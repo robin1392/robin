@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b264505c7122474bb94ff591e420621, type: 3}
+  m_Name: 20.Dice_Raider
+  m_EditorClassIdentifier: 
+  id: 19
+  grade: 2
+  castType: 0
+  moveType: 0
+  targetMoveType: 0
+  prefab: {fileID: 5081294253336761964, guid: 89ef9887e327543ef84acbd7af4aef31, type: 3}
+  spawnMultiply: 1
+  icon: {fileID: 21300000, guid: e88832afb8fc14caf85b1c88dfb5124c, type: 3}
+  card: {fileID: 21300000, guid: 7f5dc80aca9494bdb9b0267cc7d560a7, type: 3}
+  color: {r: 0.8901961, g: 0.47058824, b: 0.15686275, a: 1}
+  power: 30
+  powerUpByUpgrade: 3
+  powerUpByInGameUp: 9
+  maxHealth: 70
+  maxHealthUpByUpgrade: 8
+  maxHealthUpByInGameUp: 24
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  attackSpeed: 1
+  moveSpeed: 1.2
+  range: 0.7

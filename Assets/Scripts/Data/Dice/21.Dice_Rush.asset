@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b264505c7122474bb94ff591e420621, type: 3}
+  m_Name: 21.Dice_Rush
+  m_EditorClassIdentifier: 
+  id: 20
+  grade: 2
+  castType: 0
+  moveType: 0
+  targetMoveType: 0
+  prefab: {fileID: 5081294253336761964, guid: cec9365f899844f968c9e47d0e171aab, type: 3}
+  spawnMultiply: 1
+  icon: {fileID: 21300000, guid: ed7433d74af2e443db3d4744e7cd1680, type: 3}
+  card: {fileID: 21300000, guid: 93f82e38bf70c40e6b105cbece3b3962, type: 3}
+  color: {r: 0.85882354, g: 0.22745098, b: 0.22745098, a: 1}
+  power: 50
+  powerUpByUpgrade: 5
+  powerUpByInGameUp: 15
+  maxHealth: 150
+  maxHealthUpByUpgrade: 15
+  maxHealthUpByInGameUp: 45
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  attackSpeed: 1.2
+  moveSpeed: 0.8
+  range: 0.7

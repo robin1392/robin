@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b264505c7122474bb94ff591e420621, type: 3}
+  m_Name: 5.Dice_Fireball
+  m_EditorClassIdentifier: 
+  id: 4
+  grade: 0
+  castType: 1
+  moveType: 0
+  targetMoveType: 2
+  prefab: {fileID: 6636926182459783295, guid: ce6335d208492d843b0f7b30c1d630e8, type: 3}
+  spawnMultiply: 1
+  icon: {fileID: 21300000, guid: 935df56be498a43a19be0043917f06a9, type: 3}
+  card: {fileID: 21300000, guid: 139d1f6f94657429fb55f4437004b912, type: 3}
+  color: {r: 0.8156863, g: 0.12941177, b: 0.078431375, a: 1}
+  power: 150
+  powerUpByUpgrade: 7
+  powerUpByInGameUp: 45
+  maxHealth: 0
+  maxHealthUpByUpgrade: 0
+  maxHealthUpByInGameUp: 0
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  attackSpeed: 0
+  moveSpeed: 16
+  range: 0

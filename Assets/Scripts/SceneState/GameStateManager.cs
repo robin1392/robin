@@ -1,0 +1,240 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameStateManager : Singleton<GameStateManager>
+{
+    #region system variable
+    public StateManager<Global.E_GAMESTATE, Global.E_STATEACTION, GameStateManager> gameState = null;
+
+    private Global.E_STATEACTION _nextAction;
+
+    private Action _callBackLoadingSuccess;
+    #endregion
+    
+    
+    #region game variable
+
+    public bool isDevMode = false;
+    #endregion
+
+
+    #region unity base
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        if (this.instanceID != GameStateManager.Get().instanceID)
+        {
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
+
+        InitializeGameStateManager();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public override void OnDestroy()
+    {
+        if(gameState != null)
+            gameState.Destroy();
+        
+        base.OnDestroy();
+    }
+
+    #endregion
+
+
+    #region init destroy
+
+    public void InitializeGameStateManager()
+    {
+        gameState = new StateManager<Global.E_GAMESTATE, Global.E_STATEACTION, GameStateManager>(this);
+        
+        gameState.AddState(Global.E_GAMESTATE.STATE_START , this.gameObject.AddComponent<GameStateStart>());
+        gameState.AddState(Global.E_GAMESTATE.STATE_LOADING , this.gameObject.AddComponent<GameStateLoading>());
+        gameState.AddState(Global.E_GAMESTATE.STATE_MAIN , this.gameObject.AddComponent<GameStateMain>());
+        gameState.AddState(Global.E_GAMESTATE.STATE_INGAME , this.gameObject.AddComponent<GameStateInGame>());
+        gameState.AddState(Global.E_GAMESTATE.STATE_COOP , this.gameObject.AddComponent<GameStateCoop>());
+        
+        gameState.RegistEvent(Global.E_GAMESTATE.STATE_LOADING , Global.E_STATEACTION.ACTION_START , Global.E_GAMESTATE.STATE_START);
+        gameState.RegistEvent(Global.E_GAMESTATE.STATE_LOADING , Global.E_STATEACTION.ACTION_MAIN , Global.E_GAMESTATE.STATE_MAIN);
+        gameState.RegistEvent(Global.E_GAMESTATE.STATE_LOADING , Global.E_STATEACTION.ACTION_INGAME , Global.E_GAMESTATE.STATE_INGAME);
+        gameState.RegistEvent(Global.E_GAMESTATE.STATE_LOADING , Global.E_STATEACTION.ACTION_COOP , Global.E_GAMESTATE.STATE_COOP);
+
+        
+        // 시작을 start scene 부터 
+        // 시작을 main 부터..
+        if (SceneManager.GetActiveScene().name == Global.g_sceneStartName)
+        {
+            // 처음 시작 state = state start
+            // 정상적으로 시작했을경우니까...
+            isDevMode = false;
+            gameState.Enable(Global.E_GAMESTATE.STATE_START);
+        }
+        else if (SceneManager.GetActiveScene().name == Global.g_sceneMainName)
+        {
+            isDevMode = true;
+            gameState.Enable(Global.E_GAMESTATE.STATE_MAIN);
+        }
+        else if (SceneManager.GetActiveScene().name == Global.g_sceneInGameBattle)
+        {
+            isDevMode = true;
+            gameState.Enable(Global.E_GAMESTATE.STATE_INGAME);
+        }
+    }
+    
+
+    #endregion
+    
+    
+    #region state system
+    public void ChangeScene(Global.E_GAMESTATE nextState)
+    {
+        gameState.ChangeState(nextState);
+    }
+
+    public BaseSceneState GetCurrentState()
+    {
+        return (BaseSceneState) gameState.Current();
+    }
+
+    public Global.E_GAMESTATE GetCurrentName()
+    {
+        return gameState.GetCurrentState();
+    }
+
+    public T GetState<T>() where T : BaseSceneState
+    {
+        return this.gameObject.GetComponent<T>();
+    }
+    #endregion
+    
+    
+    #region action state
+
+    /// <summary>
+    /// 씬이동시 이벤트로..이동
+    /// </summary>
+    /// <param name="newAction"></param>
+    /// <param name="callBack"></param>
+    public void ActionEvent(Global.E_STATEACTION newAction, Action callBack = null)
+    {
+        if(isDevMode == true)
+            isDevMode = false;
+        
+        _nextAction = newAction;
+        _callBackLoadingSuccess = callBack;
+        ChangeScene(Global.E_GAMESTATE.STATE_LOADING);
+    }
+    
+    /// <summary>
+    /// 로딩 씬에서 다음씬으로 이동할시에
+    /// </summary>
+    public void LoadingAfterNextScene()
+    {
+        gameState.ChangeState(_nextAction);
+    }
+    #endregion
+    
+    
+    #region start scene to do
+
+    public void StartSceneToDo(Global.E_STARTSTEP startState)
+    {
+        switch (startState)
+        {
+            case Global.E_STARTSTEP.START_CONNECT:
+                StartCoroutine(GameWebConnect());
+                break;
+            case Global.E_STARTSTEP.START_VERSION:
+                StartCoroutine(GameVersionCheck());
+                break;
+            case Global.E_STARTSTEP.START_DATADOWN:
+                StartCoroutine(GameDataDownLoad());
+                break;
+            case Global.E_STARTSTEP.START_USERDATA:
+                StartCoroutine(GameUserData());
+                break;
+        }
+    }
+
+    private IEnumerator GameWebConnect()
+    {
+        // 상태 접속중으로 한다
+        UI_Start.Get().SetTextStatus(Global.g_startStatusConnect);
+        
+        yield return new WaitForSeconds(0.3f);
+        
+        // 서버 접속이 끝난후 버전 체크를 한다
+        GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_VERSION);
+    }
+
+    private IEnumerator GameVersionCheck()
+    {
+        // 상태 버전 체크중..
+        UI_Start.Get().SetTextStatus(Global.g_startStatusVersionCheck);
+        
+        yield return new WaitForSeconds(0.3f);
+        
+        // 버전 체크후 데이터 다운 및 로딩
+        GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_DATADOWN);
+    }
+
+    private IEnumerator GameDataDownLoad()
+    {
+        // 상태 데이터 다운중
+        UI_Start.Get().SetTextStatus(Global.g_startStatusDataDown);
+        
+        yield return new WaitForSeconds(0.3f);
+        
+        // 상태 데이터 로딩중
+        yield return new WaitForSeconds(0.3f);
+        
+        // 데이터 다운 및 로딩 후 로그인 유저 정보 받아오기
+        GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_USERDATA);
+    }
+
+    private IEnumerator GameUserData()
+    {
+        // 상태 유저 정보 받는중..혹은 로그인중
+        UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+        yield return new WaitForSeconds(0.3f);
+        
+        // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
+        // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
+        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+    }
+    #endregion
+    
+    
+    #region main scene to do
+
+    public void MoveInGameBattle()
+    {
+        ActionEvent(Global.E_STATEACTION.ACTION_INGAME);
+    }
+    #endregion
+    
+    #region in game to do
+
+    public void MoveMainScene()
+    {
+        ActionEvent(Global.E_STATEACTION.ACTION_MAIN);
+    }
+    #endregion
+}
