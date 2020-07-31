@@ -27,7 +27,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: 
+  DevRegion: kr
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -37,7 +37,6 @@ MonoBehaviour:
   - ChangeLayer
   - ClickRpc
   - DeactivateWaitingObject
-  - Death
   - DestroyMinion
   - DestroyRpc
   - DestroySpaceship
@@ -62,12 +61,12 @@ MonoBehaviour:
   - SetDeck
   - SetMagicTarget
   - SetMinionAnimationTrigger
+  - SetMinionAttackSpeedFactor
   - Spawn
   - SpawnPlayerMinions
   - SpawnSkeleton
   - SturnMinion
   - TeleportMinion
-  - SetMinionAttackSpeedFactor
   DisableAutoOpenWizard: 1
   ShowSettings: 0
-  DevRegionSetOnce: 0
+  DevRegionSetOnce: 1

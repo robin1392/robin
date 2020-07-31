@@ -201,7 +201,6 @@ MonoBehaviour:
   targetPlayer: {fileID: 0}
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 7007598002378707877}
-  listMinion: []
   listMagic: []
   _sp: 200
 --- !u!114 &5883888954613411295

@@ -110,7 +110,7 @@ namespace ED
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.identifier);
 
                     var startPos = PhotonNetwork.IsMasterClient ? ts_BottomPlayer.position : ts_TopPlayer.position;
-                    var obj = PhotonNetwork.Instantiate(pref_Player.name, startPos, Quaternion.identity, 0);
+                    var obj = PhotonNetwork.Instantiate("Tower/" + pref_Player.name, startPos, Quaternion.identity, 0);
                     obj.transform.parent = PhotonNetwork.IsMasterClient ? ts_BottomPlayer : ts_TopPlayer;
                     playerController = obj.GetComponent<PlayerController>();
                     playerController.photonView.RPC("ChangeLayer", RpcTarget.All, PhotonNetwork.IsMasterClient);

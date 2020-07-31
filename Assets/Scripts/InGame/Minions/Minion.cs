@@ -49,14 +49,14 @@ namespace ED
         private Coroutine _crtPush;
         private BehaviourTreeOwner _behaviourTreeOwner;
         protected PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
-        protected NavMeshAgent _agent;
+        public NavMeshAgent agent;
         protected Collider _collider;
 
         protected void Awake()
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
             _behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
-            _agent = GetComponent<NavMeshAgent>();
+            agent = GetComponent<NavMeshAgent>();
             _collider = GetComponentInChildren<Collider>();
         }
 
@@ -71,7 +71,7 @@ namespace ED
             if (isPlayable && animator != null)
             {
                 //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
-                animator.SetFloat(_animatorHashMoveSpeed, _agent.velocity.magnitude);
+                animator.SetFloat(_animatorHashMoveSpeed, agent.velocity.magnitude);
             }
 
             _spawnedTime += Time.fixedDeltaTime;
@@ -88,7 +88,7 @@ namespace ED
         {
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;
-            _agent.speed = moveSpeed;
+            agent.speed = moveSpeed;
             if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             isPlayable = true;
             isAttacking = false;
@@ -104,10 +104,12 @@ namespace ED
                 if (isMine)
                 {
                     _behaviourTreeOwner.behaviour.Resume();
+                    agent.enabled = true;
                 }
                 else
                 {
                     _behaviourTreeOwner.behaviour.Pause();
+                    agent.enabled = false;
                 }
             }
             
@@ -344,14 +346,15 @@ namespace ED
             isInvincibility = false;
         }
 
-        public void SetNetworkValue(Vector3 position, Quaternion rotation, Vector3 velocity, float health, double sentServerTime)
+        public void SetNetworkValue(Vector3 position, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
         {
             networkPosition = position;
             rb.rotation = rotation;
             rb.velocity = velocity;
+            //agent.velocity = velocity;
             currentHealth = health;
 
-            var lag = Mathf.Abs((float)(PhotonNetwork.Time - sentServerTime));
+            var lag = Mathf.Abs((float)(PhotonNetwork.Time - sendServerTime));
             networkPosition += rb.velocity * lag;
         }
 
@@ -388,7 +391,7 @@ namespace ED
                 //_agent.isStopped = false;
                 //_agent.updatePosition = true;
                 //_agent.updateRotation = true;
-                _agent.SetDestination(target.transform.position + Vector3.right * Random.Range(-0.2f, 0.2f) +
+                agent.SetDestination(target.transform.position + Vector3.right * Random.Range(-0.2f, 0.2f) +
                                       Vector3.forward * Random.Range(-0.2f, 0.2f));
             }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
@@ -491,27 +494,27 @@ namespace ED
         {
             isPushing = !isEnable;
             //_collider.enabled = isEnable;
-            rb.isKinematic = !isEnable;
+            //rb.isKinematic = !isEnable;
 
-            if (isEnable && _agent.enabled == false)
+            if (isEnable && agent.enabled == false)
             {
-                _agent.enabled = true;
-                _agent.isStopped = false;
-                _agent.updatePosition = true;
-                _agent.updateRotation = true;
+                agent.enabled = true;
+                agent.isStopped = false;
+                agent.updatePosition = true;
+                agent.updateRotation = true;
             }
-            else if (isEnable == false && _agent.enabled == true)
+            else if (isEnable == false && agent.enabled == true)
             {
-                _agent.isStopped = true;
-                _agent.updatePosition = false;
-                _agent.updateRotation = false;
-                _agent.enabled = false;
+                agent.isStopped = true;
+                agent.updatePosition = false;
+                agent.updateRotation = false;
+                agent.enabled = false;
             }
 
             if (isEnable == false)
             {
                 rb.velocity = Vector3.zero;
-                _agent.velocity = Vector3.zero;
+                agent.velocity = Vector3.zero;
             }
         }
     }

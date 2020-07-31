@@ -143,7 +143,8 @@ namespace ED
                 {
                     stream.SendNext(m.rb.position);
                     stream.SendNext(m.rb.rotation);
-                    stream.SendNext(m.rb.velocity);
+                    //stream.SendNext(m.rb.velocity);
+                    stream.SendNext(m.agent.velocity);
                     stream.SendNext(m.currentHealth);
                 }
             }

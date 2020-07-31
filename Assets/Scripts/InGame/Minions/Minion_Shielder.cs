@@ -49,10 +49,10 @@ namespace ED
         IEnumerator SkillCoroutine()
         {
             rb.velocity = Vector3.zero;
-            _agent.velocity = Vector3.zero;
-            _agent.isStopped = true;
-            _agent.updatePosition = false;
-            _agent.updateRotation = false;
+            agent.velocity = Vector3.zero;
+            agent.isStopped = true;
+            agent.updatePosition = false;
+            agent.updateRotation = false;
             isHalfDamage = true;
             isPushing = true;
             yield return new WaitForSeconds(_skillDuration);
