@@ -95,6 +95,22 @@ public class FieldManager : SingletonDestroy<FieldManager>
 
         return listBottomPosition[index].position;
     }
+    
+    public Transform GetTopListTs(int index)
+    {
+        if (listTopPosition.Count <= index)
+            return ts_TopPlayer;
+        
+        return listTopPosition[index];
+    }
+
+    public Transform GetBottomListTs(int index)
+    {
+        if (listBottomPosition.Count <= index)
+            return ts_BottomPlayer;
+
+        return listBottomPosition[index];
+    }
 
     public Vector3 GetPlayerPos(bool player)
     {

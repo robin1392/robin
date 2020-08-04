@@ -249,7 +249,8 @@ namespace ED
             {
                 if (arrDice[i].id >= 0 && arrDice[i].data != null && arrDice[i].data.prefab != null)
                 {
-                    var ts = transform.parent.GetChild(i);
+                    //var ts = transform.parent.GetChild(i);
+                    Transform ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(i): FieldManager.Get().GetTopListTs(i);
 
                     switch(arrDice[i].data.castType)
                     {
