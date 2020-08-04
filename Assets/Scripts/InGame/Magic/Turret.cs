@@ -70,13 +70,12 @@ namespace ED
                 
                 if (PhotonNetwork.IsConnected && isMine)
                 {
-                    controller.photonView.RPC("FireArrow", RpcTarget.All, ts_ShootPoint.position
-                        , flyingTarget.id, damage);
+                    //controller.photonView.RPC("FireArrow", RpcTarget.All, ts_ShootPoint.position, flyingTarget.id, damage);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, damage);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
-                    controller.FireArrow(ts_ShootPoint.position
-                        , flyingTarget.id, damage);
+                    controller.FireArrow(ts_ShootPoint.position, flyingTarget.id, damage);
                 }
             }
         }

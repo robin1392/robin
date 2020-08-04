@@ -26,7 +26,8 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
-                controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -105,7 +106,9 @@ namespace ED
                 var targetID = dashTarget.GetComponentInParent<Minion>().id;
                 if (PhotonNetwork.IsConnected && isMine)
                 {
-                    controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);
+                    //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f); 
+                        
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

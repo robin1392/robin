@@ -151,14 +151,15 @@ namespace ED
         {
             if (dice != null && dragDice != null && dice != dragDice && dice.id == dragDice.id && dice.level == dragDice.level)
             {
-                if (dice.LevelUp(InGameManager.Instance.playerController.arrDeck))
+                if (dice.LevelUp(InGameManager.Get().playerController.arrDeck))
                 {
                     dragDice.Reset();
                     ui_DiceField.RefreshField();
                         
                     if (PhotonNetwork.IsConnected)
                     {
-                        InGameManager.Instance.playerController.photonView.RPC("LevelUpDice", RpcTarget.Others, dragDice.diceFieldNum, dice.diceFieldNum, dice.data.id, dice.level);
+                        //InGameManager.Get().playerController.photonView.RPC("LevelUpDice", RpcTarget.Others, dragDice.diceFieldNum, dice.diceFieldNum, dice.data.id, dice.level);
+                        InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE , dragDice.diceFieldNum, dice.diceFieldNum, dice.data.id, dice.level);
                     }
                     
                     ani.SetTrigger(BBoing);

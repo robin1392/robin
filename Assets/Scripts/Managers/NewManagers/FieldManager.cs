@@ -6,6 +6,13 @@ public class FieldManager : SingletonDestroy<FieldManager>
 {
     
     #region system variable
+    public Transform ts_TopPlayer;
+    public Transform ts_BottomPlayer;
+
+
+    [Header("Spawn Position List")]
+    public List<Transform> listTopPosition;
+    public List<Transform> listBottomPosition;
     #endregion
     
     
@@ -14,6 +21,8 @@ public class FieldManager : SingletonDestroy<FieldManager>
     public override void Awake()
     {
         base.Awake();
+
+        InitializeFieldManager();
     }
     
 
@@ -31,11 +40,73 @@ public class FieldManager : SingletonDestroy<FieldManager>
 
     public override void OnDestroy()
     {
+        DestroyManager();
+        
         base.OnDestroy();
     }
 
     #endregion
     
+    #region init & destroy
+
+    public void InitializeFieldManager()
+    {
+        listTopPosition = new List<Transform>();
+        listBottomPosition = new List<Transform>();
+
+        for (int i = 0; i < ts_TopPlayer.childCount; i++)
+        {
+            listTopPosition.Add(ts_TopPlayer.GetChild(i));    
+        }
+        
+        for (int i = 0; i < ts_BottomPlayer.childCount; i++)
+        {
+            listBottomPosition.Add(ts_BottomPlayer.GetChild(i));    
+        }
+        
+    }
+
+    public void DestroyManager()
+    {
+        if(listTopPosition != null)
+            listTopPosition.Clear();
+        listTopPosition = null;
+
+        if (listBottomPosition != null) 
+            listBottomPosition.Clear();
+        listBottomPosition = null;
+    }
+    #endregion
+    
+    #region get set
+
+    public Vector3 GetTopListPos(int index)
+    {
+        if (listTopPosition.Count <= index)
+            return ts_TopPlayer.position;
+        
+        return listTopPosition[index].position;
+    }
+
+    public Vector3 GetBottomListPos(int index)
+    {
+        if (listBottomPosition.Count <= index)
+            return ts_BottomPlayer.position;
+
+        return listBottomPosition[index].position;
+    }
+
+    public Vector3 GetPlayerPos(bool player)
+    {
+        Vector3 pos = player ? ts_BottomPlayer.position:ts_TopPlayer.position;
+        return pos;
+    }
+
+    public Transform GetPlayerTrs(bool player)
+    {
+        return player?ts_BottomPlayer:ts_TopPlayer;
+    }
+    #endregion
     
     
 }

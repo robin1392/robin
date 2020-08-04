@@ -25,7 +25,7 @@ namespace ED
             icon.sprite = dataDice.icon;
             Refresh();
 
-            InGameManager.Instance.event_SP_Edit.AddListener(EditSpCallback);
+            InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
         }
 
         private void EditSpCallback(int sp)
@@ -47,8 +47,8 @@ namespace ED
 
         public void Click()
         {
-            level = InGameManager.Instance.playerController.DiceUpgrade(num);
-            InGameManager.Instance.playerController.AddSp(-arrPrice[level - 1]);
+            level = InGameManager.Get().playerController.DiceUpgrade(num);
+            InGameManager.Get().playerController.AddSp(-arrPrice[level - 1]);
             Refresh();
         }
 

@@ -65,14 +65,13 @@ namespace ED
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     //Shoot(controller.targetPlayer);
-                    controller.photonView.RPC("FireCannonBall", RpcTarget.All, ts_ShootPoint.position
-                        , longTarget.transform.position, damage);
+                    //controller.photonView.RPC("FireCannonBall", RpcTarget.All, ts_ShootPoint.position, longTarget.transform.position, damage);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootPoint.position, longTarget.transform.position, damage);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
                     //Shoot(longTarget.GetComponentInParent<BaseStat>());
-                    controller.FireCannonBall(ts_ShootPoint.position
-                        , longTarget.transform.position, damage);
+                    controller.FireCannonBall(ts_ShootPoint.position,longTarget.transform.position, damage);
                 }
             }
         }

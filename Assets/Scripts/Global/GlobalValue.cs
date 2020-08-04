@@ -25,5 +25,9 @@ public partial class Global
     public static string g_startStatusDataDown = "Game Data Download..";
     public static string g_startStatusUserData = "User Data Setting..";
 
+
+    public static string g_inGameWin = "승리";
+    public static string g_inGameLose = "패배";
+
     #endregion
 }

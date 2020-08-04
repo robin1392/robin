@@ -96,7 +96,7 @@ namespace ED
         protected void SetColor()
         {
             var isBlue = isMine;
-            if (InGameManager.Instance.playType == PLAY_TYPE.CO_OP)
+            if (InGameManager.Get().playType == PLAY_TYPE.CO_OP)
             {
                 isBlue = isBottomPlayer;
             }
@@ -113,7 +113,7 @@ namespace ED
             }
         }
 
-        [PunRPC]
+        //[PunRPC]
         public virtual void HitDamage(float damage, float delay = 0) { }
 
         protected bool IsTargetLayer(GameObject targetObject)

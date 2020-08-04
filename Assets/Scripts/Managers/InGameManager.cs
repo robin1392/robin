@@ -8,19 +8,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using TMPro;
+
+#region USING PHOTON
 using Photon.Pun;
 using Photon.Realtime;
 using CodeStage.AntiCheat.ObscuredTypes;
-using TMPro;
+#endregion
 
 namespace ED
 {
     public class IntEvent : UnityEvent<int> { }
 
-    public class InGameManager : MonoBehaviourPunCallbacks, IPunObservable
+    public class InGameManager : SingletonPhoton<InGameManager>, IPunObservable
     {
-        public static InGameManager Instance;
-
+        //ßpublic static InGameManager Instance;
+        
+        #region game system variable
+        [Header("SYSTEN INFO")]
         public PLAY_TYPE playType;
         public Data_AllDice data_AllDice;
         public GameObject pref_Player;
@@ -28,92 +33,161 @@ namespace ED
         public Transform ts_Lights;
         public Transform ts_StadiumTop;
         public Transform ts_NexusHealthBar;
-        public Transform ts_TopPlayer;
-        public Transform ts_BottomPlayer;
+        
+        // --> field manager
+        //public Transform ts_TopPlayer;
+        //public Transform ts_BottomPlayer;
+        
         public bool isAIMode;
         public bool isGamePlaying;
-
-        [Header("UI Link")]
-        public Image image_SpawnTime;
-        public Text text_SpawnTime;
-        public TextMeshProUGUI tmp_Wave;
-        public Text text_SP;
-        public Text text_GetDiceButton;
-        public UI_GetDiceButton btn_GetDice;
-        public GameObject popup_Result;
-        public Text text_Result;
-        public UI_UpgradeButton[] arrUpgradeButtons;
-        public Image image_BottomHealthBar;
-        public Text text_BottomHealth;
-        public Image image_TopHealthBar;
-        public Text text_TopHealth;
-        public GameObject popup_Waiting;
-        public GameObject obj_ViewTargetDiceField;
-        public GameObject obj_Low_HP_Effect;
-        public Button button_SP_Upgrade;
-        public Text text_SP_Upgrade;
-        public Text text_SP_Upgrade_Price;
-
+        
         [HideInInspector]
         public PlayerController playerController;
-        
-        [Space]
+
+        private int _readyPlayerCount = 0;
+
+        #endregion
+
+        #region wave variable
+        [Header("WAVE INFO")]
         public int wave = 0;
         public float startSpawnTime = 10f;
         public float spawnTime = 45f;
-        [SerializeField]
-        protected int[] arrUpgradeLevel;
+        
         private float st => wave < 1 ? 10f : 20f;
 
         public float time { get; protected set; }
-
-        private int _readyPlayerCount = 0;
+        
+        #endregion
+        
+        #region dice variable
+        [Header("DICE INFO")]
+        [SerializeField]
+        protected int[] arrUpgradeLevel;
         public int getDiceCost => 10 + getDiceCount * 10;
         public int getDiceCount = 0;
+
+        #endregion
+
+
+        #region etc variable
+        // event
+        public IntEvent event_SP_Edit;
 
         [SerializeField]
         protected List<BaseStat> listBottomPlayer = new List<BaseStat>();
         [SerializeField]
         protected List<BaseStat> listTopPlayer = new List<BaseStat>();
 
-        public IntEvent event_SP_Edit;
+        #endregion
+        
+        
+        /// <summary>
+        /// 삭제 -- Canvas 위치에 따라 world ui 와 in game ui , popup 으로 나눔 
+        /// </summary>
+        //[Header("UI Link")]
+        //public Image image_SpawnTime;
+        //public Text text_SpawnTime;
+        //public TextMeshProUGUI tmp_Wave;
+        //public Text text_SP;
+        //public Text text_GetDiceButton;
+        //public UI_GetDiceButton btn_GetDice;
+        //public GameObject popup_Result;
+        //public Text text_Result;
+        //public UI_UpgradeButton[] arrUpgradeButtons;
+        
+        //public Image image_BottomHealthBar;
+        //public Text text_BottomHealth;
+        //public Image image_TopHealthBar;
+        //public Text text_TopHealth;
+        
+        //public GameObject popup_Waiting;
+        
+        //public GameObject obj_ViewTargetDiceField;
+        //public GameObject obj_Low_HP_Effect;
+        //public Button button_SP_Upgrade;
+        //public Text text_SP_Upgrade;
+        //public Text text_SP_Upgrade_Price;
 
-        public Text text_UnitCount;
+        //public Text text_UnitCount;
 
-        protected void Awake()
+        #region unity base
+        public override void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
+            //if (Instance == null)
+            //{
+                //Instance = this;
+            //}
+            base.Awake();
+
+            InitializeManager();
         }
 
-        protected void OnDestroy()
+        public override void OnDestroy()
         {
-            if(Instance == this)
-            {
-                Instance = null;
-            }
+            //if(Instance == this)
+            //{
+                //Instance = null;
+            //}
+            
+            DestroyManager();
+            
+            base.OnDestroy();
         }
 
         protected virtual void Start()
         {
+            StartManager();
+        }
+
+        protected void Update()
+        {
+            RefreshTimeUI();
+            //text_UnitCount.text = $"총 유닛수: {listBottomPlayer.Count + listTopPlayer.Count - 2}";
+            if(UI_InGame.Get() != null)
+                UI_InGame.Get().SetUnitCount(listBottomPlayer.Count + listTopPlayer.Count - 2);
+        }
+
+
+        #endregion
+        
+        
+        #region init destroy
+
+        public void InitializeManager()
+        {
             arrUpgradeLevel = new int[6];
             event_SP_Edit = new IntEvent();
+        }
 
+
+        public void DestroyManager()
+        {
+            arrUpgradeLevel = null;
+            
+            event_SP_Edit.RemoveAllListeners();
+            event_SP_Edit = null;
+        }
+        
+
+        public void StartManager()
+        {
             if (PhotonNetwork.IsConnected)
             {
-                popup_Waiting.SetActive(true);
+                UI_InGamePopup.Get().SetViewWaiting(true);
 
-                if (PlayerController.Instance == null)
+                if (PlayerController.Get() == null)
                 {
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.identifier);
 
-                    var startPos = PhotonNetwork.IsMasterClient ? ts_BottomPlayer.position : ts_TopPlayer.position;
-                    var obj = PhotonNetwork.Instantiate("Tower/" + pref_Player.name, startPos, Quaternion.identity, 0);
-                    obj.transform.parent = PhotonNetwork.IsMasterClient ? ts_BottomPlayer : ts_TopPlayer;
+                    //var startPos = PhotonNetwork.IsMasterClient ? ts_BottomPlayer.position : ts_TopPlayer.position;
+                    Vector3 startPos = FieldManager.Get().GetPlayerPos(PhotonNetwork.IsMasterClient);
+                    GameObject obj = PhotonNetwork.Instantiate("Tower/" + pref_Player.name, startPos, Quaternion.identity, 0);
+                    obj.transform.parent = FieldManager.Get().GetPlayerTrs(PhotonNetwork.IsMasterClient);
                     playerController = obj.GetComponent<PlayerController>();
-                    playerController.photonView.RPC("ChangeLayer", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                    
+                    //playerController.photonView.RPC("ChangeLayer", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                    playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_CHANGELAYER , PhotonNetwork.IsMasterClient);
                 }
                 else
                 {
@@ -122,15 +196,16 @@ namespace ED
             }
             else
             {
-                var obj = Instantiate(pref_Player, ts_BottomPlayer.position, Quaternion.identity);
-                obj.transform.parent = ts_BottomPlayer;
+                Vector3 startPos = FieldManager.Get().GetPlayerPos(true);
+                var obj = Instantiate(pref_Player, startPos, Quaternion.identity);
+                obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
                 playerController = obj.GetComponent<PlayerController>();
                 playerController.ChangeLayer(true);
                 playerController.isMine = true;
                 playerController.isBottomPlayer = true;
 
-                obj = Instantiate(pref_AI, ts_TopPlayer.position, Quaternion.identity);
-                obj.transform.parent = ts_TopPlayer;
+                obj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
+                obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
                 obj.SendMessage("ChangeLayer", false);
 
                 isAIMode = true;
@@ -139,7 +214,8 @@ namespace ED
             var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
             if (PhotonNetwork.IsConnected)
             {
-                playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
+                //playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
+                playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SETDECK , deck);
             }
             else
             {
@@ -147,10 +223,13 @@ namespace ED
             }
 
             // Upgrade buttons
-            for (var i = 0; i < arrUpgradeButtons.Length; i++)
-            {
-                arrUpgradeButtons[i].Initialize(playerController.arrDeck[i], arrUpgradeLevel[i]);
-            }
+            //for (var i = 0; i < arrUpgradeButtons.Length; i++)
+            //{
+                //arrUpgradeButtons[i].Initialize(playerController.arrDeck[i], arrUpgradeLevel[i]);
+            //}
+            // ui 셋팅
+            UI_InGame.Get().SetArrayDeck(playerController.arrDeck , arrUpgradeLevel);
+
 
             if (PhotonNetwork.IsConnected)
             {
@@ -162,54 +241,20 @@ namespace ED
                 }
             }
 
-            obj_ViewTargetDiceField.SetActive(!PhotonNetwork.IsConnected);
+            //obj_ViewTargetDiceField.SetActive(!PhotonNetwork.IsConnected);
+            UI_InGame.Get().ViewTargetDice(!PhotonNetwork.IsConnected);
+            
             event_SP_Edit.AddListener(RefreshSP);
             event_SP_Edit.AddListener(SetSPUpgradeButton);
 
             StartGame();
             RefreshTimeUI(true);
         }
-
-        protected void Update()
-        {
-            RefreshTimeUI();
-            text_UnitCount.text = $"총 유닛수: {listBottomPlayer.Count + listTopPlayer.Count - 2}";
-        }
-
-        public void LeaveRoom()
-        {
-            if (PhotonNetwork.IsConnected)
-            {
-                PhotonNetwork.Disconnect();
-            }
-            else
-            {
-                //SceneManager.LoadScene("Main");
-                GameStateManager.Get().MoveMainScene();
-            }
-        }
-
-        public override void OnDisconnected(DisconnectCause cause)
-        {
-            Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
-
-            //SceneManager.LoadSceneAsync("Main");
-            GameStateManager.Get().MoveMainScene();
-        }
-
-        //public override void OnPlayerEnteredRoom(Player newPlayer)
-        //{
-
-        //}
-
-        public override void OnPlayerLeftRoom(Player otherPlayer)
-        {
-            if (isGamePlaying)
-            {
-                PhotonNetwork.Disconnect();
-            }
-        }
-
+        
+        #endregion
+        
+        
+        #region start game
         protected void StartGame()
         {
             if (PhotonNetwork.IsConnected)
@@ -221,7 +266,8 @@ namespace ED
                 }
                 else
                 {
-                    photonView.RPC("Ready", RpcTarget.MasterClient);
+                    //photonView.RPC("Ready", RpcTarget.MasterClient);
+                    SendBattleManager(RpcTarget.MasterClient , E_PTDefine.PT_READY);
                 }
             }
             else
@@ -230,26 +276,27 @@ namespace ED
                 StartCoroutine(SpawnLoop());
             }
         }
-
-        [PunRPC]
+        
+        //[PunRPC]
         private void Ready()
         {
             _readyPlayerCount++;
         }
 
-        [PunRPC]
-        private void DeactivateWaitingObject()
-        {
-            isGamePlaying = true;
-            popup_Waiting.SetActive(false);
-        }
-
+        #endregion
+        
+        #region spawn
+        
         private IEnumerator SpawnLoop()
         {
             if (PhotonNetwork.IsConnected)
             {
-                while (PhotonNetwork.InRoom && _readyPlayerCount < PhotonNetwork.CurrentRoom.MaxPlayers) { yield return null; }
-                photonView.RPC("DeactivateWaitingObject", RpcTarget.All);
+                while (PhotonNetwork.InRoom && _readyPlayerCount < PhotonNetwork.CurrentRoom.MaxPlayers)
+                {
+                    yield return null;
+                }
+                //photonView.RPC("DeactivateWaitingObject", RpcTarget.All);
+                SendBattleManager(RpcTarget.All , E_PTDefine.PT_DEACTIVEWAIT);
             }
             else
             {
@@ -257,7 +304,8 @@ namespace ED
             }
 
             wave = 0;
-            tmp_Wave.text = $"{wave}";
+            //tmp_Wave.text = $"{wave}";
+            WorldUIManager.Get().SetWave(wave);
             time = startSpawnTime;
             int[] arrAddTime = { 20, 15, 10, 5, -1 };
             var addNum = 0;
@@ -273,7 +321,8 @@ namespace ED
                     addNum++;
                     if (PhotonNetwork.IsConnected)
                     {
-                        photonView.RPC("AddSP", RpcTarget.All, wave);
+                        //photonView.RPC("AddSP", RpcTarget.All, wave);
+                        SendBattleManager(RpcTarget.All , E_PTDefine.PT_ADDSP , wave);
                         // clear cache
                         PhotonNetwork.SendAllOutgoingCommands();
                     }
@@ -289,7 +338,8 @@ namespace ED
                     addNum = 0;
                     if (PhotonNetwork.IsConnected)
                     {
-                        photonView.RPC("SpawnPlayerMinions", RpcTarget.All);
+                        //photonView.RPC("SpawnPlayerMinions", RpcTarget.All);
+                        SendBattleManager(RpcTarget.All , E_PTDefine.PT_SPAWNMINION );
                     }
                     else
                     {
@@ -302,53 +352,129 @@ namespace ED
             }
         }
 
+        #endregion
+        
+        #region update event
+        
+        private void RefreshSP(int sp)
+        {
+            //text_SP.text = sp.ToString();
+            UI_InGame.Get().SetSP(sp);
+        }
+
+        
         protected void RefreshTimeUI(bool isImmediately = false)
         {
             if (isImmediately)
             {
-                image_SpawnTime.fillAmount = time / st;
+                //image_SpawnTime.fillAmount = time / st;
+                WorldUIManager.Get().SetSpawnTime(time / st);
             }
             else
             {
-                var f = Mathf.Lerp(image_SpawnTime.fillAmount, time / st, Time.deltaTime * 5f);
+                //var f = Mathf.Lerp(image_SpawnTime.fillAmount, time / st, Time.deltaTime * 5f);
+                //if (f < image_SpawnTime.fillAmount) image_SpawnTime.fillAmount = f;
+                //else image_SpawnTime.fillAmount = time / st;
                 
-                if (f < image_SpawnTime.fillAmount) image_SpawnTime.fillAmount = f;
-                else image_SpawnTime.fillAmount = time / st;
+                float ff = Mathf.Lerp(WorldUIManager.Get().GetSpawnAmount(), time / st, Time.deltaTime * 5.0f);
+
+                if (ff < WorldUIManager.Get().GetSpawnAmount()) WorldUIManager.Get().SetSpawnTime(ff);
+                else WorldUIManager.Get().SetSpawnTime(time / st);
+                
             }
-            text_SpawnTime.text = $"{Mathf.CeilToInt(time):F0}";
-            tmp_Wave.text = $"{wave}";
+            
+            
+            //text_SpawnTime.text = $"{Mathf.CeilToInt(time):F0}";
+            WorldUIManager.Get().SetTextSpawnTime(time);
+            //tmp_Wave.text = $"{wave}";
+            WorldUIManager.Get().SetWave(wave);
         }
 
-        public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(time);
-                stream.SendNext(wave);
-            }
-            else
-            {
-                time = (float)stream.ReceiveNext();
-                wave = (int)stream.ReceiveNext();
-            }
-        }
+        #endregion
 
-        [PunRPC]
-        public void SpawnPlayerMinions()
-        {
-            image_SpawnTime.fillAmount = 1f;
-            playerController.photonView.RPC("Spawn", RpcTarget.All);
-        }
-
+        
+        #region get set
+        
         public void GetDice()
         {
             playerController.AddSp(-getDiceCost);
             getDiceCount++;
             playerController.AddSp(0);
-            text_GetDiceButton.text = $"{getDiceCost}";
+            //text_GetDiceButton.text = $"{getDiceCost}";
+            UI_InGame.Get().SetDiceButtonText(getDiceCost);
         }
 
-        [PunRPC]
+        public BaseStat GetRandomPlayerUnit(bool isBottomPlayer)
+        {
+            return isBottomPlayer ? listBottomPlayer[Random.Range(0, listBottomPlayer.Count)] : listTopPlayer[Random.Range(0, listTopPlayer.Count)];
+        }
+
+        public Vector3 GetRandomPlayerFieldPosition(bool isBottomPlayer)
+        {
+            var x = Random.Range(-3f, 3f);
+            var z = Random.Range(-2f, 2f);
+            return new Vector3(x, 0, z);
+        }
+
+        
+        private void SetSPUpgradeButton(int sp)
+        {
+            //button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
+            //text_SP_Upgrade.text = $"SP Lv.{playerController.spUpgradeLevel + 1}";
+            //text_SP_Upgrade_Price.text = $"{(playerController.spUpgradeLevel + 1) * 500}";
+            UI_InGame.Get().SetSPUpgrade(playerController.spUpgradeLevel , sp);
+        }
+        
+        #endregion
+        
+        
+        #region leave game
+        public void LeaveRoom()
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.Disconnect();
+            }
+            else
+            {
+                GameStateManager.Get().MoveMainScene();
+            }
+        }
+
+        //[PunRPC]
+        public void EndGame(PhotonMessageInfo info)
+        {
+            isGamePlaying = false;
+            StopAllCoroutines();
+            //popup_Result.SetActive(true);
+            UI_InGamePopup.Get().SetPopupResult(true);
+            BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
+
+            //text_Result.text = playerController.isAlive ? "승리" : "패배";
+            UI_InGamePopup.Get().SetResultText(playerController.isAlive?Global.g_inGameWin:Global.g_inGameLose);
+        }
+        #endregion
+        
+        #region rpc etc
+        
+        //[PunRPC]
+        private void DeactivateWaitingObject()
+        {
+            isGamePlaying = true;
+            //popup_Waiting.SetActive(false);
+            UI_InGamePopup.Get().SetViewWaiting(false);
+        }
+
+        //[PunRPC]
+        public void SpawnPlayerMinions()
+        {
+            //image_SpawnTime.fillAmount = 1f;
+            WorldUIManager.Get().SetSpawnTime(1.0f);
+            //playerController.photonView.RPC("Spawn", RpcTarget.All);
+            playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SPAWN);
+        }
+
+        //[PunRPC]
         private void AddSP(int wave = 0)
         {
             playerController.AddSpByWave(wave);
@@ -357,22 +483,6 @@ namespace ED
             {
                 playerController.targetPlayer.AddSpByWave(wave);
             }
-        }
-
-        private void RefreshSP(int sp)
-        {
-            text_SP.text = sp.ToString();
-        }
-
-        [PunRPC]
-        public void EndGame(PhotonMessageInfo info)
-        {
-            isGamePlaying = false;
-            StopAllCoroutines();
-            popup_Result.SetActive(true);
-            BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
-
-            text_Result.text = playerController.isAlive ? "승리" : "패배";
         }
 
         public void AddPlayerUnit(bool isBottomPlayer, BaseStat bs)
@@ -399,18 +509,6 @@ namespace ED
             }
         }
         
-        public BaseStat GetRandomPlayerUnit(bool isBottomPlayer)
-        {
-            return isBottomPlayer ? listBottomPlayer[Random.Range(0, listBottomPlayer.Count)] : listTopPlayer[Random.Range(0, listTopPlayer.Count)];
-        }
-
-        public Vector3 GetRandomPlayerFieldPosition(bool isBottomPlayer)
-        {
-            var x = Random.Range(-3f, 3f);
-            var z = Random.Range(-2f, 2f);
-            return new Vector3(x, 0, z);
-        }
-
         public void ShowAIField(bool isShow)
         {
             if (isShow)
@@ -437,16 +535,79 @@ namespace ED
             }
         }
 
-        private void SetSPUpgradeButton(int sp)
-        {
-            button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
-            text_SP_Upgrade.text = $"SP Lv.{playerController.spUpgradeLevel + 1}";
-            text_SP_Upgrade_Price.text = $"{(playerController.spUpgradeLevel + 1) * 500}";
-        }
 
         public void Click_SP_Upgrade_Button()
         {
             playerController.SP_Upgrade();
         }
+        
+        #endregion
+        
+        
+        #region photon override
+        public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(time);
+                stream.SendNext(wave);
+            }
+            else
+            {
+                time = (float)stream.ReceiveNext();
+                wave = (int)stream.ReceiveNext();
+            }
+        }
+        
+        
+        public override void OnDisconnected(DisconnectCause cause)
+        {
+            Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
+
+            //SceneManager.LoadSceneAsync("Main");
+            GameStateManager.Get().MoveMainScene();
+        }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            if (isGamePlaying)
+            {
+                PhotonNetwork.Disconnect();
+            }
+        }
+        
+        #endregion
+        
+        #region photon send recv
+        public void SendBattleManager(RpcTarget target , E_PTDefine ptID , params object[] param)
+        {
+            photonView.RPC("RecvBattleManager", target , ptID , param);
+        }
+
+        [PunRPC]
+        public void RecvBattleManager(E_PTDefine ptID , params object[] param)
+        {
+            switch (ptID)
+            {
+                case E_PTDefine.PT_READY:
+                    Ready();
+                    break;
+                case E_PTDefine.PT_DEACTIVEWAIT:
+                    DeactivateWaitingObject();
+                    break;
+                case E_PTDefine.PT_ADDSP:
+                    int addsp = (int)param[0];
+                    AddSP(addsp);
+                    break;
+                case E_PTDefine.PT_SPAWNMINION:
+                    SpawnPlayerMinions();
+                    break;
+                case E_PTDefine.PT_ENDGAME:
+                    EndGame(new PhotonMessageInfo());
+                    break;
+                
+            }
+        }
+        #endregion
     }
 }

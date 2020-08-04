@@ -16,10 +16,10 @@ namespace ED
         {
             Debug.Log("COOP_AI instantiated !!");
             currentHealth = maxHealth;
-            InGameManager.Instance.AddPlayerUnit(false, this);
+            InGameManager.Get().AddPlayerUnit(false, this);
         }
 
-        [PunRPC]
+        //[PunRPC]
         public override void HitDamage(float damage, float delay)
         {
             if (currentHealth > 0)
@@ -37,7 +37,8 @@ namespace ED
 
         public void Death()
         {
-            InGameManager.Instance.photonView.RPC("EndGame", RpcTarget.All);
+            //InGameManager.Get().photonView.RPC("EndGame", RpcTarget.All);
+            InGameManager.Get().SendBattleManager(RpcTarget.All , E_PTDefine.PT_ENDGAME);
 
             if (photonView.IsMine)
             {

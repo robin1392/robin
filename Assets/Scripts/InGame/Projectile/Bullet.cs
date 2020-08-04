@@ -66,7 +66,7 @@ namespace ED
         private void SetColor()
         {
             var isBlue = _isMine;
-            if (InGameManager.Instance.playType == PLAY_TYPE.CO_OP)
+            if (InGameManager.Get().playType == PLAY_TYPE.CO_OP)
             {
                 isBlue = _isBottomPlayer;
             }
@@ -107,7 +107,8 @@ namespace ED
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
             {
                 if (_target != null)
-                    controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, _target.id, _damage, 0f);
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,_target.id, _damage, 0f);
+                //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, _target.id, _damage, 0f);
             }
             else if (PhotonNetwork.IsConnected == false)
             {

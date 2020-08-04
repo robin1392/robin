@@ -1431,6 +1431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8136603714903428293}
+  - component: {fileID: 5521002080783570289}
   m_Layer: 0
   m_Name: BattleField
   m_TagString: Untagged
@@ -1456,6 +1457,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5521002080783570289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136603714903428294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ac8abfa4f91c4287ac09a3e634a88b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instanceID: 0
+  ts_TopPlayer: {fileID: 5124718529499653634}
+  ts_BottomPlayer: {fileID: 970477440586482792}
+  listTopPosition: []
+  listBottomPosition: []
 --- !u!1001 &5994447191047342445
 PrefabInstance:
   m_ObjectHideFlags: 0

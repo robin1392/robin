@@ -13,12 +13,12 @@ namespace ED
 
         private void Start()
         {
-            InGameManager.Instance.event_SP_Edit.AddListener(EditSpCallback);
+            InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
         }
 
         private void EditSpCallback(int sp)
         {
-            button.interactable = sp >= InGameManager.Instance.getDiceCost;
+            button.interactable = sp >= InGameManager.Get().getDiceCost;
             image_Button.color = button.interactable ? Color.white : Color.gray;
             text_SP.color = image_Button.color;
         }
