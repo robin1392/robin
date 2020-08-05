@@ -39,8 +39,10 @@ namespace ED
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
             {
                 if (target != null)
-                    controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                controller.photonView.RPC("IceballBomb", RpcTarget.All, id);
+                    controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
+                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
+                //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB , id);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -54,7 +56,7 @@ namespace ED
 
         private void OnTriggerEnter(Collider other)
         {
-            if (InGameManager.Instance.isGamePlaying == false || destroyRoutine != null) return;
+            if (InGameManager.Get().isGamePlaying == false || destroyRoutine != null) return;
 
             if (target != null && other.gameObject == target.gameObject || other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
@@ -66,10 +68,12 @@ namespace ED
                     if (target != null)
                     {
                         controller.AttackEnemyMinion(target.id, damage, 0f);
-                        controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
+                        //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
+                        controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, 3f);
                     }
                     
-                    controller.photonView.RPC("IceballBomb", RpcTarget.All, id);
+                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB , id);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

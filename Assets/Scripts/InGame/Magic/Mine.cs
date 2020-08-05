@@ -63,12 +63,13 @@ namespace ED
         {
             yield return new WaitForSeconds(lifeTime);
 
-            if (InGameManager.Instance.isGamePlaying == false) yield break;
+            if (InGameManager.Get().isGamePlaying == false) yield break;
 
             isTriggerOn = false;
             if (PhotonNetwork.IsConnected)
             {
-                controller.photonView.RPC("MineBomb", RpcTarget.All, id);
+                //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
             }
             else
             {
@@ -88,7 +89,8 @@ namespace ED
                 isTriggerOn = false;
                 if (PhotonNetwork.IsConnected)
                 {
-                    controller.photonView.RPC("MineBomb", RpcTarget.All, id);
+                    //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
                 }
                 else
                 {
@@ -109,7 +111,8 @@ namespace ED
                     {
                         if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
                         {
-                            controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, m.id, damage, 0f);
+                            //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, m.id, damage, 0f);
+                            controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , m.id, damage, 0f);
                             //controller.targetPlayer.photonView.RPC("PushMinion", RpcTarget.Others, m.id, col.transform.position - transform.position, pushPower);
                         }
                         else if (PhotonNetwork.IsConnected == false)

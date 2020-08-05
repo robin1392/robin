@@ -27,7 +27,8 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)       
             {
                 base.Attack();
-                controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -68,7 +69,8 @@ namespace ED
 
                 if (PhotonNetwork.IsConnected && isMine)
                 {
-                    controller.photonView.RPC("TeleportMinion", RpcTarget.All, id, targetPos.x, targetPos.z);
+                    //controller.photonView.RPC("TeleportMinion", RpcTarget.All, id, targetPos.x, targetPos.z);
+                    controller.SendPlayer(RpcTarget.All,E_PTDefine.PT_TELEPORTMINION , id, targetPos.x, targetPos.z);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

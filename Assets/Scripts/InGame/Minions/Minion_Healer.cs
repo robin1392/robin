@@ -14,7 +14,8 @@ namespace ED
             {
                 if (!(target.currentHealth / target.maxHealth < 1f)) return;
                 base.Attack();
-                controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.HealMinion(target.id, effect);
             }
             else if (PhotonNetwork.IsConnected == false)

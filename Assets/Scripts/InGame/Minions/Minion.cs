@@ -179,7 +179,7 @@ namespace ED
             isPlayable = false;
             if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             StopAllCoroutines();
-            InGameManager.Instance.RemovePlayerUnit(isBottomPlayer, this);
+            InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
             destroyCallback(this);
             PoolManager.instance.ActivateObject("Effect_Death", hitPos.position);
@@ -259,7 +259,7 @@ namespace ED
                         break;
                 }
             }
-            InGameManager.Instance.AddPlayerUnit(isBottomPlayer, this);
+            InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
         }
 
         public void EndGameUnit()

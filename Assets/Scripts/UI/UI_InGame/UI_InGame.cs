@@ -1,13 +1,55 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using ED;
 
-public class UI_InGame : MonoBehaviour
+
+
+public class UI_InGame : SingletonDestroy<UI_InGame>
 {
+    
+    
+    
+    #region ui element variable
+    public UI_UpgradeButton[] arrUpgradeButtons;
+    public Text text_SP;
+
+    
+    public Text text_GetDiceButton;
+    public UI_GetDiceButton btn_GetDice;
+    
+    
+
+    public GameObject obj_ViewTargetDiceField;
+    
+    public Button button_SP_Upgrade;
+    public Text text_SP_Upgrade;
+    public Text text_SP_Upgrade_Price;
+    
+    [Header("DEV UI")] 
+    public GameObject viewTargetDiceField;
+    public Text textUnitCount;
+    
+    
+    #endregion
+
+    
+    
+    
+
+    #region unity base
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        InitUIElement();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -15,4 +57,89 @@ public class UI_InGame : MonoBehaviour
     {
         
     }
+
+    public override void OnDestroy()
+    {
+        DestroyElement();
+        
+        base.OnDestroy();
+    }
+
+    #endregion
+    
+    #region init destroy
+
+    public void InitUIElement()
+    {
+        
+    }
+
+    public void DestroyElement()
+    {
+        
+    }
+    #endregion
+
+    
+    
+    #region get set
+
+    /// <summary>
+    /// 덱 주사위 셋팅
+    /// </summary>
+    /// <param name="deckDice"></param>
+    /// <param name="arrUpgradeLv"></param>
+    public void SetArrayDeck(Data_Dice[] deckDice, int[] arrUpgradeLv)
+    {
+        for (var i = 0; i < arrUpgradeButtons.Length; i++)
+        {
+            arrUpgradeButtons[i].Initialize( deckDice[i], arrUpgradeLv[i]);
+        }
+    }
+
+    public void SetTargetDiceView(bool view)
+    {
+        viewTargetDiceField.SetActive(view);
+    }
+
+
+
+    public void SetSP(int sp)
+    {
+        text_SP.text = sp.ToString();
+    }
+
+    public void SetUnitCount(int count)
+    {
+        //textUnitCount.text = count.ToString();
+        textUnitCount.text = $"총 유닛수: {count}";
+    }
+
+    public void SetDiceButtonText(int diceCost)
+    {
+        text_GetDiceButton.text = $"{diceCost}";
+    }
+
+    public void ViewTargetDice(bool view)
+    {
+        obj_ViewTargetDiceField.SetActive(view);
+    }
+    #endregion
+
+
+    #region system
+
+    public void SetSPUpgrade(int upgradeLv , int sp)
+    {
+        button_SP_Upgrade.interactable = (upgradeLv + 1) * 500 <= sp;
+        text_SP_Upgrade.text = $"SP Lv.{upgradeLv + 1}";
+        text_SP_Upgrade_Price.text = $"{(upgradeLv + 1) * 500}";
+    }
+    #endregion
+    
+    
+    #region event
+    #endregion
+    
+    
 }

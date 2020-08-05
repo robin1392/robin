@@ -58,7 +58,7 @@ namespace ED
         {
             yield return new WaitForSeconds(lifeTime);
 
-            if (InGameManager.Instance.isGamePlaying == false) yield break;
+            if (InGameManager.Get().isGamePlaying == false) yield break;
 
             _isTriggerOn = false;
 
@@ -66,7 +66,8 @@ namespace ED
             {
                 if (PhotonNetwork.IsConnected)
                 {
-                    controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, baseStatId, 1f);
+                    //controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, baseStatId, 1f);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONATTACKSPEEDFACTOR ,baseStatId, 1f);
                 }
                 else
                 {
@@ -92,7 +93,8 @@ namespace ED
                     
                     if (PhotonNetwork.IsConnected)
                     {
-                        controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, m.id, 2f);
+                        //controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, m.id, 2f);
+                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONATTACKSPEEDFACTOR ,m.id, 2f);
                     }
                     else
                     {
@@ -117,7 +119,8 @@ namespace ED
                     
                     if (PhotonNetwork.IsConnected)
                     {
-                        controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, m.id, 1f);
+                        //controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, m.id, 1f);
+                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONATTACKSPEEDFACTOR ,m.id, 1f);
                     }
                     else
                     {

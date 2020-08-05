@@ -23,8 +23,10 @@ namespace ED
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     base.Attack();
-                    controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                    controller.photonView.RPC("FiremanFire", RpcTarget.All, id);
+                    //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                    //controller.photonView.RPC("FiremanFire", RpcTarget.All, id);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

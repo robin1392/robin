@@ -21,20 +21,21 @@ namespace ED
 
             if (PhotonNetwork.IsConnected)
             {
-                if (PlayerController.Instance == null)
+                if (PlayerController.Get() == null)
                 {
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.identifier);
 
-                    Vector3 startPos = ts_BottomPlayer.position;
-                    GameObject obj = PhotonNetwork.Instantiate(pref_Player.name, startPos, Quaternion.identity, 0);
-                    obj.transform.parent = ts_BottomPlayer;
+                    Vector3 startPos = FieldManager.Get().GetPlayerPos(PhotonNetwork.IsMasterClient);
+                    GameObject obj = PhotonNetwork.Instantiate("Tower/"+pref_Player.name, startPos, Quaternion.identity, 0);
+                    obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
                     playerController = obj.GetComponent<PlayerController>();
-                    playerController.photonView.RPC("ChangeLayer", RpcTarget.All, true);
+                    //playerController.photonView.RPC("ChangeLayer", RpcTarget.All, true);
+                    playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_CHANGELAYER , true);
 
                     if (PhotonNetwork.IsMasterClient)
                     {
-                        obj = PhotonNetwork.Instantiate(pref_Enemy_AI.name, ts_TopPlayer.position, Quaternion.identity, 0);
-                        obj.transform.parent = ts_TopPlayer;
+                        obj = PhotonNetwork.Instantiate(pref_Enemy_AI.name, FieldManager.Get().GetPlayerPos(false), Quaternion.identity, 0);
+                        obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);;
                     }
                 }
                 else
@@ -44,26 +45,27 @@ namespace ED
             }
             else
             {
-                GameObject obj = Instantiate(pref_Player, ts_BottomPlayer.position, Quaternion.identity);
-                obj.transform.parent = ts_BottomPlayer;
+                GameObject obj = Instantiate(pref_Player, FieldManager.Get().GetPlayerPos(true), Quaternion.identity);
+                obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
                 obj.layer = LayerMask.NameToLayer("BottomPlayer");
                 playerController = obj.GetComponent<PlayerController>();
                 playerController.isBottomPlayer = true;
                 playerController.isMine = true;
 
-                obj = Instantiate(pref_Player, ts_BottomPlayer.position, Quaternion.identity);
-                obj.transform.parent = ts_BottomPlayer;
+                obj = Instantiate(pref_Player, FieldManager.Get().GetPlayerPos(true), Quaternion.identity);
+                obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
                 obj.layer = LayerMask.NameToLayer("BottomPlayer");
 
                 // 적 생성
-                obj = Instantiate(pref_Enemy_AI, ts_TopPlayer.position, Quaternion.identity);
-                obj.transform.parent = ts_TopPlayer;
+                obj = Instantiate(pref_Enemy_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
+                obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
             }
 
             string deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4/5");
             if (PhotonNetwork.IsConnected)
             {
-                playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
+                //playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
+                playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SETDECK , deck);
             }
             else
             {
@@ -71,10 +73,11 @@ namespace ED
             }
 
             // Upgrade buttons
-            for (int i = 0; i < arrUpgradeButtons.Length; i++)
-            {
-                arrUpgradeButtons[i].Initialize(playerController.arrDeck[i], arrUpgradeLevel[i]);
-            }
+            //for (int i = 0; i < arrUpgradeButtons.Length; i++)
+            //{
+                //arrUpgradeButtons[i].Initialize(playerController.arrDeck[i], arrUpgradeLevel[i]);
+            //}
+            UI_InGame.Get().SetArrayDeck(playerController.arrDeck , arrUpgradeLevel);
 
             StartGame();
             RefreshTimeUI(true);

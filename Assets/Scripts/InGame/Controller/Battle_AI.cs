@@ -27,14 +27,17 @@ namespace ED
                 arrDice[i] = new Dice {diceFieldNum = i};
             }
 
-            image_HealthBar = isBottomPlayer ? InGameManager.Instance.image_BottomHealthBar : InGameManager.Instance.image_TopHealthBar;
-            text_Health = isBottomPlayer ? InGameManager.Instance.text_BottomHealth : InGameManager.Instance.text_TopHealth;
+            //image_HealthBar = isBottomPlayer ? InGameManager.Get().image_BottomHealthBar : InGameManager.Get().image_TopHealthBar;
+            //text_Health = isBottomPlayer ? InGameManager.Get().text_BottomHealth : InGameManager.Get().text_TopHealth;
+            image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
+            text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+            
             text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
 
-            InGameManager.Instance.AddPlayerUnit(isBottomPlayer, this);
+            InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
 
-            targetPlayer = InGameManager.Instance.playerController;
-            InGameManager.Instance.playerController.targetPlayer = this;
+            targetPlayer = InGameManager.Get().playerController;
+            InGameManager.Get().playerController.targetPlayer = this;
 
             var listDeck = new List<int>();
             for (var i = 0; i < arrDeck.Length; i++)
@@ -42,8 +45,8 @@ namespace ED
                 var rndDiceNum = 0;
                 do
                 {
-                    var rndNum = Random.Range(0, InGameManager.Instance.data_AllDice.listDice.Count);
-                    rndDiceNum = InGameManager.Instance.data_AllDice.listDice[rndNum].id;
+                    var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
+                    rndDiceNum = InGameManager.Get().data_AllDice.listDice[rndNum].id;
                 } while (listDeck.Contains(rndDiceNum));
                 listDeck.Add(rndDiceNum);
             }
@@ -66,7 +69,7 @@ namespace ED
 
         public void AI_LevelUpDice()
         {
-            if (InGameManager.Instance.time > 5f)
+            if (InGameManager.Get().time > 5f)
             {
                 var arr = new int[arrDice.Length];
                 for (var i = 0; i < arr.Length; i++) arr[i] = i;

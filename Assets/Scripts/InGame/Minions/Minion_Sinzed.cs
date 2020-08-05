@@ -33,7 +33,8 @@ namespace ED
             {
                 base.Attack();
                 //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.photonView.RPC("HitDamageMinion", RpcTarget.All, id, float.MaxValue, 0f);
+                //controller.photonView.RPC("HitDamageMinion", RpcTarget.All, id, float.MaxValue, 0f);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,id, float.MaxValue, 0f);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -69,7 +70,7 @@ namespace ED
             animator.SetFloat(_animatorHashMoveSpeed, 0);
             isPlayable = false;
             StopAllCoroutines();
-            InGameManager.Instance.RemovePlayerUnit(isBottomPlayer, this);
+            InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
             destroyCallback(this);
             PoolManager.instance.ActivateObject("Effect_Death", hitPos.position);

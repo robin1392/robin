@@ -83,7 +83,7 @@ namespace ED
         protected void SetColor()
         {
             var isBlue = isMine;
-            if (InGameManager.Instance.playType == PLAY_TYPE.CO_OP)
+            if (InGameManager.Get().playType == PLAY_TYPE.CO_OP)
             {
                 isBlue = isBottomPlayer;
             }
@@ -133,13 +133,14 @@ namespace ED
         {
             if (PhotonNetwork.IsConnected && isMine)
             {
-                target = InGameManager.Instance.GetRandomPlayerUnit(!isBottomPlayer);
-                controller.photonView.RPC("SetMagicTarget", RpcTarget.Others, id, target.id);
+                target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
+                //controller.photonView.RPC("SetMagicTarget", RpcTarget.Others, id, target.id);
+                controller.SendPlayer(RpcTarget.Others , E_PTDefine.PT_SETMAGICTARGET,id, target.id);
                 StartCoroutine(Move());
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                target = InGameManager.Instance.GetRandomPlayerUnit(!isBottomPlayer);
+                target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 StartCoroutine(Move());
             }
         }
@@ -148,13 +149,14 @@ namespace ED
         {
             if (PhotonNetwork.IsConnected && isMine)
             {
-                targetPos = InGameManager.Instance.GetRandomPlayerFieldPosition(isBottomPlayer);
-                controller.photonView.RPC("SetMagicTarget", RpcTarget.Others, id, targetPos.x, targetPos.z);
+                targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
+                //controller.photonView.RPC("SetMagicTarget", RpcTarget.Others, id, targetPos.x, targetPos.z);
+                controller.SendPlayer(RpcTarget.Others , E_PTDefine.PT_SETMAGICTARGET,id, targetPos.x, targetPos.z);
                 StartCoroutine(Move());
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                targetPos = InGameManager.Instance.GetRandomPlayerFieldPosition(isBottomPlayer);
+                targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
                 StartCoroutine(Move());
             }
         }
