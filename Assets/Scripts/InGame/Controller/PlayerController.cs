@@ -27,6 +27,7 @@ namespace ED
 
         public static PlayerController Get()
         {
+            /*
             if (_instance == null)
             {
                 PlayerController pc = GameObject.FindObjectOfType(typeof(PlayerController)) as PlayerController;
@@ -41,6 +42,7 @@ namespace ED
                     return null;
                 }
             }
+            */
         
             return _instance;
         }
