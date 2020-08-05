@@ -29,12 +29,17 @@ namespace ED
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType(typeof(PlayerController)) as PlayerController;
-                //if (_instance == null)
-                //{
-                //}
-                //else
-                _instance.Init();
+                PlayerController pc = GameObject.FindObjectOfType(typeof(PlayerController)) as PlayerController;
+                if (pc != null && pc.photonView.IsMine)
+                {
+                    _instance = pc;
+                    _instance.Init();
+                    return _instance;
+                }
+                else
+                {
+                    return null;
+                }
             }
         
             return _instance;
@@ -869,6 +874,11 @@ namespace ED
             ((Iceball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
 
+        public void RocketBomb(int baseStatId)
+        {
+            ((Rocket)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+        }
+
         //[PunRPC]
         public void MineBomb(int baseStatId)
         {
@@ -973,7 +983,7 @@ namespace ED
                     SetDeck(deck);
                     break;
                 case E_PTDefine.PT_CHANGELAYER:
-                    ChangeLayer(param[0] is bool);
+                    ChangeLayer((bool)param[0]);
                     break;
                 case E_PTDefine.PT_REMOVEMINION:
                     int baseID = (int)param[0];
@@ -993,14 +1003,14 @@ namespace ED
                     break;
                 case E_PTDefine.PT_HITMINION:
                     int baseIDhit = (int)param[0];
-                    int damage = (int)param[1];
-                    int delay = (int)param[2];
+                    float damage = (float)param[1];
+                    float delay = (float)param[2];
                     //targetPlayer.HitDamageMinion(baseIDhit, damage, delay);
                     HitDamageMinion(baseIDhit, damage, delay);
                     break;
                 case E_PTDefine.PT_HITDAMAGE:
-                    int damageH = (int)param[0];
-                    int delayH = (int)param[1];
+                    float damageH = (float)param[0];
+                    float delayH = (float)param[1];
                     HitDamage(damageH, delayH);
                     break;
                 case E_PTDefine.PT_DESTROYMINION:
@@ -1009,13 +1019,16 @@ namespace ED
                     break;
                 case E_PTDefine.PT_HEALMINION:
                     int baseId = (int)param[0];
-                    int heal = (int)param[1];
+                    float heal = (float)param[1];
                     HealMinionRpc(baseId, heal);
                     break;
                 case E_PTDefine.PT_FIREBALLBOMB:
                     FireballBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_ICEBALLBOMB:
+                    IceballBomb((int) param[0]);
+                    break;
+                case E_PTDefine.PT_ROCKETBOMB:
                     IceballBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_MINIONATTACKSPEEDFACTOR:
@@ -1058,7 +1071,14 @@ namespace ED
                 case E_PTDefine.PT_TELEPORTMINION:
                     TeleportMinion((int) param[0],(float)param[1] , (float)param[2]);
                     break;
-                
+                case E_PTDefine.PT_SPAWN:
+                    Spawn();
+                    break;
+                case E_PTDefine.PT_LAYZERTARGET:
+                    ((Minion_Layzer)listMinion.Find(minion => minion.id == (int)param[0]))?.SetTargetList((int[])param[1]);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ptID), ptID, null);
             }
         }
         #endregion

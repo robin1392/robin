@@ -30,6 +30,7 @@ public enum E_PTDefine
     // -- unit pt define
     PT_FIREBALLBOMB,
     PT_ICEBALLBOMB,
+    PT_ROCKETBOMB,
     PT_MINIONATTACKSPEEDFACTOR,
     PT_STURNMINION,
     PT_SETMAGICTARGET,
@@ -42,4 +43,5 @@ public enum E_PTDefine
     PT_SPAWNSKELETON,
     PT_TELEPORTMINION,
     PT_MAX,
+    PT_LAYZERTARGET,
 }

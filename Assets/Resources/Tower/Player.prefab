@@ -198,11 +198,12 @@ MonoBehaviour:
   image_HealthBar: {fileID: 221219516250099712}
   text_Health: {fileID: 0}
   isPlayable: 1
+  instanceID: 0
   targetPlayer: {fileID: 0}
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 7007598002378707877}
-  listMagic: []
   _sp: 200
+  listMagic: []
 --- !u!114 &5883888954613411295
 MonoBehaviour:
   m_ObjectHideFlags: 0

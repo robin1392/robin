@@ -41,7 +41,6 @@ namespace ED
         public bool isAIMode;
         public bool isGamePlaying;
         
-        [HideInInspector]
         public PlayerController playerController;
 
         private int _readyPlayerCount = 0;
@@ -187,6 +186,7 @@ namespace ED
                     playerController = obj.GetComponent<PlayerController>();
                     
                     //playerController.photonView.RPC("ChangeLayer", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                    //Debug.Log("StartManager (IsMasterClient): " + PhotonNetwork.IsMasterClient);
                     playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_CHANGELAYER , PhotonNetwork.IsMasterClient);
                 }
                 else
@@ -339,6 +339,7 @@ namespace ED
                     if (PhotonNetwork.IsConnected)
                     {
                         //photonView.RPC("SpawnPlayerMinions", RpcTarget.All);
+                        
                         SendBattleManager(RpcTarget.All , E_PTDefine.PT_SPAWNMINION );
                     }
                     else
