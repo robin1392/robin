@@ -31,6 +31,6 @@ MonoBehaviour:
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
-  attackSpeed: 1
+  attackSpeed: 0.9
   moveSpeed: 1
   range: 2.5

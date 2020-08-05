@@ -30,7 +30,7 @@ namespace ED
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller?.FireSpear(shootingPos.position, target.id, power);
+                controller.FireSpear(shootingPos.position, target.id, power);
             }
         }
     }

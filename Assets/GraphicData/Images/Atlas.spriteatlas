@@ -64,7 +64,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 8e8c7edc5bac24cd092c6c5778c3593f, type: 3}
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
-    totalSpriteSurfaceArea: 2593898
+    totalSpriteSurfaceArea: 2670698
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -89,7 +89,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c041bd74742124345a0193a9c4e3a811, type: 3}
   - {fileID: 21300000, guid: a2d38c845448045cab30286c5324de9e, type: 3}
   - {fileID: 21300000, guid: ea7b5605459ac4696ae08627838e0ba8, type: 3}
+  - {fileID: 21300000, guid: b738f0459b2924919a058a0e7b310576, type: 3}
   - {fileID: 21300000, guid: b92feb45d01044f77a0468d023bf717f, type: 3}
+  - {fileID: 21300000, guid: 983fb25575ead4e5d9b619c35348fce8, type: 3}
   - {fileID: 21300000, guid: 0aab0365591da419d88a478317a91551, type: 3}
   - {fileID: 21300000, guid: 389097a5b4b7d4e6486a838d4f2bbe7d, type: 3}
   - {fileID: 21300000, guid: 89234546d7ee34ab880c5a1d12acd4cc, type: 3}
@@ -109,6 +111,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 90a7b7a9bafbc4a77842c803599330de, type: 3}
   - {fileID: 21300000, guid: 7f5dc80aca9494bdb9b0267cc7d560a7, type: 3}
   - {fileID: 21300000, guid: d3345b1aeb3524fb082d8f9600492960, type: 3}
+  - {fileID: 21300000, guid: 33f2244ab7970462bac0b42b3d951db8, type: 3}
   - {fileID: 21300000, guid: 2348769a6cdd34429a024966f4293634, type: 3}
   - {fileID: 21300000, guid: 3c6adbdac50e44d87b1c11f1b28b32a0, type: 3}
   - {fileID: 21300000, guid: bec0c01bf98654bd6a28fd92bb17e707, type: 3}
@@ -156,7 +159,9 @@ SpriteAtlas:
   - tier_grandmaster
   - dice_invincibility
   - dice_turrent
+  - dice_robot
   - tier_bronze
+  - dice_babydragon
   - icon_hp_bar
   - dice_empty
   - dice_fighterplane
@@ -176,6 +181,7 @@ SpriteAtlas:
   - ingame_dice_popup
   - card_dagger
   - dice_healing
+  - dice_golem
   - ingame_number_bar
   - tier_master
   - dice_mortar

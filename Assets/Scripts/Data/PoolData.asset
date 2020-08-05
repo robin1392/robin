@@ -34,3 +34,6 @@ MonoBehaviour:
   - name: Effect_Poison
     obj: {fileID: 1155568894249246553, guid: 72a1339157a58420b9f37a622917d242, type: 3}
     count: 30
+  - name: Effect_Bomb
+    obj: {fileID: 4176294856687860321, guid: 5a588058619e145ad8873c3b9e42f056, type: 3}
+    count: 30

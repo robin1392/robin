@@ -48,16 +48,17 @@ namespace ED
 
         IEnumerator SkillCoroutine()
         {
-            rb.velocity = Vector3.zero;
-            agent.velocity = Vector3.zero;
-            agent.isStopped = true;
-            agent.updatePosition = false;
-            agent.updateRotation = false;
+            //rb.velocity = Vector3.zero;
+            //agent.velocity = Vector3.zero;
+            //agent.isStopped = true;
+            //agent.updatePosition = false;
+            //agent.updateRotation = false;
+            SetControllEnable(false);
             isHalfDamage = true;
-            isPushing = true;
             yield return new WaitForSeconds(_skillDuration);
             isHalfDamage = false;
-            isPushing = false;
+            SetControllEnable(true);
+            
         }
         
         public override void HitDamage(float damage, float delay = 0)

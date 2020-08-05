@@ -62,26 +62,30 @@ namespace ED
 
         protected virtual void FixedUpdate()
         {
-            if (PhotonNetwork.IsConnected && !isMine)
+            if (isPlayable && isPushing == false && isAttacking == false)
             {
-                rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
+                if (PhotonNetwork.IsConnected && !isMine)
+                {
+                    //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
+                    agent.SetDestination(networkPosition);
+                }
+
+                var velocityMagnitude = rb.velocity.magnitude;
+                if (animator != null)
+                {
+                    //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
+                    animator.SetFloat(_animatorHashMoveSpeed, agent.velocity.magnitude);
+                }
+
+                _spawnedTime += Time.fixedDeltaTime;
+
+                if (PhotonNetwork.IsConnected && !isMine) return;
+
+                if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) return;
+                var lTargetDir = rb.velocity;
+                lTargetDir.y = 0.0f;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
             }
-
-            var velocityMagnitude = rb.velocity.magnitude;
-            if (isPlayable && animator != null)
-            {
-                //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
-                animator.SetFloat(_animatorHashMoveSpeed, agent.velocity.magnitude);
-            }
-
-            _spawnedTime += Time.fixedDeltaTime;
-
-            if (PhotonNetwork.IsConnected && !isMine) return;
-
-            if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) return;
-            var lTargetDir = rb.velocity;
-            lTargetDir.y = 0.0f;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
         }
 
         public virtual void Initialize(DestroyCallback destroy)
@@ -104,12 +108,12 @@ namespace ED
                 if (isMine)
                 {
                     _behaviourTreeOwner.behaviour.Resume();
-                    agent.enabled = true;
+                    //agent.enabled = true;
                 }
                 else
                 {
                     _behaviourTreeOwner.behaviour.Pause();
-                    agent.enabled = false;
+                    //agent.enabled = false;
                 }
             }
             

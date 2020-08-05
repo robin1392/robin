@@ -40,7 +40,7 @@ namespace ED
             {
                 if (target != null)
                     controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
+                controller.photonView.RPC("IceballBomb", RpcTarget.All, id);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -69,7 +69,7 @@ namespace ED
                         controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
                     }
                     
-                    controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
+                    controller.photonView.RPC("IceballBomb", RpcTarget.All, id);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

@@ -129,6 +129,7 @@ namespace ED
                 }
             }
 
+            transform.LookAt(Vector3.zero);
             SetColor();
         }
 
@@ -306,6 +307,12 @@ namespace ED
         public void Spawn()
         {
             var magicCastDelay = 0.05f;
+            int robotDiceCount = 0;
+            int robotEyeLevel = 0;
+            int robotUpgradeLevel = 0;
+            Minion_Robot.pieceCount = new int[2];
+            Minion_Robot.eyeTotalLevel = new int[2];
+
             for (var i = 0; i < arrDice.Length; i++)
             {
                 if (arrDice[i].id >= 0 && arrDice[i].data != null && arrDice[i].data.prefab != null)
@@ -324,11 +331,16 @@ namespace ED
                         }
                         break;
                     case DICE_CAST_TYPE.HERO:
-                        multiply = arrDice[i].data.spawnMultiply;
-                        upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
-
-                        //for (var j = 0; j < ((arrDice[i].level + 1) * multiply); j++)
+                        //if (arrDice[i].data.id == 32)
+                        //{
+                        //    robotDiceCount++;
+                        //    robotEyeLevel += arrDice[i].level;
+                        //    robotUpgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
+                        //    }
+                        //else
                         {
+                            upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
+
                             CreateMinion(arrDice[i].data, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         }
                         break;
@@ -345,6 +357,13 @@ namespace ED
                     magicCastDelay += 0.1f;
                 }
             }
+
+            
+            //if (robotDiceCount == 4)
+            //{
+            //    //CreateMinion(arrDice[i].data, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+            //    //CreateMinion(InGameManager.Instance.data_AllDice.listDice[32].prefab, Vector3.zero, robotEyeLevel, )
+            //}
         }
 
         private void CastMagic(Data_Dice data, float delay, int diceNum)
@@ -435,6 +454,39 @@ namespace ED
                     transform.GetChild(1).gameObject.SetActive(false);
                 }
             }
+        }
+
+        public Minion CreateMinion(GameObject obj, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay)
+        {
+            var m = PoolManager.instance.ActivateObject<Minion>(obj.name, spawnPos, InGameManager.Instance.transform);
+
+            if (m == null)
+            {
+                PoolManager.instance.AddPool(obj, 1);
+                Debug.LogFormat("{0} Pool Added 1", obj.name);
+                m = PoolManager.instance.ActivateObject<Minion>(obj.name, spawnPos, InGameManager.Instance.transform);
+            }
+
+            if (m != null)
+            {
+                m.id = _spawnCount++;
+                m.controller = this;
+                m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+                //m.targetMoveType = data.targetMoveType;
+                //m.ChangeLayer(isBottomPlayer);
+                //m.power = data.power + (data.powerUpByInGameUp * upgradeLevel);
+                //m.maxHealth = data.maxHealth + (data.maxHealthUpByInGameUp * upgradeLevel);
+                //m.effect = data.effect + (data.effectUpByInGameUp * upgradeLevel);
+                //m.attackSpeed = data.attackSpeed;
+                //m.moveSpeed = data.moveSpeed;
+                //m.range = data.range;
+                //m.eyeLevel = eyeLevel;
+                //m.upgradeLevel = upgradeLevel;
+                //m.Initialize(MinionDestroyCallback);
+                //if (!listMinion.Contains(m)) listMinion.Add(m);
+            }
+
+            return m;
         }
 
         public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
@@ -715,6 +767,12 @@ namespace ED
         public void FireballBomb(int baseStatId)
         {
             ((Fireball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+        }
+
+        [PunRPC]
+        public void IceballBomb(int baseStatId)
+        {
+            ((Iceball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
 
         [PunRPC]

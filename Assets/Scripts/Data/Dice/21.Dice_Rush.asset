@@ -26,8 +26,8 @@ MonoBehaviour:
   powerUpByUpgrade: 5
   powerUpByInGameUp: 15
   maxHealth: 150
-  maxHealthUpByUpgrade: 15
-  maxHealthUpByInGameUp: 45
+  maxHealthUpByUpgrade: 13
+  maxHealthUpByInGameUp: 40
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0

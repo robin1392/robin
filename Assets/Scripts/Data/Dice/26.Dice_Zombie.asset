@@ -22,15 +22,15 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 5b8a2c989958146e88e27745e04bc8ca, type: 3}
   card: {fileID: 21300000, guid: 9f0dff689e03a4f379bdc5ab19a351d4, type: 3}
   color: {r: 0.2509804, g: 0.49411765, b: 0.91764706, a: 1}
-  power: 20
-  powerUpByUpgrade: 2
-  powerUpByInGameUp: 6
-  maxHealth: 100
-  maxHealthUpByUpgrade: 10
-  maxHealthUpByInGameUp: 30
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  attackSpeed: 1
-  moveSpeed: 0.6
+  power: 50
+  powerUpByUpgrade: 5
+  powerUpByInGameUp: 16
+  maxHealth: 110
+  maxHealthUpByUpgrade: 14
+  maxHealthUpByInGameUp: 37
+  effect: 1.3
+  effectUpByUpgrade: 0.1
+  effectUpByInGameUp: 0.2
+  attackSpeed: 0.9
+  moveSpeed: 0.7
   range: 0.7

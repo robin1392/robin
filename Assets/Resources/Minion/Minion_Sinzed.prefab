@@ -146,6 +146,9 @@ MonoBehaviour:
   isAttacking: 0
   isPushing: 0
   target: {fileID: 0}
+  eyeLevel: 0
+  upgradeLevel: 0
+  agent: {fileID: 0}
   ps: {fileID: 1643489628217688994}
 --- !u!114 &-3404390952063001827
 MonoBehaviour:
@@ -357,6 +360,16 @@ PrefabInstance:
       propertyPath: ColorModule.gradient.maxGradient.m_NumAlphaKeys
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 749932148237992142, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390379351717508864, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1390379351717508866, guid: 5a588058619e145ad8873c3b9e42f056,
         type: 3}
       propertyPath: m_IsActive
@@ -461,6 +474,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350921597616535407, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a588058619e145ad8873c3b9e42f056, type: 3}

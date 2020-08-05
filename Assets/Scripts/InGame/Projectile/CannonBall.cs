@@ -9,7 +9,6 @@ namespace ED
     public class CannonBall : Bullet
     {
         public GameObject obj_Model;
-        public ParticleSystem ps_Bomb;
 
         public override void Initialize(int pTargetId, float pDamage, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
@@ -79,7 +78,7 @@ namespace ED
             }
 
             obj_Model.SetActive(false);
-            ps_Bomb.Play();
+            PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
             
             _poad.Deactive(2f);
         }

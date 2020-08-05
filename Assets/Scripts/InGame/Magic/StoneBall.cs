@@ -25,14 +25,8 @@ namespace  ED
             
             SetColor();
             
-            if (PhotonNetwork.IsConnected && isMine)
-            {
-                StartCoroutine(AttackCoroutine());
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                StartCoroutine(AttackCoroutine());
-            }
+            
+            StartCoroutine(AttackCoroutine());
         }
         
         private IEnumerator AttackCoroutine()
@@ -50,17 +44,21 @@ namespace  ED
 
         private void OnTriggerEnter(Collider other)
         {
-
-            if (IsTargetLayer(other.gameObject))
+            if (IsTargetLayer(other.gameObject) && other.CompareTag("Player") == false)
             {
-                //Debug.Log(other.gameObject.name);
-                ps_Bomb.Play();
-                var bs = other.GetComponentInParent<BaseStat>();
-                controller.AttackEnemyMinion(bs.id, damage, 0f);
+                //ps_Bomb.Play();
+                PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
+
+                if (PhotonNetwork.IsConnected && isMine)
+                {
+                    var bs = other.GetComponentInParent<BaseStat>();
+                    controller.AttackEnemyMinion(bs.id, damage, 0f);
+                }
             }
             else if (other.CompareTag("Wall"))
             {
-                ps_Bomb.Play();
+                //ps_Bomb.Play();
+                PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 StopAllCoroutines();
                 ts_Model.gameObject.SetActive(false);
                 Destroy(2f);
