@@ -25,12 +25,12 @@ MonoBehaviour:
   power: 30
   powerUpByUpgrade: 3
   powerUpByInGameUp: 9
-  maxHealth: 70
-  maxHealthUpByUpgrade: 8
-  maxHealthUpByInGameUp: 24
+  maxHealth: 100
+  maxHealthUpByUpgrade: 10
+  maxHealthUpByInGameUp: 40
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
-  attackSpeed: 1
+  attackSpeed: 0.8
   moveSpeed: 1.2
   range: 0.7

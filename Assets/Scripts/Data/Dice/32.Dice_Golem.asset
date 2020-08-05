@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b264505c7122474bb94ff591e420621, type: 3}
+  m_Name: 32.Dice_Golem
+  m_EditorClassIdentifier: 
+  id: 31
+  grade: 3
+  castType: 3
+  moveType: 0
+  targetMoveType: 0
+  prefab: {fileID: 5081294253336761964, guid: deb29bcb1127948c1a17ab820aa252ad, type: 3}
+  spawnMultiply: 1
+  icon: {fileID: 21300000, guid: 33f2244ab7970462bac0b42b3d951db8, type: 3}
+  card: {fileID: 21300000, guid: 93f82e38bf70c40e6b105cbece3b3962, type: 3}
+  color: {r: 0.85882354, g: 0.22745098, b: 0.22745098, a: 1}
+  power: 50
+  powerUpByUpgrade: 4
+  powerUpByInGameUp: 20
+  maxHealth: 250
+  maxHealthUpByUpgrade: 20
+  maxHealthUpByInGameUp: 40
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  attackSpeed: 2
+  moveSpeed: 0.6
+  range: 1

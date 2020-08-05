@@ -120,7 +120,7 @@ namespace ED
                         // {
                         //     bs.controller.HitDamageMinion(bs.id, power * 0.05f, 0f);
                         // }
-                        DamageToTarget(bs, 0, 0.05f);
+                        DamageToTarget(bs, 0, 1f);
                     }
                 }
 

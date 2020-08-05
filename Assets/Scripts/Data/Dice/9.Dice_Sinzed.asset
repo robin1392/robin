@@ -22,9 +22,9 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 130d26c2454364977815fe7302ecd52b, type: 3}
   card: {fileID: 21300000, guid: 9f0dff689e03a4f379bdc5ab19a351d4, type: 3}
   color: {r: 0.2509804, g: 0.49411765, b: 0.91764706, a: 1}
-  power: 20
-  powerUpByUpgrade: 2
-  powerUpByInGameUp: 6
+  power: 1.5
+  powerUpByUpgrade: 0.2
+  powerUpByInGameUp: 0.3
   maxHealth: 100
   maxHealthUpByUpgrade: 10
   maxHealthUpByInGameUp: 30

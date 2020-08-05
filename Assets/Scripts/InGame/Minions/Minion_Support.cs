@@ -57,7 +57,7 @@ namespace ED
 
         private IEnumerator Jump()
         {
-            isPushing = true;
+            SetControllEnable(false);
             _col.enabled = false;
             var m = GetLongDistanceFriendlyTarget();
             
@@ -109,7 +109,7 @@ namespace ED
                 yield return null;
             }
 
-            isPushing = false;
+            SetControllEnable(true);
             _col.enabled = false;
             ps_Dust.Play();
         }

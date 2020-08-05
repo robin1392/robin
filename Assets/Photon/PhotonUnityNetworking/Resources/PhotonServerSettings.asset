@@ -67,6 +67,7 @@ MonoBehaviour:
   - SpawnSkeleton
   - SturnMinion
   - TeleportMinion
+  - IceballBomb
   - RecvBattleManager
   - RecvPlayer
   DisableAutoOpenWizard: 1

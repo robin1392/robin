@@ -105,7 +105,7 @@ MonoBehaviour:
   moveSpeed: 1
   range: 3
   isBottomPlayer: 0
-  shootingPos: {fileID: 0}
+  shootingPos: {fileID: 5115729659700961604}
   hitPos: {fileID: 596961995325605319}
   image_HealthBar: {fileID: 5081294253014802598}
   text_Health: {fileID: 0}
@@ -116,6 +116,7 @@ MonoBehaviour:
   target: {fileID: 0}
   eyeLevel: 0
   upgradeLevel: 0
+  agent: {fileID: -8566674429307104195}
 --- !u!114 &-3404390952063001827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,6 +373,12 @@ Transform:
 --- !u!95 &4043688403693104215 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3956250380508702432, guid: 51e29289e99c540259c30cebd2609e18,
+    type: 3}
+  m_PrefabInstance: {fileID: 1079032052403653303}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5115729659700961604 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5190333605500431347, guid: 51e29289e99c540259c30cebd2609e18,
     type: 3}
   m_PrefabInstance: {fileID: 1079032052403653303}
   m_PrefabAsset: {fileID: 0}

@@ -19,20 +19,20 @@ namespace ED
 
         [Header("Base Stat")]
         public DICE_MOVE_TYPE targetMoveType;
-        [HideInInspector] public float power;
-        [HideInInspector] public float powerUpByUpgrade;
-        [HideInInspector] public float powerUpByInGameUp;
-        [HideInInspector] public float maxHealth;
-        [HideInInspector] public float currentHealth;
-        [HideInInspector] public float maxHealthUpByUpgrade;
-        [HideInInspector] public float maxHealthUpByInGameUp;
-        [HideInInspector] public float effect;
-        [HideInInspector] public float effectUpByUpgrade;
-        [HideInInspector] public float effectUpByInGameUp;
-        [HideInInspector] public float attackSpeed;
-        [HideInInspector] public float moveSpeed;
-        [HideInInspector] public float range;
-        [HideInInspector] public bool isBottomPlayer;
+        public float power;
+        public float powerUpByUpgrade;
+        public float powerUpByInGameUp;
+        public float maxHealth;
+        public float currentHealth;
+        public float maxHealthUpByUpgrade;
+        public float maxHealthUpByInGameUp;
+        public float effect;
+        public float effectUpByUpgrade;
+        public float effectUpByInGameUp;
+        public float attackSpeed;
+        public float moveSpeed;
+        public float range;
+        public bool isBottomPlayer;
 
         [Header("Positions")] 
         public Transform shootingPos;

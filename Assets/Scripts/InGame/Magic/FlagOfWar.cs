@@ -49,12 +49,9 @@ namespace ED
 
         private void EndMove()
         {
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            {
-                _isTriggerOn = true;
-                col.enabled = true;
-                StartCoroutine(LifetimeCoroutine());
-            }
+            _isTriggerOn = true;
+            col.enabled = true;
+            StartCoroutine(LifetimeCoroutine());
         }
 
         private IEnumerator LifetimeCoroutine()
