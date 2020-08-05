@@ -245,6 +245,9 @@ namespace ED
         public void Spawn()
         {
             var magicCastDelay = 0.05f;
+            Minion_Robot.pieceCount = new int[2];
+            Minion_Robot.eyeTotalLevel = new int[2];
+            
             for (var i = 0; i < arrDice.Length; i++)
             {
                 if (arrDice[i].id >= 0 && arrDice[i].data != null && arrDice[i].data.prefab != null)
@@ -313,6 +316,27 @@ namespace ED
         #endregion
         
         #region minion
+
+        public Minion CreateMinion(GameObject pref, Vector3 spawnPos, int eyeLevel, int upgradeLevel)
+        {
+            var m = PoolManager.instance.ActivateObject<Minion>(pref.name, spawnPos, InGameManager.Get().transform);
+
+            if (m == null)
+            {
+                PoolManager.instance.AddPool(pref, 1);
+                Debug.LogFormat("{0} Pool Added 1", pref.name);
+                m = PoolManager.instance.ActivateObject<Minion>(pref.name, spawnPos, InGameManager.Get().transform);
+            }
+
+            if (m != null)
+            {
+                m.id = _spawnCount++;
+                m.controller = this;
+                m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+            }
+
+            return m;
+        }
         
         public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
@@ -839,6 +863,11 @@ namespace ED
         {
             ((Fireball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
+        
+        public void IceballBomb(int baseStatId)
+        {
+            ((Iceball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+        }
 
         //[PunRPC]
         public void MineBomb(int baseStatId)
@@ -985,6 +1014,9 @@ namespace ED
                     break;
                 case E_PTDefine.PT_FIREBALLBOMB:
                     FireballBomb((int) param[0]);
+                    break;
+                case E_PTDefine.PT_ICEBALLBOMB:
+                    IceballBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_MINIONATTACKSPEEDFACTOR:
                     SetMinionAttackSpeedFactor((int) param[0], (float) param[1]);

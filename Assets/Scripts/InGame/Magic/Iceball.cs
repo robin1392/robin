@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Rendering;
 
 namespace ED
 {
@@ -14,7 +15,7 @@ namespace ED
         {
             var startPos = transform.position;
             while (target == null) { yield return null; }
-            var endPos = target.transform.position;
+            var endPos = target.hitPos.position;
             var distance = Vector3.Distance(startPos, endPos);
             var moveTime = distance / moveSpeed;
 
@@ -24,13 +25,9 @@ namespace ED
             {
                 if (target != null && target.isAlive)
                 {
-                    endPos = target.transform.position;
-                    rb.position = Vector3.Lerp(startPos, target.transform.position, t / moveTime);
+                    endPos = target.hitPos.position;
                 }
-                else
-                {
-                    rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
-                }
+                rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
 
                 t += Time.deltaTime;
                 yield return null;
@@ -39,16 +36,21 @@ namespace ED
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
             {
                 if (target != null)
-                    controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
-                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
+                {
+                    controller.AttackEnemyMinion(target.id, damage, 0f);
+                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id, 3f);
+                }
+
+                //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                 //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB , id);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ICEBALLBOMB , id);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
                 if (target != null)
                 {
-                    controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
+                    controller.AttackEnemyMinion(target.id, damage, 0f);
+                    controller.targetPlayer.SturnMinion(target.id, 3f);
                 }
                 Bomb();
             }
@@ -73,7 +75,7 @@ namespace ED
                     }
                     
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB , id);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ICEBALLBOMB , id);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

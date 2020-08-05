@@ -29,6 +29,7 @@ public enum E_PTDefine
     
     // -- unit pt define
     PT_FIREBALLBOMB,
+    PT_ICEBALLBOMB,
     PT_MINIONATTACKSPEEDFACTOR,
     PT_STURNMINION,
     PT_SETMAGICTARGET,
