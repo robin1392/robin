@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a686a47eee2fa44cb0a34b5d86e4d5e, type: 3}
   m_Name: Magician
   m_EditorClassIdentifier: 
-  _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"_condition":{"conditions":[{"valueA":{"_name":"currentHealth","_targetVariableID":"f1de3138-0dd3-4cd0-a313-21959cd2e2fc"},"checkType":1,"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckFloat"},{"valueA":{"_name":"isPushing","_targetVariableID":"ef9f12b2-c3a7-4db8-8bee-63b5fb5f8853"},"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"}],"$type":"NodeCanvas.Framework.ConditionList"},"_position":{"x":745.4485,"y":-28.45145},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"0"},{"_position":{"x":745.0,"y":148.0},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"1"},{"_action":{"method":{"_baseInfo":"ED.Minion_Necromancer|Skill|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":495.0,"y":265.0},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"2"},{"_action":{"method":{"_baseInfo":"ED.Minion_Magician|SetTarget|ED.BaseStat","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"ED.BaseStat","_name":"target","_targetVariableID":"52998ee4-f310-41d4-a773-d91d5b6b9560"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":628.435,"y":255.487},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"3"},{"_condition":{"valueA":{"_name":"target","_targetVariableID":"52998ee4-f310-41d4-a773-d91d5b6b9560"},"valueB":{},"_invert":true,"$type":"NodeCanvas.Tasks.Conditions.CheckVariable`1[[ED.BaseStat,
-    Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"_position":{"x":815.9104,"y":251.0},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"4"},{"_position":{"x":816.7809,"y":371.7064},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"5"},{"_action":{"parameters":[],"returnValue":{},"overrideAgent":{"_type":"UnityEngine.Transform"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":755.2936,"y":467.7063},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"6"},{"_condition":{"method":{"_baseInfo":"ED.Minion|IsTargetInnerRange|System.Boolean","_paramsInfo":""},"parameters":[],"checkValue":{"_type":"System.Boolean","_value":{"$content":true,"$type":"System.Boolean"}},"$type":"NodeCanvas.Tasks.Conditions.CheckFunction_Multiplatform"},"_position":{"x":954.6669,"y":469.0},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"7"},{"_position":{"x":880.6669,"y":615.0},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"8"},{"_action":{"method":{"_baseInfo":"ED.Minion_Necromancer|IsTargetAlive|System.Boolean","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"System.Boolean","_name":"isTargetAlive","_targetVariableID":"b08d3e8b-cba4-460d-9b23-332048ce4f69"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":608.7809,"y":697.7064},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"9"},{"_condition":{"valueA":{"_name":"isTargetAlive","_targetVariableID":"b08d3e8b-cba4-460d-9b23-332048ce4f69"},"valueB":{"_value":true},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"},"_position":{"x":880.6669,"y":693.0},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"10"},{"_position":{"x":911.0,"y":784.0},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"11"},{"_action":{"method":{"_baseInfo":"ED.Minion_Necromancer|Attack|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":974.7809,"y":855.7064},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"12"},{"_action":{"waitTime":{"_name":"attackSpeed","_targetVariableID":"c722c132-6c9c-4bbb-851d-52b20c8a3daf"},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":1080.986,"y":693.2833},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"13"}],"connections":[{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"1"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"2"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"3"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"4"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"4"},"_targetNode":{"$ref":"5"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"5"},"_targetNode":{"$ref":"6"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"5"},"_targetNode":{"$ref":"7"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"8"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"8"},"_targetNode":{"$ref":"9"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"8"},"_targetNode":{"$ref":"10"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"8"},"_targetNode":{"$ref":"13"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"10"},"_targetNode":{"$ref":"11"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"11"},"_targetNode":{"$ref":"12"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"}],"canvasGroups":[],"localBlackboard":{"_variables":{"target":{"_propertyPath":"ED.Minion_Magician.target","_name":"target","_id":"52998ee4-f310-41d4-a773-d91d5b6b9560","$type":"NodeCanvas.Framework.Variable`1[[ED.BaseStat,
+  _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"_condition":{"conditions":[{"valueA":{"_name":"currentHealth","_targetVariableID":"f1de3138-0dd3-4cd0-a313-21959cd2e2fc"},"checkType":1,"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckFloat"},{"valueA":{"_name":"isPushing","_targetVariableID":"ef9f12b2-c3a7-4db8-8bee-63b5fb5f8853"},"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"}],"$type":"NodeCanvas.Framework.ConditionList"},"_position":{"x":717.4488,"y":11.54807},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"0"},{"_position":{"x":745.0,"y":148.0},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"1"},{"_action":{"method":{"_baseInfo":"ED.Minion_Magician|Skill|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":591.9988,"y":254.3334},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"2"},{"_action":{"method":{"_baseInfo":"ED.Minion_Magician|SetTarget|ED.BaseStat","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"ED.BaseStat","_name":"target","_targetVariableID":"52998ee4-f310-41d4-a773-d91d5b6b9560"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":720.4338,"y":248.8204},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"3"},{"_condition":{"valueA":{"_name":"target","_targetVariableID":"52998ee4-f310-41d4-a773-d91d5b6b9560"},"valueB":{},"_invert":true,"$type":"NodeCanvas.Tasks.Conditions.CheckVariable`1[[ED.BaseStat,
+    Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"_position":{"x":907.9092,"y":244.3334},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"4"},{"_position":{"x":816.7809,"y":371.7064},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"5"},{"_action":{"method":{"_baseInfo":"ED.Minion_Magician|SetVelocityTarget|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":705.3831,"y":465.6033},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"6"},{"_condition":{"method":{"_baseInfo":"ED.Minion|IsTargetInnerRange|System.Boolean","_paramsInfo":""},"parameters":[],"checkValue":{"_type":"System.Boolean","_value":{"$content":true,"$type":"System.Boolean"}},"$type":"NodeCanvas.Tasks.Conditions.CheckFunction_Multiplatform"},"_position":{"x":884.6669,"y":466.0},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"7"},{"_position":{"x":948.666,"y":563.0006},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"8"},{"_action":{"method":{"_baseInfo":"ED.Minion_Magician|IsTargetAlive|System.Boolean","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"System.Boolean","_name":"isTargetAlive","_targetVariableID":"b08d3e8b-cba4-460d-9b23-332048ce4f69"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":643.4471,"y":645.707},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"9"},{"_condition":{"valueA":{"_name":"isTargetAlive","_targetVariableID":"b08d3e8b-cba4-460d-9b23-332048ce4f69"},"valueB":{"_value":true},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"},"_position":{"x":915.3331,"y":641.0006},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"10"},{"_position":{"x":945.6662,"y":732.0006},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"11"},{"_action":{"method":{"_baseInfo":"ED.Minion_Magician|Attack|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":941.4478,"y":806.3737},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"12"},{"_action":{"waitTime":{"_name":"attackSpeed","_targetVariableID":"c722c132-6c9c-4bbb-851d-52b20c8a3daf"},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":1115.651,"y":641.2839},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"13"}],"connections":[{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"1"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"2"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"3"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"4"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"4"},"_targetNode":{"$ref":"5"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"5"},"_targetNode":{"$ref":"6"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"5"},"_targetNode":{"$ref":"7"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"8"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"8"},"_targetNode":{"$ref":"9"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"8"},"_targetNode":{"$ref":"10"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"8"},"_targetNode":{"$ref":"13"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"10"},"_targetNode":{"$ref":"11"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"11"},"_targetNode":{"$ref":"12"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"}],"canvasGroups":[],"localBlackboard":{"_variables":{"target":{"_propertyPath":"ED.Minion_Magician.target","_name":"target","_id":"52998ee4-f310-41d4-a773-d91d5b6b9560","$type":"NodeCanvas.Framework.Variable`1[[ED.BaseStat,
     Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"currentHealth":{"_propertyPath":"ED.Minion_Magician.currentHealth","_name":"currentHealth","_id":"f1de3138-0dd3-4cd0-a313-21959cd2e2fc","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"attackSpeed":{"_propertyPath":"ED.Minion_Magician.attackSpeed","_name":"attackSpeed","_id":"c722c132-6c9c-4bbb-851d-52b20c8a3daf","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"isPushing":{"_propertyPath":"ED.Minion_Magician.isPushing","_name":"isPushing","_id":"ef9f12b2-c3a7-4db8-8bee-63b5fb5f8853","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
@@ -24,8 +24,8 @@ MonoBehaviour:
     _version: 3.08
     _category: 
     _comments: 
-    _translation: {x: -316, y: -20}
-    _zoomFactor: 1
+    _translation: {x: -200, y: 195}
+    _zoomFactor: 0.75000894
   _haltSerialization: 0
 #---GRAPH_START---
 #The pretty formatted json serialization bellow is only a reference to help in version control diff. Other than that it is not used at all.
@@ -60,8 +60,8 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Framework.ConditionList"
 #            },
 #            "_position": {
-#                "x": 745.4485,
-#                "y": -28.45145
+#                "x": 717.4488,
+#                "y": 11.54807
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
 #            "$id": "0"
@@ -77,7 +77,7 @@ MonoBehaviour:
 #        {
 #            "_action": {
 #                "method": {
-#                    "_baseInfo": "ED.Minion_Necromancer|Skill|System.Void",
+#                    "_baseInfo": "ED.Minion_Magician|Skill|System.Void",
 #                    "_paramsInfo": ""
 #                },
 #                "parameters": [],
@@ -87,8 +87,8 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
 #            },
 #            "_position": {
-#                "x": 495.0,
-#                "y": 265.0
+#                "x": 591.9988,
+#                "y": 254.3334
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
 #            "$id": "2"
@@ -108,8 +108,8 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
 #            },
 #            "_position": {
-#                "x": 628.435,
-#                "y": 255.487
+#                "x": 720.4338,
+#                "y": 248.8204
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
 #            "$id": "3"
@@ -127,8 +127,8 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Conditions.CheckVariable`1[[ED.BaseStat, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"
 #            },
 #            "_position": {
-#                "x": 815.9104,
-#                "y": 251.0
+#                "x": 907.9092,
+#                "y": 244.3334
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
 #            "$id": "4"
@@ -143,18 +143,19 @@ MonoBehaviour:
 #        },
 #        {
 #            "_action": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion_Magician|SetVelocityTarget|System.Void",
+#                    "_paramsInfo": ""
+#                },
 #                "parameters": [],
 #                "returnValue": {
 #
 #                },
-#                "overrideAgent": {
-#                    "_type": "UnityEngine.Transform"
-#                },
 #                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
 #            },
 #            "_position": {
-#                "x": 755.2936,
-#                "y": 467.7063
+#                "x": 705.3831,
+#                "y": 465.6033
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
 #            "$id": "6"
@@ -176,16 +177,16 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Conditions.CheckFunction_Multiplatform"
 #            },
 #            "_position": {
-#                "x": 954.6669,
-#                "y": 469.0
+#                "x": 884.6669,
+#                "y": 466.0
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
 #            "$id": "7"
 #        },
 #        {
 #            "_position": {
-#                "x": 880.6669,
-#                "y": 615.0
+#                "x": 948.666,
+#                "y": 563.0006
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
 #            "$id": "8"
@@ -193,7 +194,7 @@ MonoBehaviour:
 #        {
 #            "_action": {
 #                "method": {
-#                    "_baseInfo": "ED.Minion_Necromancer|IsTargetAlive|System.Boolean",
+#                    "_baseInfo": "ED.Minion_Magician|IsTargetAlive|System.Boolean",
 #                    "_paramsInfo": ""
 #                },
 #                "parameters": [],
@@ -205,8 +206,8 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
 #            },
 #            "_position": {
-#                "x": 608.7809,
-#                "y": 697.7064
+#                "x": 643.4471,
+#                "y": 645.707
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
 #            "$id": "9"
@@ -223,16 +224,16 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Conditions.CheckBoolean"
 #            },
 #            "_position": {
-#                "x": 880.6669,
-#                "y": 693.0
+#                "x": 915.3331,
+#                "y": 641.0006
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
 #            "$id": "10"
 #        },
 #        {
 #            "_position": {
-#                "x": 911.0,
-#                "y": 784.0
+#                "x": 945.6662,
+#                "y": 732.0006
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
 #            "$id": "11"
@@ -240,7 +241,7 @@ MonoBehaviour:
 #        {
 #            "_action": {
 #                "method": {
-#                    "_baseInfo": "ED.Minion_Necromancer|Attack|System.Void",
+#                    "_baseInfo": "ED.Minion_Magician|Attack|System.Void",
 #                    "_paramsInfo": ""
 #                },
 #                "parameters": [],
@@ -250,8 +251,8 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
 #            },
 #            "_position": {
-#                "x": 974.7809,
-#                "y": 855.7064
+#                "x": 941.4478,
+#                "y": 806.3737
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
 #            "$id": "12"
@@ -265,8 +266,8 @@ MonoBehaviour:
 #                "$type": "NodeCanvas.Tasks.Actions.Wait"
 #            },
 #            "_position": {
-#                "x": 1080.986,
-#                "y": 693.2833
+#                "x": 1115.651,
+#                "y": 641.2839
 #            },
 #            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
 #            "$id": "13"

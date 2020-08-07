@@ -86,18 +86,18 @@ namespace ED
         protected virtual IEnumerator Move()
         {
             var startPos = transform.position;
-            var endPos = _isTarget ? _target.hitPos.position : _targetPos;
+            var endPos = _isTarget ? _target.ts_HitPos.position : _targetPos;
             var distance = Vector3.Distance(startPos, endPos);
             moveTime = distance / moveSpeed;
 
-            if (_isTarget) transform.LookAt(_target.hitPos);
+            if (_isTarget) transform.LookAt(_target.ts_HitPos);
             else transform.LookAt(_targetPos);
 
             float t = 0;
             while (t < moveTime)
             {
-                transform.position = Vector3.Lerp(startPos, (_isTarget && _target != null) ? _target.hitPos.position : _targetPos, t / moveTime);
-                if (_isTarget && _target != null) transform.LookAt(_target.hitPos);
+                transform.position = Vector3.Lerp(startPos, (_isTarget && _target != null) ? _target.ts_HitPos.position : _targetPos, t / moveTime);
+                if (_isTarget && _target != null) transform.LookAt(_target.ts_HitPos);
                 t += Time.deltaTime;
                 yield return null;
             }
@@ -107,7 +107,7 @@ namespace ED
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
             {
                 if (_target != null)
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,_target.id, _damage, 0f);
+                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,_target.id, _damage, 0f);
                 //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, _target.id, _damage, 0f);
             }
             else if (PhotonNetwork.IsConnected == false)

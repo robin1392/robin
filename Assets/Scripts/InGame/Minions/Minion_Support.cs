@@ -10,19 +10,17 @@ namespace ED
     {
         public ParticleSystem ps_Dust;
 
-        private Collider _col;
-
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
 
-            _col = GetComponentInChildren<Collider>();
             StartCoroutine(Jump());
         }
 
         public override void Attack()
         {
             if (target == null) return;
+            if (_collider.enabled == false) _collider.enabled = true;
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
@@ -52,16 +50,22 @@ namespace ED
                 }
             }
             
-            return rtn;
+            return rtn == this ? null : rtn;
         }
 
         private IEnumerator Jump()
         {
             SetControllEnable(false);
-            _col.enabled = false;
+            _collider.enabled = false;
             var m = GetLongDistanceFriendlyTarget();
-            
-            if (m == null) yield break;
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+
+            if (m == null)
+            {
+                SetControllEnable(true);
+                _collider.enabled = false;
+                yield break;
+            }
 
             transform.LookAt(m.transform);
             var ts = transform;
@@ -110,7 +114,7 @@ namespace ED
             }
 
             SetControllEnable(true);
-            _col.enabled = false;
+            _collider.enabled = true;
             ps_Dust.Play();
         }
     }

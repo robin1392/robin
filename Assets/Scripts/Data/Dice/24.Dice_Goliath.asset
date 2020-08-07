@@ -33,4 +33,5 @@ MonoBehaviour:
   effectUpByInGameUp: 20
   attackSpeed: 1.2
   moveSpeed: 1
-  range: 1
+  range: 2.5
+  searchRange: 7.5

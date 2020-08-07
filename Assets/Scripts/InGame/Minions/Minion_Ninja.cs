@@ -48,7 +48,7 @@ namespace ED
 
         private void MoveBack()
         {
-            var cols = Physics.OverlapSphere(transform.position, 10f, targetLayer);
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             var distance = 0f;
             Collider longTarget = null;
             foreach (var col in cols)
@@ -70,11 +70,13 @@ namespace ED
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     //controller.photonView.RPC("TeleportMinion", RpcTarget.All, id, targetPos.x, targetPos.z);
-                    controller.SendPlayer(RpcTarget.All,E_PTDefine.PT_TELEPORTMINION , id, targetPos.x, targetPos.z);
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_TELEPORTMINION , id, targetPos.x, targetPos.z);
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, id, 2f);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
                     controller.TeleportMinion(id, targetPos.x, targetPos.z);
+                    Invincibility(2f);
                 }
                 transform.LookAt(longTarget.transform);
                 

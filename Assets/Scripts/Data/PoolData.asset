@@ -37,3 +37,6 @@ MonoBehaviour:
   - name: Effect_Bomb
     obj: {fileID: 4176294856687860321, guid: 5a588058619e145ad8873c3b9e42f056, type: 3}
     count: 30
+  - name: Scarecrow
+    obj: {fileID: 8926565139391733748, guid: 3b66288860469481fbeb497f8cb3ee6f, type: 3}
+    count: 30

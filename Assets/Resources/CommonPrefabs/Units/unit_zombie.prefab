@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 643299653537882325}
   - component: {fileID: 1110081083199489849}
+  - component: {fileID: 2273993824194380758}
   m_Layer: 0
   m_Name: unit_zombie
   m_TagString: Untagged
@@ -75,7 +76,7 @@ Animator:
   m_GameObject: {fileID: 263079103499975279}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cfc31e6bc179c4b0d8ad2150dddb5170, type: 2}
+  m_Controller: {fileID: 22100000, guid: 29a864a981d7a4f54805bf9b03ad5441, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -84,6 +85,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2273993824194380758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263079103499975279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8974a0a2439b7450f9454438c9c5d14f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
 --- !u!1 &323434930533871054
 GameObject:
   m_ObjectHideFlags: 0

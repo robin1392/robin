@@ -22,7 +22,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: d0b91380a99ec49aaa02bee5983a1f31, type: 3}
   card: {fileID: 21300000, guid: 9f0dff689e03a4f379bdc5ab19a351d4, type: 3}
   color: {r: 0.3155927, g: 0.32435656, b: 0.33962262, a: 1}
-  power: 30
+  power: 10
   powerUpByUpgrade: 4
   powerUpByInGameUp: 14
   maxHealth: 140
@@ -34,3 +34,4 @@ MonoBehaviour:
   attackSpeed: 0.3
   moveSpeed: 1
   range: 2
+  searchRange: 3

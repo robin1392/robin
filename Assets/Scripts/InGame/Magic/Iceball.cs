@@ -15,7 +15,7 @@ namespace ED
         {
             var startPos = transform.position;
             while (target == null) { yield return null; }
-            var endPos = target.hitPos.position;
+            var endPos = target.ts_HitPos.position;
             var distance = Vector3.Distance(startPos, endPos);
             var moveTime = distance / moveSpeed;
 
@@ -25,7 +25,7 @@ namespace ED
             {
                 if (target != null && target.isAlive)
                 {
-                    endPos = target.hitPos.position;
+                    endPos = target.ts_HitPos.position;
                 }
                 rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
 

@@ -20,7 +20,7 @@ namespace ED
                 if (i < _listTarget.Count && i < eyeLevel && _listTarget[i] != null && _listTarget[i].isAlive)
                 {
                     arrLineRenderer[i].gameObject.SetActive(true);
-                    arrLineRenderer[i].SetPositions(new Vector3[2] { shootingPos.position, _listTarget[i].hitPos.position });
+                    arrLineRenderer[i].SetPositions(new Vector3[2] { ts_ShootingPos.position, _listTarget[i].ts_HitPos.position });
                     arrLineRenderer[i].startColor = isMine ? Color.blue : Color.red;
                     arrLineRenderer[i].endColor = arrLineRenderer[i].startColor;
                 }
@@ -28,6 +28,17 @@ namespace ED
                 {
                     arrLineRenderer[i].gameObject.SetActive(false);
                 }
+            }
+        }
+
+        public override void Initialize(DestroyCallback destroy)
+        {
+            base.Initialize(destroy);
+            
+            _listTarget.Clear();
+            for (int i = 0; i < arrLineRenderer.Length; i++)
+            {
+                arrLineRenderer[i].gameObject.SetActive(false);
             }
         }
 
@@ -44,8 +55,14 @@ namespace ED
 
                 controller.AttackEnemyMinion(m.id, power, 0f);
             }
-            
-            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_LAYZERTARGET, id, intList.ToArray());
+
+            if (PhotonNetwork.IsConnected && isMine)
+            {
+                controller.SendPlayer(RpcTarget.Others,
+                    E_PTDefine.PT_LAYZERTARGET,
+                    id,
+                    intList.Count > 0 ? intList.ToArray() : null);
+            }
         }
 
         public override void Death()
@@ -61,11 +78,13 @@ namespace ED
         public void SetTargetList(int[] arr)
         {
             _listTarget.Clear();
+            
             if (arr != null)
             {
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
+                    if (arr[i] == 0) _listTarget.Add(controller.targetPlayer);
+                    else _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
                 }
             }
         }

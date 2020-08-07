@@ -50,7 +50,7 @@ namespace ED
                     controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
                     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                 //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -77,7 +77,7 @@ namespace ED
                         controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
                         //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

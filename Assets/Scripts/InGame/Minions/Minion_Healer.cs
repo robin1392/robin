@@ -29,7 +29,7 @@ namespace ED
         public override BaseStat SetTarget()
         {
             var cols = new Collider[50];
-            var size = Physics.OverlapSphereNonAlloc(transform.position, 10f, cols, friendlyLayer);
+            var size = Physics.OverlapSphereNonAlloc(transform.position, searchRange, cols, friendlyLayer);
             Collider firstTarget = null;
             Collider closeToTarget = null;
             var closeToDistance = float.MaxValue;

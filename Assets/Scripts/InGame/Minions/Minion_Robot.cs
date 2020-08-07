@@ -12,9 +12,6 @@ namespace ED
 {
     public class Minion_Robot : Minion
     {
-        public static int[] pieceCount;
-        public static int[] eyeTotalLevel;
-
         public GameObject obj_Piece;
 
         private int pieceID;
@@ -28,9 +25,9 @@ namespace ED
             _collider.enabled = false;
             obj_Piece.SetActive(true);
             animator.gameObject.SetActive(false);
-            pieceCount[isBottomPlayer ? 0 : 1]++;
-            eyeTotalLevel[isBottomPlayer ? 0 : 1] += eyeLevel;
-            pieceID = pieceCount[isBottomPlayer ? 0 : 1];
+            controller.robotPieceCount++;
+            controller.robotEyeTotalLevel += eyeLevel;
+            pieceID = controller.robotPieceCount;
 
             Invoke("Fusion", 1.6f);
         }
@@ -42,7 +39,8 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
-                controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -53,9 +51,11 @@ namespace ED
 
         public void Fusion()
         {
-            if (pieceCount[isBottomPlayer ? 0 : 1] == 4)
+            if (controller.robotPieceCount == 4)
             {
-                transform.DOMove(controller.transform.position + controller.transform.forward * 2, 0.5f).OnComplete(Callback_MoveComplete);
+                Vector3 fusionPosition = controller.transform.position;
+                fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
+                transform.DOMove(fusionPosition, 0.5f).OnComplete(Callback_MoveComplete);
             }
             else
             {
@@ -68,7 +68,7 @@ namespace ED
                 InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
                 destroyCallback(this);
-                PoolManager.instance.ActivateObject("Effect_Death", hitPos.position);
+                PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
                 _poolObjectAutoDeactivate.Deactive();
             }
         }
@@ -79,13 +79,14 @@ namespace ED
             {
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
 
-                maxHealth *= eyeTotalLevel[isBottomPlayer ? 0 : 1];
+                maxHealth *= controller.robotEyeTotalLevel;
                 currentHealth = maxHealth;
 
                 _collider.enabled = true;
                 obj_Piece.SetActive(false);
                 animator.gameObject.SetActive(true);
                 SetControllEnable(true);
+                ChangeLayer(isBottomPlayer);
             }
             else
             {

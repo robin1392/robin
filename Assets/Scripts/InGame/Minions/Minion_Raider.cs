@@ -46,7 +46,7 @@ namespace ED
 
         protected void Dash()
         {
-            var cols = Physics.OverlapSphere(transform.position, range * 3f, targetLayer);
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             var distance = float.MaxValue;
             Collider dashTarget = null;
             Vector3 hitPoint = Vector3.zero;
@@ -107,7 +107,7 @@ namespace ED
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f); 
+                    controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f); 
                         
                 }
                 else if (PhotonNetwork.IsConnected == false)

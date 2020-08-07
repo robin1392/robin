@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 namespace ED
@@ -20,12 +21,15 @@ namespace ED
             ps_Bomb.transform.position = controller.transform.position;
             ps_Bomb.Play();
 
-            var cols = Physics.OverlapSphere(controller.transform.position, 3f, targetLayer);
-            foreach (var col in cols)
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                DamageToTarget(col.GetComponentInParent<Minion>());
+                var cols = Physics.OverlapSphere(controller.transform.position, range, targetLayer);
+                foreach (var col in cols)
+                {
+                    DamageToTarget(col.GetComponentInParent<Minion>());
+                }
             }
-            
+
             Destroy(1f);
         }
 

@@ -409,6 +409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7500218875568640141}
   - component: {fileID: 8042470337131034488}
+  - component: {fileID: 7628599344287124736}
   m_Layer: 0
   m_Name: unit_goliath
   m_TagString: Untagged
@@ -451,6 +452,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7628599344287124736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7160145033486830135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8974a0a2439b7450f9454438c9c5d14f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
 --- !u!1 &7320113266992023391
 GameObject:
   m_ObjectHideFlags: 0

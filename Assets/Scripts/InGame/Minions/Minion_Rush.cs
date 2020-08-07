@@ -48,7 +48,7 @@ namespace ED
 
         private void Dash()
         {
-            var cols = Physics.OverlapSphere(transform.position, range * 3f, targetLayer);
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             var distance = float.MaxValue;
             Collider dashTarget = null;
             var hitPoint = Vector3.zero;

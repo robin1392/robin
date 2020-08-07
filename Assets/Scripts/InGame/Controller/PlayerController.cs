@@ -27,7 +27,6 @@ namespace ED
 
         public static PlayerController Get()
         {
-            /*
             if (_instance == null)
             {
                 PlayerController pc = GameObject.FindObjectOfType(typeof(PlayerController)) as PlayerController;
@@ -42,7 +41,6 @@ namespace ED
                     return null;
                 }
             }
-            */
         
             return _instance;
         }
@@ -114,6 +112,9 @@ namespace ED
                 _sp = value; InGameManager.Get().event_SP_Edit.Invoke(_sp);
             }
         }
+
+        public int robotPieceCount;
+        public int robotEyeTotalLevel;
 
         #endregion
         
@@ -252,45 +253,41 @@ namespace ED
         public void Spawn()
         {
             var magicCastDelay = 0.05f;
-            Minion_Robot.pieceCount = new int[2];
-            Minion_Robot.eyeTotalLevel = new int[2];
-            
+            robotPieceCount = 0;
+            robotEyeTotalLevel = 0;
+
             for (var i = 0; i < arrDice.Length; i++)
             {
                 if (arrDice[i].id >= 0 && arrDice[i].data != null && arrDice[i].data.prefab != null)
                 {
                     //var ts = transform.parent.GetChild(i);
                     Transform ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(i): FieldManager.Get().GetTopListTs(i);
+                    var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
+                    var multiply = arrDice[i].data.spawnMultiply;
 
                     switch(arrDice[i].data.castType)
                     {
-                        case DICE_CAST_TYPE.MINION:
-                            var multiply = arrDice[i].data.spawnMultiply;
-                            var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
-
-                            for (var j = 0; j < ((arrDice[i].level + 1) * multiply); j++)
-                            {
-                                CreateMinion(arrDice[i].data, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
-                            }
-                            break;
-                        case DICE_CAST_TYPE.HERO:
-                            multiply = arrDice[i].data.spawnMultiply;
-                            upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
-
-                            //for (var j = 0; j < ((arrDice[i].level + 1) * multiply); j++)
+                    case DICE_CAST_TYPE.MINION:
+                        for (var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
                         {
                             CreateMinion(arrDice[i].data, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         }
-                            break;
-                        case DICE_CAST_TYPE.MAGIC:
-                        case DICE_CAST_TYPE.INSTALLATION:
-                            for(var j = 0; j < ((arrDice[i].level + 1) * arrDice[i].data.spawnMultiply); j++)
-                            {
-                                CastMagic(arrDice[i].data, magicCastDelay, i);
-                            }
-                            break;
-                        default:
-                            break;
+                        break;
+                    case DICE_CAST_TYPE.HERO:
+                        CreateMinion(arrDice[i].data, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                        break;
+                    case DICE_CAST_TYPE.MAGIC:
+                        for(var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
+                        {
+                            CastMagic(arrDice[i].data, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                        }
+                        break;
+                    case DICE_CAST_TYPE.INSTALLATION:
+                        CastMagic(arrDice[i].data, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                        break;
+                        // upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
+                        // CastMagic(arrDice[i].data, arrDice[i].level, upgradeLevel, magicCastDelay, i);
+                        // break;
                     }
                     magicCastDelay += 0.1f;
                 }
@@ -357,8 +354,7 @@ namespace ED
                 yield return new WaitForSeconds(delay);   
             }
             
-            
-            if (!InGameManager.Get().isGamePlaying) yield break;
+            if (InGameManager.Get().isGamePlaying == false) yield break;
 
             if (uiDiceField != null && isMine && diceNum > 0)
             {
@@ -409,6 +405,7 @@ namespace ED
                 m.attackSpeed = data.attackSpeed;
                 m.moveSpeed = data.moveSpeed;
                 m.range = data.range;
+                m.searchRange = data.searchRange;
                 m.eyeLevel = eyeLevel;
                 m.upgradeLevel = upgradeLevel;
                 m.Initialize(MinionDestroyCallback);
@@ -427,7 +424,7 @@ namespace ED
                 var lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
                 if (lr != null)
                 {
-                    lr.SetPositions(new Vector3[2] {dicePos, m.hitPos.position});
+                    lr.SetPositions(new Vector3[2] {dicePos, m.ts_HitPos.position});
                     lr.startColor = data.color;
                     lr.endColor = data.color;
                 }
@@ -461,16 +458,16 @@ namespace ED
         
         #region magic
         
-        private void CastMagic(Data_Dice data, float delay, int diceNum)
+        private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
-            StartCoroutine(CastMagicCoroutine(data, delay, diceNum));
+            StartCoroutine(CastMagicCoroutine(data, eyeLevel, upgradeLevel, delay, diceNum));
         }
 
-        private IEnumerator CastMagicCoroutine(Data_Dice data, float delay, int diceNum)
+        private IEnumerator CastMagicCoroutine(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             yield return new WaitForSeconds(delay);
 
-            if (!InGameManager.Get().isGamePlaying) yield break;
+            if (InGameManager.Get().isGamePlaying == false) yield break;
 
             if (uiDiceField != null && isMine)
             {
@@ -509,21 +506,16 @@ namespace ED
                     m.id = _spawnCount++;
                     m.controller = this;
                     m.range = data.range;
+                    m.searchRange = data.searchRange;
                     m.attackSpeed = data.attackSpeed;
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = data.targetMoveType;
+                    m.eyeLevel = eyeLevel;
+                    m.upgradeLevel = upgradeLevel;
                     m.Initialize(isBottomPlayer, data.power, data.moveSpeed);
                     m.SetTarget();
                     listMagic.Add(m);
                 }
-                else
-                {
-                    yield break;
-                }
-            }
-            else
-            {
-                yield break;
             }
         }
 
@@ -972,7 +964,14 @@ namespace ED
         #region photon send recv
         public void SendPlayer(RpcTarget target , E_PTDefine ptID , params object[] param)
         {
-            photonView.RPC("RecvPlayer", target , ptID , param);
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC("RecvPlayer", target, ptID, param);
+            }
+            else
+            {
+                RecvPlayer(ptID, param);
+            }
         }
 
         [PunRPC]
@@ -1031,7 +1030,7 @@ namespace ED
                     IceballBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_ROCKETBOMB:
-                    IceballBomb((int) param[0]);
+                    RocketBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_MINIONATTACKSPEEDFACTOR:
                     SetMinionAttackSpeedFactor((int) param[0], (float) param[1]);
@@ -1040,7 +1039,7 @@ namespace ED
                     SturnMinion((int) param[0], (float) param[1]);
                     break;
                 case E_PTDefine.PT_SETMAGICTARGET:
-                    if (param[2] != null)
+                    if (param.Length > 2)
                     {
                         SetMagicTarget((int) param[0], (float) param[1], (float) param[2]);
                     }
@@ -1056,16 +1055,16 @@ namespace ED
                     FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2]);
                     break;
                 case E_PTDefine.PT_FIREARROW:
-                    FireArrow( (Vector3)param[0] , (int)param[1] , (float)param[2]);
+                    FireArrow((Vector3)param[0] , (int)param[1] , (float)param[2]);
+                    break;
+                case E_PTDefine.PT_FIRESPEAR:
+                    FireSpear((Vector3)param[0], (int) param[1], (float) param[2]);
                     break;
                 case E_PTDefine.PT_MINIONANITRIGGER:
                     SetMinionAnimationTrigger((int) param[0], (string) param[1]);
                     break;
                 case E_PTDefine.PT_FIREMANFIRE:
                     FiremanFire((int) param[0]);
-                    break;
-                case E_PTDefine.PT_FIRESPEAR:
-                    FireSpear((Vector3) param[0], (int) param[1], (float) param[2]);
                     break;
                 case E_PTDefine.PT_SPAWNSKELETON:
                     SpawnSkeleton((Vector3) param[0]);
@@ -1078,6 +1077,12 @@ namespace ED
                     break;
                 case E_PTDefine.PT_LAYZERTARGET:
                     ((Minion_Layzer)listMinion.Find(minion => minion.id == (int)param[0]))?.SetTargetList((int[])param[1]);
+                    break;
+                case E_PTDefine.PT_MINIONINVINCIBILITY:
+                    listMinion.Find(m => m.id == (int)param[0])?.Invincibility((float)param[1]);
+                    break;
+                case E_PTDefine.PT_SCARECROW:
+                    listMinion.Find(m => m.id == (int)param[0])?.Scarecrow((float)param[1]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ptID), ptID, null);

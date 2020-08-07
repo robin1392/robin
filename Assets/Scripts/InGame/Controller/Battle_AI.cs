@@ -6,6 +6,7 @@ namespace ED
 {
     public class Battle_AI : PlayerController
     {
+        public string deck;
         public override int sp
         {
             get => _sp;
@@ -39,18 +40,24 @@ namespace ED
             targetPlayer = InGameManager.Get().playerController;
             InGameManager.Get().playerController.targetPlayer = this;
 
-            var listDeck = new List<int>();
-            for (var i = 0; i < arrDeck.Length; i++)
+            if (string.IsNullOrEmpty(deck))
             {
-                var rndDiceNum = 0;
-                do
+                var listDeck = new List<int>();
+                for (var i = 0; i < arrDeck.Length; i++)
                 {
-                    var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
-                    rndDiceNum = InGameManager.Get().data_AllDice.listDice[rndNum].id;
-                } while (listDeck.Contains(rndDiceNum));
-                listDeck.Add(rndDiceNum);
+                    var rndDiceNum = 0;
+                    do
+                    {
+                        var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
+                        rndDiceNum = InGameManager.Get().data_AllDice.listDice[rndNum].id;
+                    } while (listDeck.Contains(rndDiceNum));
+
+                    listDeck.Add(rndDiceNum);
+                }
+
+                deck = $"{listDeck[0]}/{listDeck[1]}/{listDeck[2]}/{listDeck[3]}/{listDeck[4]}";
             }
-            var deck = $"{listDeck[0]}/{listDeck[1]}/{listDeck[2]}/{listDeck[3]}/{listDeck[4]}";
+
             SetDeck(deck);
 
             SetColor();

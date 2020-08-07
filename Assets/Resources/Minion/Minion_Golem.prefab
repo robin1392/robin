@@ -74,9 +74,10 @@ MonoBehaviour:
   attackSpeed: 0
   moveSpeed: 0
   range: 0
+  searchRange: 2
   isBottomPlayer: 0
-  shootingPos: {fileID: 0}
-  hitPos: {fileID: 8488758196635011245}
+  ts_ShootingPos: {fileID: 4335370127299804757}
+  ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
   isPlayable: 1
@@ -89,7 +90,6 @@ MonoBehaviour:
   agent: {fileID: -7956154699669209687}
   pref_MiniGolem: {fileID: 5081294253336761964, guid: dca45631bd4c14b9191f44e7b9426b91,
     type: 3}
-  spawnCount: 2
 --- !u!114 &5271869617561665627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +326,12 @@ Transform:
 --- !u!95 &333304763226788942 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1425757766923780422, guid: 57902bf35ca3b48b0b52e6298a9b93df,
+    type: 3}
+  m_PrefabInstance: {fileID: 1687000241710765320}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4335370127299804757 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3117399006282541917, guid: 57902bf35ca3b48b0b52e6298a9b93df,
     type: 3}
   m_PrefabInstance: {fileID: 1687000241710765320}
   m_PrefabAsset: {fileID: 0}

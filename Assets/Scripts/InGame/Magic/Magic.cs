@@ -47,7 +47,10 @@ namespace ED
         protected float damage;
         protected bool isBottomPlayer;
         public float range;
+        public float searchRange;
         public float attackSpeed;
+        public int eyeLevel;
+        public int upgradeLevel;
 
         protected Coroutine destroyRoutine;
         private Vector3 networkPosition;
