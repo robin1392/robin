@@ -104,9 +104,10 @@ MonoBehaviour:
   attackSpeed: 0.5
   moveSpeed: 1
   range: 3
+  searchRange: 2
   isBottomPlayer: 0
-  shootingPos: {fileID: 5115729659700961604}
-  hitPos: {fileID: 596961995325605319}
+  ts_ShootingPos: {fileID: 5115729659700961604}
+  ts_HitPos: {fileID: 596961995325605319}
   image_HealthBar: {fileID: 5081294253014802598}
   text_Health: {fileID: 0}
   isPlayable: 1

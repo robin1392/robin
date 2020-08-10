@@ -51,6 +51,7 @@ namespace ED
         protected PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
         public NavMeshAgent agent;
         protected Collider _collider;
+        public bool isPolymorph;
 
         protected void Awake()
         {
@@ -182,7 +183,7 @@ namespace ED
             InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
             destroyCallback(this);
-            PoolManager.instance.ActivateObject("Effect_Death", hitPos.position);
+            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
             _poolObjectAutoDeactivate.Deactive();
         }
 
@@ -198,7 +199,7 @@ namespace ED
                 return null;
             }
             
-            var cols = Physics.OverlapSphere(transform.position, range * 3f, targetLayer);
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
 
             if (cols.Length == 0)
             {
@@ -216,7 +217,6 @@ namespace ED
             var distance = float.MaxValue;
             foreach (var col in cols)
             {
-                if (!col) continue;
                 var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
                 if (sqr < distance)
                 {
@@ -317,20 +317,19 @@ namespace ED
         public virtual void Sturn(float duration)
         {
             StopAllCoroutines();
-            if (animator != null) animator.SetTrigger(_animatorHashIdle);
             
-            if(_crtPush != null) StopCoroutine(_crtPush);
             _crtPush = StartCoroutine(SturnCoroutine(duration));
         }
 
         private IEnumerator SturnCoroutine(float duration)
         {
             rb.velocity = Vector3.zero;
-            rb.isKinematic = true;
+            //rb.isKinematic = true;
             SetControllEnable(false);
+            if (animator != null) animator.SetTrigger(_animatorHashIdle);
             yield return new WaitForSeconds(duration);
             SetControllEnable(true);
-            rb.isKinematic = false;
+            //rb.isKinematic = false;
         }
 
         public void Invincibility(float time)
@@ -395,8 +394,10 @@ namespace ED
                 //_agent.isStopped = false;
                 //_agent.updatePosition = true;
                 //_agent.updateRotation = true;
-                agent.SetDestination(target.transform.position + Vector3.right * Random.Range(-0.2f, 0.2f) +
-                                      Vector3.forward * Random.Range(-0.2f, 0.2f));
+                //agent.SetDestination(target.transform.position + Vector3.right * Random.Range(-0.2f, 0.2f) +
+                //                      Vector3.forward * Random.Range(-0.2f, 0.2f));
+                Vector3 targetPos = target.transform.position;
+                agent.SetDestination(targetPos + (targetPos - transform.position).normalized * range);
             }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
 //            {
@@ -520,6 +521,27 @@ namespace ED
                 rb.velocity = Vector3.zero;
                 agent.velocity = Vector3.zero;
             }
+        }
+
+        public void Scarecrow(float duration)
+        {
+            StopAllCoroutines();
+            StartCoroutine(ScarecrowCoroutine(duration));
+        }
+
+        IEnumerator ScarecrowCoroutine(float duration)
+        {
+            isPolymorph = true;
+            SetControllEnable(false);
+            animator.gameObject.SetActive(false);
+            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow", transform.position);
+            ad.Deactive(duration);
+            
+            yield return new WaitForSeconds(duration);
+
+            isPolymorph = false;
+            SetControllEnable(true);
+            animator.gameObject.SetActive(true);
         }
     }
 }

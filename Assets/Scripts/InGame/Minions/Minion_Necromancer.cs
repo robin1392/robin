@@ -42,11 +42,11 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , shootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireArrow(shootingPos.position, target.id, power);
+                controller.FireArrow(ts_ShootingPos.position, target.id, power);
             }
         }
         

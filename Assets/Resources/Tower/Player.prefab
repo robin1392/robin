@@ -114,7 +114,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2287109785421401752}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.703, z: 0}
+  m_LocalPosition: {x: 0, y: 0.823, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5883888954613411288}
@@ -192,9 +192,10 @@ MonoBehaviour:
   attackSpeed: 0
   moveSpeed: 1
   range: 0
+  searchRange: 2
   isBottomPlayer: 0
-  shootingPos: {fileID: 0}
-  hitPos: {fileID: 980357762058366362}
+  ts_ShootingPos: {fileID: 980357762058366362}
+  ts_HitPos: {fileID: 980357762058366362}
   image_HealthBar: {fileID: 221219516250099712}
   text_Health: {fileID: 0}
   isPlayable: 1
@@ -203,6 +204,8 @@ MonoBehaviour:
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 7007598002378707877}
   _sp: 200
+  robotPieceCount: 0
+  robotEyeTotalLevel: 0
   listMagic: []
 --- !u!114 &5883888954613411295
 MonoBehaviour:

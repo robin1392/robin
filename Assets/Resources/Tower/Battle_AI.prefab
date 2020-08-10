@@ -238,18 +238,22 @@ MonoBehaviour:
   attackSpeed: 0
   moveSpeed: 1
   range: 0
+  searchRange: 2
   isBottomPlayer: 0
-  shootingPos: {fileID: 0}
-  hitPos: {fileID: 3279894872179135023}
+  ts_ShootingPos: {fileID: 3279894872179135023}
+  ts_HitPos: {fileID: 3279894872179135023}
   image_HealthBar: {fileID: 221219516250099712}
   text_Health: {fileID: 0}
   isPlayable: 1
+  instanceID: 0
   targetPlayer: {fileID: 0}
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 3098623276119017545}
-  listMinion: []
-  listMagic: []
   _sp: 200
+  robotPieceCount: 0
+  robotEyeTotalLevel: 0
+  listMagic: []
+  deck: 
   getDiceCount: 0
 --- !u!54 &7857655242034525463
 Rigidbody:

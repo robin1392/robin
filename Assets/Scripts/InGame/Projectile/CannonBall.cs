@@ -64,13 +64,13 @@ namespace ED
                 yield return null;
             }
 
-            var cols = Physics.OverlapSphere(targetPos, 0.5f, targetLayer);
+            var cols = Physics.OverlapSphere(targetPos, 1f, targetLayer);
             foreach (var col in cols)
             {
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
                 {
                     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
+                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {

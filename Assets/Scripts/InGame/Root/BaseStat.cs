@@ -32,11 +32,12 @@ namespace ED
         public float attackSpeed;
         public float moveSpeed;
         public float range;
+        public float searchRange = 2f;
         public bool isBottomPlayer;
 
         [Header("Positions")] 
-        public Transform shootingPos;
-        public Transform hitPos;
+        public Transform ts_ShootingPos;
+        public Transform ts_HitPos;
 
         [Header("UI Link")]
         public Image image_HealthBar;

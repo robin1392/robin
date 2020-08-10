@@ -55,5 +55,6 @@ namespace ED
         public float attackSpeed;
         public float moveSpeed;
         public float range;
+        public float searchRange;
     }
 }

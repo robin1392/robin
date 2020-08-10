@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1626610784246178038}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.442, z: 0}
+  m_LocalPosition: {x: 0, y: 0.271, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5081294253336761971}
@@ -104,9 +104,10 @@ MonoBehaviour:
   attackSpeed: 0
   moveSpeed: 0
   range: 0
+  searchRange: 2
   isBottomPlayer: 0
-  shootingPos: {fileID: 0}
-  hitPos: {fileID: 596961995325605319}
+  ts_ShootingPos: {fileID: 2611560620494287487}
+  ts_HitPos: {fileID: 596961995325605319}
   image_HealthBar: {fileID: 5081294253014802598}
   text_Health: {fileID: 0}
   isPlayable: 1
@@ -468,6 +469,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663721360592113950, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663721360592113950, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663721360592113950, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f479d7ad842e4ac18f6ae903ef95fcb, type: 3}

@@ -407,7 +407,25 @@ namespace ED
 
         public BaseStat GetRandomPlayerUnit(bool isBottomPlayer)
         {
-            return isBottomPlayer ? listBottomPlayer[Random.Range(0, listBottomPlayer.Count)] : listTopPlayer[Random.Range(0, listTopPlayer.Count)];
+            int rnd = 0;
+            if (isBottomPlayer)
+            {
+                do
+                {
+                    rnd = Random.Range(0, listBottomPlayer.Count);
+                } while (listBottomPlayer[rnd].isAlive == false);
+
+                return listBottomPlayer[rnd];
+            }
+            else
+            {
+                do
+                {
+                    rnd = Random.Range(0, listTopPlayer.Count);
+                } while (listTopPlayer[rnd].isAlive == false);
+
+                return listTopPlayer[rnd];
+            }
         }
 
         public Vector3 GetRandomPlayerFieldPosition(bool isBottomPlayer)

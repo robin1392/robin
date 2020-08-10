@@ -34,3 +34,4 @@ MonoBehaviour:
   attackSpeed: 0
   moveSpeed: 12
   range: 1.5
+  searchRange: 2

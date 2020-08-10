@@ -14,7 +14,7 @@ namespace ED
         {
             base.Initialize(destroy);
 
-            StartCoroutine(PolymophCoroutine());
+            StartCoroutine(PolymorphCoroutine());
         }
 
         public override void Attack()
@@ -22,7 +22,8 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
-                controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -35,15 +36,16 @@ namespace ED
         {
             if (PhotonNetwork.IsConnected && isMine)
             {
-                controller.photonView.RPC("FireSpear", RpcTarget.All, shootingPos.position, target.id, power);
+                //controller.photonView.RPC("FireSpear", RpcTarget.All, shootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller?.FireSpear(shootingPos.position, target.id, power);
+                controller?.FireSpear(ts_ShootingPos.position, target.id, power);
             }
         }
 
-        IEnumerator PolymophCoroutine()
+        IEnumerator PolymorphCoroutine()
         {
             animator.transform.localScale = Vector3.one;
 

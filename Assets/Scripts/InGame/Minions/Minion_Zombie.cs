@@ -8,15 +8,20 @@ namespace ED
     public class Minion_Zombie : Minion
     {
         public ParticleSystem ps_PoisonCloud;
+        public Animator animator_Alive;
+        public Animator animator_Dead;
 
         [SerializeField]
         private int _reviveCount = 1;
 
         public override void Initialize(DestroyCallback destroy)
         {
-            base.Initialize(destroy);
-
+            animator = animator_Alive;
+            animator_Alive.gameObject.SetActive(true);
+            animator_Dead.gameObject.SetActive(false);
             _reviveCount = 1;
+
+            base.Initialize(destroy);
         }
 
         public override void Attack()
@@ -51,19 +56,39 @@ namespace ED
         IEnumerator ReviveCoroutine()
         {
             _reviveCount--;
-            PoolManager.instance.ActivateObject("Effect_Poison", transform.position);
             SetControllEnable(false);
+            animator.gameObject.SetActive(false);
 
-            float t = 0;
-            while (t < 2f)
-            {
-                t += Time.deltaTime;
-                yield return null;
-            }
+            StartCoroutine(PoisonCoroutine(4f));
+            yield return new WaitForSeconds(2f);
 
             currentHealth = (eyeLevel + upgradeLevel) * maxHealth * 0.1f;
-
+            animator = animator_Dead;
+            animator.gameObject.SetActive(true);
+            SetColor();
             SetControllEnable(true);
+        }
+
+        IEnumerator PoisonCoroutine(float duration)
+        {
+            PoolManager.instance.ActivateObject("Effect_Poison", transform.position);
+            float t = 0;
+            
+            while (t < duration)
+            {
+                var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
+                foreach (var col in cols)
+                {
+                    var bs = col.GetComponentInParent<BaseStat>();
+                    if (bs.id > 0 && bs.isFlying == false && bs.isAlive)
+                    {
+                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION, bs.id, power, 0f);
+                    }
+                }
+                
+                t += 1f;
+                yield return new WaitForSeconds(1f);
+            }
         }
     }
 }

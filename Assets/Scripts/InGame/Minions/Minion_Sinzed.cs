@@ -73,7 +73,7 @@ namespace ED
             InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
             destroyCallback(this);
-            PoolManager.instance.ActivateObject("Effect_Death", hitPos.position);
+            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
             animator.gameObject.SetActive(false);
             
             // var cols = Physics.OverlapSphere(transform.position, range * 2f, targetLayer);

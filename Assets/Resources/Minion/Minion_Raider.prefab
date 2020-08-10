@@ -104,9 +104,10 @@ MonoBehaviour:
   attackSpeed: 0
   moveSpeed: 0
   range: 0
+  searchRange: 2
   isBottomPlayer: 0
-  shootingPos: {fileID: 0}
-  hitPos: {fileID: 1552512765847086028}
+  ts_ShootingPos: {fileID: 0}
+  ts_HitPos: {fileID: 1552512765847086028}
   image_HealthBar: {fileID: 887776035416822996}
   text_Health: {fileID: 0}
   isPlayable: 1
@@ -114,6 +115,9 @@ MonoBehaviour:
   isAttacking: 0
   isPushing: 0
   target: {fileID: 0}
+  eyeLevel: 0
+  upgradeLevel: 0
+  agent: {fileID: 0}
 --- !u!114 &4086450853476115766
 MonoBehaviour:
   m_ObjectHideFlags: 0
