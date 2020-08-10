@@ -200,18 +200,18 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.6666667
-        value: {x: -185.399, y: -70.715, z: -58.98999}
-        inSlope: {x: -18.539974, y: 0, z: -54.012035}
-        outSlope: {x: -18.539974, y: 0, z: -54.012035}
+        value: {x: -185.399, y: -70.715, z: -95.774994}
+        inSlope: {x: 0, y: 0, z: -26.531937}
+        outSlope: {x: 0, y: 0, z: -26.531937}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.9166667
-        value: {x: -186.944, y: -71.199005, z: -63.490997}
-        inSlope: {x: 0, y: -5.808106, z: 0}
-        outSlope: {x: 0, y: -5.808106, z: 0}
+        value: {x: -185.399, y: -70.715, z: -97.98599}
+        inSlope: {x: 0, y: 0, z: 0}
+        outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
@@ -313,16 +313,16 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.6666667
-        value: {x: 78.85, y: 60.512, z: -31.532}
-        inSlope: {x: -31.769985, y: 114.51601, z: 102.31199}
-        outSlope: {x: -31.769985, y: 114.51601, z: 102.31199}
+        value: {x: 46.749, y: 85.356, z: -8.488}
+        inSlope: {x: 0, y: 0, z: 0}
+        outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.9166667
-        value: {x: 74.41, y: 70.055, z: -23.006}
+        value: {x: 46.749, y: 85.356, z: -8.488}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -2106,15 +2106,15 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.6666667
         value: -185.399
-        inSlope: -18.539974
-        outSlope: -18.539974
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.9166667
-        value: -186.944
+        value: -185.399
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2178,9 +2178,9 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.9166667
-        value: -71.199005
-        inSlope: -5.808106
-        outSlope: -5.808106
+        value: -70.715
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -2233,16 +2233,16 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: -58.98999
-        inSlope: -54.012035
-        outSlope: -54.012035
+        value: -95.774994
+        inSlope: -26.531937
+        outSlope: -26.531937
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.9166667
-        value: -63.490997
+        value: -97.98599
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2645,16 +2645,16 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 78.85
-        inSlope: -31.769985
-        outSlope: -31.769985
+        value: 46.749
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.9166667
-        value: 74.41
+        value: 46.749
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2700,16 +2700,16 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 60.512
-        inSlope: 114.51601
-        outSlope: 114.51601
+        value: 85.356
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.9166667
-        value: 70.055
+        value: 85.356
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2755,16 +2755,16 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: -31.532
-        inSlope: 102.31199
-        outSlope: 102.31199
+        value: -8.488
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.9166667
-        value: -23.006
+        value: -8.488
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2945,7 +2945,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder
+    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder/necromancer_right_hand/necromancer_weapon
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2955,17 +2955,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder
+    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder/necromancer_right_hand/necromancer_weapon
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2984,8 +2974,18 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder/necromancer_right_hand/necromancer_weapon
+    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2995,7 +2995,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder/necromancer_right_hand/necromancer_weapon
+    path: 13.minion_Necromancer/necromancer_body/necromancer_right_shoulder
     classID: 4
     script: {fileID: 0}
   m_HasGenericRootTransform: 0
