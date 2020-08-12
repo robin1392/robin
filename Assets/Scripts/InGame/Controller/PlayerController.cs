@@ -326,7 +326,7 @@ namespace ED
             var m = PoolManager.instance.ActivateObject<Minion>(pref.name, spawnPos, InGameManager.Get().transform);
 
             if (m == null)
-            {
+            { 
                 PoolManager.instance.AddPool(pref, 1);
                 Debug.LogFormat("{0} Pool Added 1", pref.name);
                 m = PoolManager.instance.ActivateObject<Minion>(pref.name, spawnPos, InGameManager.Get().transform);

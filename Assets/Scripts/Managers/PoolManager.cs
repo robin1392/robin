@@ -198,8 +198,9 @@ namespace ED
             }
 
             Debug.LogError(poolName + " pool is empty. And add pool.");
-            AddPool(data.listPool.Find(data => data.name == poolName).obj, 1);
-            return ActivateObject<T>(poolName, position, parent);
+            //AddPool(data.listPool.Find(data => data.name == poolName).obj, 1);
+            //return ActivateObject<T>(poolName, position, parent);
+            return default;
         }
 
         public Transform ActivateObject(string poolName, Vector3 position, Transform parent = null)

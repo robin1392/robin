@@ -27,7 +27,9 @@ namespace ED
             for (int i = 0; i < eyeLevel - 1; i++)
             {
                 // Spawn
-                var m = controller.CreateMinion(pref_MiniGolem, transform.position, 1, 0);
+                var m = controller.CreateMinion(pref_MiniGolem,
+                    transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) +
+                    Vector3.forward * Random.Range(-0.5f, 0.5f), 1, 0);
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
