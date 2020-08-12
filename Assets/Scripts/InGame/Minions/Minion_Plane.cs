@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System.Collections;
 using System.Collections.Generic;
 using ED;
 using UnityEngine;
@@ -10,29 +14,32 @@ namespace ED
     {
         public override void Attack()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            if (target == null) return;
+            
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
                 controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
             }
         }
 
         public void FireSpear()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            if (target == null) return;
+            
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                //controller.photonView.RPC("FireSpear", RpcTarget.All, shootingPos.position, target.id, power);
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power);
             }
-            else if (PhotonNetwork.IsConnected == false)
+        }
+        
+        public void FireArrow()
+        {
+            if (target == null) return;
+            
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                controller.FireSpear(ts_ShootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power);
             }
         }
     }

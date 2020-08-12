@@ -22,11 +22,7 @@ namespace ED
             
             SetColor();
 
-            if (PhotonNetwork.IsConnected && isMine)
-            {
-                StartCoroutine(AttackCoroutine());
-            }
-            else if (PhotonNetwork.IsConnected == false)
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
                 StartCoroutine(AttackCoroutine());
             }

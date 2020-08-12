@@ -136,7 +136,8 @@ namespace ED
                     currentHealth = maxHealth;
                 }
 
-                PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
+                var t = PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
+                t.localScale = Vector3.one * 0.3f;
             }
 
             RefreshHealthBar();
@@ -388,16 +389,10 @@ namespace ED
 
         public void SetVelocityTarget()
         {
-            //if (_agent.velocity.magnitude < 0.1f)
             if (target != null)
             {
-                //_agent.isStopped = false;
-                //_agent.updatePosition = true;
-                //_agent.updateRotation = true;
-                //agent.SetDestination(target.transform.position + Vector3.right * Random.Range(-0.2f, 0.2f) +
-                //                      Vector3.forward * Random.Range(-0.2f, 0.2f));
-                Vector3 targetPos = target.transform.position;
-                agent.SetDestination(targetPos + (targetPos - transform.position).normalized * range);
+                Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
+                agent.SetDestination(targetPos);
             }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
 //            {
@@ -477,16 +472,17 @@ namespace ED
             return false;
         }
 
-        public BaseStat IsFriendlyTargetInnerRange()
+        public bool IsFriendlyTargetInnerRange()
         {
-            var hits = new RaycastHit[1];
-            var count = Physics.RaycastNonAlloc(transform.position + Vector3.up * 0.1f, target.transform.position - transform.position, hits, range, friendlyLayer);
-#if UNITY_EDITOR
-            Debug.DrawLine(transform.position + Vector3.up * 0.1f,
-                (transform.position + Vector3.up * 0.1f) + rb.velocity * range,
-                Color.yellow);
-#endif
-            return count > 0 ? hits[0].collider.GetComponent<BaseStat>() : null;
+//             var hits = new RaycastHit[1];
+//             var count = Physics.RaycastNonAlloc(transform.position + Vector3.up * 0.1f, target.transform.position - transform.position, hits, range, friendlyLayer);
+// #if UNITY_EDITOR
+//             Debug.DrawLine(transform.position + Vector3.up * 0.1f,
+//                 (transform.position + Vector3.up * 0.1f) + rb.velocity * range,
+//                 Color.yellow);
+// #endif
+            //return count > 0 ? hits[0].collider.GetComponent<BaseStat>() : null;
+            return Vector3.Distance(transform.position, target.transform.position) <= range;
         }
 
         public void SetAttackSpeedFactor(float factor)

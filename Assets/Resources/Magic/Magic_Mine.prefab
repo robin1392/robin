@@ -86,7 +86,10 @@ MonoBehaviour:
   target: {fileID: 0}
   targetPos: {x: 0, y: 0, z: 0}
   range: 1.5
+  searchRange: 0
   attackSpeed: 0
+  eyeLevel: 0
+  upgradeLevel: 0
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
@@ -197,6 +200,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 563359602468480402}
     m_Modifications:
+    - target: {fileID: 749932148237992142, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390379351717508864, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390379351717508865, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3671124645328567154, guid: 5a588058619e145ad8873c3b9e42f056,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -256,6 +274,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: particle_mine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7219108759484660983, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350921597616535407, guid: 5a588058619e145ad8873c3b9e42f056,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a588058619e145ad8873c3b9e42f056, type: 3}

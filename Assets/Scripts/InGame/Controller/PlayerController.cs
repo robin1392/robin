@@ -400,8 +400,14 @@ namespace ED
                 m.targetMoveType = data.targetMoveType;
                 m.ChangeLayer(isBottomPlayer);
                 m.power = data.power + (data.powerUpByInGameUp * upgradeLevel);
+                m.powerUpByUpgrade = data.powerUpByUpgrade;
+                m.powerUpByInGameUp = data.powerUpByInGameUp;
                 m.maxHealth = data.maxHealth + (data.maxHealthUpByInGameUp * upgradeLevel);
+                m.maxHealthUpByUpgrade = data.maxHealthUpByUpgrade;
+                m.maxHealthUpByInGameUp = data.maxHealthUpByInGameUp;
                 m.effect = data.effect + (data.effectUpByInGameUp * upgradeLevel);
+                m.effectUpByUpgrade = data.effectUpByUpgrade;
+                m.effectUpByInGameUp = data.effectUpByInGameUp;
                 m.attackSpeed = data.attackSpeed;
                 m.moveSpeed = data.moveSpeed;
                 m.range = data.range;
@@ -781,20 +787,6 @@ namespace ED
 
         public void HealMinion(int baseStatId, float heal)
         {
-            if (PhotonNetwork.IsConnected)
-            {
-                //photonView.RPC("HealMinionRpc", RpcTarget.All, baseStatId, heal);
-                SendPlayer(RpcTarget.All , E_PTDefine.PT_HEALMINION , baseStatId, heal);
-            }
-            else
-            {
-                HealMinionRpc(baseStatId, heal);
-            }
-        }
-
-        //[PunRPC]
-        private void HealMinionRpc(int baseStatId, float heal)
-        {
             listMinion.Find(minion => minion.id == baseStatId)?.Heal(heal);
         }
 
@@ -1021,7 +1013,7 @@ namespace ED
                 case E_PTDefine.PT_HEALMINION:
                     int baseId = (int)param[0];
                     float heal = (float)param[1];
-                    HealMinionRpc(baseId, heal);
+                    HealMinion(baseId, heal);
                     break;
                 case E_PTDefine.PT_FIREBALLBOMB:
                     FireballBomb((int) param[0]);
@@ -1083,6 +1075,11 @@ namespace ED
                     break;
                 case E_PTDefine.PT_SCARECROW:
                     listMinion.Find(m => m.id == (int)param[0])?.Scarecrow((float)param[1]);
+                    break;
+                case E_PTDefine.PT_ACTIVATEPOOLOBJECT:
+                    var ts = PoolManager.instance.ActivateObject((string)param[0], (Vector3)param[1]);
+                    ts.rotation = (Quaternion)param[2];
+                    ts.localScale = (Vector3)param[3];
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ptID), ptID, null);

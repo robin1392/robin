@@ -63,7 +63,7 @@ namespace ED
             if (m == null)
             {
                 SetControllEnable(true);
-                _collider.enabled = false;
+                _collider.enabled = true;
                 yield break;
             }
 

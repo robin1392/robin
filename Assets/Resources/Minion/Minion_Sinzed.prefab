@@ -150,6 +150,7 @@ MonoBehaviour:
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
+  isPolymorph: 0
   ps: {fileID: 1643489628217688994}
 --- !u!114 &-3404390952063001827
 MonoBehaviour:
@@ -261,8 +262,8 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_BaseOffset: -2
+  m_WalkableMask: 8
   m_ObstacleAvoidanceType: 4
 --- !u!1001 &2064498331034010476
 PrefabInstance:

@@ -180,6 +180,7 @@ MonoBehaviour:
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
+  isPolymorph: 0
   arrSpawnPos:
   - {fileID: 6722142075235945114}
   - {fileID: 3185210713525443266}
@@ -295,7 +296,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 1
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 7
   m_ObstacleAvoidanceType: 4
 --- !u!1 &8372099918712852319
 GameObject:

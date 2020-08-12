@@ -19,6 +19,7 @@ namespace  ED
         public override void Attack()
         {
             if (target == null) return;
+            
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();

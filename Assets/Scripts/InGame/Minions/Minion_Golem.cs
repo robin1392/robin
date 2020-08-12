@@ -13,17 +13,8 @@ namespace ED
         {
             if (target == null) return;
 
-            if (PhotonNetwork.IsConnected && isMine)
-            {
-                base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
+            base.Attack();
+            controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
         }
 
         public override BaseStat SetTarget()
@@ -37,6 +28,7 @@ namespace ED
             {
                 // Spawn
                 var m = controller.CreateMinion(pref_MiniGolem, transform.position, 1, 0);
+
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
                 m.power = power;

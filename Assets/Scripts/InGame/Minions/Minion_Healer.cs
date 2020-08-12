@@ -9,27 +9,25 @@ namespace ED
     {
         public override void Attack()
         {
-            if (target == null || !(target.currentHealth / target.maxHealth < 1f)) return;
+            if (target == null || target.currentHealth >= target.maxHealth) return;
+            
             if (PhotonNetwork.IsConnected && isMine)
             {
-                if (!(target.currentHealth / target.maxHealth < 1f)) return;
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.HealMinion(target.id, effect);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HEALMINION, target.id, effect);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
                 base.Attack();
-                ((Minion)target).Heal(effect);
                 animator.SetTrigger(_animatorHashAttack);
+                controller.HealMinion(target.id, effect);
             }
         }
 
         public override BaseStat SetTarget()
         {
-            var cols = new Collider[50];
-            var size = Physics.OverlapSphereNonAlloc(transform.position, searchRange, cols, friendlyLayer);
+            var cols = Physics.OverlapSphere(transform.position, searchRange, friendlyLayer);
             Collider firstTarget = null;
             Collider closeToTarget = null;
             var closeToDistance = float.MaxValue;
@@ -40,7 +38,7 @@ namespace ED
             {
                 if (col != null && col.CompareTag($"Minion_Ground") && col.gameObject != gameObject)
                 {
-                    var m = col.GetComponent<Minion>();
+                    var m = col.GetComponentInParent<Minion>();
                     var hp = m.currentHealth / m.maxHealth;
                     var dis = Vector3.Distance(transform.position, col.transform.position);
 
@@ -61,10 +59,10 @@ namespace ED
 
             if (firstTarget != null)
             {
-                return firstTarget.GetComponent<BaseStat>();
+                return firstTarget.GetComponentInParent<BaseStat>();
             }
 
-            return closeToTarget != null ? closeToTarget.GetComponent<BaseStat>() : null;
+            return closeToTarget != null ? closeToTarget.GetComponentInParent<BaseStat>() : null;
         }
     }
 }

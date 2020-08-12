@@ -197,8 +197,9 @@ namespace ED
                 return default;
             }
 
-            Debug.LogError(poolName + " pool is empty.");
-            return default;
+            Debug.LogError(poolName + " pool is empty. And add pool.");
+            AddPool(data.listPool.Find(data => data.name == poolName).obj, 1);
+            return ActivateObject<T>(poolName, position, parent);
         }
 
         public Transform ActivateObject(string poolName, Vector3 position, Transform parent = null)
@@ -234,8 +235,9 @@ namespace ED
                 return t;
             }
 
-            Debug.LogError(poolName + " pool is empty.");
-            return t;
+            Debug.LogError(poolName + " pool is empty. And add pool.");
+            AddPool(data.listPool.Find(data => data.name == poolName).obj, 1);
+            return ActivateObject(poolName, position, parent);
         }
 
         /// <summary>

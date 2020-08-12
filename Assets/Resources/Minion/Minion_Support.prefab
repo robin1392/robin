@@ -89,6 +89,7 @@ MonoBehaviour:
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
+  isPolymorph: 0
   ps_Dust: {fileID: 6285216188163385352}
 --- !u!114 &5271869617561665627
 MonoBehaviour:
@@ -201,7 +202,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 0.75
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 7
   m_ObstacleAvoidanceType: 4
 --- !u!1 &6079627854496716200
 GameObject:

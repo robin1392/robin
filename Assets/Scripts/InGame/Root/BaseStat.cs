@@ -11,7 +11,6 @@ namespace ED
     {
         public bool isMine;
         public int id;
-        [HideInInspector]
         public PlayerController controller;
         public Rigidbody rb;
         public Animator animator;

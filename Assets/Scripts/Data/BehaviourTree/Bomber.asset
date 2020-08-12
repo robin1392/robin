@@ -1,0 +1,433 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a686a47eee2fa44cb0a34b5d86e4d5e, type: 3}
+  m_Name: Bomber
+  m_EditorClassIdentifier: 
+  _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"_condition":{"conditions":[{"valueA":{"_name":"currentHealth","_targetVariableID":"18e9b74f-b1fa-4411-a551-5fe28e59fbaa"},"checkType":1,"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckFloat"},{"valueA":{"_name":"isPushing","_targetVariableID":"110549f4-2449-4861-84da-8b2850b67784"},"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"}],"$type":"NodeCanvas.Framework.ConditionList"},"_position":{"x":278.2979,"y":24.17551},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"0"},{"_position":{"x":303.0,"y":147.0},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"1"},{"_action":{"method":{"_baseInfo":"ED.Minion_Bomber|SetTarget|ED.BaseStat","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"ED.BaseStat","_name":"target","_targetVariableID":"1e877d71-bfbf-4109-b083-8072aec26923"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":182.4734,"y":227.9632},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"2"},{"_condition":{"valueA":{"_name":"target","_targetVariableID":"1e877d71-bfbf-4109-b083-8072aec26923"},"valueB":{},"_invert":true,"$type":"NodeCanvas.Tasks.Conditions.CheckVariable`1[[ED.BaseStat,
+    Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"_position":{"x":382.4734,"y":227.9632},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"3"},{"_position":{"x":453.6938,"y":341.792},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"4"},{"_action":{"method":{"_baseInfo":"ED.Minion_Bomber|IsTargetInnerRange|System.Boolean","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"System.Boolean","_name":"isTargetInnerRange","_targetVariableID":"cfab5b6b-a2b6-4c13-b556-fa45cfe4865f"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":305.0,"y":420.0},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"5"},{"_condition":{"valueA":{"_name":"isTargetInnerRange","_targetVariableID":"cfab5b6b-a2b6-4c13-b556-fa45cfe4865f"},"valueB":{"_value":true},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"},"_position":{"x":638.0,"y":420.0},"$type":"NodeCanvas.BehaviourTrees.BinarySelector","$id":"6"},{"_position":{"x":623.5797,"y":547.0852},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"7"},{"_action":{"method":{"_baseInfo":"ED.Minion_Bomber|IsTargetAlive|System.Boolean","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"System.Boolean","_name":"isTargetAlive","_targetVariableID":"b08d3e8b-cba4-460d-9b23-332048ce4f69"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":352.5797,"y":637.0852},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"8"},{"_condition":{"valueA":{"_name":"isTargetAlive","_targetVariableID":"b08d3e8b-cba4-460d-9b23-332048ce4f69"},"valueB":{"_value":true},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"},"_position":{"x":613.5797,"y":634.0852},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"9"},{"_action":{"method":{"_baseInfo":"ED.Minion_Bomber|Attack|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":644.5797,"y":737.0852},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"10"},{"_action":{"waitTime":{"_name":"attackSpeed","_targetVariableID":"65f79b41-a435-471e-846f-8f5534d5efa9"},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":802.8986,"y":635.3685},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"11"},{"_action":{"method":{"_baseInfo":"ED.Minion_Bomber|SetVelocityTarget|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":894.1064,"y":537.1183},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"12"},{"_action":{"method":{"_baseInfo":"ED.Minion_Bomber|Skill|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":172.5797,"y":455.0856},"$type":"NodeCanvas.BehaviourTrees.ActionNode"}],"connections":[{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"1"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"2"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"3"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"3"},"_targetNode":{"$ref":"4"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"4"},"_targetNode":{"$ref":"5"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"4"},"_targetNode":{"$ref":"6"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"7"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"12"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"8"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"9"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"11"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"9"},"_targetNode":{"$ref":"10"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"}],"canvasGroups":[],"localBlackboard":{"_variables":{"target":{"_propertyPath":"ED.Minion_Bomber.target","_name":"target","_id":"1e877d71-bfbf-4109-b083-8072aec26923","$type":"NodeCanvas.Framework.Variable`1[[ED.BaseStat,
+    Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"currentHealth":{"_propertyPath":"ED.Minion_Bomber.currentHealth","_name":"currentHealth","_id":"18e9b74f-b1fa-4411-a551-5fe28e59fbaa","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"attackSpeed":{"_propertyPath":"ED.Minion_Bomber.attackSpeed","_name":"attackSpeed","_id":"65f79b41-a435-471e-846f-8f5534d5efa9","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"isPushing":{"_propertyPath":"ED.Minion_Bomber.isPushing","_name":"isPushing","_id":"110549f4-2449-4861-84da-8b2850b67784","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"range":{"_propertyPath":"ED.Minion_Bomber.range","_name":"range","_id":"f9997445-910c-442b-99f1-7dae09ab1223","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}},"derivedData":{"repeat":true,"$type":"NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"}}'
+  _objectReferences: []
+  _graphSource:
+    _version: 3.08
+    _category: 
+    _comments: 
+    _translation: {x: 90, y: 60}
+    _zoomFactor: 1
+  _haltSerialization: 0
+#---GRAPH_START---
+#The pretty formatted json serialization bellow is only a reference to help in version control diff. Other than that it is not used at all.
+#{
+#    "type": "NodeCanvas.BehaviourTrees.BehaviourTree",
+#    "nodes": [
+#        {
+#            "_condition": {
+#                "conditions": [
+#                    {
+#                        "valueA": {
+#                            "_name": "currentHealth",
+#                            "_targetVariableID": "18e9b74f-b1fa-4411-a551-5fe28e59fbaa"
+#                        },
+#                        "checkType": 1,
+#                        "valueB": {
+#
+#                        },
+#                        "$type": "NodeCanvas.Tasks.Conditions.CheckFloat"
+#                    },
+#                    {
+#                        "valueA": {
+#                            "_name": "isPushing",
+#                            "_targetVariableID": "110549f4-2449-4861-84da-8b2850b67784"
+#                        },
+#                        "valueB": {
+#
+#                        },
+#                        "$type": "NodeCanvas.Tasks.Conditions.CheckBoolean"
+#                    }
+#                ],
+#                "$type": "NodeCanvas.Framework.ConditionList"
+#            },
+#            "_position": {
+#                "x": 278.2979,
+#                "y": 24.17551
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
+#            "$id": "0"
+#        },
+#        {
+#            "_position": {
+#                "x": 303.0,
+#                "y": 147.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "1"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion_Bomber|SetTarget|ED.BaseStat",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#                    "_type": "ED.BaseStat",
+#                    "_name": "target",
+#                    "_targetVariableID": "1e877d71-bfbf-4109-b083-8072aec26923"
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 182.4734,
+#                "y": 227.9632
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "2"
+#        },
+#        {
+#            "_condition": {
+#                "valueA": {
+#                    "_name": "target",
+#                    "_targetVariableID": "1e877d71-bfbf-4109-b083-8072aec26923"
+#                },
+#                "valueB": {
+#
+#                },
+#                "_invert": true,
+#                "$type": "NodeCanvas.Tasks.Conditions.CheckVariable`1[[ED.BaseStat, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+#            },
+#            "_position": {
+#                "x": 382.4734,
+#                "y": 227.9632
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
+#            "$id": "3"
+#        },
+#        {
+#            "_position": {
+#                "x": 453.6938,
+#                "y": 341.792
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "4"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion_Bomber|IsTargetInnerRange|System.Boolean",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#                    "_type": "System.Boolean",
+#                    "_name": "isTargetInnerRange",
+#                    "_targetVariableID": "cfab5b6b-a2b6-4c13-b556-fa45cfe4865f"
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 305.0,
+#                "y": 420.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "5"
+#        },
+#        {
+#            "_condition": {
+#                "valueA": {
+#                    "_name": "isTargetInnerRange",
+#                    "_targetVariableID": "cfab5b6b-a2b6-4c13-b556-fa45cfe4865f"
+#                },
+#                "valueB": {
+#                    "_value": true
+#                },
+#                "$type": "NodeCanvas.Tasks.Conditions.CheckBoolean"
+#            },
+#            "_position": {
+#                "x": 638.0,
+#                "y": 420.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BinarySelector",
+#            "$id": "6"
+#        },
+#        {
+#            "_position": {
+#                "x": 623.5797,
+#                "y": 547.0852
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "7"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion_Bomber|IsTargetAlive|System.Boolean",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#                    "_type": "System.Boolean",
+#                    "_name": "isTargetAlive",
+#                    "_targetVariableID": "b08d3e8b-cba4-460d-9b23-332048ce4f69"
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 352.5797,
+#                "y": 637.0852
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "8"
+#        },
+#        {
+#            "_condition": {
+#                "valueA": {
+#                    "_name": "isTargetAlive",
+#                    "_targetVariableID": "b08d3e8b-cba4-460d-9b23-332048ce4f69"
+#                },
+#                "valueB": {
+#                    "_value": true
+#                },
+#                "$type": "NodeCanvas.Tasks.Conditions.CheckBoolean"
+#            },
+#            "_position": {
+#                "x": 613.5797,
+#                "y": 634.0852
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
+#            "$id": "9"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion_Bomber|Attack|System.Void",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 644.5797,
+#                "y": 737.0852
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "10"
+#        },
+#        {
+#            "_action": {
+#                "waitTime": {
+#                    "_name": "attackSpeed",
+#                    "_targetVariableID": "65f79b41-a435-471e-846f-8f5534d5efa9"
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.Wait"
+#            },
+#            "_position": {
+#                "x": 802.8986,
+#                "y": 635.3685
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "11"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion_Bomber|SetVelocityTarget|System.Void",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 894.1064,
+#                "y": 537.1183
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "12"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion_Bomber|Skill|System.Void",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 172.5797,
+#                "y": 455.0856
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode"
+#        }
+#    ],
+#    "connections": [
+#        {
+#            "_sourceNode": {
+#                "$ref": "0"
+#            },
+#            "_targetNode": {
+#                "$ref": "1"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "1"
+#            },
+#            "_targetNode": {
+#                "$ref": "2"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "1"
+#            },
+#            "_targetNode": {
+#                "$ref": "3"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "3"
+#            },
+#            "_targetNode": {
+#                "$ref": "4"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "4"
+#            },
+#            "_targetNode": {
+#                "$ref": "5"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "4"
+#            },
+#            "_targetNode": {
+#                "$ref": "6"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "6"
+#            },
+#            "_targetNode": {
+#                "$ref": "7"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "6"
+#            },
+#            "_targetNode": {
+#                "$ref": "12"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "7"
+#            },
+#            "_targetNode": {
+#                "$ref": "8"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "7"
+#            },
+#            "_targetNode": {
+#                "$ref": "9"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "7"
+#            },
+#            "_targetNode": {
+#                "$ref": "11"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "9"
+#            },
+#            "_targetNode": {
+#                "$ref": "10"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        }
+#    ],
+#    "canvasGroups": [],
+#    "localBlackboard": {
+#        "_variables": {
+#            "target": {
+#                "_propertyPath": "ED.Minion_Bomber.target",
+#                "_name": "target",
+#                "_id": "1e877d71-bfbf-4109-b083-8072aec26923",
+#                "$type": "NodeCanvas.Framework.Variable`1[[ED.BaseStat, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+#            },
+#            "currentHealth": {
+#                "_propertyPath": "ED.Minion_Bomber.currentHealth",
+#                "_name": "currentHealth",
+#                "_id": "18e9b74f-b1fa-4411-a551-5fe28e59fbaa",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            },
+#            "attackSpeed": {
+#                "_propertyPath": "ED.Minion_Bomber.attackSpeed",
+#                "_name": "attackSpeed",
+#                "_id": "65f79b41-a435-471e-846f-8f5534d5efa9",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            },
+#            "isPushing": {
+#                "_propertyPath": "ED.Minion_Bomber.isPushing",
+#                "_name": "isPushing",
+#                "_id": "110549f4-2449-4861-84da-8b2850b67784",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            },
+#            "range": {
+#                "_propertyPath": "ED.Minion_Bomber.range",
+#                "_name": "range",
+#                "_id": "f9997445-910c-442b-99f1-7dae09ab1223",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            }
+#        }
+#    },
+#    "derivedData": {
+#        "repeat": true,
+#        "$type": "NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"
+#    }
+#}
+#---GRAPH_END---

@@ -138,13 +138,19 @@ namespace ED
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 //controller.photonView.RPC("SetMagicTarget", RpcTarget.Others, id, target.id);
-                controller.SendPlayer(RpcTarget.Others , E_PTDefine.PT_SETMAGICTARGET,id, target.id);
-                StartCoroutine(Move());
+                if (target != null)
+                {
+                    controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                    StartCoroutine(Move());
+                }
             }
             else if (PhotonNetwork.IsConnected == false)
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
-                StartCoroutine(Move());
+                if (target != null)
+                {
+                    StartCoroutine(Move());
+                }
             }
         }
 

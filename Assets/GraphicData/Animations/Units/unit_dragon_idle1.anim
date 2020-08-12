@@ -2501,7 +2501,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Armature/dragon_body/dragon_neck
+    path: Armature/dragon_body/dragon_tail1/dragon_tail2/dragon_tail3
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2511,7 +2511,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Armature/dragon_body/dragon_neck
+    path: Armature/dragon_body/dragon_tail1/dragon_tail2/dragon_tail3
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2521,7 +2521,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Armature/dragon_body/dragon_neck
+    path: Armature/dragon_body/dragon_tail1/dragon_tail2/dragon_tail3
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2591,7 +2591,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Armature/dragon_body/dragon_tail1/dragon_tail2/dragon_tail3
+    path: Armature/dragon_body/dragon_neck
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2601,7 +2601,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Armature/dragon_body/dragon_tail1/dragon_tail2/dragon_tail3
+    path: Armature/dragon_body/dragon_neck
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2611,7 +2611,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Armature/dragon_body/dragon_tail1/dragon_tail2/dragon_tail3
+    path: Armature/dragon_body/dragon_neck
     classID: 4
     script: {fileID: 0}
   m_HasGenericRootTransform: 0

@@ -410,21 +410,35 @@ namespace ED
             int rnd = 0;
             if (isBottomPlayer)
             {
-                do
+                if (listBottomPlayer.Count > 0)
                 {
-                    rnd = Random.Range(0, listBottomPlayer.Count);
-                } while (listBottomPlayer[rnd].isAlive == false);
-
-                return listBottomPlayer[rnd];
+                    do
+                    {
+                        rnd = Random.Range(0, listBottomPlayer.Count);
+                    } while (listBottomPlayer[rnd].isAlive == false);
+                    
+                    return listBottomPlayer[rnd];
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
-                do
+                if (listTopPlayer.Count > 0)
                 {
-                    rnd = Random.Range(0, listTopPlayer.Count);
-                } while (listTopPlayer[rnd].isAlive == false);
+                    do
+                    {
+                        rnd = Random.Range(0, listTopPlayer.Count);
+                    } while (listTopPlayer[rnd].isAlive == false);
 
-                return listTopPlayer[rnd];
+                    return listTopPlayer[rnd];
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

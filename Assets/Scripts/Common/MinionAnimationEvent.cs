@@ -18,11 +18,7 @@ namespace ED
 
         public void Attack()
         {
-            if (PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null)
-            {
-                _minion.DamageToTarget(_minion.target, delay);
-            }
-            else if (PhotonNetwork.IsConnected == false)
+            if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
             {
                 _minion.DamageToTarget(_minion.target, delay);
             }
@@ -32,7 +28,7 @@ namespace ED
         {
             if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
             {
-                _minion.SendMessage("FireArrow");
+                _minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
             }
         }
 
@@ -40,7 +36,7 @@ namespace ED
         {
             if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
             {
-                _minion.SendMessage("FireSpear");
+                _minion.SendMessage("FireSpear", SendMessageOptions.DontRequireReceiver);
             }
         }
     }

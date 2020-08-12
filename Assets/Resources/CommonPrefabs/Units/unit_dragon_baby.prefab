@@ -288,6 +288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4112000715225018400}
   - component: {fileID: 4511053905057994697}
+  - component: {fileID: 3315107983139091578}
   m_Layer: 0
   m_Name: unit_dragon_baby
   m_TagString: Untagged
@@ -321,7 +322,7 @@ Animator:
   m_GameObject: {fileID: 3628514204028496538}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 19e19f0846ba14e9799915ef1218a175, type: 2}
+  m_Controller: {fileID: 22100000, guid: a7515fd05402943e898b287fdec9f3a5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -330,6 +331,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3315107983139091578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3628514204028496538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8974a0a2439b7450f9454438c9c5d14f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
 --- !u!1 &3757687788251708280
 GameObject:
   m_ObjectHideFlags: 0
