@@ -13,6 +13,7 @@ public partial class Global
     public static string g_sceneStartName = "StartScene";
     public static string g_sceneMainName = "Main";
     public static string g_sceneInGameBattle = "InGame_Battle";
+    public static string g_sceneInGameCoop = "InGame_Coop";
     
     
     /// <summary>
