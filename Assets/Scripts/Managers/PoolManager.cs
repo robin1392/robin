@@ -12,6 +12,12 @@ namespace ED
 
         #region SINGLETONE
         public static PoolManager instance;
+
+        public static PoolManager Get()
+        {
+            return instance;
+        }
+        
         #endregion
 
         #region VARIABLE
@@ -27,7 +33,7 @@ namespace ED
                 instance = this;
 
             dic = new Dictionary<string, Dictionary<string, Transform>>();
-            MakePool();
+            //MakePool();
         }
 
         private void OnDestroy()
@@ -40,7 +46,7 @@ namespace ED
         /// <summary>
         /// 등록된 개수만큼 풀 생성
         /// </summary>
-        private void MakePool()
+        public void MakePool()
         {
             if (data == null) return;
             foreach (var poolData in data.listPool)

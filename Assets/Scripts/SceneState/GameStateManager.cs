@@ -75,7 +75,7 @@ public class GameStateManager : Singleton<GameStateManager>
             gameState.Enable(Global.E_GAMESTATE.STATE_START);
         }
         else if (SceneManager.GetActiveScene().name == Global.g_sceneMainName)
-        {
+        {   
             isDevMode = true;
             gameState.Enable(Global.E_GAMESTATE.STATE_MAIN);
         }
@@ -84,6 +84,13 @@ public class GameStateManager : Singleton<GameStateManager>
             isDevMode = true;
             gameState.Enable(Global.E_GAMESTATE.STATE_INGAME);
         }
+        else if (SceneManager.GetActiveScene().name == Global.g_sceneInGameCoop)
+        {
+            isDevMode = true;
+            gameState.Enable(Global.E_GAMESTATE.STATE_COOP);
+        }
+        
+        
     }
     
 
@@ -189,9 +196,12 @@ public class GameStateManager : Singleton<GameStateManager>
         UI_Start.Get().SetTextStatus(Global.g_startStatusDataDown);
         
         yield return new WaitForSeconds(0.3f);
-        
+
+        // game data patch download
+        DataPatchManager.Get().JsonDownLoad();
+
         // 상태 데이터 로딩중
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
         
         // 데이터 다운 및 로딩 후 로그인 유저 정보 받아오기
         GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_USERDATA);

@@ -136,6 +136,14 @@ namespace ED
 
         protected virtual void Start()
         {
+            // 개발 버전이라..중간에서 실행햇을시에..
+            if(DataPatchManager.Get().isDataLoadComplete == false )
+                DataPatchManager.Get().JsonDownLoad();
+            
+            // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
+            PoolManager.Get().MakePool();
+
+
             StartManager();
         }
 
