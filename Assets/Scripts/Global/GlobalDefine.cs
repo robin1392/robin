@@ -47,4 +47,13 @@ public enum E_PTDefine
     PT_MINIONINVINCIBILITY,
     PT_SCARECROW,
     PT_ACTIVATEPOOLOBJECT,
+    PT_MINIONCLOACKING,
+}
+
+public enum E_MaterialType
+{
+    BOTTOM,
+    TOP,
+    HALFTRANSPARENT,
+    TRANSPARENT,
 }

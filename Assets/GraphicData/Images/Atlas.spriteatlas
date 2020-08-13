@@ -64,12 +64,13 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 8e8c7edc5bac24cd092c6c5778c3593f, type: 3}
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
-    totalSpriteSurfaceArea: 2747498
+    totalSpriteSurfaceArea: 2773098
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 86cf89200df4d4278931128198b98d2a, type: 3}
   - {fileID: 21300000, guid: 68ae7140f7af54bd4bc1fdc450870004, type: 3}
   - {fileID: 21300000, guid: d0b91380a99ec49aaa02bee5983a1f31, type: 3}
   - {fileID: 21300000, guid: 2efe5d1191c1b41408f85119ac73724e, type: 3}
@@ -143,6 +144,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4773f2df01b4d4e99a0f5626c1438d69, type: 3}
   - {fileID: 21300000, guid: 3fa8c3efd02f64c438d9b5613022b7fe, type: 3}
   m_PackedSpriteNamesToIndex:
+  - dice_arbiter
   - ingame_name_tag
   - dice_layzer
   - dice_berserker

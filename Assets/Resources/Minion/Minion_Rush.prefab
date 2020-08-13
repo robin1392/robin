@@ -90,6 +90,8 @@ MonoBehaviour:
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
+  - {fileID: 2100000, guid: bb0129bf190cc40c19489bc88bbd6130, type: 2}
+  - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   targetMoveType: 0
   power: 0
   powerUpByUpgrade: 0
@@ -192,7 +194,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0

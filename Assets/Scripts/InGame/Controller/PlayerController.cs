@@ -243,7 +243,7 @@ namespace ED
                 }
             }
 
-            SetColor();
+            SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
         }
         #endregion
         
@@ -1080,6 +1080,9 @@ namespace ED
                     var ts = PoolManager.instance.ActivateObject((string)param[0], (Vector3)param[1]);
                     ts.rotation = (Quaternion)param[2];
                     ts.localScale = (Vector3)param[3];
+                    break;
+                case E_PTDefine.PT_MINIONCLOACKING:
+                    listMinion.Find(m => m.id == (int)param[0])?.Cloacking((bool)param[1]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ptID), ptID, null);

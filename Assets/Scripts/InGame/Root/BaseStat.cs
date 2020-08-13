@@ -93,23 +93,17 @@ namespace ED
 
         protected virtual void Start() { }
         
-        protected void SetColor()
+        protected void SetColor(E_MaterialType type)
         {
-            var isBlue = isMine;
-            if (InGameManager.Get().playType == PLAY_TYPE.CO_OP)
-            {
-                isBlue = isBottomPlayer;
-            }
-
             var mr = GetComponentsInChildren<MeshRenderer>();
             foreach (var m in mr)
             {
-                m.material = arrMaterial[isBlue ? 0 : 1];
+                m.material = arrMaterial[(int)type];
             }
             var smr = GetComponentsInChildren<SkinnedMeshRenderer>();
             foreach (var m in smr)
             {
-                m.material = arrMaterial[isBlue ? 0 : 1];
+                m.material = arrMaterial[(int)type];
             }
         }
 

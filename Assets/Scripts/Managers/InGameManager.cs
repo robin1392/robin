@@ -622,7 +622,14 @@ namespace ED
         #region photon send recv
         public void SendBattleManager(RpcTarget target , E_PTDefine ptID , params object[] param)
         {
-            photonView.RPC("RecvBattleManager", target , ptID , param);
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC("RecvBattleManager", target , ptID , param);
+            }
+            else
+            {
+                RecvBattleManager(ptID, param);
+            }
         }
 
         [PunRPC]

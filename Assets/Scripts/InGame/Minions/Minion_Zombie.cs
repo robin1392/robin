@@ -65,7 +65,7 @@ namespace ED
             currentHealth = (eyeLevel + upgradeLevel) * maxHealth * 0.1f;
             animator = animator_Dead;
             animator.gameObject.SetActive(true);
-            SetColor();
+            SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
             SetControllEnable(true);
         }
 

@@ -34,6 +34,8 @@ namespace ED
         private int _pathRefinedCount = 1;
         //private bool _isNexusAttacked;
         protected bool isInvincibility;
+        protected bool isCloacking;
+        protected int cloackingCount;
         protected int invincibilityCount;
         private float _originalAttackSpeed;
 
@@ -122,7 +124,7 @@ namespace ED
             destroyCallback += destroy;
             _pathRefinedTime = Random.Range(2.5f, 3.5f);
 
-            SetColor();
+            SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
         }
 
         public void Heal(float heal)
@@ -219,6 +221,13 @@ namespace ED
             foreach (var col in cols)
             {
                 var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
+                var bs = col.GetComponentInParent<Minion>();
+
+                if (bs != null && bs.isCloacking)
+                {
+                    continue;
+                }
+                
                 if (sqr < distance)
                 {
                     distance = sqr;
@@ -538,6 +547,47 @@ namespace ED
             isPolymorph = false;
             SetControllEnable(true);
             animator.gameObject.SetActive(true);
+        }
+        
+        protected bool IsFriendlyLayer(GameObject targetObject)
+        {
+            switch (targetMoveType)
+            {
+                case DICE_MOVE_TYPE.GROUND:
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer");
+                case DICE_MOVE_TYPE.FLYING:
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                case DICE_MOVE_TYPE.ALL:
+                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer") 
+                           || targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                default:
+                    return false;
+            }
+        }
+
+        public void Cloacking(bool isCloacking)
+        {
+            if (isCloacking)
+            {
+                cloackingCount++;
+                if (cloackingCount >= 1)
+                {
+                    this.isCloacking = true;
+                    SetColor(isMine ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT);
+                    //_collider.enabled = false;
+                }
+            }
+            else
+            {
+                cloackingCount--;
+                if (cloackingCount <= 0)
+                {
+                    cloackingCount = 0;
+                    this.isCloacking = false;
+                    SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
+                    //_collider.enabled = true;
+                }
+            }
         }
     }
 }

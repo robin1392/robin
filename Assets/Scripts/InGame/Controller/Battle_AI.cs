@@ -60,7 +60,7 @@ namespace ED
 
             SetDeck(deck);
 
-            SetColor();
+            SetColor(E_MaterialType.TOP);
         }
 
         public void AI_GetDice()
