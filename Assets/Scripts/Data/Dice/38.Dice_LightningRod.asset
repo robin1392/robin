@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b264505c7122474bb94ff591e420621, type: 3}
+  m_Name: 38.Dice_LightningRod
+  m_EditorClassIdentifier: 
+  id: 37
+  grade: 3
+  castType: 2
+  moveType: 0
+  targetMoveType: 2
+  prefab: {fileID: 563359602468480400, guid: bcb3c0dc3e4b8466aa981d2cb6363f20, type: 3}
+  spawnMultiply: 1
+  icon: {fileID: 21300000, guid: ca80718e1ca9e403a8384d9f8aa7b1cc, type: 3}
+  card: {fileID: 21300000, guid: 237f1a81e08164d129f6e509ae6c124d, type: 3}
+  color: {r: 0.3019608, g: 0.32941177, b: 0.34901962, a: 1}
+  power: 150
+  powerUpByUpgrade: 7
+  powerUpByInGameUp: 25
+  maxHealth: 0
+  maxHealthUpByUpgrade: 0
+  maxHealthUpByInGameUp: 0
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  attackSpeed: 3
+  moveSpeed: 0
+  range: 2
+  searchRange: 2
