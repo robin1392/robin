@@ -653,7 +653,6 @@ namespace ED
                 case E_PTDefine.PT_ENDGAME:
                     EndGame(new PhotonMessageInfo());
                     break;
-                
             }
         }
         #endregion

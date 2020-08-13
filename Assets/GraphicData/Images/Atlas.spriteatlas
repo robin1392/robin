@@ -70,7 +70,6 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: 86cf89200df4d4278931128198b98d2a, type: 3}
   - {fileID: 21300000, guid: 68ae7140f7af54bd4bc1fdc450870004, type: 3}
   - {fileID: 21300000, guid: d0b91380a99ec49aaa02bee5983a1f31, type: 3}
   - {fileID: 21300000, guid: 2efe5d1191c1b41408f85119ac73724e, type: 3}
@@ -131,6 +130,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: eb6424cd5a81344bd8c36966fe5b2d67, type: 3}
   - {fileID: 21300000, guid: c8cc0d1e8cf3e4745aeebad8dd2cac02, type: 3}
   - {fileID: 21300000, guid: e8d53f1e3841741c6b5dc639249cd05f, type: 3}
+  - {fileID: 21300000, guid: ca80718e1ca9e403a8384d9f8aa7b1cc, type: 3}
   - {fileID: 21300000, guid: e391578e1b5724809b32931c41284a14, type: 3}
   - {fileID: 21300000, guid: f456d98e17f044b6cb0717fe1cc1bb75, type: 3}
   - {fileID: 21300000, guid: 597b27bef1dd745ec8baa229ac77145b, type: 3}
@@ -144,7 +144,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4773f2df01b4d4e99a0f5626c1438d69, type: 3}
   - {fileID: 21300000, guid: 3fa8c3efd02f64c438d9b5613022b7fe, type: 3}
   m_PackedSpriteNamesToIndex:
-  - dice_arbiter
   - ingame_name_tag
   - dice_layzer
   - dice_berserker
@@ -205,6 +204,7 @@ SpriteAtlas:
   - ingame_sp
   - dice_shielder
   - dice_saint
+  - dice_thunder
   - dice_support
   - hp_bar
   - hp

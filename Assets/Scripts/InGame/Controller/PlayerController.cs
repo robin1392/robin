@@ -425,7 +425,7 @@ namespace ED
                 m.effect *= arrDice[diceNum].level + 1;
             }
 
-            if (diceNum > 0)
+            if (diceNum >= 0)
             {
                 var lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
                 if (lr != null)
