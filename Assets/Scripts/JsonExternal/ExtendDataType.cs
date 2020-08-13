@@ -251,6 +251,9 @@ public class JsonDataParse
         }
         else if (type == typeof(string))
         {
+            // none 일경우는 값 없음
+            if (cutString == "none")
+                cutString = "";
             return cutString;
         }
         else if (type == typeof(List<int>))

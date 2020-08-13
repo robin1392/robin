@@ -10,8 +10,12 @@ namespace ED
     {
         public int diceFieldNum;
         public Data_Dice data;
+        
         public int id => (data != null && data.id >= 0) ? data.id : -1;
         public int level;
+
+
+        public DiceInfoData diceData;
 
         public Sprite GetIcon()
         {
