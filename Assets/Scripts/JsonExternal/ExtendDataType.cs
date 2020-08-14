@@ -233,11 +233,11 @@ public class JsonDataParse
     
     public static object GetParseData(Type type , string dataString)
     {
-        string cutString = dataString.Replace("\"", "");
+        string cutString = dataString.Replace("\"", "").Trim();
         if (type == typeof(int))
         {
             int returnInt = int.Parse(cutString);
-            return returnInt;
+            return returnInt;    
         }
         else if (type == typeof(long))
         {

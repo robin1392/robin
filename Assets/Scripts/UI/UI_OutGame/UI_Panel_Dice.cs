@@ -16,7 +16,8 @@ namespace ED
 {
     public class UI_Panel_Dice : MonoBehaviour
     {
-        public Data_AllDice dataAllDice;
+        //public Data_AllDice dataAllDice;
+        
         public UI_Popup_Dice_Info ui_Popup_Dice_Info;
         public Image[] arrImageDeck;
         public Image[] arrImageDeck_Main;
@@ -35,6 +36,7 @@ namespace ED
         private bool _isSelectMode;
         private int _selectedDiceId;
 
+        
         private void Start()
         {
             RefreshDeck();
@@ -54,7 +56,6 @@ namespace ED
             rts_ScrollView.anchorMax = anchorMax;
             
             //scrollView.OnDrag(data => { GetComponentInParent<UI_Main>().OnDrag((PointerEventData)data);});
-            
         }
 
         private void RefreshDeck()
@@ -65,8 +66,8 @@ namespace ED
             for (var i = 0; i < arrImageDeck.Length; i++)
             {
                 var num = int.Parse(splitDeck[i]);
-                arrImageDeck[i].sprite = dataAllDice.listDice.Find(data => data.id == num).icon;
-                arrImageDeck_Main[i].sprite = dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeck[i].sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(num).iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeck_Main[i].sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(num).iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
             }
         }
 
@@ -76,17 +77,17 @@ namespace ED
             if (arrGettedDice == null)
             {
                 isCreated = true;
-                arrGettedDice = new UI_Getted_Dice[dataAllDice.listDice.Count];
+                arrGettedDice = new UI_Getted_Dice[JsonDataManager.Get().dataDiceInfo.dicData.Count];
             }
-            else if (arrGettedDice.Length < dataAllDice.listDice.Count)
+            else if (arrGettedDice.Length < JsonDataManager.Get().dataDiceInfo.dicData.Count)
             {
                 isCreated = true;
-                arrGettedDice = new UI_Getted_Dice[dataAllDice.listDice.Count];
+                arrGettedDice = new UI_Getted_Dice[JsonDataManager.Get().dataDiceInfo.dicData.Count];
             }
 
             if (isCreated)
             {
-                for (var i = 0; i < dataAllDice.listDice.Count; i++)
+                for (var i = 0; i < JsonDataManager.Get().dataDiceInfo.dicData.Count; i++)
                 {
                     var obj = Instantiate(prefGettedDice, tsGettedDiceParent);
                     arrGettedDice[i] = obj.GetComponent<UI_Getted_Dice>();
@@ -94,9 +95,15 @@ namespace ED
                 }
             }
 
-            for (var i = 0; i < dataAllDice.listDice.Count; i++)
+            //for (var i = 0; i < dataAllDice.listDice.Count; i++)
+            //{
+                //arrGettedDice[i].Initialize(dataAllDice.listDice[i]);
+            //}
+            int countindex = 0;
+            foreach (KeyValuePair<int, DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
             {
-                arrGettedDice[i].Initialize(dataAllDice.listDice[i]);
+                arrGettedDice[countindex].Initialize(info.Value);
+                countindex++;
             }
             
             // Grid 즉시 업데이트
@@ -114,8 +121,9 @@ namespace ED
             obj_Ciritical.SetActive(false);
             objSelectBlind.SetActive(true);
             objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite
-                = dataAllDice.listDice.Find(data => data.id == diceId).icon;
-                //= dataAllDice.listDice[diceId].icon;
+                = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(diceId).iconName);
+                //= dataAllDice.listDice.Find(data => data.id == diceId).icon;
+                
 
             rts_Content.DOAnchorPosY(0, 0.1f);
         }
@@ -124,7 +132,8 @@ namespace ED
         {
             DeactivateSelectedObjectChild();
             ui_Popup_Dice_Info.gameObject.SetActive(true);
-            ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
+            //ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
+            ui_Popup_Dice_Info.Initialize(JsonDataManager.Get().dataDiceInfo.GetData(diceId));
         }
 
         public void DeactivateSelectedObjectChild()

@@ -8,7 +8,7 @@ namespace ED
     public class Minion_Necromancer : Minion
     {
         public Transform[] arrSpawnPos;
-        public Data_Dice spawnDiceData;
+        //public Data_Dice spawnDiceData;
 
         private readonly float _skillCooltime = 10f;
         private float _skillCastedTime;

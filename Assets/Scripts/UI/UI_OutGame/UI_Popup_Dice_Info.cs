@@ -18,7 +18,8 @@ namespace ED
         public Text text_Name;
         public Text text_Discription;
 
-        private Data_Dice data;
+        //private Data_Dice data;
+        private DiceInfoData data;
         
         
         #region Base Region
@@ -35,7 +36,8 @@ namespace ED
             image_Character.rectTransform.DOAnchorPosY(anchPos.y + 400f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
         }
 
-        public void Initialize(Data_Dice pData)
+        //public void Initialize(Data_Dice pData)
+        public void Initialize(DiceInfoData pData)
         {
             data = pData;
             ui_getted_dice.Initialize(pData);

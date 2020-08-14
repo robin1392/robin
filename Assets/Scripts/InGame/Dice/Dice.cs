@@ -9,9 +9,10 @@ namespace ED
     public class Dice
     {
         public int diceFieldNum;
-        public Data_Dice data;
+        //public Data_Dice data;
         
-        public int id => (data != null && data.id >= 0) ? data.id : -1;
+        //public int id => (data != null && data.id >= 0) ? data.id : -1;
+        public int id => (diceData != null && diceData.id >= 0) ? diceData.id : -1;
         public int level;
 
 
@@ -19,22 +20,46 @@ namespace ED
 
         public Sprite GetIcon()
         {
-            return data == null ? null : data.icon;
+            //return data == null ? null : data.icon;
+            return diceData == null ? null : FileHelper.GetIcon(diceData.iconName);
         }
 
         public void Reset()
         {
-            this.data = null;
+            //this.data = null;
             this.level = 0;
+
+            this.diceData = null;
         }
 
-        public void Set(Data_Dice pData, int pLevel = 0)
+        /*public void Set(Data_Dice pData, int pLevel = 0)
         {
             this.data = pData;
             this.level = pLevel;
+        }*/
+
+        // new dice
+        public void Set(DiceInfoData pData, int pLevel = 0)
+        {
+            this.diceData = pData;
+            this.level = pLevel;
         }
 
-        public bool LevelUp(Data_Dice[] deck)
+        /*public bool LevelUp(Data_Dice[] deck)
+        {
+            if (level < 5)
+            {
+                level++;
+                var rndNum = Random.Range(0, deck.Length);
+                Set(deck[rndNum], level);
+
+                return true;
+            }
+
+            return false;
+        }*/
+        
+        public bool LevelUp(DiceInfoData[] deck)
         {
             if (level < 5)
             {
@@ -47,5 +72,6 @@ namespace ED
 
             return false;
         }
+        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace ED
 {
@@ -21,7 +22,10 @@ namespace ED
             sp = 200;
             currentHealth = maxHealth;
             _arrDice = new Dice[15];
-            _arrDeck = new Data_Dice[5];
+            
+            //_arrDeck = new Data_Dice[5];
+            _arrDiceDeck = new DiceInfoData[5];
+            
             _arrUpgradeLevel = new int[5];
             for (var i = 0; i < arrDice.Length; i++)
             {
@@ -43,13 +47,19 @@ namespace ED
             if (string.IsNullOrEmpty(deck))
             {
                 var listDeck = new List<int>();
-                for (var i = 0; i < arrDeck.Length; i++)
+                for (var i = 0; i < _arrDiceDeck.Length; i++)
                 {
                     var rndDiceNum = 0;
                     do
                     {
-                        var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
-                        rndDiceNum = InGameManager.Get().data_AllDice.listDice[rndNum].id;
+                        List<int> keyList = InGameManager.Get().data_DiceInfo.dicData.Keys.ToList();
+                        
+                        var rndNum = Random.Range(0, keyList.Count);
+                        rndDiceNum = keyList[rndNum];
+                        //var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
+                        //rndDiceNum = InGameManager.Get().data_AllDice.listDice[rndNum].id;
+                        
+                        
                     } while (listDeck.Contains(rndDiceNum));
 
                     listDeck.Add(rndDiceNum);
@@ -85,19 +95,20 @@ namespace ED
 
                 for (var i = 0; i < arrDice.Length; i++)
                 {
-                    if (arrDice[arr[i]].data != null)
+                    //if (arrDice[arr[i]].data != null)
+                    if (arrDice[arr[i]].diceData != null)
                     {
-                        var data = arrDice[arr[i]].data;
+                        var data = arrDice[arr[i]].diceData;
                         var level = arrDice[arr[i]].level;
 
                         for (var j = 0; j < arrDice.Length; j++)
                         {
                             if (arr[i] == j) continue;
 
-                            if (data == arrDice[j].data && level == arrDice[j].level)
+                            if (data == arrDice[j].diceData && level == arrDice[j].level)
                             {
                                 // Upgrade
-                                arrDice[j].LevelUp(arrDeck);
+                                arrDice[j].LevelUp(arrDiceDeck);
                                 arrDice[arr[i]].Reset();
 
                                 return;
@@ -111,11 +122,11 @@ namespace ED
         private readonly int[] _arrPrice = { 100, 200, 400, 700, 1100 };
         public void AI_UpgradeDice()
         {
-            var arr = new int[arrDeck.Length];
+            var arr = new int[arrDiceDeck.Length];
             for (var i = 0; i < arr.Length; i++) arr[i] = i;
             ShuffleIntArray(ref arr);
 
-            for (var i = 0; i < arrDeck.Length; i++)
+            for (var i = 0; i < arrDiceDeck.Length; i++)
             {
                 if (arrUpgradeLevel[arr[i]] < 5 && sp >= _arrPrice[arrUpgradeLevel[arr[i]]])
                 {

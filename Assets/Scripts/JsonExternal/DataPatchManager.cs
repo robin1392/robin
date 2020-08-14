@@ -110,7 +110,12 @@ public class DataPatchManager : MonoBehaviour
 
     public void OnDestroy()
     {
-        
+        //if (JsonDataManager.Get() != null)
+        if(this.transform.GetComponent<JsonDataManager>() != null && isDataLoadComplete == true) 
+        {
+            this.transform.GetComponent<JsonDataManager>().DestroyJsonData();
+            GameObject.Destroy(this.transform.GetComponent<JsonDataManager>());    
+        }
     }
 
     #endregion

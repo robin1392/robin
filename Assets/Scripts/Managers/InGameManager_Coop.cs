@@ -73,11 +73,7 @@ namespace ED
             }
 
             // Upgrade buttons
-            //for (int i = 0; i < arrUpgradeButtons.Length; i++)
-            //{
-                //arrUpgradeButtons[i].Initialize(playerController.arrDeck[i], arrUpgradeLevel[i]);
-            //}
-            UI_InGame.Get().SetArrayDeck(playerController.arrDeck , arrUpgradeLevel);
+            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck , arrUpgradeLevel);
 
             StartGame();
             RefreshTimeUI(true);

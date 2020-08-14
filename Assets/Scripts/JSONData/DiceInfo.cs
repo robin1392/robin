@@ -6,10 +6,12 @@ using System;
 public class DiceInfoData
 {
 	public int id = 0;
+	public string name = "";
 	public int grade = 0;
 	public int castType = 0;
 	public int moveType = 0;
 	public int targetMoveType = 0;
+	public int loadType = 0;
 	public string prefabName = "";
 	public int spawnMultiply = 0;
 	public string iconName = "";
@@ -64,10 +66,12 @@ public class DiceInfo
             DiceInfoData info = new DiceInfoData();
 
 			info.id = (int)JsonDataParse.GetParseData(info.id.GetType(), jsonData[i]["id"].ToString());
+			info.name = (string)JsonDataParse.GetParseData(info.name.GetType(), jsonData[i]["name"].ToString());
 			info.grade = (int)JsonDataParse.GetParseData(info.grade.GetType(), jsonData[i]["grade"].ToString());
 			info.castType = (int)JsonDataParse.GetParseData(info.castType.GetType(), jsonData[i]["castType"].ToString());
 			info.moveType = (int)JsonDataParse.GetParseData(info.moveType.GetType(), jsonData[i]["moveType"].ToString());
 			info.targetMoveType = (int)JsonDataParse.GetParseData(info.targetMoveType.GetType(), jsonData[i]["targetMoveType"].ToString());
+			info.loadType = (int)JsonDataParse.GetParseData(info.loadType.GetType(), jsonData[i]["loadType"].ToString());
 			info.prefabName = (string)JsonDataParse.GetParseData(info.prefabName.GetType(), jsonData[i]["prefabName"].ToString());
 			info.spawnMultiply = (int)JsonDataParse.GetParseData(info.spawnMultiply.GetType(), jsonData[i]["spawnMultiply"].ToString());
 			info.iconName = (string)JsonDataParse.GetParseData(info.iconName.GetType(), jsonData[i]["iconName"].ToString());

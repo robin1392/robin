@@ -16,12 +16,12 @@ namespace ED
         private static readonly int Off1 = Animator.StringToHash("Off");
         private static readonly int On = Animator.StringToHash("On");
 
-        public void Initialize(Data_Dice pData)
+        public void Initialize(DiceInfoData pData)
         {
             isAnimationRunning = false;
-            image_Card.sprite = pData.card;
+            image_Card.sprite = FileHelper.GetCardIcon( pData.cardName );
             text_Name.text = pData.name;
-            text_Type.text = pData.castType.ToString();
+            text_Type.text = ((DICE_CAST_TYPE)pData.castType).ToString();
             ani.SetTrigger(On);
         }
 

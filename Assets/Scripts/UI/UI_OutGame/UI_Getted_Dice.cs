@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,7 +22,9 @@ namespace ED
         public Transform ts_Move;
         public int slotNum;
 
-        private Data_Dice _data;
+        //private Data_Dice _data;
+        private DiceInfoData _data;
+        
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
 
@@ -31,10 +34,12 @@ namespace ED
             _grandParent = transform.parent.parent;
         }
 
-        public void Initialize(Data_Dice pData)
+        public void Initialize(DiceInfoData pData)
         {
             this._data = pData;
-            image_Icon.sprite = pData.icon;
+            //if(FileHelper.GetIcon( pData.iconName ) == null)
+                //print("eoroerejorjagasjdf   " + pData.iconName);
+            image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(()=>{_panelDice.Click_Dice_Info(pData.id);});
         }

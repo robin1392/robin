@@ -38,6 +38,10 @@ namespace ED
 
         private void OnDestroy()
         {
+            if(dic != null)
+                dic.Clear();
+            dic = null;
+            
             instance = null;
         }
         #endregion

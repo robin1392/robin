@@ -78,6 +78,10 @@ public class GameStateManager : Singleton<GameStateManager>
         {   
             isDevMode = true;
             gameState.Enable(Global.E_GAMESTATE.STATE_MAIN);
+            
+            // 개발 버전이라..중간에서 실행햇을시에..
+            if(DataPatchManager.Get().isDataLoadComplete == false )
+                DataPatchManager.Get().JsonDownLoad();
         }
         else if (SceneManager.GetActiveScene().name == Global.g_sceneInGameBattle)
         {

@@ -15,14 +15,16 @@ namespace ED
         public Text text_Level;
 
         private int level;
-        private Data_Dice data;
+        //private Data_Dice data;
+        private DiceInfoData pData;
         private readonly int[] arrPrice = { 100, 200, 400, 700, 1100 };
-
-        public void Initialize(Data_Dice dataDice, int level)
+    
+        //public void Initialize(Data_Dice dataDice, int level)
+        public void Initialize(DiceInfoData dataDice, int level)
         {
-            this.data = dataDice;
+            this.pData = dataDice;
             this.level = level;
-            icon.sprite = dataDice.icon;
+            icon.sprite = FileHelper.GetIcon(dataDice.iconName);
             Refresh();
 
             InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);

@@ -46,7 +46,8 @@ namespace ED
                         var images = arrEyes[i].GetComponentsInChildren<Image>();
                         foreach (var img in images)
                         {
-                            img.color = dice.data.color;
+                            img.color = FileHelper.GetColor(dice.diceData.colorR, dice.diceData.colorG,
+                                dice.diceData.colorB);
                         }
                     }
                 }
@@ -86,7 +87,7 @@ namespace ED
                 dragDice = dice;
                 ui_DiceField.BroadcastMessage("SetHighlight", dice);
                 ui_Card.gameObject.SetActive(true);
-                ui_Card.Initialize(dice.data);
+                ui_Card.Initialize(dice.diceData);
                 DetachIcon();
             }
             else
@@ -151,7 +152,7 @@ namespace ED
         {
             if (dice != null && dragDice != null && dice != dragDice && dice.id == dragDice.id && dice.level == dragDice.level)
             {
-                if (dice.LevelUp(InGameManager.Get().playerController.arrDeck))
+                if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
                 {
                     dragDice.Reset();
                     ui_DiceField.RefreshField();
@@ -159,7 +160,8 @@ namespace ED
                     if (PhotonNetwork.IsConnected)
                     {
                         //InGameManager.Get().playerController.photonView.RPC("LevelUpDice", RpcTarget.Others, dragDice.diceFieldNum, dice.diceFieldNum, dice.data.id, dice.level);
-                        InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE , dragDice.diceFieldNum, dice.diceFieldNum, dice.data.id, dice.level);
+                        InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE ,
+                            dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.level);
                     }
                     
                     ani.SetTrigger(BBoing);
@@ -182,14 +184,16 @@ namespace ED
             {
                 for (var i = 0; i < arrImage.Length; ++i)
                 {
-                    arrImage[i].DOColor(i == 0 ? Color.white : dice.data.color, 0.3f);
+                    //arrImage[i].DOColor(i == 0 ? Color.white : dice.data.color, 0.3f);
+                    arrImage[i].DOColor(i == 0 ? Color.white : FileHelper.GetColor(dice.diceData.colorR, dice.diceData.colorG,
+                        dice.diceData.colorB), 0.3f);
                 }
             }
         }
 
         public void SetHighlight(Dice d)
         {
-            if (dice != null && d != dice && (d.data != dice.data || d.level != dice.level))
+            if (dice != null && d != dice && (d.diceData != dice.diceData || d.level != dice.level))
             {
                 var arrImage = image_Icon.GetComponentsInChildren<Image>();
                 foreach (var item in arrImage)

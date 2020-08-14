@@ -39,7 +39,14 @@ public partial class Global
     }
     #endregion
     
-    
+    #region game object load type
+    public enum E_LOADTYPE
+    {
+        LOAD_MINION,
+        LOAD_MAGIC,
+        LOAD_MAX,
+    }
+    #endregion
     
     
     

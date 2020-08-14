@@ -4,29 +4,33 @@ using UnityEngine;
 
 namespace ED
 {
-    public enum DICE_CAST_TYPE
-    {
-        MINION,
-        MAGIC,
-        INSTALLATION,
-        HERO,
-    }
-
+    
     public enum DICE_GRADE
     {
-        NORMAL,
-        MAGIC,
-        HEROIC,
-        LEGENDARY,
-    }
-
-    public enum DICE_MOVE_TYPE
-    {
-        GROUND,
-        FLYING,
-        ALL,
+        NORMAL = 0,
+        MAGIC = 1,
+        HEROIC = 2,
+        LEGENDARY = 3,
     }
     
+    public enum DICE_CAST_TYPE
+    {
+        MINION = 0,
+        MAGIC = 1,
+        INSTALLATION = 2,
+        HERO = 3,
+    }
+    
+    public enum DICE_MOVE_TYPE
+    {
+        GROUND = 0,
+        FLYING = 1,
+        ALL = 2,
+    }
+    
+    
+    
+    #region not use ---- 
     [CreateAssetMenu()]
     [System.Serializable]
     public class Data_Dice : ScriptableObject
@@ -57,4 +61,7 @@ namespace ED
         public float range;
         public float searchRange;
     }
+    #endregion
+    
+    
 }

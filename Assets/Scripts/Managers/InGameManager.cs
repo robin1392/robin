@@ -27,7 +27,12 @@ namespace ED
         #region game system variable
         [Header("SYSTEN INFO")]
         public PLAY_TYPE playType;
-        public Data_AllDice data_AllDice;
+        
+        //public Data_AllDice data_AllDice;
+        // new all dice info
+        public DiceInfo data_DiceInfo;
+
+        
         public GameObject pref_Player;
         public GameObject pref_AI;
         public Transform ts_Lights;
@@ -37,7 +42,7 @@ namespace ED
         // --> field manager
         //public Transform ts_TopPlayer;
         //public Transform ts_BottomPlayer;
-        
+
         public bool isAIMode;
         public bool isGamePlaying;
         
@@ -139,6 +144,9 @@ namespace ED
             // 개발 버전이라..중간에서 실행햇을시에..
             if(DataPatchManager.Get().isDataLoadComplete == false )
                 DataPatchManager.Get().JsonDownLoad();
+
+            // 전체 주사위 정보
+            data_DiceInfo = JsonDataManager.Get().dataDiceInfo;
             
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
             PoolManager.Get().MakePool();
@@ -231,12 +239,8 @@ namespace ED
             }
 
             // Upgrade buttons
-            //for (var i = 0; i < arrUpgradeButtons.Length; i++)
-            //{
-                //arrUpgradeButtons[i].Initialize(playerController.arrDeck[i], arrUpgradeLevel[i]);
-            //}
             // ui 셋팅
-            UI_InGame.Get().SetArrayDeck(playerController.arrDeck , arrUpgradeLevel);
+            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck , arrUpgradeLevel);
 
 
             if (PhotonNetwork.IsConnected)

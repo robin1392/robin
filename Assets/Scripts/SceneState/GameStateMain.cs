@@ -41,7 +41,7 @@ public class GameStateMain : BaseSceneState
         else
         {
             // 개발 버전이라..중간에서 실행햇을시에..
-            DataPatchManager.Get().JsonDownLoad();
+            //DataPatchManager.Get().JsonDownLoad();
         }
     }
 

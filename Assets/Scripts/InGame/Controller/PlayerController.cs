@@ -67,11 +67,20 @@ namespace ED
         #region data variable
         
         // dice
-        protected Data_Dice[] _arrDeck;
+        /*protected Data_Dice[] _arrDeck;
         public Data_Dice[] arrDeck 
         { 
             get => _arrDeck;
             protected set => _arrDeck = value;
+        }*/
+        
+        
+        // new dice info
+        protected DiceInfoData[] _arrDiceDeck;
+        public DiceInfoData[] arrDiceDeck
+        {
+            get => _arrDiceDeck;
+            protected set => _arrDiceDeck = value;
         }
         
         //
@@ -183,14 +192,14 @@ namespace ED
         public void InitializePlayer()
         {
             _arrDice = new Dice[15];
-            if (arrDeck == null) _arrDeck = new Data_Dice[5];
+            if (arrDiceDeck == null) _arrDiceDeck = new DiceInfoData[5];
             _arrUpgradeLevel = new int[5];
         }
 
         public void DestroyPlayer()
         {
             _arrDice = null;
-            _arrDeck = null;
+            _arrDiceDeck = null;
             _arrUpgradeLevel = null;
         }
 
@@ -258,32 +267,37 @@ namespace ED
 
             for (var i = 0; i < arrDice.Length; i++)
             {
-                if (arrDice[i].id >= 0 && arrDice[i].data != null && arrDice[i].data.prefab != null)
+                //if (arrDice[i].id >= 0 && arrDice[i].data != null && arrDice[i].data.prefab != null)
+                if (arrDice[i].id >= 0 && arrDice[i].diceData != null )
                 {
                     //var ts = transform.parent.GetChild(i);
                     Transform ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(i): FieldManager.Get().GetTopListTs(i);
-                    var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
-                    var multiply = arrDice[i].data.spawnMultiply;
+                    
+                    //var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
+                    var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
+                    
+                    //var multiply = arrDice[i].data.spawnMultiply;
+                    var multiply = arrDice[i].diceData.spawnMultiply;
 
-                    switch(arrDice[i].data.castType)
+                    switch(arrDice[i].diceData.castType)
                     {
-                    case DICE_CAST_TYPE.MINION:
+                    case (int)DICE_CAST_TYPE.MINION:
                         for (var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
                         {
-                            CreateMinion(arrDice[i].data, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                            CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         }
                         break;
-                    case DICE_CAST_TYPE.HERO:
-                        CreateMinion(arrDice[i].data, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                    case (int)DICE_CAST_TYPE.HERO:
+                        CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
-                    case DICE_CAST_TYPE.MAGIC:
+                    case (int)DICE_CAST_TYPE.MAGIC:
                         for(var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
                         {
-                            CastMagic(arrDice[i].data, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                            CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         }
                         break;
-                    case DICE_CAST_TYPE.INSTALLATION:
-                        CastMagic(arrDice[i].data, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                    case (int)DICE_CAST_TYPE.INSTALLATION:
+                        CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
                         // upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
                         // CastMagic(arrDice[i].data, arrDice[i].level, upgradeLevel, magicCastDelay, i);
@@ -342,12 +356,14 @@ namespace ED
             return m;
         }
         
-        public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        //public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        public void CreateMinion(DiceInfoData data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             StartCoroutine(CreateMinionCoroutine(data, spawnPos, eyeLevel, upgradeLevel, delay, diceNum));
         }
 
-        private IEnumerator CreateMinionCoroutine(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        //private IEnumerator CreateMinionCoroutine(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CreateMinionCoroutine(DiceInfoData data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             if (delay > 0)
             {
@@ -359,7 +375,7 @@ namespace ED
             if (uiDiceField != null && isMine && diceNum > 0)
             {
                 var setting = uiDiceField.arrSlot[diceNum].ps.main;
-                setting.startColor = data.color;
+                setting.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);
                 uiDiceField.arrSlot[diceNum].ps.Play();
             }
 
@@ -381,15 +397,17 @@ namespace ED
                 dicePos.z *= -1f;
             }
             
+            //FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION )
             spawnPos.x += Random.Range(-0.2f, 0.2f);
             spawnPos.z += Random.Range(-0.2f, 0.2f);
-            var m = PoolManager.instance.ActivateObject<Minion>(data.prefab.name, spawnPos, InGameManager.Get().transform);
+            var m = PoolManager.instance.ActivateObject<Minion>( data.prefabName, spawnPos, InGameManager.Get().transform);
 
             if (m == null)
             {
-                PoolManager.instance.AddPool(data.prefab, 1);
-                Debug.LogFormat("{0} Pool Added 1", data.prefab.name);
-                m = PoolManager.instance.ActivateObject<Minion>(data.prefab.name, spawnPos, InGameManager.Get().transform);
+                //PoolManager.instance.AddPool(data.prefab, 1);
+                PoolManager.instance.AddPool(FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION , InGameManager.Get().transform), 1);
+                Debug.LogFormat("{0} Pool Added 1", data.prefabName);
+                m = PoolManager.instance.ActivateObject<Minion>(data.prefabName, spawnPos, InGameManager.Get().transform);
             }
             
             if (m != null)
@@ -397,17 +415,31 @@ namespace ED
                 m.id = _spawnCount++;
                 m.controller = this;
                 m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
-                m.targetMoveType = data.targetMoveType;
+                m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
                 m.ChangeLayer(isBottomPlayer);
-                m.power = data.power + (data.powerUpByInGameUp * upgradeLevel);
-                m.powerUpByUpgrade = data.powerUpByUpgrade;
-                m.powerUpByInGameUp = data.powerUpByInGameUp;
-                m.maxHealth = data.maxHealth + (data.maxHealthUpByInGameUp * upgradeLevel);
-                m.maxHealthUpByUpgrade = data.maxHealthUpByUpgrade;
-                m.maxHealthUpByInGameUp = data.maxHealthUpByInGameUp;
-                m.effect = data.effect + (data.effectUpByInGameUp * upgradeLevel);
-                m.effectUpByUpgrade = data.effectUpByUpgrade;
-                m.effectUpByInGameUp = data.effectUpByInGameUp;
+                
+                //m.power = data.power + (data.powerUpByInGameUp * upgradeLevel);
+                //m.powerUpByUpgrade = data.powerUpByUpgrade;
+                //m.powerUpByInGameUp = data.powerUpByInGameUp;
+                //m.maxHealth = data.maxHealth + (data.maxHealthUpByInGameUp * upgradeLevel);
+                //m.maxHealthUpByUpgrade = data.maxHealthUpByUpgrade;
+                //m.maxHealthUpByInGameUp = data.maxHealthUpByInGameUp;
+                //m.effect = data.effect + (data.effectUpByInGameUp * upgradeLevel);
+                //m.effectUpByUpgrade = data.effectUpByUpgrade;
+                //m.effectUpByInGameUp = data.effectUpByInGameUp;
+                
+                // new code - by nevill
+                m.power = data.power + (data.powerInGameUp * upgradeLevel);
+                m.powerUpByUpgrade = data.powerUpgrade;
+                m.powerUpByInGameUp = data.powerInGameUp;
+                m.maxHealth = data.maxHealth + (data.maxHpInGameUp * upgradeLevel);
+                m.maxHealthUpByUpgrade = data.maxHpUpgrade;
+                m.maxHealthUpByInGameUp = data.maxHpInGameUp;
+                m.effect = data.effect + (data.effectInGameUp * upgradeLevel);
+                m.effectUpByUpgrade = data.effectUpgrade;
+                m.effectUpByInGameUp = data.maxHpInGameUp;
+                
+                
                 m.attackSpeed = data.attackSpeed;
                 m.moveSpeed = data.moveSpeed;
                 m.range = data.range;
@@ -418,7 +450,7 @@ namespace ED
                 if (!listMinion.Contains(m)) listMinion.Add(m);
             }
 
-            if (data.castType == DICE_CAST_TYPE.HERO)
+            if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
             {
                 m.power *= arrDice[diceNum].level + 1;
                 m.maxHealth *= arrDice[diceNum].level + 1;
@@ -431,8 +463,8 @@ namespace ED
                 if (lr != null)
                 {
                     lr.SetPositions(new Vector3[2] {dicePos, m.ts_HitPos.position});
-                    lr.startColor = data.color;
-                    lr.endColor = data.color;
+                    lr.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
+                    lr.endColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
                 }
             }
         }
@@ -464,12 +496,14 @@ namespace ED
         
         #region magic
         
-        private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private void CastMagic(DiceInfoData data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             StartCoroutine(CastMagicCoroutine(data, eyeLevel, upgradeLevel, delay, diceNum));
         }
 
-        private IEnumerator CastMagicCoroutine(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        //private IEnumerator CastMagicCoroutine(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CastMagicCoroutine(DiceInfoData data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             yield return new WaitForSeconds(delay);
 
@@ -478,7 +512,7 @@ namespace ED
             if (uiDiceField != null && isMine)
             {
                 var setting = uiDiceField.arrSlot[diceNum].ps.main;
-                setting.startColor = data.color;
+                setting.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
                 uiDiceField.arrSlot[diceNum].ps.Play();
             }
             
@@ -500,10 +534,12 @@ namespace ED
                 spawnPos.z *= -1f;
             }
 
-            if (data.prefab != null)
+            GameObject loadMagic = FileHelper.LoadPrefab(data.prefabName, Global.E_LOADTYPE.LOAD_MAGIC , InGameManager.Get().transform);
+            //if (data.prefab != null)
+            if(loadMagic != null )
             {
-                var m = PoolManager.instance.ActivateObject<Magic>(data.prefab.name, spawnPos,
-                    InGameManager.Get().transform);
+                //var m = PoolManager.instance.ActivateObject<Magic>(data.prefab.name, spawnPos, InGameManager.Get().transform);
+                var m = PoolManager.instance.ActivateObject<Magic>(data.prefabName, spawnPos, InGameManager.Get().transform);
                 if (m != null)
                 {
                     m.isMine = PhotonNetwork.IsConnected
@@ -515,7 +551,7 @@ namespace ED
                     m.searchRange = data.searchRange;
                     m.attackSpeed = data.attackSpeed;
                     m.diceFieldNum = diceNum;
-                    m.targetMoveType = data.targetMoveType;
+                    m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
                     m.eyeLevel = eyeLevel;
                     m.upgradeLevel = upgradeLevel;
                     m.Initialize(isBottomPlayer, data.power, data.moveSpeed);
@@ -546,8 +582,11 @@ namespace ED
                     emptySlotNum = Random.Range(0, arrDice.Length);
                 } while (arrDice[emptySlotNum].id >= 0);
 
-                var randomDeckNum = Random.Range(0, arrDeck.Length);
-                arrDice[emptySlotNum].Set(arrDeck[randomDeckNum]);
+                //var randomDeckNum = Random.Range(0, arrDeck.Length);
+                int randomDeckNum = Random.Range(0, arrDiceDeck.Length);
+                //arrDice[emptySlotNum].Set(arrDeck[randDeckNum]);
+                arrDice[emptySlotNum].Set(arrDiceDeck[randomDeckNum]);
+                
                 if (uiDiceField != null)
                 {
                     uiDiceField.arrSlot[emptySlotNum].ani.SetTrigger("BBoing");
@@ -565,37 +604,59 @@ namespace ED
         public void SetDeck(string deck)
         {
             var splitDeck = deck.Split('/');
-            if (arrDeck == null) arrDeck = new Data_Dice[5];
+            //if (arrDeck == null) arrDeck = new Data_Dice[5];
+            
+            //
+            if(arrDiceDeck == null)_arrDiceDeck = new DiceInfoData[5];
 
             for (var i = 0; i < splitDeck.Length; i++)
             {
                 var num = int.Parse(splitDeck[i]);
-                arrDeck[i] = InGameManager.Get().data_AllDice.listDice.Find(data => data.id == num);
+                
+                //arrDeck[i] = InGameManager.Get().data_AllDice.listDice.Find(data => data.id == num);
+                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
                 
                 // add pool
                 //Debug.LogFormat(gameObject.name + " AddPool: " + arrDeck[i].prefab.name);
-                if (PoolManager.instance == null) Debug.Log("PoolManager Instnace is null");
-                if (arrDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDeck[i] is null", gameObject.name, i));
-                if (arrDeck[i].prefab == null) Debug.LogError(string.Format("{0}, arrDeck[{1}].prefab is null", gameObject.name, i));
-                PoolManager.instance.AddPool(arrDeck[i].prefab, 50);
+                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
+                
+                //if (arrDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDeck[i] is null", gameObject.name, i));
+                //if (arrDeck[i].prefab == null) Debug.LogError(string.Format("{0}, arrDeck[{1}].prefab is null", gameObject.name, i));
+                //PoolManager.instance.AddPool(arrDeck[i].prefab, 50);
+                
+                if (arrDiceDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDiceDeck[i] is null", gameObject.name, i));
+                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
+                {
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+                }
+                else
+                {
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+                }
+                
             }
         }
 
         //[PunRPC]
         public void GetDice(int deckNum, int slotNum)
         {
-            arrDice[slotNum].Set(arrDeck[deckNum]);
+            arrDice[slotNum].Set(arrDiceDeck[deckNum]);
         }
 
         //[PunRPC]
         public void LevelUpDice(int resetFieldNum, int levelupFieldNum, int levelupDiceId, int level)
         {
             arrDice[resetFieldNum].Reset();
-            foreach (var data in InGameManager.Get().data_AllDice.listDice.Where(data => levelupDiceId == data.id))
+            /*foreach (var data in InGameManager.Get().data_AllDice.listDice.Where(data => levelupDiceId == data.id))
             {
                 arrDice[levelupFieldNum].Set(data, level);
                 break;
-            }
+            }*/
+            
+            DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
+            arrDice[levelupFieldNum].Set(data, level);
+            
+            
         }
 
         public int GetDiceFieldEmptySlotCount()
@@ -608,12 +669,12 @@ namespace ED
             return ++arrUpgradeLevel[deckNum];
         }
 
-        private int GetDiceUpgradeLevel(Object data)
+        private int GetDiceUpgradeLevel(DiceInfoData data)
         {
             var num = 0;
-            for (var i = 0; i < arrDeck.Length; i++)
+            for (var i = 0; i < arrDiceDeck.Length; i++)
             {
-                if (arrDeck[i] != data) continue;
+                if (arrDiceDeck[i] != data) continue;
                 num = i;
                 break;
             }
@@ -910,7 +971,8 @@ namespace ED
         //[PunRPC]
         public void SpawnSkeleton(Vector3 pos)
         {
-            CreateMinion(InGameManager.Get().data_AllDice.listDice[1], pos, 1, 0, 0, -1);
+            //CreateMinion(InGameManager.Get().data_AllDice.listDice[1], pos, 1, 0, 0, -1);
+            CreateMinion(InGameManager.Get().data_DiceInfo.GetData(1), pos, 1, 0, 0, -1);
         }
 
         //[PunRPC]
@@ -946,7 +1008,8 @@ namespace ED
                 var loopCount = (int)stream.ReceiveNext();
                 for (var i = 0; i < loopCount && i < listMinion.Count; i++)
                 {
-                    listMinion[i].SetNetworkValue((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext(), (Vector3)stream.ReceiveNext(), (float)stream.ReceiveNext(), info.SentServerTime);
+                    listMinion[i].SetNetworkValue((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext(),
+                        (Vector3)stream.ReceiveNext(), (float)stream.ReceiveNext(), info.SentServerTime);
                 }
             }
         }
