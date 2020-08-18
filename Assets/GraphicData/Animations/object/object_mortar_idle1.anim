@@ -19,7 +19,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -90, y: 0, z: 180}
+        value: {x: -135, y: 0, z: 180}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -28,7 +28,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.75
-        value: {x: -90, y: 0, z: 190}
+        value: {x: -135, y: 0, z: 189.99023}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -37,16 +37,16 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 1.5
-        value: {x: -90, y: 0, z: 180}
-        inSlope: {x: 0, y: 0, z: -13.333333}
-        outSlope: {x: 0, y: 0, z: -13.333333}
+        value: {x: -135, y: 0, z: 180}
+        inSlope: {x: 0, y: 0, z: -13.326823}
+        outSlope: {x: 0, y: 0, z: -13.326823}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 2.25
-        value: {x: -90, y: 0, z: 170}
+        value: {x: -135, y: 0, z: 170}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -55,7 +55,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 3
-        value: {x: -90, y: 0, z: 180}
+        value: {x: -135, y: 0, z: 180}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -271,7 +271,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -90
+        value: -135
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -280,7 +280,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.75
-        value: -90
+        value: -135
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -289,7 +289,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.5
-        value: -90
+        value: -135
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -298,7 +298,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.25
-        value: -90
+        value: -135
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -307,7 +307,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 3
-        value: -90
+        value: -135
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -390,7 +390,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.75
-        value: 190
+        value: 189.99023
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -400,8 +400,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 1.5
         value: 180
-        inSlope: -13.333333
-        outSlope: -13.333333
+        inSlope: -13.326823
+        outSlope: -13.326823
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -859,7 +859,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: 26.object_mortar/mortar_body/mortar_weapon1
+    path: 26.object_mortar/mortar_body/mortar_weapon1/mortar_weapon2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -869,17 +869,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: 26.object_mortar/mortar_body/mortar_weapon1
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: 26.object_mortar/mortar_body/mortar_weapon1
+    path: 26.object_mortar/mortar_body/mortar_weapon1/mortar_weapon2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -898,8 +888,18 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: 26.object_mortar/mortar_body/mortar_weapon1
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: 26.object_mortar/mortar_body/mortar_weapon1/mortar_weapon2
+    path: 26.object_mortar/mortar_body/mortar_weapon1
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -909,7 +909,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: 26.object_mortar/mortar_body/mortar_weapon1/mortar_weapon2
+    path: 26.object_mortar/mortar_body/mortar_weapon1
     classID: 4
     script: {fileID: 0}
   m_HasGenericRootTransform: 0
