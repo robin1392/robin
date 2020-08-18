@@ -21,7 +21,7 @@ MonoBehaviour:
   spawnMultiply: 1
   icon: {fileID: 21300000, guid: ca80718e1ca9e403a8384d9f8aa7b1cc, type: 3}
   card: {fileID: 21300000, guid: 237f1a81e08164d129f6e509ae6c124d, type: 3}
-  color: {r: 0.3019608, g: 0.32941177, b: 0.34901962, a: 1}
+  color: {r: 0.7617953, g: 0.7735849, b: 0.23718406, a: 1}
   power: 150
   powerUpByUpgrade: 7
   powerUpByInGameUp: 25
@@ -31,7 +31,7 @@ MonoBehaviour:
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
-  attackSpeed: 3
+  attackSpeed: 0
   moveSpeed: 0
   range: 2
   searchRange: 2

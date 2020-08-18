@@ -26,18 +26,19 @@ namespace ED
         private IEnumerator AttackCoroutine()
         {
             float t = 0;
-            float shoot = tick;
+            float shootTime = tick;
             while (t < lifeTime)
             {
-                if (t >= shoot)
+                if (t >= shootTime)
                 {
-                    shoot += tick;
+                    shootTime += tick;
                     Shoot();
                 }
                 
                 t += Time.deltaTime;
                 yield return null;
             }
+            Destroy();
         }
 
         private void Shoot()
@@ -50,6 +51,15 @@ namespace ED
                     list.Add(col);
                     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Lightning",
                         col.transform.position, Quaternion.identity, Vector3.one);
+                    
+                    // Damage and sturn
+                    var cols2 = Physics.OverlapSphere(col.transform.position, 0.5f, targetLayer);
+                    foreach (var col2 in cols2)
+                    {
+                        BaseStat bs = col2.GetComponentInParent<BaseStat>();
+                        DamageToTarget(bs);
+                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, bs.id, 1f);
+                    }
                 }
             }
         }

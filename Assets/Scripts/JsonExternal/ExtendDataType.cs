@@ -222,6 +222,13 @@ public class JsonDataParse
     public static JSONObject OpenFile(string filename)
     {
         string readString = "";
+        
+        if (DataPatchManager.Get().eGamePlayMode == E_GamePlayMode.PlayMode_Dev)
+        {
+            var textData = Resources.Load<TextAsset>("JsonData/DiceInfo");
+            if (textData != null) return new JSONObject(textData.text);
+            else return null;
+        }
         readString = File.ReadAllText(filename);
 
         if (string.IsNullOrEmpty(readString))

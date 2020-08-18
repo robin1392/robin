@@ -17,7 +17,6 @@ public class JsonDataManager : MonoBehaviour
     public void Awake()
     {
         _instance = this;
-        DontDestroyOnLoad(this);
     }
     
     // load class count

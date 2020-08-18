@@ -69,32 +69,33 @@ namespace ED
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
             }
         }
-        private void OnTriggerEnter(Collider other)
-        {
-            if (IsFriendlyLayer(other.gameObject))
-            {
-                var m = other.gameObject.GetComponentInParent<Minion>();
-                if (m != null && listCloaking.Contains(m) == false && m.GetType() != typeof(Minion_Arbiter))
-                {
-                    listCloaking.Add(m);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, m.id, true);
-                }
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (IsFriendlyLayer(other.gameObject))
-            {
-                var m = other.gameObject.GetComponentInParent<Minion>();
-                if (m != null && listCloaking.Contains(m))
-                {
-                    listCloaking.Remove(m);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, m.id, false);
-                }
-            }
-        }
-        
+        //
+        // private void OnTriggerEnter(Collider other)
+        // {
+        //     if (IsFriendlyLayer(other.gameObject))
+        //     {
+        //         var m = other.gameObject.GetComponentInParent<Minion>();
+        //         if (m != null && listCloaking.Contains(m) == false && m.GetType() != typeof(Minion_Arbiter))
+        //         {
+        //             listCloaking.Add(m);
+        //             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, m.id, true);
+        //         }
+        //     }
+        // }
+        //
+        // private void OnTriggerExit(Collider other)
+        // {
+        //     if (IsFriendlyLayer(other.gameObject))
+        //     {
+        //         var m = other.gameObject.GetComponentInParent<Minion>();
+        //         if (m != null && listCloaking.Contains(m))
+        //         {
+        //             listCloaking.Remove(m);
+        //             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, m.id, false);
+        //         }
+        //     }
+        // }
+        //
         public void FireSpear()
         {
             if (target == null) return;

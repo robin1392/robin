@@ -47,7 +47,7 @@ public class FileHelper
 
     public static Sprite GetCardIcon(string name)
     {
-        string cardpath = "Image/dice_card";
+        string cardpath = "Image/dice_card/";
         
         Sprite cardSpr = Resources.Load<Sprite>(cardpath + name);// as Sprite;
         if (cardSpr == null)

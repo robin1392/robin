@@ -11,6 +11,7 @@ namespace ED
 {
     public class Turret : Magic
     {
+        public Animator animator;
         public Transform ts_ShootPoint;
         public float lifeTime = 20f;
         public Minion flyingTarget;
