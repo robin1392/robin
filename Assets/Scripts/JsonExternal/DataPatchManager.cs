@@ -37,7 +37,8 @@ public class DataPatchManager : MonoBehaviour
     
     
     #region variable
-
+    
+    public Configuration m_configuration = null; // 설정 파일
     // 게임 서비스 상태 -- 개발 모드
     public E_GameServiceMode eGameServiceMode = E_GameServiceMode.Mode_Dev;
     
@@ -86,6 +87,12 @@ public class DataPatchManager : MonoBehaviour
             GameObject.Destroy(this.gameObject);
             return;
         }
+        
+        // configuration
+        m_configuration = Configuration.GetConfigFile();//config 파일 불러오기
+        eGameServiceMode = m_configuration.eGameServiceMode;
+        eGamePlayMode = m_configuration.eGamePlayMode;
+        
         
         // data manager add
         this.gameObject.AddComponent<JsonDataManager>();
@@ -291,7 +298,8 @@ public class DataPatchManager : MonoBehaviour
         }
         else if (eGamePlayMode == E_GamePlayMode.PlayMode_Dev)
         {
-            loadPath = Application.dataPath + "/Resources/JsonData/";
+            //loadPath = Application.dataPath + "/Resources/JsonData/";
+            loadPath = "JsonData/";
         }
 
         int loadCount = 0;

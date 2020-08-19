@@ -225,11 +225,19 @@ public class JsonDataParse
         
         if (DataPatchManager.Get().eGamePlayMode == E_GamePlayMode.PlayMode_Dev)
         {
-            var textData = Resources.Load<TextAsset>("JsonData/DiceInfo");
-            if (textData != null) return new JSONObject(textData.text);
-            else return null;
+            filename = filename.Replace(".json", "");
+            var textData = Resources.Load<TextAsset>(filename);
+            //if (textData != null) return new JSONObject(textData.text);
+            //else return null;
+            if (textData != null)
+                readString = textData.text;
         }
-        readString = File.ReadAllText(filename);
+        else
+        {
+            readString = File.ReadAllText(filename);    
+        }
+        
+        Debug.Log(readString);
 
         if (string.IsNullOrEmpty(readString))
             return null;
