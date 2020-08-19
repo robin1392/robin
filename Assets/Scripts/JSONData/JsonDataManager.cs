@@ -21,17 +21,19 @@ public class JsonDataManager : MonoBehaviour
     }
     
     // load class count
-	public int loadMaxCount = 1;
+	public int loadMaxCount = 2;
     
     
     // json data
 	public DiceInfo dataDiceInfo = null;
+	public LangDiceDesc dataLangDiceDesc = null;
 
 
     //
     public void LoadJsonData(string filePath , Action<string> callBack = null)
     {
 		dataDiceInfo = new DiceInfo(filePath , callBack);
+		dataLangDiceDesc = new LangDiceDesc(filePath , callBack);
 
     }
 
@@ -40,6 +42,8 @@ public class JsonDataManager : MonoBehaviour
     {
 		dataDiceInfo.DestroyData();
 		dataDiceInfo = null;
+		dataLangDiceDesc.DestroyData();
+		dataLangDiceDesc = null;
 
     }
 
