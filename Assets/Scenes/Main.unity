@@ -574,7 +574,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info (1)
+      value: UI_Dice_Info_01
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
@@ -717,7 +717,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info (5)
+      value: UI_Dice_Info_05
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
@@ -1842,7 +1842,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cd13bb1b225749b7ba480075d9a6854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataAllDice: {fileID: 11400000, guid: 81b10ac00cd04437a85e3b2a9f325b15, type: 2}
   ui_Popup_Dice_Info: {fileID: 1593578196}
   arrImageDeck:
   - {fileID: 1860190439}
@@ -2903,7 +2902,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 28.1, y: -18.3}
-  m_SizeDelta: {x: 52, y: 162}
+  m_SizeDelta: {x: 55.2, y: 162}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &487664676
 MonoBehaviour:
@@ -2933,7 +2932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.54901963, g: 0.54901963, b: 0.54901963, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3483,7 +3482,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info (6)
+      value: UI_Dice_Info_06
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
@@ -4226,7 +4225,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -4264,7 +4263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6037736, g: 0.56674975, b: 0.56674975, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4922,7 +4921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5792,7 +5791,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info (4)
+      value: UI_Dice_Info_04
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
@@ -5974,9 +5973,9 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: f861c4a80377a40809b811e053a0e24b, type: 3}
     m_FontSize: 50
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 80
+    m_BestFit: 1
+    m_MinSize: 10
+    m_MaxSize: 50
     m_Alignment: 2
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -7291,7 +7290,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info (3)
+      value: UI_Dice_Info_03
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
@@ -7744,7 +7743,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info (7)
+      value: UI_Dice_Info_07
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
@@ -10580,7 +10579,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info (2)
+      value: UI_Dice_Info_02
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
@@ -11928,6 +11927,7 @@ MonoBehaviour:
   instanceID: 0
   eGameServiceMode: 0
   eGamePlayMode: 0
+  isDataLoadComplete: 0
   listDownData: []
   listCheckSum: []
 --- !u!4 &2064595332
@@ -12352,7 +12352,7 @@ PrefabInstance:
     - target: {fileID: 748508521654562621, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}
       propertyPath: m_Name
-      value: UI_Dice_Info
+      value: UI_Dice_Info_00
       objectReference: {fileID: 0}
     - target: {fileID: 748508521654562622, guid: 71c742ec616de481a97161c73dc5ca00,
         type: 3}

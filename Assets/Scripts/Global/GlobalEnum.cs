@@ -49,5 +49,32 @@ public partial class Global
     #endregion
     
     
+    #region lang code
+    public enum COUNTRYCODE
+    {
+        nonCode = -1,
+        KO,
+        EN,
+        TW,
+        RU,
+        JP,
+        BR,
+        CN
+    }
+
+    public enum COUNTRY
+    {
+        non = -1,
+        Korean,
+        English,
+        Taiwan,
+        Russia,
+        Japan,
+        Brazil,
+        Chinese
+    }
+    
+    #endregion
+    
     
 }
