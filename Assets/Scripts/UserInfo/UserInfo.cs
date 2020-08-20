@@ -19,8 +19,13 @@ public class UserInfo
         get => _activateDeckIndex;
         private set => _activateDeckIndex = value;
     }
-    
-    
+
+    private string[] _slotDeck = new string[Global.g_countDeck];
+    public string[] slotDeck
+    {
+        get => _slotDeck;
+        private set => _slotDeck = value;
+    }
 
     public UserInfo()
     {
