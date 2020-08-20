@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
@@ -9,6 +13,7 @@ namespace ED
     {
         public Transform[] arrSpawnPos;
         //public Data_Dice spawnDiceData;
+        public ParticleSystem[] arrPs_Spawn;
 
         private readonly float _skillCooltime = 10f;
         private float _skillCastedTime;
@@ -61,6 +66,7 @@ namespace ED
 
         IEnumerator SkillCoroutine()
         {
+            SetControllEnable(false);
             animator.SetTrigger("Skill");
             _isSkillCasting = true;
             
@@ -68,6 +74,8 @@ namespace ED
 
             for (int i = 0; i < arrSpawnPos.Length; i++)
             {
+                arrPs_Spawn[i].Play();
+                
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     //controller.photonView.RPC("SpawnSkeleton", RpcTarget.All, arrSpawnPos[i].position);
@@ -81,6 +89,7 @@ namespace ED
             
             yield return new WaitForSeconds(0.3f);
             
+            SetControllEnable(true);
             _isSkillCasting = false;
         }
     }

@@ -12,19 +12,17 @@ namespace  ED
 {
     public class StoneBall : Magic
     {
-        public Transform ts_Model;
         public ParticleSystem ps_Bomb;
         
-        public override void Initialize(bool pIsBottomPlayer, float pDamage, float pMoveSpeed = 1)
+        public override void Initialize(bool pIsBottomPlayer)
         {
-            base.Initialize(pIsBottomPlayer, pDamage, pMoveSpeed);
+            base.Initialize(pIsBottomPlayer);
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             if (isBottomPlayer == false) transform.rotation = Quaternion.Euler(0, 180, 0);
-            ts_Model.gameObject.SetActive(true);
+            //ts_Model.gameObject.SetActive(true);
             
             SetColor();
-            
             
             StartCoroutine(AttackCoroutine());
         }
@@ -37,7 +35,7 @@ namespace  ED
             {
                 transform.position += forward * moveSpeed * Time.deltaTime;
                 angle += (isBottomPlayer ? 45f : -45f) * Time.deltaTime;
-                ts_Model.rotation = Quaternion.AngleAxis(angle, Vector3.right);
+                //ts_Model.rotation = Quaternion.AngleAxis(angle, Vector3.right);
                 yield return null;
             }
         }
@@ -52,7 +50,7 @@ namespace  ED
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     var bs = other.GetComponentInParent<BaseStat>();
-                    controller.AttackEnemyMinion(bs.id, damage, 0f);
+                    controller.AttackEnemyMinion(bs.id, power, 0f);
                 }
             }
             else if (other.CompareTag("Wall"))
@@ -60,7 +58,7 @@ namespace  ED
                 //ps_Bomb.Play();
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 StopAllCoroutines();
-                ts_Model.gameObject.SetActive(false);
+                //ts_Model.gameObject.SetActive(false);
                 Destroy(2f);
             }
         }

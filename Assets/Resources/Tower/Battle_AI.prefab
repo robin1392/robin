@@ -253,7 +253,7 @@ MonoBehaviour:
   robotPieceCount: 0
   robotEyeTotalLevel: 0
   listMagic: []
-  deck: 
+  deck: 0/1/2/3/4
   getDiceCount: 0
 --- !u!54 &7857655242034525463
 Rigidbody:

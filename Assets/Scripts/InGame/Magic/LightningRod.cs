@@ -12,9 +12,9 @@ namespace ED
         public float tick = 0.1f;
         
         private List<Collider> list = new List<Collider>();
-        public override void Initialize(bool pIsBottomPlayer, float pDamage, float pMoveSpeed = 1)
+        public override void Initialize(bool pIsBottomPlayer)
         {
-            base.Initialize(pIsBottomPlayer, pDamage, pMoveSpeed);
+            base.Initialize(pIsBottomPlayer);
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             list.Clear();

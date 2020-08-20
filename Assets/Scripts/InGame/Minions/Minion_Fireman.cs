@@ -8,6 +8,15 @@ namespace ED
     public class Minion_Fireman : Minion
     {
         public ParticleSystem ps_Fire;
+        public Light light;
+
+        public override void Initialize(DestroyCallback destroy)
+        {
+            base.Initialize(destroy);
+
+            ps_Fire.Stop();
+            light.enabled = false;
+        }
 
         public override void Sturn(float duration)
         {
@@ -39,8 +48,6 @@ namespace ED
 
         public void Fire()
         {
-            ps_Fire.Play();
-
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
                 StartCoroutine(FireCoroutine());
@@ -49,9 +56,11 @@ namespace ED
 
         IEnumerator FireCoroutine()
         {
+            ps_Fire.Play();
+            light.enabled = true;
             var t = 0f;
             var tick = 0f;
-            while (t < 1f)
+            while (t < 0.95f)
             {
                 t += Time.deltaTime;
                 if (t >= tick)
@@ -81,6 +90,9 @@ namespace ED
 
                 yield return null;
             }
+
+            ps_Fire.Stop();
+            light.enabled = false;
         }
     }
 }

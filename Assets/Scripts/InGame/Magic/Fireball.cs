@@ -13,11 +13,13 @@ namespace ED
 {
     public class Fireball : Magic
     {
+        public Light light;
         public ParticleSystem ps_Tail;
         public ParticleSystem ps_BombEffect;
 
         protected override IEnumerator Move()
         {
+            light.enabled = true;
             var startPos = transform.position;
             while (target == null) { yield return null; }
             var endPos = target.ts_HitPos.position;
@@ -40,18 +42,20 @@ namespace ED
 
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
             {
-                if (target != null)
-                    controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
+                SplashDamage();
+                // if (target != null)
+                //     controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
                     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                 //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                 controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                if (target != null)
-                {
-                    controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
-                }
+                // if (target != null)
+                // {
+                //     controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
+                // }
+                SplashDamage();
                 Bomb();
             }
         }
@@ -67,26 +71,37 @@ namespace ED
 
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
                 {
-                    if (target != null)
-                        controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
+                    SplashDamage();
+                    //if (target != null)
+                        //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
                         //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
-                    if (target != null)
-                    {
-                        controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
-                    }
-
+                    // if (target != null)
+                    // {
+                    //     controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
+                    // }
+                    SplashDamage();
                     Bomb();
                 }
             }
         }
 
+        private void SplashDamage()
+        {
+            var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
+            foreach (var col in cols)
+            {
+                controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , col.GetComponentInParent<BaseStat>().id, power, 0f);
+            }
+        }
+
         public void Bomb()
         {
+            light.enabled = false;
             rb.velocity = Vector3.zero;
             ps_Tail.Stop();
             ps_BombEffect.Play();

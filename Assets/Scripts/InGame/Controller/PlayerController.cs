@@ -438,7 +438,8 @@ namespace ED
                 m.effect = data.effect + (data.effectInGameUp * upgradeLevel);
                 m.effectUpByUpgrade = data.effectUpgrade;
                 m.effectUpByInGameUp = data.maxHpInGameUp;
-                
+                m.effectDuration = data.effectDuration;
+                m.effectCooltime = data.effectCooltime;
                 
                 m.attackSpeed = data.attackSpeed;
                 m.moveSpeed = data.moveSpeed;
@@ -547,14 +548,30 @@ namespace ED
                         : (InGameManager.Get().playerController == this);
                     m.id = _spawnCount++;
                     m.controller = this;
-                    m.range = data.range;
-                    m.searchRange = data.searchRange;
-                    m.attackSpeed = data.attackSpeed;
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
+                    m.castType = (DICE_CAST_TYPE)data.castType;
+                    
+                    m.power = data.power + (data.powerInGameUp * upgradeLevel);
+                    m.powerUpByUpgrade = data.powerUpgrade;
+                    m.powerUpByInGameUp = data.powerInGameUp;
+                    m.maxHealth = data.maxHealth + (data.maxHpInGameUp * upgradeLevel);
+                    m.maxHealthUpByUpgrade = data.maxHpUpgrade;
+                    m.maxHealthUpByInGameUp = data.maxHpInGameUp;
+                    m.effect = data.effect + (data.effectInGameUp * upgradeLevel);
+                    m.effectUpByUpgrade = data.effectUpgrade;
+                    m.effectUpByInGameUp = data.maxHpInGameUp;
+                    m.effectDuration = data.effectDuration;
+                    m.effectCooltime = data.effectCooltime;
+                
+                    m.attackSpeed = data.attackSpeed;
+                    m.moveSpeed = data.moveSpeed;
+                    m.range = data.range;
+                    m.searchRange = data.searchRange;
                     m.eyeLevel = eyeLevel;
                     m.upgradeLevel = upgradeLevel;
-                    m.Initialize(isBottomPlayer, data.power, data.moveSpeed);
+                    
+                    m.Initialize(isBottomPlayer);
                     m.SetTarget();
                     listMagic.Add(m);
                 }
@@ -959,7 +976,10 @@ namespace ED
         //[PunRPC]
         public void TeleportMinion(int baseStatId, float x, float z)
         {
-            listMinion.Find(minion => minion.id == baseStatId).transform.position = new Vector3(x, 0, z);
+            Transform ts = listMinion.Find(minion => minion.id == baseStatId).transform;
+            PoolManager.instance.ActivateObject("Effect_Ninja", ts.position);
+            ts.position = new Vector3(x, 0, z);
+            PoolManager.instance.ActivateObject("Effect_Ninja", ts.position);
         }
 
         //[PunRPC]

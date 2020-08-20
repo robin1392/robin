@@ -19,7 +19,6 @@ public class LangEN
         if (dicData.ContainsKey(key))
             return dicData[key];
 
-        Debug.Log( "DATA KEY INVALID : " + "<color=yellow>" + key + "</color>");
         return null;
     }
     

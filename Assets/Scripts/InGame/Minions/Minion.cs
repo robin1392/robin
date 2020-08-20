@@ -65,6 +65,8 @@ namespace ED
 
         protected virtual void FixedUpdate()
         {
+            _spawnedTime += Time.fixedDeltaTime;
+            
             if (isPlayable && isPushing == false && isAttacking == false)
             {
                 if (PhotonNetwork.IsConnected && !isMine)
@@ -80,7 +82,6 @@ namespace ED
                     animator.SetFloat(_animatorHashMoveSpeed, agent.velocity.magnitude);
                 }
 
-                _spawnedTime += Time.fixedDeltaTime;
 
                 if (PhotonNetwork.IsConnected && !isMine) return;
 
@@ -138,8 +139,7 @@ namespace ED
                     currentHealth = maxHealth;
                 }
 
-                var t = PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
-                t.localScale = Vector3.one * 0.3f;
+                PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
             }
 
             RefreshHealthBar();

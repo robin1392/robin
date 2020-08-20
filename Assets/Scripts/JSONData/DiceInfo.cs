@@ -28,6 +28,8 @@ public class DiceInfoData
 	public float effect = 0.0f;
 	public float effectUpgrade = 0.0f;
 	public float effectInGameUp = 0.0f;
+	public float effectDuration = 0.0f;
+	public float effectCooltime = 0.0f;
 	public float attackSpeed = 0.0f;
 	public float moveSpeed = 0.0f;
 	public float range = 0.0f;
@@ -44,7 +46,6 @@ public class DiceInfo
         if (dicData.ContainsKey(key))
             return dicData[key];
 
-        Debug.Log( "DATA KEY INVALID : " + "<color=yellow>" + key + "</color>");
         return null;
     }
     
@@ -89,6 +90,8 @@ public class DiceInfo
 			info.effect = (float)JsonDataParse.GetParseData(info.effect.GetType(), jsonData[i]["effect"].ToString());
 			info.effectUpgrade = (float)JsonDataParse.GetParseData(info.effectUpgrade.GetType(), jsonData[i]["effectUpgrade"].ToString());
 			info.effectInGameUp = (float)JsonDataParse.GetParseData(info.effectInGameUp.GetType(), jsonData[i]["effectInGameUp"].ToString());
+			info.effectDuration = (float)JsonDataParse.GetParseData(info.effectDuration.GetType(), jsonData[i]["effectDuration"].ToString());
+			info.effectCooltime = (float)JsonDataParse.GetParseData(info.effectCooltime.GetType(), jsonData[i]["effectCooltime"].ToString());
 			info.attackSpeed = (float)JsonDataParse.GetParseData(info.attackSpeed.GetType(), jsonData[i]["attackSpeed"].ToString());
 			info.moveSpeed = (float)JsonDataParse.GetParseData(info.moveSpeed.GetType(), jsonData[i]["moveSpeed"].ToString());
 			info.range = (float)JsonDataParse.GetParseData(info.range.GetType(), jsonData[i]["range"].ToString());

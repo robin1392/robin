@@ -20,9 +20,9 @@ namespace ED
         private bool isTriggerOn;
         private static readonly int Set = Animator.StringToHash("Set");
 
-        public override void Initialize(bool pIsBottomPlayer, float pDamage, float pMoveSpeed = 1)
+        public override void Initialize(bool pIsBottomPlayer)
         {
-            base.Initialize(pIsBottomPlayer, pDamage, pMoveSpeed);
+            base.Initialize(pIsBottomPlayer);
 
             ani.gameObject.SetActive(true);
             SetColor();
@@ -112,12 +112,12 @@ namespace ED
                         if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
                         {
                             //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, m.id, damage, 0f);
-                            controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , m.id, damage, 0f);
+                            controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , m.id, power, 0f);
                             //controller.targetPlayer.photonView.RPC("PushMinion", RpcTarget.Others, m.id, col.transform.position - transform.position, pushPower);
                         }
                         else if (PhotonNetwork.IsConnected == false)
                         {
-                            controller.targetPlayer.HitDamageMinion(m.id, damage, 0f);
+                            controller.targetPlayer.HitDamageMinion(m.id, power, 0f);
                             //controller.targetPlayer.PushMinion(m.id, col.transform.position - transform.position, pushPower);
                         }
                     }

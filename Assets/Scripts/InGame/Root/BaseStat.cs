@@ -28,6 +28,8 @@ namespace ED
         public float effect;
         public float effectUpByUpgrade;
         public float effectUpByInGameUp;
+        public float effectDuration;
+        public float effectCooltime;
         public float attackSpeed;
         public float moveSpeed;
         public float range;
