@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using DG;
 using DG.Tweening;
 
+
 namespace ED
 {
 
@@ -31,6 +32,7 @@ namespace ED
         //private Data_Dice data;
         private DiceInfoData data;
 
+        public Transform infosTranform;
         //
         private List<InfoUI> listInfoUI = new List<InfoUI>();
         
@@ -93,13 +95,20 @@ namespace ED
             
             listInfoUI.Clear();
 
+
+            if (infosTranform == null)
+            {
+                infosTranform = this.transform.Find("Frame/Image_Inner_Frame/Infos");
+            }
+
             for (int i = 0; i < INFOCOUNT; i++)
             {
                 InfoUI info = new InfoUI();
-                info.textType = this.transform.Find("Frame/Image_Inner_Frame/Infos/UI_Dice_Info_0" + i.ToString() + "/Text_Type")
+                
+                info.textType = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Type")
                     .GetComponent<Text>();
                 
-                info.textValue = this.transform.Find("Frame/Image_Inner_Frame/Infos/UI_Dice_Info_0" + i.ToString() + "/Text_Value")
+                info.textValue = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Value")
                     .GetComponent<Text>();
                 
                 listInfoUI.Add(info);
@@ -117,8 +126,33 @@ namespace ED
             {
                 listInfoUI[i].textType.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_DESC + i);
             }
+
+            int castLangIndex = (int) LANG_ENUM.UI_TYPE_MINION;
+            switch (data.castType)
+            {
+                case (int)DICE_CAST_TYPE.MINION:
+                    castLangIndex = (int) LANG_ENUM.UI_TYPE_MINION;
+                    break;
+                case (int)DICE_CAST_TYPE.MAGIC:
+                    castLangIndex = (int) LANG_ENUM.UI_TYPE_MAGIC;
+                    break;
+                case (int)DICE_CAST_TYPE.INSTALLATION:
+                    castLangIndex = (int) LANG_ENUM.UI_TYPE_INSTALL;
+                    break;
+                case (int)DICE_CAST_TYPE.HERO:
+                    castLangIndex = (int) LANG_ENUM.UI_TYPE_HERO;
+                    break;
+            }
             
-            //listInfoUI[0].textValue.text = 
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Type].textValue.text = LocalizationManager.GetLangDesc( castLangIndex);
+            listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].textValue.text = string.Format("{0}", data.maxHealth);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = string.Format("{0:f1}", data.power);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = string.Format("{0:f1}", data.attackSpeed);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = string.Format("{0:f1}", data.moveSpeed);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_SearchRange].textValue.text = string.Format("{0:f1}", data.searchRange);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_etc].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Sp].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
+
         }
         #endregion
         
