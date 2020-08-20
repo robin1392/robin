@@ -28,6 +28,7 @@ namespace ED
         [Header("Info")] 
         public Text text_Name;
         public Text text_Discription;
+        public Text text_Grade;
 
         //private Data_Dice data;
         private DiceInfoData data;
@@ -61,6 +62,7 @@ namespace ED
             text_Name.text = LocalizationManager.GetLangDesc(data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
 
+            SetUnitGrade();
             SetInfoDesc();
         }
 
@@ -120,6 +122,29 @@ namespace ED
             listInfoUI.Clear();
         }
 
+        public void SetUnitGrade()
+        {
+            //text_Grade
+            int gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
+            switch (data.grade)
+            {
+                case (int)DICE_GRADE.NORMAL:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
+                    break;
+                case (int)DICE_GRADE.MAGIC:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_MAGIC;
+                    break;
+                case (int)DICE_GRADE.HEROIC:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_EPIC;
+                    break;
+                case (int)DICE_GRADE.LEGENDARY:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_LEGEND;
+                    break;
+            }
+            
+            text_Grade.text = LocalizationManager.GetLangDesc( gradeindex);
+        }
+        
         public void SetInfoDesc()
         {
             for (int i = 0; i < listInfoUI.Count; i++)
