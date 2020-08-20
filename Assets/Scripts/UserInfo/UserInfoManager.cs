@@ -194,6 +194,21 @@ public class UserInfoManager : Singleton<UserInfoManager>
     {
         return _userInfo.slotDeck[_userInfo.activateDeckIndex];
     }
+
+    public string GetSelectDeck(int index)
+    {
+        return _userInfo.slotDeck[index];
+    }
+
+    public void SetActiveDeckIndex(int index)
+    {
+        _userInfo.SetActiveDeck(index);
+    }
+
+    public int GetActiveDeckIndex()
+    {
+        return _userInfo.activateDeckIndex;
+    }
     #endregion
 }
 

@@ -1863,6 +1863,12 @@ MonoBehaviour:
   rts_Content: {fileID: 1255853477}
   text_Getted: {fileID: 308131065}
   obj_Ciritical: {fileID: 1543302425}
+  sprite_Use: {fileID: 21300000, guid: 612c032b9b5004c07a4b133fc090c517, type: 3}
+  sprite_UnUse: {fileID: 21300000, guid: e018a2bd5b2ab47539abbc5298cef362, type: 3}
+  arrImageDeckButton:
+  - {fileID: 835064399}
+  - {fileID: 1926368227}
+  - {fileID: 331802680}
   prefGettedDice: {fileID: 7851210545955448655, guid: 48794cafed9074fe181733204bcde09d,
     type: 3}
 --- !u!1 &250516113
@@ -2444,7 +2450,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 331802680}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 240476481}
+        m_TargetAssemblyTypeName: ED.UI_Panel_Dice, Assembly-CSharp
+        m_MethodName: OnClickDeck
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &331802680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4479,7 +4497,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 835064399}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 240476481}
+        m_TargetAssemblyTypeName: ED.UI_Panel_Dice, Assembly-CSharp
+        m_MethodName: OnClickDeck
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &835064399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11268,7 +11298,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1926368227}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 240476481}
+        m_TargetAssemblyTypeName: ED.UI_Panel_Dice, Assembly-CSharp
+        m_MethodName: OnClickDeck
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1926368227
 MonoBehaviour:
   m_ObjectHideFlags: 0
