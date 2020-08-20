@@ -29,6 +29,11 @@ namespace ED
         public RectTransform rts_Content;
         public Text text_Getted;
         public GameObject obj_Ciritical;
+
+        public Sprite sprite_Use;
+        public Sprite sprite_UnUse;
+
+        public Image[] arrImageDeckButton;
         
         [Header("Prefabs")]
         public GameObject prefGettedDice;
@@ -61,8 +66,8 @@ namespace ED
         private void RefreshDeck()
         {
             //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
-            int active = UserInfoManager.Get().GetUserInfo().activateDeckIndex;
-            var deck = UserInfoManager.Get().GetUserInfo().slotDeck[active];
+            int active = UserInfoManager.Get().GetActiveDeckIndex();
+            var deck = UserInfoManager.Get().GetSelectDeck(active);
                 
             var splitDeck = deck.Split('/');
 
@@ -148,7 +153,10 @@ namespace ED
         {
             if (_isSelectMode)
             {
-                var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+                //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+                int active = UserInfoManager.Get().GetActiveDeckIndex();
+                var deck = UserInfoManager.Get().GetSelectDeck(active);
+                
                 var splitDeck = deck.Split('/');
                 var intDeck = new int[5];
                 var isChanged = false;
@@ -170,7 +178,7 @@ namespace ED
                 
                 //ObscuredPrefs.SetString("Deck", $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
                 UserInfoManager.Get().GetUserInfo()
-                    .SetDeck(0, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                    .SetDeck(active, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
 
                 tsGettedDiceParent.gameObject.SetActive(true);
                 text_Getted.gameObject.SetActive(true);
@@ -189,5 +197,40 @@ namespace ED
             obj_Ciritical.SetActive(true);
             objSelectBlind.SetActive(false);
         }
+
+        #region dice deck select
+
+        public void SetActiveDeck()
+        {
+            int active = UserInfoManager.Get().GetActiveDeckIndex();
+            switch (active)
+            {
+                case 0:
+                    arrImageDeckButton[0].sprite = sprite_Use;
+                    arrImageDeckButton[1].sprite = sprite_UnUse;
+                    arrImageDeckButton[2].sprite = sprite_UnUse;
+                    break;
+                case 1:
+                    arrImageDeckButton[0].sprite = sprite_UnUse;
+                    arrImageDeckButton[1].sprite = sprite_Use;
+                    arrImageDeckButton[2].sprite = sprite_UnUse;
+                    break;
+                case 2:
+                    arrImageDeckButton[0].sprite = sprite_UnUse;
+                    arrImageDeckButton[1].sprite = sprite_UnUse;
+                    arrImageDeckButton[2].sprite = sprite_Use;
+                    break;
+            }
+            
+            RefreshDeck();
+        }
+        #endregion
+
+        public void OnClickDeck(int index)
+        {
+            UserInfoManager.Get().SetActiveDeckIndex(index);
+            SetActiveDeck();
+        }
+        
     }
 }
