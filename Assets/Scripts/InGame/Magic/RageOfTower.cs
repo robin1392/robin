@@ -9,9 +9,9 @@ namespace ED
     public class RageOfTower : Magic
     {
         public ParticleSystem ps_Bomb;
-        public override void Initialize(bool pIsBottomPlayer, float pDamage, float pMoveSpeed = 1)
+        public override void Initialize(bool pIsBottomPlayer)
         {
-            base.Initialize(pIsBottomPlayer, pDamage, pMoveSpeed);
+            base.Initialize(pIsBottomPlayer);
             
             Fire();
         }

@@ -18,9 +18,9 @@ namespace ED
         private Collider longTarget;
         private static readonly int animatorHashShoot = Animator.StringToHash("Shoot");
 
-        public override void Initialize(bool pIsBottomPlayer, float pDamage, float pMoveSpeed = 1)
+        public override void Initialize(bool pIsBottomPlayer)
         {
-            base.Initialize(pIsBottomPlayer, pDamage, pMoveSpeed);
+            base.Initialize(pIsBottomPlayer);
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             
@@ -93,12 +93,12 @@ namespace ED
             {
                 //Shoot(controller.targetPlayer);
                 //controller.photonView.RPC("FireCannonBall", RpcTarget.All, ts_ShootPoint.position, longTarget.transform.position, damage);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootPoint.position, longTarget.transform.position, damage);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootPoint.position, longTarget.transform.position, power);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
                 //Shoot(longTarget.GetComponentInParent<BaseStat>());
-                controller.FireCannonBall(ts_ShootPoint.position,longTarget.transform.position, damage);
+                controller.FireCannonBall(ts_ShootPoint.position,longTarget.transform.position, power);
             }
         }
         

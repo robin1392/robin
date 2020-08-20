@@ -15,6 +15,8 @@ namespace ED
         private float _skillCastedTime;
         private bool _isSkillCasting;
 
+        public ParticleSystem ps_Wind;
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -54,6 +56,7 @@ namespace ED
             
             yield return new WaitForSeconds(0.6f);
             
+            ps_Wind.Play();
             var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
             //Debug.LogFormat("BerserkerSkill: {0}", cols.Length);
             foreach (var col in cols)

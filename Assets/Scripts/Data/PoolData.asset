@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   listPool:
   - name: Effect_Heal
-    obj: {fileID: 771907615394794659, guid: 78b96bedb4d7b4a0b95ecd03081dfd57, type: 3}
+    obj: {fileID: 8196298747947456408, guid: 3256ab7ff4a554bf49fb0dcee0202a84, type: 3}
     count: 50
   - name: Bullet
     obj: {fileID: 4058551278812737087, guid: 5b2f5a3ed55744289a156c0e4a308b42, type: 3}
@@ -32,7 +32,7 @@ MonoBehaviour:
     obj: {fileID: 6781037679366507185, guid: 55f367a9602f2447a9ebb777b1340a83, type: 3}
     count: 30
   - name: Effect_Poison
-    obj: {fileID: 1155568894249246553, guid: 72a1339157a58420b9f37a622917d242, type: 3}
+    obj: {fileID: 3693968143288254739, guid: 0cbe6ce63894a48d8827b65c7d461f29, type: 3}
     count: 30
   - name: Effect_Bomb
     obj: {fileID: 4176294856687860321, guid: 5a588058619e145ad8873c3b9e42f056, type: 3}
@@ -42,4 +42,7 @@ MonoBehaviour:
     count: 30
   - name: Effect_Lightning
     obj: {fileID: 5060921744694126846, guid: 9c97f28897eba43e285d06df261a7912, type: 3}
+    count: 30
+  - name: Effect_Ninja
+    obj: {fileID: 9017776126007456575, guid: 81c5f0038f2914eabbbcac37316143b9, type: 3}
     count: 30

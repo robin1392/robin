@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace ED
 {
-    public class Magic : MonoBehaviourPun
+    public class Magic : MonoBehaviour
     {
         public enum SPAWN_TYPE
         {
@@ -14,6 +14,7 @@ namespace ED
             SPAWN_POINT,
         }
 
+        public DICE_CAST_TYPE castType;
         public SPAWN_TYPE spawnType;
         public DICE_MOVE_TYPE targetMoveType;
         public bool isMine;
@@ -41,14 +42,25 @@ namespace ED
                 }
             }
         }
-        protected float moveSpeed = 2f;
         public BaseStat target;
         public Vector3 targetPos;
-        protected float damage;
-        protected bool isBottomPlayer;
+        public float power;
+        public float powerUpByUpgrade;
+        public float powerUpByInGameUp;
+        public float maxHealth;
+        public float currentHealth;
+        public float maxHealthUpByUpgrade;
+        public float maxHealthUpByInGameUp;
+        public float effect;
+        public float effectUpByUpgrade;
+        public float effectUpByInGameUp;
+        public float effectDuration;
+        public float effectCooltime;
+        public float attackSpeed;
+        public float moveSpeed = 2f;
         public float range;
         public float searchRange;
-        public float attackSpeed;
+        protected bool isBottomPlayer;
         public int eyeLevel;
         public int upgradeLevel;
 
@@ -72,11 +84,10 @@ namespace ED
             }
         }
 
-        public virtual void Initialize(bool pIsBottomPlayer, float pDamage, float pMoveSpeed = 1f)
+        public virtual void Initialize(bool pIsBottomPlayer)
         {
-            this.isBottomPlayer = pIsBottomPlayer;
-            this.damage = pDamage;
-            this.moveSpeed = pMoveSpeed;
+            currentHealth = maxHealth;
+            isBottomPlayer = pIsBottomPlayer;
             //targetLayer = 1 << LayerMask.NameToLayer(pIsBottomPlayer ? "TopPlayer" : "BottomPlayer");
 
             destroyCallback = null;
@@ -188,7 +199,7 @@ namespace ED
         {
             if (m == null) return;
             
-            controller.AttackEnemyMinion(m.id, damage * factor, delay);
+            controller.AttackEnemyMinion(m.id, power * factor, delay);
         }
 
         protected bool IsTargetLayer(GameObject targetObject)

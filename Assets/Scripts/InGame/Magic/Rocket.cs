@@ -47,7 +47,7 @@ namespace ED
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
             {
                 if (target != null)
-                    controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
+                    controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, power, 0f);
                     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                 //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                 controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
@@ -56,7 +56,7 @@ namespace ED
             {
                 if (target != null)
                 {
-                    controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
+                    controller.targetPlayer.HitDamageMinion(target.id, power, 0f);
                 }
                 Bomb();
             }
@@ -74,7 +74,7 @@ namespace ED
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
                 {
                     if (target != null)
-                        controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
+                        controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, power, 0f);
                         //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
@@ -83,7 +83,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
+                        controller.targetPlayer.HitDamageMinion(target.id, power, 0f);
                     }
 
                     Bomb();

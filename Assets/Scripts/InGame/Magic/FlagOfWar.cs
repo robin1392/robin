@@ -12,15 +12,16 @@ namespace ED
 {
     public class FlagOfWar : Magic
     {
+        public ParticleSystem ps;
         public Collider col;
         public float lifeTime = 20f;
 
         private bool _isTriggerOn;
         private List<int> _listAttackSpeedUp = new List<int>();
         
-        public override void Initialize(bool pIsBottomPlayer, float pDamage, float pMoveSpeed = 1)
+        public override void Initialize(bool pIsBottomPlayer)
         {
-            base.Initialize(pIsBottomPlayer, pDamage, pMoveSpeed);
+            base.Initialize(pIsBottomPlayer);
 
             col.enabled = false;
             _listAttackSpeedUp.Clear();
@@ -56,7 +57,7 @@ namespace ED
 
         private IEnumerator LifetimeCoroutine()
         {
-            yield return new WaitForSeconds(lifeTime);
+            yield return new WaitForSeconds(lifeTime - 1.5f);
 
             if (InGameManager.Get().isGamePlaying == false) yield break;
 
@@ -74,6 +75,9 @@ namespace ED
                     controller.SetMinionAttackSpeedFactor(baseStatId, 1f);
                 }
             }
+
+            ps.Stop();
+            yield return new WaitForSeconds(1.5f);
             
             Destroy();
         }

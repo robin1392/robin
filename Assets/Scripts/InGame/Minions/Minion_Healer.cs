@@ -7,9 +7,15 @@ namespace ED
 {
     public class Minion_Healer : Minion
     {
+        public override void Initialize(DestroyCallback destroy)
+        {
+            base.Initialize(destroy);
+            attackSpeed = effectCooltime;
+        }
+
         public override void Attack()
         {
-            if (target == null || target.currentHealth >= target.maxHealth) return;
+            if (target == null || !IsFriendlyLayer(target.gameObject) || target.currentHealth >= target.maxHealth) return;
             
             if (PhotonNetwork.IsConnected && isMine)
             {
@@ -62,7 +68,7 @@ namespace ED
                 return firstTarget.GetComponentInParent<BaseStat>();
             }
 
-            return closeToTarget != null ? closeToTarget.GetComponentInParent<BaseStat>() : null;
+            return closeToTarget != null ? closeToTarget.GetComponentInParent<BaseStat>() : controller.targetPlayer;
         }
     }
 }

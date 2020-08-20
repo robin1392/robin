@@ -18,6 +18,7 @@ namespace ED
             var endPos = target.ts_HitPos.position;
             var distance = Vector3.Distance(startPos, endPos);
             var moveTime = distance / moveSpeed;
+            var moveDistance = 0f;
 
             float t = 0;
             
@@ -27,7 +28,8 @@ namespace ED
                 {
                     endPos = target.ts_HitPos.position;
                 }
-                rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
+                //rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
+                rb.position += (endPos - transform.position).normalized * (moveSpeed * Time.deltaTime);
 
                 t += Time.deltaTime;
                 yield return null;
@@ -37,7 +39,7 @@ namespace ED
             {
                 if (target != null)
                 {
-                    controller.AttackEnemyMinion(target.id, damage, 0f);
+                    controller.AttackEnemyMinion(target.id, power, 0f);
                     controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id, 3f);
                 }
 
@@ -49,7 +51,7 @@ namespace ED
             {
                 if (target != null)
                 {
-                    controller.AttackEnemyMinion(target.id, damage, 0f);
+                    controller.AttackEnemyMinion(target.id, power, 0f);
                     controller.targetPlayer.SturnMinion(target.id, 3f);
                 }
                 Bomb();
@@ -69,7 +71,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinion(target.id, damage, 0f);
+                        controller.AttackEnemyMinion(target.id, power, 0f);
                         //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
                         controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, 3f);
                     }
@@ -81,7 +83,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinion(target.id, damage, 0f);
+                        controller.AttackEnemyMinion(target.id, power, 0f);
                         controller.targetPlayer.SturnMinion(target.id, 3f);
                     }
 
