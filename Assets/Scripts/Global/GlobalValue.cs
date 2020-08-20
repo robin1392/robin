@@ -17,6 +17,19 @@ public partial class Global
     
     
     /// <summary>
+    /// 게임 시스템에 필요한 변수 지정 -- 해킹에 영향받지 않는 변수
+    /// </summary>
+    #region system value
+    // 덱의 개수
+    public static int g_countDeck = 3;
+    
+    #endregion
+    
+    
+    
+    
+    
+    /// <summary>
     /// ui 에 들어갈 string 을 임시로 정의 해놓는다
     /// </summary>
     #region ui string
@@ -29,6 +42,8 @@ public partial class Global
 
     public static string g_inGameWin = "승리";
     public static string g_inGameLose = "패배";
+
+    public static string[] g_gradeColor = {"000000", "43C0FF", "851CEA", "E19F38"};
 
     #endregion
 }

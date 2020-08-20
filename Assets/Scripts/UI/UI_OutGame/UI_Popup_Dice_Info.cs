@@ -143,6 +143,11 @@ namespace ED
             }
             
             text_Grade.text = LocalizationManager.GetLangDesc( gradeindex);
+            
+            if(data.grade == (int)DICE_GRADE.NORMAL)
+                text_Grade.color = UnityUtil.HexToColor("FFFFFF");
+            else
+                text_Grade.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);
         }
         
         public void SetInfoDesc()

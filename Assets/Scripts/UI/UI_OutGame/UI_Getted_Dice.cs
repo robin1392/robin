@@ -28,10 +28,18 @@ namespace ED
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
 
+        public Image image_GradeBG;
+        
+
         private void Awake()
         {
             _panelDice = FindObjectOfType<UI_Panel_Dice>();
             _grandParent = transform.parent.parent;
+
+            if (image_GradeBG == null)
+            {
+                image_GradeBG = this.transform.Find("Parent/Image").GetComponent<Image>();
+            }
         }
 
         public void Initialize(DiceInfoData pData)
@@ -42,6 +50,8 @@ namespace ED
             image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(()=>{_panelDice.Click_Dice_Info(pData.id);});
+
+            image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[pData.grade]);
         }
 
         public void Click_Dice()

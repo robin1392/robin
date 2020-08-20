@@ -227,7 +227,8 @@ namespace ED
                 isAIMode = true;
             }
 
-            var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+            //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+            var deck = UserInfoManager.Get().GetActiveDeck();
             if (PhotonNetwork.IsConnected)
             {
                 //playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
