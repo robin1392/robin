@@ -46,6 +46,8 @@ namespace ED
         {
             RefreshDeck();
             RefreshGettedDice();
+
+            RefreshButton();
             
             var safeArea = Screen.safeArea;
             var canvas = GetComponentInParent<Canvas>();
@@ -68,7 +70,7 @@ namespace ED
             //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
             int active = UserInfoManager.Get().GetActiveDeckIndex();
             var deck = UserInfoManager.Get().GetSelectDeck(active);
-                
+            
             var splitDeck = deck.Split('/');
 
             for (var i = 0; i < arrImageDeck.Length; i++)
@@ -223,6 +225,29 @@ namespace ED
             }
             
             RefreshDeck();
+        }
+
+        public void RefreshButton()
+        {
+            int active = UserInfoManager.Get().GetActiveDeckIndex();
+            switch (active)
+            {
+                case 0:
+                    arrImageDeckButton[0].sprite = sprite_Use;
+                    arrImageDeckButton[1].sprite = sprite_UnUse;
+                    arrImageDeckButton[2].sprite = sprite_UnUse;
+                    break;
+                case 1:
+                    arrImageDeckButton[0].sprite = sprite_UnUse;
+                    arrImageDeckButton[1].sprite = sprite_Use;
+                    arrImageDeckButton[2].sprite = sprite_UnUse;
+                    break;
+                case 2:
+                    arrImageDeckButton[0].sprite = sprite_UnUse;
+                    arrImageDeckButton[1].sprite = sprite_UnUse;
+                    arrImageDeckButton[2].sprite = sprite_Use;
+                    break;
+            }
         }
         #endregion
 

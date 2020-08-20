@@ -126,13 +126,16 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
     public override void Awake()
     {
-        base.Awake();
-
-        if (this.instanceID != UserInfoManager.Get().instanceID)
+        if (UserInfoManager.Get() != null)
         {
-            GameObject.Destroy(this.gameObject);
-            return;
+            if (this.instanceID != UserInfoManager.Get().instanceID)
+            {
+                GameObject.Destroy(this.gameObject);
+                return;
+            }
         }
+        
+        base.Awake();
         
         InitializeUserInfo();
     }

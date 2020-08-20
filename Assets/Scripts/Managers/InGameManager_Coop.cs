@@ -61,8 +61,12 @@ namespace ED
                 obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
             }
 
-            //string deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4/5");
-            var deck = UserInfoManager.Get().GetActiveDeck();
+            string deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4/5");
+            if (UserInfoManager.Get() != null)
+            {
+                deck = UserInfoManager.Get().GetActiveDeck();
+            }
+            
             if (PhotonNetwork.IsConnected)
             {
                 //playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
