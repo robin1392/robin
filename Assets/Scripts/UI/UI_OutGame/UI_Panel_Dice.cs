@@ -60,7 +60,10 @@ namespace ED
 
         private void RefreshDeck()
         {
-            var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+            //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+            int active = UserInfoManager.Get().GetUserInfo().activateDeckIndex;
+            var deck = UserInfoManager.Get().GetUserInfo().slotDeck[active];
+                
             var splitDeck = deck.Split('/');
 
             for (var i = 0; i < arrImageDeck.Length; i++)
@@ -164,7 +167,10 @@ namespace ED
                     }
                 }
                 if (!isChanged) intDeck[deckNum] = _selectedDiceId;
-                ObscuredPrefs.SetString("Deck", $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                
+                //ObscuredPrefs.SetString("Deck", $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                UserInfoManager.Get().GetUserInfo()
+                    .SetDeck(0, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
 
                 tsGettedDiceParent.gameObject.SetActive(true);
                 text_Getted.gameObject.SetActive(true);
