@@ -20,7 +20,7 @@ public class UILocalizationHelp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ConvertLang();
     }
 
     // Update is called once per frame
@@ -36,6 +36,9 @@ public class UILocalizationHelp : MonoBehaviour
     public void ConvertLang()
     {
         Text textThis = this.transform.GetComponent<Text>();
+        
+        if(textThis != null)
+            textThis.text = LocalizationManager.GetLangDesc(localizeLangKey);
         
     }
     #endregion
