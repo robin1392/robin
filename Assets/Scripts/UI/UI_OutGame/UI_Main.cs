@@ -158,6 +158,11 @@ namespace ED
                     .BroadcastMessage(i == num ? "Up" : "Down", SendMessageOptions.DontRequireReceiver);
             }
 
+            //Vector3 pos = scrollRect.content.position; 
+            //pos.y = 0.0f;
+            //scrollRect.content.position = pos;
+
+            panel_Dice.ResetYPos();
             panel_Dice.HideSelectPanel();
             panel_Dice.BroadcastMessage("DeactivateSelectedObject", SendMessageOptions.DontRequireReceiver);
         }

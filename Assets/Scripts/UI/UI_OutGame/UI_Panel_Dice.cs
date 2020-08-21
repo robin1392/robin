@@ -121,6 +121,11 @@ namespace ED
             rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + 1460 + 300);
         }
 
+        public void ResetYPos()
+        {
+            rts_Content.DOAnchorPosY(0f, 0.1f);
+        }
+
         public void Click_Dice_Use(int diceId)
         {
             _isSelectMode = true;
