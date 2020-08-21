@@ -15,6 +15,9 @@ namespace ED
         public ParticleSystem ps_Smoke;
         public float polymophCooltime = 20f;
 
+        public float bulletMoveSpeedBaby = 6f;
+        public float bulletMoveSpeedDragon = 10f;
+        
         private float originRange;
         private readonly string strTagGround = "Minion_Ground"; 
         private readonly string strTagFlying = "Minion_Flying"; 
@@ -54,11 +57,11 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireSpear", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller?.FireSpear(ts_ShootingPos.position, target.id, power);
+                controller?.FireSpear(ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
         }
 

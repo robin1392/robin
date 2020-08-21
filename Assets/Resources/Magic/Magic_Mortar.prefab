@@ -31,6 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8810350885836857216}
+  - {fileID: 3007511785663222370}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46,25 +47,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e59ccc1cc85b0487bae457ec50f8c27f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnType: 1
-  targetMoveType: 0
   isMine: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 0}
-  target: {fileID: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  range: 0
-  searchRange: 0
-  attackSpeed: 0
-  eyeLevel: 0
-  upgradeLevel: 0
+  animator: {fileID: 5288287222544880285}
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
+  targetMoveType: 0
+  power: 0
+  powerUpByUpgrade: 0
+  powerUpByInGameUp: 0
+  maxHealth: 0
+  currentHealth: 0
+  maxHealthUpByUpgrade: 0
+  maxHealthUpByInGameUp: 0
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
+  attackSpeed: 0
+  moveSpeed: 0
+  range: 0
+  searchRange: 0
+  isBottomPlayer: 0
+  ts_ShootingPos: {fileID: 761445587598328131}
+  ts_HitPos: {fileID: 3007511785663222370}
+  image_HealthBar: {fileID: 0}
+  text_Health: {fileID: 0}
+  isPlayable: 1
+  castType: 0
+  spawnType: 1
+  target: {fileID: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  eyeLevel: 0
+  upgradeLevel: 0
   diceFieldNum: 0
-  animator: {fileID: 5288287222544880285}
-  ts_ShootPoint: {fileID: 761445587598328131}
   shootCount: 4
 --- !u!114 &4959641879111532696
 MonoBehaviour:
@@ -320,6 +340,36 @@ Transform:
   - {fileID: 5125861991894358484}
   m_Father: {fileID: 563359602468480402}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8602860493570610025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3007511785663222370}
+  m_Layer: 0
+  m_Name: HitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3007511785663222370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602860493570610025}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.277, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 563359602468480402}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &569993602729509223
 PrefabInstance:

@@ -25,10 +25,10 @@ namespace ED
         public DestroyCallback destroyCallback;
         public delegate void DestroyCallback(Minion minion);
 
+        public DICE_CAST_TYPE castType;
         public bool targetIsEnemy = true;
         public bool isAttacking;
         public bool isPushing;
-        public BaseStat target;
         protected float _spawnedTime;
         private float _pathRefinedTime = 3f;
         private int _pathRefinedCount = 1;
@@ -94,6 +94,13 @@ namespace ED
 
         public virtual void Initialize(DestroyCallback destroy)
         {
+            if (castType == DICE_CAST_TYPE.HERO)
+            {
+                power *= Mathf.Pow(1.5f, eyeLevel - 1);
+                maxHealth *= Mathf.Pow(2f, eyeLevel - 1);
+                effect *= Mathf.Pow(2f, eyeLevel - 1);
+            }
+            
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;
             agent.speed = moveSpeed;
@@ -124,6 +131,9 @@ namespace ED
             destroyCallback = null;
             destroyCallback += destroy;
             _pathRefinedTime = Random.Range(2.5f, 3.5f);
+            
+            cloackingCount = 0;
+            Cloacking(false);
 
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
         }
@@ -287,7 +297,7 @@ namespace ED
 
         public void DamageToTarget(BaseStat m, float delay = 0, float factor = 1f)
         {
-            if (m == null) return;
+            if (m == null || m.isAlive == false) return;
             // if (PhotonNetwork.IsConnected && isMine)
             // {
             //     if (m.photonView == null)
@@ -398,7 +408,7 @@ namespace ED
 
         public void SetVelocityTarget()
         {
-            if (target != null)
+            if (target != null && isAlive)
             {
                 Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
                 agent.SetDestination(targetPos);

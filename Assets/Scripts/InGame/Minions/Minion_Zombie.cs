@@ -82,7 +82,7 @@ namespace ED
                     var bs = col.GetComponentInParent<BaseStat>();
                     if (bs.id > 0 && bs.isFlying == false && bs.isAlive)
                     {
-                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION, bs.id, power, 0f);
+                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, power, 0f);
                     }
                 }
                 

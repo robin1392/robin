@@ -177,7 +177,6 @@ namespace ED
             }
             
             StartPlayerControll();
-
         }
 
         public void OnDestroy()
@@ -291,11 +290,11 @@ namespace ED
                         CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
                     case (int)DICE_CAST_TYPE.MAGIC:
-                        for(var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
-                        {
-                            CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
-                        }
-                        break;
+                        // for(var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
+                        // {
+                        //     CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                        // }
+                        // break;
                     case (int)DICE_CAST_TYPE.INSTALLATION:
                         CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
@@ -303,7 +302,7 @@ namespace ED
                         // CastMagic(arrDice[i].data, arrDice[i].level, upgradeLevel, magicCastDelay, i);
                         // break;
                     }
-                    magicCastDelay += 0.1f;
+                    magicCastDelay += 0.066666f;
                 }
             }
         }
@@ -380,15 +379,18 @@ namespace ED
             }
 
             Vector3 dicePos = Vector3.zero;
-            if (uiDiceField != null && diceNum > 0)
+            if (diceNum >= 0)
             {
-                dicePos = uiDiceField.arrSlot[diceNum].transform.position;
-            }
-            else if (diceNum > 0)
-            {
-                dicePos = InGameManager.Get().playerController.uiDiceField.arrSlot[diceNum].transform.position;
-                dicePos.x *= -1f;
-                dicePos.z *= -1f;
+                if (uiDiceField != null)
+                {
+                    dicePos = uiDiceField.arrSlot[diceNum].transform.position;
+                }
+                else
+                {
+                    dicePos = InGameManager.Get().playerController.uiDiceField.arrSlot[diceNum].transform.position;
+                    dicePos.x *= -1f;
+                    dicePos.z *= -1f; 
+                }
             }
 
             if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
@@ -412,6 +414,7 @@ namespace ED
             
             if (m != null)
             {
+                m.castType = (DICE_CAST_TYPE)data.castType;
                 m.id = _spawnCount++;
                 m.controller = this;
                 m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
@@ -437,7 +440,7 @@ namespace ED
                 m.maxHealthUpByInGameUp = data.maxHpInGameUp;
                 m.effect = data.effect + (data.effectInGameUp * upgradeLevel);
                 m.effectUpByUpgrade = data.effectUpgrade;
-                m.effectUpByInGameUp = data.maxHpInGameUp;
+                m.effectUpByInGameUp = data.effectInGameUp;
                 m.effectDuration = data.effectDuration;
                 m.effectCooltime = data.effectCooltime;
                 
@@ -472,7 +475,25 @@ namespace ED
 
         public BaseStat GetBaseStatFromId(int baseStatId)
         {
-            return baseStatId == 0 ? (BaseStat) this : listMinion.Find(minion => minion.id == baseStatId);
+            if (baseStatId == 0) return this;
+
+            var minion = listMinion.Find(m => m.id == baseStatId);
+            if (minion != null)
+            {
+                return minion;
+            }
+            else
+            {
+                var magic = listMagic.Find(m => m.id == baseStatId);
+                if (magic != null)
+                {
+                    return magic;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         public Minion GetRandomMinion()
@@ -552,15 +573,15 @@ namespace ED
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
                     m.castType = (DICE_CAST_TYPE)data.castType;
                     
-                    m.power = data.power + (data.powerInGameUp * upgradeLevel);
+                    m.power = (data.power + (data.powerInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
                     m.powerUpByUpgrade = data.powerUpgrade;
                     m.powerUpByInGameUp = data.powerInGameUp;
-                    m.maxHealth = data.maxHealth + (data.maxHpInGameUp * upgradeLevel);
+                    m.maxHealth = (data.maxHealth + (data.maxHpInGameUp * upgradeLevel)) * Mathf.Pow(2f, eyeLevel - 1);
                     m.maxHealthUpByUpgrade = data.maxHpUpgrade;
                     m.maxHealthUpByInGameUp = data.maxHpInGameUp;
-                    m.effect = data.effect + (data.effectInGameUp * upgradeLevel);
+                    m.effect = (data.effect + (data.effectInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
                     m.effectUpByUpgrade = data.effectUpgrade;
-                    m.effectUpByInGameUp = data.maxHpInGameUp;
+                    m.effectUpByInGameUp = data.effectInGameUp;
                     m.effectDuration = data.effectDuration;
                     m.effectCooltime = data.effectCooltime;
                 
@@ -814,16 +835,16 @@ namespace ED
             if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom.PlayerCount > 1)
             {
                 //targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, baseStatId, damage, delay);
-                targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINION , baseStatId, damage, delay);
+                targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINIONANDMAGIC , baseStatId, damage, delay);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                targetPlayer.HitDamageMinion(baseStatId, damage, delay);
+                targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
             }
         }
 
         //[PunRPC]
-        public void HitDamageMinion(int baseStatId, float damage, float delay)
+        public void HitDamageMinionAndMagic(int baseStatId, float damage, float delay)
         {
             // baseStatId == 0 => Player tower
             if (baseStatId == 0)
@@ -840,7 +861,19 @@ namespace ED
             }
             else
             {
-                listMinion.Find(minion => minion.id == baseStatId)?.HitDamage(damage, delay);
+                var m = listMinion.Find(minion => minion.id == baseStatId);
+                if (m != null)
+                {
+                    m.HitDamage(damage, delay);
+                }
+                else
+                {
+                    var mg = listMagic.Find(magic => magic.id == baseStatId);
+                    if (mg != null)
+                    {
+                        mg.HitDamage(damage, delay);
+                    }
+                }
             }
         }
 
@@ -857,10 +890,27 @@ namespace ED
             }
         }
 
+        public void DeathMagic(int baseStatId)
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                SendPlayer(RpcTarget.All , E_PTDefine.PT_DESTROYMAGIC , baseStatId);
+            }
+            else
+            {
+                DestroyMagic(baseStatId);
+            }
+        }
+
         //[PunRPC]
         private void DestroyMinion(int baseStatId)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Death();
+        }
+
+        private void DestroyMagic(int baseStatId)
+        {
+            listMagic.Find(magic => magic.id == baseStatId)?.Destroy();
         }
 
         public void HealMinion(int baseStatId, float heal)
@@ -892,25 +942,27 @@ namespace ED
         // Unit's RPCs
         //////////////////////////////////////////////////////////////////////
         //[PunRPC]
-        public void FireArrow(Vector3 startPos, int targetId, float damage)
+        public void FireArrow(Vector3 startPos, int targetId, float damage, float moveSpeed)
         {
             var b = PoolManager.instance.ActivateObject<Bullet>("Bullet", startPos);
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
+                b.moveSpeed = moveSpeed;
                 b.Initialize(targetId, damage, isMine, isBottomPlayer);
             }
         }
         
         //[PunRPC]
-        public void FireSpear(Vector3 startPos, int targetId, float damage)
+        public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
         {
             var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
+                b.moveSpeed = moveSpeed;
                 b.Initialize(targetId, damage, isMine, isBottomPlayer);
             }
         }
@@ -1077,12 +1129,12 @@ namespace ED
                     int magicId = (int)param[0];
                     RemoveMagic(magicId);
                     break;
-                case E_PTDefine.PT_HITMINION:
+                case E_PTDefine.PT_HITMINIONANDMAGIC:
                     int baseIDhit = (int)param[0];
                     float damage = (float)param[1];
                     float delay = (float)param[2];
                     //targetPlayer.HitDamageMinion(baseIDhit, damage, delay);
-                    HitDamageMinion(baseIDhit, damage, delay);
+                    HitDamageMinionAndMagic(baseIDhit, damage, delay);
                     break;
                 case E_PTDefine.PT_HITDAMAGE:
                     float damageH = (float)param[0];
@@ -1092,6 +1144,10 @@ namespace ED
                 case E_PTDefine.PT_DESTROYMINION:
                     int baseIdD = (int)param[0];
                     DestroyMinion(baseIdD);
+                    break;
+                case E_PTDefine.PT_DESTROYMAGIC:
+                    baseIdD = (int) param[0];
+                    DestroyMagic(baseIdD);
                     break;
                 case E_PTDefine.PT_HEALMINION:
                     int baseId = (int)param[0];
@@ -1130,10 +1186,10 @@ namespace ED
                     FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2]);
                     break;
                 case E_PTDefine.PT_FIREARROW:
-                    FireArrow((Vector3)param[0] , (int)param[1] , (float)param[2]);
+                    FireArrow((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
                     break;
                 case E_PTDefine.PT_FIRESPEAR:
-                    FireSpear((Vector3)param[0], (int) param[1], (float) param[2]);
+                    FireSpear((Vector3)param[0], (int) param[1], (float) param[2], (float)param[3]);
                     break;
                 case E_PTDefine.PT_MINIONANITRIGGER:
                     SetMinionAnimationTrigger((int) param[0], (string) param[1]);

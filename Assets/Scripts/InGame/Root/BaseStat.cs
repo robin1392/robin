@@ -15,6 +15,7 @@ namespace ED
         public Rigidbody rb;
         public Animator animator;
         public Material[] arrMaterial;
+        public BaseStat target;
 
         [Header("Base Stat")]
         public DICE_MOVE_TYPE targetMoveType;

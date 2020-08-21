@@ -235,6 +235,8 @@ MonoBehaviour:
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 1
   range: 0
@@ -253,7 +255,7 @@ MonoBehaviour:
   robotPieceCount: 0
   robotEyeTotalLevel: 0
   listMagic: []
-  deck: 0/1/2/3/4
+  deck: 6/12/26/35/0
   getDiceCount: 0
 --- !u!54 &7857655242034525463
 Rigidbody:

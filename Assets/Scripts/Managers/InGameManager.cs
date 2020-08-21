@@ -427,7 +427,7 @@ namespace ED
             int rnd = 0;
             if (isBottomPlayer)
             {
-                if (listBottomPlayer.Count > 0)
+                if (listBottomPlayer.Count > 0 && listBottomPlayer[0].isAlive)
                 {
                     do
                     {
@@ -443,7 +443,7 @@ namespace ED
             }
             else
             {
-                if (listTopPlayer.Count > 0)
+                if (listTopPlayer.Count > 0 && listTopPlayer[0].isAlive)
                 {
                     do
                     {
@@ -665,5 +665,38 @@ namespace ED
             }
         }
         #endregion
+
+        public BaseStat GetRandomPlayerUnitHighHealth(bool pIsBottomPlayer)
+        {
+            BaseStat rtn = null;
+            float hp = 0;
+            
+            if (pIsBottomPlayer)
+            {
+                for (int i = 1; i < listBottomPlayer.Count; i++)
+                {
+                    if (listBottomPlayer[i].currentHealth > hp)
+                    {
+                        rtn = listBottomPlayer[i];
+                        hp = rtn.currentHealth;
+                    }
+                }
+
+                return rtn;
+            }
+            else
+            {
+                for (int i = 1; i < listTopPlayer.Count; i++)
+                {
+                    if (listTopPlayer[i].currentHealth > hp)
+                    {
+                        rtn = listTopPlayer[i];
+                        hp = rtn.currentHealth;
+                    }
+                }
+
+                return rtn;
+            }
+        }
     }
 }

@@ -107,13 +107,13 @@ namespace ED
             if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
             {
                 if (_target != null)
-                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,_target.id, _damage, 0f);
+                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,_target.id, _damage, 0f);
                 //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, _target.id, _damage, 0f);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
                 if (_target != null)
-                    controller.targetPlayer.HitDamageMinion(_target.id, _damage, 0f);
+                    controller.targetPlayer.HitDamageMinionAndMagic(_target.id, _damage, 0f);
             }
 
             _poad.Deactive();

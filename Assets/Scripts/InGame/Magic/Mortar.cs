@@ -11,8 +11,6 @@ namespace ED
 {
     public class Mortar : Magic
     {
-        public Animator animator;
-        public Transform ts_ShootPoint;
         public int shootCount = 4;
 
         private Collider longTarget;
@@ -93,12 +91,12 @@ namespace ED
             {
                 //Shoot(controller.targetPlayer);
                 //controller.photonView.RPC("FireCannonBall", RpcTarget.All, ts_ShootPoint.position, longTarget.transform.position, damage);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootPoint.position, longTarget.transform.position, power);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.transform.position, power);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
                 //Shoot(longTarget.GetComponentInParent<BaseStat>());
-                controller.FireCannonBall(ts_ShootPoint.position,longTarget.transform.position, power);
+                controller.FireCannonBall(ts_ShootingPos.position,longTarget.transform.position, power);
             }
         }
         

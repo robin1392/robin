@@ -11,6 +11,8 @@ namespace ED
 {
     public class Minion_Goliath : Minion
     {
+        public float bulletMoveSpeedByGround = 10f;
+        public float bulletMoveSpeedByFlying = 6f;
         public Transform ts_ShootingPos2;
         
         public override void Attack()
@@ -34,19 +36,21 @@ namespace ED
             {
                 //controller.photonView.RPC(target.isFlying ? "FireSpear" : "FireArrow", RpcTarget.All, 
                     //shootingPos.position, target.id, target.isFlying ? power * 1.5f : power);
-                
-                controller.SendPlayer(RpcTarget.All , target.isFlying ? E_PTDefine.PT_FIRESPEAR : E_PTDefine.PT_FIREARROW,
-                    ts_ShootingPos.position, target.id, target.isFlying ? power * 1.5f : power);
+
+                controller.SendPlayer(RpcTarget.All,
+                    target.isFlying ? E_PTDefine.PT_FIRESPEAR : E_PTDefine.PT_FIREARROW,
+            ts_ShootingPos.position, target.id, target.isFlying ? power * 1.5f : power, 
+                    target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
                 if (target.isFlying)
                 {
-                    controller.FireSpear(ts_ShootingPos2.position, target.id, power * 1.5f);
+                    controller.FireSpear(ts_ShootingPos2.position, target.id, power * 1.5f, bulletMoveSpeedByFlying);
                 }
                 else
                 {
-                    controller.FireArrow(ts_ShootingPos.position, target.id, power);
+                    controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeedByGround);
                 }
             }
         }

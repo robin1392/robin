@@ -9,6 +9,9 @@ namespace ED
     public class CameraController : MonoBehaviour
     {
         private Camera camera;
+        public Camera camera_UI;
+        public Camera camera_Effect;
+        public Camera camera_UI_Popup;
 
         private void Awake()
         {

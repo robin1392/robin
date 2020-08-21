@@ -70,11 +70,11 @@ namespace ED
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
                 {
                     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINION,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
+                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
-                    controller.targetPlayer.HitDamageMinion(col.GetComponentInParent<BaseStat>().id, _damage, 0f);
+                    controller.targetPlayer.HitDamageMinionAndMagic(col.GetComponentInParent<BaseStat>().id, _damage, 0f);
                 }
             }
 

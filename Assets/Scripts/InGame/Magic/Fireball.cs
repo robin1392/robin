@@ -92,10 +92,12 @@ namespace ED
 
         private void SplashDamage()
         {
-            var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
+            Vector3 pos = transform.position;
+            pos.y = 0;
+            var cols = Physics.OverlapSphere(pos, 1f, targetLayer);
             foreach (var col in cols)
             {
-                controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , col.GetComponentInParent<BaseStat>().id, power, 0f);
+                controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);
             }
         }
 

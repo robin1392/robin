@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace ED
 {
-    public class Magic : MonoBehaviour
+    public class Magic : BaseStat
     {
         public enum SPAWN_TYPE
         {
@@ -14,65 +14,68 @@ namespace ED
             SPAWN_POINT,
         }
 
+        [SerializeField]
+        protected Collider _collider;
+
         public DICE_CAST_TYPE castType;
         public SPAWN_TYPE spawnType;
-        public DICE_MOVE_TYPE targetMoveType;
-        public bool isMine;
-        public int id;
-        public PlayerController controller;
-        public Rigidbody rb;
+        //public DICE_MOVE_TYPE targetMoveType;
+        //public bool isMine;
+        //public int id;
+        //public PlayerController controller;
+        //public Rigidbody rb;
         public DestroyCallback destroyCallback;
         public delegate void DestroyCallback(Magic magic);
 
-        protected int targetLayer
-        {
-            get
-            {
-                switch (targetMoveType)
-                {
-                    case DICE_MOVE_TYPE.GROUND:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
-                    case DICE_MOVE_TYPE.FLYING:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
-                    case DICE_MOVE_TYPE.ALL:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer") 
-                               | 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
-                    default:
-                        return 0;
-                }
-            }
-        }
-        public BaseStat target;
+        // protected int targetLayer
+        // {
+        //     get
+        //     {
+        //         switch (targetMoveType)
+        //         {
+        //             case DICE_MOVE_TYPE.GROUND:
+        //                 return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
+        //             case DICE_MOVE_TYPE.FLYING:
+        //                 return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+        //             case DICE_MOVE_TYPE.ALL:
+        //                 return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer") 
+        //                        | 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+        //             default:
+        //                 return 0;
+        //         }
+        //     }
+        // }
         public Vector3 targetPos;
-        public float power;
-        public float powerUpByUpgrade;
-        public float powerUpByInGameUp;
-        public float maxHealth;
-        public float currentHealth;
-        public float maxHealthUpByUpgrade;
-        public float maxHealthUpByInGameUp;
-        public float effect;
-        public float effectUpByUpgrade;
-        public float effectUpByInGameUp;
-        public float effectDuration;
-        public float effectCooltime;
-        public float attackSpeed;
-        public float moveSpeed = 2f;
-        public float range;
-        public float searchRange;
-        protected bool isBottomPlayer;
+        // public float power;
+        // public float powerUpByUpgrade;
+        // public float powerUpByInGameUp;
+        // public float maxHealth;
+        // public float currentHealth;
+        // public float maxHealthUpByUpgrade;
+        // public float maxHealthUpByInGameUp;
+        // public float effect;
+        // public float effectUpByUpgrade;
+        // public float effectUpByInGameUp;
+        // public float effectDuration;
+        // public float effectCooltime;
+        // public float attackSpeed;
+        // public float moveSpeed = 2f;
+        // public float range;
+        // public float searchRange;
+        // protected bool isBottomPlayer;
+        
         public int eyeLevel;
         public int upgradeLevel;
-
+        
         protected Coroutine destroyRoutine;
-        private Vector3 networkPosition;
+        //private Vector3 networkPosition;
         private PoolObjectAutoDeactivate poolDeactive;
 
-        public Material[] arrMaterial;
+        //public Material[] arrMaterial;
 
         [HideInInspector] public int diceFieldNum;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (rb  == null)
             {
@@ -88,7 +91,6 @@ namespace ED
         {
             currentHealth = maxHealth;
             isBottomPlayer = pIsBottomPlayer;
-            //targetLayer = 1 << LayerMask.NameToLayer(pIsBottomPlayer ? "TopPlayer" : "BottomPlayer");
 
             destroyCallback = null;
             destroyCallback += controller.MagicDestroyCallback;
@@ -114,7 +116,7 @@ namespace ED
             }
         }
 
-        protected void Destroy(float delay = 0)
+        public virtual void Destroy(float delay = 0)
         {
             if (destroyRoutine != null) StopCoroutine(destroyRoutine);
             destroyRoutine = StartCoroutine(DestroyCoroutine(delay));
@@ -202,21 +204,21 @@ namespace ED
             controller.AttackEnemyMinion(m.id, power * factor, delay);
         }
 
-        protected bool IsTargetLayer(GameObject targetObject)
-        {
-            switch (targetMoveType)
-            {
-                case DICE_MOVE_TYPE.GROUND:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
-                case DICE_MOVE_TYPE.FLYING:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
-                case DICE_MOVE_TYPE.ALL:
-                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer") 
-                           || targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
-                default:
-                    return false;
-            }
-        }
+        // protected bool IsTargetLayer(GameObject targetObject)
+        // {
+        //     switch (targetMoveType)
+        //     {
+        //         case DICE_MOVE_TYPE.GROUND:
+        //             return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
+        //         case DICE_MOVE_TYPE.FLYING:
+        //             return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+        //         case DICE_MOVE_TYPE.ALL:
+        //             return targetObject.layer ==  LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer") 
+        //                    || targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+        //         default:
+        //             return false;
+        //     }
+        // }
         
         protected bool IsFriendlyLayer(GameObject targetObject)
         {
@@ -231,6 +233,22 @@ namespace ED
                            || targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
                 default:
                     return false;
+            }
+        }
+
+        public override void HitDamage(float damage, float delay = 0)
+        {
+            if (currentHealth > 0)
+            {
+                currentHealth -= damage;
+
+                if (currentHealth <= 0)
+                {
+                    if (PhotonNetwork.IsConnected && !isMine) return;
+
+                    currentHealth = 0;
+                    controller.DeathMagic(id);
+                }
             }
         }
     }

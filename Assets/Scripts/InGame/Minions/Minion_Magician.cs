@@ -7,6 +7,8 @@ namespace  ED
 {
     public class Minion_Magician : Minion
     {
+        public float bulletMoveSpeed = 6f;
+        
         [SerializeField] private readonly float _skillCooltime = 10f;
         private int _skillCastedCount;
 
@@ -36,11 +38,11 @@ namespace  ED
         {
             if (PhotonNetwork.IsConnected && isMine)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireArrow(ts_ShootingPos.position, target.id, power);
+                controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
 

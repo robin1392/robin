@@ -76,7 +76,10 @@ namespace ED
 
         public void AddPool(GameObject prefab, int count)
         {
-            if (prefab == null) return;
+            if (prefab == null)
+            {
+                return;
+            }
 
             StartCoroutine(AddPoolCoroutine(prefab, count));
         }
@@ -103,7 +106,7 @@ namespace ED
                     pad.poolName = prefab.name;
                 }
                 
-                yield return new WaitForSeconds(0.2f);
+                yield return null;
             }
         }
 

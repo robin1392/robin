@@ -10,6 +10,8 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light;
 
+        public bool isFire;
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -56,6 +58,7 @@ namespace ED
 
         IEnumerator FireCoroutine()
         {
+            isFire = true;
             ps_Fire.Play();
             light.enabled = true;
             var t = 0f;
@@ -65,12 +68,12 @@ namespace ED
                 t += Time.deltaTime;
                 if (t >= tick)
                 {
-                    tick += 0.1f;
+                    tick += attackSpeed;
                     var cols = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range,
                         targetLayer);
                     foreach (var col in cols)
                     {
-                        var bs = col.transform.GetComponent<BaseStat>();
+                        var bs = col.transform.GetComponentInParent<BaseStat>();
                         
                         if (bs.id == id) continue;
 
@@ -84,7 +87,7 @@ namespace ED
                         //     controller.targetPlayer.HitDamageMinion(bs.id, power * 0.1f, 0f);
                         // }
                         
-                        DamageToTarget(bs, 0, 0.1f);
+                        DamageToTarget(bs);
                     }
                 }
 
@@ -93,6 +96,7 @@ namespace ED
 
             ps_Fire.Stop();
             light.enabled = false;
+            isFire = false;
         }
     }
 }

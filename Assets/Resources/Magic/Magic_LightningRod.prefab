@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4959641879111532696}
   - component: {fileID: 84509054124665570}
   m_Layer: 0
-  m_Name: Magic_Thunder
+  m_Name: Magic_LightningRod
   m_TagString: Installation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,6 +32,7 @@ Transform:
   m_Children:
   - {fileID: 8810350885836857216}
   - {fileID: 761445587598328131}
+  - {fileID: 2527651284894689149}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47,24 +48,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e63cd5160b15a40f1939ae38a8eca2d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnType: 1
-  targetMoveType: 0
   isMine: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 0}
-  target: {fileID: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  range: 0
-  searchRange: 0
-  attackSpeed: 0
-  eyeLevel: 0
-  upgradeLevel: 0
+  animator: {fileID: 0}
   arrMaterial:
   - {fileID: 2100000, guid: 429a4b434b7774dceb7fd95568445097, type: 2}
   - {fileID: 2100000, guid: 09df1657f31b548e2a63aff14ee47cb5, type: 2}
+  targetMoveType: 0
+  power: 0
+  powerUpByUpgrade: 0
+  powerUpByInGameUp: 0
+  maxHealth: 0
+  currentHealth: 0
+  maxHealthUpByUpgrade: 0
+  maxHealthUpByInGameUp: 0
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
+  attackSpeed: 0
+  moveSpeed: 0
+  range: 0
+  searchRange: 0
+  isBottomPlayer: 0
+  ts_ShootingPos: {fileID: 761445587598328131}
+  ts_HitPos: {fileID: 2527651284894689149}
+  image_HealthBar: {fileID: 0}
+  text_Health: {fileID: 0}
+  isPlayable: 1
+  castType: 0
+  spawnType: 1
+  target: {fileID: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  eyeLevel: 0
+  upgradeLevel: 0
   diceFieldNum: 0
   ts_ShootPoint: {fileID: 761445587598328131}
+  lifeTime: 20
+  tick: 0.1
 --- !u!114 &4959641879111532696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,6 +308,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5279979929154446112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2527651284894689149}
+  m_Layer: 0
+  m_Name: HitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2527651284894689149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5279979929154446112}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.42, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 563359602468480402}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &5667363262230888955
 GameObject:
   m_ObjectHideFlags: 0

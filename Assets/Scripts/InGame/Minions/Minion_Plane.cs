@@ -12,6 +12,8 @@ namespace ED
 {
     public class Minion_Plane : Minion
     {
+        public float bulletMoveSpeed = 6f;
+        
         public override void Attack()
         {
             if (target == null) return;
@@ -29,7 +31,7 @@ namespace ED
             
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
         
@@ -39,7 +41,7 @@ namespace ED
             
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
     }

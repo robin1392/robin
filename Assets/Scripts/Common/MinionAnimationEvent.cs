@@ -9,18 +9,18 @@ namespace ED
     public class MinionAnimationEvent : MonoBehaviour
     {
         public float delay;
-        private Minion _minion;
+        private BaseStat _minion;
 
         private void Awake()
         {
-            _minion = GetComponentInParent<Minion>();
+            _minion = GetComponentInParent<BaseStat>();
         }
 
         public void Attack()
         {
             if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
             {
-                _minion.DamageToTarget(_minion.target, delay);
+                ((Minion)_minion).DamageToTarget(_minion.target, delay);
             }
         }
 

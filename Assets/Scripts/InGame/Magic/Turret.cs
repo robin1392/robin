@@ -11,10 +11,17 @@ namespace ED
 {
     public class Turret : Magic
     {
-        public Animator animator;
+        public ParticleSystem ps_Fire;
+        public Light light_Fire;
+
+        public Transform ts_Head;
         public Transform ts_ShootPoint;
         public float lifeTime = 20f;
         public Minion flyingTarget;
+        public float bulletMoveSpeed = 6f;
+        public float shootTime = 0;
+
+        public Transform[] arrTs_Parts;
 
         public override void Initialize(bool pIsBottomPlayer)
         {
@@ -24,27 +31,58 @@ namespace ED
             
             SetColor();
 
-            if (PhotonNetwork.IsConnected && isMine)
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
+                shootTime = 0;
                 StartCoroutine(AttackCoroutine());
             }
-            else if (PhotonNetwork.IsConnected == false)
+            
+            SetParts();
+        }
+
+        private void SetParts()
+        {
+            for (int i = 0; i < arrTs_Parts.Length; i++)
             {
-                StartCoroutine(AttackCoroutine());
+                arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
             }
+
+            animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
+            ts_Head.rotation = Quaternion.identity;
         }
 
         private IEnumerator AttackCoroutine()
         {
             var t = 0f;
-            
+
             while (t < lifeTime)
             {
-                SetFlyingTarget();
-                t += attackSpeed;
-                yield return new WaitForSeconds(attackSpeed);
+                yield return null;
+                
+                t += Time.deltaTime;
+                if (shootTime + attackSpeed <= Time.time)
+                {
+                    SetFlyingTarget();
+                }
             }
+            
             Destroy();
+        }
+
+        public void FireArrow()
+        {
+            ps_Fire.Play();
+            light_Fire.enabled = true;
+            Invoke("FireLightOff", 0.15f);
+            
+            if (PhotonNetwork.IsConnected && isMine)
+            {
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+            }
+            else if (PhotonNetwork.IsConnected == false)
+            {
+                controller.FireArrow(ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+            }
         }
 
         private void SetFlyingTarget()
@@ -67,23 +105,39 @@ namespace ED
 
             if (colTarget != null)
             {
+                shootTime = Time.time;
                 flyingTarget = colTarget.GetComponentInParent<Minion>();
+                //animator.transform.LookAt(colTarget.transform);
+                StartCoroutine(LookAtCoroutine());
                 
-                if (PhotonNetwork.IsConnected && isMine)
-                {
-                    //controller.photonView.RPC("FireArrow", RpcTarget.All, ts_ShootPoint.position, flyingTarget.id, damage);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, power);
-                }
-                else if (PhotonNetwork.IsConnected == false)
-                {
-                    controller.FireArrow(ts_ShootPoint.position, flyingTarget.id, power);
-                }
+                animator.SetTrigger("Attack");
+            }
+        }
+
+        private IEnumerator LookAtCoroutine()
+        {
+            float t = 0;
+            while (t < 0.5f)
+            {
+                ts_Head.rotation = Quaternion.RotateTowards(ts_Head.rotation,
+                    Quaternion.LookRotation((flyingTarget.transform.position - ts_Head.position).normalized),
+                    Time.deltaTime * 540f);
+                t += Time.deltaTime;
+                yield return null;
             }
         }
 
         public void EndGameUnit()
         {
             StopAllCoroutines();
+        }
+        
+        private void FireLightOff()
+        {
+            if (light_Fire != null)
+            {
+                light_Fire.enabled = false;
+            }
         }
     }
 }

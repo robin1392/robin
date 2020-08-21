@@ -11,14 +11,14 @@ namespace ED
 {
     public class Minion_Ninja : Minion
     {
-        [SerializeField] private readonly float _skillCooltime = 6f;
-        private int _skillCastedCount;
-        [SerializeField] private readonly float _skillDuration = 2f;
-
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-            _skillCastedCount = 0;
+
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            {
+                Skill();
+            }
         }
 
         public override void Attack()
@@ -38,50 +38,62 @@ namespace ED
         }
 
         public void Skill()
-        {
-            if (_spawnedTime >= _skillCooltime * _skillCastedCount)
-            {            
-                MoveBack();
-                Invincibility(_skillDuration);
-            }
+        {            
+            MoveForward();
         }
 
-        private void MoveBack()
+        private void MoveForward()
         {
-            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var distance = 0f;
-            Collider longTarget = null;
-            foreach (var col in cols)
-            {
-                if (col.CompareTag("Player")) continue;
+            // var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
+            // var distance = 0f;
+            // Collider longTarget = null;
+            // foreach (var col in cols)
+            // {
+            //     if (col.CompareTag("Player")) continue;
+            //
+            //     var dis = Vector3.SqrMagnitude(col.transform.position - transform.position);
+            //     if (dis > distance)
+            //     {
+            //         distance = dis;
+            //         longTarget = col;
+            //     }
+            // }
+            //
+            // if (longTarget != null)
+            // {
+            //     var targetPos = longTarget.transform.position + (-longTarget.transform.forward * 0.4f);
+            //
+            //     if (PhotonNetwork.IsConnected && isMine)
+            //     {
+            //         //controller.photonView.RPC("TeleportMinion", RpcTarget.All, id, targetPos.x, targetPos.z);
+            //         controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_TELEPORTMINION , id, targetPos.x, targetPos.z);
+            //         controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, id, 2f);
+            //     }
+            //     else if (PhotonNetwork.IsConnected == false)
+            //     {
+            //         controller.TeleportMinion(id, targetPos.x, targetPos.z);
+            //         Invincibility(2f);
+            //     }
+            //     transform.LookAt(longTarget.transform);
+            // }
 
-                var dis = Vector3.SqrMagnitude(col.transform.position - transform.position);
-                if (dis > distance)
-                {
-                    distance = dis;
-                    longTarget = col;
-                }
-            }
+            StartCoroutine(MoveForwardCoroutine());
+        }
 
-            if (longTarget != null)
-            {
-                var targetPos = longTarget.transform.position + (-longTarget.transform.forward * 0.4f);
+        IEnumerator MoveForwardCoroutine()
+        {
+            isPushing = true;
+            yield return null;
+            
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, true);
+            animator.SetFloat("MoveSpeed", 1f);
+            
+            agent.SetDestination(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back) * 5f);
+            
+            yield return new WaitForSeconds(effectCooltime);
 
-                if (PhotonNetwork.IsConnected && isMine)
-                {
-                    //controller.photonView.RPC("TeleportMinion", RpcTarget.All, id, targetPos.x, targetPos.z);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_TELEPORTMINION , id, targetPos.x, targetPos.z);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, id, 2f);
-                }
-                else if (PhotonNetwork.IsConnected == false)
-                {
-                    controller.TeleportMinion(id, targetPos.x, targetPos.z);
-                    Invincibility(2f);
-                }
-                transform.LookAt(longTarget.transform);
-                
-                _skillCastedCount++;
-            }
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, false);
+            isPushing = false;
         }
     }
 }

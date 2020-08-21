@@ -11,10 +11,26 @@ namespace ED
         public ParticleSystem ps_Tail;
         public ParticleSystem ps_BombEffect;
 
+        private float sturnTime => effect + effectDuration * eyeLevel;
+
+        public override void SetTarget()
+        {
+            StartCoroutine(Move());
+        }
+
         protected override IEnumerator Move()
         {
             var startPos = transform.position;
-            while (target == null) { yield return null; }
+            while (target == null)
+            {
+                yield return null;
+                
+                target = InGameManager.Get().GetRandomPlayerUnitHighHealth(!isBottomPlayer);
+                if (target != null)
+                {
+                    controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                }
+            }
             var endPos = target.ts_HitPos.position;
             var distance = Vector3.Distance(startPos, endPos);
             var moveTime = distance / moveSpeed;
@@ -40,7 +56,7 @@ namespace ED
                 if (target != null)
                 {
                     controller.AttackEnemyMinion(target.id, power, 0f);
-                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id, 3f);
+                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id, sturnTime);
                 }
 
                 //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
@@ -52,7 +68,7 @@ namespace ED
                 if (target != null)
                 {
                     controller.AttackEnemyMinion(target.id, power, 0f);
-                    controller.targetPlayer.SturnMinion(target.id, 3f);
+                    controller.targetPlayer.SturnMinion(target.id, sturnTime);
                 }
                 Bomb();
             }
@@ -73,7 +89,7 @@ namespace ED
                     {
                         controller.AttackEnemyMinion(target.id, power, 0f);
                         //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
-                        controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, 3f);
+                        controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, sturnTime);
                     }
                     
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
@@ -84,7 +100,7 @@ namespace ED
                     if (target != null)
                     {
                         controller.AttackEnemyMinion(target.id, power, 0f);
-                        controller.targetPlayer.SturnMinion(target.id, 3f);
+                        controller.targetPlayer.SturnMinion(target.id, sturnTime);
                     }
 
                     Bomb();

@@ -13,6 +13,7 @@ namespace  ED
     public class StoneBall : Magic
     {
         public ParticleSystem ps_Bomb;
+        public Transform ts_Model;
         
         public override void Initialize(bool pIsBottomPlayer)
         {
@@ -20,7 +21,7 @@ namespace  ED
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             if (isBottomPlayer == false) transform.rotation = Quaternion.Euler(0, 180, 0);
-            //ts_Model.gameObject.SetActive(true);
+            ts_Model.gameObject.SetActive(true);
             
             SetColor();
             
@@ -35,7 +36,7 @@ namespace  ED
             {
                 transform.position += forward * moveSpeed * Time.deltaTime;
                 angle += (isBottomPlayer ? 45f : -45f) * Time.deltaTime;
-                //ts_Model.rotation = Quaternion.AngleAxis(angle, Vector3.right);
+                ts_Model.rotation = Quaternion.AngleAxis(angle, Vector3.right);
                 yield return null;
             }
         }
@@ -47,7 +48,7 @@ namespace  ED
                 //ps_Bomb.Play();
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
 
-                if (PhotonNetwork.IsConnected && isMine)
+                if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                 {
                     var bs = other.GetComponentInParent<BaseStat>();
                     controller.AttackEnemyMinion(bs.id, power, 0f);
@@ -58,7 +59,7 @@ namespace  ED
                 //ps_Bomb.Play();
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 StopAllCoroutines();
-                //ts_Model.gameObject.SetActive(false);
+                ts_Model.gameObject.SetActive(false);
                 Destroy(2f);
             }
         }
