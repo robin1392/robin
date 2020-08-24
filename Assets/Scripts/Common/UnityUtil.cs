@@ -37,4 +37,14 @@ public class UnityUtil
     }
     
     
+    
+    #region debug color
+    
+    public static void Print(string preMessge, string message = "", string logColor = "white")
+    {
+        Debug.Log(string.Format(" {0}  : <color={1}> {2} !! </color>", preMessge, logColor, message));
+    }
+
+    #endregion
+    
 }
