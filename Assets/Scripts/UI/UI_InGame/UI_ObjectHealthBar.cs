@@ -14,6 +14,10 @@ public class UI_ObjectHealthBar : MonoBehaviour
     {
         camera_UI = FindObjectOfType<CameraController>().camera_UI;
         canvas.worldCamera = camera_UI;
+    }
+
+    private void LateUpdate()
+    {
         transform.forward = camera_UI.transform.forward;
     }
 }
