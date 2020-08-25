@@ -54,6 +54,7 @@ public partial class WebPacket : Singleton<WebPacket>
                 RecvUserAuth(content["userId"].ToString());
                 break;
             case WebProtocol.WebPD_Match:
+                //content[""]
                 break;
         }
 
@@ -73,6 +74,11 @@ public partial class WebPacket : Singleton<WebPacket>
     
     
     #region match
+
+    public void MatchResponse(string ticketId)
+    {
+        
+    }
     #endregion
     
 

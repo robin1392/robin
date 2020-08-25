@@ -12,10 +12,12 @@ public class NetworkManager : Singleton<NetworkManager>
     public WebNetworkCommon webNetCommon { get; private set; }
     public WebPacket webPacket { get; private set; }
 
+    
+    
     // socket
     private SocketManager _clientSocket = null;
     
-    //
+    // sender 
     private SocketSendPacket _packetSend;
     public SocketSendPacket SendSocket
     {

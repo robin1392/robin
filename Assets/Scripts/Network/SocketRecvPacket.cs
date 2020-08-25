@@ -4,7 +4,6 @@ using UnityEngine;
 using RWCoreNet;
 using RWCoreNet.NetPacket;
 using RWSocketProtocol.Protocol;
-using UnityEditorInternal;
 
 
 public class SocketRecvPacket : IPacketProcessor
