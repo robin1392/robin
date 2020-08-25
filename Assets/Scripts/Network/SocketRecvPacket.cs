@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RWCoreNet;
+using RWCoreNet.NetPacket;
+using RWSocketProtocol.Protocol;
+using UnityEditorInternal;
 
-public class SocketRecvPacket : MonoBehaviour
+
+public class SocketRecvPacket : IPacketProcessor
 {
-    // Start is called before the first frame update
-    void Start()
+    public bool DoWork(IPeer session, short protocolId, byte[] data)
     {
-        
-    }
+        switch ((GameProtocol) protocolId)
+        {
+            case GameProtocol.MSG_BEGIN:
+            {
+                break;
+            }
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return true;
     }
 }

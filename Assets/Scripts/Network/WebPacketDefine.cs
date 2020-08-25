@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace PacketDefine
+namespace WebPacketDefine
 {
+    public enum E_MatchStatus
+    {
+        None,
+        Wait,
+        Request,
+        Complete,
+    }
+
 
     #region web protocol
     public enum WebProtocol
     {
         WebPD_None,
+        WebPD_UserAuth,
+        WebPD_Match,
         WebPD_MAX,
     }
     
     #endregion
-    
-    
-    #region socket protocol
-    public enum GameProtocol : short
-    {
-        GPD_MAX,
-    }
-    
-    #endregion
-    
 }
 
 

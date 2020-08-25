@@ -13,8 +13,15 @@ public class NetworkManager : Singleton<NetworkManager>
     public WebPacket webPacket { get; private set; }
 
     // socket
+    private SocketManager _clientSocket = null;
     
-    
+    //
+    private SocketSendPacket _packetSend;
+    public SocketSendPacket SendSocket
+    {
+        get => _packetSend;
+        private set => _packetSend = value;
+    }
     
     #endregion
     
@@ -36,7 +43,7 @@ public class NetworkManager : Singleton<NetworkManager>
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateSocket();
     }
 
     public override void OnDestroy()
@@ -55,6 +62,11 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
         webPacket = this.gameObject.AddComponent<WebPacket>();
+        
+        
+        _clientSocket = new SocketManager();
+        _clientSocket.Init(new SocketRecvPacket());
+        _packetSend = new SocketSendPacket(_clientSocket);
     }
 
     
@@ -62,9 +74,31 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
+
+        _packetSend = null;
+        _clientSocket = null;
     }
     #endregion
     
+    
+    #region socket
+
+    public void UpdateSocket()
+    {
+        if(_clientSocket != null)
+            _clientSocket.Update();
+    }
+
+    public void DisconnectSocket()
+    {
+        _clientSocket.Disconnect();
+    }
+
+    public bool IsConnect()
+    {
+        return _clientSocket.IsConnected();
+    }
+    #endregion
     
 }
 

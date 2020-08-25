@@ -48,3 +48,18 @@ public class MatchRequestReq
 {
     public string userId;
 }
+
+[Serializable]
+public class MatchStatusReq
+{
+    public string ticketId;
+}
+
+[Serializable]
+public class MatchStatusAck
+{
+    public string serverAddr;
+    public int port;
+    public string gameSessionId;
+}
+

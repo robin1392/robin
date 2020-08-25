@@ -1,4 +1,9 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

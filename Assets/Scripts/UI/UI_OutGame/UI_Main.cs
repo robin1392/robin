@@ -220,5 +220,20 @@ namespace ED
             isDragging = false;
         }
         #endregion
+        
+        
+        #region test
+
+        public void OnClickBtn1()
+        {
+            WebPacket.Get().SendUserAuth( string.Empty , null );
+        }
+
+        public void OnClickBtn2()
+        {
+            
+        }
+        
+        #endregion
     }
 }

@@ -5,9 +5,11 @@ using ErrorDefine;
 using UnityEngine;
 using UnityEngine.Networking;
 
+//
+using WebPacketDefine;
 
 //
-public delegate void RecvCallback(PacketDefine.WebProtocol packID , string content , NetCallBack cbSuccess , NetCallBackFail cbFail );
+public delegate void RecvCallback( WebProtocol packID , string content , NetCallBack cbSuccess , NetCallBackFail cbFail );
 
 public delegate void NetCallBack();
 
@@ -15,14 +17,28 @@ public delegate void NetCallBackFail(ErrorDefine.ErrorCode errorCode = ErrorCode
 
 public class SendQueue
 {
-    public PacketDefine.WebProtocol packetDef;
+    public WebProtocol packetDef;
     public string packetData;
+
+    public string extraUrl;
 
     public RecvCallback recvCB;
     public RecvCallback recvFailCB;
 
     public NetCallBack cb_Success;
     public NetCallBackFail cb_Fail;
+
+    public void FillPacket(string jsonbody , NetCallBack cbSuccess, NetCallBackFail cbFail = null)
+    {
+        packetData = jsonbody;
+        
+        this.recvCB = new RecvCallback(WebPacket.Get().RecvPacket);
+        this.recvFailCB = new RecvCallback(WebPacket.Get().RecvFail);
+
+        this.cb_Success = cbSuccess;
+        this.cb_Fail = cbFail;
+    }
+
 }
 
 public class WebNetworkCommon : Singleton<WebNetworkCommon>
@@ -58,7 +74,12 @@ public class WebNetworkCommon : Singleton<WebNetworkCommon>
         _sendQueue.Clear();
         _sendFailCount = 0;
         
-        _headers.Add("content-type", "application/json; charset=utf-8");
+        //_headers.Add("content-type", "application/json; charset=utf-8");
+        _headers.Add("Content-Type", "application/json");
+        
+        
+        //test 
+        SetWebUrl("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod");
     }
 
     // Start is called before the first frame update
@@ -163,19 +184,13 @@ public class WebNetworkCommon : Singleton<WebNetworkCommon>
         _bIsSending = true;
 
         string url = string.Empty;
-        url = _urlWebAdress;
+        url = _urlWebAdress + packData.extraUrl;
 
         byte[] body = Encoding.UTF8.GetBytes(packData.packetData);
         WWW www = new WWW(url , body , _headers);
         
         yield return www;
-        
-        //UnityWebRequest www = new UnityWebRequest(url , "POST");
-        //www.uploadHandler = (UploadHandler)new UploadHandlerRaw(body);
-        //www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-        //www.SetRequestHeader("Content-Type", "application/json");
-        //yield return www.SendWebRequest();
-        
+
         // 데이터 없을경우 에러
         if (www.bytes == null)
         {
@@ -183,6 +198,7 @@ public class WebNetworkCommon : Singleton<WebNetworkCommon>
         }
 
         string decodedString = Encoding.UTF8.GetString(www.bytes);
+        //string decodedString = www.text;
         if (www.error == null)
         {
             if (packData.recvCB == null)
@@ -190,9 +206,15 @@ public class WebNetworkCommon : Singleton<WebNetworkCommon>
                 // 
                 yield break;
             }
+            
+            // 이게 왜 붙는지는....의문이..
+            decodedString = decodedString.Replace("\\u0022", "\"");
+            decodedString = decodedString.Replace("\\n", "");
+            decodedString = decodedString.Replace("\"{", "{");
+            decodedString = decodedString.Replace("}\"", "}");
+            
 
-
-            packData.recvCB(packData.packetDef, packData.packetData, packData.cb_Success, packData.cb_Fail);
+            packData.recvCB(packData.packetDef, decodedString, packData.cb_Success, packData.cb_Fail);
 
             DeQueuePacket();
             _sendFailCount = 0;
@@ -285,3 +307,4 @@ public class WebNetworkCommon : Singleton<WebNetworkCommon>
     
     
 }
+

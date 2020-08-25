@@ -182,12 +182,17 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
 
     #region system
-
+    
     public UserInfo GetUserInfo()
     {
         return _userInfo;
     }
 
+    public void SetUserKey(string userid)
+    {
+        _userInfo.SetID(userid);
+    }
+    
     public void SetDeck(int deckIndex , string deck)
     {
         _userInfo.SetDeck(deck);
