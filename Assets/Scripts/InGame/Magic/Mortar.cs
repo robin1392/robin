@@ -11,17 +11,21 @@ namespace ED
 {
     public class Mortar : Magic
     {
-        public int shootCount = 4;
+        public ParticleSystem ps_Fire;
+        public Light light_Fire;
+        public float shootTime = 0;
 
-        private Collider longTarget;
+        private Transform longTarget;
         private static readonly int animatorHashShoot = Animator.StringToHash("Shoot");
+
+        public Transform[] arrTs_Parts;
 
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
-            
+            shootTime = 0;
             SetColor();
 
             if (pIsBottomPlayer == false)
@@ -33,16 +37,41 @@ namespace ED
             {
                 StartCoroutine(AttackCoroutine());
             }
+            
+            SetParts();
+        }
+
+        private void SetParts()
+        {
+            for (int i = 0; i < arrTs_Parts.Length; i++)
+            {
+                arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
+            }
+
+            animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
 
         private IEnumerator AttackCoroutine()
         {
-            for (var i = 0; i < shootCount; i++)
+            // for (var i = 0; i < shootCount; i++)
+            // {
+            //     SetLongTarget();
+            //     yield return new WaitForSeconds(5f);
+            // }
+            //
+            var t = 0f;
+            var lifeTime = InGameManager.Get().spawnTime;
+
+            while (t < lifeTime)
             {
-                SetLongTarget();
-                yield return new WaitForSeconds(5f);
+                yield return null;
+                
+                t += Time.deltaTime;
+                if (shootTime + attackSpeed <= Time.time)
+                {
+                    SetLongTarget();
+                }
             }
-            Destroy();
         }
 
         private void SetLongTarget()
@@ -59,19 +88,32 @@ namespace ED
                 if (dis > distance)
                 {
                     distance = dis;
-                    longTarget = col;
+                    longTarget = col.transform;
                 }
             }
 
             if (longTarget != null)
             {
-                animator.SetTrigger(animatorHashShoot);
-                StartCoroutine(LookAtTargetCoroutine(longTarget.transform));
+                shootTime = Time.time;
                 Invoke("Shoot", 0.5f);
+                // StartCoroutine(LookAtTargetCoroutine());
+                // animator.SetTrigger(animatorHashShoot);
+                
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", longTarget.GetComponentInParent<BaseStat>().id);
             }
         }
 
-        IEnumerator LookAtTargetCoroutine(Transform lookTarget)
+        public void LookAndAniTrigger(int targetID)
+        {
+            longTarget = controller.targetPlayer.GetBaseStatFromId(targetID)?.transform;
+            if (longTarget != null)
+            {
+                StartCoroutine(LookAtTargetCoroutine());
+                animator.SetTrigger(animatorHashShoot);
+            }
+        }
+        
+        IEnumerator LookAtTargetCoroutine()
         {
             float t = 0f;
             Quaternion q = transform.rotation;
@@ -79,7 +121,7 @@ namespace ED
             {
                 t += Time.deltaTime;
                 transform.rotation = Quaternion.Lerp(q,
-                    Quaternion.LookRotation((lookTarget.transform.position - transform.position).normalized),
+                    Quaternion.LookRotation((longTarget.position - transform.position).normalized),
                     t / 0.5f);
                 yield return null;
             }
@@ -87,22 +129,27 @@ namespace ED
 
         public void Shoot()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            ps_Fire.Play();
+            light_Fire.enabled = true;
+            Invoke("FireLightOff", 0.15f);
+            
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                //Shoot(controller.targetPlayer);
-                //controller.photonView.RPC("FireCannonBall", RpcTarget.All, ts_ShootPoint.position, longTarget.transform.position, damage);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.transform.position, power);
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                //Shoot(longTarget.GetComponentInParent<BaseStat>());
-                controller.FireCannonBall(ts_ShootingPos.position,longTarget.transform.position, power);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.position, power);
             }
         }
         
         public void EndGameUnit()
         {
             StopAllCoroutines();
+        }
+        
+        private void FireLightOff()
+        {
+            if (light_Fire != null)
+            {
+                light_Fire.enabled = false;
+            }
         }
     }
 }

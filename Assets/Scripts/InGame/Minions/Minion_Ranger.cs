@@ -10,7 +10,14 @@ namespace ED
         public float bulletMoveSpeed = 6f;
         public ParticleSystem ps_Fire;
         public Light light_Fire;
-        
+
+        public override void Initialize(DestroyCallback destroy)
+        {
+            base.Initialize(destroy);
+
+            if (light_Fire != null) light_Fire.enabled = false;
+        }
+
         public override void Attack()
         {
             if (PhotonNetwork.IsConnected && isMine)

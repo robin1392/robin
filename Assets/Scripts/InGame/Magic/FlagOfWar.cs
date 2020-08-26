@@ -13,8 +13,7 @@ namespace ED
     public class FlagOfWar : Magic
     {
         public ParticleSystem ps;
-        public Collider col;
-        public float lifeTime = 20f;
+        public ParticleSystem ps_NotIsMine;
 
         private bool _isTriggerOn;
         private List<int> _listAttackSpeedUp = new List<int>();
@@ -23,9 +22,15 @@ namespace ED
         {
             base.Initialize(pIsBottomPlayer);
 
-            col.enabled = false;
+            _collider.enabled = false;
+            _hitCollider.enabled = false;
             _listAttackSpeedUp.Clear();
             SetColor();
+            if (isMine) ps.Play(); else ps_NotIsMine.Play();
+            
+            animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
+            ps.transform.parent.localScale = animator.transform.localScale;
+            ((SphereCollider)_collider).radius = Mathf.Lerp(1.5f, 2.25f, (eyeLevel - 1) / 5f);
         }
         
         public override void SetTarget()
@@ -51,13 +56,14 @@ namespace ED
         private void EndMove()
         {
             _isTriggerOn = true;
-            col.enabled = true;
+            _collider.enabled = true;
+            _hitCollider.enabled = true;
             StartCoroutine(LifetimeCoroutine());
         }
 
         private IEnumerator LifetimeCoroutine()
         {
-            yield return new WaitForSeconds(lifeTime - 1.5f);
+            yield return new WaitForSeconds(InGameManager.Get().spawnTime - 1.5f);
 
             if (InGameManager.Get().isGamePlaying == false) yield break;
 
@@ -65,18 +71,14 @@ namespace ED
 
             foreach (var baseStatId in _listAttackSpeedUp)
             {
-                if (PhotonNetwork.IsConnected)
+                if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                 {
-                    //controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, baseStatId, 1f);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONATTACKSPEEDFACTOR ,baseStatId, 1f);
-                }
-                else
-                {
-                    controller.SetMinionAttackSpeedFactor(baseStatId, 1f);
+                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,baseStatId, false, effect);
                 }
             }
 
             ps.Stop();
+            ps_NotIsMine.Stop();
             yield return new WaitForSeconds(1.5f);
             
             Destroy();
@@ -91,18 +93,15 @@ namespace ED
                 
                 var m = collision.GetComponentInParent<Minion>();
 
+                if (m == null) return;
+
                 if (_listAttackSpeedUp.Contains(m.id) == false)
                 {
                     _listAttackSpeedUp.Add(m.id);
                     
-                    if (PhotonNetwork.IsConnected)
+                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                     {
-                        //controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, m.id, 2f);
-                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONATTACKSPEEDFACTOR ,m.id, 2f);
-                    }
-                    else
-                    {
-                        controller.SetMinionAttackSpeedFactor(m.id, 2f);
+                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, true, effect);
                     }
                 }
             }
@@ -117,18 +116,15 @@ namespace ED
             {
                 var m = other.GetComponentInParent<Minion>();
 
+                if (m == null) return;
+
                 if (_listAttackSpeedUp.Contains(m.id))
                 {
                     _listAttackSpeedUp.Remove(m.id);
                     
-                    if (PhotonNetwork.IsConnected)
+                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                     {
-                        //controller.photonView.RPC("SetMinionAttackSpeedFactor", RpcTarget.All, m.id, 1f);
-                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONATTACKSPEEDFACTOR ,m.id, 1f);
-                    }
-                    else
-                    {
-                        controller.SetMinionAttackSpeedFactor(m.id, 1f);
+                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, false, effect);
                     }
                 }
             }

@@ -46,8 +46,7 @@ namespace ED
                         var images = arrEyes[i].GetComponentsInChildren<Image>();
                         foreach (var img in images)
                         {
-                            img.color = FileHelper.GetColor(dice.diceData.colorR, dice.diceData.colorG,
-                                dice.diceData.colorB);
+                            img.color = FileHelper.GetColor(dice.diceData.color);
                         }
                     }
                 }
@@ -185,8 +184,7 @@ namespace ED
                 for (var i = 0; i < arrImage.Length; ++i)
                 {
                     //arrImage[i].DOColor(i == 0 ? Color.white : dice.data.color, 0.3f);
-                    arrImage[i].DOColor(i == 0 ? Color.white : FileHelper.GetColor(dice.diceData.colorR, dice.diceData.colorG,
-                        dice.diceData.colorB), 0.3f);
+                    arrImage[i].DOColor(i == 0 ? Color.white : FileHelper.GetColor(dice.diceData.color), 0.3f);
                 }
             }
         }

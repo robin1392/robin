@@ -153,6 +153,8 @@ namespace ED
 
 
             StartManager();
+            
+            SendBattleManager(RpcTarget.Others, E_PTDefine.PT_NICKNAME, ObscuredPrefs.GetString("Nickname"));
         }
 
         protected void Update()
@@ -661,6 +663,9 @@ namespace ED
                     break;
                 case E_PTDefine.PT_ENDGAME:
                     EndGame(new PhotonMessageInfo());
+                    break;
+                case E_PTDefine.PT_NICKNAME:
+                    UI_InGame.Get().SetNickname((string)param[0]);
                     break;
             }
         }

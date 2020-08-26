@@ -54,7 +54,7 @@ namespace ED
                     {
                         List<int> keyList = InGameManager.Get().data_DiceInfo.dicData.Keys.ToList();
                         
-                        var rndNum = Random.Range(0, keyList.Count);
+                        var rndNum = Random.Range(0, keyList.Count - 10);
                         rndDiceNum = keyList[rndNum];
                         //var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
                         //rndDiceNum = InGameManager.Get().data_AllDice.listDice[rndNum].id;

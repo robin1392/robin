@@ -2,6 +2,7 @@
 #define ENABLE_LOG
 #endif
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace ED
 {
     public class Minion_Necromancer : Minion
     {
+        public GameObject pref_Skeleton;
         public float bulletMoveSpeed = 6f;
         public Transform[] arrSpawnPos;
         //public Data_Dice spawnDiceData;
@@ -19,6 +21,17 @@ namespace ED
         private readonly float _skillCooltime = 10f;
         private float _skillCastedTime;
         private bool _isSkillCasting;
+
+        private void Update()
+        {
+            if (_spawnedTime >= _skillCastedTime + _skillCooltime)
+            {
+                _skillCastedTime = _spawnedTime;
+                //StartCoroutine(SkillCoroutine());
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEVOID, id, "Summon");
+                Summon();
+            }
+        }
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -48,44 +61,64 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_NECROMANCERBULLET , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.FireNecromancerBullet(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
         
         public void Skill()
         {
-            if (_spawnedTime >= _skillCastedTime + _skillCooltime)
-            {
-                _skillCastedTime = _spawnedTime;
-                StartCoroutine(SkillCoroutine());
-            }
+            // if (_spawnedTime >= _skillCastedTime + _skillCooltime)
+            // {
+            //     _skillCastedTime = _spawnedTime;
+            //     //StartCoroutine(SkillCoroutine());
+            //     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEVOID, id, "Summon");
+            // }
         }
 
-        IEnumerator SkillCoroutine()
+        public void Summon()
+        {
+            StartCoroutine(SummonCoroutine());
+        }
+
+        IEnumerator SummonCoroutine()
         {
             SetControllEnable(false);
             animator.SetTrigger("Skill");
             _isSkillCasting = true;
             
-            yield return new WaitForSeconds(0.6f);
+            yield return new WaitForSeconds(0.4f);
 
             for (int i = 0; i < arrSpawnPos.Length; i++)
             {
                 arrPs_Spawn[i].Play();
                 
-                if (PhotonNetwork.IsConnected && isMine)
-                {
-                    //controller.photonView.RPC("SpawnSkeleton", RpcTarget.All, arrSpawnPos[i].position);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_SPAWNSKELETON , arrSpawnPos[i].position);
-                }
-                else
-                {
-                    controller.SpawnSkeleton(arrSpawnPos[i].position);
-                }
+                // if (PhotonNetwork.IsConnected && isMine)
+                // {
+                //     //controller.photonView.RPC("SpawnSkeleton", RpcTarget.All, arrSpawnPos[i].position);
+                //     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_SPAWNSKELETON , arrSpawnPos[i].position);
+                // }
+                // else
+                // {
+                //     controller.SpawnSkeleton(arrSpawnPos[i].position);
+                // }
+                
+                var m = controller.CreateMinion(pref_Skeleton,
+                    arrSpawnPos[i].position, 1, 0);
+
+                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
+                m.ChangeLayer(isBottomPlayer);
+                m.power = 10f + (6f * upgradeLevel);
+                m.maxHealth = 40f + (12f * upgradeLevel);
+                m.attackSpeed = 0.8f;
+                m.moveSpeed = 1.2f;
+                m.range = 0.7f;
+                m.eyeLevel = eyeLevel;
+                m.upgradeLevel = upgradeLevel;
+                m.Initialize(destroyCallback);
             }
             
             yield return new WaitForSeconds(0.3f);

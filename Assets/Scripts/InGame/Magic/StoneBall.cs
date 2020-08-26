@@ -26,6 +26,8 @@ namespace  ED
             SetColor();
             
             StartCoroutine(AttackCoroutine());
+            
+            transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
         
         private IEnumerator AttackCoroutine()
@@ -46,11 +48,11 @@ namespace  ED
             if (IsTargetLayer(other.gameObject) && other.CompareTag("Player") == false)
             {
                 //ps_Bomb.Play();
-                PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
+                var bs = other.GetComponentInParent<BaseStat>();
+                PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
 
                 if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                 {
-                    var bs = other.GetComponentInParent<BaseStat>();
                     controller.AttackEnemyMinion(bs.id, power, 0f);
                 }
             }

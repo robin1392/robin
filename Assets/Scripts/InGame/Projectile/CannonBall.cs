@@ -30,7 +30,7 @@ namespace ED
 
             float fg;
             float fEndTime;
-            float fMaxHeight = 3f;
+            float fMaxHeight = 1.5f;
             float fHeight;
             float fEndHeight;
             float fTime = 0f;

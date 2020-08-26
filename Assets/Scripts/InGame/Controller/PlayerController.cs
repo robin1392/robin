@@ -350,6 +350,7 @@ namespace ED
                 m.id = _spawnCount++;
                 m.controller = this;
                 m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+                if (!listMinion.Contains(m)) listMinion.Add(m);
             }
 
             return m;
@@ -374,7 +375,7 @@ namespace ED
             if (uiDiceField != null && isMine && diceNum > 0)
             {
                 var setting = uiDiceField.arrSlot[diceNum].ps.main;
-                setting.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);
+                setting.startColor = FileHelper.GetColor(data.color);
                 uiDiceField.arrSlot[diceNum].ps.Play();
             }
 
@@ -467,8 +468,8 @@ namespace ED
                 if (lr != null)
                 {
                     lr.SetPositions(new Vector3[2] {dicePos, m.ts_HitPos.position});
-                    lr.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
-                    lr.endColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
+                    lr.startColor = FileHelper.GetColor(data.color);//data.color;
+                    lr.endColor = FileHelper.GetColor(data.color);//data.color;
                 }
             }
         }
@@ -534,7 +535,7 @@ namespace ED
             if (uiDiceField != null && isMine)
             {
                 var setting = uiDiceField.arrSlot[diceNum].ps.main;
-                setting.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
+                setting.startColor = FileHelper.GetColor(data.color);//data.color;
                 uiDiceField.arrSlot[diceNum].ps.Play();
             }
             
@@ -879,12 +880,12 @@ namespace ED
 
         public void DeathMinion(int baseStatId)
         {
-            if (PhotonNetwork.IsConnected)
+            if (PhotonNetwork.IsConnected && isMine)
             {
                 //photonView.RPC("DestroyMinion", RpcTarget.All, baseStatId);
                 SendPlayer(RpcTarget.All , E_PTDefine.PT_DESTROYMINION , baseStatId);
             }
-            else
+            else if (PhotonNetwork.IsConnected == false)
             {
                 DestroyMinion(baseStatId);
             }
@@ -892,11 +893,11 @@ namespace ED
 
         public void DeathMagic(int baseStatId)
         {
-            if (PhotonNetwork.IsConnected)
+            if (PhotonNetwork.IsConnected && isMine)
             {
                 SendPlayer(RpcTarget.All , E_PTDefine.PT_DESTROYMAGIC , baseStatId);
             }
-            else
+            else if (PhotonNetwork.IsConnected == false)
             {
                 DestroyMagic(baseStatId);
             }
@@ -958,6 +959,18 @@ namespace ED
         public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
         {
             var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
+            if (b != null)
+            {
+                b.transform.rotation = Quaternion.identity;
+                b.controller = this;
+                b.moveSpeed = moveSpeed;
+                b.Initialize(targetId, damage, isMine, isBottomPlayer);
+            }
+        }
+        
+        public void FireNecromancerBullet(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        {
+            var b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
@@ -1045,14 +1058,10 @@ namespace ED
         {
             //CreateMinion(InGameManager.Get().data_AllDice.listDice[1], pos, 1, 0, 0, -1);
             CreateMinion(InGameManager.Get().data_DiceInfo.GetData(1), pos, 1, 0, 0, -1);
+            
+            
         }
 
-        //[PunRPC]
-        public void SetMinionAttackSpeedFactor(int baseStatId, float factor)
-        {
-            listMinion.Find(minion => minion.id == baseStatId)?.SetAttackSpeedFactor(factor);
-        }
-        
         #endregion
         
         #region photon override
@@ -1164,7 +1173,7 @@ namespace ED
                     RocketBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_MINIONATTACKSPEEDFACTOR:
-                    SetMinionAttackSpeedFactor((int) param[0], (float) param[1]);
+                    listMinion.Find(minion => minion.id == (int) param[0])?.SetAttackSpeedFactor((float)param[1]);
                     break;
                 case E_PTDefine.PT_STURNMINION:
                     SturnMinion((int) param[0], (float) param[1]);
@@ -1222,6 +1231,24 @@ namespace ED
                     break;
                 case E_PTDefine.PT_MINIONCLOACKING:
                     listMinion.Find(m => m.id == (int)param[0])?.Cloacking((bool)param[1]);
+                    break;
+                case E_PTDefine.PT_MINIONFOGOFWAR:
+                    listMinion.Find(m => m.id == (int)param[0])?.SetFogOfWar((bool)param[1], (float)param[2]);
+                    break;
+                case E_PTDefine.PT_SENDMESSAGEVOID:
+                    listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1]);
+                    listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1]);
+                    break;
+                case E_PTDefine.PT_SENDMESSAGEPARAM1:
+                    listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2]);
+                    listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2]);
+                    break;
+                case E_PTDefine.PT_NECROMANCERBULLET:
+                    FireNecromancerBullet((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
+                    break;
+                case E_PTDefine.PT_SETMINIONTARGET:
+                    listMinion.Find(minion => minion.id == (int) param[0]).target =
+                        targetPlayer.GetBaseStatFromId((int) param[1]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ptID), ptID, null);

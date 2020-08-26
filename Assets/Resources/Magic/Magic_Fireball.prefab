@@ -77,20 +77,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b23dbd0dc8a6a14e869bd0c15546a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnType: 0
-  targetMoveType: 2
   isMine: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 3769771245035174349}
+  animator: {fileID: 0}
+  arrMaterial: []
   target: {fileID: 0}
-  targetPos: {x: 0, y: 0, z: 0}
+  targetMoveType: 2
+  power: 0
+  powerUpByUpgrade: 0
+  powerUpByInGameUp: 0
+  maxHealth: 0
+  currentHealth: 0
+  maxHealthUpByUpgrade: 0
+  maxHealthUpByInGameUp: 0
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
+  attackSpeed: 0
+  moveSpeed: 0
   range: 0
   searchRange: 0
-  attackSpeed: 0
+  isBottomPlayer: 0
+  ts_ShootingPos: {fileID: 0}
+  ts_HitPos: {fileID: 0}
+  image_HealthBar: {fileID: 0}
+  text_Health: {fileID: 0}
+  isPlayable: 1
+  _collider: {fileID: 0}
+  _hitCollider: {fileID: 0}
+  castType: 0
+  spawnType: 0
+  targetPos: {x: 0, y: 0, z: 0}
   eyeLevel: 0
   upgradeLevel: 0
-  arrMaterial: []
   diceFieldNum: 0
   light: {fileID: 8081847643383214301}
   ps_Tail: {fileID: 8081847643390879907}
@@ -176,11 +199,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8625136449953914110, guid: d7125d645e8a6404caba339c8da21547,
-        type: 3}
-      propertyPath: m_Range
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7125d645e8a6404caba339c8da21547, type: 3}
 --- !u!4 &8081847643372614863 stripped
@@ -208,65 +226,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6636926182459783293}
     m_Modifications:
-    - target: {fileID: 7963176998962874697, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998962890183, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998962901257, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998962936409, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998962958529, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998976741675, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998976750411, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998976750741, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998976776259, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998976780405, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 7963176998976806123, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
         type: 3}
       propertyPath: m_Name
       value: particle_fire_explosion
-      objectReference: {fileID: 0}
-    - target: {fileID: 7963176998976806123, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7963176998977024821, guid: fe11b9bb142ba4e9c8fbe7f9b0efb00b,
         type: 3}

@@ -18,12 +18,13 @@ namespace ED
 
             ps_Fire.Stop();
             light.enabled = false;
+            isFire = false;
         }
 
         public override void Sturn(float duration)
         {
             base.Sturn(duration);
-            
+            isFire = false;
             ps_Fire.Stop();
         }
 
@@ -50,10 +51,13 @@ namespace ED
 
         public void Fire()
         {
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //{
+            if (isFire == false)
             {
                 StartCoroutine(FireCoroutine());
             }
+            //}
         }
 
         IEnumerator FireCoroutine()
@@ -66,37 +70,50 @@ namespace ED
             while (t < 0.95f)
             {
                 t += Time.deltaTime;
+                
                 if (t >= tick)
                 {
                     tick += attackSpeed;
-                    var cols = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range,
-                        targetLayer);
-                    foreach (var col in cols)
+                    
+                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                     {
-                        var bs = col.transform.GetComponentInParent<BaseStat>();
-                        
-                        if (bs.id == id) continue;
+                        var cols = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range,
+                            targetLayer);
+                        foreach (var col in cols)
+                        {
+                            var bs = col.transform.GetComponentInParent<BaseStat>();
 
-                        // if (PhotonNetwork.IsConnected && isMine)
-                        // {
-                        //     controller.targetPlayer.photonView.RPC("HitDamageMinion", 
-                        //         RpcTarget.All, bs.id, power * 0.1f, 0f);
-                        // }
-                        // else if (PhotonNetwork.IsConnected == false)
-                        // {
-                        //     controller.targetPlayer.HitDamageMinion(bs.id, power * 0.1f, 0f);
-                        // }
-                        
-                        DamageToTarget(bs);
+                            if (bs.id == id) continue;
+
+                            // if (PhotonNetwork.IsConnected && isMine)
+                            // {
+                            //     controller.targetPlayer.photonView.RPC("HitDamageMinion", 
+                            //         RpcTarget.All, bs.id, power * 0.1f, 0f);
+                            // }
+                            // else if (PhotonNetwork.IsConnected == false)
+                            // {
+                            //     controller.targetPlayer.HitDamageMinion(bs.id, power * 0.1f, 0f);
+                            // }
+
+                            DamageToTarget(bs);
+                        }
                     }
+                    
                 }
-
+                
                 yield return null;
             }
 
             ps_Fire.Stop();
             light.enabled = false;
             isFire = false;
+        }
+
+        public override void EndGameUnit()
+        {
+            base.EndGameUnit();
+            
+            ps_Fire.Stop();
         }
     }
 }

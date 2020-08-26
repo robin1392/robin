@@ -55,6 +55,7 @@ MonoBehaviour:
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
+  target: {fileID: 0}
   targetMoveType: 0
   power: 0
   powerUpByUpgrade: 0
@@ -79,9 +80,9 @@ MonoBehaviour:
   text_Health: {fileID: 0}
   isPlayable: 1
   _collider: {fileID: 0}
+  _hitCollider: {fileID: 0}
   castType: 0
   spawnType: 1
-  target: {fileID: 0}
   targetPos: {x: 0, y: 0, z: 0}
   eyeLevel: 0
   upgradeLevel: 0
@@ -161,7 +162,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.75
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!1001 &3711163204323624170
 PrefabInstance:
   m_ObjectHideFlags: 0

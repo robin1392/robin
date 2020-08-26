@@ -16,6 +16,8 @@ namespace ED
 
         [SerializeField]
         protected Collider _collider;
+        [SerializeField]
+        protected Collider _hitCollider;
 
         public DICE_CAST_TYPE castType;
         public SPAWN_TYPE spawnType;
@@ -87,6 +89,14 @@ namespace ED
             }
         }
 
+        protected void Update()
+        {
+            if (image_HealthBar != null)
+            {
+                image_HealthBar.fillAmount = currentHealth / maxHealth;
+            }
+        }
+
         public virtual void Initialize(bool pIsBottomPlayer)
         {
             currentHealth = maxHealth;
@@ -94,6 +104,20 @@ namespace ED
 
             destroyCallback = null;
             destroyCallback += controller.MagicDestroyCallback;
+
+            if (image_HealthBar != null)
+            {
+                image_HealthBar.enabled = true;
+                image_HealthBar.fillAmount = 1f;
+                
+                if (_hitCollider != null)
+                {
+                    var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}"; 
+                    _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
+                }
+                
+                StartCoroutine(LifetimeCoroutine());
+            }
         }
 
         protected void SetColor()
@@ -247,9 +271,38 @@ namespace ED
                     if (PhotonNetwork.IsConnected && !isMine) return;
 
                     currentHealth = 0;
-                    controller.DeathMagic(id);
+                    EndLifetime();
                 }
             }
+        }
+        
+        protected IEnumerator LifetimeCoroutine()
+        {
+            float t = 0;
+            float lifeTime = InGameManager.Get().spawnTime; 
+            while (t < lifeTime)
+            {
+                yield return null;
+                t += Time.deltaTime;
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, (maxHealth / lifeTime) * Time.deltaTime, 0f);
+                currentHealth -= (maxHealth / lifeTime) * Time.deltaTime;
+                
+                if (currentHealth <= 0)
+                {
+                    EndLifetime();
+                    yield break;
+                }
+            }
+            
+            if (InGameManager.Get().isGamePlaying == false) yield break;
+
+            EndLifetime();
+        }
+
+        protected virtual void EndLifetime()
+        {
+            StopAllCoroutines();
+            controller.DeathMagic(id);
         }
     }
 }

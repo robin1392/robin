@@ -27,11 +27,6 @@ namespace ED
             _originRange = range;
         }
 
-        private void Update()
-        {
-            image_HealthBar.fillAmount = currentHealth / maxHealth;
-        }
-
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
@@ -42,13 +37,12 @@ namespace ED
             //     _collider.gameObject.layer = LayerMask.NameToLayer(layerName);
             // }
 
+            image_HealthBar.transform.parent.gameObject.SetActive(false);
             _collider.enabled = true;
             animator.gameObject.SetActive(true);
             SetColor();
-            image_HealthBar.enabled = false;
-            image_HealthBar.fillAmount = 1f;
+            animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
             ps_Bomb.transform.localScale = Vector3.one * Mathf.Pow(1.5f, eyeLevel - 1);
-            StartCoroutine(LifetimeCoroutine());
         }
 
         public override void SetTarget()
@@ -92,34 +86,10 @@ namespace ED
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
                 isTriggerOn = true;
-                image_HealthBar.enabled = true;
+                image_HealthBar.transform.parent.gameObject.SetActive(true);
             }
 
             animator.SetTrigger(Set);
-        }
-
-        private IEnumerator LifetimeCoroutine()
-        {
-            float t = 0;
-            while (t < lifeTime)
-            {
-                yield return null;
-                t += Time.deltaTime;
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, (maxHealth / lifeTime) * Time.deltaTime, 0f);
-            }
-            
-            if (InGameManager.Get().isGamePlaying == false) yield break;
-
-            isTriggerOn = false;
-            if (PhotonNetwork.IsConnected)
-            {
-                //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
-            }
-            else
-            {
-                Bomb();
-            }
         }
 
         private void OnTriggerEnter(Collider collision)
@@ -147,7 +117,7 @@ namespace ED
         public void Bomb()
         {
             _collider.enabled = false;
-            image_HealthBar.enabled = false;
+            image_HealthBar.transform.parent.gameObject.SetActive(false);
             
             if (((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
             {
@@ -176,6 +146,20 @@ namespace ED
             ps_Bomb.Play();
 
             base.Destroy(2f);
+        }
+
+        protected override void EndLifetime()
+        {
+            isTriggerOn = false;
+            if (PhotonNetwork.IsConnected)
+            {
+                //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
+            }
+            else
+            {
+                Bomb();
+            }
         }
     }
 }

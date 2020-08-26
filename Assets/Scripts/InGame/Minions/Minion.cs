@@ -12,6 +12,13 @@ using Random = UnityEngine.Random;
 
 namespace ED
 {
+    public enum MAZ
+    {
+        NONE,
+        STURN,
+        FREEZE,
+    }
+    
     public enum TARGET_ORDER
     {
         NONE,
@@ -30,11 +37,13 @@ namespace ED
         public bool isAttacking;
         public bool isPushing;
         protected float _spawnedTime;
+        public float spawnedTime => _spawnedTime;
         private float _pathRefinedTime = 3f;
         private int _pathRefinedCount = 1;
         //private bool _isNexusAttacked;
         protected bool isInvincibility;
-        protected bool isCloacking;
+        protected bool _isCloacking;
+        public bool isCloacking => _isCloacking;
         protected int cloackingCount;
         protected int invincibilityCount;
         private float _originalAttackSpeed;
@@ -54,8 +63,11 @@ namespace ED
         public NavMeshAgent agent;
         protected Collider _collider;
         public bool isPolymorph;
+        protected int _fogOfWarCount;
 
-        protected void Awake()
+        protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
+
+        protected virtual void Awake()
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
             _behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
@@ -197,6 +209,10 @@ namespace ED
 
             destroyCallback(this);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            foreach (var autoDeactivate in _dicEffectPool)
+            {
+                autoDeactivate.Value.Deactive();
+            }
             _poolObjectAutoDeactivate.Deactive();
         }
 
@@ -231,9 +247,9 @@ namespace ED
             foreach (var col in cols)
             {
                 var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
-                var bs = col.GetComponentInParent<Minion>();
+                var bs = col.GetComponentInParent<BaseStat>();
 
-                if (bs != null && bs.isCloacking)
+                if (bs != null && (bs.GetType() == typeof(Minion) && ((Minion)bs).isCloacking))
                 {
                     continue;
                 }
@@ -282,7 +298,7 @@ namespace ED
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
         }
 
-        public void EndGameUnit()
+        public virtual void EndGameUnit()
         {
             if (animator != null)
             {
@@ -337,18 +353,27 @@ namespace ED
         public virtual void Sturn(float duration)
         {
             StopAllCoroutines();
-            
+
+            if (_dicEffectPool.ContainsKey(MAZ.STURN))
+            {
+                _dicEffectPool[MAZ.STURN].Deactive();
+                _dicEffectPool.Remove(MAZ.STURN);
+            }
             _crtPush = StartCoroutine(SturnCoroutine(duration));
         }
 
         private IEnumerator SturnCoroutine(float duration)
         {
+            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn", ts_HitPos.position + Vector3.up * 0.65f);
+            _dicEffectPool.Add(MAZ.STURN, ad);
             rb.velocity = Vector3.zero;
             //rb.isKinematic = true;
             SetControllEnable(false);
             if (animator != null) animator.SetTrigger(_animatorHashIdle);
             yield return new WaitForSeconds(duration);
             SetControllEnable(true);
+            ad.Deactive();
+            _dicEffectPool.Remove(MAZ.STURN);
             //rb.isKinematic = false;
         }
 
@@ -504,9 +529,24 @@ namespace ED
             return Vector3.Distance(transform.position, target.transform.position) <= range;
         }
 
+        public void SetFogOfWar(bool isIn, float factor)
+        {
+            _fogOfWarCount += isIn ? 1 : -1;
+
+            if (_fogOfWarCount > 0)
+            {
+                SetAttackSpeedFactor(factor);
+            }
+            else
+            {
+                _fogOfWarCount = 0;
+                SetAttackSpeedFactor(1f);
+            }
+        }
+        
         public void SetAttackSpeedFactor(float factor)
         {
-            attackSpeed = _originalAttackSpeed / factor;
+            attackSpeed = _originalAttackSpeed * factor;
             if (animator != null) animator.speed = factor;
         }
 
@@ -582,7 +622,7 @@ namespace ED
                 cloackingCount++;
                 if (cloackingCount >= 1)
                 {
-                    this.isCloacking = true;
+                    this._isCloacking = true;
                     SetColor(isMine ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT);
                     //_collider.enabled = false;
                 }
@@ -593,7 +633,7 @@ namespace ED
                 if (cloackingCount <= 0)
                 {
                     cloackingCount = 0;
-                    this.isCloacking = false;
+                    this._isCloacking = false;
                     SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
                     //_collider.enabled = true;
                 }

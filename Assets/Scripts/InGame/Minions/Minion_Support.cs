@@ -8,8 +8,6 @@ namespace ED
 {
     public class Minion_Support : Minion
     {
-        public ParticleSystem ps_Dust;
-
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -42,8 +40,8 @@ namespace ED
             
             foreach (var minion in controller.listMinion)
             {
-                if ((isBottomPlayer && minion.transform.position.z > distance) ||
-                    (isBottomPlayer == false && minion.transform.position.z < distance))
+                if (minion.spawnedTime < 3f && ((isBottomPlayer && minion.transform.position.z > distance) ||
+                    (isBottomPlayer == false && minion.transform.position.z < distance)))
                 {
                     distance = minion.transform.position.z;
                     rtn = minion;
@@ -115,7 +113,7 @@ namespace ED
 
             SetControllEnable(true);
             _collider.enabled = true;
-            ps_Dust.Play();
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Dust", transform.position, Quaternion.identity, Vector3.one);
         }
     }
 }

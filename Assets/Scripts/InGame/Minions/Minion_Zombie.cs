@@ -55,6 +55,7 @@ namespace ED
 
         IEnumerator ReviveCoroutine()
         {
+            _collider.enabled = false;
             _reviveCount--;
             SetControllEnable(false);
             animator.gameObject.SetActive(false);
@@ -67,6 +68,7 @@ namespace ED
             animator.gameObject.SetActive(true);
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
             SetControllEnable(true);
+            _collider.enabled = true;
         }
 
         IEnumerator PoisonCoroutine(float duration)

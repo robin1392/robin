@@ -9,7 +9,15 @@ namespace ED
     [RequireComponent(typeof(PoolObjectAutoDeactivate))]
     public class Bullet : MonoBehaviour
     {
+        [Header("Bullet")]
+        public GameObject obj_Bullet;
+        [Header("End Effect")]
+        public GameObject obj_EndEffect;
+        public float endEffectDuration = 1f;
+        
+        [HideInInspector]
         public PlayerController controller;
+        [Space]
         public float moveSpeed = 0.5f;
         [HideInInspector]
         public float moveTime;
@@ -33,6 +41,9 @@ namespace ED
 
         public virtual void Initialize(int pTargetId, float pDamage, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
+            obj_Bullet.SetActive(true);
+            obj_EndEffect.SetActive(false);
+            
             _isTarget = true;
             _damage = pDamage;
             _isMine = pIsMine;
@@ -114,6 +125,13 @@ namespace ED
             {
                 if (_target != null)
                     controller.targetPlayer.HitDamageMinionAndMagic(_target.id, _damage, 0f);
+            }
+
+            if (obj_EndEffect != null)
+            {
+                obj_Bullet.SetActive(false);
+                obj_EndEffect.SetActive(true);
+                yield return new WaitForSeconds(endEffectDuration);
             }
 
             _poad.Deactive();

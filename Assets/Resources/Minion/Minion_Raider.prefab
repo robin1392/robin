@@ -92,6 +92,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
   - {fileID: 2100000, guid: bb0129bf190cc40c19489bc88bbd6130, type: 2}
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
+  target: {fileID: 0}
   targetMoveType: 0
   power: 0
   powerUpByUpgrade: 0
@@ -103,6 +104,8 @@ MonoBehaviour:
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 0
   range: 0
@@ -113,14 +116,16 @@ MonoBehaviour:
   image_HealthBar: {fileID: 887776035416822996}
   text_Health: {fileID: 0}
   isPlayable: 1
+  castType: 0
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
-  target: {fileID: 0}
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
   isPolymorph: 0
+  pref_EffectDash: {fileID: 6669238935598796364, guid: ab3b5f28b42a14a0c89031f698035924,
+    type: 3}
 --- !u!114 &4086450853476115766
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
@@ -26,6 +27,10 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public Button button_SP_Upgrade;
     public Text text_SP_Upgrade;
     public Text text_SP_Upgrade_Price;
+
+    [Header("Nickname")] 
+    public Text text_MyNickname;
+    public Text text_EnemyNickname;
     
     [Header("DEV UI")] 
     public GameObject viewTargetDiceField;
@@ -125,6 +130,13 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     {
         obj_ViewTargetDiceField.SetActive(view);
     }
+
+    public void SetNickname(string enemyNickname)
+    {
+        text_MyNickname.text = ObscuredPrefs.GetString("Nickname");
+        text_EnemyNickname.text = enemyNickname;
+    }
+    
     #endregion
 
 

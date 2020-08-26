@@ -11,15 +11,15 @@ namespace ED
 {
     public class Minion_Rush : Minion
     {
-        [SerializeField] private readonly float _skillCooltime = 6f;
-        private float _skillCastedTime;
-        private Collider _col;
+        //private float _skillCastedTime;
+        //private Collider _col;
 
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-            _skillCastedTime = -_skillCooltime;
-            if (_col == null) _col = GetComponent<Collider>();
+
+            SetControllEnable(false);
+            Skill();
         }
 
         public override void Attack()
@@ -28,7 +28,6 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
                 controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
             }
             else if (PhotonNetwork.IsConnected == false)
@@ -40,9 +39,10 @@ namespace ED
 
         public void Skill()
         {
-            if (_spawnedTime >= _skillCastedTime + _skillCooltime)
+            //if (_spawnedTime >= _skillCastedTime + _skillCooltime)
             {
-                Dash();
+                //Dash();
+                StartCoroutine(DashCoroutine());
             }
         }
 
@@ -70,54 +70,86 @@ namespace ED
 
             if (dashTarget != null)
             {
-                _skillCastedTime = _spawnedTime;
-                StartCoroutine(DashCoroutine(dashTarget));
+                //_skillCastedTime = _spawnedTime;
+                //StartCoroutine(DashCoroutine(dashTarget));
                 Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
         }
 
-        private IEnumerator DashCoroutine(Collider dashTarget)
+        private IEnumerator DashCoroutine(/*Collider dashTarget*/)
         {
-            isPushing = true;
-            _col.enabled = false;
-            var ts = transform;
-            animator.SetTrigger(_animatorHashSkill);
+            yield return new WaitForSeconds(1f);
             
-            while (true)
+            // target
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
+            var distance = 0f;
+            Collider dashTarget = null;
+            var hitPoint = Vector3.zero;
+            foreach (var col in cols)
+            {
+                if (col.CompareTag("Player")) continue;
+
+                var dis = Vector3.Distance(transform.position, col.transform.position); 
+                if (dis > distance)
+                {
+                    distance = dis;
+                    dashTarget = col;
+                }
+            }
+
+            if (dashTarget != null)
+            {
+                //_skillCastedTime = _spawnedTime;
+                //StartCoroutine(DashCoroutine(dashTarget));
+                Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
+            }
+            
+            
+            // dash
+            //isPushing = true;
+            _collider.enabled = false;
+            var ts = transform;
+            //animator.SetTrigger(_animatorHashSkill);
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+
+            List<Collider> list = new List<Collider>();
+            while (dashTarget != null)
             {
                 ts.LookAt(dashTarget.transform);
-                //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);
-                ts.position += (dashTarget.transform.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
+                ts.position += (dashTarget.transform.position - transform.position).normalized * (moveSpeed * 2.5f) * Time.deltaTime;
 
-                if (Vector3.Distance(dashTarget.transform.position, transform.position) < 0.7f)
+                RaycastHit hit;
+                var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range, targetLayer);
+                foreach (var raycastHit in hits)
+                {
+                    if (list.Contains(raycastHit.collider) == false)
+                    {
+                        var bs = raycastHit.collider.GetComponentInParent<BaseStat>();
+                        if (bs.isAlive)
+                        {
+                            list.Add(raycastHit.collider);
+                            DamageToTarget(bs, 0, 0.2f);
+                            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Dust", transform.position, Quaternion.identity, Vector3.one);
+                        }
+                    }
+                }
+
+                if (Vector3.Distance(dashTarget.transform.position, transform.position) < range)
                     break;
                 
-                //var vel = (dashTarget.transform.position - transform.position).normalized * moveSpeed * 3f;
-                //vel.y = 0;
-                //rb.velocity = vel;
                 yield return null;
-                //yield return new WaitForSeconds(moveTime);
             }
-            rb.velocity = Vector3.zero;
-
-            isPushing = false;
-            _col.enabled = true;
-            //dashTarget.GetComponent<Minion>()?.Sturn(1f);
-
-            if (dashTarget != null && dashTarget.gameObject.activeSelf)
-            {
-                // var targetID = dashTarget.GetComponentInParent<Minion>().id;
-                // if (PhotonNetwork.IsConnected && isMine)
-                // {
-                //     controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);
-                // }
-                // else if (PhotonNetwork.IsConnected == false)
-                // {
-                //     controller.targetPlayer.SturnMinion(targetID, 1f);
-                // }
-                
-                DamageToTarget(dashTarget.GetComponentInParent<BaseStat>(), 0, 5f);
-            }
+            
+            //rb.velocity = Vector3.zero;
+            //isPushing = false;
+            SetControllEnable(true);
+            _collider.enabled = true;
+            
+            // if (dashTarget != null && dashTarget.gameObject.activeSelf)
+            // {
+            //     DamageToTarget(dashTarget.GetComponentInParent<BaseStat>(), 0, 5f);
+            // }
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
         }
     }
 }

@@ -156,6 +156,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
   - {fileID: 2100000, guid: bb0129bf190cc40c19489bc88bbd6130, type: 2}
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
+  target: {fileID: 0}
   targetMoveType: 2
   power: 0
   powerUpByUpgrade: 0
@@ -167,6 +168,8 @@ MonoBehaviour:
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 0
   range: 0
@@ -177,14 +180,17 @@ MonoBehaviour:
   image_HealthBar: {fileID: 5081294253014802598}
   text_Health: {fileID: 0}
   isPlayable: 1
+  castType: 0
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
-  target: {fileID: 0}
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
   isPolymorph: 0
+  pref_Skeleton: {fileID: 5081294253336761964, guid: 08a354f4eada14c7bbe7445c492be60c,
+    type: 3}
+  bulletMoveSpeed: 6
   arrSpawnPos:
   - {fileID: 6722142075235945114}
   - {fileID: 3185210713525443266}
@@ -328,10 +334,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8372099918712852319}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.00356, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6669637550755425343}
+  m_Father: {fileID: 6971935327881929595}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4104195656519212926
@@ -765,6 +771,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5663721360592113950, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663721360592113950, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663721360592113950, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.85
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f479d7ad842e4ac18f6ae903ef95fcb, type: 3}
 --- !u!4 &3593457206391745613 stripped
@@ -779,9 +800,9 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 9171319900427173203}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &6669637550755425343 stripped
+--- !u!4 &6971935327881929595 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2578384284080181612, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
+  m_CorrespondingSourceObject: {fileID: 2271600808884215336, guid: 8f479d7ad842e4ac18f6ae903ef95fcb,
     type: 3}
   m_PrefabInstance: {fileID: 9171319900427173203}
   m_PrefabAsset: {fileID: 0}

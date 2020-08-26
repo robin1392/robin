@@ -10,6 +10,16 @@ namespace ED
         public ParticleSystem ps_Tail;
         public ParticleSystem ps_BombEffect;
 
+        private bool isBombed;
+
+        public override void Initialize(bool pIsBottomPlayer)
+        {
+            base.Initialize(pIsBottomPlayer);
+
+            isBombed = false;
+            transform.localScale = Vector3.one * Mathf.Lerp(1f, 3f, (eyeLevel - 1) / 5f);
+        }
+
         public override void SetTarget()
         {
             target = controller.targetPlayer;
@@ -44,32 +54,41 @@ namespace ED
                 yield return null;
             }
 
-            if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+            if (isBombed == false)
             {
-                if (target != null)
-                    controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
-                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                if (target != null)
+                isBombed = true;
+                
+                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 &&
+                    isMine)
                 {
-                    controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                    if (target != null)
+                        controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id,
+                            power, 0f);
+                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
+                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ROCKETBOMB, id);
                 }
-                Bomb();
+                else if (PhotonNetwork.IsConnected == false)
+                {
+                    if (target != null)
+                    {
+                        controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                    }
+
+                    Bomb();
+                }
             }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (InGameManager.Get().isGamePlaying == false || destroyRoutine != null) return;
+            if (InGameManager.Get().isGamePlaying == false || destroyRoutine != null || isBombed) return;
 
             if (target != null && other.gameObject == target.gameObject || other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
                 StopAllCoroutines();
                 rb.velocity = Vector3.zero;
+                isBombed = true;
 
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
                 {

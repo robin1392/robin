@@ -16,7 +16,7 @@ namespace ED
 
         public Transform ts_Head;
         public Transform ts_ShootPoint;
-        public float lifeTime = 20f;
+        //public float lifeTime = 20f;
         public Minion flyingTarget;
         public float bulletMoveSpeed = 6f;
         public float shootTime = 0;
@@ -28,12 +28,11 @@ namespace ED
             base.Initialize(pIsBottomPlayer);
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
-            
+            shootTime = 0;
             SetColor();
 
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                shootTime = 0;
                 StartCoroutine(AttackCoroutine());
             }
             
@@ -54,6 +53,7 @@ namespace ED
         private IEnumerator AttackCoroutine()
         {
             var t = 0f;
+            var lifeTime = InGameManager.Get().spawnTime;
 
             while (t < lifeTime)
             {
@@ -66,7 +66,7 @@ namespace ED
                 }
             }
             
-            Destroy();
+            //Destroy();
         }
 
         public void FireArrow()
@@ -107,14 +107,21 @@ namespace ED
             {
                 shootTime = Time.time;
                 flyingTarget = colTarget.GetComponentInParent<Minion>();
-                //animator.transform.LookAt(colTarget.transform);
-                StartCoroutine(LookAtCoroutine());
                 
-                animator.SetTrigger("Attack");
+                // StartCoroutine(LookAtTargetCoroutine());
+                // animator.SetTrigger("Attack");
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
             }
         }
 
-        private IEnumerator LookAtCoroutine()
+        public void LookAndAniTrigger(int targetID)
+        {
+            flyingTarget = (Minion)controller.targetPlayer.GetBaseStatFromId(targetID);
+            StartCoroutine(LookAtTargetCoroutine());
+            animator.SetTrigger("Attack");
+        }
+
+        private IEnumerator LookAtTargetCoroutine()
         {
             float t = 0;
             while (t < 0.5f)
