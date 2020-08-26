@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
+using RWGameProtocol;
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -21,13 +22,23 @@ public class NetworkManager : Singleton<NetworkManager>
     private SocketManager _clientSocket = null;
     
     // sender 
-    private RWGameProtocol.GamePacketSender _packetSend;
-    public RWGameProtocol.GamePacketSender SendSocket
+    private GamePacketSender _packetSend;
+    public GamePacketSender SendSocket
     {
         get => _packetSend;
         private set => _packetSend = value;
     }
-    
+
+    // 외부에서 얘를 건들일은 없도록하지
+    private GamePacketReceiver _packetRecv;
+
+    private SocketRecvEvent _socketRecv;
+    public SocketRecvEvent socketRecv
+    {
+        get => _socketRecv;
+        private set => _socketRecv = value;
+    }
+
     #endregion
     
     
@@ -71,14 +82,10 @@ public class NetworkManager : Singleton<NetworkManager>
         _clientSocket = new SocketManager();
         _packetSend = new GamePacketSender();
 
-
-        // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
-        GamePacketReceiver gamePacketReceiver = new GamePacketReceiver();
-        gamePacketReceiver.JoinGameAck = OnJoinGameAck;
-
-
-
-        _clientSocket.Init(gamePacketReceiver);
+        // 
+        _socketRecv = new SocketRecvEvent();
+        // recv 셋팅
+        CombineRecvDelegate();
     }
 
     
@@ -88,6 +95,7 @@ public class NetworkManager : Singleton<NetworkManager>
         GameObject.Destroy(webNetCommon);
 
         _packetSend = null;
+        _packetRecv = null;
         _clientSocket = null;
     }
     #endregion
@@ -113,17 +121,22 @@ public class NetworkManager : Singleton<NetworkManager>
     #endregion
 
 
-    /// <summary>
-    /// 게임 참가 응답 처리부
-    /// </summary>
-    /// <param name="peer"></param>
-    /// <param name="msg"></param>
-    void OnJoinGameAck(IPeer peer, MsgJoinGameAck msg)
-    {
-        // something to do...
 
-        //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
-        //SendSocket.ReadyGameReq(peer);
+    #region socket delegate
+
+    public void CombineRecvDelegate()
+    {
+        // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
+        _packetRecv = new GamePacketReceiver();
+        _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
+
+        
+        
+
+        _clientSocket.Init(_packetRecv);
     }
+    
+    #endregion
+    
 }
 

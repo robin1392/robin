@@ -15,6 +15,13 @@ public class UserInfo
         private set => _userID = value;
     }
 
+    private string _userNickName;
+    public string userNickName
+    {
+        get => _userNickName;
+        private set => _userNickName = value;
+    }
+
     private int _activateDeckIndex;
     public int activateDeckIndex
     {
@@ -38,6 +45,8 @@ public class UserInfo
         _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "" );
         _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "" );
 
+        _userNickName = ObscuredPrefs.GetString("NickName", "" );
+        
         if (_slotDeck[1] == "" || _slotDeck[2] == "")
         {
             ObscuredPrefs.SetString("Deck2", "0/1/2/3/4" );
@@ -48,7 +57,12 @@ public class UserInfo
             _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "" );
             _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "" );
         }
-        
+
+        if (_userNickName == "")
+        {
+            ObscuredPrefs.SetString("NickName", "" );
+            ObscuredPrefs.Save();
+        }
         
         
     }
@@ -58,6 +72,11 @@ public class UserInfo
     public void SetID(string id)
     {
         _userID = id;
+    }
+
+    public void SetNickName(string nickname)
+    {
+        _userNickName = nickname;
     }
 
     public void SetActiveDeck(int index)
@@ -187,10 +206,15 @@ public class UserInfoManager : Singleton<UserInfoManager>
     {
         return _userInfo;
     }
-
+    
     public void SetUserKey(string userid)
     {
         _userInfo.SetID(userid);
+    }
+
+    public void SetUserNickName(string nickname)
+    {
+        _userInfo.SetNickName(nickname);
     }
     
     public void SetDeck(int deckIndex , string deck)
