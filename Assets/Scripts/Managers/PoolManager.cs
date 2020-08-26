@@ -81,11 +81,6 @@ namespace ED
                 return;
             }
 
-            StartCoroutine(AddPoolCoroutine(prefab, count));
-        }
-
-        IEnumerator AddPoolCoroutine(GameObject prefab, int count)
-        {
             if (dic.ContainsKey(prefab.name) == false)
             {
                 dic[prefab.name] = new Dictionary<string, Transform>();
@@ -105,8 +100,6 @@ namespace ED
                 {
                     pad.poolName = prefab.name;
                 }
-                
-                yield return null;
             }
         }
 

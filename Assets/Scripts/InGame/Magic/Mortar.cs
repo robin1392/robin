@@ -105,9 +105,12 @@ namespace ED
 
         public void LookAndAniTrigger(int targetID)
         {
-            longTarget = controller.targetPlayer.GetBaseStatFromId(targetID).transform;
-            StartCoroutine(LookAtTargetCoroutine());
-            animator.SetTrigger(animatorHashShoot);
+            longTarget = controller.targetPlayer.GetBaseStatFromId(targetID)?.transform;
+            if (longTarget != null)
+            {
+                StartCoroutine(LookAtTargetCoroutine());
+                animator.SetTrigger(animatorHashShoot);
+            }
         }
         
         IEnumerator LookAtTargetCoroutine()

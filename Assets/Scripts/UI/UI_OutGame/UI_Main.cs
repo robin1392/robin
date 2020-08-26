@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,7 +24,11 @@ namespace ED
         public Button btn_Cancel;
         public Image image_Progress;
         public Text text_Progress;
+        public Text text_Nickname;
 
+        [Header("Nicnname")] public InputField inputfield_Nicnname;
+
+        [Space]
         public bool isAIMode;
 
         [Header("Panals")] public UI_Panel_Dice panel_Dice;
@@ -31,6 +36,16 @@ namespace ED
         private void Start()
         {
             DOTween.Init();
+
+            string nickname = ObscuredPrefs.GetString("Nickname");
+            if (string.IsNullOrEmpty(nickname))
+            {
+                nickname = string.Format("RW{0}", Random.Range(1000, 9999));
+                ObscuredPrefs.SetString("Nickname", nickname);
+            }
+
+            inputfield_Nicnname.text = nickname;
+            text_Nickname.text = nickname;
         }
 
         public void Toggle(bool isOn)
@@ -52,6 +67,12 @@ namespace ED
             }
         }
 
+        public void EditNickname(string str)
+        {
+            ObscuredPrefs.SetString("Nickname", str);
+            text_Nickname.text = str;
+        }
+        
         private IEnumerator AIMode()
         {
             yield return new WaitForSeconds(1f);

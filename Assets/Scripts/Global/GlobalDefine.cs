@@ -27,6 +27,7 @@ public enum E_PTDefine
     PT_DESTROYMAGIC,
     PT_HEALMINION,
     PT_LEVELUPDICE,
+    PT_NICKNAME,
     
     // -- unit pt define
     PT_FIREBALLBOMB,

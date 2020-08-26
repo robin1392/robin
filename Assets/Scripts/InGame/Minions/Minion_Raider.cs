@@ -11,13 +11,22 @@ namespace ED
 {
     public class Minion_Raider : Minion
     {
-        [SerializeField] private readonly float _skillCooltime = 6f;
+        [Header("Effect")]
+        public GameObject pref_EffectDash;
+        
         private float _skillCastedTime;
 
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_EffectDash, 1);
+        }
+        
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-            _skillCastedTime = -_skillCooltime;
+            _skillCastedTime = -effectCooltime;
         }
 
         public override void Attack()
@@ -84,6 +93,7 @@ namespace ED
 
         private IEnumerator DashCoroutine(Transform dashTarget)
         {
+            PoolManager.instance.ActivateObject("Effect_Dash", ts_HitPos.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
             controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");

@@ -50,8 +50,14 @@ MonoBehaviour:
     obj: {fileID: 5467132472131940660, guid: 660e4e8631b0745a5905a5051460f11e, type: 3}
     count: 30
   - name: Necromancer_Bullet
-    obj: {fileID: 3905228318234301646, guid: d7749324233014c499829223ef76f9d0, type: 3}
+    obj: {fileID: 665045047327999094, guid: bff63328ee9f54870bf0da1b7c6fd977, type: 3}
     count: 30
   - name: Effect_Stone
     obj: {fileID: 3690115790097565010, guid: 6921a49996ac641c6810bd40b2fb6d4f, type: 3}
+    count: 30
+  - name: Effect_Sturn
+    obj: {fileID: 1001158548166426346, guid: ce146ffe4b4cb42b5a76691746158ad2, type: 3}
+    count: 30
+  - name: Effect_ShotHit
+    obj: {fileID: 7277101816294039622, guid: 7b5a53139eb5a40d18b9cdba17ddc40c, type: 3}
     count: 30

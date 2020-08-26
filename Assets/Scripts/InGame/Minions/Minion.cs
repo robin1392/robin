@@ -12,6 +12,13 @@ using Random = UnityEngine.Random;
 
 namespace ED
 {
+    public enum MAZ
+    {
+        NONE,
+        STURN,
+        FREEZE,
+    }
+    
     public enum TARGET_ORDER
     {
         NONE,
@@ -58,7 +65,9 @@ namespace ED
         public bool isPolymorph;
         protected int _fogOfWarCount;
 
-        protected void Awake()
+        protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
+
+        protected virtual void Awake()
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
             _behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
@@ -200,6 +209,10 @@ namespace ED
 
             destroyCallback(this);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            foreach (var autoDeactivate in _dicEffectPool)
+            {
+                autoDeactivate.Value.Deactive();
+            }
             _poolObjectAutoDeactivate.Deactive();
         }
 
@@ -340,18 +353,27 @@ namespace ED
         public virtual void Sturn(float duration)
         {
             StopAllCoroutines();
-            
+
+            if (_dicEffectPool.ContainsKey(MAZ.STURN))
+            {
+                _dicEffectPool[MAZ.STURN].Deactive();
+                _dicEffectPool.Remove(MAZ.STURN);
+            }
             _crtPush = StartCoroutine(SturnCoroutine(duration));
         }
 
         private IEnumerator SturnCoroutine(float duration)
         {
+            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn", ts_HitPos.position + Vector3.up * 0.65f);
+            _dicEffectPool.Add(MAZ.STURN, ad);
             rb.velocity = Vector3.zero;
             //rb.isKinematic = true;
             SetControllEnable(false);
             if (animator != null) animator.SetTrigger(_animatorHashIdle);
             yield return new WaitForSeconds(duration);
             SetControllEnable(true);
+            ad.Deactive();
+            _dicEffectPool.Remove(MAZ.STURN);
             //rb.isKinematic = false;
         }
 
