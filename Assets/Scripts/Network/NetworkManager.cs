@@ -128,15 +128,41 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
         _packetRecv = new GamePacketReceiver();
+        
         _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
-
+        _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
+        _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
+        _packetRecv.SetDeckAck = _socketRecv.OnSetDeckAck;
+        _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
+        _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
+        _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
         
+        // notify
+        _packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
+        _packetRecv.LeaveGameNotify = _socketRecv.OnLeaveGameNotify;
+        _packetRecv.GetDiceNotify = _socketRecv.OnGetDiceNotify;
+        _packetRecv.DeactiveWaitingObjectNotify = _socketRecv.OnDeactiveWaitingObjectNotify;
+            
+        // relay
+        _packetRecv.RemoveMinionRelay = _socketRecv.OnRemoveMinionRelay;
+        _packetRecv.HitDamageMinionRelay = _socketRecv.OnHitDamageMinionRelay;
+        _packetRecv.DestroyMinionRelay = _socketRecv.OnDestroyMinionRelay;
+        _packetRecv.HealMinionRelay = _socketRecv.OnHealMinionRelay;
+        _packetRecv.PushMinionRelay = _socketRecv.OnPushMinionRelay;
+        _packetRecv.SetMinionAnimationTriggerRelay = _socketRecv.OnSetMinionAnimationTriggerRelay;
+        _packetRecv.RemoveMagicRelay = _socketRecv.OnRemoveMagicRelay;
+        _packetRecv.FireArrowRelay = _socketRecv.OnFireArrowRelay;
+        _packetRecv.FireballBombRelay = _socketRecv.OnFireballBombRelay;
+        _packetRecv.MineBombRelay = _socketRecv.OnMineBombRelay;
+        _packetRecv.SetMagicTargetIdRelay = _socketRecv.OnSetMagicTargetIdRelay;
+        _packetRecv.SetMagicTargetRelay = _socketRecv.OnSetMagicTargetRelay;
         
-
         _clientSocket.Init(_packetRecv);
     }
     
     #endregion
     
 }
+
+
 
