@@ -38,7 +38,7 @@ namespace ED
 
         public void Skill()
         {
-            if (_spawnedTime >= _skillCastedTime + _skillCooltime)
+            if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
                 Dash();
             }
@@ -70,24 +70,32 @@ namespace ED
             if (dashTarget != null)
             {
                 _skillCastedTime = _spawnedTime;
-                StartCoroutine(DashCoroutine(dashTarget));
+                StartCoroutine(DashCoroutine(dashTarget.transform));
+                controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
                 Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
         }
 
-        private IEnumerator DashCoroutine(Collider dashTarget)
+        public void DashMessage(int targetID)
+        {
+            Transform ts = controller.targetPlayer.GetBaseStatFromId(targetID).transform;
+            StartCoroutine(DashCoroutine(ts));
+        }
+
+        private IEnumerator DashCoroutine(Transform dashTarget)
         {
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
+            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
             var ts = transform;
             
             while (true)
             {
-                ts.LookAt(dashTarget.transform);
+                ts.LookAt(dashTarget);
                 //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);
-                ts.position += (dashTarget.transform.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
+                ts.position += (dashTarget.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
 
-                if (Vector3.Distance(dashTarget.transform.position, transform.position) < 0.5f)
+                if (Vector3.Distance(dashTarget.position, transform.position) < range)
                     break;
                 
                 //var vel = (dashTarget.transform.position - transform.position).normalized * moveSpeed * 3f;
@@ -103,7 +111,7 @@ namespace ED
 
             if (dashTarget != null && dashTarget.gameObject.activeSelf)
             {
-                var targetID = dashTarget.GetComponentInParent<Minion>().id;
+                var targetID = dashTarget.GetComponentInParent<BaseStat>().id;
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);

@@ -82,18 +82,26 @@ namespace ED
 
         IEnumerator MoveForwardCoroutine()
         {
-            isPushing = true;
+            SetControllEnable(false);
+            transform.LookAt(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back));
             yield return null;
             
             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, true);
             animator.SetFloat("MoveSpeed", 1f);
             
-            agent.SetDestination(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back) * 5f);
+            //agent.SetDestination(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back) * 5f);
+            float t = 0;
+            while (t < effectDuration)
+            {
+                transform.position += (isBottomPlayer ? Vector3.forward : Vector3.back) * moveSpeed * Time.deltaTime;
+                t += Time.deltaTime;
+                yield return null;
+            }
             
-            yield return new WaitForSeconds(effectCooltime);
+            //yield return new WaitForSeconds(effectCooltime);
 
             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, false);
-            isPushing = false;
+            SetControllEnable(true);
         }
     }
 }

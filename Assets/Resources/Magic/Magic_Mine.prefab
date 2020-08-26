@@ -88,6 +88,7 @@ MonoBehaviour:
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
+  target: {fileID: 0}
   targetMoveType: 0
   power: 0
   powerUpByUpgrade: 0
@@ -114,7 +115,6 @@ MonoBehaviour:
   _collider: {fileID: 7220310024489854118}
   castType: 0
   spawnType: 0
-  target: {fileID: 0}
   targetPos: {x: 0, y: 0, z: 0}
   eyeLevel: 0
   upgradeLevel: 0
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 1230877270958688012}
   - component: {fileID: 9007213355689201138}
   m_Layer: 0
-  m_Name: Collider
+  m_Name: Hit Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

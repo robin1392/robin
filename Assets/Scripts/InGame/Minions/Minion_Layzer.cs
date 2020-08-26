@@ -7,7 +7,9 @@ namespace ED
 {
     public class Minion_Layzer : Minion
     {
+        public GameObject obj_LineStart;
         public LineRenderer[] arrLineRenderer;
+        public GameObject[] arrObj_LineEnd;
 
         private List<BaseStat> _listTarget = new List<BaseStat>();
 
@@ -15,20 +17,27 @@ namespace ED
         {
             base.FixedUpdate();
 
+            bool isLayzerOn = false;
             for (int i = 0; i < arrLineRenderer.Length; i++)
             {
                 if (i < _listTarget.Count && i < eyeLevel && _listTarget[i] != null && _listTarget[i].isAlive)
                 {
+                    isLayzerOn = true;
                     arrLineRenderer[i].gameObject.SetActive(true);
                     arrLineRenderer[i].SetPositions(new Vector3[2] { ts_ShootingPos.position, _listTarget[i].ts_HitPos.position });
-                    arrLineRenderer[i].startColor = isMine ? Color.blue : Color.red;
-                    arrLineRenderer[i].endColor = arrLineRenderer[i].startColor;
+                    arrObj_LineEnd[i].SetActive(true);
+                    arrObj_LineEnd[i].transform.position = _listTarget[i].ts_HitPos.position;
+                    //arrLineRenderer[i].startColor = isMine ? Color.blue : Color.red;
+                    //arrLineRenderer[i].endColor = arrLineRenderer[i].startColor;
                 }
                 else
                 {
                     arrLineRenderer[i].gameObject.SetActive(false);
+                    arrObj_LineEnd[i].SetActive(false);
                 }
             }
+
+            obj_LineStart.SetActive(isLayzerOn);
         }
 
         public override void Initialize(DestroyCallback destroy)
@@ -36,9 +45,12 @@ namespace ED
             base.Initialize(destroy);
             
             _listTarget.Clear();
+            
+            obj_LineStart.SetActive(false);
             for (int i = 0; i < arrLineRenderer.Length; i++)
             {
                 arrLineRenderer[i].gameObject.SetActive(false);
+                arrObj_LineEnd[i].SetActive(false);
             }
         }
 
@@ -69,9 +81,11 @@ namespace ED
         {
             base.Death();
 
+            obj_LineStart.SetActive(false);
             for (int i = 0; i < arrLineRenderer.Length; i++)
             {
                 arrLineRenderer[i].gameObject.SetActive(false);
+                arrObj_LineEnd[i].SetActive(false);
             }
         }
 

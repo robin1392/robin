@@ -178,6 +178,7 @@ MonoBehaviour:
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
+  target: {fileID: 0}
   targetMoveType: 0
   power: 0
   powerUpByUpgrade: 0
@@ -189,6 +190,8 @@ MonoBehaviour:
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 1
   range: 0

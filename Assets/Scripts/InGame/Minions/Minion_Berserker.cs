@@ -53,6 +53,7 @@ namespace ED
         {
             animator.SetTrigger("Skill");
             _isSkillCasting = true;
+            SetControllEnable(false);
             
             yield return new WaitForSeconds(0.6f);
             
@@ -63,14 +64,15 @@ namespace ED
             {
                 if (col.CompareTag("Player")) continue;
 
-                var m = col.GetComponent<Minion>();
-                if (m.isAlive)
+                var m = col.GetComponent<BaseStat>();
+                if (m != null && m.isAlive)
                 {
                     DamageToTarget(m, 0, 0.3f);
                 }
             }
             
             _isSkillCasting = false;
+            SetControllEnable(true);
         }
     }
 }

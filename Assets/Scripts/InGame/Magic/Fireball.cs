@@ -16,6 +16,17 @@ namespace ED
         public Light light;
         public ParticleSystem ps_Tail;
         public ParticleSystem ps_BombEffect;
+        
+        private bool isBombed = false;
+
+        public override void Initialize(bool pIsBottomPlayer)
+        {
+            base.Initialize(pIsBottomPlayer);
+            
+            isBombed = false;
+            ps_Tail.transform.localScale = Vector3.one * Mathf.Lerp(1f, 3f, (eyeLevel - 1) / 5f);
+            ps_BombEffect.transform.localScale = Vector3.one * Mathf.Lerp(0.7f, 1f, (eyeLevel - 1) / 5f);
+        }
 
         protected override IEnumerator Move()
         {
@@ -40,34 +51,33 @@ namespace ED
                 yield return null;
             }
 
-            if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+            if (isBombed == false)
             {
-                SplashDamage();
-                // if (target != null)
-                //     controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
-                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                // if (target != null)
-                // {
-                //     controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
-                // }
-                SplashDamage();
-                Bomb();
+                isBombed = true;
+                
+                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 &&
+                    isMine)
+                {
+                    SplashDamage();
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBALLBOMB, id);
+                }
+                else if (PhotonNetwork.IsConnected == false)
+                {
+                    SplashDamage();
+                    Bomb();
+                }
             }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (InGameManager.Get().isGamePlaying == false || destroyRoutine != null) return;
+            if (InGameManager.Get().isGamePlaying == false || destroyRoutine != null || isBombed) return;
 
             if (target != null && other.gameObject == target.gameObject || other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
                 StopAllCoroutines();
                 rb.velocity = Vector3.zero;
+                isBombed = true;
 
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
                 {
@@ -94,7 +104,7 @@ namespace ED
         {
             Vector3 pos = transform.position;
             pos.y = 0;
-            var cols = Physics.OverlapSphere(pos, 1f, targetLayer);
+            var cols = Physics.OverlapSphere(pos, Mathf.Lerp(1f, 2f, (eyeLevel - 1) / 5f), targetLayer);
             foreach (var col in cols)
             {
                 controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);

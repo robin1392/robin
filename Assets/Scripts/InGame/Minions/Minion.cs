@@ -30,11 +30,13 @@ namespace ED
         public bool isAttacking;
         public bool isPushing;
         protected float _spawnedTime;
+        public float spawnedTime => _spawnedTime;
         private float _pathRefinedTime = 3f;
         private int _pathRefinedCount = 1;
         //private bool _isNexusAttacked;
         protected bool isInvincibility;
-        protected bool isCloacking;
+        protected bool _isCloacking;
+        public bool isCloacking => _isCloacking;
         protected int cloackingCount;
         protected int invincibilityCount;
         private float _originalAttackSpeed;
@@ -54,6 +56,7 @@ namespace ED
         public NavMeshAgent agent;
         protected Collider _collider;
         public bool isPolymorph;
+        protected int _fogOfWarCount;
 
         protected void Awake()
         {
@@ -231,9 +234,9 @@ namespace ED
             foreach (var col in cols)
             {
                 var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
-                var bs = col.GetComponentInParent<Minion>();
+                var bs = col.GetComponentInParent<BaseStat>();
 
-                if (bs != null && bs.isCloacking)
+                if (bs != null && (bs.GetType() == typeof(Minion) && ((Minion)bs).isCloacking))
                 {
                     continue;
                 }
@@ -282,7 +285,7 @@ namespace ED
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
         }
 
-        public void EndGameUnit()
+        public virtual void EndGameUnit()
         {
             if (animator != null)
             {
@@ -504,9 +507,24 @@ namespace ED
             return Vector3.Distance(transform.position, target.transform.position) <= range;
         }
 
+        public void SetFogOfWar(bool isIn, float factor)
+        {
+            _fogOfWarCount += isIn ? 1 : -1;
+
+            if (_fogOfWarCount > 0)
+            {
+                SetAttackSpeedFactor(factor);
+            }
+            else
+            {
+                _fogOfWarCount = 0;
+                SetAttackSpeedFactor(1f);
+            }
+        }
+        
         public void SetAttackSpeedFactor(float factor)
         {
-            attackSpeed = _originalAttackSpeed / factor;
+            attackSpeed = _originalAttackSpeed * factor;
             if (animator != null) animator.speed = factor;
         }
 
@@ -582,7 +600,7 @@ namespace ED
                 cloackingCount++;
                 if (cloackingCount >= 1)
                 {
-                    this.isCloacking = true;
+                    this._isCloacking = true;
                     SetColor(isMine ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT);
                     //_collider.enabled = false;
                 }
@@ -593,7 +611,7 @@ namespace ED
                 if (cloackingCount <= 0)
                 {
                     cloackingCount = 0;
-                    this.isCloacking = false;
+                    this._isCloacking = false;
                     SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
                     //_collider.enabled = true;
                 }

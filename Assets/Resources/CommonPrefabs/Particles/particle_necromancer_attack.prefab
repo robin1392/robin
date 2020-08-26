@@ -9501,6 +9501,8 @@ GameObject:
   - component: {fileID: 3905228318215697502}
   - component: {fileID: 3905228318215710696}
   - component: {fileID: 3905228318240271392}
+  - component: {fileID: 125363784836603891}
+  - component: {fileID: 7212554710586377961}
   m_Layer: 0
   m_Name: particle_necromancer_attack
   m_TagString: Untagged
@@ -14235,8 +14237,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.7627647, g: 0.15619439, b: 0.8490566, a: 1}
-  m_Intensity: 2
-  m_Range: 6
+  m_Intensity: 3
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.802082
   m_CookieSize: 10
@@ -14284,3 +14286,33 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &125363784836603891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3905228318234301646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8392b961c9f7d4742ad6368d481d198a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolName: 
+  lifeTime: 0
+--- !u!114 &7212554710586377961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3905228318234301646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1146b5cd099d8482cbc25c74aa7d31f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  moveSpeed: 1
+  moveTime: 0
+  arrMaterial: []

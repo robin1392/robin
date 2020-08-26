@@ -92,6 +92,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
   - {fileID: 2100000, guid: bb0129bf190cc40c19489bc88bbd6130, type: 2}
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
+  target: {fileID: 0}
   targetMoveType: 0
   power: 0
   powerUpByUpgrade: 0
@@ -103,6 +104,8 @@ MonoBehaviour:
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 0
   range: 0
@@ -113,10 +116,10 @@ MonoBehaviour:
   image_HealthBar: {fileID: 887776035416822996}
   text_Health: {fileID: 0}
   isPlayable: 1
+  castType: 0
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
-  target: {fileID: 0}
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
@@ -443,6 +446,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1983070326255894981, guid: 3ed046ccf2786499c94e34e3efcc1864,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983070326255894981, guid: 3ed046ccf2786499c94e34e3efcc1864,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983070326255894981, guid: 3ed046ccf2786499c94e34e3efcc1864,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2022114622204847656, guid: 3ed046ccf2786499c94e34e3efcc1864,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 8d1133d4778064ff39dd3fb50d3cfb89, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ed046ccf2786499c94e34e3efcc1864, type: 3}
 --- !u!4 &8280055526610507446 stripped

@@ -41,7 +41,6 @@ namespace ED
                 m.eyeLevel = eyeLevel;
                 m.upgradeLevel = upgradeLevel;
                 m.Initialize(destroyCallback);
-                controller.listMinion.Add(m);
             }
 
             base.Death();
