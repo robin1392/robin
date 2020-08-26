@@ -42,11 +42,22 @@ public class UserAuthReq
     public string userId;
 }
 
+[Serializable]
+public class UserAuthRes
+{
+    public string userId;
+}
 
 [Serializable]
 public class MatchRequestReq
 {
     public string userId;
+}
+
+[Serializable]
+public class MatchRequestAck
+{
+    public string TicketId;
 }
 
 [Serializable]
