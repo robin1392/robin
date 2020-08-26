@@ -246,13 +246,14 @@ public class JsonDataParse
     }
 
     
+    
     public static object GetParseData(Type type , string dataString)
     {
-        string cutString = dataString.Replace("\"", "").Trim();
+        string cutString = dataString.Replace("\"", "");
         if (type == typeof(int))
         {
             int returnInt = int.Parse(cutString);
-            return returnInt;    
+            return returnInt;
         }
         else if (type == typeof(long))
         {
@@ -266,10 +267,12 @@ public class JsonDataParse
         }
         else if (type == typeof(string))
         {
-            // none 일경우는 값 없음
-            if (cutString == "none")
-                cutString = "";
             return cutString;
+        }
+        else if (type == typeof(bool))
+        {
+            bool returnBool = bool.Parse(cutString.ToLower());
+            return returnBool;
         }
         else if (type == typeof(List<int>))
         {
@@ -308,6 +311,16 @@ public class JsonDataParse
             for (int i = 0; i < values.Length; i++)
             {
                 retList.Add(float.Parse(values[i]));
+            }
+            return retList;
+        }
+        else if (type == typeof(List<bool>))
+        {
+            string[] values = cutString.Split(',');
+            List<bool> retList = new List<bool>();
+            for (int i = 0; i < values.Length; i++)
+            {
+                retList.Add(bool.Parse(values[i].ToLower()));
             }
             return retList;
         }

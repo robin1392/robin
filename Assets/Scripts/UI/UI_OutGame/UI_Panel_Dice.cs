@@ -84,20 +84,32 @@ namespace ED
         private void RefreshGettedDice()
         {
             var isCreated = false;
+
+            int enableCount = 0;
+            foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
+            {
+                if (info.Value.enableDice == true)
+                    enableCount++;
+            }
+            
+            
             if (arrGettedDice == null)
             {
                 isCreated = true;
-                arrGettedDice = new UI_Getted_Dice[JsonDataManager.Get().dataDiceInfo.dicData.Count];
+                //arrGettedDice = new UI_Getted_Dice[JsonDataManager.Get().dataDiceInfo.dicData.Count];
+                arrGettedDice = new UI_Getted_Dice[enableCount];
             }
-            else if (arrGettedDice.Length < JsonDataManager.Get().dataDiceInfo.dicData.Count)
+            //else if (arrGettedDice.Length < JsonDataManager.Get().dataDiceInfo.dicData.Count)
+            else if (arrGettedDice.Length < enableCount)
             {
                 isCreated = true;
-                arrGettedDice = new UI_Getted_Dice[JsonDataManager.Get().dataDiceInfo.dicData.Count];
+                arrGettedDice = new UI_Getted_Dice[enableCount];
             }
 
             if (isCreated)
             {
-                for (var i = 0; i < JsonDataManager.Get().dataDiceInfo.dicData.Count; i++)
+                //for (var i = 0; i < JsonDataManager.Get().dataDiceInfo.dicData.Count; i++)
+                for (var i = 0; i < enableCount; i++)
                 {
                     var obj = Instantiate(prefGettedDice, tsGettedDiceParent);
                     arrGettedDice[i] = obj.GetComponent<UI_Getted_Dice>();
@@ -112,8 +124,11 @@ namespace ED
             int countindex = 0;
             foreach (KeyValuePair<int, DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
             {
-                arrGettedDice[countindex].Initialize(info.Value);
-                countindex++;
+                if (info.Value.enableDice)
+                {
+                    arrGettedDice[countindex].Initialize(info.Value);
+                    countindex++;
+                }
             }
             
             // Grid 즉시 업데이트

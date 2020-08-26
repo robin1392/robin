@@ -375,7 +375,7 @@ namespace ED
             if (uiDiceField != null && isMine && diceNum > 0)
             {
                 var setting = uiDiceField.arrSlot[diceNum].ps.main;
-                setting.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);
+                setting.startColor = FileHelper.GetColor(data.color);
                 uiDiceField.arrSlot[diceNum].ps.Play();
             }
 
@@ -468,8 +468,8 @@ namespace ED
                 if (lr != null)
                 {
                     lr.SetPositions(new Vector3[2] {dicePos, m.ts_HitPos.position});
-                    lr.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
-                    lr.endColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
+                    lr.startColor = FileHelper.GetColor(data.color);//data.color;
+                    lr.endColor = FileHelper.GetColor(data.color);//data.color;
                 }
             }
         }
@@ -535,7 +535,7 @@ namespace ED
             if (uiDiceField != null && isMine)
             {
                 var setting = uiDiceField.arrSlot[diceNum].ps.main;
-                setting.startColor = FileHelper.GetColor(data.colorR , data.colorG , data.colorB);//data.color;
+                setting.startColor = FileHelper.GetColor(data.color);//data.color;
                 uiDiceField.arrSlot[diceNum].ps.Play();
             }
             

@@ -12,13 +12,12 @@ public class DiceInfoData
 	public int moveType = 0;
 	public int targetMoveType = 0;
 	public int loadType = 0;
+	public bool enableDice = false;
 	public string prefabName = "";
 	public int spawnMultiply = 0;
 	public string iconName = "";
 	public string cardName = "";
-	public int colorR = 0;
-	public int colorG = 0;
-	public int colorB = 0;
+	public List<int> color = new List<int>();
 	public float power = 0.0f;
 	public float powerUpgrade = 0.0f;
 	public float powerInGameUp = 0.0f;
@@ -46,6 +45,7 @@ public class DiceInfo
         if (dicData.ContainsKey(key))
             return dicData[key];
 
+        Debug.Log( "DATA KEY INVALID : " + "<color=yellow>" + key + "</color>");
         return null;
     }
     
@@ -74,13 +74,12 @@ public class DiceInfo
 			info.moveType = (int)JsonDataParse.GetParseData(info.moveType.GetType(), jsonData[i]["moveType"].ToString());
 			info.targetMoveType = (int)JsonDataParse.GetParseData(info.targetMoveType.GetType(), jsonData[i]["targetMoveType"].ToString());
 			info.loadType = (int)JsonDataParse.GetParseData(info.loadType.GetType(), jsonData[i]["loadType"].ToString());
+			info.enableDice = (bool)JsonDataParse.GetParseData(info.enableDice.GetType(), jsonData[i]["enableDice"].ToString());
 			info.prefabName = (string)JsonDataParse.GetParseData(info.prefabName.GetType(), jsonData[i]["prefabName"].ToString());
 			info.spawnMultiply = (int)JsonDataParse.GetParseData(info.spawnMultiply.GetType(), jsonData[i]["spawnMultiply"].ToString());
 			info.iconName = (string)JsonDataParse.GetParseData(info.iconName.GetType(), jsonData[i]["iconName"].ToString());
 			info.cardName = (string)JsonDataParse.GetParseData(info.cardName.GetType(), jsonData[i]["cardName"].ToString());
-			info.colorR = (int)JsonDataParse.GetParseData(info.colorR.GetType(), jsonData[i]["colorR"].ToString());
-			info.colorG = (int)JsonDataParse.GetParseData(info.colorG.GetType(), jsonData[i]["colorG"].ToString());
-			info.colorB = (int)JsonDataParse.GetParseData(info.colorB.GetType(), jsonData[i]["colorB"].ToString());
+			info.color = (List<int>)JsonDataParse.GetParseData(info.color.GetType(), jsonData[i]["color"].ToString());
 			info.power = (float)JsonDataParse.GetParseData(info.power.GetType(), jsonData[i]["power"].ToString());
 			info.powerUpgrade = (float)JsonDataParse.GetParseData(info.powerUpgrade.GetType(), jsonData[i]["powerUpgrade"].ToString());
 			info.powerInGameUp = (float)JsonDataParse.GetParseData(info.powerInGameUp.GetType(), jsonData[i]["powerInGameUp"].ToString());

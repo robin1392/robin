@@ -65,4 +65,11 @@ public class FileHelper
 
         return newColor;
     }
+    
+    public static Color GetColor(List<int> color)
+    {
+        Color newColor = new Color32((byte)color[0] , (byte)color[1] , (byte)color[2] , 255);
+
+        return newColor;
+    }
 }
