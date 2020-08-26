@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
-using RWCoreNet;
-using RWCoreNet.NetPacket;
+using RWCoreNetwork;
+using RWCoreNetwork.NetPacket;
 using System;
 
 
 public class SocketManager
 {
     private NetworkService _netService;
-    private IPeer _serverPeer;
+    private ServerPeer _serverPeer;
 
 
     //
@@ -65,10 +65,11 @@ public class SocketManager
     /// 서버 연결 성공 콜백
     /// </summary>
     /// <param name="session">세션</param>
-    void OnServerConnected(ClientSession session)
+    void OnServerConnected(UserToken session)
     {
-        _serverPeer = new SocketClientPeer(session);
-        
+        _serverPeer = new ServerPeer();
+        _serverPeer.SetUserToken(session);
+
         //
     }
     

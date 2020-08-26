@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using RWGameProtocol;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RWCoreNetwork;
+using RWGameProtocol.Msg;
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -18,8 +21,8 @@ public class NetworkManager : Singleton<NetworkManager>
     private SocketManager _clientSocket = null;
     
     // sender 
-    private SocketSendPacket _packetSend;
-    public SocketSendPacket SendSocket
+    private RWGameProtocol.GamePacketSender _packetSend;
+    public RWGameProtocol.GamePacketSender SendSocket
     {
         get => _packetSend;
         private set => _packetSend = value;
@@ -64,11 +67,18 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
         webPacket = this.gameObject.AddComponent<WebPacket>();
-        
-        
+
         _clientSocket = new SocketManager();
-        _clientSocket.Init(new SocketRecvPacket());
-        _packetSend = new SocketSendPacket(_clientSocket);
+        _packetSend = new GamePacketSender();
+
+
+        // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
+        GamePacketReceiver gamePacketReceiver = new GamePacketReceiver();
+        gamePacketReceiver.JoinGameAck = OnJoinGameAck;
+
+
+
+        _clientSocket.Init(gamePacketReceiver);
     }
 
     
@@ -101,6 +111,19 @@ public class NetworkManager : Singleton<NetworkManager>
         return _clientSocket.IsConnected();
     }
     #endregion
-    
+
+
+    /// <summary>
+    /// 게임 참가 응답 처리부
+    /// </summary>
+    /// <param name="peer"></param>
+    /// <param name="msg"></param>
+    void OnJoinGameAck(IPeer peer, MsgJoinGameAck msg)
+    {
+        // something to do...
+
+        //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
+        //SendSocket.ReadyGameReq(peer);
+    }
 }
 
