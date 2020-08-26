@@ -89,6 +89,18 @@ namespace ED
             }
         }
 
+        public override void Sturn(float duration)
+        {
+            base.Sturn(duration);
+            
+            obj_LineStart.SetActive(false);
+            for (int i = 0; i < arrLineRenderer.Length; i++)
+            {
+                arrLineRenderer[i].gameObject.SetActive(false);
+                arrObj_LineEnd[i].SetActive(false);
+            }
+        }
+
         public void SetTargetList(int[] arr)
         {
             _listTarget.Clear();

@@ -9,12 +9,14 @@ namespace ED
     public class CannonBall : Bullet
     {
         public GameObject obj_Model;
+        public ParticleSystem ps_Tail;
 
         public override void Initialize(int pTargetId, float pDamage, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
             base.Initialize(pTargetId, pDamage, pIsMine, pIsBottomPlayer, pCallback);
             
             obj_Model.SetActive(true);
+            ps_Tail.Play();
         }
 
         protected override IEnumerator Move()
@@ -64,6 +66,7 @@ namespace ED
                 yield return null;
             }
 
+            ps_Tail.Stop();
             var cols = Physics.OverlapSphere(targetPos, 1f, targetLayer);
             foreach (var col in cols)
             {
@@ -81,7 +84,7 @@ namespace ED
             obj_Model.SetActive(false);
             PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
             
-            _poad.Deactive(2f);
+            _poad.Deactive(3.5f);
         }
     }
 }

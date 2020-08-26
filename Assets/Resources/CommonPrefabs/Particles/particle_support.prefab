@@ -9617,7 +9617,7 @@ GameObject:
   - component: {fileID: 2901722313883654027}
   - component: {fileID: 2901722313883711957}
   m_Layer: 0
-  m_Name: particle_support
+  m_Name: Effect_Support
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

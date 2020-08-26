@@ -18,8 +18,6 @@ using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace ED
 {
-    public class IntEvent : UnityEvent<int> { }
-
     public class InGameManager : SingletonPhoton<InGameManager>, IPunObservable
     {
         //ßpublic static InGameManager Instance;
@@ -68,7 +66,7 @@ namespace ED
         [Header("DICE INFO")]
         [SerializeField]
         protected int[] arrUpgradeLevel;
-        public int getDiceCost => 10 + getDiceCount * 10;
+        //public int getDiceCost => 10 + getDiceCount * 10;
         public int getDiceCount = 0;
 
         #endregion
@@ -76,7 +74,7 @@ namespace ED
 
         #region etc variable
         // event
-        public IntEvent event_SP_Edit;
+        public UnityEvent<int> event_SP_Edit;
 
         [SerializeField]
         protected List<BaseStat> listBottomPlayer = new List<BaseStat>();
@@ -153,8 +151,15 @@ namespace ED
 
 
             StartManager();
-            
-            SendBattleManager(RpcTarget.Others, E_PTDefine.PT_NICKNAME, ObscuredPrefs.GetString("Nickname"));
+
+            if (PhotonNetwork.IsConnected)
+            {
+                SendBattleManager(RpcTarget.Others, E_PTDefine.PT_NICKNAME, ObscuredPrefs.GetString("Nickname"));
+            }
+            else
+            {
+                UI_InGame.Get().SetNickname("AI");
+            }
         }
 
         protected void Update()
@@ -174,7 +179,7 @@ namespace ED
         public void InitializeManager()
         {
             arrUpgradeLevel = new int[6];
-            event_SP_Edit = new IntEvent();
+            event_SP_Edit = new UnityEvent<int>();
         }
 
 
@@ -417,15 +422,21 @@ namespace ED
         
         public void GetDice()
         {
-            playerController.AddSp(-getDiceCost);
+            playerController.AddSp(-GetDiceCost());
             getDiceCount++;
             playerController.AddSp(0);
             //text_GetDiceButton.text = $"{getDiceCost}";
-            UI_InGame.Get().SetDiceButtonText(getDiceCost);
+            UI_InGame.Get().SetDiceButtonText(GetDiceCost());
+        }
+
+        public int GetDiceCost()
+        {
+            return 10 + getDiceCount * 10;
         }
 
         public BaseStat GetRandomPlayerUnit(bool isBottomPlayer)
         {
+            int searchCount = 30;
             int rnd = 0;
             if (isBottomPlayer)
             {
@@ -433,8 +444,9 @@ namespace ED
                 {
                     do
                     {
+                        searchCount--;
                         rnd = Random.Range(0, listBottomPlayer.Count);
-                    } while (listBottomPlayer[rnd].isAlive == false);
+                    } while (listBottomPlayer[rnd].isAlive == false && searchCount > 0);
                     
                     return listBottomPlayer[rnd];
                 }
@@ -449,8 +461,9 @@ namespace ED
                 {
                     do
                     {
+                        searchCount--;
                         rnd = Random.Range(0, listTopPlayer.Count);
-                    } while (listTopPlayer[rnd].isAlive == false);
+                    } while (listTopPlayer[rnd].isAlive == false && searchCount > 0);
 
                     return listTopPlayer[rnd];
                 }
@@ -468,7 +481,6 @@ namespace ED
             return new Vector3(x, 0, z);
         }
 
-        
         private void SetSPUpgradeButton(int sp)
         {
             //button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
@@ -476,7 +488,6 @@ namespace ED
             //text_SP_Upgrade_Price.text = $"{(playerController.spUpgradeLevel + 1) * 500}";
             UI_InGame.Get().SetSPUpgrade(playerController.spUpgradeLevel , sp);
         }
-        
         #endregion
         
         

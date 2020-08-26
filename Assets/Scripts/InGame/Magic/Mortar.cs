@@ -51,6 +51,13 @@ namespace ED
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
 
+        public override void Destroy(float delay = 0)
+        {
+            base.Destroy(delay);
+            
+            CancelInvoke("Shoot");
+        }
+
         private IEnumerator AttackCoroutine()
         {
             // for (var i = 0; i < shootCount; i++)

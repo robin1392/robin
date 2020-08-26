@@ -1233,7 +1233,7 @@ namespace ED
                     listMinion.Find(m => m.id == (int)param[0])?.Cloacking((bool)param[1]);
                     break;
                 case E_PTDefine.PT_MINIONFOGOFWAR:
-                    listMinion.Find(m => m.id == (int)param[0])?.SetFogOfWar((bool)param[1], (float)param[2]);
+                    listMinion.Find(m => m.id == (int)param[0])?.SetFlagOfWar((bool)param[1], (float)param[2]);
                     break;
                 case E_PTDefine.PT_SENDMESSAGEVOID:
                     listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1]);
