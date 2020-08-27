@@ -367,7 +367,7 @@ namespace ED
         {
             if (delay > 0)
             {
-                yield return new WaitForSeconds(delay);   
+                yield return new WaitForSeconds(delay);
             }
             
             if (InGameManager.Get().isGamePlaying == false) yield break;
@@ -400,6 +400,7 @@ namespace ED
                 dicePos.z *= -1f;
             }
             
+            //Debug.LogFormat("Spawn: {0}", data.prefabName);
             //FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION )
             spawnPos.x += Random.Range(-0.2f, 0.2f);
             spawnPos.z += Random.Range(-0.2f, 0.2f);
@@ -530,6 +531,7 @@ namespace ED
         {
             yield return new WaitForSeconds(delay);
 
+            //Debug.LogFormat("Spawn: {0}", data.prefabName);
             if (InGameManager.Get().isGamePlaying == false) yield break;
 
             if (uiDiceField != null && isMine)
@@ -663,7 +665,8 @@ namespace ED
                 //if (arrDeck[i].prefab == null) Debug.LogError(string.Format("{0}, arrDeck[{1}].prefab is null", gameObject.name, i));
                 //PoolManager.instance.AddPool(arrDeck[i].prefab, 50);
                 
-                if (arrDiceDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDiceDeck[i] is null", gameObject.name, i));
+                //if (arrDiceDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDiceDeck[i] is null", gameObject.name, i));
+                
                 if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
                 {
                     PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
@@ -951,7 +954,7 @@ namespace ED
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
                 b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, isMine, isBottomPlayer);
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
         
@@ -964,7 +967,7 @@ namespace ED
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
                 b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, isMine, isBottomPlayer);
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
         
@@ -976,19 +979,19 @@ namespace ED
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
                 b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, isMine, isBottomPlayer);
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
 
         //[PunRPC]
-        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage)
+        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
         {
             var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
-                b.Initialize(targetPos, damage, isMine, isBottomPlayer);
+                b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
             }
         }
 
@@ -1192,7 +1195,7 @@ namespace ED
                     MineBomb((int)param[0]);
                     break;
                 case E_PTDefine.PT_FIRECANNONBALL:
-                    FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2]);
+                    FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float)param[3]);
                     break;
                 case E_PTDefine.PT_FIREARROW:
                     FireArrow((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
@@ -1233,7 +1236,7 @@ namespace ED
                     listMinion.Find(m => m.id == (int)param[0])?.Cloacking((bool)param[1]);
                     break;
                 case E_PTDefine.PT_MINIONFOGOFWAR:
-                    listMinion.Find(m => m.id == (int)param[0])?.SetFogOfWar((bool)param[1], (float)param[2]);
+                    listMinion.Find(m => m.id == (int)param[0])?.SetFlagOfWar((bool)param[1], (float)param[2]);
                     break;
                 case E_PTDefine.PT_SENDMESSAGEVOID:
                     listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1]);

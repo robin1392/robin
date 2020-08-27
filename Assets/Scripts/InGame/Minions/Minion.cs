@@ -63,7 +63,7 @@ namespace ED
         public NavMeshAgent agent;
         protected Collider _collider;
         public bool isPolymorph;
-        protected int _fogOfWarCount;
+        protected int _flagOfWarCount;
 
         protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
 
@@ -529,17 +529,17 @@ namespace ED
             return Vector3.Distance(transform.position, target.transform.position) <= range;
         }
 
-        public void SetFogOfWar(bool isIn, float factor)
+        public void SetFlagOfWar(bool isIn, float factor)
         {
-            _fogOfWarCount += isIn ? 1 : -1;
+            _flagOfWarCount += isIn ? 1 : -1;
 
-            if (_fogOfWarCount > 0)
+            if (_flagOfWarCount > 0)
             {
                 SetAttackSpeedFactor(factor);
             }
             else
             {
-                _fogOfWarCount = 0;
+                _flagOfWarCount = 0;
                 SetAttackSpeedFactor(1f);
             }
         }
@@ -553,7 +553,6 @@ namespace ED
         protected void SetControllEnable(bool isEnable)
         {
             isPushing = !isEnable;
-            //_collider.enabled = isEnable;
             //rb.isKinematic = !isEnable;
 
             if (isEnable && agent.enabled == false)
@@ -623,6 +622,7 @@ namespace ED
                 if (cloackingCount >= 1)
                 {
                     this._isCloacking = true;
+                    _collider.enabled = false;
                     SetColor(isMine ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT);
                     //_collider.enabled = false;
                 }
@@ -634,6 +634,7 @@ namespace ED
                 {
                     cloackingCount = 0;
                     this._isCloacking = false;
+                    _collider.enabled = true;
                     SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
                     //_collider.enabled = true;
                 }

@@ -136,7 +136,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: particle_arrow_hit
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -8508248718100885895, guid: d92ac969513e84ca5afa49f5c00f0055, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d92ac969513e84ca5afa49f5c00f0055, type: 3}
 --- !u!1 &2288240132702165761 stripped
 GameObject:

@@ -34,7 +34,7 @@ namespace ED
 
         public void Click_GetDiceButton()
         {
-            if (_ingameManager.playerController.sp >= _ingameManager.getDiceCost && _ingameManager.playerController.GetDiceFieldEmptySlotCount() > 0)
+            if (_ingameManager.playerController.sp >= _ingameManager.GetDiceCost() && _ingameManager.playerController.GetDiceFieldEmptySlotCount() > 0)
             {
                 _ingameManager.GetDice();
                 _ingameManager.playerController.GetDice();

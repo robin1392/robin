@@ -51,6 +51,13 @@ namespace ED
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
 
+        public override void Destroy(float delay = 0)
+        {
+            base.Destroy(delay);
+            
+            CancelInvoke("Shoot");
+        }
+
         private IEnumerator AttackCoroutine()
         {
             // for (var i = 0; i < shootCount; i++)
@@ -77,7 +84,7 @@ namespace ED
         private void SetLongTarget()
         {
             var distance = 0f;
-            var cols = Physics.OverlapSphere(transform.position, 15f, targetLayer);
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             longTarget = null;
 
             foreach (var col in cols)
@@ -135,7 +142,7 @@ namespace ED
             
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.position, power);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.position, power, range);
             }
         }
         

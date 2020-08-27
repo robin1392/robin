@@ -57,13 +57,13 @@ namespace ED
 
             while (t < lifeTime)
             {
-                yield return null;
-                
                 t += Time.deltaTime;
                 if (shootTime + attackSpeed <= Time.time)
                 {
                     SetFlyingTarget();
                 }
+                
+                yield return null;
             }
             
             //Destroy();

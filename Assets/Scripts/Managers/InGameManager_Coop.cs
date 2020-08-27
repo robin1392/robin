@@ -17,7 +17,7 @@ namespace ED
         protected override void Start()
         {
             arrUpgradeLevel = new int[6];
-            event_SP_Edit = new IntEvent();
+            event_SP_Edit = new UnityEvent<int>();
 
             if (PhotonNetwork.IsConnected)
             {

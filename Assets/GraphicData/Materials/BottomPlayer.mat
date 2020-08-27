@@ -84,7 +84,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _AmbientColor: {r: 0.2627451, g: 0.30588236, b: 0.85882354, a: 1}
     - _BackBottomColor: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _BackTopColor: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _BottomColor: {r: 0, g: 0, b: 0, a: 0}

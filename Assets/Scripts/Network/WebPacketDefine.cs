@@ -20,6 +20,7 @@ namespace WebPacketDefine
         WebPD_None,
         WebPD_UserAuth,
         WebPD_Match,
+        WebPD_MatchStatus,
         WebPD_MAX,
     }
     

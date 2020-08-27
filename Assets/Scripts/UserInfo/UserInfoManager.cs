@@ -22,6 +22,14 @@ public class UserInfo
         private set => _userNickName = value;
     }
 
+
+    private string _ticketId;
+    public string ticketId
+    {
+        get => _ticketId;
+        private set => _ticketId = value;
+    }
+
     private int _activateDeckIndex;
     public int activateDeckIndex
     {
@@ -77,6 +85,11 @@ public class UserInfo
     public void SetNickName(string nickname)
     {
         _userNickName = nickname;
+    }
+
+    public void SetTicketId(string ticket)
+    {
+        _ticketId = ticket;
     }
 
     public void SetActiveDeck(int index)
@@ -216,7 +229,11 @@ public class UserInfoManager : Singleton<UserInfoManager>
     {
         _userInfo.SetNickName(nickname);
     }
-    
+
+    public void SetTicketId(string ticket)
+    {
+        _userInfo.SetTicketId(ticket);
+    }
     public void SetDeck(int deckIndex , string deck)
     {
         _userInfo.SetDeck(deck);

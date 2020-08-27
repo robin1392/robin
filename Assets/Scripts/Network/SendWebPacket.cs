@@ -53,7 +53,21 @@ public partial class WebPacket : Singleton<WebPacket>
 
     public IEnumerator StartMatchStatus()
     {
-        yield return null;
+        yield return new WaitForSeconds(1.0f);
+        
+        MatchStatusReq req = new MatchStatusReq();
+        req.ticketId = UserInfoManager.Get().GetUserInfo().ticketId;
+
+        string jsonBody = JsonHelper.ToJson<MatchStatusReq>(req);
+        UnityUtil.Print("send  : " + jsonBody);
+
+        SendQueue requestData = new SendQueue();
+        requestData.packetDef = WebProtocol.WebPD_MatchStatus;
+        requestData.extraUrl = "/matchrequest";
+        
+        requestData.FillPacket(jsonBody , null , null);
+        
+        WebNetworkCommon.Get().SendPacket(requestData);
     }
 
     #endregion

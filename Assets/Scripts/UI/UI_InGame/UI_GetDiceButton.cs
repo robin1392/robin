@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace ED
@@ -8,19 +10,36 @@ namespace ED
     public class UI_GetDiceButton : MonoBehaviour
     {
         public Button button;
-        public Image image_Button;
-        public Text text_SP;
+        public Image[] arrImage;
+        public Text[] arrText;
 
         private void Start()
         {
             InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
         }
 
-        private void EditSpCallback(int sp)
+        /// <summary>
+        /// 버튼 활성화 여부를 판단 후 SetImageAndText 호출 할 것
+        /// </summary>
+        /// <param name="sp"></param>
+        protected virtual void EditSpCallback(int sp)
         {
-            button.interactable = sp >= InGameManager.Get().getDiceCost;
-            image_Button.color = button.interactable ? Color.white : Color.gray;
-            text_SP.color = image_Button.color;
+            button.interactable = sp >= InGameManager.Get().GetDiceCost();
+            SetImageAndText();
+        }
+
+        protected void SetImageAndText()
+        {
+            Color color = button.interactable ? Color.white : Color.gray;
+            foreach (var image in arrImage)
+            {
+                image.color = color;
+            }
+
+            foreach (var text in arrText)
+            {
+                text.color = color;
+            }
         }
     }
 }

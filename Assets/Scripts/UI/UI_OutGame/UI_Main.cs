@@ -33,6 +33,13 @@ namespace ED
 
         [Header("Panals")] public UI_Panel_Dice panel_Dice;
 
+        public override void Awake()
+        {
+            base.Awake();
+            
+            Application.targetFrameRate = 60;
+        }
+        
         private void Start()
         {
             DOTween.Init();

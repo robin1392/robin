@@ -58,7 +58,6 @@ namespace ED
             var tick = 0f;
             while (t < 5f)
             {
-                t += Time.deltaTime;
                 if (t >= tick)
                 {
                     tick += 0.1f;
@@ -70,12 +69,13 @@ namespace ED
 
                         var bs = col.transform.GetComponent<BaseStat>();
 
-                        if (bs.id == id) continue;
+                        if (bs == null || bs.id == id) continue;
 
                         DamageToTarget(bs, 0, 1f);
                     }
                 }
 
+                t += Time.deltaTime;
                 yield return null;
             }
             

@@ -99,7 +99,7 @@ namespace ED
             controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
             var ts = transform;
             
-            while (true)
+            while (dashTarget != null)
             {
                 ts.LookAt(dashTarget);
                 //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);

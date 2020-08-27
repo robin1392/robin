@@ -24,11 +24,9 @@ namespace ED
 
         private void Update()
         {
-            if (_spawnedTime >= _skillCastedTime + _skillCooltime)
+            if (isPlayable && _spawnedTime >= _skillCastedTime + _skillCooltime)
             {
                 _skillCastedTime = _spawnedTime;
-                //StartCoroutine(SkillCoroutine());
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEVOID, id, "Summon");
                 Summon();
             }
         }
@@ -46,7 +44,6 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
                 controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
             }
             else if (PhotonNetwork.IsConnected == false)
@@ -60,7 +57,6 @@ namespace ED
         {
             if (PhotonNetwork.IsConnected && isMine)
             {
-                //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_NECROMANCERBULLET , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)

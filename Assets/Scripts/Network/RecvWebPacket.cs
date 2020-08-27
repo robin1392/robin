@@ -34,28 +34,40 @@ public partial class WebPacket : Singleton<WebPacket>
         UnityUtil.Print("Complete Packet     :  ", content, "green");
 #endif
 
-        Nev.JSONObject jsoncontent = Nev.JSONObject.Parse(content);
-        //JSONArray jsonArray = JSONArray.Parse(content);
-        //JsonUtility.FromJson<>(content);
+        //Nev.JSONObject jsoncontent = Nev.JSONObject.Parse(content);
         
         //
-        PacketParse(packID, jsoncontent, cbSuccess, cbFail);
+        PacketParse(packID, content, cbSuccess, cbFail);
     }
 
     #endregion
     
     #region packet content
 
-    public void PacketParse( WebProtocol packID, Nev.JSONObject content, NetCallBack cbSuccess, NetCallBackFail cbFail)
+    public void PacketParse( WebProtocol packID, string content, NetCallBack cbSuccess, NetCallBackFail cbFail)
     {
         switch (packID)
         {
             case WebProtocol.WebPD_UserAuth:
-                RecvUserAuth(content["userId"].ToString());
+            {
+                UserAuthRes res = JsonUtility.FromJson<UserAuthRes>(content);
+                //RecvUserAuth(content["userId"].ToString());
+                RecvUserAuth(res.userId);
                 break;
+            }
             case WebProtocol.WebPD_Match:
-                //content[""]
+            {
+                MatchRequestAck res = JsonUtility.FromJson<MatchRequestAck>(content);
+                //MatchResponse(content["TicketId"].ToString());
+                MatchResponse(res.TicketId);
                 break;
+            }
+            case WebProtocol.WebPD_MatchStatus:
+            {
+                MatchStatusAck res = JsonUtility.FromJson<MatchStatusAck>(content);
+                MatchStatsAck(res);
+                break;
+            }
         }
 
         if (cbSuccess != null)
@@ -77,7 +89,21 @@ public partial class WebPacket : Singleton<WebPacket>
 
     public void MatchResponse(string ticketId)
     {
+        UserInfoManager.Get().SetTicketId(ticketId);
+
+        StartCoroutine(StartMatchStatus());
+    }
+
+    public void MatchStatsAck(MatchStatusAck res)
+    {
+        if (res.gameSessionId.Length == 0)
+        {
+            //_matchStatus = EMatchStatus.Request;
+            StartCoroutine(StartMatchStatus());
+            return;
+        }
         
+        // go match -> socket
     }
     #endregion
     
