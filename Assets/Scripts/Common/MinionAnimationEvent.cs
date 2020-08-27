@@ -20,6 +20,7 @@ namespace ED
         {
             if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
             {
+                Debug.Log("AnimationEventAttack: " + gameObject.name);
                 ((Minion)_minion).DamageToTarget(_minion.target, delay);
                 PlayerController.Get().SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_ArrowHit", _minion.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);
             }

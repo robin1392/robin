@@ -367,7 +367,7 @@ namespace ED
         {
             if (delay > 0)
             {
-                yield return new WaitForSeconds(delay);   
+                yield return new WaitForSeconds(delay);
             }
             
             if (InGameManager.Get().isGamePlaying == false) yield break;
@@ -400,6 +400,7 @@ namespace ED
                 dicePos.z *= -1f;
             }
             
+            Debug.LogFormat("Spawn: {0}", data.prefabName);
             //FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION )
             spawnPos.x += Random.Range(-0.2f, 0.2f);
             spawnPos.z += Random.Range(-0.2f, 0.2f);
@@ -530,6 +531,7 @@ namespace ED
         {
             yield return new WaitForSeconds(delay);
 
+            Debug.LogFormat("Spawn: {0}", data.prefabName);
             if (InGameManager.Get().isGamePlaying == false) yield break;
 
             if (uiDiceField != null && isMine)
@@ -663,7 +665,8 @@ namespace ED
                 //if (arrDeck[i].prefab == null) Debug.LogError(string.Format("{0}, arrDeck[{1}].prefab is null", gameObject.name, i));
                 //PoolManager.instance.AddPool(arrDeck[i].prefab, 50);
                 
-                if (arrDiceDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDiceDeck[i] is null", gameObject.name, i));
+                //if (arrDiceDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDiceDeck[i] is null", gameObject.name, i));
+                
                 if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
                 {
                     PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
