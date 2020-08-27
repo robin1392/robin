@@ -11,10 +11,10 @@ namespace ED
         public GameObject obj_Model;
         public ParticleSystem ps_Tail;
 
-        public override void Initialize(int pTargetId, float pDamage, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public override void Initialize(int pTargetId, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
-            base.Initialize(pTargetId, pDamage, pIsMine, pIsBottomPlayer, pCallback);
-            
+            base.Initialize(pTargetId, pDamage, splashRange, pIsMine, pIsBottomPlayer, pCallback);
+
             obj_Model.SetActive(true);
             ps_Tail.Play();
         }
@@ -67,7 +67,7 @@ namespace ED
             }
 
             ps_Tail.Stop();
-            var cols = Physics.OverlapSphere(targetPos, 1f, targetLayer);
+            var cols = Physics.OverlapSphere(targetPos, _splashRange, targetLayer);
             foreach (var col in cols)
             {
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)

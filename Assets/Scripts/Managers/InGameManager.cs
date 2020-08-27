@@ -122,6 +122,7 @@ namespace ED
             //}
             base.Awake();
 
+            Application.targetFrameRate = 30;
             InitializeManager();
         }
 

@@ -47,7 +47,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
         PhotonNetwork.SendRate = 30;
         PhotonNetwork.SerializationRate = 30;
         PhotonNetwork.UseRpcMonoBehaviourCache = true;

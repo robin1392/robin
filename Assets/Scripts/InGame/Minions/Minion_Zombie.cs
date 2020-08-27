@@ -63,7 +63,7 @@ namespace ED
             StartCoroutine(PoisonCoroutine(4f));
             yield return new WaitForSeconds(2f);
 
-            currentHealth = (eyeLevel + upgradeLevel) * maxHealth * 0.1f;
+            currentHealth = (eyeLevel * 15) * 0.01f * maxHealth;
             animator = animator_Dead;
             animator.gameObject.SetActive(true);
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
@@ -84,7 +84,7 @@ namespace ED
                     var bs = col.GetComponentInParent<BaseStat>();
                     if (bs.id > 0 && bs.isFlying == false && bs.isAlive)
                     {
-                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, power, 0f);
+                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect * 10, 0f);
                     }
                 }
                 

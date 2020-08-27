@@ -68,6 +68,7 @@ namespace ED
                     }
                     else
                     {
+                        controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                         break;
                     }
                 }
@@ -93,6 +94,12 @@ namespace ED
         public void Aiming()
         {
             StartCoroutine(AimingCoroutine());
+        }
+
+        public void StopAiming()
+        {
+            StopAllCoroutines();
+            lr.gameObject.SetActive(false);
         }
         
         IEnumerator AimingCoroutine()
@@ -120,6 +127,8 @@ namespace ED
 
         public void FireArrow()
         {
+            lr.gameObject.SetActive(false);
+            
             if (ps_Fire != null)
             {
                 ps_Fire.Play();

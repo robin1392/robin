@@ -104,7 +104,7 @@ namespace ED
         {
             Vector3 pos = transform.position;
             pos.y = 0;
-            var cols = Physics.OverlapSphere(pos, Mathf.Lerp(1f, 2f, (eyeLevel - 1) / 5f), targetLayer);
+            var cols = Physics.OverlapSphere(pos, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
             foreach (var col in cols)
             {
                 controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);

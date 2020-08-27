@@ -31,6 +31,7 @@ namespace ED
         protected bool _isBottomPlayer;
         protected PoolObjectAutoDeactivate _poad;
         protected float _damage;
+        protected float _splashRange;
 
         protected int targetLayer => 1 << LayerMask.NameToLayer(_isBottomPlayer ? "TopPlayer" : "BottomPlayer");
 
@@ -39,13 +40,14 @@ namespace ED
             _poad = GetComponent<PoolObjectAutoDeactivate>();
         }
 
-        public virtual void Initialize(int pTargetId, float pDamage, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public virtual void Initialize(int pTargetId, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
             obj_Bullet.SetActive(true);
             obj_EndEffect.SetActive(false);
             
             _isTarget = true;
             _damage = pDamage;
+            _splashRange = splashRange;
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
             _target = controller.targetPlayer.GetBaseStatFromId(pTargetId);
@@ -62,10 +64,11 @@ namespace ED
             }
         }
 
-        public void Initialize(Vector3 pTargetPos, float pDamage, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
             _isTarget = false;
             _damage = pDamage;
+            _splashRange = splashRange;
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
             _targetPos = pTargetPos;

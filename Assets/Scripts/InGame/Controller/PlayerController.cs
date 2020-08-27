@@ -400,7 +400,7 @@ namespace ED
                 dicePos.z *= -1f;
             }
             
-            Debug.LogFormat("Spawn: {0}", data.prefabName);
+            //Debug.LogFormat("Spawn: {0}", data.prefabName);
             //FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION )
             spawnPos.x += Random.Range(-0.2f, 0.2f);
             spawnPos.z += Random.Range(-0.2f, 0.2f);
@@ -531,7 +531,7 @@ namespace ED
         {
             yield return new WaitForSeconds(delay);
 
-            Debug.LogFormat("Spawn: {0}", data.prefabName);
+            //Debug.LogFormat("Spawn: {0}", data.prefabName);
             if (InGameManager.Get().isGamePlaying == false) yield break;
 
             if (uiDiceField != null && isMine)
@@ -954,7 +954,7 @@ namespace ED
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
                 b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, isMine, isBottomPlayer);
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
         
@@ -967,7 +967,7 @@ namespace ED
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
                 b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, isMine, isBottomPlayer);
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
         
@@ -979,19 +979,19 @@ namespace ED
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
                 b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, isMine, isBottomPlayer);
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
 
         //[PunRPC]
-        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage)
+        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
         {
             var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
-                b.Initialize(targetPos, damage, isMine, isBottomPlayer);
+                b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
             }
         }
 
@@ -1195,7 +1195,7 @@ namespace ED
                     MineBomb((int)param[0]);
                     break;
                 case E_PTDefine.PT_FIRECANNONBALL:
-                    FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2]);
+                    FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float)param[3]);
                     break;
                 case E_PTDefine.PT_FIREARROW:
                     FireArrow((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
