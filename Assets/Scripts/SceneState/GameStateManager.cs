@@ -51,6 +51,10 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public void InitializeGameStateManager()
     {
+        // 화면 안꺼지게
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        
+        
         gameState = new StateManager<Global.E_GAMESTATE, Global.E_STATEACTION, GameStateManager>(this);
         
         gameState.AddState(Global.E_GAMESTATE.STATE_START , this.gameObject.AddComponent<GameStateStart>());
