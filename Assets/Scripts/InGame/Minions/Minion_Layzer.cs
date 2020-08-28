@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
@@ -13,10 +14,8 @@ namespace ED
 
         private List<BaseStat> _listTarget = new List<BaseStat>();
 
-        protected override void FixedUpdate()
+        private void LateUpdate()
         {
-            base.FixedUpdate();
-
             bool isLayzerOn = false;
             for (int i = 0; i < arrLineRenderer.Length; i++)
             {

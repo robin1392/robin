@@ -417,13 +417,34 @@ namespace ED
         private IEnumerator AttackCoroutine()
         {
             //if (target != null && target.id == 0) _isNexusAttacked = true;
+
+            StartCoroutine(MoveToAttackInnerRanger());
+            
             SetControllEnable(false);
             isAttacking = true;
             transform.LookAt(target.transform);
             yield return new WaitForSeconds(attackSpeed);
             isAttacking = false;
             SetControllEnable(true);
-            
+        }
+
+        private IEnumerator MoveToAttackInnerRanger()
+        {
+            Vector3 startPos = transform.position;
+            Vector3 targetPos = target.transform.position;
+            if (Vector3.Distance(startPos, targetPos) > range)
+            {
+                float t = 0;
+                Vector3 endPos = targetPos + (startPos - targetPos).normalized * range;
+                while (t < 0.5f)
+                {
+                    transform.position = Vector3.Lerp(startPos, endPos, t * 2f);
+                    t += Time.deltaTime;
+                    yield return null;
+                }
+
+                transform.position = endPos;
+            }
         }
         
         public bool IsTargetAlive()

@@ -116,6 +116,7 @@ namespace ED
 
         public void Bomb()
         {
+            StopAllCoroutines();
             _collider.enabled = false;
             image_HealthBar.transform.parent.gameObject.SetActive(false);
             
