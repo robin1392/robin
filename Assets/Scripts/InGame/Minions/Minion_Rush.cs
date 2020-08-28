@@ -172,5 +172,12 @@ namespace ED
             _collider.enabled = true;
             ps_Rush.Stop();
         }
+
+        public override void EndGameUnit()
+        {
+            base.EndGameUnit();
+            
+            ps_Rush.Stop();
+        }
     }
 }

@@ -100,11 +100,11 @@ namespace ED
         protected virtual IEnumerator Move()
         {
             var startPos = transform.position;
-            var endPos = _isTarget ? _target.ts_HitPos.position : _targetPos;
+            var endPos = (_isTarget && _target != null) ? _target.ts_HitPos.position : _targetPos;
             var distance = Vector3.Distance(startPos, endPos);
             moveTime = distance / moveSpeed;
 
-            if (_isTarget) transform.LookAt(_target.ts_HitPos);
+            if (_isTarget && _target != null) transform.LookAt(_target.ts_HitPos);
             else transform.LookAt(_targetPos);
 
             float t = 0;

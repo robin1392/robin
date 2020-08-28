@@ -87,8 +87,12 @@ namespace ED
 
         public void DashMessage(int targetID)
         {
-            Transform ts = controller.targetPlayer.GetBaseStatFromId(targetID).transform;
-            StartCoroutine(DashCoroutine(ts));
+            var bs = controller.targetPlayer.GetBaseStatFromId(targetID);
+            if (bs != null)
+            {
+                Transform ts = bs.transform;
+                StartCoroutine(DashCoroutine(ts));
+            }
         }
 
         private IEnumerator DashCoroutine(Transform dashTarget)

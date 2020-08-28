@@ -60,7 +60,7 @@ namespace ED
             SetControllEnable(false);
             animator.gameObject.SetActive(false);
 
-            StartCoroutine(PoisonCoroutine(4f));
+            StartCoroutine(PoisonCoroutine(2f));
             yield return new WaitForSeconds(2f);
 
             currentHealth = (eyeLevel * 15) * 0.01f * maxHealth;

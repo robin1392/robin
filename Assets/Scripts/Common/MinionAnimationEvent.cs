@@ -18,11 +18,15 @@ namespace ED
 
         public void Attack()
         {
-            if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
+            if (_minion != null && _minion.isAlive && _minion.target != null && ((PhotonNetwork.IsConnected && _minion.isMine) || PhotonNetwork.IsConnected == false))
             {
                 Debug.Log("AnimationEventAttack: " + gameObject.name);
-                ((Minion)_minion).DamageToTarget(_minion.target, delay);
-                PlayerController.Get().SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_ArrowHit", _minion.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);
+                Minion m = _minion as Minion;
+                if (m != null)
+                {
+                    m.DamageToTarget(m.target, delay);
+                    PlayerController.Get().SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_ArrowHit", m.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);
+                }
             }
         }
 

@@ -61,10 +61,13 @@ namespace ED
             foreach (var col in cols)
             {
                 var m = col.GetComponentInParent<BaseStat>();
-                _listTarget.Add(m);
-                intList.Add(m.id);
+                if (m != null && m.isAlive)
+                {
+                    _listTarget.Add(m);
+                    intList.Add(m.id);
 
-                controller.AttackEnemyMinion(m.id, power, 0f);
+                    controller.AttackEnemyMinion(m.id, power, 0f);
+                }
             }
 
             if (PhotonNetwork.IsConnected && isMine)

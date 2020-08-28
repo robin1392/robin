@@ -937,7 +937,11 @@ namespace ED
         //[PunRPC]
         public void SetMinionAnimationTrigger(int baseStatId, string trigger)
         {
-            listMinion.Find(minion => minion.id == baseStatId)?.animator.SetTrigger(trigger);
+            var m = listMinion.Find(minion => minion.id == baseStatId);
+            if (m != null)
+            {
+                m.animator.SetTrigger(trigger);
+            }
         }
         
         
@@ -1053,7 +1057,15 @@ namespace ED
         //[PunRPC]
         public void FiremanFire(int baseStatId)
         {
-            ((Minion_Fireman)listMinion.Find(minion => minion.id == baseStatId))?.Fire();
+            var m = listMinion.Find(minion => minion.id == baseStatId);
+            if (m != null)
+            {
+                var fireman = m as Minion_Fireman;
+                if (fireman != null)
+                {
+                    fireman.Fire();
+                }
+            }
         }
 
         //[PunRPC]
@@ -1123,38 +1135,38 @@ namespace ED
                     SetDeck(deck);
                     break;
                 case E_PTDefine.PT_CHANGELAYER:
-                    ChangeLayer((bool)param[0]);
+                    ChangeLayer((bool) param[0]);
                     break;
                 case E_PTDefine.PT_REMOVEMINION:
-                    int baseID = (int)param[0];
+                    int baseID = (int) param[0];
                     RemoveMinion(baseID);
                     break;
                 case E_PTDefine.PT_GETDICE:
-                    int deckNum = (int)param[0];
-                    int slotNum = (int)param[1];
+                    int deckNum = (int) param[0];
+                    int slotNum = (int) param[1];
                     GetDice(deckNum, slotNum);
                     break;
                 case E_PTDefine.PT_LEVELUPDICE:
                     LevelUpDice((int) param[0], (int) param[1], (int) param[2], (int) param[3]);
                     break;
                 case E_PTDefine.PT_REMOVEMAGIC:
-                    int magicId = (int)param[0];
+                    int magicId = (int) param[0];
                     RemoveMagic(magicId);
                     break;
                 case E_PTDefine.PT_HITMINIONANDMAGIC:
-                    int baseIDhit = (int)param[0];
-                    float damage = (float)param[1];
-                    float delay = (float)param[2];
+                    int baseIDhit = (int) param[0];
+                    float damage = (float) param[1];
+                    float delay = (float) param[2];
                     //targetPlayer.HitDamageMinion(baseIDhit, damage, delay);
                     HitDamageMinionAndMagic(baseIDhit, damage, delay);
                     break;
                 case E_PTDefine.PT_HITDAMAGE:
-                    float damageH = (float)param[0];
-                    float delayH = (float)param[1];
+                    float damageH = (float) param[0];
+                    float delayH = (float) param[1];
                     HitDamage(damageH, delayH);
                     break;
                 case E_PTDefine.PT_DESTROYMINION:
-                    int baseIdD = (int)param[0];
+                    int baseIdD = (int) param[0];
                     DestroyMinion(baseIdD);
                     break;
                 case E_PTDefine.PT_DESTROYMAGIC:
@@ -1162,8 +1174,8 @@ namespace ED
                     DestroyMagic(baseIdD);
                     break;
                 case E_PTDefine.PT_HEALMINION:
-                    int baseId = (int)param[0];
-                    float heal = (float)param[1];
+                    int baseId = (int) param[0];
+                    float heal = (float) param[1];
                     HealMinion(baseId, heal);
                     break;
                 case E_PTDefine.PT_FIREBALLBOMB:
@@ -1176,7 +1188,7 @@ namespace ED
                     RocketBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_MINIONATTACKSPEEDFACTOR:
-                    listMinion.Find(minion => minion.id == (int) param[0])?.SetAttackSpeedFactor((float)param[1]);
+                    listMinion.Find(minion => minion.id == (int) param[0])?.SetAttackSpeedFactor((float) param[1]);
                     break;
                 case E_PTDefine.PT_STURNMINION:
                     SturnMinion((int) param[0], (float) param[1]);
@@ -1190,18 +1202,19 @@ namespace ED
                     {
                         SetMagicTarget((int) param[0], (int) param[1]);
                     }
+
                     break;
                 case E_PTDefine.PT_MINEBOMB:
-                    MineBomb((int)param[0]);
+                    MineBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_FIRECANNONBALL:
-                    FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float)param[3]);
+                    FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float) param[3]);
                     break;
                 case E_PTDefine.PT_FIREARROW:
-                    FireArrow((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
+                    FireArrow((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
                     break;
                 case E_PTDefine.PT_FIRESPEAR:
-                    FireSpear((Vector3)param[0], (int) param[1], (float) param[2], (float)param[3]);
+                    FireSpear((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
                     break;
                 case E_PTDefine.PT_MINIONANITRIGGER:
                     SetMinionAnimationTrigger((int) param[0], (string) param[1]);
@@ -1213,24 +1226,35 @@ namespace ED
                     SpawnSkeleton((Vector3) param[0]);
                     break;
                 case E_PTDefine.PT_TELEPORTMINION:
-                    TeleportMinion((int) param[0],(float)param[1] , (float)param[2]);
+                    TeleportMinion((int) param[0], (float) param[1], (float) param[2]);
                     break;
                 case E_PTDefine.PT_SPAWN:
                     Spawn();
                     break;
                 case E_PTDefine.PT_LAYZERTARGET:
-                    ((Minion_Layzer)listMinion.Find(minion => minion.id == (int)param[0]))?.SetTargetList((int[])param[1]);
+                    var m_layzer = listMinion.Find(minion => minion.id == (int) param[0]);
+                    if (m_layzer != null)
+                    {
+                        var layzer = m_layzer as Minion_Layzer;
+                        if (layzer != null)
+                        {
+                            layzer.SetTargetList((int[]) param[1]);
+                        }
+                    }
                     break;
                 case E_PTDefine.PT_MINIONINVINCIBILITY:
-                    listMinion.Find(m => m.id == (int)param[0])?.Invincibility((float)param[1]);
+                    listMinion.Find(m => m.id == (int) param[0])?.Invincibility((float) param[1]);
                     break;
                 case E_PTDefine.PT_SCARECROW:
-                    listMinion.Find(m => m.id == (int)param[0])?.Scarecrow((float)param[1]);
+                    listMinion.Find(m => m.id == (int) param[0])?.Scarecrow((float) param[1]);
                     break;
                 case E_PTDefine.PT_ACTIVATEPOOLOBJECT:
-                    var ts = PoolManager.instance.ActivateObject((string)param[0], (Vector3)param[1]);
-                    ts.rotation = (Quaternion)param[2];
-                    ts.localScale = (Vector3)param[3];
+                    var ts = PoolManager.instance.ActivateObject((string) param[0], (Vector3) param[1]);
+                    if (ts != null)
+                    {
+                        ts.rotation = (Quaternion) param[2];
+                        ts.localScale = (Vector3) param[3];
+                    }
                     break;
                 case E_PTDefine.PT_MINIONCLOACKING:
                     listMinion.Find(m => m.id == (int)param[0])?.Cloacking((bool)param[1]);
@@ -1239,12 +1263,12 @@ namespace ED
                     listMinion.Find(m => m.id == (int)param[0])?.SetFlagOfWar((bool)param[1], (float)param[2]);
                     break;
                 case E_PTDefine.PT_SENDMESSAGEVOID:
-                    listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1]);
-                    listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1]);
+                    listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], SendMessageOptions.DontRequireReceiver);
+                    listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], SendMessageOptions.DontRequireReceiver);
                     break;
                 case E_PTDefine.PT_SENDMESSAGEPARAM1:
-                    listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2]);
-                    listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2]);
+                    listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
+                    listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
                     break;
                 case E_PTDefine.PT_NECROMANCERBULLET:
                     FireNecromancerBullet((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);

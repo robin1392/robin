@@ -21,10 +21,21 @@ namespace ED
             isFire = false;
         }
 
+        public override void Death()
+        {
+            base.Death();
+
+            isFire = false;
+            light.enabled = false;
+            ps_Fire.Stop();
+        }
+
         public override void Sturn(float duration)
         {
             base.Sturn(duration);
+            
             isFire = false;
+            light.enabled = false;
             ps_Fire.Stop();
         }
 
