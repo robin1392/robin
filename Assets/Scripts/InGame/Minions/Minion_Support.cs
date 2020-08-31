@@ -8,10 +8,13 @@ namespace ED
 {
     public class Minion_Support : Minion
     {
+        public GameObject pref_Dust;
+        
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
 
+            PoolManager.instance.AddPool(pref_Dust, 1);
             StartCoroutine(Jump());
         }
 
@@ -56,7 +59,6 @@ namespace ED
             SetControllEnable(false);
             _collider.enabled = false;
             var m = GetLongDistanceFriendlyTarget();
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
 
             if (m == null)
             {
@@ -66,6 +68,8 @@ namespace ED
             }
 
             transform.LookAt(m.transform);
+            yield return null;
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
             var ts = transform;
             var startPos = ts.position;
             var targetPos = m.transform.position;
@@ -113,7 +117,7 @@ namespace ED
 
             SetControllEnable(true);
             _collider.enabled = true;
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Dust", transform.position, Quaternion.identity, Vector3.one);
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", transform.position, Quaternion.identity, Vector3.one);
         }
     }
 }

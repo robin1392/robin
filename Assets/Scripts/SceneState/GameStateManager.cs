@@ -1,6 +1,13 @@
-﻿using System;
+﻿#if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
+#define ENABLE_LOG
+#endif
+
+//#define NETWORK_ACT
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,6 +40,8 @@ public class GameStateManager : Singleton<GameStateManager>
             return;
         }
 
+        Application.logMessageReceived += OnLogHandle;
+
         InitializeGameStateManager();
     }
     
@@ -40,6 +49,8 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         if(gameState != null)
             gameState.Destroy();
+        
+        Application.logMessageReceived -= OnLogHandle;
         
         base.OnDestroy();
     }
@@ -51,6 +62,10 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public void InitializeGameStateManager()
     {
+        // 화면 안꺼지게
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        
+        
         gameState = new StateManager<Global.E_GAMESTATE, Global.E_STATEACTION, GameStateManager>(this);
         
         gameState.AddState(Global.E_GAMESTATE.STATE_START , this.gameObject.AddComponent<GameStateStart>());
@@ -218,8 +233,22 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         // 상태 유저 정보 받는중..혹은 로그인중
         UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-        yield return new WaitForSeconds(0.3f);
         
+        yield return new WaitForSeconds(0.1f);
+        
+#if NETWORK_ACT
+        //
+        WebPacket.Get().SendUserAuth(UserInfoManager.Get().GetUserInfo().userID , UserAuthOK);
+#else
+        // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
+        // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
+        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+#endif
+        
+    }
+
+    public void UserAuthOK()
+    {
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
         ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
@@ -242,4 +271,35 @@ public class GameStateManager : Singleton<GameStateManager>
         ActionEvent(Global.E_STATEACTION.ACTION_MAIN);
     }
     #endregion
+    
+    
+    
+    #region on application log
+
+    public void OnLogHandle(string logString, string stackTrace, LogType type)
+    {
+        //string clipText = "3242";
+        //clipText.CopyToClipboard();
+        string copyText = "";
+        
+        switch (type)
+        {
+            case LogType.Assert:
+                copyText = "ASSERT  ::: > " + logString + "    trace : " + stackTrace;
+                copyText.CopyToClipboard();
+                break;
+            case LogType.Error:
+                copyText = "ERROR  ::: > " + logString + "    trace : " + stackTrace;
+                copyText.CopyToClipboard();
+                break;
+            case LogType.Exception:
+                copyText = "EXCEPTION  ::: > " + logString + "    trace : " + stackTrace;
+                copyText.CopyToClipboard();
+                break;
+        }
+    }
+    
+    #endregion
+
+
 }

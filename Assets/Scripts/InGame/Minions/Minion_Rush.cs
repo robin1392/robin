@@ -13,6 +13,7 @@ namespace ED
     {
         //private float _skillCastedTime;
         //private Collider _col;
+        public ParticleSystem ps_Rush;
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -25,6 +26,8 @@ namespace ED
         public override void Attack()
         {
             if (target == null) return;
+            
+            ps_Rush.Stop();
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
@@ -108,35 +111,44 @@ namespace ED
             // dash
             //isPushing = true;
             _collider.enabled = false;
+            ps_Rush.Play();
             var ts = transform;
             //animator.SetTrigger(_animatorHashSkill);
             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
 
-            List<Collider> list = new List<Collider>();
+            //List<Collider> list = new List<Collider>();
+            float tick = 0.1f;
             while (dashTarget != null)
             {
                 ts.LookAt(dashTarget.transform);
                 ts.position += (dashTarget.transform.position - transform.position).normalized * (moveSpeed * 2.5f) * Time.deltaTime;
 
-                RaycastHit hit;
-                var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range, targetLayer);
-                foreach (var raycastHit in hits)
+                if (tick < 0)
                 {
-                    if (list.Contains(raycastHit.collider) == false)
+                    tick = 0.1f;
+                    
+                    RaycastHit hit;
+                    var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range, targetLayer);
+                    foreach (var raycastHit in hits)
                     {
-                        var bs = raycastHit.collider.GetComponentInParent<BaseStat>();
-                        if (bs.isAlive)
+                        //if (list.Contains(raycastHit.collider) == false)
                         {
-                            list.Add(raycastHit.collider);
-                            DamageToTarget(bs, 0, 0.2f);
-                            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Dust", transform.position, Quaternion.identity, Vector3.one);
+                            var bs = raycastHit.collider.GetComponentInParent<BaseStat>();
+                            if (bs.isAlive)
+                            {
+                                //list.Add(raycastHit.collider);
+                                //DamageToTarget(bs, 0, 0.2f);
+                                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
+                                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
+                            }
                         }
-                    }
+                    } 
                 }
 
                 if (Vector3.Distance(dashTarget.transform.position, transform.position) < range)
                     break;
-                
+
+                tick -= Time.deltaTime;
                 yield return null;
             }
             
@@ -144,12 +156,28 @@ namespace ED
             //isPushing = false;
             SetControllEnable(true);
             _collider.enabled = true;
+            ps_Rush.Stop();
             
             // if (dashTarget != null && dashTarget.gameObject.activeSelf)
             // {
             //     DamageToTarget(dashTarget.GetComponentInParent<BaseStat>(), 0, 5f);
             // }
             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
+        }
+
+        public override void Sturn(float duration)
+        {
+            base.Sturn(duration);
+
+            _collider.enabled = true;
+            ps_Rush.Stop();
+        }
+
+        public override void EndGameUnit()
+        {
+            base.EndGameUnit();
+            
+            ps_Rush.Stop();
         }
     }
 }

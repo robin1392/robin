@@ -152,8 +152,8 @@ public class StateManager<STATE, EVENT , T>
     {
         if (_isEntering)
         {
-            Debug.LogError($"Current : {current_State}");
-            Debug.LogError("current state is already entering");
+            Debug.LogWarning($"Current : {current_State}");
+            Debug.LogWarning("current state is already entering");
             return false;
         }
         
@@ -183,8 +183,8 @@ public class StateManager<STATE, EVENT , T>
     {
         if (_isEntering)
         {
-            Debug.LogError($"Current : {current_State}" + $" Target : {_event}");
-            Debug.LogError("current state is already entering");
+            Debug.LogWarning($"Current : {current_State}" + $" Target : {_event}");
+            Debug.LogWarning("current state is already entering");
             return false;
         }
 
@@ -206,7 +206,7 @@ public class StateManager<STATE, EVENT , T>
         }
         else
         {
-            Debug.LogError($"Current : {current_State}" + $" Target : {_event} state Map Event Error" );
+            Debug.LogWarning($"Current : {current_State}" + $" Target : {_event} state Map Event Error" );
             return false;
         }
         
@@ -254,7 +254,7 @@ public class StateManager<STATE, EVENT , T>
         }
         catch (Exception e)
         {
-            Debug.LogError($"state map event add error {_event}" + $" {e.ToString()}");
+            Debug.LogWarning($"state map event add error {_event}" + $" {e.ToString()}");
             throw;
         }
     }

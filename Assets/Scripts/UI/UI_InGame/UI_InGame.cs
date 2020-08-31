@@ -41,8 +41,6 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     
     
-    
-
     #region unity base
 
     public override void Awake()
@@ -50,17 +48,6 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         base.Awake();
 
         InitUIElement();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public override void OnDestroy()
@@ -108,8 +95,6 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         viewTargetDiceField.SetActive(view);
     }
 
-
-
     public void SetSP(int sp)
     {
         text_SP.text = sp.ToString();
@@ -144,8 +129,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     public void SetSPUpgrade(int upgradeLv , int sp)
     {
-        button_SP_Upgrade.interactable = (upgradeLv + 1) * 500 <= sp;
-        text_SP_Upgrade.text = $"SP Lv.{upgradeLv + 1}";
+        //button_SP_Upgrade.interactable = (upgradeLv + 1) * 500 <= sp;
+        text_SP_Upgrade.text = $"Lv.{upgradeLv + 1}";
         text_SP_Upgrade_Price.text = $"{(upgradeLv + 1) * 500}";
     }
     #endregion

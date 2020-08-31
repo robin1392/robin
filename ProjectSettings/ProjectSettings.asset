@@ -32,7 +32,7 @@ PlayerSettings:
     x: 0
     y: 0
     width: 1
-    height: 1
+    height: 0.99999994
   m_SplashScreenBackgroundPortraitUvs:
     serializedVersion: 2
     x: 0
@@ -214,7 +214,7 @@ PlayerSettings:
     serializedVersion: 2
     rgba: 0
   iOSLaunchScreenFillPct: 100
-  iOSLaunchScreenSize: 100
+  iOSLaunchScreenSize: 50
   iOSLaunchScreenCustomXibPath: 
   iOSLaunchScreeniPadType: 0
   iOSLaunchScreeniPadImage: {fileID: 0}
@@ -271,7 +271,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: f111ffe0ccfdf4bc183a9f5280ee7937, type: 3}
+      m_Icon: {fileID: 2800000, guid: 31b3f97bf5f1e4febb39aebd4e2e6dda, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0

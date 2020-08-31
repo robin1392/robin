@@ -47,7 +47,7 @@ namespace ED
             }
 
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
-            ts_Head.rotation = Quaternion.identity;
+            ts_Head.rotation = isBottomPlayer ? Quaternion.identity : Quaternion.Euler(0, 180f, 0);
         }
 
         private IEnumerator AttackCoroutine()
@@ -57,13 +57,13 @@ namespace ED
 
             while (t < lifeTime)
             {
-                yield return null;
-                
                 t += Time.deltaTime;
                 if (shootTime + attackSpeed <= Time.time)
                 {
                     SetFlyingTarget();
                 }
+                
+                yield return null;
             }
             
             //Destroy();

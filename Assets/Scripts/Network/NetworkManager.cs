@@ -1,9 +1,12 @@
-﻿using RWGameProtocol;
+﻿using System;
+using RWGameProtocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
+using RWGameProtocol;
+
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -21,11 +24,48 @@ public class NetworkManager : Singleton<NetworkManager>
     private SocketManager _clientSocket = null;
     
     // sender 
-    private RWGameProtocol.GamePacketSender _packetSend;
-    public RWGameProtocol.GamePacketSender SendSocket
+    private GamePacketSender _packetSend;
+    public GamePacketSender SendSocket
     {
         get => _packetSend;
         private set => _packetSend = value;
+    }
+
+    // 외부에서 얘를 건들일은 없도록하지
+    private GamePacketReceiver _packetRecv;
+
+    private SocketRecvEvent _socketRecv;
+    public SocketRecvEvent socketRecv
+    {
+        get => _socketRecv;
+        private set => _socketRecv = value;
+    }
+
+    #endregion
+    
+    #region socket addr
+
+    private string _serverAddr;
+    public string serverAddr
+    {
+        get => _serverAddr;
+        private set => _serverAddr = value;
+    }
+
+    private int _port;
+
+    public int port
+    {
+        get => _port;
+        private set => _port = value;
+    }
+
+    private string _gameSession;
+
+    public string gameSession
+    {
+        get => _gameSession;
+        private set => _gameSession = value;
     }
     
     #endregion
@@ -71,14 +111,10 @@ public class NetworkManager : Singleton<NetworkManager>
         _clientSocket = new SocketManager();
         _packetSend = new GamePacketSender();
 
-
-        // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
-        GamePacketReceiver gamePacketReceiver = new GamePacketReceiver();
-        gamePacketReceiver.JoinGameAck = OnJoinGameAck;
-
-
-
-        _clientSocket.Init(gamePacketReceiver);
+        // 
+        _socketRecv = new SocketRecvEvent();
+        // recv 셋팅
+        CombineRecvDelegate();
     }
 
     
@@ -88,42 +124,93 @@ public class NetworkManager : Singleton<NetworkManager>
         GameObject.Destroy(webNetCommon);
 
         _packetSend = null;
+        _packetRecv = null;
         _clientSocket = null;
     }
     #endregion
     
+    #region update packet
     
-    #region socket
-
     public void UpdateSocket()
     {
         if(_clientSocket != null)
             _clientSocket.Update();
     }
 
+    #endregion
+    
+    
+    #region connent
+
+    public void SetAddr(string serveraddr, int port, string gamesession)
+    {
+        _serverAddr = serveraddr;
+        _port = port;
+        _gameSession = gamesession;
+    }
+
+    public void ConnectServer( Action callback = null)
+    {
+        _clientSocket.Connect( _serverAddr , _port , callback);
+    }
+
+    
     public void DisconnectSocket()
     {
-        _clientSocket.Disconnect();
+        if(_clientSocket.IsConnected() == true)
+            _clientSocket.Disconnect();
     }
 
     public bool IsConnect()
     {
         return _clientSocket.IsConnected();
     }
+    
     #endregion
 
 
-    /// <summary>
-    /// 게임 참가 응답 처리부
-    /// </summary>
-    /// <param name="peer"></param>
-    /// <param name="msg"></param>
-    void OnJoinGameAck(IPeer peer, MsgJoinGameAck msg)
-    {
-        // something to do...
 
-        //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
-        //SendSocket.ReadyGameReq(peer);
+    #region socket delegate
+
+    public void CombineRecvDelegate()
+    {
+        // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
+        _packetRecv = new GamePacketReceiver();
+        
+        _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
+        _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
+        _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
+        _packetRecv.SetDeckAck = _socketRecv.OnSetDeckAck;
+        _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
+        _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
+        _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
+        
+        // notify
+        _packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
+        _packetRecv.LeaveGameNotify = _socketRecv.OnLeaveGameNotify;
+        _packetRecv.GetDiceNotify = _socketRecv.OnGetDiceNotify;
+        _packetRecv.DeactiveWaitingObjectNotify = _socketRecv.OnDeactiveWaitingObjectNotify;
+            
+        // relay
+        _packetRecv.RemoveMinionRelay = _socketRecv.OnRemoveMinionRelay;
+        _packetRecv.HitDamageMinionRelay = _socketRecv.OnHitDamageMinionRelay;
+        _packetRecv.DestroyMinionRelay = _socketRecv.OnDestroyMinionRelay;
+        _packetRecv.HealMinionRelay = _socketRecv.OnHealMinionRelay;
+        _packetRecv.PushMinionRelay = _socketRecv.OnPushMinionRelay;
+        _packetRecv.SetMinionAnimationTriggerRelay = _socketRecv.OnSetMinionAnimationTriggerRelay;
+        _packetRecv.RemoveMagicRelay = _socketRecv.OnRemoveMagicRelay;
+        _packetRecv.FireArrowRelay = _socketRecv.OnFireArrowRelay;
+        _packetRecv.FireballBombRelay = _socketRecv.OnFireballBombRelay;
+        _packetRecv.MineBombRelay = _socketRecv.OnMineBombRelay;
+        _packetRecv.SetMagicTargetIdRelay = _socketRecv.OnSetMagicTargetIdRelay;
+        _packetRecv.SetMagicTargetRelay = _socketRecv.OnSetMagicTargetRelay;
+        
+        _clientSocket.Init(_packetRecv);
     }
+    
+    #endregion
+    
 }
+
+
 

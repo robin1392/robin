@@ -35,16 +35,13 @@ MonoBehaviour:
     obj: {fileID: 3693968143288254739, guid: 0cbe6ce63894a48d8827b65c7d461f29, type: 3}
     count: 30
   - name: Effect_Bomb
-    obj: {fileID: 4176294856687860321, guid: 5a588058619e145ad8873c3b9e42f056, type: 3}
+    obj: {fileID: 5166360906360891136, guid: 0cbe4091e477e45a4adc3eadf50c0328, type: 3}
     count: 30
   - name: Scarecrow
     obj: {fileID: 8926565139391733748, guid: 3b66288860469481fbeb497f8cb3ee6f, type: 3}
     count: 30
   - name: Effect_Lightning
     obj: {fileID: 5060921744694126846, guid: 9c97f28897eba43e285d06df261a7912, type: 3}
-    count: 30
-  - name: Effect_Ninja
-    obj: {fileID: 9017776126007456575, guid: 81c5f0038f2914eabbbcac37316143b9, type: 3}
     count: 30
   - name: Effect_Dust
     obj: {fileID: 5467132472131940660, guid: 660e4e8631b0745a5905a5051460f11e, type: 3}
@@ -60,4 +57,7 @@ MonoBehaviour:
     count: 30
   - name: Effect_ShotHit
     obj: {fileID: 7277101816294039622, guid: 7b5a53139eb5a40d18b9cdba17ddc40c, type: 3}
+    count: 30
+  - name: Effect_ArrowHit
+    obj: {fileID: 5506211092641390471, guid: d92ac969513e84ca5afa49f5c00f0055, type: 3}
     count: 30

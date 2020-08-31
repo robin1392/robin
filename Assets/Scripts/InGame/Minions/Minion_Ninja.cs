@@ -11,6 +11,16 @@ namespace ED
 {
     public class Minion_Ninja : Minion
     {
+        [Header("Effect")] 
+        public GameObject pref_Effect;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_Effect, 1);
+        }
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -83,9 +93,10 @@ namespace ED
         IEnumerator MoveForwardCoroutine()
         {
             SetControllEnable(false);
+            PoolManager.instance.ActivateObject("Effect_Ninja", transform.position);
             transform.LookAt(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back));
-            yield return null;
             
+            yield return null;
             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, true);
             animator.SetFloat("MoveSpeed", 1f);
             

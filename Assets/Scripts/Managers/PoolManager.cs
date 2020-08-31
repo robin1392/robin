@@ -132,7 +132,7 @@ namespace ED
                 }
             }
 
-            Debug.LogError(poolName + " pool is empty.");
+            Debug.LogWarning(poolName + " pool is empty.");
             return default;
         }
 
@@ -159,7 +159,7 @@ namespace ED
                 }
             }
 
-            Debug.LogError(poolName + " pool is empty.");
+            Debug.LogWarning(poolName + " pool is empty.");
             return t;
         }
 
@@ -199,11 +199,11 @@ namespace ED
             }
             else
             {
-                Debug.LogError(poolName + " pool is not created.");
+                Debug.LogWarning(poolName + " pool is not created.");
                 return default;
             }
 
-            Debug.LogError(poolName + " pool is empty. And add pool.");
+            Debug.LogWarning(poolName + " pool is empty. And add pool.");
             //AddPool(data.listPool.Find(data => data.name == poolName).obj, 1);
             //return ActivateObject<T>(poolName, position, parent);
             return default;
@@ -238,13 +238,22 @@ namespace ED
             }
             else
             {
-                Debug.LogError(poolName + " pool is not created.");
+                Debug.LogWarning(poolName + " pool is not created.");
                 return t;
             }
 
-            Debug.LogError(poolName + " pool is empty. And add pool.");
-            AddPool(data.listPool.Find(data => data.name == poolName).obj, 1);
-            return ActivateObject(poolName, position, parent);
+            Debug.LogWarning(poolName + " pool is empty. And add pool.");
+            var pool = data.listPool.Find(data => data.name == poolName);
+            if (pool == null || pool.obj == null)
+            {
+                return null;
+            }
+            else
+            {
+                AddPool(pool.obj, 1);
+                return ActivateObject(poolName, position, parent);
+                
+            }
         }
 
         /// <summary>

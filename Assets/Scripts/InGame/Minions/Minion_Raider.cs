@@ -87,8 +87,12 @@ namespace ED
 
         public void DashMessage(int targetID)
         {
-            Transform ts = controller.targetPlayer.GetBaseStatFromId(targetID).transform;
-            StartCoroutine(DashCoroutine(ts));
+            var bs = controller.targetPlayer.GetBaseStatFromId(targetID);
+            if (bs != null)
+            {
+                Transform ts = bs.transform;
+                StartCoroutine(DashCoroutine(ts));
+            }
         }
 
         private IEnumerator DashCoroutine(Transform dashTarget)
@@ -99,7 +103,7 @@ namespace ED
             controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
             var ts = transform;
             
-            while (true)
+            while (dashTarget != null)
             {
                 ts.LookAt(dashTarget);
                 //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);

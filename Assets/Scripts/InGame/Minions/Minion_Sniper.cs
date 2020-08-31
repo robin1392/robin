@@ -38,6 +38,14 @@ namespace ED
             }
         }
 
+        public override void Death()
+        {
+            base.Death();
+
+            lr.gameObject.SetActive(false);
+            light_Fire.enabled = false;
+        }
+
         IEnumerator AttackReadyCoroutine()
         {
             yield return new WaitForSeconds(0.5f);
@@ -60,6 +68,7 @@ namespace ED
                     }
                     else
                     {
+                        controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                         break;
                     }
                 }
@@ -86,11 +95,17 @@ namespace ED
         {
             StartCoroutine(AimingCoroutine());
         }
+
+        public void StopAiming()
+        {
+            StopAllCoroutines();
+            lr.gameObject.SetActive(false);
+        }
         
         IEnumerator AimingCoroutine()
         {
             float t = 0;
-            while (t < attackSpeed - 1.5f)
+            while (t < attackSpeed - 1.5f && target != null)
             {
                 if (target != null)
                 {
@@ -104,7 +119,7 @@ namespace ED
                 }
 
                 t += Time.deltaTime;
-                yield return null;
+                yield return new WaitForEndOfFrame();
             }
             
             lr.gameObject.SetActive(false);
@@ -112,6 +127,8 @@ namespace ED
 
         public void FireArrow()
         {
+            lr.gameObject.SetActive(false);
+            
             if (ps_Fire != null)
             {
                 ps_Fire.Play();
