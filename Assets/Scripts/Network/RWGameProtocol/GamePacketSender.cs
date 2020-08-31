@@ -68,10 +68,9 @@ namespace RWGameProtocol
         }
 
 
-        public void ReadyGameAck(IPeer peer, GameErrorCode code, bool isPlayGame)
+        public void ReadyGameAck(IPeer peer, GameErrorCode code)
         {
             MsgReadyGameAck msg = new MsgReadyGameAck();
-            msg.IsPlayGame = isPlayGame;
             peer.SendPacket((short)GameProtocol.READY_GAME_ACK, msg.Serialize());
         }
 
