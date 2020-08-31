@@ -53,7 +53,7 @@ public class UserInfo
         _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "" );
         _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "" );
 
-        _userNickName = ObscuredPrefs.GetString("NickName", "" );
+        _userNickName = ObscuredPrefs.GetString("Nickname", "" );
         
         if (_slotDeck[1] == "" || _slotDeck[2] == "")
         {
@@ -68,7 +68,7 @@ public class UserInfo
 
         if (_userNickName == "")
         {
-            ObscuredPrefs.SetString("NickName", "" );
+            ObscuredPrefs.SetString("Nickname", "" );
             ObscuredPrefs.Save();
         }
         

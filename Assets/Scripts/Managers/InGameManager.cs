@@ -81,6 +81,8 @@ namespace ED
         [SerializeField]
         protected List<BaseStat> listTopPlayer = new List<BaseStat>();
 
+        private readonly string recvMessage = "RecvBattleManager";
+        
         #endregion
         
         
@@ -515,7 +517,7 @@ namespace ED
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
 
             //text_Result.text = playerController.isAlive ? "승리" : "패배";
-            UI_InGamePopup.Get().SetResultText(playerController.isAlive?Global.g_inGameWin:Global.g_inGameLose);
+            UI_InGamePopup.Get().SetResultText(playerController.isAlive ? Global.g_inGameWin : Global.g_inGameLose);
         }
         #endregion
         
@@ -647,7 +649,7 @@ namespace ED
         {
             if (PhotonNetwork.IsConnected)
             {
-                photonView.RPC("RecvBattleManager", target , ptID , param);
+                photonView.RPC(recvMessage, target , ptID , param);
             }
             else
             {

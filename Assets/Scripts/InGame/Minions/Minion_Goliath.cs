@@ -33,6 +33,8 @@ namespace ED
 
         public void FireArrow()
         {
+            if (target == null) return;
+            
             if (target.isFlying) ps_FireTargetFlying.Play();
             
             if (PhotonNetwork.IsConnected && isMine)
@@ -45,7 +47,7 @@ namespace ED
             {
                 if (target.isFlying)
                 {
-                    controller.FireSpear(ts_ShootingPos2.position, target.id, power * 1.5f, bulletMoveSpeedByFlying);
+                    controller.FireSpear(ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
                 }
                 else
                 {

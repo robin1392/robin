@@ -140,6 +140,7 @@ namespace ED
         
         [SerializeField]
         protected List<Magic> listMagic = new List<Magic>();
+        private readonly string recvMessage = "RecvPlayer";
 
         #endregion
 
@@ -177,6 +178,11 @@ namespace ED
             }
             
             StartPlayerControll();
+        }
+
+        private void Update()
+        {
+            RefreshHealthBar();
         }
 
         public void OnDestroy()
@@ -750,8 +756,6 @@ namespace ED
                     UI_InGamePopup.Get().ViewLowHP(true);
                 }
             }
-
-            RefreshHealthBar();
         }
 
         private void Death()
@@ -938,7 +942,7 @@ namespace ED
         public void SetMinionAnimationTrigger(int baseStatId, string trigger)
         {
             var m = listMinion.Find(minion => minion.id == baseStatId);
-            if (m != null)
+            if (m != null && m.animator != null)
             {
                 m.animator.SetTrigger(trigger);
             }
@@ -1117,7 +1121,7 @@ namespace ED
         {
             if (PhotonNetwork.IsConnected)
             {
-                photonView.RPC("RecvPlayer", target, ptID, param);
+                photonView.RPC(recvMessage, target, ptID, param);
             }
             else
             {
