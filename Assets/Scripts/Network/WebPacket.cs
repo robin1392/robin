@@ -57,7 +57,7 @@ public class MatchRequestReq
 [Serializable]
 public class MatchRequestAck
 {
-    public string TicketId;
+    public string ticketId;
 }
 
 [Serializable]

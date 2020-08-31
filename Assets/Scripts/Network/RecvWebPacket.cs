@@ -57,7 +57,7 @@ public partial class WebPacket : Singleton<WebPacket>
             case WebProtocol.WebPD_Match:
             {
                 MatchRequestAck res = JsonUtility.FromJson<MatchRequestAck>(content);
-                MatchResponse(res.TicketId);
+                MatchResponse(res.ticketId);
                 break;
             }
             case WebProtocol.WebPD_MatchStatus:
