@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using ErrorDefine;
 using WebPacketDefine;
+using WebSocketSharp;
 
 public partial class WebPacket : Singleton<WebPacket>
 {
@@ -86,6 +87,12 @@ public partial class WebPacket : Singleton<WebPacket>
 
     private void MatchResponse(string ticketId)
     {
+        if (ticketId.IsNullOrEmpty())
+        {
+            UnityUtil.Print("ticket id null");
+            return;
+        }
+        
         UserInfoManager.Get().SetTicketId(ticketId);
 
         StartCoroutine(StartMatchStatus());

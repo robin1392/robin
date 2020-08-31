@@ -14,7 +14,7 @@ public class UserInfo
         get => _userID;
         private set => _userID = value;
     }
-
+    
     private string _userNickName;
     public string userNickName
     {
@@ -92,7 +92,7 @@ public class UserInfo
         ObscuredPrefs.SetString("UserKey", _userID );
         ObscuredPrefs.Save();    
     }
-
+    
     public void SetNickName(string nickname)
     {
         _userNickName = nickname;

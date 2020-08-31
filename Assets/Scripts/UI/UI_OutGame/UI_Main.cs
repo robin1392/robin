@@ -254,7 +254,8 @@ namespace ED
 
         public void OnClickBtn1()
         {
-            WebPacket.Get().SendUserAuth( string.Empty , null );
+            //WebPacket.Get().SendUserAuth( string.Empty , null );
+            WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
         }
         
         #endregion
