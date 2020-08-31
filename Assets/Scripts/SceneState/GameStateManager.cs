@@ -2,7 +2,7 @@
 #define ENABLE_LOG
 #endif
 
-
+//#define NETWORK_ACT
 
 using System;
 using System.Collections;
@@ -233,8 +233,22 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         // 상태 유저 정보 받는중..혹은 로그인중
         UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-        yield return new WaitForSeconds(0.3f);
         
+        yield return new WaitForSeconds(0.1f);
+        
+#if NETWORK_ACT
+        //
+        WebPacket.Get().SendUserAuth(UserInfoManager.Get().GetUserInfo().userID , UserAuthOK);
+#else
+        // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
+        // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
+        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+#endif
+        
+    }
+
+    public void UserAuthOK()
+    {
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
         ChangeScene(Global.E_GAMESTATE.STATE_MAIN);

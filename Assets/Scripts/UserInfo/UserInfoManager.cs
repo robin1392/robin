@@ -55,6 +55,8 @@ public class UserInfo
 
         _userNickName = ObscuredPrefs.GetString("Nickname", "" );
         
+        _userID = ObscuredPrefs.GetString("UserKey", "" );
+        
         if (_slotDeck[1] == "" || _slotDeck[2] == "")
         {
             ObscuredPrefs.SetString("Deck2", "0/1/2/3/4" );
@@ -71,15 +73,24 @@ public class UserInfo
             ObscuredPrefs.SetString("Nickname", "" );
             ObscuredPrefs.Save();
         }
+
+        if (_userID == "")
+        {
+            ObscuredPrefs.SetString("UserKey", "" );
+            ObscuredPrefs.Save();    
+        }
         
         
     }
     
     #region set
 
-    public void SetID(string id)
+    public void SetUserKey(string id)
     {
         _userID = id;
+        
+        ObscuredPrefs.SetString("UserKey", _userID );
+        ObscuredPrefs.Save();    
     }
 
     public void SetNickName(string nickname)
@@ -222,7 +233,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
     
     public void SetUserKey(string userid)
     {
-        _userInfo.SetID(userid);
+        _userInfo.SetUserKey(userid);
     }
 
     public void SetUserNickName(string nickname)
