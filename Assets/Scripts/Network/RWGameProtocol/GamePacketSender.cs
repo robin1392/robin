@@ -26,10 +26,11 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="code"></param>
-        public void JoinGameAck(IPeer peer, GameErrorCode code)
+        public void JoinGameAck(IPeer peer, GameErrorCode code, PlayerInfo otherPlayerInfo)
         {
             MsgJoinGameAck msg = new MsgJoinGameAck();
             msg.ErrorCode = (short)code;
+            msg.OtherPlayerInfo = otherPlayerInfo;
             peer.SendPacket((short)GameProtocol.JOIN_GAME_ACK, msg.Serialize());
         }
 
@@ -62,14 +63,15 @@ namespace RWGameProtocol
 
         public void ReadyGameReq(IPeer peer)
         {
-            MsgLeaveGameReq msg = new MsgLeaveGameReq();
+            MsgReadyGameReq msg = new MsgReadyGameReq();
             peer.SendPacket((short)GameProtocol.READY_GAME_REQ, msg.Serialize());
         }
 
 
-        public void ReadyGameAck(IPeer peer, GameErrorCode code)
+        public void ReadyGameAck(IPeer peer, GameErrorCode code, bool isPlayGame)
         {
-            MsgLeaveGameAck msg = new MsgLeaveGameAck();
+            MsgReadyGameAck msg = new MsgReadyGameAck();
+            msg.IsPlayGame = isPlayGame;
             peer.SendPacket((short)GameProtocol.READY_GAME_ACK, msg.Serialize());
         }
 

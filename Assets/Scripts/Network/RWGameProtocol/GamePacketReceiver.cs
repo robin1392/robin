@@ -7,8 +7,11 @@ using RWGameProtocol.Msg;
 
 namespace RWGameProtocol
 {
+
     public class GamePacketReceiver : IPacketProcessor
     {
+        #region Req/Ack delegate                
+
         public delegate void JoinGameReqDelegate(IPeer peer, MsgJoinGameReq msg);
         public JoinGameReqDelegate JoinGameReq;
 
@@ -51,6 +54,7 @@ namespace RWGameProtocol
         public delegate void HitDamageAckDelegate(IPeer peer, MsgHitDamageAck msg);
         public HitDamageAckDelegate HitDamageAck;
 
+        #endregion
 
 
         #region Notify delegate                
@@ -66,6 +70,13 @@ namespace RWGameProtocol
 
         public delegate void DeactiveWaitingObjectNotifyDelegate(IPeer peer, MsgDeactiveWaitingObjectNotify msg);
         public DeactiveWaitingObjectNotifyDelegate DeactiveWaitingObjectNotify;
+
+        public delegate void AddSpNotifyDelegate(IPeer peer, MsgAddSpNotify msg);
+        public AddSpNotifyDelegate AddSpNotify;
+
+        public delegate void SpawnNotifyDelegate(IPeer peer, MsgSpawnNotify msg);
+        public SpawnNotifyDelegate SpawnNotify;
+
 
         #endregion
 
@@ -114,41 +125,201 @@ namespace RWGameProtocol
         {
             switch ((GameProtocol)protocolId)
             {
-                case GameProtocol.JOIN_GAME_REQ: JoinGameReq(peer, MsgJoinGameReq.Deserialize(data)); break;
-                case GameProtocol.JOIN_GAME_ACK: JoinGameAck(peer, MsgJoinGameAck.Deserialize(data)); break;
-                case GameProtocol.LEAVE_GAME_REQ: LeaveGameReq(peer, MsgLeaveGameReq.Deserialize(data)); break;
-                case GameProtocol.LEAVE_GAME_ACK: LeaveGameAck(peer, MsgLeaveGameAck.Deserialize(data)); break;
-                case GameProtocol.READY_GAME_REQ: ReadyGameReq(peer, MsgReadyGameReq.Deserialize(data)); break;
-                case GameProtocol.READY_GAME_ACK: ReadyGameAck(peer, MsgReadyGameAck.Deserialize(data)); break;
-                case GameProtocol.SET_DECK_REQ: SetDeckReq(peer, MsgSetDeckReq.Deserialize(data)); break;
-                case GameProtocol.SET_DECK_ACK: SetDeckAck(peer, MsgSetDeckAck.Deserialize(data)); break;
-                case GameProtocol.GET_DICE_REQ: GetDiceReq(peer, MsgGetDiceReq.Deserialize(data)); break;
-                case GameProtocol.GET_DICE_ACK: GetDiceAck(peer, MsgGetDiceAck.Deserialize(data)); break;
-                case GameProtocol.LEVEL_UP_DICE_REQ: LevelUpDiceReq(peer, MsgLevelUpDiceReq.Deserialize(data)); break;
-                case GameProtocol.LEVEL_UP_DICE_ACK: LevelUpDiceAck(peer, MsgLevelUpDiceAck.Deserialize(data)); break;
-                case GameProtocol.HIT_DAMAGE_REQ: HitDamageReq(peer, MsgHitDamageReq.Deserialize(data)); break;
-                case GameProtocol.HIT_DAMAGE_ACK: HitDamageAck(peer, MsgHitDamageAck.Deserialize(data)); break;
+                case GameProtocol.JOIN_GAME_REQ:
+                    if (JoinGameReq == null)
+                        return false;
+
+                    JoinGameReq(peer, MsgJoinGameReq.Deserialize(data)); 
+                    break;
+                case GameProtocol.JOIN_GAME_ACK:
+                    if (JoinGameAck == null)
+                        return false;
+
+                    JoinGameAck(peer, MsgJoinGameAck.Deserialize(data)); 
+                    break;
+                case GameProtocol.LEAVE_GAME_REQ:
+                    if (LeaveGameReq == null)
+                        return false;
+
+                    LeaveGameReq(peer, MsgLeaveGameReq.Deserialize(data)); 
+                    break;
+                case GameProtocol.LEAVE_GAME_ACK:
+                    if (LeaveGameAck == null)
+                        return false;
+
+                    LeaveGameAck(peer, MsgLeaveGameAck.Deserialize(data)); 
+                    break;
+                case GameProtocol.READY_GAME_REQ:
+                    if (ReadyGameReq == null)
+                        return false;
+
+                    ReadyGameReq(peer, MsgReadyGameReq.Deserialize(data)); 
+                    break;
+                case GameProtocol.READY_GAME_ACK:
+                    if (ReadyGameAck == null)
+                        return false;
+
+                    ReadyGameAck(peer, MsgReadyGameAck.Deserialize(data)); 
+                    break;
+                case GameProtocol.SET_DECK_REQ:
+                    if (SetDeckReq == null)
+                        return false;
+
+                    SetDeckReq(peer, MsgSetDeckReq.Deserialize(data)); 
+                    break;
+                case GameProtocol.SET_DECK_ACK:
+                    if (SetDeckAck == null)
+                        return false;
+
+                    SetDeckAck(peer, MsgSetDeckAck.Deserialize(data)); 
+                    break;
+                case GameProtocol.GET_DICE_REQ:
+                    if (GetDiceReq == null)
+                        return false;
+
+                    GetDiceReq(peer, MsgGetDiceReq.Deserialize(data)); 
+                    break;
+                case GameProtocol.GET_DICE_ACK:
+                    if (GetDiceAck == null)
+                        return false;
+
+                    GetDiceAck(peer, MsgGetDiceAck.Deserialize(data)); 
+                    break;
+                case GameProtocol.LEVEL_UP_DICE_REQ:
+                    if (LevelUpDiceReq == null)
+                        return false;
+
+                    LevelUpDiceReq(peer, MsgLevelUpDiceReq.Deserialize(data)); 
+                    break;
+                case GameProtocol.LEVEL_UP_DICE_ACK:
+                    if (LevelUpDiceAck == null)
+                        return false;
+
+                    LevelUpDiceAck(peer, MsgLevelUpDiceAck.Deserialize(data)); 
+                    break;
+                case GameProtocol.HIT_DAMAGE_REQ:
+                    if (HitDamageReq == null)
+                        return false;
+
+                    HitDamageReq(peer, MsgHitDamageReq.Deserialize(data)); 
+                    break;
+                case GameProtocol.HIT_DAMAGE_ACK:
+                    if (HitDamageAck == null)
+                        return false;
+
+                    HitDamageAck(peer, MsgHitDamageAck.Deserialize(data)); 
+                    break;
+
 
                 #region Notify Protocol                
-                case GameProtocol.JOIN_GAME_NOTIFY: JoinGameNotify(peer, MsgJoinGameNotify.Deserialize(data)); break;
-                case GameProtocol.LEAVE_GAME_NOTIFY: LeaveGameNotify(peer, MsgLeaveGameNotify.Deserialize(data)); break;
-                case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY: DeactiveWaitingObjectNotify(peer, MsgDeactiveWaitingObjectNotify.Deserialize(data)); break;
-                case GameProtocol.GET_DICE_NOTIFY: GetDiceNotify(peer, MsgGetDiceNotify.Deserialize(data)); break;
+                case GameProtocol.JOIN_GAME_NOTIFY:
+                    if (JoinGameNotify == null)
+                        return false;
+
+                    JoinGameNotify(peer, MsgJoinGameNotify.Deserialize(data)); 
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    if (LeaveGameNotify == null)
+                        return false;
+
+                    LeaveGameNotify(peer, MsgLeaveGameNotify.Deserialize(data)); 
+                    break;
+                case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
+                    if (DeactiveWaitingObjectNotify == null)
+                        return false;
+
+                    DeactiveWaitingObjectNotify(peer, MsgDeactiveWaitingObjectNotify.Deserialize(data)); 
+                    break;
+                case GameProtocol.GET_DICE_NOTIFY:
+                    if (GetDiceNotify == null)
+                        return false;
+
+                    GetDiceNotify(peer, MsgGetDiceNotify.Deserialize(data)); 
+                    break;
+                case GameProtocol.ADD_SP_NOTIFY:
+                    if (AddSpNotify == null)
+                        return false;
+
+                    AddSpNotify(peer, MsgAddSpNotify.Deserialize(data));
+                    break;
+                case GameProtocol.SPAWN_NOTIFY:
+                    if (SpawnNotify == null)
+                        return false;
+
+                    SpawnNotify(peer, MsgSpawnNotify.Deserialize(data));
+                    break;
+
 
                 #endregion
 
+
                 #region Relay Protocol                
-                case GameProtocol.REMOVE_MINION_RELAY: RemoveMinionRelay(peer, MsgRemoveMinionRelay.Deserialize(data)); break;
-                case GameProtocol.HIT_DAMAGE_MINION_RELAY: HitDamageMinionRelay(peer, MsgHitDamageMinionRelay.Deserialize(data)); break;
-                case GameProtocol.HEAL_MINION_RELAY: HealMinionRelay(peer, MsgHealMinionRelay.Deserialize(data)); break;
-                case GameProtocol.PUSH_MINION_RELAY: PushMinionRelay(peer, MsgPushMinionRelay.Deserialize(data)); break;
-                case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY: SetMinionAnimationTriggerRelay(peer, MsgSetMinionAnimationTriggerRelay.Deserialize(data)); break;
-                case GameProtocol.FIRE_ARROW_RELAY: FireArrowRelay(peer, MsgFireArrowRelay.Deserialize(data)); break;
-                case GameProtocol.FIREBALL_BOMB_RELAY: FireballBombRelay(peer, MsgFireballBombRelay.Deserialize(data)); break;
-                case GameProtocol.MINE_BOMB_RELAY: MineBombRelay(peer, MsgMineBombRelay.Deserialize(data)); break;
-                case GameProtocol.REMOVE_MAGIC_RELAY: RemoveMagicRelay(peer, MsgRemoveMagicRelay.Deserialize(data)); break;
-                case GameProtocol.SET_MAGIC_TARGET_ID_RELAY: SetMagicTargetIdRelay(peer, MsgSetMagicTargetIdRelay.Deserialize(data)); break;
-                case GameProtocol.SET_MAGIC_TARGET_POS_RELAY: SetMagicTargetRelay(peer, MsgSetMagicTargetRelay.Deserialize(data)); break;
+                case GameProtocol.REMOVE_MINION_RELAY:
+                    if (RemoveMinionRelay == null)
+                        return false;
+
+                    RemoveMinionRelay(peer, MsgRemoveMinionRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                    if (HitDamageMinionRelay == null)
+                        return false;
+
+                    HitDamageMinionRelay(peer, MsgHitDamageMinionRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.HEAL_MINION_RELAY:
+                    if (HealMinionRelay == null)
+                        return false;
+
+                    HealMinionRelay(peer, MsgHealMinionRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.PUSH_MINION_RELAY:
+                    if (PushMinionRelay == null)
+                        return false;
+
+                    PushMinionRelay(peer, MsgPushMinionRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+                    if (LeaveGameReq == null)
+                        return false;
+
+                    SetMinionAnimationTriggerRelay(peer, MsgSetMinionAnimationTriggerRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.FIRE_ARROW_RELAY:
+                    if (FireArrowRelay == null)
+                        return false;
+
+                    FireArrowRelay(peer, MsgFireArrowRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.FIREBALL_BOMB_RELAY:
+                    if (FireballBombRelay == null)
+                        return false;
+
+                    FireballBombRelay(peer, MsgFireballBombRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.MINE_BOMB_RELAY:
+                    if (MineBombRelay == null)
+                        return false;
+
+                    MineBombRelay(peer, MsgMineBombRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.REMOVE_MAGIC_RELAY:
+                    if (RemoveMagicRelay == null)
+                        return false;
+
+                    RemoveMagicRelay(peer, MsgRemoveMagicRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+                    if (SetMagicTargetIdRelay == null)
+                        return false;
+
+                    SetMagicTargetIdRelay(peer, MsgSetMagicTargetIdRelay.Deserialize(data)); 
+                    break;
+                case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+                    if (SetMagicTargetRelay == null)
+                        return false;
+
+                    SetMagicTargetRelay(peer, MsgSetMagicTargetRelay.Deserialize(data)); 
+                    break;
                    
                 #endregion
 

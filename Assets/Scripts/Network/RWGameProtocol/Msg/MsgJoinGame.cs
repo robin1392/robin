@@ -4,16 +4,16 @@ using System.Runtime.InteropServices;
 namespace RWGameProtocol.Msg
 {
     [Serializable] 
-    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Unicode)] 
-    public struct PlayerInfo
+    [StructLayout(LayoutKind.Sequential, Pack = 1)] 
+    public class PlayerInfo
     {
-        public byte Team;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-        public string PlayerSessionId;
-        
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
         public string Name;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+        public int[] DeckInfo;
+
+        public bool IsBottomPlayer;
     }
 
 

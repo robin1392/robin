@@ -16,5 +16,8 @@ namespace RWGameProtocol.Msg
     public class MsgReadyGameAck : Serializer<MsgReadyGameAck>
     {
         public short ErrorCode;
+        
+        // 게임 플레이 여부(true이면 게임 시작)
+        public bool IsPlayGame;
     }
 }
