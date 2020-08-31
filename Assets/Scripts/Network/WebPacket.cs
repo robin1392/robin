@@ -71,6 +71,6 @@ public class MatchStatusAck
 {
     public string serverAddr;
     public int port;
-    public string gameSessionId;
+    public string playerSessionId;
 }
 

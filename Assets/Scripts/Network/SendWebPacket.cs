@@ -63,7 +63,7 @@ public partial class WebPacket : Singleton<WebPacket>
 
         SendQueue requestData = new SendQueue();
         requestData.packetDef = WebProtocol.WebPD_MatchStatus;
-        requestData.extraUrl = "/matchrequest";
+        requestData.extraUrl = "/matchstatus";
         
         requestData.FillPacket(jsonBody , null , null);
         

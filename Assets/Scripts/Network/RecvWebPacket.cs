@@ -100,17 +100,17 @@ public partial class WebPacket : Singleton<WebPacket>
 
     private void MatchStatsAck(MatchStatusAck res)
     {
-        if (res.gameSessionId.Length == 0)
+        if (res.playerSessionId.IsNullOrEmpty())
         {
             //_matchStatus = EMatchStatus.Request;
             StartCoroutine(StartMatchStatus());
             return;
         }
         
-        UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   session" + res.gameSessionId, "yellow");
+        UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   session" + res.playerSessionId, "yellow");
         
         // go match -> socket
-        NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.gameSessionId);
+        NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.playerSessionId);
     }
     #endregion
     
