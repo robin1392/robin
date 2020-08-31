@@ -13,10 +13,7 @@ public class SocketManager
     private ServerPeer _serverPeer;
 
 
-    //
-    private Action _callBack;
-    
-    
+    private Action _connectCallBack;
     
     public SocketManager()
     {
@@ -33,10 +30,11 @@ public class SocketManager
     }
 
 
-    public void Connect(string host, int port)
+    public void Connect(string host, int port , Action connectCallback = null)
     {
         Connector connector = new Connector(_netService);
         connector.OnConnectedCallback += OnServerConnected;
+        _connectCallBack = connectCallback;
 
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(host), port);
         connector.Connect(endpoint);
@@ -71,6 +69,8 @@ public class SocketManager
         _serverPeer.SetUserToken(session);
 
         //
+        if (_connectCallBack != null)
+            _connectCallBack();
     }
     
     
@@ -92,9 +92,5 @@ public class SocketManager
     }
 
 
-    public void SetCallBack(Action callback = null)
-    {
-        _callBack = callback;
-    }
     
 }

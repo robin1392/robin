@@ -1,10 +1,12 @@
-﻿using RWGameProtocol;
+﻿using System;
+using RWGameProtocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
 using RWGameProtocol;
+
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -39,6 +41,33 @@ public class NetworkManager : Singleton<NetworkManager>
         private set => _socketRecv = value;
     }
 
+    #endregion
+    
+    #region socket addr
+
+    private string _serverAddr;
+    public string serverAddr
+    {
+        get => _serverAddr;
+        private set => _serverAddr = value;
+    }
+
+    private int _port;
+
+    public int port
+    {
+        get => _port;
+        private set => _port = value;
+    }
+
+    private string _gameSession;
+
+    public string gameSession
+    {
+        get => _gameSession;
+        private set => _gameSession = value;
+    }
+    
     #endregion
     
     
@@ -100,24 +129,43 @@ public class NetworkManager : Singleton<NetworkManager>
     }
     #endregion
     
+    #region update packet
     
-    #region socket
-
     public void UpdateSocket()
     {
         if(_clientSocket != null)
             _clientSocket.Update();
     }
 
+    #endregion
+    
+    
+    #region connent
+
+    public void SetAddr(string serveraddr, int port, string gamesession)
+    {
+        _serverAddr = serveraddr;
+        _port = port;
+        _gameSession = gamesession;
+    }
+
+    public void ConnectServer( Action callback = null)
+    {
+        _clientSocket.Connect( _serverAddr , _port , callback);
+    }
+
+    
     public void DisconnectSocket()
     {
-        _clientSocket.Disconnect();
+        if(_clientSocket.IsConnected() == true)
+            _clientSocket.Disconnect();
     }
 
     public bool IsConnect()
     {
         return _clientSocket.IsConnected();
     }
+    
     #endregion
 
 

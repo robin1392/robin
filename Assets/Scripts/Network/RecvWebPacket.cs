@@ -16,7 +16,8 @@ public partial class WebPacket : Singleton<WebPacket>
 #endif
 
         //
-        ErrorDefine.ErrorCode errorCode = ErrorCode.ErrorCode_None;
+        ErrorCode errorCode = ErrorCode.ErrorCode_None;
+
         //
         if (cbFail != null)
             cbFail(errorCode);
@@ -33,9 +34,7 @@ public partial class WebPacket : Singleton<WebPacket>
 #if UNITY_EDITOR
         UnityUtil.Print("Complete Packet     :  ", content, "green");
 #endif
-
         //Nev.JSONObject jsoncontent = Nev.JSONObject.Parse(content);
-        
         //
         PacketParse(packID, content, cbSuccess, cbFail);
     }
@@ -51,14 +50,12 @@ public partial class WebPacket : Singleton<WebPacket>
             case WebProtocol.WebPD_UserAuth:
             {
                 UserAuthRes res = JsonUtility.FromJson<UserAuthRes>(content);
-                //RecvUserAuth(content["userId"].ToString());
                 RecvUserAuth(res.userId);
                 break;
             }
             case WebProtocol.WebPD_Match:
             {
                 MatchRequestAck res = JsonUtility.FromJson<MatchRequestAck>(content);
-                //MatchResponse(content["TicketId"].ToString());
                 MatchResponse(res.TicketId);
                 break;
             }
@@ -78,7 +75,7 @@ public partial class WebPacket : Singleton<WebPacket>
 
     #region user auth
 
-    public void RecvUserAuth(string userkey)
+    private void RecvUserAuth(string userkey)
     {
         UserInfoManager.Get().SetUserKey(userkey);
     }
@@ -87,14 +84,14 @@ public partial class WebPacket : Singleton<WebPacket>
     
     #region match
 
-    public void MatchResponse(string ticketId)
+    private void MatchResponse(string ticketId)
     {
         UserInfoManager.Get().SetTicketId(ticketId);
 
         StartCoroutine(StartMatchStatus());
     }
 
-    public void MatchStatsAck(MatchStatusAck res)
+    private void MatchStatsAck(MatchStatusAck res)
     {
         if (res.gameSessionId.Length == 0)
         {
@@ -103,7 +100,10 @@ public partial class WebPacket : Singleton<WebPacket>
             return;
         }
         
+        UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   session" + res.gameSessionId, "yellow");
+        
         // go match -> socket
+        NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.gameSessionId);
     }
     #endregion
     
