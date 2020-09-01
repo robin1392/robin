@@ -26,11 +26,11 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="code"></param>
-        public void JoinGameAck(IPeer peer, GameErrorCode code, PlayerInfo otherPlayerInfo)
+        public void JoinGameAck(IPeer peer, GameErrorCode code, MsgPlayerInfo playerInfo)
         {
             MsgJoinGameAck msg = new MsgJoinGameAck();
             msg.ErrorCode = (short)code;
-            msg.OtherPlayerInfo = otherPlayerInfo;
+            msg.PlayerInfo = playerInfo;
             peer.SendPacket((short)GameProtocol.JOIN_GAME_ACK, msg.Serialize());
         }
 
@@ -99,12 +99,11 @@ namespace RWGameProtocol
         }
 
 
-        public void GetDiceAck(IPeer peer, GameErrorCode code, int deckNum, int slotNum, int currentSp)
+        public void GetDiceAck(IPeer peer, GameErrorCode code, MsgGameDice diceInfo, int currentSp)
         {
             MsgGetDiceAck msg = new MsgGetDiceAck();
             msg.ErrorCode = (short)code;
-            msg.DeckNum = deckNum;
-            msg.SlotNum = slotNum;
+            msg.DiceInfo = diceInfo;
             msg.CurrentSp = currentSp;
             peer.SendPacket((short)GameProtocol.GET_DICE_ACK, msg.Serialize());
         }
@@ -157,10 +156,10 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="info"></param>
-        public void JoinGameNotify(IPeer peer, PlayerInfo info)
+        public void JoinGameNotify(IPeer peer, MsgPlayerInfo info)
         {
             MsgJoinGameNotify msg = new MsgJoinGameNotify();
-            msg.JoinPlayerInfo = info;
+            msg.OtherPlayerInfo = info;
             peer.SendPacket((short)GameProtocol.JOIN_GAME_NOTIFY, msg.Serialize());
         }
 

@@ -3,15 +3,27 @@ using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
+    /// <summary>
+    /// 덱 주사위 정보
+    /// </summary>
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgDeckDiceInfo
+    {
+        public int Id;
+        public short Upgrade;
+    }
+
+
     [Serializable] 
     [StructLayout(LayoutKind.Sequential, Pack = 1)] 
-    public class PlayerInfo
+    public class MsgPlayerInfo
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
         public string Name;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
-        public int[] DeckInfo;
+        public MsgDeckDiceInfo[] DiceInfoArray = new MsgDeckDiceInfo[5];
 
         public bool IsBottomPlayer;
     }
@@ -23,6 +35,8 @@ namespace RWGameProtocol.Msg
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string PlayerSessionId;
+
+        public sbyte DeckIndex;
     }
 
 
@@ -33,8 +47,8 @@ namespace RWGameProtocol.Msg
         // 에러 코드
         public short ErrorCode;
 
-        // 상대 플레이어 정보.
-        public PlayerInfo OtherPlayerInfo;
+        // 플레이어 정보.
+        public MsgPlayerInfo PlayerInfo;
     }
 
 
@@ -42,6 +56,6 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgJoinGameNotify : Serializer<MsgJoinGameNotify>
     {
-        public PlayerInfo JoinPlayerInfo;
+        public MsgPlayerInfo OtherPlayerInfo;
     }
 }
