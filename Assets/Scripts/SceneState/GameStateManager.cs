@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using RWGameProtocol;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -262,8 +263,8 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
         
-        
-        
+        //MoveInGameBattle();
+        NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession);
     }
     #endregion
     

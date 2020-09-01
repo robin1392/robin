@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System.Collections;
 using System.Collections.Generic;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
@@ -38,6 +42,14 @@ public class SocketRecvEvent
 
         //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
         //SendSocket.ReadyGameReq(peer);
+        UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        if( msg.PlayerInfo == null )
+            Debug.Log("other player null");
+
+        UnityUtil.Print("other info ", msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
+
+
     }
     #endregion
     
@@ -93,7 +105,10 @@ public class SocketRecvEvent
 
     public void OnJoinGameNotify(IPeer peer, MsgJoinGameNotify msg)
     {
-        
+        if( msg.OtherPlayerInfo == null )
+            Debug.Log("join player null");
+
+        UnityUtil.Print("join info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
     }
 
     public void OnLeaveGameNotify(IPeer peer, MsgLeaveGameNotify msg)

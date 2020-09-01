@@ -69,6 +69,12 @@ public class NetworkManager : Singleton<NetworkManager>
     
     
     
+    #region socket user info
+    // 통신간 정보를 담아둘만한 휘발성 클래스
+    
+    private NetInfo _netInfo = null;
+    #endregion
+    
     #region unity base
 
     public override void Awake()
@@ -102,6 +108,10 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private void InitNetwork()
     {
+        //
+        _netInfo = new NetInfo();
+        
+        
         webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
         webPacket = this.gameObject.AddComponent<WebPacket>();
 
@@ -176,10 +186,20 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void Send(GameProtocol protocol , params object[] param)
     {
+        UnityUtil.Print("SEND =>  " , protocol.ToString() , "magenta");
         _socketSend.SendPacket(protocol , _clientSocket.Peer , param);
     }
     #endregion
 
+    
+    #region get net info
+
+    public NetInfo GetNetInfo()
+    {
+        return _netInfo;
+    }
+    
+    #endregion
 
 
     #region socket delegate
@@ -230,4 +250,43 @@ public class NetworkManager : Singleton<NetworkManager>
 }
 
 
+
+
+
+#region net user info
+/// <summary>
+/// 소켓 통신에서 잠시 담아둘 정보 클래스
+/// 대전 할때마다 정보 갱신..
+/// </summary>
+public class NetInfo
+{
+    
+    //
+    public MsgPlayerInfo _playerInfo = null;
+    public MsgPlayerInfo _otherInfo = null;
+    
+    public NetInfo()
+    {
+        
+    }
+
+    public void Clear()
+    {
+        _playerInfo = null;
+        _otherInfo = null;
+    }
+
+    public void SetPlayerInfo(MsgPlayerInfo info)
+    {
+        _playerInfo = info;
+    }
+
+    public void SetOtherInfo(MsgPlayerInfo info)
+    {
+        _otherInfo = info;
+    }
+    
+    
+}
+#endregion
 

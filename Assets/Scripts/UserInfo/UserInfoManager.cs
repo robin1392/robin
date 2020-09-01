@@ -162,6 +162,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
     private UserInfo _userInfo = null;
 
+
     #endregion
 
 
@@ -222,7 +223,8 @@ public class UserInfoManager : Singleton<UserInfoManager>
     
 
     #endregion
-
+    
+    
 
     #region system
     

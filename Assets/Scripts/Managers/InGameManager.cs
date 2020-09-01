@@ -197,6 +197,8 @@ namespace ED
 
         public void StartManager()
         {
+            
+            
             if (PhotonNetwork.IsConnected)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
