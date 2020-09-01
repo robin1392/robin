@@ -10,7 +10,12 @@ using System;
 public class SocketManager
 {
     private NetworkService _netService;
+    
     private ServerPeer _serverPeer;
+    public ServerPeer Peer
+    {
+        get => _serverPeer;
+    }
 
 
     private Action _connectCallBack;

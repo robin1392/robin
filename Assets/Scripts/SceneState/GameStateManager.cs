@@ -256,6 +256,17 @@ public class GameStateManager : Singleton<GameStateManager>
     #endregion
     
     
+    #region server connect ok
+
+    public void ServerConnectCallBack()
+    {
+        UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
+        
+        
+        
+    }
+    #endregion
+    
     #region main scene to do
 
     public void MoveInGameBattle()

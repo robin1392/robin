@@ -6,7 +6,7 @@ using UnityEngine;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
 using RWGameProtocol;
-
+    
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -18,11 +18,8 @@ public class NetworkManager : Singleton<NetworkManager>
     public WebNetworkCommon webNetCommon { get; private set; }
     public WebPacket webPacket { get; private set; }
 
-    
-    
     // socket
     private SocketManager _clientSocket = null;
-    
     // sender 
     private GamePacketSender _packetSend;
     public GamePacketSender SendSocket
@@ -34,12 +31,12 @@ public class NetworkManager : Singleton<NetworkManager>
     // 외부에서 얘를 건들일은 없도록하지
     private GamePacketReceiver _packetRecv;
 
+    
+    //
+    // 패킷 리시브 함수들 모아놓는곳
     private SocketRecvEvent _socketRecv;
-    public SocketRecvEvent socketRecv
-    {
-        get => _socketRecv;
-        private set => _socketRecv = value;
-    }
+    // 패킷 send 함수 모아놓는곳
+    private SocketSendEvent _socketSend;
 
     #endregion
     
@@ -103,7 +100,7 @@ public class NetworkManager : Singleton<NetworkManager>
     
     #region net add
 
-    public void InitNetwork()
+    private void InitNetwork()
     {
         webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
         webPacket = this.gameObject.AddComponent<WebPacket>();
@@ -113,25 +110,31 @@ public class NetworkManager : Singleton<NetworkManager>
 
         // 
         _socketRecv = new SocketRecvEvent();
+        _socketSend = new SocketSendEvent(_packetSend);
+        
         // recv 셋팅
         CombineRecvDelegate();
     }
 
     
-    public void DestroyNetwork()
+    private void DestroyNetwork()
     {
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
 
         _packetSend = null;
         _packetRecv = null;
+
+        _socketRecv = null;
+        _socketSend = null;
+        
         _clientSocket = null;
     }
     #endregion
     
     #region update packet
     
-    public void UpdateSocket()
+    private void UpdateSocket()
     {
         if(_clientSocket != null)
             _clientSocket.Update();
@@ -165,7 +168,11 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         return _clientSocket.IsConnected();
     }
-    
+
+    public void Send(GameProtocol protocol , params object[] param)
+    {
+        _socketSend.SendPacket(protocol , _clientSocket.Peer , param);
+    }
     #endregion
 
 
