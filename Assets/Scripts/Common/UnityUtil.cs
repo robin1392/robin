@@ -54,7 +54,8 @@ public class UnityUtil
     
 }
 
-#define CLIPDEF
+//#define CLIPDEF
+
 public static class ClipboardExtension
 {
     /// <summary>
@@ -62,9 +63,9 @@ public static class ClipboardExtension
     /// </summary>
     public static void CopyToClipboard(this string str)
     {
-#if CLIPDEF
+//#if CLIPDEF
         GUIUtility.systemCopyBuffer = str;
-#endif
+//#endif
     }
 }
 
