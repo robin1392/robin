@@ -107,7 +107,7 @@ public partial class WebPacket : Singleton<WebPacket>
             return;
         }
         
-        UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   session" + res.playerSessionId, "yellow");
+        UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   " + res.playerSessionId, "yellow");
         
         // go match -> socket
         NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.playerSessionId);

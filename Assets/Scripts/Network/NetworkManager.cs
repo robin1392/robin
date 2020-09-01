@@ -119,6 +119,11 @@ public class NetworkManager : Singleton<NetworkManager>
     
     private void DestroyNetwork()
     {
+        if (IsConnect())
+        {
+            DisconnectSocket();
+        }
+        
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
 
