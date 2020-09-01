@@ -110,6 +110,16 @@ public class SocketRecvEvent
     {
         
     }
+
+    public void OnSpawnNotify(IPeer peer, MsgSpawnNotify msg)
+    {
+        
+    }
+
+    public void OnAddSpNotify(IPeer peer, MsgAddSpNotify msg)
+    {
+        
+    }
     #endregion
     
     #region relay

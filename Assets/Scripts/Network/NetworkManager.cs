@@ -192,16 +192,19 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
         _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
         
+        
         // notify
         _packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
         _packetRecv.LeaveGameNotify = _socketRecv.OnLeaveGameNotify;
         _packetRecv.GetDiceNotify = _socketRecv.OnGetDiceNotify;
         _packetRecv.DeactiveWaitingObjectNotify = _socketRecv.OnDeactiveWaitingObjectNotify;
+        _packetRecv.SpawnNotify = _socketRecv.OnSpawnNotify;
+        _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
+        
             
         // relay
         _packetRecv.RemoveMinionRelay = _socketRecv.OnRemoveMinionRelay;
         _packetRecv.HitDamageMinionRelay = _socketRecv.OnHitDamageMinionRelay;
-        _packetRecv.DestroyMinionRelay = _socketRecv.OnDestroyMinionRelay;
         _packetRecv.HealMinionRelay = _socketRecv.OnHealMinionRelay;
         _packetRecv.PushMinionRelay = _socketRecv.OnPushMinionRelay;
         _packetRecv.SetMinionAnimationTriggerRelay = _socketRecv.OnSetMinionAnimationTriggerRelay;
@@ -211,6 +214,8 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.MineBombRelay = _socketRecv.OnMineBombRelay;
         _packetRecv.SetMagicTargetIdRelay = _socketRecv.OnSetMagicTargetIdRelay;
         _packetRecv.SetMagicTargetRelay = _socketRecv.OnSetMagicTargetRelay;
+        
+        _packetRecv.DestroyMinionRelay = _socketRecv.OnDestroyMinionRelay;
         
         _clientSocket.Init(_packetRecv);
     }
