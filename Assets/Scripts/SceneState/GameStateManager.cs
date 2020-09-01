@@ -2,7 +2,7 @@
 #define ENABLE_LOG
 #endif
 
-//#define NETWORK_ACT
+#define NETWORK_ACT
 
 using System;
 using System.Collections;
