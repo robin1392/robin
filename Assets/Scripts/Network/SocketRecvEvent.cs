@@ -43,10 +43,6 @@ public class SocketRecvEvent
         //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
         //SendSocket.ReadyGameReq(peer);
         UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
-        
-        if( msg.PlayerInfo == null )
-            Debug.Log("join player null");
-
         UnityUtil.Print("join my info ", msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
 
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
@@ -59,7 +55,7 @@ public class SocketRecvEvent
     #region leave
     public void OnLeaveGameAck(IPeer peer, MsgLeaveGameAck msg)
     {
-        
+        UnityUtil.Print(" leave recv ", "errocode : " + msg.ErrorCode, "white");
     }
     #endregion
     
@@ -67,7 +63,7 @@ public class SocketRecvEvent
 
     public void OnReadyGameAck(IPeer peer, MsgReadyGameAck msg)
     {
-        
+        UnityUtil.Print(" ready recv ", "errocode : " + msg.ErrorCode, "white");
     }
     #endregion
     
@@ -108,27 +104,24 @@ public class SocketRecvEvent
 
     public void OnJoinGameNotify(IPeer peer, MsgJoinGameNotify msg)
     {
-        if( msg.OtherPlayerInfo == null )
-            Debug.Log("other player null");
-
         UnityUtil.Print("other info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
         
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.OtherPlayerInfo);
         
         GameStateManager.Get().CheckSendInGame();
     }
+    
+    public void OnDeactiveWaitingObjectNotify(IPeer peer, MsgDeactiveWaitingObjectNotify msg)
+    {
+        UnityUtil.Print("Notify Wait" , "DeActive Wait Game Start" , "white");
+    }
 
     public void OnLeaveGameNotify(IPeer peer, MsgLeaveGameNotify msg)
     {
-        
+        UnityUtil.Print("Notify Leave" , msg.PlayerSessionId , "white");
     }
 
     public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
-    {
-        
-    }
-
-    public void OnDeactiveWaitingObjectNotify(IPeer peer, MsgDeactiveWaitingObjectNotify msg)
     {
         
     }
@@ -142,6 +135,7 @@ public class SocketRecvEvent
     {
         
     }
+    
     #endregion
     
     #region relay

@@ -32,11 +32,12 @@ public class SocketSendEvent
             case GameProtocol.LEAVE_GAME_REQ:
             {
                 //LeaveGameReq(IPeer peer, string playerSessionId)
+                _sender.LeaveGameReq(peer , (string)param[0]);
                 break;
             }
             case GameProtocol.READY_GAME_REQ:
             {
-                //ReadyGameReq(IPeer peer)
+                _sender.ReadyGameReq(peer);
                 break;
             }
             case GameProtocol.CHANGE_LAYER_REQ:

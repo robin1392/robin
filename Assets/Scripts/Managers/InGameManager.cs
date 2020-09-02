@@ -152,9 +152,10 @@ namespace ED
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
             PoolManager.Get().MakePool();
 
-
+            
             StartManager();
-
+            /*
+             
             if (PhotonNetwork.IsConnected)
             {
                 SendBattleManager(RpcTarget.Others, E_PTDefine.PT_NICKNAME, ObscuredPrefs.GetString("Nickname"));
@@ -163,6 +164,7 @@ namespace ED
             {
                 UI_InGame.Get().SetNickname("AI");
             }
+            */
         }
 
         protected void Update()
@@ -199,6 +201,8 @@ namespace ED
         {
             
             
+            
+            /*
             if (PhotonNetwork.IsConnected)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
@@ -278,6 +282,7 @@ namespace ED
 
             StartGame();
             RefreshTimeUI(true);
+            */
         }
         
         #endregion

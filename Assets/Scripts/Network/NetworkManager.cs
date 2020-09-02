@@ -278,10 +278,10 @@ public class NetInfo
 {
     
     //
-    public MsgPlayerInfo playerInfo = null;
-    public MsgPlayerInfo otherInfo = null;
-    private bool _myInfoGet = false;
-    private bool _otherInfoGet = false;
+    public MsgPlayerInfo playerInfo;
+    public MsgPlayerInfo otherInfo;
+    public bool myInfoGet = false;
+    public bool otherInfoGet = false;
     
     public NetInfo()
     {
@@ -290,22 +290,20 @@ public class NetInfo
 
     public void Clear()
     {
-        playerInfo = null;
-        otherInfo = null;
-        _myInfoGet = false;
-        _otherInfoGet = false;
+        myInfoGet = false;
+        otherInfoGet = false;
     }
 
     public void SetPlayerInfo(MsgPlayerInfo info)
     {
         playerInfo = info;
-        _myInfoGet = true;
+        myInfoGet = true;
     }
 
     public void SetOtherInfo(MsgPlayerInfo info)
     {
         otherInfo = info;
-        _otherInfoGet = true;
+        otherInfoGet = true;
     }
 
     
