@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using ED;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
 using UnityEngine;
@@ -56,6 +57,10 @@ public class SocketRecvEvent
     public void OnLeaveGameAck(IPeer peer, MsgLeaveGameAck msg)
     {
         UnityUtil.Print(" leave recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        
+        if( InGameManager.Get() != null )
+            InGameManager.Get().CallBackLeaveRoom();
     }
     #endregion
     
@@ -114,11 +119,19 @@ public class SocketRecvEvent
     public void OnDeactiveWaitingObjectNotify(IPeer peer, MsgDeactiveWaitingObjectNotify msg)
     {
         UnityUtil.Print("Notify Wait" , "DeActive Wait Game Start" , "white");
+        
+        // 둘다 준비 끝낫다고 노티 이므로 
+        // 게임 시작하자
+        //if( InGameManager.Get() != null )
+        // startgame()
     }
 
     public void OnLeaveGameNotify(IPeer peer, MsgLeaveGameNotify msg)
     {
         UnityUtil.Print("Notify Leave" , msg.PlayerSessionId , "white");
+
+        if (InGameManager.Get() != null)
+            InGameManager.Get().OnOtherLeft();
     }
 
     public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)

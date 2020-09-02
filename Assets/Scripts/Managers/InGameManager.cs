@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using RWGameProtocol;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -200,7 +201,7 @@ namespace ED
         public void StartManager()
         {
             
-            
+            NetworkManager.Get().Send(GameProtocol.READY_GAME_REQ);
             
             /*
             if (PhotonNetwork.IsConnected)
@@ -504,6 +505,7 @@ namespace ED
         #region leave game
         public void LeaveRoom()
         {
+            /*
             if (PhotonNetwork.IsConnected)
             {
                 PhotonNetwork.Disconnect();
@@ -512,6 +514,36 @@ namespace ED
             {
                 GameStateManager.Get().MoveMainScene();
             }
+            */
+            if (NetworkManager.Get().IsConnect() == true)
+            {
+                NetworkManager.Get().Send(GameProtocol.LEAVE_GAME_REQ , NetworkManager.Get().gameSession);
+            }
+            else
+            {
+                GameStateManager.Get().MoveMainScene();
+            }
+        }
+        
+        public void CallBackLeaveRoom()
+        {
+            NetworkManager.Get().DisconnectSocket();
+            
+            GameStateManager.Get().MoveMainScene();
+        }
+
+        /// <summary>
+        /// 상대방이 나갓다고 noti를 받앗을 경우
+        /// </summary>
+        public void OnOtherLeft()
+        {
+            // 플레이 도중 나갓을경우...
+            // 나도 나가자
+            if (isGamePlaying)
+            {
+                NetworkManager.Get().Send(GameProtocol.LEAVE_GAME_REQ , NetworkManager.Get().gameSession);
+            }
+            
         }
 
         //[PunRPC]

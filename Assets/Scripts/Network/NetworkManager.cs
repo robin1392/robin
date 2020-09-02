@@ -190,8 +190,6 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if(_clientSocket.IsConnected() == true)
             _clientSocket.Disconnect();
-        
-        
     }
 
     public bool IsConnect()
