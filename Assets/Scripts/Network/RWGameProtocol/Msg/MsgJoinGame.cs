@@ -8,7 +8,7 @@ namespace RWGameProtocol.Msg
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgDeckDiceInfo
+    public struct MsgDeckDiceInfo
     {
         public int Id;
         public short Upgrade;
@@ -16,14 +16,14 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable] 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)] 
-    public class MsgPlayerInfo
+    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Unicode)] 
+    public struct MsgPlayerInfo
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
         public string Name;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
-        public MsgDeckDiceInfo[] DiceInfoArray = new MsgDeckDiceInfo[5];
+        public MsgDeckDiceInfo[] DiceInfoArray;
 
         public bool IsBottomPlayer;
     }
@@ -41,7 +41,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable] 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)] 
+    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Unicode)] 
     public class MsgJoinGameAck : Serializer<MsgJoinGameAck>
     {
         // 에러 코드
@@ -53,7 +53,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Unicode)]
     public class MsgJoinGameNotify : Serializer<MsgJoinGameNotify>
     {
         public MsgPlayerInfo OtherPlayerInfo;

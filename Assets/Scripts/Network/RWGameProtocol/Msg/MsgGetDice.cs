@@ -9,7 +9,7 @@ namespace RWGameProtocol.Msg
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgGameDice
+    public struct MsgGameDice
     {
         public int Id;
         public short SlotNum;
