@@ -111,7 +111,7 @@ public class SocketRecvEvent
     {
         UnityUtil.Print("other info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
         
-        NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.OtherPlayerInfo);
+        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
         
         GameStateManager.Get().CheckSendInGame();
     }
