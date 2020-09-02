@@ -61,7 +61,7 @@ namespace ED
             foreach (var col in cols)
             {
                 var m = col.GetComponentInParent<BaseStat>();
-                if (m != null && m.isAlive)
+                if (m != null && m.isAlive && IsTargetInnerRange(m))
                 {
                     _listTarget.Add(m);
                     intList.Add(m.id);

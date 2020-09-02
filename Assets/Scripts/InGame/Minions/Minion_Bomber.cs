@@ -9,8 +9,16 @@ namespace ED
     {
         public override void Attack()
         {
-            if (target == null) return;
-            
+            if (target == null)
+            {
+                return;
+            }
+            else if (IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                return;
+            }
+
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
                 base.Attack();

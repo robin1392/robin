@@ -118,6 +118,12 @@ namespace ED
                 
                 StartCoroutine(LifetimeCoroutine());
             }
+
+            if (image_HealthBar != null)
+            {
+                image_HealthBar.fillAmount = 1f;
+                image_HealthBar.color = isMine ? Color.green : Color.red;
+            }
         }
 
         protected void SetColor()

@@ -12,9 +12,20 @@ namespace  ED
 {
     public class StoneBall : Magic
     {
+        [Header("Prefab")]
+        public GameObject pref_StoneHitEffect;
+        
+        [Space]
         public ParticleSystem ps_Bomb;
         public Transform ts_Model;
-        
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_StoneHitEffect, 2);
+        }
+
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);

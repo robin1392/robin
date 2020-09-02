@@ -64,8 +64,8 @@ Transform:
   - {fileID: 5861160414296538247}
   - {fileID: 1108319081766535483}
   - {fileID: 5993039447194216721}
-  - {fileID: 7669623942583906158}
   - {fileID: 1170135058105751419}
+  - {fileID: 7968616656073532653}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -152,7 +152,6 @@ MonoBehaviour:
   diceFieldNum: 0
   ps: {fileID: 7474766724198679748}
   ps_NotIsMine: {fileID: 6269633718755841126}
-  lifeTime: 20
 --- !u!114 &4959641879111532696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +166,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolName: 
   lifeTime: 0
+--- !u!1 &2454056249372512440
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7968616656073532653}
+  m_Layer: 0
+  m_Name: HPBarPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7968616656073532653
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2454056249372512440}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7669623942583906158}
+  m_Father: {fileID: 563359602468480402}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6558731390010174717
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,7 +226,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 563359602468480402}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &5489973056171844951
 SphereCollider:
@@ -646,7 +676,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 563359602468480402}
+    m_TransformParent: {fileID: 7968616656073532653}
     m_Modifications:
     - target: {fileID: 1932381380993190476, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
         type: 3}
@@ -691,7 +721,7 @@ PrefabInstance:
     - target: {fileID: 1932381380993190477, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1932381380993190477, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
         type: 3}
@@ -716,7 +746,7 @@ PrefabInstance:
     - target: {fileID: 1932381380993190477, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1932381380993190477, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
         type: 3}

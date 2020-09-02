@@ -7,6 +7,15 @@ namespace ED
 {
     public class Minion_Healer : Minion
     {
+        [Header("Prefab")] public GameObject pref_Heal;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_Heal, 1);
+        }
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);

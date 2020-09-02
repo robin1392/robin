@@ -12,24 +12,20 @@ namespace ED
 {
     public class Minion_Robot : Minion
     {
-        public GameObject obj_Piece;
-
-        private int pieceID;
-
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
 
-            currentHealth = 0;
-            SetControllEnable(false);
-            _collider.enabled = false;
-            obj_Piece.SetActive(true);
-            animator.gameObject.SetActive(false);
-            controller.robotPieceCount++;
-            controller.robotEyeTotalLevel += eyeLevel;
-            pieceID = controller.robotPieceCount;
+            // currentHealth = 0;
+            // SetControllEnable(false);
+            // _collider.enabled = false;
+            // animator.gameObject.SetActive(false);
+            // controller.robotPieceCount++;
+            // controller.robotEyeTotalLevel += eyeLevel;
 
-            Invoke("Fusion", 1.6f);
+            //Invoke("Fusion", 1.6f);
+            
+            animator.SetTrigger(_animatorHashSkill);
         }
 
         public override void Attack()
@@ -75,30 +71,30 @@ namespace ED
 
         private void Callback_MoveComplete()
         {
-            if (pieceID == 4)
-            {
-                PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
-
-                maxHealth *= controller.robotEyeTotalLevel;
-                currentHealth = maxHealth;
-
-                _collider.enabled = true;
-                obj_Piece.SetActive(false);
-                animator.gameObject.SetActive(true);
-                SetControllEnable(true);
-                ChangeLayer(isBottomPlayer);
-            }
-            else
-            {
-                SetControllEnable(false);
-                isPlayable = false;
-                if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
-                StopAllCoroutines();
-                InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
-
-                destroyCallback(this);
-                _poolObjectAutoDeactivate.Deactive();
-            }
+            // if (pieceID == 4)
+            // {
+            //     PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
+            //
+            //     maxHealth *= controller.robotEyeTotalLevel;
+            //     currentHealth = maxHealth;
+            //
+            //     _collider.enabled = true;
+            //     obj_Piece.SetActive(false);
+            //     animator.gameObject.SetActive(true);
+            //     SetControllEnable(true);
+            //     ChangeLayer(isBottomPlayer);
+            // }
+            // else
+            // {
+            //     SetControllEnable(false);
+            //     isPlayable = false;
+            //     if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
+            //     StopAllCoroutines();
+            //     InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
+            //
+            //     destroyCallback(this);
+            //     _poolObjectAutoDeactivate.Deactive();
+            // }
         }
     }
 }

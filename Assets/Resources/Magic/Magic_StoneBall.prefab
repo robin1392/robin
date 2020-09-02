@@ -87,6 +87,8 @@ MonoBehaviour:
   eyeLevel: 0
   upgradeLevel: 0
   diceFieldNum: 0
+  pref_StoneHitEffect: {fileID: 3690115790097565010, guid: 6921a49996ac641c6810bd40b2fb6d4f,
+    type: 3}
   ps_Bomb: {fileID: 0}
   ts_Model: {fileID: 4518647159089944879}
 --- !u!54 &6474548453207052780

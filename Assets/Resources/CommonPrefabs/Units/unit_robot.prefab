@@ -158,6 +158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2413379809184630646}
   - component: {fileID: 2807067870812545183}
+  - component: {fileID: 5711176582766548175}
   m_Layer: 0
   m_Name: unit_robot
   m_TagString: Untagged
@@ -191,7 +192,7 @@ Animator:
   m_GameObject: {fileID: 3041579611847433676}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 88ff834ba72a24f88a5476ad44a0439b, type: 2}
+  m_Controller: {fileID: 22100000, guid: 6cae1fbffae2c47319e91aae65a872c2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -200,6 +201,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5711176582766548175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041579611847433676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8974a0a2439b7450f9454438c9c5d14f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
 --- !u!1 &3981712352497244313
 GameObject:
   m_ObjectHideFlags: 0

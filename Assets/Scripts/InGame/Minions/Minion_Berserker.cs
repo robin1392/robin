@@ -25,8 +25,16 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null || _isSkillCasting) return;
-            
+            if (target == null || _isSkillCasting)
+            {
+                return;
+            }
+            else if (IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                return;
+            }
+
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
@@ -51,7 +59,7 @@ namespace ED
 
         IEnumerator SkillCoroutine()
         {
-            animator.SetTrigger("Skill");
+            animator.SetTrigger(_animatorHashSkill);
             _isSkillCasting = true;
             SetControllEnable(false);
             

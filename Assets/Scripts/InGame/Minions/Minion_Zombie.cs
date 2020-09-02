@@ -64,6 +64,7 @@ namespace ED
             yield return new WaitForSeconds(2f);
 
             currentHealth = (eyeLevel * 15) * 0.01f * maxHealth;
+            RefreshHealthBar();
             animator = animator_Dead;
             animator.gameObject.SetActive(true);
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);

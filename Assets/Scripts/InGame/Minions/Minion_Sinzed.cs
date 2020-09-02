@@ -67,7 +67,7 @@ namespace ED
                     {
                         if (col.CompareTag("Player")) continue;
 
-                        var bs = col.transform.GetComponent<BaseStat>();
+                        var bs = col.transform.GetComponentInParent<BaseStat>();
 
                         if (bs == null || bs.id == id) continue;
 

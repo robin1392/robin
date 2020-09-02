@@ -12,7 +12,10 @@ namespace ED
 {
     public class Minion_Necromancer : Minion
     {
+        [Header("Prefab")]
+        public GameObject pref_Bullet;
         public GameObject pref_Skeleton;
+        [Space]
         public float bulletMoveSpeed = 6f;
         public Transform[] arrSpawnPos;
         //public Data_Dice spawnDiceData;
@@ -21,6 +24,13 @@ namespace ED
         private readonly float _skillCooltime = 10f;
         private float _skillCastedTime;
         private bool _isSkillCasting;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_Bullet, 1);
+        }
 
         private void Update()
         {
@@ -39,8 +49,6 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null || _isSkillCasting) return;
-            
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
@@ -55,6 +63,16 @@ namespace ED
         
         public void FireArrow()
         {
+            if (target == null)
+            {
+                return;
+            }
+            else if (IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                return;
+            }
+
             if (PhotonNetwork.IsConnected && isMine)
             {
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_NECROMANCERBULLET , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);

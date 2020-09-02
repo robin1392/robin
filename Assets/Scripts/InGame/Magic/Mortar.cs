@@ -11,6 +11,10 @@ namespace ED
 {
     public class Mortar : Magic
     {
+        [Header("Prefab")]
+        public GameObject pref_Cannonball;
+        
+        [Space]
         public ParticleSystem ps_Fire;
         public Light light_Fire;
         public float shootTime = 0;
@@ -19,6 +23,13 @@ namespace ED
         private static readonly int animatorHashShoot = Animator.StringToHash("Shoot");
 
         public Transform[] arrTs_Parts;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_Cannonball, 1);
+        }
 
         public override void Initialize(bool pIsBottomPlayer)
         {

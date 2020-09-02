@@ -22,6 +22,8 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     public Text text_TopHealth;
     public Text text_BottomHealth;
 
+    [Header("Canvas")] public Canvas canvas_UnitHPBar;
+
     
     //public Image image_HealthBar;
     //public Text text_Health;

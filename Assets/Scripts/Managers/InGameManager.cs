@@ -413,7 +413,7 @@ namespace ED
             
             
             //text_SpawnTime.text = $"{Mathf.CeilToInt(time):F0}";
-            WorldUIManager.Get().SetTextSpawnTime(time);
+            //WorldUIManager.Get().SetTextSpawnTime(time);
             //tmp_Wave.text = $"{wave}";
             WorldUIManager.Get().SetWave(wave);
         }

@@ -78,6 +78,10 @@ namespace ED
                     transform.LookAt(target.transform);
                     lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
                 }
+                else
+                {
+                    break;
+                }
 
                 t += Time.deltaTime;
                 yield return null;
@@ -129,6 +133,16 @@ namespace ED
         {
             lr.gameObject.SetActive(false);
             
+            if (target == null)
+            {
+                return;
+            }
+            else if (IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                return;
+            }
+
             if (ps_Fire != null)
             {
                 ps_Fire.Play();

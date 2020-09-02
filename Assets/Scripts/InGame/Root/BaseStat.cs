@@ -96,7 +96,7 @@ namespace ED
 
         protected virtual void Start() { }
         
-        protected void SetColor(E_MaterialType type)
+        protected virtual void SetColor(E_MaterialType type)
         {
             var mr = GetComponentsInChildren<MeshRenderer>();
             foreach (var m in mr)

@@ -6,7 +6,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using RWGameProtocol;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -108,6 +110,8 @@ namespace ED
         
         public UI_DiceField uiDiceField;
         public GameObject objCollider;
+        public ParticleSystem ps_ShieldOff;
+        public GameObject pref_Guardian;
         
         private int _spawnCount = 1;
         
@@ -141,6 +145,8 @@ namespace ED
         [SerializeField]
         protected List<Magic> listMagic = new List<Magic>();
         private readonly string recvMessage = "RecvPlayer";
+        private static readonly int Break = Animator.StringToHash("Break");
+        private bool isHalfHealth;
 
         #endregion
 
@@ -183,6 +189,14 @@ namespace ED
         private void Update()
         {
             RefreshHealthBar();
+
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                PushEnemyMinions(70f);
+                SummonGuardian();
+            }
+#endif
         }
 
         public void OnDestroy()
@@ -210,6 +224,7 @@ namespace ED
 
         public void StartPlayerControll()
         {
+            isHalfHealth = false;
             sp = 200;
             currentHealth = maxHealth;
             
@@ -259,7 +274,35 @@ namespace ED
 
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
         }
+
+        protected override void SetColor(E_MaterialType type)
+        {
+            var mr = GetComponentsInChildren<MeshRenderer>();
+            foreach (var m in mr)
+            {
+                if (m.gameObject.CompareTag("Finish")) continue;
+
+                m.material = arrMaterial[isMine ? 0 : 1];
+                switch (type)
+                {
+                    case E_MaterialType.BOTTOM:
+                    case E_MaterialType.TOP:
+                        Color c = m.material.color;
+                        c.a = 1f;
+                        m.material.color = c;
+                        break;
+                    case E_MaterialType.HALFTRANSPARENT:
+                    case E_MaterialType.TRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.3f;
+                        m.material.color = c;
+                        break;
+                }
+            }
+        }
+
         #endregion
+        
         
         #region spawn
         
@@ -703,8 +746,6 @@ namespace ED
             
             DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
             arrDice[levelupFieldNum].Set(data, level);
-            
-            
         }
 
         public int GetDiceFieldEmptySlotCount()
@@ -734,6 +775,48 @@ namespace ED
         #endregion
         
         #region etc system
+
+        public void PushEnemyMinions(float pushPower)
+        {
+            var cols = Physics.OverlapSphere(transform.position, 5f, targetLayer);
+            //Debug.Log("PushCount: " + cols.Length);
+            foreach (var col in cols)
+            {
+                var bs = col.GetComponentInParent<BaseStat>();
+                if (bs != null)
+                {
+                    float pp = Mathf.Lerp(pushPower, 0f, Vector3.Distance(col.transform.position, transform.position) / 5f);
+                    targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_PUSHMINION, bs.id, (col.transform.position - transform.position).normalized, pp);
+                }
+            }
+        }
+
+        public void SummonGuardian()
+        {
+            ps_ShieldOff.Play();
+            Vector3 pos = isBottomPlayer ? FieldManager.Get().GetBottomListPos(12) : FieldManager.Get().GetTopListPos(12);
+
+            NavMeshHit navMeshHit;
+            do
+            {
+                pos.x += Random.Range(-1f, 1f);
+                pos.z += Random.Range(-1f, 1f);
+            } while (NavMesh.SamplePosition(pos, out navMeshHit, 0.2f, NavMesh.AllAreas) == false);
+
+            var m = CreateMinion(pref_Guardian, pos, 1, 0);
+            m.targetMoveType = DICE_MOVE_TYPE.GROUND;
+            m.ChangeLayer(isBottomPlayer);
+            m.power = 200f;
+            m.maxHealth = 5000f;
+            m.attackSpeed = 0.8f;
+            m.moveSpeed = 0.8f;
+            m.range = 0.7f;
+            m.eyeLevel = 1;
+            m.upgradeLevel = 0;
+            m.Initialize(MinionDestroyCallback);
+            
+            PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
+        }
         
         //[PunRPC]
         public override void HitDamage(float damage, float delay = 0)
@@ -742,9 +825,18 @@ namespace ED
             {
                 currentHealth -= damage;
 
+                if (isHalfHealth == false && currentHealth < maxHealth * 0.5f)
+                {
+                    isHalfHealth = true;
+                    animator.SetBool(Break, true);
+
+                    PushEnemyMinions(70f);
+
+                    SummonGuardian();
+                }
+
                 if (currentHealth <= 0)
                 {
-                    //InGameManager.Get().obj_Low_HP_Effect.SetActive(false);
                     UI_InGamePopup.Get().ViewLowHP(false);
                     currentHealth = 0;
                     Death();
@@ -752,7 +844,6 @@ namespace ED
                 else if (((PhotonNetwork.IsConnected && photonView.IsMine) || (!PhotonNetwork.IsConnected && isMine)) 
                          && currentHealth < 1000 && !UI_InGamePopup.Get().GetLowHP())
                 {
-                    //InGameManager.Get().obj_Low_HP_Effect.SetActive(true);
                     UI_InGamePopup.Get().ViewLowHP(true);
                 }
             }
@@ -1280,6 +1371,9 @@ namespace ED
                 case E_PTDefine.PT_SETMINIONTARGET:
                     listMinion.Find(minion => minion.id == (int) param[0]).target =
                         targetPlayer.GetBaseStatFromId((int) param[1]);
+                    break;
+                case E_PTDefine.PT_PUSHMINION:
+                    listMinion.Find(minion => minion.id == (int)param[0])?.Push((Vector3)param[1], (float)param[2]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ptID), ptID, null);

@@ -20,8 +20,6 @@ namespace  ED
 
         public override void Attack()
         {
-            if (target == null) return;
-            
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
@@ -36,6 +34,16 @@ namespace  ED
 
         public void FireArrow()
         {
+            if (target == null)
+            {
+                return;
+            }
+            else if (IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                return;
+            }
+            
             if (PhotonNetwork.IsConnected && isMine)
             {
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);

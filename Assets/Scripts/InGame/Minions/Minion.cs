@@ -125,6 +125,8 @@ namespace ED
             _originalAttackSpeed = attackSpeed;
             //_isNexusAttacked = false;
             currentHealth = maxHealth;
+            image_HealthBar.fillAmount = 1f;
+            image_HealthBar.color = isMine ? Color.green : Color.red;
 
             if (PhotonNetwork.IsConnected)
             {
@@ -216,7 +218,7 @@ namespace ED
             _poolObjectAutoDeactivate.Deactive();
         }
 
-        private void RefreshHealthBar()
+        protected void RefreshHealthBar()
         {
             image_HealthBar.fillAmount = currentHealth / maxHealth;
         }
@@ -329,9 +331,12 @@ namespace ED
 
         public void Push(Vector3 dir, float pushPower)
         {
+            StopAllCoroutines();
+            SetControllEnable(false);
+            rb.isKinematic = false;
+            animator.SetTrigger(_animatorHashIdle);
             rb.velocity = Vector3.zero;
             rb.AddForce(dir.normalized * pushPower, ForceMode.Impulse);
-            SetControllEnable(false);
             if(_crtPush != null) StopCoroutine(_crtPush);
             _crtPush = StartCoroutine(PushCoroutine());
         }
@@ -347,6 +352,7 @@ namespace ED
                 vel = rb.velocity.magnitude;
             }
             rb.velocity = Vector3.zero;
+            rb.isKinematic = true;
             SetControllEnable(true);
         }
 
@@ -418,7 +424,7 @@ namespace ED
         {
             //if (target != null && target.id == 0) _isNexusAttacked = true;
 
-            StartCoroutine(MoveToAttackInnerRanger());
+            //StartCoroutine(MoveToAttackInnerRanger());
             
             SetControllEnable(false);
             isAttacking = true;
@@ -527,11 +533,33 @@ namespace ED
                 Color.yellow);
 #endif
             //return Vector3.Distance(transform.position, target.transform.position) < range + 0.1f;
-            var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f,
-                (target.transform.position - transform.position).normalized, range, targetLayer);
-            foreach (var hit in hits)
+            
+            // var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f,
+            //     (target.transform.position - transform.position).normalized, range, targetLayer);
+            // foreach (var hit in hits)
+            // {
+            //     if (hit.collider.GetComponentInParent<BaseStat>() == target) return true;
+            // }
+
+            if (target != null)
             {
-                if (hit.collider.GetComponentInParent<BaseStat>() == target) return true;
+                return Vector3.Distance(transform.position, target.transform.position) <= range;
+            }
+
+            return false;
+        }
+        
+        public bool IsTargetInnerRange(BaseStat bs)
+        {
+#if UNITY_EDITOR
+            Debug.DrawLine(transform.position + Vector3.up * 0.1f,
+                (transform.position + Vector3.up * 0.1f) + (target.transform.position - transform.position).normalized * range,
+                Color.yellow);
+#endif
+            
+            if (bs != null)
+            {
+                return Vector3.Distance(transform.position, bs.transform.position) <= range;
             }
 
             return false;
@@ -574,7 +602,7 @@ namespace ED
         protected void SetControllEnable(bool isEnable)
         {
             isPushing = !isEnable;
-            //rb.isKinematic = !isEnable;
+            //rb.isKinematic = isEnable;
 
             if (isEnable && agent.enabled == false)
             {

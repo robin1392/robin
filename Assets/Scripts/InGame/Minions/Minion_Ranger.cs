@@ -35,6 +35,16 @@ namespace ED
 
         public void FireArrow()
         {
+            if (target == null)
+            {
+                return;
+            }
+            else if (IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                return;
+            }
+            
             if (ps_Fire != null)
             {
                 ps_Fire.Play();

@@ -6,7 +6,7 @@ using Photon.Pun;
 namespace ED
 {
     [RequireComponent(typeof(Camera))]
-    public class CameraController : MonoBehaviour
+    public class CameraController : SingletonDestroy<CameraController>
     {
         private Camera camera;
         public Camera camera_UI;

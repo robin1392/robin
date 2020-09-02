@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
@@ -20,7 +24,7 @@ namespace ED
         {
             if (_minion != null && _minion.isAlive && _minion.target != null && ((PhotonNetwork.IsConnected && _minion.isMine) || PhotonNetwork.IsConnected == false))
             {
-                Debug.Log("AnimationEventAttack: " + gameObject.name);
+                //Debug.Log("AnimationEventAttack: " + gameObject.name);
                 Minion m = _minion as Minion;
                 if (m != null)
                 {
