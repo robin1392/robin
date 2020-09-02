@@ -779,6 +779,8 @@ namespace ED
 
         private void RefreshHealthBar()
         {
+            return;
+            
             image_HealthBar.fillAmount = currentHealth / maxHealth;
             text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
         }

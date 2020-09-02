@@ -201,7 +201,7 @@ namespace ED
         public void StartManager()
         {
 
-            if (NetworkManager.Get().IsConnect())
+            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
 
