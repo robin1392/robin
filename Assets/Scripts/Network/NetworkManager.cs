@@ -22,11 +22,12 @@ public class NetworkManager : Singleton<NetworkManager>
     private SocketManager _clientSocket = null;
     // sender 
     private GamePacketSender _packetSend;
-    public GamePacketSender SendSocket
+    
+    /*public GamePacketSender SendSocket
     {
         get => _packetSend;
         private set => _packetSend = value;
-    }
+    }*/
 
     // 외부에서 얘를 건들일은 없도록하지
     private GamePacketReceiver _packetRecv;
@@ -65,6 +66,12 @@ public class NetworkManager : Singleton<NetworkManager>
         private set => _gameSession = value;
     }
     
+    #endregion
+    
+    
+    #region game process var
+
+    private bool _recvJoinPlayerInfoCheck = false;
     #endregion
     
     
@@ -110,7 +117,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         //
         _netInfo = new NetInfo();
-        
+        _recvJoinPlayerInfoCheck = false;
         
         webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
         webPacket = this.gameObject.AddComponent<WebPacket>();
@@ -144,6 +151,8 @@ public class NetworkManager : Singleton<NetworkManager>
         _socketSend = null;
         
         _clientSocket = null;
+
+        _netInfo = null;
     }
     #endregion
     
@@ -153,6 +162,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if(_clientSocket != null)
             _clientSocket.Update();
+
     }
 
     #endregion
@@ -165,6 +175,9 @@ public class NetworkManager : Singleton<NetworkManager>
         _serverAddr = serveraddr;
         _port = port;
         _gameSession = gamesession;
+        
+        _recvJoinPlayerInfoCheck = true;
+        _netInfo.Clear();
     }
 
     public void ConnectServer( Action callback = null)
@@ -177,6 +190,8 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if(_clientSocket.IsConnected() == true)
             _clientSocket.Disconnect();
+        
+        
     }
 
     public bool IsConnect()
@@ -200,6 +215,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
     
     #endregion
+    
 
 
     #region socket delegate
@@ -262,8 +278,10 @@ public class NetInfo
 {
     
     //
-    public MsgPlayerInfo _playerInfo = null;
-    public MsgPlayerInfo _otherInfo = null;
+    public MsgPlayerInfo playerInfo = null;
+    public MsgPlayerInfo otherInfo = null;
+    private bool _myInfoGet = false;
+    private bool _otherInfoGet = false;
     
     public NetInfo()
     {
@@ -272,20 +290,24 @@ public class NetInfo
 
     public void Clear()
     {
-        _playerInfo = null;
-        _otherInfo = null;
+        playerInfo = null;
+        otherInfo = null;
+        _myInfoGet = false;
+        _otherInfoGet = false;
     }
 
     public void SetPlayerInfo(MsgPlayerInfo info)
     {
-        _playerInfo = info;
+        playerInfo = info;
+        _myInfoGet = true;
     }
 
     public void SetOtherInfo(MsgPlayerInfo info)
     {
-        _otherInfo = info;
+        otherInfo = info;
+        _otherInfoGet = true;
     }
-    
+
     
 }
 #endregion

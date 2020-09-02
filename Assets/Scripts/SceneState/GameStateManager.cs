@@ -240,6 +240,7 @@ public class GameStateManager : Singleton<GameStateManager>
 #if NETWORK_ACT
         //
         WebPacket.Get().SendUserAuth(UserInfoManager.Get().GetUserInfo().userID , UserAuthOK);
+        //WebPacket.Get().SendUserAuth("" , UserAuthOK);
 #else
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
@@ -263,8 +264,13 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
         
-        //MoveInGameBattle();
         NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession);
+    }
+
+    public void CheckSendInGame()
+    {
+        if (NetworkManager.Get().GetNetInfo().playerInfo != null && NetworkManager.Get().GetNetInfo().otherInfo != null)
+            MoveInGameBattle();
     }
     #endregion
     

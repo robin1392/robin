@@ -45,10 +45,13 @@ public class SocketRecvEvent
         UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
         
         if( msg.PlayerInfo == null )
-            Debug.Log("other player null");
+            Debug.Log("join player null");
 
-        UnityUtil.Print("other info ", msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print("join my info ", msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
 
+        NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
+        
+        GameStateManager.Get().CheckSendInGame();
 
     }
     #endregion
@@ -106,9 +109,13 @@ public class SocketRecvEvent
     public void OnJoinGameNotify(IPeer peer, MsgJoinGameNotify msg)
     {
         if( msg.OtherPlayerInfo == null )
-            Debug.Log("join player null");
+            Debug.Log("other player null");
 
-        UnityUtil.Print("join info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print("other info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
+        
+        NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.OtherPlayerInfo);
+        
+        GameStateManager.Get().CheckSendInGame();
     }
 
     public void OnLeaveGameNotify(IPeer peer, MsgLeaveGameNotify msg)
