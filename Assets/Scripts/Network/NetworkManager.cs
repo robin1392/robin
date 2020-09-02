@@ -10,8 +10,6 @@ using RWGameProtocol;
 
 public class NetworkManager : Singleton<NetworkManager>
 {
-    
-    
     #region net variable
     
     // web
@@ -72,6 +70,8 @@ public class NetworkManager : Singleton<NetworkManager>
     #region game process var
 
     private bool _recvJoinPlayerInfoCheck = false;
+    
+    public PLAY_TYPE playType;
     #endregion
     
     
@@ -180,8 +180,9 @@ public class NetworkManager : Singleton<NetworkManager>
         _netInfo.Clear();
     }
 
-    public void ConnectServer( Action callback = null)
+    public void ConnectServer( PLAY_TYPE type , Action callback = null)
     {
+        playType = type;
         _clientSocket.Connect( _serverAddr , _port , callback);
     }
 

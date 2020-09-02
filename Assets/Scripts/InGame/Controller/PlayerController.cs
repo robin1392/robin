@@ -210,6 +210,9 @@ namespace ED
 
         public void StartPlayerControll()
         {
+
+            return;
+            
             sp = 200;
             currentHealth = maxHealth;
             
@@ -787,6 +790,13 @@ namespace ED
             objCollider.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
             this.isBottomPlayer = pIsBottomPlayer;
 
+            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect() 
+                && this.isBottomPlayer == false && NetworkManager.Get().playType == PLAY_TYPE.BATTLE)
+            {
+                transform.rotation = Quaternion.Euler(0, 180f, 0);
+            }
+            
+            /*
             if (PhotonNetwork.IsConnected && PhotonNetwork.IsMasterClient == false && PhotonManager.Instance.playType == PLAY_TYPE.BATTLE)
             {
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
@@ -802,6 +812,7 @@ namespace ED
                     transform.GetChild(1).gameObject.SetActive(false);
                 }
             }
+            */
         }
 
 

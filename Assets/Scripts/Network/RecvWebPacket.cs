@@ -112,7 +112,8 @@ public partial class WebPacket : Singleton<WebPacket>
         // go match -> socket
         NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.playerSessionId);
         
-        NetworkManager.Get().ConnectServer(GameStateManager.Get().ServerConnectCallBack);
+        // 우선 그냥 배틀로 지정하자
+        NetworkManager.Get().ConnectServer( PLAY_TYPE.BATTLE , GameStateManager.Get().ServerConnectCallBack);
     }
     #endregion
     

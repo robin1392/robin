@@ -200,6 +200,48 @@ namespace ED
 
         public void StartManager()
         {
+
+            if (NetworkManager.Get().IsConnect())
+            {
+                UI_InGamePopup.Get().SetViewWaiting(true);
+
+                // player controller create...my and other
+                Vector3 myTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                GameObject myTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
+                myTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                myTObj.transform.position = myTowerPos;
+                playerController = myTObj.GetComponent<PlayerController>();
+                playerController.isMine = true;
+                playerController.isBottomPlayer = NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer;
+                playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                
+                
+                Vector3 otherTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+                GameObject otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
+                otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+                otherTObj.transform.position = myTowerPos;
+                playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
+                playerController.targetPlayer.isMine = false;
+                playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
+                playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+
+            }
+            else
+            {
+                Vector3 startPos = FieldManager.Get().GetPlayerPos(true);
+                var obj = Instantiate(pref_Player, startPos, Quaternion.identity);
+                obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
+                playerController = obj.GetComponent<PlayerController>();
+                playerController.ChangeLayer(true);
+                playerController.isMine = true;
+                playerController.isBottomPlayer = true;
+
+                obj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
+                obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
+                obj.SendMessage("ChangeLayer", false);
+
+                isAIMode = true;
+            }
             
             NetworkManager.Get().Send(GameProtocol.READY_GAME_REQ);
             
