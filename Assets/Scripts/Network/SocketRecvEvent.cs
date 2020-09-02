@@ -47,7 +47,7 @@ public class SocketRecvEvent
         UnityUtil.Print("join my info ", msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
 
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
-        
+        NetworkManager.Get().IsMaster = msg.PlayerInfo.IsBottomPlayer;
         GameStateManager.Get().CheckSendInGame();
 
     }

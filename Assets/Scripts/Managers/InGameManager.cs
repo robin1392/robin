@@ -219,7 +219,7 @@ namespace ED
                 Vector3 otherTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
                 GameObject otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
                 otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
-                otherTObj.transform.position = myTowerPos;
+                otherTObj.transform.position = otherTowerPos;
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 playerController.targetPlayer.isMine = false;
                 playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;

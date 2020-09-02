@@ -210,7 +210,19 @@ namespace ED
 
         public void StartPlayerControll()
         {
-
+            sp = 200;
+            currentHealth = maxHealth;
+            
+            
+            for (var i = 0; i < arrDice.Length; i++)
+            {
+                arrDice[i] = new Dice {diceFieldNum = i};
+            }
+            uiDiceField = FindObjectOfType<UI_DiceField>();            
+            uiDiceField.SetField(arrDice);
+            
+            
+            SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
             return;
             
             sp = 200;

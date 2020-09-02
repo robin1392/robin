@@ -72,6 +72,13 @@ public class NetworkManager : Singleton<NetworkManager>
     private bool _recvJoinPlayerInfoCheck = false;
     
     public PLAY_TYPE playType;
+
+    private bool _isMaster;
+    public bool IsMaster
+    {
+        get => _isMaster;
+        set => _isMaster = value;
+    }
     #endregion
     
     
