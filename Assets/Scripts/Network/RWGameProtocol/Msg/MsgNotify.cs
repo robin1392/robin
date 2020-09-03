@@ -26,4 +26,12 @@ namespace RWGameProtocol.Msg
     {
         public int Wave;
     }
+
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgEndGameNotify : Serializer<MsgEndGameNotify>
+    {
+        public int WinPlayerUId;
+    }
 }

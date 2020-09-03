@@ -7,8 +7,8 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgHitDamageReq : Serializer<MsgHitDamageReq>
     {
+        // 데미지량
         public float Damage;
-        public float Delay;
     }
 
 
@@ -17,15 +17,19 @@ namespace RWGameProtocol.Msg
     public class MsgHitDamageAck : Serializer<MsgHitDamageAck>
     {
         public short ErrorCode;
+
+        // 데미지량
         public float Damage;
-        public float Delay;
     }
 
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgHitDamageNotify : Serializer<MsgHitDamageNotify>
     {
+        // 플레이어 UID
+        public int PlayerUId;
+
+        // 데미지량
         public float Damage;
-        public float Delay;
     }
 }

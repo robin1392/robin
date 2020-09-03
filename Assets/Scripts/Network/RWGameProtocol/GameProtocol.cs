@@ -46,11 +46,12 @@ namespace RWGameProtocol
         LEAVE_GAME_NOTIFY,
         DEACTIVE_WAITING_OBJECT_NOTIFY,
         GET_DICE_NOTIFY,
-        ADD_SP_NOTIFY,
-        SPAWN_NOTIFY,
         LEVEL_UP_DICE_NOTIFY,
         INGAME_UP_DICE_NOTIFY,
         UPGRADE_SP_NOTIFY,
+        ADD_SP_NOTIFY,
+        SPAWN_NOTIFY,
+        END_GAME_NOTIFY,
 
 
         // ----------------------------------------------------------------------------------------------------

@@ -92,6 +92,8 @@ namespace RWGameProtocol
         public delegate void SpawnNotifyDelegate(IPeer peer, MsgSpawnNotify msg);
         public SpawnNotifyDelegate SpawnNotify;
 
+        public delegate void EndGameNotifyDelegate(IPeer peer, MsgEndGameNotify msg);
+        public EndGameNotifyDelegate EndGameNotify;
 
         #endregion
 

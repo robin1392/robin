@@ -156,21 +156,28 @@ namespace RWGameProtocol
         }
 
 
-        public void HitDamageReq(IPeer peer, float damage, float delay)
+        public void HitDamageReq(IPeer peer, float damage)
         {
             MsgHitDamageReq msg = new MsgHitDamageReq();
             msg.Damage = damage;
-            msg.Delay = delay;
             peer.SendPacket((short)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
         }
 
 
-        public void HitDamageAck(IPeer peer, GameErrorCode code, float damage, float delay)
+        public void HitDamageAck(IPeer peer, GameErrorCode code, float damage)
         {
             MsgHitDamageAck msg = new MsgHitDamageAck();
             msg.ErrorCode = (short)code;
             msg.Damage = damage;
-            msg.Delay = delay;
+            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
+        }
+
+
+        public void HitDamageNotify(IPeer peer, int playerUId, float damage)
+        {
+            MsgHitDamageNotify msg = new MsgHitDamageNotify();
+            msg.PlayerUId = playerUId;
+            msg.Damage = damage;
             peer.SendPacket((short)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
         }
 
@@ -267,6 +274,19 @@ namespace RWGameProtocol
             MsgSpawnNotify msg = new MsgSpawnNotify();
             msg.Wave = wave;
             peer.SendPacket((short)GameProtocol.SPAWN_NOTIFY, msg.Serialize());
+        }
+
+
+        /// <summary>
+        /// 게임 종료 알림
+        /// </summary>
+        /// <param name="peer"></param>
+        /// <param name="winPlayerUId"></param>
+        public void EndGameNotify(IPeer peer, int winPlayerUId)
+        {
+            MsgEndGameNotify msg = new MsgEndGameNotify();
+            msg.WinPlayerUId = winPlayerUId;
+            peer.SendPacket((short)GameProtocol.END_GAME_NOTIFY, msg.Serialize());
         }
 
         #endregion
