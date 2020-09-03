@@ -39,11 +39,9 @@ namespace RWGameProtocol
         /// 플레이어 게임 퇴장 요청
         /// </summary>
         /// <param name="peer"></param>
-        /// <param name="playerSessionId"></param>
-        public void LeaveGameReq(IPeer peer, string playerSessionId)
+        public void LeaveGameReq(IPeer peer)
         {
             MsgLeaveGameReq msg = new MsgLeaveGameReq();
-            msg.PlayerSessionId = playerSessionId;
             peer.SendPacket((short)GameProtocol.LEAVE_GAME_REQ, msg.Serialize());
         }
 
@@ -169,11 +167,11 @@ namespace RWGameProtocol
         /// 플레이어 게임 퇴장 알림
         /// </summary>
         /// <param name="peer"></param>
-        /// <param name="playerSessionId"></param>
-        public void LeaveGameNotify(IPeer peer, string playerSessionId)
+        /// <param name="playerUId"></param>
+        public void LeaveGameNotify(IPeer peer, int playerUId)
         {
             MsgLeaveGameNotify msg = new MsgLeaveGameNotify();
-            msg.PlayerSessionId = playerSessionId;
+            msg.PlayerUId = playerUId;
             peer.SendPacket((short)GameProtocol.LEAVE_GAME_NOTIFY, msg.Serialize());
         }
 

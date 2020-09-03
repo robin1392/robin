@@ -8,8 +8,10 @@ namespace RWGameProtocol
     {
         SUCCESS = 0,
 
-        ERROR_ACCEPT_PLAYER_SESSION                         = 10001,            // 플레이어 세션 ID를 확인 할 수 없습니다.
-        ERROR_DATABASE_UNEXPECTED                          = 10002,             // 데이터베이스의 예상치 못한 에러
+        ERROR_GAMELIFT_ACCEPT_PLAYER_SESSION                         = 10001,            // 게임 리프트 플레이어 세션 ID를 확인 할 수 없습니다.
+        ERROR_GAMELIFT_REMOVE_PLAYER_SESSION                        = 10002,        // 게임 리프트 플레이어 세션 ID를 제거 할 수 없습니다.
+
+        ERROR_DATABASE_UNEXPECTED                          = 10011,             // 데이터베이스의 예상치 못한 에러
 
         ERROR_GAME_ROOM_NOT_FOUND           = 10101,          // 게임방을 찾을 수 없습니다.
         ERROR_GAME_ROOM_PLAYER_JOIN             = 10102,          // 게임방 참여에 실패했습니다.
