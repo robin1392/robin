@@ -91,19 +91,20 @@ namespace RWGameProtocol
         }
 
 
-        public void GetDiceReq(IPeer peer, int useSp)
+        public void GetDiceReq(IPeer peer)
         {
             MsgGetDiceReq msg = new MsgGetDiceReq();
-            msg.UseSp = useSp;
             peer.SendPacket((short)GameProtocol.GET_DICE_REQ, msg.Serialize());
         }
 
 
-        public void GetDiceAck(IPeer peer, GameErrorCode code, MsgGameDice diceInfo, int currentSp)
+        public void GetDiceAck(IPeer peer, GameErrorCode code, int diceId, short slotNum, short level, int currentSp)
         {
             MsgGetDiceAck msg = new MsgGetDiceAck();
             msg.ErrorCode = (short)code;
-            msg.DiceInfo = diceInfo;
+            msg.DiceId = diceId;
+            msg.SlotNum = slotNum;
+            msg.Level = level;
             msg.CurrentSp = currentSp;
             peer.SendPacket((short)GameProtocol.GET_DICE_ACK, msg.Serialize());
         }
@@ -184,11 +185,13 @@ namespace RWGameProtocol
         }
 
 
-        public void GetDiceNotify(IPeer peer, int deckNum, int slotNum)
+        public void GetDiceNotify(IPeer peer, int playerUid, int diceId, short slotNum, short level)
         {
             MsgGetDiceNotify msg = new MsgGetDiceNotify();
-            msg.DeckNum = deckNum;
+            msg.PlayerUId = playerUid;
+            msg.DiceId = diceId;
             msg.SlotNum = slotNum;
+            msg.Level = level;
             peer.SendPacket((short)GameProtocol.GET_DICE_NOTIFY, msg.Serialize());
         }
 
@@ -209,9 +212,10 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="currentSp"></param>
-        public void AddSpNotify(IPeer peer, int currentSp)
+        public void AddSpNotify(IPeer peer, int playerUId, int currentSp)
         {
             MsgAddSpNotify msg = new MsgAddSpNotify();
+            msg.PlayerUId = playerUId;
             msg.CurrentSp = currentSp;
             peer.SendPacket((short)GameProtocol.ADD_SP_NOTIFY, msg.Serialize());
         }
