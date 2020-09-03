@@ -70,14 +70,20 @@ namespace ED
             var cols = Physics.OverlapSphere(targetPos, _splashRange, targetLayer);
             foreach (var col in cols)
             {
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
+                // if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
+                // {
+                //     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, col.GetComponentInParent<BaseStat>().id, _damage, 0f);
+                //     controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
+                // }
+                // else if (PhotonNetwork.IsConnected == false)
+                // {
+                //     controller.targetPlayer.HitDamageMinionAndMagic(col.GetComponentInParent<BaseStat>().id, _damage, 0f);
+                // }
+
+                var bs = col.GetComponentInParent<BaseStat>();
+                if (bs != null)
                 {
-                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                    controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                }
-                else if (PhotonNetwork.IsConnected == false)
-                {
-                    controller.targetPlayer.HitDamageMinionAndMagic(col.GetComponentInParent<BaseStat>().id, _damage, 0f);
+                    controller.AttackEnemyMinionOrMagic(bs.id, _damage, 0f);
                 }
             }
 

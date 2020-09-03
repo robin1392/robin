@@ -77,11 +77,11 @@ namespace ED
             
             if (PhotonNetwork.IsConnected && isMine)
             {
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, "Arrow", ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireArrow(ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                controller.FireBullet("Arrow", ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }
         }
 

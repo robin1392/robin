@@ -231,7 +231,7 @@ namespace ED
         {
             if (m == null) return;
             
-            controller.AttackEnemyMinion(m.id, power * factor, delay);
+            controller.AttackEnemyMinionOrMagic(m.id, power * factor, delay);
         }
 
         // protected bool IsTargetLayer(GameObject targetObject)
@@ -266,7 +266,7 @@ namespace ED
             }
         }
 
-        public override void HitDamage(float damage, float delay = 0)
+        public override void HitDamage(float damage)
         {
             if (currentHealth > 0)
             {

@@ -62,13 +62,13 @@ namespace ED
             
         }
         
-        public override void HitDamage(float damage, float delay = 0)
+        public override void HitDamage(float damage)
         {
             Skill();
             
             if (isHalfDamage) damage *= 0.5f;
             
-            base.HitDamage(damage, delay);
+            base.HitDamage(damage);
         }
 
         public override BaseStat SetTarget()

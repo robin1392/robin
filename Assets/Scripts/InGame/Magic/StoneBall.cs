@@ -64,7 +64,7 @@ namespace  ED
 
                 if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                 {
-                    controller.AttackEnemyMinion(bs.id, power, 0f);
+                    controller.AttackEnemyMinionOrMagic(bs.id, power, 0f);
                 }
             }
             else if (other.CompareTag("Wall"))

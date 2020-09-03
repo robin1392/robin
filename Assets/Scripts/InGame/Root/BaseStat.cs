@@ -141,7 +141,7 @@ namespace ED
         }
 
         //[PunRPC]
-        public virtual void HitDamage(float damage, float delay = 0) { }
+        public virtual void HitDamage(float damage) { }
 
         protected bool IsTargetLayer(GameObject targetObject)
         {

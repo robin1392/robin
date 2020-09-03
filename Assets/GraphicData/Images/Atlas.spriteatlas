@@ -65,7 +65,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
     - {fileID: 102900000, guid: 484506e1f5f3b405d99003974efd1299, type: 3}
-    totalSpriteSurfaceArea: 5200340
+    totalSpriteSurfaceArea: 5221400
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -98,6 +98,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ee9f2fe349e4e4c969549afd81b2a729, type: 3}
   - {fileID: 21300000, guid: b39cb6f33b7f14a1ebf49865641d689a, type: 3}
   - {fileID: 21300000, guid: 959bcbf36c32e4c7a884e768dc3194b4, type: 3}
+  - {fileID: 21300000, guid: 488e22044bcca4cb6b6e77920a006e4f, type: 3}
   - {fileID: 21300000, guid: 7cf0c43465b8540da9e16fd71248fd75, type: 3}
   - {fileID: 21300000, guid: 14ad1344feb53499a95125809bfdbdb7, type: 3}
   - {fileID: 21300000, guid: 75090c549affa4ac587a284ee646c005, type: 3}
@@ -150,6 +151,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0023215a80263423ead9abf74d5cee15, type: 3}
   - {fileID: 21300000, guid: c971e59a936b74d21bb31b0499bd8e27, type: 3}
   - {fileID: 21300000, guid: 2348769a6cdd34429a024966f4293634, type: 3}
+  - {fileID: 21300000, guid: d7b5ddaa2f10e49408b4007ec9d74ecd, type: 3}
   - {fileID: 21300000, guid: 3c6adbdac50e44d87b1c11f1b28b32a0, type: 3}
   - {fileID: 21300000, guid: bec0c01bf98654bd6a28fd92bb17e707, type: 3}
   - {fileID: 21300000, guid: 612c032b9b5004c07a4b133fc090c517, type: 3}
@@ -224,6 +226,7 @@ SpriteAtlas:
   - tier_challenger
   - ingame_map1_popup
   - info_range
+  - ingame_core_BG2
   - dice_magician
   - dice_pip
   - tier_gold
@@ -276,6 +279,7 @@ SpriteAtlas:
   - lobby_start
   - lobby_arrow
   - ingame_number_bar
+  - ingame_core_BG1
   - tier_master
   - dice_mortar
   - lobby_dice_use

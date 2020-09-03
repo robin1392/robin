@@ -8,9 +8,24 @@ namespace  ED
     public class Minion_Magician : Minion
     {
         public float bulletMoveSpeed = 6f;
+        public Transform ts_SkillParticlePosition;
+
+        [Header("Effect prefab")] 
+        public GameObject pref_Bullet;
+        public GameObject pref_SkillEffect;
+        public GameObject pref_Scarecrow;
         
-        [SerializeField] private readonly float _skillCooltime = 10f;
+        //[SerializeField] private readonly float _skillCooltime = 10f;
         private int _skillCastedCount;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_Bullet, 1);
+            PoolManager.instance.AddPool(pref_SkillEffect, 1);
+            PoolManager.instance.AddPool(pref_Scarecrow, 1);
+        }
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -34,29 +49,27 @@ namespace  ED
 
         public void FireArrow()
         {
-            if (target == null)
-            {
-                return;
-            }
-            else if (IsTargetInnerRange() == false)
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
                 return;
             }
             
             if (PhotonNetwork.IsConnected && isMine)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, pref_Bullet.name, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.FireBullet(pref_Bullet.name, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
 
         public void Skill()
         {
-            if (_spawnedTime >= _skillCooltime * _skillCastedCount)
+            if (_spawnedTime >= effectCooltime * _skillCastedCount)
             {
                 Polymorph();
             }
@@ -70,20 +83,23 @@ namespace  ED
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseStat>();
-                if (bs != null && bs.id > 0 && bs.isFlying == false && ((Minion)bs).isPolymorph == false)
+                if (bs != null && bs.id > 0 && bs.isFlying == false)
                 {
-                    list.Add(bs.id);
+                    var m = bs as Minion;
+                    if (m != null && m.isPolymorph == false)
+                    {
+                        list.Add(bs.id);
+                    }
                 }
             }
 
             if (list.Count > 0)
             {
                 _skillCastedCount++;
+                PoolManager.instance.ActivateObject(pref_SkillEffect.name, ts_SkillParticlePosition.position);
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-                controller.targetPlayer.SendPlayer(RpcTarget.All,
-                    E_PTDefine.PT_SCARECROW,
-                    list[Random.Range(0, list.Count)],
-                    (float) eyeLevel);
+                controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW,
+                    list[Random.Range(0, list.Count)], effectDuration * eyeLevel);
             }
         }
     }

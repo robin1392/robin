@@ -20,7 +20,7 @@ namespace ED
         }
 
         //[PunRPC]
-        public override void HitDamage(float damage, float delay)
+        public override void HitDamage(float damage)
         {
             if (currentHealth > 0)
             {

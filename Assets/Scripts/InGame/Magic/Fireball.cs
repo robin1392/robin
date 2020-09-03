@@ -107,7 +107,12 @@ namespace ED
             var cols = Physics.OverlapSphere(pos, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
             foreach (var col in cols)
             {
-                controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);
+                //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);
+                var bs = col.GetComponentInParent<BaseStat>();
+                if (bs != null)
+                {
+                    controller.AttackEnemyMinionOrMagic(bs.id, power, 0f);
+                }
             }
         }
 

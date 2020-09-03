@@ -125,20 +125,22 @@ namespace ED
                 var cols = Physics.OverlapSphere(transform.position, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
                 foreach (var col in cols)
                 {
-                    var m = col.GetComponent<Minion>();
-                    if(m)
+                    var m = col.GetComponentInParent<Minion>();
+                    if(m != null)
                     {
-                        if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
-                        {
-                            //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, m.id, damage, 0f);
-                            controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , m.id, power, 0f);
-                            //controller.targetPlayer.photonView.RPC("PushMinion", RpcTarget.Others, m.id, col.transform.position - transform.position, pushPower);
-                        }
-                        else if (PhotonNetwork.IsConnected == false)
-                        {
-                            controller.targetPlayer.HitDamageMinionAndMagic(m.id, power, 0f);
-                            //controller.targetPlayer.PushMinion(m.id, col.transform.position - transform.position, pushPower);
-                        }
+                        // if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
+                        // {
+                        //     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, m.id, damage, 0f);
+                        //     controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , m.id, power, 0f);
+                        //     //controller.targetPlayer.photonView.RPC("PushMinion", RpcTarget.Others, m.id, col.transform.position - transform.position, pushPower);
+                        // }
+                        // else if (PhotonNetwork.IsConnected == false)
+                        // {
+                        //     controller.targetPlayer.HitDamageMinionAndMagic(m.id, power, 0f);
+                        //     //controller.targetPlayer.PushMinion(m.id, col.transform.position - transform.position, pushPower);
+                        // }
+                        
+                        controller.AttackEnemyMinionOrMagic(m.id, power, 0f);
                     }
                 }
             }

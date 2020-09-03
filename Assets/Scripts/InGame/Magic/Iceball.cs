@@ -74,7 +74,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinion(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
                         controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id,
                             sturnTime);
                     }
@@ -87,7 +87,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinion(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
                         controller.targetPlayer.SturnMinion(target.id, sturnTime);
                     }
 
@@ -110,7 +110,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinion(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
                         //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
                         controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, sturnTime);
                     }
@@ -122,7 +122,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinion(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
                         controller.targetPlayer.SturnMinion(target.id, sturnTime);
                     }
 

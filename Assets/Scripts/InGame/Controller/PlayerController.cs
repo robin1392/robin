@@ -239,15 +239,23 @@ namespace ED
             {
                 //image_HealthBar = photonView.IsMine ? InGameManager.Get().image_BottomHealthBar : InGameManager.Get().image_TopHealthBar;
                 //text_Health = photonView.IsMine ? InGameManager.Get().text_BottomHealth : InGameManager.Get().text_TopHealth;
-                image_HealthBar = WorldUIManager.Get().GetHealthBar(photonView.IsMine);
-                text_Health = WorldUIManager.Get().GetHealthText(photonView.IsMine);
+                
+                // image_HealthBar = WorldUIManager.Get().GetHealthBar(photonView.IsMine);
+                // text_Health = WorldUIManager.Get().GetHealthText(photonView.IsMine);
+
+                image_HealthBar.color = photonView.IsMine ? Color.blue : Color.red;
+                transform.GetChild(0).localPosition = new Vector3(0, photonView.IsMine ? -1.3f : 1.78f, 0);
             }
             else
             {
                 //image_HealthBar = isBottomPlayer ? InGameManager.Get().image_BottomHealthBar : InGameManager.Get().image_TopHealthBar;
                 //text_Health = isBottomPlayer ? InGameManager.Get().text_BottomHealth : InGameManager.Get().text_TopHealth;
-                image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
-                text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+                
+                // image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
+                // text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+                
+                image_HealthBar.color = isBottomPlayer ? Color.blue : Color.red;
+                transform.GetChild(0).localPosition = new Vector3(0, isBottomPlayer ? -1.3f : 1.78f, 0);
             }
             text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
 
@@ -390,7 +398,7 @@ namespace ED
             if (m == null)
             { 
                 PoolManager.instance.AddPool(pref, 1);
-                Debug.LogFormat("{0} Pool Added 1", pref.name);
+                //Debug.LogFormat("{0} Pool Added 1", pref.name);
                 m = PoolManager.instance.ActivateObject<Minion>(pref.name, spawnPos, InGameManager.Get().transform);
             }
 
@@ -459,7 +467,7 @@ namespace ED
             {
                 //PoolManager.instance.AddPool(data.prefab, 1);
                 PoolManager.instance.AddPool(FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION , InGameManager.Get().transform), 1);
-                Debug.LogFormat("{0} Pool Added 1", data.prefabName);
+                //Debug.LogFormat("{0} Pool Added 1", data.prefabName);
                 m = PoolManager.instance.ActivateObject<Minion>(data.prefabName, spawnPos, InGameManager.Get().transform);
             }
             
@@ -819,7 +827,7 @@ namespace ED
         }
         
         //[PunRPC]
-        public override void HitDamage(float damage, float delay = 0)
+        public override void HitDamage(float damage)
         {
             if (currentHealth > 0)
             {
@@ -889,8 +897,8 @@ namespace ED
                     || (PhotonNetwork.IsMasterClient == false && photonView.IsMine == true))
                 {
                     GetComponentInChildren<Collider>().enabled = false;
-                    transform.GetChild(0).gameObject.SetActive(false);
                     transform.GetChild(1).gameObject.SetActive(false);
+                    transform.GetChild(2).gameObject.SetActive(false);
                 }
             }
         }
@@ -929,21 +937,28 @@ namespace ED
         }
 
         
-        public void AttackEnemyMinion(int baseStatId, float damage, float delay)
+        public void AttackEnemyMinionOrMagic(int baseStatId, float damage, float delay)
         {
-            if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom.PlayerCount > 1)
+            StartCoroutine(AttackEnemyMinionOrMagicCoroutine(baseStatId, damage, delay));
+        }
+
+        IEnumerator AttackEnemyMinionOrMagicCoroutine(int baseStatId, float damage, float delay)
+        {
+            if (delay > 0) yield return new WaitForSeconds(delay);
+            
+            if (PhotonNetwork.IsConnected && isMine && PhotonNetwork.CurrentRoom.PlayerCount > 1)
             {
                 //targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, baseStatId, damage, delay);
-                targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINIONANDMAGIC , baseStatId, damage, delay);
+                targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINIONANDMAGIC , baseStatId, damage);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
+                targetPlayer.HitDamageMinionAndMagic(baseStatId, damage);
             }
         }
 
         //[PunRPC]
-        public void HitDamageMinionAndMagic(int baseStatId, float damage, float delay)
+        public void HitDamageMinionAndMagic(int baseStatId, float damage)
         {
             // baseStatId == 0 => Player tower
             if (baseStatId == 0)
@@ -951,11 +966,11 @@ namespace ED
                 if (PhotonNetwork.IsConnected)
                 {
                     //photonView.RPC("HitDamage", RpcTarget.All, damage, delay);
-                    SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
+                    SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage);
                 }
                 else
                 {
-                    HitDamage(damage, delay);
+                    HitDamage(damage);
                 }
             }
             else
@@ -963,14 +978,14 @@ namespace ED
                 var m = listMinion.Find(minion => minion.id == baseStatId);
                 if (m != null)
                 {
-                    m.HitDamage(damage, delay);
+                    m.HitDamage(damage);
                 }
                 else
                 {
                     var mg = listMagic.Find(magic => magic.id == baseStatId);
                     if (mg != null)
                     {
-                        mg.HitDamage(damage, delay);
+                        mg.HitDamage(damage);
                     }
                 }
             }
@@ -1045,9 +1060,9 @@ namespace ED
         // Unit's RPCs
         //////////////////////////////////////////////////////////////////////
         //[PunRPC]
-        public void FireArrow(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void FireBullet(string bulletName, Vector3 startPos, int targetId, float damage, float moveSpeed)
         {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Bullet", startPos);
+            var b = PoolManager.instance.ActivateObject<Bullet>(bulletName, startPos);
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
@@ -1056,31 +1071,31 @@ namespace ED
                 b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
-        
-        //[PunRPC]
-        public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
-        
-        public void FireNecromancerBullet(Vector3 startPos, int targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
+        //
+        // //[PunRPC]
+        // public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        // {
+        //     var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
+        //     if (b != null)
+        //     {
+        //         b.transform.rotation = Quaternion.identity;
+        //         b.controller = this;
+        //         b.moveSpeed = moveSpeed;
+        //         b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+        //     }
+        // }
+        //
+        // public void FireNecromancerBullet(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        // {
+        //     var b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
+        //     if (b != null)
+        //     {
+        //         b.transform.rotation = Quaternion.identity;
+        //         b.controller = this;
+        //         b.moveSpeed = moveSpeed;
+        //         b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+        //     }
+        // }
 
         //[PunRPC]
         public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
@@ -1251,14 +1266,12 @@ namespace ED
                 case E_PTDefine.PT_HITMINIONANDMAGIC:
                     int baseIDhit = (int) param[0];
                     float damage = (float) param[1];
-                    float delay = (float) param[2];
                     //targetPlayer.HitDamageMinion(baseIDhit, damage, delay);
-                    HitDamageMinionAndMagic(baseIDhit, damage, delay);
+                    HitDamageMinionAndMagic(baseIDhit, damage);
                     break;
                 case E_PTDefine.PT_HITDAMAGE:
                     float damageH = (float) param[0];
-                    float delayH = (float) param[1];
-                    HitDamage(damageH, delayH);
+                    HitDamage(damageH);
                     break;
                 case E_PTDefine.PT_DESTROYMINION:
                     int baseIdD = (int) param[0];
@@ -1305,11 +1318,8 @@ namespace ED
                 case E_PTDefine.PT_FIRECANNONBALL:
                     FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float) param[3]);
                     break;
-                case E_PTDefine.PT_FIREARROW:
-                    FireArrow((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
-                    break;
-                case E_PTDefine.PT_FIRESPEAR:
-                    FireSpear((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
+                case E_PTDefine.PT_FIREBULLET:
+                    FireBullet((string)param[0], (Vector3) param[1], (int) param[2], (float) param[3], (float) param[4]);
                     break;
                 case E_PTDefine.PT_MINIONANITRIGGER:
                     SetMinionAnimationTrigger((int) param[0], (string) param[1]);
@@ -1364,9 +1374,6 @@ namespace ED
                 case E_PTDefine.PT_SENDMESSAGEPARAM1:
                     listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
                     listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
-                    break;
-                case E_PTDefine.PT_NECROMANCERBULLET:
-                    FireNecromancerBullet((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
                     break;
                 case E_PTDefine.PT_SETMINIONTARGET:
                     listMinion.Find(minion => minion.id == (int) param[0]).target =

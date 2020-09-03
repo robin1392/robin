@@ -34,10 +34,11 @@ namespace ED
 
             //image_HealthBar = isBottomPlayer ? InGameManager.Get().image_BottomHealthBar : InGameManager.Get().image_TopHealthBar;
             //text_Health = isBottomPlayer ? InGameManager.Get().text_BottomHealth : InGameManager.Get().text_TopHealth;
-            image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
-            text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
             
-            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+            // image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
+            // text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+            //
+            // text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
 
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
 

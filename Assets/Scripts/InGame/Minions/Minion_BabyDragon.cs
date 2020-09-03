@@ -12,6 +12,9 @@ namespace ED
         public Animator ani_Dragon;
         public Transform ts_HitPosBaby;
         public Transform ts_HitPosDragon;
+        public Transform ts_HPBarParent;
+        public Transform ts_BabyHPBarPoint;
+        public Transform ts_DragonHPBarPoint;
         public ParticleSystem ps_Smoke;
         public float polymophCooltime = 20f;
 
@@ -19,8 +22,8 @@ namespace ED
         public float bulletMoveSpeedDragon = 10f;
         
         private float originRange;
-        private readonly string strTagGround = "Minion_Ground"; 
-        private readonly string strTagFlying = "Minion_Flying"; 
+        private readonly string strTagGround = "Minion_Ground";
+        private readonly string strTagFlying = "Minion_Flying";
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -31,7 +34,9 @@ namespace ED
             ani_Dragon.gameObject.SetActive(false);
             animator = ani_Baby;
             ts_HitPos = ts_HitPosBaby;
+            ts_HPBarParent.localPosition = ts_BabyHPBarPoint.localPosition;
             agent.baseOffset = 0;
+            agent.areaMask = NavMesh.AllAreas;
             originRange = range;
             range = 0.7f;
             StartCoroutine(PolymorphCoroutine());
@@ -54,14 +59,24 @@ namespace ED
 
         public void FireSpear()
         {
+            if (target == null)
+            {
+                return;
+            }
+            else if (IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                return;
+            }
+
             if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireSpear", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _spear, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller?.FireSpear(ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                controller?.FireBullet(_spear, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
         }
 
@@ -74,7 +89,9 @@ namespace ED
             ani_Dragon.gameObject.SetActive(true);
             animator = ani_Dragon;
             ts_HitPos = ts_HitPosDragon;
+            ts_HPBarParent.localPosition = ts_DragonHPBarPoint.localPosition;
             agent.baseOffset = -2f;
+            agent.areaMask = 1 << NavMesh.GetAreaFromName("Fly");
             range = originRange;
             
             ps_Smoke.Play();

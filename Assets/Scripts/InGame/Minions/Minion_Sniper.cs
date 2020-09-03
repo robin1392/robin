@@ -73,7 +73,7 @@ namespace ED
                     }
                 }
 
-                if (target != null)
+                if (target != null && IsTargetInnerRange())
                 {
                     transform.LookAt(target.transform);
                     lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
@@ -140,6 +140,8 @@ namespace ED
             else if (IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
                 return;
             }
 
@@ -159,12 +161,12 @@ namespace ED
                 if (PhotonNetwork.IsConnected && isMine)
                 {
                     //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, ts_ShootingPos.position, target.id,
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id,
                         power, bulletMoveSpeed);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
-                    controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                    controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 }
             }
         }

@@ -35,13 +35,11 @@ namespace ED
 
         public void FireArrow()
         {
-            if (target == null)
-            {
-                return;
-            }
-            else if (IsTargetInnerRange() == false)
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
                 return;
             }
             
@@ -59,11 +57,11 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
 

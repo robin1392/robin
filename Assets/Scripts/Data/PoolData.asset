@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PoolData
   m_EditorClassIdentifier: 
   listPool:
-  - name: Bullet
+  - name: Arrow
     obj: {fileID: 4058551278812737087, guid: 5b2f5a3ed55744289a156c0e4a308b42, type: 3}
     count: 50
   - name: Spear

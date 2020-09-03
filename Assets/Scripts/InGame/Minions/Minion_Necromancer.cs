@@ -70,16 +70,18 @@ namespace ED
             else if (IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
                 return;
             }
 
             if (PhotonNetwork.IsConnected && isMine)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_NECROMANCERBULLET , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, pref_Bullet.name, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireNecromancerBullet(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.FireBullet(pref_Bullet.name, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
         

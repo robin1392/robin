@@ -50,6 +50,8 @@ namespace ED
             else if (IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
                 return;
             }
 
@@ -57,7 +59,7 @@ namespace ED
             
             if (PhotonNetwork.IsConnected && isMine)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW,
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET,
             ts_ShootingPos.position, target.id, target.isFlying ? effect : power, 
                     target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround);
             }
@@ -65,11 +67,11 @@ namespace ED
             {
                 if (target.isFlying)
                 {
-                    controller.FireSpear(ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
+                    controller.FireBullet(_spear, ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
                 }
                 else
                 {
-                    controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeedByGround);
+                    controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeedByGround);
                 }
             }
         }

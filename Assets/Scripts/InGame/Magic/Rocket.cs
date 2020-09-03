@@ -62,8 +62,8 @@ namespace ED
                     isMine)
                 {
                     if (target != null)
-                        controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id,
-                            power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
+                        //controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id, power);
                     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ROCKETBOMB, id);
@@ -72,7 +72,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
                     }
 
                     Bomb();
@@ -93,7 +93,8 @@ namespace ED
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
                 {
                     if (target != null)
-                        controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
+                        //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
                         //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
@@ -102,7 +103,8 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                        //controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
                     }
 
                     Bomb();

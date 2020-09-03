@@ -65,6 +65,10 @@ namespace ED
         public bool isPolymorph;
         protected int _flagOfWarCount;
 
+        protected static readonly string _scarecrow = "Scarecrow";
+        protected static readonly string _arrow = "Arrow";
+        protected static readonly string _spear = "Spear";
+
         protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
 
         protected virtual void Awake()
@@ -119,6 +123,8 @@ namespace ED
             if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             isPlayable = true;
             isAttacking = false;
+            isPolymorph = false;
+            animator.gameObject.SetActive(true);
             _spawnedTime = 0;
             _pathRefinedCount = 1;
             target = null;
@@ -169,7 +175,7 @@ namespace ED
             RefreshHealthBar();
         }
 
-        public override void HitDamage(float damage, float delay = 0)
+        public override void HitDamage(float damage)
         {
             if (isInvincibility) return;
             if (invincibilityCount > 0)
@@ -178,20 +184,13 @@ namespace ED
                 return;
             }
             
-            StartCoroutine(HitDamageCoroutine(damage, delay));
-        }
-
-        private IEnumerator HitDamageCoroutine(float damage, float delay)
-        {
-            if (delay > 0) yield return new WaitForSeconds(delay);
-
             if (currentHealth > 0)
             {
                 currentHealth -= damage;
 
                 if (currentHealth <= 0)
                 {
-                    if (PhotonNetwork.IsConnected && !isMine) yield break;
+                    if (PhotonNetwork.IsConnected && !isMine) return;
 
                     currentHealth = 0;
                     controller.DeathMinion(id);
@@ -248,13 +247,15 @@ namespace ED
             var distance = float.MaxValue;
             foreach (var col in cols)
             {
-                var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
                 var bs = col.GetComponentInParent<BaseStat>();
+                var m = bs as Minion;
 
-                if (bs != null && (bs.GetType() == typeof(Minion) && ((Minion)bs).isCloacking))
+                if (bs == null || bs.isAlive == false || (m != null && m.isCloacking))
                 {
                     continue;
                 }
+                
+                var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
                 
                 if (sqr < distance)
                 {
@@ -325,7 +326,7 @@ namespace ED
             // }
             // else if (PhotonNetwork.IsConnected == false)
             {
-                controller.AttackEnemyMinion(m.id, power * factor, delay);
+                controller.AttackEnemyMinionOrMagic(m.id, power * factor, delay);
             }
         }
 
@@ -460,7 +461,7 @@ namespace ED
 
         public void SetVelocityTarget()
         {
-            if (target != null && isAlive)
+            if (target != null && isAlive && agent.enabled && agent.updatePosition)
             {
                 Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
                 agent.SetDestination(targetPos);
@@ -534,17 +535,24 @@ namespace ED
 #endif
             //return Vector3.Distance(transform.position, target.transform.position) < range + 0.1f;
             
-            // var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f,
-            //     (target.transform.position - transform.position).normalized, range, targetLayer);
-            // foreach (var hit in hits)
-            // {
-            //     if (hit.collider.GetComponentInParent<BaseStat>() == target) return true;
-            // }
-
-            if (target != null)
+            var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f,
+                (target.transform.position - transform.position).normalized, range, targetLayer);
+            foreach (var hit in hits)
             {
-                return Vector3.Distance(transform.position, target.transform.position) <= range;
+                if (hit.collider.GetComponentInParent<BaseStat>() == target)
+                {
+                    return true;
+                }
+                else
+                {
+                    return Vector3.Distance(transform.position, target.transform.position) <= range;
+                }
             }
+
+            // if (target != null)
+            // {
+            //     return Vector3.Distance(transform.position, target.transform.position) <= range;
+            // }
 
             return false;
         }
@@ -602,6 +610,7 @@ namespace ED
         protected void SetControllEnable(bool isEnable)
         {
             isPushing = !isEnable;
+            isAttacking = !isEnable;
             //rb.isKinematic = isEnable;
 
             if (isEnable && agent.enabled == false)
@@ -637,7 +646,7 @@ namespace ED
             isPolymorph = true;
             SetControllEnable(false);
             animator.gameObject.SetActive(false);
-            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow", transform.position);
+            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(_scarecrow, transform.position);
             ad.Deactive(duration);
             
             yield return new WaitForSeconds(duration);
