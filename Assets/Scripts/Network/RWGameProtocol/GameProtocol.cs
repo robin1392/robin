@@ -22,9 +22,6 @@ namespace RWGameProtocol
         CHANGE_LAYER_REQ,
         CHANGE_LAYER_ACK,
 
-        SET_DECK_REQ,
-        SET_DECK_ACK,
-
         GET_DICE_REQ,
         GET_DICE_ACK,
 
@@ -34,8 +31,11 @@ namespace RWGameProtocol
         LEVEL_UP_DICE_REQ,
         LEVEL_UP_DICE_ACK,
 
-        UPGRADE_DICE_REQ,
-        UPGRADE_DICE_ACK,
+        INGAME_UP_DICE_REQ,
+        INGAME_UP_DICE_ACK,
+
+        UPGRADE_SP_REQ,
+        UPGRADE_SP_ACK,
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -49,7 +49,8 @@ namespace RWGameProtocol
         ADD_SP_NOTIFY,
         SPAWN_NOTIFY,
         LEVEL_UP_DICE_NOTIFY,
-        UPGRADE_DICE_NOTIFY,
+        INGAME_UP_DICE_NOTIFY,
+        UPGRADE_SP_NOTIFY,
 
 
         // ----------------------------------------------------------------------------------------------------

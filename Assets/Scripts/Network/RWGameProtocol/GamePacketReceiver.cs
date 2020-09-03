@@ -30,12 +30,6 @@ namespace RWGameProtocol
         public delegate void ReadyGameAckDelegate(IPeer peer, MsgReadyGameAck msg);
         public ReadyGameAckDelegate ReadyGameAck;
 
-        public delegate void SetDeckReqDelegate(IPeer peer, MsgSetDeckReq msg);
-        public SetDeckReqDelegate SetDeckReq;
-
-        public delegate void SetDeckAckDelegate(IPeer peer, MsgSetDeckAck msg);
-        public SetDeckAckDelegate SetDeckAck;
-
         public delegate void GetDiceReqDelegate(IPeer peer, MsgGetDiceReq msg);
         public GetDiceReqDelegate GetDiceReq;
 
@@ -47,6 +41,18 @@ namespace RWGameProtocol
 
         public delegate void LevelUpDiceAckDelegate(IPeer peer, MsgLevelUpDiceAck msg);
         public LevelUpDiceAckDelegate LevelUpDiceAck;
+
+        public delegate void InGameUpDiceReqDelegate(IPeer peer, MsgInGameUpDiceReq msg);
+        public InGameUpDiceReqDelegate InGameUpDiceReq;
+
+        public delegate void InGameUpDiceAckDelegate(IPeer peer, MsgInGameUpDiceAck msg);
+        public InGameUpDiceAckDelegate InGameUpDiceAck;
+
+        public delegate void UpgradeSpReqDelegate(IPeer peer, MsgUpgradeSpReq msg);
+        public UpgradeSpReqDelegate UpgradeSpReq;
+
+        public delegate void UpgradeSpAckDelegate(IPeer peer, MsgUpgradeSpAck msg);
+        public UpgradeSpAckDelegate UpgradeSpAck;
 
         public delegate void HitDamageReqDelegate(IPeer peer, MsgHitDamageReq msg);
         public HitDamageReqDelegate HitDamageReq;
@@ -67,6 +73,15 @@ namespace RWGameProtocol
 
         public delegate void GetDiceNotifyDelegate(IPeer peer, MsgGetDiceNotify msg);
         public GetDiceNotifyDelegate GetDiceNotify;
+
+        public delegate void LevelUpDiceNotifyDelegate(IPeer peer, MsgLevelUpDiceNotify msg);
+        public LevelUpDiceNotifyDelegate LevelUpDiceNotify;
+
+        public delegate void InGameUpDiceNotifyDelegate(IPeer peer, MsgInGameUpDiceNotify msg);
+        public InGameUpDiceNotifyDelegate InGameUpDiceNotify;
+
+        public delegate void UpgradeSpNotifyDelegate(IPeer peer, MsgUpgradeSpNotify msg);
+        public UpgradeSpNotifyDelegate UpgradeSpNotify;
 
         public delegate void DeactiveWaitingObjectNotifyDelegate(IPeer peer, MsgDeactiveWaitingObjectNotify msg);
         public DeactiveWaitingObjectNotifyDelegate DeactiveWaitingObjectNotify;
@@ -161,18 +176,6 @@ namespace RWGameProtocol
 
                     ReadyGameAck(peer, MsgReadyGameAck.Deserialize(data)); 
                     break;
-                case GameProtocol.SET_DECK_REQ:
-                    if (SetDeckReq == null)
-                        return false;
-
-                    SetDeckReq(peer, MsgSetDeckReq.Deserialize(data)); 
-                    break;
-                case GameProtocol.SET_DECK_ACK:
-                    if (SetDeckAck == null)
-                        return false;
-
-                    SetDeckAck(peer, MsgSetDeckAck.Deserialize(data)); 
-                    break;
                 case GameProtocol.GET_DICE_REQ:
                     if (GetDiceReq == null)
                         return false;
@@ -196,6 +199,30 @@ namespace RWGameProtocol
                         return false;
 
                     LevelUpDiceAck(peer, MsgLevelUpDiceAck.Deserialize(data)); 
+                    break;
+                case GameProtocol.INGAME_UP_DICE_REQ:
+                    if (InGameUpDiceReq == null)
+                        return false;
+
+                    InGameUpDiceReq(peer, MsgInGameUpDiceReq.Deserialize(data));
+                    break;
+                case GameProtocol.INGAME_UP_DICE_ACK:
+                    if (InGameUpDiceAck == null)
+                        return false;
+
+                    InGameUpDiceAck(peer, MsgInGameUpDiceAck.Deserialize(data));
+                    break;
+                case GameProtocol.UPGRADE_SP_REQ:
+                    if (UpgradeSpReq == null)
+                        return false;
+
+                    UpgradeSpReq(peer, MsgUpgradeSpReq.Deserialize(data));
+                    break;
+                case GameProtocol.UPGRADE_SP_ACK:
+                    if (UpgradeSpAck == null)
+                        return false;
+
+                    UpgradeSpAck(peer, MsgUpgradeSpAck.Deserialize(data));
                     break;
                 case GameProtocol.HIT_DAMAGE_REQ:
                     if (HitDamageReq == null)
@@ -235,6 +262,24 @@ namespace RWGameProtocol
                         return false;
 
                     GetDiceNotify(peer, MsgGetDiceNotify.Deserialize(data)); 
+                    break;
+                case GameProtocol.LEVEL_UP_DICE_NOTIFY:
+                    if (LevelUpDiceNotify == null)
+                        return false;
+
+                    LevelUpDiceNotify(peer, MsgLevelUpDiceNotify.Deserialize(data));
+                    break;
+                case GameProtocol.INGAME_UP_DICE_NOTIFY:
+                    if (InGameUpDiceNotify == null)
+                        return false;
+
+                    InGameUpDiceNotify(peer, MsgInGameUpDiceNotify.Deserialize(data));
+                    break;
+                case GameProtocol.UPGRADE_SP_NOTIFY:
+                    if (UpgradeSpNotify == null)
+                        return false;
+
+                    UpgradeSpNotify(peer, MsgUpgradeSpNotify.Deserialize(data));
                     break;
                 case GameProtocol.ADD_SP_NOTIFY:
                     if (AddSpNotify == null)

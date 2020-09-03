@@ -73,22 +73,6 @@ namespace RWGameProtocol
         }
 
 
-        public void SetDeckReq(IPeer peer, int[] deck)
-        {
-            MsgSetDeckReq msg = new MsgSetDeckReq();
-            msg.Deck = deck;
-            peer.SendPacket((short)GameProtocol.SET_DECK_REQ, msg.Serialize());
-        }
-
-
-        public void SetDeckAck(IPeer peer, GameErrorCode code)
-        {
-            MsgSetDeckAck msg = new MsgSetDeckAck();
-            msg.ErrorCode = (short)code;
-            peer.SendPacket((short)GameProtocol.SET_DECK_ACK, msg.Serialize());
-        }
-
-
         public void GetDiceReq(IPeer peer)
         {
             MsgGetDiceReq msg = new MsgGetDiceReq();
@@ -108,7 +92,7 @@ namespace RWGameProtocol
         }
 
 
-        public void LevelUpDiceReq(IPeer peer, int resetFieldNum, int leveupFieldNum)
+        public void LevelUpDiceReq(IPeer peer, short resetFieldNum, short leveupFieldNum)
         {
             MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
             msg.ResetFieldNum = resetFieldNum;
@@ -117,7 +101,7 @@ namespace RWGameProtocol
         }
 
 
-        public void LevelUpDiceAck(IPeer peer, GameErrorCode code, int resetFieldNum, int leveupFieldNum, int levelUpDiceId, int level)
+        public void LevelUpDiceAck(IPeer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
         {
             MsgLevelUpDiceAck msg = new MsgLevelUpDiceAck();
             msg.ErrorCode = (short)code;
@@ -126,6 +110,49 @@ namespace RWGameProtocol
             msg.LevelupDiceId = levelUpDiceId;
             msg.Level = level;
             peer.SendPacket((short)GameProtocol.LEVEL_UP_DICE_ACK, msg.Serialize());
+        }
+
+        public void InGameUpDiceReq(IPeer peer, int diceId)
+        {
+            MsgInGameUpDiceReq msg = new MsgInGameUpDiceReq();
+            msg.DiceId = diceId;
+            peer.SendPacket((short)GameProtocol.INGAME_UP_DICE_REQ, msg.Serialize());
+        }
+
+
+        public void InGameUpDiceAck(IPeer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp)
+        {
+            MsgInGameUpDiceAck msg = new MsgInGameUpDiceAck();
+            msg.ErrorCode = (short)code;
+            msg.DiceId = diceId;
+            msg.InGameUp = inGameUp;
+            msg.CurrentSp = currentSp;
+            peer.SendPacket((short)GameProtocol.INGAME_UP_DICE_ACK, msg.Serialize());
+        }
+
+        public void UpgradeSpReq(IPeer peer)
+        {
+            MsgUpgradeSpReq msg = new MsgUpgradeSpReq();
+            peer.SendPacket((short)GameProtocol.UPGRADE_SP_REQ, msg.Serialize());
+        }
+
+
+        public void UpgradeSpAck(IPeer peer, GameErrorCode code, short upgrade, int currentSp)
+        {
+            MsgUpgradeSpAck msg = new MsgUpgradeSpAck();
+            msg.ErrorCode = (short)code;
+            msg.Upgrade = upgrade;
+            msg.CurrentSp = currentSp;
+            peer.SendPacket((short)GameProtocol.UPGRADE_SP_ACK, msg.Serialize());
+        }
+
+
+        public void UpgradeSpNotify(IPeer peer, int playerUId, short upgrade)
+        {
+            MsgUpgradeSpNotify msg = new MsgUpgradeSpNotify();
+            msg.PlayerUId = playerUId;
+            msg.Upgrade = upgrade;
+            peer.SendPacket((short)GameProtocol.UPGRADE_SP_ACK, msg.Serialize());
         }
 
 
@@ -194,14 +221,25 @@ namespace RWGameProtocol
         }
 
 
-        public void LevelUpDiceNotify(IPeer peer, int resetFieldNum, int leveupFieldNum, int levelUpDiceId, int level)
+        public void LevelUpDiceNotify(IPeer peer, int playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
         {
             MsgLevelUpDiceNotify msg = new MsgLevelUpDiceNotify();
+            msg.PlayerUId = playerUId;
             msg.ResetFieldNum = resetFieldNum;
             msg.LeveupFieldNum = leveupFieldNum;
             msg.LevelupDiceId = levelUpDiceId;
             msg.Level = level;
             peer.SendPacket((short)GameProtocol.LEVEL_UP_DICE_NOTIFY, msg.Serialize());
+        }
+
+
+        public void InGameUpDiceNotify(IPeer peer, int playerUId, int diceId, short inGameUp)
+        {
+            MsgInGameUpDiceNotify msg = new MsgInGameUpDiceNotify();
+            msg.PlayerUId = playerUId;
+            msg.DiceId = diceId;
+            msg.InGameUp = inGameUp;
+            peer.SendPacket((short)GameProtocol.INGAME_UP_DICE_NOTIFY, msg.Serialize());
         }
 
 

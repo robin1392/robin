@@ -45,11 +45,11 @@ public class SocketSendEvent
                 
                 break;
             }
-            case GameProtocol.SET_DECK_REQ:
-            {
-                //SetDeckReq(IPeer peer, int[] deck)
-                break;
-            }
+            //case GameProtocol.SET_DECK_REQ:
+            //{
+            //    //SetDeckReq(IPeer peer, int[] deck)
+            //    break;
+            //}
             case GameProtocol.GET_DICE_REQ:
             {
                 //GetDiceReq(IPeer peer, int useSp)
@@ -65,7 +65,7 @@ public class SocketSendEvent
                 //LevelUpDiceReq(IPeer peer, int resetFieldNum, int leveupFieldNum)
                 break;
             }
-            case GameProtocol.UPGRADE_DICE_REQ:
+            case GameProtocol.INGAME_UP_DICE_REQ:
             {
                 break;
             }
