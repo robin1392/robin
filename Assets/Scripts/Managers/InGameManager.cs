@@ -243,6 +243,11 @@ namespace ED
                 isAIMode = true;
             }
             
+            // deck setting
+            //NetworkManager.Get().GetNetInfo().playerInfo.DiceInfoArray
+            //NetworkManager.Get().GetNetInfo().otherInfo.DiceInfoArray
+            
+            
             NetworkManager.Get().Send(GameProtocol.READY_GAME_REQ);
             
             /*
@@ -577,9 +582,10 @@ namespace ED
         /// <summary>
         /// 상대방이 나갓다고 noti를 받앗을 경우
         /// </summary>
-        public void OnOtherLeft()
+        public void OnOtherLeft(int userUid)
         {
             // 플레이 도중 나갓을경우...
+            // 나중에 플레이어가 여러명일 경우 해당 플레이어만 초기화 해주는 로직이 필요하긴하다
             // 나도 나가자
             if (isGamePlaying)
             {

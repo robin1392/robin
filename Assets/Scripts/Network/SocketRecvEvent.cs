@@ -128,10 +128,10 @@ public class SocketRecvEvent
 
     public void OnLeaveGameNotify(IPeer peer, MsgLeaveGameNotify msg)
     {
-        UnityUtil.Print("Notify Leave" , msg.PlayerSessionId , "white");
+        UnityUtil.Print("Notify Leave" , msg.PlayerUId.ToString() , "white");
 
         if (InGameManager.Get() != null)
-            InGameManager.Get().OnOtherLeft();
+            InGameManager.Get().OnOtherLeft(msg.PlayerUId);
     }
 
     public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
