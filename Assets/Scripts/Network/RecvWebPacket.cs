@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using ErrorDefine;
 using WebPacketDefine;
-using WebSocketSharp;
+//using WebSocketSharp;
 
 public partial class WebPacket : Singleton<WebPacket>
 {
@@ -87,7 +87,8 @@ public partial class WebPacket : Singleton<WebPacket>
 
     private void MatchResponse(string ticketId)
     {
-        if (ticketId.IsNullOrEmpty())
+        //if (ticketId.IsNullOrEmpty())
+        if(string.IsNullOrEmpty(ticketId) )
         {
             UnityUtil.Print("ticket id null");
             return;
@@ -100,7 +101,8 @@ public partial class WebPacket : Singleton<WebPacket>
 
     private void MatchStatsAck(MatchStatusAck res)
     {
-        if (res.playerSessionId.IsNullOrEmpty())
+        //if (res.playerSessionId.IsNullOrEmpty())
+        if(string.IsNullOrEmpty(res.playerSessionId) )
         {
             //_matchStatus = EMatchStatus.Request;
             StartCoroutine(StartMatchStatus());
