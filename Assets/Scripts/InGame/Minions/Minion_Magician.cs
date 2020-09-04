@@ -18,6 +18,14 @@ namespace  ED
         //[SerializeField] private readonly float _skillCooltime = 10f;
         private int _skillCastedCount;
 
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+        }
+
         protected override void Awake()
         {
             base.Awake();

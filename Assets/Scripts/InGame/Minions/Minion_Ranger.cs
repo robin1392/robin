@@ -11,6 +11,15 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light_Fire;
 
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+            ae.event_FireLight += FireLightOn;
+        }
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -20,29 +29,32 @@ namespace ED
 
         public override void Attack()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            base.Attack();
+            if (PhotonNetwork.IsConnected)
             {
-                base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            else
             {
-                base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
             }
         }
 
         public void FireArrow()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false)
+            if (PhotonNetwork.IsConnected && isMine)
             {
-                animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
-                return;
+                //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
-            
+            else if (PhotonNetwork.IsConnected == false)
+            {
+                controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+            }
+        }
+
+        public void FireLightOn()
+        {
             if (ps_Fire != null)
             {
                 ps_Fire.Play();
@@ -52,16 +64,6 @@ namespace ED
             {
                 light_Fire.enabled = true;
                 Invoke("FireLightOff", 0.15f);
-            }
-            
-            if (PhotonNetwork.IsConnected && isMine)
-            {
-                //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
 

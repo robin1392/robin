@@ -23,6 +23,15 @@ namespace ED
 
         public Transform[] arrTs_Parts;
 
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+            ae.event_FireLight += FireLightOn;
+        }
+
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
@@ -71,9 +80,9 @@ namespace ED
 
         public void FireArrow()
         {
-            ps_Fire.Play();
-            light_Fire.enabled = true;
-            Invoke("FireLightOff", 0.15f);
+            //ps_Fire.Play();
+            //light_Fire.enabled = true;
+            //Invoke("FireLightOff", 0.15f);
             
             if (PhotonNetwork.IsConnected && isMine)
             {
@@ -116,9 +125,12 @@ namespace ED
 
         public void LookAndAniTrigger(int targetID)
         {
-            flyingTarget = (Minion)controller.targetPlayer.GetBaseStatFromId(targetID);
-            StartCoroutine(LookAtTargetCoroutine());
-            animator.SetTrigger("Attack");
+            flyingTarget = controller.targetPlayer.GetBaseStatFromId(targetID) as Minion;
+            if (flyingTarget)
+            {
+                StartCoroutine(LookAtTargetCoroutine());
+                animator.SetTrigger("Attack");
+            }
         }
 
         private IEnumerator LookAtTargetCoroutine()
@@ -137,6 +149,20 @@ namespace ED
         public void EndGameUnit()
         {
             StopAllCoroutines();
+        }
+        
+        public void FireLightOn()
+        {
+            if (ps_Fire != null)
+            {
+                ps_Fire.Play();
+            }
+
+            if (light_Fire != null)
+            {
+                light_Fire.enabled = true;
+                Invoke("FireLightOff", 0.15f);
+            }
         }
         
         private void FireLightOff()

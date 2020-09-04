@@ -13,6 +13,15 @@ namespace ED
         public Light light_Fire;
         public LineRenderer lr;
 
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+            ae.event_FireLight += FireLightOn;
+        }
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -58,7 +67,8 @@ namespace ED
             
             while (t < attackSpeed - 1.5f)
             {
-                if (target == null || target.isAlive == false || (target.GetType() == typeof(Minion) && ((Minion)target).isCloacking))
+                var m = target as Minion;
+                if (target == null || target.isAlive == false || (target.isAlive && m != null && m.isCloacking))
                 {
                     target = SetTarget();
 
@@ -66,7 +76,7 @@ namespace ED
                     {
                         controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
                     }
-                    else
+                    else if (target == null || IsTargetInnerRange() == false)
                     {
                         controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                         break;
@@ -78,8 +88,9 @@ namespace ED
                     transform.LookAt(target.transform);
                     lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
                 }
-                else
+                else if (target == null || IsTargetInnerRange() == false)
                 {
+                    controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                     break;
                 }
 
@@ -131,31 +142,6 @@ namespace ED
 
         public void FireArrow()
         {
-            lr.gameObject.SetActive(false);
-            
-            if (target == null)
-            {
-                return;
-            }
-            else if (IsTargetInnerRange() == false)
-            {
-                animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
-                return;
-            }
-
-            if (ps_Fire != null)
-            {
-                ps_Fire.Play();
-            }
-
-            if (light_Fire != null)
-            {
-                light_Fire.enabled = true;
-                Invoke("FireLightOff", 0.15f);
-            }
-
             if (target != null)
             {
                 if (PhotonNetwork.IsConnected && isMine)
@@ -168,6 +154,22 @@ namespace ED
                 {
                     controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 }
+            }
+        }
+
+        public void FireLightOn()
+        {
+            lr.gameObject.SetActive(false);
+
+            if (ps_Fire != null)
+            {
+                ps_Fire.Play();
+            }
+
+            if (light_Fire != null)
+            {
+                light_Fire.enabled = true;
+                Invoke("FireLightOff", 0.15f);
             }
         }
 

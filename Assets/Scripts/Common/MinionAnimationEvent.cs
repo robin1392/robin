@@ -12,7 +12,14 @@ namespace ED
 {
     public class MinionAnimationEvent : MonoBehaviour
     {
+        public delegate void Fire();
+
+        public event Fire event_FireArrow;
+        public event Fire event_FireSpear;
+        public event Fire event_FireLight;
+        
         public float delay;
+        [SerializeField]
         private BaseStat _minion;
 
         private void Awake()
@@ -24,7 +31,6 @@ namespace ED
         {
             if (_minion != null && _minion.isAlive && _minion.target != null && ((PhotonNetwork.IsConnected && _minion.isMine) || PhotonNetwork.IsConnected == false))
             {
-                //Debug.Log("AnimationEventAttack: " + gameObject.name);
                 Minion m = _minion as Minion;
                 if (m != null)
                 {
@@ -36,17 +42,47 @@ namespace ED
 
         public void FireArrow()
         {
-            if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
+            if (_minion != null)
             {
-                _minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
+                //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
+                event_FireLight.Invoke();
+
+                if (PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null || PhotonNetwork.IsConnected == false)
+                {
+                    //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
+                    event_FireArrow.Invoke();
+                }
             }
+            //
+            // if ((PhotonNetwork.IsConnected && _minion != null && _minion.target != null) || PhotonNetwork.IsConnected == false)
+            // {
+            //     if (_minion.isMine)
+            //     {
+            //         _minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
+            //     }
+            //     else
+            //     {
+            //         _minion.SendMessage("FireArrowIsNotMine", SendMessageOptions.DontRequireReceiver);
+            //     }
+            // }
         }
 
         public void FireSpear()
         {
-            if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
+            // if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
+            // {
+            //     _minion.SendMessage("FireSpear", SendMessageOptions.DontRequireReceiver);
+            // }
+            if (_minion != null && _minion.target != null)
             {
-                _minion.SendMessage("FireSpear", SendMessageOptions.DontRequireReceiver);
+                //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
+                event_FireLight.Invoke();
+
+                if (PhotonNetwork.IsConnected && _minion.isMine || PhotonNetwork.IsConnected == false)
+                {
+                    //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
+                    event_FireSpear.Invoke();
+                }
             }
         }
     }

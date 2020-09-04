@@ -32,6 +32,14 @@ namespace ED
             PoolManager.instance.AddPool(pref_Bullet, 1);
         }
 
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+        }
+
         private void Update()
         {
             if (isPlayable && _spawnedTime >= _skillCastedTime + _skillCooltime)

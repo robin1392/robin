@@ -16,6 +16,15 @@ namespace ED
         public Transform ts_ShootingPos2;
         public ParticleSystem ps_FireTargetFlying;
         
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+            ae.event_FireLight += FireLightOn;
+        }
+
         public override void Attack()
         {
             if (target == null)
@@ -55,8 +64,6 @@ namespace ED
                 return;
             }
 
-            if (target.isFlying) ps_FireTargetFlying.Play();
-            
             if (PhotonNetwork.IsConnected && isMine)
             {
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET,
@@ -74,6 +81,11 @@ namespace ED
                     controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeedByGround);
                 }
             }
+        }
+        
+        public void FireLightOn()
+        {
+            if (target.isFlying) ps_FireTargetFlying.Play();
         }
     }
 }

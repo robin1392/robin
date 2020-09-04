@@ -375,6 +375,16 @@ PrefabInstance:
       propertyPath: LightsModule.light
       value: 
       objectReference: {fileID: 3485473548886311085}
+    - target: {fileID: 6200102228801107148, guid: a14745bd4da0f4940b2f8f7fdc0f7b80,
+        type: 3}
+      propertyPath: RotationModule.x.minMaxState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6200102228801107148, guid: a14745bd4da0f4940b2f8f7fdc0f7b80,
+        type: 3}
+      propertyPath: RotationModule.y.minMaxState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6200102228801126678, guid: a14745bd4da0f4940b2f8f7fdc0f7b80,
         type: 3}
       propertyPath: playOnAwake
@@ -475,7 +485,8 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.005
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8308808281916977918, guid: a14745bd4da0f4940b2f8f7fdc0f7b80, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a14745bd4da0f4940b2f8f7fdc0f7b80, type: 3}
 --- !u!4 &6609558541257996081 stripped
 Transform:

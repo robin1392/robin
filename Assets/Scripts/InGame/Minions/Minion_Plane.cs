@@ -14,6 +14,15 @@ namespace ED
     {
         public float bulletMoveSpeed = 6f;
         
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+            ae.event_FireSpear += FireSpear;
+        }
+
         public override void Attack()
         {
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)

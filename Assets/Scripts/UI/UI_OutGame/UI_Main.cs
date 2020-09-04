@@ -119,7 +119,7 @@ namespace ED
             else
             {
                 btn_Cancel.interactable = false;
-                while (!PhotonManager.Instance.async.isDone)
+                while (PhotonManager.Instance.async != null && PhotonManager.Instance.async.isDone == false)
                 {
                     image_Progress.fillAmount = PhotonManager.Instance.async.progress / 0.9f;
                     text_Progress.text = $"{(int) (PhotonManager.Instance.async.progress / 0.9f * 100)}%";
