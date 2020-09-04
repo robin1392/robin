@@ -74,10 +74,7 @@ public class SocketRecvEvent
     
     #region deck
 
-    public void OnSetDeckAck(IPeer peer, MsgSetDeckAck msg)
-    {
-        
-    }
+
 
     #endregion
     

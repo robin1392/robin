@@ -234,7 +234,6 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
         _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
-        _packetRecv.SetDeckAck = _socketRecv.OnSetDeckAck;
         _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
         _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
         _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
