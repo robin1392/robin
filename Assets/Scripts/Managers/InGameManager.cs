@@ -247,6 +247,31 @@ namespace ED
             //NetworkManager.Get().GetNetInfo().playerInfo.DiceInfoArray
             //NetworkManager.Get().GetNetInfo().otherInfo.DiceInfoArray
             
+            var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+            if (UserInfoManager.Get() != null)
+            {
+                deck = UserInfoManager.Get().GetActiveDeck();
+            }
+            
+            
+            
+            
+            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            {
+                //playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
+                //playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SETDECK , deck);
+                
+                // my
+                playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
+                //other
+                playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
+            }
+            else
+            {
+                playerController.SetDeck(deck);
+            }
+            
+            
             
             NetworkManager.Get().Send(GameProtocol.READY_GAME_REQ);
             
