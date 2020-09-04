@@ -247,13 +247,6 @@ namespace ED
             //NetworkManager.Get().GetNetInfo().playerInfo.DiceInfoArray
             //NetworkManager.Get().GetNetInfo().otherInfo.DiceInfoArray
             
-            var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
-            if (UserInfoManager.Get() != null)
-            {
-                deck = UserInfoManager.Get().GetActiveDeck();
-            }
-            
-            
             
             
             if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
@@ -268,12 +261,47 @@ namespace ED
             }
             else
             {
+                // 네트워크 안쓰니까...개발용으로
+                var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+                if (UserInfoManager.Get() != null)
+                {
+                    deck = UserInfoManager.Get().GetActiveDeck();
+                }
                 playerController.SetDeck(deck);
             }
             
+            // Upgrade buttons
+            // ui 셋팅
+            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck , arrUpgradeLevel);
+
             
+            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            {
+                if (NetworkManager.Get().IsMaster == false)
+                {
+                    ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
+                    ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
+                    ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
+                }
+            }
             
-            NetworkManager.Get().Send(GameProtocol.READY_GAME_REQ);
+            //obj_ViewTargetDiceField.SetActive(!PhotonNetwork.IsConnected);
+            UI_InGame.Get().ViewTargetDice(!PhotonNetwork.IsConnected);
+            
+            event_SP_Edit.AddListener(RefreshSP);
+            event_SP_Edit.AddListener(SetSPUpgradeButton);
+
+            
+            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            {
+                NetworkManager.Get().Send(GameProtocol.READY_GAME_REQ);
+            }
+            else
+            {
+                StartGame();
+                RefreshTimeUI(true);
+            }
+            
             
             /*
             if (PhotonNetwork.IsConnected)
@@ -362,8 +390,22 @@ namespace ED
         
         
         #region start game
+
+        public void NetStartGame()
+        {
+            DeactivateWaitingObject();
+            
+            // start...
+            StartGame();
+            
+            RefreshTimeUI(true);
+        }
+        
         protected void StartGame()
         {
+            
+            
+            /*
             if (PhotonNetwork.IsConnected)
             {
                 if (PhotonNetwork.IsMasterClient)
@@ -382,6 +424,7 @@ namespace ED
                 Debug.Log("StartGame: OfflineMode");
                 StartCoroutine(SpawnLoop());
             }
+            */
         }
         
         //[PunRPC]
