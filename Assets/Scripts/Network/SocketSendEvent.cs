@@ -45,11 +45,6 @@ public class SocketSendEvent
                 
                 break;
             }
-            //case GameProtocol.SET_DECK_REQ:
-            //{
-            //    //SetDeckReq(IPeer peer, int[] deck)
-            //    break;
-            //}
             case GameProtocol.GET_DICE_REQ:
             {
                 //GetDiceReq(IPeer peer, int useSp)

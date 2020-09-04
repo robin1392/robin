@@ -87,6 +87,7 @@ namespace ED
         #endregion
         
         
+        
         /// <summary>
         /// 삭제 -- Canvas 위치에 따라 world ui 와 in game ui , popup 으로 나눔 
         /// </summary>
@@ -196,12 +197,19 @@ namespace ED
             event_SP_Edit.RemoveAllListeners();
             event_SP_Edit = null;
         }
-        
+
+        public bool IsNetwork()
+        {
+            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+                return true;
+
+            return false;
+        }
 
         public void StartManager()
         {
 
-            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            if ( IsNetwork() == true)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
 
@@ -249,7 +257,7 @@ namespace ED
             
             
             
-            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            if ( IsNetwork() == true)
             {
                 //playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
                 //playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SETDECK , deck);
@@ -275,7 +283,7 @@ namespace ED
             UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck , arrUpgradeLevel);
 
             
-            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            if ( IsNetwork() == true)
             {
                 if (NetworkManager.Get().IsMaster == false)
                 {
@@ -292,9 +300,9 @@ namespace ED
             event_SP_Edit.AddListener(SetSPUpgradeButton);
 
             
-            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            if ( IsNetwork() == true)
             {
-                NetworkManager.Get().Send(GameProtocol.READY_GAME_REQ);
+                SendInGameManager(GameProtocol.READY_GAME_REQ);
             }
             else
             {
@@ -403,8 +411,16 @@ namespace ED
         
         protected void StartGame()
         {
-            
-            
+            if ( IsNetwork() == true)
+            {
+                StartCoroutine(SpawnLoop());
+            }
+            else
+            {
+                Debug.Log("StartGame: OfflineMode");
+                StartCoroutine(SpawnLoop());
+            }
+                
             /*
             if (PhotonNetwork.IsConnected)
             {
@@ -427,6 +443,7 @@ namespace ED
             */
         }
         
+        // not use
         //[PunRPC]
         private void Ready()
         {
@@ -438,7 +455,8 @@ namespace ED
         #region spawn
         
         private IEnumerator SpawnLoop()
-        {
+        {   
+            /*
             if (PhotonNetwork.IsConnected)
             {
                 while (PhotonNetwork.InRoom && _readyPlayerCount < PhotonNetwork.CurrentRoom.MaxPlayers)
@@ -501,9 +519,88 @@ namespace ED
                     wave++;
                 }
             }
+            */
+            
+            
+            wave = 0;
+            //tmp_Wave.text = $"{wave}";
+            
+            // 개발용으로 쓰일때만..
+            if (IsNetwork() == false)
+                WorldUIManager.Get().SetWave(wave);
+            
+            time = startSpawnTime;
+            int[] arrAddTime = { 20, 15, 10, 5, -1 };
+            var addNum = 0;
+
+            while (true)
+            {
+                yield return null;
+                
+                time -= Time.deltaTime;
+
+                //
+                if (wave > 0 && time <= arrAddTime[addNum])
+                {
+                    addNum++;
+                    if (IsNetwork() == true)
+                    {
+                        //...sp 를 노티가 오니....안해도 되겟네..
+                    }
+                    else
+                    {
+                        AddSP(wave);
+                    }
+                }
+
+                if (time <= 0)
+                {
+                    time = spawnTime;
+                    addNum = 0;
+
+                    if (IsNetwork() == true)
+                    {
+                        // spawn 도 노티로 온다...
+                    }
+                    else
+                    {
+                        playerController.Spawn();
+                        playerController.targetPlayer.Spawn();
+                        
+                        wave++;
+                    }
+                }
+            }
+        }
+
+        public void NetSpawnNotify(int wave)
+        {
+            WorldUIManager.Get().SetWave(wave);
+            
+            playerController.Spawn();
+            playerController.targetPlayer.Spawn();
         }
 
         #endregion
+        
+        
+        #region net sp
+
+        //[PunRPC]
+        private void AddSP(int wave = 0)
+        {
+            playerController.AddSpByWave(wave);
+
+            //if (PhotonNetwork.IsConnected == false)
+            if (IsNetwork() == false)
+            {
+                playerController.targetPlayer.AddSpByWave(wave);
+            }
+        }
+
+
+        #endregion
+        
         
         #region update event
         
@@ -630,9 +727,10 @@ namespace ED
                 GameStateManager.Get().MoveMainScene();
             }
             */
+            
             if (NetworkManager.Get().IsConnect() == true)
             {
-                NetworkManager.Get().Send(GameProtocol.LEAVE_GAME_REQ , NetworkManager.Get().gameSession);
+                SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             }
             else
             {
@@ -640,10 +738,10 @@ namespace ED
             }
         }
         
+        // 내자신이 나간다고 눌럿을때
         public void CallBackLeaveRoom()
         {
             NetworkManager.Get().DisconnectSocket();
-            
             GameStateManager.Get().MoveMainScene();
         }
 
@@ -657,9 +755,8 @@ namespace ED
             // 나도 나가자
             if (isGamePlaying)
             {
-                NetworkManager.Get().Send(GameProtocol.LEAVE_GAME_REQ , NetworkManager.Get().gameSession);
+                SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             }
-            
         }
 
         //[PunRPC]
@@ -675,6 +772,7 @@ namespace ED
             UI_InGamePopup.Get().SetResultText(playerController.isAlive ? Global.g_inGameWin : Global.g_inGameLose);
         }
         #endregion
+        
         
         #region rpc etc
         
@@ -693,17 +791,6 @@ namespace ED
             WorldUIManager.Get().SetSpawnTime(1.0f);
             //playerController.photonView.RPC("Spawn", RpcTarget.All);
             playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SPAWN);
-        }
-
-        //[PunRPC]
-        private void AddSP(int wave = 0)
-        {
-            playerController.AddSpByWave(wave);
-
-            if (PhotonNetwork.IsConnected == false)
-            {
-                playerController.targetPlayer.AddSpByWave(wave);
-            }
         }
 
         public void AddPlayerUnit(bool isBottomPlayer, BaseStat bs)
@@ -763,6 +850,70 @@ namespace ED
         }
         
         #endregion
+        
+        
+        
+        #region network
+
+        public void SendInGameManager(GameProtocol protocol , params object[] param)
+        {
+            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            {
+                NetworkManager.Get().Send(protocol , param);
+            }
+            else
+            {
+                RecvInGameManager(protocol, param);
+            }
+            
+        }
+
+        public void RecvInGameManager(GameProtocol protocol, params object[] param)
+        {
+            switch (protocol)
+            {
+                case GameProtocol.LEAVE_GAME_ACK:
+                    CallBackLeaveRoom();
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    OnOtherLeft((int) param[0]);
+                    break;
+                case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
+                    NetStartGame();
+                    break;
+                case GameProtocol.ADD_SP_NOTIFY:
+                {
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    {
+                        AddSP((int)param[1]);    // param1 wave
+                    }
+                    break;
+                }
+                case GameProtocol.SPAWN_NOTIFY:
+                {
+                    NetSpawnNotify((int)param[0]);
+                    break;
+                }
+                /*
+                
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;*/
+            }   
+        }
+        #endregion
+        
         
         
         #region photon override

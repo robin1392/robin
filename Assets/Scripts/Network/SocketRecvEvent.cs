@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ED;
 using RWCoreNetwork;
+using RWGameProtocol;
 using RWGameProtocol.Msg;
 using UnityEngine;
 
@@ -46,6 +47,7 @@ public class SocketRecvEvent
         UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
         UnityUtil.Print("join my info ", msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
 
+        //
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
         NetworkManager.Get().IsMaster = msg.PlayerInfo.IsBottomPlayer;
         GameStateManager.Get().CheckSendInGame();
@@ -57,10 +59,10 @@ public class SocketRecvEvent
     public void OnLeaveGameAck(IPeer peer, MsgLeaveGameAck msg)
     {
         UnityUtil.Print(" leave recv ", "errocode : " + msg.ErrorCode, "white");
-        
-        
-        if( InGameManager.Get() != null )
-            InGameManager.Get().CallBackLeaveRoom();
+
+
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.LEAVE_GAME_ACK);
     }
     #endregion
     
@@ -70,12 +72,6 @@ public class SocketRecvEvent
     {
         UnityUtil.Print(" ready recv ", "errocode : " + msg.ErrorCode, "white");
     }
-    #endregion
-    
-    #region deck
-
-
-
     #endregion
     
     
@@ -108,8 +104,8 @@ public class SocketRecvEvent
     {
         UnityUtil.Print("other info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
         
+        // menu
         NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
-        
         GameStateManager.Get().CheckSendInGame();
     }
     
@@ -117,10 +113,11 @@ public class SocketRecvEvent
     {
         UnityUtil.Print("Notify Wait" , "DeActive Wait Game Start" , "white");
         
+        // ingame
         // 둘다 준비 끝낫다고 노티 이므로 
         // 게임 시작하자
         if (InGameManager.Get() != null)
-            InGameManager.Get().NetStartGame();
+            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY);
         // 
     }
 
@@ -129,23 +126,35 @@ public class SocketRecvEvent
         UnityUtil.Print("Notify Leave" , msg.PlayerUId.ToString() , "white");
 
         if (InGameManager.Get() != null)
-            InGameManager.Get().OnOtherLeft(msg.PlayerUId);
-    }
-
-    public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
-    {
+            InGameManager.Get().RecvInGameManager(GameProtocol.LEAVE_GAME_NOTIFY , msg.PlayerUId);
         
+        //if (InGameManager.Get() != null)
+            //InGameManager.Get().OnOtherLeft(msg.PlayerUId);
     }
 
     public void OnSpawnNotify(IPeer peer, MsgSpawnNotify msg)
     {
+        UnityUtil.Print("spawn Notify " , msg.Wave.ToString() , "white");
+        //
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.SPAWN_NOTIFY , msg.Wave );
         
     }
 
     public void OnAddSpNotify(IPeer peer, MsgAddSpNotify msg)
     {
+        UnityUtil.Print("Add Sp Notify" , msg.PlayerUId.ToString() + "  " + msg.CurrentSp.ToString(), "white");
+        //
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.ADD_SP_NOTIFY , msg.PlayerUId , msg.CurrentSp );
+    }
+    
+    
+    public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
+    {
         
     }
+
     
     #endregion
     

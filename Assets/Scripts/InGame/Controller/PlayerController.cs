@@ -341,6 +341,11 @@ namespace ED
         {
             sp += addSp * (50 + 10 * spUpgradeLevel);
         }
+
+        public void SetSp(int sp)
+        {
+            this.sp = sp;
+        }
         
         public void SP_Upgrade()
         {

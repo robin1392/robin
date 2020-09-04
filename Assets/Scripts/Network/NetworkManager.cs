@@ -311,6 +311,13 @@ public class NetInfo
         otherInfoGet = true;
     }
 
+    public bool IsMyUID(int userUid)
+    {
+        if (playerInfo.PlayerUId == userUid)
+            return true;
+
+        return false;
+    }
     
 }
 #endregion
