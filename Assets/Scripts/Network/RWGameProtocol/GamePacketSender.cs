@@ -210,9 +210,11 @@ namespace RWGameProtocol
         }
 
 
-        public void DeactiveWaitingObjectNotify(IPeer peer)
+        public void DeactiveWaitingObjectNotify(IPeer peer, int playerUid, int currentSp)
         {
             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
+            msg.PlayerUId = playerUid;
+            msg.CurrentSp = currentSp;
             peer.SendPacket((short)GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, msg.Serialize());
         }
 
