@@ -639,6 +639,70 @@ namespace ED
 
         #endregion
         
+        #region net dice system
+        
+        public void SetDeck(int[] deck)
+        {
+            if(arrDiceDeck == null)_arrDiceDeck = new DiceInfoData[5];
+            for (int i = 0; i < deck.Length; i++)
+            {
+                int num = deck[i];
+                
+                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
+                
+                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
+                
+                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
+                {
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+                }
+                else
+                {
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+                }
+
+            }
+        }
+
+        public void GetDice(int diceId , int slotNum , int level = 1)
+        {
+            arrDice[slotNum].Set(GetArrayDeckDice(diceId));
+            
+            if (uiDiceField != null)
+            {
+                uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
+                uiDiceField.SetField(arrDice);
+            }
+            
+            //
+            uiDiceField.RefreshField();
+        }
+
+        public void OtherGetDice(int diceId, int slotNum)
+        {
+            //arrDice[slotNum].Set(arrDiceDeck[deckNum]);
+            arrDice[slotNum].Set(GetArrayDeckDice(diceId));
+        }
+
+        public DiceInfoData GetArrayDeckDice(int diceId)
+        {
+            //arrDiceDeck.Contains()
+            //return arrDiceDeck.Find(x => x.id == diceId);
+            DiceInfoData dice = null;
+            for (int i = 0; i < arrDiceDeck.Length; i++)
+            {
+                if (arrDiceDeck[i].id == diceId)
+                {
+                    dice = arrDiceDeck[i];
+                    break;
+                }
+            }
+            return dice;
+        }
+        
+        
+        #endregion
+        
         #region dice system
         
         public void GetDice()
@@ -713,29 +777,7 @@ namespace ED
                 
             }
         }
-
-        public void SetDeck(int[] deck)
-        {
-            if(arrDiceDeck == null)_arrDiceDeck = new DiceInfoData[5];
-            for (int i = 0; i < deck.Length; i++)
-            {
-                int num = deck[i];
-                
-                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
-                
-                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
-                
-                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
-                }
-                else
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
-                }
-
-            }
-        }
+        
 
         //[PunRPC]
         public void GetDice(int deckNum, int slotNum)

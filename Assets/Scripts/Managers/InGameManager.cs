@@ -649,15 +649,29 @@ namespace ED
         #endregion
 
         
-        
-        
-        #region get set
-
+        #region net get dice
         public void NetGetDice()
         {
             SendInGameManager(GameProtocol.GET_DICE_REQ);
         }
+
+        public void GetDiceCallBack(int diceId , int slotNum , int level , int curSp )
+        {   
+            NetSetSp(curSp);
+            
+            getDiceCount++;
+            UI_InGame.Get().SetDiceButtonText(GetDiceCost());
+            playerController.GetDice( diceId , slotNum , level);
+        }
+
+        public void GetDiceOther(int diecId, int slotNum, int level)
+        {
+            playerController.targetPlayer.OtherGetDice( diecId , slotNum);
+        }
+        #endregion
+
         
+        #region get set
         public void GetDice()
         {
             playerController.AddSp(-GetDiceCost());
@@ -726,6 +740,7 @@ namespace ED
             //text_SP_Upgrade_Price.text = $"{(playerController.spUpgradeLevel + 1) * 500}";
             UI_InGame.Get().SetSPUpgrade(playerController.spUpgradeLevel , sp);
         }
+        
         #endregion
         
         
@@ -916,14 +931,18 @@ namespace ED
                     // 레벨 Level;
                     // 현재 sp CurrentSp;
                     MsgGetDiceAck diceack = (MsgGetDiceAck) param[0];
-                    
                     Debug.Log(diceack.DiceId + "  " + diceack.SlotNum + "   " + diceack.Level);
+                    GetDiceCallBack( diceack.DiceId , diceack.SlotNum , diceack.Level , diceack.CurrentSp);
                     break;
                 }
                 case GameProtocol.GET_DICE_NOTIFY:
                 {
+                    // 상대방것만 온다...
                     MsgGetDiceNotify dicenoty = (MsgGetDiceNotify) param[0];
-                    
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID(dicenoty.PlayerUId) == false)
+                    {
+                        GetDiceOther(dicenoty.DiceId, dicenoty.SlotNum, dicenoty.Level);
+                    }
                     
                     break;
                 }
