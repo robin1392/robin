@@ -424,7 +424,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9736decb80d5241e9b906754343e8848, type: 2}
+  - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -449,7 +449,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 2534964839176971238, guid: 5cbe549f254664216a0071a490e913b1, type: 3}
+  m_Mesh: {fileID: 6240159341419647114, guid: 5cbe549f254664216a0071a490e913b1, type: 3}
   m_Bones:
   - {fileID: 2506877864443101280}
   - {fileID: 398484283178009030}
@@ -526,14 +526,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6779240274646947514}
-  m_LocalRotation: {x: -0.08715578, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: -1.598721e-16, y: 0.0042599323, z: 0}
+  m_LocalRotation: {x: -0.58778524, y: 0, z: 0, w: 0.809017}
+  m_LocalPosition: {x: -1.598721e-16, y: 0.00295, z: 0.00023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 435691046238929081}
   m_Father: {fileID: 6741759172813254325}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -10, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -72, y: 0, z: 0}
 --- !u!1 &7163645557008073065
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,14 +619,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7762776207632257771}
-  m_LocalRotation: {x: 0.00000030901577, y: 7.0968516e-15, z: 4.6660043e-14, w: 1}
-  m_LocalPosition: {x: 2.5740043e-17, y: 0.0004150574, z: -2.3344113e-10}
+  m_LocalRotation: {x: 0.5224985, y: 0, z: 0, w: 0.8526402}
+  m_LocalPosition: {x: 2.574004e-17, y: 0.0004150574, z: -2.3344113e-10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 235790565483730683}
   m_Father: {fileID: 6087743509992570316}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 63, y: 0, z: 0}
 --- !u!1 &7814376046888233599
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,6 +724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
+  _minion: {fileID: 0}
 --- !u!1 &7998928005110669943
 GameObject:
   m_ObjectHideFlags: 0
