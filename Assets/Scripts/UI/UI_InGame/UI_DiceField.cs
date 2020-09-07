@@ -36,9 +36,16 @@ namespace ED
         {
             if (_ingameManager.playerController.sp >= _ingameManager.GetDiceCost() && _ingameManager.playerController.GetDiceFieldEmptySlotCount() > 0)
             {
-                _ingameManager.GetDice();
-                _ingameManager.playerController.GetDice();
-                RefreshField();
+                if (_ingameManager.IsNetwork() == true)
+                {
+                    _ingameManager.NetGetDice();
+                }
+                else
+                {
+                    _ingameManager.GetDice();
+                    _ingameManager.playerController.GetDice();
+                    RefreshField();
+                }
             }
         }
     }

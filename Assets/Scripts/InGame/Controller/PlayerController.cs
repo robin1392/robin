@@ -112,7 +112,7 @@ namespace ED
         private int _spawnCount = 1;
         
         [SerializeField]
-        protected int _sp = 200;
+        protected int _sp = 0;
         public virtual int sp 
         { 
             get => _sp;

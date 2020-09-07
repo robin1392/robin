@@ -400,6 +400,11 @@ namespace ED
             
             RefreshTimeUI(true);
         }
+
+        public void NetSetStartSP(int sp)
+        {
+            
+        }
         
         protected void StartGame()
         {
@@ -880,8 +885,16 @@ namespace ED
                     OnOtherLeft((int) param[0]);
                     break;
                 case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
+                {
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    {
+                        NetSetSp((int)param[1]);    // param1 wave
+                    }
+                    
                     NetStartGame();
                     break;
+                }
+                    
                 case GameProtocol.ADD_SP_NOTIFY:
                 {
                     if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid

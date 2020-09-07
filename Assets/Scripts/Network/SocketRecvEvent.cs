@@ -122,7 +122,7 @@ public class SocketRecvEvent
         // 둘다 준비 끝낫다고 노티 이므로 
         // 게임 시작하자
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY);
+            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY , msg.PlayerUId , msg.CurrentSp);
         // 
     }
 
