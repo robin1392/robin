@@ -300,9 +300,10 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public void RemoveMinionRelay(IPeer peer, int id)
+        public void RemoveMinionRelay(IPeer peer, int playerUId, int id)
         {
             MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             peer.SendPacket((short)GameProtocol.REMOVE_MINION_RELAY, msg.Serialize());
         }
@@ -315,9 +316,10 @@ namespace RWGameProtocol
         /// <param name="id"></param>
         /// <param name="damage"></param>
         /// <param name="delay"></param>
-        public void HitDamageMinionRelay(IPeer peer, int id, int damage, int delay)
+        public void HitDamageMinionRelay(IPeer peer, int playerUId, int id, int damage, int delay)
         {
             MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Damage = damage;
             msg.Delay = delay;
@@ -330,9 +332,10 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public void DestroyMinionRelay(IPeer peer, int id)
+        public void DestroyMinionRelay(IPeer peer, int playerUId, int id)
         {
             MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             peer.SendPacket((short)GameProtocol.DESTROY_MINION_RELAY, msg.Serialize());
         }
@@ -344,9 +347,10 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="heal"></param>
-        public void HealMinionRelay(IPeer peer, int id, int heal)
+        public void HealMinionRelay(IPeer peer, int playerUId, int id, int heal)
         {
             MsgHealMinionRelay msg = new MsgHealMinionRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Heal = heal;
             peer.SendPacket((short)GameProtocol.HEAL_MINION_RELAY, msg.Serialize());
@@ -362,9 +366,10 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="pushPower"></param>
-        public void PushMinionRelay(IPeer peer, int id, int x, int y, int z, int pushPower)
+        public void PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
         {
             MsgPushMinionRelay msg = new MsgPushMinionRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Dir[0] = x;
             msg.Dir[1] = y;
@@ -380,9 +385,10 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="trigger"></param>
-        public void SetMinionAnimationTriggerRelay(IPeer peer, int id, string trigger)
+        public void SetMinionAnimationTriggerRelay(IPeer peer, int playerUId, int id, string trigger)
         {
             MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Trigger = trigger;
             peer.SendPacket((short)GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, msg.Serialize());
@@ -398,9 +404,10 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="damage"></param>
-        public void FireArrowRelay(IPeer peer, int id, int x, int y, int z, int damage)
+        public void FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage)
         {
             MsgFireArrowRelay msg = new MsgFireArrowRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Dir[0] = x;
             msg.Dir[1] = y;
@@ -415,9 +422,10 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public void FireballBombRelay(IPeer peer, int id)
+        public void FireballBombRelay(IPeer peer, int playerUId, int id)
         {
             MsgFireballBombRelay msg = new MsgFireballBombRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             peer.SendPacket((short)GameProtocol.FIREBALL_BOMB_RELAY, msg.Serialize());
         }
@@ -428,9 +436,10 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public void MineBombRelay(IPeer peer, int id)
+        public void MineBombRelay(IPeer peer, int playerUId, int id)
         {
             MsgMineBombRelay msg = new MsgMineBombRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             peer.SendPacket((short)GameProtocol.MINE_BOMB_RELAY, msg.Serialize());
         }
@@ -441,9 +450,10 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public void RemoveMagicRelay(IPeer peer, int id)
+        public void RemoveMagicRelay(IPeer peer, int playerUId, int id)
         {
             MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             peer.SendPacket((short)GameProtocol.REMOVE_MAGIC_RELAY, msg.Serialize());
         }
@@ -455,9 +465,10 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="targetId"></param>
-        public void SetMagicTargetIdRelay(IPeer peer, int id, int targetId)
+        public void SetMagicTargetIdRelay(IPeer peer, int playerUId, int id, int targetId)
         {
             MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.TargetId = targetId;
             peer.SendPacket((short)GameProtocol.SET_MAGIC_TARGET_ID_RELAY, msg.Serialize());
@@ -471,9 +482,10 @@ namespace RWGameProtocol
         /// <param name="id"></param>
         /// <param name="x"></param>
         /// <param name="z"></param>
-        public void SetMagicTargetRelay(IPeer peer, int id, int x, int z)
+        public void SetMagicTargetRelay(IPeer peer, int playerUId, int id, int x, int z)
         {
             MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
+            msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.X = x;
             msg.Z = z;

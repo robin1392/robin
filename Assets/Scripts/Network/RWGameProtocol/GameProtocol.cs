@@ -58,7 +58,9 @@ namespace RWGameProtocol
         // ----------------------------------------------------------------------------------------------------
         // Relay protocols
         // ----------------------------------------------------------------------------------------------------
-        REMOVE_MINION_RELAY = 20001,
+        BEGIN_PROTOCOL_RELAY = 20000,
+
+        REMOVE_MINION_RELAY,
         HIT_DAMAGE_MINION_RELAY,
         DESTROY_MINION_RELAY,
         HEAL_MINION_RELAY,
@@ -71,6 +73,7 @@ namespace RWGameProtocol
         SET_MAGIC_TARGET_ID_RELAY,
         SET_MAGIC_TARGET_POS_RELAY,
 
+        END_PROTOCOL_RELAY,
 
         END,
     };
