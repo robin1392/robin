@@ -47,7 +47,7 @@ public class SocketSendEvent
             }
             case GameProtocol.GET_DICE_REQ:
             {
-                //GetDiceReq(IPeer peer, int useSp)
+                _sender.GetDiceReq(peer);
                 break;
             }
             case GameProtocol.HIT_DAMAGE_REQ:

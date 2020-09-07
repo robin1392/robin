@@ -147,12 +147,12 @@ namespace ED
         #region unity base
         protected void Awake()
         {
+            /*
             if (PhotonNetwork.IsConnected)
             {
                 if (photonView.IsMine)
                 {
                     isMine = true;
-                    //Instance = this;
                     Init();
                 }
             }
@@ -160,13 +160,17 @@ namespace ED
             {
                 if (_instance == null)
                 {
-//                    Instance = this;
                     Init();
                 }
-                
             }
-            //DontDestroyOnLoad(gameObject);
-
+            */
+            
+            //
+            if (_instance == null)
+            {
+                Init();
+            }
+            
             InitializePlayer();
         }
 
@@ -210,9 +214,10 @@ namespace ED
 
         public void StartPlayerControll()
         {
-            sp = 200;
-            currentHealth = maxHealth;
+            if(InGameManager.Get().IsNetwork() == false )
+                sp = 200;
             
+            currentHealth = maxHealth;
             
             for (var i = 0; i < arrDice.Length; i++)
             {
@@ -220,11 +225,19 @@ namespace ED
             }
             uiDiceField = FindObjectOfType<UI_DiceField>();            
             uiDiceField.SetField(arrDice);
+
             
+            // 
+            image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
+            text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+            
+            InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
             
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
-            return;
             
+            // not use
+            /*
             sp = 200;
             currentHealth = maxHealth;
             
@@ -235,6 +248,8 @@ namespace ED
             uiDiceField = FindObjectOfType<UI_DiceField>();            
             uiDiceField.SetField(arrDice);
 
+            
+            
             if (PhotonNetwork.IsConnected)
             {
                 //image_HealthBar = photonView.IsMine ? InGameManager.Get().image_BottomHealthBar : InGameManager.Get().image_TopHealthBar;
@@ -273,6 +288,7 @@ namespace ED
             }
 
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
+            */
         }
         #endregion
         
@@ -311,17 +327,10 @@ namespace ED
                         CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
                     case (int)DICE_CAST_TYPE.MAGIC:
-                        // for(var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
-                        // {
-                        //     CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
-                        // }
-                        // break;
                     case (int)DICE_CAST_TYPE.INSTALLATION:
                         CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
-                        // upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
-                        // CastMagic(arrDice[i].data, arrDice[i].level, upgradeLevel, magicCastDelay, i);
-                        // break;
+
                     }
                     magicCastDelay += 0.066666f;
                 }

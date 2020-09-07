@@ -79,6 +79,11 @@ public class SocketRecvEvent
 
     public void OnGetDiceAck(IPeer peer, MsgGetDiceAck msg)
     {
+        // my dice get
+        UnityUtil.Print(" get dice recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_ACK , msg);
         
     }
 
@@ -152,6 +157,9 @@ public class SocketRecvEvent
     
     public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
     {
+        // other dice get
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_NOTIFY , msg );
         
     }
 
