@@ -112,7 +112,7 @@ namespace ED
         private int _spawnCount = 1;
         
         [SerializeField]
-        protected int _sp = 200;
+        protected int _sp = 0;
         public virtual int sp 
         { 
             get => _sp;
@@ -147,12 +147,12 @@ namespace ED
         #region unity base
         protected void Awake()
         {
+            /*
             if (PhotonNetwork.IsConnected)
             {
                 if (photonView.IsMine)
                 {
                     isMine = true;
-                    //Instance = this;
                     Init();
                 }
             }
@@ -160,13 +160,17 @@ namespace ED
             {
                 if (_instance == null)
                 {
-//                    Instance = this;
                     Init();
                 }
-                
             }
-            //DontDestroyOnLoad(gameObject);
-
+            */
+            
+            //
+            if (_instance == null)
+            {
+                Init();
+            }
+            
             InitializePlayer();
         }
 
@@ -210,9 +214,10 @@ namespace ED
 
         public void StartPlayerControll()
         {
-            sp = 200;
-            currentHealth = maxHealth;
+            if(InGameManager.Get().IsNetwork() == false )
+                sp = 200;
             
+            currentHealth = maxHealth;
             
             for (var i = 0; i < arrDice.Length; i++)
             {
@@ -220,11 +225,19 @@ namespace ED
             }
             uiDiceField = FindObjectOfType<UI_DiceField>();            
             uiDiceField.SetField(arrDice);
+
             
+            // 
+            image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
+            text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+            
+            InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
             
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
-            return;
             
+            // not use
+            /*
             sp = 200;
             currentHealth = maxHealth;
             
@@ -235,6 +248,8 @@ namespace ED
             uiDiceField = FindObjectOfType<UI_DiceField>();            
             uiDiceField.SetField(arrDice);
 
+            
+            
             if (PhotonNetwork.IsConnected)
             {
                 //image_HealthBar = photonView.IsMine ? InGameManager.Get().image_BottomHealthBar : InGameManager.Get().image_TopHealthBar;
@@ -273,6 +288,7 @@ namespace ED
             }
 
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
+            */
         }
         #endregion
         
@@ -311,17 +327,10 @@ namespace ED
                         CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
                     case (int)DICE_CAST_TYPE.MAGIC:
-                        // for(var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
-                        // {
-                        //     CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
-                        // }
-                        // break;
                     case (int)DICE_CAST_TYPE.INSTALLATION:
                         CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
                         break;
-                        // upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
-                        // CastMagic(arrDice[i].data, arrDice[i].level, upgradeLevel, magicCastDelay, i);
-                        // break;
+
                     }
                     magicCastDelay += 0.066666f;
                 }
@@ -630,6 +639,70 @@ namespace ED
 
         #endregion
         
+        #region net dice system
+        
+        public void SetDeck(int[] deck)
+        {
+            if(arrDiceDeck == null)_arrDiceDeck = new DiceInfoData[5];
+            for (int i = 0; i < deck.Length; i++)
+            {
+                int num = deck[i];
+                
+                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
+                
+                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
+                
+                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
+                {
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+                }
+                else
+                {
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+                }
+
+            }
+        }
+
+        public void GetDice(int diceId , int slotNum , int level = 1)
+        {
+            arrDice[slotNum].Set(GetArrayDeckDice(diceId));
+            
+            if (uiDiceField != null)
+            {
+                uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
+                uiDiceField.SetField(arrDice);
+            }
+            
+            //
+            uiDiceField.RefreshField();
+        }
+
+        public void OtherGetDice(int diceId, int slotNum)
+        {
+            //arrDice[slotNum].Set(arrDiceDeck[deckNum]);
+            arrDice[slotNum].Set(GetArrayDeckDice(diceId));
+        }
+
+        public DiceInfoData GetArrayDeckDice(int diceId)
+        {
+            //arrDiceDeck.Contains()
+            //return arrDiceDeck.Find(x => x.id == diceId);
+            DiceInfoData dice = null;
+            for (int i = 0; i < arrDiceDeck.Length; i++)
+            {
+                if (arrDiceDeck[i].id == diceId)
+                {
+                    dice = arrDiceDeck[i];
+                    break;
+                }
+            }
+            return dice;
+        }
+        
+        
+        #endregion
+        
         #region dice system
         
         public void GetDice()
@@ -704,29 +777,7 @@ namespace ED
                 
             }
         }
-
-        public void SetDeck(int[] deck)
-        {
-            if(arrDiceDeck == null)_arrDiceDeck = new DiceInfoData[5];
-            for (int i = 0; i < deck.Length; i++)
-            {
-                int num = deck[i];
-                
-                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
-                
-                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
-                
-                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
-                }
-                else
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
-                }
-
-            }
-        }
+        
 
         //[PunRPC]
         public void GetDice(int deckNum, int slotNum)

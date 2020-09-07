@@ -79,6 +79,11 @@ public class SocketRecvEvent
 
     public void OnGetDiceAck(IPeer peer, MsgGetDiceAck msg)
     {
+        // my dice get
+        UnityUtil.Print(" get dice recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_ACK , msg);
         
     }
 
@@ -117,7 +122,7 @@ public class SocketRecvEvent
         // 둘다 준비 끝낫다고 노티 이므로 
         // 게임 시작하자
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY);
+            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY , msg.PlayerUId , msg.CurrentSp);
         // 
     }
 
@@ -152,6 +157,9 @@ public class SocketRecvEvent
     
     public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
     {
+        // other dice get
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_NOTIFY , msg );
         
     }
 
