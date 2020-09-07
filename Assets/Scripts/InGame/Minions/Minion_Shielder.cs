@@ -7,16 +7,14 @@ namespace ED
 {
     public class Minion_Shielder : Minion
     {
-        [SerializeField] private readonly float _skillCooltime = 5f;
-        private int _skillCastedCount;
-        [SerializeField] private readonly float _skillDuration = 3f;
+        private float skillCastedTime;
         private bool isHalfDamage;
         private static readonly int aniHashAttack = Animator.StringToHash("Skill");
 
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-            _skillCastedCount = 0;
+            skillCastedTime = -effectCooltime;
         }
 
         public override void Attack()
@@ -38,12 +36,12 @@ namespace ED
         
         public void Skill()
         {
-            if (_spawnedTime >= _skillCooltime * _skillCastedCount)
+            if (_spawnedTime >= skillCastedTime + effectCooltime)
             {
+                skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine());
 
                 animator.SetTrigger(aniHashAttack);
-                _skillCastedCount++;
             }
         }
 
@@ -56,7 +54,7 @@ namespace ED
             //agent.updateRotation = false;
             SetControllEnable(false);
             isHalfDamage = true;
-            yield return new WaitForSeconds(_skillDuration);
+            yield return new WaitForSeconds(effectDuration);
             isHalfDamage = false;
             SetControllEnable(true);
             

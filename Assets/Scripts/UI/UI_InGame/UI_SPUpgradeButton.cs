@@ -7,7 +7,15 @@ public class UI_SPUpgradeButton : UI_GetDiceButton
 {
     protected override void EditSpCallback(int sp)
     {
-        button.interactable = sp >= (PlayerController.Get().spUpgradeLevel + 1) * 500;
+        if (PlayerController.Get().spUpgradeLevel < 5)
+        {
+            button.interactable = sp >= (PlayerController.Get().spUpgradeLevel + 1) * 100;
+        }
+        else
+        {
+            button.interactable = false;
+        }
+        
         SetImageAndText();
     }
 }

@@ -311,7 +311,6 @@ MonoBehaviour:
   isAIMode: 1
   isGamePlaying: 0
   playerController: {fileID: 0}
-  wave: 0
   startSpawnTime: 10
   spawnTime: 20
   arrUpgradeLevel: 
@@ -1022,6 +1021,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2608280262390197771, guid: c281f5911e2a54de8a9e3a667e36a364,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2608280262390197771, guid: c281f5911e2a54de8a9e3a667e36a364,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 480
+      objectReference: {fileID: 0}
     - target: {fileID: 2608280262557788293, guid: c281f5911e2a54de8a9e3a667e36a364,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1041,6 +1050,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2608280262966641133, guid: c281f5911e2a54de8a9e3a667e36a364,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2608280262966641133, guid: c281f5911e2a54de8a9e3a667e36a364,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -318
       objectReference: {fileID: 0}
     - target: {fileID: 2608280262966641138, guid: c281f5911e2a54de8a9e3a667e36a364,
         type: 3}

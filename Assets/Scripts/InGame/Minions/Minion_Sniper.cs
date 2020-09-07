@@ -146,7 +146,6 @@ namespace ED
             {
                 if (PhotonNetwork.IsConnected && isMine)
                 {
-                    //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
                     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id,
                         power, bulletMoveSpeed);
                 }
@@ -160,6 +159,10 @@ namespace ED
         public void FireLightOn()
         {
             lr.gameObject.SetActive(false);
+            if (target == null || IsTargetInnerRange() == false)
+            {
+                return;
+            }
 
             if (ps_Fire != null)
             {

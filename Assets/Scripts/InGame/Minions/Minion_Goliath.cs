@@ -31,12 +31,7 @@ namespace ED
             {
                 return;
             }
-            else if (IsTargetInnerRange() == false)
-            {
-                animator.SetTrigger(_animatorHashIdle);
-                return;
-            }
-
+            
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
@@ -48,6 +43,56 @@ namespace ED
                 base.Attack();
                 animator.SetTrigger(target.isFlying ? "Attack2" : "Attack1");
             }
+        }
+
+        public override BaseStat SetTarget()
+        {
+            if (isPushing)
+            {
+                return null;
+            }
+            
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
+
+            if (cols.Length == 0)
+            {
+                if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
+                {
+                    return controller.targetPlayer;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            Collider firstTarget = null;
+            var distance = float.MaxValue;
+            foreach (var col in cols)
+            {
+                var bs = col.GetComponentInParent<BaseStat>();
+                var m = bs as Minion;
+
+                if (bs == null || bs.isAlive == false || (m != null && m.isCloacking) || (bs.CompareTag("Minion_Ground") && Vector3.Distance(bs.transform.position, transform.position) > 1.5f))
+                {
+                    continue;
+                }
+                
+                var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
+                
+                if (sqr < distance)
+                {
+                    distance = sqr;
+                    firstTarget = col;
+                }
+            }
+
+            if (firstTarget == null && animator != null)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+            }
+
+            return firstTarget ? firstTarget.GetComponentInParent<BaseStat>() : controller.targetPlayer;
         }
 
         public void FireArrow()
@@ -85,6 +130,11 @@ namespace ED
         
         public void FireLightOn()
         {
+            if (target == null || IsTargetInnerRange() == false)
+            {
+                return;
+            }
+
             if (target.isFlying) ps_FireTargetFlying.Play();
         }
     }

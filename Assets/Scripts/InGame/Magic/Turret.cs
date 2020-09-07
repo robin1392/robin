@@ -153,6 +153,11 @@ namespace ED
         
         public void FireLightOn()
         {
+            if (target == null)
+            {
+                return;
+            }
+            
             if (ps_Fire != null)
             {
                 ps_Fire.Play();

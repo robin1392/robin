@@ -139,7 +139,7 @@ MonoBehaviour:
   power: 0
   powerUpByUpgrade: 0
   powerUpByInGameUp: 0
-  maxHealth: 20000
+  maxHealth: 30000
   currentHealth: 0
   maxHealthUpByUpgrade: 0
   maxHealthUpByInGameUp: 0

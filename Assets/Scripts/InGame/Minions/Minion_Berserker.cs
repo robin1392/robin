@@ -11,7 +11,6 @@ namespace ED
 {
     public class Minion_Berserker : Minion
     {
-        private readonly float _skillCooltime = 6f;
         private float _skillCastedTime;
         private bool _isSkillCasting;
 
@@ -20,7 +19,7 @@ namespace ED
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-            _skillCastedTime = -_skillCooltime;
+            _skillCastedTime = -effectCooltime;
         }
 
         public override void Attack()
@@ -50,7 +49,7 @@ namespace ED
         
         public void Skill()
         {
-            if (_spawnedTime >= _skillCastedTime + _skillCooltime)
+            if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine());

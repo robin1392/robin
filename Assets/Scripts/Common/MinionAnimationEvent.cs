@@ -45,12 +45,12 @@ namespace ED
             if (_minion != null)
             {
                 //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
-                event_FireLight.Invoke();
+                event_FireLight?.Invoke();
 
                 if (PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null || PhotonNetwork.IsConnected == false)
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
-                    event_FireArrow.Invoke();
+                    event_FireArrow?.Invoke();
                 }
             }
             //
@@ -76,12 +76,12 @@ namespace ED
             if (_minion != null && _minion.target != null)
             {
                 //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
-                event_FireLight.Invoke();
+                event_FireLight?.Invoke();
 
                 if (PhotonNetwork.IsConnected && _minion.isMine || PhotonNetwork.IsConnected == false)
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
-                    event_FireSpear.Invoke();
+                    event_FireSpear?.Invoke();
                 }
             }
         }

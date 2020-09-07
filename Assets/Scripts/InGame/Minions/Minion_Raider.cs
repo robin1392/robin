@@ -97,7 +97,7 @@ namespace ED
 
         private IEnumerator DashCoroutine(Transform dashTarget)
         {
-            PoolManager.instance.ActivateObject("Effect_Dash", ts_HitPos.position);
+            PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
             controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
@@ -125,16 +125,20 @@ namespace ED
 
             if (dashTarget != null && dashTarget.gameObject.activeSelf)
             {
-                var targetID = dashTarget.GetComponentInParent<BaseStat>().id;
-                if (PhotonNetwork.IsConnected && isMine)
+                var bs = dashTarget.GetComponentInParent<BaseStat>();
+                if (bs != null)
                 {
-                    //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);
-                    controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f); 
-                        
-                }
-                else if (PhotonNetwork.IsConnected == false)
-                {
-                    controller.targetPlayer.SturnMinion(targetID, 1f);
+                    var targetID = bs.id;
+                    if (PhotonNetwork.IsConnected && isMine)
+                    {
+                        //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);
+                        controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f);
+                            
+                    }
+                    else if (PhotonNetwork.IsConnected == false)
+                    {
+                        controller.targetPlayer.SturnMinion(targetID, 1f);
+                    }
                 }
             }
         }

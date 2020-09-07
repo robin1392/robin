@@ -34,13 +34,11 @@ namespace ED
 
         public void FireSpear()
         {
-            if (target == null)
-            {
-                return;
-            }
-            else if (IsTargetInnerRange() == false)
+            if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
                 return;
             }
 
@@ -52,11 +50,7 @@ namespace ED
         
         public void FireArrow()
         {
-            if (target == null)
-            {
-                return;
-            }
-            else if (IsTargetInnerRange() == false)
+            if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
                 isAttacking = false;

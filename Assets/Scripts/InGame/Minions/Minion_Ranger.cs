@@ -42,6 +42,14 @@ namespace ED
 
         public void FireArrow()
         {
+            if (target == null || IsTargetInnerRange() == false)
+            {
+                animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
+                return;
+            }
+            
             if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
@@ -55,6 +63,11 @@ namespace ED
 
         public void FireLightOn()
         {
+            if (target == null || IsTargetInnerRange() == false)
+            {
+                return;
+            }
+            
             if (ps_Fire != null)
             {
                 ps_Fire.Play();

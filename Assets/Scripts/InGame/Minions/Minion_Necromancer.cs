@@ -135,8 +135,8 @@ namespace ED
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
-                m.power = 10f + (6f * upgradeLevel);
-                m.maxHealth = 40f + (12f * upgradeLevel);
+                m.power = effect + (effectUpByInGameUp * upgradeLevel);
+                m.maxHealth = effectDuration + (effectCooltime * upgradeLevel);
                 m.attackSpeed = 0.8f;
                 m.moveSpeed = 1.2f;
                 m.range = 0.7f;

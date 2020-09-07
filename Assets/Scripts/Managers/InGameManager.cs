@@ -51,8 +51,12 @@ namespace ED
         #endregion
 
         #region wave variable
-        [Header("WAVE INFO")]
-        public int wave = 0;
+        public int wave
+
+        {
+            get;
+            protected set;
+        }
         public float startSpawnTime = 10f;
         public float spawnTime = 45f;
         

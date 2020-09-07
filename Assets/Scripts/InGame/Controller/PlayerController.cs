@@ -373,16 +373,17 @@ namespace ED
             sp += add;
         }
 
+        private readonly int[] arrSPUpgradeValue = {10, 15, 20, 25, 30, 35};
         public void AddSpByWave(int addSp)
         {
-            sp += addSp * (50 + 10 * spUpgradeLevel);
+            sp += 40 + addSp * arrSPUpgradeValue[spUpgradeLevel];
         }
         
         public void SP_Upgrade()
         {
             if (spUpgradeLevel < 5)
             {
-                sp -= (spUpgradeLevel + 1) * 500;
+                sp -= (spUpgradeLevel + 1) * 100;
                 spUpgradeLevel++;
                 InGameManager.Get().event_SP_Edit.Invoke(sp);
             }
@@ -491,7 +492,12 @@ namespace ED
                 //m.effectUpByInGameUp = data.effectUpByInGameUp;
                 
                 // new code - by nevill
+                int wave = InGameManager.Get().wave;
                 m.power = data.power + (data.powerInGameUp * upgradeLevel);
+                if (wave > 10)
+                {
+                    m.power *= Mathf.Pow(2f, wave - 10);
+                }
                 m.powerUpByUpgrade = data.powerUpgrade;
                 m.powerUpByInGameUp = data.powerInGameUp;
                 m.maxHealth = data.maxHealth + (data.maxHpInGameUp * upgradeLevel);
@@ -504,6 +510,10 @@ namespace ED
                 m.effectCooltime = data.effectCooltime;
                 
                 m.attackSpeed = data.attackSpeed;
+                if (wave > 10)
+                {
+                    m.attackSpeed /= Mathf.Pow(2f, wave - 10);
+                }
                 m.moveSpeed = data.moveSpeed;
                 m.range = data.range;
                 m.searchRange = data.searchRange;
@@ -632,8 +642,13 @@ namespace ED
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
                     m.castType = (DICE_CAST_TYPE)data.castType;
-                    
+
+                    int wave = InGameManager.Get().wave;
                     m.power = (data.power + (data.powerInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
+                    if (wave > 10)
+                    {
+                        m.power *= Mathf.Pow(2f, wave - 10);
+                    }
                     m.powerUpByUpgrade = data.powerUpgrade;
                     m.powerUpByInGameUp = data.powerInGameUp;
                     m.maxHealth = (data.maxHealth + (data.maxHpInGameUp * upgradeLevel)) * Mathf.Pow(2f, eyeLevel - 1);
@@ -646,6 +661,10 @@ namespace ED
                     m.effectCooltime = data.effectCooltime;
                 
                     m.attackSpeed = data.attackSpeed;
+                    if (wave > 10)
+                    {
+                        m.attackSpeed /= Mathf.Pow(2f, wave - 10);
+                    }
                     m.moveSpeed = data.moveSpeed;
                     m.range = data.range;
                     m.searchRange = data.searchRange;
@@ -815,7 +834,7 @@ namespace ED
             m.targetMoveType = DICE_MOVE_TYPE.GROUND;
             m.ChangeLayer(isBottomPlayer);
             m.power = 200f;
-            m.maxHealth = 5000f;
+            m.maxHealth = 7500f;
             m.attackSpeed = 0.8f;
             m.moveSpeed = 0.8f;
             m.range = 0.7f;
@@ -833,7 +852,7 @@ namespace ED
             {
                 currentHealth -= damage;
 
-                if (isHalfHealth == false && currentHealth < maxHealth * 0.5f)
+                if (isHalfHealth == false && currentHealth <= 20000)
                 {
                     isHalfHealth = true;
                     animator.SetBool(Break, true);
@@ -850,7 +869,7 @@ namespace ED
                     Death();
                 }
                 else if (((PhotonNetwork.IsConnected && photonView.IsMine) || (!PhotonNetwork.IsConnected && isMine)) 
-                         && currentHealth < 1000 && !UI_InGamePopup.Get().GetLowHP())
+                         && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
                 {
                     UI_InGamePopup.Get().ViewLowHP(true);
                 }
@@ -861,6 +880,8 @@ namespace ED
         {
             if (InGameManager.Get().isGamePlaying)
             {
+                SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
+                animator.gameObject.SetActive(false);
                 if (PhotonNetwork.IsConnected)
                 {
                     //InGameManager.Get().photonView.RPC("EndGame", RpcTarget.All);
