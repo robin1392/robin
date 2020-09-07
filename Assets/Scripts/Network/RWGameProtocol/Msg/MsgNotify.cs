@@ -8,6 +8,8 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgDeactiveWaitingObjectNotify : Serializer<MsgDeactiveWaitingObjectNotify>
     {
+        public int PlayerUId;
+        public int CurrentSp;
     }
 
 

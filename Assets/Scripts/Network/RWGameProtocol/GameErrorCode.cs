@@ -19,5 +19,7 @@ namespace RWGameProtocol
         ERROR_GAME_PLAYER_NOT_FOUND             = 10104,            // 플레이어를 찾을 수 없습니다.
         ERROR_GAME_PLAYER_INVALID_STATE         = 10105,            // 플레이어를 상태가 유효하지 않습니다.
         ERROR_GET_DICE_FAILED                           = 10106,            // 주사위 생성에 실패했습니다.
+        ERROR_LEVELUP_DICE_FAILED                   = 10107,            // 주사위 강화에 실패했습니다.
+        ERROR_INGAME_UP_DICE_FAILED                   = 10108,            // 주사위 강화에 실패했습니다.
     }
 }

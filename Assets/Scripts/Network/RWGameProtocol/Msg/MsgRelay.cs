@@ -16,8 +16,8 @@ namespace RWGameProtocol.Msg
     public class MsgHitDamageMinionRelay : Serializer<MsgHitDamageMinionRelay>
     {
         public int Id;
-        public float Damage;
-        public float Delay;
+        public int Damage;
+        public int Delay;
     }
 
 
@@ -34,7 +34,7 @@ namespace RWGameProtocol.Msg
     public class MsgHealMinionRelay : Serializer<MsgHealMinionRelay>
     {
         public int Id;
-        public float Heal;
+        public int Heal;
     }
 
 
@@ -45,9 +45,9 @@ namespace RWGameProtocol.Msg
         public int Id;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        public float[] Dir = new float[3];
+        public int[] Dir = new int[3];
 
-        public float PushPower;
+        public int PushPower;
     }
 
 
@@ -77,9 +77,9 @@ namespace RWGameProtocol.Msg
         public int Id;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        public float[] Dir = new float[3];
+        public int[] Dir = new int[3];
 
-        public float Damage;
+        public int Damage;
     }
 
 
@@ -113,7 +113,7 @@ namespace RWGameProtocol.Msg
     public class MsgSetMagicTargetRelay : Serializer<MsgSetMagicTargetRelay>
     {
         public int Id;
-        public float X;
-        public float Z;
+        public int X;
+        public int Z;
     }
 }

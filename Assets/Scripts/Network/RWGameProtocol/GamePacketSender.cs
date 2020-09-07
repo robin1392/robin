@@ -156,7 +156,7 @@ namespace RWGameProtocol
         }
 
 
-        public void HitDamageReq(IPeer peer, float damage)
+        public void HitDamageReq(IPeer peer, int damage)
         {
             MsgHitDamageReq msg = new MsgHitDamageReq();
             msg.Damage = damage;
@@ -164,7 +164,7 @@ namespace RWGameProtocol
         }
 
 
-        public void HitDamageAck(IPeer peer, GameErrorCode code, float damage)
+        public void HitDamageAck(IPeer peer, GameErrorCode code, int damage)
         {
             MsgHitDamageAck msg = new MsgHitDamageAck();
             msg.ErrorCode = (short)code;
@@ -173,12 +173,12 @@ namespace RWGameProtocol
         }
 
 
-        public void HitDamageNotify(IPeer peer, int playerUId, float damage)
+        public void HitDamageNotify(IPeer peer, int playerUId, int damage)
         {
             MsgHitDamageNotify msg = new MsgHitDamageNotify();
             msg.PlayerUId = playerUId;
             msg.Damage = damage;
-            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
+            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_NOTIFY, msg.Serialize());
         }
 
 
@@ -210,9 +210,11 @@ namespace RWGameProtocol
         }
 
 
-        public void DeactiveWaitingObjectNotify(IPeer peer)
+        public void DeactiveWaitingObjectNotify(IPeer peer, int playerUid, int currentSp)
         {
             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
+            msg.PlayerUId = playerUid;
+            msg.CurrentSp = currentSp;
             peer.SendPacket((short)GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, msg.Serialize());
         }
 
@@ -313,7 +315,7 @@ namespace RWGameProtocol
         /// <param name="id"></param>
         /// <param name="damage"></param>
         /// <param name="delay"></param>
-        public void HitDamageMinionRelay(IPeer peer, int id, float damage, float delay)
+        public void HitDamageMinionRelay(IPeer peer, int id, int damage, int delay)
         {
             MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
             msg.Id = id;
@@ -342,7 +344,7 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="heal"></param>
-        public void HealMinionRelay(IPeer peer, int id, float heal)
+        public void HealMinionRelay(IPeer peer, int id, int heal)
         {
             MsgHealMinionRelay msg = new MsgHealMinionRelay();
             msg.Id = id;
@@ -360,7 +362,7 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="pushPower"></param>
-        public void PushMinionRelay(IPeer peer, int id, float x, float y, float z, float pushPower)
+        public void PushMinionRelay(IPeer peer, int id, int x, int y, int z, int pushPower)
         {
             MsgPushMinionRelay msg = new MsgPushMinionRelay();
             msg.Id = id;
@@ -396,7 +398,7 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="damage"></param>
-        public void FireArrowRelay(IPeer peer, int id, float x, float y, float z, float damage)
+        public void FireArrowRelay(IPeer peer, int id, int x, int y, int z, int damage)
         {
             MsgFireArrowRelay msg = new MsgFireArrowRelay();
             msg.Id = id;
@@ -469,7 +471,7 @@ namespace RWGameProtocol
         /// <param name="id"></param>
         /// <param name="x"></param>
         /// <param name="z"></param>
-        public void SetMagicTargetRelay(IPeer peer, int id, float x, float z)
+        public void SetMagicTargetRelay(IPeer peer, int id, int x, int z)
         {
             MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
             msg.Id = id;
