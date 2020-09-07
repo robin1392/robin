@@ -51,6 +51,7 @@ namespace RWGameProtocol
         UPGRADE_SP_NOTIFY,
         ADD_SP_NOTIFY,
         SPAWN_NOTIFY,
+        HIT_DAMAGE_NOTIFY,
         END_GAME_NOTIFY,
 
 

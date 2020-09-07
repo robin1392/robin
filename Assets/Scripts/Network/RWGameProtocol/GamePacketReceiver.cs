@@ -92,6 +92,9 @@ namespace RWGameProtocol
         public delegate void SpawnNotifyDelegate(IPeer peer, MsgSpawnNotify msg);
         public SpawnNotifyDelegate SpawnNotify;
 
+        public delegate void HitDamageNotifyDelegate(IPeer peer, MsgHitDamageNotify msg);
+        public HitDamageNotifyDelegate HitDamageNotify;
+
         public delegate void EndGameNotifyDelegate(IPeer peer, MsgEndGameNotify msg);
         public EndGameNotifyDelegate EndGameNotify;
 
@@ -295,7 +298,18 @@ namespace RWGameProtocol
 
                     SpawnNotify(peer, MsgSpawnNotify.Deserialize(data));
                     break;
+                case GameProtocol.HIT_DAMAGE_NOTIFY:
+                    if (HitDamageNotify == null)
+                        return false;
 
+                    HitDamageNotify(peer, MsgHitDamageNotify.Deserialize(data));
+                    break;
+                case GameProtocol.END_GAME_NOTIFY:
+                    if (EndGameNotify == null)
+                        return false;
+
+                    EndGameNotify(peer, MsgEndGameNotify.Deserialize(data));
+                    break;
 
                 #endregion
 
