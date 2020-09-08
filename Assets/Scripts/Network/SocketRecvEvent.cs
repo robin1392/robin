@@ -98,21 +98,34 @@ public class SocketRecvEvent
         UnityUtil.Print(" level up dice recv ", "errocode : " + msg.ErrorCode, "white");
 
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, msg);
+            InGameManager.Get().RecvInGameManager(GameProtocol.LEVEL_UP_DICE_ACK, msg);
     }
 
-    #endregion
+    public void OnUpgradeSpAck(IPeer peer, MsgUpgradeSpAck msg)
+    {
+        UnityUtil.Print(" up sp recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.UPGRADE_SP_ACK, msg);
+    }
 
-
-    #region damage
-
+    public void OnInGameUpDiceAck(IPeer peer, MsgInGameUpDiceAck msg)
+    {
+        UnityUtil.Print(" in game upgrade recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.INGAME_UP_DICE_ACK, msg);
+    }
+    
     public void OnHitDamageAck(IPeer peer, MsgHitDamageAck msg)
     {
-
+        UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
     }
 
+    
     #endregion
 
+    
 
     #region notify
 
@@ -178,21 +191,27 @@ public class SocketRecvEvent
 
     public void OnLevelUpDiceNotify(IPeer peer, MsgLevelUpDiceNotify msg)
     {
-        UnityUtil.Print("get dice Notify", msg.PlayerUId.ToString() + "  " + msg.LevelupDiceId.ToString(), "white");
+        UnityUtil.Print("level up dice Notify", msg.PlayerUId.ToString() + "  " + msg.LevelupDiceId.ToString(), "white");
 
         // other dice level up
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.LEVEL_UP_DICE_NOTIFY, msg);
     }
 
-    public void OnInGameUpDiceNotify(IPeer peer, MsgInGameUpDiceNotify msg)
-    {
-        UnityUtil.Print("ingame dice up Notify", msg.PlayerUId.ToString() + "  " + msg.DiceId.ToString(), "white");
-    }
-
     public void OnUpgradeSpNotify(IPeer peer, MsgUpgradeSpNotify msg)
     {
         UnityUtil.Print("upgrade sp Notify", msg.PlayerUId.ToString() + "  " + msg.Upgrade.ToString(), "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.UPGRADE_SP_NOTIFY, msg);
+    }
+
+    public void OnInGameUpDiceNotify(IPeer peer, MsgInGameUpDiceNotify msg)
+    {
+        UnityUtil.Print("ingame dice up Notify", msg.PlayerUId.ToString() + "  " + msg.DiceId.ToString(), "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.INGAME_UP_DICE_NOTIFY, msg);
     }
 
     public void HitDamageNotify(IPeer peer, MsgHitDamageNotify msg)

@@ -292,6 +292,8 @@ namespace ED
         }
         #endregion
         
+        
+        
         #region spawn
         
         //[PunRPC]
@@ -339,6 +341,8 @@ namespace ED
         
         #endregion
 
+        
+        
         #region game sp & wave
         
         public void AddSp(int add)
@@ -364,6 +368,13 @@ namespace ED
                 spUpgradeLevel++;
                 InGameManager.Get().event_SP_Edit.Invoke(sp);
             }
+        }
+
+        public void SP_Upgrade(int upgradeLv, int curSp)
+        {
+            spUpgradeLevel = upgradeLv;
+            SetSp(curSp);
+            InGameManager.Get().event_SP_Edit.Invoke(sp);
         }
         
         private void RefreshHealthBar()
@@ -716,11 +727,16 @@ namespace ED
             arrDice[levelupFieldNum].Set(data, level);
             
         }
+
+
+        public void InGameDiceUpgrade(int slotNum , int upgradeLv)
+        {
+            arrUpgradeLevel[slotNum] = upgradeLv;
+        }
         
         #endregion
         
         #region net etc system
-        
         
         public void ChangeLayer(bool pIsBottomPlayer)
         {
@@ -850,7 +866,6 @@ namespace ED
             return arrUpgradeLevel[num];
         }
 
-        
         #endregion
         
         
@@ -897,6 +912,10 @@ namespace ED
 
 
         #endregion
+        
+        
+        
+        
         
         #region dice rpc
         

@@ -45,25 +45,27 @@ public class SocketSendEvent
                 _sender.GetDiceReq(peer);
                 break;
             }
+            case GameProtocol.LEVEL_UP_DICE_REQ:
+            {
+                _sender.LevelUpDiceReq(peer , (short)param[0] , (short)param[1]);
+                break;
+            }
+            case GameProtocol.UPGRADE_SP_REQ:
+            {
+                _sender.UpgradeSpReq(peer);
+                break;
+            }
+            case GameProtocol.INGAME_UP_DICE_REQ:
+            {
+                _sender.InGameUpDiceReq(peer, (int) param[0]);
+                break;
+            }
             case GameProtocol.HIT_DAMAGE_REQ:
             {
                 //HitDamageReq(IPeer peer, float damage, float delay)
                 break;
             }
-            case GameProtocol.LEVEL_UP_DICE_REQ:
-            {
-                _sender.LevelUpDiceReq(peer , (short)param[0] , (short)param[1]);
-                //LevelUpDiceReq(IPeer peer, int resetFieldNum, int leveupFieldNum)
-                break;
-            }
-            case GameProtocol.INGAME_UP_DICE_REQ:
-            {
-                break;
-            }
-            case GameProtocol.UPGRADE_SP_REQ:
-            {
-                break;
-            }
+            
         }
     }
     

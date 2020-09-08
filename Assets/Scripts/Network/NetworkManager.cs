@@ -236,8 +236,11 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
         _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
         _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
-        _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
         
+        _packetRecv.UpgradeSpAck = _socketRecv.OnUpgradeSpAck;
+        _packetRecv.InGameUpDiceAck = _socketRecv.OnInGameUpDiceAck;
+        
+        _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
         
         // notify
         _packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
@@ -248,8 +251,9 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
 
         _packetRecv.LevelUpDiceNotify = _socketRecv.OnLevelUpDiceNotify;
-        _packetRecv.InGameUpDiceNotify = _socketRecv.OnInGameUpDiceNotify;
         _packetRecv.UpgradeSpNotify = _socketRecv.OnUpgradeSpNotify;
+        _packetRecv.InGameUpDiceNotify = _socketRecv.OnInGameUpDiceNotify;
+        
         _packetRecv.HitDamageNotify = _socketRecv.HitDamageNotify;
         _packetRecv.EndGameNotify = _socketRecv.OnEndGameNotify;
         

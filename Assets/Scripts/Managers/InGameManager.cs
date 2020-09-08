@@ -88,6 +88,12 @@ namespace ED
         #endregion
         
         
+        #region net variable
+
+        private int _ingameUpgradeSlot = 0;
+        
+        #endregion
+        
         
         /// <summary>
         /// 삭제 -- Canvas 위치에 따라 world ui 와 in game ui , popup 으로 나눔 
@@ -157,8 +163,9 @@ namespace ED
 
             
             StartManager();
-            /*
-             
+            
+            // not use
+            /*             
             if (PhotonNetwork.IsConnected)
             {
                 SendBattleManager(RpcTarget.Others, E_PTDefine.PT_NICKNAME, ObscuredPrefs.GetString("Nickname"));
@@ -399,10 +406,6 @@ namespace ED
             RefreshTimeUI(true);
         }
 
-        public void NetSetStartSP(int sp)
-        {
-            
-        }
         
         protected void StartGame()
         {
@@ -572,15 +575,14 @@ namespace ED
         #endregion
         
         
-        #region net sp & spawn
+        #region sp & spawn
         
         private void DeactivateWaitingObject()
         {
             isGamePlaying = true;
             UI_InGamePopup.Get().SetViewWaiting(false);
         }
-        
-        
+
         // not network --
         private void AddSP(int wave = 0)
         {
@@ -609,8 +611,6 @@ namespace ED
         }
 
         #endregion
-        
-        
         
         
         #region update event
@@ -663,12 +663,13 @@ namespace ED
         {
             playerController.targetPlayer.OtherGetDice( diecId , slotNum);
         }
+        
         #endregion
 
         
+        // not network use
         #region get set
         
-        // not network use
         public void GetDice()
         {
             playerController.AddSp(-GetDiceCost());
@@ -742,7 +743,7 @@ namespace ED
         #endregion
         
         
-        #region leave game
+        #region leave & end game
         public void LeaveRoom()
         {
             if (NetworkManager.Get().IsConnect() == true)
@@ -806,6 +807,25 @@ namespace ED
         #endregion
         
         
+        #region net etc system
+        public void Click_SP_Upgrade_Button()
+        {
+            //playerController.SP_Upgrade();
+            SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
+        }
+
+        public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)
+        {
+            int upgradeSlot = UI_InGame.Get().SetDeckRefresh(diceId, upgradeLv);
+            
+            playerController.InGameDiceUpgrade(upgradeSlot , upgradeLv);
+            
+            NetSetSp(curSp);
+        }
+        
+        #endregion
+        
+        
         // 매니저 외부에서 패킷을 보낼때 쓰자..
         #region outter send
 
@@ -813,7 +833,16 @@ namespace ED
         {
             SendInGameManager(GameProtocol.LEVEL_UP_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
         }
+
+        public void SendInGameUpgrade(int diceId , int slotNum)
+        {
+            _ingameUpgradeSlot = slotNum;
+            SendInGameManager(GameProtocol.INGAME_UP_DICE_REQ , diceId);
+        }
+        
         #endregion
+        
+        
         
         
         #region network
@@ -906,7 +935,34 @@ namespace ED
                     break;
                 }
                 
-                
+                case GameProtocol.UPGRADE_SP_ACK:
+                {
+                    MsgUpgradeSpAck spack = (MsgUpgradeSpAck) param[0];
+                    playerController.SP_Upgrade(spack.Upgrade, spack.CurrentSp);
+                    break;
+                }
+                case GameProtocol.UPGRADE_SP_NOTIFY:
+                {
+                    MsgUpgradeSpNotify notisp = (MsgUpgradeSpNotify) param[0];
+                    
+                    // 상대방이 SP 업그레이드한건데...알필요가 잇을까 싶다..일단은 공간만 만들어놓자
+                    break;
+                }
+                case GameProtocol.INGAME_UP_DICE_ACK:
+                {
+                    MsgInGameUpDiceAck ingameup = (MsgInGameUpDiceAck) param[0];
+                    InGameUpgradeCallback(ingameup.DiceId, ingameup.InGameUp, ingameup.CurrentSp);
+                    break;
+                }
+                case GameProtocol.INGAME_UP_DICE_NOTIFY:
+                {
+                    // 상대방이...주사위 업그레이 햇다..고 노티가 날라옴
+                    MsgInGameUpDiceNotify notiIngame = (MsgInGameUpDiceNotify) param[0];
+                    
+                    // 상대방이 햇다는것을..알필요가 잇나..나중에..
+                    break;
+                }
+
                 /*                
                 case GameProtocol.LEAVE_GAME_NOTIFY:
                     break;
@@ -993,11 +1049,6 @@ namespace ED
         }
 
 
-        public void Click_SP_Upgrade_Button()
-        {
-            playerController.SP_Upgrade();
-        }
-        
         #endregion
         
         

@@ -90,6 +90,23 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
     }
 
+    public int SetDeckRefresh(int diceId , int upgradeLv)
+    {
+        int slotnum = -1;
+        for (var i = 0; i < arrUpgradeButtons.Length; i++)
+        {
+            if (arrUpgradeButtons[i].GetDeckDiceId() == diceId)
+            {
+                arrUpgradeButtons[i].RefreshLevel(upgradeLv);
+                arrUpgradeButtons[i].Refresh();
+                slotnum = i;
+                break;
+            }
+        }
+
+        return slotnum;
+    }
+
     public void SetTargetDiceView(bool view)
     {
         viewTargetDiceField.SetActive(view);
