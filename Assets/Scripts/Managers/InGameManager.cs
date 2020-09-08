@@ -298,7 +298,7 @@ namespace ED
             }
 
             //obj_ViewTargetDiceField.SetActive(!PhotonNetwork.IsConnected);
-            UI_InGame.Get().ViewTargetDice(!PhotonNetwork.IsConnected);
+            UI_InGame.Get().ViewTargetDice(!IsNetwork());
 
             event_SP_Edit.AddListener(RefreshSP);
             event_SP_Edit.AddListener(SetSPUpgradeButton);
