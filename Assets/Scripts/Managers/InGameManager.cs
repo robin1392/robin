@@ -816,10 +816,8 @@ namespace ED
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)
         {
-            int upgradeSlot = UI_InGame.Get().SetDeckRefresh(diceId, upgradeLv);
-            
-            playerController.InGameDiceUpgrade(upgradeSlot , upgradeLv);
-            
+            playerController.InGameDiceUpgrade(diceId , upgradeLv);
+            UI_InGame.Get().SetDeckRefresh(diceId, upgradeLv);
             NetSetSp(curSp);
         }
         
@@ -944,8 +942,9 @@ namespace ED
                 case GameProtocol.UPGRADE_SP_NOTIFY:
                 {
                     MsgUpgradeSpNotify notisp = (MsgUpgradeSpNotify) param[0];
-                    
                     // 상대방이 SP 업그레이드한건데...알필요가 잇을까 싶다..일단은 공간만 만들어놓자
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID(notisp.PlayerUId) == false)
+                        playerController.targetPlayer.SP_Upgrade(notisp.Upgrade);
                     break;
                 }
                 case GameProtocol.INGAME_UP_DICE_ACK:
@@ -959,7 +958,9 @@ namespace ED
                     // 상대방이...주사위 업그레이 햇다..고 노티가 날라옴
                     MsgInGameUpDiceNotify notiIngame = (MsgInGameUpDiceNotify) param[0];
                     
-                    // 상대방이 햇다는것을..알필요가 잇나..나중에..
+                    // 상대방이 햇다는것을..알필요가 잇나..잇겟지...
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID(notiIngame.PlayerUId) == false)
+                        playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId , notiIngame.InGameUp);
                     break;
                 }
 

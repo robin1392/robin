@@ -376,6 +376,11 @@ namespace ED
             SetSp(curSp);
             InGameManager.Get().event_SP_Edit.Invoke(sp);
         }
+
+        public void SP_Upgrade(int upgradeLv)
+        {
+            spUpgradeLevel = upgradeLv;
+        }
         
         private void RefreshHealthBar()
         {
@@ -728,10 +733,17 @@ namespace ED
             
         }
 
-
-        public void InGameDiceUpgrade(int slotNum , int upgradeLv)
+        
+        public void InGameDiceUpgrade(int diceId , int upgradeLv)
         {
-            arrUpgradeLevel[slotNum] = upgradeLv;
+            for (int i = 0; i < arrDiceDeck.Length; i++)
+            {
+                if (arrDiceDeck[i].id == diceId)
+                {
+                    arrUpgradeLevel[i] = upgradeLv;
+                    break;
+                }
+            }
         }
         
         #endregion
