@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
@@ -10,12 +15,26 @@ namespace ED
     {
         public GameObject obj_Model;
         public ParticleSystem ps_Tail;
+        public GameObject pref_BombEffect;
 
-        public override void Initialize(int pTargetId, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        [Header("Value")] 
+        public float maxHeight = 1.5f;
+        public float maxTime = 0.8f;
+
+        private void Start()
         {
-            base.Initialize(pTargetId, pDamage, splashRange, pIsMine, pIsBottomPlayer, pCallback);
+            if (pref_BombEffect != null)
+            {
+                PoolManager.instance.AddPool(pref_BombEffect, 1);
+            }
+        }
+
+        public override void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        {
+            base.Initialize(pTargetPos, pDamage, splashRange, pIsMine, pIsBottomPlayer, pCallback);
 
             obj_Model.SetActive(true);
+            ps_Tail.Clear();
             ps_Tail.Play();
         }
 
@@ -25,6 +44,7 @@ namespace ED
             var startPos = ts.position;
             var targetPos = _targetPos;
             var t = 0f;
+            //Debug.LogFormat("{0}, {1}", startPos, targetPos);
 
             float fV_x;
             float fV_y;
@@ -32,15 +52,12 @@ namespace ED
 
             float fg;
             float fEndTime;
-            float fMaxHeight = 1.5f;
             float fHeight;
             float fEndHeight;
-            float fTime = 0f;
-            float fMaxTime = 0.8f;
 
             fEndHeight = targetPos.y - startPos.y;
-            fHeight = fMaxHeight - startPos.y;
-            fg = 2 * fHeight / (fMaxTime * fMaxTime);
+            fHeight = maxHeight - startPos.y;
+            fg = 2 * fHeight / (maxTime * maxTime);
             fV_y = Mathf.Sqrt(2 * fg * fHeight);
 
             float a = fg;
@@ -48,6 +65,7 @@ namespace ED
             float c = 2 * fEndHeight;
 
             fEndTime = (-b + Mathf.Sqrt(b * b - 4 * a * c)) / (2 * a);
+            //Debug.LogFormat("{0}, {1}, {2}, {3}", a, b, c, fEndTime);
 
             fV_x = -(startPos.x - targetPos.x) / fEndTime;
             fV_z = -(startPos.z - targetPos.z) / fEndTime;
@@ -88,7 +106,15 @@ namespace ED
             }
 
             obj_Model.SetActive(false);
-            PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
+
+            if (pref_BombEffect != null)
+            {
+                PoolManager.instance.ActivateObject(pref_BombEffect.name, transform.position);
+            }
+            else
+            {
+                PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
+            }
             
             _poad.Deactive(3.5f);
         }

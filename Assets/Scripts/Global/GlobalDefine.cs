@@ -63,3 +63,18 @@ public enum E_MaterialType
     HALFTRANSPARENT,
     TRANSPARENT,
 }
+
+public enum E_CannonType
+{
+    DEFAULT,
+    BOMBER,
+}
+
+public enum E_BulletType
+{
+    ARROW,
+    SPEAR,
+    NECROMANCER,
+    MAGICIAN,
+    ARBITER,
+}

@@ -66,8 +66,8 @@ namespace ED
         protected int _flagOfWarCount;
 
         protected static readonly string _scarecrow = "Scarecrow";
-        protected static readonly string _arrow = "Arrow";
-        protected static readonly string _spear = "Spear";
+        protected static readonly E_BulletType _arrow = E_BulletType.ARROW;
+        protected static readonly E_BulletType _spear = E_BulletType.SPEAR;
 
         protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
 
@@ -676,13 +676,13 @@ namespace ED
         {
             if (isCloacking)
             {
+                PoolManager.instance.ActivateObject("Effect_Cloaking", ts_HitPos.position);
                 cloackingCount++;
                 if (cloackingCount >= 1)
                 {
                     this._isCloacking = true;
-                    _collider.enabled = false;
-                    SetColor(isMine ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT);
                     //_collider.enabled = false;
+                    SetColor(isMine ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT);
                 }
             }
             else
@@ -692,9 +692,8 @@ namespace ED
                 {
                     cloackingCount = 0;
                     this._isCloacking = false;
-                    _collider.enabled = true;
-                    SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
                     //_collider.enabled = true;
+                    SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
                 }
             }
         }

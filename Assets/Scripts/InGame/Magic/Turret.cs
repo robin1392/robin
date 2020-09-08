@@ -86,11 +86,11 @@ namespace ED
             
             if (PhotonNetwork.IsConnected && isMine)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, "Arrow", ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller.FireBullet("Arrow", ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                controller.FireBullet(E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }
         }
 
@@ -105,10 +105,12 @@ namespace ED
                 if (col.CompareTag("Player")) continue;
                 
                 var dis = Vector3.SqrMagnitude(transform.position - col.transform.position);
-                if (dis < distance)
+                var m = col.GetComponentInParent<Minion>();
+                if (dis < distance && m != null && m.isCloacking == false)
                 {
                     distance = dis;
-                    colTarget = col;
+                    //colTarget = col;
+                    flyingTarget = m;
                 }
             }
 

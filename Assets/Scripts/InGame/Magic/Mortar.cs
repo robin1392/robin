@@ -153,7 +153,7 @@ namespace ED
             
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.position, power, range);
+                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , E_CannonType.DEFAULT, ts_ShootingPos.position, longTarget.position, power, range);
             }
         }
         

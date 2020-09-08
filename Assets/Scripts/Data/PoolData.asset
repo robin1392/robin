@@ -46,3 +46,9 @@ MonoBehaviour:
   - name: Effect_Robot_Summon
     obj: {fileID: 2028398663927964445, guid: 2dfd74e7850804002aa7923dd5390440, type: 3}
     count: 2
+  - name: Effect_Heal
+    obj: {fileID: 8196298747947456408, guid: 3256ab7ff4a554bf49fb0dcee0202a84, type: 3}
+    count: 30
+  - name: Effect_Cloaking
+    obj: {fileID: 9017776126007456575, guid: 81c5f0038f2914eabbbcac37316143b9, type: 3}
+    count: 30
