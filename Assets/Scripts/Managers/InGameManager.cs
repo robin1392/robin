@@ -23,29 +23,29 @@ namespace ED
     public class InGameManager : SingletonPhoton<InGameManager>, IPunObservable
     {
         //ßpublic static InGameManager Instance;
-        
+
         #region game system variable
-        [Header("SYSTEN INFO")]
-        public PLAY_TYPE playType;
-        
+
+        [Header("SYSTEN INFO")] public PLAY_TYPE playType;
+
         //public Data_AllDice data_AllDice;
         // new all dice info
         public DiceInfo data_DiceInfo;
 
-        
+
         public GameObject pref_Player;
         public GameObject pref_AI;
         public Transform ts_Lights;
         public Transform ts_StadiumTop;
         public Transform ts_NexusHealthBar;
-        
+
         // --> field manager
         //public Transform ts_TopPlayer;
         //public Transform ts_BottomPlayer;
 
         public bool isAIMode;
         public bool isGamePlaying;
-        
+
         public PlayerController playerController;
 
         private int _readyPlayerCount = 0;
@@ -53,21 +53,21 @@ namespace ED
         #endregion
 
         #region wave variable
-        [Header("WAVE INFO")]
-        public int wave = 0;
+
+        [Header("WAVE INFO")] public int wave = 0;
         public float startSpawnTime = 10f;
         public float spawnTime = 45f;
-        
+
         private float st => wave < 1 ? 10f : 20f;
 
         public float time { get; protected set; }
-        
+
         #endregion
-        
+
         #region dice variable
-        [Header("DICE INFO")]
-        [SerializeField]
-        protected int[] arrUpgradeLevel;
+
+        [Header("DICE INFO")] [SerializeField] protected int[] arrUpgradeLevel;
+
         //public int getDiceCost => 10 + getDiceCount * 10;
         public int getDiceCount = 0;
 
@@ -75,26 +75,25 @@ namespace ED
 
 
         #region etc variable
+
         // event
         public UnityEvent<int> event_SP_Edit;
 
-        [SerializeField]
-        protected List<BaseStat> listBottomPlayer = new List<BaseStat>();
-        [SerializeField]
-        protected List<BaseStat> listTopPlayer = new List<BaseStat>();
+        [SerializeField] protected List<BaseStat> listBottomPlayer = new List<BaseStat>();
+        [SerializeField] protected List<BaseStat> listTopPlayer = new List<BaseStat>();
 
         private readonly string recvMessage = "RecvBattleManager";
-        
+
         #endregion
-        
-        
+
+
         #region net variable
 
         private int _ingameUpgradeSlot = 0;
-        
+
         #endregion
-        
-        
+
+
         /// <summary>
         /// 삭제 -- Canvas 위치에 따라 world ui 와 in game ui , popup 으로 나눔 
         /// </summary>
@@ -108,14 +107,14 @@ namespace ED
         //public GameObject popup_Result;
         //public Text text_Result;
         //public UI_UpgradeButton[] arrUpgradeButtons;
-        
+
         //public Image image_BottomHealthBar;
         //public Text text_BottomHealth;
         //public Image image_TopHealthBar;
         //public Text text_TopHealth;
-        
+
         //public GameObject popup_Waiting;
-        
+
         //public GameObject obj_ViewTargetDiceField;
         //public GameObject obj_Low_HP_Effect;
         //public Button button_SP_Upgrade;
@@ -125,11 +124,12 @@ namespace ED
         //public Text text_UnitCount;
 
         #region unity base
+
         public override void Awake()
         {
             //if (Instance == null)
             //{
-                //Instance = this;
+            //Instance = this;
             //}
             base.Awake();
 
@@ -141,29 +141,29 @@ namespace ED
         {
             //if(Instance == this)
             //{
-                //Instance = null;
+            //Instance = null;
             //}
-            
+
             DestroyManager();
-            
+
             base.OnDestroy();
         }
 
         protected virtual void Start()
         {
             // 개발 버전이라..중간에서 실행햇을시에..
-            if(DataPatchManager.Get().isDataLoadComplete == false )
+            if (DataPatchManager.Get().isDataLoadComplete == false)
                 DataPatchManager.Get().JsonDownLoad();
 
             // 전체 주사위 정보
             data_DiceInfo = JsonDataManager.Get().dataDiceInfo;
-            
+
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
             PoolManager.Get().MakePool();
 
-            
+
             StartManager();
-            
+
             // not use
             /*             
             if (PhotonNetwork.IsConnected)
@@ -180,13 +180,13 @@ namespace ED
         protected void Update()
         {
             RefreshTimeUI();
-            if(UI_InGame.Get() != null)
+            if (UI_InGame.Get() != null)
                 UI_InGame.Get().SetUnitCount(listBottomPlayer.Count + listTopPlayer.Count - 2);
         }
 
         #endregion
-        
-        
+
+
         #region init destroy
 
         public void InitializeManager()
@@ -199,10 +199,10 @@ namespace ED
         public void DestroyManager()
         {
             arrUpgradeLevel = null;
-            
+
             event_SP_Edit.RemoveAllListeners();
             event_SP_Edit = null;
-            
+
         }
 
         public bool IsNetwork()
@@ -216,28 +216,33 @@ namespace ED
         public void StartManager()
         {
 
-            if ( IsNetwork() == true)
+            if (IsNetwork() == true)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
 
                 // player controller create...my and other
-                Vector3 myTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                Vector3 myTowerPos = FieldManager.Get()
+                    .GetPlayerPos(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
                 GameObject myTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
-                myTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                myTObj.transform.parent = FieldManager.Get()
+                    .GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
                 myTObj.transform.position = myTowerPos;
                 playerController = myTObj.GetComponent<PlayerController>();
                 playerController.isMine = true;
                 playerController.isBottomPlayer = NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer;
                 playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
-                
-                
-                Vector3 otherTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+
+
+                Vector3 otherTowerPos = FieldManager.Get()
+                    .GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
                 GameObject otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
-                otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+                otherTObj.transform.parent = FieldManager.Get()
+                    .GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
                 otherTObj.transform.position = otherTowerPos;
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 playerController.targetPlayer.isMine = false;
-                playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
+                playerController.targetPlayer.isBottomPlayer =
+                    NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
                 playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
 
             }
@@ -257,9 +262,9 @@ namespace ED
 
                 isAIMode = true;
             }
-            
+
             // deck setting
-            if ( IsNetwork() == true)
+            if (IsNetwork() == true)
             {
                 // my
                 playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
@@ -274,14 +279,15 @@ namespace ED
                 {
                     deck = UserInfoManager.Get().GetActiveDeck();
                 }
+
                 playerController.SetDeck(deck);
             }
-            
+
             // Upgrade buttons
             // ui 셋팅
-            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck , arrUpgradeLevel);
+            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
 
-            if ( IsNetwork() == true)
+            if (IsNetwork() == true)
             {
                 if (NetworkManager.Get().IsMaster == false)
                 {
@@ -290,14 +296,14 @@ namespace ED
                     ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
                 }
             }
-            
+
             //obj_ViewTargetDiceField.SetActive(!PhotonNetwork.IsConnected);
             UI_InGame.Get().ViewTargetDice(!PhotonNetwork.IsConnected);
-            
+
             event_SP_Edit.AddListener(RefreshSP);
             event_SP_Edit.AddListener(SetSPUpgradeButton);
-            
-            if ( IsNetwork() == true)
+
+            if (IsNetwork() == true)
             {
                 SendInGameManager(GameProtocol.READY_GAME_REQ);
             }
@@ -306,7 +312,7 @@ namespace ED
                 StartGame();
                 RefreshTimeUI(true);
             }
-            
+
             // not use
             /*
             if (PhotonNetwork.IsConnected)
@@ -390,38 +396,39 @@ namespace ED
             RefreshTimeUI(true);
             */
         }
-        
+
         #endregion
-        
-        
+
+
         #region start game
 
         public void NetStartGame()
         {
             DeactivateWaitingObject();
-            
+
             // start...
             StartGame();
-            
+
             RefreshTimeUI(true);
         }
 
-        
+
         protected void StartGame()
         {
-            if ( IsNetwork() == true)
+            if (IsNetwork() == true)
             {
                 StartCoroutine(SpawnLoop());
             }
             else
             {
-                
+
                 Debug.Log("StartGame: OfflineMode");
                 // 네트워크 연결 안됫으니 deactive...   
                 DeactivateWaitingObject();
                 StartCoroutine(SpawnLoop());
             }
-                
+
+            // not use
             /*
             if (PhotonNetwork.IsConnected)
             {
@@ -443,7 +450,7 @@ namespace ED
             }
             */
         }
-        
+
         // not use
         //[PunRPC]
         private void Ready()
@@ -452,11 +459,60 @@ namespace ED
         }
 
         #endregion
-        
+
         #region spawn
-        
+
         private IEnumerator SpawnLoop()
-        {   
+        {
+            wave = 0;
+            // 개발용으로 쓰일때만..
+            if (IsNetwork() == false)
+                WorldUIManager.Get().SetWave(wave);
+
+            time = startSpawnTime;
+            int[] arrAddTime = {20, 15, 10, 5, -1};
+            var addNum = 0;
+
+            while (true)
+            {
+                yield return null;
+
+                time -= Time.deltaTime;
+
+                //
+                if (wave > 0 && time <= arrAddTime[addNum])
+                {
+                    addNum++;
+                    if (IsNetwork() == true)
+                    {
+                        //...sp 를 노티가 오니....안해도 되겟네..
+                    }
+                    else
+                    {
+                        AddSP(wave);
+                    }
+                }
+
+                if (time <= 0)
+                {
+                    time = spawnTime;
+                    addNum = 0;
+
+                    if (IsNetwork() == true)
+                    {
+                        // spawn 도 노티로 온다...
+                    }
+                    else
+                    {
+                        playerController.Spawn();
+                        playerController.targetPlayer.Spawn();
+
+                        wave++;
+                    }
+                }
+            }
+            
+            //not use
             /*
             if (PhotonNetwork.IsConnected)
             {
@@ -522,61 +578,13 @@ namespace ED
             }
             */
             
-            
-            wave = 0;
-            // 개발용으로 쓰일때만..
-            if (IsNetwork() == false)
-                WorldUIManager.Get().SetWave(wave);
-            
-            time = startSpawnTime;
-            int[] arrAddTime = { 20, 15, 10, 5, -1 };
-            var addNum = 0;
-
-            while (true)
-            {
-                yield return null;
-                
-                time -= Time.deltaTime;
-
-                //
-                if (wave > 0 && time <= arrAddTime[addNum])
-                {
-                    addNum++;
-                    if (IsNetwork() == true)
-                    {
-                        //...sp 를 노티가 오니....안해도 되겟네..
-                    }
-                    else
-                    {
-                        AddSP(wave);
-                    }
-                }
-
-                if (time <= 0)
-                {
-                    time = spawnTime;
-                    addNum = 0;
-
-                    if (IsNetwork() == true)
-                    {
-                        // spawn 도 노티로 온다...
-                    }
-                    else
-                    {
-                        playerController.Spawn();
-                        playerController.targetPlayer.Spawn();
-                        
-                        wave++;
-                    }
-                }
-            }
         }
 
         #endregion
-        
-        
+
+
         #region sp & spawn
-        
+
         private void DeactivateWaitingObject()
         {
             isGamePlaying = true;
@@ -603,24 +611,24 @@ namespace ED
         public void NetSpawnNotify(int wave)
         {
             WorldUIManager.Get().SetWave(wave);
-            
-            Debug.Log("spawn  : " + wave );
-            
+
+            Debug.Log("spawn  : " + wave);
+
             playerController.Spawn();
             playerController.targetPlayer.Spawn();
         }
 
         #endregion
-        
-        
+
+
         #region update event
-        
+
         private void RefreshSP(int sp)
         {
             UI_InGame.Get().SetSP(sp);
         }
 
-        
+
         protected void RefreshTimeUI(bool isImmediately = false)
         {
             if (isImmediately)
@@ -634,7 +642,7 @@ namespace ED
                 if (ff < WorldUIManager.Get().GetSpawnAmount()) WorldUIManager.Get().SetSpawnTime(ff);
                 else WorldUIManager.Get().SetSpawnTime(time / st);
             }
-            
+
             //text_SpawnTime.text = $"{Mathf.CeilToInt(time):F0}";
             WorldUIManager.Get().SetTextSpawnTime(time);
             //tmp_Wave.text = $"{wave}";
@@ -643,33 +651,32 @@ namespace ED
 
         #endregion
 
-        
+
         #region net get dice
         public void NetGetDice()
         {
             SendInGameManager(GameProtocol.GET_DICE_REQ);
         }
 
-        public void GetDiceCallBack(int diceId , int slotNum , int level , int curSp )
-        {   
+        public void GetDiceCallBack(int diceId, int slotNum, int level, int curSp)
+        {
             NetSetSp(curSp);
-            
+
             getDiceCount++;
             UI_InGame.Get().SetDiceButtonText(GetDiceCost());
-            playerController.GetDice( diceId , slotNum , level);
+            playerController.GetDice(diceId, slotNum, level);
         }
 
         public void GetDiceOther(int diecId, int slotNum, int level)
         {
-            playerController.targetPlayer.OtherGetDice( diecId , slotNum);
+            playerController.targetPlayer.OtherGetDice(diecId, slotNum);
         }
-        
+
         #endregion
 
-        
+
         // not network use
         #region get set
-        
         public void GetDice()
         {
             playerController.AddSp(-GetDiceCost());
@@ -678,13 +685,12 @@ namespace ED
             //text_GetDiceButton.text = $"{getDiceCost}";
             UI_InGame.Get().SetDiceButtonText(GetDiceCost());
         }
-
         public int GetDiceCost()
         {
             return 10 + getDiceCount * 10;
         }
 
-        
+
         public BaseStat GetRandomPlayerUnit(bool isBottomPlayer)
         {
             int searchCount = 30;
@@ -698,7 +704,7 @@ namespace ED
                         searchCount--;
                         rnd = Random.Range(0, listBottomPlayer.Count);
                     } while (listBottomPlayer[rnd].isAlive == false && searchCount > 0);
-                    
+
                     return listBottomPlayer[rnd];
                 }
                 else
@@ -737,13 +743,14 @@ namespace ED
             //button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
             //text_SP_Upgrade.text = $"SP Lv.{playerController.spUpgradeLevel + 1}";
             //text_SP_Upgrade_Price.text = $"{(playerController.spUpgradeLevel + 1) * 500}";
-            UI_InGame.Get().SetSPUpgrade(playerController.spUpgradeLevel , sp);
+            UI_InGame.Get().SetSPUpgrade(playerController.spUpgradeLevel, sp);
         }
-        
+
         #endregion
-        
-        
+
+
         #region leave & end game
+
         public void LeaveRoom()
         {
             if (NetworkManager.Get().IsConnect() == true)
@@ -754,7 +761,7 @@ namespace ED
             {
                 GameStateManager.Get().MoveMainScene();
             }
-            
+
             // not use
             /*
             if (PhotonNetwork.IsConnected)
@@ -768,7 +775,7 @@ namespace ED
             */
 
         }
-        
+
         // 내자신이 나간다고 눌럿을때 응답 받은것
         public void CallBackLeaveRoom()
         {
@@ -776,7 +783,7 @@ namespace ED
             GameStateManager.Get().MoveMainScene();
         }
 
-        
+
         /// <summary>
         /// 상대방이 나갓다고 noti를 받앗을 경우
         /// </summary>
@@ -791,7 +798,7 @@ namespace ED
             }
         }
 
-        
+
         public void EndGame(PhotonMessageInfo info)
         {
             isGamePlaying = false;
@@ -803,11 +810,12 @@ namespace ED
             //text_Result.text = playerController.isAlive ? "승리" : "패배";
             UI_InGamePopup.Get().SetResultText(playerController.isAlive ? Global.g_inGameWin : Global.g_inGameLose);
         }
-        
+
         #endregion
-        
-        
+
+
         #region net etc system
+
         public void Click_SP_Upgrade_Button()
         {
             //playerController.SP_Upgrade();
@@ -816,82 +824,89 @@ namespace ED
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)
         {
-            playerController.InGameDiceUpgrade(diceId , upgradeLv);
+            playerController.InGameDiceUpgrade(diceId, upgradeLv);
             UI_InGame.Get().SetDeckRefresh(diceId, upgradeLv);
             NetSetSp(curSp);
         }
-        
+
+
+        public BaseStat GetRandomPlayerUnitHighHealth(bool pIsBottomPlayer)
+        {
+            BaseStat rtn = null;
+            float hp = 0;
+
+            if (pIsBottomPlayer)
+            {
+                for (int i = 1; i < listBottomPlayer.Count; i++)
+                {
+                    if (listBottomPlayer[i].currentHealth > hp)
+                    {
+                        rtn = listBottomPlayer[i];
+                        hp = rtn.currentHealth;
+                    }
+                }
+
+                return rtn;
+            }
+            else
+            {
+                for (int i = 1; i < listTopPlayer.Count; i++)
+                {
+                    if (listTopPlayer[i].currentHealth > hp)
+                    {
+                        rtn = listTopPlayer[i];
+                        hp = rtn.currentHealth;
+                    }
+                }
+
+                return rtn;
+            }
+        }
+
         #endregion
-        
-        
+
+
         // 매니저 외부에서 패킷을 보낼때 쓰자..
+
         #region outter send
 
-        public void SendDiceLevelUp(int resetFieldNum , int levelUpFieldNum)
+        public void SendDiceLevelUp(int resetFieldNum, int levelUpFieldNum)
         {
             SendInGameManager(GameProtocol.LEVEL_UP_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
         }
 
-        public void SendInGameUpgrade(int diceId , int slotNum)
+        public void SendInGameUpgrade(int diceId, int slotNum)
         {
             _ingameUpgradeSlot = slotNum;
-            SendInGameManager(GameProtocol.INGAME_UP_DICE_REQ , diceId);
+            SendInGameManager(GameProtocol.INGAME_UP_DICE_REQ, diceId);
         }
-        
-        #endregion
-        
-        
-        
-        
-        #region network
 
-        public void SendInGameManager(GameProtocol protocol , params object[] param)
+        #endregion
+
+
+        #region network
+        public void SendInGameManager(GameProtocol protocol, params object[] param)
         {
-            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
             {
-                NetworkManager.Get().Send(protocol , param);
+                NetworkManager.Get().Send(protocol, param);
             }
             else
             {
                 RecvInGameManager(protocol, param);
             }
-            
+
         }
 
         public void RecvInGameManager(GameProtocol protocol, params object[] param)
         {
             switch (protocol)
             {
+                #region case ack
+
                 case GameProtocol.LEAVE_GAME_ACK:
                     CallBackLeaveRoom();
                     break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    OnOtherLeft((int) param[0]);
-                    break;
-                case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
-                {
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
-                    {
-                        NetSetSp((int)param[1]);    // param1 wave
-                    }
-                    
-                    NetStartGame();
-                    break;
-                }
-                    
-                case GameProtocol.ADD_SP_NOTIFY:
-                {
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
-                    {
-                        NetSetSp((int)param[1]);    // param1 wave
-                    }
-                    break;
-                }
-                case GameProtocol.SPAWN_NOTIFY:
-                {
-                    NetSpawnNotify((int)param[0]);
-                    break;
-                }
                 case GameProtocol.GET_DICE_ACK:
                 {
                     // my dice 셋팅
@@ -900,10 +915,63 @@ namespace ED
                     // 레벨 Level;
                     // 현재 sp CurrentSp;
                     MsgGetDiceAck diceack = (MsgGetDiceAck) param[0];
-                    GetDiceCallBack( diceack.DiceId , diceack.SlotNum , diceack.Level , diceack.CurrentSp);
-                    
+                    GetDiceCallBack(diceack.DiceId, diceack.SlotNum, diceack.Level, diceack.CurrentSp);
+
                     Debug.Log(diceack.DiceId + "  " + diceack.SlotNum + "   " + diceack.Level);
-                    
+
+                    break;
+                }
+                case GameProtocol.LEVEL_UP_DICE_ACK:
+                {
+                    MsgLevelUpDiceAck lvupDiceack = (MsgLevelUpDiceAck) param[0];
+                    playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum,
+                        lvupDiceack.LevelupDiceId, lvupDiceack.Level);
+
+                    break;
+                }
+                case GameProtocol.UPGRADE_SP_ACK:
+                {
+                    MsgUpgradeSpAck spack = (MsgUpgradeSpAck) param[0];
+                    playerController.SP_Upgrade(spack.Upgrade, spack.CurrentSp);
+                    break;
+                }
+                case GameProtocol.INGAME_UP_DICE_ACK:
+                {
+                    MsgInGameUpDiceAck ingameup = (MsgInGameUpDiceAck) param[0];
+                    InGameUpgradeCallback(ingameup.DiceId, ingameup.InGameUp, ingameup.CurrentSp);
+                    break;
+                }
+
+                #endregion
+
+
+                #region case notify
+
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    OnOtherLeft((int) param[0]);
+                    break;
+                case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
+                {
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    {
+                        NetSetSp((int) param[1]); // param1 wave
+                    }
+
+                    NetStartGame();
+                    break;
+                }
+                case GameProtocol.ADD_SP_NOTIFY:
+                {
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    {
+                        NetSetSp((int) param[1]); // param1 wave
+                    }
+
+                    break;
+                }
+                case GameProtocol.SPAWN_NOTIFY:
+                {
+                    NetSpawnNotify((int) param[0]);
                     break;
                 }
                 case GameProtocol.GET_DICE_NOTIFY:
@@ -914,14 +982,7 @@ namespace ED
                     {
                         GetDiceOther(dicenoty.DiceId, dicenoty.SlotNum, dicenoty.Level);
                     }
-                    
-                    break;
-                }
-                case GameProtocol.LEVEL_UP_DICE_ACK:
-                {
-                    MsgLevelUpDiceAck lvupDiceack = (MsgLevelUpDiceAck) param[0];
-                    playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum, lvupDiceack.LevelupDiceId, lvupDiceack.Level);
-                    
+
                     break;
                 }
                 case GameProtocol.LEVEL_UP_DICE_NOTIFY:
@@ -929,14 +990,8 @@ namespace ED
                     MsgLevelUpDiceNotify lvupdiceNoti = (MsgLevelUpDiceNotify) param[0];
                     // 상대방거..
                     if (NetworkManager.Get().GetNetInfo().IsMyUID(lvupdiceNoti.PlayerUId) == false)
-                        playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum, lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
-                    break;
-                }
-                
-                case GameProtocol.UPGRADE_SP_ACK:
-                {
-                    MsgUpgradeSpAck spack = (MsgUpgradeSpAck) param[0];
-                    playerController.SP_Upgrade(spack.Upgrade, spack.CurrentSp);
+                        playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,
+                            lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
                     break;
                 }
                 case GameProtocol.UPGRADE_SP_NOTIFY:
@@ -947,22 +1002,21 @@ namespace ED
                         playerController.targetPlayer.SP_Upgrade(notisp.Upgrade);
                     break;
                 }
-                case GameProtocol.INGAME_UP_DICE_ACK:
-                {
-                    MsgInGameUpDiceAck ingameup = (MsgInGameUpDiceAck) param[0];
-                    InGameUpgradeCallback(ingameup.DiceId, ingameup.InGameUp, ingameup.CurrentSp);
-                    break;
-                }
                 case GameProtocol.INGAME_UP_DICE_NOTIFY:
                 {
                     // 상대방이...주사위 업그레이 햇다..고 노티가 날라옴
                     MsgInGameUpDiceNotify notiIngame = (MsgInGameUpDiceNotify) param[0];
-                    
+
                     // 상대방이 햇다는것을..알필요가 잇나..잇겟지...
                     if (NetworkManager.Get().GetNetInfo().IsMyUID(notiIngame.PlayerUId) == false)
-                        playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId , notiIngame.InGameUp);
+                        playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId, notiIngame.InGameUp);
                     break;
                 }
+
+                #endregion
+
+
+
 
                 /*                
                 case GameProtocol.LEAVE_GAME_NOTIFY:
@@ -980,23 +1034,24 @@ namespace ED
                 case GameProtocol.LEAVE_GAME_NOTIFY:
                     break;
                 */
-            }   
+            }
         }
+
         #endregion
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
         #region rpc etc
-        
+
         //[PunRPC]
         public void SpawnPlayerMinions()
         {
             WorldUIManager.Get().SetSpawnTime(1.0f);
-            playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SPAWN);
+            playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_SPAWN);
         }
 
         public void AddPlayerUnit(bool isBottomPlayer, BaseStat bs)
@@ -1022,7 +1077,7 @@ namespace ED
                 listTopPlayer.Remove(bs);
             }
         }
-        
+
         public void ShowAIField(bool isShow)
         {
             if (isShow)
@@ -1051,9 +1106,11 @@ namespace ED
 
 
         #endregion
+
         
         
-        
+
+
         #region photon override
         public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
@@ -1064,15 +1121,14 @@ namespace ED
             }
             else
             {
-                time = (float)stream.ReceiveNext();
-                wave = (int)stream.ReceiveNext();
+                time = (float) stream.ReceiveNext();
+                wave = (int) stream.ReceiveNext();
             }
         }
-        
-        
         public override void OnDisconnected(DisconnectCause cause)
         {
-            Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
+            Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}",
+                cause);
 
             //SceneManager.LoadSceneAsync("Main");
             GameStateManager.Get().MoveMainScene();
@@ -1085,15 +1141,16 @@ namespace ED
                 PhotonNetwork.Disconnect();
             }
         }
-        
         #endregion
         
+        
+
         #region photon send recv
-        public void SendBattleManager(RpcTarget target , E_PTDefine ptID , params object[] param)
+        public void SendBattleManager(RpcTarget target, E_PTDefine ptID, params object[] param)
         {
             if (PhotonNetwork.IsConnected)
             {
-                photonView.RPC(recvMessage, target , ptID , param);
+                photonView.RPC(recvMessage, target, ptID, param);
             }
             else
             {
@@ -1102,7 +1159,7 @@ namespace ED
         }
 
         [PunRPC]
-        public void RecvBattleManager(E_PTDefine ptID , params object[] param)
+        public void RecvBattleManager(E_PTDefine ptID, params object[] param)
         {
             switch (ptID)
             {
@@ -1113,7 +1170,7 @@ namespace ED
                     DeactivateWaitingObject();
                     break;
                 case E_PTDefine.PT_ADDSP:
-                    int addsp = (int)param[0];
+                    int addsp = (int) param[0];
                     AddSP(addsp);
                     break;
                 case E_PTDefine.PT_SPAWNMINION:
@@ -1123,43 +1180,10 @@ namespace ED
                     EndGame(new PhotonMessageInfo());
                     break;
                 case E_PTDefine.PT_NICKNAME:
-                    UI_InGame.Get().SetNickname((string)param[0]);
+                    UI_InGame.Get().SetNickname((string) param[0]);
                     break;
             }
         }
         #endregion
-
-        public BaseStat GetRandomPlayerUnitHighHealth(bool pIsBottomPlayer)
-        {
-            BaseStat rtn = null;
-            float hp = 0;
-            
-            if (pIsBottomPlayer)
-            {
-                for (int i = 1; i < listBottomPlayer.Count; i++)
-                {
-                    if (listBottomPlayer[i].currentHealth > hp)
-                    {
-                        rtn = listBottomPlayer[i];
-                        hp = rtn.currentHealth;
-                    }
-                }
-
-                return rtn;
-            }
-            else
-            {
-                for (int i = 1; i < listTopPlayer.Count; i++)
-                {
-                    if (listTopPlayer[i].currentHealth > hp)
-                    {
-                        rtn = listTopPlayer[i];
-                        hp = rtn.currentHealth;
-                    }
-                }
-
-                return rtn;
-            }
-        }
     }
 }

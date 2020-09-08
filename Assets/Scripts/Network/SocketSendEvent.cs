@@ -62,9 +62,75 @@ public class SocketSendEvent
             }
             case GameProtocol.HIT_DAMAGE_REQ:
             {
-                //HitDamageReq(IPeer peer, float damage, float delay)
+                float damage = (float)param[0] * Global.g_networkBaseValue;
+                _sender.HitDamageReq(peer , (int)damage);
                 break;
             }
+            
+            #region relay
+
+            case GameProtocol.REMOVE_MINION_RELAY:
+            {
+                //RemoveMinionRelay(IPeer peer, int playerUId, int id)
+                break;
+            }
+            case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+            {
+                //HitDamageMinionRelay(IPeer peer, int playerUId, int id, int damage, int delay)
+                break;
+            }
+            case GameProtocol.DESTROY_MINION_RELAY:
+            {
+                //DestroyMinionRelay(IPeer peer, int playerUId, int id)
+                break;
+            }
+            case GameProtocol.HEAL_MINION_RELAY:
+            {
+                //HealMinionRelay(IPeer peer, int playerUId, int id, int heal)
+                break;
+            }
+            case GameProtocol.PUSH_MINION_RELAY:
+            {
+                //PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
+                break;
+            }
+            case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+            {
+                //SetMinionAnimationTriggerRelay(IPeer peer, int playerUId, int id, string trigger)
+                break;
+            }
+            case GameProtocol.FIRE_ARROW_RELAY:
+            {
+                //FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage)
+                break;
+            }
+            case GameProtocol.FIREBALL_BOMB_RELAY:
+            {
+                //FireballBombRelay(IPeer peer, int playerUId, int id)
+                break;
+            }
+            case GameProtocol.MINE_BOMB_RELAY:
+            {
+                //MineBombRelay(IPeer peer, int playerUId, int id)
+                break;
+            }
+            case GameProtocol.REMOVE_MAGIC_RELAY:
+            {
+                //RemoveMagicRelay(IPeer peer, int playerUId, int id)
+                break;
+            }
+            case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+            {
+                //SetMagicTargetIdRelay(IPeer peer, int playerUId, int id, int targetId)
+                break;
+            }
+            case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+            {
+                //SetMagicTargetRelay(IPeer peer, int playerUId, int id, int x, int z)
+                break;
+            }
+            
+            #endregion
             
         }
     }
