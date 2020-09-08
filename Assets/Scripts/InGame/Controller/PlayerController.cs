@@ -365,6 +365,13 @@ namespace ED
                 InGameManager.Get().event_SP_Edit.Invoke(sp);
             }
         }
+        
+        private void RefreshHealthBar()
+        {
+            image_HealthBar.fillAmount = currentHealth / maxHealth;
+            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+        }
+
         #endregion
         
         #region minion
@@ -701,7 +708,53 @@ namespace ED
         }
         
         
+        public void LevelUpDice(int resetFieldNum, int levelupFieldNum, int levelupDiceId, int level)
+        {
+            arrDice[resetFieldNum].Reset();
+            
+            DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
+            arrDice[levelupFieldNum].Set(data, level);
+            
+        }
+        
         #endregion
+        
+        #region net etc system
+        
+        
+        public void ChangeLayer(bool pIsBottomPlayer)
+        {
+            gameObject.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
+            objCollider.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
+            this.isBottomPlayer = pIsBottomPlayer;
+
+            if (InGameManager.Get().IsNetwork() == true && this.isBottomPlayer == false && NetworkManager.Get().playType == PLAY_TYPE.BATTLE)
+            {
+                transform.rotation = Quaternion.Euler(0, 180f, 0);
+            }
+            
+            /*
+            if (PhotonNetwork.IsConnected && PhotonNetwork.IsMasterClient == false && PhotonManager.Instance.playType == PLAY_TYPE.BATTLE)
+            {
+                transform.rotation = Quaternion.Euler(0, 180f, 0);
+            }
+
+            if (PhotonNetwork.IsConnected && PhotonManager.Instance.playType == PLAY_TYPE.CO_OP)
+            {
+                if ((PhotonNetwork.IsMasterClient && photonView.IsMine == false)
+                    || (PhotonNetwork.IsMasterClient == false && photonView.IsMine == true))
+                {
+                    GetComponentInChildren<Collider>().enabled = false;
+                    transform.GetChild(0).gameObject.SetActive(false);
+                    transform.GetChild(1).gameObject.SetActive(false);
+                }
+            }
+            */
+        }
+
+        
+        #endregion
+        
         
         #region dice system
         
@@ -740,7 +793,6 @@ namespace ED
         }
 
         
-        //[PunRPC]
         public void SetDeck(string deck)
         {
             var splitDeck = deck.Split('/');
@@ -753,18 +805,10 @@ namespace ED
             {
                 var num = int.Parse(splitDeck[i]);
                 
-                //arrDeck[i] = InGameManager.Get().data_AllDice.listDice.Find(data => data.id == num);
                 arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
                 
                 // add pool
-                //Debug.LogFormat(gameObject.name + " AddPool: " + arrDeck[i].prefab.name);
                 if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
-                
-                //if (arrDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDeck[i] is null", gameObject.name, i));
-                //if (arrDeck[i].prefab == null) Debug.LogError(string.Format("{0}, arrDeck[{1}].prefab is null", gameObject.name, i));
-                //PoolManager.instance.AddPool(arrDeck[i].prefab, 50);
-                
-                //if (arrDiceDeck[i] == null) Debug.LogError(string.Format("{0},i={1}:arrDiceDeck[i] is null", gameObject.name, i));
                 
                 if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
                 {
@@ -778,27 +822,9 @@ namespace ED
             }
         }
         
-
-        //[PunRPC]
         public void GetDice(int deckNum, int slotNum)
         {
             arrDice[slotNum].Set(arrDiceDeck[deckNum]);
-        }
-
-        //[PunRPC]
-        public void LevelUpDice(int resetFieldNum, int levelupFieldNum, int levelupDiceId, int level)
-        {
-            arrDice[resetFieldNum].Reset();
-            /*foreach (var data in InGameManager.Get().data_AllDice.listDice.Where(data => levelupDiceId == data.id))
-            {
-                arrDice[levelupFieldNum].Set(data, level);
-                break;
-            }*/
-            
-            DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
-            arrDice[levelupFieldNum].Set(data, level);
-            
-            
         }
 
         public int GetDiceFieldEmptySlotCount()
@@ -827,9 +853,10 @@ namespace ED
         
         #endregion
         
+        
+        
         #region etc system
         
-        //[PunRPC]
         public override void HitDamage(float damage, float delay = 0)
         {
             if (currentHealth > 0)
@@ -866,46 +893,6 @@ namespace ED
                     InGameManager.Get().EndGame(new PhotonMessageInfo());
                 }
             }
-        }
-
-        private void RefreshHealthBar()
-        {
-            return;
-            
-            image_HealthBar.fillAmount = currentHealth / maxHealth;
-            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
-        }
-
-        //[PunRPC]
-        public void ChangeLayer(bool pIsBottomPlayer)
-        {
-            gameObject.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
-            objCollider.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
-            this.isBottomPlayer = pIsBottomPlayer;
-
-            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect() 
-                && this.isBottomPlayer == false && NetworkManager.Get().playType == PLAY_TYPE.BATTLE)
-            {
-                transform.rotation = Quaternion.Euler(0, 180f, 0);
-            }
-            
-            /*
-            if (PhotonNetwork.IsConnected && PhotonNetwork.IsMasterClient == false && PhotonManager.Instance.playType == PLAY_TYPE.BATTLE)
-            {
-                transform.rotation = Quaternion.Euler(0, 180f, 0);
-            }
-
-            if (PhotonNetwork.IsConnected && PhotonManager.Instance.playType == PLAY_TYPE.CO_OP)
-            {
-                if ((PhotonNetwork.IsMasterClient && photonView.IsMine == false)
-                    || (PhotonNetwork.IsMasterClient == false && photonView.IsMine == true))
-                {
-                    GetComponentInChildren<Collider>().enabled = false;
-                    transform.GetChild(0).gameObject.SetActive(false);
-                    transform.GetChild(1).gameObject.SetActive(false);
-                }
-            }
-            */
         }
 
 

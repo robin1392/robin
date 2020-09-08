@@ -246,6 +246,12 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.DeactiveWaitingObjectNotify = _socketRecv.OnDeactiveWaitingObjectNotify;
         _packetRecv.SpawnNotify = _socketRecv.OnSpawnNotify;
         _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
+
+        _packetRecv.LevelUpDiceNotify = _socketRecv.OnLevelUpDiceNotify;
+        _packetRecv.InGameUpDiceNotify = _socketRecv.OnInGameUpDiceNotify;
+        _packetRecv.UpgradeSpNotify = _socketRecv.OnUpgradeSpNotify;
+        _packetRecv.HitDamageNotify = _socketRecv.HitDamageNotify;
+        _packetRecv.EndGameNotify = _socketRecv.OnEndGameNotify;
         
             
         // relay

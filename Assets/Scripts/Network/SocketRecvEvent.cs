@@ -11,25 +11,27 @@ using RWGameProtocol.Msg;
 using UnityEngine;
 
 
-public class SocketRecvEvent 
+public class SocketRecvEvent
 {
 
     #region variable
+
     #endregion
-    
-    
-    #region init 
+
+
+    #region init
+
     // 
     public SocketRecvEvent()
     {
     }
-    
-    
+
+
     #endregion
-    
-    
-    
-    
+
+
+
+
     #region join room
 
 
@@ -53,9 +55,11 @@ public class SocketRecvEvent
         GameStateManager.Get().CheckSendInGame();
 
     }
+
     #endregion
-    
+
     #region leave
+
     public void OnLeaveGameAck(IPeer peer, MsgLeaveGameAck msg)
     {
         UnityUtil.Print(" leave recv ", "errocode : " + msg.ErrorCode, "white");
@@ -64,107 +68,147 @@ public class SocketRecvEvent
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.LEAVE_GAME_ACK);
     }
+
     #endregion
-    
+
     #region ready game
 
     public void OnReadyGameAck(IPeer peer, MsgReadyGameAck msg)
     {
         UnityUtil.Print(" ready recv ", "errocode : " + msg.ErrorCode, "white");
     }
+
     #endregion
-    
-    
+
+
     #region dice
 
     public void OnGetDiceAck(IPeer peer, MsgGetDiceAck msg)
     {
         // my dice get
         UnityUtil.Print(" get dice recv ", "errocode : " + msg.ErrorCode, "white");
-        
+
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_ACK , msg);
-        
+            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_ACK, msg);
+
     }
 
     public void OnLevelUpDiceAck(IPeer peer, MsgLevelUpDiceAck msg)
     {
-        
+        UnityUtil.Print(" level up dice recv ", "errocode : " + msg.ErrorCode, "white");
+
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, msg);
     }
+
     #endregion
-    
-    
+
+
     #region damage
 
     public void OnHitDamageAck(IPeer peer, MsgHitDamageAck msg)
     {
-        
+
     }
+
     #endregion
-    
-    
+
+
     #region notify
 
     public void OnJoinGameNotify(IPeer peer, MsgJoinGameNotify msg)
     {
         UnityUtil.Print("other info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
-        
+
         // menu
         NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
         GameStateManager.Get().CheckSendInGame();
     }
-    
+
     public void OnDeactiveWaitingObjectNotify(IPeer peer, MsgDeactiveWaitingObjectNotify msg)
     {
-        UnityUtil.Print("Notify Wait" , "DeActive Wait Game Start" , "white");
-        
+        UnityUtil.Print("Notify Wait", "DeActive Wait Game Start", "white");
+
         // ingame
         // 둘다 준비 끝낫다고 노티 이므로 
         // 게임 시작하자
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY , msg.PlayerUId , msg.CurrentSp);
+            InGameManager.Get()
+                .RecvInGameManager(GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, msg.PlayerUId, msg.CurrentSp);
         // 
     }
 
     public void OnLeaveGameNotify(IPeer peer, MsgLeaveGameNotify msg)
     {
-        UnityUtil.Print("Notify Leave" , msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("Notify Leave", msg.PlayerUId.ToString(), "white");
 
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.LEAVE_GAME_NOTIFY , msg.PlayerUId);
-        
+            InGameManager.Get().RecvInGameManager(GameProtocol.LEAVE_GAME_NOTIFY, msg.PlayerUId);
+
         //if (InGameManager.Get() != null)
-            //InGameManager.Get().OnOtherLeft(msg.PlayerUId);
+        //InGameManager.Get().OnOtherLeft(msg.PlayerUId);
     }
 
     public void OnSpawnNotify(IPeer peer, MsgSpawnNotify msg)
     {
-        UnityUtil.Print("spawn Notify " , msg.Wave.ToString() , "white");
+        UnityUtil.Print("spawn Notify ", msg.Wave.ToString(), "white");
         //
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.SPAWN_NOTIFY , msg.Wave );
-        
+            InGameManager.Get().RecvInGameManager(GameProtocol.SPAWN_NOTIFY, msg.Wave);
+
     }
 
     public void OnAddSpNotify(IPeer peer, MsgAddSpNotify msg)
     {
-        UnityUtil.Print("Add Sp Notify" , msg.PlayerUId.ToString() + "  " + msg.CurrentSp.ToString(), "white");
+        UnityUtil.Print("Add Sp Notify", msg.PlayerUId.ToString() + "  " + msg.CurrentSp.ToString(), "white");
         //
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.ADD_SP_NOTIFY , msg.PlayerUId , msg.CurrentSp );
-    }
-    
-    
-    public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
-    {
-        // other dice get
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_NOTIFY , msg );
-        
+            InGameManager.Get().RecvInGameManager(GameProtocol.ADD_SP_NOTIFY, msg.PlayerUId, msg.CurrentSp);
     }
 
+
+    public void OnGetDiceNotify(IPeer peer, MsgGetDiceNotify msg)
+    {
+        UnityUtil.Print("get dice Notify", msg.PlayerUId.ToString() + "  " + msg.DiceId.ToString(), "white");
+        // other dice get
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_NOTIFY, msg);
+
+    }
+
+    public void OnLevelUpDiceNotify(IPeer peer, MsgLevelUpDiceNotify msg)
+    {
+        UnityUtil.Print("get dice Notify", msg.PlayerUId.ToString() + "  " + msg.LevelupDiceId.ToString(), "white");
+
+        // other dice level up
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.LEVEL_UP_DICE_NOTIFY, msg);
+    }
+
+    public void OnInGameUpDiceNotify(IPeer peer, MsgInGameUpDiceNotify msg)
+    {
+        UnityUtil.Print("ingame dice up Notify", msg.PlayerUId.ToString() + "  " + msg.DiceId.ToString(), "white");
+    }
+
+    public void OnUpgradeSpNotify(IPeer peer, MsgUpgradeSpNotify msg)
+    {
+        UnityUtil.Print("upgrade sp Notify", msg.PlayerUId.ToString() + "  " + msg.Upgrade.ToString(), "white");
+    }
+
+    public void HitDamageNotify(IPeer peer, MsgHitDamageNotify msg)
+    {
+        UnityUtil.Print("hit damage Notify", msg.PlayerUId.ToString() + "  " + msg.Damage.ToString(), "white");
+    }
     
+    public void OnEndGameNotify(IPeer peer, MsgEndGameNotify msg)
+    {
+        UnityUtil.Print("end game Notify", msg.WinPlayerUId.ToString() , "white");
+    }
+
     #endregion
+    
+    
+    
     
     #region relay
 

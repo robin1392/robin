@@ -40,11 +40,6 @@ public class SocketSendEvent
                 _sender.ReadyGameReq(peer);
                 break;
             }
-            case GameProtocol.CHANGE_LAYER_REQ:
-            {
-                
-                break;
-            }
             case GameProtocol.GET_DICE_REQ:
             {
                 _sender.GetDiceReq(peer);
@@ -57,10 +52,15 @@ public class SocketSendEvent
             }
             case GameProtocol.LEVEL_UP_DICE_REQ:
             {
+                _sender.LevelUpDiceReq(peer , (short)param[0] , (short)param[1]);
                 //LevelUpDiceReq(IPeer peer, int resetFieldNum, int leveupFieldNum)
                 break;
             }
             case GameProtocol.INGAME_UP_DICE_REQ:
+            {
+                break;
+            }
+            case GameProtocol.UPGRADE_SP_REQ:
             {
                 break;
             }

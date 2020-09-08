@@ -173,11 +173,9 @@ namespace ED
         protected void Update()
         {
             RefreshTimeUI();
-            //text_UnitCount.text = $"총 유닛수: {listBottomPlayer.Count + listTopPlayer.Count - 2}";
             if(UI_InGame.Get() != null)
                 UI_InGame.Get().SetUnitCount(listBottomPlayer.Count + listTopPlayer.Count - 2);
         }
-
 
         #endregion
         
@@ -414,7 +412,10 @@ namespace ED
             }
             else
             {
+                
                 Debug.Log("StartGame: OfflineMode");
+                // 네트워크 연결 안됫으니 deactive...   
+                DeactivateWaitingObject();
                 StartCoroutine(SpawnLoop());
             }
                 
@@ -517,12 +518,6 @@ namespace ED
                 }
             }
             */
-            if (IsNetwork() == false)
-            {
-                // 네트워크 연결 안됫으니 deactive...   
-                DeactivateWaitingObject();
-            }
-            
             
             
             wave = 0;
@@ -672,6 +667,8 @@ namespace ED
 
         
         #region get set
+        
+        // not network use
         public void GetDice()
         {
             playerController.AddSp(-GetDiceCost());
@@ -686,6 +683,7 @@ namespace ED
             return 10 + getDiceCount * 10;
         }
 
+        
         public BaseStat GetRandomPlayerUnit(bool isBottomPlayer)
         {
             int searchCount = 30;
@@ -747,6 +745,16 @@ namespace ED
         #region leave game
         public void LeaveRoom()
         {
+            if (NetworkManager.Get().IsConnect() == true)
+            {
+                SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
+            }
+            else
+            {
+                GameStateManager.Get().MoveMainScene();
+            }
+            
+            // not use
             /*
             if (PhotonNetwork.IsConnected)
             {
@@ -757,24 +765,17 @@ namespace ED
                 GameStateManager.Get().MoveMainScene();
             }
             */
-            
-            if (NetworkManager.Get().IsConnect() == true)
-            {
-                SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
-            }
-            else
-            {
-                GameStateManager.Get().MoveMainScene();
-            }
+
         }
         
-        // 내자신이 나간다고 눌럿을때
+        // 내자신이 나간다고 눌럿을때 응답 받은것
         public void CallBackLeaveRoom()
         {
             NetworkManager.Get().DisconnectSocket();
             GameStateManager.Get().MoveMainScene();
         }
 
+        
         /// <summary>
         /// 상대방이 나갓다고 noti를 받앗을 경우
         /// </summary>
@@ -789,7 +790,7 @@ namespace ED
             }
         }
 
-        //[PunRPC]
+        
         public void EndGame(PhotonMessageInfo info)
         {
             isGamePlaying = false;
@@ -803,6 +804,133 @@ namespace ED
         }
         
         #endregion
+        
+        
+        // 매니저 외부에서 패킷을 보낼때 쓰자..
+        #region outter send
+
+        public void SendDiceLevelUp(int resetFieldNum , int levelUpFieldNum)
+        {
+            SendInGameManager(GameProtocol.LEVEL_UP_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
+        }
+        #endregion
+        
+        
+        #region network
+
+        public void SendInGameManager(GameProtocol protocol , params object[] param)
+        {
+            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            {
+                NetworkManager.Get().Send(protocol , param);
+            }
+            else
+            {
+                RecvInGameManager(protocol, param);
+            }
+            
+        }
+
+        public void RecvInGameManager(GameProtocol protocol, params object[] param)
+        {
+            switch (protocol)
+            {
+                case GameProtocol.LEAVE_GAME_ACK:
+                    CallBackLeaveRoom();
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    OnOtherLeft((int) param[0]);
+                    break;
+                case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
+                {
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    {
+                        NetSetSp((int)param[1]);    // param1 wave
+                    }
+                    
+                    NetStartGame();
+                    break;
+                }
+                    
+                case GameProtocol.ADD_SP_NOTIFY:
+                {
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    {
+                        NetSetSp((int)param[1]);    // param1 wave
+                    }
+                    break;
+                }
+                case GameProtocol.SPAWN_NOTIFY:
+                {
+                    NetSpawnNotify((int)param[0]);
+                    break;
+                }
+                case GameProtocol.GET_DICE_ACK:
+                {
+                    // my dice 셋팅
+                    // 주사위 아이디 DiceId;
+                    // 슬롯 번호 SlotNum;
+                    // 레벨 Level;
+                    // 현재 sp CurrentSp;
+                    MsgGetDiceAck diceack = (MsgGetDiceAck) param[0];
+                    GetDiceCallBack( diceack.DiceId , diceack.SlotNum , diceack.Level , diceack.CurrentSp);
+                    
+                    Debug.Log(diceack.DiceId + "  " + diceack.SlotNum + "   " + diceack.Level);
+                    
+                    break;
+                }
+                case GameProtocol.GET_DICE_NOTIFY:
+                {
+                    // 상대방것만 온다...
+                    MsgGetDiceNotify dicenoty = (MsgGetDiceNotify) param[0];
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID(dicenoty.PlayerUId) == false)
+                    {
+                        GetDiceOther(dicenoty.DiceId, dicenoty.SlotNum, dicenoty.Level);
+                    }
+                    
+                    break;
+                }
+                case GameProtocol.LEVEL_UP_DICE_ACK:
+                {
+                    MsgLevelUpDiceAck lvupDiceack = (MsgLevelUpDiceAck) param[0];
+                    playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum, lvupDiceack.LevelupDiceId, lvupDiceack.Level);
+                    
+                    break;
+                }
+                case GameProtocol.LEVEL_UP_DICE_NOTIFY:
+                {
+                    MsgLevelUpDiceNotify lvupdiceNoti = (MsgLevelUpDiceNotify) param[0];
+                    // 상대방거..
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID(lvupdiceNoti.PlayerUId) == false)
+                        playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum, lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
+                    break;
+                }
+                
+                
+                /*                
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                case GameProtocol.LEAVE_GAME_NOTIFY:
+                    break;
+                */
+            }   
+        }
+        #endregion
+        
+        
+        
+        
+        
         
         
         #region rpc etc
@@ -870,102 +998,6 @@ namespace ED
             playerController.SP_Upgrade();
         }
         
-        #endregion
-        
-        
-        
-        #region network
-
-        public void SendInGameManager(GameProtocol protocol , params object[] param)
-        {
-            if ( NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
-            {
-                NetworkManager.Get().Send(protocol , param);
-            }
-            else
-            {
-                RecvInGameManager(protocol, param);
-            }
-            
-        }
-
-        public void RecvInGameManager(GameProtocol protocol, params object[] param)
-        {
-            switch (protocol)
-            {
-                case GameProtocol.LEAVE_GAME_ACK:
-                    CallBackLeaveRoom();
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    OnOtherLeft((int) param[0]);
-                    break;
-                case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
-                {
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
-                    {
-                        NetSetSp((int)param[1]);    // param1 wave
-                    }
-                    
-                    NetStartGame();
-                    break;
-                }
-                    
-                case GameProtocol.ADD_SP_NOTIFY:
-                {
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
-                    {
-                        NetSetSp((int)param[1]);    // param1 wave
-                    }
-                    break;
-                }
-                case GameProtocol.SPAWN_NOTIFY:
-                {
-                    NetSpawnNotify((int)param[0]);
-                    break;
-                }
-                case GameProtocol.GET_DICE_ACK:
-                {
-                    // my dice 셋팅
-                    // 주사위 아이디 DiceId;
-                    // 슬롯 번호 SlotNum;
-                    // 레벨 Level;
-                    // 현재 sp CurrentSp;
-                    MsgGetDiceAck diceack = (MsgGetDiceAck) param[0];
-                    Debug.Log(diceack.DiceId + "  " + diceack.SlotNum + "   " + diceack.Level);
-                    GetDiceCallBack( diceack.DiceId , diceack.SlotNum , diceack.Level , diceack.CurrentSp);
-                    break;
-                }
-                case GameProtocol.GET_DICE_NOTIFY:
-                {
-                    // 상대방것만 온다...
-                    MsgGetDiceNotify dicenoty = (MsgGetDiceNotify) param[0];
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID(dicenoty.PlayerUId) == false)
-                    {
-                        GetDiceOther(dicenoty.DiceId, dicenoty.SlotNum, dicenoty.Level);
-                    }
-                    
-                    break;
-                }
-                
-                
-                /*                
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                */
-            }   
-        }
         #endregion
         
         
