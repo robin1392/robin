@@ -80,7 +80,8 @@ namespace ED
                 rb.velocity = Vector3.zero;
                 isBombed = true;
 
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                if(InGameManager.Get().IsNetwork() && isMine )
                 {
                     SplashDamage();
                     //if (target != null)
@@ -89,7 +90,8 @@ namespace ED
                     //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.Get().IsNetwork() == false )
                 {
                     // if (target != null)
                     // {
@@ -109,7 +111,7 @@ namespace ED
             foreach (var col in cols)
             {
                 //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);
-                controller.NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , col.GetComponentInParent<BaseStat>().id , power, 0f);
+                controller.HitMinionDamage( true , col.GetComponentInParent<BaseStat>().id , power, 0f);
             }
         }
 

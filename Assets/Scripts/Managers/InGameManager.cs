@@ -1031,7 +1031,7 @@ namespace ED
                     MsgEndGameNotify endNoti = (MsgEndGameNotify) param[0];
 
                     // 이긴 사람 id 가 나면 내가 승
-                    if (NetworkManager.Get().GetNetInfo().UserUID() == endNoti.WinPlayerUId )
+                    if (NetworkManager.Get().UserUID == endNoti.WinPlayerUId )
                     {
                         EndGame(true);
                     }

@@ -993,6 +993,25 @@ namespace ED
             }*/
         }
 
+        public void HitMinionDamage(bool other , int minionId , float damage , float delay )
+        {
+            if (other == true)
+            {
+                targetPlayer.HitDamageMinionAndMagic(minionId, damage, delay);
+                if (InGameManager.Get().IsNetwork())
+                {
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , minionId , damage, delay);
+                }
+            }
+            else
+            {
+                HitDamageMinionAndMagic(minionId, damage, delay);
+                if (InGameManager.Get().IsNetwork())
+                {
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().UserUID , minionId , damage, delay);
+                }
+            }    
+        }
 
 
         #endregion
@@ -1021,10 +1040,11 @@ namespace ED
             {
                 NetworkManager.Get().Send(protocol, param);
             }
-            else
+            // 네트워크는 이렇게 하면안된다...파라메터에 uid 부터 들어가서...변수가 틀려진다
+            /*else
             {
                 NetRecvPlayer(protocol, param);
-            }
+            }*/
         }
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
@@ -1044,7 +1064,7 @@ namespace ED
                 {
                     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
 
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID(damagenoti.PlayerUId) == false)
+                    if (NetworkManager.Get().OtherUID == damagenoti.PlayerUId )
                     {
                         float calDamage = damagenoti.Damage /  Global.g_networkBaseValue;
                         targetPlayer.HitDamage(calDamage);
