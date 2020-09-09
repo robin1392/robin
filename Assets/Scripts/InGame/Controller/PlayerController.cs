@@ -1081,9 +1081,29 @@ namespace ED
         // Unit's RPCs
         //////////////////////////////////////////////////////////////////////
         //[PunRPC]
-        public void FireBullet(string bulletName, Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void FireBullet(E_BulletType bulletType, Vector3 startPos, int targetId, float damage, float moveSpeed)
         {
-            var b = PoolManager.instance.ActivateObject<Bullet>(bulletName, startPos);
+            Bullet b = null;
+            
+            switch (bulletType)
+            {
+                case E_BulletType.ARROW:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Arrow", startPos);
+                    break;
+                case E_BulletType.SPEAR:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
+                    break;
+                case E_BulletType.NECROMANCER:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
+                    break;
+                case E_BulletType.MAGICIAN:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Magician_Bullet", startPos);
+                    break;
+                case E_BulletType.ARBITER:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Arbiter_Bullet", startPos);
+                    break;
+            }
+            
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
@@ -1119,9 +1139,19 @@ namespace ED
         // }
 
         //[PunRPC]
-        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
+        public void FireCannonBall(E_CannonType type, Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
         {
-            var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
+            CannonBall b = null;
+            switch (type)
+            {
+                case E_CannonType.DEFAULT:
+                    b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
+                    break;
+                case E_CannonType.BOMBER:
+                    b = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
+                    break;
+            }
+            
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
@@ -1337,10 +1367,10 @@ namespace ED
                     MineBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_FIRECANNONBALL:
-                    FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float) param[3]);
+                    FireCannonBall((E_CannonType)param[0], (Vector3) param[1], (Vector3) param[2], (float) param[3], (float) param[4]);
                     break;
                 case E_PTDefine.PT_FIREBULLET:
-                    FireBullet((string)param[0], (Vector3) param[1], (int) param[2], (float) param[3], (float) param[4]);
+                    FireBullet((E_BulletType)param[0], (Vector3) param[1], (int) param[2], (float) param[3], (float) param[4]);
                     break;
                 case E_PTDefine.PT_MINIONANITRIGGER:
                     SetMinionAnimationTrigger((int) param[0], (string) param[1]);

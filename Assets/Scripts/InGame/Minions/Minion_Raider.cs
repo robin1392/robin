@@ -67,12 +67,16 @@ namespace ED
                 Physics.Raycast(transform1.position + Vector3.up * 0.2f, transform1.forward, out var hit,
                     7f, targetLayer);
 
-                if (hit.collider != null && !hit.collider.CompareTag("Player") 
-                    /*&& hit.collider.gameObject != target.gameObject */&& hit.distance < distance)
+                if (hit.collider != null)
                 {
-                    distance = hit.distance;
-                    dashTarget = col;
-                    hitPoint = hit.point;
+                    var m = hit.collider.GetComponentInParent<Minion>();
+
+                    if (!hit.collider.CompareTag("Player") && hit.distance < distance && (m != null && m.isCloacking == false))
+                    {
+                        distance = hit.distance;
+                        dashTarget = col;
+                        hitPoint = hit.point;
+                    }
                 }
             }
 

@@ -7,24 +7,29 @@ namespace ED
 {
     public class Minion_Saint : Minion
     {
-        public ParticleSystem ps_Heal;
+        public GameObject pref_HealArea;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_HealArea, 1);
+        }
 
         public override void Attack()
         {
             if (target == null || target.currentHealth >= target.maxHealth) return;
 
-            controller.SendPlayer(RpcTarget.All,
-                E_PTDefine.PT_ACTIVATEPOOLOBJECT,
-                "Effect_Heal",
-                transform.position,
-                Quaternion.identity,
-                new Vector3(1.5f, 1.5f, 0.3f));
-            var cols = Physics.OverlapSphere(transform.position, range, friendlyLayer);
+            var pos = transform.position;
+            pos.y = 0.1f;
+            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, pref_HealArea.name, pos,
+                Quaternion.identity, Vector3.one);
+            var cols = Physics.OverlapSphere(pos, range, friendlyLayer);
             
             if (PhotonNetwork.IsConnected && isMine)
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
                 foreach (var col in cols)
                 {
                     if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
@@ -36,7 +41,7 @@ namespace ED
             else if (PhotonNetwork.IsConnected == false)
             {
                 base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
+                animator.SetTrigger(_animatorHashSkill);
                 foreach (var col in cols)
                 {
                     if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
@@ -52,7 +57,7 @@ namespace ED
             var cols = Physics.OverlapSphere(transform.position, searchRange, friendlyLayer);
             Collider firstTarget = null;
             Collider closeToTarget = null;
-            var closeToDistance = float.MaxValue;
+            var closeToDistance = 0f;
             var distance = float.MaxValue;
             var oldHp = 1f;
 
@@ -64,7 +69,7 @@ namespace ED
                     var hp = m.currentHealth / m.maxHealth;
                     var dis = Vector3.Distance(transform.position, col.transform.position);
 
-                    if (dis < closeToDistance && m.GetType() != typeof(Minion_Healer))
+                    if (dis > closeToDistance && m != null && m.GetType() != typeof(Minion_Healer))
                     {
                         closeToDistance = dis;
                         closeToTarget = col;

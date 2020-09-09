@@ -8,8 +8,26 @@ namespace ED
 {
     public class Minion_Arbiter : Minion
     {
-        private List<Minion> listCloaking = new List<Minion>();
+        public float bulletMoveSpeed = 6f;
+        public GameObject pref_Bullet;
         
+        private List<Minion> listCloaking = new List<Minion>();
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_Bullet, 1);
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = animator.GetComponentInChildren<MinionAnimationEvent>();
+            ae.event_FireArrow += FireArrow;
+        }
+
         public override void Attack()
         {
             if (target == null) return;
@@ -96,23 +114,24 @@ namespace ED
         //     }
         // }
         //
-        public void FireSpear()
-        {
-            if (target == null) return;
-            
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET , ts_ShootingPos.position, target.id, power);
-            }
-        }
-        
         public void FireArrow()
         {
-            if (target == null) return;
-            
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if (target == null || IsTargetInnerRange() == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET , ts_ShootingPos.position, target.id, power);
+                animator.SetTrigger(_animatorHashIdle);
+                isAttacking = false;
+                SetControllEnable(true);
+                return;
+            }
+            
+            if (PhotonNetwork.IsConnected && isMine)
+            {
+                //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.ARBITER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+            }
+            else if (PhotonNetwork.IsConnected == false)
+            {
+                controller.FireBullet(E_BulletType.ARBITER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
     }

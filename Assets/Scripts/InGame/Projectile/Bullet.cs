@@ -64,7 +64,7 @@ namespace ED
             }
         }
 
-        public void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public virtual void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
             _isTarget = false;
             _damage = pDamage;
