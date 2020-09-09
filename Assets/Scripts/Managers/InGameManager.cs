@@ -238,6 +238,8 @@ namespace ED
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 playerController.targetPlayer.isMine = false;
                 playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
+                playerController.targetPlayer.targetPlayer = playerController;
+                
                 playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
 
             }
