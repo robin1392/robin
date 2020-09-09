@@ -221,11 +221,9 @@ namespace ED
                 UI_InGamePopup.Get().SetViewWaiting(true);
 
                 // player controller create...my and other
-                Vector3 myTowerPos = FieldManager.Get()
-                    .GetPlayerPos(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                Vector3 myTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
                 GameObject myTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
-                myTObj.transform.parent = FieldManager.Get()
-                    .GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                myTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
                 myTObj.transform.position = myTowerPos;
                 playerController = myTObj.GetComponent<PlayerController>();
                 playerController.isMine = true;
@@ -233,16 +231,13 @@ namespace ED
                 playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
 
 
-                Vector3 otherTowerPos = FieldManager.Get()
-                    .GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+                Vector3 otherTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
                 GameObject otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
-                otherTObj.transform.parent = FieldManager.Get()
-                    .GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+                otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
                 otherTObj.transform.position = otherTowerPos;
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 playerController.targetPlayer.isMine = false;
-                playerController.targetPlayer.isBottomPlayer =
-                    NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
+                playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
                 playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
 
             }
@@ -256,9 +251,11 @@ namespace ED
                 playerController.isMine = true;
                 playerController.isBottomPlayer = true;
 
-                obj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
-                obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
-                obj.SendMessage("ChangeLayer", false);
+                GameObject otherTObj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
+                otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
+                playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
+                
+                otherTObj.SendMessage("ChangeLayer", false);
 
                 isAIMode = true;
             }
@@ -799,6 +796,17 @@ namespace ED
         }
 
 
+        public void EndGame(bool winLose)
+        {
+            isGamePlaying = false;
+            StopAllCoroutines();
+            
+            UI_InGamePopup.Get().SetPopupResult(true);
+            BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
+            
+            UI_InGamePopup.Get().SetResultText(winLose ? Global.g_inGameWin : Global.g_inGameLose);
+        }
+        
         public void EndGame(PhotonMessageInfo info)
         {
             isGamePlaying = false;
@@ -887,7 +895,7 @@ namespace ED
         #region network
         public void SendInGameManager(GameProtocol protocol, params object[] param)
         {
-            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            if (IsNetwork() == true)
             {
                 NetworkManager.Get().Send(protocol, param);
             }
@@ -895,9 +903,15 @@ namespace ED
             {
                 RecvInGameManager(protocol, param);
             }
-
         }
 
+        // net direct player
+        public void RecvPlayerManager(GameProtocol protocol, params object[] param)
+        {
+            playerController.NetRecvPlayer(protocol, param);
+        }
+
+        // net ingame manager to do
         public void RecvInGameManager(GameProtocol protocol, params object[] param)
         {
             switch (protocol)
@@ -952,7 +966,7 @@ namespace ED
                     break;
                 case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
                 {
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    if (NetworkManager.Get().UserUID == (int) param[0]) // param 0 = useruid
                     {
                         NetSetSp((int) param[1]); // param1 wave
                     }
@@ -962,7 +976,7 @@ namespace ED
                 }
                 case GameProtocol.ADD_SP_NOTIFY:
                 {
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID((int) param[0]) == true) // param 0 = useruid
+                    if (NetworkManager.Get().UserUID == (int) param[0] ) // param 0 = useruid
                     {
                         NetSetSp((int) param[1]); // param1 wave
                     }
@@ -978,7 +992,7 @@ namespace ED
                 {
                     // 상대방것만 온다...
                     MsgGetDiceNotify dicenoty = (MsgGetDiceNotify) param[0];
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID(dicenoty.PlayerUId) == false)
+                    if (NetworkManager.Get().OtherUID == dicenoty.PlayerUId)
                     {
                         GetDiceOther(dicenoty.DiceId, dicenoty.SlotNum, dicenoty.Level);
                     }
@@ -989,7 +1003,7 @@ namespace ED
                 {
                     MsgLevelUpDiceNotify lvupdiceNoti = (MsgLevelUpDiceNotify) param[0];
                     // 상대방거..
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID(lvupdiceNoti.PlayerUId) == false)
+                    if (NetworkManager.Get().OtherUID == lvupdiceNoti.PlayerUId )
                         playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,
                             lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
                     break;
@@ -998,7 +1012,7 @@ namespace ED
                 {
                     MsgUpgradeSpNotify notisp = (MsgUpgradeSpNotify) param[0];
                     // 상대방이 SP 업그레이드한건데...알필요가 잇을까 싶다..일단은 공간만 만들어놓자
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID(notisp.PlayerUId) == false)
+                    if (NetworkManager.Get().OtherUID == notisp.PlayerUId )
                         playerController.targetPlayer.SP_Upgrade(notisp.Upgrade);
                     break;
                 }
@@ -1008,11 +1022,26 @@ namespace ED
                     MsgInGameUpDiceNotify notiIngame = (MsgInGameUpDiceNotify) param[0];
 
                     // 상대방이 햇다는것을..알필요가 잇나..잇겟지...
-                    if (NetworkManager.Get().GetNetInfo().IsMyUID(notiIngame.PlayerUId) == false)
+                    if (NetworkManager.Get().OtherUID == notiIngame.PlayerUId )
                         playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId, notiIngame.InGameUp);
                     break;
                 }
+                case GameProtocol.END_GAME_NOTIFY:
+                {
+                    MsgEndGameNotify endNoti = (MsgEndGameNotify) param[0];
 
+                    // 이긴 사람 id 가 나면 내가 승
+                    if (NetworkManager.Get().GetNetInfo().UserUID() == endNoti.WinPlayerUId )
+                    {
+                        EndGame(true);
+                    }
+                    else
+                    {
+                        // 승리자 uid 내가 아닌 상대방
+                        EndGame(false);
+                    }
+                    break;
+                }
                 #endregion
 
 

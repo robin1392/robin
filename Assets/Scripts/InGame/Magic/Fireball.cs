@@ -8,6 +8,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.Events;
 using DG.Tweening;
+using RWGameProtocol;
 
 namespace ED
 {
@@ -107,7 +108,8 @@ namespace ED
             var cols = Physics.OverlapSphere(pos, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
             foreach (var col in cols)
             {
-                controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);
+                //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , col.GetComponentInParent<BaseStat>().id, power, 0f);
+                controller.NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , col.GetComponentInParent<BaseStat>().id , power, 0f);
             }
         }
 

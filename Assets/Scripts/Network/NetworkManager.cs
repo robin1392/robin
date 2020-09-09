@@ -79,6 +79,16 @@ public class NetworkManager : Singleton<NetworkManager>
         get => _isMaster;
         set => _isMaster = value;
     }
+
+    public int UserUID
+    {
+        get => GetNetInfo().UserUID();
+    }
+
+    public int OtherUID
+    {
+        get => GetNetInfo().OtherUID();
+    }
     #endregion
     
     
@@ -328,6 +338,16 @@ public class NetInfo
             return true;
 
         return false;
+    }
+
+    public int UserUID()
+    {
+        return playerInfo.PlayerUId;
+    }
+
+    public int OtherUID()
+    {
+        return otherInfo.PlayerUId;
     }
 
     public bool IsOtherUID(int userUid)

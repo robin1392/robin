@@ -72,11 +72,15 @@ public class SocketSendEvent
             case GameProtocol.REMOVE_MINION_RELAY:
             {
                 //RemoveMinionRelay(IPeer peer, int playerUId, int id)
+                _sender.RemoveMinionRelay(peer , (int)param[0] , (int)param[1]);
                 break;
             }
             case GameProtocol.HIT_DAMAGE_MINION_RELAY:
             {
                 //HitDamageMinionRelay(IPeer peer, int playerUId, int id, int damage, int delay)
+                float damage = (float)param[2] * Global.g_networkBaseValue;
+                float delay = (float)param[3] * Global.g_networkBaseValue;
+                _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , (int)damage , (int)delay);
                 break;
             }
             case GameProtocol.DESTROY_MINION_RELAY:

@@ -6,6 +6,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using RWGameProtocol;
+using RWGameProtocol.Msg;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
@@ -30,7 +32,8 @@ namespace ED
             if (_instance == null)
             {
                 PlayerController pc = GameObject.FindObjectOfType(typeof(PlayerController)) as PlayerController;
-                if (pc != null && pc.photonView.IsMine)
+                //if (pc != null && pc.photonView.IsMine)
+                if (pc != null && pc.isMine)
                 {
                     _instance = pc;
                     _instance.Init();
@@ -407,7 +410,8 @@ namespace ED
             {
                 m.id = _spawnCount++;
                 m.controller = this;
-                m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+                //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+                m.isMine = isMine;
                 if (!listMinion.Contains(m)) listMinion.Add(m);
             }
 
@@ -452,7 +456,8 @@ namespace ED
                 }
             }
 
-            if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
+            //if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
+            if (InGameManager.Get().IsNetwork() && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !isMine)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;
@@ -477,7 +482,8 @@ namespace ED
                 m.castType = (DICE_CAST_TYPE)data.castType;
                 m.id = _spawnCount++;
                 m.controller = this;
-                m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+                //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+                m.isMine = isMine;
                 m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
                 m.ChangeLayer(isBottomPlayer);
                 
@@ -563,6 +569,15 @@ namespace ED
 
         private void MinionDestroyCallback(Minion minion)
         {
+
+            RemoveMinion(minion.id);
+            if (InGameManager.Get().IsNetwork())
+            {
+                NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , NetworkManager.Get().UserUID , minion.id);
+            }
+
+            
+            /*
             if (PhotonNetwork.IsConnected)
             {
                 //photonView.RPC("RemoveMinion", RpcTarget.All, minion.id);
@@ -572,6 +587,7 @@ namespace ED
             {
                 RemoveMinion(minion.id);
             }
+            */
         }
         
         #endregion
@@ -611,7 +627,8 @@ namespace ED
                 spawnPos.z *= -1f;
             }
 
-            if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
+            //if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
+            if (InGameManager.Get().IsNetwork() && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !isMine)
             {
                 spawnPos.x *= -1f;
                 spawnPos.z *= -1f;
@@ -621,13 +638,11 @@ namespace ED
             //if (data.prefab != null)
             if(loadMagic != null )
             {
-                //var m = PoolManager.instance.ActivateObject<Magic>(data.prefab.name, spawnPos, InGameManager.Get().transform);
                 var m = PoolManager.instance.ActivateObject<Magic>(data.prefabName, spawnPos, InGameManager.Get().transform);
                 if (m != null)
                 {
-                    m.isMine = PhotonNetwork.IsConnected
-                        ? photonView.IsMine
-                        : (InGameManager.Get().playerController == this);
+                    //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : (InGameManager.Get().playerController == this);
+                    m.isMine = InGameManager.Get().IsNetwork() ? isMine : (InGameManager.Get().playerController == this);
                     m.id = _spawnCount++;
                     m.controller = this;
                     m.diceFieldNum = diceNum;
@@ -662,8 +677,9 @@ namespace ED
 
         #endregion
         
-        #region net dice system
         
+        
+        #region net dice system
         public void SetDeck(int[] deck)
         {
             if(arrDiceDeck == null)_arrDiceDeck = new DiceInfoData[5];
@@ -703,14 +719,11 @@ namespace ED
 
         public void OtherGetDice(int diceId, int slotNum)
         {
-            //arrDice[slotNum].Set(arrDiceDeck[deckNum]);
             arrDice[slotNum].Set(GetArrayDeckDice(diceId));
         }
 
         public DiceInfoData GetArrayDeckDice(int diceId)
         {
-            //arrDiceDeck.Contains()
-            //return arrDiceDeck.Find(x => x.id == diceId);
             DiceInfoData dice = null;
             for (int i = 0; i < arrDiceDeck.Length; i++)
             {
@@ -779,9 +792,10 @@ namespace ED
             }
             */
         }
-
         
         #endregion
+        
+        
         
         
         #region dice system
@@ -819,8 +833,7 @@ namespace ED
                     SendPlayer(RpcTarget.Others , E_PTDefine.PT_GETDICE , randomDeckNum, emptySlotNum);
             }
         }
-
-        
+       
         public void SetDeck(string deck)
         {
             var splitDeck = deck.Split('/');
@@ -882,6 +895,9 @@ namespace ED
         
         
         
+        
+        
+        
         #region etc system
         
         public override void HitDamage(float damage, float delay = 0)
@@ -892,15 +908,13 @@ namespace ED
 
                 if (currentHealth <= 0)
                 {
-                    //InGameManager.Get().obj_Low_HP_Effect.SetActive(false);
                     UI_InGamePopup.Get().ViewLowHP(false);
                     currentHealth = 0;
-                    Death();
+                    Death();    // 
                 }
                 else if (((PhotonNetwork.IsConnected && photonView.IsMine) || (!PhotonNetwork.IsConnected && isMine)) 
                          && currentHealth < 1000 && !UI_InGamePopup.Get().GetLowHP())
                 {
-                    //InGameManager.Get().obj_Low_HP_Effect.SetActive(true);
                     UI_InGamePopup.Get().ViewLowHP(true);
                 }
             }
@@ -922,67 +936,23 @@ namespace ED
             }
         }
 
-
         #endregion
         
         
-        
-        
-        
-        #region dice rpc
-        
-        //////////////////////////////////////////////////////////////////////
-        // Dice RPCs
-        //////////////////////////////////////////////////////////////////////
-        //[PunRPC]
-        private void RemoveMinion(int baseStatId)
-        {
-            listMinion.Remove(listMinion.Find(minion => minion.id == baseStatId));
-        }
 
-        public void MagicDestroyCallback(Magic magic)
-        {
-            if (PhotonNetwork.IsConnected)
-            {
-                //photonView.RPC("RemoveMagic", RpcTarget.All, magic.id);
-                SendPlayer(RpcTarget.All , E_PTDefine.PT_REMOVEMAGIC , magic.id);
-            }
-            else
-            {
-                RemoveMagic(magic.id);
-            }
-        }
-
-        //[PunRPC]
-        private void RemoveMagic(int baseStatId)
-        {
-            listMagic.Remove(listMagic.Find(magic => magic.id == baseStatId));
-        }
-
+        #region net minion
         
-        public void AttackEnemyMinion(int baseStatId, float damage, float delay)
-        {
-            if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom.PlayerCount > 1)
-            {
-                //targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, baseStatId, damage, delay);
-                targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINIONANDMAGIC , baseStatId, damage, delay);
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
-            }
-        }
-
-        //[PunRPC]
         public void HitDamageMinionAndMagic(int baseStatId, float damage, float delay)
         {
             // baseStatId == 0 => Player tower
             if (baseStatId == 0)
             {
-                if (PhotonNetwork.IsConnected)
+                //if (PhotonNetwork.IsConnected)
+                if( InGameManager.Get().IsNetwork() == true)
                 {
                     //photonView.RPC("HitDamage", RpcTarget.All, damage, delay);
-                    SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
+                    //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, damage);
                 }
                 else
                 {
@@ -1007,6 +977,144 @@ namespace ED
             }
         }
 
+        
+        public void AttackEnemyMinion(int baseStatId, float damage, float delay)
+        {
+            //if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom.PlayerCount > 1)
+            targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
+            if(InGameManager.Get().IsNetwork())
+            {
+                //targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINIONANDMAGIC , baseStatId, damage, delay);
+                NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , baseStatId , damage, delay);
+            }
+            /*else if (PhotonNetwork.IsConnected == false)
+            {
+                targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
+            }*/
+        }
+
+
+
+        #endregion
+        
+        
+        #region remove
+        //
+        private void RemoveMinion(int baseStatId)
+        {
+            listMinion.Remove(listMinion.Find(minion => minion.id == baseStatId));
+        }
+
+        private void RemoveMagic(int baseStatId)
+        {
+            listMagic.Remove(listMagic.Find(magic => magic.id == baseStatId));
+        }
+        #endregion
+        
+
+
+        #region net packet player
+
+        public void NetSendPlayer(GameProtocol protocol, params object[] param)
+        {
+            if (InGameManager.Get().IsNetwork() == true)
+            {
+                NetworkManager.Get().Send(protocol, param);
+            }
+            else
+            {
+                NetRecvPlayer(protocol, param);
+            }
+        }
+        
+        public void NetRecvPlayer(GameProtocol protocol, params object[] param)
+        {
+            switch (protocol)
+            {
+                case GameProtocol.HIT_DAMAGE_ACK:
+                {
+                    MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
+
+                    float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
+                    HitDamage(calDamage);
+                    
+                    break;
+                }
+                case GameProtocol.HIT_DAMAGE_NOTIFY:
+                {
+                    MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
+
+                    if (NetworkManager.Get().GetNetInfo().IsMyUID(damagenoti.PlayerUId) == false)
+                    {
+                        float calDamage = damagenoti.Damage /  Global.g_networkBaseValue;
+                        targetPlayer.HitDamage(calDamage);
+                    }
+                    
+                    break;
+                }
+                case GameProtocol.REMOVE_MINION_RELAY:
+                {
+                    MsgRemoveMinionRelay ralayremove = (MsgRemoveMinionRelay) param[0];
+                    if (NetworkManager.Get().UserUID == ralayremove.PlayerUId )
+                    {
+                        RemoveMinion(ralayremove.Id);
+                    } 
+                    else if (NetworkManager.Get().OtherUID == ralayremove.PlayerUId )
+                    {
+                        targetPlayer.RemoveMinion(ralayremove.Id);
+                    }
+                    break;
+                }
+                case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                {
+                    MsgHitDamageMinionRelay hitminion = (MsgHitDamageMinionRelay) param[0];
+                    float damage = hitminion.Damage / Global.g_networkBaseValue;
+                    float delay = hitminion.Delay / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == hitminion.PlayerUId)
+                    {
+                        HitDamageMinionAndMagic(hitminion.Id, damage, delay);
+                    }
+                    else if (NetworkManager.Get().OtherUID == hitminion.PlayerUId )
+                    {
+                        targetPlayer.HitDamageMinionAndMagic(hitminion.Id, damage, delay);
+                    }
+                    
+                    break;
+                }
+                
+            }
+        }
+
+        #endregion
+        
+        
+        
+        
+        
+        
+        
+        
+        #region dice rpc
+        
+        //////////////////////////////////////////////////////////////////////
+        // Dice RPCs
+        //////////////////////////////////////////////////////////////////////
+
+        public void MagicDestroyCallback(Magic magic)
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                //photonView.RPC("RemoveMagic", RpcTarget.All, magic.id);
+                SendPlayer(RpcTarget.All , E_PTDefine.PT_REMOVEMAGIC , magic.id);
+            }
+            else
+            {
+                RemoveMagic(magic.id);
+            }
+        }
+
+        
         public void DeathMinion(int baseStatId)
         {
             if (PhotonNetwork.IsConnected && isMine)
@@ -1069,6 +1177,8 @@ namespace ED
                 m.animator.SetTrigger(trigger);
             }
         }
+        
+        
         
         
 
@@ -1205,6 +1315,12 @@ namespace ED
 
         #endregion
         
+        
+        
+        
+        
+        
+        
         #region photon override
         
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -1283,7 +1399,6 @@ namespace ED
                     int baseIDhit = (int) param[0];
                     float damage = (float) param[1];
                     float delay = (float) param[2];
-                    //targetPlayer.HitDamageMinion(baseIDhit, damage, delay);
                     HitDamageMinionAndMagic(baseIDhit, damage, delay);
                     break;
                 case E_PTDefine.PT_HITDAMAGE:

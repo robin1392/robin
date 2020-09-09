@@ -284,9 +284,8 @@ namespace ED
             {
                 yield return null;
                 t += Time.deltaTime;
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, (maxHealth / lifeTime) * Time.deltaTime, 0f);
-                currentHealth -= (maxHealth / lifeTime) * Time.deltaTime;
                 
+                currentHealth -= (maxHealth / lifeTime) * Time.deltaTime;
                 if (currentHealth <= 0)
                 {
                     EndLifetime();

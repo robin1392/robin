@@ -120,6 +120,10 @@ public class SocketRecvEvent
     public void OnHitDamageAck(IPeer peer, MsgHitDamageAck msg)
     {
         UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        //Global.g_networkBaseValue
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_ACK, msg);
     }
 
     
@@ -217,11 +221,17 @@ public class SocketRecvEvent
     public void HitDamageNotify(IPeer peer, MsgHitDamageNotify msg)
     {
         UnityUtil.Print("hit damage Notify", msg.PlayerUId.ToString() + "  " + msg.Damage.ToString(), "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_NOTIFY, msg);
     }
     
     public void OnEndGameNotify(IPeer peer, MsgEndGameNotify msg)
     {
         UnityUtil.Print("end game Notify", msg.WinPlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.END_GAME_NOTIFY, msg);
     }
 
     #endregion
@@ -233,27 +243,30 @@ public class SocketRecvEvent
 
     public void OnRemoveMinionRelay(IPeer peer, MsgRemoveMinionRelay msg)
     {
+        UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
         
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MINION_RELAY, msg);
     }
 
     public void OnHitDamageMinionRelay(IPeer peer, MsgHitDamageMinionRelay msg)
     {
-        
+        UnityUtil.Print("hit mi relay", msg.PlayerUId.ToString() , "white");
     }
 
     public void OnDestroyMinionRelay(IPeer peer, MsgDestroyMinionRelay msg)
     {
-        
+        UnityUtil.Print("dest mi relay", msg.PlayerUId.ToString() , "white");
     }
 
     public void OnHealMinionRelay(IPeer peer, MsgHealMinionRelay msg)
     {
-        
+        UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
     }
 
     public void OnPushMinionRelay(IPeer peer, MsgPushMinionRelay msg)
     {
-        
+        UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
     }
 
     public void OnSetMinionAnimationTriggerRelay(IPeer peer, MsgSetMinionAnimationTriggerRelay msg)
