@@ -56,13 +56,14 @@ namespace ED
             {
                 isBombed = true;
                 
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 &&
-                    isMine)
+                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                if(InGameManager.Get().IsNetwork() && isMine )
                 {
                     SplashDamage();
                     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBALLBOMB, id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.Get().IsNetwork() == false )
                 {
                     SplashDamage();
                     Bomb();
@@ -84,19 +85,11 @@ namespace ED
                 if(InGameManager.Get().IsNetwork() && isMine )
                 {
                     SplashDamage();
-                    //if (target != null)
-                        //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINION , target.id, damage, 0f);
-                        //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.Get().IsNetwork() == false )
                 {
-                    // if (target != null)
-                    // {
-                    //     controller.targetPlayer.HitDamageMinion(target.id, damage, 0f);
-                    // }
                     SplashDamage();
                     Bomb();
                 }

@@ -56,11 +56,13 @@ namespace ED
 
             // Bomb
             isTriggerOn = false;
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if(InGameManager.Get().IsNetwork() && isMine)
             {
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINEBOMB, id);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false)
             {
                 Bomb();
             }
@@ -83,7 +85,8 @@ namespace ED
 
         private void EndMove()
         {
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
             {
                 isTriggerOn = true;
                 image_HealthBar.transform.parent.gameObject.SetActive(true);
@@ -94,15 +97,17 @@ namespace ED
 
         private void OnTriggerEnter(Collider collision)
         {
-            if (isTriggerOn &&
-                ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
+            if (isTriggerOn && 
+                //((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
+                ( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false ) && 
                 1 << collision.gameObject.layer == targetLayer)
             {
                 StopAllCoroutines();
 
                 // Bomb
                 isTriggerOn = false;
-                if (PhotonNetwork.IsConnected)
+                //if (PhotonNetwork.IsConnected)
+                if(InGameManager.Get().IsNetwork() == true)
                 {
                     //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
@@ -120,7 +125,8 @@ namespace ED
             _collider.enabled = false;
             image_HealthBar.transform.parent.gameObject.SetActive(false);
             
-            if (((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            //if (((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
             {
                 var cols = Physics.OverlapSphere(transform.position, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
                 foreach (var col in cols)
@@ -128,15 +134,17 @@ namespace ED
                     var m = col.GetComponent<Minion>();
                     if(m)
                     {
-                        if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
+                        //if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
+                        controller.HitMinionDamage( true , m.id , power, 0f);
+                        /*if(InGameManager.Get().IsNetwork() == true)
                         {
                             controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , m.id, power, 0f);
-                            
                         }
-                        else if (PhotonNetwork.IsConnected == false)
+                        //else if (PhotonNetwork.IsConnected == false)
+                        else if(InGameManager.Get().IsNetwork() == false)
                         {
                             controller.targetPlayer.HitDamageMinionAndMagic(m.id, power, 0f);
-                        }
+                        }*/
                     }
                 }
             }
@@ -150,7 +158,8 @@ namespace ED
         protected override void EndLifetime()
         {
             isTriggerOn = false;
-            if (PhotonNetwork.IsConnected)
+            //if (PhotonNetwork.IsConnected)
+            if(InGameManager.Get().IsNetwork() == true)
             {
                 //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
                 controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
