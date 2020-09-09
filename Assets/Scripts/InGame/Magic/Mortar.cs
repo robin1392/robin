@@ -103,7 +103,8 @@ namespace ED
                 if (col.CompareTag("Player")) continue;
                 
                 var dis = Vector3.SqrMagnitude(transform.position - col.transform.position);
-                if (dis > distance)
+                var m = col.GetComponentInParent<Minion>();
+                if (dis > distance && m != null && m.isCloacking == false)
                 {
                     distance = dis;
                     longTarget = col.transform;

@@ -1102,6 +1102,9 @@ namespace ED
                 case E_BulletType.ARBITER:
                     b = PoolManager.instance.ActivateObject<Bullet>("Arbiter_Bullet", startPos);
                     break;
+                case E_BulletType.BABYDRAGON:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
+                    break;
             }
             
             if (b != null)

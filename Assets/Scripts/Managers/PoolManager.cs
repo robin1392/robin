@@ -55,20 +55,21 @@ namespace ED
             if (data == null) return;
             foreach (var poolData in data.listPool)
             {
-                dic[poolData.name] = new Dictionary<string, Transform>();
+                string name = poolData.obj.name;
+                dic[name] = new Dictionary<string, Transform>();
 
                 for(var j = 0; j < poolData.count; ++j)
                 {
                     var obj = Instantiate(poolData.obj, transform);
                     obj.gameObject.SetActive(false);
-                    obj.gameObject.name = $"{poolData.name}[{j}]";
-                    dic[poolData.name].Add(obj.gameObject.name, obj.transform);
+                    obj.gameObject.name = $"{name}[{j}]";
+                    dic[name].Add(obj.gameObject.name, obj.transform);
 
                     // InteractionObject과 PoolObjectAutoDeactivate에 오브젝트에 풀 이름 설정
                     var pad = obj.GetComponent<PoolObjectAutoDeactivate>();
                     if(pad != null)
                     {
-                        pad.poolName = poolData.name;
+                        pad.poolName = name;
                     }
                 }
             }
@@ -90,9 +91,9 @@ namespace ED
             for(var i = originCount; i < originCount + count; ++i)
             {
                 var obj = Instantiate(prefab, transform);
-                obj.gameObject.SetActive(false);
-                obj.gameObject.name = $"{prefab.name}[{dic[prefab.name].Count}]";
-                dic[prefab.name].Add(obj.gameObject.name, obj.transform);
+                obj.SetActive(false);
+                obj.name = $"{prefab.name}[{dic[prefab.name].Count}]";
+                dic[prefab.name].Add(obj.name, obj.transform);
 
                 // InteractionObject과 PoolObjectAutoDeactivate에 오브젝트에 풀 이름 설정
                 var pad = obj.GetComponent<PoolObjectAutoDeactivate>();
@@ -243,7 +244,7 @@ namespace ED
             }
 
             Debug.LogWarning(poolName + " pool is empty. And add pool.");
-            var pool = data.listPool.Find(data => data.name == poolName);
+            var pool = data.listPool.Find(data => data.obj.name == poolName);
             if (pool == null || pool.obj == null)
             {
                 return null;

@@ -13,42 +13,31 @@ MonoBehaviour:
   m_Name: PoolData
   m_EditorClassIdentifier: 
   listPool:
-  - name: Arrow
-    obj: {fileID: 4058551278812737087, guid: 5b2f5a3ed55744289a156c0e4a308b42, type: 3}
+  - obj: {fileID: 4058551278812737087, guid: 5b2f5a3ed55744289a156c0e4a308b42, type: 3}
     count: 50
-  - name: Spear
-    obj: {fileID: 4058551278812737087, guid: 5820d654af7d84e85894396f6e64712d, type: 3}
+  - obj: {fileID: 4058551278812737087, guid: 5820d654af7d84e85894396f6e64712d, type: 3}
     count: 50
-  - name: Effect_Death
-    obj: {fileID: 4336589901522608097, guid: 101d90711ff9e48af9cd4eb45149a550, type: 3}
+  - obj: {fileID: 4336589901522608097, guid: 101d90711ff9e48af9cd4eb45149a550, type: 3}
     count: 50
-  - name: Effect_SpawnLine
-    obj: {fileID: 4559156952497101338, guid: 44f155666560f4176b25fa27b89c95ea, type: 3}
+  - obj: {fileID: 4559156952497101338, guid: 44f155666560f4176b25fa27b89c95ea, type: 3}
     count: 30
-  - name: Effect_Poison
-    obj: {fileID: 3693968143288254739, guid: 0cbe6ce63894a48d8827b65c7d461f29, type: 3}
+  - obj: {fileID: 3693968143288254739, guid: 0cbe6ce63894a48d8827b65c7d461f29, type: 3}
     count: 30
-  - name: Effect_Bomb
-    obj: {fileID: 5166360906360891136, guid: 0cbe4091e477e45a4adc3eadf50c0328, type: 3}
+  - obj: {fileID: 5166360906360891136, guid: 0cbe4091e477e45a4adc3eadf50c0328, type: 3}
     count: 30
-  - name: Effect_Lightning
-    obj: {fileID: 5060921744694126846, guid: 9c97f28897eba43e285d06df261a7912, type: 3}
+  - obj: {fileID: 5060921744694126846, guid: 9c97f28897eba43e285d06df261a7912, type: 3}
     count: 30
-  - name: Effect_Sturn
-    obj: {fileID: 1001158548166426346, guid: ce146ffe4b4cb42b5a76691746158ad2, type: 3}
+  - obj: {fileID: 1001158548166426346, guid: ce146ffe4b4cb42b5a76691746158ad2, type: 3}
     count: 30
-  - name: Effect_ShotHit
-    obj: {fileID: 7277101816294039622, guid: 7b5a53139eb5a40d18b9cdba17ddc40c, type: 3}
+  - obj: {fileID: 7277101816294039622, guid: 7b5a53139eb5a40d18b9cdba17ddc40c, type: 3}
     count: 30
-  - name: Effect_ArrowHit
-    obj: {fileID: 5506211092641390471, guid: d92ac969513e84ca5afa49f5c00f0055, type: 3}
+  - obj: {fileID: 5506211092641390471, guid: d92ac969513e84ca5afa49f5c00f0055, type: 3}
     count: 30
-  - name: Effect_Robot_Summon
-    obj: {fileID: 2028398663927964445, guid: 2dfd74e7850804002aa7923dd5390440, type: 3}
+  - obj: {fileID: 2028398663927964445, guid: 2dfd74e7850804002aa7923dd5390440, type: 3}
     count: 2
-  - name: Effect_Heal
-    obj: {fileID: 8196298747947456408, guid: 3256ab7ff4a554bf49fb0dcee0202a84, type: 3}
+  - obj: {fileID: 8196298747947456408, guid: 3256ab7ff4a554bf49fb0dcee0202a84, type: 3}
     count: 30
-  - name: Effect_Cloaking
-    obj: {fileID: 9017776126007456575, guid: 81c5f0038f2914eabbbcac37316143b9, type: 3}
+  - obj: {fileID: 9017776126007456575, guid: 81c5f0038f2914eabbbcac37316143b9, type: 3}
+    count: 30
+  - obj: {fileID: 8140820785244318594, guid: d55cf9aeadf314f498a30e131cdccd3c, type: 3}
     count: 30

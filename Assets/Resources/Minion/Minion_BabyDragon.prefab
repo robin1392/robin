@@ -5069,6 +5069,8 @@ MonoBehaviour:
   polymophCooltime: 20
   bulletMoveSpeedBaby: 6
   bulletMoveSpeedDragon: 10
+  pref_Fireball: {fileID: 665045047327999094, guid: 7caa53e576af04ff38e0df064bd7aac7,
+    type: 3}
 --- !u!114 &-3404390952063001827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10181,6 +10183,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112000715225018400, guid: 669cf2a872bbf496bb81328fc05ea7c2,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112000715225018400, guid: 669cf2a872bbf496bb81328fc05ea7c2,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112000715225018400, guid: 669cf2a872bbf496bb81328fc05ea7c2,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 669cf2a872bbf496bb81328fc05ea7c2, type: 3}

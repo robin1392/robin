@@ -20,10 +20,28 @@ namespace ED
 
         public float bulletMoveSpeedBaby = 6f;
         public float bulletMoveSpeedDragon = 10f;
-        
+
+        [Header("Prefab")] 
+        public GameObject pref_Fireball;
+
         private float originRange;
         private readonly string strTagGround = "Minion_Ground";
         private readonly string strTagFlying = "Minion_Flying";
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_Fireball, 1);
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            var ae = ani_Dragon.GetComponent<MinionAnimationEvent>();
+            ae.event_FireSpear += FireSpear;
+        }
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -72,11 +90,12 @@ namespace ED
             if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireSpear", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _spear, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.BABYDRAGON, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
             else if (PhotonNetwork.IsConnected == false)
             {
-                controller?.FireBullet(_spear, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                controller?.FireBullet(E_BulletType.BABYDRAGON, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                
             }
         }
 

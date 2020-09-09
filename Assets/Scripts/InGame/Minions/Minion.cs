@@ -70,6 +70,7 @@ namespace ED
         protected static readonly E_BulletType _spear = E_BulletType.SPEAR;
 
         protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
+        protected Shield _shield;
 
         protected virtual void Awake()
         {

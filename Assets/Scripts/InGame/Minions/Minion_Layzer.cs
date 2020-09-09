@@ -60,13 +60,16 @@ namespace ED
             List<int> intList = new List<int>();
             foreach (var col in cols)
             {
-                var m = col.GetComponentInParent<BaseStat>();
-                if (m != null && m.isAlive && IsTargetInnerRange(m))
+                var bs = col.GetComponentInParent<BaseStat>();
+                var m = bs as Minion;
+                if (bs != null && bs.isAlive && IsTargetInnerRange(bs))
                 {
-                    _listTarget.Add(m);
-                    intList.Add(m.id);
+                    if (m != null && m.isCloacking) continue;
+                    
+                    _listTarget.Add(bs);
+                    intList.Add(bs.id);
 
-                    controller.AttackEnemyMinionOrMagic(m.id, power, 0f);
+                    controller.AttackEnemyMinionOrMagic(bs.id, power, 0f);
                 }
             }
 

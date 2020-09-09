@@ -7,7 +7,6 @@ namespace ED
     [Serializable]
     public class Pool
     {
-        public string name;
         public GameObject obj;
         public int count;
     }

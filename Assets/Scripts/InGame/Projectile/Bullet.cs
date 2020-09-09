@@ -34,6 +34,8 @@ namespace ED
         protected float _splashRange;
 
         protected int targetLayer => 1 << LayerMask.NameToLayer(_isBottomPlayer ? "TopPlayer" : "BottomPlayer");
+        protected MeshRenderer[] _arrMeshRenderer;
+        protected SkinnedMeshRenderer[] _arrSkinnedMeshRenderers;
 
         private void Awake()
         {
@@ -85,13 +87,20 @@ namespace ED
                 isBlue = _isBottomPlayer;
             }
 
-            var mr = GetComponentsInChildren<MeshRenderer>();
-            foreach (var m in mr)
+            if (_arrMeshRenderer == null)
+            {
+                _arrMeshRenderer = GetComponentsInChildren<MeshRenderer>();
+            }
+            foreach (var m in _arrMeshRenderer)
             {
                 m.material = arrMaterial[isBlue ? 0 : 1];
             }
-            var smr = GetComponentsInChildren<SkinnedMeshRenderer>();
-            foreach (var m in smr)
+
+            if (_arrSkinnedMeshRenderers == null)
+            {
+                _arrSkinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+            }
+            foreach (var m in _arrSkinnedMeshRenderers)
             {
                 m.material = arrMaterial[isBlue ? 0 : 1];
             }
@@ -118,21 +127,11 @@ namespace ED
 
             _callback?.Invoke();
 
-            // if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
-            // {
-            //     if (_target != null)
-            //         controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,_target.id, _damage, 0f);
-            //     //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.All, _target.id, _damage, 0f);
-            // }
-            // else if (PhotonNetwork.IsConnected == false)
-            // {
-            //     if (_target != null)
-            //         controller.targetPlayer.HitDamageMinionAndMagic(_target.id, _damage, 0f);
-            // }
             controller.AttackEnemyMinionOrMagic(_target.id, _damage, 0f);
 
             if (obj_EndEffect != null)
             {
+                transform.rotation = Quaternion.identity;
                 obj_Bullet.SetActive(false);
                 obj_EndEffect.SetActive(true);
                 yield return new WaitForSeconds(endEffectDuration);

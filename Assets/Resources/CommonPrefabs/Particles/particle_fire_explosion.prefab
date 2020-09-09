@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7963176998977094395}
   - component: {fileID: 7963176998962958529}
   - component: {fileID: 7963176998960899681}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4791,7 +4791,7 @@ GameObject:
   - component: {fileID: 7963176998977083205}
   - component: {fileID: 7963176998962901257}
   - component: {fileID: 7963176998960912549}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9589,7 +9589,7 @@ GameObject:
   - component: {fileID: 7963176998977099521}
   - component: {fileID: 7963176998962874697}
   - component: {fileID: 7963176998960917793}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Nova
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14342,7 +14342,7 @@ GameObject:
   - component: {fileID: 7963176998977055519}
   - component: {fileID: 7963176998962936409}
   - component: {fileID: 7963176998960951969}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19176,7 +19176,7 @@ GameObject:
   - component: {fileID: 7963176998977050373}
   - component: {fileID: 7963176998962890183}
   - component: {fileID: 7963176998960949087}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: FireBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23992,7 +23992,7 @@ GameObject:
   - component: {fileID: 7963176998977024821}
   - component: {fileID: 7963176998962906003}
   - component: {fileID: 7963176998962984025}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: particle_fire_explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -93,13 +93,19 @@ namespace ED
         }
 
         protected Vector3 networkPosition = Vector3.zero;
+        protected MeshRenderer[] arrMeshRenderer;
+        protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
 
         protected virtual void Start() { }
         
         protected virtual void SetColor(E_MaterialType type)
         {
-            var mr = GetComponentsInChildren<MeshRenderer>();
-            foreach (var m in mr)
+            if (arrMeshRenderer == null)
+            {
+                arrMeshRenderer = GetComponentsInChildren<MeshRenderer>();
+            }
+            
+            foreach (var m in arrMeshRenderer)
             {
                 m.material = arrMaterial[isMine ? 0 : 1];
                 switch (type)
@@ -111,15 +117,24 @@ namespace ED
                         m.material.color = c;
                         break;
                     case E_MaterialType.HALFTRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.2f;
+                        m.material.color = c;
+                        break;
                     case E_MaterialType.TRANSPARENT:
                         c = m.material.color;
-                        c.a = 0.3f;
+                        c.a = 0.1f;
                         m.material.color = c;
                         break;
                 }
             }
-            var smr = GetComponentsInChildren<SkinnedMeshRenderer>();
-            foreach (var m in smr)
+
+            if (arrSkinnedMeshRenderer == null)
+            {
+                arrSkinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+            }
+
+            foreach (var m in arrSkinnedMeshRenderer)
             {
                 m.material = arrMaterial[isMine ? 0 : 1];
                 switch (type)
@@ -131,9 +146,13 @@ namespace ED
                         m.material.color = c;
                         break;
                     case E_MaterialType.HALFTRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.2f;
+                        m.material.color = c;
+                        break;
                     case E_MaterialType.TRANSPARENT:
                         c = m.material.color;
-                        c.a = 0.3f;
+                        c.a = 0.1f;
                         m.material.color = c;
                         break;
                 }

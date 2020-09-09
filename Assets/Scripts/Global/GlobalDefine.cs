@@ -77,4 +77,5 @@ public enum E_BulletType
     NECROMANCER,
     MAGICIAN,
     ARBITER,
+    BABYDRAGON,
 }
