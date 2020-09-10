@@ -567,7 +567,14 @@ namespace ED
 
         public Minion GetRandomMinion()
         {
-            return listMinion[Random.Range(0, listMinion.Count)];
+            if (listMinion.Count > 0)
+            {
+                return listMinion[Random.Range(0, listMinion.Count)];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private void MinionDestroyCallback(Minion minion)

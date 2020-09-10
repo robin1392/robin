@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolName: 
-  lifeTime: 1
+  lifeTime: 0
 --- !u!1001 &8140820784493062688
 PrefabInstance:
   m_ObjectHideFlags: 0

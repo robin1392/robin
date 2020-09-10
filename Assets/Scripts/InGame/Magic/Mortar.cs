@@ -136,7 +136,7 @@ namespace ED
         {
             float t = 0f;
             Quaternion q = transform.rotation;
-            while (t < 0.5f)
+            while (t < 0.5f && longTarget != null)
             {
                 t += Time.deltaTime;
                 transform.rotation = Quaternion.Lerp(q,
@@ -152,7 +152,7 @@ namespace ED
             light_Fire.enabled = true;
             Invoke("FireLightOff", 0.15f);
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if (longTarget != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
             {
                 controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , E_CannonType.DEFAULT, ts_ShootingPos.position, longTarget.position, power, range);
             }

@@ -30,7 +30,7 @@ namespace ED
                 }
             }
 
-            Destroy(1f);
+            Destroy(2f);
         }
 
         public override void SetTarget() { }

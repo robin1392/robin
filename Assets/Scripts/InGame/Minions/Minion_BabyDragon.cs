@@ -117,6 +117,7 @@ namespace ED
             power *= 10;
             maxHealth *= 10;
             currentHealth = maxHealth;
+            RefreshHealthBar();
         }
     }
 }

@@ -71,6 +71,7 @@ namespace ED
 
         protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
         protected Shield _shield;
+        protected Coroutine _invincibilityCoroutine;
 
         protected virtual void Awake()
         {
@@ -182,6 +183,11 @@ namespace ED
             if (invincibilityCount > 0)
             {
                 invincibilityCount--;
+                if (_shield != null && invincibilityCount == 0 && _invincibilityCoroutine == null)
+                {
+                    _shield.Deactive();
+                    _shield = null;
+                }
                 return;
             }
             
@@ -387,19 +393,35 @@ namespace ED
 
         public void Invincibility(float time)
         {
-            StartCoroutine(InvincibilityCoroutine(time));
+            if (_invincibilityCoroutine != null) StopCoroutine(_invincibilityCoroutine);
+            _invincibilityCoroutine = StartCoroutine(InvincibilityCoroutine(time));
         }
 
         public void Invincibility(int addCount)
         {
             invincibilityCount += addCount;
+            if (_shield == null)
+            {
+                _shield = PoolManager.instance.ActivateObject<Shield>("Shield", transform);
+                _shield.transform.localPosition = ts_HitPos.localPosition;
+            }
         }
 
         private IEnumerator InvincibilityCoroutine(float time)
         {
             isInvincibility = true;
+            if (_shield == null)
+            {
+                _shield = PoolManager.instance.ActivateObject<Shield>("Shield", transform);
+                _shield.transform.localPosition = ts_HitPos.localPosition;
+            }
             yield return new WaitForSeconds(time);
             isInvincibility = false;
+            if (_shield != null && invincibilityCount == 0)
+            {
+                _shield.Deactive();
+                _shield = null;
+            }
         }
 
         public void SetNetworkValue(Vector3 position, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)

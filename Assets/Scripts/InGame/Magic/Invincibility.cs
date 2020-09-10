@@ -12,7 +12,7 @@ namespace ED
 
             if (isMine)
             {
-                controller.GetRandomMinion().Invincibility(1);
+                controller.GetRandomMinion()?.Invincibility(1);
             }
             
             Destroy();
