@@ -404,7 +404,7 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="damage"></param>
-        public void FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage)
+        public void FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeed)
         {
             MsgFireArrowRelay msg = new MsgFireArrowRelay();
             msg.PlayerUId = playerUId;
@@ -413,6 +413,7 @@ namespace RWGameProtocol
             msg.Dir[1] = y;
             msg.Dir[2] = z;
             msg.Damage = damage;
+            msg.MoveSpeed = moveSpeed;
             peer.SendPacket((short)GameProtocol.FIRE_ARROW_RELAY, msg.Serialize());
         }
 
