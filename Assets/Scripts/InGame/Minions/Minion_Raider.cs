@@ -32,13 +32,15 @@ namespace ED
         public override void Attack()
         {
             if (target == null) return;
-            if (PhotonNetwork.IsConnected && isMine)
+            
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -100,9 +102,11 @@ namespace ED
             PoolManager.instance.ActivateObject("Effect_Dash", ts_HitPos.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
-            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            var ts = transform;
             
+            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+            controller.MinionAniTrigger(id, "Skill");
+            
+            var ts = transform;
             while (dashTarget != null)
             {
                 ts.LookAt(dashTarget);

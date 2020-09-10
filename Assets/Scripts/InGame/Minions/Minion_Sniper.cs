@@ -23,14 +23,17 @@ namespace ED
 
         public override void Attack()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "AttackReady");
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "AttackReady");
+                controller.MinionAniTrigger(id, "AttackReady");
+                
                 StartCoroutine(AttackReadyCoroutine());
-
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 base.Attack();
                 animator.SetTrigger("AttackReady");
@@ -85,9 +88,11 @@ namespace ED
             
             lr.gameObject.SetActive(false);
 
-            if (target != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            //if (target != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            if (target != null && ((InGameManager.Get().IsNetwork() && isMine ) || InGameManager.Get().IsNetwork() == false))
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
         }
 

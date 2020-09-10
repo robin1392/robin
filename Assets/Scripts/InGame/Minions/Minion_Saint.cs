@@ -21,10 +21,14 @@ namespace ED
                 new Vector3(1.5f, 1.5f, 0.3f));
             var cols = Physics.OverlapSphere(transform.position, range, friendlyLayer);
             
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                controller.MinionAniTrigger(id, "Attack");
+                
                 foreach (var col in cols)
                 {
                     if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
@@ -32,8 +36,10 @@ namespace ED
                         controller.HealMinion(col.GetComponentInParent<Minion>().id, effect);
                     }
                 }
+                
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

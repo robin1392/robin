@@ -834,8 +834,12 @@ namespace ED
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)
         {
-            playerController.InGameDiceUpgrade(diceId, upgradeLv);
-            UI_InGame.Get().SetDeckRefresh(diceId, upgradeLv);
+            int serverUpgradeLv = upgradeLv - 1;
+            if (serverUpgradeLv < 0)
+                serverUpgradeLv = 0;
+            
+            playerController.InGameDiceUpgrade(diceId, serverUpgradeLv);
+            UI_InGame.Get().SetDeckRefresh(diceId, serverUpgradeLv);
             NetSetSp(curSp);
         }
 
@@ -873,6 +877,30 @@ namespace ED
             }
         }
 
+        public void AddPlayerUnit(bool isBottomPlayer, BaseStat bs)
+        {
+            if (isBottomPlayer && listBottomPlayer.Contains(bs) == false)
+            {
+                listBottomPlayer.Add(bs);
+            }
+            else if (isBottomPlayer == false && listTopPlayer.Contains(bs) == false)
+            {
+                listTopPlayer.Add(bs);
+            }
+        }
+        
+        public void RemovePlayerUnit(bool isBottomPlayer, BaseStat bs)
+        {
+            if (isBottomPlayer && listBottomPlayer.Contains(bs))
+            {
+                listBottomPlayer.Remove(bs);
+            }
+            else if (isBottomPlayer == false && listTopPlayer.Contains(bs))
+            {
+                listTopPlayer.Remove(bs);
+            }
+        }
+        
         #endregion
 
 
@@ -940,8 +968,7 @@ namespace ED
                 case GameProtocol.LEVEL_UP_DICE_ACK:
                 {
                     MsgLevelUpDiceAck lvupDiceack = (MsgLevelUpDiceAck) param[0];
-                    playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum,
-                        lvupDiceack.LevelupDiceId, lvupDiceack.Level);
+                    playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum, lvupDiceack.LevelupDiceId, lvupDiceack.Level);
 
                     break;
                 }
@@ -1004,10 +1031,10 @@ namespace ED
                 case GameProtocol.LEVEL_UP_DICE_NOTIFY:
                 {
                     MsgLevelUpDiceNotify lvupdiceNoti = (MsgLevelUpDiceNotify) param[0];
-                    // 상대방거..
+                    
                     if (NetworkManager.Get().OtherUID == lvupdiceNoti.PlayerUId )
-                        playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,
-                            lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
+                        playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
+                    
                     break;
                 }
                 case GameProtocol.UPGRADE_SP_NOTIFY:
@@ -1045,26 +1072,8 @@ namespace ED
                     break;
                 }
                 #endregion
-
-
-
-
-                /*                
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                case GameProtocol.LEAVE_GAME_NOTIFY:
-                    break;
-                */
+                
+                
             }
         }
 
@@ -1078,35 +1087,10 @@ namespace ED
 
         #region rpc etc
 
-        //[PunRPC]
         public void SpawnPlayerMinions()
         {
             WorldUIManager.Get().SetSpawnTime(1.0f);
             playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_SPAWN);
-        }
-
-        public void AddPlayerUnit(bool isBottomPlayer, BaseStat bs)
-        {
-            if (isBottomPlayer && listBottomPlayer.Contains(bs) == false)
-            {
-                listBottomPlayer.Add(bs);
-            }
-            else if (isBottomPlayer == false && listTopPlayer.Contains(bs) == false)
-            {
-                listTopPlayer.Add(bs);
-            }
-        }
-
-        public void RemovePlayerUnit(bool isBottomPlayer, BaseStat bs)
-        {
-            if (isBottomPlayer && listBottomPlayer.Contains(bs))
-            {
-                listBottomPlayer.Remove(bs);
-            }
-            else if (isBottomPlayer == false && listTopPlayer.Contains(bs))
-            {
-                listTopPlayer.Remove(bs);
-            }
         }
 
         public void ShowAIField(bool isShow)
@@ -1158,10 +1142,8 @@ namespace ED
         }
         public override void OnDisconnected(DisconnectCause cause)
         {
-            Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}",
-                cause);
+            Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
 
-            //SceneManager.LoadSceneAsync("Main");
             GameStateManager.Get().MoveMainScene();
         }
 

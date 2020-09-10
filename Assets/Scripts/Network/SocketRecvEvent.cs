@@ -252,34 +252,50 @@ public class SocketRecvEvent
     public void OnHitDamageMinionRelay(IPeer peer, MsgHitDamageMinionRelay msg)
     {
         UnityUtil.Print("hit mi relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_MINION_RELAY, msg);
     }
 
     public void OnDestroyMinionRelay(IPeer peer, MsgDestroyMinionRelay msg)
     {
         UnityUtil.Print("dest mi relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.DESTROY_MINION_RELAY, msg);
     }
 
     public void OnHealMinionRelay(IPeer peer, MsgHealMinionRelay msg)
     {
         UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.HEAL_MINION_RELAY, msg);
     }
 
     public void OnPushMinionRelay(IPeer peer, MsgPushMinionRelay msg)
     {
         UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
+        
     }
 
     public void OnSetMinionAnimationTriggerRelay(IPeer peer, MsgSetMinionAnimationTriggerRelay msg)
     {
+        UnityUtil.Print("ani trigger relay", msg.PlayerUId.ToString() , "white");
         
-    }
-
-    public void OnRemoveMagicRelay(IPeer peer, MsgRemoveMagicRelay msg)
-    {
-        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, msg);
     }
 
     public void OnFireArrowRelay(IPeer peer, MsgFireArrowRelay msg)
+    {
+        UnityUtil.Print("fire arrow relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_ARROW_RELAY, msg);
+    }
+
+    public void OnRemoveMagicRelay(IPeer peer, MsgRemoveMagicRelay msg)
     {
         
     }

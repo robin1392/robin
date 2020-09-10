@@ -28,13 +28,15 @@ namespace ED
         {
             if (target == null) return;
 
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -84,7 +86,8 @@ namespace ED
                     var bs = col.GetComponentInParent<BaseStat>();
                     if (bs.id > 0 && bs.isFlying == false && bs.isAlive)
                     {
-                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect * 10, 0f);
+                        //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect * 10, 0f);
+                        controller.HitMinionDamage( true , bs.id , effect * 10, 0f);
                     }
                 }
                 

@@ -143,6 +143,9 @@ namespace RWGameProtocol
 
         public bool DoWork(IPeer peer, short protocolId, byte[] data)
         {
+            
+            UnityEngine.Debug.Log(string.Format(" {0}  : <color={1}> {2} </color>", "RECV ==>" , "yellow", protocolId));
+            
             switch ((GameProtocol)protocolId)
             {
                 case GameProtocol.JOIN_GAME_REQ:
