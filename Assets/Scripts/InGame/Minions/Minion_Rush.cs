@@ -28,12 +28,15 @@ namespace ED
             if (target == null) return;
             
             ps_Rush.Stop();
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -113,10 +116,10 @@ namespace ED
             _collider.enabled = false;
             ps_Rush.Play();
             var ts = transform;
-            //animator.SetTrigger(_animatorHashSkill);
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-
-            //List<Collider> list = new List<Collider>();
+            
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+            controller.MinionAniTrigger(id, "Skill");
+            
             float tick = 0.1f;
             while (dashTarget != null)
             {
@@ -138,7 +141,9 @@ namespace ED
                             {
                                 //list.Add(raycastHit.collider);
                                 //DamageToTarget(bs, 0, 0.2f);
-                                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
+                                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
+                                controller.HitMinionDamage( true , bs.id , effect, 0f);
+                                
                                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
                             }
                         }
@@ -162,7 +167,9 @@ namespace ED
             // {
             //     DamageToTarget(dashTarget.GetComponentInParent<BaseStat>(), 0, 5f);
             // }
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
+            
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
+            controller.MinionAniTrigger(id, "Idle");
         }
 
         public override void Sturn(float duration)

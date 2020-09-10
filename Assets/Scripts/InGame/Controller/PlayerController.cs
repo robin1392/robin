@@ -703,7 +703,7 @@ namespace ED
             }
         }
 
-        public void GetDice(int diceId , int slotNum , int level = 1)
+        public void GetDice(int diceId , int slotNum , int level = 0)
         {
             arrDice[slotNum].Set(GetArrayDeckDice(diceId));
             
@@ -742,8 +742,11 @@ namespace ED
             arrDice[resetFieldNum].Reset();
             
             DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
-            arrDice[levelupFieldNum].Set(data, level);
-            
+            // 서버에서 오는 레벨이 1부터 시작하기때문에 (클라는 0 부터 시작)1을 빼줘야된다
+            int serverLevel = level - 1;
+            if (serverLevel < 0)
+                serverLevel = 0;
+            arrDice[levelupFieldNum].Set(data, serverLevel);
         }
 
         
@@ -981,15 +984,14 @@ namespace ED
         public void AttackEnemyMinion(int baseStatId, float damage, float delay)
         {
             //if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom.PlayerCount > 1)
-            targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
+
+            HitMinionDamage(true, baseStatId, damage, delay);
+            
+            /*targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
             if(InGameManager.Get().IsNetwork())
             {
                 //targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINIONANDMAGIC , baseStatId, damage, delay);
                 NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , baseStatId , damage, delay);
-            }
-            /*else if (PhotonNetwork.IsConnected == false)
-            {
-                targetPlayer.HitDamageMinionAndMagic(baseStatId, damage, delay);
             }*/
         }
 
@@ -1013,11 +1015,49 @@ namespace ED
             }    
         }
 
+        public void DeathMinion(int baseStatId)
+        {
+            
+            DestroyMinion(baseStatId);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.DESTROY_MINION_RELAY , NetworkManager.Get().UserUID , baseStatId);
+            }
+            
+            /*if (PhotonNetwork.IsConnected && isMine)
+            {
+                //photonView.RPC("DestroyMinion", RpcTarget.All, baseStatId);
+                SendPlayer(RpcTarget.All , E_PTDefine.PT_DESTROYMINION , baseStatId);
+            }
+            else if (PhotonNetwork.IsConnected == false)
+            {
+                DestroyMinion(baseStatId);
+            }*/
+        }
 
+
+        public void HealerMinion(int baseStatId, float heal)
+        {
+            HealMinion(baseStatId, heal);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.HEAL_MINION_RELAY , NetworkManager.Get().UserUID , baseStatId , heal);
+            }
+        }
+
+        public void MinionAniTrigger(int baseStatId , string aniName)
+        {
+            SetMinionAnimationTrigger(baseStatId, aniName);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniName);
+            }
+        }
+        
         #endregion
         
         
-        #region remove
+        #region remove & destroy
         //
         private void RemoveMinion(int baseStatId)
         {
@@ -1028,6 +1068,31 @@ namespace ED
         {
             listMagic.Remove(listMagic.Find(magic => magic.id == baseStatId));
         }
+        
+        private void DestroyMinion(int baseStatId)
+        {
+            listMinion.Find(minion => minion.id == baseStatId)?.Death();
+        }
+
+        private void DestroyMagic(int baseStatId)
+        {
+            listMagic.Find(magic => magic.id == baseStatId)?.Destroy();
+        }
+        
+        public void HealMinion(int baseStatId, float heal)
+        {
+            listMinion.Find(minion => minion.id == baseStatId)?.Heal(heal);
+        }
+        
+        public void SetMinionAnimationTrigger(int baseStatId, string trigger)
+        {
+            var m = listMinion.Find(minion => minion.id == baseStatId);
+            if (m != null && m.animator != null)
+            {
+                m.animator.SetTrigger(trigger);
+            }
+        }
+        
         #endregion
         
 
@@ -1102,6 +1167,50 @@ namespace ED
                     
                     break;
                 }
+                case GameProtocol.DESTROY_MINION_RELAY:
+                {
+                    MsgDestroyMinionRelay destrelay = (MsgDestroyMinionRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == destrelay.PlayerUId)
+                    {
+                        DestroyMinion(destrelay.Id);
+                    }
+                    else if (NetworkManager.Get().OtherUID == destrelay.PlayerUId )
+                    {
+                        targetPlayer.DestroyMinion(destrelay.Id);
+                    }
+                    break;
+                }
+                case GameProtocol.HEAL_MINION_RELAY:
+                {
+                    MsgHealMinionRelay healrelay = (MsgHealMinionRelay) param[0];
+
+                    float serverHealVal =  (float)healrelay.Heal / Global.g_networkBaseValue;
+                    if (NetworkManager.Get().UserUID == healrelay.PlayerUId)
+                    {
+                        HealMinion(healrelay.Id, serverHealVal);
+                    }
+                    else if (NetworkManager.Get().OtherUID == healrelay.PlayerUId )
+                    {
+                        targetPlayer.HealMinion(healrelay.Id, serverHealVal);
+                    }
+                    
+                    break;
+                }
+                case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+                {
+                    MsgSetMinionAnimationTriggerRelay anirelay = (MsgSetMinionAnimationTriggerRelay) param[0];
+                    if (NetworkManager.Get().UserUID == anirelay.PlayerUId)
+                    {
+                        SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
+                    }
+                    else if (NetworkManager.Get().OtherUID == anirelay.PlayerUId )
+                    {
+                        targetPlayer.SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
+                    }
+                    break;
+                }
+                
                 
             }
         }
@@ -1134,20 +1243,6 @@ namespace ED
             }
         }
 
-        
-        public void DeathMinion(int baseStatId)
-        {
-            if (PhotonNetwork.IsConnected && isMine)
-            {
-                //photonView.RPC("DestroyMinion", RpcTarget.All, baseStatId);
-                SendPlayer(RpcTarget.All , E_PTDefine.PT_DESTROYMINION , baseStatId);
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                DestroyMinion(baseStatId);
-            }
-        }
-
         public void DeathMagic(int baseStatId)
         {
             if (PhotonNetwork.IsConnected && isMine)
@@ -1160,23 +1255,6 @@ namespace ED
             }
         }
 
-        //[PunRPC]
-        private void DestroyMinion(int baseStatId)
-        {
-            listMinion.Find(minion => minion.id == baseStatId)?.Death();
-        }
-
-        private void DestroyMagic(int baseStatId)
-        {
-            listMagic.Find(magic => magic.id == baseStatId)?.Destroy();
-        }
-
-        public void HealMinion(int baseStatId, float heal)
-        {
-            listMinion.Find(minion => minion.id == baseStatId)?.Heal(heal);
-        }
-
-        //[PunRPC]
         public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
@@ -1188,18 +1266,6 @@ namespace ED
             listMinion.Find(minion => minion.id == baseStatId)?.Sturn(duration);
         }
 
-        //[PunRPC]
-        public void SetMinionAnimationTrigger(int baseStatId, string trigger)
-        {
-            var m = listMinion.Find(minion => minion.id == baseStatId);
-            if (m != null && m.animator != null)
-            {
-                m.animator.SetTrigger(trigger);
-            }
-        }
-        
-        
-        
         
 
         //////////////////////////////////////////////////////////////////////

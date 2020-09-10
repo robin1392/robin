@@ -43,15 +43,18 @@ namespace ED
         {
             if (target != null)
             {
-                if (PhotonNetwork.IsConnected && isMine)
+                //if (PhotonNetwork.IsConnected && isMine)
+                if( InGameManager.Get().IsNetwork() && isMine )
                 {
                     base.Attack();
-                    //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                    //controller.photonView.RPC("FiremanFire", RpcTarget.All, id);
+                    
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                    controller.MinionAniTrigger(id, "Attack");
+                    
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.Get().IsNetwork() == false )
                 {
                     base.Attack();
                     animator.SetTrigger(_animatorHashAttack);

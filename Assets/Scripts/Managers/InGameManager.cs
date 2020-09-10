@@ -834,8 +834,12 @@ namespace ED
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)
         {
-            playerController.InGameDiceUpgrade(diceId, upgradeLv);
-            UI_InGame.Get().SetDeckRefresh(diceId, upgradeLv);
+            int serverUpgradeLv = upgradeLv - 1;
+            if (serverUpgradeLv < 0)
+                serverUpgradeLv = 0;
+            
+            playerController.InGameDiceUpgrade(diceId, serverUpgradeLv);
+            UI_InGame.Get().SetDeckRefresh(diceId, serverUpgradeLv);
             NetSetSp(curSp);
         }
 
@@ -940,8 +944,7 @@ namespace ED
                 case GameProtocol.LEVEL_UP_DICE_ACK:
                 {
                     MsgLevelUpDiceAck lvupDiceack = (MsgLevelUpDiceAck) param[0];
-                    playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum,
-                        lvupDiceack.LevelupDiceId, lvupDiceack.Level);
+                    playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum, lvupDiceack.LevelupDiceId, lvupDiceack.Level);
 
                     break;
                 }
@@ -1004,10 +1007,10 @@ namespace ED
                 case GameProtocol.LEVEL_UP_DICE_NOTIFY:
                 {
                     MsgLevelUpDiceNotify lvupdiceNoti = (MsgLevelUpDiceNotify) param[0];
-                    // 상대방거..
+                    
                     if (NetworkManager.Get().OtherUID == lvupdiceNoti.PlayerUId )
-                        playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,
-                            lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
+                        playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
+                    
                     break;
                 }
                 case GameProtocol.UPGRADE_SP_NOTIFY:

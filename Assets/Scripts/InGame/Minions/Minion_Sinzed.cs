@@ -27,7 +27,8 @@ namespace ED
             {
                 if (Vector3.Distance(transform.position, target.transform.position) < 2f)
                 {
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
+                    controller.HitMinionDamage( false , id , float.MaxValue, 0f);
                 }
             }
             

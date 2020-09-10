@@ -323,12 +323,16 @@ public class NetInfo
     public void SetPlayerInfo(MsgPlayerInfo info)
     {
         playerInfo = info;
+        /*for(int i = 0 ; i < playerInfo.DiceIdArray.Length ; i++ )
+            UnityEngine.Debug.Log(playerInfo.DiceIdArray[i]);*/
         myInfoGet = true;
     }
 
     public void SetOtherInfo(MsgPlayerInfo info)
     {
         otherInfo = info;
+        /*for(int i = 0 ; i < otherInfo.DiceIdArray.Length ; i++ )
+            UnityEngine.Debug.Log(otherInfo.DiceIdArray[i]);*/
         otherInfoGet = true;
     }
 

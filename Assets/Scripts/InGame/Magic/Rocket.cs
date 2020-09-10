@@ -58,21 +58,22 @@ namespace ED
             {
                 isBombed = true;
                 
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 &&
-                    isMine)
+                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                if(InGameManager.Get().IsNetwork() && isMine)
                 {
                     if (target != null)
-                        controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id,
-                            power, 0f);
-                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
+                        controller.HitMinionDamage( true , target.id , power, 0f);
+                    //controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id, power, 0f);
+
                     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ROCKETBOMB, id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.Get().IsNetwork() == false )
                 {
                     if (target != null)
                     {
-                        controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                        controller.HitMinionDamage( true , target.id , power, 0f);
+                        //controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
                     }
 
                     Bomb();
@@ -90,19 +91,22 @@ namespace ED
                 rb.velocity = Vector3.zero;
                 isBombed = true;
 
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                if(InGameManager.Get().IsNetwork() && isMine)
                 {
                     if (target != null)
-                        controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
-                        //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
+                        controller.HitMinionDamage( true , target.id , power, 0f);
+                    //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
+                        
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.Get().IsNetwork() == false )
                 {
                     if (target != null)
                     {
-                        controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                        controller.HitMinionDamage( true , target.id , power, 0f);
+                        //controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
                     }
 
                     Bomb();
