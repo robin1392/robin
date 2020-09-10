@@ -91,7 +91,7 @@ public class SocketSendEvent
             }
             case GameProtocol.HEAL_MINION_RELAY:
             {
-                float serverHeal = (int) param[2] * Global.g_networkBaseValue;
+                float serverHeal = (float)param[2] * Global.g_networkBaseValue;
                 _sender.HealMinionRelay(peer , (int)param[0] , (int)param[1] ,(int)serverHeal);
                 //HealMinionRelay(IPeer peer, int playerUId, int id, int heal)
                 break;
