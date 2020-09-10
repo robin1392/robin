@@ -1055,7 +1055,6 @@ namespace ED
         public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
         {
             FireArrow(startPos, targetId, damage, moveSpeed);
-            
             if (InGameManager.Get().IsNetwork() && isMine)
             {
                 int x = (int) (startPos.x * Global.g_networkBaseValue);
@@ -1246,6 +1245,23 @@ namespace ED
                 {
                     MsgFireArrowRelay arrrelay = (MsgFireArrowRelay) param[0];
                     
+                    //Dir Damage MoveSpeed
+                    Vector3 sPos = Vector3.zero;
+                    sPos.x = (float) arrrelay.Dir[0] / Global.g_networkBaseValue;
+                    sPos.y = (float) arrrelay.Dir[1] / Global.g_networkBaseValue;
+                    sPos.z = (float) arrrelay.Dir[2] / Global.g_networkBaseValue;
+                    
+                    float calDamage = (float)arrrelay.Damage / Global.g_networkBaseValue;
+                    float calSpeed = (float)arrrelay.MoveSpeed / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
+                    {
+                        FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
+                    }
+                    else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
+                    {
+                        targetPlayer.FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
+                    }
                     break;
                 }
                 case GameProtocol.FIREBALL_BOMB_RELAY:
@@ -1443,8 +1459,6 @@ namespace ED
         {
             //CreateMinion(InGameManager.Get().data_AllDice.listDice[1], pos, 1, 0, 0, -1);
             CreateMinion(InGameManager.Get().data_DiceInfo.GetData(1), pos, 1, 0, 0, -1);
-            
-            
         }
 
         #endregion

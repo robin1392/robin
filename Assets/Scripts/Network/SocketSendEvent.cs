@@ -108,6 +108,7 @@ public class SocketSendEvent
             }
             case GameProtocol.FIRE_ARROW_RELAY:
             {
+                _sender.FireArrowRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] );
                 //FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage)
                 break;
             }

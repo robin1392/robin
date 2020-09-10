@@ -41,9 +41,11 @@ namespace ED
         {
             if (target == null) return;
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if((InGameManager.Get().IsNetwork() && isMine ) || InGameManager.Get().IsNetwork() == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
     }

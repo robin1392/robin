@@ -48,12 +48,14 @@ namespace ED
                 Invoke("FireLightOff", 0.15f);
             }
             
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
-                //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }

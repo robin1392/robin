@@ -39,13 +39,20 @@ namespace ED
             
             if (target.isFlying) ps_FireTargetFlying.Play();
             
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW,
-            ts_ShootingPos.position, target.id, target.isFlying ? effect : power, 
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, 
+                    //ts_ShootingPos.position, target.id, target.isFlying ? effect : power,
+                    //target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround);
+                    
+                controller.ActionFireArrow(ts_ShootingPos.position, target.id, 
+                    target.isFlying ? effect : power, 
                     target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround);
+                    
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 if (target.isFlying)
                 {

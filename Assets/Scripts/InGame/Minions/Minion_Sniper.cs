@@ -149,9 +149,8 @@ namespace ED
             {
                 if (PhotonNetwork.IsConnected && isMine)
                 {
-                    //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, ts_ShootingPos.position, target.id,
-                        power, bulletMoveSpeed);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                    controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
