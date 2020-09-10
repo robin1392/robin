@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
 using RWCoreNetwork;
+using RWCoreNetwork.NetService;
 using RWCoreNetwork.NetPacket;
 using System;
 
 
 public class SocketManager
 {
-    private NetworkService _netService;
+    private NetClientService _netService;
     
     private ServerPeer _serverPeer;
     public ServerPeer Peer
@@ -30,30 +31,23 @@ public class SocketManager
     {
         PacketHandler handler = new PacketHandler();
         handler.Init(recvProcessor, 10);
+        handler.SetActive(true);
 
-        _netService = new NetworkService(handler);
+        _netService = new NetClientService(handler, 1, 1024, 1000, 1000);
+        _netService.ClientConnectedCallback += OnClientConnected;
+        _netService.ClientConnectedCallback += OnClientDisconnected;
     }
 
 
     public void Connect(string host, int port , Action connectCallback = null)
     {
-        Connector connector = new Connector(_netService);
-        connector.OnConnectedCallback += OnServerConnected;
+        _netService.Connect(host, port, 1);
         _connectCallBack = connectCallback;
-
-        IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(host), port);
-        connector.Connect(endpoint);
     }
 
     public void Disconnect()
     {
-        if (_serverPeer == null)
-        {
-            return;
-        }
-
-        _serverPeer.Disconnect();
-        
+        _netService.Disconnect();
         _serverPeer = null;
     }
     
@@ -68,7 +62,7 @@ public class SocketManager
     /// 서버 연결 성공 콜백
     /// </summary>
     /// <param name="session">세션</param>
-    void OnServerConnected(UserToken session)
+    void OnClientConnected(UserToken session)
     {
         _serverPeer = new ServerPeer();
         _serverPeer.SetUserToken(session);
@@ -77,17 +71,18 @@ public class SocketManager
         if (_connectCallBack != null)
             _connectCallBack();
     }
-    
-    
-    
+
+
+    void OnClientDisconnected(UserToken session)
+    {
+
+    }
+
+
+
     public void Update()
     {
-        if (IsConnected() == false)
-        {
-            return;
-        }
-
-        _netService.PacketHandler.ProcessPacket();
+        _netService.Update();
     }
 
 

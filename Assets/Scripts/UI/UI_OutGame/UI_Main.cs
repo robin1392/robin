@@ -255,7 +255,10 @@ namespace ED
         public void OnClickBtn1()
         {
             //WebPacket.Get().SendUserAuth( string.Empty , null );
-            WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
+            //WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
+
+            NetworkManager.Get().SetAddr("192.168.0.4", 40001, "");
+            NetworkManager.Get().ConnectServer(PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
         }
         
         #endregion

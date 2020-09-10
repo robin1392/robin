@@ -15,12 +15,21 @@ namespace RWCoreNetwork
 
     public class ServerPeer : IPeer
     {
-        UserToken _userToken;
+        protected UserToken _userToken;
 
         public void SetUserToken(UserToken userToken)
         {
             _userToken = userToken;
-            _userToken.SetPeer(this);
+
+            if (_userToken != null)
+            {
+                _userToken.SetPeer(this);
+            }
+        }
+
+        public UserToken GetUserToken()
+        {
+            return _userToken;
         }
 
 
@@ -41,7 +50,7 @@ namespace RWCoreNetwork
 
         public void OnRemoved()
         {
-
+            _userToken = null;
         }
     }
 }

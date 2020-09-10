@@ -1,9 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RWCoreNetwork.NetPacket
 {
+    public interface IPacketProcessor
+    {
+        bool Run(IPeer peer, short protocolId, byte[] data);
+    }
+
     public class Packet
     {
         public short ProtocolId { get; private set; }

@@ -1,46 +1,65 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Threading;
 using System.Net.Sockets;
 using RWCoreNetwork.NetPacket;
+using RWCoreNetwork.NetService;
 
 
 namespace RWCoreNetwork
 {
+    public delegate void CompletedMessageDelegate(UserToken userToken, short protocolId, byte[] msg);
+
+
     public class UserToken
     {
+        public CompletedMessageDelegate CompletedMessageCallback;
+
+
+        public int Id { get; set; }
+
+        public ENetState NetState { get; set; }
+
+
         public Socket Socket { get; set; }
         public SocketAsyncEventArgs ReceiveEventArgs { get; set; }
         public SocketAsyncEventArgs SendEventArgs { get; set; }
 
 		// session객체. 어플리케이션 딴에서 구현하여 사용.
-		IPeer m_peer;
-
-        // 클라이언트 세션을 소유하는 네트워크 서비스 객체
-        NetworkService m_networkService;
+		IPeer _peer;
 
         // 바이트를 패킷 형식으로 해석해주는 해석기.
-        MessageHandler m_messageHandler;
+        MessageHandler _messageHandler;
 
         // 전송할 패킷을 보관해놓는 큐
-        Queue<byte[]> m_sendingQueue;
+        Queue<byte[]> _sendingQueue;
 
-        // m_sendingQueue lock처리에 사용되는 객체
-        object m_lockSendingQueue;
+        // _sendingQueue lock처리에 사용되는 객체
+        object _lockSendingQueue;
 
 
-        public UserToken(NetworkService networkService)
+        public UserToken(int bufferSize, int id)
         {
-            m_peer = null;
-            m_messageHandler = new MessageHandler();
-            m_networkService = networkService;
-            m_sendingQueue = new Queue<byte[]>();
-            m_lockSendingQueue = new object();
+            Id = id;
+            _peer = null;
+            _messageHandler = new MessageHandler(bufferSize);
+            _sendingQueue = new Queue<byte[]>();
+            _lockSendingQueue = new object();
         }
 
         public void SetPeer(IPeer peer)
         {
-            m_peer = peer;
+            _peer = peer;
         }
+
+
+        public IPeer GetPeer()
+        {
+            return _peer;
+        }
+
 
         public void SetEventArgs(SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
@@ -57,24 +76,13 @@ namespace RWCoreNetwork
         /// <param name="transfered">수신된 데이터의 바이트 수</param>
         public void OnReceive(byte[] buffer, int offset, int transfered)
         {
-            m_messageHandler.OnReceive(buffer, offset, transfered, OnMessage);
+            _messageHandler.OnReceive(this, buffer, offset, transfered, CompletedMessageCallback);
         }
 
-        private void OnMessage(Int16 protocolId, byte[] msg)
-        {
-            if (m_peer == null)
-            {
-                return;
-            }
-
-            if (m_networkService.PacketHandler == null)
-            {
-                return;
-            }
-
-            // TODO : PacketPool로 변경해야함.
-            m_networkService.PacketHandler.Enqueue(new Packet(m_peer, protocolId, msg, msg.Length));
-        }
+            
+        //    // 패킷처리 큐에 추가한다.
+        //    _networkService.PacketHandler.Enqueue(new Packet(_peer, protocolId, msg, msg.Length));
+        //}
 
 		/// <summary>
 		/// 패킷을 전송한다.
@@ -86,7 +94,7 @@ namespace RWCoreNetwork
 		/// </summary>
 		/// <param name="protocolId"></param>
 		/// <param name="msg"></param>
-        public void Send(Int16 protocolId, byte[] msg)
+        public void Send(short protocolId, byte[] msg)
         {
             byte[] buffer = new byte[1024];
             
@@ -97,27 +105,30 @@ namespace RWCoreNetwork
 
             // body length
             offset = tmpBuffer.Length;
-            tmpBuffer = BitConverter.GetBytes((Int16)(buffer.Length - 4));
+            tmpBuffer = BitConverter.GetBytes((short)(buffer.Length - 4));
             Array.Copy(tmpBuffer, 0, buffer, offset, tmpBuffer.Length);
 
             // msg
             offset += tmpBuffer.Length;
             Array.Copy(msg, 0, buffer, offset, msg.Length);
 
-            lock(m_lockSendingQueue)
+            lock(_lockSendingQueue)
             {
                 // 큐가 비어 있다면 큐에 추가하고 바로 비동기 전송 매소드를 호출한다.
-                if (m_sendingQueue.Count == 0)
+                if (_sendingQueue.Count == 0)
                 {
-                    m_sendingQueue.Enqueue(buffer);
+                    //Console.WriteLine("[Send] - 1 thread: " + Thread.CurrentThread.ManagedThreadId);
+                    _sendingQueue.Enqueue(buffer);
                     StartSend();
                     return;
                 }
 
-				// 큐에 무언가가 들어 있다면 아직 이전 전송이 완료되지 않은 상태이므로 큐에 추가만 하고 리턴한다.
-				// 현재 수행중인 SendAsync가 완료된 이후에 큐를 검사하여 데이터가 있으면 SendAsync를 호출하여 전송해줄 것이다.
+                // 큐에 무언가가 들어 있다면 아직 이전 전송이 완료되지 않은 상태이므로 큐에 추가만 하고 리턴한다.
+                // 현재 수행중인 SendAsync가 완료된 이후에 큐를 검사하여 데이터가 있으면 SendAsync를 호출하여 전송해줄 것이다.
                 // Console.WriteLine("Queue is not empty. Copy and Enqueue a msg. protocol id : " + msg.protocol_id);
-                m_sendingQueue.Enqueue(buffer);
+
+                //Console.WriteLine("[Send] - 2 thread: " + Thread.CurrentThread.ManagedThreadId);
+                _sendingQueue.Enqueue(buffer);
             }
         }
 
@@ -126,11 +137,13 @@ namespace RWCoreNetwork
 		/// </summary>
         private void StartSend()
         {
+            //Console.WriteLine("StartSend thread: " + Thread.CurrentThread.ManagedThreadId);
+
             byte[] buffer;
-            lock(m_lockSendingQueue)
+            lock(_lockSendingQueue)
             {
                 // 전송이 아직 완료된 상태가 아니므로 데이터만 가져오고 큐에서 제거하진 않는다.
-                buffer = m_sendingQueue.Peek();
+                buffer = _sendingQueue.Peek();
             }
 
             // 이번에 보낼 패킷 사이즈 만큼 버퍼 크기를 설정하고
@@ -157,16 +170,19 @@ namespace RWCoreNetwork
                 return;
             }
 
-            lock(m_lockSendingQueue)
+            lock (_lockSendingQueue)
             {
-                if (m_sendingQueue.Count == 0)
+                //Console.WriteLine("ProcessSend thread: " + Thread.CurrentThread.ManagedThreadId);
+                //Console.WriteLine("ProcessSend Queue count: " + _sendingQueue.Count);
+
+                if (_sendingQueue.Count == 0)
                 {
                     throw new Exception("Sending queue count is less than zero!");
                 }
 
 				// TODO : 재전송 로직 검토
 				// 패킷 하나를 다 못보낸 경우는??
-                byte[] buffer = m_sendingQueue.Peek();
+                byte[] buffer = _sendingQueue.Peek();
                 if (e.BytesTransferred != buffer.Length)
                 {
                     string error = string.Format("Need to send more! transferred {0},  packet size {1}", e.BytesTransferred, buffer.Length);
@@ -175,10 +191,10 @@ namespace RWCoreNetwork
                 }
                 
                 // 전송 완료된 패킷을 큐에서 제거한다.
-                m_sendingQueue.Dequeue();
+                _sendingQueue.Dequeue();
 
                 // 아직 전송하지 않은 대기중인 패킷이 있다면 다시한번 전송을 요청한다.
-				if (this.m_sendingQueue.Count > 0)
+				if (_sendingQueue.Count > 0)
 				{
 					StartSend();
 				}
@@ -187,11 +203,11 @@ namespace RWCoreNetwork
 
         public void OnRemoved()
         {
-            m_sendingQueue.Clear();
+            _sendingQueue.Clear();
 
-            if (m_peer != null)
+            if (_peer != null)
             {
-                m_peer.OnRemoved();
+                _peer.OnRemoved();
             }
         }
 
@@ -199,26 +215,46 @@ namespace RWCoreNetwork
         {
             try
             {
-                Console.WriteLine( string.Format("Disconnected. Handle {0}", Socket.Handle));
-
+                //Console.WriteLine( string.Format("Disconnected. Handle {0}", Socket.Handle));
                 Socket.Shutdown(SocketShutdown.Send);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                throw new Exception(e.Message);
             }
             
             Socket.Close();
         }
 
-        public void KeepAlive()
+        public void SetKeepAlive(int keepaliveTime, int keepaliveInterval)
         {
-			// System.Threading.Timer keepalive = new System.Threading.Timer((object e) =>
-			// {
-			// 	CPacket msg = CPacket.create(0);
-			// 	msg.push(0);
-			// 	send(msg);
-			// }, null, 0, 3000);
+            byte[] inOptionValues = new byte[12];
+            int enable = 0 != keepaliveTime
+                                 ? 1
+                                 : 0;
+            BitConverter.GetBytes(enable).CopyTo(inOptionValues, 0);
+            BitConverter.GetBytes(keepaliveTime).CopyTo(inOptionValues, 4);
+            BitConverter.GetBytes(keepaliveInterval).CopyTo(inOptionValues, 8);
+
+            try
+            {
+                Socket.IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
+                return;
+            }
+            catch (NotSupportedException)
+            {
+                Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, inOptionValues);
+                return;
+            }
+            catch (NotImplementedException)
+            {
+                Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, inOptionValues);
+                return;
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
     }
 }

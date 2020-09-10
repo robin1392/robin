@@ -13,10 +13,11 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="playerSessionId"></param>
-        public void JoinGameReq(IPeer peer, string playerSessionId)
+        public void JoinGameReq(IPeer peer, string playerSessionId, sbyte deckIndex)
         {
             MsgJoinGameReq msg = new MsgJoinGameReq();
             msg.PlayerSessionId = playerSessionId;
+            msg.DeckIndex = deckIndex;
             peer.SendPacket((short)GameProtocol.JOIN_GAME_REQ, msg.Serialize());
         }
 
@@ -209,7 +210,7 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.LEAVE_GAME_NOTIFY, msg.Serialize());
         }
 
-
+    
         public void DeactiveWaitingObjectNotify(IPeer peer, int playerUid, int currentSp)
         {
             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
