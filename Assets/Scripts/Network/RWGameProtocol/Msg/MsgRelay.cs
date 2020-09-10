@@ -88,6 +88,7 @@ namespace RWGameProtocol.Msg
         public int[] Dir = new int[3];
 
         public int Damage;
+        public int MoveSpeed;
     }
 
 
