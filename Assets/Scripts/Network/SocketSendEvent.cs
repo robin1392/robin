@@ -26,12 +26,10 @@ public class SocketSendEvent
             case GameProtocol.JOIN_GAME_REQ:
             {
                 _sender.JoinGameReq(peer , (string)param[0]);
-                //JoinGameReq(IPeer peer, string playerSessionId)
                 break;
             }
             case GameProtocol.LEAVE_GAME_REQ:
             {
-                //LeaveGameReq(IPeer peer, string playerSessionId)
                 _sender.LeaveGameReq(peer);
                 break;
             }
@@ -71,29 +69,31 @@ public class SocketSendEvent
 
             case GameProtocol.REMOVE_MINION_RELAY:
             {
-                //RemoveMinionRelay(IPeer peer, int playerUId, int id)
                 _sender.RemoveMinionRelay(peer , (int)param[0] , (int)param[1]);
-                break;
-            }
-            case GameProtocol.HIT_DAMAGE_MINION_RELAY:
-            {
-                //HitDamageMinionRelay(IPeer peer, int playerUId, int id, int damage, int delay)
-                float damage = (float)param[2] * Global.g_networkBaseValue;
-                float delay = (float)param[3] * Global.g_networkBaseValue;
-                _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , (int)damage , (int)delay);
                 break;
             }
             case GameProtocol.DESTROY_MINION_RELAY:
             {
                 _sender.DestroyMinionRelay(peer , (int)param[0] , (int)param[1]);
-                //DestroyMinionRelay(IPeer peer, int playerUId, int id)
                 break;
             }
+            case GameProtocol.REMOVE_MAGIC_RELAY:
+            {
+                //RemoveMagicRelay(IPeer peer, int playerUId, int id)
+                break;
+            }
+            case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+            {
+                float damage = (float)param[2] * Global.g_networkBaseValue;
+                float delay = (float)param[3] * Global.g_networkBaseValue;
+                _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , (int)damage , (int)delay);
+                break;
+            }
+            
             case GameProtocol.HEAL_MINION_RELAY:
             {
                 float serverHeal = (float)param[2] * Global.g_networkBaseValue;
                 _sender.HealMinionRelay(peer , (int)param[0] , (int)param[1] ,(int)serverHeal);
-                //HealMinionRelay(IPeer peer, int playerUId, int id, int heal)
                 break;
             }
             case GameProtocol.PUSH_MINION_RELAY:
@@ -104,7 +104,6 @@ public class SocketSendEvent
             case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
             {
                 _sender.SetMinionAnimationTriggerRelay(peer, (int) param[0], (int) param[1], (string) param[2]);
-                //SetMinionAnimationTriggerRelay(IPeer peer, int playerUId, int id, string trigger)
                 break;
             }
             case GameProtocol.FIRE_ARROW_RELAY:
@@ -122,11 +121,7 @@ public class SocketSendEvent
                 //MineBombRelay(IPeer peer, int playerUId, int id)
                 break;
             }
-            case GameProtocol.REMOVE_MAGIC_RELAY:
-            {
-                //RemoveMagicRelay(IPeer peer, int playerUId, int id)
-                break;
-            }
+            
             case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
             {
                 //SetMagicTargetIdRelay(IPeer peer, int playerUId, int id, int targetId)

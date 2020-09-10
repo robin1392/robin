@@ -287,12 +287,15 @@ public class SocketRecvEvent
             InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, msg);
     }
 
-    public void OnRemoveMagicRelay(IPeer peer, MsgRemoveMagicRelay msg)
+    public void OnFireArrowRelay(IPeer peer, MsgFireArrowRelay msg)
     {
+        UnityUtil.Print("fire arrow relay", msg.PlayerUId.ToString() , "white");
         
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_ARROW_RELAY, msg);
     }
 
-    public void OnFireArrowRelay(IPeer peer, MsgFireArrowRelay msg)
+    public void OnRemoveMagicRelay(IPeer peer, MsgRemoveMagicRelay msg)
     {
         
     }

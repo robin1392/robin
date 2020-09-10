@@ -412,7 +412,9 @@ namespace ED
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
-                if (!listMinion.Contains(m)) listMinion.Add(m);
+                
+                if (!listMinion.Contains(m)) 
+                    listMinion.Add(m);
             }
 
             return m;
@@ -486,17 +488,7 @@ namespace ED
                 m.isMine = isMine;
                 m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
                 m.ChangeLayer(isBottomPlayer);
-                
-                //m.power = data.power + (data.powerUpByInGameUp * upgradeLevel);
-                //m.powerUpByUpgrade = data.powerUpByUpgrade;
-                //m.powerUpByInGameUp = data.powerUpByInGameUp;
-                //m.maxHealth = data.maxHealth + (data.maxHealthUpByInGameUp * upgradeLevel);
-                //m.maxHealthUpByUpgrade = data.maxHealthUpByUpgrade;
-                //m.maxHealthUpByInGameUp = data.maxHealthUpByInGameUp;
-                //m.effect = data.effect + (data.effectUpByInGameUp * upgradeLevel);
-                //m.effectUpByUpgrade = data.effectUpByUpgrade;
-                //m.effectUpByInGameUp = data.effectUpByInGameUp;
-                
+
                 // new code - by nevill
                 m.power = data.power + (data.powerInGameUp * upgradeLevel);
                 m.powerUpByUpgrade = data.powerUpgrade;
@@ -517,7 +509,9 @@ namespace ED
                 m.eyeLevel = eyeLevel;
                 m.upgradeLevel = upgradeLevel;
                 m.Initialize(MinionDestroyCallback);
-                if (!listMinion.Contains(m)) listMinion.Add(m);
+                
+                if (!listMinion.Contains(m)) 
+                    listMinion.Add(m);
             }
 
             if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
@@ -576,7 +570,7 @@ namespace ED
                 NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , NetworkManager.Get().UserUID , minion.id);
             }
 
-            
+            // not use
             /*
             if (PhotonNetwork.IsConnected)
             {
@@ -670,6 +664,7 @@ namespace ED
                     
                     m.Initialize(isBottomPlayer);
                     m.SetTarget();
+                    
                     listMagic.Add(m);
                 }
             }
@@ -762,7 +757,22 @@ namespace ED
             }
         }
         
+        private int GetDiceUpgradeLevel(DiceInfoData data)
+        {
+            var num = 0;
+            for (var i = 0; i < arrDiceDeck.Length; i++)
+            {
+                if (arrDiceDeck[i] != data) continue;
+                num = i;
+                break;
+            }
+
+            return arrUpgradeLevel[num];
+        }
+        
         #endregion
+        
+        
         
         #region net etc system
         
@@ -881,18 +891,6 @@ namespace ED
             return ++arrUpgradeLevel[deckNum];
         }
 
-        private int GetDiceUpgradeLevel(DiceInfoData data)
-        {
-            var num = 0;
-            for (var i = 0; i < arrDiceDeck.Length; i++)
-            {
-                if (arrDiceDeck[i] != data) continue;
-                num = i;
-                break;
-            }
-
-            return arrUpgradeLevel[num];
-        }
 
         #endregion
         
@@ -1053,6 +1051,22 @@ namespace ED
                 NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniName);
             }
         }
+
+        public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
+        {
+            FireArrow(startPos, targetId, damage, moveSpeed);
+            
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                int x = (int) (startPos.x * Global.g_networkBaseValue);
+                int y = (int) (startPos.y * Global.g_networkBaseValue);
+                int z = (int) (startPos.z * Global.g_networkBaseValue);
+                int chDamage = (int) (damage * Global.g_networkBaseValue);
+                int chSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
+                
+                NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
+            }
+        }
         
         #endregion
         
@@ -1095,6 +1109,23 @@ namespace ED
         
         #endregion
         
+        
+        #region skill & effect
+        public void FireArrow(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        {
+            var b = PoolManager.instance.ActivateObject<Bullet>("Bullet", startPos);
+            if (b != null)
+            {
+                b.transform.rotation = Quaternion.identity;
+                b.controller = this;
+                b.moveSpeed = moveSpeed;
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+            }
+        }
+        
+        
+        
+        #endregion
 
 
         #region net packet player
@@ -1105,6 +1136,7 @@ namespace ED
             {
                 NetworkManager.Get().Send(protocol, param);
             }
+            
             // 네트워크는 이렇게 하면안된다...파라메터에 uid 부터 들어가서...변수가 틀려진다
             /*else
             {
@@ -1210,6 +1242,32 @@ namespace ED
                     }
                     break;
                 }
+                case GameProtocol.FIRE_ARROW_RELAY:
+                {
+                    MsgFireArrowRelay arrrelay = (MsgFireArrowRelay) param[0];
+                    
+                    break;
+                }
+                case GameProtocol.FIREBALL_BOMB_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.MINE_BOMB_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.REMOVE_MAGIC_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+                {
+                    break;
+                }
                 
                 
             }
@@ -1272,17 +1330,7 @@ namespace ED
         // Unit's RPCs
         //////////////////////////////////////////////////////////////////////
         //[PunRPC]
-        public void FireArrow(Vector3 startPos, int targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Bullet", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
+        
         
         //[PunRPC]
         public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
@@ -1458,41 +1506,41 @@ namespace ED
         {
             switch (ptID)
             {
-                case E_PTDefine.PT_SETDECK:
+                case E_PTDefine.PT_SETDECK:            //
                     string deck = param[0] as string;
                     SetDeck(deck);
                     break;
-                case E_PTDefine.PT_CHANGELAYER:
+                case E_PTDefine.PT_CHANGELAYER:            //
                     ChangeLayer((bool) param[0]);
                     break;
-                case E_PTDefine.PT_REMOVEMINION:
+                case E_PTDefine.PT_REMOVEMINION:             //
                     int baseID = (int) param[0];
                     RemoveMinion(baseID);
                     break;
-                case E_PTDefine.PT_GETDICE:
+                case E_PTDefine.PT_GETDICE:            //
                     int deckNum = (int) param[0];
                     int slotNum = (int) param[1];
                     GetDice(deckNum, slotNum);
                     break;
-                case E_PTDefine.PT_LEVELUPDICE:
+                case E_PTDefine.PT_LEVELUPDICE:            //
                     LevelUpDice((int) param[0], (int) param[1], (int) param[2], (int) param[3]);
                     break;
-                case E_PTDefine.PT_REMOVEMAGIC:
+                case E_PTDefine.PT_REMOVEMAGIC:            //
                     int magicId = (int) param[0];
                     RemoveMagic(magicId);
                     break;
-                case E_PTDefine.PT_HITMINIONANDMAGIC:
+                case E_PTDefine.PT_HITMINIONANDMAGIC:            //
                     int baseIDhit = (int) param[0];
                     float damage = (float) param[1];
                     float delay = (float) param[2];
                     HitDamageMinionAndMagic(baseIDhit, damage, delay);
                     break;
-                case E_PTDefine.PT_HITDAMAGE:
+                case E_PTDefine.PT_HITDAMAGE:            //
                     float damageH = (float) param[0];
                     float delayH = (float) param[1];
                     HitDamage(damageH, delayH);
                     break;
-                case E_PTDefine.PT_DESTROYMINION:
+                case E_PTDefine.PT_DESTROYMINION:            //
                     int baseIdD = (int) param[0];
                     DestroyMinion(baseIdD);
                     break;
@@ -1500,7 +1548,7 @@ namespace ED
                     baseIdD = (int) param[0];
                     DestroyMagic(baseIdD);
                     break;
-                case E_PTDefine.PT_HEALMINION:
+                case E_PTDefine.PT_HEALMINION:            //
                     int baseId = (int) param[0];
                     float heal = (float) param[1];
                     HealMinion(baseId, heal);
@@ -1555,7 +1603,7 @@ namespace ED
                 case E_PTDefine.PT_TELEPORTMINION:
                     TeleportMinion((int) param[0], (float) param[1], (float) param[2]);
                     break;
-                case E_PTDefine.PT_SPAWN:
+                case E_PTDefine.PT_SPAWN:            //
                     Spawn();
                     break;
                 case E_PTDefine.PT_LAYZERTARGET:
