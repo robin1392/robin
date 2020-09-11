@@ -138,7 +138,7 @@ namespace ED
                             {
                                 //list.Add(raycastHit.collider);
                                 //DamageToTarget(bs, 0, 0.2f);
-                                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
+                                controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
                                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
                             }
                         }

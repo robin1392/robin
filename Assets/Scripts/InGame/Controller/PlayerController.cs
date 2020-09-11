@@ -512,7 +512,8 @@ namespace ED
                 m.attackSpeed = data.attackSpeed;
                 if (wave > 10)
                 {
-                    m.attackSpeed /= Mathf.Pow(2f, wave - 10);
+                    m.attackSpeed *= Mathf.Pow(0.9f, wave - 10);
+                    if (m.attackSpeed < data.attackSpeed * 0.5f) m.attackSpeed = data.attackSpeed * 0.5f;
                 }
                 m.moveSpeed = data.moveSpeed;
                 m.range = data.range;
@@ -670,7 +671,8 @@ namespace ED
                     m.attackSpeed = data.attackSpeed;
                     if (wave > 10)
                     {
-                        m.attackSpeed /= Mathf.Pow(2f, wave - 10);
+                        m.attackSpeed *= Mathf.Pow(0.9f, wave - 10);
+                        if (m.attackSpeed < data.attackSpeed * 0.5f) m.attackSpeed = data.attackSpeed * 0.5f;
                     }
                     m.moveSpeed = data.moveSpeed;
                     m.range = data.range;
