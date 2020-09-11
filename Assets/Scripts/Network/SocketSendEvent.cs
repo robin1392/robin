@@ -112,7 +112,7 @@ public class SocketSendEvent
                 //FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage)
                 break;
             }
-            case GameProtocol.FIREBALL_BOMB_RELAY:
+            case GameProtocol.FIRE_BALL_BOMB_RELAY:
             {
                 //FireballBombRelay(IPeer peer, int playerUId, int id)
                 break;

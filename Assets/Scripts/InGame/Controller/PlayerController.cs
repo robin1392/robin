@@ -1264,7 +1264,7 @@ namespace ED
                     }
                     break;
                 }
-                case GameProtocol.FIREBALL_BOMB_RELAY:
+                case GameProtocol.FIRE_BALL_BOMB_RELAY:
                 {
                     break;
                 }
