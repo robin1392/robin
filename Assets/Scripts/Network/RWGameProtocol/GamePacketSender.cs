@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Win32;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
 
@@ -405,7 +406,7 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="damage"></param>
-        public void FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeed)
+        public void FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage)
         {
             MsgFireArrowRelay msg = new MsgFireArrowRelay();
             msg.PlayerUId = playerUId;
@@ -414,7 +415,6 @@ namespace RWGameProtocol
             msg.Dir[1] = y;
             msg.Dir[2] = z;
             msg.Damage = damage;
-            msg.MoveSpeed = moveSpeed;
             peer.SendPacket((short)GameProtocol.FIRE_ARROW_RELAY, msg.Serialize());
         }
 
@@ -429,7 +429,7 @@ namespace RWGameProtocol
             MsgFireballBombRelay msg = new MsgFireballBombRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.FIREBALL_BOMB_RELAY, msg.Serialize());
+            peer.SendPacket((short)GameProtocol.FIRE_BALL_BOMB_RELAY, msg.Serialize());
         }
 
 
@@ -493,6 +493,159 @@ namespace RWGameProtocol
             msg.Z = z;
             peer.SendPacket((short)GameProtocol.SET_MAGIC_TARGET_POS_RELAY, msg.Serialize());
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="peer"></param>
+        /// <param name="playerUId"></param>
+        /// <param name="id"></param>
+        /// <param name="sturnTime"></param>
+        public void SturnMinionRelay(IPeer peer, int playerUId, int id, int sturnTime)
+        {
+            MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.SturnTime = sturnTime;
+            peer.SendPacket((short)GameProtocol.STURN_MINION_RELAY, msg.Serialize());
+        }
+
+
+        public void RocketBombRelay(IPeer peer, int playerUId, int id)
+        {
+            MsgRocketBombRelay msg = new MsgRocketBombRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            peer.SendPacket((short)GameProtocol.ROCKET_BOMB_RELAY, msg.Serialize());
+        }
+
+
+        public void IceBombRelay(IPeer peer, int playerUId, int id)
+        {
+            MsgIceBombRelay msg = new MsgIceBombRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            peer.SendPacket((short)GameProtocol.ICE_BOMB_RELAY, msg.Serialize());
+        }
+
+
+        public void MsgDestroyMagic(IPeer peer, int playerUId, int baseStatId)
+        {
+            MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
+            msg.PlayerUId = playerUId;
+            msg.BaseStatId = baseStatId;
+            peer.SendPacket((short)GameProtocol.ICE_BOMB_RELAY, msg.Serialize());
+        }
+
+
+        public void MsgFireCannonBall(IPeer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
+        {
+            MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
+            msg.PlayerUId = playerUId;
+            msg.ShootPos = shootPos;
+            msg.TargetPos = targetPos;
+            msg.Power = power;
+            msg.Range = range;
+            peer.SendPacket((short)GameProtocol.FIRE_CANNON_BALL_RELAY, msg.Serialize());
+        }
+
+
+        public void FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
+        {
+            MsgFireSpearRelay msg = new MsgFireSpearRelay();
+            msg.PlayerUId = playerUId;
+            msg.ShootPos = shootPos;
+            msg.TargetId = targetId;
+            msg.Power = power;
+            peer.SendPacket((short)GameProtocol.FIRE_SPEAR_RELAY, msg.Serialize());
+        }
+
+
+        public void FireManFireRelay(IPeer peer, int playerUId, int id)
+        {
+            MsgFireManFireRelay msg = new MsgFireManFireRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            peer.SendPacket((short)GameProtocol.FIRE_MAN_FIRE_RELAY, msg.Serialize());
+        }
+
+
+        public void ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
+        {
+            MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
+            msg.PlayerUId = playerUId;
+            msg.PoolName = poolName;
+            msg.HitPos = hitPos;
+            msg.LocalScale = localScale;
+            msg.Rotation = rotation;
+            peer.SendPacket((short)GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, msg.Serialize());
+        }
+
+
+        public void MinionCloackingRelay(IPeer peer, int playerUId, int id, bool isCloacking)
+        {
+            MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.IsCloacking = isCloacking;
+            peer.SendPacket((short)GameProtocol.MINION_CLOACKING_RELAY, msg.Serialize());
+        }
+
+
+        public void MinionFogOfWarRelay(IPeer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
+        {
+            MsgMinionFogOfWarRelay msg = new MsgMinionFogOfWarRelay();
+            msg.PlayerUId = playerUId;
+            msg.BaseStatId = baseStatId;
+            msg.Effect = effect;
+            msg.IsFogOfWar = isFogOfWar;
+            peer.SendPacket((short)GameProtocol.MINION_FOG_OF_WAR_RELAY, msg.Serialize());
+        }
+
+
+        public void SendMessageVoidRelay(IPeer peer, int playerUId, int id, string message)
+        {
+            MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.Message = message;
+            peer.SendPacket((short)GameProtocol.SEND_MESSAGE_VOID_RELAY, msg.Serialize());
+        }
+
+
+        public void SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
+        {
+            MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.TargetId = targetId;
+            msg.Message = message;
+            peer.SendPacket((short)GameProtocol.SEND_MESSAGE_PARAM1_RELAY, msg.Serialize());
+        }
+
+
+        public void NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
+        {
+            MsgNecromancerBulletRelay msg = new MsgNecromancerBulletRelay();
+            msg.PlayerUId = playerUId;
+            msg.ShootPos = shootPos;
+            msg.TargetId = targetId;
+            msg.Power = power;
+            msg.BulletMoveSpeed = bulletMoveSpeed;
+            peer.SendPacket((short)GameProtocol.NECROMANCER_BULLET_RELAY, msg.Serialize());
+        }
+
+
+        public void SetMinionTargetRelay(IPeer peer, int playerUId, int id, int targetId)
+        {
+            MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.TargetId = targetId;
+            peer.SendPacket((short)GameProtocol.SET_MINION_TARGET_RELAY, msg.Serialize());
+        }
+
 
         #endregion
     }
