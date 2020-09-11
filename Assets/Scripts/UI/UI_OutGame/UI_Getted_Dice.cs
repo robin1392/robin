@@ -16,6 +16,7 @@ namespace ED
     public class UI_Getted_Dice : MonoBehaviour
     {
         public Image image_Icon;
+        public Image image_Eye;
         public Button button_Use;
         public Button button_Info;
         public GameObject obj_Selected;
@@ -48,6 +49,7 @@ namespace ED
             //if(FileHelper.GetIcon( pData.iconName ) == null)
                 //print("eoroerejorjagasjdf   " + pData.iconName);
             image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
+            image_Eye.color = FileHelper.GetColor(pData.color);
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(()=>{_panelDice.Click_Dice_Info(pData.id);});
 

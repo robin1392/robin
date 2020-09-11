@@ -20,7 +20,9 @@ namespace ED
         
         public UI_Popup_Dice_Info ui_Popup_Dice_Info;
         public Image[] arrImageDeck;
+        public Image[] arrImageDeckEye;
         public Image[] arrImageDeck_Main;
+        public Image[] arrImageDeckEye_Main;
         public RectTransform tsGettedDiceParent;
         public UI_Getted_Dice[] arrGettedDice;
         public GameObject objSelectBlind;
@@ -76,8 +78,11 @@ namespace ED
             for (var i = 0; i < arrImageDeck.Length; i++)
             {
                 var num = int.Parse(splitDeck[i]);
-                arrImageDeck[i].sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(num).iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
-                arrImageDeck_Main[i].sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(num).iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
+                var data = JsonDataManager.Get().dataDiceInfo.GetData(num);
+                arrImageDeck[i].sprite = FileHelper.GetIcon(data.iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeckEye[i].color = FileHelper.GetColor(data.color);
+                arrImageDeck_Main[i].sprite = FileHelper.GetIcon(data.iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeckEye_Main[i].color = FileHelper.GetColor(data.color);
             }
         }
 
@@ -276,6 +281,10 @@ namespace ED
             UserInfoManager.Get().SetActiveDeckIndex(index);
             SetActiveDeck();
         }
-        
+
+        public void Click_CancelSelectMode()
+        {
+            _isSelectMode = false;
+        }
     }
 }

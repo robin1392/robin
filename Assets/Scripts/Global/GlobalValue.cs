@@ -43,7 +43,7 @@ public partial class Global
     public static string g_inGameWin = "승리";
     public static string g_inGameLose = "패배";
 
-    public static string[] g_gradeColor = {"000000", "43C0FF", "851CEA", "E19F38"};
+    public static string[] g_gradeColor = {"000000", "43C0FF", "851CEA", "FCC017"};
 
     #endregion
 }

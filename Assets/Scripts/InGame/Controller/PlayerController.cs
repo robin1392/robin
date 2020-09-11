@@ -850,6 +850,8 @@ namespace ED
             m.eyeLevel = 1;
             m.upgradeLevel = 0;
             m.Initialize(MinionDestroyCallback);
+            m.CancelInvoke("Fusion");
+            ((Minion_Robot)m).Transform();
             
             PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
         }
@@ -868,7 +870,7 @@ namespace ED
 
                     PushEnemyMinions(70f);
 
-                    SummonGuardian();
+                    Invoke("SummonGuardian", 0.5f);
                 }
 
                 if (currentHealth <= 0)

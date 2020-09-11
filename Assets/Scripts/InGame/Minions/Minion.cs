@@ -72,6 +72,7 @@ namespace ED
         protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
+        protected BaseStat _attackedTarget;
 
         protected virtual void Awake()
         {
@@ -129,6 +130,7 @@ namespace ED
             _spawnedTime = 0;
             _pathRefinedCount = 1;
             target = null;
+            _attackedTarget = null;
             _originalAttackSpeed = attackSpeed;
             //_isNexusAttacked = false;
             currentHealth = maxHealth;
@@ -240,6 +242,19 @@ namespace ED
             if (isPushing)
             {
                 return null;
+            }
+
+            if (_attackedTarget != null && _attackedTarget.isAlive)
+            {
+                var m = _attackedTarget as Minion;
+                if (m != null)
+                {
+                    if (m.isCloacking == false) return _attackedTarget;
+                }
+                else
+                {
+                    return _attackedTarget;
+                }
             }
             
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
@@ -446,6 +461,7 @@ namespace ED
         {
             if (isPlayable && isPushing == false)
             {
+                _attackedTarget = target;
                 StartCoroutine(AttackCoroutine());
             }
         }
@@ -469,7 +485,7 @@ namespace ED
             //         break;
             //     }
             // }
-            
+            if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
             isAttacking = false;
             SetControllEnable(true);
         }
