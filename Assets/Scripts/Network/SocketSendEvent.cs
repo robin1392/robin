@@ -79,7 +79,7 @@ public class SocketSendEvent
             }
             case GameProtocol.REMOVE_MAGIC_RELAY:
             {
-                //RemoveMagicRelay(IPeer peer, int playerUId, int id)
+                _sender.RemoveMagicRelay(peer , (int)param[0] , (int)param[1]);
                 break;
             }
             case GameProtocol.HIT_DAMAGE_MINION_RELAY:
@@ -89,7 +89,6 @@ public class SocketSendEvent
                 _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , (int)damage , (int)delay);
                 break;
             }
-            
             case GameProtocol.HEAL_MINION_RELAY:
             {
                 float serverHeal = (float)param[2] * Global.g_networkBaseValue;
@@ -109,30 +108,24 @@ public class SocketSendEvent
             case GameProtocol.FIRE_ARROW_RELAY:
             {
                 _sender.FireArrowRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] );
-                //FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage)
-                break;
-            }
-            case GameProtocol.FIRE_BALL_BOMB_RELAY:
-            {
-                //FireballBombRelay(IPeer peer, int playerUId, int id)
                 break;
             }
             case GameProtocol.MINE_BOMB_RELAY:
             {
-                //MineBombRelay(IPeer peer, int playerUId, int id)
+                _sender.MineBombRelay(peer , (int)param[0] , (int)param[1]);
                 break;
             }
-            
             case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
             {
-                //SetMagicTargetIdRelay(IPeer peer, int playerUId, int id, int targetId)
+                _sender.SetMagicTargetIdRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
                 break;
             }
             case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
             {
-                //SetMagicTargetRelay(IPeer peer, int playerUId, int id, int x, int z)
+                _sender.SetMagicTargetRelay(peer , (int)param[0] , (int)param[1] , (int)param[2], (int)param[3]);
                 break;
             }
+
             
             #endregion
             

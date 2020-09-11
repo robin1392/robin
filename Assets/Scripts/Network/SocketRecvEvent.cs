@@ -297,27 +297,42 @@ public class SocketRecvEvent
 
     public void OnRemoveMagicRelay(IPeer peer, MsgRemoveMagicRelay msg)
     {
+        UnityUtil.Print("remove magic relay", msg.PlayerUId.ToString() , "white");
         
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MAGIC_RELAY, msg);
     }
 
     public void OnFireballBombRelay(IPeer peer, MsgFireballBombRelay msg)
     {
+        UnityUtil.Print("fireball bomb relay", msg.PlayerUId.ToString() , "white");
         
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_BALL_BOMB_RELAY, msg);
     }
 
     public void OnMineBombRelay(IPeer peer, MsgMineBombRelay msg)
     {
+        UnityUtil.Print("mine bomb relay", msg.PlayerUId.ToString() , "white");
         
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.MINE_BOMB_RELAY, msg);
     }
 
     public void OnSetMagicTargetIdRelay(IPeer peer, MsgSetMagicTargetIdRelay msg)
     {
+        UnityUtil.Print("set magic id relay", msg.PlayerUId.ToString() , "white");
         
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MAGIC_TARGET_ID_RELAY, msg);
     }
 
     public void OnSetMagicTargetRelay(IPeer peer, MsgSetMagicTargetRelay msg)
     {
+        UnityUtil.Print("set magic relay", msg.PlayerUId.ToString() , "white");
         
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MAGIC_TARGET_POS_RELAY, msg);
     }
     #endregion
     

@@ -8,6 +8,8 @@ namespace ED
 {
     public class Minion_Arbiter : Minion
     {
+        public float bulletMoveSpeed = 6f;
+        
         private List<Minion> listCloaking = new List<Minion>();
         
         public override void Attack()
@@ -15,11 +17,12 @@ namespace ED
             if (target == null) return;
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            //{
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
+            {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.MinionAniTrigger(id, "Attack");
-            //}
+            }
         }
 
         public override void Death()
@@ -103,7 +106,7 @@ namespace ED
             
             if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power);
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
             }
         }
         
@@ -111,9 +114,11 @@ namespace ED
         {
             if (target == null) return;
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
+                controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
         }
     }

@@ -891,7 +891,6 @@ namespace ED
             return ++arrUpgradeLevel[deckNum];
         }
 
-
         #endregion
         
         
@@ -1032,7 +1031,24 @@ namespace ED
                 DestroyMinion(baseStatId);
             }*/
         }
-
+        
+        public void MagicDestroyCallback(Magic magic)
+        {
+            RemoveMagic(magic.id);
+            if (InGameManager.Get().IsNetwork())
+            {
+                NetSendPlayer(GameProtocol.REMOVE_MAGIC_RELAY , NetworkManager.Get().UserUID , magic.id );
+            }
+            
+            /*if (PhotonNetwork.IsConnected)
+            {
+                SendPlayer(RpcTarget.All , E_PTDefine.PT_REMOVEMAGIC , magic.id);
+            }
+            else
+            {
+                RemoveMagic(magic.id);
+            }*/
+        }
 
         public void HealerMinion(int baseStatId, float heal)
         {
@@ -1052,6 +1068,46 @@ namespace ED
             }
         }
 
+        public void ActionFireBallBomb(int bastStatId)
+        {
+            FireballBomb(bastStatId);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.FIRE_BALL_BOMB_RELAY , NetworkManager.Get().UserUID , bastStatId );
+            }
+        }
+
+        public void ActionMineBomb(int baseStatId)
+        {
+            MineBomb(baseStatId);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.MINE_BOMB_RELAY , NetworkManager.Get().UserUID , baseStatId );
+            }
+        }
+
+        public void ActionSetMagicTarget(int baseStatId , params object[] param)
+        {
+            if (param.Length > 1)
+            {
+                SetMagicTarget(baseStatId, (float) param[0], (float) param[1]);
+                if (InGameManager.Get().IsNetwork() && isMine)
+                {
+                    int chX = (int) ((float) param[0] * Global.g_networkBaseValue);
+                    int chZ = (int) ((float) param[0] * Global.g_networkBaseValue);
+                    NetSendPlayer(GameProtocol.SET_MAGIC_TARGET_POS_RELAY , NetworkManager.Get().UserUID , baseStatId , chX , chZ );
+                }
+            }
+            else // id 만 들어잇을테니..
+            {
+                SetMagicTarget(baseStatId, (int) param[0]);
+                if (InGameManager.Get().IsNetwork() && isMine)
+                {
+                    NetSendPlayer(GameProtocol.SET_MAGIC_TARGET_ID_RELAY , NetworkManager.Get().UserUID , baseStatId ,(int) param[0]);    
+                }
+            }
+        }
+        
         public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
         {
             FireArrow(startPos, targetId, damage, moveSpeed);
@@ -1106,6 +1162,37 @@ namespace ED
             }
         }
         
+        public void FireballBomb(int baseStatId)
+        {
+            ((Fireball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+        }
+        
+        public void MineBomb(int baseStatId)
+        {
+            ((Mine)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+        }
+        
+        public void SetMagicTarget(int baseStatId, int targetId)
+        {
+            StartCoroutine(SetMagicTargetCoroutine(baseStatId, targetId));
+        }
+
+        private IEnumerator SetMagicTargetCoroutine(int baseStatId, int targetId)
+        {
+            while (listMagic.Find(magic => magic.id == baseStatId) == null) yield return null;
+            listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(targetId);
+        }
+
+        public void SetMagicTarget(int baseStatId, float x, float z)
+        {
+            StartCoroutine(SetMagicTargetCoroutine(baseStatId, x, z));
+        }
+
+        private IEnumerator SetMagicTargetCoroutine(int baseStatId, float x, float z)
+        {
+            while (listMagic.Find(magic => magic.id == baseStatId) == null) yield return null;
+            listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(x, z);
+        }
         #endregion
         
         
@@ -1264,24 +1351,79 @@ namespace ED
                     }
                     break;
                 }
+                case GameProtocol.REMOVE_MAGIC_RELAY:
+                {
+                    MsgRemoveMagicRelay remrelay = (MsgRemoveMagicRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == remrelay.PlayerUId)
+                    {
+                        RemoveMagic(remrelay.Id);
+                    }
+                    else if (NetworkManager.Get().OtherUID == remrelay.PlayerUId )
+                    {
+                        targetPlayer.RemoveMagic(remrelay.Id);
+                    }
+                    
+                    break;
+                }
                 case GameProtocol.FIRE_BALL_BOMB_RELAY:
                 {
+                    MsgFireballBombRelay fbrelay = (MsgFireballBombRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == fbrelay.PlayerUId)
+                    {
+                        FireballBomb(fbrelay.Id);
+                    }
+                    else if (NetworkManager.Get().OtherUID == fbrelay.PlayerUId )
+                    {
+                        targetPlayer.FireballBomb(fbrelay.Id);
+                    }
+                    
                     break;
                 }
                 case GameProtocol.MINE_BOMB_RELAY:
                 {
-                    break;
-                }
-                case GameProtocol.REMOVE_MAGIC_RELAY:
-                {
+                    MsgMineBombRelay mbrelay = (MsgMineBombRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == mbrelay.PlayerUId)
+                    {
+                        MineBomb(mbrelay.Id);
+                    }
+                    else if (NetworkManager.Get().OtherUID == mbrelay.PlayerUId )
+                    {
+                        targetPlayer.MineBomb(mbrelay.Id);
+                    }
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
                 {
+                    MsgSetMagicTargetIdRelay smtidrelay = (MsgSetMagicTargetIdRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == smtidrelay.PlayerUId)
+                    {
+                        SetMagicTarget(smtidrelay.Id, smtidrelay.TargetId);
+                    }
+                    else if (NetworkManager.Get().OtherUID == smtidrelay.PlayerUId )
+                    {
+                        targetPlayer.SetMagicTarget(smtidrelay.Id, smtidrelay.TargetId);
+                    }
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
                 {
+                    MsgSetMagicTargetRelay smtrelay = (MsgSetMagicTargetRelay) param[0];
+                    
+                    float chX =  (float)smtrelay.X / Global.g_networkBaseValue;
+                    float chZ =  (float)smtrelay.Z / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == smtrelay.PlayerUId)
+                    {
+                        SetMagicTarget(smtrelay.Id, chX , chZ);
+                    }
+                    else if (NetworkManager.Get().OtherUID == smtrelay.PlayerUId )
+                    {
+                        targetPlayer.SetMagicTarget(smtrelay.Id, chX , chZ);
+                    }
                     break;
                 }
                 
@@ -1304,18 +1446,6 @@ namespace ED
         // Dice RPCs
         //////////////////////////////////////////////////////////////////////
 
-        public void MagicDestroyCallback(Magic magic)
-        {
-            if (PhotonNetwork.IsConnected)
-            {
-                //photonView.RPC("RemoveMagic", RpcTarget.All, magic.id);
-                SendPlayer(RpcTarget.All , E_PTDefine.PT_REMOVEMAGIC , magic.id);
-            }
-            else
-            {
-                RemoveMagic(magic.id);
-            }
-        }
 
         public void DeathMagic(int baseStatId)
         {
@@ -1385,11 +1515,7 @@ namespace ED
             }
         }
 
-        //[PunRPC]
-        public void FireballBomb(int baseStatId)
-        {
-            ((Fireball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
-        }
+        
         
         public void IceballBomb(int baseStatId)
         {
@@ -1401,35 +1527,9 @@ namespace ED
             ((Rocket)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
 
-        //[PunRPC]
-        public void MineBomb(int baseStatId)
-        {
-            ((Mine)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
-        }
+        
 
-        //[PunRPC]
-        public void SetMagicTarget(int baseStatId, int targetId)
-        {
-            StartCoroutine(SetMagicTargetCoroutine(baseStatId, targetId));
-        }
-
-        private IEnumerator SetMagicTargetCoroutine(int baseStatId, int targetId)
-        {
-            while (listMagic.Find(magic => magic.id == baseStatId) == null) yield return null;
-            listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(targetId);
-        }
-
-        //[PunRPC]
-        public void SetMagicTarget(int baseStatId, float x, float z)
-        {
-            StartCoroutine(SetMagicTargetCoroutine(baseStatId, x, z));
-        }
-
-        private IEnumerator SetMagicTargetCoroutine(int baseStatId, float x, float z)
-        {
-            while (listMagic.Find(magic => magic.id == baseStatId) == null) yield return null;
-            listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(x, z);
-        }
+        
 
         //[PunRPC]
         public void TeleportMinion(int baseStatId, float x, float z)
@@ -1567,7 +1667,7 @@ namespace ED
                     float heal = (float) param[1];
                     HealMinion(baseId, heal);
                     break;
-                case E_PTDefine.PT_FIREBALLBOMB:
+                case E_PTDefine.PT_FIREBALLBOMB:            //
                     FireballBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_ICEBALLBOMB:
@@ -1593,19 +1693,19 @@ namespace ED
                     }
 
                     break;
-                case E_PTDefine.PT_MINEBOMB:
+                case E_PTDefine.PT_MINEBOMB:            //
                     MineBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_FIRECANNONBALL:
                     FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float) param[3]);
                     break;
-                case E_PTDefine.PT_FIREARROW:
+                case E_PTDefine.PT_FIREARROW:            //
                     FireArrow((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
                     break;
                 case E_PTDefine.PT_FIRESPEAR:
                     FireSpear((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
                     break;
-                case E_PTDefine.PT_MINIONANITRIGGER:
+                case E_PTDefine.PT_MINIONANITRIGGER:            //
                     SetMinionAnimationTrigger((int) param[0], (string) param[1]);
                     break;
                 case E_PTDefine.PT_FIREMANFIRE:

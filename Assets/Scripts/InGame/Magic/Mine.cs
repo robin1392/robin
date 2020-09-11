@@ -59,7 +59,8 @@ namespace ED
             //if (PhotonNetwork.IsConnected && isMine)
             if(InGameManager.Get().IsNetwork() && isMine)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINEBOMB, id);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINEBOMB, id);
+                controller.ActionMineBomb(id);
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.Get().IsNetwork() == false)
@@ -109,8 +110,8 @@ namespace ED
                 //if (PhotonNetwork.IsConnected)
                 if(InGameManager.Get().IsNetwork() == true)
                 {
-                    //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
+                    controller.ActionMineBomb(id);
                 }
                 else
                 {
@@ -161,8 +162,8 @@ namespace ED
             //if (PhotonNetwork.IsConnected)
             if(InGameManager.Get().IsNetwork() == true)
             {
-                //controller.photonView.RPC("MineBomb", RpcTarget.All, id);
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
+                controller.ActionMineBomb(id);
             }
             else
             {

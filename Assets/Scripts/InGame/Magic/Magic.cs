@@ -171,17 +171,20 @@ namespace ED
 
         private void SetTargetBaseStat()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if(InGameManager.Get().IsNetwork() && isMine )
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
-                //controller.photonView.RPC("SetMagicTarget", RpcTarget.Others, id, target.id);
                 if (target != null)
                 {
-                    controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                    //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                    controller.ActionSetMagicTarget(id, target.id);
+                    
                     StartCoroutine(Move());
                 }
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 if (target != null)
@@ -193,14 +196,18 @@ namespace ED
 
         protected void SetTargetPosition()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if(InGameManager.Get().IsNetwork() && isMine )
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
-                //controller.photonView.RPC("SetMagicTarget", RpcTarget.Others, id, targetPos.x, targetPos.z);
-                controller.SendPlayer(RpcTarget.Others , E_PTDefine.PT_SETMAGICTARGET,id, targetPos.x, targetPos.z);
+                
+                //controller.SendPlayer(RpcTarget.Others , E_PTDefine.PT_SETMAGICTARGET,id, targetPos.x, targetPos.z);
+                controller.ActionSetMagicTarget(id, targetPos.x, targetPos.z);
+                
                 StartCoroutine(Move());
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
                 StartCoroutine(Move());

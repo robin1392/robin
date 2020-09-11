@@ -37,7 +37,8 @@ namespace ED
                 target = InGameManager.Get().GetRandomPlayerUnitHighHealth(!isBottomPlayer);
                 if (target != null)
                 {
-                    controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                    //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                    controller.ActionSetMagicTarget(id, target.id);
                 }
             }
             var endPos = target.ts_HitPos.position;
@@ -75,12 +76,9 @@ namespace ED
                     if (target != null)
                     {
                         controller.AttackEnemyMinion(target.id, power, 0f);
-                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id,
-                            sturnTime);
+                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id, sturnTime);
                     }
 
-                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ICEBALLBOMB, id);
                 }
                 else if (PhotonNetwork.IsConnected == false)
@@ -111,11 +109,9 @@ namespace ED
                     if (target != null)
                     {
                         controller.AttackEnemyMinion(target.id, power, 0f);
-                        //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
                         controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, sturnTime);
                     }
                     
-                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
                     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ICEBALLBOMB , id);
                 }
                 else if (PhotonNetwork.IsConnected == false)

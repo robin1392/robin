@@ -60,7 +60,8 @@ namespace ED
                 if(InGameManager.Get().IsNetwork() && isMine )
                 {
                     SplashDamage();
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBALLBOMB, id);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBALLBOMB, id);
+                    controller.ActionFireBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.Get().IsNetwork() == false )
@@ -85,7 +86,8 @@ namespace ED
                 if(InGameManager.Get().IsNetwork() && isMine )
                 {
                     SplashDamage();
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
+                    controller.ActionFireBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.Get().IsNetwork() == false )
