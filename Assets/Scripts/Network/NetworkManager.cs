@@ -282,7 +282,23 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.SetMagicTargetIdRelay = _socketRecv.OnSetMagicTargetIdRelay;
         _packetRecv.SetMagicTargetRelay = _socketRecv.OnSetMagicTargetRelay;
         
+        //
+        _packetRecv.SturnMinionRelay = _socketRecv.OnSturnMinionRelay;
+        _packetRecv.RocketBombRelay = _socketRecv.OnRocketBombRelay;
+        _packetRecv.IceBombRelay = _socketRecv.OnIceBombRelay;
+        _packetRecv.DestroyMagicRelay = _socketRecv.OnDestroyMagicRelay;
+        _packetRecv.FireCannonBallRelay = _socketRecv.OnFireCannonBallRelay;
+        _packetRecv.FireSpearRelay = _socketRecv.OnFireSpearRelay;
+        _packetRecv.FireManFireRelay = _socketRecv.OnFireManFireRelay;
+        _packetRecv.ActivatePoolObjectRelay = _socketRecv.OnActivatePoolObjectRelay;
+        _packetRecv.MinionCloackingRelay = _socketRecv.OnMinionCloackingRelay;
+        _packetRecv.MinionFogOfWarRelay = _socketRecv.OnMinionFogOfWarRelay;
+        _packetRecv.SendMessageVoidRelay = _socketRecv.OnSendMessageVoidRelay;
+        _packetRecv.SendMessageParam1Relay = _socketRecv.OnSendMessageParam1Relay;
+        _packetRecv.NecromancerBulletRelay = _socketRecv.OnNecromancerBulletRelay;
+        _packetRecv.SetMinionTargetRelay = _socketRecv.OnSetMinionTargetRelay;
         
+        _packetRecv.MinionStatusRelay = _socketRecv.OnMinionStatusRelay;
         
         _clientSocket.Init(_packetRecv);
     }

@@ -19,7 +19,8 @@ namespace ED
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.MinionAniTrigger(id, "Attack");
                 
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, target.transform.position, power);
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, target.transform.position, power);
+                controller.ActionFireCannonBall(ts_ShootingPos.position, target.transform.position, power, range);
             }
         }
         

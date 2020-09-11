@@ -1049,6 +1049,26 @@ namespace ED
                 RemoveMagic(magic.id);
             }*/
         }
+        
+        
+        public void DeathMagic(int baseStatId)
+        {
+            DestroyMagic(baseStatId);
+            if (InGameManager.Get().IsNetwork())
+            {
+                NetSendPlayer(GameProtocol.DESTROY_MAGIC_RELAY , NetworkManager.Get().UserUID , baseStatId );
+            }
+            
+            /*if (PhotonNetwork.IsConnected && isMine)
+            {
+                SendPlayer(RpcTarget.All , E_PTDefine.PT_DESTROYMAGIC , baseStatId);
+            }
+            else if (PhotonNetwork.IsConnected == false)
+            {
+                DestroyMagic(baseStatId);
+            }*/
+        }
+
 
         public void HealerMinion(int baseStatId, float heal)
         {
@@ -1122,7 +1142,59 @@ namespace ED
                 NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
             }
         }
-        
+
+        public void ActionSturn(bool other , int baseStatId, float duration)
+        {
+            int chDur = (int) (duration * Global.g_networkBaseValue);
+            if (other == true)
+            {
+                targetPlayer.SturnMinion(baseStatId , duration);
+                if (InGameManager.Get().IsNetwork() && isMine)
+                {
+                    NetSendPlayer(GameProtocol.STURN_MINION_RELAY, NetworkManager.Get().OtherUID, baseStatId, chDur);
+                }
+            }
+            else
+            {
+                SturnMinion(baseStatId , duration);
+                if (InGameManager.Get().IsNetwork() && isMine)
+                {
+                    NetSendPlayer(GameProtocol.STURN_MINION_RELAY, NetworkManager.Get().UserUID, baseStatId, chDur);
+                }
+            }
+        }
+
+        public void ActionRocketBomb(int baseStatId)
+        {
+            RocketBomb(baseStatId);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.ROCKET_BOMB_RELAY, NetworkManager.Get().UserUID, baseStatId);
+            }
+        }
+
+        public void ActionIceBallBomb(int baseStatId)
+        {
+            IceballBomb(baseStatId);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.ICE_BOMB_RELAY, NetworkManager.Get().UserUID, baseStatId);
+            }
+        }
+
+        public void ActionFireCannonBall(Vector3 shootPos , Vector3 targetPos , float damage , float range )
+        {
+            FireCannonBall(shootPos, targetPos, damage, range);
+            
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                int chDamage = (int)(damage * Global.g_networkBaseValue);
+                int chRange = (int)(range * Global.g_networkBaseValue);
+                
+                NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange);
+            }
+            
+        }
         #endregion
         
         
@@ -1193,6 +1265,22 @@ namespace ED
             while (listMagic.Find(magic => magic.id == baseStatId) == null) yield return null;
             listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(x, z);
         }
+        
+        public void SturnMinion(int baseStatId, float duration)
+        {
+            listMinion.Find(minion => minion.id == baseStatId)?.Sturn(duration);
+        }
+
+        public void RocketBomb(int baseStatId)
+        {
+            ((Rocket)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+        }
+        
+        public void IceballBomb(int baseStatId)
+        {
+            ((Iceball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+        }
+
         #endregion
         
         
@@ -1209,7 +1297,16 @@ namespace ED
             }
         }
         
-        
+        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
+        {
+            var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
+            if (b != null)
+            {
+                b.transform.rotation = Quaternion.identity;
+                b.controller = this;
+                b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
+            }
+        }
         
         #endregion
 
@@ -1258,14 +1355,12 @@ namespace ED
                 case GameProtocol.REMOVE_MINION_RELAY:
                 {
                     MsgRemoveMinionRelay ralayremove = (MsgRemoveMinionRelay) param[0];
+                    
                     if (NetworkManager.Get().UserUID == ralayremove.PlayerUId )
-                    {
                         RemoveMinion(ralayremove.Id);
-                    } 
                     else if (NetworkManager.Get().OtherUID == ralayremove.PlayerUId )
-                    {
                         targetPlayer.RemoveMinion(ralayremove.Id);
-                    }
+                    
                     break;
                 }
                 case GameProtocol.HIT_DAMAGE_MINION_RELAY:
@@ -1275,13 +1370,9 @@ namespace ED
                     float delay = hitminion.Delay / Global.g_networkBaseValue;
                     
                     if (NetworkManager.Get().UserUID == hitminion.PlayerUId)
-                    {
                         HitDamageMinionAndMagic(hitminion.Id, damage, delay);
-                    }
                     else if (NetworkManager.Get().OtherUID == hitminion.PlayerUId )
-                    {
                         targetPlayer.HitDamageMinionAndMagic(hitminion.Id, damage, delay);
-                    }
                     
                     break;
                 }
@@ -1290,13 +1381,10 @@ namespace ED
                     MsgDestroyMinionRelay destrelay = (MsgDestroyMinionRelay) param[0];
                     
                     if (NetworkManager.Get().UserUID == destrelay.PlayerUId)
-                    {
                         DestroyMinion(destrelay.Id);
-                    }
                     else if (NetworkManager.Get().OtherUID == destrelay.PlayerUId )
-                    {
                         targetPlayer.DestroyMinion(destrelay.Id);
-                    }
+                    
                     break;
                 }
                 case GameProtocol.HEAL_MINION_RELAY:
@@ -1305,13 +1393,9 @@ namespace ED
 
                     float serverHealVal =  (float)healrelay.Heal / Global.g_networkBaseValue;
                     if (NetworkManager.Get().UserUID == healrelay.PlayerUId)
-                    {
                         HealMinion(healrelay.Id, serverHealVal);
-                    }
                     else if (NetworkManager.Get().OtherUID == healrelay.PlayerUId )
-                    {
                         targetPlayer.HealMinion(healrelay.Id, serverHealVal);
-                    }
                     
                     break;
                 }
@@ -1319,13 +1403,9 @@ namespace ED
                 {
                     MsgSetMinionAnimationTriggerRelay anirelay = (MsgSetMinionAnimationTriggerRelay) param[0];
                     if (NetworkManager.Get().UserUID == anirelay.PlayerUId)
-                    {
                         SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
-                    }
                     else if (NetworkManager.Get().OtherUID == anirelay.PlayerUId )
-                    {
                         targetPlayer.SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
-                    }
                     break;
                 }
                 case GameProtocol.FIRE_ARROW_RELAY:
@@ -1334,21 +1414,17 @@ namespace ED
                     
                     //Dir Damage MoveSpeed
                     Vector3 sPos = Vector3.zero;
-                    sPos.x = (float) arrrelay.Dir[0] / Global.g_networkBaseValue;
-                    sPos.y = (float) arrrelay.Dir[1] / Global.g_networkBaseValue;
-                    sPos.z = (float) arrrelay.Dir[2] / Global.g_networkBaseValue;
+                    sPos.x = (float)arrrelay.Dir[0] / Global.g_networkBaseValue;
+                    sPos.y = (float)arrrelay.Dir[1] / Global.g_networkBaseValue;
+                    sPos.z = (float)arrrelay.Dir[2] / Global.g_networkBaseValue;
                     
                     float calDamage = (float)arrrelay.Damage / Global.g_networkBaseValue;
                     float calSpeed = (float)arrrelay.MoveSpeed / Global.g_networkBaseValue;
                     
                     if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
-                    {
                         FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
-                    }
                     else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
-                    {
                         targetPlayer.FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
-                    }
                     break;
                 }
                 case GameProtocol.REMOVE_MAGIC_RELAY:
@@ -1356,13 +1432,9 @@ namespace ED
                     MsgRemoveMagicRelay remrelay = (MsgRemoveMagicRelay) param[0];
                     
                     if (NetworkManager.Get().UserUID == remrelay.PlayerUId)
-                    {
                         RemoveMagic(remrelay.Id);
-                    }
                     else if (NetworkManager.Get().OtherUID == remrelay.PlayerUId )
-                    {
                         targetPlayer.RemoveMagic(remrelay.Id);
-                    }
                     
                     break;
                 }
@@ -1371,13 +1443,9 @@ namespace ED
                     MsgFireballBombRelay fbrelay = (MsgFireballBombRelay) param[0];
                     
                     if (NetworkManager.Get().UserUID == fbrelay.PlayerUId)
-                    {
                         FireballBomb(fbrelay.Id);
-                    }
                     else if (NetworkManager.Get().OtherUID == fbrelay.PlayerUId )
-                    {
                         targetPlayer.FireballBomb(fbrelay.Id);
-                    }
                     
                     break;
                 }
@@ -1386,13 +1454,9 @@ namespace ED
                     MsgMineBombRelay mbrelay = (MsgMineBombRelay) param[0];
                     
                     if (NetworkManager.Get().UserUID == mbrelay.PlayerUId)
-                    {
                         MineBomb(mbrelay.Id);
-                    }
                     else if (NetworkManager.Get().OtherUID == mbrelay.PlayerUId )
-                    {
                         targetPlayer.MineBomb(mbrelay.Id);
-                    }
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
@@ -1400,13 +1464,10 @@ namespace ED
                     MsgSetMagicTargetIdRelay smtidrelay = (MsgSetMagicTargetIdRelay) param[0];
                     
                     if (NetworkManager.Get().UserUID == smtidrelay.PlayerUId)
-                    {
                         SetMagicTarget(smtidrelay.Id, smtidrelay.TargetId);
-                    }
                     else if (NetworkManager.Get().OtherUID == smtidrelay.PlayerUId )
-                    {
                         targetPlayer.SetMagicTarget(smtidrelay.Id, smtidrelay.TargetId);
-                    }
+                    
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
@@ -1417,16 +1478,126 @@ namespace ED
                     float chZ =  (float)smtrelay.Z / Global.g_networkBaseValue;
                     
                     if (NetworkManager.Get().UserUID == smtrelay.PlayerUId)
-                    {
                         SetMagicTarget(smtrelay.Id, chX , chZ);
-                    }
                     else if (NetworkManager.Get().OtherUID == smtrelay.PlayerUId )
-                    {
                         targetPlayer.SetMagicTarget(smtrelay.Id, chX , chZ);
-                    }
+                    
                     break;
                 }
-                
+
+                case GameProtocol.STURN_MINION_RELAY:
+                {
+                    MsgSturnMinionRelay sturelay = (MsgSturnMinionRelay) param[0];
+                    
+                    float chDur = (float)sturelay.SturnTime / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == sturelay.PlayerUId)
+                        SturnMinion(sturelay.Id, chDur);
+                    else if (NetworkManager.Get().OtherUID == sturelay.PlayerUId )
+                        targetPlayer.SturnMinion(sturelay.Id, chDur);
+                    
+                    break;
+                }
+                case GameProtocol.DESTROY_MAGIC_RELAY:
+                {
+                    MsgDestroyMagicRelay desmagic = (MsgDestroyMagicRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == desmagic.PlayerUId)
+                        DestroyMagic(desmagic.BaseStatId);
+                    else if (NetworkManager.Get().OtherUID == desmagic.PlayerUId )
+                        targetPlayer.DestroyMagic(desmagic.BaseStatId);
+                    
+                    break;
+                }
+                case GameProtocol.ROCKET_BOMB_RELAY:
+                {
+                    MsgRocketBombRelay rockrelay = (MsgRocketBombRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == rockrelay.PlayerUId)
+                        DestroyMagic(rockrelay.Id);
+                    else if (NetworkManager.Get().OtherUID == rockrelay.PlayerUId )
+                        targetPlayer.DestroyMagic(rockrelay.Id);
+                    
+                    break;
+                }
+                case GameProtocol.ICE_BOMB_RELAY:
+                {
+                    MsgIceBombRelay icerelay = (MsgIceBombRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == icerelay.PlayerUId)
+                        IceballBomb(icerelay.Id);
+                    else if (NetworkManager.Get().OtherUID == icerelay.PlayerUId )
+                        targetPlayer.IceballBomb(icerelay.Id);
+                    
+                    break;
+                }
+                case GameProtocol.FIRE_CANNON_BALL_RELAY:
+                {
+                    MsgFireCannonBallRelay fcannonrelay = (MsgFireCannonBallRelay) param[0];
+
+                    Vector3 startPos = new Vector3();
+                    Vector3 targetPos = new Vector3();
+                    float chDamage;
+                    float chRange;
+                    
+                    startPos.x = (float)fcannonrelay.ShootPos.X / Global.g_networkBaseValue;
+                    startPos.y = (float)fcannonrelay.ShootPos.Y / Global.g_networkBaseValue;
+                    startPos.z = (float)fcannonrelay.ShootPos.Z / Global.g_networkBaseValue;
+                    
+                    targetPos.x = (float)fcannonrelay.TargetPos.X / Global.g_networkBaseValue;
+                    targetPos.y = (float)fcannonrelay.TargetPos.Y / Global.g_networkBaseValue;
+                    targetPos.z = (float)fcannonrelay.TargetPos.Z / Global.g_networkBaseValue;
+                    
+                    chDamage = (float)fcannonrelay.Power / Global.g_networkBaseValue;
+                    chRange = (float)fcannonrelay.Range / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == fcannonrelay.PlayerUId)
+                        FireCannonBall(startPos, targetPos, chDamage, chRange);
+                    else if (NetworkManager.Get().OtherUID == fcannonrelay.PlayerUId )
+                        targetPlayer.FireCannonBall(startPos, targetPos, chDamage, chRange);
+                    
+                    break;
+                }
+                case GameProtocol.FIRE_SPEAR_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.FIRE_MAN_FIRE_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.MINION_CLOACKING_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.MINION_FOG_OF_WAR_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.NECROMANCER_BULLET_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.SET_MINION_TARGET_RELAY:
+                {
+                    break;
+                }
+                case GameProtocol.MINION_STATUS_RELAY:
+                {
+                    break;
+                }
                 
             }
         }
@@ -1447,29 +1618,14 @@ namespace ED
         //////////////////////////////////////////////////////////////////////
 
 
-        public void DeathMagic(int baseStatId)
-        {
-            if (PhotonNetwork.IsConnected && isMine)
-            {
-                SendPlayer(RpcTarget.All , E_PTDefine.PT_DESTROYMAGIC , baseStatId);
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                DestroyMagic(baseStatId);
-            }
-        }
+        
 
         public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
         }
 
-        //[PunRPC]
-        public void SturnMinion(int baseStatId, float duration)
-        {
-            listMinion.Find(minion => minion.id == baseStatId)?.Sturn(duration);
-        }
-
+        
         
 
         //////////////////////////////////////////////////////////////////////
@@ -1503,29 +1659,13 @@ namespace ED
             }
         }
 
-        //[PunRPC]
-        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
-        {
-            var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
-            }
-        }
+        
+        
 
         
         
-        public void IceballBomb(int baseStatId)
-        {
-            ((Iceball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
-        }
-
-        public void RocketBomb(int baseStatId)
-        {
-            ((Rocket)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
-        }
+        
+        
 
         
 
@@ -1658,7 +1798,7 @@ namespace ED
                     int baseIdD = (int) param[0];
                     DestroyMinion(baseIdD);
                     break;
-                case E_PTDefine.PT_DESTROYMAGIC:
+                case E_PTDefine.PT_DESTROYMAGIC:            //
                     baseIdD = (int) param[0];
                     DestroyMagic(baseIdD);
                     break;
@@ -1679,7 +1819,7 @@ namespace ED
                 case E_PTDefine.PT_MINIONATTACKSPEEDFACTOR:
                     listMinion.Find(minion => minion.id == (int) param[0])?.SetAttackSpeedFactor((float) param[1]);
                     break;
-                case E_PTDefine.PT_STURNMINION:
+                case E_PTDefine.PT_STURNMINION:            //
                     SturnMinion((int) param[0], (float) param[1]);
                     break;
                 case E_PTDefine.PT_SETMAGICTARGET:
