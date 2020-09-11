@@ -306,7 +306,7 @@ MonoBehaviour:
     type: 3}
   pref_AI: {fileID: 5883888954613411290, guid: a7b795ec78b3b4df688a07fa8e27c7a9, type: 3}
   ts_Lights: {fileID: 1981603873}
-  ts_StadiumTop: {fileID: 2041399384}
+  ts_StadiumTop: {fileID: 8136603715242153752}
   ts_NexusHealthBar: {fileID: 242093596}
   isAIMode: 1
   isGamePlaying: 0
@@ -888,12 +888,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &2041399384 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5037692763834208571, guid: 58a4a590607854fda9b7098b130c9c79,
-    type: 3}
-  m_PrefabInstance: {fileID: 8136603715242153751}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2608280262822723138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2429,6 +2423,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58a4a590607854fda9b7098b130c9c79, type: 3}
+--- !u!4 &8136603715242153752 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1573731755591559126, guid: 58a4a590607854fda9b7098b130c9c79,
+    type: 3}
+  m_PrefabInstance: {fileID: 8136603715242153751}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8136603715242153753 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1105151579, guid: 58a4a590607854fda9b7098b130c9c79,

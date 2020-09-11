@@ -10,17 +10,45 @@ namespace ED
         public Transform ts_ShootPoint;
         public float lifeTime = 20f;
         public float tick = 0.1f;
+
+        public Transform[] arrTs_Parts;
+
+        [Header("Prefab")]
+        public GameObject pref_FireEffect;
         
         private List<Collider> list = new List<Collider>();
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            PoolManager.instance.AddPool(pref_FireEffect, 1);
+        }
+
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             list.Clear();
-            StartCoroutine(AttackCoroutine());
             
+            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            {
+                StartCoroutine(AttackCoroutine());
+            }
+
             SetColor();
+            SetParts();
+        }
+
+        private void SetParts()
+        {
+            for (int i = 0; i < arrTs_Parts.Length; i++)
+            {
+                arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
+            }
+
+            animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
 
         private IEnumerator AttackCoroutine()
@@ -43,22 +71,28 @@ namespace ED
 
         private void Shoot()
         {
-            var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             foreach (var col in cols)
             {
                 if (list.Contains(col) == false)
                 {
                     list.Add(col);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Lightning",
-                        col.transform.position, Quaternion.identity, Vector3.one);
-                    
-                    // Damage and sturn
-                    var cols2 = Physics.OverlapSphere(col.transform.position, 0.5f, targetLayer);
-                    foreach (var col2 in cols2)
+                    BaseStat bs = col.GetComponentInParent<BaseStat>();
+                    if (bs != null)
                     {
-                        BaseStat bs = col2.GetComponentInParent<BaseStat>();
-                        DamageToTarget(bs);
-                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, bs.id, 1f);
+                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, pref_FireEffect.name,
+                            ts_ShootPoint.position, Quaternion.identity, Vector3.one);
+                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Lightning",
+                            bs.ts_HitPos.position, Quaternion.identity, Vector3.one);
+
+                        // Damage and sturn
+                        var cols2 = Physics.OverlapSphere(col.transform.position, 0.5f, targetLayer);
+                        foreach (var col2 in cols2)
+                        {
+                            bs = col2.GetComponentInParent<BaseStat>();
+                            DamageToTarget(bs);
+                            controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, bs.id, 1f);
+                        }
                     }
                 }
             }

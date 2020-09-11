@@ -122,7 +122,6 @@ namespace ED
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;
             agent.speed = moveSpeed;
-            if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             isPlayable = true;
             isAttacking = false;
             isPolymorph = false;
@@ -135,6 +134,12 @@ namespace ED
             currentHealth = maxHealth;
             image_HealthBar.fillAmount = 1f;
             image_HealthBar.color = isMine ? Color.green : Color.red;
+            
+            if (animator != null)
+            {
+                animator.SetFloat(_animatorHashMoveSpeed, 0);
+                animator.SetFloat("AttackSpeed", 1f / attackSpeed);
+            }
 
             if (PhotonNetwork.IsConnected)
             {
@@ -156,6 +161,7 @@ namespace ED
             
             cloackingCount = 0;
             Cloacking(false);
+            _dicEffectPool.Clear();
 
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
         }
@@ -380,7 +386,7 @@ namespace ED
         {
             var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn", ts_HitPos.position + Vector3.up * 0.65f);
             _dicEffectPool.Add(MAZ.STURN, ad);
-            rb.velocity = Vector3.zero;
+            //rb.velocity = Vector3.zero;
             //rb.isKinematic = true;
             SetControllEnable(false);
             if (animator != null) animator.SetTrigger(_animatorHashIdle);
@@ -453,7 +459,17 @@ namespace ED
             SetControllEnable(false);
             isAttacking = true;
             transform.LookAt(target.transform);
+            
             yield return new WaitForSeconds(attackSpeed);
+            // while (true)
+            // {
+            //     yield return null;
+            //     if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            //     {
+            //         break;
+            //     }
+            // }
+            
             isAttacking = false;
             SetControllEnable(true);
         }
@@ -627,7 +643,7 @@ namespace ED
         public void SetAttackSpeedFactor(float factor)
         {
             attackSpeed = _originalAttackSpeed * factor;
-            if (animator != null) animator.speed = factor;
+            if (animator != null) animator.SetFloat("AttackSpeed", 1f / attackSpeed);
         }
 
         protected void SetControllEnable(bool isEnable)
