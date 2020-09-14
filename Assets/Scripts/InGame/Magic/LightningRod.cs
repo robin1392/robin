@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
@@ -8,8 +12,7 @@ namespace ED
     public class LightningRod : Magic
     {
         public Transform ts_ShootPoint;
-        public float lifeTime = 20f;
-        public float tick = 0.1f;
+        public readonly float tick = 0.1f;
 
         public Transform[] arrTs_Parts;
 
@@ -55,6 +58,7 @@ namespace ED
         {
             float t = 0;
             float shootTime = tick;
+            float lifeTime = InGameManager.Get().spawnTime;
             while (t < lifeTime)
             {
                 if (t >= shootTime)
@@ -64,9 +68,11 @@ namespace ED
                 }
                 
                 t += Time.deltaTime;
+                //Debug.LogFormat("AttackCoroutine t:{0}", t);
                 yield return null;
             }
-            Destroy();
+            //Debug.Log(gameObject.name + " Destroy !!");
+            //Destroy();
         }
 
         private void Shoot()
@@ -101,6 +107,11 @@ namespace ED
         public void EndGameUnit()
         {
             StopAllCoroutines();
+        }
+
+        public override void SetTarget()
+        {
+            
         }
     }
 }

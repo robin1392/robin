@@ -338,13 +338,13 @@ namespace ED
                     switch(arrDice[i].diceData.castType)
                     {
                     case (int)DICE_CAST_TYPE.MINION:
-                        for (var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
+                        for (var j = 0; j < (arrDice[i].eyeLevel + 1) * multiply; j++)
                         {
-                            CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                            CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
                         }
                         break;
                     case (int)DICE_CAST_TYPE.HERO:
-                        CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                        CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
                         break;
                     case (int)DICE_CAST_TYPE.MAGIC:
                         // for(var j = 0; j < (arrDice[i].level + 1) * multiply; j++)
@@ -353,7 +353,7 @@ namespace ED
                         // }
                         // break;
                     case (int)DICE_CAST_TYPE.INSTALLATION:
-                        CastMagic(arrDice[i].diceData, arrDice[i].level + 1, upgradeLevel, magicCastDelay, i);
+                        CastMagic(arrDice[i].diceData, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
                         break;
                         // upgradeLevel = GetDiceUpgradeLevel(arrDice[i].data);
                         // CastMagic(arrDice[i].data, arrDice[i].level, upgradeLevel, magicCastDelay, i);
@@ -520,15 +520,16 @@ namespace ED
                 m.searchRange = data.searchRange;
                 m.eyeLevel = eyeLevel;
                 m.upgradeLevel = upgradeLevel;
+                
+                if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
+                {
+                    m.power *= arrDice[diceNum].eyeLevel + 1;
+                    m.maxHealth *= arrDice[diceNum].eyeLevel + 1;
+                    m.effect *= arrDice[diceNum].eyeLevel + 1;
+                }
+
                 m.Initialize(MinionDestroyCallback);
                 if (!listMinion.Contains(m)) listMinion.Add(m);
-            }
-
-            if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
-            {
-                m.power *= arrDice[diceNum].level + 1;
-                m.maxHealth *= arrDice[diceNum].level + 1;
-                m.effect *= arrDice[diceNum].level + 1;
             }
 
             if (diceNum >= 0)

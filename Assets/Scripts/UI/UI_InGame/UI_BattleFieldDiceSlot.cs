@@ -39,7 +39,7 @@ namespace ED
                 image_Icon.color = c;
                 for (var i = 0; i < arrEyes.Length; i++)
                 {
-                    arrEyes[i].SetActive(i == dice.level);
+                    arrEyes[i].SetActive(i == dice.eyeLevel);
 
                     if (arrEyes[i].activeSelf)
                     {
@@ -149,7 +149,7 @@ namespace ED
 
         public void OnDrop(PointerEventData eventData)
         {
-            if (dice != null && dragDice != null && dice != dragDice && dice.id == dragDice.id && dice.level == dragDice.level)
+            if (dice != null && dragDice != null && dice != dragDice && dice.id == dragDice.id && dice.eyeLevel == dragDice.eyeLevel)
             {
                 if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
                 {
@@ -160,7 +160,7 @@ namespace ED
                     {
                         //InGameManager.Get().playerController.photonView.RPC("LevelUpDice", RpcTarget.Others, dragDice.diceFieldNum, dice.diceFieldNum, dice.data.id, dice.level);
                         InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE ,
-                            dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.level);
+                            dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.eyeLevel);
                     }
                     
                     ani.SetTrigger(BBoing);
@@ -191,7 +191,7 @@ namespace ED
 
         public void SetHighlight(Dice d)
         {
-            if (dice != null && d != dice && (d.diceData != dice.diceData || d.level != dice.level))
+            if (dice != null && d != dice && (d.diceData != dice.diceData || d.eyeLevel != dice.eyeLevel))
             {
                 var arrImage = image_Icon.GetComponentsInChildren<Image>();
                 foreach (var item in arrImage)

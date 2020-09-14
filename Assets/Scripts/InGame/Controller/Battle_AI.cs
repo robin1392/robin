@@ -100,13 +100,13 @@ namespace ED
                     if (arrDice[arr[i]].diceData != null)
                     {
                         var data = arrDice[arr[i]].diceData;
-                        var level = arrDice[arr[i]].level;
+                        var level = arrDice[arr[i]].eyeLevel;
 
                         for (var j = 0; j < arrDice.Length; j++)
                         {
                             if (arr[i] == j) continue;
 
-                            if (data == arrDice[j].diceData && level == arrDice[j].level)
+                            if (data == arrDice[j].diceData && level == arrDice[j].eyeLevel)
                             {
                                 // Upgrade
                                 arrDice[j].LevelUp(arrDiceDeck);

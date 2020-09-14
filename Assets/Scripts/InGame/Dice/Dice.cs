@@ -13,7 +13,7 @@ namespace ED
         
         //public int id => (data != null && data.id >= 0) ? data.id : -1;
         public int id => (diceData != null && diceData.id >= 0) ? diceData.id : -1;
-        public int level;
+        public int eyeLevel;
 
 
         public DiceInfoData diceData;
@@ -27,7 +27,7 @@ namespace ED
         public void Reset()
         {
             //this.data = null;
-            this.level = 0;
+            this.eyeLevel = 0;
 
             this.diceData = null;
         }
@@ -42,7 +42,7 @@ namespace ED
         public void Set(DiceInfoData pData, int pLevel = 0)
         {
             this.diceData = pData;
-            this.level = pLevel;
+            this.eyeLevel = pLevel;
         }
 
         /*public bool LevelUp(Data_Dice[] deck)
@@ -61,11 +61,11 @@ namespace ED
         
         public bool LevelUp(DiceInfoData[] deck)
         {
-            if (level < 5)
+            if (eyeLevel < 5)
             {
-                level++;
+                eyeLevel++;
                 var rndNum = Random.Range(0, deck.Length);
-                Set(deck[rndNum], level);
+                Set(deck[rndNum], eyeLevel);
 
                 return true;
             }
