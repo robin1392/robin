@@ -234,10 +234,24 @@ public class SocketSendEvent
                 _sender.SetMinionTargetRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
                 break;
             }
+            case GameProtocol.SCARECROW_RELAY:
+            {
+                //ScarecrowRelay(IPeer peer, int playerUId, int baseStatId, int eyeLevel)
+                _sender.ScarecrowRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
+                break;
+            }
+            case GameProtocol.LAYZER_TARGET_RELAY:
+            {
+                //LayzerTargetRelay(IPeer peer, int playerUId, int id, int[] targetId)
+                _sender.LayzerTargetRelay(peer , (int)param[0] , (int)param[1] , (int[]) param[2]);
+                
+                break;
+            }
             case GameProtocol.MINION_STATUS_RELAY:
             {
                 break;
             }
+            
             
             #endregion
             

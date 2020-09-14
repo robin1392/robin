@@ -81,7 +81,8 @@ namespace  ED
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
                 controller.MinionAniTrigger(id, "Skill");
                 
-                controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW, list[Random.Range(0, list.Count)], (float) eyeLevel);
+                //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW, list[Random.Range(0, list.Count)], (float) eyeLevel);
+                controller.ActionMinionScareCrow(true, list[Random.Range(0, list.Count)], (float) eyeLevel);
             }
         }
     }

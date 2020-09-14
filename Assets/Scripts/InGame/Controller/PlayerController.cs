@@ -1149,7 +1149,7 @@ namespace ED
             if (other == true)
             {
                 targetPlayer.SturnMinion(baseStatId , duration);
-                if (InGameManager.Get().IsNetwork() && isMine)
+                if (InGameManager.Get().IsNetwork() )
                 {
                     NetSendPlayer(GameProtocol.STURN_MINION_RELAY, NetworkManager.Get().OtherUID, baseStatId, chDur);
                 }
@@ -1157,7 +1157,7 @@ namespace ED
             else
             {
                 SturnMinion(baseStatId , duration);
-                if (InGameManager.Get().IsNetwork() && isMine)
+                if (InGameManager.Get().IsNetwork() )
                 {
                     NetSendPlayer(GameProtocol.STURN_MINION_RELAY, NetworkManager.Get().UserUID, baseStatId, chDur);
                 }
@@ -1279,6 +1279,36 @@ namespace ED
             if (InGameManager.Get().IsNetwork() && isMine)
             {
                 NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , targetId );
+            }
+        }
+
+        public void ActionMinionScareCrow(bool other , int targetId, float eyeLevel)
+        {
+            int chEyeLv = (int)(eyeLevel * Global.g_networkBaseValue);
+            if (other == true)
+            {
+                targetPlayer.ScareCrow(targetId , eyeLevel);
+                if (InGameManager.Get().IsNetwork() )
+                {
+                    NetSendPlayer(GameProtocol.STURN_MINION_RELAY, NetworkManager.Get().OtherUID, targetId, chEyeLv);
+                }
+            }
+            else
+            {
+                ScareCrow(targetId , eyeLevel);
+                if (InGameManager.Get().IsNetwork() )
+                {
+                    NetSendPlayer(GameProtocol.STURN_MINION_RELAY, NetworkManager.Get().UserUID, targetId, chEyeLv);
+                }
+            }
+        }
+
+        public void ActionLayzer(int baseStatId, int[] arrTarget)
+        {
+            LayzerMinion(baseStatId, arrTarget);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , arrTarget );
             }
         }
         #endregion
@@ -1408,9 +1438,24 @@ namespace ED
                 listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, targetId, SendMessageOptions.DontRequireReceiver);
             }
         }
-        
-        
-        
+
+        public void ScareCrow(int targetId , float eyeLevel )
+        {
+            listMinion.Find(m => m.id == targetId)?.Scarecrow(eyeLevel);
+        }
+
+        public void LayzerMinion(int bastStatId , int[] arrTarget)
+        {
+            var m_layzer = listMinion.Find(minion => minion.id == bastStatId);
+            if (m_layzer != null)
+            {
+                var layzer = m_layzer as Minion_Layzer;
+                if (layzer != null)
+                {
+                    layzer.SetTargetList(arrTarget);
+                }
+            }
+        }
         #endregion
         
         
@@ -1820,6 +1865,30 @@ namespace ED
                     
                     break;
                 }
+                case GameProtocol.SCARECROW_RELAY:
+                {
+                    MsgScarecrowRelay scarelay = (MsgScarecrowRelay) param[0];
+                    
+                    float chEyeLv = (float)scarelay.EyeLevel / Global.g_networkBaseValue;
+                    if (NetworkManager.Get().UserUID == scarelay.PlayerUId)
+                        ScareCrow(scarelay.BaseStatId , chEyeLv);
+                    else if (NetworkManager.Get().OtherUID == scarelay.PlayerUId )
+                        targetPlayer.ScareCrow(scarelay.BaseStatId , chEyeLv);
+                    
+                    break;
+                }
+                case GameProtocol.LAYZER_TARGET_RELAY:
+                {
+                    MsgLazerTargetRelay lazerrelay = (MsgLazerTargetRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == lazerrelay.PlayerUId)
+                        LayzerMinion(lazerrelay.Id, lazerrelay.TargetIdArray);
+                    else if (NetworkManager.Get().OtherUID == lazerrelay.PlayerUId )
+                        targetPlayer.LayzerMinion(lazerrelay.Id, lazerrelay.TargetIdArray);
+                    
+                    
+                    break;
+                }
                 case GameProtocol.MINION_STATUS_RELAY:
                 {
                     break;
@@ -2091,10 +2160,10 @@ namespace ED
                     listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
                     listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
                     break;
-                case E_PTDefine.PT_NECROMANCERBULLET:
+                case E_PTDefine.PT_NECROMANCERBULLET:            //
                     FireNecromancerBullet((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
                     break;
-                case E_PTDefine.PT_SETMINIONTARGET:
+                case E_PTDefine.PT_SETMINIONTARGET:            //
                     listMinion.Find(minion => minion.id == (int) param[0]).target = targetPlayer.GetBaseStatFromId((int) param[1]);
                     break;
                 default:

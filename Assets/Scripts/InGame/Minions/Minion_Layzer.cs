@@ -70,9 +70,11 @@ namespace ED
                 }
             }
 
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if(InGameManager.Get().IsNetwork() && isMine)
             {
-                controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_LAYZERTARGET,id, intList.Count > 0 ? intList.ToArray() : null);
+                //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_LAYZERTARGET,id, intList.Count > 0 ? intList.ToArray() : null);
+                controller.ActionLayzer(id, intList.Count > 0 ? intList.ToArray() : null);
             }
         }
 

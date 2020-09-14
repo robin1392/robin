@@ -359,6 +359,9 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.NecromancerBulletRelay = _socketRecv.OnNecromancerBulletRelay;
         _packetRecv.SetMinionTargetRelay = _socketRecv.OnSetMinionTargetRelay;
         
+        _packetRecv.ScarecrowRelay = _socketRecv.OnScarecrowRelay;
+        _packetRecv.LazerTargetRelay = _socketRecv.OnLazerTargetRelay;
+        
         _packetRecv.MinionStatusRelay = _socketRecv.OnMinionStatusRelay;
         
         _clientSocket.Init(_packetRecv);

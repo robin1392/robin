@@ -448,6 +448,23 @@ public class SocketRecvEvent
             InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MINION_TARGET_RELAY, msg);
     }
 
+    public void OnScarecrowRelay(IPeer peer, MsgScarecrowRelay msg)
+    {
+        UnityUtil.Print("scar scrow relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.SCARECROW_RELAY, msg);
+    }
+
+    public void OnLazerTargetRelay(IPeer peer, MsgLazerTargetRelay msg)
+    {
+        UnityUtil.Print("lazer target relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.LAYZER_TARGET_RELAY, msg);
+    }
+    
+
     public void OnMinionStatusRelay(IPeer peer, MsgMinionStatusRelay msg)
     {
     }
