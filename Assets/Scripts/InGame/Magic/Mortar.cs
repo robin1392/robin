@@ -33,7 +33,8 @@ namespace ED
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
             {
                 StartCoroutine(AttackCoroutine());
             }
@@ -140,9 +141,11 @@ namespace ED
             light_Fire.enabled = true;
             Invoke("FireLightOff", 0.15f);
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
             {
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.position, power, range);
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , ts_ShootingPos.position, longTarget.position, power, range);
+                controller.ActionFireCannonBall(ts_ShootingPos.position, longTarget.position, power, range);
             }
         }
         

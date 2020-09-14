@@ -49,8 +49,7 @@ namespace ED
                 if (list.Contains(col) == false)
                 {
                     list.Add(col);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Lightning",
-                        col.transform.position, Quaternion.identity, Vector3.one);
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Lightning", col.transform.position, Quaternion.identity, Vector3.one);
                     
                     // Damage and sturn
                     var cols2 = Physics.OverlapSphere(col.transform.position, 0.5f, targetLayer);
@@ -58,7 +57,9 @@ namespace ED
                     {
                         BaseStat bs = col2.GetComponentInParent<BaseStat>();
                         DamageToTarget(bs);
-                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, bs.id, 1f);
+                        
+                        //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, bs.id, 1f);
+                        controller.ActionSturn(true , bs.id , 1f);
                     }
                 }
             }

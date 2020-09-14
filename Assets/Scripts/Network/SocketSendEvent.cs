@@ -110,6 +110,11 @@ public class SocketSendEvent
                 _sender.FireArrowRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] );
                 break;
             }
+            case GameProtocol.FIRE_BALL_BOMB_RELAY:
+            {
+                _sender.FireballBombRelay(peer ,(int)param[0] , (int)param[1]);
+                break;
+            }
             case GameProtocol.MINE_BOMB_RELAY:
             {
                 _sender.MineBombRelay(peer , (int)param[0] , (int)param[1]);
@@ -125,7 +130,101 @@ public class SocketSendEvent
                 _sender.SetMagicTargetRelay(peer , (int)param[0] , (int)param[1] , (int)param[2], (int)param[3]);
                 break;
             }
+            
+            case GameProtocol.STURN_MINION_RELAY:
+            {
+                //SturnMinionRelay(IPeer peer, int playerUId, int id, int sturnTime)
+                _sender.SturnMinionRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
+                break;
+            }
+            case GameProtocol.DESTROY_MAGIC_RELAY:
+            {
+                //MsgDestroyMagic(IPeer peer, int playerUId, int baseStatId)
+                _sender.MsgDestroyMagic(peer ,(int)param[0] , (int)param[1]  );
+                break;
+            }
+            case GameProtocol.ROCKET_BOMB_RELAY:
+            {
+                //RocketBombRelay(IPeer peer, int playerUId, int id)
+                _sender.RocketBombRelay(peer  , (int)param[0] , (int)param[1] );
+                break;
+            }
+            case GameProtocol.ICE_BOMB_RELAY:
+            {
+                //IceBombRelay(IPeer peer, int playerUId, int id)
+                _sender.IceBombRelay(peer  , (int)param[0] ,(int)param[1]);
+                break;
+            }
+            case GameProtocol.FIRE_CANNON_BALL_RELAY:
+            {
+                //MsgFireCannonBall(IPeer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
 
+                Vector3 startPos = (Vector3) param[1];
+                Vector3 targetPos = (Vector3) param[2];
+
+                MsgVector3 chStPos = new MsgVector3();
+                MsgVector3 chTgPos = new MsgVector3();
+                
+                chStPos.X = (int)(startPos.x * Global.g_networkBaseValue);
+                chStPos.Y = (int)(startPos.y * Global.g_networkBaseValue);
+                chStPos.Z = (int)(startPos.z * Global.g_networkBaseValue);
+                
+                chTgPos.X = (int)(startPos.x * Global.g_networkBaseValue);
+                chTgPos.Y = (int)(startPos.y * Global.g_networkBaseValue);
+                chTgPos.Z = (int)(startPos.z * Global.g_networkBaseValue);
+                
+                _sender.MsgFireCannonBall(peer ,(int)param[0] ,chStPos , chTgPos , (int)param[3] , (int)param[4]);
+                break;
+            }
+            case GameProtocol.FIRE_SPEAR_RELAY:
+            {
+                //FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
+                break;
+            }
+            case GameProtocol.FIRE_MAN_FIRE_RELAY:
+            {
+                //FireManFireRelay(IPeer peer, int playerUId, int id)
+                break;
+            }
+            case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+            {
+                //ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
+                break;
+            }
+            case GameProtocol.MINION_CLOACKING_RELAY:
+            {
+                //MinionCloackingRelay(IPeer peer, int playerUId, int id, bool isCloacking)
+                break;
+            }
+            case GameProtocol.MINION_FOG_OF_WAR_RELAY:
+            {
+                //MinionFogOfWarRelay(IPeer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
+                break;
+            }
+            case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+            {
+                //SendMessageVoidRelay(IPeer peer, int playerUId, int id, string message)
+                break;
+            }
+            case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+            {
+                //SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
+                break;
+            }
+            case GameProtocol.NECROMANCER_BULLET_RELAY:
+            {
+                //NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
+                break;
+            }
+            case GameProtocol.SET_MINION_TARGET_RELAY:
+            {
+                //SetMinionTargetRelay(IPeer peer, int playerUId, int id, int targetId)
+                break;
+            }
+            case GameProtocol.MINION_STATUS_RELAY:
+            {
+                break;
+            }
             
             #endregion
             

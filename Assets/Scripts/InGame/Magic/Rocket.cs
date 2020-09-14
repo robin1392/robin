@@ -65,7 +65,8 @@ namespace ED
                         controller.HitMinionDamage( true , target.id , power, 0f);
                     //controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id, power, 0f);
 
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ROCKETBOMB, id);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ROCKETBOMB, id);
+                    controller.ActionRocketBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.Get().IsNetwork() == false )
@@ -98,7 +99,8 @@ namespace ED
                         controller.HitMinionDamage( true , target.id , power, 0f);
                     //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
                         
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
+                    controller.ActionRocketBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.Get().IsNetwork() == false )
