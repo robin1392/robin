@@ -552,13 +552,14 @@ namespace RWGameProtocol
         }
 
 
-        public void FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
+        public void FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int moveSpeed)
         {
             MsgFireSpearRelay msg = new MsgFireSpearRelay();
             msg.PlayerUId = playerUId;
             msg.ShootPos = shootPos;
             msg.TargetId = targetId;
             msg.Power = power;
+            msg.MoveSpeed = moveSpeed;
             peer.SendPacket((short)GameProtocol.FIRE_SPEAR_RELAY, msg.Serialize());
         }
 

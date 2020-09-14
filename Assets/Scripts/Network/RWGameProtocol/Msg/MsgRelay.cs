@@ -209,6 +209,7 @@ namespace RWGameProtocol.Msg
         public MsgVector3 ShootPos;
         public int TargetId;
         public int Power;
+        public int MoveSpeed;
     }
 
 
