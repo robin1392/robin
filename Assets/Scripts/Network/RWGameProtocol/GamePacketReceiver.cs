@@ -183,6 +183,12 @@ namespace RWGameProtocol
         public delegate void MinionStatusRelayDelegate(IPeer peer, MsgMinionStatusRelay msg);
         public MinionStatusRelayDelegate MinionStatusRelay;
 
+        public delegate void ScarecrowRelayDelegate(IPeer peer, MsgScarecrowRelay msg);
+        public ScarecrowRelayDelegate ScarecrowRelay;
+
+        public delegate void LazerTargetRelayDelegate(IPeer peer, MsgLazerTargetRelay msg);
+        public LazerTargetRelayDelegate LazerTargetRelay;
+
         #endregion
 
 
@@ -567,6 +573,20 @@ namespace RWGameProtocol
                         if (MinionStatusRelay == null)
                             return false;
                         MinionStatusRelay(peer, MsgMinionStatusRelay.Deserialize(data));
+                    }
+                    break;
+                case GameProtocol.SCARECROW_RELAY:
+                    {
+                        if (ScarecrowRelay == null)
+                            return false;
+                        ScarecrowRelay(peer, MsgScarecrowRelay.Deserialize(data));
+                    }
+                    break;
+                case GameProtocol.LAYZER_TARGET_RELAY:
+                    {
+                        if (LazerTargetRelay == null)
+                            return false;
+                        LazerTargetRelay(peer, MsgLazerTargetRelay.Deserialize(data));
                     }
                     break;
                     #endregion

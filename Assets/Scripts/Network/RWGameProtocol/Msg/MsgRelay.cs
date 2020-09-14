@@ -303,6 +303,25 @@ namespace RWGameProtocol.Msg
         public int TargetId;
     }
 
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgScarecrowRelay : Serializer<MsgScarecrowRelay>
+    {
+        public int PlayerUId;
+        public int BaseStatId;
+        public int EyeLevel;
+    }
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgLazerTargetRelay : Serializer<MsgLazerTargetRelay>
+    {
+        public int PlayerUId;
+        public int Id;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
+        public int[] TargetIdArray = new int[30];
+    }
 
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -313,9 +332,7 @@ namespace RWGameProtocol.Msg
         // Pos배열 분할 인덱스
         public byte PosIndex;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
-        public MsgVector3[] Pos = new MsgVector3[30];
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
+        public MsgVector3[] Pos = new MsgVector3[100];
     }
-
-
 }

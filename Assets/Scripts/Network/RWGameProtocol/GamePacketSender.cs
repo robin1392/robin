@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Win32;
-using RWCoreNetwork;
+﻿using RWCoreNetwork;
 using RWGameProtocol.Msg;
 
 namespace RWGameProtocol
@@ -648,6 +644,24 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.SET_MINION_TARGET_RELAY, msg.Serialize());
         }
 
+        public void ScarecrowRelay(IPeer peer, int playerUId, int baseStatId, int eyeLevel)
+        {
+            MsgScarecrowRelay msg = new MsgScarecrowRelay();
+            msg.PlayerUId = playerUId;
+            msg.BaseStatId = baseStatId;
+            msg.EyeLevel = eyeLevel;
+            peer.SendPacket((short)GameProtocol.SCARECROW_RELAY, msg.Serialize());
+        }
+
+
+        public void LayzerTargetRelay(IPeer peer, int playerUId, int id, int[] targetId)
+        {
+            MsgLazerTargetRelay msg = new MsgLazerTargetRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.TargetIdArray = targetId;
+            peer.SendPacket((short)GameProtocol.LAYZER_TARGET_RELAY, msg.Serialize());
+        }
 
         #endregion
     }
