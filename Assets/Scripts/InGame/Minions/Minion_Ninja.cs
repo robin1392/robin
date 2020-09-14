@@ -100,7 +100,9 @@ namespace ED
             transform.LookAt(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back));
             
             yield return null;
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, true);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, true);
+            controller.ActionCloacking(id, true);
+            
             animator.SetFloat("MoveSpeed", 1f);
             
             //agent.SetDestination(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back) * 5f);
@@ -114,7 +116,9 @@ namespace ED
             
             //yield return new WaitForSeconds(effectCooltime);
 
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, false);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, false);
+            controller.ActionCloacking(id, false);
+            
             SetControllEnable(true);
         }
     }

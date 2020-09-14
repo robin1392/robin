@@ -104,10 +104,9 @@ namespace ED
             {
                 shootTime = Time.time;
                 Invoke("Shoot", 0.5f);
-                // StartCoroutine(LookAtTargetCoroutine());
-                // animator.SetTrigger(animatorHashShoot);
                 
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", longTarget.GetComponentInParent<BaseStat>().id);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", longTarget.GetComponentInParent<BaseStat>().id);
+                controller.ActionSendMsg(id, "LookAndAniTrigger", longTarget.GetComponentInParent<BaseStat>().id);
             }
         }
 

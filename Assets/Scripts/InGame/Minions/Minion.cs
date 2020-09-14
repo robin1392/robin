@@ -314,17 +314,8 @@ namespace ED
         public void DamageToTarget(BaseStat m, float delay = 0, float factor = 1f)
         {
             if (m == null || m.isAlive == false) return;
-            // if (PhotonNetwork.IsConnected && isMine)
-            // {
-            //     if (m.photonView == null)
-            //         controller.AttackEnemyMinion(m.id, power * factor, delay);
-            //     else
-            //         m.photonView.RPC("HitDamage", RpcTarget.All, power * factor, delay);
-            // }
-            // else if (PhotonNetwork.IsConnected == false)
-            {
-                controller.AttackEnemyMinion(m.id, power * factor, delay);
-            }
+
+            controller.AttackEnemyMinion(m.id, power * factor, delay);
         }
 
         public void Push(Vector3 dir, float pushPower)

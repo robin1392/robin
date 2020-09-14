@@ -1087,12 +1087,14 @@ namespace ED
 
         #region rpc etc
 
+        // not use
         public void SpawnPlayerMinions()
         {
             WorldUIManager.Get().SetSpawnTime(1.0f);
             playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_SPAWN);
         }
 
+        // 내가 언제 이런 함수를 만들엇지....???!!???
         public void ShowAIField(bool isShow)
         {
             if (isShow)

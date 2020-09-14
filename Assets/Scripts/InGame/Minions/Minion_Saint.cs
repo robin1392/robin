@@ -13,12 +13,10 @@ namespace ED
         {
             if (target == null || target.currentHealth >= target.maxHealth) return;
 
-            controller.SendPlayer(RpcTarget.All,
-                E_PTDefine.PT_ACTIVATEPOOLOBJECT,
-                "Effect_Heal",
-                transform.position,
-                Quaternion.identity,
-                new Vector3(1.5f, 1.5f, 0.3f));
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Heal", transform.position, Quaternion.identity, new Vector3(1.5f, 1.5f, 0.3f));
+            controller.ActionActivePoolObject("Effect_Heal", transform.position, Quaternion.identity, new Vector3(1.5f, 1.5f, 0.3f));
+            
+            
             var cols = Physics.OverlapSphere(transform.position, range, friendlyLayer);
             
             //if (PhotonNetwork.IsConnected && isMine)

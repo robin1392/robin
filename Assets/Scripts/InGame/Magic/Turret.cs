@@ -111,9 +111,8 @@ namespace ED
                 shootTime = Time.time;
                 flyingTarget = colTarget.GetComponentInParent<Minion>();
                 
-                // StartCoroutine(LookAtTargetCoroutine());
-                // animator.SetTrigger("Attack");
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
+                controller.ActionSendMsg(id, "LookAndAniTrigger", flyingTarget.id);
             }
         }
 

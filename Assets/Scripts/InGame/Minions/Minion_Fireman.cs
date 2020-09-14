@@ -51,7 +51,8 @@ namespace ED
                     //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                     controller.MinionAniTrigger(id, "Attack");
                     
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
+                    controller.ActionFireManFire(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.Get().IsNetwork() == false )
@@ -65,13 +66,11 @@ namespace ED
 
         public void Fire()
         {
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            //{
             if (isFire == false)
             {
                 StartCoroutine(FireCoroutine());
             }
-            //}
+
         }
 
         IEnumerator FireCoroutine()
@@ -98,16 +97,6 @@ namespace ED
                             var bs = col.transform.GetComponentInParent<BaseStat>();
 
                             if (bs.id == id) continue;
-
-                            // if (PhotonNetwork.IsConnected && isMine)
-                            // {
-                            //     controller.targetPlayer.photonView.RPC("HitDamageMinion", 
-                            //         RpcTarget.All, bs.id, power * 0.1f, 0f);
-                            // }
-                            // else if (PhotonNetwork.IsConnected == false)
-                            // {
-                            //     controller.targetPlayer.HitDamageMinion(bs.id, power * 0.1f, 0f);
-                            // }
 
                             DamageToTarget(bs);
                         }

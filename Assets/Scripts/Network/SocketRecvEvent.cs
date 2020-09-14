@@ -379,46 +379,73 @@ public class SocketRecvEvent
     public void OnFireSpearRelay(IPeer peer, MsgFireSpearRelay msg)
     {
         UnityUtil.Print("fire spear relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_SPEAR_RELAY, msg);
     }
 
     public void OnFireManFireRelay(IPeer peer, MsgFireManFireRelay msg)
     {
         UnityUtil.Print("fire man relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_MAN_FIRE_RELAY, msg);
     }
 
     public void OnActivatePoolObjectRelay(IPeer peer, MsgActivatePoolObjectRelay msg)
     {
         UnityUtil.Print("active relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, msg);
     }
 
     public void OnMinionCloackingRelay(IPeer peer, MsgMinionCloackingRelay msg)
     {
         UnityUtil.Print("cloacking relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_CLOACKING_RELAY, msg);
     }
 
     public void OnMinionFogOfWarRelay(IPeer peer, MsgMinionFogOfWarRelay msg)
     {
         UnityUtil.Print("fog war relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_FOG_OF_WAR_RELAY, msg);
     }
 
     public void OnSendMessageVoidRelay(IPeer peer, MsgSendMessageVoidRelay msg)
     {
         UnityUtil.Print("send void relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.SEND_MESSAGE_VOID_RELAY, msg);
     }
 
     public void OnSendMessageParam1Relay(IPeer peer, MsgSendMessageParam1Relay msg)
     {
         UnityUtil.Print("send p1 relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, msg);
     }
 
     public void OnNecromancerBulletRelay(IPeer peer, MsgNecromancerBulletRelay msg)
     {
         UnityUtil.Print("necro relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.NECROMANCER_BULLET_RELAY, msg);
     }
 
     public void OnSetMinionTargetRelay(IPeer peer, MsgSetMinionTargetRelay msg)
     {
         UnityUtil.Print("min target relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MINION_TARGET_RELAY, msg);
     }
 
     public void OnMinionStatusRelay(IPeer peer, MsgMinionStatusRelay msg)

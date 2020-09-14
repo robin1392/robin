@@ -232,6 +232,67 @@ public class NetworkManager : Singleton<NetworkManager>
     
     #endregion
     
+    
+    #region server msg convert
+    
+    public MsgVector3 VectorToMsg(Vector3 val)
+    {
+        MsgVector3 chVec = new MsgVector3();
+                
+        chVec.X = (int)(val.x * Global.g_networkBaseValue);
+        chVec.Y = (int)(val.y * Global.g_networkBaseValue);
+        chVec.Z = (int)(val.z * Global.g_networkBaseValue);
+
+        return chVec;
+    }
+
+    public MsgQuaternion QuaternionToMsg(Quaternion quat)
+    {
+        MsgQuaternion chMsgQuat = new MsgQuaternion();
+        
+        chMsgQuat.X = (int)(quat.x * Global.g_networkBaseValue);
+        chMsgQuat.Y = (int)(quat.y * Global.g_networkBaseValue);
+        chMsgQuat.Z = (int)(quat.z * Global.g_networkBaseValue);
+        chMsgQuat.W = (int)(quat.w * Global.g_networkBaseValue);
+        
+        return chMsgQuat;
+    }
+
+    public Vector3 MsgToVector(MsgVector3 msgVec)
+    {
+        Vector3 vecVal = new Vector3();
+
+        vecVal.x = (float) msgVec.X / Global.g_networkBaseValue;
+        vecVal.y = (float) msgVec.Y / Global.g_networkBaseValue;
+        vecVal.z = (float) msgVec.Z / Global.g_networkBaseValue;
+
+        return vecVal;
+    }
+    
+    public Vector3 MsgToVector(int[] msgVec)
+    {
+        Vector3 vecVal = new Vector3();
+
+        vecVal.x = (float) msgVec[0] / Global.g_networkBaseValue;
+        vecVal.y = (float) msgVec[1] / Global.g_networkBaseValue;
+        vecVal.z = (float) msgVec[2] / Global.g_networkBaseValue;
+
+        return vecVal;
+    }
+
+    public Quaternion MsgToQuaternion(MsgQuaternion quat)
+    {
+        Quaternion quatVal = new Quaternion();
+        
+        quatVal.x = (float) quat.X / Global.g_networkBaseValue;
+        quatVal.y = (float) quat.Y / Global.g_networkBaseValue;
+        quatVal.z = (float) quat.Z / Global.g_networkBaseValue;
+        quatVal.w = (float) quat.W / Global.g_networkBaseValue;
+
+        return quatVal;
+    }
+
+    #endregion
 
 
     #region socket delegate

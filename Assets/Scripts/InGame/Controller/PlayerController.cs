@@ -1193,7 +1193,93 @@ namespace ED
                 
                 NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange);
             }
+        }
+
+        public void ActionFireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        {
+            FireSpear(startPos, targetId, damage, moveSpeed);
+
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                int chDamage = (int)(damage *  Global.g_networkBaseValue);
+                int chSpeed = (int)(moveSpeed *  Global.g_networkBaseValue);
+                
+                NetSendPlayer(GameProtocol.FIRE_SPEAR_RELAY, NetworkManager.Get().UserUID, startPos , targetId , chDamage , chSpeed);
+            }
+        }
+
+        public void ActionFireManFire(int baseStatId)
+        {
+            FiremanFire(baseStatId);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.FIRE_MAN_FIRE_RELAY, NetworkManager.Get().UserUID, baseStatId);
+            }
+        }
+
+        public void ActionActivePoolObject(string objName , Vector3 startPos , Quaternion rotate , Vector3 scale)
+        {
+            ActivationPoolObject(objName , startPos , rotate , scale);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, NetworkManager.Get().UserUID, objName , startPos , scale , rotate);
+            }
+        }
+
+        public void ActionCloacking(int bastStatId, bool isCloacking)
+        {
+            Cloacking(bastStatId, isCloacking);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.MINION_CLOACKING_RELAY, NetworkManager.Get().UserUID, bastStatId , isCloacking);
+            }
+        }
+
+        public void ActionFlagOfWar(int bastStatId, bool isIn, float factor)
+        {
+            FlagOfWar(bastStatId , isIn , factor);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                int convFactor = (int) (factor * Global.g_networkBaseValue);
+                NetSendPlayer(GameProtocol.MINION_FOG_OF_WAR_RELAY, NetworkManager.Get().UserUID, bastStatId ,convFactor , isIn );
+            }
+        }
+
+        public void ActionSendMsg(int bastStatId, string msgFunc, int targetId = 1)
+        {
+            MinionSendMessage(bastStatId, msgFunc, targetId);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                if (targetId == -1)
+                {
+                    NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, NetworkManager.Get().UserUID, bastStatId ,msgFunc );
+                }
+                else
+                {
+                    NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, NetworkManager.Get().UserUID, bastStatId ,msgFunc , targetId );
+                }
+            }
+        }
+
+        public void ActionNecroBullet(Vector3 shootPos , int targetId , float damage , float moveSpeed)
+        {
+            FireNecromancerBullet(shootPos, targetId, damage, moveSpeed);
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                int convDamage = (int) (damage * Global.g_networkBaseValue);
+                int convSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
+                NetSendPlayer(GameProtocol.NECROMANCER_BULLET_RELAY, NetworkManager.Get().UserUID, shootPos , targetId ,convDamage , convSpeed );
+            }
+        }
+
+        public void ActionMinionTarget(int baseStatId, int targetId)
+        {
+            SetMinionTarget(baseStatId , targetId);
             
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , targetId );
+            }
         }
         #endregion
         
@@ -1280,7 +1366,51 @@ namespace ED
         {
             ((Iceball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
+        
+        public void FiremanFire(int baseStatId)
+        {
+            var m = listMinion.Find(minion => minion.id == baseStatId);
+            if (m != null)
+            {
+                var fireman = m as Minion_Fireman;
+                if (fireman != null)
+                {
+                    fireman.Fire();
+                }
+            }
+        }
 
+        public void Cloacking(int baseStatId , bool isCloack)
+        {
+            listMinion.Find(m => m.id == baseStatId)?.Cloacking(isCloack);
+        }
+
+        public void FlagOfWar(int bastStatId , bool isIn , float factor)
+        {
+            listMinion.Find(m => m.id == bastStatId )?.SetFlagOfWar(isIn, factor);
+        }
+
+        public void SetMinionTarget(int bastStatId , int targetId )
+        {
+            listMinion.Find(minion => minion.id == bastStatId).target = targetPlayer.GetBaseStatFromId(targetId);
+        }
+        
+        public void MinionSendMessage(int bastStatId, string msgFunc , int targetId = -1 )
+        {
+            if (targetId == -1)
+            {
+                listMinion.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, SendMessageOptions.DontRequireReceiver);
+                listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, SendMessageOptions.DontRequireReceiver);
+            }
+            else
+            {
+                listMinion.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, targetId, SendMessageOptions.DontRequireReceiver);
+                listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, targetId, SendMessageOptions.DontRequireReceiver);
+            }
+        }
+        
+        
+        
         #endregion
         
         
@@ -1308,6 +1438,40 @@ namespace ED
             }
         }
         
+        
+        public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        {
+            var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
+            if (b != null)
+            {
+                b.transform.rotation = Quaternion.identity;
+                b.controller = this;
+                b.moveSpeed = moveSpeed;
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+            }
+        }
+        
+        public void FireNecromancerBullet(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        {
+            var b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
+            if (b != null)
+            {
+                b.transform.rotation = Quaternion.identity;
+                b.controller = this;
+                b.moveSpeed = moveSpeed;
+                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+            }
+        }
+
+        public void ActivationPoolObject(string objectName , Vector3 startPos , Quaternion rotate , Vector3 scale )
+        {
+            Transform ts = PoolManager.instance.ActivateObject(objectName, startPos);
+            if (ts != null)
+            {
+                ts.rotation = rotate;
+                ts.localScale = scale;
+            }
+        }
         #endregion
 
 
@@ -1413,10 +1577,7 @@ namespace ED
                     MsgFireArrowRelay arrrelay = (MsgFireArrowRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = Vector3.zero;
-                    sPos.x = (float)arrrelay.Dir[0] / Global.g_networkBaseValue;
-                    sPos.y = (float)arrrelay.Dir[1] / Global.g_networkBaseValue;
-                    sPos.z = (float)arrrelay.Dir[2] / Global.g_networkBaseValue;
+                    Vector3 sPos = NetworkManager.Get().MsgToVector(arrrelay.Dir);
                     
                     float calDamage = (float)arrrelay.Damage / Global.g_networkBaseValue;
                     float calSpeed = (float)arrrelay.MoveSpeed / Global.g_networkBaseValue;
@@ -1535,22 +1696,11 @@ namespace ED
                 {
                     MsgFireCannonBallRelay fcannonrelay = (MsgFireCannonBallRelay) param[0];
 
-                    Vector3 startPos = new Vector3();
-                    Vector3 targetPos = new Vector3();
-                    float chDamage;
-                    float chRange;
-                    
-                    startPos.x = (float)fcannonrelay.ShootPos.X / Global.g_networkBaseValue;
-                    startPos.y = (float)fcannonrelay.ShootPos.Y / Global.g_networkBaseValue;
-                    startPos.z = (float)fcannonrelay.ShootPos.Z / Global.g_networkBaseValue;
-                    
-                    targetPos.x = (float)fcannonrelay.TargetPos.X / Global.g_networkBaseValue;
-                    targetPos.y = (float)fcannonrelay.TargetPos.Y / Global.g_networkBaseValue;
-                    targetPos.z = (float)fcannonrelay.TargetPos.Z / Global.g_networkBaseValue;
-                    
-                    chDamage = (float)fcannonrelay.Power / Global.g_networkBaseValue;
-                    chRange = (float)fcannonrelay.Range / Global.g_networkBaseValue;
-                    
+                    Vector3 startPos = NetworkManager.Get().MsgToVector(fcannonrelay.ShootPos);
+                    Vector3 targetPos = NetworkManager.Get().MsgToVector(fcannonrelay.TargetPos);
+                    float chDamage = (float)fcannonrelay.Power / Global.g_networkBaseValue;
+                    float chRange = (float)fcannonrelay.Range / Global.g_networkBaseValue;
+        
                     if (NetworkManager.Get().UserUID == fcannonrelay.PlayerUId)
                         FireCannonBall(startPos, targetPos, chDamage, chRange);
                     else if (NetworkManager.Get().OtherUID == fcannonrelay.PlayerUId )
@@ -1560,38 +1710,114 @@ namespace ED
                 }
                 case GameProtocol.FIRE_SPEAR_RELAY:
                 {
+                    MsgFireSpearRelay spearrelay = (MsgFireSpearRelay) param[0];
+
+                    Vector3 startPos = NetworkManager.Get().MsgToVector(spearrelay.ShootPos);
+                    float chDamage = (float)spearrelay.Power / Global.g_networkBaseValue;
+                    float chSpeed = (float)spearrelay.MoveSpeed /  Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == spearrelay.PlayerUId)
+                        FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
+                    else if (NetworkManager.Get().OtherUID == spearrelay.PlayerUId )
+                        targetPlayer.FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
+                    
                     break;
                 }
                 case GameProtocol.FIRE_MAN_FIRE_RELAY:
                 {
+                    MsgFireManFireRelay firerelay = (MsgFireManFireRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == firerelay.PlayerUId)
+                        FiremanFire(firerelay.Id);
+                    else if (NetworkManager.Get().OtherUID == firerelay.PlayerUId )
+                        targetPlayer.FiremanFire(firerelay.Id);
+                    
                     break;
                 }
                 case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
                 {
+                    MsgActivatePoolObjectRelay actrelay = (MsgActivatePoolObjectRelay) param[0];
+                    
+                    Vector3 stPos = NetworkManager.Get().MsgToVector(actrelay.HitPos);
+                    Vector3 localScale = NetworkManager.Get().MsgToVector(actrelay.LocalScale);
+                    Quaternion rotate = NetworkManager.Get().MsgToQuaternion(actrelay.Rotation);
+
+                    if (NetworkManager.Get().UserUID == actrelay.PlayerUId)
+                        ActivationPoolObject(actrelay.PoolName, stPos, rotate, localScale);
+                    else if (NetworkManager.Get().OtherUID == actrelay.PlayerUId )
+                        targetPlayer.ActivationPoolObject(actrelay.PoolName, stPos, rotate, localScale);
+
                     break;
                 }
                 case GameProtocol.MINION_CLOACKING_RELAY:
                 {
+                    MsgMinionCloackingRelay cloackrelay = (MsgMinionCloackingRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == cloackrelay.PlayerUId)
+                        Cloacking(cloackrelay.Id, cloackrelay.IsCloacking);
+                    else if (NetworkManager.Get().OtherUID == cloackrelay.PlayerUId )
+                        targetPlayer.Cloacking(cloackrelay.Id, cloackrelay.IsCloacking);
+                    
+                    
                     break;
                 }
                 case GameProtocol.MINION_FOG_OF_WAR_RELAY:
                 {
+                    MsgMinionFogOfWarRelay flagrelay = (MsgMinionFogOfWarRelay) param[0];
+                    
+                    float convFactor = (float)flagrelay.Effect / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == flagrelay.PlayerUId)
+                        FlagOfWar(flagrelay.BaseStatId , flagrelay.IsFogOfWar , convFactor);
+                    else if (NetworkManager.Get().OtherUID == flagrelay.PlayerUId )
+                        targetPlayer.FlagOfWar(flagrelay.BaseStatId , flagrelay.IsFogOfWar , convFactor);
+                    
                     break;
                 }
                 case GameProtocol.SEND_MESSAGE_VOID_RELAY:
                 {
+                    MsgSendMessageVoidRelay voidmsg = (MsgSendMessageVoidRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == voidmsg.PlayerUId)
+                        MinionSendMessage(voidmsg.Id , voidmsg.Message);
+                    else if (NetworkManager.Get().OtherUID == voidmsg.PlayerUId )
+                        targetPlayer.MinionSendMessage(voidmsg.Id , voidmsg.Message);
+                    
                     break;
                 }
                 case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
                 {
+                    MsgSendMessageParam1Relay paramrelay = (MsgSendMessageParam1Relay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == paramrelay.PlayerUId)
+                        MinionSendMessage(paramrelay.Id , paramrelay.Message , paramrelay.TargetId);
+                    else if (NetworkManager.Get().OtherUID == paramrelay.PlayerUId )
+                        targetPlayer.MinionSendMessage(paramrelay.Id , paramrelay.Message , paramrelay.TargetId);
+                    
                     break;
                 }
                 case GameProtocol.NECROMANCER_BULLET_RELAY:
                 {
+                    MsgNecromancerBulletRelay necrorelay = (MsgNecromancerBulletRelay) param[0];
+
+                    Vector3 shootPos = NetworkManager.Get().MsgToVector(necrorelay.ShootPos);
+                        
+                    if (NetworkManager.Get().UserUID == necrorelay.PlayerUId)
+                        FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
+                    else if (NetworkManager.Get().OtherUID == necrorelay.PlayerUId )
+                        targetPlayer.FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
+                    
                     break;
                 }
                 case GameProtocol.SET_MINION_TARGET_RELAY:
                 {
+                    MsgSetMinionTargetRelay targetrelay = (MsgSetMinionTargetRelay) param[0];
+                    
+                    if (NetworkManager.Get().UserUID == targetrelay.PlayerUId)
+                        SetMinionTarget(targetrelay.Id , targetrelay.TargetId);
+                    else if (NetworkManager.Get().OtherUID == targetrelay.PlayerUId )
+                        targetPlayer.SetMinionTarget(targetrelay.Id , targetrelay.TargetId);
+                    
                     break;
                 }
                 case GameProtocol.MINION_STATUS_RELAY:
@@ -1631,33 +1857,11 @@ namespace ED
         //////////////////////////////////////////////////////////////////////
         // Unit's RPCs
         //////////////////////////////////////////////////////////////////////
-        //[PunRPC]
+
         
         
-        //[PunRPC]
-        public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
         
-        public void FireNecromancerBullet(Vector3 startPos, int targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
+        
 
         
         
@@ -1680,19 +1884,7 @@ namespace ED
             PoolManager.instance.ActivateObject("Effect_Ninja", ts.position);
         }
 
-        //[PunRPC]
-        public void FiremanFire(int baseStatId)
-        {
-            var m = listMinion.Find(minion => minion.id == baseStatId);
-            if (m != null)
-            {
-                var fireman = m as Minion_Fireman;
-                if (fireman != null)
-                {
-                    fireman.Fire();
-                }
-            }
-        }
+        
 
         //[PunRPC]
         public void SpawnSkeleton(Vector3 pos)
@@ -1810,10 +2002,10 @@ namespace ED
                 case E_PTDefine.PT_FIREBALLBOMB:            //
                     FireballBomb((int) param[0]);
                     break;
-                case E_PTDefine.PT_ICEBALLBOMB:
+                case E_PTDefine.PT_ICEBALLBOMB:            //
                     IceballBomb((int) param[0]);
                     break;
-                case E_PTDefine.PT_ROCKETBOMB:
+                case E_PTDefine.PT_ROCKETBOMB:            //
                     RocketBomb((int) param[0]);
                     break;
                 case E_PTDefine.PT_MINIONATTACKSPEEDFACTOR:
@@ -1822,7 +2014,7 @@ namespace ED
                 case E_PTDefine.PT_STURNMINION:            //
                     SturnMinion((int) param[0], (float) param[1]);
                     break;
-                case E_PTDefine.PT_SETMAGICTARGET:
+                case E_PTDefine.PT_SETMAGICTARGET:            //
                     if (param.Length > 2)
                     {
                         SetMagicTarget((int) param[0], (float) param[1], (float) param[2]);
@@ -1836,19 +2028,19 @@ namespace ED
                 case E_PTDefine.PT_MINEBOMB:            //
                     MineBomb((int) param[0]);
                     break;
-                case E_PTDefine.PT_FIRECANNONBALL:
+                case E_PTDefine.PT_FIRECANNONBALL:            //
                     FireCannonBall((Vector3) param[0], (Vector3) param[1], (float) param[2], (float) param[3]);
                     break;
                 case E_PTDefine.PT_FIREARROW:            //
                     FireArrow((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
                     break;
-                case E_PTDefine.PT_FIRESPEAR:
+                case E_PTDefine.PT_FIRESPEAR:            //
                     FireSpear((Vector3) param[0], (int) param[1], (float) param[2], (float) param[3]);
                     break;
                 case E_PTDefine.PT_MINIONANITRIGGER:            //
                     SetMinionAnimationTrigger((int) param[0], (string) param[1]);
                     break;
-                case E_PTDefine.PT_FIREMANFIRE:
+                case E_PTDefine.PT_FIREMANFIRE:            //
                     FiremanFire((int) param[0]);
                     break;
                 case E_PTDefine.PT_SPAWNSKELETON:
@@ -1877,7 +2069,7 @@ namespace ED
                 case E_PTDefine.PT_SCARECROW:
                     listMinion.Find(m => m.id == (int) param[0])?.Scarecrow((float) param[1]);
                     break;
-                case E_PTDefine.PT_ACTIVATEPOOLOBJECT:
+                case E_PTDefine.PT_ACTIVATEPOOLOBJECT:            //
                     var ts = PoolManager.instance.ActivateObject((string) param[0], (Vector3) param[1]);
                     if (ts != null)
                     {
@@ -1885,17 +2077,17 @@ namespace ED
                         ts.localScale = (Vector3) param[3];
                     }
                     break;
-                case E_PTDefine.PT_MINIONCLOACKING:
+                case E_PTDefine.PT_MINIONCLOACKING:            //
                     listMinion.Find(m => m.id == (int)param[0])?.Cloacking((bool)param[1]);
                     break;
-                case E_PTDefine.PT_MINIONFOGOFWAR:
+                case E_PTDefine.PT_MINIONFOGOFWAR:            //
                     listMinion.Find(m => m.id == (int)param[0])?.SetFlagOfWar((bool)param[1], (float)param[2]);
                     break;
-                case E_PTDefine.PT_SENDMESSAGEVOID:
+                case E_PTDefine.PT_SENDMESSAGEVOID:            //
                     listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], SendMessageOptions.DontRequireReceiver);
                     listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], SendMessageOptions.DontRequireReceiver);
                     break;
-                case E_PTDefine.PT_SENDMESSAGEPARAM1:
+                case E_PTDefine.PT_SENDMESSAGEPARAM1:            //
                     listMinion.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
                     listMagic.Find(m => m.id == (int)param[0])?.SendMessage((string)param[1], param[2], SendMessageOptions.DontRequireReceiver);
                     break;
@@ -1903,8 +2095,7 @@ namespace ED
                     FireNecromancerBullet((Vector3)param[0] , (int)param[1] , (float)param[2], (float)param[3]);
                     break;
                 case E_PTDefine.PT_SETMINIONTARGET:
-                    listMinion.Find(minion => minion.id == (int) param[0]).target =
-                        targetPlayer.GetBaseStatFromId((int) param[1]);
+                    listMinion.Find(minion => minion.id == (int) param[0]).target = targetPlayer.GetBaseStatFromId((int) param[1]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ptID), ptID, null);

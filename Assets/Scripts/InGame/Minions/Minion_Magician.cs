@@ -77,13 +77,11 @@ namespace  ED
             if (list.Count > 0)
             {
                 _skillCastedCount++;
+                
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
                 controller.MinionAniTrigger(id, "Skill");
                 
-                controller.targetPlayer.SendPlayer(RpcTarget.All,
-                    E_PTDefine.PT_SCARECROW,
-                    list[Random.Range(0, list.Count)],
-                    (float) eyeLevel);
+                controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW, list[Random.Range(0, list.Count)], (float) eyeLevel);
             }
         }
     }

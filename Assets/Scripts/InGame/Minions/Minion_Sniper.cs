@@ -56,8 +56,12 @@ namespace ED
             isPushing = false;
             float t = 0;
             lr.gameObject.SetActive(true);
-            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
-            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "Aiming");
+            
+            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
+            controller.ActionMinionTarget(id, target.id);
+            
+            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "Aiming");
+            controller.ActionSendMsg(id, "Aiming");
             
             while (t < attackSpeed - 1.5f)
             {
@@ -67,11 +71,13 @@ namespace ED
 
                     if (target != null)
                     {
-                        controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
+                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
+                        controller.ActionMinionTarget(id, target.id);
                     }
                     else
                     {
-                        controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
+                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
+                        controller.ActionSendMsg(id, "StopAiming");
                         break;
                     }
                 }
@@ -147,12 +153,14 @@ namespace ED
 
             if (target != null)
             {
-                if (PhotonNetwork.IsConnected && isMine)
+                //if (PhotonNetwork.IsConnected && isMine)
+                if( InGameManager.Get().IsNetwork() && isMine )
                 {
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                     controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.Get().IsNetwork() == false)
                 {
                     controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 }

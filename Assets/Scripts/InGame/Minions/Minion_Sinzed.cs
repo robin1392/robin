@@ -45,11 +45,13 @@ namespace ED
             InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
             destroyCallback(this);
-            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            var position = ts_HitPos.position;
+            PoolManager.instance.ActivateObject("Effect_Death", position);
             animator.gameObject.SetActive(false);
             
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Poison", ts_HitPos.position,
-                Quaternion.identity, Vector3.one);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Poison", ts_HitPos.position, Quaternion.identity, Vector3.one);
+            controller.ActionActivePoolObject("Effect_Poison", position, Quaternion.identity, Vector3.one);
+            
             StartCoroutine(DeathCoroutine());
         }
 

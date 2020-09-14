@@ -71,9 +71,11 @@ namespace ED
 
             foreach (var baseStatId in _listAttackSpeedUp)
             {
-                if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
                 {
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,baseStatId, false, effect);
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,baseStatId, false, effect);
+                    controller.ActionFlagOfWar(baseStatId, false, effect);
                 }
             }
 
@@ -99,9 +101,11 @@ namespace ED
                 {
                     _listAttackSpeedUp.Add(m.id);
                     
-                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
                     {
-                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, true, effect);
+                        //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, true, effect);
+                        controller.ActionFlagOfWar(m.id, true, effect);
                     }
                 }
             }
@@ -122,9 +126,11 @@ namespace ED
                 {
                     _listAttackSpeedUp.Remove(m.id);
                     
-                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
                     {
-                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, false, effect);
+                        //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, false, effect);
+                        controller.ActionFlagOfWar(m.id, false, effect);
                     }
                 }
             }

@@ -83,7 +83,10 @@ namespace ED
             {
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(DashCoroutine(dashTarget.transform));
-                controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
+                
+                //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
+                controller.ActionSendMsg(id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
+                
                 Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
         }

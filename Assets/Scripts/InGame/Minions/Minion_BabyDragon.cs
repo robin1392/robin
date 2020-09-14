@@ -56,11 +56,14 @@ namespace ED
 
         public void FireSpear()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.Get().IsNetwork() && isMine )
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.Get().IsNetwork() == false )
             {
                 controller?.FireSpear(ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }

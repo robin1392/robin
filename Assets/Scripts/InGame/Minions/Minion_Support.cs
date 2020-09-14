@@ -124,7 +124,8 @@ namespace ED
 
             SetControllEnable(true);
             _collider.enabled = true;
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", transform.position, Quaternion.identity, Vector3.one);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", transform.position, Quaternion.identity, Vector3.one);
+            controller.ActionActivePoolObject("Effect_Support", transform.position, Quaternion.identity, Vector3.one);
         }
     }
 }

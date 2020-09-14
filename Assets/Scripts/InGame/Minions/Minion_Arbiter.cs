@@ -29,7 +29,8 @@ namespace ED
         {
             foreach (var minion in listCloaking)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                controller.ActionCloacking(minion.id, false);
             }
             listCloaking.Clear();
             
@@ -54,7 +55,8 @@ namespace ED
                 if (listCloaking.Contains(temp) == false && temp.GetType() != typeof(Minion_Arbiter))
                 {
                     listCloaking.Add(temp);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, temp.id, true);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, temp.id, true);
+                    controller.ActionCloacking(temp.id, true);
                 }
             }
 
@@ -70,7 +72,8 @@ namespace ED
             foreach (var minion in removeList)
             {
                 listCloaking.Remove(minion);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                controller.ActionCloacking(minion.id, false);
             }
         }
         //
@@ -104,9 +107,11 @@ namespace ED
         {
             if (target == null) return;
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
+                controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
             }
         }
         

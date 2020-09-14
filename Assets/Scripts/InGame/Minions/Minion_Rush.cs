@@ -139,12 +139,11 @@ namespace ED
                             var bs = raycastHit.collider.GetComponentInParent<BaseStat>();
                             if (bs.isAlive)
                             {
-                                //list.Add(raycastHit.collider);
-                                //DamageToTarget(bs, 0, 0.2f);
                                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
                                 controller.HitMinionDamage( true , bs.id , effect, 0f);
                                 
-                                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
+                                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
+                                controller.ActionActivePoolObject("Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
                             }
                         }
                     } 
@@ -162,11 +161,6 @@ namespace ED
             SetControllEnable(true);
             _collider.enabled = true;
             ps_Rush.Stop();
-            
-            // if (dashTarget != null && dashTarget.gameObject.activeSelf)
-            // {
-            //     DamageToTarget(dashTarget.GetComponentInParent<BaseStat>(), 0, 5f);
-            // }
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
             controller.MinionAniTrigger(id, "Idle");
