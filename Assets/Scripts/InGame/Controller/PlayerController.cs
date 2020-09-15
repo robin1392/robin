@@ -9,6 +9,7 @@ using System.Linq;
 using RWGameProtocol;
 using RWGameProtocol.Msg;
 using UnityEngine;
+using UnityEngine.iOS;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -1540,6 +1541,7 @@ namespace ED
                     
                         for (int i = 0; i < listMinion.Count; i++)
                         {
+                            UnityEngine.Debug.Log(listMinion[i].rb.position);
                             msgMinPos[i] = NetworkManager.Get().VectorToMsg(listMinion[i].rb.position);
                         }
                     
@@ -1556,6 +1558,7 @@ namespace ED
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
                 Vector3 chPos = NetworkManager.Get().MsgToVector(msgPoss[i]);
+                UnityEngine.Debug.Log(chPos);
                 listMinion[i].SetNetworkValue(chPos);
             }
             
