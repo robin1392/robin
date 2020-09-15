@@ -20,7 +20,7 @@ public class SocketSendEvent
 
 
 
-    public void SendPacket(GameProtocol protocol , IPeer peer , params object[] param)
+    public void SendPacket(GameProtocol protocol , Peer peer , params object[] param)
     {
         switch (protocol)
         {

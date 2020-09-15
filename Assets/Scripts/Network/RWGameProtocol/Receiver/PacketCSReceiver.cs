@@ -10,11 +10,8 @@ namespace RWGameProtocol
 
     public class PacketCSReceiver : PacketReceiver, IPacketProcessor
     {
-        public bool Run(IPeer peer, short protocolId, byte[] data)
+        public bool Run(Peer peer, short protocolId, byte[] data)
         {
-            if((GameProtocol)protocolId != GameProtocol.MINION_STATUS_RELAY)
-                UnityEngine.Debug.Log(string.Format(" RECV ==>   : <color=yellow> {0} </color>", (GameProtocol)protocolId));
-            
             switch ((GameProtocol)protocolId)
             {
                 case GameProtocol.JOIN_GAME_REQ:
@@ -253,6 +250,13 @@ namespace RWGameProtocol
                         if (HitDamageMinionRelay == null)
                             return false;
                         HitDamageMinionRelay(peer, MsgHitDamageMinionRelay.Deserialize(data));
+                    }
+                    break;
+                case GameProtocol.DESTROY_MINION_RELAY:
+                    {
+                        if (DestroyMinionRelay == null)
+                            return false;
+                        DestroyMinionRelay(peer, MsgDestroyMinionRelay.Deserialize(data));
                     }
                     break;
                 case GameProtocol.HEAL_MINION_RELAY:

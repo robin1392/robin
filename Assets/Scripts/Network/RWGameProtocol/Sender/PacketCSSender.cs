@@ -14,7 +14,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="playerSessionId"></param>
-        public override void JoinGameReq(IPeer peer, string playerSessionId, sbyte deckIndex)
+        public override void JoinGameReq(Peer peer, string playerSessionId, sbyte deckIndex)
         {
             MsgJoinGameReq msg = new MsgJoinGameReq();
             msg.PlayerSessionId = playerSessionId;
@@ -28,7 +28,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="code"></param>
-        public override void JoinGameAck(IPeer peer, GameErrorCode code, MsgPlayerInfo playerInfo)
+        public override void JoinGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo)
         {
             MsgJoinGameAck msg = new MsgJoinGameAck();
             msg.ErrorCode = (short)code;
@@ -41,7 +41,7 @@ namespace RWGameProtocol
         /// 플레이어 게임 퇴장 요청
         /// </summary>
         /// <param name="peer"></param>
-        public override void LeaveGameReq(IPeer peer)
+        public override void LeaveGameReq(Peer peer)
         {
             MsgLeaveGameReq msg = new MsgLeaveGameReq();
             peer.SendPacket((short)GameProtocol.LEAVE_GAME_REQ, msg.Serialize());
@@ -53,7 +53,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="code"></param>
-        public override void LeaveGameAck(IPeer peer, GameErrorCode code)
+        public override void LeaveGameAck(Peer peer, GameErrorCode code)
         {
             MsgLeaveGameAck msg = new MsgLeaveGameAck();
             msg.ErrorCode = (short)code;
@@ -61,28 +61,28 @@ namespace RWGameProtocol
         }
 
 
-        public override void ReadyGameReq(IPeer peer)
+        public override void ReadyGameReq(Peer peer)
         {
             MsgReadyGameReq msg = new MsgReadyGameReq();
             peer.SendPacket((short)GameProtocol.READY_GAME_REQ, msg.Serialize());
         }
 
 
-        public override void ReadyGameAck(IPeer peer, GameErrorCode code)
+        public override void ReadyGameAck(Peer peer, GameErrorCode code)
         {
             MsgReadyGameAck msg = new MsgReadyGameAck();
             peer.SendPacket((short)GameProtocol.READY_GAME_ACK, msg.Serialize());
         }
 
 
-        public override void GetDiceReq(IPeer peer)
+        public override void GetDiceReq(Peer peer)
         {
             MsgGetDiceReq msg = new MsgGetDiceReq();
             peer.SendPacket((short)GameProtocol.GET_DICE_REQ, msg.Serialize());
         }
 
 
-        public override void GetDiceAck(IPeer peer, GameErrorCode code, int diceId, short slotNum, short level, int currentSp)
+        public override void GetDiceAck(Peer peer, GameErrorCode code, int diceId, short slotNum, short level, int currentSp)
         {
             MsgGetDiceAck msg = new MsgGetDiceAck();
             msg.ErrorCode = (short)code;
@@ -94,7 +94,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void LevelUpDiceReq(IPeer peer, short resetFieldNum, short leveupFieldNum)
+        public override void LevelUpDiceReq(Peer peer, short resetFieldNum, short leveupFieldNum)
         {
             MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
             msg.ResetFieldNum = resetFieldNum;
@@ -103,7 +103,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void LevelUpDiceAck(IPeer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
+        public override void LevelUpDiceAck(Peer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
         {
             MsgLevelUpDiceAck msg = new MsgLevelUpDiceAck();
             msg.ErrorCode = (short)code;
@@ -114,7 +114,7 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.LEVEL_UP_DICE_ACK, msg.Serialize());
         }
 
-        public override void InGameUpDiceReq(IPeer peer, int diceId)
+        public override void InGameUpDiceReq(Peer peer, int diceId)
         {
             MsgInGameUpDiceReq msg = new MsgInGameUpDiceReq();
             msg.DiceId = diceId;
@@ -122,7 +122,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void InGameUpDiceAck(IPeer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp)
+        public override void InGameUpDiceAck(Peer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp)
         {
             MsgInGameUpDiceAck msg = new MsgInGameUpDiceAck();
             msg.ErrorCode = (short)code;
@@ -132,14 +132,14 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.INGAME_UP_DICE_ACK, msg.Serialize());
         }
 
-        public override void UpgradeSpReq(IPeer peer)
+        public override void UpgradeSpReq(Peer peer)
         {
             MsgUpgradeSpReq msg = new MsgUpgradeSpReq();
             peer.SendPacket((short)GameProtocol.UPGRADE_SP_REQ, msg.Serialize());
         }
 
 
-        public override void UpgradeSpAck(IPeer peer, GameErrorCode code, short upgrade, int currentSp)
+        public override void UpgradeSpAck(Peer peer, GameErrorCode code, short upgrade, int currentSp)
         {
             MsgUpgradeSpAck msg = new MsgUpgradeSpAck();
             msg.ErrorCode = (short)code;
@@ -149,7 +149,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void UpgradeSpNotify(IPeer peer, int playerUId, short upgrade)
+        public override void UpgradeSpNotify(Peer peer, int playerUId, short upgrade)
         {
             MsgUpgradeSpNotify msg = new MsgUpgradeSpNotify();
             msg.PlayerUId = playerUId;
@@ -158,7 +158,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void HitDamageReq(IPeer peer, int damage)
+        public override void HitDamageReq(Peer peer, int damage)
         {
             MsgHitDamageReq msg = new MsgHitDamageReq();
             msg.Damage = damage;
@@ -166,7 +166,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void HitDamageAck(IPeer peer, GameErrorCode code, int damage)
+        public override void HitDamageAck(Peer peer, GameErrorCode code, int damage)
         {
             MsgHitDamageAck msg = new MsgHitDamageAck();
             msg.ErrorCode = (short)code;
@@ -174,14 +174,14 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
         }
 
-        public override void ReconnectGameReq(IPeer peer, int playerUId) 
+        public override void ReconnectGameReq(Peer peer, int playerUId) 
         {
             MsgReconnectGameReq msg = new MsgReconnectGameReq();
             msg.PlayerUId = playerUId;
             peer.SendPacket((short)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
         }
 
-        public override void ReconnectGameAck(IPeer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) 
+        public override void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) 
         {
             MsgReconnectGameAck msg = new MsgReconnectGameAck();
             msg.ErrorCode = (short)code;
@@ -190,7 +190,7 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.RECONNECT_GAME_ACK, msg.Serialize());
         }
 
-        public override void HitDamageNotify(IPeer peer, int playerUId, int damage)
+        public override void HitDamageNotify(Peer peer, int playerUId, int damage)
         {
             MsgHitDamageNotify msg = new MsgHitDamageNotify();
             msg.PlayerUId = playerUId;
@@ -206,7 +206,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="info"></param>
-        public override void JoinGameNotify(IPeer peer, MsgPlayerInfo info)
+        public override void JoinGameNotify(Peer peer, MsgPlayerInfo info)
         {
             MsgJoinGameNotify msg = new MsgJoinGameNotify();
             msg.OtherPlayerInfo = info;
@@ -219,7 +219,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="playerUId"></param>
-        public override void LeaveGameNotify(IPeer peer, int playerUId)
+        public override void LeaveGameNotify(Peer peer, int playerUId)
         {
             MsgLeaveGameNotify msg = new MsgLeaveGameNotify();
             msg.PlayerUId = playerUId;
@@ -227,7 +227,7 @@ namespace RWGameProtocol
         }
 
     
-        public override void DeactiveWaitingObjectNotify(IPeer peer, int playerUid, int currentSp)
+        public override void DeactiveWaitingObjectNotify(Peer peer, int playerUid, int currentSp)
         {
             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
             msg.PlayerUId = playerUid;
@@ -236,7 +236,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void GetDiceNotify(IPeer peer, int playerUid, int diceId, short slotNum, short level)
+        public override void GetDiceNotify(Peer peer, int playerUid, int diceId, short slotNum, short level)
         {
             MsgGetDiceNotify msg = new MsgGetDiceNotify();
             msg.PlayerUId = playerUid;
@@ -247,7 +247,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void LevelUpDiceNotify(IPeer peer, int playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
+        public override void LevelUpDiceNotify(Peer peer, int playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
         {
             MsgLevelUpDiceNotify msg = new MsgLevelUpDiceNotify();
             msg.PlayerUId = playerUId;
@@ -259,7 +259,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void InGameUpDiceNotify(IPeer peer, int playerUId, int diceId, short inGameUp)
+        public override void InGameUpDiceNotify(Peer peer, int playerUId, int diceId, short inGameUp)
         {
             MsgInGameUpDiceNotify msg = new MsgInGameUpDiceNotify();
             msg.PlayerUId = playerUId;
@@ -274,7 +274,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="currentSp"></param>
-        public override void AddSpNotify(IPeer peer, int playerUId, int currentSp)
+        public override void AddSpNotify(Peer peer, int playerUId, int currentSp)
         {
             MsgAddSpNotify msg = new MsgAddSpNotify();
             msg.PlayerUId = playerUId;
@@ -288,7 +288,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="wave"></param>
-        public override void SpawnNotify(IPeer peer, int wave)
+        public override void SpawnNotify(Peer peer, int wave)
         {
             MsgSpawnNotify msg = new MsgSpawnNotify();
             msg.Wave = wave;
@@ -301,21 +301,21 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="winPlayerUId"></param>
-        public override void EndGameNotify(IPeer peer, int winPlayerUId)
+        public override void EndGameNotify(Peer peer, int winPlayerUId)
         {
             MsgEndGameNotify msg = new MsgEndGameNotify();
             msg.WinPlayerUId = winPlayerUId;
             peer.SendPacket((short)GameProtocol.END_GAME_NOTIFY, msg.Serialize());
         }
 
-        public override void DisconnectGameNotify(IPeer peer, int playerUId)
+        public override void DisconnectGameNotify(Peer peer, int playerUId)
         {
             MsgDisconnectGameNotify msg = new MsgDisconnectGameNotify();
             msg.PlayerUId = playerUId;
             peer.SendPacket((short)GameProtocol.DISCONNECT_GAME_NOTIFY, msg.Serialize());
         }
 
-        public override void ReconnectGameNotify(IPeer peer, int playerUId)
+        public override void ReconnectGameNotify(Peer peer, int playerUId)
         {
             MsgReconnectGameNotify msg = new MsgReconnectGameNotify();
             msg.PlayerUId = playerUId;
@@ -331,7 +331,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public override void RemoveMinionRelay(IPeer peer, int playerUId, int id)
+        public override void RemoveMinionRelay(Peer peer, int playerUId, int id)
         {
             MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
             msg.PlayerUId = playerUId;
@@ -347,7 +347,7 @@ namespace RWGameProtocol
         /// <param name="id"></param>
         /// <param name="damage"></param>
         /// <param name="delay"></param>
-        public override void HitDamageMinionRelay(IPeer peer, int playerUId, int id, int damage, int delay)
+        public override void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage, int delay)
         {
             MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
             msg.PlayerUId = playerUId;
@@ -363,7 +363,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public override void DestroyMinionRelay(IPeer peer, int playerUId, int id)
+        public override void DestroyMinionRelay(Peer peer, int playerUId, int id)
         {
             MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
             msg.PlayerUId = playerUId;
@@ -378,7 +378,7 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="heal"></param>
-        public override void HealMinionRelay(IPeer peer, int playerUId, int id, int heal)
+        public override void HealMinionRelay(Peer peer, int playerUId, int id, int heal)
         {
             MsgHealMinionRelay msg = new MsgHealMinionRelay();
             msg.PlayerUId = playerUId;
@@ -397,7 +397,7 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="pushPower"></param>
-        public override void PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
+        public override void PushMinionRelay(Peer peer, int playerUId, int id, int x, int y, int z, int pushPower)
         {
             MsgPushMinionRelay msg = new MsgPushMinionRelay();
             msg.PlayerUId = playerUId;
@@ -416,7 +416,7 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="trigger"></param>
-        public override void SetMinionAnimationTriggerRelay(IPeer peer, int playerUId, int id, string trigger)
+        public override void SetMinionAnimationTriggerRelay(Peer peer, int playerUId, int id, string trigger)
         {
             MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
             msg.PlayerUId = playerUId;
@@ -435,7 +435,7 @@ namespace RWGameProtocol
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="damage"></param>
-        public override void FireArrowRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeed)
+        public override void FireArrowRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeed)
         {
             MsgFireArrowRelay msg = new MsgFireArrowRelay();
             msg.PlayerUId = playerUId;
@@ -454,7 +454,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public override void FireballBombRelay(IPeer peer, int playerUId, int id)
+        public override void FireballBombRelay(Peer peer, int playerUId, int id)
         {
             MsgFireballBombRelay msg = new MsgFireballBombRelay();
             msg.PlayerUId = playerUId;
@@ -468,7 +468,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public override void MineBombRelay(IPeer peer, int playerUId, int id)
+        public override void MineBombRelay(Peer peer, int playerUId, int id)
         {
             MsgMineBombRelay msg = new MsgMineBombRelay();
             msg.PlayerUId = playerUId;
@@ -482,7 +482,7 @@ namespace RWGameProtocol
         /// </summary>
         /// <param name="peer"></param>
         /// <param name="id"></param>
-        public override void RemoveMagicRelay(IPeer peer, int playerUId, int id)
+        public override void RemoveMagicRelay(Peer peer, int playerUId, int id)
         {
             MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
             msg.PlayerUId = playerUId;
@@ -497,7 +497,7 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="targetId"></param>
-        public override void SetMagicTargetIdRelay(IPeer peer, int playerUId, int id, int targetId)
+        public override void SetMagicTargetIdRelay(Peer peer, int playerUId, int id, int targetId)
         {
             MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
             msg.PlayerUId = playerUId;
@@ -514,7 +514,7 @@ namespace RWGameProtocol
         /// <param name="id"></param>
         /// <param name="x"></param>
         /// <param name="z"></param>
-        public override void SetMagicTargetRelay(IPeer peer, int playerUId, int id, int x, int z)
+        public override void SetMagicTargetRelay(Peer peer, int playerUId, int id, int x, int z)
         {
             MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
             msg.PlayerUId = playerUId;
@@ -532,7 +532,7 @@ namespace RWGameProtocol
         /// <param name="playerUId"></param>
         /// <param name="id"></param>
         /// <param name="sturnTime"></param>
-        public override void SturnMinionRelay(IPeer peer, int playerUId, int id, int sturnTime)
+        public override void SturnMinionRelay(Peer peer, int playerUId, int id, int sturnTime)
         {
             MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
             msg.PlayerUId = playerUId;
@@ -542,7 +542,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void RocketBombRelay(IPeer peer, int playerUId, int id)
+        public override void RocketBombRelay(Peer peer, int playerUId, int id)
         {
             MsgRocketBombRelay msg = new MsgRocketBombRelay();
             msg.PlayerUId = playerUId;
@@ -551,7 +551,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void IceBombRelay(IPeer peer, int playerUId, int id)
+        public override void IceBombRelay(Peer peer, int playerUId, int id)
         {
             MsgIceBombRelay msg = new MsgIceBombRelay();
             msg.PlayerUId = playerUId;
@@ -560,7 +560,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void MsgDestroyMagic(IPeer peer, int playerUId, int baseStatId)
+        public override void MsgDestroyMagic(Peer peer, int playerUId, int baseStatId)
         {
             MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
             msg.PlayerUId = playerUId;
@@ -569,7 +569,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void MsgFireCannonBall(IPeer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
+        public override void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
         {
             MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
             msg.PlayerUId = playerUId;
@@ -581,7 +581,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int moveSpeed)
+        public override void FireSpearRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int moveSpeed)
         {
             MsgFireSpearRelay msg = new MsgFireSpearRelay();
             msg.PlayerUId = playerUId;
@@ -593,7 +593,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void FireManFireRelay(IPeer peer, int playerUId, int id)
+        public override void FireManFireRelay(Peer peer, int playerUId, int id)
         {
             MsgFireManFireRelay msg = new MsgFireManFireRelay();
             msg.PlayerUId = playerUId;
@@ -602,7 +602,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
+        public override void ActivatePoolObjectRelay(Peer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
         {
             MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
             msg.PlayerUId = playerUId;
@@ -614,7 +614,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void MinionCloackingRelay(IPeer peer, int playerUId, int id, bool isCloacking)
+        public override void MinionCloackingRelay(Peer peer, int playerUId, int id, bool isCloacking)
         {
             MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
             msg.PlayerUId = playerUId;
@@ -624,7 +624,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void MinionFogOfWarRelay(IPeer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
+        public override void MinionFogOfWarRelay(Peer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
         {
             MsgMinionFogOfWarRelay msg = new MsgMinionFogOfWarRelay();
             msg.PlayerUId = playerUId;
@@ -635,7 +635,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void SendMessageVoidRelay(IPeer peer, int playerUId, int id, string message)
+        public override void SendMessageVoidRelay(Peer peer, int playerUId, int id, string message)
         {
             MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
             msg.PlayerUId = playerUId;
@@ -645,7 +645,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
+        public override void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, string message)
         {
             MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
             msg.PlayerUId = playerUId;
@@ -656,7 +656,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
+        public override void NecromancerBulletRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
         {
             MsgNecromancerBulletRelay msg = new MsgNecromancerBulletRelay();
             msg.PlayerUId = playerUId;
@@ -668,7 +668,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void SetMinionTargetRelay(IPeer peer, int playerUId, int id, int targetId)
+        public override void SetMinionTargetRelay(Peer peer, int playerUId, int id, int targetId)
         {
             MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
             msg.PlayerUId = playerUId;
@@ -677,7 +677,7 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.SET_MINION_TARGET_RELAY, msg.Serialize());
         }
 
-        public override void MinionStatusRelay(IPeer peer, int playerUId, byte posIndex, MsgVector3[] pos)
+        public override void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos)
         {
             MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
             msg.PlayerUId = playerUId;
@@ -686,7 +686,7 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.MINION_STATUS_RELAY, msg.Serialize());
         }
 
-        public override void ScarecrowRelay(IPeer peer, int playerUId, int baseStatId, int eyeLevel)
+        public override void ScarecrowRelay(Peer peer, int playerUId, int baseStatId, int eyeLevel)
         {
             MsgScarecrowRelay msg = new MsgScarecrowRelay();
             msg.PlayerUId = playerUId;
@@ -696,7 +696,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void LayzerTargetRelay(IPeer peer, int playerUId, int id, int[] targetId)
+        public override void LayzerTargetRelay(Peer peer, int playerUId, int id, int[] targetId)
         {
             MsgLazerTargetRelay msg = new MsgLazerTargetRelay();
             msg.PlayerUId = playerUId;

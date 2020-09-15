@@ -12,8 +12,8 @@ public class SocketManager
 {
     private NetClientService _netService;
     
-    private ServerPeer _serverPeer;
-    public ServerPeer Peer
+    private Peer _serverPeer;
+    public Peer Peer
     {
         get => _serverPeer;
     }
@@ -64,7 +64,7 @@ public class SocketManager
     /// <param name="session">세션</param>
     void OnClientConnected(UserToken session)
     {
-        _serverPeer = new ServerPeer();
+        _serverPeer = new Peer();
         _serverPeer.SetUserToken(session);
 
         //

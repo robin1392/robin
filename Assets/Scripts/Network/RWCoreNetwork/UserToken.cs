@@ -28,7 +28,7 @@ namespace RWCoreNetwork
         public SocketAsyncEventArgs SendEventArgs { get; set; }
 
 		// session객체. 어플리케이션 딴에서 구현하여 사용.
-		IPeer _peer;
+		Peer _peer;
 
         // 바이트를 패킷 형식으로 해석해주는 해석기.
         MessageHandler _messageHandler;
@@ -49,13 +49,13 @@ namespace RWCoreNetwork
             _lockSendingQueue = new object();
         }
 
-        public void SetPeer(IPeer peer)
+        public void SetPeer(Peer peer)
         {
             _peer = peer;
         }
 
 
-        public IPeer GetPeer()
+        public Peer GetPeer()
         {
             return _peer;
         }

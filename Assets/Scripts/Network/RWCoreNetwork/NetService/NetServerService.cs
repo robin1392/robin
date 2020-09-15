@@ -12,9 +12,9 @@ namespace RWCoreNetwork.NetService
 {
     public class NetServerService : NetBaseService
     {
-        // 릴레이 전용 프로토콜을 정의 델리게이트
-        public delegate bool DefineRelayProtocolDelegate(short protocolId);
-        public DefineRelayProtocolDelegate DefineRelayProtocol;
+        // 프로토콜 정의 델리게이트
+        public delegate bool InterceptProtocolDelegate(UserToken userToken, short protocolId, byte[] msg);
+        public InterceptProtocolDelegate InterceptProtocol;
 
 
         private Listener _listener;
@@ -74,12 +74,11 @@ namespace RWCoreNetwork.NetService
             }
 
 
-            // relay 프로토콜은 패킷처리 큐에 넣지 않고 곧바로 대상에게 송신하도록 하자.
-            if (DefineRelayProtocol != null)
+            // 패킷 큐에 저장하기 전에 사용자가 지정한 처리를 수행한다.
+            if (InterceptProtocol != null)
             {
-                if (DefineRelayProtocol(protocolId) == true)
+                if (InterceptProtocol(userToken, protocolId, msg) == true)
                 {
-                    SendRelayPacket(userToken, protocolId, msg);
                     return;
                 }
             }
