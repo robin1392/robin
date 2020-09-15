@@ -21,7 +21,7 @@ using Photon.Pun;
 
 namespace ED
 {
-    public class PlayerController : BaseStat, IPunObservable
+    public class PlayerController : BaseStat //, IPunObservable
     {
 
         #region singleton
@@ -30,7 +30,7 @@ namespace ED
 
         public static PlayerController Get()
         {
-            if (_instance == null)
+            /*if (_instance == null)
             {
                 PlayerController pc = GameObject.FindObjectOfType(typeof(PlayerController)) as PlayerController;
                 //if (pc != null && pc.photonView.IsMine)
@@ -44,12 +44,12 @@ namespace ED
                 {
                     return null;
                 }
-            }
+            }*/
         
             return _instance;
         }
         
-        protected virtual void Init()
+        protected void Init()
         {
             if (_instance == null)
             {
@@ -170,11 +170,12 @@ namespace ED
             */
             
             //
-            if (_instance == null)
+            if (_instance == null && isMine)
             {
-                Init();
+                _instance = this;
             }
-            
+            instanceID = GetInstanceID();
+
             InitializePlayer();
         }
 
@@ -1332,6 +1333,7 @@ namespace ED
         
         private void DestroyMinion(int baseStatId)
         {
+            UnityEngine.Debug.Log(listMinion.Find(minion => minion.id == baseStatId)?"TRUE" : "FALSE");
             listMinion.Find(minion => minion.id == baseStatId)?.Death();
         }
 
@@ -1558,17 +1560,8 @@ namespace ED
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
                 Vector3 chPos = NetworkManager.Get().MsgToVector(msgPoss[i]);
-                UnityEngine.Debug.Log(chPos);
                 listMinion[i].SetNetworkValue(chPos);
             }
-            
-            /*var loopCount = (int)stream.ReceiveNext();
-            for (var i = 0; i < loopCount && i < listMinion.Count; i++)
-            {
-                listMinion[i].SetNetworkValue((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext(),
-                    (Vector3)stream.ReceiveNext(), (float)stream.ReceiveNext(), info.SentServerTime);
-                    
-            }*/
         }
         #endregion
 
@@ -1642,6 +1635,7 @@ namespace ED
                 {
                     MsgDestroyMinionRelay destrelay = (MsgDestroyMinionRelay) param[0];
                     
+                    UnityEngine.Debug.Log(NetworkManager.Get().UserUID  + "   destroy id " + destrelay.Id);
                     if (NetworkManager.Get().UserUID == destrelay.PlayerUId)
                         DestroyMinion(destrelay.Id);
                     else if (NetworkManager.Get().OtherUID == destrelay.PlayerUId )
