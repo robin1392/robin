@@ -981,7 +981,7 @@ namespace ED
         {
             if (other == true)
             {
-                if (InGameManager.Get().IsNetwork())
+                if (InGameManager.Get().IsNetwork() )
                 {
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , minionId , damage, delay);
                 }
@@ -1112,6 +1112,7 @@ namespace ED
             {
                 NetSendPlayer(GameProtocol.MINE_BOMB_RELAY , NetworkManager.Get().UserUID , baseStatId );
             }
+            
             MineBomb(baseStatId);
         }
 

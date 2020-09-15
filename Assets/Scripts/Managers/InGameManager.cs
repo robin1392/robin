@@ -609,6 +609,7 @@ namespace ED
 
         public void NetSpawnNotify(int wave)
         {
+            this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
 
             Debug.Log("spawn  : " + wave);
@@ -641,11 +642,12 @@ namespace ED
                 if (ff < WorldUIManager.Get().GetSpawnAmount()) WorldUIManager.Get().SetSpawnTime(ff);
                 else WorldUIManager.Get().SetSpawnTime(time / st);
             }
-
-            //text_SpawnTime.text = $"{Mathf.CeilToInt(time):F0}";
+            
+            
             WorldUIManager.Get().SetTextSpawnTime(time);
-            //tmp_Wave.text = $"{wave}";
-            WorldUIManager.Get().SetWave(wave);
+            
+            if (IsNetwork() == false)
+                WorldUIManager.Get().SetWave(wave);
         }
 
         #endregion
