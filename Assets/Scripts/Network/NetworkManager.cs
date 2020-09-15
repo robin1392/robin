@@ -63,7 +63,8 @@ public class NetworkManager : Singleton<NetworkManager>
         get => _gameSession;
         private set => _gameSession = value;
     }
-    
+
+
     #endregion
     
     
@@ -89,13 +90,16 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         get => GetNetInfo().OtherUID();
     }
+
+    public bool LocalServer;
+
     #endregion
-    
-    
-    
+
+
+
     #region socket user info
     // 통신간 정보를 담아둘만한 휘발성 클래스
-    
+
     private NetInfo _netInfo = null;
     #endregion
     

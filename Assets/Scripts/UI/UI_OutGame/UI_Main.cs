@@ -254,6 +254,12 @@ namespace ED
 
         public void OnClickBtn1()
         {
+            if (NetworkManager.Get().LocalServer == true)
+            {
+                NetworkManager.Get().ConnectServer(PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+                return;
+            }
+
             //WebPacket.Get().SendUserAuth( string.Empty , null );
             WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
         }
