@@ -12,7 +12,8 @@ namespace RWGameProtocol
     {
         public bool Run(IPeer peer, short protocolId, byte[] data)
         {
-            UnityEngine.Debug.Log(string.Format(" RECV ==>   : <color=yellow> {0} </color>", protocolId));
+            if((GameProtocol)protocolId != GameProtocol.MINION_STATUS_RELAY)
+                UnityEngine.Debug.Log(string.Format(" RECV ==>   : <color=yellow> {0} </color>", (GameProtocol)protocolId));
             
             switch ((GameProtocol)protocolId)
             {
