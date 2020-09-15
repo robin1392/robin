@@ -12,8 +12,8 @@ using RWGameProtocol.Msg;
 public class SocketSendEvent
 {
 
-    private GamePacketSender _sender; 
-    public SocketSendEvent(GamePacketSender sender)
+    private PacketSender _sender; 
+    public SocketSendEvent(PacketSender sender)
     {
         this._sender = sender;
     }

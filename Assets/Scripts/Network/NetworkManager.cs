@@ -19,7 +19,7 @@ public class NetworkManager : Singleton<NetworkManager>
     // socket
     private SocketManager _clientSocket = null;
     // sender 
-    private GamePacketSender _packetSend;
+    private PacketSender _packetSend;
     
     /*public GamePacketSender SendSocket
     {
@@ -28,7 +28,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }*/
 
     // 외부에서 얘를 건들일은 없도록하지
-    private GamePacketReceiver _packetRecv;
+    private PacketCSReceiver _packetRecv;
 
     
     //
@@ -140,7 +140,7 @@ public class NetworkManager : Singleton<NetworkManager>
         webPacket = this.gameObject.AddComponent<WebPacket>();
 
         _clientSocket = new SocketManager();
-        _packetSend = new GamePacketSender();
+        _packetSend = new PacketCSSender();
 
         // 
         _socketRecv = new SocketRecvEvent();
@@ -302,7 +302,7 @@ public class NetworkManager : Singleton<NetworkManager>
     public void CombineRecvDelegate()
     {
         // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
-        _packetRecv = new GamePacketReceiver();
+        _packetRecv = new PacketCSReceiver();
         
         _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;

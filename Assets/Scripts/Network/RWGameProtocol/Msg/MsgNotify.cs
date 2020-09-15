@@ -35,4 +35,20 @@ namespace RWGameProtocol.Msg
     {
         public int WinPlayerUId;
     }
+
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgDisconnectGameNotify : Serializer<MsgDisconnectGameNotify>
+    {
+        public int PlayerUId;
+    }
+
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgReconnectGameNotify : Serializer<MsgReconnectGameNotify>
+    {
+        public int PlayerUId;
+    }
 }

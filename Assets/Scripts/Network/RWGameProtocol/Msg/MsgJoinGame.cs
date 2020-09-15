@@ -17,6 +17,9 @@ namespace RWGameProtocol.Msg
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
         public string Name;
 
+        // 현재 sp
+        public int CurrentSp;
+
         // 주사위 아이디 배열
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
         public int[] DiceIdArray;

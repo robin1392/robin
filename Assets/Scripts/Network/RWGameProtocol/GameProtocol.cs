@@ -19,6 +19,9 @@ namespace RWGameProtocol
         READY_GAME_REQ,
         READY_GAME_ACK,
 
+        RECONNECT_GAME_REQ,
+        RECONNECT_GAME_ACK,
+
         CHANGE_LAYER_REQ,
         CHANGE_LAYER_ACK,
 
@@ -53,6 +56,8 @@ namespace RWGameProtocol
         SPAWN_NOTIFY,
         HIT_DAMAGE_NOTIFY,
         END_GAME_NOTIFY,
+        DISCONNECT_GAME_NOTIFY,
+        RECONNECT_GAME_NOTIFY,
 
 
         // ----------------------------------------------------------------------------------------------------
