@@ -1541,7 +1541,7 @@ namespace ED
                     
                         for (int i = 0; i < listMinion.Count; i++)
                         {
-                            UnityEngine.Debug.Log(listMinion[i].rb.position);
+                            //UnityEngine.Debug.Log(listMinion[i].rb.position);
                             msgMinPos[i] = NetworkManager.Get().VectorToMsg(listMinion[i].rb.position);
                         }
                     
