@@ -275,7 +275,8 @@ namespace ED
 
                 if (currentHealth <= 0)
                 {
-                    if (PhotonNetwork.IsConnected && !isMine) return;
+                    //if (PhotonNetwork.IsConnected && !isMine) return;
+                    if (InGameManager.Get().IsNetwork() && !isMine) return;
 
                     currentHealth = 0;
                     EndLifetime();

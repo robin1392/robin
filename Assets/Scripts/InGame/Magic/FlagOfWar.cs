@@ -88,11 +88,9 @@ namespace ED
 
         private void OnTriggerEnter(Collider collision)
         {
-            if (_isTriggerOn &&
-                ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
-                IsFriendlyLayer(collision.gameObject))
+            //if (_isTriggerOn && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) && IsFriendlyLayer(collision.gameObject))
+            if (_isTriggerOn && ((InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false) && IsFriendlyLayer(collision.gameObject))
             {
-                
                 var m = collision.GetComponentInParent<Minion>();
 
                 if (m == null) return;
@@ -114,9 +112,8 @@ namespace ED
         private void OnTriggerExit(Collider other)
         {
             
-            if (_isTriggerOn &&
-                ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
-                IsFriendlyLayer(other.gameObject))
+            //if (_isTriggerOn && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) && IsFriendlyLayer(other.gameObject))
+            if (_isTriggerOn && ((InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false) && IsFriendlyLayer(other.gameObject))
             {
                 var m = other.GetComponentInParent<Minion>();
 

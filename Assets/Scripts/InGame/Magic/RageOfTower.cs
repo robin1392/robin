@@ -21,7 +21,8 @@ namespace ED
             ps_Bomb.transform.position = controller.transform.position;
             ps_Bomb.Play();
 
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false)
             {
                 var cols = Physics.OverlapSphere(controller.transform.position, range, targetLayer);
                 foreach (var col in cols)

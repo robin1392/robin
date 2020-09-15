@@ -81,7 +81,8 @@ namespace ED
             
             if (isPlayable && isPushing == false && isAttacking == false)
             {
-                if (PhotonNetwork.IsConnected && !isMine)
+                //if (PhotonNetwork.IsConnected && !isMine)
+                if(InGameManager.Get().IsNetwork() && !isMine)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
                     agent.SetDestination(networkPosition);
@@ -95,7 +96,8 @@ namespace ED
                 }
 
 
-                if (PhotonNetwork.IsConnected && !isMine) return;
+                //if (PhotonNetwork.IsConnected && !isMine) return;
+                if (InGameManager.Get().IsNetwork() && !isMine) return;
 
                 if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) return;
                 var lTargetDir = rb.velocity;
@@ -126,7 +128,8 @@ namespace ED
             //_isNexusAttacked = false;
             currentHealth = maxHealth;
 
-            if (PhotonNetwork.IsConnected)
+            //if (PhotonNetwork.IsConnected)
+            if(InGameManager.Get().IsNetwork())
             {
                 if (isMine)
                 {
@@ -189,7 +192,9 @@ namespace ED
 
                 if (currentHealth <= 0)
                 {
-                    if (PhotonNetwork.IsConnected && !isMine) yield break;
+                    //if (PhotonNetwork.IsConnected && !isMine)
+                    if(InGameManager.Get().IsNetwork() && !isMine)
+                        yield break;
 
                     currentHealth = 0;
                     controller.DeathMinion(id);
@@ -281,9 +286,11 @@ namespace ED
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
 
-            if (PhotonNetwork.IsConnected)
+            //if (PhotonNetwork.IsConnected)
+            if(InGameManager.Get().IsNetwork())
             {
-                switch (PhotonManager.Instance.playType)
+                //switch (PhotonManager.Instance.playType)
+                switch (NetworkManager.Get().playType)
                 {
                     case PLAY_TYPE.BATTLE:
                         image_HealthBar.color = isMine ? Color.green : Color.red;

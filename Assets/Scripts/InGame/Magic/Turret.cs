@@ -31,7 +31,8 @@ namespace ED
             shootTime = 0;
             SetColor();
 
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false)
             {
                 StartCoroutine(AttackCoroutine());
             }
