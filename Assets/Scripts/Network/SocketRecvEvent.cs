@@ -243,7 +243,7 @@ public class SocketRecvEvent
 
     public void OnRemoveMinionRelay(Peer peer, MsgRemoveMinionRelay msg)
     {
-        UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => REMOVE_MINION_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MINION_RELAY, msg);
@@ -251,7 +251,7 @@ public class SocketRecvEvent
 
     public void OnHitDamageMinionRelay(Peer peer, MsgHitDamageMinionRelay msg)
     {
-        UnityUtil.Print("hit mi relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => HIT_DAMAGE_MINION_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_MINION_RELAY, msg);
@@ -259,7 +259,7 @@ public class SocketRecvEvent
 
     public void OnDestroyMinionRelay(Peer peer, MsgDestroyMinionRelay msg)
     {
-        UnityUtil.Print("dest mi relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => DESTROY_MINION_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.DESTROY_MINION_RELAY, msg);
@@ -267,7 +267,7 @@ public class SocketRecvEvent
 
     public void OnHealMinionRelay(Peer peer, MsgHealMinionRelay msg)
     {
-        UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => HEAL_MINION_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.HEAL_MINION_RELAY, msg);
@@ -275,13 +275,13 @@ public class SocketRecvEvent
 
     public void OnPushMinionRelay(Peer peer, MsgPushMinionRelay msg)
     {
-        UnityUtil.Print("remove mi relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => HIT_DAMAGE_MINION_RELAY", msg.PlayerUId.ToString() , "yellow");
         
     }
 
     public void OnSetMinionAnimationTriggerRelay(Peer peer, MsgSetMinionAnimationTriggerRelay msg)
     {
-        UnityUtil.Print("ani trigger relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => SET_MINION_ANIMATION_TRIGGER_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, msg);
@@ -289,7 +289,7 @@ public class SocketRecvEvent
 
     public void OnFireArrowRelay(Peer peer, MsgFireArrowRelay msg)
     {
-        UnityUtil.Print("fire arrow relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => FIRE_ARROW_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_ARROW_RELAY, msg);
@@ -297,7 +297,7 @@ public class SocketRecvEvent
 
     public void OnRemoveMagicRelay(Peer peer, MsgRemoveMagicRelay msg)
     {
-        UnityUtil.Print("remove magic relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => REMOVE_MAGIC_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MAGIC_RELAY, msg);
@@ -305,7 +305,7 @@ public class SocketRecvEvent
 
     public void OnFireballBombRelay(Peer peer, MsgFireballBombRelay msg)
     {
-        UnityUtil.Print("fireball bomb relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => FIRE_BALL_BOMB_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_BALL_BOMB_RELAY, msg);
@@ -313,7 +313,7 @@ public class SocketRecvEvent
 
     public void OnMineBombRelay(Peer peer, MsgMineBombRelay msg)
     {
-        UnityUtil.Print("mine bomb relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => MINE_BOMB_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.MINE_BOMB_RELAY, msg);
@@ -321,7 +321,7 @@ public class SocketRecvEvent
 
     public void OnSetMagicTargetIdRelay(Peer peer, MsgSetMagicTargetIdRelay msg)
     {
-        UnityUtil.Print("set magic id relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => SET_MAGIC_TARGET_ID_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MAGIC_TARGET_ID_RELAY, msg);
@@ -329,7 +329,7 @@ public class SocketRecvEvent
 
     public void OnSetMagicTargetRelay(Peer peer, MsgSetMagicTargetRelay msg)
     {
-        UnityUtil.Print("set magic relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => SET_MAGIC_TARGET_POS_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MAGIC_TARGET_POS_RELAY, msg);
@@ -338,7 +338,7 @@ public class SocketRecvEvent
     //
     public void OnSturnMinionRelay(Peer peer, MsgSturnMinionRelay msg)
     {
-        UnityUtil.Print("sturn relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => STURN_MINION_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.STURN_MINION_RELAY, msg);
@@ -346,7 +346,7 @@ public class SocketRecvEvent
 
     public void OnRocketBombRelay(Peer peer, MsgRocketBombRelay msg)
     {
-        UnityUtil.Print("rocket relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => ROCKET_BOMB_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.ROCKET_BOMB_RELAY, msg);
@@ -354,7 +354,7 @@ public class SocketRecvEvent
 
     public void OnIceBombRelay(Peer peer, MsgIceBombRelay msg)
     {
-        UnityUtil.Print("icebomb relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => ICE_BOMB_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.ICE_BOMB_RELAY, msg);
@@ -362,7 +362,7 @@ public class SocketRecvEvent
 
     public void OnDestroyMagicRelay(Peer peer, MsgDestroyMagicRelay msg)
     {
-        UnityUtil.Print("dest magic relay", msg.PlayerUId.ToString(), "white");
+        UnityUtil.Print("RECV => DESTROY_MAGIC_RELAY", msg.PlayerUId.ToString(), "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.DESTROY_MAGIC_RELAY, msg);
@@ -370,7 +370,7 @@ public class SocketRecvEvent
 
     public void OnFireCannonBallRelay(Peer peer, MsgFireCannonBallRelay msg)
     {
-        UnityUtil.Print("fire cannon relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => FIRE_CANNON_BALL_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_CANNON_BALL_RELAY, msg);
@@ -378,7 +378,7 @@ public class SocketRecvEvent
 
     public void OnFireSpearRelay(Peer peer, MsgFireSpearRelay msg)
     {
-        UnityUtil.Print("fire spear relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => FIRE_SPEAR_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_SPEAR_RELAY, msg);
@@ -386,7 +386,7 @@ public class SocketRecvEvent
 
     public void OnFireManFireRelay(Peer peer, MsgFireManFireRelay msg)
     {
-        UnityUtil.Print("fire man relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => FIRE_MAN_FIRE_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_MAN_FIRE_RELAY, msg);
@@ -394,7 +394,7 @@ public class SocketRecvEvent
 
     public void OnActivatePoolObjectRelay(Peer peer, MsgActivatePoolObjectRelay msg)
     {
-        UnityUtil.Print("active relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => ACTIVATE_POOL_OBJECT_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, msg);
@@ -402,7 +402,7 @@ public class SocketRecvEvent
 
     public void OnMinionCloackingRelay(Peer peer, MsgMinionCloackingRelay msg)
     {
-        UnityUtil.Print("cloacking relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => MINION_CLOACKING_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_CLOACKING_RELAY, msg);
@@ -410,7 +410,7 @@ public class SocketRecvEvent
 
     public void OnMinionFogOfWarRelay(Peer peer, MsgMinionFogOfWarRelay msg)
     {
-        UnityUtil.Print("fog war relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => MINION_FOG_OF_WAR_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_FOG_OF_WAR_RELAY, msg);
@@ -418,7 +418,7 @@ public class SocketRecvEvent
 
     public void OnSendMessageVoidRelay(Peer peer, MsgSendMessageVoidRelay msg)
     {
-        UnityUtil.Print("send void relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => SEND_MESSAGE_VOID_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.SEND_MESSAGE_VOID_RELAY, msg);
@@ -426,7 +426,7 @@ public class SocketRecvEvent
 
     public void OnSendMessageParam1Relay(Peer peer, MsgSendMessageParam1Relay msg)
     {
-        UnityUtil.Print("send p1 relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => SEND_MESSAGE_PARAM1_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, msg);
@@ -434,7 +434,7 @@ public class SocketRecvEvent
 
     public void OnNecromancerBulletRelay(Peer peer, MsgNecromancerBulletRelay msg)
     {
-        UnityUtil.Print("necro relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => NECROMANCER_BULLET_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.NECROMANCER_BULLET_RELAY, msg);
@@ -442,7 +442,7 @@ public class SocketRecvEvent
 
     public void OnSetMinionTargetRelay(Peer peer, MsgSetMinionTargetRelay msg)
     {
-        UnityUtil.Print("min target relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => SET_MINION_TARGET_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.SET_MINION_TARGET_RELAY, msg);
@@ -450,7 +450,7 @@ public class SocketRecvEvent
 
     public void OnScarecrowRelay(Peer peer, MsgScarecrowRelay msg)
     {
-        UnityUtil.Print("scar scrow relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => SCARECROW_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.SCARECROW_RELAY, msg);
@@ -458,7 +458,7 @@ public class SocketRecvEvent
 
     public void OnLazerTargetRelay(Peer peer, MsgLazerTargetRelay msg)
     {
-        UnityUtil.Print("lazer target relay", msg.PlayerUId.ToString() , "white");
+        UnityUtil.Print("RECV => LAYZER_TARGET_RELAY", msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.LAYZER_TARGET_RELAY, msg);
