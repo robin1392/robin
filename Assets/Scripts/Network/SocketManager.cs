@@ -30,7 +30,7 @@ public class SocketManager
     public void Init(IPacketProcessor recvProcessor)
     {
         PacketHandler handler = new PacketHandler();
-        handler.Init(recvProcessor, 10);
+        handler.Init(recvProcessor, 200);
         handler.SetActive(true);
 
         _netService = new NetClientService(handler, 1, 1024, 1000, 1000);
