@@ -113,7 +113,8 @@ namespace ED
         public UI_DiceField uiDiceField;
         public GameObject objCollider;
         
-        private int _spawnCount = 1;
+        [SerializeField]
+        public int _spawnCount = 1;
         
         [SerializeField]
         protected int _sp = 0;
@@ -169,18 +170,19 @@ namespace ED
             }
             */
             
+
+            InitializePlayer();
+        }
+
+        protected override void Start()
+        {   
             //
             if (_instance == null && isMine)
             {
                 _instance = this;
             }
             instanceID = GetInstanceID();
-
-            InitializePlayer();
-        }
-
-        protected override void Start()
-        {
+            
             if (InGameManager.Get().playType != PLAY_TYPE.CO_OP)
             {
                 base.Start();
@@ -566,28 +568,6 @@ namespace ED
             return listMinion[Random.Range(0, listMinion.Count)];
         }
 
-        private void MinionDestroyCallback(Minion minion)
-        {
-
-            RemoveMinion(minion.id);
-            if (InGameManager.Get().IsNetwork() && isMine)
-            {
-                NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , NetworkManager.Get().UserUID , minion.id);
-            }
-
-            // not use
-            /*
-            if (PhotonNetwork.IsConnected)
-            {
-                //photonView.RPC("RemoveMinion", RpcTarget.All, minion.id);
-                SendPlayer(RpcTarget.All , E_PTDefine.PT_REMOVEMINION , minion.id);
-            }
-            else
-            {
-                RemoveMinion(minion.id);
-            }
-            */
-        }
         
         #endregion
         
@@ -1001,30 +981,52 @@ namespace ED
         {
             if (other == true)
             {
-                targetPlayer.HitDamageMinionAndMagic(minionId, damage, delay);
                 if (InGameManager.Get().IsNetwork())
                 {
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , minionId , damage, delay);
                 }
+                targetPlayer.HitDamageMinionAndMagic(minionId, damage, delay);
             }
             else
             {
-                HitDamageMinionAndMagic(minionId, damage, delay);
                 if (InGameManager.Get().IsNetwork())
                 {
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().UserUID , minionId , damage, delay);
                 }
+                HitDamageMinionAndMagic(minionId, damage, delay);
             }    
         }
 
+        
+        private void MinionDestroyCallback(Minion minion)
+        {
+            if (InGameManager.Get().IsNetwork() && isMine)
+            {
+                NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , NetworkManager.Get().UserUID , minion.id);
+            }
+            
+            RemoveMinion(minion.id);
+            // not use
+            /*
+            if (PhotonNetwork.IsConnected)
+            {
+                //photonView.RPC("RemoveMinion", RpcTarget.All, minion.id);
+                SendPlayer(RpcTarget.All , E_PTDefine.PT_REMOVEMINION , minion.id);
+            }
+            else
+            {
+                RemoveMinion(minion.id);
+            }
+            */
+        }
         public void DeathMinion(int baseStatId)
         {
-            
-            DestroyMinion(baseStatId);
             if (InGameManager.Get().IsNetwork() && isMine)
             {
                 NetSendPlayer(GameProtocol.DESTROY_MINION_RELAY , NetworkManager.Get().UserUID , baseStatId);
             }
+            
+            DestroyMinion(baseStatId);
             
             /*if (PhotonNetwork.IsConnected && isMine)
             {
@@ -1039,11 +1041,11 @@ namespace ED
         
         public void MagicDestroyCallback(Magic magic)
         {
-            RemoveMagic(magic.id);
             if (InGameManager.Get().IsNetwork())
             {
                 NetSendPlayer(GameProtocol.REMOVE_MAGIC_RELAY , NetworkManager.Get().UserUID , magic.id );
             }
+            RemoveMagic(magic.id);
             
             /*if (PhotonNetwork.IsConnected)
             {
@@ -1058,11 +1060,11 @@ namespace ED
         
         public void DeathMagic(int baseStatId)
         {
-            DestroyMagic(baseStatId);
             if (InGameManager.Get().IsNetwork())
             {
                 NetSendPlayer(GameProtocol.DESTROY_MAGIC_RELAY , NetworkManager.Get().UserUID , baseStatId );
             }
+            DestroyMagic(baseStatId);
             
             /*if (PhotonNetwork.IsConnected && isMine)
             {
@@ -1077,59 +1079,61 @@ namespace ED
 
         public void HealerMinion(int baseStatId, float heal)
         {
-            HealMinion(baseStatId, heal);
             if (InGameManager.Get().IsNetwork() && isMine)
             {
                 NetSendPlayer(GameProtocol.HEAL_MINION_RELAY , NetworkManager.Get().UserUID , baseStatId , heal);
             }
+            
+            HealMinion(baseStatId, heal);
         }
 
         public void MinionAniTrigger(int baseStatId , string aniName)
         {
-            SetMinionAnimationTrigger(baseStatId, aniName);
             if (InGameManager.Get().IsNetwork() && isMine)
             {
                 NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniName);
             }
+            
+            SetMinionAnimationTrigger(baseStatId, aniName);
         }
 
         public void ActionFireBallBomb(int bastStatId)
         {
-            FireballBomb(bastStatId);
             if (InGameManager.Get().IsNetwork() && isMine)
             {
                 NetSendPlayer(GameProtocol.FIRE_BALL_BOMB_RELAY , NetworkManager.Get().UserUID , bastStatId );
             }
+            FireballBomb(bastStatId);
         }
 
         public void ActionMineBomb(int baseStatId)
         {
-            MineBomb(baseStatId);
             if (InGameManager.Get().IsNetwork() && isMine)
             {
                 NetSendPlayer(GameProtocol.MINE_BOMB_RELAY , NetworkManager.Get().UserUID , baseStatId );
             }
+            MineBomb(baseStatId);
         }
 
         public void ActionSetMagicTarget(int baseStatId , params object[] param)
         {
             if (param.Length > 1)
             {
-                SetMagicTarget(baseStatId, (float) param[0], (float) param[1]);
                 if (InGameManager.Get().IsNetwork() && isMine)
                 {
                     int chX = (int) ((float) param[0] * Global.g_networkBaseValue);
                     int chZ = (int) ((float) param[1] * Global.g_networkBaseValue);
                     NetSendPlayer(GameProtocol.SET_MAGIC_TARGET_POS_RELAY , NetworkManager.Get().UserUID , baseStatId , chX , chZ );
                 }
+                SetMagicTarget(baseStatId, (float) param[0], (float) param[1]);
             }
             else // id 만 들어잇을테니..
             {
-                SetMagicTarget(baseStatId, (int) param[0]);
                 if (InGameManager.Get().IsNetwork() && isMine)
                 {
                     NetSendPlayer(GameProtocol.SET_MAGIC_TARGET_ID_RELAY , NetworkManager.Get().UserUID , baseStatId ,(int) param[0]);    
                 }
+                SetMagicTarget(baseStatId, (int) param[0]);
             }
         }
         
