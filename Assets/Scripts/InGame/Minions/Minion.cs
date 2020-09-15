@@ -407,6 +407,8 @@ namespace ED
         public void SetNetworkValue(Vector3 position)
         {
             networkPosition = position;
+
+            networkPosition += rb.velocity;
         }
 
         public virtual void Attack()
