@@ -254,8 +254,9 @@ namespace ED
 
         public void OnClickBtn1()
         {
-            if (NetworkManager.Get().LocalServer == true)
+            if (NetworkManager.Get().UseLocalServer == true)
             {
+                NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, "");
                 NetworkManager.Get().ConnectServer(PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
                 return;
             }

@@ -558,6 +558,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  playType: 0
+  UseLocalServer: 1
+  LocalServerAddr: 192.168.0.4
+  LocalServerPort: 40001
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0
