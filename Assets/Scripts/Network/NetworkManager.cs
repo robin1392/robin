@@ -217,7 +217,9 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void Send(GameProtocol protocol , params object[] param)
     {
-        UnityUtil.Print("SEND =>  " , protocol.ToString() , "magenta");
+        if(protocol != GameProtocol.MINION_STATUS_RELAY)
+            UnityUtil.Print("SEND =>  " , protocol.ToString() , "magenta");
+        
         _socketSend.SendPacket(protocol , _clientSocket.Peer , param);
     }
     #endregion
