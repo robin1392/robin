@@ -91,7 +91,10 @@ public class NetworkManager : Singleton<NetworkManager>
         get => GetNetInfo().OtherUID();
     }
 
-    public bool LocalServer;
+    
+    public bool UseLocalServer;
+    public string LocalServerAddr;
+    public int LocalServerPort;
 
     #endregion
 
