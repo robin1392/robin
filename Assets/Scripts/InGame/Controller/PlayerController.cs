@@ -568,7 +568,7 @@ namespace ED
         {
 
             RemoveMinion(minion.id);
-            if (InGameManager.Get().IsNetwork())
+            if (InGameManager.Get().IsNetwork() && isMine)
             {
                 NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , NetworkManager.Get().UserUID , minion.id);
             }
@@ -1117,7 +1117,7 @@ namespace ED
                 if (InGameManager.Get().IsNetwork() && isMine)
                 {
                     int chX = (int) ((float) param[0] * Global.g_networkBaseValue);
-                    int chZ = (int) ((float) param[0] * Global.g_networkBaseValue);
+                    int chZ = (int) ((float) param[1] * Global.g_networkBaseValue);
                     NetSendPlayer(GameProtocol.SET_MAGIC_TARGET_POS_RELAY , NetworkManager.Get().UserUID , baseStatId , chX , chZ );
                 }
             }
