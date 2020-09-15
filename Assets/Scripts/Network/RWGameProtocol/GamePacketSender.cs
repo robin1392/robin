@@ -644,6 +644,16 @@ namespace RWGameProtocol
             peer.SendPacket((short)GameProtocol.SET_MINION_TARGET_RELAY, msg.Serialize());
         }
 
+        public void MinionStatusRelay(IPeer peer, int playerUId, byte posIndex, MsgVector3[] pos)
+        {
+            MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
+            msg.PlayerUId = playerUId;
+            msg.PosIndex = posIndex;
+            msg.Pos = pos;
+            peer.SendPacket((short)GameProtocol.MINION_STATUS_RELAY, msg.Serialize());
+        }
+
+
         public void ScarecrowRelay(IPeer peer, int playerUId, int baseStatId, int eyeLevel)
         {
             MsgScarecrowRelay msg = new MsgScarecrowRelay();
@@ -662,6 +672,7 @@ namespace RWGameProtocol
             msg.TargetIdArray = targetId;
             peer.SendPacket((short)GameProtocol.LAYZER_TARGET_RELAY, msg.Serialize());
         }
+
 
         #endregion
     }
