@@ -238,7 +238,10 @@ namespace ED
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
             
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
-            
+
+            //
+            StartCoroutine(SyncMinionStatus());
+
             // not use
             /*
             sp = 200;
@@ -1518,6 +1521,53 @@ namespace ED
             }
         }
         #endregion
+        
+        
+        #region sync minion --
+
+        public IEnumerator SyncMinionStatus()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(0.2f);
+
+                if (InGameManager.Get().IsNetwork() && isMine)
+                {
+                    if (listMinion.Count > 0)
+                    {
+                        byte minionCount = (byte) listMinion.Count;
+                        MsgVector3[] msgMinPos = new MsgVector3[100];
+                    
+                        for (int i = 0; i < listMinion.Count; i++)
+                        {
+                            msgMinPos[i] = NetworkManager.Get().VectorToMsg(listMinion[i].rb.position);
+                        }
+                    
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, NetworkManager.Get().UserUID, minionCount , msgMinPos );
+                    }
+                }
+            }
+            
+        }
+
+        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss)
+        {
+            
+            for (var i = 0; i < minionCount && i < listMinion.Count; i++)
+            {
+                Vector3 chPos = NetworkManager.Get().MsgToVector(msgPoss[i]);
+                listMinion[i].SetNetworkValue(chPos);
+            }
+            
+            /*var loopCount = (int)stream.ReceiveNext();
+            for (var i = 0; i < loopCount && i < listMinion.Count; i++)
+            {
+                listMinion[i].SetNetworkValue((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext(),
+                    (Vector3)stream.ReceiveNext(), (float)stream.ReceiveNext(), info.SentServerTime);
+                    
+            }*/
+        }
+        #endregion
 
 
         #region net packet player
@@ -1891,6 +1941,11 @@ namespace ED
                 }
                 case GameProtocol.MINION_STATUS_RELAY:
                 {
+                    MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
+
+                    if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
+                        targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos);
+                    
                     break;
                 }
                 

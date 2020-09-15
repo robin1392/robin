@@ -397,6 +397,11 @@ namespace ED
             networkPosition += rb.velocity * lag;
         }
 
+        public void SetNetworkValue(Vector3 position)
+        {
+            networkPosition = position;
+        }
+
         public virtual void Attack()
         {
             if (isPlayable && isPushing == false)

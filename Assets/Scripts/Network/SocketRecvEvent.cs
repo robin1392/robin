@@ -467,6 +467,10 @@ public class SocketRecvEvent
 
     public void OnMinionStatusRelay(IPeer peer, MsgMinionStatusRelay msg)
     {
+        //UnityUtil.Print("minion status relay", msg.PlayerUId.ToString() , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_STATUS_RELAY, msg);
     }
     
     
