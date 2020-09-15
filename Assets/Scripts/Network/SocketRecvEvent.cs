@@ -47,7 +47,7 @@ public class SocketRecvEvent
         //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
         //SendSocket.ReadyGameReq(peer);
         UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
-        UnityUtil.Print("join my info ", msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print("join my info ", msg.PlayerInfo.PlayerUId + "  " +msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
 
         //
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
@@ -135,7 +135,7 @@ public class SocketRecvEvent
 
     public void OnJoinGameNotify(IPeer peer, MsgJoinGameNotify msg)
     {
-        UnityUtil.Print("other info ", msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print("other info ", msg.OtherPlayerInfo.PlayerUId + "  " + msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
 
         // menu
         NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
