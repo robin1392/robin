@@ -108,7 +108,7 @@ namespace ED
                 // Bomb
                 isTriggerOn = false;
                 //if (PhotonNetwork.IsConnected)
-                if(InGameManager.Get().IsNetwork() == true)
+                if(InGameManager.Get().IsNetwork() && isMine)
                 {
                     //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
                     controller.ActionMineBomb(id);
@@ -160,7 +160,7 @@ namespace ED
         {
             isTriggerOn = false;
             //if (PhotonNetwork.IsConnected)
-            if(InGameManager.Get().IsNetwork() == true)
+            if(InGameManager.Get().IsNetwork() && isMine)
             {
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
                 controller.ActionMineBomb(id);
