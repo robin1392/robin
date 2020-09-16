@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 1681993772575063175}
   - component: {fileID: 1215159436775791465}
   m_Layer: 0
-  m_Name: object_flag
+  m_Name: object_flagofwar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -319,7 +319,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9736decb80d5241e9b906754343e8848, type: 2}
+  - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

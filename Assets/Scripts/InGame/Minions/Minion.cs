@@ -84,7 +84,7 @@ namespace ED
 
         private void Update()
         {
-            _spawnedTime += Time.fixedDeltaTime;
+            _spawnedTime += Time.deltaTime;
             
             if (isPlayable && isPushing == false && isAttacking == false)
             {
@@ -113,12 +113,12 @@ namespace ED
 
         public virtual void Initialize(DestroyCallback destroy)
         {
-            if (castType == DICE_CAST_TYPE.HERO)
-            {
-                power *= Mathf.Pow(1.5f, eyeLevel - 1);
-                maxHealth *= Mathf.Pow(2f, eyeLevel - 1);
-                effect *= Mathf.Pow(2f, eyeLevel - 1);
-            }
+            // if (castType == DICE_CAST_TYPE.HERO)
+            // {
+            //     power *= Mathf.Pow(1.5f, eyeLevel - 1);
+            //     maxHealth *= Mathf.Pow(2f, eyeLevel - 1);
+            //     effect *= Mathf.Pow(2f, eyeLevel - 1);
+            // }
             
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;

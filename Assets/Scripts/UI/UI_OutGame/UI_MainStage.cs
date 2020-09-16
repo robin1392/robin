@@ -42,6 +42,7 @@ namespace ED
                     arrAni_Model[i].transform.parent = arrTs_SpawnPos[i];
                     arrAni_Model[i].transform.localPosition = Vector3.zero;
                     arrAni_Model[i].transform.localRotation = Quaternion.identity;
+                    arrAni_Model[i].SetTrigger("Set");
                 }
 
                 if (data.moveType == 1)
@@ -57,9 +58,10 @@ namespace ED
             {
                 yield return new WaitForSeconds(Random.Range(1f, 10f));
 
-                if (arrAni_Model != null)
+                var rnd = Random.Range(0, arrAni_Model.Length);
+                if (arrAni_Model != null && arrAni_Model[rnd] != null)
                 {
-                    arrAni_Model[Random.Range(0, arrAni_Model.Length)].SetTrigger("Idle2");
+                    arrAni_Model[rnd].SetTrigger("Idle2");
                 }
             }
         }
