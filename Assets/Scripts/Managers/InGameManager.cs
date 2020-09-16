@@ -86,43 +86,8 @@ namespace ED
 
         #endregion
 
-
-        #region net variable
-
-        private int _ingameUpgradeSlot = 0;
-
-        #endregion
-
-
-        /// <summary>
-        /// 삭제 -- Canvas 위치에 따라 world ui 와 in game ui , popup 으로 나눔 
-        /// </summary>
-        //[Header("UI Link")]
-        //public Image image_SpawnTime;
-        //public Text text_SpawnTime;
-        //public TextMeshProUGUI tmp_Wave;
-        //public Text text_SP;
-        //public Text text_GetDiceButton;
-        //public UI_GetDiceButton btn_GetDice;
-        //public GameObject popup_Result;
-        //public Text text_Result;
-        //public UI_UpgradeButton[] arrUpgradeButtons;
-
-        //public Image image_BottomHealthBar;
-        //public Text text_BottomHealth;
-        //public Image image_TopHealthBar;
-        //public Text text_TopHealth;
-
-        //public GameObject popup_Waiting;
-
-        //public GameObject obj_ViewTargetDiceField;
-        //public GameObject obj_Low_HP_Effect;
-        //public Button button_SP_Upgrade;
-        //public Text text_SP_Upgrade;
-        //public Text text_SP_Upgrade_Price;
-
-        //public Text text_UnitCount;
-
+        
+        
         #region unity base
 
         public override void Awake()
@@ -257,8 +222,8 @@ namespace ED
                 otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 
+                
                 otherTObj.SendMessage("ChangeLayer", false);
-
                 isAIMode = true;
             }
 
@@ -304,6 +269,7 @@ namespace ED
 
             if (IsNetwork() == true)
             {
+                WorldUIManager.Get().SetWave(wave);
                 SendInGameManager(GameProtocol.READY_GAME_REQ);
             }
             else
@@ -917,7 +883,6 @@ namespace ED
 
         public void SendInGameUpgrade(int diceId, int slotNum)
         {
-            _ingameUpgradeSlot = slotNum;
             SendInGameManager(GameProtocol.INGAME_UP_DICE_REQ, diceId);
         }
 
@@ -955,11 +920,6 @@ namespace ED
                     break;
                 case GameProtocol.GET_DICE_ACK:
                 {
-                    // my dice 셋팅
-                    // 주사위 아이디 DiceId;
-                    // 슬롯 번호 SlotNum;
-                    // 레벨 Level;
-                    // 현재 sp CurrentSp;
                     MsgGetDiceAck diceack = (MsgGetDiceAck) param[0];
                     GetDiceCallBack(diceack.DiceId, diceack.SlotNum, diceack.Level, diceack.CurrentSp);
 
@@ -986,12 +946,9 @@ namespace ED
                     InGameUpgradeCallback(ingameup.DiceId, ingameup.InGameUp, ingameup.CurrentSp);
                     break;
                 }
-
                 #endregion
 
-
                 #region case notify
-
                 case GameProtocol.LEAVE_GAME_NOTIFY:
                     OnOtherLeft((int) param[0]);
                     break;
@@ -1159,7 +1116,6 @@ namespace ED
             }
         }
         #endregion
-        
         
 
         #region photon send recv

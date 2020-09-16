@@ -25,6 +25,7 @@ namespace ED
     {
 
         #region singleton
+        
         private static PlayerController _instance = null;
         public int instanceID;
 
@@ -60,13 +61,17 @@ namespace ED
             if (instanceID == 0)
                 instanceID = GetInstanceID();
         }
-        //public static PlayerController Instance;
+        
         #endregion
+        
+        
         
         #region player variable.
         
         public PlayerController targetPlayer;
         #endregion
+        
+        
         
         #region data variable
         
@@ -895,9 +900,11 @@ namespace ED
                 {
                     UI_InGamePopup.Get().ViewLowHP(false);
                     currentHealth = 0;
+                    
                     Death();    // 
                 }
-                else if (((PhotonNetwork.IsConnected && photonView.IsMine) || (!PhotonNetwork.IsConnected && isMine)) 
+                //else if (((PhotonNetwork.IsConnected && photonView.IsMine) || (!PhotonNetwork.IsConnected && isMine)) && currentHealth < 1000 && !UI_InGamePopup.Get().GetLowHP())
+                else if( ( (InGameManager.Get().IsNetwork() && isMine) || (InGameManager.Get().IsNetwork() == false && isMine) ) 
                          && currentHealth < 1000 && !UI_InGamePopup.Get().GetLowHP())
                 {
                     UI_InGamePopup.Get().ViewLowHP(true);
@@ -905,19 +912,27 @@ namespace ED
             }
         }
 
+        // 네트워크 변환하면서 필요없어지긴 했으나 
+        // 싱글 모드 테스트 일때는 게임 끝내는걸 호출해준다
+        // 네트워크 모드에선 게임의 끝은 서버가 판단해준다
         private void Death()
         {
             if (InGameManager.Get().isGamePlaying)
             {
-                if (PhotonNetwork.IsConnected)
+                // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
+                if (InGameManager.Get().IsNetwork() == false && isMine)
                 {
-                    //InGameManager.Get().photonView.RPC("EndGame", RpcTarget.All);
+                    InGameManager.Get().EndGame(false);
+                }
+                
+                /*if (PhotonNetwork.IsConnected)
+                {                    
                     InGameManager.Get().SendBattleManager(RpcTarget.All , E_PTDefine.PT_ENDGAME );
                 }
                 else
                 {
                     InGameManager.Get().EndGame(new PhotonMessageInfo());
-                }
+                }*/
             }
         }
 
@@ -1338,7 +1353,7 @@ namespace ED
         
         private void DestroyMinion(int baseStatId)
         {
-            UnityEngine.Debug.Log(listMinion.Find(minion => minion.id == baseStatId)?"TRUE" : "FALSE");
+            //UnityEngine.Debug.Log(listMinion.Find(minion => minion.id == baseStatId)?"TRUE" : "FALSE");
             listMinion.Find(minion => minion.id == baseStatId)?.Death();
         }
 
@@ -1640,7 +1655,7 @@ namespace ED
                 {
                     MsgDestroyMinionRelay destrelay = (MsgDestroyMinionRelay) param[0];
                     
-                    UnityEngine.Debug.Log(NetworkManager.Get().UserUID  + "   destroy id " + destrelay.Id);
+                    //UnityEngine.Debug.Log(NetworkManager.Get().UserUID  + "   destroy id " + destrelay.Id);
                     if (NetworkManager.Get().UserUID == destrelay.PlayerUId)
                         DestroyMinion(destrelay.Id);
                     else if (NetworkManager.Get().OtherUID == destrelay.PlayerUId )
@@ -1663,6 +1678,8 @@ namespace ED
                 case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
                 {
                     MsgSetMinionAnimationTriggerRelay anirelay = (MsgSetMinionAnimationTriggerRelay) param[0];
+                    
+                    //UnityEngine.Debug.Log(anirelay.Trigger);
                     if (NetworkManager.Get().UserUID == anirelay.PlayerUId)
                         SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
                     else if (NetworkManager.Get().OtherUID == anirelay.PlayerUId )
@@ -1969,39 +1986,14 @@ namespace ED
         // Dice RPCs
         //////////////////////////////////////////////////////////////////////
 
-
-        
-
         public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
         }
 
-        
-        
-
         //////////////////////////////////////////////////////////////////////
         // Unit's RPCs
         //////////////////////////////////////////////////////////////////////
-
-        
-        
-        
-        
-
-        
-        
-
-        
-        
-        
-        
-
-        
-
-        
-
-        //[PunRPC]
         public void TeleportMinion(int baseStatId, float x, float z)
         {
             Transform ts = listMinion.Find(minion => minion.id == baseStatId).transform;
@@ -2010,9 +2002,6 @@ namespace ED
             PoolManager.instance.ActivateObject("Effect_Ninja", ts.position);
         }
 
-        
-
-        //[PunRPC]
         public void SpawnSkeleton(Vector3 pos)
         {
             //CreateMinion(InGameManager.Get().data_AllDice.listDice[1], pos, 1, 0, 0, -1);
@@ -2228,7 +2217,5 @@ namespace ED
             }
         }
         #endregion
-        
-        
     }
 }

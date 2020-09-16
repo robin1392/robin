@@ -408,7 +408,7 @@ namespace ED
         {
             networkPosition = position;
 
-            networkPosition += rb.velocity;
+            //networkPosition += rb.velocity;
         }
 
         public virtual void Attack()
