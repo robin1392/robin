@@ -275,7 +275,7 @@ namespace RWGameProtocol
                     break;
                 case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
                     {
-                        if (LeaveGameReq == null)
+                        if (SetMinionAnimationTriggerRelay == null)
                             return false;
                         SetMinionAnimationTriggerRelay(peer, MsgSetMinionAnimationTriggerRelay.Deserialize(data));
                     }
