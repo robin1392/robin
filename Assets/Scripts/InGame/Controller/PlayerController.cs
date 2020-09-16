@@ -193,7 +193,7 @@ namespace ED
 #if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.P))
             {
-                PushEnemyMinions(70f);
+                PushEnemyMinions(30f);
                 SummonGuardian();
             }
 #endif
@@ -815,7 +815,7 @@ namespace ED
 
         public void PushEnemyMinions(float pushPower)
         {
-            var cols = Physics.OverlapSphere(transform.position, 5f, targetLayer);
+            var cols = Physics.OverlapSphere(transform.position, 4f, targetLayer);
             //Debug.Log("PushCount: " + cols.Length);
             foreach (var col in cols)
             {
@@ -1267,10 +1267,10 @@ namespace ED
                 foreach (var m in listMinion)
                 {
                     stream.SendNext(m.rb.position);
-                    stream.SendNext(m.rb.rotation);
+                    //stream.SendNext(m.rb.rotation);
                     //stream.SendNext(m.rb.velocity);
-                    stream.SendNext(m.agent.velocity);
-                    stream.SendNext(m.currentHealth);
+                    //stream.SendNext(m.agent.velocity);
+                    //stream.SendNext(m.currentHealth);
                 }
             }
             else
@@ -1280,8 +1280,9 @@ namespace ED
                 var loopCount = (int)stream.ReceiveNext();
                 for (var i = 0; i < loopCount && i < listMinion.Count; i++)
                 {
-                    listMinion[i].SetNetworkValue((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext(),
-                        (Vector3)stream.ReceiveNext(), (float)stream.ReceiveNext(), info.SentServerTime);
+                    // listMinion[i].SetNetworkValue((Vector3)stream.ReceiveNext(), (Quaternion)stream.ReceiveNext(),
+                    //     (Vector3)stream.ReceiveNext(), (float)stream.ReceiveNext(), info.SentServerTime);
+                    listMinion[i].SetNetworkValue((Vector3)stream.ReceiveNext());
                 }
             }
         }

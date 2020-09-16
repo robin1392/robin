@@ -114,8 +114,8 @@ namespace ED
             range = originRange;
             
             ps_Smoke.Play();
-            power *= 10;
-            maxHealth *= 10;
+            power = effect;
+            maxHealth = effectDuration + (effectCooltime * upgradeLevel);
             currentHealth = maxHealth;
             RefreshHealthBar();
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 namespace ED
@@ -12,7 +13,15 @@ namespace ED
 
             if (isMine)
             {
-                controller.GetRandomMinion()?.Invincibility(1);
+                //controller.GetRandomMinion()?.Invincibility(1);
+                for (int i = 0; i < eyeLevel; i++)
+                {
+                    var m = controller.GetRandomMinion();
+                    if (m != null)
+                    {
+                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, m.id, effect);
+                    }
+                }
             }
             
             Destroy();

@@ -17,7 +17,7 @@ namespace ED
     public class UI_Panel_Dice : MonoBehaviour
     {
         //public Data_AllDice dataAllDice;
-        
+        public UI_MainStage ui_MainStage;
         public UI_Popup_Dice_Info ui_Popup_Dice_Info;
         public Image[] arrImageDeck;
         public Image[] arrImageDeckEye;
@@ -84,6 +84,8 @@ namespace ED
                 arrImageDeck_Main[i].sprite = FileHelper.GetIcon(data.iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeckEye_Main[i].color = FileHelper.GetColor(data.color);
             }
+            
+            ui_MainStage.Set();
         }
 
         private void RefreshGettedDice()

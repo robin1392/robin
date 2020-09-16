@@ -46,9 +46,9 @@ namespace ED
             image_Character.color = Color.clear;
             image_Character.DOColor(Color.white, 0.2f).SetDelay(0.1f);
             var anchPos = image_Character.rectTransform.anchoredPosition;
-            anchPos.y = -1000f;
-            image_Character.rectTransform.anchoredPosition = anchPos;
-            image_Character.rectTransform.DOAnchorPosY(anchPos.y + 400f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
+            //anchPos.y -= 1000f;
+            //image_Character.rectTransform.anchoredPosition = anchPos;
+            image_Character.rectTransform.DOAnchorPosY(anchPos.y + 1000f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
 
             ConnentUIInfo();
         }
@@ -70,7 +70,7 @@ namespace ED
         {
             CloseDisConnectInfo();
             
-            image_Character.rectTransform.DOAnchorPosY(image_Character.rectTransform.anchoredPosition.y - 400f, 0.2f).SetEase(Ease.InBack);
+            image_Character.rectTransform.DOAnchorPosY(image_Character.rectTransform.anchoredPosition.y - 1000f, 0.2f).SetEase(Ease.InBack);
             image_Character.DOFade(0, 0.2f);
             image_BG.DOFade(0, 0.2f).SetDelay(0.1f);
             rts_Frame.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).SetDelay(0.1f).OnComplete(()=>

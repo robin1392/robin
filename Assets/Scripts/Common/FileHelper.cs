@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,13 +12,21 @@ public class FileHelper
     public static GameObject LoadPrefab(string fileName , Global.E_LOADTYPE loadType , Transform parent = null)
     {
         string rscPath = "";
-        if (loadType == Global.E_LOADTYPE.LOAD_MINION)
+
+        switch (loadType)
         {
-            rscPath = "Minion/";
-        }
-        else if (loadType == Global.E_LOADTYPE.LOAD_MAGIC)
-        {
-            rscPath = "Magic/";
+            case Global.E_LOADTYPE.LOAD_MINION:
+                rscPath = "Minion/";
+                break;
+            case Global.E_LOADTYPE.LOAD_MAGIC:
+                rscPath = "Magic/";
+                break;
+            case Global.E_LOADTYPE.LOAD_MAIN_MINION:
+                rscPath = "CommonPrefabs/Units/";
+                break;
+            case Global.E_LOADTYPE.LOAD_MAIN_MAGIC:
+                rscPath = "CommonPrefabs/object/";
+                break;
         }
 
         GameObject loadObj = Resources.Load(rscPath + fileName) as GameObject;

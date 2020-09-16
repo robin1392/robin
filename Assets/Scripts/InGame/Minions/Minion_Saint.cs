@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
@@ -9,6 +10,8 @@ namespace ED
     {
         public GameObject pref_HealArea;
 
+        private float healTime;
+
         protected override void Awake()
         {
             base.Awake();
@@ -16,39 +19,52 @@ namespace ED
             PoolManager.instance.AddPool(pref_HealArea, 1);
         }
 
+        public override void Initialize(DestroyCallback destroy)
+        {
+            base.Initialize(destroy);
+            
+            //attackSpeed = effectCooltime;
+            healTime = -effectCooltime;
+        }
+
         public override void Attack()
         {
-            if (target == null || target.currentHealth >= target.maxHealth) return;
+            if (target == null || target.currentHealth >= target.maxHealth || healTime + effectCooltime > _spawnedTime) return;
 
             var pos = transform.position;
             pos.y = 0.1f;
             controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, pref_HealArea.name, pos,
                 Quaternion.identity, Vector3.one);
             var cols = Physics.OverlapSphere(pos, range, friendlyLayer);
-            
-            if (PhotonNetwork.IsConnected && isMine)
+
+            if (cols.Length > 0)
             {
-                base.Attack();
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-                foreach (var col in cols)
+                if (PhotonNetwork.IsConnected && isMine)
                 {
-                    if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
+                    base.Attack();
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+                    foreach (var col in cols)
                     {
-                        controller.HealMinion(col.GetComponentInParent<Minion>().id, effect);
+                        if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
+                        {
+                            controller.HealMinion(col.GetComponentInParent<Minion>().id, effect);
+                        }
                     }
                 }
-            }
-            else if (PhotonNetwork.IsConnected == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashSkill);
-                foreach (var col in cols)
+                else if (PhotonNetwork.IsConnected == false)
                 {
-                    if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
+                    base.Attack();
+                    animator.SetTrigger(_animatorHashSkill);
+                    foreach (var col in cols)
                     {
-                        controller.HealMinion(col.GetComponentInParent<Minion>().id, effect);
+                        if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
+                        {
+                            controller.HealMinion(col.GetComponentInParent<Minion>().id, effect);
+                        }
                     }
                 }
+
+                healTime = _spawnedTime;
             }
         }
         

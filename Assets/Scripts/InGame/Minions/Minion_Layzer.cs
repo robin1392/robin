@@ -55,6 +55,7 @@ namespace ED
 
         public override void Attack()
         {
+            _attackedTarget = target;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
             _listTarget.Clear();
             List<int> intList = new List<int>();
@@ -62,7 +63,7 @@ namespace ED
             {
                 var bs = col.GetComponentInParent<BaseStat>();
                 var m = bs as Minion;
-                if (bs != null && bs.isAlive && IsTargetInnerRange(bs))
+                if (bs != null && bs.isAlive)
                 {
                     if (m != null && m.isCloacking) continue;
                     
@@ -80,6 +81,8 @@ namespace ED
                     id,
                     intList.Count > 0 ? intList.ToArray() : null);
             }
+            
+            if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
         }
 
         public override void Death()

@@ -61,6 +61,10 @@ namespace ED
 
             isPushing = false;
             float t = 0;
+            if (controller == null || target == null)
+            {
+                yield break;
+            }
             lr.gameObject.SetActive(true);
             controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
             controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "Aiming");
@@ -79,6 +83,8 @@ namespace ED
                     else if (target == null || IsTargetInnerRange() == false)
                     {
                         controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
+                        lr.gameObject.SetActive(false);
+                        isAttacking = false;
                         break;
                     }
                 }
@@ -91,7 +97,9 @@ namespace ED
                 else if (target == null || IsTargetInnerRange() == false)
                 {
                     controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
-                    break;
+                    lr.gameObject.SetActive(false);
+                    isAttacking = false;
+                    yield break;
                 }
 
                 t += Time.deltaTime;
@@ -114,6 +122,7 @@ namespace ED
         public void StopAiming()
         {
             StopAllCoroutines();
+            isAttacking = false;
             lr.gameObject.SetActive(false);
         }
         

@@ -68,6 +68,8 @@ public partial class Global
     {
         LOAD_MINION,
         LOAD_MAGIC,
+        LOAD_MAIN_MINION,
+        LOAD_MAIN_MAGIC,
         LOAD_MAX,
     }
     #endregion

@@ -82,7 +82,7 @@ namespace ED
             _collider = GetComponentInChildren<Collider>();
         }
 
-        protected virtual void FixedUpdate()
+        private void Update()
         {
             _spawnedTime += Time.fixedDeltaTime;
             
@@ -217,6 +217,7 @@ namespace ED
 
         public virtual void Death()
         {
+            currentHealth = 0;
             SetControllEnable(false);
             isPlayable = false;
             if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
@@ -321,8 +322,6 @@ namespace ED
                         break;
                     case PLAY_TYPE.CO_OP:
                         image_HealthBar.color = Color.green;
-                        break;
-                    default:
                         break;
                 }
             }
@@ -445,16 +444,16 @@ namespace ED
             }
         }
 
-        public void SetNetworkValue(Vector3 position, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
+        public void SetNetworkValue(Vector3 position)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
         {
             networkPosition = position;
-            rb.rotation = rotation;
-            rb.velocity = velocity;
+            //rb.rotation = rotation;
+            //rb.velocity = velocity;
             //agent.velocity = velocity;
-            currentHealth = health;
+            //currentHealth = health;
 
-            var lag = Mathf.Abs((float)(PhotonNetwork.Time - sendServerTime));
-            networkPosition += rb.velocity * lag;
+            //var lag = Mathf.Abs((float)(PhotonNetwork.Time - sendServerTime));
+            //networkPosition += rb.velocity * lag;
         }
 
         public virtual void Attack()
@@ -519,7 +518,7 @@ namespace ED
             if (target != null && isAlive && agent.enabled && agent.updatePosition)
             {
                 Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                agent.SetDestination(targetPos);
+                agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
             }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
 //            {

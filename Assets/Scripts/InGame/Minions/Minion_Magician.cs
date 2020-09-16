@@ -107,7 +107,7 @@ namespace  ED
                 PoolManager.instance.ActivateObject(pref_SkillEffect.name, ts_SkillParticlePosition.position);
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
                 controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW,
-                    list[Random.Range(0, list.Count)], effectDuration * eyeLevel);
+                    list[Random.Range(0, list.Count)], effect);
             }
         }
     }

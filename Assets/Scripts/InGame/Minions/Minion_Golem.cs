@@ -24,7 +24,7 @@ namespace ED
 
         public override void Death()
         {
-            for (int i = 0; i < eyeLevel - 1; i++)
+            for (int i = 0; i < 2; i++)
             {
                 // Spawn
                 var m = controller.CreateMinion(pref_MiniGolem,
@@ -33,7 +33,7 @@ namespace ED
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
-                m.power = power;
+                m.power = effect;
                 m.maxHealth = maxHealth * eyeLevel * 0.1f;
                 m.attackSpeed = attackSpeed;
                 m.moveSpeed = moveSpeed;
