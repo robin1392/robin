@@ -93,6 +93,6 @@ public class DeckUpdateReq
 public class DeckUpdateAck
 {
     public sbyte deckIndex;
-    public int[] diceIds;
+    public int[] diceIds = new int[5];
 }
 

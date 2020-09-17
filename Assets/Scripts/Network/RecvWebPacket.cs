@@ -68,6 +68,7 @@ public partial class WebPacket : Singleton<WebPacket>
             }
             case WebProtocol.WebPD_DeckUpdate:
             {
+                content = content.Replace(@"\" , "").Replace(", " , ",").Replace("\"[ " , "[").Replace("]\"" , "]");
                 DeckUpdateAck res = JsonUtility.FromJson<DeckUpdateAck>(content);
                 RecvDeckUpdate(res);
                 break;
