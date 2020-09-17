@@ -74,3 +74,18 @@ public class MatchStatusAck
     public string playerSessionId;
 }
 
+[Serializable]
+public class DeckUpdateReq
+{
+    public string userId;
+    public sbyte deckIndex;
+    public int[] diceIds;
+}
+
+[Serializable]
+public class DeckUpdateAck
+{
+    public sbyte deckIndex;
+    public int[] diceIds;
+}
+
