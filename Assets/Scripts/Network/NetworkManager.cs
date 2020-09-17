@@ -111,6 +111,14 @@ public class NetworkManager : Singleton<NetworkManager>
     public override void Awake()
     {
         base.Awake();
+        
+        if (this.instanceID != NetworkManager.Get().instanceID)
+        {
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
+        
+        
     }
 
     // Start is called before the first frame update

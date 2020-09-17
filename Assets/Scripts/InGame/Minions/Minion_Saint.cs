@@ -20,7 +20,7 @@ namespace ED
             var cols = Physics.OverlapSphere(transform.position, range, friendlyLayer);
             
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.Get().IsNetwork() && isMine )
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
                 
@@ -37,7 +37,7 @@ namespace ED
                 
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

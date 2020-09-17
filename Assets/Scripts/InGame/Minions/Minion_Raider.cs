@@ -34,14 +34,14 @@ namespace ED
             if (target == null) return;
             
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.Get().IsNetwork() && isMine )
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.MinionAniTrigger(id, "Attack");
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false)
+            else if(InGameManager.IsNetwork == false)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -135,13 +135,13 @@ namespace ED
             {
                 var targetID = dashTarget.GetComponentInParent<BaseStat>().id;
                 //if (PhotonNetwork.IsConnected && isMine)
-                if(InGameManager.Get().IsNetwork() && isMine)
+                if(InGameManager.IsNetwork && isMine)
                 {
                     //controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f);
                     controller.ActionSturn(true , targetID , 1f);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.Get().IsNetwork() == false)
+                else if(InGameManager.IsNetwork == false)
                 {
                     controller.targetPlayer.SturnMinion(targetID, 1f);
                 }

@@ -57,13 +57,13 @@ namespace ED
             // Bomb
             isTriggerOn = false;
             //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.Get().IsNetwork() && isMine)
+            if(InGameManager.IsNetwork && isMine)
             {
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINEBOMB, id);
                 controller.ActionMineBomb(id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false)
+            else if(InGameManager.IsNetwork == false)
             {
                 Bomb();
             }
@@ -87,7 +87,7 @@ namespace ED
         private void EndMove()
         {
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 isTriggerOn = true;
                 image_HealthBar.transform.parent.gameObject.SetActive(true);
@@ -100,7 +100,7 @@ namespace ED
         {
             if (isTriggerOn && 
                 //((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
-                ( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false ) && 
+                ( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false ) && 
                 1 << collision.gameObject.layer == targetLayer)
             {
                 StopAllCoroutines();
@@ -108,7 +108,7 @@ namespace ED
                 // Bomb
                 isTriggerOn = false;
                 //if (PhotonNetwork.IsConnected)
-                if(InGameManager.Get().IsNetwork() && isMine)
+                if(InGameManager.IsNetwork && isMine)
                 {
                     //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
                     controller.ActionMineBomb(id);
@@ -127,7 +127,7 @@ namespace ED
             image_HealthBar.transform.parent.gameObject.SetActive(false);
             
             //if (((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
-            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 var cols = Physics.OverlapSphere(transform.position, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
                 foreach (var col in cols)
@@ -137,12 +137,12 @@ namespace ED
                     {
                         //if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
                         controller.HitMinionDamage( true , m.id , power, 0f);
-                        /*if(InGameManager.Get().IsNetwork() == true)
+                        /*if(InGameManager.IsNetwork == true)
                         {
                             controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , m.id, power, 0f);
                         }
                         //else if (PhotonNetwork.IsConnected == false)
-                        else if(InGameManager.Get().IsNetwork() == false)
+                        else if(InGameManager.IsNetwork == false)
                         {
                             controller.targetPlayer.HitDamageMinionAndMagic(m.id, power, 0f);
                         }*/
@@ -160,7 +160,7 @@ namespace ED
         {
             isTriggerOn = false;
             //if (PhotonNetwork.IsConnected)
-            if(InGameManager.Get().IsNetwork() && isMine)
+            if(InGameManager.IsNetwork && isMine)
             {
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
                 controller.ActionMineBomb(id);

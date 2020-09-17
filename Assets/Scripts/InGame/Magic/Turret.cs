@@ -32,7 +32,7 @@ namespace ED
             SetColor();
 
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
             {
                 StartCoroutine(AttackCoroutine());
             }
@@ -77,13 +77,13 @@ namespace ED
             Invoke("FireLightOff", 0.15f);
             
             //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.Get().IsNetwork() && isMine)
+            if(InGameManager.IsNetwork && isMine)
             {
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
                 controller.ActionFireArrow(ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false)
+            else if(InGameManager.IsNetwork == false)
             {
                 controller.FireArrow(ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }

@@ -119,14 +119,14 @@ namespace ED
             _callback?.Invoke();
 
             //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
-            if( InGameManager.Get().IsNetwork() && _isMine )
+            if( InGameManager.IsNetwork && _isMine )
             {
                 if (_target != null)
                     controller.HitMinionDamage( true , _target.id , _damage, 0f);
                 //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,_target.id, _damage, 0f);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false)
+            else if(InGameManager.IsNetwork == false)
             {
                 if (_target != null)
                     controller.HitMinionDamage( true , _target.id , _damage, 0f);

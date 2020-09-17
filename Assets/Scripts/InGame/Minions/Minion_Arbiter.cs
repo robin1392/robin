@@ -17,7 +17,7 @@ namespace ED
             if (target == null) return;
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
@@ -108,7 +108,7 @@ namespace ED
             if (target == null) return;
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
                 controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
@@ -120,7 +120,7 @@ namespace ED
             if (target == null) return;
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
                 controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);

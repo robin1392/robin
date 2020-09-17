@@ -71,13 +71,13 @@ namespace ED
             foreach (var col in cols)
             {
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
-                if(InGameManager.Get().IsNetwork() && _isMine)
+                if(InGameManager.IsNetwork && _isMine)
                 {
                     controller.HitMinionDamage( true , GetComponentInParent<BaseStat>().id , _damage, 0f);
                     //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.Get().IsNetwork() == false )
+                else if(InGameManager.IsNetwork == false )
                 {
                     controller.HitMinionDamage( true , GetComponentInParent<BaseStat>().id , _damage, 0f);
                     //controller.targetPlayer.HitDamageMinionAndMagic(col.GetComponentInParent<BaseStat>().id, _damage, 0f);

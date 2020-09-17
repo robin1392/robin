@@ -172,7 +172,7 @@ namespace ED
         private void SetTargetBaseStat()
         {
             //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.Get().IsNetwork() && isMine )
+            if(InGameManager.IsNetwork && isMine )
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 if (target != null)
@@ -184,7 +184,7 @@ namespace ED
                 }
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 if (target != null)
@@ -197,7 +197,7 @@ namespace ED
         protected void SetTargetPosition()
         {
             //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.Get().IsNetwork() && isMine )
+            if(InGameManager.IsNetwork && isMine )
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
                 
@@ -207,7 +207,7 @@ namespace ED
                 StartCoroutine(Move());
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
                 StartCoroutine(Move());
@@ -276,7 +276,7 @@ namespace ED
                 if (currentHealth <= 0)
                 {
                     //if (PhotonNetwork.IsConnected && !isMine) return;
-                    if (InGameManager.Get().IsNetwork() && !isMine) return;
+                    if (InGameManager.IsNetwork && !isMine) return;
 
                     currentHealth = 0;
                     EndLifetime();

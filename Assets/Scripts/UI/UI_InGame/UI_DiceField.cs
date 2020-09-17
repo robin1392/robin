@@ -34,16 +34,16 @@ namespace ED
 
         public void Click_GetDiceButton()
         {
-            if (_ingameManager.playerController.sp >= _ingameManager.GetDiceCost() && _ingameManager.playerController.GetDiceFieldEmptySlotCount() > 0)
+            if (InGameManager.Get().playerController.sp >= InGameManager.Get().GetDiceCost() && InGameManager.Get().playerController.GetDiceFieldEmptySlotCount() > 0)
             {
-                if (_ingameManager.IsNetwork() == true)
+                if (InGameManager.IsNetwork == true)
                 {
-                    _ingameManager.NetGetDice();
+                    InGameManager.Get().NetGetDice();
                 }
                 else
                 {
-                    _ingameManager.GetDice();
-                    _ingameManager.playerController.GetDice();
+                    InGameManager.Get().GetDice();
+                    InGameManager.Get().playerController.GetDice();
                     RefreshField();
                 }
             }

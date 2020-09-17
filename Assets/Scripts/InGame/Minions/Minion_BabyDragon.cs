@@ -40,14 +40,14 @@ namespace ED
         public override void Attack()
         {
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.Get().IsNetwork() && isMine )
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.MinionAniTrigger(id, "Attack");
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -57,13 +57,13 @@ namespace ED
         public void FireSpear()
         {
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.Get().IsNetwork() && isMine )
+            if( InGameManager.IsNetwork && isMine )
             {
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
                 controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 controller?.FireSpear(ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }

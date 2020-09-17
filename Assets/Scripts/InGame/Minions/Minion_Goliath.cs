@@ -19,14 +19,14 @@ namespace ED
         public override void Attack()
         {
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.Get().IsNetwork() && isMine )
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , target.isFlying ? "Attack2" : "Attack1");
                 controller.MinionAniTrigger(id, target.isFlying ? "Attack2" : "Attack1");
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(target.isFlying ? "Attack2" : "Attack1");
@@ -40,7 +40,7 @@ namespace ED
             if (target.isFlying) ps_FireTargetFlying.Play();
             
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.Get().IsNetwork() && isMine )
+            if( InGameManager.IsNetwork && isMine )
             {
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, 
                     //ts_ShootingPos.position, target.id, target.isFlying ? effect : power,
@@ -52,7 +52,7 @@ namespace ED
                     
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 if (target.isFlying)
                 {

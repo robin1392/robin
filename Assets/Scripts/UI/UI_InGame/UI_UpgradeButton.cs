@@ -53,7 +53,7 @@ namespace ED
             if (InGameManager.Get().playerController.sp < arrPrice[level])
                 return;
             
-            if( InGameManager.Get().IsNetwork() == true )
+            if( InGameManager.IsNetwork == true )
                 InGameManager.Get().SendInGameUpgrade(pData.id , num);
             else
             {

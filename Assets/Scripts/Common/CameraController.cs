@@ -15,6 +15,22 @@ namespace ED
 
         private void Awake()
         {
+            
+            
+            /*
+            if (PhotonNetwork.IsConnected)
+            {
+                SetPosition(PhotonManager.Instance.playType != PLAY_TYPE.BATTLE || PhotonNetwork.IsMasterClient, height);
+            }
+            else
+            {
+                SetPosition(true, height);
+            }
+            */
+        }
+
+        public void Start()
+        {
             camera = GetComponent<Camera>();
 
             var split = (Screen.height / (float)Screen.width - 1.777f);
@@ -29,18 +45,8 @@ namespace ED
             {
                 SetPosition(true, height);
             }
-            
-            /*
-            if (PhotonNetwork.IsConnected)
-            {
-                SetPosition(PhotonManager.Instance.playType != PLAY_TYPE.BATTLE || PhotonNetwork.IsMasterClient, height);
-            }
-            else
-            {
-                SetPosition(true, height);
-            }
-            */
         }
+        
 
         private void SetPosition(bool isOrigin, float height)
         {

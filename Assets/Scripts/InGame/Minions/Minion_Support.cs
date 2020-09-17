@@ -24,14 +24,14 @@ namespace ED
             if (_collider.enabled == false) _collider.enabled = true;
             
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.Get().IsNetwork() && isMine )
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.MinionAniTrigger(id, "Attack");
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.Get().IsNetwork() == false )
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

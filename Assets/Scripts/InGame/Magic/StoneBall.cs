@@ -52,7 +52,7 @@ namespace  ED
                 PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
 
                 //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                if( (InGameManager.Get().IsNetwork() && isMine) || InGameManager.Get().IsNetwork() == false)
+                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
                 {
                     controller.AttackEnemyMinion(bs.id, power, 0f);
                 }

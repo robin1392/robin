@@ -44,7 +44,7 @@ namespace ED
             if (target != null)
             {
                 //if (PhotonNetwork.IsConnected && isMine)
-                if( InGameManager.Get().IsNetwork() && isMine )
+                if( InGameManager.IsNetwork && isMine )
                 {
                     base.Attack();
                     
@@ -55,7 +55,7 @@ namespace ED
                     controller.ActionFireManFire(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.Get().IsNetwork() == false )
+                else if(InGameManager.IsNetwork == false )
                 {
                     base.Attack();
                     animator.SetTrigger(_animatorHashAttack);

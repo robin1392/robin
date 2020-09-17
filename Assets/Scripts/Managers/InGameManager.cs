@@ -87,6 +87,22 @@ namespace ED
         #endregion
 
         
+        #region static
+        public static bool IsNetwork
+        {
+            get
+            {
+                if (NetworkManager.Get() == null)
+                    return false;
+                
+                if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+                    return true;
+
+                return false;
+            }
+        }
+        #endregion
+        
         
         #region unity base
 
@@ -170,18 +186,12 @@ namespace ED
 
         }
 
-        public bool IsNetwork()
-        {
-            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
-                return true;
-
-            return false;
-        }
+        
 
         public void StartManager()
         {
 
-            if (IsNetwork() == true)
+            if (IsNetwork == true)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
 
@@ -228,7 +238,7 @@ namespace ED
             }
 
             // deck setting
-            if (IsNetwork() == true)
+            if (IsNetwork == true)
             {
                 // my
                 playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
@@ -251,7 +261,7 @@ namespace ED
             // ui 셋팅
             UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
 
-            if (IsNetwork() == true)
+            if (IsNetwork == true)
             {
                 if (NetworkManager.Get().IsMaster == false)
                 {
@@ -262,12 +272,12 @@ namespace ED
             }
 
             //obj_ViewTargetDiceField.SetActive(!PhotonNetwork.IsConnected);
-            UI_InGame.Get().ViewTargetDice(!IsNetwork());
+            UI_InGame.Get().ViewTargetDice(!IsNetwork);
 
             event_SP_Edit.AddListener(RefreshSP);
             event_SP_Edit.AddListener(SetSPUpgradeButton);
 
-            if (IsNetwork() == true)
+            if (IsNetwork == true)
             {
                 WorldUIManager.Get().SetWave(wave);
                 SendInGameManager(GameProtocol.READY_GAME_REQ);
@@ -380,11 +390,11 @@ namespace ED
 
         protected void StartGame()
         {
-            if (IsNetwork() == true)
+            if (IsNetwork == true)
             {
                 StartCoroutine(SpawnLoop());
             }
-            else
+            else if (IsNetwork == false)
             {
 
                 Debug.Log("StartGame: OfflineMode");
@@ -431,7 +441,7 @@ namespace ED
         {
             wave = 0;
             // 개발용으로 쓰일때만..
-            if (IsNetwork() == false)
+            if (IsNetwork == false)
                 WorldUIManager.Get().SetWave(wave);
 
             time = startSpawnTime;
@@ -448,11 +458,11 @@ namespace ED
                 if (wave > 0 && time <= arrAddTime[addNum])
                 {
                     addNum++;
-                    if (IsNetwork() == true)
+                    /*if (IsNetwork() == true)
                     {
                         //...sp 를 노티가 오니....안해도 되겟네..
-                    }
-                    else
+                    }*/
+                    if (IsNetwork == false)
                     {
                         AddSP(wave);
                     }
@@ -463,11 +473,7 @@ namespace ED
                     time = spawnTime;
                     addNum = 0;
 
-                    if (IsNetwork() == true)
-                    {
-                        // spawn 도 노티로 온다...
-                    }
-                    else
+                    if (IsNetwork == false)
                     {
                         playerController.Spawn();
                         playerController.targetPlayer.Spawn();
@@ -561,7 +567,7 @@ namespace ED
         {
             playerController.AddSpByWave(wave);
 
-            if (IsNetwork() == false)
+            if (IsNetwork == false)
             {
                 playerController.targetPlayer.AddSpByWave(wave);
             }
@@ -605,14 +611,16 @@ namespace ED
             {
                 float ff = Mathf.Lerp(WorldUIManager.Get().GetSpawnAmount(), time / st, Time.deltaTime * 5.0f);
 
-                if (ff < WorldUIManager.Get().GetSpawnAmount()) WorldUIManager.Get().SetSpawnTime(ff);
-                else WorldUIManager.Get().SetSpawnTime(time / st);
+                if (ff < WorldUIManager.Get().GetSpawnAmount())
+                    WorldUIManager.Get().SetSpawnTime(ff);
+                else 
+                    WorldUIManager.Get().SetSpawnTime(time / st);
             }
             
             
             WorldUIManager.Get().SetTextSpawnTime(time);
             
-            if (IsNetwork() == false)
+            if (IsNetwork == false)
                 WorldUIManager.Get().SetWave(wave);
         }
 
@@ -720,7 +728,7 @@ namespace ED
 
         public void LeaveRoom()
         {
-            if (NetworkManager.Get().IsConnect() == true)
+            if (IsNetwork == true)
             {
                 SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             }
@@ -746,7 +754,9 @@ namespace ED
         // 내자신이 나간다고 눌럿을때 응답 받은것
         public void CallBackLeaveRoom()
         {
-            NetworkManager.Get().DisconnectSocket();
+            if(IsNetwork)
+                NetworkManager.Get().DisconnectSocket();
+            
             GameStateManager.Get().MoveMainScene();
         }
 
@@ -892,7 +902,7 @@ namespace ED
         #region network
         public void SendInGameManager(GameProtocol protocol, params object[] param)
         {
-            if (IsNetwork() == true)
+            if (IsNetwork == true)
             {
                 NetworkManager.Get().Send(protocol, param);
             }

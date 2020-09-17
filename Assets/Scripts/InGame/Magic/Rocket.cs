@@ -59,7 +59,7 @@ namespace ED
                 isBombed = true;
                 
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.Get().IsNetwork() && isMine)
+                if(InGameManager.IsNetwork && isMine)
                 {
                     if (target != null)
                         controller.HitMinionDamage( true , target.id , power, 0f);
@@ -69,7 +69,7 @@ namespace ED
                     controller.ActionRocketBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.Get().IsNetwork() == false )
+                else if(InGameManager.IsNetwork == false )
                 {
                     if (target != null)
                     {
@@ -93,7 +93,7 @@ namespace ED
                 isBombed = true;
 
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.Get().IsNetwork() && isMine)
+                if(InGameManager.IsNetwork && isMine)
                 {
                     if (target != null)
                         controller.HitMinionDamage( true , target.id , power, 0f);
@@ -103,7 +103,7 @@ namespace ED
                     controller.ActionRocketBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.Get().IsNetwork() == false )
+                else if(InGameManager.IsNetwork == false )
                 {
                     if (target != null)
                     {

@@ -75,14 +75,18 @@ namespace ED
             _collider = GetComponentInChildren<Collider>();
         }
 
-        protected virtual void FixedUpdate()
+        //protected virtual void FixedUpdate()
+        protected virtual void Update()
         {
-            _spawnedTime += Time.fixedDeltaTime;
+            //return;
+            
+            //_spawnedTime += Time.fixedDeltaTime;
+            _spawnedTime += Time.deltaTime;
             
             if (isPlayable && isPushing == false && isAttacking == false)
             {
                 //if (PhotonNetwork.IsConnected && !isMine)
-                if(InGameManager.Get().IsNetwork() && !isMine)
+                if(InGameManager.IsNetwork && !isMine)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
                     agent.SetDestination(networkPosition);
@@ -97,12 +101,16 @@ namespace ED
 
 
                 //if (PhotonNetwork.IsConnected && !isMine) return;
-                if (InGameManager.Get().IsNetwork() && !isMine) return;
+                if (InGameManager.IsNetwork && !isMine) 
+                    return;
 
-                if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) return;
+                if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) 
+                    return;
+                
                 var lTargetDir = rb.velocity;
                 lTargetDir.y = 0.0f;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
+                //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
             }
         }
 
@@ -129,7 +137,7 @@ namespace ED
             currentHealth = maxHealth;
 
             //if (PhotonNetwork.IsConnected)
-            if(InGameManager.Get().IsNetwork())
+            if(InGameManager.IsNetwork)
             {
                 if (isMine)
                 {
@@ -193,7 +201,7 @@ namespace ED
                 if (currentHealth <= 0)
                 {
                     //if (PhotonNetwork.IsConnected && !isMine)
-                    if(InGameManager.Get().IsNetwork() && !isMine)
+                    if(InGameManager.IsNetwork && !isMine)
                         yield break;
 
                     currentHealth = 0;
@@ -287,7 +295,7 @@ namespace ED
             }
 
             //if (PhotonNetwork.IsConnected)
-            if(InGameManager.Get().IsNetwork())
+            if(InGameManager.IsNetwork)
             {
                 //switch (PhotonManager.Instance.playType)
                 switch (NetworkManager.Get().playType)
