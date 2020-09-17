@@ -66,6 +66,12 @@ public partial class WebPacket : Singleton<WebPacket>
                 MatchStatsAck(res);
                 break;
             }
+            case WebProtocol.WebPD_DeckUpdate:
+            {
+                DeckUpdateAck res = JsonUtility.FromJson<DeckUpdateAck>(content);
+                RecvDeckUpdate(res);
+                break;
+            }
         }
 
         if (cbSuccess != null)
@@ -119,5 +125,15 @@ public partial class WebPacket : Singleton<WebPacket>
     }
     #endregion
     
+    #region deck update
+
+    private void RecvDeckUpdate(DeckUpdateAck res)
+    {
+        //
+        UserInfoManager.Get().GetUserInfo().SetDeck(res.deckIndex, $"{res.diceIds[0]}/{res.diceIds[1]}/{res.diceIds[2]}/{res.diceIds[3]}/{res.diceIds[4]}");
+        
+        _isPacketSend = false;
+    }
+    #endregion
 
 }

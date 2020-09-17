@@ -44,12 +44,19 @@ namespace ED
         {
             DOTween.Init();
 
-            string nickname = ObscuredPrefs.GetString("Nickname");
+            string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
+            if (string.IsNullOrEmpty(nickname))
+            {
+                nickname = string.Format("RW{0}", Random.Range(1000, 9999));
+                UserInfoManager.Get().SetUserNickName(nickname);
+            }
+            
+            /*string nickname = ObscuredPrefs.GetString("Nickname");
             if (string.IsNullOrEmpty(nickname))
             {
                 nickname = string.Format("RW{0}", Random.Range(1000, 9999));
                 ObscuredPrefs.SetString("Nickname", nickname);
-            }
+            }*/
 
             inputfield_Nicnname.text = nickname;
             text_Nickname.text = nickname;
@@ -76,7 +83,9 @@ namespace ED
 
         public void EditNickname(string str)
         {
-            ObscuredPrefs.SetString("Nickname", str);
+            UserInfoManager.Get().SetUserNickName(str);
+            //ObscuredPrefs.SetString("Nickname", str);
+            
             text_Nickname.text = str;
         }
         

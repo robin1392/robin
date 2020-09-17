@@ -21,6 +21,7 @@ namespace WebPacketDefine
         WebPD_UserAuth,
         WebPD_Match,
         WebPD_MatchStatus,
+        WebPD_DeckUpdate,
         WebPD_MAX,
     }
     

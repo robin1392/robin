@@ -19,7 +19,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 
     public static T Get()
     {
-        /*if (_instance == null)
+        if (_instance == null)
         {
             _instance = GameObject.FindObjectOfType(typeof(T)) as T;
             if (_instance == null)
@@ -29,7 +29,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
             }
             else
                 _instance.Init();
-        }*/
+        }
         
         return _instance;
     }
@@ -42,13 +42,14 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 
     protected virtual void Init()
     {
+        //print(typeof(T).Name);
         if (_instance == null)
         {
             instanceID = GetInstanceID();
             _instance = this as T;
         }
 
-        if (instanceID == 0)
+        if (instanceID <= 0)
             instanceID = GetInstanceID();
         
         DontDestroyOnLoad(base.gameObject);

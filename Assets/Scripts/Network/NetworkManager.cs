@@ -117,8 +117,7 @@ public class NetworkManager : Singleton<NetworkManager>
             GameObject.Destroy(this.gameObject);
             return;
         }
-        
-        
+
     }
 
     // Start is called before the first frame update

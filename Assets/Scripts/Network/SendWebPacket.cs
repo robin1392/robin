@@ -72,6 +72,32 @@ public partial class WebPacket : Singleton<WebPacket>
 
     #endregion
     
+    #region deck update
+
+    public void SendDeckUpdateRequest(int deckIndex, int[] deckIds , NetCallBack cbSuccess, NetCallBackFail cbFail = null)
+    {
+        _isPacketSend = true;
+        
+        DeckUpdateReq req = new DeckUpdateReq();
+
+        req.userId = UserInfoManager.Get().GetUserInfo().userID;
+        req.deckIndex = (sbyte)deckIndex;
+        req.diceIds = new[] {deckIds[0], deckIds[1], deckIds[2], deckIds[3], deckIds[4]};
+        
+        string jsonBody = JsonHelper.ToJson<DeckUpdateReq>(req);
+        UnityUtil.Print("send  : " + jsonBody);
+
+        SendQueue requestData = new SendQueue();
+        requestData.packetDef = WebProtocol.WebPD_DeckUpdate;
+        requestData.extraUrl = "/deckupdate";
+        
+        requestData.FillPacket(jsonBody , cbSuccess , cbFail);
+        
+        WebNetworkCommon.Get().SendPacket(requestData);
+    }
+    
+    #endregion
+    
 }
 
 

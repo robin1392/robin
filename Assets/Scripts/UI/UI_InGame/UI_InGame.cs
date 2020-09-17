@@ -130,9 +130,15 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     }
 
     public void SetNickname(string enemyNickname)
-    {
+    {   
         text_MyNickname.text = ObscuredPrefs.GetString("Nickname");
         text_EnemyNickname.text = enemyNickname;
+    }
+
+    public void SetNickName(string myName, string enemyName)
+    {
+        text_MyNickname.text = myName;
+        text_EnemyNickname.text = enemyName;
     }
     
     #endregion

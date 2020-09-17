@@ -216,6 +216,9 @@ namespace ED
                 playerController.targetPlayer.targetPlayer = playerController;
                 
                 playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+                
+                //
+                UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
 
             }
             else
@@ -232,7 +235,8 @@ namespace ED
                 otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 
-                
+                // name
+                UI_InGame.Get().SetNickName(ObscuredPrefs.GetString("Nickname") , "AI");
                 otherTObj.SendMessage("ChangeLayer", false);
                 isAIMode = true;
             }

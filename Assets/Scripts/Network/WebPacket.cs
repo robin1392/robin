@@ -7,12 +7,19 @@ public partial class WebPacket : Singleton<WebPacket>
 {
     
     //
+    private bool _isPacketSend;
+    public bool isPacketSend
+    {
+        get { return _isPacketSend; }
+    }
     
     
     #region unity base
     public override void Awake()
     {
         base.Awake();
+        
+        _isPacketSend = false;
     }
 
     // Start is called before the first frame update
