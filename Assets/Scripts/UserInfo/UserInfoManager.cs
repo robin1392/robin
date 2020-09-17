@@ -172,15 +172,15 @@ public class UserInfoManager : Singleton<UserInfoManager>
     #region unity base
 
     public override void Awake()
-    {
-        base.Awake();
-        
+    {   
         if (UserInfoManager.Get() != null && this != UserInfoManager.Get())
         {
-            //print("del user");
             GameObject.Destroy(this.gameObject);
             return;
         }
+
+        
+        base.Awake();
         
         InitializeUserInfo();
     }

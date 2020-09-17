@@ -110,14 +110,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public override void Awake()
     {
-        base.Awake();
-        
-        if (this.instanceID != NetworkManager.Get().instanceID)
+        if (NetworkManager.Get() != null && this != NetworkManager.Get())
         {
             GameObject.Destroy(this.gameObject);
             return;
         }
 
+        base.Awake();
+        
     }
 
     // Start is called before the first frame update
@@ -220,12 +220,15 @@ public class NetworkManager : Singleton<NetworkManager>
     
     public void DisconnectSocket()
     {
-        if(_clientSocket.IsConnected() == true)
+        if(_clientSocket != null && _clientSocket.IsConnected() == true)
             _clientSocket.Disconnect();
     }
 
     public bool IsConnect()
     {
+        if (_clientSocket == null)
+            return false;
+        
         return _clientSocket.IsConnected();
     }
 
