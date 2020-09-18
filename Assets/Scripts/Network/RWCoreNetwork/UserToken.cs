@@ -39,10 +39,13 @@ namespace RWCoreNetwork
         // _sendingQueue lock처리에 사용되는 객체
         object _lockSendingQueue;
 
+        int _bufferSize;
+
 
         public UserToken(int bufferSize, int id)
         {
             Id = id;
+            _bufferSize = bufferSize;
             _peer = null;
             _messageHandler = new MessageHandler(bufferSize);
             _sendingQueue = new Queue<byte[]>();
@@ -96,7 +99,7 @@ namespace RWCoreNetwork
 		/// <param name="msg"></param>
         public void Send(short protocolId, byte[] msg)
         {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[_bufferSize];
             
             // protocol id
             int offset = 0;
