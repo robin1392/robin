@@ -1152,7 +1152,6 @@ namespace ED
         
         public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
         {
-            FireArrow(startPos, targetId, damage, moveSpeed);
             if (InGameManager.IsNetwork && isMine)
             {
                 int x = (int) (startPos.x * Global.g_networkBaseValue);
@@ -1163,6 +1162,7 @@ namespace ED
                 
                 NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
             }
+            FireArrow(startPos, targetId, damage, moveSpeed);
         }
 
         public void ActionSturn(bool other , int baseStatId, float duration)
@@ -1188,26 +1188,24 @@ namespace ED
 
         public void ActionRocketBomb(int baseStatId)
         {
-            RocketBomb(baseStatId);
             if (InGameManager.IsNetwork && isMine)
             {
                 NetSendPlayer(GameProtocol.ROCKET_BOMB_RELAY, NetworkManager.Get().UserUID, baseStatId);
             }
+            RocketBomb(baseStatId);
         }
 
         public void ActionIceBallBomb(int baseStatId)
         {
-            IceballBomb(baseStatId);
             if (InGameManager.IsNetwork && isMine)
             {
                 NetSendPlayer(GameProtocol.ICE_BOMB_RELAY, NetworkManager.Get().UserUID, baseStatId);
             }
+            IceballBomb(baseStatId);
         }
 
         public void ActionFireCannonBall(Vector3 shootPos , Vector3 targetPos , float damage , float range )
         {
-            FireCannonBall(shootPos, targetPos, damage, range);
-            
             if (InGameManager.IsNetwork && isMine)
             {
                 int chDamage = (int)(damage * Global.g_networkBaseValue);
@@ -1215,12 +1213,11 @@ namespace ED
                 
                 NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange);
             }
+            FireCannonBall(shootPos, targetPos, damage, range);
         }
 
         public void ActionFireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
-        {
-            FireSpear(startPos, targetId, damage, moveSpeed);
-
+        {            
             if (InGameManager.IsNetwork && isMine)
             {
                 int chDamage = (int)(damage *  Global.g_networkBaseValue);
@@ -1228,48 +1225,49 @@ namespace ED
                 
                 NetSendPlayer(GameProtocol.FIRE_SPEAR_RELAY, NetworkManager.Get().UserUID, startPos , targetId , chDamage , chSpeed);
             }
+            FireSpear(startPos, targetId, damage, moveSpeed);
+
         }
 
         public void ActionFireManFire(int baseStatId)
         {
-            FiremanFire(baseStatId);
             if (InGameManager.IsNetwork && isMine)
             {
                 NetSendPlayer(GameProtocol.FIRE_MAN_FIRE_RELAY, NetworkManager.Get().UserUID, baseStatId);
             }
+            FiremanFire(baseStatId);
         }
 
         public void ActionActivePoolObject(string objName , Vector3 startPos , Quaternion rotate , Vector3 scale)
         {
-            ActivationPoolObject(objName , startPos , rotate , scale);
             if (InGameManager.IsNetwork && isMine)
             {
                 NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, NetworkManager.Get().UserUID, objName , startPos , scale , rotate);
             }
+            ActivationPoolObject(objName , startPos , rotate , scale);
         }
 
         public void ActionCloacking(int bastStatId, bool isCloacking)
         {
-            Cloacking(bastStatId, isCloacking);
             if (InGameManager.IsNetwork && isMine)
             {
                 NetSendPlayer(GameProtocol.MINION_CLOACKING_RELAY, NetworkManager.Get().UserUID, bastStatId , isCloacking);
             }
+            Cloacking(bastStatId, isCloacking);
         }
 
         public void ActionFlagOfWar(int bastStatId, bool isIn, float factor)
         {
-            FlagOfWar(bastStatId , isIn , factor);
             if (InGameManager.IsNetwork && isMine)
             {
                 int convFactor = (int) (factor * Global.g_networkBaseValue);
                 NetSendPlayer(GameProtocol.MINION_FOG_OF_WAR_RELAY, NetworkManager.Get().UserUID, bastStatId ,convFactor , isIn );
             }
+            FlagOfWar(bastStatId , isIn , factor);
         }
 
         public void ActionSendMsg(int bastStatId, string msgFunc, int targetId = 1)
         {
-            MinionSendMessage(bastStatId, msgFunc, targetId);
             if (InGameManager.IsNetwork && isMine)
             {
                 if (targetId == -1)
@@ -1281,27 +1279,27 @@ namespace ED
                     NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, NetworkManager.Get().UserUID, bastStatId ,msgFunc , targetId );
                 }
             }
+            MinionSendMessage(bastStatId, msgFunc, targetId);
         }
 
         public void ActionNecroBullet(Vector3 shootPos , int targetId , float damage , float moveSpeed)
         {
-            FireNecromancerBullet(shootPos, targetId, damage, moveSpeed);
             if (InGameManager.IsNetwork && isMine)
             {
                 int convDamage = (int) (damage * Global.g_networkBaseValue);
                 int convSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
                 NetSendPlayer(GameProtocol.NECROMANCER_BULLET_RELAY, NetworkManager.Get().UserUID, shootPos , targetId ,convDamage , convSpeed );
             }
+            FireNecromancerBullet(shootPos, targetId, damage, moveSpeed);
         }
 
         public void ActionMinionTarget(int baseStatId, int targetId)
         {
-            SetMinionTarget(baseStatId , targetId);
-            
             if (InGameManager.IsNetwork && isMine)
             {
                 NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , targetId );
             }
+            SetMinionTarget(baseStatId , targetId);
         }
 
         public void ActionMinionScareCrow(bool other , int targetId, float eyeLevel)
@@ -1328,11 +1326,11 @@ namespace ED
 
         public void ActionLayzer(int baseStatId, int[] arrTarget)
         {
-            LayzerMinion(baseStatId, arrTarget);
             if (InGameManager.IsNetwork && isMine)
             {
                 NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , arrTarget );
             }
+            LayzerMinion(baseStatId, arrTarget);
         }
         #endregion
         
