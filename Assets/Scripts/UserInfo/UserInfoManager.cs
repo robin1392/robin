@@ -53,8 +53,9 @@ public class UserInfo
         _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004" );
         _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004" );
 
-        _userNickName = ObscuredPrefs.GetString("Nickname", "" );
+        FixDeckOld();
         
+        _userNickName = ObscuredPrefs.GetString("Nickname", "" );
         _userID = ObscuredPrefs.GetString("UserKey", "" );
         
         if (_slotDeck[1] == "" || _slotDeck[2] == "")
@@ -79,8 +80,29 @@ public class UserInfo
             ObscuredPrefs.SetString("UserKey", "" );
             ObscuredPrefs.Save();    
         }
+    }
+
+    public void FixDeckOld()
+    {
+        string[] deckstr =_slotDeck[0].Split('/');
+        if (int.Parse(deckstr[0]) < 1000)
+        {
+            ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004" );
+        }
         
+        deckstr =_slotDeck[1].Split('/');
+        if (int.Parse(deckstr[0]) < 1000)
+        {
+            ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004" );
+        }
         
+        deckstr =_slotDeck[2].Split('/');
+        if (int.Parse(deckstr[0]) < 1000)
+        {
+            ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004" );
+        }
+        
+        ObscuredPrefs.Save();    
     }
     
     #region set
