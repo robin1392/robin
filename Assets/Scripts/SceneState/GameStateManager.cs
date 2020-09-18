@@ -266,7 +266,7 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
         
-        NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , UserInfoManager.Get().GetActiveDeckIndex());
+        NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
     }
 
     public void CheckSendInGame()
