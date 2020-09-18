@@ -272,7 +272,10 @@ public class GameStateManager : Singleton<GameStateManager>
     public void CheckSendInGame()
     {
         if (NetworkManager.Get().GetNetInfo().myInfoGet == true && NetworkManager.Get().GetNetInfo().otherInfoGet == true)
+        {
             MoveInGameBattle();
+        }
+            
     }
     #endregion
     
@@ -280,6 +283,7 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public void MoveInGameBattle()
     {
+        WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
         ActionEvent(Global.E_STATEACTION.ACTION_INGAME);
     }
     #endregion

@@ -2021,8 +2021,8 @@ namespace ED
         
         
         
-        
-        
+        // photon remove
+        /*
         #region photon override
         
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -2055,6 +2055,7 @@ namespace ED
         }
 
         #endregion
+        
         
         #region photon send recv
         public void SendPlayer(RpcTarget target , E_PTDefine ptID , params object[] param)
@@ -2224,5 +2225,6 @@ namespace ED
             }
         }
         #endregion
+        */
     }
 }

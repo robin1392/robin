@@ -36,6 +36,8 @@ public partial class WebPacket : Singleton<WebPacket>
 
     public void SendMatchRequest(string userkey, NetCallBack cbSuccess, NetCallBackFail cbFail = null)
     {
+        netMatchStep = Global.E_MATCHSTEP.MATCH_START;
+        
         MatchRequestReq req = new MatchRequestReq();
         req.userId = userkey;
         
@@ -53,6 +55,13 @@ public partial class WebPacket : Singleton<WebPacket>
 
     public IEnumerator StartMatchStatus()
     {
+        //
+        if (netMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+        {
+            netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+            yield break;
+        }
+        
         yield return new WaitForSeconds(1.0f);
         
         MatchStatusReq req = new MatchStatusReq();

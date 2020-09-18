@@ -10,7 +10,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace ED
 {
-    public class InGameManager_Coop : InGameManager, IPunObservable
+    public class InGameManager_Coop : InGameManager //, IPunObservable
     {
         public GameObject pref_Enemy_AI;
 
@@ -29,8 +29,8 @@ namespace ED
                     GameObject obj = PhotonNetwork.Instantiate("Tower/"+pref_Player.name, startPos, Quaternion.identity, 0);
                     obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
                     playerController = obj.GetComponent<PlayerController>();
-                    //playerController.photonView.RPC("ChangeLayer", RpcTarget.All, true);
-                    playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_CHANGELAYER , true);
+                    
+                    //playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_CHANGELAYER , true);
 
                     if (PhotonNetwork.IsMasterClient)
                     {
@@ -67,15 +67,14 @@ namespace ED
                 deck = UserInfoManager.Get().GetActiveDeck();
             }
             
-            if (PhotonNetwork.IsConnected)
+            /*if (PhotonNetwork.IsConnected)
             {
-                //playerController.photonView.RPC("SetDeck", RpcTarget.All, deck);
-                playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SETDECK , deck);
+                //playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SETDECK , deck);
             }
             else
             {
                 playerController.SetDeck(deck);
-            }
+            }*/
 
             // Upgrade buttons
             UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck , arrUpgradeLevel);
@@ -84,6 +83,9 @@ namespace ED
             RefreshTimeUI(true);
         }
 
+        
+        // photon remove
+        /*
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
 
@@ -121,5 +123,6 @@ namespace ED
                 playerController.uiDiceField.RefreshField();
             }
         }
+        */
     }
 }

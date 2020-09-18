@@ -37,13 +37,24 @@ namespace ED
 
         public void Death()
         {
-            //InGameManager.Get().photonView.RPC("EndGame", RpcTarget.All);
+            
+            if (InGameManager.Get().isGamePlaying)
+            {
+                // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
+                if (InGameManager.IsNetwork == false && isMine)
+                {
+                    InGameManager.Get().EndGame(false);
+                }
+            }
+            
+            /*
             InGameManager.Get().SendBattleManager(RpcTarget.All , E_PTDefine.PT_ENDGAME);
 
             if (photonView.IsMine)
             {
                 PhotonNetwork.Destroy(photonView);
             }
+            */
         }
 
         public void RefreshHealthBar()

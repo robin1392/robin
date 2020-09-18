@@ -20,7 +20,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace ED
 {
-    public class InGameManager : SingletonPhoton<InGameManager>, IPunObservable
+    public class InGameManager : SingletonDestroy<InGameManager> //, IPunObservable
     {
         //ßpublic static InGameManager Instance;
 
@@ -1060,7 +1060,8 @@ namespace ED
 
 
 
-
+        // photon remove
+        /*
         #region rpc etc
 
         // not use
@@ -1103,7 +1104,7 @@ namespace ED
         
         
 
-
+        
         #region photon override
         public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
@@ -1175,5 +1176,6 @@ namespace ED
             }
         }
         #endregion
+        */
     }
 }

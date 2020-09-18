@@ -94,7 +94,13 @@ public partial class WebPacket : Singleton<WebPacket>
 
     private void MatchResponse(string ticketId)
     {
-        //if (ticketId.IsNullOrEmpty())
+        
+        if (netMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+        {
+            netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+            return;
+        }
+        
         if(string.IsNullOrEmpty(ticketId))
         {
             UnityUtil.Print("ticket id null");
@@ -108,21 +114,30 @@ public partial class WebPacket : Singleton<WebPacket>
 
     private void MatchStatsAck(MatchStatusAck res)
     {
-        //if (res.playerSessionId.IsNullOrEmpty())
+        // 세션아이디 받앗으면 연결됫다는거니까..
         if(string.IsNullOrEmpty(res.playerSessionId))
         {
-            //_matchStatus = EMatchStatus.Request;
+            // 취소 눌럿으면...취소해야되는데...
+            if (netMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+            {
+                netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+                return;
+            }
+            
             StartCoroutine(StartMatchStatus());
-            return;
         }
+        else
+        {
+            netMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
         
-        UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   " + res.playerSessionId, "yellow");
+            UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   " + res.playerSessionId, "yellow");
         
-        // go match -> socket
-        NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.playerSessionId);
+            // go match -> socket
+            NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.playerSessionId);
         
-        // 우선 그냥 배틀로 지정하자
-        NetworkManager.Get().ConnectServer( PLAY_TYPE.BATTLE , GameStateManager.Get().ServerConnectCallBack);
+            // 우선 그냥 배틀로 지정하자
+            NetworkManager.Get().ConnectServer( PLAY_TYPE.BATTLE , GameStateManager.Get().ServerConnectCallBack);
+        }
     }
     #endregion
     

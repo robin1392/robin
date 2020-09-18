@@ -73,6 +73,18 @@ public partial class Global
     #endregion
     
     
+    #region network match status
+
+    public enum E_MATCHSTEP
+    {
+        MATCH_NONE,
+        MATCH_START,
+        MATCH_CONNECT,
+        MATCH_CANCEL,
+    }
+    #endregion
+    
+    
     #region lang code
     public enum COUNTRYCODE
     {

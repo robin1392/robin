@@ -50,7 +50,7 @@ namespace ED
             image_Character.rectTransform.anchoredPosition = anchPos;
             image_Character.rectTransform.DOAnchorPosY(anchPos.y + 400f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
 
-            ConnentUIInfo();
+            ContentUIInfo();
         }
 
         //public void Initialize(Data_Dice pData)
@@ -68,7 +68,7 @@ namespace ED
 
         public override void Close()
         {
-            CloseDisConnectInfo();
+            CloseContectInfo();
             
             image_Character.rectTransform.DOAnchorPosY(image_Character.rectTransform.anchoredPosition.y - 400f, 0.2f).SetEase(Ease.InBack);
             image_Character.DOFade(0, 0.2f);
@@ -90,7 +90,7 @@ namespace ED
         
         #region ui info
 
-        public void ConnentUIInfo()
+        public void ContentUIInfo()
         {
             if(listInfoUI == null)
                 listInfoUI = new List<InfoUI>();
@@ -112,7 +112,7 @@ namespace ED
             }
         }
 
-        public void CloseDisConnectInfo()
+        public void CloseContectInfo()
         {
             listInfoUI.Clear();
         }

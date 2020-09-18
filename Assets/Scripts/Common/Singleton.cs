@@ -73,7 +73,7 @@ public class SingletonDestroy<T> : MonoBehaviour where T : SingletonDestroy<T>
 
     public static T Get()
     {
-        /*if (_instance == null)
+        if (_instance == null)
         {
             _instance = GameObject.FindObjectOfType(typeof(T)) as T;
             if (_instance == null)
@@ -83,7 +83,7 @@ public class SingletonDestroy<T> : MonoBehaviour where T : SingletonDestroy<T>
             }
             else
                 _instance.Init();
-        }*/
+        }
         
         return _instance;
     }
@@ -126,7 +126,7 @@ public class SingletonPhoton<T> : MonoBehaviourPunCallbacks where T : SingletonP
 
     public static T Get()
     {
-        /*if (_instance == null)
+        if (_instance == null)
         {
             _instance = GameObject.FindObjectOfType(typeof(T)) as T;
             if (_instance == null)
@@ -136,7 +136,7 @@ public class SingletonPhoton<T> : MonoBehaviourPunCallbacks where T : SingletonP
             }
             else
                 _instance.Init();
-        }*/
+        }
         
         return _instance;
     }

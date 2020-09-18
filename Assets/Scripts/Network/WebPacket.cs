@@ -12,6 +12,9 @@ public partial class WebPacket : Singleton<WebPacket>
     {
         get { return _isPacketSend; }
     }
+
+
+    public Global.E_MATCHSTEP netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
     
     
     #region unity base
@@ -20,6 +23,7 @@ public partial class WebPacket : Singleton<WebPacket>
         base.Awake();
         
         _isPacketSend = false;
+        netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
     }
 
     // Start is called before the first frame update
