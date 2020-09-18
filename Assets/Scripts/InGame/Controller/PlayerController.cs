@@ -945,7 +945,7 @@ namespace ED
             if (baseStatId == 0)
             {
                 //if (PhotonNetwork.IsConnected)
-                if( InGameManager.IsNetwork == true)
+                if( InGameManager.IsNetwork == true )
                 {
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, damage);
@@ -1610,10 +1610,11 @@ namespace ED
             {
                 case GameProtocol.HIT_DAMAGE_ACK:
                 {
+                    // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
-                    //float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
-                    //HitDamage(calDamage);
+                    float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
+                    targetPlayer.HitDamage(calDamage);
                     
                     break;
                 }
