@@ -1611,8 +1611,8 @@ namespace ED
                     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
-                    float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
-                    targetPlayer.HitDamage(calDamage);
+                    //float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
+                    //targetPlayer.HitDamage(calDamage);
                     
                     break;
                 }
