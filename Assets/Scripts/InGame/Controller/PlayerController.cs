@@ -667,7 +667,9 @@ namespace ED
         #region net dice system
         public void SetDeck(int[] deck)
         {
-            if(arrDiceDeck == null)_arrDiceDeck = new DiceInfoData[5];
+            if(arrDiceDeck == null)
+                _arrDiceDeck = new DiceInfoData[5];
+            
             for (int i = 0; i < deck.Length; i++)
             {
                 int num = deck[i];

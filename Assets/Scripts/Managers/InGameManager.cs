@@ -245,6 +245,9 @@ namespace ED
             if (IsNetwork == true)
             {
                 // my
+                for(int i = 0 ; i < NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray.Length; i++)
+                    print(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray[i]);
+                
                 playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
                 //other
                 playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
