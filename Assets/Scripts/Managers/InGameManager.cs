@@ -241,7 +241,7 @@ namespace ED
                 isAIMode = true;
             }
 
-            var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+            var deck = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
             if (UserInfoManager.Get() != null)
             {
                 deck = UserInfoManager.Get().GetActiveDeck();
