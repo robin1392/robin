@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
+  _minion: {fileID: 0}
 --- !u!1 &6247427451394031292
 GameObject:
   m_ObjectHideFlags: 0
