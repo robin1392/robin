@@ -589,24 +589,29 @@ namespace ED
 #endif
             //return Vector3.Distance(transform.position, target.transform.position) < range + 0.1f;
             
-            var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f,
-                (target.transform.position - transform.position).normalized, range, targetLayer);
-            foreach (var hit in hits)
+            if (target != null)
             {
-                if (hit.collider.GetComponentInParent<BaseStat>() == target)
+                if (Vector3.Distance(transform.position, target.transform.position) <= range)
                 {
                     return true;
                 }
                 else
                 {
-                    return Vector3.Distance(transform.position, target.transform.position) <= range;
+                    var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f,
+                        (target.transform.position - transform.position).normalized, range, targetLayer);
+
+                    bool rtn = false;
+                    foreach (var hit in hits)
+                    {
+                        if (hit.collider.GetComponentInParent<BaseStat>() == target)
+                        {
+                            rtn = true;
+                        }
+                    }
+
+                    return rtn;
                 }
             }
-
-            // if (target != null)
-            // {
-            //     return Vector3.Distance(transform.position, target.transform.position) <= range;
-            // }
 
             return false;
         }

@@ -28,7 +28,7 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null || IsTargetInnerRange() == false)
+            if (target == null)
             {
                 animator.SetTrigger(_animatorHashIdle);
                 return;

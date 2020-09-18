@@ -51,17 +51,22 @@ namespace ED
                 for (var i = 0; i < _arrDiceDeck.Length; i++)
                 {
                     var rndDiceNum = 0;
+                    List<int> keyList = InGameManager.Get().data_DiceInfo.dicData.Keys.ToList();
                     do
                     {
-                        List<int> keyList = InGameManager.Get().data_DiceInfo.dicData.Keys.ToList();
+                        var rndNum = keyList[Random.Range(0, keyList.Count)];
                         
-                        var rndNum = Random.Range(0, keyList.Count - 10);
-                        rndDiceNum = keyList[rndNum];
+
+                        //var rndNum = Random.Range(0, keyList.Count - 10);
+                        //var rndNum = DataPatchManager.Get().
+                        //rndDiceNum = keyList[rndNum];
                         //var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
-                        //rndDiceNum = InGameManager.Get().data_AllDice.listDice[rndNum].id;
                         
+                        if (InGameManager.Get().data_DiceInfo.dicData[rndNum].enableDice == false) continue;
                         
-                    } while (listDeck.Contains(rndDiceNum));
+                        rndDiceNum = InGameManager.Get().data_DiceInfo.dicData[rndNum].id;
+
+                    } while (listDeck.Contains(rndDiceNum) || rndDiceNum == 0);
 
                     listDeck.Add(rndDiceNum);
                 }

@@ -410,6 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
+  _minion: {fileID: 0}
 --- !u!1001 &374090440053673231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -450,7 +451,7 @@ PrefabInstance:
     - target: {fileID: 2635555936899996512, guid: d90d34a69fa124c009a7169a7b13b34c,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2635555936899996512, guid: d90d34a69fa124c009a7169a7b13b34c,
         type: 3}
