@@ -58,8 +58,8 @@ namespace ED
         {
             data = pData;
             ui_getted_dice.Initialize(data);
-            //text_Name.text = pData.name;
-            text_Name.text = LocalizationManager.GetLangDesc(data.id);
+            
+            text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
 
             SetUnitGrade();
@@ -106,13 +106,8 @@ namespace ED
             for (int i = 0; i < INFOCOUNT; i++)
             {
                 InfoUI info = new InfoUI();
-                
-                info.textType = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Type")
-                    .GetComponent<Text>();
-                
-                info.textValue = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Value")
-                    .GetComponent<Text>();
-                
+                info.textType = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Type").GetComponent<Text>();
+                info.textValue = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Value").GetComponent<Text>();
                 listInfoUI.Add(info);
             }
         }

@@ -49,9 +49,9 @@ public class UserInfo
     {
         _activateDeckIndex = 0;
         
-        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "0/1/2/3/4" );
-        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "0/1/2/3/4" );
-        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "0/1/2/3/4" );
+        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004" );
+        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004" );
+        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004" );
 
         _userNickName = ObscuredPrefs.GetString("Nickname", "" );
         
@@ -59,13 +59,13 @@ public class UserInfo
         
         if (_slotDeck[1] == "" || _slotDeck[2] == "")
         {
-            ObscuredPrefs.SetString("Deck2", "0/1/2/3/4" );
-            ObscuredPrefs.SetString("Deck3", "0/1/2/3/4" );
+            ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004" );
+            ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004" );
             ObscuredPrefs.Save();    
             
-            _slotDeck[0] = ObscuredPrefs.GetString("Deck", "0/1/2/3/4" );
-            _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "0/1/2/3/4" );
-            _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "0/1/2/3/4" );
+            _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004" );
+            _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004" );
+            _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004" );
         }
 
         if (_userNickName == "")

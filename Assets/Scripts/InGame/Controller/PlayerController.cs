@@ -947,9 +947,9 @@ namespace ED
                 //if (PhotonNetwork.IsConnected)
                 if( InGameManager.IsNetwork == true)
                 {
-                    //photonView.RPC("HitDamage", RpcTarget.All, damage, delay);
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, damage);
+                    //HitDamage(damage, delay);
                 }
                 else
                 {
@@ -1612,8 +1612,8 @@ namespace ED
                 {
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
-                    float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
-                    HitDamage(calDamage);
+                    //float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
+                    //HitDamage(calDamage);
                     
                     break;
                 }
@@ -1621,9 +1621,13 @@ namespace ED
                 {
                     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
 
-                    if (NetworkManager.Get().OtherUID == damagenoti.PlayerUId )
+                    float calDamage = damagenoti.Damage /  Global.g_networkBaseValue;
+                    if (NetworkManager.Get().UserUID == damagenoti.PlayerUId)
                     {
-                        float calDamage = damagenoti.Damage /  Global.g_networkBaseValue;
+                        HitDamage(calDamage);
+                    }
+                    else if (NetworkManager.Get().OtherUID == damagenoti.PlayerUId )
+                    {
                         targetPlayer.HitDamage(calDamage);
                     }
                     

@@ -14,6 +14,7 @@ public class DiceInfoData
 	public int loadType = 0;
 	public bool enableDice = false;
 	public string prefabName = "";
+	public string modelName = "";
 	public int spawnMultiply = 0;
 	public string iconName = "";
 	public string cardName = "";
@@ -76,6 +77,7 @@ public class DiceInfo
 			info.loadType = (int)JsonDataParse.GetParseData(info.loadType.GetType(), jsonData[i]["loadType"].ToString());
 			info.enableDice = (bool)JsonDataParse.GetParseData(info.enableDice.GetType(), jsonData[i]["enableDice"].ToString());
 			info.prefabName = (string)JsonDataParse.GetParseData(info.prefabName.GetType(), jsonData[i]["prefabName"].ToString());
+			info.modelName = (string)JsonDataParse.GetParseData(info.modelName.GetType(), jsonData[i]["modelName"].ToString());
 			info.spawnMultiply = (int)JsonDataParse.GetParseData(info.spawnMultiply.GetType(), jsonData[i]["spawnMultiply"].ToString());
 			info.iconName = (string)JsonDataParse.GetParseData(info.iconName.GetType(), jsonData[i]["iconName"].ToString());
 			info.cardName = (string)JsonDataParse.GetParseData(info.cardName.GetType(), jsonData[i]["cardName"].ToString());
