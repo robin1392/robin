@@ -77,18 +77,18 @@ namespace RWCoreNetwork.NetPacket
         /// </summary>
         public virtual void Update()
         {
-            try
+            if (_isActivated == false)
             {
-                if (_isActivated == false)
-                {
-                    return;
-                }
+                return;
+            }
 
-                if (PacketProcessor == null)
-                {
-                    return;
-                }
+            if (PacketProcessor == null)
+            {
+                return;
+            }
 
+            for (int i = 0; i < 60; i++)
+            {
                 Packet packet = DequeuePacket();
                 if (packet == null)
                 {
@@ -97,11 +97,6 @@ namespace RWCoreNetwork.NetPacket
 
                 PacketProcessor.Run(packet.Peer, packet.ProtocolId, packet.Data);
             }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
         }
     }
 }
