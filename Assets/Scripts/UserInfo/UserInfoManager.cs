@@ -49,38 +49,37 @@ public class UserInfo
     {
         _activateDeckIndex = 0;
         
-        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "0/1/2/3/4" );
-        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "" );
-        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "" );
+        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
+        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
 
-        _userNickName = ObscuredPrefs.GetString("Nickname", "" );
+        _userNickName = ObscuredPrefs.GetString("Nickname", "");
         
         _userID = ObscuredPrefs.GetString("UserKey", "" );
         
-        if (_slotDeck[1] == "" || _slotDeck[2] == "")
+        if (_slotDeck[0].Length < 20 || _slotDeck[1].Length < 20 || _slotDeck[2].Length < 20)
         {
-            ObscuredPrefs.SetString("Deck2", "0/1/2/3/4" );
-            ObscuredPrefs.SetString("Deck3", "0/1/2/3/4" );
-            ObscuredPrefs.Save();    
+            ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004");
+            ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
+            ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
+            ObscuredPrefs.Save();
             
-            _slotDeck[0] = ObscuredPrefs.GetString("Deck", "0/1/2/3/4" );
-            _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "" );
-            _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "" );
+            _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+            _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
+            _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
         }
 
         if (_userNickName == "")
         {
-            ObscuredPrefs.SetString("Nickname", "" );
+            ObscuredPrefs.SetString("Nickname", "");
             ObscuredPrefs.Save();
         }
 
         if (_userID == "")
         {
-            ObscuredPrefs.SetString("UserKey", "" );
+            ObscuredPrefs.SetString("UserKey", "");
             ObscuredPrefs.Save();    
         }
-        
-        
     }
     
     #region set
@@ -89,7 +88,7 @@ public class UserInfo
     {
         _userID = id;
         
-        ObscuredPrefs.SetString("UserKey", _userID );
+        ObscuredPrefs.SetString("UserKey", _userID);
         ObscuredPrefs.Save();    
     }
     
@@ -115,13 +114,13 @@ public class UserInfo
         switch (_activateDeckIndex)
         {
             case 0:
-                ObscuredPrefs.SetString("Deck", _slotDeck[_activateDeckIndex] );
+                ObscuredPrefs.SetString("Deck", _slotDeck[_activateDeckIndex]);
                 break;
             case 1:
-                ObscuredPrefs.SetString("Deck2", _slotDeck[_activateDeckIndex] );
+                ObscuredPrefs.SetString("Deck2", _slotDeck[_activateDeckIndex]);
                 break;
             case 2:
-                ObscuredPrefs.SetString("Deck3", _slotDeck[_activateDeckIndex] );
+                ObscuredPrefs.SetString("Deck3", _slotDeck[_activateDeckIndex]);
                 break;
         }
         
@@ -135,20 +134,18 @@ public class UserInfo
         switch (index)
         {
             case 0:
-                ObscuredPrefs.SetString("Deck", _slotDeck[index] );
+                ObscuredPrefs.SetString("Deck", _slotDeck[index]);
                 break;
             case 1:
-                ObscuredPrefs.SetString("Deck2", _slotDeck[index] );
+                ObscuredPrefs.SetString("Deck2", _slotDeck[index]);
                 break;
             case 2:
-                ObscuredPrefs.SetString("Deck3", _slotDeck[index] );
+                ObscuredPrefs.SetString("Deck3", _slotDeck[index]);
                 break;
         }
         
         ObscuredPrefs.Save();
     }
-    
-    
     #endregion
     
 
@@ -183,29 +180,16 @@ public class UserInfoManager : Singleton<UserInfoManager>
         InitializeUserInfo();
     }
 
-    public void Start()
-    {
-        
-    }
-
-    public void Update()
-    {
-        
-    }
-
-
     public override void OnDestroy()
     {
         DestroyUserInfo();
         
         base.OnDestroy();
     }
-
     #endregion
 
 
     #region init destroy
-
     public void InitializeUserInfo()
     {
         _userInfo = new UserInfo();
@@ -219,8 +203,6 @@ public class UserInfoManager : Singleton<UserInfoManager>
     {
         _userInfo = null;
     }
-    
-
     #endregion
 
 
