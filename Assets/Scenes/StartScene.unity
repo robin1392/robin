@@ -560,9 +560,9 @@ MonoBehaviour:
   instanceID: 0
   playType: 0
   UseLocalServer: 0
-  LocalServerAddr: 
-  LocalServerPort: 0
-  PlayerSessionId: 
+  LocalServerAddr: 127.0.0.1
+  LocalServerPort: 40001
+  PlayerSessionId: 1
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0
