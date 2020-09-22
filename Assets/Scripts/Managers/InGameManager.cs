@@ -1060,7 +1060,31 @@ namespace ED
         #endregion
 
 
+        public void ShowAIField(bool isShow)
+        {
+            if (isShow)
+            {
+                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
+                playerController.uiDiceField.RefreshField(0.5f);
+                StartCoroutine(nameof(ShowAiFieldCoroutine));
+            }
+            else
+            {
+                StopCoroutine(nameof(ShowAiFieldCoroutine));
+                playerController.uiDiceField.SetField(playerController.arrDice);
+                playerController.uiDiceField.RefreshField();
+            }
+        }
 
+        private IEnumerator ShowAiFieldCoroutine()
+        {
+            while (true)
+            {
+                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
+                playerController.uiDiceField.RefreshField(0.5f);
+                yield return null;
+            }
+        }
 
 
 

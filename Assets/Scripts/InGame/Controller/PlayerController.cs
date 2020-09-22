@@ -216,9 +216,9 @@ namespace ED
 
             
             // 
-            image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
-            text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
-            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+            //image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
+            //text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+            //text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
             
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
             
@@ -1012,7 +1012,7 @@ namespace ED
             if (InGameManager.Get().isGamePlaying)
             {
                 //SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
-                controller.ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
+                ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
                 animator.gameObject.SetActive(false);
                 
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면

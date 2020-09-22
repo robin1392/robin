@@ -16,12 +16,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     public Text textSpawnTime;
     public TextMeshProUGUI tmpWave;
 
-    public Image imageTopHPBar;
-    public Image imageBottomHPBar;
-
-    public Text text_TopHealth;
-    public Text text_BottomHealth;
-
     [Header("Canvas")] public Canvas canvas_UnitHPBar;
 
     
@@ -37,18 +31,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         base.Awake();
 
         InitializeManager();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public override void OnDestroy()
@@ -100,27 +82,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         return imageSpawnTime.fillAmount;
     }
 
-    public Image GetHealthBar(bool bottom)
-    {
-        return bottom ? imageBottomHPBar : imageTopHPBar;
-    }
-
-    public Text GetHealthText(bool bottom)
-    {
-        return bottom ? text_BottomHealth : text_TopHealth;
-    }
-
-
-    //public void SetHealth(bool bottom)
-    //{
-        //image_HealthBar = bottom ? imageBottomHPBar : imageTopHPBar;
-        //text_Health = bottom ? text_BottomHealth : text_TopHealth;
-    //}
-
-    //public void SetHealthText(float currentHp)
-    //{
-        //text_Health.text = $"{Mathf.CeilToInt(currentHp)}";
-    //}
     #endregion
 
     #region system

@@ -93,7 +93,6 @@ namespace ED
                     {
                         //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                         controller.ActionSendMsg(id, "StopAiming");
-
                         break;
                     }
                 }
@@ -108,10 +107,6 @@ namespace ED
 
                     //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                     controller.ActionSendMsg(id, "StopAiming");
-                    
-                    lr.gameObject.SetActive(false);
-                    isAttacking = false;
-
                     yield break;
                 }
 
