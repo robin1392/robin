@@ -17,8 +17,6 @@ namespace RWCoreNetwork.NetPacket
         // 큐 동기화 객체
         protected object _lockQueue;
 
-        protected int _limitCount;
-
         protected IPacketProcessor PacketProcessor { get; private set; }
 
 
@@ -26,16 +24,22 @@ namespace RWCoreNetwork.NetPacket
         {
             _isActivated = false;
             _packetQueue = new Queue<Packet>();
-            _lockQueue = new object();           
-            _limitCount = 0;
+            _lockQueue = new object();
         }
 
-        public void Init(IPacketProcessor packetProcessor, int count)
+        public void Init(IPacketProcessor packetProcessor)
         {
-            _limitCount = count;
             PacketProcessor = packetProcessor;
         }
 
+
+        public int Count()
+        {
+            lock (_lockQueue)
+            {
+                return _packetQueue.Count;
+            }
+        }
 
         public virtual void SetActive(bool flag)
         {
@@ -43,15 +47,11 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public virtual void EnqueuePacket(Packet packet)
+        public virtual void EnqueuePacket(Peer peer, short protocolId, byte[] msg)
         {
+            Packet packet = new Packet(peer, protocolId, msg, msg.Length);
             lock (_lockQueue)
             {
-                if (_packetQueue.Count >= _limitCount)
-                {
-                    throw new Exception("overflow receive packet queue.");
-                }
-
                 _packetQueue.Enqueue(packet);
             }
         }
@@ -87,13 +87,14 @@ namespace RWCoreNetwork.NetPacket
                 return;
             }
 
-            for (int i = 0; i < 60; i++)
+            for (int i = 0; i < 30; i++)
             {
                 Packet packet = DequeuePacket();
                 if (packet == null)
                 {
                     return;
                 }
+
 
                 PacketProcessor.Run(packet.Peer, packet.ProtocolId, packet.Data);
             }

@@ -68,6 +68,13 @@ namespace RWCoreNetwork
         {
             ReceiveEventArgs = receiveArgs;
             SendEventArgs = sendArgs;
+
+            lock (_lockSendingQueue)
+            {
+                _sendingQueue.Clear();
+            }
+
+            Console.WriteLine("[TIDX: " + Thread.CurrentThread.ManagedThreadId + " ] SetEventArgs. queue: " + _sendingQueue.Count);
         }
 
         /// <summary>
@@ -115,12 +122,11 @@ namespace RWCoreNetwork
             offset += tmpBuffer.Length;
             Array.Copy(msg, 0, buffer, offset, msg.Length);
 
-            lock(_lockSendingQueue)
+            lock (_lockSendingQueue)
             {
                 // 큐가 비어 있다면 큐에 추가하고 바로 비동기 전송 매소드를 호출한다.
                 if (_sendingQueue.Count == 0)
                 {
-                    //Console.WriteLine("[Send] - 1 thread: " + Thread.CurrentThread.ManagedThreadId);
                     _sendingQueue.Enqueue(buffer);
                     StartSend();
                     return;
@@ -128,9 +134,7 @@ namespace RWCoreNetwork
 
                 // 큐에 무언가가 들어 있다면 아직 이전 전송이 완료되지 않은 상태이므로 큐에 추가만 하고 리턴한다.
                 // 현재 수행중인 SendAsync가 완료된 이후에 큐를 검사하여 데이터가 있으면 SendAsync를 호출하여 전송해줄 것이다.
-                // Console.WriteLine("Queue is not empty. Copy and Enqueue a msg. protocol id : " + msg.protocol_id);
 
-                //Console.WriteLine("[Send] - 2 thread: " + Thread.CurrentThread.ManagedThreadId);
                 _sendingQueue.Enqueue(buffer);
             }
         }
@@ -140,8 +144,6 @@ namespace RWCoreNetwork
 		/// </summary>
         private void StartSend()
         {
-            //Console.WriteLine("StartSend thread: " + Thread.CurrentThread.ManagedThreadId);
-
             byte[] buffer;
             lock(_lockSendingQueue)
             {
@@ -170,6 +172,7 @@ namespace RWCoreNetwork
         {
             if (e.BytesTransferred <= 0 || e.SocketError != SocketError.Success)
             {
+                Console.WriteLine("[Send] - 6 thread: " + Thread.CurrentThread.ManagedThreadId + ", err: " + e.SocketError);
                 return;
             }
 

@@ -58,7 +58,7 @@ namespace RWGameProtocol
         public virtual void RocketBombRelay(Peer peer, int playerUId, int id) { }
         public virtual void IceBombRelay(Peer peer, int playerUId, int id) { }
         public virtual void MsgDestroyMagic(Peer peer, int playerUId, int baseStatId) { }
-        public virtual void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range) { }
+        public virtual void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range, int type) { }
         public virtual void FireSpearRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int moveSpeed) { }
         public virtual void FireManFireRelay(Peer peer, int playerUId, int id) { }
         public virtual void ActivatePoolObjectRelay(Peer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation) { }
@@ -71,6 +71,9 @@ namespace RWGameProtocol
         public virtual void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos) { }
         public virtual void ScarecrowRelay(Peer peer, int playerUId, int baseStatId, int eyeLevel) { }
         public virtual void LayzerTargetRelay(Peer peer, int playerUId, int id, int[] targetId) { }
+        public virtual void FireBulletRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeedk, int type) { }
+        public virtual void MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time) { }
+
 
     }
 }

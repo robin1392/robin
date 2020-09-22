@@ -6,6 +6,11 @@ namespace RWCoreNetwork
     {
         protected UserToken _userToken;
 
+        public bool IsDisconnected()
+        {
+            return _userToken == null || _userToken.NetState == NetService.ENetState.Disconnected;
+        }
+
         public void SetUserToken(UserToken userToken)
         {
             _userToken = userToken;
@@ -39,7 +44,7 @@ namespace RWCoreNetwork
 
         public void OnRemoved()
         {
-            _userToken = null;
+            //_userToken = null;
         }
     }
 }

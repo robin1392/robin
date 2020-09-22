@@ -12,6 +12,17 @@ namespace RWGameProtocol
     {
         public bool Run(Peer peer, short protocolId, byte[] data)
         {
+
+            if (protocolId > (short)GameProtocol.BEGIN_PROTOCOL_RELAY && 
+                protocolId < (short)GameProtocol.END_PROTOCOL_RELAY)
+            {
+                if (CommonRelay == null)
+                    return false;
+                CommonRelay(peer, protocolId, data);
+                return true;
+            }
+
+
             switch ((GameProtocol)protocolId)
             {
                 case GameProtocol.JOIN_GAME_REQ:
@@ -439,6 +450,20 @@ namespace RWGameProtocol
                         if (LazerTargetRelay == null)
                             return false;
                         LazerTargetRelay(peer, MsgLazerTargetRelay.Deserialize(data));
+                    }
+                    break;
+                case GameProtocol.FIRE_BULLET_RELAY:
+                    {
+                        if (FireBulletRelay == null)
+                            return false;
+                        FireBulletRelay(peer, MsgFireBulletRelay.Deserialize(data));
+                    }
+                    break;
+                case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                    {
+                        if (MinionInvincibilityRelay == null)
+                            return false;
+                        MinionInvincibilityRelay(peer, MsgMinionInvincibilityRelay.Deserialize(data));
                     }
                     break;
                     #endregion
