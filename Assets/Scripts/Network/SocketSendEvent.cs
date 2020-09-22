@@ -61,8 +61,8 @@ public class SocketSendEvent
             }
             case GameProtocol.HIT_DAMAGE_REQ:
             {
-                float damage = (float)param[0] * Global.g_networkBaseValue;
-                _sender.HitDamageReq(peer , (int)damage);
+                float damage = (float)param[1] * Global.g_networkBaseValue;
+                _sender.HitDamageReq(peer , (int)param[0] , (int)damage);
                 break;
             }
             

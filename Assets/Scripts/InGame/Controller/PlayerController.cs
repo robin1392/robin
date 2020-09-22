@@ -1057,7 +1057,7 @@ namespace ED
                     //transform.GetChild(2).gameObject.SetActive(false);
                     
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, damage);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, damage);
                 }
                 else
                 {
