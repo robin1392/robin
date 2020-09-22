@@ -15,21 +15,38 @@ namespace ED
 
         private void Awake()
         {
+            
+            
+            /*
+            if (PhotonNetwork.IsConnected)
+            {
+                SetPosition(PhotonManager.Instance.playType != PLAY_TYPE.BATTLE || PhotonNetwork.IsMasterClient, height);
+            }
+            else
+            {
+                SetPosition(true, height);
+            }
+            */
+        }
+
+        public void Start()
+        {
             camera = GetComponent<Camera>();
 
             var split = (Screen.height / (float)Screen.width - 1.777f);
             var height = Mathf.Lerp(-17.09f, -15.77f, split / 0.388f);
 
-            if (PhotonNetwork.IsConnected)
+
+            if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
             {
-                SetPosition(PhotonManager.Instance.playType != PLAY_TYPE.BATTLE || PhotonNetwork.IsMasterClient,
-                    height);
+                SetPosition(NetworkManager.Get().playType != PLAY_TYPE.BATTLE || NetworkManager.Get().IsMaster , height );
             }
             else
             {
                 SetPosition(true, height);
             }
         }
+        
 
         private void SetPosition(bool isOrigin, float height)
         {

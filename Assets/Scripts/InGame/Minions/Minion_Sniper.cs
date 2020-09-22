@@ -33,14 +33,17 @@ namespace ED
 
         public override void Attack()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "AttackReady");
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "AttackReady");
+                controller.MinionAniTrigger(id, "AttackReady");
+                
                 StartCoroutine(AttackReadyCoroutine());
-
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(AttackReady);
@@ -67,8 +70,12 @@ namespace ED
                 yield break;
             }
             lr.gameObject.SetActive(true);
-            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
-            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "Aiming");
+            
+            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
+            controller.ActionMinionTarget(id, target.id);
+            
+            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "Aiming");
+            controller.ActionSendMsg(id, "Aiming");
             
             while (t < attackSpeed - 1.5f)
             {
@@ -79,11 +86,14 @@ namespace ED
 
                     if (target != null)
                     {
-                        controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
+                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
+                        controller.ActionMinionTarget(id, target.id);
                     }
                     else if (target == null || IsTargetInnerRange() == false)
                     {
-                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
+                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
+                        controller.ActionSendMsg(id, "StopAiming");
+
                         break;
                     }
                 }
@@ -95,7 +105,13 @@ namespace ED
                 }
                 else if (target == null || IsTargetInnerRange() == false)
                 {
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
+
+                    //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
+                    controller.ActionSendMsg(id, "StopAiming");
+                    
+                    lr.gameObject.SetActive(false);
+                    isAttacking = false;
+
                     yield break;
                 }
 
@@ -105,9 +121,11 @@ namespace ED
             
             lr.gameObject.SetActive(false);
 
-            if (target != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            //if (target != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            if (target != null && ((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false))
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
         }
 
@@ -151,15 +169,19 @@ namespace ED
         {
             if (target != null)
             {
-                if (PhotonNetwork.IsConnected && isMine)
+                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
                 {
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id,
-                        power, bulletMoveSpeed);
+                    controller.ActionFireBullet(_arrow , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                }
+                
+                /*if (PhotonNetwork.IsConnected && isMine)
+                {
+                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 }
                 else if (PhotonNetwork.IsConnected == false)
                 {
                     controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                }
+                }*/
             }
         }
 
@@ -181,6 +203,25 @@ namespace ED
                 light_Fire.enabled = true;
                 Invoke("FireLightOff", 0.15f);
             }
+
+
+            /*if (target != null)
+            {
+                //if (PhotonNetwork.IsConnected && isMine)
+                if( InGameManager.IsNetwork && isMine )
+                {
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                    controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                }
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.IsNetwork == false)
+                {
+                    controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                }
+            }
+            */
+            
+
         }
 
         private void FireLightOff()

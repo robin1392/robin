@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class UnityUtil
 {
@@ -42,6 +43,16 @@ public class UnityUtil
     }
     
     
+    #region object load
+
+    public static GameObject Instantiate(string pathFile)
+    {
+        GameObject createobj = Resources.Load<GameObject>(pathFile);
+        createobj = GameObject.Instantiate(createobj);
+
+        return createobj;
+    }
+    #endregion
     
     #region debug color
     
@@ -54,7 +65,7 @@ public class UnityUtil
     
 }
 
-
+//#define CLIPDEF
 
 public static class ClipboardExtension
 {
@@ -63,7 +74,9 @@ public static class ClipboardExtension
     /// </summary>
     public static void CopyToClipboard(this string str)
     {
+//#if CLIPDEF
         GUIUtility.systemCopyBuffer = str;
+//#endif
     }
 }
 

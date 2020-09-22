@@ -14,7 +14,8 @@ namespace ED
             if (target == null) return;
 
             base.Attack();
-            controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+            //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+            controller.MinionAniTrigger(id, "Attack");
         }
 
         public override BaseStat SetTarget()

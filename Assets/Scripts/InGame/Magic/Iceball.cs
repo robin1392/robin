@@ -37,7 +37,8 @@ namespace ED
                 target = InGameManager.Get().GetRandomPlayerUnitHighHealth(!isBottomPlayer);
                 if (target != null)
                 {
-                    controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                    //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
+                    controller.ActionSetMagicTarget(id, target.id);
                 }
             }
             var endPos = target.ts_HitPos.position;
@@ -69,21 +70,23 @@ namespace ED
             {
                 isBombed = true;
                 
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 &&
-                    isMine)
+                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                if(InGameManager.IsNetwork && isMine)
                 {
                     if (target != null)
                     {
+
                         controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
-                        controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id,
-                            sturnTime);
+                        //controller.AttackEnemyMinion(target.id, power, 0f);
+                        //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id, sturnTime);
+                        controller.ActionSturn(true , target.id , sturnTime);
                     }
 
-                    //controller.targetPlayer.photonView.RPC("HitDamageMinion", RpcTarget.Others, target.id, damage, 0f);
-                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ICEBALLBOMB, id);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ICEBALLBOMB, id);
+                    controller.ActionIceBallBomb(id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.IsNetwork == false)
                 {
                     if (target != null)
                     {
@@ -106,19 +109,21 @@ namespace ED
                 isBombed = true;
                 rb.velocity = Vector3.zero;
 
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                if(InGameManager.IsNetwork && isMine)
                 {
                     if (target != null)
                     {
                         controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
-                        //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, target.id, 3f);
-                        controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, sturnTime);
+                        //controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, sturnTime);
+                        controller.ActionSturn(true , target.id , sturnTime);
                     }
                     
-                    //controller.photonView.RPC("FireballBomb", RpcTarget.All, id);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ICEBALLBOMB , id);
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ICEBALLBOMB , id);
+                    controller.ActionIceBallBomb(id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.IsNetwork == false)
                 {
                     if (target != null)
                     {

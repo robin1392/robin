@@ -32,13 +32,15 @@ namespace ED
                 return;
             }
             
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , target.isFlying ? "Attack2" : "Attack1");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , target.isFlying ? "Attack2" : "Attack1");
+                controller.MinionAniTrigger(id, target.isFlying ? "Attack2" : "Attack1");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(target.isFlying ? "Attack2" : "Attack1");
@@ -53,7 +55,6 @@ namespace ED
             }
             
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-
             if (cols.Length == 0)
             {
                 if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
@@ -109,13 +110,29 @@ namespace ED
                 return;
             }
 
-            if (PhotonNetwork.IsConnected && isMine)
+            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET,
-            ts_ShootingPos.position, target.id, target.isFlying ? effect : power, 
-                    target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround);
+                if (target.isFlying)
+                    controller.ActionFireBullet(_spear, ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
+                else 
+                    controller.ActionFireBullet(_arrow, ts_ShootingPos2.position, target.id, power, bulletMoveSpeedByGround);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            
+            /*//if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
+            {
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET,
+                    //ts_ShootingPos.position, target.id, target.isFlying ? effect : power, 
+                    //target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround);
+
+                    if (target.isFlying)
+                        controller.ActionFireBullet(_spear, ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
+                    else 
+                        controller.ActionFireBullet(_arrow, ts_ShootingPos2.position, target.id, power, bulletMoveSpeedByGround);
+                                    
+            }
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 if (target.isFlying)
                 {
@@ -125,7 +142,8 @@ namespace ED
                 {
                     controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeedByGround);
                 }
-            }
+            }*/
+            
         }
         
         public void FireLightOn()

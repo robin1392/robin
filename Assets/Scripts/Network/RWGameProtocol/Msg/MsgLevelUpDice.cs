@@ -7,8 +7,8 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgLevelUpDiceReq : Serializer<MsgLevelUpDiceReq>
     {
-        public int ResetFieldNum;
-        public int LeveupFieldNum;
+        public short ResetFieldNum;
+        public short LeveupFieldNum;
     }
 
 
@@ -17,10 +17,10 @@ namespace RWGameProtocol.Msg
     public class MsgLevelUpDiceAck : Serializer<MsgLevelUpDiceAck>
     {
         public short ErrorCode;
-        public int ResetFieldNum;
-        public int LeveupFieldNum;
+        public short ResetFieldNum;
+        public short LeveupFieldNum;
         public int LevelupDiceId;
-        public int Level;
+        public short Level;
     }
 
 
@@ -28,9 +28,10 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgLevelUpDiceNotify : Serializer<MsgLevelUpDiceNotify>
     {
-        public int ResetFieldNum;
-        public int LeveupFieldNum;
+        public int PlayerUId;
+        public short ResetFieldNum;
+        public short LeveupFieldNum;
         public int LevelupDiceId;
-        public int Level;
+        public short Level;
     }
 }

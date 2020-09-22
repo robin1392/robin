@@ -49,12 +49,30 @@ namespace ED
 
         public void Click()
         {
-            level = InGameManager.Get().playerController.DiceUpgrade(num);
-            InGameManager.Get().playerController.AddSp(-arrPrice[level - 1]);
-            Refresh();
+            // sp 작으면 리턴
+            if (InGameManager.Get().playerController.sp < arrPrice[level])
+                return;
+            
+            if( InGameManager.IsNetwork == true )
+                InGameManager.Get().SendInGameUpgrade(pData.id , num);
+            else
+            {
+                level = InGameManager.Get().playerController.DiceUpgrade(num);
+                InGameManager.Get().playerController.AddSp(-arrPrice[level - 1]);
+                Refresh();
+            }
         }
 
-        private void Refresh()
+        public int GetDeckDiceId()
+        {
+            return pData.id;
+        }
+        public void RefreshLevel(int level)
+        {
+            this.level = level;
+        }
+
+        public void Refresh()
         {
             text_Price.text = level < 5 ? arrPrice[level].ToString() : string.Empty;
             text_Level.text = $"Lv.{(level < 5 ? (level + 1).ToString() : "MAX")}";

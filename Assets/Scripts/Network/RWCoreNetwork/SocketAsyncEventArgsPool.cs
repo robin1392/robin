@@ -9,17 +9,17 @@ namespace RWCoreNetwork
     /// </summary>   
     public class SocketAsyncEventArgsPool
     {
-        Stack<SocketAsyncEventArgs> m_pool;
-        object m_lockPool = new object();
+        Stack<SocketAsyncEventArgs> _pool;
+        object _lockPool = new object();
 
         public int Count
         {
-            get { return m_pool.Count; }
+            get { return _pool.Count; }
         }
 
         public SocketAsyncEventArgsPool(int capacity)
         {
-            m_pool = new Stack<SocketAsyncEventArgs>(capacity);
+            _pool = new Stack<SocketAsyncEventArgs>(capacity);
         }
 
         /// <summary>
@@ -32,9 +32,9 @@ namespace RWCoreNetwork
                 throw new ArgumentNullException("SocketAsyncEventArgsPool cannot be null");
             }
 
-            lock(m_lockPool)
+            lock(_lockPool)
             {
-                m_pool.Push(args);
+                _pool.Push(args);
             }
         }
 
@@ -43,9 +43,9 @@ namespace RWCoreNetwork
         /// </summary> 
         public SocketAsyncEventArgs Pop()
         {
-            lock(m_lockPool)
+            lock(_lockPool)
             {
-                return m_pool.Pop();
+                return _pool.Pop();
             }
         }
     }

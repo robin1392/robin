@@ -5,24 +5,25 @@ using UnityEngine;
 public enum LANG_ENUM 
 {
     // dice desc 0~99 - dice name
-    DICE_DESC = 100,
+    DICE_NAME = 10000,
+    DICE_DESC = 20000,
     
     //
-    UI_DESC = 1000,
-    UI_NONEVALUE1 = 1006,
-    UI_NONEVALUE2 = 1007,
+    UI_DESC = 31000,
+    UI_NONEVALUE1 = 31006,
+    UI_NONEVALUE2 = 31007,
     
     // ui type
-    UI_TYPE_MINION = 1008,
-    UI_TYPE_MAGIC = 1009,
-    UI_TYPE_INSTALL = 1010,
-    UI_TYPE_HERO = 1011,
+    UI_TYPE_MINION = 31008,
+    UI_TYPE_MAGIC = 31009,
+    UI_TYPE_INSTALL = 31010,
+    UI_TYPE_HERO = 31011,
     
     // ui grade
-    UI_GRADE_NORMAL = 1012,
-    UI_GRADE_MAGIC = 1013,
-    UI_GRADE_EPIC = 1014,
-    UI_GRADE_LEGEND = 1015,
+    UI_GRADE_NORMAL = 31012,
+    UI_GRADE_MAGIC = 31013,
+    UI_GRADE_EPIC = 31014,
+    UI_GRADE_LEGEND = 31015,
     
     
     LANGMAX,

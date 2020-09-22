@@ -15,6 +15,10 @@ public partial class Global
     public static string g_sceneInGameBattle = "InGame_Battle";
     public static string g_sceneInGameCoop = "InGame_Coop";
     
+    #region network
+
+    public static float g_networkBaseValue = 100.0f;
+    #endregion
     
     /// <summary>
     /// 게임 시스템에 필요한 변수 지정 -- 해킹에 영향받지 않는 변수

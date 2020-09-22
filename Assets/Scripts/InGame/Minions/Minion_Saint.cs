@@ -33,16 +33,21 @@ namespace ED
 
             var pos = transform.position;
             pos.y = 0.1f;
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, pref_HealArea.name, pos,
-                Quaternion.identity, Vector3.one);
+            
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, pref_HealArea.name, pos, Quaternion.identity, Vector3.one);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Heal", transform.position, Quaternion.identity, new Vector3(1.5f, 1.5f, 0.3f));
+            controller.ActionActivePoolObject(pref_HealArea.name, pos, Quaternion.identity, Vector3.one);
+            
             var cols = Physics.OverlapSphere(pos, range, friendlyLayer);
-
             if (cols.Length > 0)
             {
-                if (PhotonNetwork.IsConnected && isMine)
+                //if (PhotonNetwork.IsConnected && isMine)
+                if (InGameManager.IsNetwork && isMine)
                 {
                     base.Attack();
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+                    controller.MinionAniTrigger(id, "Skill");
+                    
                     foreach (var col in cols)
                     {
                         if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
@@ -51,7 +56,8 @@ namespace ED
                         }
                     }
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if (InGameManager.IsNetwork == false)
                 {
                     base.Attack();
                     animator.SetTrigger(_animatorHashSkill);

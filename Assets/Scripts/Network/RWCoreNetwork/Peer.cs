@@ -2,25 +2,23 @@ using System;
 
 namespace RWCoreNetwork
 {
-    public interface IPeer
+    public class Peer
     {
-        void SendPacket(short protocolId, byte[] msg);
-
-        bool ReceivePacket(short protocolId, byte[] msg);
-
-        void OnRemoved();
-
-        void Disconnect();
-    }
-
-    public class ServerPeer : IPeer
-    {
-        UserToken _userToken;
+        protected UserToken _userToken;
 
         public void SetUserToken(UserToken userToken)
         {
             _userToken = userToken;
-            _userToken.SetPeer(this);
+
+            if (_userToken != null)
+            {
+                _userToken.SetPeer(this);
+            }
+        }
+
+        public UserToken GetUserToken()
+        {
+            return _userToken;
         }
 
 
@@ -41,7 +39,7 @@ namespace RWCoreNetwork
 
         public void OnRemoved()
         {
-
+            _userToken = null;
         }
     }
 }

@@ -25,7 +25,8 @@ namespace ED
         {
             base.Initialize(destroy);
 
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.IsNetwork && isMine) ||  InGameManager.IsNetwork == false )
             {
                 Skill();
             }
@@ -34,13 +35,16 @@ namespace ED
         public override void Attack()
         {
             if (target == null) return;
-            if (PhotonNetwork.IsConnected && isMine)       
+            
+            //if (PhotonNetwork.IsConnected && isMine)       
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -97,7 +101,9 @@ namespace ED
             transform.LookAt(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back));
             
             yield return null;
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, true);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, true);
+            controller.ActionCloacking(id, true);
+            
             animator.SetFloat("MoveSpeed", 1f);
             
             //agent.SetDestination(transform.position + (isBottomPlayer ? Vector3.forward : Vector3.back) * 5f);
@@ -111,7 +117,9 @@ namespace ED
             
             //yield return new WaitForSeconds(effectCooltime);
 
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, false);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, id, false);
+            controller.ActionCloacking(id, false);
+            
             SetControllEnable(true);
         }
     }

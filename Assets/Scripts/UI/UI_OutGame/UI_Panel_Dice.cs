@@ -64,6 +64,8 @@ namespace ED
             //SafeAreaRect.anchorMin = anchorMin;
             rts_ScrollView.anchorMax = anchorMax;
             
+            if(UserInfoManager.Get() == null)
+                print("user null");
             //scrollView.OnDrag(data => { GetComponentInParent<UI_Main>().OnDrag((PointerEventData)data);});
         }
 
@@ -150,18 +152,20 @@ namespace ED
 
         public void Click_Dice_Use(int diceId)
         {
+            if (WebPacket.Get() != null && WebPacket.Get().isPacketSend == true)
+                return;
+            
             _isSelectMode = true;
             _selectedDiceId = diceId;
+            
             DeactivateSelectedObjectChild();
             tsGettedDiceParent.gameObject.SetActive(false);
             text_Getted.gameObject.SetActive(false);
             obj_Ciritical.SetActive(false);
             objSelectBlind.SetActive(true);
-            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite
-                = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(diceId).iconName);
-                //= dataAllDice.listDice.Find(data => data.id == diceId).icon;
-                
-
+            
+            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(diceId).iconName);
+            
             rts_Content.DOAnchorPosY(0, 0.1f);
         }
 
@@ -205,9 +209,16 @@ namespace ED
                 }
                 if (!isChanged) intDeck[deckNum] = _selectedDiceId;
                 
-                //ObscuredPrefs.SetString("Deck", $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
-                UserInfoManager.Get().GetUserInfo()
-                    .SetDeck(active, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                //
+                if (WebPacket.Get() != null)
+                {
+                    WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
+                }
+                else
+                {
+                    //ObscuredPrefs.SetString("Deck", $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                    UserInfoManager.Get().GetUserInfo().SetDeck(active, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                }
 
                 tsGettedDiceParent.gameObject.SetActive(true);
                 text_Getted.gameObject.SetActive(true);
@@ -217,6 +228,11 @@ namespace ED
 
                 RefreshDeck();
             }
+        }
+
+        public void CallBackDeckUpdate()
+        {
+            RefreshDeck();
         }
 
         public void HideSelectPanel()

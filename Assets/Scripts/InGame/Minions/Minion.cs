@@ -82,13 +82,15 @@ namespace ED
             _collider = GetComponentInChildren<Collider>();
         }
 
+
         private void Update()
         {
             _spawnedTime += Time.deltaTime;
             
             if (isPlayable && isPushing == false && isAttacking == false)
             {
-                if (PhotonNetwork.IsConnected && !isMine)
+                //if (PhotonNetwork.IsConnected && !isMine)
+                if(InGameManager.IsNetwork && !isMine)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
                     agent.SetDestination(networkPosition);
@@ -102,14 +104,20 @@ namespace ED
                 }
 
 
-                if (PhotonNetwork.IsConnected && !isMine) return;
+                //if (PhotonNetwork.IsConnected && !isMine) return;
+                if (InGameManager.IsNetwork && !isMine) 
+                    return;
 
-                if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) return;
+                if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) 
+                    return;
+                
                 var lTargetDir = rb.velocity;
                 lTargetDir.y = 0.0f;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
+                //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
             }
         }
+        
 
         public virtual void Initialize(DestroyCallback destroy)
         {
@@ -143,7 +151,8 @@ namespace ED
                 animator.SetFloat("AttackSpeed", 1f / attackSpeed);
             }
 
-            if (PhotonNetwork.IsConnected)
+            //if (PhotonNetwork.IsConnected)
+            if(InGameManager.IsNetwork)
             {
                 if (isMine)
                 {
@@ -205,7 +214,9 @@ namespace ED
 
                 if (currentHealth <= 0)
                 {
-                    if (PhotonNetwork.IsConnected && !isMine) return;
+                    //if (PhotonNetwork.IsConnected && !isMine)
+                    if(InGameManager.IsNetwork && !isMine)
+                        return;
 
                     currentHealth = 0;
                     controller.DeathMinion(id);
@@ -313,9 +324,11 @@ namespace ED
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
 
-            if (PhotonNetwork.IsConnected)
+            //if (PhotonNetwork.IsConnected)
+            if(InGameManager.IsNetwork)
             {
-                switch (PhotonManager.Instance.playType)
+                //switch (PhotonManager.Instance.playType)
+                switch (NetworkManager.Get().playType)
                 {
                     case PLAY_TYPE.BATTLE:
                         image_HealthBar.color = isMine ? Color.green : Color.red;
@@ -344,17 +357,9 @@ namespace ED
         public void DamageToTarget(BaseStat m, float delay = 0, float factor = 1f)
         {
             if (m == null || m.isAlive == false) return;
-            // if (PhotonNetwork.IsConnected && isMine)
-            // {
-            //     if (m.photonView == null)
-            //         controller.AttackEnemyMinion(m.id, power * factor, delay);
-            //     else
-            //         m.photonView.RPC("HitDamage", RpcTarget.All, power * factor, delay);
-            // }
-            // else if (PhotonNetwork.IsConnected == false)
-            {
+
                 controller.AttackEnemyMinionOrMagic(m.id, power * factor, delay);
-            }
+                //controller.AttackEnemyMinion(m.id, power * factor, delay);
         }
 
         public void Push(Vector3 dir, float pushPower)
@@ -455,6 +460,7 @@ namespace ED
             //var lag = Mathf.Abs((float)(PhotonNetwork.Time - sendServerTime));
             //networkPosition += rb.velocity * lag;
         }
+        
 
         public virtual void Attack()
         {

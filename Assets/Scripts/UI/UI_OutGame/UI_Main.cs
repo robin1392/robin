@@ -12,7 +12,8 @@ namespace ED
 {
     public class UI_Main : SingletonDestroy<UI_Main>
     {
-        [Header("Main UI")] public RectTransform rts_MainPages;
+        [Header("Main UI")] 
+        public RectTransform rts_MainPages;
         public RectTransform[] arrRts_MainButtons;
         private int currentPageNum = 2;
         private bool isDragging;
@@ -21,17 +22,20 @@ namespace ED
         public UI_ScrollViewEvent ui_ScrollViewEvent;
         public Button btn_PlayBattle;
         public Button btn_PlayCoop;
-        public Button btn_Cancel;
+        public Button btn_SearchCancel;
         public Image image_Progress;
         public Text text_Progress;
         public Text text_Nickname;
 
-        [Header("Nicnname")] public InputField inputfield_Nicnname;
+        public UI_SearchingPopup searchPopup;
+        [Header("Nicnname")] 
+        public InputField inputfield_Nicnname;
 
         [Space]
         public bool isAIMode;
 
-        [Header("Panals")] public UI_Panel_Dice panel_Dice;
+        [Header("Panals")] 
+        public UI_Panel_Dice panel_Dice;
 
         public override void Awake()
         {
@@ -44,12 +48,19 @@ namespace ED
         {
             DOTween.Init();
 
-            string nickname = ObscuredPrefs.GetString("Nickname");
+            string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
+            if (string.IsNullOrEmpty(nickname))
+            {
+                nickname = string.Format("RW{0}", Random.Range(1000, 9999));
+                UserInfoManager.Get().SetUserNickName(nickname);
+            }
+            
+            /*string nickname = ObscuredPrefs.GetString("Nickname");
             if (string.IsNullOrEmpty(nickname))
             {
                 nickname = string.Format("RW{0}", Random.Range(1000, 9999));
                 ObscuredPrefs.SetString("Nickname", nickname);
-            }
+            }*/
 
             inputfield_Nicnname.text = nickname;
             text_Nickname.text = nickname;
@@ -66,17 +77,31 @@ namespace ED
             StopAllCoroutines();
             if (isAIMode)
             {
+                btn_PlayBattle.interactable = false;
+                searchPopup.gameObject.SetActive(true);
+                
                 StartCoroutine(AIMode());
             }
             else
             {
-                StartCoroutine(ConnectBattle());
+                // 취소중이라면 none 상태가 될때까지 기다리자...
+                if (WebPacket.Get() != null && WebPacket.Get().netMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+                    return;
+
+                btn_PlayBattle.interactable = false;
+                searchPopup.gameObject.SetActive(true);
+                
+                ConnectBattle();
+                
+                //StartCoroutine(ConnectBattle());
             }
         }
 
         public void EditNickname(string str)
         {
-            ObscuredPrefs.SetString("Nickname", str);
+            UserInfoManager.Get().SetUserNickName(str);
+            //ObscuredPrefs.SetString("Nickname", str);
+            
             text_Nickname.text = str;
         }
         
@@ -88,6 +113,21 @@ namespace ED
             GameStateManager.Get().MoveInGameBattle();
         }
 
+
+        // send battle network
+        private void ConnectBattle()
+        {
+            if (NetworkManager.Get().UseLocalServer == true)
+            {
+                NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().PlayerSessionId);
+                NetworkManager.Get().ConnectServer(PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+                return;
+            }
+
+            WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
+        }
+        
+        /*
         private IEnumerator ConnectBattle()
         {
             if (PhotonNetwork.IsConnected == false)
@@ -100,8 +140,7 @@ namespace ED
 
             PhotonManager.Instance.JoinRoom(PLAY_TYPE.BATTLE);
 
-            while (PhotonNetwork.IsConnected && PhotonNetwork.LevelLoadingProgress <= 0 ||
-                   PhotonNetwork.LevelLoadingProgress > 0.9f)
+            while (PhotonNetwork.IsConnected && PhotonNetwork.LevelLoadingProgress <= 0 || PhotonNetwork.LevelLoadingProgress > 0.9f)
             {
                 yield return null;
             }
@@ -127,12 +166,14 @@ namespace ED
                 }
             }
         }
+        */
 
         public void Click_PlayCoop()
         {
-            StartCoroutine(ConnectCoop());
+            //StartCoroutine(ConnectCoop());
         }
 
+        /*
         private IEnumerator ConnectCoop()
         {
             if (PhotonNetwork.IsConnected == false)
@@ -159,11 +200,17 @@ namespace ED
                 yield return new WaitForEndOfFrame();
             }
         }
+        */
 
         public void Click_DisconnectButton()
         {
             StopAllCoroutines();
-            PhotonManager.Instance.Disconnect();
+            
+            if(WebPacket.Get() != null)
+                WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+            
+            btn_PlayBattle.interactable = true;
+            //PhotonManager.Instance.Disconnect();
         }
 
         #region Main UI
@@ -185,10 +232,6 @@ namespace ED
                 arrRts_MainButtons[i]
                     .BroadcastMessage(i == num ? "Up" : "Down", SendMessageOptions.DontRequireReceiver);
             }
-
-            //Vector3 pos = scrollRect.content.position; 
-            //pos.y = 0.0f;
-            //scrollRect.content.position = pos;
 
             panel_Dice.ResetYPos();
             panel_Dice.HideSelectPanel();
@@ -249,15 +292,21 @@ namespace ED
         }
         #endregion
         
-        
+        /*
         #region test
-
         public void OnClickBtn1()
         {
+            if (NetworkManager.Get().UseLocalServer == true)
+            {
+                NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().PlayerSessionId);
+                NetworkManager.Get().ConnectServer(PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+                return;
+            }
+
             //WebPacket.Get().SendUserAuth( string.Empty , null );
             WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
-        }
-        
+        }        
         #endregion
+        */
     }
 }

@@ -25,10 +25,14 @@ namespace ED
 
         public override void Attack()
         {
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if (target == null) return;
+            
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false)
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
         }
 
@@ -42,9 +46,15 @@ namespace ED
                 return;
             }
 
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if (target == null) return;
+            
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _spear, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _spear, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
+                controller.ActionFireBullet(_spear ,ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
             }
         }
         
@@ -58,9 +68,13 @@ namespace ED
                 return;
             }
 
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(_arrow ,ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
             }
         }
     }

@@ -22,13 +22,16 @@ namespace ED
         {
             if (target == null) return;
             if (_collider.enabled == false) _collider.enabled = true;
-            if (PhotonNetwork.IsConnected && isMine)
+            
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -68,8 +71,12 @@ namespace ED
             }
 
             transform.LookAt(m.transform);
+            
             yield return null;
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+            
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+            controller.MinionAniTrigger(id, "Skill");
+            
             var ts = transform;
             var startPos = ts.position;
             var targetPos = m.transform.position;
@@ -119,7 +126,8 @@ namespace ED
             _collider.enabled = true;
             var pos = transform.position;
             pos.y = 0.1f;
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
+            controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
         }
     }
 }
