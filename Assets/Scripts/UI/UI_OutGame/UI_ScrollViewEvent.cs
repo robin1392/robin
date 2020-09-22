@@ -20,7 +20,7 @@ namespace ED
         
         public UnityEngine.UI.ScrollRect scrollView;
 
-        public Vector2 _pointDownPos;
+        public Vector2 pointDownPos;
 
         public SCROLL scrollType;
 
@@ -64,7 +64,7 @@ namespace ED
         {
             base.OnPointerDown(eventData);
             //Debug.Log("PointerDown: " + eventData.currentInputModule.input.mousePosition);
-            _pointDownPos = eventData.currentInputModule.input.mousePosition;
+            pointDownPos = eventData.currentInputModule.input.mousePosition;
             BroadcastMessage("DeactivateSelectedObject", SendMessageOptions.DontRequireReceiver);
         }
         
@@ -74,8 +74,8 @@ namespace ED
             //     _pointDownPos.x, eventData.currentInputModule.input.mousePosition.y,
             //     _pointDownPos.y);
             
-            if (Mathf.Abs(eventData.currentInputModule.input.mousePosition.x - _pointDownPos.x) >
-                Mathf.Abs(eventData.currentInputModule.input.mousePosition.y - _pointDownPos.y))
+            if (Mathf.Abs(eventData.currentInputModule.input.mousePosition.x - pointDownPos.x) >
+                Mathf.Abs(eventData.currentInputModule.input.mousePosition.y - pointDownPos.y))
             {
                 _main.OnBeginDrag(eventData);
                 scrollView.enabled = false;

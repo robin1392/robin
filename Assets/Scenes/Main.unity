@@ -2827,7 +2827,7 @@ MonoBehaviour:
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2862,6 +2862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image_Blind: {fileID: 438279455}
+  fadeinTime: 1.5
 --- !u!1 &462717293
 GameObject:
   m_ObjectHideFlags: 0
@@ -10015,7 +10016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Delegates: []
   scrollView: {fileID: 1655602664}
-  _pointDownPos: {x: 0, y: 0}
+  pointDownPos: {x: 0, y: 0}
   scrollType: 0
   _main: {fileID: 0}
 --- !u!1001 &1685405983

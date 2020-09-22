@@ -9,6 +9,8 @@ namespace ED
         public Transform[] arrTs_SpawnPos;
 
         private Animator[] arrAni_Model;
+        private static readonly int Idle2 = Animator.StringToHash("Idle2");
+        private static readonly int Set1 = Animator.StringToHash("Set");
 
         private void Start()
         {
@@ -42,7 +44,7 @@ namespace ED
                     arrAni_Model[i].transform.parent = arrTs_SpawnPos[i];
                     arrAni_Model[i].transform.localPosition = Vector3.zero;
                     arrAni_Model[i].transform.localRotation = Quaternion.identity;
-                    arrAni_Model[i].SetTrigger("Set");
+                    arrAni_Model[i].SetTrigger(Set1);
                 }
 
                 if (data.moveType == 1)
@@ -61,7 +63,7 @@ namespace ED
                 var rnd = Random.Range(0, arrAni_Model.Length);
                 if (arrAni_Model != null && arrAni_Model[rnd] != null)
                 {
-                    arrAni_Model[rnd].SetTrigger("Idle2");
+                    arrAni_Model[rnd].SetTrigger(Idle2);
                 }
             }
         }

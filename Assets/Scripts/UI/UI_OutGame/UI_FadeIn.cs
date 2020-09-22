@@ -9,13 +9,17 @@ using DG.Tweening;
 public class UI_FadeIn : MonoBehaviour
 {
     public Image image_Blind;
+    public float fadeinTime = 2f;
 
     private void Start()
     {
-        image_Blind.enabled = true;
-        image_Blind.DOFade(0f, 1.5f).OnComplete(() =>
+        if (image_Blind != null)
         {
-            image_Blind.enabled = false;
-        });
+            image_Blind.enabled = true;
+            image_Blind.DOFade(0f, fadeinTime).SetEase(Ease.InCirc).OnComplete(() =>
+            {
+                image_Blind.enabled = false;
+            });
+        }
     }
 }

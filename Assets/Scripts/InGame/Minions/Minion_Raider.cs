@@ -36,7 +36,7 @@ namespace ED
             {
                 base.Attack();
                 //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
             }
             else if (PhotonNetwork.IsConnected == false)
             {
@@ -64,14 +64,19 @@ namespace ED
                 if (col.CompareTag("Player")) continue;
                 //var dis = Vector3.SqrMagnitude(col.transform.position);
                 var transform1 = transform;
-                Physics.Raycast(transform1.position + Vector3.up * 0.2f, transform1.forward, out var hit,
-                    7f, targetLayer);
+                Physics.Raycast(transform1.position + Vector3.up * 0.2f,
+                    transform1.forward,
+                    out var hit,
+                    7f,
+                    targetLayer);
 
                 if (hit.collider != null)
                 {
                     var m = hit.collider.GetComponentInParent<Minion>();
 
-                    if (!hit.collider.CompareTag("Player") && hit.distance < distance && (m != null && m.isCloacking == false))
+                    if (!hit.collider.CompareTag("Player") &&
+                        hit.distance < distance &&
+                        (m != null && m.isCloacking == false))
                     {
                         distance = hit.distance;
                         dashTarget = col;
@@ -84,7 +89,11 @@ namespace ED
             {
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(DashCoroutine(dashTarget.transform));
-                controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
+                controller.SendPlayer(RpcTarget.Others,
+                    E_PTDefine.PT_SENDMESSAGEPARAM1,
+                    id,
+                    "DashMessage",
+                    dashTarget.GetComponentInParent<BaseStat>().id);
                 Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
         }
@@ -95,13 +104,14 @@ namespace ED
             if (bs != null)
             {
                 Transform ts = bs.transform;
-                StartCoroutine(DashCoroutine(ts));
+                StartCoroutine(DashCoroutine(ts)); 
             }
         }
 
         private IEnumerator DashCoroutine(Transform dashTarget)
         {
-            PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
+            var t = PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
+            t.LookAt(target.transform.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
             controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
@@ -111,7 +121,9 @@ namespace ED
             {
                 ts.LookAt(dashTarget);
                 //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);
-                ts.position += (dashTarget.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
+                ts.position += (dashTarget.position - transform.position).normalized *
+                               (moveSpeed * 5f) *
+                               Time.deltaTime;
 
                 if (Vector3.Distance(dashTarget.position, transform.position) < range)
                     break;
