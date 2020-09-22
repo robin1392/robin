@@ -40,8 +40,10 @@ namespace ED
             ae.event_FireArrow += FireArrow;
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+            
             if (isPlayable && _spawnedTime >= _skillCastedTime + _skillCooltime)
             {
                 _skillCastedTime = _spawnedTime;

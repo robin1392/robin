@@ -122,6 +122,7 @@ MonoBehaviour:
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
+  isAttackSpeedFactorWithAnimation: 0
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}

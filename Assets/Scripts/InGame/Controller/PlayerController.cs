@@ -1016,9 +1016,9 @@ namespace ED
                 animator.gameObject.SetActive(false);
                 
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
-                if (InGameManager.IsNetwork == false && isMine)
+                if (InGameManager.IsNetwork == false)
                 {
-                    InGameManager.Get().EndGame(false);
+                    InGameManager.Get().EndGame(!isMine);
                 }
                 
                 /*if (PhotonNetwork.IsConnected)

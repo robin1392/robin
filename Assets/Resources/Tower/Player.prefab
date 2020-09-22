@@ -120,6 +120,7 @@ MonoBehaviour:
   ps_ShieldOff: {fileID: 6893542662049175148}
   pref_Guardian: {fileID: 5081294253336761964, guid: 007e05ebde8f64b2a96c1f5ab77bc495,
     type: 3}
+  _spawnCount: 1
   _sp: 200
   robotPieceCount: 0
   robotEyeTotalLevel: 0
@@ -484,6 +485,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: core_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669085579914644987, guid: 0e095450ad2a3418c923a7fa4e264250,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3669085581226930429, guid: 0e095450ad2a3418c923a7fa4e264250,
         type: 3}
