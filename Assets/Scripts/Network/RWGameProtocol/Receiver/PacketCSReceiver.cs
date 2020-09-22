@@ -12,17 +12,6 @@ namespace RWGameProtocol
     {
         public bool Run(Peer peer, short protocolId, byte[] data)
         {
-
-            if (protocolId > (short)GameProtocol.BEGIN_PROTOCOL_RELAY && 
-                protocolId < (short)GameProtocol.END_PROTOCOL_RELAY)
-            {
-                if (CommonRelay == null)
-                    return false;
-                CommonRelay(peer, protocolId, data);
-                return true;
-            }
-
-
             switch ((GameProtocol)protocolId)
             {
                 case GameProtocol.JOIN_GAME_REQ:
