@@ -1057,7 +1057,8 @@ namespace ED
                     //transform.GetChild(2).gameObject.SetActive(false);
                     
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, damage);
+                    int convDamage = (int) (damage * Global.g_networkBaseValue);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, convDamage);
                 }
                 else
                 {
@@ -1862,8 +1863,16 @@ namespace ED
                     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
-                    //float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
+                    float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
                     //targetPlayer.HitDamage(calDamage);
+                    if (NetworkManager.Get().UserUID == damageack.PlayerUId)
+                    {
+                        targetPlayer.HitDamage(calDamage);
+                    }
+                    else if (NetworkManager.Get().OtherUID == damageack.PlayerUId )
+                    {
+                        HitDamage(calDamage);
+                    }
                     
                     break;
                 }
