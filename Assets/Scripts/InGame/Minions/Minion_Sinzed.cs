@@ -27,7 +27,9 @@ namespace ED
             {
                 if (Vector3.Distance(transform.position, target.transform.position) < 2f)
                 {
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
+                    // 이건 자신이 데미지 입는것이기 때문에...
+                    controller.HitMinionDamage( false , id , 10000.0f );
                 }
             }
             
@@ -44,11 +46,13 @@ namespace ED
             InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
             destroyCallback(this);
-            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            var position = ts_HitPos.position;
+            PoolManager.instance.ActivateObject("Effect_Death", position);
             animator.gameObject.SetActive(false);
             
-            controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Poison", ts_HitPos.position,
-                Quaternion.identity, Vector3.one);
+            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Poison", ts_HitPos.position, Quaternion.identity, Vector3.one);
+            controller.ActionActivePoolObject("Effect_Poison", position, Quaternion.identity, Vector3.one);
+            
             StartCoroutine(DeathCoroutine());
         }
 

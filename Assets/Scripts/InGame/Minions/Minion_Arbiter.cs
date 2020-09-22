@@ -9,8 +9,9 @@ namespace ED
     public class Minion_Arbiter : Minion
     {
         public float bulletMoveSpeed = 6f;
+
+        //
         public GameObject pref_Bullet;
-        
         private List<Minion> listCloaking = new List<Minion>();
 
         protected override void Awake()
@@ -32,10 +33,12 @@ namespace ED
         {
             if (target == null) return;
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
         }
 
@@ -43,7 +46,8 @@ namespace ED
         {
             foreach (var minion in listCloaking)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                controller.ActionCloacking(minion.id, false);
             }
             listCloaking.Clear();
             
@@ -68,7 +72,8 @@ namespace ED
                 if (listCloaking.Contains(temp) == false && temp.GetType() != typeof(Minion_Arbiter))
                 {
                     listCloaking.Add(temp);
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, temp.id, true);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, temp.id, true);
+                    controller.ActionCloacking(temp.id, true);
                 }
             }
 
@@ -84,7 +89,8 @@ namespace ED
             foreach (var minion in removeList)
             {
                 listCloaking.Remove(minion);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
+                controller.ActionCloacking(minion.id, false);
             }
         }
         //
@@ -114,8 +120,10 @@ namespace ED
         //     }
         // }
         //
+        
         public void FireArrow()
         {
+
             if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
@@ -124,7 +132,13 @@ namespace ED
                 return;
             }
             
-            if (PhotonNetwork.IsConnected && isMine)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+            {
+                controller.ActionFireBullet(E_BulletType.ARBITER , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+            }
+           
+            /*if (PhotonNetwork.IsConnected && isMine)
             {
                 //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
                 controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.ARBITER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
@@ -132,7 +146,8 @@ namespace ED
             else if (PhotonNetwork.IsConnected == false)
             {
                 controller.FireBullet(E_BulletType.ARBITER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }
+            }*/
+            
         }
     }
 }

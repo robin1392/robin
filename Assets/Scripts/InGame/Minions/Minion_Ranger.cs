@@ -30,11 +30,15 @@ namespace ED
         public override void Attack()
         {
             base.Attack();
-            if (PhotonNetwork.IsConnected)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
+                base.Attack();
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 animator.SetTrigger(_animatorHashAttack);
             }
@@ -50,12 +54,16 @@ namespace ED
                 return;
             }
             
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
-                //controller.photonView.RPC("FireArrow", RpcTarget.All, shootingPos.position, target.id, power);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(_arrow ,ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }

@@ -34,10 +34,12 @@ namespace ED
                 return;
             }
 
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
         }
 
@@ -45,10 +47,11 @@ namespace ED
         {
             if (target != null)
             {
-                if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
                 {
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRECANNONBALL, E_CannonType.BOMBER,
-                        ts_ShootingPos.position, target.transform.position, power, 2f);
+                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRECANNONBALL, E_CannonType.BOMBER, ts_ShootingPos.position, target.transform.position, power, 2f);
+                    controller.ActionFireCannonBall(E_CannonType.BOMBER , ts_ShootingPos.position, target.transform.position, power, 2f);
                 }
             }
         }

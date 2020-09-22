@@ -43,15 +43,19 @@ namespace ED
         {
             if (target != null)
             {
-                if (PhotonNetwork.IsConnected && isMine)
+                //if (PhotonNetwork.IsConnected && isMine)
+                if( InGameManager.IsNetwork && isMine )
                 {
                     base.Attack();
-                    //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                    //controller.photonView.RPC("FiremanFire", RpcTarget.All, id);
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
+                    
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                    controller.MinionAniTrigger(id, "Attack");
+                    
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
+                    controller.ActionFireManFire(id);
                 }
-                else if (PhotonNetwork.IsConnected == false)
+                //else if (PhotonNetwork.IsConnected == false)
+                else if(InGameManager.IsNetwork == false )
                 {
                     base.Attack();
                     animator.SetTrigger(_animatorHashAttack);
@@ -62,13 +66,11 @@ namespace ED
 
         public void Fire()
         {
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            //{
             if (isFire == false)
             {
                 StartCoroutine(FireCoroutine());
             }
-            //}
+
         }
 
         IEnumerator FireCoroutine()
@@ -95,16 +97,6 @@ namespace ED
                             var bs = col.transform.GetComponentInParent<BaseStat>();
 
                             if (bs.id == id) continue;
-
-                            // if (PhotonNetwork.IsConnected && isMine)
-                            // {
-                            //     controller.targetPlayer.photonView.RPC("HitDamageMinion", 
-                            //         RpcTarget.All, bs.id, power * 0.1f, 0f);
-                            // }
-                            // else if (PhotonNetwork.IsConnected == false)
-                            // {
-                            //     controller.targetPlayer.HitDamageMinion(bs.id, power * 0.1f, 0f);
-                            // }
 
                             DamageToTarget(bs);
                         }

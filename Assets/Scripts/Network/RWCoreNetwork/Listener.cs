@@ -58,16 +58,9 @@ namespace RWCoreNetwork
             
             _listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            try
-            {
-                _listenSocket.Bind(endpoint);
-                _listenSocket.Listen(backlog);
-                _listenThread.Start();
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+            _listenSocket.Bind(endpoint);
+            _listenSocket.Listen(backlog);
+            _listenThread.Start();
 
             return true;
         }

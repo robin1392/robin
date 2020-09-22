@@ -32,13 +32,16 @@ namespace ED
         public override void Attack()
         {
             if (target == null) return;
-            if (PhotonNetwork.IsConnected && isMine)
+            
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
-                //controller.photonView.RPC("SetMinionAnimationTrigger", RpcTarget.All, id, "Attack");
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -84,7 +87,10 @@ namespace ED
             {
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(DashCoroutine(dashTarget.transform));
-                controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
+                
+                //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
+                controller.ActionSendMsg(id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
+                
                 Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
         }
@@ -104,9 +110,11 @@ namespace ED
             PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
-            controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            var ts = transform;
             
+            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+            controller.MinionAniTrigger(id, "Skill");
+            
+            var ts = transform;
             while (dashTarget != null)
             {
                 ts.LookAt(dashTarget);
@@ -133,16 +141,17 @@ namespace ED
                 if (bs != null)
                 {
                     var targetID = bs.id;
-                    if (PhotonNetwork.IsConnected && isMine)
+                    //if (PhotonNetwork.IsConnected && isMine)
+                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
                     {
-                        //controller.targetPlayer.photonView.RPC("SturnMinion", RpcTarget.All, targetID, 1f);
-                        controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f);
-                            
+                        //controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f);
+                        controller.ActionSturn(true , targetID , 1f);
                     }
-                    else if (PhotonNetwork.IsConnected == false)
-                    {
-                        controller.targetPlayer.SturnMinion(targetID, 1f);
-                    }
+                    //else if (PhotonNetwork.IsConnected == false)
+                    //else if(InGameManager.IsNetwork == false)
+                    //{
+                        //controller.targetPlayer.SturnMinion(targetID, 1f);
+                    //}
                 }
             }
         }

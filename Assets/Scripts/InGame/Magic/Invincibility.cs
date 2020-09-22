@@ -19,7 +19,8 @@ namespace ED
                     var m = controller.GetRandomMinion();
                     if (m != null)
                     {
-                        controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, m.id, effect);
+                        //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, m.id, effect);
+                        // add nev
                     }
                 }
             }

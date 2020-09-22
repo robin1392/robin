@@ -82,7 +82,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
 
     public void SetWave(int wave)
     {
-        tmpWave.text = $"{wave}";
+        tmpWave.text = wave.ToString(); //$"{wave}";
     }
 
     public void SetTextSpawnTime(float time)

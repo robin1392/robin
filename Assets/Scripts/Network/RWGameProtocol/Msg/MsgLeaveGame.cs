@@ -7,8 +7,6 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgLeaveGameReq : Serializer<MsgLeaveGameReq>
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-        public string PlayerSessionId;
     }
 
 
@@ -24,8 +22,7 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgLeaveGameNotify : Serializer<MsgLeaveGameNotify>
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-        public string PlayerSessionId;
+        public int PlayerUId;
     }
 
 

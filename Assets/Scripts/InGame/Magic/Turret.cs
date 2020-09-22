@@ -40,7 +40,8 @@ namespace ED
             shootTime = 0;
             SetColor();
 
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
             {
                 StartCoroutine(AttackCoroutine());
             }
@@ -80,18 +81,23 @@ namespace ED
 
         public void FireArrow()
         {
-            //ps_Fire.Play();
-            //light_Fire.enabled = true;
-            //Invoke("FireLightOff", 0.15f);
-            
-            if (PhotonNetwork.IsConnected && isMine)
+            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.ARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            
+            /*//if (PhotonNetwork.IsConnected && isMine)
+            if(InGameManager.IsNetwork && isMine)
+            {
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                controller.ActionFireArrow(ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+            }
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false)
             {
                 controller.FireBullet(E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-            }
+            }*/
         }
 
         private void SetFlyingTarget()
@@ -119,9 +125,8 @@ namespace ED
                 shootTime = Time.time;
                 flyingTarget = colTarget.GetComponentInParent<Minion>();
                 
-                // StartCoroutine(LookAtTargetCoroutine());
-                // animator.SetTrigger("Attack");
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
+                controller.ActionSendMsg(id, "LookAndAniTrigger", flyingTarget.id);
             }
         }
 

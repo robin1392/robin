@@ -47,12 +47,17 @@ namespace  ED
 
         public override void Attack()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (target == null) return;
+            
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -61,6 +66,7 @@ namespace  ED
 
         public void FireArrow()
         {
+
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
@@ -69,14 +75,24 @@ namespace  ED
                 return;
             }
             
-            if (PhotonNetwork.IsConnected && isMine)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.MAGICIAN, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.MAGICIAN , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            
+            /*//if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
+            {
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.MAGICIAN, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.MAGICIAN , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+            }
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 controller.FireBullet(E_BulletType.MAGICIAN, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }
+            }*/
+            
         }
 
         public void Skill()
@@ -108,10 +124,15 @@ namespace  ED
             if (list.Count > 0)
             {
                 _skillCastedCount++;
+
                 PoolManager.instance.ActivateObject(pref_SkillEffect.name, ts_SkillParticlePosition.position);
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-                controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW,
-                    list[Random.Range(0, list.Count)], effect);
+                
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
+                controller.MinionAniTrigger(id, "Skill");
+                
+                //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW, list[Random.Range(0, list.Count)], effect);
+                controller.ActionMinionScareCrow(true, list[Random.Range(0, list.Count)], (float) eyeLevel);
+
             }
         }
     }

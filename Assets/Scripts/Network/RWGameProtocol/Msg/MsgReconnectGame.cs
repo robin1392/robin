@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSetDeckReq : Serializer<MsgSetDeckReq>
+    public class MsgReconnectGameReq : Serializer<MsgReconnectGameReq>
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
-        public int[] Deck = new int[5];
+        public int PlayerUId;
     }
 
 
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSetDeckAck : Serializer<MsgSetDeckAck>
+    public class MsgReconnectGameAck : Serializer<MsgReconnectGameAck>
     {
         public short ErrorCode;
+        public int Wave;
+        public MsgPlayerInfo PlayerInfo;
     }
-
-
 }

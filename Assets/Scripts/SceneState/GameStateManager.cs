@@ -2,12 +2,13 @@
 #define ENABLE_LOG
 #endif
 
-//#define NETWORK_ACT
+#define NETWORK_ACT
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using RWGameProtocol;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,13 +33,15 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public override void Awake()
     {
-        base.Awake();
-
-        if (this.instanceID != GameStateManager.Get().instanceID)
+        
+        if ( GameStateManager.Get() != null && this != GameStateManager.Get() )
         {
             GameObject.Destroy(this.gameObject);
             return;
         }
+        
+        base.Awake();
+
 
         Application.logMessageReceived += OnLogHandle;
 
@@ -239,6 +242,7 @@ public class GameStateManager : Singleton<GameStateManager>
 #if NETWORK_ACT
         //
         WebPacket.Get().SendUserAuth(UserInfoManager.Get().GetUserInfo().userID , UserAuthOK);
+        //WebPacket.Get().SendUserAuth("" , UserAuthOK);
 #else
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
@@ -256,10 +260,30 @@ public class GameStateManager : Singleton<GameStateManager>
     #endregion
     
     
+    #region server connect ok
+
+    public void ServerConnectCallBack()
+    {
+        UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
+        
+        NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+    }
+
+    public void CheckSendInGame()
+    {
+        if (NetworkManager.Get().GetNetInfo().myInfoGet == true && NetworkManager.Get().GetNetInfo().otherInfoGet == true)
+        {
+            MoveInGameBattle();
+        }
+            
+    }
+    #endregion
+    
     #region main scene to do
 
     public void MoveInGameBattle()
     {
+        WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
         ActionEvent(Global.E_STATEACTION.ACTION_INGAME);
     }
     #endregion

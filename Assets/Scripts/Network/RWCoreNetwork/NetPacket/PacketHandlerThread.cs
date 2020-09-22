@@ -9,36 +9,57 @@ namespace RWCoreNetwork.NetPacket
 	/// </summary>
     public class PacketHandlerThread : PacketHandler
     {
-        Thread m_thread;
-		AutoResetEvent m_loopEvent;
+        Thread _thread;
+		AutoResetEvent _loopEvent;
 
         public PacketHandlerThread()
         {
-            m_loopEvent = new AutoResetEvent(false);
-            m_thread = new Thread(new ThreadStart(ProcessPacket));
-            m_thread.Start();
+            _loopEvent = new AutoResetEvent(false);
+            _thread = new Thread(new ThreadStart(DoWork));
+            _thread.Start();
         }
 
-        public override void Enqueue(Packet packet)
+
+        public override void SetActive(bool flag)
         {
-            base.Enqueue(packet);
-            m_loopEvent.Set();
+            _isActivated = flag;
+
+            if (_isActivated == true)
+            {
+                _loopEvent.Set();
+            }
         }
 
-        public override void ProcessPacket()
+
+        public override void EnqueuePacket(Packet packet)
+        {
+            base.EnqueuePacket(packet);
+            _loopEvent.Set();
+        }
+
+
+        public override void Update() { }
+
+
+        public void DoWork()
         {
             Packet packet = null; 
             while(true)
             {
-                packet = Dequeue();
+                if (_isActivated == false)
+                {
+                    continue;
+                }
+
+                packet = DequeuePacket();
                 if (packet == null)
                 {
                     // 더이상 처리할 패킷이 없으면 스레드 대기.
-                    m_loopEvent.WaitOne();
+                    _loopEvent.WaitOne();
                     continue;
                 }
                 
-                PacketProcessor.DoWork(packet.Peer, packet.ProtocolId, packet.Data);
+                PacketProcessor.Run(packet.Peer, packet.ProtocolId, packet.Data);
             }
         }
     }

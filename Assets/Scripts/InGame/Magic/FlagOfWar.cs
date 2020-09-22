@@ -71,9 +71,11 @@ namespace ED
 
             foreach (var baseStatId in _listAttackSpeedUp)
             {
-                if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
                 {
-                    controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,baseStatId, false, effect);
+                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,baseStatId, false, effect);
+                    controller.ActionFlagOfWar(baseStatId, false, effect);
                 }
             }
 
@@ -86,11 +88,9 @@ namespace ED
 
         private void OnTriggerEnter(Collider collision)
         {
-            if (_isTriggerOn &&
-                ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
-                IsFriendlyLayer(collision.gameObject))
+            //if (_isTriggerOn && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) && IsFriendlyLayer(collision.gameObject))
+            if (_isTriggerOn && ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false) && IsFriendlyLayer(collision.gameObject))
             {
-                
                 var m = collision.GetComponentInParent<Minion>();
 
                 if (m == null) return;
@@ -99,9 +99,11 @@ namespace ED
                 {
                     _listAttackSpeedUp.Add(m.id);
                     
-                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
                     {
-                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, true, effect);
+                        //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, true, effect);
+                        controller.ActionFlagOfWar(m.id, true, effect);
                     }
                 }
             }
@@ -110,9 +112,8 @@ namespace ED
         private void OnTriggerExit(Collider other)
         {
             
-            if (_isTriggerOn &&
-                ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
-                IsFriendlyLayer(other.gameObject))
+            //if (_isTriggerOn && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) && IsFriendlyLayer(other.gameObject))
+            if (_isTriggerOn && ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false) && IsFriendlyLayer(other.gameObject))
             {
                 var m = other.GetComponentInParent<Minion>();
 
@@ -122,9 +123,11 @@ namespace ED
                 {
                     _listAttackSpeedUp.Remove(m.id);
                     
-                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
                     {
-                        controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, false, effect);
+                        //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, false, effect);
+                        controller.ActionFlagOfWar(m.id, false, effect);
                     }
                 }
             }

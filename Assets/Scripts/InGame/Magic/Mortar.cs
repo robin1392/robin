@@ -44,7 +44,8 @@ namespace ED
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 StartCoroutine(AttackCoroutine());
             }
@@ -115,10 +116,9 @@ namespace ED
             {
                 shootTime = Time.time;
                 Invoke("Shoot", 0.5f);
-                // StartCoroutine(LookAtTargetCoroutine());
-                // animator.SetTrigger(animatorHashShoot);
                 
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", longTarget.GetComponentInParent<BaseStat>().id);
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", longTarget.GetComponentInParent<BaseStat>().id);
+                controller.ActionSendMsg(id, "LookAndAniTrigger", longTarget.GetComponentInParent<BaseStat>().id);
             }
         }
 
@@ -152,9 +152,11 @@ namespace ED
             light_Fire.enabled = true;
             Invoke("FireLightOff", 0.15f);
             
-            if (longTarget != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            //if (longTarget != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
+            if (longTarget != null && ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false))
             {
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , E_CannonType.DEFAULT, ts_ShootingPos.position, longTarget.position, power, range);
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , E_CannonType.DEFAULT, ts_ShootingPos.position, longTarget.position, power, range);
+                controller.ActionFireCannonBall(E_CannonType.DEFAULT ,ts_ShootingPos.position, longTarget.position, power, range);
             }
         }
         

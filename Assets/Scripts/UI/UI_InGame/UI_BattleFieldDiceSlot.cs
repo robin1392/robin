@@ -156,11 +156,12 @@ namespace ED
                     dragDice.Reset();
                     ui_DiceField.RefreshField();
                         
-                    if (PhotonNetwork.IsConnected)
+                    //if (PhotonNetwork.IsConnected)
+                    if(InGameManager.IsNetwork == true)
                     {
-                        //InGameManager.Get().playerController.photonView.RPC("LevelUpDice", RpcTarget.Others, dragDice.diceFieldNum, dice.diceFieldNum, dice.data.id, dice.level);
-                        InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE ,
-                            dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.eyeLevel);
+                        //InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE , dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.eyeLevel);
+                        //InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE ,dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.level);
+                        InGameManager.Get().SendDiceLevelUp(dragDice.diceFieldNum, dice.diceFieldNum);
                     }
                     
                     ani.SetTrigger(BBoing);

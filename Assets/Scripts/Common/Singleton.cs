@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 /// <summary>
 /// 싱글톤 정의
@@ -30,7 +29,6 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
             }
             else
                 _instance.Init();
-
         }
         
         return _instance;
@@ -44,13 +42,14 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 
     protected virtual void Init()
     {
+        //print(typeof(T).Name);
         if (_instance == null)
         {
             instanceID = GetInstanceID();
             _instance = this as T;
         }
 
-        if (instanceID == 0)
+        if (instanceID <= 0)
             instanceID = GetInstanceID();
         
         DontDestroyOnLoad(base.gameObject);
@@ -84,7 +83,6 @@ public class SingletonDestroy<T> : MonoBehaviour where T : SingletonDestroy<T>
             }
             else
                 _instance.Init();
-
         }
         
         return _instance;
@@ -138,7 +136,6 @@ public class SingletonPhoton<T> : MonoBehaviourPunCallbacks where T : SingletonP
             }
             else
                 _instance.Init();
-
         }
         
         return _instance;

@@ -57,12 +57,17 @@ namespace ED
 
         public override void Attack()
         {
-            if (PhotonNetwork.IsConnected && isMine)
+            //if (target == null || _isSkillCasting) return;
+            
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
-                controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack");
             }
-            else if (PhotonNetwork.IsConnected == false)
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -82,25 +87,34 @@ namespace ED
                 SetControllEnable(true);
                 return;
             }
-
-            if (PhotonNetwork.IsConnected && isMine)
+            
+            
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.NECROMANCER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.NECROMANCER , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }
-            else if (PhotonNetwork.IsConnected == false)
+            
+            /*
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
+            {
+                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.NECROMANCER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                //controller.ActionNecroBullet(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.NECROMANCER ,ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+            }
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
             {
                 controller.FireBullet(E_BulletType.NECROMANCER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }
+            }*/
+            
+            
+            
         }
         
         public void Skill()
         {
-            // if (_spawnedTime >= _skillCastedTime + _skillCooltime)
-            // {
-            //     _skillCastedTime = _spawnedTime;
-            //     //StartCoroutine(SkillCoroutine());
-            //     controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEVOID, id, "Summon");
-            // }
+
         }
 
         public void Summon()
@@ -120,18 +134,7 @@ namespace ED
             {
                 arrPs_Spawn[i].Play();
                 
-                // if (PhotonNetwork.IsConnected && isMine)
-                // {
-                //     //controller.photonView.RPC("SpawnSkeleton", RpcTarget.All, arrSpawnPos[i].position);
-                //     controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_SPAWNSKELETON , arrSpawnPos[i].position);
-                // }
-                // else
-                // {
-                //     controller.SpawnSkeleton(arrSpawnPos[i].position);
-                // }
-                
-                var m = controller.CreateMinion(pref_Skeleton,
-                    arrSpawnPos[i].position, 1, 0);
+                var m = controller.CreateMinion(pref_Skeleton, arrSpawnPos[i].position, 1, 0);
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);

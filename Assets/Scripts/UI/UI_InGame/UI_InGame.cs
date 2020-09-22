@@ -90,6 +90,19 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
     }
 
+    public void SetDeckRefresh(int diceId , int upgradeLv)
+    {
+        for (var i = 0; i < arrUpgradeButtons.Length; i++)
+        {
+            if (arrUpgradeButtons[i].GetDeckDiceId() == diceId)
+            {
+                arrUpgradeButtons[i].RefreshLevel(upgradeLv);
+                arrUpgradeButtons[i].Refresh();
+                break;
+            }
+        }
+    }
+
     public void SetTargetDiceView(bool view)
     {
         viewTargetDiceField.SetActive(view);
@@ -117,9 +130,15 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     }
 
     public void SetNickname(string enemyNickname)
-    {
+    {   
         text_MyNickname.text = ObscuredPrefs.GetString("Nickname");
         text_EnemyNickname.text = enemyNickname;
+    }
+
+    public void SetNickName(string myName, string enemyName)
+    {
+        text_MyNickname.text = myName;
+        text_EnemyNickname.text = enemyName;
     }
     
     #endregion

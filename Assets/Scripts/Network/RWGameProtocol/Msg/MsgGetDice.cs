@@ -8,7 +8,6 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgGetDiceReq : Serializer<MsgGetDiceReq>
     {
-        public int UseSp;
     }
 
 
@@ -17,8 +16,17 @@ namespace RWGameProtocol.Msg
     public class MsgGetDiceAck : Serializer<MsgGetDiceAck>
     {
         public short ErrorCode;
-        public int DeckNum;
-        public int SlotNum;
+
+        // 주사위 아이디
+        public int DiceId;
+
+        // 슬롯 번호
+        public short SlotNum;
+
+        // 레벨
+        public short Level;
+
+        // 현재 sp
         public int CurrentSp;
     }
 
@@ -26,7 +34,16 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgGetDiceNotify : Serializer<MsgGetDiceNotify>
     {
-        public int DeckNum;
-        public int SlotNum;
+        // 플레이어 UId
+        public int PlayerUId;
+
+        // 주사위 아이디
+        public int DiceId;
+
+        // 슬롯 번호
+        public short SlotNum;
+
+        // 레벨
+        public short Level;
     }
 }

@@ -73,6 +73,13 @@ public class DataPatchManager : MonoBehaviour
 
     private void Awake()
     {
+        // 개발용으로 각 씬에 있을수도 있어서...대비용으로
+        if (DataPatchManager.Get() != null && this != DataPatchManager.Get())
+        {
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
+        
         DontDestroyOnLoad(this);
         
         if(_instance == null)
@@ -81,12 +88,6 @@ public class DataPatchManager : MonoBehaviour
         if (instanceID == 0)
             instanceID = GetInstanceID();
         
-        // 개발용으로 각 씬에 있을수도 있어서...대비용으로
-        if (this.instanceID != DataPatchManager.Get().instanceID)
-        {
-            GameObject.Destroy(this.gameObject);
-            return;
-        }
         
         // configuration
         m_configuration = Configuration.GetConfigFile();//config 파일 불러오기
