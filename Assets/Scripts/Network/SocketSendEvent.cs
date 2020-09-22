@@ -83,6 +83,12 @@ public class SocketSendEvent
                 _sender.RemoveMagicRelay(peer , (int)param[0] , (int)param[1]);
                 break;
             }
+            case GameProtocol.DESTROY_MAGIC_RELAY:
+            {
+                //MsgDestroyMagic(IPeer peer, int playerUId, int baseStatId)
+                _sender.MsgDestroyMagic(peer ,(int)param[0] , (int)param[1]  );
+                break;
+            }
             case GameProtocol.HIT_DAMAGE_MINION_RELAY:
             {
                 float damage = (float)param[2] * Global.g_networkBaseValue;
@@ -90,35 +96,13 @@ public class SocketSendEvent
                 _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , (int)damage , (int)delay);
                 break;
             }
-            case GameProtocol.HEAL_MINION_RELAY:
-            {
-                float serverHeal = (float)param[2] * Global.g_networkBaseValue;
-                _sender.HealMinionRelay(peer , (int)param[0] , (int)param[1] ,(int)serverHeal);
-                break;
-            }
-            case GameProtocol.PUSH_MINION_RELAY:
-            {
-                //PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
-                break;
-            }
+            
+            
+            
+            
             case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
             {
                 _sender.SetMinionAnimationTriggerRelay(peer, (int) param[0], (int) param[1], (string) param[2]);
-                break;
-            }
-            case GameProtocol.FIRE_ARROW_RELAY:
-            {
-                _sender.FireArrowRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] );
-                break;
-            }
-            case GameProtocol.FIRE_BALL_BOMB_RELAY:
-            {
-                _sender.FireballBombRelay(peer ,(int)param[0] , (int)param[1]);
-                break;
-            }
-            case GameProtocol.MINE_BOMB_RELAY:
-            {
-                _sender.MineBombRelay(peer , (int)param[0] , (int)param[1]);
                 break;
             }
             case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
@@ -132,16 +116,28 @@ public class SocketSendEvent
                 break;
             }
             
+            
+            
+            case GameProtocol.HEAL_MINION_RELAY:
+            {
+                float serverHeal = (float)param[2] * Global.g_networkBaseValue;
+                _sender.HealMinionRelay(peer , (int)param[0] , (int)param[1] ,(int)serverHeal);
+                break;
+            }
+            case GameProtocol.FIRE_BALL_BOMB_RELAY:
+            {
+                _sender.FireballBombRelay(peer ,(int)param[0] , (int)param[1]);
+                break;
+            }
+            case GameProtocol.MINE_BOMB_RELAY:
+            {
+                _sender.MineBombRelay(peer , (int)param[0] , (int)param[1]);
+                break;
+            }
             case GameProtocol.STURN_MINION_RELAY:
             {
                 //SturnMinionRelay(IPeer peer, int playerUId, int id, int sturnTime)
                 _sender.SturnMinionRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
-                break;
-            }
-            case GameProtocol.DESTROY_MAGIC_RELAY:
-            {
-                //MsgDestroyMagic(IPeer peer, int playerUId, int baseStatId)
-                _sender.MsgDestroyMagic(peer ,(int)param[0] , (int)param[1]  );
                 break;
             }
             case GameProtocol.ROCKET_BOMB_RELAY:
@@ -156,41 +152,10 @@ public class SocketSendEvent
                 _sender.IceBombRelay(peer  , (int)param[0] ,(int)param[1]);
                 break;
             }
-            case GameProtocol.FIRE_CANNON_BALL_RELAY:
-            {
-                //MsgFireCannonBall(IPeer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
-                
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
-                MsgVector3 chTgPos = NetworkManager.Get().VectorToMsg((Vector3) param[2]);
-                
-                _sender.MsgFireCannonBall(peer ,(int)param[0] ,chStPos , chTgPos , (int)param[3] , (int)param[4]);
-                break;
-            }
-            case GameProtocol.FIRE_SPEAR_RELAY:
-            {
-                //FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
-                
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
-                
-                _sender.FireSpearRelay(peer , (int)param[0] , chStPos , (int)param[2] , (int)param[3] , (int)param[4]);
-                break;
-            }
             case GameProtocol.FIRE_MAN_FIRE_RELAY:
             {
                 //FireManFireRelay(IPeer peer, int playerUId, int id)
                 _sender.FireManFireRelay(peer, (int)param[0] , (int)param[1]);
-                break;
-            }
-            case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
-            {
-                //ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
-                
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[2]);
-                MsgVector3 chScale = NetworkManager.Get().VectorToMsg((Vector3) param[3]);
-                MsgQuaternion chRot = NetworkManager.Get().QuaternionToMsg((Quaternion) param[4]);
-                
-                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , (string)param[1] , chStPos , chScale , chRot);
-                
                 break;
             }
             case GameProtocol.MINION_CLOACKING_RELAY:
@@ -203,35 +168,6 @@ public class SocketSendEvent
             {
                 //MinionFogOfWarRelay(IPeer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
                 _sender.MinionFogOfWarRelay(peer , (int)param[0], (int)param[1] , (int)param[2] , (bool)param[3]);
-                break;
-            }
-            case GameProtocol.SEND_MESSAGE_VOID_RELAY:
-            {
-                //SendMessageVoidRelay(IPeer peer, int playerUId, int id, string message)
-                _sender.SendMessageVoidRelay(peer , (int)param[0] , (int)param[1] , (string)param[2]);
-                break;
-            }
-            case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
-            {
-                //SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
-                _sender.SendMessageParam1Relay(peer , (int)param[0] , (int)param[1] , (int)param[3] , (string)param[2]);
-                break;
-            }
-            case GameProtocol.NECROMANCER_BULLET_RELAY:
-            {
-                //NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
-                
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
-                
-                _sender.NecromancerBulletRelay(peer , (int)param[0] , chStPos , (int)param[2] , (int)param[3] , (int)param[4]);
-                
-                break;
-            }
-            case GameProtocol.SET_MINION_TARGET_RELAY:
-            {
-                //SetMinionTargetRelay(IPeer peer, int playerUId, int id, int targetId)
-                
-                _sender.SetMinionTargetRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
                 break;
             }
             case GameProtocol.SCARECROW_RELAY:
@@ -247,6 +183,98 @@ public class SocketSendEvent
                 
                 break;
             }
+            case GameProtocol.MINION_INVINCIBILITY_RELAY:
+            {
+                //MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time)
+                break;
+            }
+            
+            
+            //
+            case GameProtocol.FIRE_BULLET_RELAY:
+            {
+                //FireBulletRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeedk, int type)
+                _sender.FireBulletRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] , (int)param[7] );
+                break;
+            }
+            case GameProtocol.FIRE_ARROW_RELAY:
+            {
+                _sender.FireArrowRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] );
+                break;
+            }
+            case GameProtocol.FIRE_SPEAR_RELAY:
+            {
+                //FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
+                
+                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
+                
+                _sender.FireSpearRelay(peer , (int)param[0] , chStPos , (int)param[2] , (int)param[3] , (int)param[4]);
+                break;
+            }
+            case GameProtocol.NECROMANCER_BULLET_RELAY:
+            {
+                //NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
+                
+                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
+                
+                _sender.NecromancerBulletRelay(peer , (int)param[0] , chStPos , (int)param[2] , (int)param[3] , (int)param[4]);
+                
+                break;
+            }
+            case GameProtocol.FIRE_CANNON_BALL_RELAY:
+            {
+                //MsgFireCannonBall(IPeer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
+                
+                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
+                MsgVector3 chTgPos = NetworkManager.Get().VectorToMsg((Vector3) param[2]);
+                
+                _sender.MsgFireCannonBall(peer ,(int)param[0] ,chStPos , chTgPos , (int)param[3] , (int)param[4] , (int)param[5]);
+                break;
+            }
+            
+            
+            
+            
+            case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+            {
+                //ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
+                
+                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[2]);
+                MsgVector3 chScale = NetworkManager.Get().VectorToMsg((Vector3) param[3]);
+                MsgQuaternion chRot = NetworkManager.Get().QuaternionToMsg((Quaternion) param[4]);
+                
+                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , (string)param[1] , chStPos , chScale , chRot);
+                
+                break;
+            }
+            case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+            {
+                //SendMessageVoidRelay(IPeer peer, int playerUId, int id, string message)
+                _sender.SendMessageVoidRelay(peer , (int)param[0] , (int)param[1] , (string)param[2]);
+                break;
+            }
+            case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+            {
+                //SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
+                _sender.SendMessageParam1Relay(peer , (int)param[0] , (int)param[1] , (int)param[3] , (string)param[2]);
+                break;
+            }
+            case GameProtocol.SET_MINION_TARGET_RELAY:
+            {
+                //SetMinionTargetRelay(IPeer peer, int playerUId, int id, int targetId)
+                
+                _sender.SetMinionTargetRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
+                break;
+            }
+            case GameProtocol.PUSH_MINION_RELAY:
+            {
+                //PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
+                break;
+            }
+            
+            
+            
+            
             case GameProtocol.MINION_STATUS_RELAY:
             {
                 //MinionStatusRelay(IPeer peer, int playerUId, byte posIndex, MsgVector3[] pos)

@@ -1584,7 +1584,8 @@ namespace ED
                 int chDamage = (int) (damage * Global.g_networkBaseValue);
                 int chSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
                 
-                NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
+                //NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
+                NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed , (int)bulletType);
             }
             FireBullet(bulletType ,startPos, targetId, damage, moveSpeed);
         }
@@ -1623,7 +1624,7 @@ namespace ED
             }
         }
         
-        public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
+        /*public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
         {
             if (InGameManager.IsNetwork && isMine)
             {
@@ -1647,9 +1648,6 @@ namespace ED
             }
             FireNecromancerBullet(shootPos, targetId, damage, moveSpeed);
         }
-        
-        
-
         public void ActionFireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
         {            
             if (InGameManager.IsNetwork && isMine)
@@ -1661,7 +1659,7 @@ namespace ED
             }
             FireSpear(startPos, targetId, damage, moveSpeed);
 
-        }
+        }*/
         
         #endregion
         
@@ -1677,7 +1675,7 @@ namespace ED
                 int chDamage = (int)(damage * Global.g_networkBaseValue);
                 int chRange = (int)(range * Global.g_networkBaseValue);
                 
-                NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange);
+                NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange , (int)type);
             }
             FireCannonBall(type ,shootPos, targetPos, damage, range);
         }
@@ -1703,8 +1701,7 @@ namespace ED
             }
         }
         
-        
-        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
+        /*public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
         {
             var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
             if (b != null)
@@ -1713,7 +1710,7 @@ namespace ED
                 b.controller = this;
                 b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
             }
-        }
+        }*/
         
         #endregion
         
@@ -2042,8 +2039,26 @@ namespace ED
                     
                     break;
                 }
-                
-                
+
+
+                case GameProtocol.FIRE_BULLET_RELAY:
+                {
+                    MsgFireBulletRelay arrrelay = (MsgFireBulletRelay) param[0];
+                    
+                    //Dir Damage MoveSpeed
+                    Vector3 sPos = NetworkManager.Get().MsgToVector(arrrelay.Dir);
+                    
+                    float calDamage = (float)arrrelay.Damage / Global.g_networkBaseValue;
+                    float calSpeed = (float)arrrelay.MoveSpeed / Global.g_networkBaseValue;
+                    E_BulletType bulletType = (E_BulletType) arrrelay.Type;
+                    
+                    if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
+                        FireBullet(bulletType , sPos , arrrelay.Id, calDamage , calSpeed);
+                    else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
+                        targetPlayer.FireBullet(bulletType , sPos , arrrelay.Id, calDamage , calSpeed);
+                    
+                    break;
+                }
                 
                 case GameProtocol.FIRE_ARROW_RELAY:
                 {
@@ -2097,11 +2112,12 @@ namespace ED
                     Vector3 targetPos = NetworkManager.Get().MsgToVector(fcannonrelay.TargetPos);
                     float chDamage = (float)fcannonrelay.Power / Global.g_networkBaseValue;
                     float chRange = (float)fcannonrelay.Range / Global.g_networkBaseValue;
+                    E_CannonType cannonType = (E_CannonType) fcannonrelay.Type;
         
                     if (NetworkManager.Get().UserUID == fcannonrelay.PlayerUId)
-                        FireCannonBall(startPos, targetPos, chDamage, chRange);
+                        FireCannonBall(cannonType , startPos, targetPos, chDamage, chRange);
                     else if (NetworkManager.Get().OtherUID == fcannonrelay.PlayerUId )
-                        targetPlayer.FireCannonBall(startPos, targetPos, chDamage, chRange);
+                        targetPlayer.FireCannonBall(cannonType ,startPos, targetPos, chDamage, chRange);
                     
                     break;
                 }
