@@ -270,6 +270,8 @@ public class SocketSendEvent
             case GameProtocol.PUSH_MINION_RELAY:
             {
                 //PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
+                
+                _sender.PushMinionRelay(peer , (int)param[0] , (int)param[1] , (int)param[2], (int)param[3], (int)param[4], (int)param[5] );
                 break;
             }
             

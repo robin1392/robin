@@ -21,7 +21,7 @@ using Random = UnityEngine.Random;
 
 
 #region photon
-using Photon.Pun;
+//using Photon.Pun;
 #endregion
 
 namespace ED
@@ -938,6 +938,7 @@ namespace ED
                     
                     // nev
                     //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_PUSHMINION, bs.id, (col.transform.position - transform.position).normalized, pp);
+                    ActionPushMinion(bs.id, (col.transform.position - transform.position).normalized, pp);
                 }
             }
         }
@@ -1050,9 +1051,10 @@ namespace ED
                 //if (PhotonNetwork.IsConnected)
                 if( InGameManager.IsNetwork == true )
                 {
-                    GetComponentInChildren<Collider>().enabled = false;
-                    transform.GetChild(1).gameObject.SetActive(false);
-                    transform.GetChild(2).gameObject.SetActive(false);
+                    //GetComponentInChildren<Collider>().enabled = false;
+                    //objCollider.GetComponent<Collider>().enabled = false;
+                    //transform.GetChild(1).gameObject.SetActive(false);
+                    //transform.GetChild(2).gameObject.SetActive(false);
                     
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, damage);
@@ -1402,6 +1404,22 @@ namespace ED
             
             SetMinionInvincibility(baseStatId, time);
         }
+
+        public void ActionPushMinion(int baseStatId, Vector3 dir, float pushPower)
+        {
+            // 상대방 미니언을 푸쉬한다..
+            if (InGameManager.IsNetwork && isMine)
+            {
+                int x = (int) (dir.x * Global.g_networkBaseValue);
+                int y = (int) (dir.y * Global.g_networkBaseValue);
+                int z = (int) (dir.z * Global.g_networkBaseValue);
+                
+                int convPush  = (int)(pushPower * Global.g_networkBaseValue);
+                
+                NetSendPlayer(GameProtocol.PUSH_MINION_RELAY, NetworkManager.Get().OtherUID, baseStatId ,x, y, z, convPush);
+            }
+            targetPlayer.PushMinion(baseStatId , dir , pushPower);
+        }
         #endregion
         
         #endregion
@@ -1536,6 +1554,7 @@ namespace ED
             listMinion.Find(m => m.id == bastStatId)?.Invincibility(time);
         }
 
+        
         #endregion
         
         
@@ -1576,6 +1595,12 @@ namespace ED
                 ts.localScale = scale;
             }
         }
+        
+        public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
+        {
+            listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
+        }
+        
         #endregion
         
         
@@ -2231,7 +2256,21 @@ namespace ED
                     
                     break;
                 }
-                
+                case GameProtocol.PUSH_MINION_RELAY:
+                {
+                    MsgPushMinionRelay pushrelay = (MsgPushMinionRelay) param[0];
+
+                    Vector3 conVecDir = NetworkManager.Get().MsgToVector(pushrelay.Dir);
+                    float convPower = (float)pushrelay.PushPower / Global.g_networkBaseValue;
+                    
+                    
+                    if (NetworkManager.Get().UserUID == pushrelay.PlayerUId)
+                        PushMinion(pushrelay.Id ,conVecDir , convPower );
+                    else if (NetworkManager.Get().OtherUID == pushrelay.PlayerUId )
+                        targetPlayer.PushMinion(pushrelay.Id ,conVecDir , convPower );
+                    
+                    break;
+                }
                 
                 
                 case GameProtocol.MINION_STATUS_RELAY:
@@ -2262,10 +2301,7 @@ namespace ED
         // Dice RPCs
         //////////////////////////////////////////////////////////////////////
 
-        public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
-        {
-            listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
-        }
+        
 
         //////////////////////////////////////////////////////////////////////
         // Unit's RPCs
