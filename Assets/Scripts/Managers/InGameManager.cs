@@ -817,8 +817,12 @@ namespace ED
 
         public void Click_SP_Upgrade_Button()
         {
-            //playerController.SP_Upgrade();
-            SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
+            if(IsNetwork)
+                SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
+            else
+            {
+                playerController.SP_Upgrade();
+            }
         }
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)
