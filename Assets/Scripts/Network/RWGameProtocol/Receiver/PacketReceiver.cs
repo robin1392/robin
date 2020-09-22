@@ -113,7 +113,10 @@ namespace RWGameProtocol
         #endregion
 
 
-        #region Relay delegate                
+        #region Relay delegate
+        public delegate void CommonRelayDelegate(Peer peer, short portocolId, byte[] msg);
+        public CommonRelayDelegate CommonRelay;
+
         public delegate void RemoveMinionDelegate(Peer peer, MsgRemoveMinionRelay msg);
         public RemoveMinionDelegate RemoveMinionRelay;
 
@@ -200,6 +203,13 @@ namespace RWGameProtocol
 
         public delegate void LazerTargetRelayDelegate(Peer peer, MsgLazerTargetRelay msg);
         public LazerTargetRelayDelegate LazerTargetRelay;
+
+        public delegate void FireBulletRelayDelegate(Peer peer, MsgFireBulletRelay msg);
+        public FireBulletRelayDelegate FireBulletRelay;
+
+        public delegate void MinionInvincibilityRelayDelegate(Peer peer, MsgMinionInvincibilityRelay msg);
+        public MinionInvincibilityRelayDelegate MinionInvincibilityRelay;
+
         #endregion
 
     }

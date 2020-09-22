@@ -248,6 +248,11 @@ namespace RWCoreNetwork.NetService
             SocketAsyncEventArgs sendArgs = _sendEventAragePool.Pop();
 
 
+            // 소켓 옵션 설정.
+            socket.LingerState = new LingerOption(true, 10);
+            socket.NoDelay = true;
+
+
             // 패킷 수신 시작
             UserToken userToken = receiveArgs.UserToken as UserToken;
             BeginReceive(socket, receiveArgs, sendArgs);
@@ -260,6 +265,7 @@ namespace RWCoreNetwork.NetService
             }
 
 
+            userToken.NetState = ENetState.Connected;
             CallClientConnectedCallback(userToken);
         }
 
@@ -271,6 +277,7 @@ namespace RWCoreNetwork.NetService
         protected virtual void CloseClientsocket(UserToken userToken)
         {
             userToken.OnRemoved();
+            userToken.NetState = ENetState.Disconnected;
 
 
             CallClientDisconnectedCallback(userToken);
@@ -279,14 +286,14 @@ namespace RWCoreNetwork.NetService
             if (_receiveEventAragePool != null)
             {
                 _receiveEventAragePool.Push(userToken.ReceiveEventArgs);
-                userToken.ReceiveEventArgs = null;
+               // userToken.ReceiveEventArgs = null;
             }
 
 
             if (_sendEventAragePool != null)
             {
                 _sendEventAragePool.Push(userToken.SendEventArgs);
-                userToken.SendEventArgs = null;
+                //userToken.SendEventArgs = null;
             }
 
 
@@ -296,7 +303,7 @@ namespace RWCoreNetwork.NetService
                 _userTokenMap.Remove(userToken.Id);
             }
             
-            userToken.Socket = null;
+           // userToken.Socket = null;
         }
 
 
@@ -321,7 +328,7 @@ namespace RWCoreNetwork.NetService
 
 
             // 패킷처리 큐에 추가한다.
-            _packetHandler.EnqueuePacket(new Packet(userToken.GetPeer(), protocolId, msg, msg.Length));
+            _packetHandler.EnqueuePacket(userToken.GetPeer(), protocolId, msg);
         }
 
 
@@ -357,6 +364,11 @@ namespace RWCoreNetwork.NetService
             {
                 ClientDisconnectedCallback(userToken);
             }
+        }
+
+        public int GetPacketQueueCount()
+        {
+            return _packetHandler.Count();
         }
     }
 }

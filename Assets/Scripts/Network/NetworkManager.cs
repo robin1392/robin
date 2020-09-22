@@ -384,6 +384,11 @@ public class NetworkManager : Singleton<NetworkManager>
         
         _packetRecv.MinionStatusRelay = _socketRecv.OnMinionStatusRelay;
         
+        
+        _packetRecv.FireBulletRelay = _socketRecv.OnFireBulletRelay;
+        _packetRecv.MinionInvincibilityRelay = _socketRecv.OnMinionInvincibilityRelay;
+            
+
         _clientSocket.Init(_packetRecv);
     }
     

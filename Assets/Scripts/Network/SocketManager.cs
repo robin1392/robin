@@ -30,10 +30,10 @@ public class SocketManager
     public void Init(IPacketProcessor recvProcessor)
     {
         PacketHandler handler = new PacketHandler();
-        handler.Init(recvProcessor, 200);
+        handler.Init(recvProcessor);
         handler.SetActive(true);
 
-        _netService = new NetClientService(handler, 1, 2048, 1000, 1000);
+        _netService = new NetClientService(handler, 1, 1024, 1000, 1000);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientConnectedCallback += OnClientDisconnected;
     }

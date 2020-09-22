@@ -94,6 +94,9 @@ namespace RWGameProtocol
         MINION_STATUS_RELAY,
         SCARECROW_RELAY,
         LAYZER_TARGET_RELAY,
+        FIRE_BULLET_RELAY,
+        MINION_INVINCIBILITY_RELAY,
+
 
         END_PROTOCOL_RELAY,
 

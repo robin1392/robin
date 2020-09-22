@@ -441,6 +441,20 @@ namespace RWGameProtocol
                         LazerTargetRelay(peer, MsgLazerTargetRelay.Deserialize(data));
                     }
                     break;
+                case GameProtocol.FIRE_BULLET_RELAY:
+                    {
+                        if (FireBulletRelay == null)
+                            return false;
+                        FireBulletRelay(peer, MsgFireBulletRelay.Deserialize(data));
+                    }
+                    break;
+                case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                    {
+                        if (MinionInvincibilityRelay == null)
+                            return false;
+                        MinionInvincibilityRelay(peer, MsgMinionInvincibilityRelay.Deserialize(data));
+                    }
+                    break;
                     #endregion
 
             }

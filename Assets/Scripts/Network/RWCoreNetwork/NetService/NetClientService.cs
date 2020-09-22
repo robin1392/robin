@@ -24,6 +24,9 @@ namespace RWCoreNetwork.NetService
             for (int i = 0; i < clientCount; i++)
             {
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.LingerState = new LingerOption(true, 10);
+                socket.NoDelay = true;
+
 
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs();
                 args.Completed += OnConnectCompleted;
@@ -62,7 +65,6 @@ namespace RWCoreNetwork.NetService
         {
             lock (_netEventQueue)
             {
-                userToken.NetState = ENetState.Connected;
                 _netEventQueue.Enqueue(userToken);
             }
         }
@@ -72,7 +74,6 @@ namespace RWCoreNetwork.NetService
         {
             lock (_netEventQueue)
             {
-                userToken.NetState = ENetState.Disconnected;
                 _netEventQueue.Enqueue(userToken);
             }
         }

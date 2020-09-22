@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace RWCoreNetwork.NetPacket
@@ -11,6 +12,7 @@ namespace RWCoreNetwork.NetPacket
     {
         Thread _thread;
 		AutoResetEvent _loopEvent;
+
 
         public PacketHandlerThread()
         {
@@ -31,14 +33,16 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public override void EnqueuePacket(Packet packet)
+        public override void EnqueuePacket(Peer peer, short protocolId, byte[] msg)
         {
-            base.EnqueuePacket(packet);
+            base.EnqueuePacket(peer, protocolId, msg);
             _loopEvent.Set();
         }
 
 
-        public override void Update() { }
+        public override void Update()
+        {
+        }
 
 
         public void DoWork()
@@ -46,11 +50,6 @@ namespace RWCoreNetwork.NetPacket
             Packet packet = null; 
             while(true)
             {
-                if (_isActivated == false)
-                {
-                    continue;
-                }
-
                 packet = DequeuePacket();
                 if (packet == null)
                 {
@@ -58,7 +57,7 @@ namespace RWCoreNetwork.NetPacket
                     _loopEvent.WaitOne();
                     continue;
                 }
-                
+
                 PacketProcessor.Run(packet.Peer, packet.ProtocolId, packet.Data);
             }
         }
