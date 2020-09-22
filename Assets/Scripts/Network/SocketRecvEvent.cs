@@ -273,7 +273,10 @@ public class SocketRecvEvent
 
     public void OnPushMinionRelay(Peer peer, MsgPushMinionRelay msg)
     {
-        UnityUtil.Print("RECV => ", "HIT_DAMAGE_MINION_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        UnityUtil.Print("RECV => ", "PUSH_MINION_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.PUSH_MINION_RELAY, msg);
         
     }
 
