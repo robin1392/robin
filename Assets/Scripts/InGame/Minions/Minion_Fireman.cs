@@ -88,7 +88,8 @@ namespace ED
                 {
                     tick += attackSpeed;
                     
-                    if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
                     {
                         var cols = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range,
                             targetLayer);

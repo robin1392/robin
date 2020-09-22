@@ -35,7 +35,8 @@ namespace ED
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             list.Clear();
             
-            if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
             {
                 StartCoroutine(AttackCoroutine());
             }

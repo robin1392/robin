@@ -50,7 +50,8 @@ namespace ED
                 //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
                 event_FireLight?.Invoke();
 
-                if (PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null || PhotonNetwork.IsConnected == false)
+                //if (PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null || PhotonNetwork.IsConnected == false)
+                if( (InGameManager.IsNetwork && _minion.isMine && _minion.target != null ) || InGameManager.IsNetwork == false )
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
                     event_FireArrow?.Invoke();
@@ -84,7 +85,8 @@ namespace ED
                 //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
                 event_FireLight?.Invoke();
 
-                if (PhotonNetwork.IsConnected && _minion.isMine || PhotonNetwork.IsConnected == false)
+                //if (PhotonNetwork.IsConnected && _minion.isMine || PhotonNetwork.IsConnected == false)
+                if( (InGameManager.IsNetwork && _minion.isMine) || InGameManager.IsNetwork == false )
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
                     event_FireSpear?.Invoke();
