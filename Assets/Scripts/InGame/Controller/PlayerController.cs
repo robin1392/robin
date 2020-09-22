@@ -21,7 +21,7 @@ using Random = UnityEngine.Random;
 
 
 #region photon
-using Photon.Pun;
+//using Photon.Pun;
 #endregion
 
 namespace ED

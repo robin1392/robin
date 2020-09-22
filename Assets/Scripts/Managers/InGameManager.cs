@@ -12,10 +12,12 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using TMPro;
 
-#region USING PHOTON
-using Photon.Pun;
-using Photon.Realtime;
+
 using CodeStage.AntiCheat.ObscuredTypes;
+
+#region USING PHOTON
+//using Photon.Pun;
+//using Photon.Realtime;
 #endregion
 
 namespace ED
@@ -798,7 +800,7 @@ namespace ED
             UI_InGamePopup.Get().SetResultText(winLose ? Global.g_inGameWin : Global.g_inGameLose);
         }
         
-        public void EndGame(PhotonMessageInfo info)
+        /*public void EndGame(PhotonMessageInfo info)
         {
             isGamePlaying = false;
             StopAllCoroutines();
@@ -808,7 +810,7 @@ namespace ED
 
             //text_Result.text = playerController.isAlive ? "승리" : "패배";
             UI_InGamePopup.Get().SetResultText(playerController.isAlive ? Global.g_inGameWin : Global.g_inGameLose);
-        }
+        }*/
 
         #endregion
 
