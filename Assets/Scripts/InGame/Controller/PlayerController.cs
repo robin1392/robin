@@ -1393,6 +1393,15 @@ namespace ED
                 NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , arrTarget );
             LayzerMinion(baseStatId, arrTarget);
         }
+
+        public void ActionInvincibility(int baseStatId, float time)
+        {
+            int convTime = (int)(time * Global.g_networkBaseValue);
+            if (InGameManager.IsNetwork && isMine)
+                NetSendPlayer(GameProtocol.MINION_INVINCIBILITY_RELAY, NetworkManager.Get().UserUID, baseStatId , convTime );
+            
+            SetMinionInvincibility(baseStatId, time);
+        }
         #endregion
         
         #endregion
@@ -1484,6 +1493,8 @@ namespace ED
                 }
             }
         }
+        
+        
 
         #endregion
 
@@ -2036,6 +2047,18 @@ namespace ED
                     else if (NetworkManager.Get().OtherUID == lazerrelay.PlayerUId )
                         targetPlayer.LayzerMinion(lazerrelay.Id, lazerrelay.TargetIdArray);
                     
+                    break;
+                }
+                case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                {
+                    MsgMinionInvincibilityRelay inrelay = (MsgMinionInvincibilityRelay) param[0];
+                    
+                    float convTime = (float)inrelay.Time / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == inrelay.PlayerUId)
+                        SetMinionInvincibility(inrelay.Id, convTime);
+                    else if (NetworkManager.Get().OtherUID == inrelay.PlayerUId )
+                        targetPlayer.SetMinionInvincibility(inrelay.Id, convTime);
                     
                     break;
                 }

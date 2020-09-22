@@ -21,6 +21,7 @@ namespace ED
                     {
                         //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, m.id, effect);
                         // add nev
+                        controller.ActionInvincibility(m.id, effect);
                     }
                 }
             }

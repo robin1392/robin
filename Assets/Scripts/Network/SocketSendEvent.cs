@@ -186,6 +186,7 @@ public class SocketSendEvent
             case GameProtocol.MINION_INVINCIBILITY_RELAY:
             {
                 //MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time)
+                _sender.MinionInvincibilityRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
                 break;
             }
             
