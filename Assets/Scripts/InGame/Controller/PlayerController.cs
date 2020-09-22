@@ -1051,9 +1051,10 @@ namespace ED
                 //if (PhotonNetwork.IsConnected)
                 if( InGameManager.IsNetwork == true )
                 {
-                    GetComponentInChildren<Collider>().enabled = false;
-                    transform.GetChild(1).gameObject.SetActive(false);
-                    transform.GetChild(2).gameObject.SetActive(false);
+                    //GetComponentInChildren<Collider>().enabled = false;
+                    //objCollider.GetComponent<Collider>().enabled = false;
+                    //transform.GetChild(1).gameObject.SetActive(false);
+                    //transform.GetChild(2).gameObject.SetActive(false);
                     
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, damage);
