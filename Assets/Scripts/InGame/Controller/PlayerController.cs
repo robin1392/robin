@@ -767,11 +767,30 @@ namespace ED
             arrDice[resetFieldNum].Reset();
             
             DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
-            // 서버에서 오는 레벨이 1부터 시작하기때문에 (클라는 0 부터 시작)1을 빼줘야된다
-            int serverLevel = level - 1;
-            if (serverLevel < 0)
-                serverLevel = 0;
-            arrDice[levelupFieldNum].Set(data, serverLevel);
+
+
+            if (InGameManager.IsNetwork == true)
+            {
+                // 서버에서 오는 레벨이 1부터 시작하기때문에 (클라는 0 부터 시작)1을 빼줘야된다
+                int serverLevel = level - 1;
+                if (serverLevel < 0)
+                    serverLevel = 0;
+                arrDice[levelupFieldNum].Set(data, serverLevel);    
+            }
+            else
+                arrDice[levelupFieldNum].Set(data, level);
+            
+
+            if (InGameManager.IsNetwork && isMine)
+            {
+                if (uiDiceField != null)
+                {
+                    uiDiceField.SetField(arrDice);
+                }
+                //
+                uiDiceField.RefreshField();    
+            }
+
         }
         
         public void InGameDiceUpgrade(int diceId , int upgradeLv)
@@ -1049,7 +1068,7 @@ namespace ED
             if (baseStatId == 0)
             {
                 //if (PhotonNetwork.IsConnected)
-                if( InGameManager.IsNetwork == true )
+                if( InGameManager.IsNetwork == true && isMine)
                 {
                     //GetComponentInChildren<Collider>().enabled = false;
                     //objCollider.GetComponent<Collider>().enabled = false;
@@ -1060,7 +1079,7 @@ namespace ED
                     int convDamage = (int) (damage * Global.g_networkBaseValue);
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, convDamage);
                 }
-                else
+                else if (InGameManager.IsNetwork == false)
                 {
                     HitDamage(damage);
                 }
@@ -1125,7 +1144,7 @@ namespace ED
             if (delay > 0) yield return new WaitForSeconds(delay);
 
             //if (PhotonNetwork.IsConnected && isMine && PhotonNetwork.CurrentRoom.PlayerCount > 1)
-            if (InGameManager.IsNetwork && isMine)
+            if (InGameManager.IsNetwork)
             {
                 //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, baseStatId, damage);
                 NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , baseStatId , damage, delay);
@@ -1867,11 +1886,11 @@ namespace ED
                     //targetPlayer.HitDamage(calDamage);
                     if (NetworkManager.Get().UserUID == damageack.PlayerUId)
                     {
-                        targetPlayer.HitDamage(calDamage);
+                        HitDamage(calDamage);
                     }
                     else if (NetworkManager.Get().OtherUID == damageack.PlayerUId )
                     {
-                        HitDamage(calDamage);
+                        targetPlayer.HitDamage(calDamage);
                     }
                     
                     break;

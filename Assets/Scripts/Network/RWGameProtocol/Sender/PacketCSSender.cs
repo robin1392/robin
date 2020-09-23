@@ -161,6 +161,7 @@ namespace RWGameProtocol
         public override void HitDamageReq(Peer peer, int playerUId, int damage)
         {
             MsgHitDamageReq msg = new MsgHitDamageReq();
+            msg.PlayerUId = playerUId;
             msg.Damage = damage;
             peer.SendPacket((short)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
         }
@@ -170,6 +171,7 @@ namespace RWGameProtocol
         {
             MsgHitDamageAck msg = new MsgHitDamageAck();
             msg.ErrorCode = (short)code;
+            msg.PlayerUId = playerUId;
             msg.Damage = damage;
             peer.SendPacket((short)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
         }
