@@ -567,7 +567,7 @@ namespace RWGameProtocol
             MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
             msg.PlayerUId = playerUId;
             msg.BaseStatId = baseStatId;
-            peer.SendPacket((short)GameProtocol.ICE_BOMB_RELAY, msg.Serialize());
+            peer.SendPacket((short)GameProtocol.DESTROY_MAGIC_RELAY, msg.Serialize());
         }
 
 
