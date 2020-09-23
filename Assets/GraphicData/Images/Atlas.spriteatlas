@@ -65,7 +65,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
     - {fileID: 102900000, guid: 484506e1f5f3b405d99003974efd1299, type: 3}
-    totalSpriteSurfaceArea: 5276928
+    totalSpriteSurfaceArea: 5368274
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -86,6 +86,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a1cdbb028fd6249069a20170cb67e18c, type: 3}
   - {fileID: 21300000, guid: 77013c02259714a5081538fdfa41b91a, type: 3}
   - {fileID: 21300000, guid: 656b9b326f584444dbc455fbba2ebfdd, type: 3}
+  - {fileID: 21300000, guid: dde1c24256686457c8ff583b9d3a371c, type: 3}
   - {fileID: 21300000, guid: ba1024521b651466f80b51c3b38c106a, type: 3}
   - {fileID: 21300000, guid: 41585f52e892540168a198e1aa513fd6, type: 3}
   - {fileID: 21300000, guid: 130d26c2454364977815fe7302ecd52b, type: 3}
@@ -119,6 +120,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 89234546d7ee34ab880c5a1d12acd4cc, type: 3}
   - {fileID: 21300000, guid: 77d270569ea274907b7b221f65575e15, type: 3}
   - {fileID: 21300000, guid: 75c972569836246178d1ad0b0dbbbd73, type: 3}
+  - {fileID: 21300000, guid: bc443096c95b6419ea77b4b8a5b70927, type: 3}
   - {fileID: 21300000, guid: 5e677a96f0eda42f88017e7e22643371, type: 3}
   - {fileID: 21300000, guid: fd853ba6841004540a7d81965fc77cf4, type: 3}
   - {fileID: 21300000, guid: 6e272cb6e305c4582b9a84d4e59fc968, type: 3}
@@ -135,6 +137,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 45dddff7ccad0494c8db4081706c2335, type: 3}
   - {fileID: 21300000, guid: 525f1618216fc4a1aafdabc70b267259, type: 3}
   - {fileID: 21300000, guid: 68b18718af7fc49ffbc91149210f6d20, type: 3}
+  - {fileID: 21300000, guid: 9882c428c9a65431c99d69ef2d0f20f7, type: 3}
   - {fileID: 21300000, guid: 07e27e283a38d44daab7eefa30f279b4, type: 3}
   - {fileID: 21300000, guid: 93f82e38bf70c40e6b105cbece3b3962, type: 3}
   - {fileID: 21300000, guid: 75784458d37d1437a8abb32828fdd611, type: 3}
@@ -146,6 +149,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e056f299a1ebb42ec962bce751727cfb, type: 3}
   - {fileID: 21300000, guid: 90a7b7a9bafbc4a77842c803599330de, type: 3}
   - {fileID: 21300000, guid: 73198ac96da1c40d788d4c72b9f0f570, type: 3}
+  - {fileID: 21300000, guid: a42064f95d89d4c4197dfa9700a61079, type: 3}
   - {fileID: 21300000, guid: 7f5dc80aca9494bdb9b0267cc7d560a7, type: 3}
   - {fileID: 21300000, guid: d3345b1aeb3524fb082d8f9600492960, type: 3}
   - {fileID: 21300000, guid: 33f2244ab7970462bac0b42b3d951db8, type: 3}
@@ -215,6 +219,7 @@ SpriteAtlas:
   - dice_RageOfTower
   - ingame_speech
   - info_type
+  - lobby_dice_background_nomal
   - lobby_dice_upgradebar1
   - info_HP
   - dice_sinzed
@@ -248,6 +253,7 @@ SpriteAtlas:
   - dice_fighterplane
   - lobby_dice_line2
   - dice_supply
+  - lobby_dice_bar
   - card_healing
   - lobby_dice_ribbon
   - dice_ninja
@@ -264,6 +270,7 @@ SpriteAtlas:
   - ingame_core_hpbar
   - ingame_timer
   - ingame_sp_bar
+  - dice_button1
   - lobby_start_ competition
   - card_sword
   - lobby_event
@@ -275,6 +282,7 @@ SpriteAtlas:
   - dice_flagofwar
   - ingame_dice_popup
   - dice_bomber
+  - dice_button2
   - card_dagger
   - dice_healing
   - dice_golem
