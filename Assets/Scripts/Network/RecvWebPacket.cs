@@ -40,6 +40,12 @@ public partial class WebPacket : Singleton<WebPacket>
         if (content.Contains("errorType") || content.Contains("errorMessage"))
         {
             UnityEngine.Debug.LogError( "WEB SERVER ERROR : >>>>>>> " + content);
+            
+            //
+            ErrorCode errorCode = ErrorCode.ErrorCode_WEBSERVER;
+            if (cbFail != null)
+                cbFail(errorCode);
+            
             return;
         }
         

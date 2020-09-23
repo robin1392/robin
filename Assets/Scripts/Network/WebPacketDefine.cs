@@ -34,6 +34,7 @@ namespace ErrorDefine
     public enum ErrorCode
     {
         ErrorCode_None,
+        ErrorCode_WEBSERVER,
         ErrorCode_MAX,
     }
 }
