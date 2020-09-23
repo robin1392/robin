@@ -1068,7 +1068,7 @@ namespace ED
             if (baseStatId == 0)
             {
                 //if (PhotonNetwork.IsConnected)
-                if( InGameManager.IsNetwork == true )
+                if( InGameManager.IsNetwork == true && isMine)
                 {
                     //GetComponentInChildren<Collider>().enabled = false;
                     //objCollider.GetComponent<Collider>().enabled = false;
@@ -1079,7 +1079,7 @@ namespace ED
                     int convDamage = (int) (damage * Global.g_networkBaseValue);
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, convDamage);
                 }
-                else
+                else if (InGameManager.IsNetwork == false)
                 {
                     HitDamage(damage);
                 }
@@ -1886,11 +1886,11 @@ namespace ED
                     //targetPlayer.HitDamage(calDamage);
                     if (NetworkManager.Get().UserUID == damageack.PlayerUId)
                     {
-                        targetPlayer.HitDamage(calDamage);
+                        HitDamage(calDamage);
                     }
                     else if (NetworkManager.Get().OtherUID == damageack.PlayerUId )
                     {
-                        HitDamage(calDamage);
+                        targetPlayer.HitDamage(calDamage);
                     }
                     
                     break;
