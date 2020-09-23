@@ -29,7 +29,6 @@ namespace ED
 
         public override void Attack()
         {
-            base.Attack();
             //if (PhotonNetwork.IsConnected && isMine)
             if( InGameManager.IsNetwork && isMine )
             {
@@ -40,6 +39,7 @@ namespace ED
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false )
             {
+                base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
             }
         }
