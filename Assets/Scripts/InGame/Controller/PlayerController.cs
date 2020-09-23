@@ -767,13 +767,21 @@ namespace ED
             arrDice[resetFieldNum].Reset();
             
             DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
-            // 서버에서 오는 레벨이 1부터 시작하기때문에 (클라는 0 부터 시작)1을 빼줘야된다
-            int serverLevel = level - 1;
-            if (serverLevel < 0)
-                serverLevel = 0;
-            arrDice[levelupFieldNum].Set(data, serverLevel);
 
-            if (isMine)
+
+            if (InGameManager.IsNetwork == true)
+            {
+                // 서버에서 오는 레벨이 1부터 시작하기때문에 (클라는 0 부터 시작)1을 빼줘야된다
+                int serverLevel = level - 1;
+                if (serverLevel < 0)
+                    serverLevel = 0;
+                arrDice[levelupFieldNum].Set(data, serverLevel);    
+            }
+            else
+                arrDice[levelupFieldNum].Set(data, level);
+            
+
+            if (InGameManager.IsNetwork && isMine)
             {
                 if (uiDiceField != null)
                 {

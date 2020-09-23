@@ -151,10 +151,10 @@ namespace ED
         {
             if (dice != null && dragDice != null && dice != dragDice && dice.id == dragDice.id && dice.eyeLevel == dragDice.eyeLevel)
             {
-                if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
+                //if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
                 {
                     dragDice.Reset();
-                    ui_DiceField.RefreshField();
+                    //ui_DiceField.RefreshField();
                         
                     //if (PhotonNetwork.IsConnected)
                     if(InGameManager.IsNetwork == true)
@@ -165,7 +165,11 @@ namespace ED
                     }
                     else
                     {
-                        
+                        if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
+                        {
+                            InGameManager.Get().playerController.LevelUpDice(dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.eyeLevel);
+                            ui_DiceField.RefreshField();
+                        }
                     }
                     
                     ani.SetTrigger(BBoing);
