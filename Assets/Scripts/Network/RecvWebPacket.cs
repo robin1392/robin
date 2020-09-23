@@ -35,6 +35,14 @@ public partial class WebPacket : Singleton<WebPacket>
 #if UNITY_EDITOR
         UnityUtil.Print("Complete Packet     :  ", content, "green");
 #endif
+
+        // 넷상에러가 아닌 웹 컨텐츠 에러는 별도로 검출해내기 위해서
+        if (content.Contains("errorType") || content.Contains("errorMessage"))
+        {
+            UnityEngine.Debug.LogError(content);
+            return;
+        }
+        
         //Nev.JSONObject jsoncontent = Nev.JSONObject.Parse(content);
         //
         PacketParse(packID, content, cbSuccess, cbFail);

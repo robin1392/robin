@@ -1125,7 +1125,7 @@ namespace ED
             if (delay > 0) yield return new WaitForSeconds(delay);
 
             //if (PhotonNetwork.IsConnected && isMine && PhotonNetwork.CurrentRoom.PlayerCount > 1)
-            if (InGameManager.IsNetwork && isMine)
+            if (InGameManager.IsNetwork)
             {
                 //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, baseStatId, damage);
                 NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , baseStatId , damage, delay);
