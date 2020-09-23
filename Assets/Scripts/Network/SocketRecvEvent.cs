@@ -120,7 +120,7 @@ public class SocketRecvEvent
     public void OnHitDamageAck(Peer peer, MsgHitDamageAck msg)
     {
         //UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
-        UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.Damage , "green");
+        UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.Damage + "   error code " + msg.ErrorCode , "green");
         
         //Global.g_networkBaseValue
         if (InGameManager.Get() != null)

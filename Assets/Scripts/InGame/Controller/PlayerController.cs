@@ -1068,7 +1068,7 @@ namespace ED
             if (baseStatId == 0)
             {
                 //if (PhotonNetwork.IsConnected)
-                if( InGameManager.IsNetwork == true )
+                if( InGameManager.IsNetwork == true && isMine)
                 {
                     //GetComponentInChildren<Collider>().enabled = false;
                     //objCollider.GetComponent<Collider>().enabled = false;
