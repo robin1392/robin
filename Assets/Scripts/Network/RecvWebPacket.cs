@@ -39,7 +39,7 @@ public partial class WebPacket : Singleton<WebPacket>
         // 넷상에러가 아닌 웹 컨텐츠 에러는 별도로 검출해내기 위해서
         if (content.Contains("errorType") || content.Contains("errorMessage"))
         {
-            UnityEngine.Debug.LogError(content);
+            UnityEngine.Debug.LogError( "WEB SERVER ERROR : >>>>>>> " + content);
             return;
         }
         
