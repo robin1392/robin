@@ -12,6 +12,7 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light_Fire;
         public LineRenderer lr;
+        private static readonly int AttackReady = Animator.StringToHash("AttackReady");
 
         protected override void Start()
         {
@@ -45,7 +46,7 @@ namespace ED
             else if(InGameManager.IsNetwork == false )
             {
                 base.Attack();
-                animator.SetTrigger("AttackReady");
+                animator.SetTrigger(AttackReady);
                 StartCoroutine(AttackReadyCoroutine());
             }
         }
@@ -90,12 +91,8 @@ namespace ED
                     }
                     else if (target == null || IsTargetInnerRange() == false)
                     {
-                        lr.gameObject.SetActive(false);
-                        isAttacking = false;
-
                         //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                         controller.ActionSendMsg(id, "StopAiming");
-
                         break;
                     }
                 }
@@ -107,11 +104,9 @@ namespace ED
                 }
                 else if (target == null || IsTargetInnerRange() == false)
                 {
+
                     //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                     controller.ActionSendMsg(id, "StopAiming");
-                    
-                    lr.gameObject.SetActive(false);
-                    isAttacking = false;
                     yield break;
                 }
 
@@ -137,8 +132,9 @@ namespace ED
         public void StopAiming()
         {
             StopAllCoroutines();
-            isAttacking = false;
+            SetControllEnable(true);
             lr.gameObject.SetActive(false);
+            animator.SetTrigger(_animatorHashIdle);
         }
         
         IEnumerator AimingCoroutine()
@@ -229,6 +225,12 @@ namespace ED
             {
                 light_Fire.enabled = false;
             }
+        }
+
+        public override void EndGameUnit()
+        {
+            base.EndGameUnit();
+            StopAiming();
         }
     }
 }

@@ -158,7 +158,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void HitDamageReq(Peer peer, int damage)
+        public override void HitDamageReq(Peer peer, int playerUId, int damage)
         {
             MsgHitDamageReq msg = new MsgHitDamageReq();
             msg.Damage = damage;
@@ -166,7 +166,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void HitDamageAck(Peer peer, GameErrorCode code, int damage)
+        public override void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage)
         {
             MsgHitDamageAck msg = new MsgHitDamageAck();
             msg.ErrorCode = (short)code;
@@ -569,7 +569,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
+        public override void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range, int type)
         {
             MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
             msg.PlayerUId = playerUId;
@@ -577,6 +577,7 @@ namespace RWGameProtocol
             msg.TargetPos = targetPos;
             msg.Power = power;
             msg.Range = range;
+            msg.Type = type;
             peer.SendPacket((short)GameProtocol.FIRE_CANNON_BALL_RELAY, msg.Serialize());
         }
 
@@ -704,6 +705,31 @@ namespace RWGameProtocol
             msg.TargetIdArray = targetId;
             peer.SendPacket((short)GameProtocol.LAYZER_TARGET_RELAY, msg.Serialize());
         }
+
+        public override void FireBulletRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeed, int type)
+        {
+            MsgFireBulletRelay msg = new MsgFireBulletRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.Dir[0] = x;
+            msg.Dir[1] = y;
+            msg.Dir[2] = z;
+            msg.Damage = damage;
+            msg.MoveSpeed = moveSpeed;
+            msg.Type = type;
+            peer.SendPacket((short)GameProtocol.FIRE_BULLET_RELAY, msg.Serialize());
+        }
+
+        public override void MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time)
+        {
+            MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();
+            msg.PlayerUId = playerUId;
+            msg.Id = id;
+            msg.Time = time;
+            peer.SendPacket((short)GameProtocol.MINION_INVINCIBILITY_RELAY, msg.Serialize());
+        }
+
+
         #endregion
     }
 }

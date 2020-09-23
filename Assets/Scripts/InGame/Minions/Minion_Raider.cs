@@ -37,8 +37,10 @@ namespace ED
             if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
+
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.MinionAniTrigger(id, "Attack");
+
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false)
@@ -61,24 +63,28 @@ namespace ED
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             var distance = float.MaxValue;
             Collider dashTarget = null;
-            Vector3 hitPoint = Vector3.zero;
             foreach (var col in cols)
             {
                 if (col.CompareTag("Player")) continue;
                 //var dis = Vector3.SqrMagnitude(col.transform.position);
                 var transform1 = transform;
-                Physics.Raycast(transform1.position + Vector3.up * 0.2f, transform1.forward, out var hit,
-                    7f, targetLayer);
+                // Physics.Raycast(transform1.position + Vector3.up * 0.2f,
+                //     transform1.forward,
+                //     out var hit,
+                //     7f,
+                //     targetLayer);
 
-                if (hit.collider != null)
+                //if (col.collider != null)
                 {
-                    var m = hit.collider.GetComponentInParent<Minion>();
+                    var m = col.GetComponentInParent<Minion>();
+                    var dis = Vector3.Distance(transform.position, col.transform.position);
 
-                    if (!hit.collider.CompareTag("Player") && hit.distance < distance && (m != null && m.isCloacking == false))
+                    if (!col.CompareTag("Player") &&
+                        dis < distance &&
+                        (m != null && m.isCloacking == false))
                     {
-                        distance = hit.distance;
+                        distance = dis; 
                         dashTarget = col;
-                        hitPoint = hit.point;
                     }
                 }
             }
@@ -87,11 +93,12 @@ namespace ED
             {
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(DashCoroutine(dashTarget.transform));
+
                 
                 //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
                 controller.ActionSendMsg(id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
                 
-                Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
+                Debug.DrawLine(transform.position + Vector3.up * 0.2f, dashTarget.transform.position + Vector3.up * 0.2f, Color.red, 2f);
             }
         }
 
@@ -101,13 +108,14 @@ namespace ED
             if (bs != null)
             {
                 Transform ts = bs.transform;
-                StartCoroutine(DashCoroutine(ts));
+                StartCoroutine(DashCoroutine(ts)); 
             }
         }
 
         private IEnumerator DashCoroutine(Transform dashTarget)
         {
-            PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
+            var t = PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
+            t.LookAt(target.transform.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
             
@@ -119,7 +127,9 @@ namespace ED
             {
                 ts.LookAt(dashTarget);
                 //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);
-                ts.position += (dashTarget.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
+                ts.position += (dashTarget.position - transform.position).normalized *
+                               (moveSpeed * 5f) *
+                               Time.deltaTime;
 
                 if (Vector3.Distance(dashTarget.position, transform.position) < range)
                     break;

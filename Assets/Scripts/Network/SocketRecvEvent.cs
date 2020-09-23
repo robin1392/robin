@@ -273,7 +273,10 @@ public class SocketRecvEvent
 
     public void OnPushMinionRelay(Peer peer, MsgPushMinionRelay msg)
     {
-        UnityUtil.Print("RECV => ", "HIT_DAMAGE_MINION_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        UnityUtil.Print("RECV => ", "PUSH_MINION_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.PUSH_MINION_RELAY, msg);
         
     }
 
@@ -470,7 +473,23 @@ public class SocketRecvEvent
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_STATUS_RELAY, msg);
     }
+
+
+    public void OnFireBulletRelay(Peer peer, MsgFireBulletRelay msg)
+    {
+        UnityUtil.Print("RECV => ", "FIRE_BULLET_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_BULLET_RELAY, msg);
+    }
     
+    public void OnMinionInvincibilityRelay(Peer peer, MsgMinionInvincibilityRelay msg)
+    {
+        UnityUtil.Print("RECV => ", "INVINCIBILITY_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_INVINCIBILITY_RELAY , msg);
+    }
     
     
     #endregion

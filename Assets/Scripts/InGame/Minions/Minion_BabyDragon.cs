@@ -54,7 +54,7 @@ namespace ED
             ts_HitPos = ts_HitPosBaby;
             ts_HPBarParent.localPosition = ts_BabyHPBarPoint.localPosition;
             agent.baseOffset = 0;
-            agent.areaMask = NavMesh.AllAreas;
+            agent.areaMask = 1 << NavMesh.GetAreaFromName("Walkable");
             originRange = range;
             range = 0.7f;
             StartCoroutine(PolymorphCoroutine());
@@ -115,6 +115,9 @@ namespace ED
             yield return new WaitForSeconds(polymophCooltime);
 
             gameObject.tag = strTagFlying;
+            gameObject.layer =
+                LayerMask.NameToLayer(string.Format("{0}Flying", isBottomPlayer ? "BottomPlayer" : "TopPlayer"));
+            targetMoveType = DICE_MOVE_TYPE.ALL;
             ani_Baby.gameObject.SetActive(false);
             ani_Dragon.gameObject.SetActive(true);
             animator = ani_Dragon;

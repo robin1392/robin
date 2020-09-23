@@ -21,7 +21,7 @@ using Random = UnityEngine.Random;
 
 
 #region photon
-using Photon.Pun;
+//using Photon.Pun;
 #endregion
 
 namespace ED
@@ -216,9 +216,9 @@ namespace ED
 
             
             // 
-            image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
-            text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
-            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+            //image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
+            //text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
+            //text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
             
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
             
@@ -938,6 +938,7 @@ namespace ED
                     
                     // nev
                     //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_PUSHMINION, bs.id, (col.transform.position - transform.position).normalized, pp);
+                    ActionPushMinion(bs.id, (col.transform.position - transform.position).normalized, pp);
                 }
             }
         }
@@ -1012,13 +1013,13 @@ namespace ED
             if (InGameManager.Get().isGamePlaying)
             {
                 //SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
-                controller.ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
+                ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
                 animator.gameObject.SetActive(false);
                 
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
-                if (InGameManager.IsNetwork == false && isMine)
+                if (InGameManager.IsNetwork == false)
                 {
-                    InGameManager.Get().EndGame(false);
+                    InGameManager.Get().EndGame(!isMine);
                 }
                 
                 /*if (PhotonNetwork.IsConnected)
@@ -1050,12 +1051,14 @@ namespace ED
                 //if (PhotonNetwork.IsConnected)
                 if( InGameManager.IsNetwork == true )
                 {
-                    GetComponentInChildren<Collider>().enabled = false;
-                    transform.GetChild(1).gameObject.SetActive(false);
-                    transform.GetChild(2).gameObject.SetActive(false);
+                    //GetComponentInChildren<Collider>().enabled = false;
+                    //objCollider.GetComponent<Collider>().enabled = false;
+                    //transform.GetChild(1).gameObject.SetActive(false);
+                    //transform.GetChild(2).gameObject.SetActive(false);
                     
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, damage);
+                    int convDamage = (int) (damage * Global.g_networkBaseValue);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, convDamage);
                 }
                 else
                 {
@@ -1393,6 +1396,31 @@ namespace ED
                 NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , arrTarget );
             LayzerMinion(baseStatId, arrTarget);
         }
+
+        public void ActionInvincibility(int baseStatId, float time)
+        {
+            int convTime = (int)(time * Global.g_networkBaseValue);
+            if (InGameManager.IsNetwork && isMine)
+                NetSendPlayer(GameProtocol.MINION_INVINCIBILITY_RELAY, NetworkManager.Get().UserUID, baseStatId , convTime );
+            
+            SetMinionInvincibility(baseStatId, time);
+        }
+
+        public void ActionPushMinion(int baseStatId, Vector3 dir, float pushPower)
+        {
+            // 상대방 미니언을 푸쉬한다..
+            if (InGameManager.IsNetwork && isMine)
+            {
+                int x = (int) (dir.x * Global.g_networkBaseValue);
+                int y = (int) (dir.y * Global.g_networkBaseValue);
+                int z = (int) (dir.z * Global.g_networkBaseValue);
+                
+                int convPush  = (int)(pushPower * Global.g_networkBaseValue);
+                
+                NetSendPlayer(GameProtocol.PUSH_MINION_RELAY, NetworkManager.Get().OtherUID, baseStatId ,x, y, z, convPush);
+            }
+            targetPlayer.PushMinion(baseStatId , dir , pushPower);
+        }
         #endregion
         
         #endregion
@@ -1484,6 +1512,8 @@ namespace ED
                 }
             }
         }
+        
+        
 
         #endregion
 
@@ -1525,6 +1555,7 @@ namespace ED
             listMinion.Find(m => m.id == bastStatId)?.Invincibility(time);
         }
 
+        
         #endregion
         
         
@@ -1565,6 +1596,12 @@ namespace ED
                 ts.localScale = scale;
             }
         }
+        
+        public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
+        {
+            listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
+        }
+        
         #endregion
         
         
@@ -1584,7 +1621,8 @@ namespace ED
                 int chDamage = (int) (damage * Global.g_networkBaseValue);
                 int chSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
                 
-                NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
+                //NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
+                NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed , (int)bulletType);
             }
             FireBullet(bulletType ,startPos, targetId, damage, moveSpeed);
         }
@@ -1623,7 +1661,7 @@ namespace ED
             }
         }
         
-        public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
+        /*public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
         {
             if (InGameManager.IsNetwork && isMine)
             {
@@ -1647,9 +1685,6 @@ namespace ED
             }
             FireNecromancerBullet(shootPos, targetId, damage, moveSpeed);
         }
-        
-        
-
         public void ActionFireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
         {            
             if (InGameManager.IsNetwork && isMine)
@@ -1661,7 +1696,7 @@ namespace ED
             }
             FireSpear(startPos, targetId, damage, moveSpeed);
 
-        }
+        }*/
         
         #endregion
         
@@ -1677,7 +1712,7 @@ namespace ED
                 int chDamage = (int)(damage * Global.g_networkBaseValue);
                 int chRange = (int)(range * Global.g_networkBaseValue);
                 
-                NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange);
+                NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange , (int)type);
             }
             FireCannonBall(type ,shootPos, targetPos, damage, range);
         }
@@ -1703,8 +1738,7 @@ namespace ED
             }
         }
         
-        
-        public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
+        /*public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
         {
             var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
             if (b != null)
@@ -1713,7 +1747,7 @@ namespace ED
                 b.controller = this;
                 b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
             }
-        }
+        }*/
         
         #endregion
         
@@ -1829,8 +1863,16 @@ namespace ED
                     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
-                    //float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
+                    float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
                     //targetPlayer.HitDamage(calDamage);
+                    if (NetworkManager.Get().UserUID == damageack.PlayerUId)
+                    {
+                        targetPlayer.HitDamage(calDamage);
+                    }
+                    else if (NetworkManager.Get().OtherUID == damageack.PlayerUId )
+                    {
+                        HitDamage(calDamage);
+                    }
                     
                     break;
                 }
@@ -2039,11 +2081,41 @@ namespace ED
                     else if (NetworkManager.Get().OtherUID == lazerrelay.PlayerUId )
                         targetPlayer.LayzerMinion(lazerrelay.Id, lazerrelay.TargetIdArray);
                     
+                    break;
+                }
+                case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                {
+                    MsgMinionInvincibilityRelay inrelay = (MsgMinionInvincibilityRelay) param[0];
+                    
+                    float convTime = (float)inrelay.Time / Global.g_networkBaseValue;
+                    
+                    if (NetworkManager.Get().UserUID == inrelay.PlayerUId)
+                        SetMinionInvincibility(inrelay.Id, convTime);
+                    else if (NetworkManager.Get().OtherUID == inrelay.PlayerUId )
+                        targetPlayer.SetMinionInvincibility(inrelay.Id, convTime);
                     
                     break;
                 }
-                
-                
+
+
+                case GameProtocol.FIRE_BULLET_RELAY:
+                {
+                    MsgFireBulletRelay arrrelay = (MsgFireBulletRelay) param[0];
+                    
+                    //Dir Damage MoveSpeed
+                    Vector3 sPos = NetworkManager.Get().MsgToVector(arrrelay.Dir);
+                    
+                    float calDamage = (float)arrrelay.Damage / Global.g_networkBaseValue;
+                    float calSpeed = (float)arrrelay.MoveSpeed / Global.g_networkBaseValue;
+                    E_BulletType bulletType = (E_BulletType) arrrelay.Type;
+                    
+                    if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
+                        FireBullet(bulletType , sPos , arrrelay.Id, calDamage , calSpeed);
+                    else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
+                        targetPlayer.FireBullet(bulletType , sPos , arrrelay.Id, calDamage , calSpeed);
+                    
+                    break;
+                }
                 
                 case GameProtocol.FIRE_ARROW_RELAY:
                 {
@@ -2097,11 +2169,12 @@ namespace ED
                     Vector3 targetPos = NetworkManager.Get().MsgToVector(fcannonrelay.TargetPos);
                     float chDamage = (float)fcannonrelay.Power / Global.g_networkBaseValue;
                     float chRange = (float)fcannonrelay.Range / Global.g_networkBaseValue;
+                    E_CannonType cannonType = (E_CannonType) fcannonrelay.Type;
         
                     if (NetworkManager.Get().UserUID == fcannonrelay.PlayerUId)
-                        FireCannonBall(startPos, targetPos, chDamage, chRange);
+                        FireCannonBall(cannonType , startPos, targetPos, chDamage, chRange);
                     else if (NetworkManager.Get().OtherUID == fcannonrelay.PlayerUId )
-                        targetPlayer.FireCannonBall(startPos, targetPos, chDamage, chRange);
+                        targetPlayer.FireCannonBall(cannonType ,startPos, targetPos, chDamage, chRange);
                     
                     break;
                 }
@@ -2192,7 +2265,21 @@ namespace ED
                     
                     break;
                 }
-                
+                case GameProtocol.PUSH_MINION_RELAY:
+                {
+                    MsgPushMinionRelay pushrelay = (MsgPushMinionRelay) param[0];
+
+                    Vector3 conVecDir = NetworkManager.Get().MsgToVector(pushrelay.Dir);
+                    float convPower = (float)pushrelay.PushPower / Global.g_networkBaseValue;
+                    
+                    
+                    if (NetworkManager.Get().UserUID == pushrelay.PlayerUId)
+                        PushMinion(pushrelay.Id ,conVecDir , convPower );
+                    else if (NetworkManager.Get().OtherUID == pushrelay.PlayerUId )
+                        targetPlayer.PushMinion(pushrelay.Id ,conVecDir , convPower );
+                    
+                    break;
+                }
                 
                 
                 case GameProtocol.MINION_STATUS_RELAY:
@@ -2223,10 +2310,7 @@ namespace ED
         // Dice RPCs
         //////////////////////////////////////////////////////////////////////
 
-        public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
-        {
-            listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
-        }
+        
 
         //////////////////////////////////////////////////////////////////////
         // Unit's RPCs

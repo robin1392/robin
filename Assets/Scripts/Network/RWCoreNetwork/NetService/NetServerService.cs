@@ -75,17 +75,18 @@ namespace RWCoreNetwork.NetService
 
 
             // 패킷 큐에 저장하기 전에 사용자가 지정한 처리를 수행한다.
-            if (InterceptProtocol != null)
-            {
-                if (InterceptProtocol(userToken, protocolId, msg) == true)
-                {
-                    return;
-                }
-            }
+            //if (InterceptProtocol != null)
+            //{
+            //    if (InterceptProtocol(userToken, protocolId, msg) == true)
+            //    {
+            //        return;
+            //    }
+            //}
 
 
             // 패킷처리 큐에 추가한다.
-            _packetHandler.EnqueuePacket(new Packet(userToken.GetPeer(), protocolId, msg, msg.Length));
+            //_packetHandler.EnqueuePacket(new Packet(userToken.GetPeer(), protocolId, msg, msg.Length));
+            _packetHandler.EnqueuePacket(userToken.GetPeer(), protocolId, msg);
         }
 
 

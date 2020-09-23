@@ -12,10 +12,12 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using TMPro;
 
-#region USING PHOTON
-using Photon.Pun;
-using Photon.Realtime;
+
 using CodeStage.AntiCheat.ObscuredTypes;
+
+#region USING PHOTON
+//using Photon.Pun;
+//using Photon.Realtime;
 #endregion
 
 namespace ED
@@ -798,7 +800,7 @@ namespace ED
             UI_InGamePopup.Get().SetResultText(winLose ? Global.g_inGameWin : Global.g_inGameLose);
         }
         
-        public void EndGame(PhotonMessageInfo info)
+        /*public void EndGame(PhotonMessageInfo info)
         {
             isGamePlaying = false;
             StopAllCoroutines();
@@ -808,7 +810,7 @@ namespace ED
 
             //text_Result.text = playerController.isAlive ? "승리" : "패배";
             UI_InGamePopup.Get().SetResultText(playerController.isAlive ? Global.g_inGameWin : Global.g_inGameLose);
-        }
+        }*/
 
         #endregion
 
@@ -817,8 +819,12 @@ namespace ED
 
         public void Click_SP_Upgrade_Button()
         {
-            //playerController.SP_Upgrade();
-            SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
+            if(IsNetwork)
+                SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
+            else
+            {
+                playerController.SP_Upgrade();
+            }
         }
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)
@@ -1060,7 +1066,31 @@ namespace ED
         #endregion
 
 
+        public void ShowAIField(bool isShow)
+        {
+            if (isShow)
+            {
+                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
+                playerController.uiDiceField.RefreshField(0.5f);
+                StartCoroutine(nameof(ShowAiFieldCoroutine));
+            }
+            else
+            {
+                StopCoroutine(nameof(ShowAiFieldCoroutine));
+                playerController.uiDiceField.SetField(playerController.arrDice);
+                playerController.uiDiceField.RefreshField();
+            }
+        }
 
+        private IEnumerator ShowAiFieldCoroutine()
+        {
+            while (true)
+            {
+                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
+                playerController.uiDiceField.RefreshField(0.5f);
+                yield return null;
+            }
+        }
 
 
 

@@ -198,6 +198,7 @@ namespace RWGameProtocol.Msg
         public MsgVector3 TargetPos;
         public int Power;
         public int Range;
+        public int Type;
     }
 
 
@@ -335,9 +336,33 @@ namespace RWGameProtocol.Msg
         // Pos배열 분할 인덱스
         public byte PosIndex;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
-        public MsgVector3[] Pos = new MsgVector3[100];
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 80)]
+        public MsgVector3[] Pos = new MsgVector3[80];
     }
 
 
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgFireBulletRelay : Serializer<MsgFireBulletRelay>
+    {
+        public int PlayerUId;
+        public int Id;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+        public int[] Dir = new int[3];
+
+        public int Damage;
+        public int MoveSpeed;
+        public int Type;
+    }
+
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgMinionInvincibilityRelay : Serializer<MsgMinionInvincibilityRelay>
+    {
+        public int PlayerUId;
+        public int Id;
+        public int Time;
+    }
 }

@@ -36,6 +36,7 @@ namespace ED
         public bool targetIsEnemy = true;
         public bool isAttacking;
         public bool isPushing;
+        public bool isAttackSpeedFactorWithAnimation = true;
         protected float _spawnedTime;
         public float spawnedTime => _spawnedTime;
         private float _pathRefinedTime = 3f;
@@ -83,7 +84,7 @@ namespace ED
         }
 
 
-        private void Update()
+        protected virtual void Update()
         {
             _spawnedTime += Time.deltaTime;
             
@@ -148,7 +149,11 @@ namespace ED
             if (animator != null)
             {
                 animator.SetFloat(_animatorHashMoveSpeed, 0);
-                animator.SetFloat("AttackSpeed", 1f / attackSpeed);
+
+                if (isAttackSpeedFactorWithAnimation)
+                {
+                    animator.SetFloat("AttackSpeed", 1f / attackSpeed);
+                }
             }
 
             //if (PhotonNetwork.IsConnected)
@@ -364,7 +369,7 @@ namespace ED
 
         public void Push(Vector3 dir, float pushPower)
         {
-            StopAllCoroutines();
+            //StopAllCoroutines();
             SetControllEnable(false);
             rb.isKinematic = false;
             animator.SetTrigger(_animatorHashIdle);
@@ -391,7 +396,7 @@ namespace ED
 
         public virtual void Sturn(float duration)
         {
-            StopAllCoroutines();
+            //StopAllCoroutines();
 
             if (_dicEffectPool.ContainsKey(MAZ.STURN))
             {
@@ -702,7 +707,7 @@ namespace ED
 
         public void Scarecrow(float duration)
         {
-            StopAllCoroutines();
+            //StopAllCoroutines();
             StartCoroutine(ScarecrowCoroutine(duration));
         }
 
