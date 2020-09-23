@@ -772,6 +772,17 @@ namespace ED
             if (serverLevel < 0)
                 serverLevel = 0;
             arrDice[levelupFieldNum].Set(data, serverLevel);
+
+            if (isMine)
+            {
+                if (uiDiceField != null)
+                {
+                    uiDiceField.SetField(arrDice);
+                }
+                //
+                uiDiceField.RefreshField();    
+            }
+
         }
         
         public void InGameDiceUpgrade(int diceId , int upgradeLv)

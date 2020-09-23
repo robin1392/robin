@@ -163,6 +163,10 @@ namespace ED
                         //InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE ,dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.level);
                         InGameManager.Get().SendDiceLevelUp(dragDice.diceFieldNum, dice.diceFieldNum);
                     }
+                    else
+                    {
+                        
+                    }
                     
                     ani.SetTrigger(BBoing);
                 }
