@@ -119,14 +119,22 @@ public class SocketRecvEvent
     
     public void OnHitDamageAck(Peer peer, MsgHitDamageAck msg)
     {
-        UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
+        //UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
+        UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.Damage , "green");
         
         //Global.g_networkBaseValue
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_ACK, msg);
     }
 
-    
+    public void HitDamageNotify(Peer peer, MsgHitDamageNotify msg)
+    {
+        //UnityUtil.Print("hit damage Notify", msg.PlayerUId.ToString() + "  " + msg.Damage.ToString(), "white");
+        UnityUtil.Print("RECV => ", "HIT DAMAGE NOTIFY  " +msg.PlayerUId.ToString() + "   " + msg.Damage , "white");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_NOTIFY, msg);
+    }
     #endregion
 
     
@@ -216,13 +224,7 @@ public class SocketRecvEvent
             InGameManager.Get().RecvInGameManager(GameProtocol.INGAME_UP_DICE_NOTIFY, msg);
     }
 
-    public void HitDamageNotify(Peer peer, MsgHitDamageNotify msg)
-    {
-        UnityUtil.Print("hit damage Notify", msg.PlayerUId.ToString() + "  " + msg.Damage.ToString(), "white");
-        
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_NOTIFY, msg);
-    }
+    
     
     public void OnEndGameNotify(Peer peer, MsgEndGameNotify msg)
     {
