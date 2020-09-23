@@ -65,7 +65,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
     - {fileID: 102900000, guid: 484506e1f5f3b405d99003974efd1299, type: 3}
-    totalSpriteSurfaceArea: 5368274
+    totalSpriteSurfaceArea: 5382550
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -88,6 +88,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 656b9b326f584444dbc455fbba2ebfdd, type: 3}
   - {fileID: 21300000, guid: dde1c24256686457c8ff583b9d3a371c, type: 3}
   - {fileID: 21300000, guid: ba1024521b651466f80b51c3b38c106a, type: 3}
+  - {fileID: 21300000, guid: 06b1e9528e4ab4caf8ec893004bf80fc, type: 3}
   - {fileID: 21300000, guid: 41585f52e892540168a198e1aa513fd6, type: 3}
   - {fileID: 21300000, guid: 130d26c2454364977815fe7302ecd52b, type: 3}
   - {fileID: 21300000, guid: 472d68e2b710b4655bc5a2463f4f924f, type: 3}
@@ -147,6 +148,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 248379b8f89c845e0bc42bd8ba877b8d, type: 3}
   - {fileID: 21300000, guid: 70a685492ef0f456994f8670ce003875, type: 3}
   - {fileID: 21300000, guid: e056f299a1ebb42ec962bce751727cfb, type: 3}
+  - {fileID: 21300000, guid: f96951a92382c4974a822238612eb0c1, type: 3}
   - {fileID: 21300000, guid: 90a7b7a9bafbc4a77842c803599330de, type: 3}
   - {fileID: 21300000, guid: 73198ac96da1c40d788d4c72b9f0f570, type: 3}
   - {fileID: 21300000, guid: a42064f95d89d4c4197dfa9700a61079, type: 3}
@@ -221,6 +223,7 @@ SpriteAtlas:
   - info_type
   - lobby_dice_background_nomal
   - lobby_dice_upgradebar1
+  - dice_dice_use
   - info_HP
   - dice_sinzed
   - dice_sniper
@@ -280,6 +283,7 @@ SpriteAtlas:
   - tier_silver
   - ingame_core_hp
   - dice_flagofwar
+  - dice_dice_unuse
   - ingame_dice_popup
   - dice_bomber
   - dice_button2

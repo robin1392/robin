@@ -34,8 +34,13 @@ namespace ED
 
         public Sprite sprite_Use;
         public Sprite sprite_UnUse;
+        public Sprite sprite_MainUse;
+        public Sprite sprite_MainUnUse;
 
         public Image[] arrImageDeckButton;
+        public Image[] arrImageDeckButtonMain;
+        public Text[] arrTextDeckButton;
+        public Text[] arrTextDeckButtonMain;
         
         [Header("Prefabs")]
         public GameObject prefGettedDice;
@@ -254,16 +259,43 @@ namespace ED
                     arrImageDeckButton[0].sprite = sprite_Use;
                     arrImageDeckButton[1].sprite = sprite_UnUse;
                     arrImageDeckButton[2].sprite = sprite_UnUse;
+                    arrImageDeckButtonMain[0].sprite = sprite_MainUse;
+                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
+                    arrTextDeckButton[0].color = Color.white;
+                    arrTextDeckButton[1].color = Color.gray;
+                    arrTextDeckButton[2].color = Color.gray;
+                    arrTextDeckButtonMain[0].color = Color.white;
+                    arrTextDeckButtonMain[1].color = Color.gray;
+                    arrTextDeckButtonMain[2].color = Color.gray;
                     break;
                 case 1:
                     arrImageDeckButton[0].sprite = sprite_UnUse;
                     arrImageDeckButton[1].sprite = sprite_Use;
                     arrImageDeckButton[2].sprite = sprite_UnUse;
+                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[1].sprite = sprite_MainUse;
+                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
+                    arrTextDeckButton[0].color = Color.gray;
+                    arrTextDeckButton[1].color = Color.white;
+                    arrTextDeckButton[2].color = Color.gray;
+                    arrTextDeckButtonMain[0].color = Color.gray;
+                    arrTextDeckButtonMain[1].color = Color.white;
+                    arrTextDeckButtonMain[2].color = Color.gray;
                     break;
                 case 2:
                     arrImageDeckButton[0].sprite = sprite_UnUse;
                     arrImageDeckButton[1].sprite = sprite_UnUse;
                     arrImageDeckButton[2].sprite = sprite_Use;
+                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[2].sprite = sprite_MainUse;
+                    arrTextDeckButton[0].color = Color.gray;
+                    arrTextDeckButton[1].color = Color.gray;
+                    arrTextDeckButton[2].color = Color.white;
+                    arrTextDeckButtonMain[0].color = Color.gray;
+                    arrTextDeckButtonMain[1].color = Color.gray;
+                    arrTextDeckButtonMain[2].color = Color.white;
                     break;
             }
             
