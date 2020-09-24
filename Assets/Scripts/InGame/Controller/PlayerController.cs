@@ -1268,7 +1268,7 @@ namespace ED
                 // 
                 NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniEnum , targetId);
             }
-            SetMinionAnimationTrigger(baseStatId, aniName);
+            SetMinionAnimationTrigger(baseStatId, aniName , targetId);
         }
         public void ActionSendMsg(int bastStatId, string msgFunc, int targetId = -1)
         {
@@ -1586,7 +1586,7 @@ namespace ED
         
         #region minion etc list do it
         
-        public void SetMinionAnimationTrigger(int baseStatId, string trigger)
+        public void SetMinionAnimationTrigger(int baseStatId, string trigger , int targetId )
         {
             var m = listMinion.Find(minion => minion.id == baseStatId);
             if (m != null && m.animator != null)
@@ -2210,9 +2210,9 @@ namespace ED
                     string aniName = ((E_AniTrigger)anirelay.Trigger).ToString();
                     
                     if (NetworkManager.Get().UserUID == anirelay.PlayerUId)
-                        SetMinionAnimationTrigger(anirelay.Id, aniName);
+                        SetMinionAnimationTrigger(anirelay.Id, aniName , anirelay.TargetId);
                     else if (NetworkManager.Get().OtherUID == anirelay.PlayerUId )
-                        targetPlayer.SetMinionAnimationTrigger(anirelay.Id, aniName);
+                        targetPlayer.SetMinionAnimationTrigger(anirelay.Id, aniName ,anirelay.TargetId);
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
