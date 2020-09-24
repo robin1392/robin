@@ -84,9 +84,7 @@ namespace RWGameProtocol.Msg
         public int PlayerUId;
         public int Id;
         public int TargetId;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string Trigger;
+        public int Trigger;
     }
 
 
