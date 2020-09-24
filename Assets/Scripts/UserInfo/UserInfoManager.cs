@@ -181,6 +181,10 @@ public class UserInfo
         ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
         ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
         ObscuredPrefs.Save();
+        
+        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
+        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
     }
     #endregion
     
