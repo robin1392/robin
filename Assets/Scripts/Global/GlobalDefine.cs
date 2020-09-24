@@ -82,10 +82,10 @@ public enum E_BulletType
 
 public enum E_AniTrigger
 {
-    IDLE,
-    ATTACK,
-    SKILL,
-    ATTACK1,
-    ATTACK2,
-    ATTACK_READY,
+    Idle,
+    Attack,
+    Skill,
+    Attack1,
+    Attack2,
+    AttackReady,
 }
