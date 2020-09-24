@@ -171,6 +171,18 @@ public class UserInfo
         
         ObscuredPrefs.Save();
     }
+
+    public void ResetDeck()
+    {
+        ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004");
+        ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
+        ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
+        ObscuredPrefs.Save();
+        
+        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
+        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
+    }
     #endregion
     
 
@@ -251,10 +263,6 @@ public class UserInfoManager : Singleton<UserInfoManager>
     public void SetTicketId(string ticket)
     {
         _userInfo.SetTicketId(ticket);
-    }
-    public void SetDeck(int deckIndex , string deck)
-    {
-        _userInfo.SetDeck(deck);
     }
 
     public string GetActiveDeck()
