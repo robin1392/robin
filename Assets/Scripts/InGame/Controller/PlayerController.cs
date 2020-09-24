@@ -1831,7 +1831,7 @@ namespace ED
                     if (listMinion.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgVector3[] msgMinPos = new MsgVector3[100];
+                        MsgVector3[] msgMinPos = new MsgVector3[160];
                     
                         for (int i = 0; i < listMinion.Count; i++)
                         {
