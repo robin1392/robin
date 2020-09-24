@@ -187,13 +187,16 @@ namespace ED
             image_Icon.transform.SetParent(transform);
             image_Icon.transform.localPosition = Vector3.zero;
             var arrImage = image_Icon.GetComponentsInChildren<Image>();
-            
-            if (image_Icon.color != Color.white)
-            {
-                for (var i = 0; i < arrImage.Length; ++i)
+
+            if (dice != null && dice.diceData != null)
+            {   
+                if (image_Icon.color != Color.white)
                 {
-                    //arrImage[i].DOColor(i == 0 ? Color.white : dice.data.color, 0.3f);
-                    arrImage[i].DOColor(i == 0 ? Color.white : FileHelper.GetColor(dice.diceData.color), 0.3f);
+                    for (var i = 0; i < arrImage.Length; ++i)
+                    {
+                        //arrImage[i].DOColor(i == 0 ? Color.white : dice.data.color, 0.3f);
+                        arrImage[i].DOColor(i == 0 ? Color.white : FileHelper.GetColor(dice.diceData.color), 0.3f);
+                    }
                 }
             }
         }
