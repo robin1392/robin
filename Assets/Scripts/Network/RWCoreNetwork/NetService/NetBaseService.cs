@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using RWCoreNetwork.NetPacket;
@@ -79,7 +78,6 @@ namespace RWCoreNetwork.NetService
 
         private NetMonitorInfo _monitorInfo;
         private long _monitorTick;
-        private PerformanceCounter _cpuCounter;
 
 
         public NetBaseService(PacketHandler packetHandler, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval)
@@ -90,7 +88,6 @@ namespace RWCoreNetwork.NetService
             _netEventQueue = new Queue<UserToken>();
             _monitorInfo = new NetMonitorInfo();
             _monitorTick = DateTime.UtcNow.AddSeconds(10).Ticks;
-            _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
 
 
             _packetHandler = packetHandler;
@@ -147,7 +144,6 @@ namespace RWCoreNetwork.NetService
                 {
                     _monitorTick = now.AddSeconds(5).Ticks;
 
-                    _monitorInfo.CpuUsage = (int)_cpuCounter.NextValue();
                     _monitorInfo.UserCount = _userTokenMap.Count;
                     _monitorInfo.ReceiveEventPoolCount = _receiveEventAragePool.Count;
                     _monitorInfo.SendEventPoolCount = _sendEventAragePool.Count;
