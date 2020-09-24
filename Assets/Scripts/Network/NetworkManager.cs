@@ -97,8 +97,6 @@ public class NetworkManager : Singleton<NetworkManager>
     public bool UseLocalServer;
     public string LocalServerAddr;
     public int LocalServerPort;
-    public string PlayerSessionId;
-
     public string UserId;
 
     #endregion
