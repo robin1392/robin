@@ -85,4 +85,7 @@ public enum E_AniTrigger
     IDLE,
     ATTACK,
     SKILL,
+    ATTACK1,
+    ATTACK2,
+    ATTACK_READY,
 }
