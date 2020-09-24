@@ -37,7 +37,7 @@ namespace ED
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , target.isFlying ? "Attack2" : "Attack1");
-                controller.MinionAniTrigger(id, target.isFlying ? "Attack2" : "Attack1");
+                controller.MinionAniTrigger(id, target.isFlying ? "Attack2" : "Attack1", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false )

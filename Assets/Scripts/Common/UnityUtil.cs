@@ -42,6 +42,20 @@ public class UnityUtil
 
     }
     
+    #region enum convert
+
+    public static T ToEnum<T>(string val)
+    {
+        //변환 오류일경우 디폴트
+        if (!Enum.IsDefined(typeof(T), val))
+            return default(T);
+
+        return (T) System.Enum.Parse(typeof(T), val, true);
+
+    }
+
+    #endregion
+    
     
     #region object load
 

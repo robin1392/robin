@@ -33,7 +33,7 @@ namespace ED
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack");
+                controller.MinionAniTrigger(id, "Attack", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false )
@@ -118,7 +118,7 @@ namespace ED
             var ts = transform;
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "Skill");
+            controller.MinionAniTrigger(id, "Skill", target.id);
             
             float tick = 0.1f;
             while (dashTarget != null)
@@ -164,7 +164,7 @@ namespace ED
             ps_Rush.Stop();
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
-            controller.MinionAniTrigger(id, "Idle");
+            controller.MinionAniTrigger(id, "Idle" , 0);
         }
 
         public override void Sturn(float duration)

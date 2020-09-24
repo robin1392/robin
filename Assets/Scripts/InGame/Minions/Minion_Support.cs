@@ -28,7 +28,7 @@ namespace ED
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack");
+                controller.MinionAniTrigger(id, "Attack", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false )
@@ -75,7 +75,7 @@ namespace ED
             yield return null;
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "Skill");
+            controller.MinionAniTrigger(id, "Skill" , m.GetComponent<BaseStat>().id);
             
             var ts = transform;
             var startPos = ts.position;

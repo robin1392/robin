@@ -39,7 +39,7 @@ namespace ED
                 base.Attack();
 
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack");
+                controller.MinionAniTrigger(id, "Attack", target.id);
 
             }
             //else if (PhotonNetwork.IsConnected == false)
@@ -120,16 +120,14 @@ namespace ED
             animator.SetTrigger(_animatorHashSkill);
             
             //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "Skill");
+            controller.MinionAniTrigger(id, "Skill", target.id);
             
             var ts = transform;
             while (dashTarget != null)
             {
                 ts.LookAt(dashTarget);
                 //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);
-                ts.position += (dashTarget.position - transform.position).normalized *
-                               (moveSpeed * 5f) *
-                               Time.deltaTime;
+                ts.position += (dashTarget.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
 
                 if (Vector3.Distance(dashTarget.position, transform.position) < range)
                     break;

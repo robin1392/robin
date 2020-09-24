@@ -1260,11 +1260,13 @@ namespace ED
         
         
         
-        public void MinionAniTrigger(int baseStatId , string aniName)
+        public void MinionAniTrigger(int baseStatId , string aniName , int targetId )
         {
             if (InGameManager.IsNetwork && isMine)
             {
-                NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniName);
+                int aniEnum = (int)UnityUtil.ToEnum<E_AniTrigger>(aniName);
+                // 
+                NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniEnum , targetId);
             }
             SetMinionAnimationTrigger(baseStatId, aniName);
         }
@@ -2205,10 +2207,12 @@ namespace ED
                     MsgSetMinionAnimationTriggerRelay anirelay = (MsgSetMinionAnimationTriggerRelay) param[0];
                     
                     //UnityEngine.Debug.Log(anirelay.Trigger);
+                    string aniName = ((E_AniTrigger)anirelay.Trigger).ToString();
+                    
                     if (NetworkManager.Get().UserUID == anirelay.PlayerUId)
-                        SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
+                        SetMinionAnimationTrigger(anirelay.Id, aniName);
                     else if (NetworkManager.Get().OtherUID == anirelay.PlayerUId )
-                        targetPlayer.SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
+                        targetPlayer.SetMinionAnimationTrigger(anirelay.Id, aniName);
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
