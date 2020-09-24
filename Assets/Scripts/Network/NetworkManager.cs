@@ -94,6 +94,7 @@ public class NetworkManager : Singleton<NetworkManager>
     
     #region dev test var
     
+    [Header("Dev Test Variable")]
     public bool UseLocalServer;
     public string LocalServerAddr;
     public int LocalServerPort;
