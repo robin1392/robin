@@ -14,10 +14,11 @@ namespace RWCoreNetwork.NetPacket
 		AutoResetEvent _loopEvent;
 
 
-        public PacketHandlerThread()
+        public PacketHandlerThread(IPacketReceiver packetReceiver, int packetProcessCount)
+            : base(packetReceiver, packetProcessCount)
         {
             _loopEvent = new AutoResetEvent(false);
-            _thread = new Thread(new ThreadStart(DoWork));
+            _thread = new Thread(new ThreadStart(ProcessReceive));
             _thread.Start();
         }
 
@@ -33,9 +34,9 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public override void EnqueuePacket(Peer peer, short protocolId, byte[] msg)
+        public override void EnqueueReceivePacket(Peer peer, byte[] msg)
         {
-            base.EnqueuePacket(peer, protocolId, msg);
+            base.EnqueueReceivePacket(peer, msg);
             _loopEvent.Set();
         }
 
@@ -45,12 +46,12 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public void DoWork()
+        public void ProcessReceive()
         {
             Packet packet = null; 
             while(true)
             {
-                packet = DequeuePacket();
+                packet = DequeueReceivePacket();
                 if (packet == null)
                 {
                     // 더이상 처리할 패킷이 없으면 스레드 대기.
@@ -58,7 +59,17 @@ namespace RWCoreNetwork.NetPacket
                     continue;
                 }
 
-                PacketProcessor.Run(packet.Peer, packet.ProtocolId, packet.Data);
+
+                if (InterceptProtocol != null)
+                {
+                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Data) == true)
+                    {
+                        continue;
+                    }
+                }
+
+
+                PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Data);
             }
         }
     }

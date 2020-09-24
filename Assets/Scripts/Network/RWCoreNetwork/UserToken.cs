@@ -10,7 +10,7 @@ using RWCoreNetwork.NetService;
 
 namespace RWCoreNetwork
 {
-    public delegate void CompletedMessageDelegate(UserToken userToken, short protocolId, byte[] msg);
+    public delegate void CompletedMessageDelegate(UserToken userToken, byte[] msg);
 
 
     public class UserToken
@@ -33,6 +33,10 @@ namespace RWCoreNetwork
         // 바이트를 패킷 형식으로 해석해주는 해석기.
         MessageHandler _messageHandler;
 
+
+        PacketHandler _packetHandler;
+
+
         // 전송할 패킷을 보관해놓는 큐
         Queue<byte[]> _sendingQueue;
 
@@ -42,15 +46,17 @@ namespace RWCoreNetwork
         int _bufferSize;
 
 
-        public UserToken(int bufferSize, int id)
+        public UserToken(PacketHandler packetHandler, int bufferSize, int id)
         {
             Id = id;
             _bufferSize = bufferSize;
+            _packetHandler = packetHandler;
             _peer = null;
             _messageHandler = new MessageHandler(bufferSize);
             _sendingQueue = new Queue<byte[]>();
             _lockSendingQueue = new object();
         }
+
 
         public void SetPeer(Peer peer)
         {
@@ -73,8 +79,12 @@ namespace RWCoreNetwork
             {
                 _sendingQueue.Clear();
             }
+        }
 
-            Console.WriteLine("[TIDX: " + Thread.CurrentThread.ManagedThreadId + " ] SetEventArgs. queue: " + _sendingQueue.Count);
+
+        public int GetSendQueueCount()
+        {
+            return _sendingQueue.Count;
         }
 
         /// <summary>
@@ -90,10 +100,6 @@ namespace RWCoreNetwork
         }
 
             
-        //    // 패킷처리 큐에 추가한다.
-        //    _networkService.PacketHandler.Enqueue(new Packet(_peer, protocolId, msg, msg.Length));
-        //}
-
 		/// <summary>
 		/// 패킷을 전송한다.
 		/// 큐가 비어 있을 경우에는 큐에 추가한 뒤 바로 SendAsync매소드를 호출하고,
@@ -107,7 +113,7 @@ namespace RWCoreNetwork
         public void Send(short protocolId, byte[] msg)
         {
             byte[] buffer = new byte[_bufferSize];
-            
+
             // protocol id
             int offset = 0;
             byte[] tmpBuffer = BitConverter.GetBytes(protocolId);
@@ -134,7 +140,6 @@ namespace RWCoreNetwork
 
                 // 큐에 무언가가 들어 있다면 아직 이전 전송이 완료되지 않은 상태이므로 큐에 추가만 하고 리턴한다.
                 // 현재 수행중인 SendAsync가 완료된 이후에 큐를 검사하여 데이터가 있으면 SendAsync를 호출하여 전송해줄 것이다.
-
                 _sendingQueue.Enqueue(buffer);
             }
         }
@@ -164,6 +169,7 @@ namespace RWCoreNetwork
             }
         }
 
+
 		/// <summary>
 		/// 비동기 전송 완료시 호출되는 콜백 매소드.
 		/// </summary>
@@ -172,38 +178,39 @@ namespace RWCoreNetwork
         {
             if (e.BytesTransferred <= 0 || e.SocketError != SocketError.Success)
             {
-                Console.WriteLine("[Send] - 6 thread: " + Thread.CurrentThread.ManagedThreadId + ", err: " + e.SocketError);
+                Console.WriteLine("[ERROR] thread: " + Thread.CurrentThread.ManagedThreadId + ", err: " + e.SocketError);
                 return;
             }
 
             lock (_lockSendingQueue)
             {
-                //Console.WriteLine("ProcessSend thread: " + Thread.CurrentThread.ManagedThreadId);
-                //Console.WriteLine("ProcessSend Queue count: " + _sendingQueue.Count);
-
                 if (_sendingQueue.Count == 0)
                 {
-                    throw new Exception("Sending queue count is less than zero!");
+                    Console.WriteLine("[ERROR] thread: " + Thread.CurrentThread.ManagedThreadId + ", Sending queue count is less than zero");
+                    return;
                 }
 
-				// TODO : 재전송 로직 검토
-				// 패킷 하나를 다 못보낸 경우는??
+                // TODO : 재전송 로직 검토
+                // 패킷 하나를 다 못보낸 경우는??
                 byte[] buffer = _sendingQueue.Peek();
                 if (e.BytesTransferred != buffer.Length)
                 {
-                    string error = string.Format("Need to send more! transferred {0},  packet size {1}", e.BytesTransferred, buffer.Length);
-					Console.WriteLine(error);
-					return;  
+                    Console.WriteLine(string.Format("Need to send more! transferred {0},  packet size {1}", e.BytesTransferred, buffer.Length));
+                    return;
                 }
-                
+
                 // 전송 완료된 패킷을 큐에서 제거한다.
                 _sendingQueue.Dequeue();
 
+
+                //Console.WriteLine(string.Format("send message. handle {0},  userToken: {1},  e.BytesTransferred {2}", Socket.Handle, Id, e.BytesTransferred));
+
+
                 // 아직 전송하지 않은 대기중인 패킷이 있다면 다시한번 전송을 요청한다.
-				if (_sendingQueue.Count > 0)
-				{
-					StartSend();
-				}
+                if (_sendingQueue.Count > 0)
+                {
+                    StartSend();
+                }
             }
         }
 

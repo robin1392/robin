@@ -40,7 +40,7 @@ namespace RWCoreNetwork
 
         public MessageHandler(int bufferSize)
         {
-            _messageBuffer = new byte[bufferSize - (Defines.PROTOCOL_ID + Defines.HEADERSIZE)];
+            _messageBuffer = new byte[bufferSize];
             _messageSize = 0;
             _currentPosition = 0;
             _positionToRead = 0;
@@ -76,42 +76,28 @@ namespace RWCoreNetwork
                     // 목표 지점 설정(헤더 위치까지 도달하도록 설정).
                     _positionToRead = Defines.PROTOCOL_ID + Defines.HEADERSIZE;
 
-                    // completed = ReadUntil(buffer, ref srcPosition, offset, transfered);
-                    // if (completed == false)
-                    // {
-                    //     // 아직 다 못읽었으므로 다음 receive를 기다린다.
-                    //     return;
-                    // }
 
-                    // // 프로토콜 아이디를 구한다.
-                    // _protocolId = GetProtocolId();
+                    completed = ReadUntil(buffer, ref srcPosition, offset, transfered);
+                    if (completed == false)
+                    {
+                        // 아직 다 못읽었으므로 다음 receive를 기다린다.
+                        return;
+                    }
 
-                    // // 헤더 하나를 온전히 읽어왔으므로 메시지 사이즈를 구한다.
-                    // _messageSize = GetBodySize();
 
-                    _protocolId = BitConverter.ToInt16(buffer, srcPosition);
-                    _messageSize = BitConverter.ToInt16(buffer, srcPosition + Defines.PROTOCOL_ID);
+                    // 메세지 사이즈를 구한다.
+                    _messageSize = BitConverter.ToInt16(_messageBuffer, Defines.PROTOCOL_ID);
 
-                    int copySize = _positionToRead - _currentPosition;
 
-                    // 원본 버퍼 포지션 이동.
-                    srcPosition += copySize;
-
-                    // 타겟 버퍼 포지션도 이동.
-                    //_currentPosition += copySize;
-
-                    // 남은 바이트 수.
-                    _remainBytes -= copySize;
-
-                    // 다음 목표 지점(헤더 + 메시지 사이즈).
-                    _positionToRead = _messageSize;
+                    // 다음 목표 지점
+                    _positionToRead = _messageSize + Defines.PROTOCOL_ID + Defines.HEADERSIZE;
                 }
 
                 // 메시지를 읽는다.
                 completed = ReadUntil(buffer, ref srcPosition, offset, transfered);
                 if (completed == true)
                 {
-                    callback(userToken, _protocolId, _messageBuffer);
+                    callback(userToken, _messageBuffer);
                     ClearBuffer();
                 }
             }
@@ -128,9 +114,9 @@ namespace RWCoreNetwork
 		/// <returns>다 읽었으면 true, 데이터가 모자라서 못 읽었으면 false를 리턴한다.</returns>
         private bool ReadUntil(byte[] buffer, ref int srcPosition, int offset, int transffered)
         {
-            if (_currentPosition >= offset + transffered)
+            if (_currentPosition >= _messageBuffer.Length)
             {
-				// 들어온 데이터 만큼 다 읽은 상태이므로 더이상 읽을 데이터가 없다.
+                // 들어온 데이터 만큼 다 읽은 상태이므로 더이상 읽을 데이터가 없다.
                 return false;
             }
 
@@ -163,31 +149,6 @@ namespace RWCoreNetwork
             }
             
             return true;
-        }
-
-        private Int16 GetProtocolId()
-        {
-            Type type = Defines.PROTOCOL_ID.GetType();
-            if (type.Equals(typeof(Int16)) == false)
-            {
-                throw new Exception("Invalid Protocol id type!");
-            }
-
-            return BitConverter.ToInt16(_messageBuffer, 0);
-        }
-
-        /// <summary>
-        /// 헤더 타입의 바이트만큼을 읽어와 메시지 사이즈를 리턴한다.
-        /// </summary>
-        private int GetBodySize()
-        {
-            Type type = Defines.HEADERSIZE.GetType();
-            if (type.Equals(typeof(Int16)))
-            {
-                return BitConverter.ToInt16(_messageBuffer, Defines.PROTOCOL_ID);
-            }
-
-            return BitConverter.ToInt32(_messageBuffer, 0);
         }
 
         private void ClearBuffer()
