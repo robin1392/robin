@@ -240,9 +240,17 @@ public class GameStateManager : Singleton<GameStateManager>
         yield return new WaitForSeconds(0.1f);
         
 #if NETWORK_ACT
-        //
-        //WebPacket.Get().SendUserAuth(UserInfoManager.Get().GetUserInfo().userID , UserAuthOK);
-        WebPacket.Get().SendUserAuth("" , UserAuthOK);
+        
+        // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
+        if (NetworkManager.Get().UserId.Length > 0)
+        {
+            WebPacket.Get().SendUserAuth(NetworkManager.Get().UserId, UserAuthOK);
+        }
+        else
+        {
+            //WebPacket.Get().SendUserAuth(UserInfoManager.Get().GetUserInfo().userID , UserAuthOK);
+            WebPacket.Get().SendUserAuth("", UserAuthOK);
+        }
 #else
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
