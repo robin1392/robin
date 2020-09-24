@@ -38,7 +38,7 @@ namespace ED
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack");
+                controller.MinionAniTrigger(id, "Attack", target.id);
             }
         }
 

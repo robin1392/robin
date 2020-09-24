@@ -8,9 +8,9 @@ using RWGameProtocol.Msg;
 namespace RWGameProtocol
 {
 
-    public class PacketCSReceiver : PacketReceiver, IPacketProcessor
+    public class PacketCSReceiver : PacketReceiver, IPacketReceiver
     {
-        public bool Run(Peer peer, short protocolId, byte[] data)
+        public bool Process(Peer peer, int protocolId, byte[] data)
         {
             switch ((GameProtocol)protocolId)
             {

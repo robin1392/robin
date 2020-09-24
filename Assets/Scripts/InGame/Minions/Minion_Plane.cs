@@ -25,14 +25,14 @@ namespace ED
 
         public override void Attack()
         {
-            //if (target == null) return;
+            if (target == null) return;
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             if((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false)
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack");
+                controller.MinionAniTrigger(id, "Attack", target.id);
             }
         }
 

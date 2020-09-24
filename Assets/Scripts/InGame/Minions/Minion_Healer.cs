@@ -31,7 +31,7 @@ namespace ED
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
-                controller.MinionAniTrigger(id, "Attack");
+                controller.MinionAniTrigger(id, "Attack", target.id);
                 
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HEALMINION, target.id, effect);
                 controller.HealerMinion(target.id, effect);
@@ -83,6 +83,14 @@ namespace ED
             }
 
             return closeToTarget != null ? closeToTarget.GetComponentInParent<BaseStat>() : controller.targetPlayer;
+        }
+
+        public override void SetAnimationTrigger(string triggerName, int targetID)
+        {
+            var target = controller.GetBaseStatFromId(targetID);
+            transform.LookAt(target.transform);
+            
+            animator.SetTrigger(triggerName);
         }
     }
 }

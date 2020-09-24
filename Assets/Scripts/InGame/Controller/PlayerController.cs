@@ -1260,13 +1260,15 @@ namespace ED
         
         
         
-        public void MinionAniTrigger(int baseStatId , string aniName)
+        public void MinionAniTrigger(int baseStatId , string aniName , int targetId )
         {
             if (InGameManager.IsNetwork && isMine)
             {
-                NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniName);
+                int aniEnum = (int)UnityUtil.ToEnum<E_AniTrigger>(aniName);
+                // 
+                NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniEnum , targetId);
             }
-            SetMinionAnimationTrigger(baseStatId, aniName);
+            SetMinionAnimationTrigger(baseStatId, aniName , targetId);
         }
         public void ActionSendMsg(int bastStatId, string msgFunc, int targetId = -1)
         {
@@ -1584,12 +1586,13 @@ namespace ED
         
         #region minion etc list do it
         
-        public void SetMinionAnimationTrigger(int baseStatId, string trigger)
+        public void SetMinionAnimationTrigger(int baseStatId, string trigger , int targetId )
         {
             var m = listMinion.Find(minion => minion.id == baseStatId);
             if (m != null && m.animator != null)
             {
-                m.animator.SetTrigger(trigger);
+                //m.animator.SetTrigger(trigger);
+                m.SetAnimationTrigger(trigger, targetId);
             }
         }
         
@@ -1831,7 +1834,7 @@ namespace ED
                     if (listMinion.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgVector3[] msgMinPos = new MsgVector3[100];
+                        MsgVector3[] msgMinPos = new MsgVector3[160];
                     
                         for (int i = 0; i < listMinion.Count; i++)
                         {
@@ -2205,10 +2208,12 @@ namespace ED
                     MsgSetMinionAnimationTriggerRelay anirelay = (MsgSetMinionAnimationTriggerRelay) param[0];
                     
                     //UnityEngine.Debug.Log(anirelay.Trigger);
+                    string aniName = ((E_AniTrigger)anirelay.Trigger).ToString();
+                    
                     if (NetworkManager.Get().UserUID == anirelay.PlayerUId)
-                        SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
+                        SetMinionAnimationTrigger(anirelay.Id, aniName , anirelay.TargetId);
                     else if (NetworkManager.Get().OtherUID == anirelay.PlayerUId )
-                        targetPlayer.SetMinionAnimationTrigger(anirelay.Id, anirelay.Trigger);
+                        targetPlayer.SetMinionAnimationTrigger(anirelay.Id, aniName ,anirelay.TargetId);
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:

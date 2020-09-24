@@ -27,13 +27,11 @@ public class SocketManager
         _serverPeer = null;
     }
 
-    public void Init(IPacketProcessor recvProcessor)
+    public void Init(IPacketReceiver recvProcessor)
     {
-        PacketHandler handler = new PacketHandler();
-        handler.Init(recvProcessor);
-        handler.SetActive(true);
+        PacketHandler handler = new PacketHandler(recvProcessor, 30);
 
-        _netService = new NetClientService(handler, 1, 1024, 1000, 1000);
+        _netService = new NetClientService(handler, 1, 4096, 1000, 1000);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientConnectedCallback += OnClientDisconnected;
     }

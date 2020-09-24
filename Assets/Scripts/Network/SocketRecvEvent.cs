@@ -88,6 +88,14 @@ public class SocketRecvEvent
         // my dice get
         UnityUtil.Print(" get dice recv ", "errocode : " + msg.ErrorCode, "white");
 
+        // 차후엔 에러처리를 해야된다..
+        if (msg.ErrorCode != 0)
+        {
+            UnityUtil.Print(" get dice recv ", "errocode : " + msg.ErrorCode, "red");
+            return;
+        }
+            
+
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.GET_DICE_ACK, msg);
 
@@ -96,6 +104,14 @@ public class SocketRecvEvent
     public void OnLevelUpDiceAck(Peer peer, MsgLevelUpDiceAck msg)
     {
         UnityUtil.Print(" level up dice recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        // 차후엔 에러처리를 해야된다..
+        if (msg.ErrorCode != 0)
+        {
+            UnityUtil.Print(" level up dice recv ", "errocode : " + msg.ErrorCode, "red");
+            return;
+        }
+            
 
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.LEVEL_UP_DICE_ACK, msg);
@@ -105,6 +121,14 @@ public class SocketRecvEvent
     {
         UnityUtil.Print(" up sp recv ", "errocode : " + msg.ErrorCode, "white");
         
+        // 차후엔 에러처리를 해야된다..
+        if (msg.ErrorCode != 0)
+        {
+            UnityUtil.Print(" up sp recv ", "errocode : " + msg.ErrorCode, "red");
+            return;
+        }
+            
+                    
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.UPGRADE_SP_ACK, msg);
     }
@@ -112,6 +136,14 @@ public class SocketRecvEvent
     public void OnInGameUpDiceAck(Peer peer, MsgInGameUpDiceAck msg)
     {
         UnityUtil.Print(" in game upgrade recv ", "errocode : " + msg.ErrorCode, "white");
+        
+        // 차후엔 에러처리를 해야된다..
+        if (msg.ErrorCode != 0)
+        {
+            UnityUtil.Print(" in game upgrade recv ", "errocode : " + msg.ErrorCode, "red");
+            return;
+        }
+            
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.INGAME_UP_DICE_ACK, msg);
@@ -122,6 +154,14 @@ public class SocketRecvEvent
         //UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
         UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.Damage + "   error code " + msg.ErrorCode , "green");
         
+        // 차후엔 에러처리를 해야된다..
+        if (msg.ErrorCode != 0)
+        {
+            UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.Damage + "   error code " + msg.ErrorCode , "red");
+            return;
+        }
+            
+        
         //Global.g_networkBaseValue
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_ACK, msg);
@@ -131,6 +171,7 @@ public class SocketRecvEvent
     {
         //UnityUtil.Print("hit damage Notify", msg.PlayerUId.ToString() + "  " + msg.Damage.ToString(), "white");
         UnityUtil.Print("RECV => ", "HIT DAMAGE NOTIFY  " +msg.PlayerUId.ToString() + "   " + msg.Damage , "white");
+        
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_NOTIFY, msg);

@@ -83,9 +83,8 @@ namespace RWGameProtocol.Msg
     {
         public int PlayerUId;
         public int Id;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string Trigger;
+        public int TargetId;
+        public int Trigger;
     }
 
 
@@ -336,8 +335,8 @@ namespace RWGameProtocol.Msg
         // Pos배열 분할 인덱스
         public byte PosIndex;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 80)]
-        public MsgVector3[] Pos = new MsgVector3[80];
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 160)]
+        public MsgVector3[] Pos = new MsgVector3[160];
     }
 
 

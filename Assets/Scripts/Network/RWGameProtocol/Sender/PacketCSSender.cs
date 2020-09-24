@@ -418,11 +418,12 @@ namespace RWGameProtocol
         /// <param name="peer"></param>
         /// <param name="id"></param>
         /// <param name="trigger"></param>
-        public override void SetMinionAnimationTriggerRelay(Peer peer, int playerUId, int id, string trigger)
+        public override void SetMinionAnimationTriggerRelay(Peer peer, int playerUId, int id, int targetId, int trigger)
         {
             MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
+            msg.TargetId = targetId;
             msg.Trigger = trigger;
             peer.SendPacket((short)GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, msg.Serialize());
         }

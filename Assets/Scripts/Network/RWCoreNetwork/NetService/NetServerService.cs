@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.Threading;
-
+﻿using System.Net.Sockets;
 using RWCoreNetwork.NetPacket;
 
 namespace RWCoreNetwork.NetService
 {
     public class NetServerService : NetBaseService
     {
-        // 프로토콜 정의 델리게이트
-        public delegate bool InterceptProtocolDelegate(UserToken userToken, short protocolId, byte[] msg);
-        public InterceptProtocolDelegate InterceptProtocol;
-
-
         private Listener _listener;
 
 
@@ -51,62 +39,6 @@ namespace RWCoreNetwork.NetService
         private void OnConnectedClient(Socket clientSocket, object token)
         {
             OpenClientSocket(clientSocket);
-        }
-
-
-        /// <summary>
-        /// 패킷을 큐에 추가한다.
-        /// </summary>
-        /// <param name="userToken"></param>
-        /// <param name="protocolId"></param>
-        /// <param name="msg"></param>
-        protected override void OnMessageCompleted(UserToken userToken, short protocolId, byte[] msg)
-        {
-            if (userToken == null)
-            {
-                return;
-            }
-
-
-            if (_packetHandler == null)
-            {
-                return;
-            }
-
-
-            // 패킷 큐에 저장하기 전에 사용자가 지정한 처리를 수행한다.
-            //if (InterceptProtocol != null)
-            //{
-            //    if (InterceptProtocol(userToken, protocolId, msg) == true)
-            //    {
-            //        return;
-            //    }
-            //}
-
-
-            // 패킷처리 큐에 추가한다.
-            //_packetHandler.EnqueuePacket(new Packet(userToken.GetPeer(), protocolId, msg, msg.Length));
-            _packetHandler.EnqueuePacket(userToken.GetPeer(), protocolId, msg);
-        }
-
-
-        /// <summary>
-        /// 릴레이 패킷을 전송한다.
-        /// </summary>
-        /// <param name="userToken">전송 유저 토큰</param>
-        /// <param name="protocolId"></param>
-        /// <param name="msg"></param>
-        void SendRelayPacket(UserToken userToken, short protocolId, byte[] msg)
-        {
-            foreach (var elem in _userTokenMap)
-            {
-                if (elem.Value.Id == userToken.Id)
-                {
-                    continue;
-                }
-
-                elem.Value.Send(protocolId, msg);
-            }
         }
     }
 }

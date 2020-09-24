@@ -47,14 +47,14 @@ namespace  ED
 
         public override void Attack()
         {
-            //if (target == null) return;
+            if (target == null) return;
             
             //if (PhotonNetwork.IsConnected && isMine)
             if( InGameManager.IsNetwork && isMine )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack");
+                controller.MinionAniTrigger(id, "Attack", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false )
@@ -126,12 +126,14 @@ namespace  ED
                 _skillCastedCount++;
 
                 PoolManager.instance.ActivateObject(pref_SkillEffect.name, ts_SkillParticlePosition.position);
+
+                int targetId = list[Random.Range(0, list.Count)];
                 
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-                controller.MinionAniTrigger(id, "Skill");
+                controller.MinionAniTrigger(id, "Skill", targetId);
                 
                 //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW, list[Random.Range(0, list.Count)], effect);
-                controller.ActionMinionScareCrow(true, list[Random.Range(0, list.Count)], (float) eyeLevel);
+                controller.ActionMinionScareCrow(true, targetId, (float) eyeLevel);
 
             }
         }

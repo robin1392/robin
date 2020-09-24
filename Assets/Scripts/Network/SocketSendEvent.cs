@@ -102,7 +102,7 @@ public class SocketSendEvent
             
             case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
             {
-                _sender.SetMinionAnimationTriggerRelay(peer, (int) param[0], (int) param[1], (string) param[2]);
+                _sender.SetMinionAnimationTriggerRelay(peer, (int) param[0], (int) param[1], (int)param[3] , (int) param[2] );
                 break;
             }
             case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:

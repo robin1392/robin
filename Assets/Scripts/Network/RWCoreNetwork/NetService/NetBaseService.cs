@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using RWCoreNetwork.NetPacket;
@@ -21,19 +20,45 @@ namespace RWCoreNetwork.NetService
     }
 
 
+    public class NetMonitorInfo
+    {
+        public int ReceiveEventPoolCount { get; set; }
+        public int SendEventPoolCount { get; set; }
+
+        public int ReceivePacketQueueCount { get; set; }
+
+        public Dictionary<int, int> SendPacketQueueCount { get; set; }
+
+        public int UserCount { get; set; }
+
+
+        public NetMonitorInfo()
+        {
+            SendPacketQueueCount = new Dictionary<int, int>();
+        }
+    }
+
     public class NetBaseService
     {
         public delegate void ClientConnectDelegate(UserToken token);
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
 
-        
+        // 네트워크 서비스 모니터링 델리게이터
+        public delegate void NetServiceMonitoringDelegate(NetMonitorInfo monitorInfo);
+        public NetServiceMonitoringDelegate NetServiceMonitoring;
+
+
         // 유저 토큰 맵
         protected Dictionary<int, UserToken> _userTokenMap;
 
 
         // 패킷 핸들러
         protected PacketHandler _packetHandler;
+
+
+        // 네트워크 상태 큐
+        protected Queue<UserToken> _netEventQueue;
 
 
         private readonly int preAllocCount = 2;
@@ -49,10 +74,8 @@ namespace RWCoreNetwork.NetService
         // 메시지 수신, 전송시 비동기 소켓에서 사용할 버퍼를 관리하는 객체
         private BufferManager _bufferManager;
 
-
-        // 네트워크 상태 큐
-        protected Queue<UserToken> _netEventQueue;
-
+        private NetMonitorInfo _monitorInfo;
+        private long _monitorTick;
 
 
         public NetBaseService(PacketHandler packetHandler, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval)
@@ -61,8 +84,11 @@ namespace RWCoreNetwork.NetService
             ClientDisconnectedCallback = null;
             _userTokenMap = new Dictionary<int, UserToken>();
             _netEventQueue = new Queue<UserToken>();
-            _packetHandler = packetHandler;
+            _monitorInfo = new NetMonitorInfo();
+            _monitorTick = DateTime.UtcNow.AddSeconds(10).Ticks;
 
+
+            _packetHandler = packetHandler;
 
             // SocketAsyncEventArgs object pool 생성
             _receiveEventAragePool = new SocketAsyncEventArgsPool(maxConnection);
@@ -109,10 +135,34 @@ namespace RWCoreNetwork.NetService
 
         public virtual void Update() 
         {
+            if (NetServiceMonitoring != null)
+            {
+                DateTime now = DateTime.UtcNow;
+                if (_monitorTick < now.Ticks)
+                {
+                    _monitorTick = now.AddSeconds(5).Ticks;
+
+                    _monitorInfo.UserCount = _userTokenMap.Count;
+                    _monitorInfo.ReceiveEventPoolCount = _receiveEventAragePool.Count;
+                    _monitorInfo.SendEventPoolCount = _sendEventAragePool.Count;
+                    _monitorInfo.ReceivePacketQueueCount = _packetHandler.Count();
+                    
+
+                    _monitorInfo.SendPacketQueueCount.Clear();
+                    foreach (var elem in _userTokenMap)
+                    {
+                        _monitorInfo.SendPacketQueueCount.Add(elem.Key, elem.Value.GetSendQueueCount());
+                    }
+
+                    NetServiceMonitoring(_monitorInfo);
+                }
+            }
+
+
             // 연결 이벤트 처리
             ProcessConnectionEvent();
             
-            // 수신된 패킷을 처리한다.
+            // 패킷을 처리한다.
             _packetHandler.Update();
         }
 
@@ -206,8 +256,6 @@ namespace RWCoreNetwork.NetService
             UserToken userToken = e.UserToken as UserToken;
             if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
             {
-                //Console.WriteLine(string.Format("[{0}] Receive message. handle {1},  count {2}", Thread.CurrentThread.ManagedThreadId, userToken.Socket.Handle, _connectedCount));
-
                 // 이후의 작업은 CUserToekn에 맡긴다.
                 userToken.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
 
@@ -250,7 +298,7 @@ namespace RWCoreNetwork.NetService
 
             // 소켓 옵션 설정.
             socket.LingerState = new LingerOption(true, 10);
-            socket.NoDelay = true;
+            //socket.NoDelay = true;
 
 
             // 패킷 수신 시작
@@ -313,7 +361,7 @@ namespace RWCoreNetwork.NetService
         /// <param name="userToken"></param>
         /// <param name="protocolId"></param>
         /// <param name="msg"></param>
-        protected virtual void OnMessageCompleted(UserToken userToken, short protocolId, byte[] msg)
+        protected virtual void OnMessageCompleted(UserToken userToken, byte[] msg)
         {
             if (userToken == null)
             {
@@ -328,7 +376,7 @@ namespace RWCoreNetwork.NetService
 
 
             // 패킷처리 큐에 추가한다.
-            _packetHandler.EnqueuePacket(userToken.GetPeer(), protocolId, msg);
+            _packetHandler.EnqueueReceivePacket(userToken.GetPeer(), msg);
         }
 
 
@@ -364,11 +412,6 @@ namespace RWCoreNetwork.NetService
             {
                 ClientDisconnectedCallback(userToken);
             }
-        }
-
-        public int GetPacketQueueCount()
-        {
-            return _packetHandler.Count();
         }
     }
 }

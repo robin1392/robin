@@ -9,37 +9,42 @@ namespace RWCoreNetwork.NetPacket
 	/// </summary>
     public class PacketHandler
     {
+        // 프로토콜 정의 델리게이트
+        public delegate bool InterceptProtocolDelegate(Peer peer, int protocolId, byte[] msg);
+        public InterceptProtocolDelegate InterceptProtocol;
+
+
+        protected IPacketReceiver PacketReceiver { get; private set; }
+
         protected bool _isActivated { get; set; }
 
-        // 패킷 보관 큐
-        protected Queue<Packet> _packetQueue;
+        // 수신 큐
+        protected Queue<Packet> _receiveQueue;
+        protected object _lockReceiveQueue;
 
-        // 큐 동기화 객체
-        protected object _lockQueue;
+        protected Queue<byte[]> _sendQueue;
+        protected object _lockSendQueue;
 
-        protected IPacketProcessor PacketProcessor { get; private set; }
+        private readonly int _packetProcessCount;
 
 
-        public PacketHandler()
+
+        public PacketHandler(IPacketReceiver packetReceiver, int packetProcessCount)
         {
-            _isActivated = false;
-            _packetQueue = new Queue<Packet>();
-            _lockQueue = new object();
-        }
+            PacketReceiver = packetReceiver;
+            _packetProcessCount = packetProcessCount;
 
-        public void Init(IPacketProcessor packetProcessor)
-        {
-            PacketProcessor = packetProcessor;
+            _isActivated = true;
+            _receiveQueue = new Queue<Packet>();
+            _lockReceiveQueue = new object();
         }
 
 
         public int Count()
         {
-            lock (_lockQueue)
-            {
-                return _packetQueue.Count;
-            }
+            return _receiveQueue.Count;
         }
+
 
         public virtual void SetActive(bool flag)
         {
@@ -47,25 +52,66 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public virtual void EnqueuePacket(Peer peer, short protocolId, byte[] msg)
+        public virtual void EnqueueReceivePacket(Peer peer, byte[] msg)
         {
-            Packet packet = new Packet(peer, protocolId, msg, msg.Length);
-            lock (_lockQueue)
+            Packet packet = new Packet(peer, msg);
+            lock (_lockReceiveQueue)
             {
-                _packetQueue.Enqueue(packet);
+                _receiveQueue.Enqueue(packet);
             }
         }
 
-        public virtual Packet DequeuePacket()
+
+        public virtual Packet DequeueReceivePacket()
         {
-            lock (_lockQueue)
+            lock (_lockReceiveQueue)
             {
-                if (_packetQueue.Count == 0)
+                if (_receiveQueue.Count == 0)
                 {
                     return null;
                 }
 
-                return _packetQueue.Dequeue();
+                return _receiveQueue.Dequeue();
+            }
+        }
+
+
+        public virtual void EnqueueSendPacket(Peer peer, int protocolId, byte[] msg)
+        {
+            //byte[] buffer = new byte[1024];
+
+            //// protocol id
+            //int offset = 0;
+            //byte[] tmpBuffer = BitConverter.GetBytes(protocolId);
+            //Array.Copy(tmpBuffer, 0, buffer, offset, tmpBuffer.Length);
+
+            //// body length
+            //offset = tmpBuffer.Length;
+            //tmpBuffer = BitConverter.GetBytes((short)(buffer.Length - 4));
+            //Array.Copy(tmpBuffer, 0, buffer, offset, tmpBuffer.Length);
+
+            //// msg
+            //offset += tmpBuffer.Length;
+            //Array.Copy(msg, 0, buffer, offset, msg.Length);
+
+
+            //lock (_lockSendQueue)
+            //{
+            //    _sendQueue.Enqueue(buffer);
+            //}
+        }
+
+
+        public virtual byte[] DequeueSendPacket()
+        {
+            lock (_lockSendQueue)
+            {
+                if (_sendQueue.Count == 0)
+                {
+                    return null;
+                }
+
+                return _sendQueue.Dequeue();
             }
         }
 
@@ -82,21 +128,30 @@ namespace RWCoreNetwork.NetPacket
                 return;
             }
 
-            if (PacketProcessor == null)
+            if (PacketReceiver == null)
             {
                 return;
             }
 
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < _packetProcessCount; i++)
             {
-                Packet packet = DequeuePacket();
+                Packet packet = DequeueReceivePacket();
                 if (packet == null)
                 {
                     return;
                 }
 
 
-                PacketProcessor.Run(packet.Peer, packet.ProtocolId, packet.Data);
+                if (InterceptProtocol != null)
+                {
+                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Msg) == true)
+                    {
+                        continue;
+                    }
+                }
+
+
+                PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Msg);
             }
         }
     }

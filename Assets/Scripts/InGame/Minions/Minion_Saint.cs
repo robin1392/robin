@@ -46,7 +46,7 @@ namespace ED
                 {
                     base.Attack();
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-                    controller.MinionAniTrigger(id, "Skill");
+                    controller.MinionAniTrigger(id, "Skill", target.id);
                     
                     foreach (var col in cols)
                     {
@@ -112,6 +112,14 @@ namespace ED
             }
 
             return closeToTarget != null ? closeToTarget.GetComponentInParent<BaseStat>() : null;
+        }
+
+        public override void SetAnimationTrigger(string triggerName, int targetID)
+        {
+            var target = controller.GetBaseStatFromId(targetID);
+            transform.LookAt(target.transform);
+            
+            animator.SetTrigger(triggerName);
         }
     }
 }

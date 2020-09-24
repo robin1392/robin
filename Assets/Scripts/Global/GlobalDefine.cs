@@ -79,3 +79,13 @@ public enum E_BulletType
     ARBITER,
     BABYDRAGON,
 }
+
+public enum E_AniTrigger
+{
+    Idle,
+    Attack,
+    Skill,
+    Attack1,
+    Attack2,
+    AttackReady,
+}

@@ -47,7 +47,7 @@ namespace RWGameProtocol
         public virtual void DestroyMinionRelay(Peer peer, int playerUId, int id) { }
         public virtual void HealMinionRelay(Peer peer, int playerUId, int id, int heal) { }
         public virtual void PushMinionRelay(Peer peer, int playerUId, int id, int x, int y, int z, int pushPower) { }
-        public virtual void SetMinionAnimationTriggerRelay(Peer peer, int playerUId, int id, string trigger) { }
+        public virtual void SetMinionAnimationTriggerRelay(Peer peer, int playerUId, int id, int targetId, int trigger) { }
         public virtual void FireArrowRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeed) { }
         public virtual void FireballBombRelay(Peer peer, int playerUId, int id) { }
         public virtual void MineBombRelay(Peer peer, int playerUId, int id) { }
