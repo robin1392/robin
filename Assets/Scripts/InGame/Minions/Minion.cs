@@ -213,19 +213,16 @@ namespace ED
                 return;
             }
             
-            if (currentHealth > 0)
+            currentHealth -= damage;
+
+            if (currentHealth <= 0)
             {
-                currentHealth -= damage;
+                //if (PhotonNetwork.IsConnected && !isMine)
+                if(InGameManager.IsNetwork && !isMine)
+                    return;
 
-                if (currentHealth <= 0)
-                {
-                    //if (PhotonNetwork.IsConnected && !isMine)
-                    if(InGameManager.IsNetwork && !isMine)
-                        return;
-
-                    currentHealth = 0;
-                    controller.DeathMinion(id);
-                }
+                currentHealth = 0;
+                controller.DeathMinion(id);
             }
 
             RefreshHealthBar();

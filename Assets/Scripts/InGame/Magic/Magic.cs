@@ -275,18 +275,15 @@ namespace ED
 
         public override void HitDamage(float damage)
         {
-            if (currentHealth > 0)
+            currentHealth -= damage;
+
+            if (currentHealth <= 0)
             {
-                currentHealth -= damage;
+                //if (PhotonNetwork.IsConnected && !isMine) return;
+                if (InGameManager.IsNetwork && !isMine) return;
 
-                if (currentHealth <= 0)
-                {
-                    //if (PhotonNetwork.IsConnected && !isMine) return;
-                    if (InGameManager.IsNetwork && !isMine) return;
-
-                    currentHealth = 0;
-                    EndLifetime();
-                }
+                currentHealth = 0;
+                EndLifetime();
             }
         }
         
