@@ -248,8 +248,14 @@ public class GameStateManager : Singleton<GameStateManager>
         }
         else
         {
-            //WebPacket.Get().SendUserAuth(UserInfoManager.Get().GetUserInfo().userID , UserAuthOK);
-            WebPacket.Get().SendUserAuth("", UserAuthOK);
+            //string userid = UserInfoManager.Get().GetUserInfo().userID;
+            string userid = "";
+            WebPacket.Get().SendUserAuth(userid, UserAuthOK);
+            // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
+            if (userid == "")
+            {
+                UserInfoManager.Get().GetUserInfo().ResetDeck();
+            }
         }
 #else
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능

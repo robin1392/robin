@@ -30,11 +30,10 @@ public class UserInfo
         private set => _ticketId = value;
     }
 
-    private int _activateDeckIndex;
     public int activateDeckIndex
     {
-        get => _activateDeckIndex;
-        private set => _activateDeckIndex = value;
+        get => ObscuredPrefs.GetInt("SelectedDeckNum", 0);
+        private set => ObscuredPrefs.SetInt("SelectedDeckNum", value);
     }
 
     // 서버가 정식으로 붙기 전까진 playerpref 에 저장해두고 가져오고 쓰자
@@ -47,8 +46,6 @@ public class UserInfo
 
     public UserInfo()
     {
-        _activateDeckIndex = 0;
-        
         _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004" );
         _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004" );
         _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004" );
@@ -132,23 +129,23 @@ public class UserInfo
 
     public void SetActiveDeck(int index)
     {
-        _activateDeckIndex = index;
+        activateDeckIndex = index;
     }
 
     public void SetDeck(string deck)
     {
-        _slotDeck[_activateDeckIndex] = deck;
+        _slotDeck[activateDeckIndex] = deck;
 
-        switch (_activateDeckIndex)
+        switch (activateDeckIndex)
         {
             case 0:
-                ObscuredPrefs.SetString("Deck", _slotDeck[_activateDeckIndex]);
+                ObscuredPrefs.SetString("Deck", _slotDeck[activateDeckIndex]);
                 break;
             case 1:
-                ObscuredPrefs.SetString("Deck2", _slotDeck[_activateDeckIndex]);
+                ObscuredPrefs.SetString("Deck2", _slotDeck[activateDeckIndex]);
                 break;
             case 2:
-                ObscuredPrefs.SetString("Deck3", _slotDeck[_activateDeckIndex]);
+                ObscuredPrefs.SetString("Deck3", _slotDeck[activateDeckIndex]);
                 break;
         }
         
@@ -173,6 +170,18 @@ public class UserInfo
         }
         
         ObscuredPrefs.Save();
+    }
+
+    public void ResetDeck()
+    {
+        ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004");
+        ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
+        ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
+        ObscuredPrefs.Save();
+        
+        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
+        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
     }
     #endregion
     
@@ -254,10 +263,6 @@ public class UserInfoManager : Singleton<UserInfoManager>
     public void SetTicketId(string ticket)
     {
         _userInfo.SetTicketId(ticket);
-    }
-    public void SetDeck(int deckIndex , string deck)
-    {
-        _userInfo.SetDeck(deck);
     }
 
     public string GetActiveDeck()
