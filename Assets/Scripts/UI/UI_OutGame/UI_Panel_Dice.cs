@@ -187,7 +187,7 @@ namespace ED
             BroadcastMessage("DeactivateSelectedObject", SendMessageOptions.DontRequireReceiver);
         }
 
-        public void Click_Deck(int deckNum)
+        public void Click_Deck(int deckSlotNum)
         {
             if (_isSelectMode)
             {
@@ -202,17 +202,17 @@ namespace ED
                 for (var i = 0; i < intDeck.Length; i++) intDeck[i] = int.Parse(splitDeck[i]);
                 for (var i = 0; i < intDeck.Length; i++)
                 {
-                    if (i == deckNum) continue;
+                    if (i == deckSlotNum) continue;
                     if (intDeck[i] == _selectedDiceId)
                     {
-                        var temp = intDeck[deckNum];
-                        intDeck[deckNum] = _selectedDiceId;
+                        var temp = intDeck[deckSlotNum];
+                        intDeck[deckSlotNum] = _selectedDiceId;
                         intDeck[i] = temp;
                         isChanged = true;
                         break;
                     }
                 }
-                if (!isChanged) intDeck[deckNum] = _selectedDiceId;
+                if (!isChanged) intDeck[deckSlotNum] = _selectedDiceId;
                 
                 //
                 if (WebPacket.Get() != null)
@@ -311,16 +311,25 @@ namespace ED
                     arrImageDeckButton[0].sprite = sprite_Use;
                     arrImageDeckButton[1].sprite = sprite_UnUse;
                     arrImageDeckButton[2].sprite = sprite_UnUse;
+                    arrImageDeckButtonMain[0].sprite = sprite_MainUse;
+                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
                     break;
                 case 1:
                     arrImageDeckButton[0].sprite = sprite_UnUse;
                     arrImageDeckButton[1].sprite = sprite_Use;
                     arrImageDeckButton[2].sprite = sprite_UnUse;
+                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[1].sprite = sprite_MainUse;
+                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
                     break;
                 case 2:
                     arrImageDeckButton[0].sprite = sprite_UnUse;
                     arrImageDeckButton[1].sprite = sprite_UnUse;
                     arrImageDeckButton[2].sprite = sprite_Use;
+                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
+                    arrImageDeckButtonMain[2].sprite = sprite_MainUse;
                     break;
             }
         }
