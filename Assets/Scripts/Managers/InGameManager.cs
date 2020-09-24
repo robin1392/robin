@@ -648,11 +648,10 @@ namespace ED
 
         public void GetDiceCallBack(int diceId, int slotNum, int level, int curSp)
         {
-            NetSetSp(curSp);
-
             getDiceCount++;
             UI_InGame.Get().SetDiceButtonText(GetDiceCost());
             playerController.GetDice(diceId, slotNum, level);
+            NetSetSp(curSp);
         }
 
         public void GetDiceOther(int diecId, int slotNum, int level)

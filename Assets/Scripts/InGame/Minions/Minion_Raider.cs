@@ -115,7 +115,7 @@ namespace ED
         private IEnumerator DashCoroutine(Transform dashTarget)
         {
             var t = PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
-            t.LookAt(target.transform.position);
+            if (target != null) t.LookAt(target.transform.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
             
