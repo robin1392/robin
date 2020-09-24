@@ -31,8 +31,6 @@ namespace RWCoreNetwork.NetService
 
         public int UserCount { get; set; }
 
-        public int CpuUsage { get; set; }
-
 
         public NetMonitorInfo()
         {
@@ -105,7 +103,7 @@ namespace RWCoreNetwork.NetService
             SocketAsyncEventArgs args;
             for (int i = 0; i < maxConnection; i++)
             {
-                UserToken userToken = new UserToken(_packetHandler, bufferSize, i + 1);
+                UserToken userToken = new UserToken(bufferSize, i + 1);
                 userToken.CompletedMessageCallback += OnMessageCompleted;
 
 
@@ -258,8 +256,6 @@ namespace RWCoreNetwork.NetService
             UserToken userToken = e.UserToken as UserToken;
             if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
             {
-                //Console.WriteLine(string.Format("Receive message. handle {0},  userToken: {1},  e.BytesTransferred {2}", userToken.Socket.Handle, userToken.Id, e.BytesTransferred));
-
                 // 이후의 작업은 CUserToekn에 맡긴다.
                 userToken.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
 

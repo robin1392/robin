@@ -10,7 +10,7 @@ namespace RWGameProtocol
 
     public class PacketCSReceiver : PacketReceiver, IPacketReceiver
     {
-        public bool Process(Peer peer, short protocolId, byte[] data)
+        public bool Process(Peer peer, int protocolId, byte[] data)
         {
             switch ((GameProtocol)protocolId)
             {

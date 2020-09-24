@@ -8,23 +8,22 @@ namespace RWCoreNetwork.NetPacket
 {
     public interface IPacketReceiver
     {
-        bool Process(Peer peer, short protocolId, byte[] data);
+        bool Process(Peer peer, int protocolId, byte[] msg);
     }
 
     public class Packet
     {
-        public short ProtocolId { get; private set; }
-        public byte[] Data { get; private set; }
+        public int ProtocolId { get; private set; }
+        public byte[] Msg { get; private set; }
         public Peer Peer { get; private set; }
 
         public Packet(Peer peer, byte[] buffer)
         {
             Peer = peer;
-            ProtocolId = BitConverter.ToInt16(buffer, 0);
+            ProtocolId = BitConverter.ToInt32(buffer, 0);
 
-            int headerSize = Defines.PROTOCOL_ID + Defines.HEADERSIZE;
-            Data = new byte[buffer.Length - headerSize];
-            Array.Copy(buffer, headerSize, Data, 0, buffer.Length - headerSize);
+            Msg = new byte[buffer.Length - Defines.HEADER_SIZE];
+            Array.Copy(buffer, Defines.HEADER_SIZE, Msg, 0, buffer.Length - Defines.HEADER_SIZE);
         }
     }
 }

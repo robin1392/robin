@@ -10,7 +10,7 @@ namespace RWCoreNetwork.NetPacket
     public class PacketHandler
     {
         // 프로토콜 정의 델리게이트
-        public delegate bool InterceptProtocolDelegate(Peer peer, short protocolId, byte[] msg);
+        public delegate bool InterceptProtocolDelegate(Peer peer, int protocolId, byte[] msg);
         public InterceptProtocolDelegate InterceptProtocol;
 
 
@@ -76,7 +76,7 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public virtual void EnqueueSendPacket(Peer peer, short protocolId, byte[] msg)
+        public virtual void EnqueueSendPacket(Peer peer, int protocolId, byte[] msg)
         {
             //byte[] buffer = new byte[1024];
 
@@ -144,14 +144,14 @@ namespace RWCoreNetwork.NetPacket
 
                 if (InterceptProtocol != null)
                 {
-                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Data) == true)
+                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Msg) == true)
                     {
                         continue;
                     }
                 }
 
 
-                PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Data);
+                PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Msg);
             }
         }
     }

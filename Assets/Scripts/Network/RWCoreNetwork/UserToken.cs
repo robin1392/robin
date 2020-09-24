@@ -34,9 +34,6 @@ namespace RWCoreNetwork
         MessageHandler _messageHandler;
 
 
-        PacketHandler _packetHandler;
-
-
         // 전송할 패킷을 보관해놓는 큐
         Queue<byte[]> _sendingQueue;
 
@@ -46,11 +43,10 @@ namespace RWCoreNetwork
         int _bufferSize;
 
 
-        public UserToken(PacketHandler packetHandler, int bufferSize, int id)
+        public UserToken(int bufferSize, int id)
         {
             Id = id;
             _bufferSize = bufferSize;
-            _packetHandler = packetHandler;
             _peer = null;
             _messageHandler = new MessageHandler(bufferSize);
             _sendingQueue = new Queue<byte[]>();
@@ -110,24 +106,9 @@ namespace RWCoreNetwork
 		/// </summary>
 		/// <param name="protocolId"></param>
 		/// <param name="msg"></param>
-        public void Send(short protocolId, byte[] msg)
+        public void Send(int protocolId, byte[] msg)
         {
-            byte[] buffer = new byte[_bufferSize];
-
-            // protocol id
-            int offset = 0;
-            byte[] tmpBuffer = BitConverter.GetBytes(protocolId);
-            Array.Copy(tmpBuffer, 0, buffer, offset, tmpBuffer.Length);
-
-            // body length
-            offset = tmpBuffer.Length;
-            tmpBuffer = BitConverter.GetBytes((short)(buffer.Length - 4));
-            Array.Copy(tmpBuffer, 0, buffer, offset, tmpBuffer.Length);
-
-            // msg
-            offset += tmpBuffer.Length;
-            Array.Copy(msg, 0, buffer, offset, msg.Length);
-
+            byte[] buffer = _messageHandler.WriteBuffer(protocolId, msg);
             lock (_lockSendingQueue)
             {
                 // 큐가 비어 있다면 큐에 추가하고 바로 비동기 전송 매소드를 호출한다.

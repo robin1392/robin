@@ -62,14 +62,14 @@ namespace RWCoreNetwork.NetPacket
 
                 if (InterceptProtocol != null)
                 {
-                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Data) == true)
+                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Msg) == true)
                     {
                         continue;
                     }
                 }
 
 
-                PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Data);
+                PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Msg);
             }
         }
     }
