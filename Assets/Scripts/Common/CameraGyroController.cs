@@ -16,11 +16,13 @@ public class CameraGyroController : MonoBehaviour
         //Input.gyro.enabled = true;
         originPos = transform.position;
         originAngle = transform.localRotation;
-        transform.position += new Vector3(0, 5f, -5f);
+        transform.position += new Vector3(0, 8f, 0);
+        transform.rotation = Quaternion.Euler(60f, 0, 0);
         transform.DOMove(originPos, 3f, false).SetEase(Ease.OutQuint).OnComplete(() =>
         {
             Input.gyro.enabled = true;
         });
+        transform.DORotate(new Vector3(39f, 0, 0), 3f).SetEase(Ease.OutQuint);
     }
 
     // Update is called once per frame

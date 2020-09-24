@@ -767,5 +767,13 @@ namespace ED
                 }
             }
         }
+
+        public virtual void SetAnimationTrigger(string triggerName, int targetID)
+        {
+            var target = controller.targetPlayer.GetBaseStatFromId(targetID);
+            transform.LookAt(target.transform);
+            
+            animator.SetTrigger(triggerName);
+        }
     }
 }

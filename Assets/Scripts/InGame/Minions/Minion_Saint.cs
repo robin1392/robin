@@ -113,5 +113,13 @@ namespace ED
 
             return closeToTarget != null ? closeToTarget.GetComponentInParent<BaseStat>() : null;
         }
+
+        public override void SetAnimationTrigger(string triggerName, int targetID)
+        {
+            var target = controller.GetBaseStatFromId(targetID);
+            transform.LookAt(target.transform);
+            
+            animator.SetTrigger(triggerName);
+        }
     }
 }

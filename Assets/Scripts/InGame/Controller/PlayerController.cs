@@ -1591,7 +1591,8 @@ namespace ED
             var m = listMinion.Find(minion => minion.id == baseStatId);
             if (m != null && m.animator != null)
             {
-                m.animator.SetTrigger(trigger);
+                //m.animator.SetTrigger(trigger);
+                m.SetAnimationTrigger(trigger, targetId);
             }
         }
         
