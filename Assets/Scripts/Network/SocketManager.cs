@@ -31,7 +31,7 @@ public class SocketManager
     {
         PacketHandler handler = new PacketHandler(recvProcessor, 30);
 
-        _netService = new NetClientService(handler, 1, 4096, 1000, 1000);
+        _netService = new NetClientService(handler, 1, 4096, 5000, 1000);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientConnectedCallback += OnClientDisconnected;
     }
