@@ -51,7 +51,8 @@ namespace ED
         
         private void Start()
         {
-            RefreshDeck();
+            //RefreshDeck();
+            SetActiveDeck();
             RefreshGettedDice();
 
             RefreshButton();

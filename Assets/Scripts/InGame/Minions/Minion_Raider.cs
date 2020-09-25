@@ -115,12 +115,12 @@ namespace ED
         private IEnumerator DashCoroutine(Transform dashTarget)
         {
             var t = PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
-            if (target != null) t.LookAt(target.transform.position);
+            if (dashTarget != null) t.LookAt(dashTarget.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
             
             //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "Skill", target.id);
+            if (dashTarget != null) controller.MinionAniTrigger(id, "Skill", dashTarget.GetComponentInParent<BaseStat>().id);
             
             var ts = transform;
             while (dashTarget != null)

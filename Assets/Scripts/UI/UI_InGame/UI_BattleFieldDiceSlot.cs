@@ -154,7 +154,7 @@ namespace ED
                 //if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
                 {
                     dragDice.Reset();
-                    //ui_DiceField.RefreshField();
+                    ui_DiceField.RefreshField();
                         
                     //if (PhotonNetwork.IsConnected)
                     if(InGameManager.IsNetwork == true)
