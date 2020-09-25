@@ -97,3 +97,34 @@ public enum E_ActionSendMessage
     Aiming,
     StopAiming,
 }
+
+public enum E_PoolName
+{
+    Arrow,
+    Spear,
+    Effect_Death,
+    Effect_SpawnLine,
+    Effect_Poison,
+    Effect_Bomb,
+    Effect_Lightning,
+    Effect_Sturn,
+    Effect_ShotHit,
+    Effect_ArrowHit,
+    Effect_Robot_Summon,
+    Effect_Heal,
+    Effect_Cloaking,
+    Effect_Shield,
+    Babydragon_Bullet,
+    Bomber_Bullet,
+    CannonBall,
+    Magician_Bullet,
+    Necromancer_Bullet,
+    Scarecrow,
+    Effect_Dash,
+    Effect_Dust,
+    Effect_Saint,
+    Effect_Stone,
+    Effect_Support,
+    particle_wizard_skill_book,
+    
+}
