@@ -1416,7 +1416,10 @@ namespace ED
         public void ActionLayzer(int baseStatId, int[] arrTarget)
         {
             if (InGameManager.IsNetwork && isMine)
+            {   
                 NetSendPlayer(GameProtocol.LAYZER_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , arrTarget );
+            }
+                
             LayzerMinion(baseStatId, arrTarget);
         }
 

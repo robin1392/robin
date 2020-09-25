@@ -78,7 +78,13 @@ namespace ED
             if(InGameManager.IsNetwork && isMine)
             {
                 //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_LAYZERTARGET,id, intList.Count > 0 ? intList.ToArray() : null);
-                controller.ActionLayzer(id, intList.Count > 0 ? intList.ToArray() : null);
+                if(intList.Count > 0 )
+                    controller.ActionLayzer(id, intList.ToArray());
+                else
+                {
+                    int[] emptyLst = new int[6] {-1, -1, -1, -1, -1, -1};
+                    controller.ActionLayzer(id, emptyLst);
+                }
             }
             
             if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
@@ -116,6 +122,8 @@ namespace ED
             {
                 for (int i = 0; i < arr.Length; i++)
                 {
+                    if (arr[i] == -1) continue;
+                    
                     if (arr[i] == 0) _listTarget.Add(controller.targetPlayer);
                     else _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
                 }
