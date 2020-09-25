@@ -100,6 +100,7 @@ public enum E_ActionSendMessage
 
 public enum E_PoolName
 {
+    None,
     Arrow,
     Spear,
     Effect_Death,
@@ -126,5 +127,4 @@ public enum E_PoolName
     Effect_Stone,
     Effect_Support,
     particle_wizard_skill_book,
-    
 }
