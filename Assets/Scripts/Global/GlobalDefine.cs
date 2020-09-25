@@ -89,3 +89,11 @@ public enum E_AniTrigger
     Attack2,
     AttackReady,
 }
+
+public enum E_ActionSendMessage
+{
+    LookAndAniTrigger,
+    DashMessage,
+    Aiming,
+    StopAiming,
+}

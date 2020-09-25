@@ -918,14 +918,16 @@ namespace ED
         #region network
         public void SendInGameManager(GameProtocol protocol, params object[] param)
         {
+            
             if (IsNetwork == true)
             {
                 NetworkManager.Get().Send(protocol, param);
             }
-            else
+            // 패킷프로토콜이 틀리기때문에 쓸모없슴...
+            /*else
             {
                 RecvInGameManager(protocol, param);
-            }
+            }*/
         }
 
         // net direct player
