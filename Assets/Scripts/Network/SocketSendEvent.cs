@@ -244,7 +244,7 @@ public class SocketSendEvent
                 MsgVector3 chScale = NetworkManager.Get().VectorToMsg((Vector3) param[3]);
                 MsgQuaternion chRot = NetworkManager.Get().QuaternionToMsg((Quaternion) param[4]);
                 
-                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , (string)param[1] , chStPos , chScale , chRot);
+                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , (int)param[1] , chStPos , chScale , chRot);
                 
                 break;
             }

@@ -26,6 +26,9 @@ public class UnityUtil
         return new Color32(r, g, b, a);
     }
     
+    
+    
+    #region enum convert
     public static T GetEnumByStringNonError<T>(string value) where T : IConvertible
     {
 
@@ -41,10 +44,8 @@ public class UnityUtil
         }
 
     }
-    
-    #region enum convert
 
-    public static T ToEnum<T>(string val)
+    public static T StringToEnum<T>(string val)
     {
         //변환 오류일경우 디폴트
         if (!Enum.IsDefined(typeof(T), val))

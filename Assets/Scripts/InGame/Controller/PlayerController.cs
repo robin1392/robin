@@ -1264,7 +1264,7 @@ namespace ED
         {
             if (InGameManager.IsNetwork && isMine)
             {
-                int aniEnum = (int)UnityUtil.ToEnum<E_AniTrigger>(aniName);
+                int aniEnum = (int)UnityUtil.StringToEnum<E_AniTrigger>(aniName);
                 // 
                 NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , NetworkManager.Get().UserUID , baseStatId , aniEnum , targetId);
             }
@@ -1274,7 +1274,7 @@ namespace ED
         {
             if (InGameManager.IsNetwork && isMine)
             {
-                int funcEnum = (int) UnityUtil.ToEnum<E_ActionSendMessage>(msgFunc);
+                int funcEnum = (int) UnityUtil.StringToEnum<E_ActionSendMessage>(msgFunc);
                     
                 if (targetId == -1)
                 {
@@ -1294,6 +1294,16 @@ namespace ED
                 NetSendPlayer(GameProtocol.SET_MINION_TARGET_RELAY, NetworkManager.Get().UserUID, baseStatId , targetId );
             }
             SetMinionTarget(baseStatId , targetId);
+        }
+        
+        public void ActionActivePoolObject(string objName , Vector3 startPos , Quaternion rotate , Vector3 scale)
+        {
+            if (InGameManager.IsNetwork && isMine)
+            {
+                int enumObj = (int) UnityUtil.StringToEnum<E_PoolName>(objName);
+                NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, NetworkManager.Get().UserUID, enumObj , startPos , scale , rotate);
+            }
+            ActivationPoolObject(objName , startPos , rotate , scale);
         }
 
         
@@ -1369,16 +1379,6 @@ namespace ED
             }
             FiremanFire(baseStatId);
         }
-
-        public void ActionActivePoolObject(string objName , Vector3 startPos , Quaternion rotate , Vector3 scale)
-        {
-            if (InGameManager.IsNetwork && isMine)
-            {
-                NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, NetworkManager.Get().UserUID, objName , startPos , scale , rotate);
-            }
-            ActivationPoolObject(objName , startPos , rotate , scale);
-        }
-
         public void ActionCloacking(int bastStatId, bool isCloacking)
         {
             if (InGameManager.IsNetwork && isMine)
@@ -2253,11 +2253,13 @@ namespace ED
                     Vector3 stPos = NetworkManager.Get().MsgToVector(actrelay.HitPos);
                     Vector3 localScale = NetworkManager.Get().MsgToVector(actrelay.LocalScale);
                     Quaternion rotate = NetworkManager.Get().MsgToQuaternion(actrelay.Rotation);
+                    
+                    string strObjName = ((E_PoolName) actrelay.PoolName).ToString();
 
                     if (NetworkManager.Get().UserUID == actrelay.PlayerUId)
-                        ActivationPoolObject(actrelay.PoolName, stPos, rotate, localScale);
+                        ActivationPoolObject(strObjName, stPos, rotate, localScale);
                     else if (NetworkManager.Get().OtherUID == actrelay.PlayerUId )
-                        targetPlayer.ActivationPoolObject(actrelay.PoolName, stPos, rotate, localScale);
+                        targetPlayer.ActivationPoolObject(strObjName, stPos, rotate, localScale);
 
                     break;
                 }
