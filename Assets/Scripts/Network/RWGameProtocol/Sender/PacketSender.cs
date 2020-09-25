@@ -64,8 +64,8 @@ namespace RWGameProtocol
         public virtual void ActivatePoolObjectRelay(Peer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation) { }
         public virtual void MinionCloackingRelay(Peer peer, int playerUId, int id, bool isCloacking) { }
         public virtual void MinionFogOfWarRelay(Peer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar) { }
-        public virtual void SendMessageVoidRelay(Peer peer, int playerUId, int id, string message) { }
-        public virtual void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, string message) { }
+        public virtual void SendMessageVoidRelay(Peer peer, int playerUId, int id, int message) { }
+        public virtual void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, int message) { }
         public virtual void NecromancerBulletRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed) { }
         public virtual void SetMinionTargetRelay(Peer peer, int playerUId, int id, int targetId) { }
         public virtual void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos) { }

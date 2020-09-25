@@ -263,9 +263,7 @@ namespace RWGameProtocol.Msg
     {
         public int PlayerUId;
         public int Id;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string Message;
+        public int Message;
     }
 
 
@@ -276,9 +274,7 @@ namespace RWGameProtocol.Msg
         public int PlayerUId;
         public int Id;
         public int TargetId;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string Message;
+        public int Message;
     }
 
 

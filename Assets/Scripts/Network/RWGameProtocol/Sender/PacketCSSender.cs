@@ -19,7 +19,7 @@ namespace RWGameProtocol
             MsgJoinGameReq msg = new MsgJoinGameReq();
             msg.PlayerSessionId = playerSessionId;
             msg.DeckIndex = deckIndex;
-            peer.SendPacket((short)GameProtocol.JOIN_GAME_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.JOIN_GAME_REQ, msg.Serialize());
         }
 
 
@@ -33,7 +33,7 @@ namespace RWGameProtocol
             MsgJoinGameAck msg = new MsgJoinGameAck();
             msg.ErrorCode = (short)code;
             msg.PlayerInfo = playerInfo;
-            peer.SendPacket((short)GameProtocol.JOIN_GAME_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.JOIN_GAME_ACK, msg.Serialize());
         }
 
 
@@ -44,7 +44,7 @@ namespace RWGameProtocol
         public override void LeaveGameReq(Peer peer)
         {
             MsgLeaveGameReq msg = new MsgLeaveGameReq();
-            peer.SendPacket((short)GameProtocol.LEAVE_GAME_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.LEAVE_GAME_REQ, msg.Serialize());
         }
 
 
@@ -57,28 +57,28 @@ namespace RWGameProtocol
         {
             MsgLeaveGameAck msg = new MsgLeaveGameAck();
             msg.ErrorCode = (short)code;
-            peer.SendPacket((short)GameProtocol.LEAVE_GAME_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.LEAVE_GAME_ACK, msg.Serialize());
         }
 
 
         public override void ReadyGameReq(Peer peer)
         {
             MsgReadyGameReq msg = new MsgReadyGameReq();
-            peer.SendPacket((short)GameProtocol.READY_GAME_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.READY_GAME_REQ, msg.Serialize());
         }
 
 
         public override void ReadyGameAck(Peer peer, GameErrorCode code)
         {
             MsgReadyGameAck msg = new MsgReadyGameAck();
-            peer.SendPacket((short)GameProtocol.READY_GAME_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.READY_GAME_ACK, msg.Serialize());
         }
 
 
         public override void GetDiceReq(Peer peer)
         {
             MsgGetDiceReq msg = new MsgGetDiceReq();
-            peer.SendPacket((short)GameProtocol.GET_DICE_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.GET_DICE_REQ, msg.Serialize());
         }
 
 
@@ -90,7 +90,7 @@ namespace RWGameProtocol
             msg.SlotNum = slotNum;
             msg.Level = level;
             msg.CurrentSp = currentSp;
-            peer.SendPacket((short)GameProtocol.GET_DICE_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.GET_DICE_ACK, msg.Serialize());
         }
 
 
@@ -99,7 +99,7 @@ namespace RWGameProtocol
             MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
             msg.ResetFieldNum = resetFieldNum;
             msg.LeveupFieldNum = leveupFieldNum;
-            peer.SendPacket((short)GameProtocol.LEVEL_UP_DICE_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_REQ, msg.Serialize());
         }
 
 
@@ -111,14 +111,14 @@ namespace RWGameProtocol
             msg.LeveupFieldNum = leveupFieldNum;
             msg.LevelupDiceId = levelUpDiceId;
             msg.Level = level;
-            peer.SendPacket((short)GameProtocol.LEVEL_UP_DICE_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_ACK, msg.Serialize());
         }
 
         public override void InGameUpDiceReq(Peer peer, int diceId)
         {
             MsgInGameUpDiceReq msg = new MsgInGameUpDiceReq();
             msg.DiceId = diceId;
-            peer.SendPacket((short)GameProtocol.INGAME_UP_DICE_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.INGAME_UP_DICE_REQ, msg.Serialize());
         }
 
 
@@ -129,13 +129,13 @@ namespace RWGameProtocol
             msg.DiceId = diceId;
             msg.InGameUp = inGameUp;
             msg.CurrentSp = currentSp;
-            peer.SendPacket((short)GameProtocol.INGAME_UP_DICE_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.INGAME_UP_DICE_ACK, msg.Serialize());
         }
 
         public override void UpgradeSpReq(Peer peer)
         {
             MsgUpgradeSpReq msg = new MsgUpgradeSpReq();
-            peer.SendPacket((short)GameProtocol.UPGRADE_SP_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.UPGRADE_SP_REQ, msg.Serialize());
         }
 
 
@@ -145,7 +145,7 @@ namespace RWGameProtocol
             msg.ErrorCode = (short)code;
             msg.Upgrade = upgrade;
             msg.CurrentSp = currentSp;
-            peer.SendPacket((short)GameProtocol.UPGRADE_SP_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.UPGRADE_SP_ACK, msg.Serialize());
         }
 
 
@@ -154,7 +154,7 @@ namespace RWGameProtocol
             MsgUpgradeSpNotify msg = new MsgUpgradeSpNotify();
             msg.PlayerUId = playerUId;
             msg.Upgrade = upgrade;
-            peer.SendPacket((short)GameProtocol.UPGRADE_SP_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.UPGRADE_SP_ACK, msg.Serialize());
         }
 
 
@@ -163,7 +163,7 @@ namespace RWGameProtocol
             MsgHitDamageReq msg = new MsgHitDamageReq();
             msg.PlayerUId = playerUId;
             msg.Damage = damage;
-            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
         }
 
 
@@ -173,14 +173,14 @@ namespace RWGameProtocol
             msg.ErrorCode = (short)code;
             msg.PlayerUId = playerUId;
             msg.Damage = damage;
-            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
         }
 
         public override void ReconnectGameReq(Peer peer, int playerUId) 
         {
             MsgReconnectGameReq msg = new MsgReconnectGameReq();
             msg.PlayerUId = playerUId;
-            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
         }
 
         public override void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) 
@@ -189,7 +189,7 @@ namespace RWGameProtocol
             msg.ErrorCode = (short)code;
             msg.PlayerInfo = playerInfo;
             msg.Wave = wave;
-            peer.SendPacket((short)GameProtocol.RECONNECT_GAME_ACK, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.RECONNECT_GAME_ACK, msg.Serialize());
         }
 
         public override void HitDamageNotify(Peer peer, int playerUId, int damage)
@@ -197,7 +197,7 @@ namespace RWGameProtocol
             MsgHitDamageNotify msg = new MsgHitDamageNotify();
             msg.PlayerUId = playerUId;
             msg.Damage = damage;
-            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.HIT_DAMAGE_NOTIFY, msg.Serialize());
         }
 
 
@@ -212,7 +212,7 @@ namespace RWGameProtocol
         {
             MsgJoinGameNotify msg = new MsgJoinGameNotify();
             msg.OtherPlayerInfo = info;
-            peer.SendPacket((short)GameProtocol.JOIN_GAME_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.JOIN_GAME_NOTIFY, msg.Serialize());
         }
 
 
@@ -225,7 +225,7 @@ namespace RWGameProtocol
         {
             MsgLeaveGameNotify msg = new MsgLeaveGameNotify();
             msg.PlayerUId = playerUId;
-            peer.SendPacket((short)GameProtocol.LEAVE_GAME_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.LEAVE_GAME_NOTIFY, msg.Serialize());
         }
 
     
@@ -234,7 +234,7 @@ namespace RWGameProtocol
             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
             msg.PlayerUId = playerUid;
             msg.CurrentSp = currentSp;
-            peer.SendPacket((short)GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, msg.Serialize());
         }
 
 
@@ -245,7 +245,7 @@ namespace RWGameProtocol
             msg.DiceId = diceId;
             msg.SlotNum = slotNum;
             msg.Level = level;
-            peer.SendPacket((short)GameProtocol.GET_DICE_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.GET_DICE_NOTIFY, msg.Serialize());
         }
 
 
@@ -257,7 +257,7 @@ namespace RWGameProtocol
             msg.LeveupFieldNum = leveupFieldNum;
             msg.LevelupDiceId = levelUpDiceId;
             msg.Level = level;
-            peer.SendPacket((short)GameProtocol.LEVEL_UP_DICE_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_NOTIFY, msg.Serialize());
         }
 
 
@@ -267,7 +267,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.DiceId = diceId;
             msg.InGameUp = inGameUp;
-            peer.SendPacket((short)GameProtocol.INGAME_UP_DICE_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.INGAME_UP_DICE_NOTIFY, msg.Serialize());
         }
 
 
@@ -281,7 +281,7 @@ namespace RWGameProtocol
             MsgAddSpNotify msg = new MsgAddSpNotify();
             msg.PlayerUId = playerUId;
             msg.CurrentSp = currentSp;
-            peer.SendPacket((short)GameProtocol.ADD_SP_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.ADD_SP_NOTIFY, msg.Serialize());
         }
 
 
@@ -294,7 +294,7 @@ namespace RWGameProtocol
         {
             MsgSpawnNotify msg = new MsgSpawnNotify();
             msg.Wave = wave;
-            peer.SendPacket((short)GameProtocol.SPAWN_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SPAWN_NOTIFY, msg.Serialize());
         }
 
 
@@ -307,21 +307,21 @@ namespace RWGameProtocol
         {
             MsgEndGameNotify msg = new MsgEndGameNotify();
             msg.WinPlayerUId = winPlayerUId;
-            peer.SendPacket((short)GameProtocol.END_GAME_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.END_GAME_NOTIFY, msg.Serialize());
         }
 
         public override void DisconnectGameNotify(Peer peer, int playerUId)
         {
             MsgDisconnectGameNotify msg = new MsgDisconnectGameNotify();
             msg.PlayerUId = playerUId;
-            peer.SendPacket((short)GameProtocol.DISCONNECT_GAME_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.DISCONNECT_GAME_NOTIFY, msg.Serialize());
         }
 
         public override void ReconnectGameNotify(Peer peer, int playerUId)
         {
             MsgReconnectGameNotify msg = new MsgReconnectGameNotify();
             msg.PlayerUId = playerUId;
-            peer.SendPacket((short)GameProtocol.RECONNECT_GAME_NOTIFY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.RECONNECT_GAME_NOTIFY, msg.Serialize());
         }
 
         #endregion
@@ -338,7 +338,7 @@ namespace RWGameProtocol
             MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.REMOVE_MINION_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.REMOVE_MINION_RELAY, msg.Serialize());
         }
 
 
@@ -356,7 +356,7 @@ namespace RWGameProtocol
             msg.Id = id;
             msg.Damage = damage;
             msg.Delay = delay;
-            peer.SendPacket((short)GameProtocol.HIT_DAMAGE_MINION_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.HIT_DAMAGE_MINION_RELAY, msg.Serialize());
         }
 
 
@@ -370,7 +370,7 @@ namespace RWGameProtocol
             MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.DESTROY_MINION_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.DESTROY_MINION_RELAY, msg.Serialize());
         }
 
 
@@ -386,7 +386,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Heal = heal;
-            peer.SendPacket((short)GameProtocol.HEAL_MINION_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.HEAL_MINION_RELAY, msg.Serialize());
         }
 
 
@@ -408,7 +408,7 @@ namespace RWGameProtocol
             msg.Dir[1] = y;
             msg.Dir[2] = z;
             msg.PushPower = pushPower;
-            peer.SendPacket((short)GameProtocol.PUSH_MINION_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.PUSH_MINION_RELAY, msg.Serialize());
         }
 
 
@@ -425,7 +425,7 @@ namespace RWGameProtocol
             msg.Id = id;
             msg.TargetId = targetId;
             msg.Trigger = trigger;
-            peer.SendPacket((short)GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, msg.Serialize());
         }
 
 
@@ -448,7 +448,7 @@ namespace RWGameProtocol
             msg.Dir[2] = z;
             msg.Damage = damage;
             msg.MoveSpeed = moveSpeed;
-            peer.SendPacket((short)GameProtocol.FIRE_ARROW_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.FIRE_ARROW_RELAY, msg.Serialize());
         }
 
 
@@ -462,7 +462,7 @@ namespace RWGameProtocol
             MsgFireballBombRelay msg = new MsgFireballBombRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.FIRE_BALL_BOMB_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.FIRE_BALL_BOMB_RELAY, msg.Serialize());
         }
 
 
@@ -476,7 +476,7 @@ namespace RWGameProtocol
             MsgMineBombRelay msg = new MsgMineBombRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.MINE_BOMB_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.MINE_BOMB_RELAY, msg.Serialize());
         }
 
 
@@ -490,7 +490,7 @@ namespace RWGameProtocol
             MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.REMOVE_MAGIC_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.REMOVE_MAGIC_RELAY, msg.Serialize());
         }
 
 
@@ -506,7 +506,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.TargetId = targetId;
-            peer.SendPacket((short)GameProtocol.SET_MAGIC_TARGET_ID_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SET_MAGIC_TARGET_ID_RELAY, msg.Serialize());
         }
 
 
@@ -524,7 +524,7 @@ namespace RWGameProtocol
             msg.Id = id;
             msg.X = x;
             msg.Z = z;
-            peer.SendPacket((short)GameProtocol.SET_MAGIC_TARGET_POS_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SET_MAGIC_TARGET_POS_RELAY, msg.Serialize());
         }
 
 
@@ -541,7 +541,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.SturnTime = sturnTime;
-            peer.SendPacket((short)GameProtocol.STURN_MINION_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.STURN_MINION_RELAY, msg.Serialize());
         }
 
 
@@ -550,7 +550,7 @@ namespace RWGameProtocol
             MsgRocketBombRelay msg = new MsgRocketBombRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.ROCKET_BOMB_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.ROCKET_BOMB_RELAY, msg.Serialize());
         }
 
 
@@ -559,7 +559,7 @@ namespace RWGameProtocol
             MsgIceBombRelay msg = new MsgIceBombRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.ICE_BOMB_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.ICE_BOMB_RELAY, msg.Serialize());
         }
 
 
@@ -568,7 +568,7 @@ namespace RWGameProtocol
             MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
             msg.PlayerUId = playerUId;
             msg.BaseStatId = baseStatId;
-            peer.SendPacket((short)GameProtocol.DESTROY_MAGIC_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.DESTROY_MAGIC_RELAY, msg.Serialize());
         }
 
 
@@ -581,7 +581,7 @@ namespace RWGameProtocol
             msg.Power = power;
             msg.Range = range;
             msg.Type = type;
-            peer.SendPacket((short)GameProtocol.FIRE_CANNON_BALL_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.FIRE_CANNON_BALL_RELAY, msg.Serialize());
         }
 
 
@@ -593,7 +593,7 @@ namespace RWGameProtocol
             msg.TargetId = targetId;
             msg.Power = power;
             msg.MoveSpeed = moveSpeed;
-            peer.SendPacket((short)GameProtocol.FIRE_SPEAR_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.FIRE_SPEAR_RELAY, msg.Serialize());
         }
 
 
@@ -602,7 +602,7 @@ namespace RWGameProtocol
             MsgFireManFireRelay msg = new MsgFireManFireRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
-            peer.SendPacket((short)GameProtocol.FIRE_MAN_FIRE_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.FIRE_MAN_FIRE_RELAY, msg.Serialize());
         }
 
 
@@ -614,7 +614,7 @@ namespace RWGameProtocol
             msg.HitPos = hitPos;
             msg.LocalScale = localScale;
             msg.Rotation = rotation;
-            peer.SendPacket((short)GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, msg.Serialize());
         }
 
 
@@ -624,7 +624,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.IsCloacking = isCloacking;
-            peer.SendPacket((short)GameProtocol.MINION_CLOACKING_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.MINION_CLOACKING_RELAY, msg.Serialize());
         }
 
 
@@ -635,28 +635,28 @@ namespace RWGameProtocol
             msg.BaseStatId = baseStatId;
             msg.Effect = effect;
             msg.IsFogOfWar = isFogOfWar;
-            peer.SendPacket((short)GameProtocol.MINION_FOG_OF_WAR_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.MINION_FOG_OF_WAR_RELAY, msg.Serialize());
         }
 
 
-        public override void SendMessageVoidRelay(Peer peer, int playerUId, int id, string message)
+        public override void SendMessageVoidRelay(Peer peer, int playerUId, int id, int message)
         {
             MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Message = message;
-            peer.SendPacket((short)GameProtocol.SEND_MESSAGE_VOID_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SEND_MESSAGE_VOID_RELAY, msg.Serialize());
         }
 
 
-        public override void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, string message)
+        public override void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, int message)
         {
             MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.TargetId = targetId;
             msg.Message = message;
-            peer.SendPacket((short)GameProtocol.SEND_MESSAGE_PARAM1_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SEND_MESSAGE_PARAM1_RELAY, msg.Serialize());
         }
 
 
@@ -668,7 +668,7 @@ namespace RWGameProtocol
             msg.TargetId = targetId;
             msg.Power = power;
             msg.BulletMoveSpeed = bulletMoveSpeed;
-            peer.SendPacket((short)GameProtocol.NECROMANCER_BULLET_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.NECROMANCER_BULLET_RELAY, msg.Serialize());
         }
 
 
@@ -678,7 +678,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.TargetId = targetId;
-            peer.SendPacket((short)GameProtocol.SET_MINION_TARGET_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SET_MINION_TARGET_RELAY, msg.Serialize());
         }
 
         public override void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos)
@@ -687,7 +687,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.PosIndex = posIndex;
             msg.Pos = pos;
-            peer.SendPacket((short)GameProtocol.MINION_STATUS_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.MINION_STATUS_RELAY, msg.Serialize());
         }
 
         public override void ScarecrowRelay(Peer peer, int playerUId, int baseStatId, int eyeLevel)
@@ -696,7 +696,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.BaseStatId = baseStatId;
             msg.EyeLevel = eyeLevel;
-            peer.SendPacket((short)GameProtocol.SCARECROW_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.SCARECROW_RELAY, msg.Serialize());
         }
 
 
@@ -706,7 +706,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.TargetIdArray = targetId;
-            peer.SendPacket((short)GameProtocol.LAYZER_TARGET_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.LAYZER_TARGET_RELAY, msg.Serialize());
         }
 
         public override void FireBulletRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeed, int type)
@@ -720,7 +720,7 @@ namespace RWGameProtocol
             msg.Damage = damage;
             msg.MoveSpeed = moveSpeed;
             msg.Type = type;
-            peer.SendPacket((short)GameProtocol.FIRE_BULLET_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.FIRE_BULLET_RELAY, msg.Serialize());
         }
 
         public override void MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time)
@@ -729,7 +729,7 @@ namespace RWGameProtocol
             msg.PlayerUId = playerUId;
             msg.Id = id;
             msg.Time = time;
-            peer.SendPacket((short)GameProtocol.MINION_INVINCIBILITY_RELAY, msg.Serialize());
+            peer.SendPacket((int)GameProtocol.MINION_INVINCIBILITY_RELAY, msg.Serialize());
         }
 
 
