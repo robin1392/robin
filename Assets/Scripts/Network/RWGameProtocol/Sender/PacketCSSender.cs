@@ -606,7 +606,7 @@ namespace RWGameProtocol
         }
 
 
-        public override void ActivatePoolObjectRelay(Peer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
+        public override void ActivatePoolObjectRelay(Peer peer, int playerUId, int poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
         {
             MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
             msg.PlayerUId = playerUId;

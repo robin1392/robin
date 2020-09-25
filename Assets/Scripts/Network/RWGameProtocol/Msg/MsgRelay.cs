@@ -227,9 +227,7 @@ namespace RWGameProtocol.Msg
     public class MsgActivatePoolObjectRelay : Serializer<MsgActivatePoolObjectRelay>
     {
         public int PlayerUId;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string PoolName;
+        public int PoolName;
         public MsgVector3 HitPos;
         public MsgQuaternion Rotation;
         public MsgVector3 LocalScale;
