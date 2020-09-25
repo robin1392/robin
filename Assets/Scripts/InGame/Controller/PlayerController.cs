@@ -1864,6 +1864,9 @@ namespace ED
 
         public void NetSendPlayer(GameProtocol protocol, params object[] param)
         {
+            if (InGameManager.Get().isGamePlaying == false)
+                return;
+
             if (InGameManager.IsNetwork == true)
             {
                 NetworkManager.Get().Send(protocol, param);
