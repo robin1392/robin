@@ -33,7 +33,7 @@ public class SocketManager
 
         _netService = new NetClientService(handler, 1, 4096, 5000, 1000);
         _netService.ClientConnectedCallback += OnClientConnected;
-        _netService.ClientConnectedCallback += OnClientDisconnected;
+        _netService.ClientDisconnectedCallback += OnClientDisconnected;
     }
 
 
