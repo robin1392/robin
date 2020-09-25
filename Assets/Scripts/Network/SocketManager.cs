@@ -74,6 +74,8 @@ public class SocketManager
     void OnClientDisconnected(UserToken session)
     {
         Disconnect();
+        
+        UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
     }
 
 
