@@ -41,5 +41,18 @@ namespace ED
                 text.color = color;
             }
         }
+
+
+        public void SetInteracterButton(bool interactive)
+        {
+            if (interactive == true)
+            {
+                if (InGameManager.Get().playerController.sp < InGameManager.Get().GetDiceCost())
+                    return;
+            }
+            
+            button.interactable = interactive;
+            SetImageAndText();
+        }
     }
 }

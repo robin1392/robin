@@ -652,6 +652,8 @@ namespace ED
             UI_InGame.Get().SetDiceButtonText(GetDiceCost());
             playerController.GetDice(diceId, slotNum, level);
             NetSetSp(curSp);
+            
+            UI_InGame.Get().ControlGetDiceButton(true);
         }
 
         public void GetDiceOther(int diecId, int slotNum, int level)

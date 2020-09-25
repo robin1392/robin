@@ -38,6 +38,7 @@ namespace ED
             {
                 if (InGameManager.IsNetwork == true)
                 {
+                    UI_InGame.Get().ControlGetDiceButton(false);
                     InGameManager.Get().NetGetDice();
                 }
                 else

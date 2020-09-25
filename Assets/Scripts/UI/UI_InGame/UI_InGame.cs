@@ -140,7 +140,11 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         text_MyNickname.text = myName;
         text_EnemyNickname.text = enemyName;
     }
-    
+
+    public void ControlGetDiceButton(bool inter)
+    {
+        btn_GetDice.SetInteracterButton(inter);
+    }
     #endregion
 
 
@@ -164,6 +168,9 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     
     
     #region event
+    
+    
+    
     #endregion
     
     
