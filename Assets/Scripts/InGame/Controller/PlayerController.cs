@@ -1274,13 +1274,15 @@ namespace ED
         {
             if (InGameManager.IsNetwork && isMine)
             {
+                int funcEnum = (int) UnityUtil.ToEnum<E_ActionSendMessage>(msgFunc);
+                    
                 if (targetId == -1)
                 {
-                    NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, NetworkManager.Get().UserUID, bastStatId ,msgFunc );
+                    NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, NetworkManager.Get().UserUID, bastStatId ,funcEnum );
                 }
                 else
-                {
-                    NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, NetworkManager.Get().UserUID, bastStatId ,msgFunc , targetId );
+                {   
+                    NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, NetworkManager.Get().UserUID, bastStatId ,funcEnum , targetId );
                 }
             }
             MinionSendMessage(bastStatId, msgFunc, targetId);
@@ -2263,10 +2265,12 @@ namespace ED
                 {
                     MsgSendMessageVoidRelay voidmsg = (MsgSendMessageVoidRelay) param[0];
                     
+                    string msgFunc = ((E_ActionSendMessage)voidmsg.Message).ToString();
+                    
                     if (NetworkManager.Get().UserUID == voidmsg.PlayerUId)
-                        MinionSendMessage(voidmsg.Id , voidmsg.Message);
+                        MinionSendMessage(voidmsg.Id , msgFunc);
                     else if (NetworkManager.Get().OtherUID == voidmsg.PlayerUId )
-                        targetPlayer.MinionSendMessage(voidmsg.Id , voidmsg.Message);
+                        targetPlayer.MinionSendMessage(voidmsg.Id , msgFunc);
                     
                     break;
                 }
@@ -2274,10 +2278,12 @@ namespace ED
                 {
                     MsgSendMessageParam1Relay paramrelay = (MsgSendMessageParam1Relay) param[0];
                     
+                    string msgFunc = ((E_ActionSendMessage)paramrelay.Message).ToString();
+                    
                     if (NetworkManager.Get().UserUID == paramrelay.PlayerUId)
-                        MinionSendMessage(paramrelay.Id , paramrelay.Message , paramrelay.TargetId);
+                        MinionSendMessage(paramrelay.Id , msgFunc , paramrelay.TargetId);
                     else if (NetworkManager.Get().OtherUID == paramrelay.PlayerUId )
-                        targetPlayer.MinionSendMessage(paramrelay.Id , paramrelay.Message , paramrelay.TargetId);
+                        targetPlayer.MinionSendMessage(paramrelay.Id , msgFunc , paramrelay.TargetId);
                     
                     break;
                 }

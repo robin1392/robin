@@ -251,13 +251,13 @@ public class SocketSendEvent
             case GameProtocol.SEND_MESSAGE_VOID_RELAY:
             {
                 //SendMessageVoidRelay(IPeer peer, int playerUId, int id, string message)
-                _sender.SendMessageVoidRelay(peer , (int)param[0] , (int)param[1] , (string)param[2]);
+                _sender.SendMessageVoidRelay(peer , (int)param[0] , (int)param[1] , (int)param[2]);
                 break;
             }
             case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
             {
                 //SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
-                _sender.SendMessageParam1Relay(peer , (int)param[0] , (int)param[1] , (int)param[3] , (string)param[2]);
+                _sender.SendMessageParam1Relay(peer , (int)param[0] , (int)param[1] , (int)param[3] , (int)param[2]);
                 break;
             }
             case GameProtocol.SET_MINION_TARGET_RELAY:
