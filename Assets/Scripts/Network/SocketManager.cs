@@ -73,7 +73,7 @@ public class SocketManager
 
     void OnClientDisconnected(UserToken session)
     {
-
+        Disconnect();
     }
 
 
