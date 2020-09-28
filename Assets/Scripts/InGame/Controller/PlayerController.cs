@@ -1136,7 +1136,7 @@ namespace ED
                 HitDamageMinionAndMagic(minionId, damage);
             }    
         }
-
+    
         public void AttackEnemyMinionOrMagic(int baseStatId, float damage, float delay)
         {
             if(baseStatId == 0)

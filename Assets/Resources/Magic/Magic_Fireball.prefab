@@ -103,7 +103,7 @@ MonoBehaviour:
   searchRange: 0
   isBottomPlayer: 0
   ts_ShootingPos: {fileID: 0}
-  ts_HitPos: {fileID: 0}
+  ts_HitPos: {fileID: 6636926182459783293}
   image_HealthBar: {fileID: 0}
   text_Health: {fileID: 0}
   isPlayable: 1

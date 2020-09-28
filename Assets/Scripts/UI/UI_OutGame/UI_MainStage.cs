@@ -42,6 +42,7 @@ namespace ED
                     var insObj = Instantiate(obj);
                     arrAni_Model[i] = insObj.GetComponent<Animator>();
                     arrAni_Model[i].transform.parent = arrTs_SpawnPos[i];
+                    arrAni_Model[i].transform.localScale = Vector3.one;
                     arrAni_Model[i].transform.localPosition = Vector3.zero;
                     arrAni_Model[i].transform.localRotation = Quaternion.identity;
                     arrAni_Model[i].SetTrigger(Set1);

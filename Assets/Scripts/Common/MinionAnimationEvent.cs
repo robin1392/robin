@@ -30,7 +30,7 @@ namespace ED
         public void Attack()
         {
             //if (_minion != null && _minion.isAlive && _minion.target != null && ((PhotonNetwork.IsConnected && _minion.isMine) || PhotonNetwork.IsConnected == false))
-            if (_minion != null && _minion.isAlive && _minion.target != null && ((InGameManager.IsNetwork && _minion.isMine) || InGameManager.IsNetwork == false))
+            if (_minion != null && _minion.isAlive && _minion.target != null && _minion.target.isAlive && ((InGameManager.IsNetwork && _minion.isMine) || InGameManager.IsNetwork == false))
             {
                 Minion m = _minion as Minion;
                 if (m != null)

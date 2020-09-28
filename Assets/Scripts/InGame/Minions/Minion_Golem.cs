@@ -11,7 +11,7 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null) return;
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
             
             if( InGameManager.IsNetwork && isMine )
             {

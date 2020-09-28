@@ -41,26 +41,25 @@ namespace ED
 
         public override void Attack()
         {
-            if (target != null)
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            
+            //if (PhotonNetwork.IsConnected && isMine)
+            if( InGameManager.IsNetwork && isMine )
             {
-                //if (PhotonNetwork.IsConnected && isMine)
-                if( InGameManager.IsNetwork && isMine )
-                {
-                    base.Attack();
-                    
-                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                    controller.MinionAniTrigger(id, "Attack" , target.id);
-                    
-                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
-                    controller.ActionFireManFire(id);
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false )
-                {
-                    base.Attack();
-                    animator.SetTrigger(_animatorHashAttack);
-                    controller.FiremanFire(id);
-                }
+                base.Attack();
+                
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+                controller.MinionAniTrigger(id, "Attack" , target.id);
+                
+                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
+                controller.ActionFireManFire(id);
+            }
+            //else if (PhotonNetwork.IsConnected == false)
+            else if(InGameManager.IsNetwork == false )
+            {
+                base.Attack();
+                animator.SetTrigger(_animatorHashAttack);
+                controller.FiremanFire(id);
             }
         }
 

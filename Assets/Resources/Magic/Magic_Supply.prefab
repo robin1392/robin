@@ -44,13 +44,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4747d3e102474c9baae9823b4a91a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMoveType: 2
   isMine: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 0}
+  animator: {fileID: 0}
+  arrMaterial: []
   target: {fileID: 0}
+  targetMoveType: 2
+  power: 0
+  powerUpByUpgrade: 0
+  powerUpByInGameUp: 0
+  maxHealth: 0
+  currentHealth: 0
+  maxHealthUpByUpgrade: 0
+  maxHealthUpByInGameUp: 0
+  effect: 0
+  effectUpByUpgrade: 0
+  effectUpByInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
+  attackSpeed: 0
+  moveSpeed: 0
+  range: 0
+  searchRange: 2
+  isBottomPlayer: 0
+  ts_ShootingPos: {fileID: 0}
+  ts_HitPos: {fileID: 6636926182459783293}
+  image_HealthBar: {fileID: 0}
+  text_Health: {fileID: 0}
+  isPlayable: 1
+  _collider: {fileID: 0}
+  _hitCollider: {fileID: 0}
+  castType: 0
+  spawnType: 0
   targetPos: {x: 0, y: 0, z: 0}
+  eyeLevel: 0
+  upgradeLevel: 0
+  diceFieldNum: 0
 --- !u!114 &7685983556338847813
 MonoBehaviour:
   m_ObjectHideFlags: 0
