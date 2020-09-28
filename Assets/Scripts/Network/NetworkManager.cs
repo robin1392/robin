@@ -390,7 +390,12 @@ public class NetworkManager : Singleton<NetworkManager>
         
         _packetRecv.FireBulletRelay = _socketRecv.OnFireBulletRelay;
         _packetRecv.MinionInvincibilityRelay = _socketRecv.OnMinionInvincibilityRelay;
-            
+
+        //
+        _packetRecv.DisconnectGameNotify = _socketRecv.OnDisconnectGameNotify;
+        _packetRecv.ReconnectGameNotify = _socketRecv.OnReconnectGameNotify;
+        
+        
 
         _clientSocket.Init(_packetRecv);
     }

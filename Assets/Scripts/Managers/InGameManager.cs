@@ -1060,6 +1060,18 @@ namespace ED
                     }
                     break;
                 }
+                case GameProtocol.DISCONNECT_GAME_NOTIFY:
+                {
+                    MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
+                    
+                    break;
+                }
+                case GameProtocol.RECONNECT_GAME_NOTIFY:
+                {
+                    MsgReconnectGameNotify reconnNoti = (MsgReconnectGameNotify) param[0];
+                    
+                    break;
+                }
                 #endregion
                 
                 

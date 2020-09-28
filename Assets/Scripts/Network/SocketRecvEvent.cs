@@ -275,6 +275,23 @@ public class SocketRecvEvent
             InGameManager.Get().RecvInGameManager(GameProtocol.END_GAME_NOTIFY, msg);
     }
 
+
+    public void OnDisconnectGameNotify(Peer peer, MsgDisconnectGameNotify msg)
+    {
+        UnityUtil.Print("NOTIFY => ", "DISCONNECT_GAME_NOTIFY  " +msg.PlayerUId.ToString() , "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.DISCONNECT_GAME_NOTIFY, msg);
+    }
+
+    public void OnReconnectGameNotify(Peer peer, MsgReconnectGameNotify msg)
+    {
+        UnityUtil.Print("NOTIFY => ", "RECONNECT_GAME_NOTIFY  " +msg.PlayerUId.ToString() , "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_NOTIFY, msg);
+    }
+
     #endregion
     
     
