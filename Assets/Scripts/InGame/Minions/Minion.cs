@@ -8,6 +8,7 @@ using NodeCanvas.BehaviourTrees;
 using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
+using RWGameProtocol;
 using Random = UnityEngine.Random;
 
 namespace ED
@@ -58,6 +59,7 @@ namespace ED
         protected static readonly int _animatorHashAttack = Animator.StringToHash("Attack");
         protected static readonly int _animatorHashSkill = Animator.StringToHash("Skill");
 
+        private Coroutine _crtAttack;
         private Coroutine _crtPush;
         private BehaviourTreeOwner _behaviourTreeOwner;
         protected PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
@@ -91,7 +93,7 @@ namespace ED
             if (isPlayable && isPushing == false && isAttacking == false)
             {
                 //if (PhotonNetwork.IsConnected && !isMine)
-                if(InGameManager.IsNetwork && !isMine)
+                if(InGameManager.IsNetwork && !isMine && agent.enabled)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
                     agent.SetDestination(networkPosition);
@@ -469,7 +471,8 @@ namespace ED
             if (isPlayable && isPushing == false)
             {
                 _attackedTarget = target;
-                StartCoroutine(AttackCoroutine());
+                if (_crtAttack != null) StopCoroutine(_crtAttack);
+                _crtAttack = StartCoroutine(AttackCoroutine());
             }
         }
 
@@ -680,25 +683,28 @@ namespace ED
             isAttacking = !isEnable;
             //rb.isKinematic = isEnable;
 
-            if (isEnable && agent.enabled == false)
+            if (isMine)
             {
-                agent.enabled = true;
-                agent.isStopped = false;
-                agent.updatePosition = true;
-                agent.updateRotation = true;
-            }
-            else if (isEnable == false && agent.enabled == true)
-            {
-                agent.isStopped = true;
-                agent.updatePosition = false;
-                agent.updateRotation = false;
-                agent.enabled = false;
-            }
+                if (isEnable && agent.enabled == false)
+                {
+                    agent.enabled = true;
+                    agent.isStopped = false;
+                    agent.updatePosition = true;
+                    agent.updateRotation = true;
+                }
+                else if (isEnable == false && agent.enabled == true)
+                {
+                    agent.isStopped = true;
+                    agent.updatePosition = false;
+                    agent.updateRotation = false;
+                    agent.enabled = false;
+                }
 
-            if (isEnable == false)
-            {
-                rb.velocity = Vector3.zero;
-                agent.velocity = Vector3.zero;
+                if (isEnable == false)
+                {
+                    rb.velocity = Vector3.zero;
+                    agent.velocity = Vector3.zero;
+                }
             }
         }
 
@@ -771,6 +777,17 @@ namespace ED
             if (target != null) transform.LookAt(target.transform);
             
             animator.SetTrigger(triggerName);
+        }
+
+        public void CancelAttack()
+        {
+            if (_crtAttack != null) StopCoroutine((_crtAttack));
+            if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
+            isAttacking = false;
+            SetControllEnable(true);
+
+            animator.SetTrigger(_animatorHashIdle);
+            controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, NetworkManager.Get().UserUID, id, (int)E_AniTrigger.Idle, target.id);
         }
     }
 }
