@@ -301,7 +301,7 @@ public class SocketRecvEvent
 
     public void OnRemoveMinionRelay(Peer peer, MsgRemoveMinionRelay msg)
     {
-        UnityUtil.Print("RECV => ", "REMOVE_MINION_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        UnityUtil.Print("RECV => ", "REMOVE_MINION_RELAY  " +msg.PlayerUId.ToString() + "  minion id " + msg.Id  , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MINION_RELAY, msg);
@@ -309,7 +309,7 @@ public class SocketRecvEvent
 
     public void OnHitDamageMinionRelay(Peer peer, MsgHitDamageMinionRelay msg)
     {
-        UnityUtil.Print("RECV => ", "HIT_DAMAGE_MINION_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        UnityUtil.Print("RECV => ", "HIT_DAMAGE_MINION_RELAY " + msg.PlayerUId.ToString() + "  minion id " + msg.Id , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.HIT_DAMAGE_MINION_RELAY, msg);
@@ -317,7 +317,7 @@ public class SocketRecvEvent
 
     public void OnDestroyMinionRelay(Peer peer, MsgDestroyMinionRelay msg)
     {
-        UnityUtil.Print("RECV => ", "DESTROY_MINION_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        UnityUtil.Print("RECV => ", "DESTROY_MINION_RELAY  " +msg.PlayerUId.ToString() + "  minion id " + msg.Id , "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.DESTROY_MINION_RELAY, msg);
