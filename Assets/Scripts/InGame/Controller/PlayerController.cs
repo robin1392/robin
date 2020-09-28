@@ -1116,6 +1116,9 @@ namespace ED
 
         public void HitMinionDamage(bool other , int minionId , float damage )
         {
+            if(minionId == 0)
+                print("  id ---- 0 :  "+minionId);
+                            
             if (other == true)
             {
                 if (InGameManager.IsNetwork )
@@ -1136,6 +1139,9 @@ namespace ED
 
         public void AttackEnemyMinionOrMagic(int baseStatId, float damage, float delay)
         {
+            if(baseStatId == 0)
+                print("  id ---- 0 :  "+baseStatId);
+            
             StartCoroutine(AttackEnemyMinionOrMagicCoroutine(baseStatId, damage, delay));
         }
         
