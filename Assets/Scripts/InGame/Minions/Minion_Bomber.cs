@@ -28,11 +28,7 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null)
-            {
-                animator.SetTrigger(_animatorHashIdle);
-                return;
-            }
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
 
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )

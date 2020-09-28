@@ -20,7 +20,7 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null) return;
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
             if (_collider.enabled == false) _collider.enabled = true;
             
             //if (PhotonNetwork.IsConnected && isMine)

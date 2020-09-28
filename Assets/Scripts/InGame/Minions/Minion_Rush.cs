@@ -25,7 +25,7 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null) return;
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
             
             ps_Rush.Stop();
             //if (PhotonNetwork.IsConnected && isMine)

@@ -19,7 +19,7 @@ namespace ED
 
         public override void Attack()
         {
-            if (target == null || isHalfDamage) return;
+            if (target == null || target.isAlive == false || IsTargetInnerRange() == false || isHalfDamage) return;
             
             //if (PhotonNetwork.IsConnected && isMine)
             if( InGameManager.IsNetwork && isMine )
