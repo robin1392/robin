@@ -65,7 +65,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
     - {fileID: 102900000, guid: 484506e1f5f3b405d99003974efd1299, type: 3}
-    totalSpriteSurfaceArea: 5388950
+    totalSpriteSurfaceArea: 5436008
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -128,6 +128,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6e272cb6e305c4582b9a84d4e59fc968, type: 3}
   - {fileID: 21300000, guid: 84c07fd673c5448bf8e1db3282b4dce5, type: 3}
   - {fileID: 21300000, guid: 197273e65da664b8dab3b66526c114fe, type: 3}
+  - {fileID: 21300000, guid: 4cfa5fe699c0d4429bc67ea4640b566f, type: 3}
   - {fileID: 21300000, guid: f275b3070303849fd92ccfc4ce5cc762, type: 3}
   - {fileID: 21300000, guid: 3938b6278734843dcbfb4425249e1491, type: 3}
   - {fileID: 21300000, guid: 23dfe847b9ece47238d1813c90016d36, type: 3}
@@ -148,6 +149,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5b8a2c989958146e88e27745e04bc8ca, type: 3}
   - {fileID: 21300000, guid: 248379b8f89c845e0bc42bd8ba877b8d, type: 3}
   - {fileID: 21300000, guid: 70a685492ef0f456994f8670ce003875, type: 3}
+  - {fileID: 21300000, guid: c525b2998e68c4527b442bbbca68835d, type: 3}
   - {fileID: 21300000, guid: e056f299a1ebb42ec962bce751727cfb, type: 3}
   - {fileID: 21300000, guid: f96951a92382c4974a822238612eb0c1, type: 3}
   - {fileID: 21300000, guid: 90a7b7a9bafbc4a77842c803599330de, type: 3}
@@ -181,6 +183,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 90786efcc5087479a8775b2afa065220, type: 3}
   - {fileID: 21300000, guid: b1d3860d14262448fbc7ce02d7903134, type: 3}
   - {fileID: 21300000, guid: bf01a88d87bbd4e199c01fa2a7786fb7, type: 3}
+  - {fileID: 21300000, guid: 60285dad612904a0c840537c5cb89836, type: 3}
   - {fileID: 21300000, guid: e018a2bd5b2ab47539abbc5298cef362, type: 3}
   - {fileID: 21300000, guid: eb6424cd5a81344bd8c36966fe5b2d67, type: 3}
   - {fileID: 21300000, guid: 5a910acd898ed41f49664c4dde23fa63, type: 3}
@@ -264,6 +267,7 @@ SpriteAtlas:
   - dice_ninja
   - WhiteBox
   - botton_achievement
+  - loading_icon1
   - lobby_menu
   - coin_bar
   - lobby_crew
@@ -284,6 +288,7 @@ SpriteAtlas:
   - dice_zombie
   - tier_silver
   - ingame_core_hp
+  - loading_icon2
   - dice_flagofwar
   - dice_dice_unuse
   - ingame_dice_popup
@@ -317,6 +322,7 @@ SpriteAtlas:
   - info_character
   - dice_plane
   - ingame_dice_button
+  - loading_icon3
   - lobby_dice_unuse
   - ingame_sp
   - info_characteristic
