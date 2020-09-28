@@ -2,6 +2,8 @@
 using RWGameProtocol;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
@@ -64,6 +66,7 @@ public class NetworkManager : Singleton<NetworkManager>
         private set => _gameSession = value;
     }
 
+    private string _battlePath = "/BattleInfo.bytes";
 
     #endregion
     
@@ -103,11 +106,12 @@ public class NetworkManager : Singleton<NetworkManager>
     #endregion
 
 
-
     #region socket user info
     // 통신간 정보를 담아둘만한 휘발성 클래스
 
     private NetInfo _netInfo = null;
+
+    private NetBattleInfo _battleInfo = null;
     #endregion
     
     #region unity base
@@ -121,7 +125,6 @@ public class NetworkManager : Singleton<NetworkManager>
         }
 
         base.Awake();
-        
     }
 
     // Start is called before the first frame update
@@ -217,6 +220,9 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void ConnectServer( PLAY_TYPE type , Action callback = null)
     {
+        // 배틀정보..저장
+        SaveBattleInfo();
+        
         playType = type;
         _clientSocket.Connect( _serverAddr , _port , callback);
     }
@@ -402,9 +408,110 @@ public class NetworkManager : Singleton<NetworkManager>
     
     #endregion
     
+    
+    #region read write file
+    public void BinarySerialize(NetBattleInfo data, string filePath)
+    {
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
+        formatter.Serialize(stream, data);
+        stream.Close();
+    }
+    
+    public NetBattleInfo BinaryDeserialize(string filePath)
+    {
+        try
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(filePath, FileMode.Open);
+            NetBattleInfo patchinfo = (NetBattleInfo)formatter.Deserialize(stream);
+            stream.Close();
+
+            return patchinfo;
+        }
+        catch
+        {
+            // game frame -- init
+            return null;
+        }
+        
+    }
+
+    // 배틀 인포 파일이 잇는가??
+    public bool CheckBattleInfoFile()
+    {
+        string battlePath = Application.persistentDataPath + _battlePath;
+        return File.Exists(battlePath);
+    }
+
+    public void ReadBattleInfo()
+    {
+        string battlePath = Application.persistentDataPath + _battlePath;
+        _battleInfo = BinaryDeserialize(battlePath);
+    }
+
+    public void SaveBattleInfo()
+    {
+        string battlePath = Application.persistentDataPath + _battlePath;
+        
+        if(_battleInfo == null)
+            _battleInfo = new NetBattleInfo();
+
+        _battleInfo.serverAddr = _serverAddr;
+        _battleInfo.serverPort = _port;
+        _battleInfo.serverSession = _gameSession;
+        _battleInfo.battleStartTime = DateTime.UtcNow;
+
+        _battleInfo.battleStart = true;
+
+        BinarySerialize(_battleInfo, battlePath);
+    }
+
+    public void DeleteBattleInfo()
+    {
+        string battlePath = Application.persistentDataPath + _battlePath;
+        _battleInfo = BinaryDeserialize(battlePath);
+
+        if (_battleInfo == null)
+            return;
+        
+        print(_battleInfo.battleStartTime);
+        
+        _battleInfo.ResetInfo();
+        
+        // 파일 삭제
+        File.Delete(battlePath);
+
+        _battleInfo = null;
+        //BinarySerialize(_battleInfo, battlePath);
+    }
+    
+    #endregion
 }
 
+#region net battle save info
 
+[Serializable]
+public class NetBattleInfo
+{
+    public string serverAddr;
+    public int serverPort;
+    public string serverSession;
+    public bool battleStart;
+
+    public DateTime battleStartTime;
+
+    public void ResetInfo()
+    {
+        serverAddr = "";
+        serverPort = 0;
+        serverSession = "";
+        battleStart = false;
+        
+        battleStartTime = DateTime.UtcNow;
+    }
+}
+#endregion
 
 
 

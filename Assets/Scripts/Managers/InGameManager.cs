@@ -770,6 +770,8 @@ namespace ED
         {
             if(IsNetwork)
                 NetworkManager.Get().DisconnectSocket();
+
+            NetworkManager.Get().DeleteBattleInfo();
             
             GameStateManager.Get().MoveMainScene();
         }
