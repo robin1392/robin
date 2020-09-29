@@ -219,6 +219,7 @@ namespace ED
                 if (WebPacket.Get() != null)
                 {
                     WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
+                    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 }
                 else
                 {
@@ -238,6 +239,7 @@ namespace ED
 
         public void CallBackDeckUpdate()
         {
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             RefreshDeck();
         }
 

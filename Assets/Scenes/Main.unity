@@ -1159,6 +1159,11 @@ PrefabInstance:
       propertyPath: searchPopup
       value: 
       objectReference: {fileID: 1735105245}
+    - target: {fileID: 4236744650293910018, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: obj_IndicatorPopup
+      value: 
+      objectReference: {fileID: 6362351360819374708}
     - target: {fileID: 4236744650293910019, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1495,3 +1500,9 @@ PrefabInstance:
       objectReference: {fileID: 240476481}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a998d57e18f84fe49e21ebba33e7eaa, type: 3}
+--- !u!1 &6362351360819374708 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4215782882790181022, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+    type: 3}
+  m_PrefabInstance: {fileID: 6362351360819374707}
+  m_PrefabAsset: {fileID: 0}
