@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 
 namespace RWGameProtocol.Msg
 {
@@ -7,7 +8,7 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgReconnectGameReq : Serializer<MsgReconnectGameReq>
     {
-        public int PlayerUId;
+        public string PlayerSessionId;
     }
 
 

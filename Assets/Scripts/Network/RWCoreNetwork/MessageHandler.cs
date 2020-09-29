@@ -57,9 +57,6 @@ namespace RWCoreNetwork
 		/// <param name="callback">패킷 완성시 호출할 콜백 함수</param>
         public void OnReceive(UserToken userToken, byte[] buffer, int offset, int transfered, CompletedMessageDelegate callback)
         {
-            Console.WriteLine(string.Format("Receive message. handle {0},  userToken: {1},  offset: {2}, transfered: {3}", userToken.Socket.Handle, userToken.Id, offset, transfered));
-
-
             // 이번 receive로 읽어오게 될 바이트 수.
             _remainBytes = transfered;
 
@@ -100,8 +97,6 @@ namespace RWCoreNetwork
                 completed = ReadBuffer(buffer, ref srcPosition);
                 if (completed == true)
                 {
-                    Console.WriteLine(string.Format("Receive message. handle {0},  userToken: {1},  offset: {2}, transfered: {3}", userToken.Socket.Handle, userToken.Id, offset, transfered));
-
                     callback(userToken, _receiveBuffer);
                     ClearBuffer();
                 }
@@ -157,9 +152,9 @@ namespace RWCoreNetwork
         }
 
 
-        public byte[] WriteBuffer(int protocolId, byte[] msg)
+        public byte[] WriteBuffer(int protocolId, byte[] msg, int length)
         {
-            byte[] buffer = new byte[Defines.HEADER_SIZE + msg.Length];
+            byte[] buffer = new byte[Defines.HEADER_SIZE + length];
 
             // protocol id
             int offset = 0;
@@ -168,12 +163,12 @@ namespace RWCoreNetwork
 
             // body length
             offset = tmpBuffer.Length;
-            tmpBuffer = BitConverter.GetBytes(msg.Length);
+            tmpBuffer = BitConverter.GetBytes(length);
             Array.Copy(tmpBuffer, 0, buffer, offset, Defines.BODY_SIZE);
 
             // msg
             offset += tmpBuffer.Length;
-            Array.Copy(msg, 0, buffer, offset, msg.Length);
+            Array.Copy(msg, 0, buffer, offset, length);
 
             return buffer;
         }

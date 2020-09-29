@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Net.Sockets;
+
+using RWCoreLib.Log;
 using RWCoreNetwork.NetPacket;
 using RWCoreNetwork.NetService;
 
@@ -12,6 +14,8 @@ namespace RWCoreNetwork
 {
     public delegate void CompletedMessageDelegate(UserToken userToken, byte[] msg);
 
+
+   
 
     public class UserToken
     {
@@ -22,17 +26,19 @@ namespace RWCoreNetwork
 
         public ENetState NetState { get; set; }
 
+        public SocketError Error { get; set; }
 
         public Socket Socket { get; set; }
+        
         public SocketAsyncEventArgs ReceiveEventArgs { get; set; }
+        
         public SocketAsyncEventArgs SendEventArgs { get; set; }
 
-		// session객체. 어플리케이션 딴에서 구현하여 사용.
-		Peer _peer;
+        // session객체. 어플리케이션 딴에서 구현하여 사용.
+        Peer _peer;
 
         // 바이트를 패킷 형식으로 해석해주는 해석기.
         MessageHandler _messageHandler;
-
 
         // 전송할 패킷을 보관해놓는 큐
         Queue<byte[]> _sendingQueue;
@@ -40,13 +46,14 @@ namespace RWCoreNetwork
         // _sendingQueue lock처리에 사용되는 객체
         object _lockSendingQueue;
 
-        int _bufferSize;
+        ILog _logger;
 
 
-        public UserToken(int bufferSize, int id)
+
+        public UserToken(ILog logger, int bufferSize, int id)
         {
+            _logger = logger;
             Id = id;
-            _bufferSize = bufferSize;
             _peer = null;
             _messageHandler = new MessageHandler(bufferSize);
             _sendingQueue = new Queue<byte[]>();
@@ -78,11 +85,6 @@ namespace RWCoreNetwork
         }
 
 
-        public int GetSendQueueCount()
-        {
-            return _sendingQueue.Count;
-        }
-
         /// <summary>
 		///	이 매소드에서 직접 바이트 데이터를 해석해도 되지만 Message resolver클래스를 따로 둔 이유는
 		///	추후에 확장성을 고려하여 다른 resolver를 구현할 때 CUserToken클래스의 코드 수정을 최소화 하기 위함이다.
@@ -95,20 +97,20 @@ namespace RWCoreNetwork
             _messageHandler.OnReceive(this, buffer, offset, transfered, CompletedMessageCallback);
         }
 
-            
-		/// <summary>
-		/// 패킷을 전송한다.
-		/// 큐가 비어 있을 경우에는 큐에 추가한 뒤 바로 SendAsync매소드를 호출하고,
-		/// 데이터가 들어있을 경우에는 새로 추가만 한다.
-		/// 
-		/// 큐잉된 패킷의 전송 시점 :
-		///		현재 진행중인 SendAsync가 완료되었을 때 큐를 검사하여 나머지 패킷을 전송한다.
-		/// </summary>
-		/// <param name="protocolId"></param>
-		/// <param name="msg"></param>
-        public void Send(int protocolId, byte[] msg)
+
+        /// <summary>
+        /// 패킷을 전송한다.
+        /// 큐가 비어 있을 경우에는 큐에 추가한 뒤 바로 SendAsync매소드를 호출하고,
+        /// 데이터가 들어있을 경우에는 새로 추가만 한다.
+        /// 
+        /// 큐잉된 패킷의 전송 시점 :
+        ///		현재 진행중인 SendAsync가 완료되었을 때 큐를 검사하여 나머지 패킷을 전송한다.
+        /// </summary>
+        /// <param name="protocolId"></param>
+        /// <param name="msg"></param>
+        public void Send(int protocolId, byte[] msg, int length)
         {
-            byte[] buffer = _messageHandler.WriteBuffer(protocolId, msg);
+            byte[] buffer = _messageHandler.WriteBuffer(protocolId, msg, length);
             lock (_lockSendingQueue)
             {
                 // 큐가 비어 있다면 큐에 추가하고 바로 비동기 전송 매소드를 호출한다.
@@ -142,6 +144,7 @@ namespace RWCoreNetwork
             SendEventArgs.SetBuffer(SendEventArgs.Offset, buffer.Length);
             Array.Copy(buffer, 0, SendEventArgs.Buffer, SendEventArgs.Offset, buffer.Length);
 
+
             // 비동기 전송 시작.
             bool pending = Socket.SendAsync(SendEventArgs);
             if (pending == false)
@@ -155,12 +158,12 @@ namespace RWCoreNetwork
 		/// 비동기 전송 완료시 호출되는 콜백 매소드.
 		/// </summary>
 		/// <param name="e"></param>
-        public void ProcessSend(SocketAsyncEventArgs e)
+        public byte[] ProcessSend(SocketAsyncEventArgs e)
         {
             if (e.BytesTransferred <= 0 || e.SocketError != SocketError.Success)
             {
                 Console.WriteLine("[ERROR] thread: " + Thread.CurrentThread.ManagedThreadId + ", err: " + e.SocketError);
-                return;
+                return null;
             }
 
             lock (_lockSendingQueue)
@@ -168,7 +171,7 @@ namespace RWCoreNetwork
                 if (_sendingQueue.Count == 0)
                 {
                     Console.WriteLine("[ERROR] thread: " + Thread.CurrentThread.ManagedThreadId + ", Sending queue count is less than zero");
-                    return;
+                    return null;
                 }
 
                 // TODO : 재전송 로직 검토
@@ -177,14 +180,11 @@ namespace RWCoreNetwork
                 if (e.BytesTransferred != buffer.Length)
                 {
                     Console.WriteLine(string.Format("Need to send more! transferred {0},  packet size {1}", e.BytesTransferred, buffer.Length));
-                    return;
+                    return null;
                 }
 
                 // 전송 완료된 패킷을 큐에서 제거한다.
                 _sendingQueue.Dequeue();
-
-
-                //Console.WriteLine(string.Format("send message. handle {0},  userToken: {1},  e.BytesTransferred {2}", Socket.Handle, Id, e.BytesTransferred));
 
 
                 // 아직 전송하지 않은 대기중인 패킷이 있다면 다시한번 전송을 요청한다.
@@ -192,8 +192,11 @@ namespace RWCoreNetwork
                 {
                     StartSend();
                 }
+
+                return buffer;
             }
         }
+
 
         public void OnRemoved()
         {
@@ -204,6 +207,7 @@ namespace RWCoreNetwork
                 _peer.OnRemoved();
             }
         }
+
 
         public void Disconnect()
         {

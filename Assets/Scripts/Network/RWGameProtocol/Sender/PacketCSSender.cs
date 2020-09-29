@@ -176,11 +176,11 @@ namespace RWGameProtocol
             peer.SendPacket((int)GameProtocol.HIT_DAMAGE_ACK, msg.Serialize());
         }
 
-        public override void ReconnectGameReq(Peer peer, int playerUId) 
+        public override void ReconnectGameReq(Peer peer, string playerSessionId) 
         {
             MsgReconnectGameReq msg = new MsgReconnectGameReq();
-            msg.PlayerUId = playerUId;
-            peer.SendPacket((int)GameProtocol.HIT_DAMAGE_REQ, msg.Serialize());
+            msg.PlayerSessionId = playerSessionId;
+            peer.SendPacket((int)GameProtocol.RECONNECT_GAME_REQ, msg.Serialize());
         }
 
         public override void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) 

@@ -25,7 +25,7 @@ namespace RWGameProtocol
         public virtual void UpgradeSpNotify(Peer peer, int playerUId, short upgrade) { }
         public virtual void HitDamageReq(Peer peer, int playerUId, int damage) { }
         public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage) { }
-        public virtual void ReconnectGameReq(Peer peer, int playerUId) { }
+        public virtual void ReconnectGameReq(Peer peer, string playerSessionId) { }
         public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) { }
 
 

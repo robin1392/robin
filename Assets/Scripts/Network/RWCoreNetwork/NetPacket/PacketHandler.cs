@@ -10,7 +10,7 @@ namespace RWCoreNetwork.NetPacket
     public class PacketHandler
     {
         // 프로토콜 정의 델리게이트
-        public delegate bool InterceptProtocolDelegate(Peer peer, int protocolId, byte[] msg);
+        public delegate bool InterceptProtocolDelegate(Peer peer, int protocolId, byte[] msg, int msgLength);
         public InterceptProtocolDelegate InterceptProtocol;
 
 
@@ -22,17 +22,16 @@ namespace RWCoreNetwork.NetPacket
         protected Queue<Packet> _receiveQueue;
         protected object _lockReceiveQueue;
 
-        protected Queue<byte[]> _sendQueue;
-        protected object _lockSendQueue;
-
         private readonly int _packetProcessCount;
+        private readonly int _bufferSize;
 
 
 
-        public PacketHandler(IPacketReceiver packetReceiver, int packetProcessCount)
+        public PacketHandler(IPacketReceiver packetReceiver, int packetProcessCount, int bufferSize)
         {
             PacketReceiver = packetReceiver;
             _packetProcessCount = packetProcessCount;
+            _bufferSize = bufferSize;
 
             _isActivated = true;
             _receiveQueue = new Queue<Packet>();
@@ -52,9 +51,9 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public virtual void EnqueueReceivePacket(Peer peer, byte[] msg)
+        public virtual void EnqueuePacket(Peer peer, byte[] msg)
         {
-            Packet packet = new Packet(peer, msg);
+            Packet packet = new Packet(peer, msg, _bufferSize);
             lock (_lockReceiveQueue)
             {
                 _receiveQueue.Enqueue(packet);
@@ -62,7 +61,7 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public virtual Packet DequeueReceivePacket()
+        public virtual Packet DequeuePacket()
         {
             lock (_lockReceiveQueue)
             {
@@ -72,46 +71,6 @@ namespace RWCoreNetwork.NetPacket
                 }
 
                 return _receiveQueue.Dequeue();
-            }
-        }
-
-
-        public virtual void EnqueueSendPacket(Peer peer, int protocolId, byte[] msg)
-        {
-            //byte[] buffer = new byte[1024];
-
-            //// protocol id
-            //int offset = 0;
-            //byte[] tmpBuffer = BitConverter.GetBytes(protocolId);
-            //Array.Copy(tmpBuffer, 0, buffer, offset, tmpBuffer.Length);
-
-            //// body length
-            //offset = tmpBuffer.Length;
-            //tmpBuffer = BitConverter.GetBytes((short)(buffer.Length - 4));
-            //Array.Copy(tmpBuffer, 0, buffer, offset, tmpBuffer.Length);
-
-            //// msg
-            //offset += tmpBuffer.Length;
-            //Array.Copy(msg, 0, buffer, offset, msg.Length);
-
-
-            //lock (_lockSendQueue)
-            //{
-            //    _sendQueue.Enqueue(buffer);
-            //}
-        }
-
-
-        public virtual byte[] DequeueSendPacket()
-        {
-            lock (_lockSendQueue)
-            {
-                if (_sendQueue.Count == 0)
-                {
-                    return null;
-                }
-
-                return _sendQueue.Dequeue();
             }
         }
 
@@ -135,7 +94,7 @@ namespace RWCoreNetwork.NetPacket
 
             for (int i = 0; i < _packetProcessCount; i++)
             {
-                Packet packet = DequeueReceivePacket();
+                Packet packet = DequeuePacket();
                 if (packet == null)
                 {
                     return;
@@ -144,7 +103,7 @@ namespace RWCoreNetwork.NetPacket
 
                 if (InterceptProtocol != null)
                 {
-                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Msg) == true)
+                    if (InterceptProtocol(packet.Peer, packet.ProtocolId, packet.Msg, packet.Length) == true)
                     {
                         continue;
                     }

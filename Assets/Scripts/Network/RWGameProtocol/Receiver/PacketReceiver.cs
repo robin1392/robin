@@ -63,7 +63,7 @@ namespace RWGameProtocol
         public delegate void ReconnectGameReqDelegate(Peer peer, MsgReconnectGameReq msg);
         public ReconnectGameReqDelegate ReconnectGameReq;
 
-        public delegate void ReconnectGameAckDelegate(Peer peer, MsgHitDamageAck msg);
+        public delegate void ReconnectGameAckDelegate(Peer peer, MsgReconnectGameAck msg);
         public ReconnectGameAckDelegate ReconnectGameAck;
 
         #endregion
@@ -114,9 +114,6 @@ namespace RWGameProtocol
 
 
         #region Relay delegate
-        public delegate void CommonRelayDelegate(Peer peer, short portocolId, byte[] msg);
-        public CommonRelayDelegate CommonRelay;
-
         public delegate void RemoveMinionDelegate(Peer peer, MsgRemoveMinionRelay msg);
         public RemoveMinionDelegate RemoveMinionRelay;
 

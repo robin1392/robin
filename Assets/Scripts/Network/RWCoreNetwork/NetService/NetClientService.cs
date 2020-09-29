@@ -1,15 +1,23 @@
-﻿using RWCoreNetwork.NetPacket;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using RWCoreLib.Log;
+using RWCoreNetwork.NetPacket;
 
 
 namespace RWCoreNetwork.NetService
 {
     public class NetClientService : NetBaseService
     {
-        public NetClientService(PacketHandler packetHandler, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval)
-            : base(packetHandler, maxConnection, bufferSize, keepAliveTime, keepAliveInterval)
+        // 네트워크 상태 큐
+        Queue<UserToken> _netEventQueue;
+
+
+
+        public NetClientService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring)
+            : base(packetHandler, logger, maxConnection, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
         {
+            _netEventQueue = new Queue<UserToken>();
         }
 
 
@@ -25,7 +33,7 @@ namespace RWCoreNetwork.NetService
             {
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 socket.LingerState = new LingerOption(true, 10);
-                //socket.NoDelay = true;
+                socket.NoDelay = true;
 
 
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs();
@@ -66,6 +74,46 @@ namespace RWCoreNetwork.NetService
             lock (_netEventQueue)
             {
                 _netEventQueue.Enqueue(userToken);
+            }
+        }
+
+
+        /// <summary>
+        /// 연결 이벤트 처리
+        /// </summary>
+        protected override void ProcessConnectionEvent()
+        {
+            // 서버 연결/해제 이벤트를 처리한다.
+            UserToken userToken = null;
+            lock (_netEventQueue)
+            {
+                if (_netEventQueue.Count == 0)
+                {
+                    return;
+                }
+
+                userToken = _netEventQueue.Dequeue();
+            }
+
+
+            switch (userToken.NetState)
+            {
+                case ENetState.Connected:
+                    {
+                        if (ClientConnectedCallback != null)
+                        {
+                            ClientConnectedCallback(userToken);
+                        }
+                    }
+                    break;
+                case ENetState.Disconnected:
+                    {
+                        if (ClientDisconnectedCallback != null)
+                        {
+                            ClientDisconnectedCallback(userToken);
+                        }
+                    }
+                    break;
             }
         }
 

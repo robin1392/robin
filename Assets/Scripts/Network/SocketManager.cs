@@ -8,6 +8,30 @@ using RWCoreNetwork.NetPacket;
 using System;
 
 
+class NetLogger : RWCoreLib.Log.ILog
+{
+    public void Info(string log)
+    {
+        UnityEngine.Debug.Log(log);
+    }
+    public void Fatal(string log)
+    {
+        UnityEngine.Debug.LogError(log);
+    }
+    public void Error(string log)
+    {
+        UnityEngine.Debug.LogError(log);
+    }
+    public void Warn(string log)
+    {
+        UnityEngine.Debug.LogWarning(log);
+    }
+    public void Debug(string log)
+    {
+        UnityEngine.Debug.Log(log);
+    }
+}
+
 public class SocketManager
 {
     private NetClientService _netService;
@@ -29,9 +53,8 @@ public class SocketManager
 
     public void Init(IPacketReceiver recvProcessor)
     {
-        PacketHandler handler = new PacketHandler(recvProcessor, 30);
-
-        _netService = new NetClientService(handler, 1, 4096, 5000, 1000);
+        PacketHandler handler = new PacketHandler(recvProcessor, 30, 4096);
+        _netService = new NetClientService(handler, new NetLogger(), 1, 4096, 5000, 1000, false);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;
     }

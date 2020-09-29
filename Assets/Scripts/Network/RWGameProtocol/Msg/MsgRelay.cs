@@ -329,8 +329,8 @@ namespace RWGameProtocol.Msg
         // Pos배열 분할 인덱스
         public byte PosIndex;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 160)]
-        public MsgVector3[] Pos = new MsgVector3[160];
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
+        public MsgVector3[] Pos = new MsgVector3[100];
     }
 
 

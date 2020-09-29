@@ -27,9 +27,9 @@ namespace RWCoreNetwork
         }
 
 
-        public void SendPacket(short protocolId, byte[] msg)
+        public void SendPacket(int protocolId, byte[] msg)
         {
-            _userToken.Send(protocolId, msg);
+            _userToken.Send(protocolId, msg, msg.Length);
         }
 
         public void Disconnect()

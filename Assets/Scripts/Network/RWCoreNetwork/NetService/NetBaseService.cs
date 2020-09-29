@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net.Sockets;
+using RWCoreLib.Log;
 using RWCoreNetwork.NetPacket;
 
 namespace RWCoreNetwork.NetService
@@ -20,50 +21,35 @@ namespace RWCoreNetwork.NetService
     }
 
 
-    public class NetMonitorInfo
-    {
-        public int ReceiveEventPoolCount { get; set; }
-        public int SendEventPoolCount { get; set; }
-
-        public int ReceivePacketQueueCount { get; set; }
-
-        public Dictionary<int, int> SendPacketQueueCount { get; set; }
-
-        public int UserCount { get; set; }
-
-
-        public NetMonitorInfo()
-        {
-            SendPacketQueueCount = new Dictionary<int, int>();
-        }
-    }
-
+    /// <summary>
+    /// 네트워크 기본 서비스 클래스
+    /// 소켓 연결 및 패킷의 송수신과 관련된 전반적인 처리를 담당한다.
+    /// </summary>
     public class NetBaseService
     {
         public delegate void ClientConnectDelegate(UserToken token);
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
 
-        // 네트워크 서비스 모니터링 델리게이터
-        public delegate void NetServiceMonitoringDelegate(NetMonitorInfo monitorInfo);
-        public NetServiceMonitoringDelegate NetServiceMonitoring;
-
-
         // 유저 토큰 맵
         protected Dictionary<int, UserToken> _userTokenMap;
 
-
         // 패킷 핸들러
         protected PacketHandler _packetHandler;
+        
+        // 네트워크 상태 모니터링 핸들러
+        public NetMonitorHandler _netMonitorHandler { get; set; }
 
 
-        // 네트워크 상태 큐
-        protected Queue<UserToken> _netEventQueue;
-
+        // 로그
+        protected ILog _logger;
 
         private readonly int preAllocCount = 2;
         private readonly int _keepAliveTime;
         private readonly int _keepAliveInterval;
+        private readonly int _bufferSize;
+
+        private bool _onMonitoring;
 
 
         // 메시지 송수신시 필요한 오브젝트
@@ -74,21 +60,18 @@ namespace RWCoreNetwork.NetService
         // 메시지 수신, 전송시 비동기 소켓에서 사용할 버퍼를 관리하는 객체
         private BufferManager _bufferManager;
 
-        private NetMonitorInfo _monitorInfo;
-        private long _monitorTick;
 
-
-        public NetBaseService(PacketHandler packetHandler, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval)
+        public NetBaseService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring)
         {
             ClientConnectedCallback = null;
             ClientDisconnectedCallback = null;
             _userTokenMap = new Dictionary<int, UserToken>();
-            _netEventQueue = new Queue<UserToken>();
-            _monitorInfo = new NetMonitorInfo();
-            _monitorTick = DateTime.UtcNow.AddSeconds(10).Ticks;
+            _netMonitorHandler = new NetMonitorHandler(10);
 
 
             _packetHandler = packetHandler;
+            _logger = logger;
+
 
             // SocketAsyncEventArgs object pool 생성
             _receiveEventAragePool = new SocketAsyncEventArgsPool(maxConnection);
@@ -103,7 +86,7 @@ namespace RWCoreNetwork.NetService
             SocketAsyncEventArgs args;
             for (int i = 0; i < maxConnection; i++)
             {
-                UserToken userToken = new UserToken(bufferSize, i + 1);
+                UserToken userToken = new UserToken(_logger, bufferSize, i + 1);
                 userToken.CompletedMessageCallback += OnMessageCompleted;
 
 
@@ -130,38 +113,23 @@ namespace RWCoreNetwork.NetService
 
             _keepAliveTime = keepAliveTime;
             _keepAliveInterval = keepAliveInterval;
+            _onMonitoring = onMonitoring;
+            _bufferSize = bufferSize;
         }
 
 
         public virtual void Update() 
         {
-            if (NetServiceMonitoring != null)
+            if ( _onMonitoring == true)
             {
-                DateTime now = DateTime.UtcNow;
-                if (_monitorTick < now.Ticks)
-                {
-                    _monitorTick = now.AddSeconds(5).Ticks;
-
-                    _monitorInfo.UserCount = _userTokenMap.Count;
-                    _monitorInfo.ReceiveEventPoolCount = _receiveEventAragePool.Count;
-                    _monitorInfo.SendEventPoolCount = _sendEventAragePool.Count;
-                    _monitorInfo.ReceivePacketQueueCount = _packetHandler.Count();
-                    
-
-                    _monitorInfo.SendPacketQueueCount.Clear();
-                    foreach (var elem in _userTokenMap)
-                    {
-                        _monitorInfo.SendPacketQueueCount.Add(elem.Key, elem.Value.GetSendQueueCount());
-                    }
-
-                    NetServiceMonitoring(_monitorInfo);
-                }
+                _netMonitorHandler.Print(_logger);
             }
 
 
             // 연결 이벤트 처리
             ProcessConnectionEvent();
             
+
             // 패킷을 처리한다.
             _packetHandler.Update();
         }
@@ -170,43 +138,98 @@ namespace RWCoreNetwork.NetService
         /// <summary>
         /// 연결 이벤트 처리
         /// </summary>
-        protected void ProcessConnectionEvent()
-        {
-            // 서버 연결/해제 이벤트를 처리한다.
-            UserToken userToken = null;
-            lock (_netEventQueue)
-            {
-                if (_netEventQueue.Count == 0)
-                {
-                    return;
-                }
+        protected virtual void ProcessConnectionEvent() { }
 
-                userToken = _netEventQueue.Dequeue();
+
+        /// <summary>
+        /// 소켓을 오픈한다.
+        /// </summary>
+        /// <param name="socket"></param>
+        protected virtual void OpenClientSocket(Socket socket)
+        {
+            SocketAsyncEventArgs receiveArgs = _receiveEventAragePool.Pop();
+            SocketAsyncEventArgs sendArgs = _sendEventAragePool.Pop();
+
+
+            // 소켓 옵션 설정.
+            socket.LingerState = new LingerOption(true, 10);
+            socket.NoDelay = true;
+
+
+            // 패킷 수신 시작
+            UserToken userToken = receiveArgs.UserToken as UserToken;
+            BeginReceive(socket, receiveArgs, sendArgs);
+
+
+            // 접속 유저 토큰 추가
+            lock (_userTokenMap)
+            {
+                _userTokenMap.Add(userToken.Id, userToken);
             }
 
 
-            switch (userToken.NetState)
+            userToken.NetState = ENetState.Connected;
+            CallClientConnectedCallback(userToken);
+        }
+
+
+        /// <summary>
+        /// 소켓을 닫는다.
+        /// </summary>
+        /// <param name="userToken"></param>
+        protected virtual void CloseClientsocket(UserToken userToken, SocketError error)
+        {
+            userToken.OnRemoved();
+            userToken.NetState = ENetState.Disconnected;
+
+
+            CallClientDisconnectedCallback(userToken);
+
+
+            if (_receiveEventAragePool != null)
             {
-                case ENetState.Connected:
-                    {
-                        if (ClientConnectedCallback != null)
-                        {
-                            ClientConnectedCallback(userToken);
-                        }
-                    }
-                    break;
-                case ENetState.Disconnected:
-                    {
-                        if (ClientDisconnectedCallback != null)
-                        {
-                            ClientDisconnectedCallback(userToken);
-                        }
-                    }
-                    break;
+                _receiveEventAragePool.Push(userToken.ReceiveEventArgs);
+            }
+
+
+            if (_sendEventAragePool != null)
+            {
+                _sendEventAragePool.Push(userToken.SendEventArgs);
+            }
+
+
+            // 유저 토큰 제거
+            lock (_userTokenMap)
+            {
+                _userTokenMap.Remove(userToken.Id);
             }
         }
 
 
+        protected virtual void CallClientConnectedCallback(UserToken userToken)
+        {
+            if (ClientConnectedCallback != null)
+            {
+                ClientConnectedCallback(userToken);
+            }
+        }
+
+
+        protected virtual void CallClientDisconnectedCallback(UserToken userToken)
+        {
+            if (ClientDisconnectedCallback != null)
+            {
+                ClientDisconnectedCallback(userToken);
+            }
+        }
+
+
+        /// <summary>
+        /// 비동기 패킷 수신을 시작한다.
+        /// </summary>
+        /// <param name="clientSocket"></param>
+        /// <param name="receiveArgs"></param>
+        /// <param name="sendArgs"></param>
         protected void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
             // receive_args, send_args 아무곳에서나 꺼내와도 됨. 둘 다 동일한 userToken 물고 있음
@@ -247,17 +270,19 @@ namespace RWCoreNetwork.NetService
 
 
         /// <summary>
-        /// 비동기 수신 작업이 완료 될 때 호출됩니다
+        /// 비동기 수신 작업이 완료 될 때 호출됩니다. 
         /// 원격 호스트가 연결을 닫은 경우 소켓이 닫힙니다
         /// </summary>
+        /// <param name="e"></param>
         private void ProcessReceive(SocketAsyncEventArgs e)
         {
             // 원격 호스트가 연결을 종료했는지 확인
             UserToken userToken = e.UserToken as UserToken;
             if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
             {
-                // 이후의 작업은 CUserToekn에 맡긴다.
+                // 이후의 작업은 UserToken에 맡긴다.
                 userToken.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
+    
 
                 // 다음 메시지 수신을 위해서 다시 ReceiveAsync 메소드를 호출한다.
                 bool pending = userToken.Socket.ReceiveAsync(e);
@@ -268,8 +293,7 @@ namespace RWCoreNetwork.NetService
             }
             else
             {
-                //Console.WriteLine(string.Format("error {0},  transferred {1}", e.SocketError, e.BytesTransferred));
-                CloseClientsocket(userToken);
+                CloseClientsocket(userToken, e.SocketError);
             }
         }
 
@@ -282,76 +306,12 @@ namespace RWCoreNetwork.NetService
         protected void OnSendCompleted(object sender, SocketAsyncEventArgs e)
         {
             UserToken userToken = e.UserToken as UserToken;
-            userToken.ProcessSend(e);
-        }
+            byte[] msg = userToken.ProcessSend(e);
 
-
-        /// <summary>
-        /// 소켓을 오픈한다.
-        /// </summary>
-        /// <param name="socket"></param>
-        protected virtual void OpenClientSocket(Socket socket)
-        {
-            SocketAsyncEventArgs receiveArgs = _receiveEventAragePool.Pop();
-            SocketAsyncEventArgs sendArgs = _sendEventAragePool.Pop();
-
-
-            // 소켓 옵션 설정.
-            socket.LingerState = new LingerOption(true, 10);
-            //socket.NoDelay = true;
-
-
-            // 패킷 수신 시작
-            UserToken userToken = receiveArgs.UserToken as UserToken;
-            BeginReceive(socket, receiveArgs, sendArgs);
-
-
-            // 접속 유저 토큰 추가
-            lock (_userTokenMap)
+            if (_onMonitoring == true)
             {
-                _userTokenMap.Add(userToken.Id, userToken);
+                _netMonitorHandler.SetSendPacket(userToken.Id, msg);
             }
-
-
-            userToken.NetState = ENetState.Connected;
-            CallClientConnectedCallback(userToken);
-        }
-
-
-        /// <summary>
-        /// 소켓을 닫는다.
-        /// </summary>
-        /// <param name="userToken"></param>
-        protected virtual void CloseClientsocket(UserToken userToken)
-        {
-            userToken.OnRemoved();
-            userToken.NetState = ENetState.Disconnected;
-
-
-            CallClientDisconnectedCallback(userToken);
-
-
-            if (_receiveEventAragePool != null)
-            {
-                _receiveEventAragePool.Push(userToken.ReceiveEventArgs);
-               // userToken.ReceiveEventArgs = null;
-            }
-
-
-            if (_sendEventAragePool != null)
-            {
-                _sendEventAragePool.Push(userToken.SendEventArgs);
-                //userToken.SendEventArgs = null;
-            }
-
-
-            // 유저 토큰 제거
-            lock(_userTokenMap)
-            {
-                _userTokenMap.Remove(userToken.Id);
-            }
-            
-           // userToken.Socket = null;
         }
 
 
@@ -375,9 +335,16 @@ namespace RWCoreNetwork.NetService
             }
 
 
+            if (_onMonitoring == true)
+            {
+                _netMonitorHandler.SetReceivePacket(userToken.Id, msg);
+            }
+
+
             // 패킷처리 큐에 추가한다.
-            _packetHandler.EnqueueReceivePacket(userToken.GetPeer(), msg);
+            _packetHandler.EnqueuePacket(userToken.GetPeer(), msg);
         }
+
 
 
         public List<UserToken> GetUserTokenList()
@@ -388,6 +355,7 @@ namespace RWCoreNetwork.NetService
             }
         }
 
+
         public int GetUserTokenCount()
         {
             lock (_userTokenMap)
@@ -396,22 +364,5 @@ namespace RWCoreNetwork.NetService
             }
         }
 
-
-        protected virtual void CallClientConnectedCallback(UserToken userToken)
-        {
-            if (ClientConnectedCallback != null)
-            {
-                ClientConnectedCallback(userToken);
-            }
-        }
-
-
-        protected virtual void CallClientDisconnectedCallback(UserToken userToken)
-        {
-            if (ClientDisconnectedCallback != null)
-            {
-                ClientDisconnectedCallback(userToken);
-            }
-        }
     }
 }
