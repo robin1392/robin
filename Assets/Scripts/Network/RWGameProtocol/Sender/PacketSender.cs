@@ -27,7 +27,7 @@ namespace RWGameProtocol
         public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage) { }
         public virtual void ReconnectGameReq(Peer peer, string playerSessionId) { }
         public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) { }
-        public virtual void PauseGameReq(Peer peer, string playerSessionId) { }
+        public virtual void PauseGameReq(Peer peer) { }
         public virtual void PauseGameAck(Peer peer, GameErrorCode code) { }
         public virtual void PauseGameNotify(Peer peer, int playerUId) { }
         public virtual void ResumeGameReq(Peer peer, string playerSessionId) { }

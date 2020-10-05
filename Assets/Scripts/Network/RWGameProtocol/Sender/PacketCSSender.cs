@@ -201,10 +201,9 @@ namespace RWGameProtocol
         }
 
 
-        public override void PauseGameReq(Peer peer, string playerSessionId) 
+        public override void PauseGameReq(Peer peer) 
         {
             MsgPauseGameReq msg = new MsgPauseGameReq();
-            msg.PlayerSessionId = playerSessionId;
             peer.SendPacket((int)GameProtocol.PAUSE_GAME_REQ, msg.Serialize());
         }
 
