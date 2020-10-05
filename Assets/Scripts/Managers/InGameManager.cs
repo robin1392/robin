@@ -15,6 +15,7 @@ using TMPro;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
+using UnityEditor;
 using Random = UnityEngine.Random;
 
 #region USING PHOTON
@@ -124,6 +125,10 @@ namespace ED
 
             Application.targetFrameRate = 30;
             InitializeManager();
+            
+#if UNITY_EDITOR
+            EditorApplication.pauseStateChanged += OnEditorAppPause;
+#endif
         }
 
         public override void OnDestroy()
@@ -132,6 +137,10 @@ namespace ED
             //{
             //Instance = null;
             //}
+            
+#if UNITY_EDITOR
+            EditorApplication.pauseStateChanged -= OnEditorAppPause;
+#endif
 
             DestroyManager();
 
@@ -1127,6 +1136,25 @@ namespace ED
                 //SendInGameManager(GameProtocol.RESUME_GAME_REQ);
             }
         }
+        
+
+        // 에디터에서 테스트용도로 사용하기 위해
+        public void OnEditorAppPause(PauseState pause)
+        {
+            if (pause == PauseState.Paused)
+            {
+                print("Application Pause");
+                // 일시정지
+                //SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+            }
+            else
+            {
+                print("Application Resume");
+                // resume
+                //SendInGameManager(GameProtocol.RESUME_GAME_REQ);
+            }
+        }
+
 
         
 
