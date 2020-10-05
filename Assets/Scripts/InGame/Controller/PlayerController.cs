@@ -2346,7 +2346,7 @@ namespace ED
         
         
         
-        
+        #region not use old code
         /*
         #region dice rpc
         
@@ -2606,5 +2606,6 @@ namespace ED
         }
         #endregion
         */
+        #endregion
     }
 }

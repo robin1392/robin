@@ -1073,6 +1073,17 @@ namespace ED
                     }
                     break;
                 }
+                case GameProtocol.PAUSE_GAME_NOTIFY:
+                {
+                    MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
+
+                    if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
+                    {
+                        NetworkManager.Get().SetOtherPause(true);
+                    }
+                    
+                    break;
+                }
                 case GameProtocol.DISCONNECT_GAME_NOTIFY:
                 {
                     MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
@@ -1085,12 +1096,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.PAUSE_GAME_NOTIFY:
-                {
-                    MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
-                    
-                    break;
-                }
+                
                 case GameProtocol.RESUME_GAME_ACK:
                 {
                     MsgResumeGameAck resumeack = (MsgResumeGameAck) param[0];

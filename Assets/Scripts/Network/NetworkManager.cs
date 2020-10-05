@@ -95,6 +95,17 @@ public class NetworkManager : Singleton<NetworkManager>
     }
     #endregion
     
+    
+    #region net game pause , resume , reconnect
+
+    private bool _isOtherPause;
+
+    public bool IsOtherPause
+    {
+        get { return _isOtherPause; }
+    }
+    #endregion
+    
     #region dev test var
     
     [Header("Dev Test Variable")]
@@ -223,6 +234,9 @@ public class NetworkManager : Singleton<NetworkManager>
         // 배틀정보..저장
         SaveBattleInfo();
         
+        // 시작하면서 상대 멈춤 초기화
+        SetOtherPause(false);
+        
         playType = type;
         _clientSocket.Connect( _serverAddr , _port , callback);
     }
@@ -257,6 +271,15 @@ public class NetworkManager : Singleton<NetworkManager>
     public NetInfo GetNetInfo()
     {
         return _netInfo;
+    }
+    
+    #endregion
+    
+    #region pause resume reconnect
+
+    public void SetOtherPause(bool pause)
+    {
+        _isOtherPause = pause;
     }
     
     #endregion
