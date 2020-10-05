@@ -50,6 +50,9 @@ public class SocketRecvEvent
     public void OnReconnectGameAck(Peer peer, MsgReconnectGameAck msg)
     {
         UnityUtil.Print("ACK => ", "RECONNECT_GAME_ACK  " +msg.ErrorCode.ToString() , "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_ACK, msg);
     }
 
     

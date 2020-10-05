@@ -1085,6 +1085,30 @@ namespace ED
                     
                     break;
                 }
+                case GameProtocol.PAUSE_GAME_NOTIFY:
+                {
+                    MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
+                    
+                    break;
+                }
+                case GameProtocol.RESUME_GAME_ACK:
+                {
+                    MsgResumeGameAck resumeack = (MsgResumeGameAck) param[0];
+                    
+                    break;
+                }
+                case GameProtocol.RESUME_GAME_NOTIFY:
+                {
+                    MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
+                    
+                    break;
+                }
+                case GameProtocol.RECONNECT_GAME_ACK:
+                {
+                    MsgReconnectGameAck reconnack = (MsgReconnectGameAck) param[0];
+                    
+                    break;
+                }
                 #endregion
                 
                 
