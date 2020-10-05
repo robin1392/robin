@@ -7,7 +7,6 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgResumeGameReq : Serializer<MsgResumeGameReq>
     {
-        public string PlayerSessionId;
     }
 
 
