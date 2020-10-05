@@ -1157,7 +1157,7 @@ namespace ED
             {
                 print("Application Pause");
                 // 일시정지
-                //SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
             }
             else
             {
@@ -1175,7 +1175,7 @@ namespace ED
             {
                 print("Application Pause");
                 // 일시정지
-                //SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
             }
             else
             {
