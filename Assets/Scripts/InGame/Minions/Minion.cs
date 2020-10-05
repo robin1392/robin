@@ -134,6 +134,11 @@ namespace ED
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;
             agent.speed = moveSpeed;
+            agent.enabled = true;
+            agent.isStopped = false;
+            agent.updatePosition = true;
+            agent.updateRotation = true;
+            _collider.enabled = true;
             isPlayable = true;
             isAttacking = false;
             isPolymorph = false;

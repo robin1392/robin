@@ -25,15 +25,20 @@ namespace RWGameProtocol
         public virtual void UpgradeSpNotify(Peer peer, int playerUId, short upgrade) { }
         public virtual void HitDamageReq(Peer peer, int playerUId, int damage) { }
         public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage) { }
-        public virtual void ReconnectGameReq(Peer peer, int playerUId) { }
+        public virtual void ReconnectGameReq(Peer peer, string playerSessionId) { }
         public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) { }
-
+        public virtual void PauseGameReq(Peer peer, string playerSessionId) { }
+        public virtual void PauseGameAck(Peer peer, GameErrorCode code) { }
+        public virtual void PauseGameNotify(Peer peer, int playerUId) { }
+        public virtual void ResumeGameReq(Peer peer, string playerSessionId) { }
+        public virtual void ResumeGameAck(Peer peer, GameErrorCode code) { }
+        public virtual void ResumeGameNotify(Peer peer, int playerUId) { }
 
         public virtual void HitDamageNotify(Peer peer, int playerUId, int damage) { }
         public virtual void JoinGameNotify(Peer peer, MsgPlayerInfo info) { }
         public virtual void LeaveGameNotify(Peer peer, int playerUId) { }
-        public virtual void DeactiveWaitingObjectNotify(Peer peer, int playerUid, int currentSp) { }
-        public virtual void GetDiceNotify(Peer peer, int playerUid, int diceId, short slotNum, short level) { }
+        public virtual void DeactiveWaitingObjectNotify(Peer peer, int playerUId, int currentSp) { }
+        public virtual void GetDiceNotify(Peer peer, int playerUId, int diceId, short slotNum, short level) { }
         public virtual void LevelUpDiceNotify(Peer peer, int playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) { }
         public virtual void InGameUpDiceNotify(Peer peer, int playerUId, int diceId, short inGameUp) { }
         public virtual void AddSpNotify(Peer peer, int playerUId, int currentSp) { }

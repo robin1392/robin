@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace RWCoreNetwork.NetPacket
 {
@@ -14,16 +15,17 @@ namespace RWCoreNetwork.NetPacket
     public class Packet
     {
         public int ProtocolId { get; private set; }
+        public int Length { get; private set; }
         public byte[] Msg { get; private set; }
         public Peer Peer { get; private set; }
 
-        public Packet(Peer peer, byte[] buffer)
+        public Packet(Peer peer, byte[] buffer, int bufferLength)
         {
             Peer = peer;
             ProtocolId = BitConverter.ToInt32(buffer, 0);
-
-            Msg = new byte[buffer.Length - Defines.HEADER_SIZE];
-            Array.Copy(buffer, Defines.HEADER_SIZE, Msg, 0, buffer.Length - Defines.HEADER_SIZE);
+            Length = BitConverter.ToInt32(buffer, Defines.PROTOCOL_ID);
+            Msg = new byte[bufferLength];
+            Array.Copy(buffer, Defines.HEADER_SIZE, Msg, 0, Length);
         }
     }
 }

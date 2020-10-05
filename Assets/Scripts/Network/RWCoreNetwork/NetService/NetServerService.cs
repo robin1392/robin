@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using RWCoreLib.Log;
 using RWCoreNetwork.NetPacket;
 
 namespace RWCoreNetwork.NetService
@@ -9,8 +10,8 @@ namespace RWCoreNetwork.NetService
 
 
 
-        public NetServerService(PacketHandler packetHandler, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval)
-            : base(packetHandler, maxConnection, bufferSize, keepAliveTime, keepAliveInterval)
+        public NetServerService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring)
+            : base(packetHandler, logger, maxConnection, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
         {
             _listener = new Listener();
             _listener.OnNewClientCallback += OnConnectedClient;

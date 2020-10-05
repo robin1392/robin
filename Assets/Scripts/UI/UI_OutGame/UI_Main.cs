@@ -26,8 +26,11 @@ namespace ED
         public Image image_Progress;
         public Text text_Progress;
         public Text text_Nickname;
-
+        
+        [Header("Popup")]
         public UI_SearchingPopup searchPopup;
+        public GameObject obj_IndicatorPopup;
+        
         [Header("Nicnname")] 
         public InputField inputfield_Nicnname;
 

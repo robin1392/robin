@@ -5,7 +5,7 @@ namespace RWGameProtocol.Msg
 {
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgReconnectGameReq : Serializer<MsgReconnectGameReq>
+    public class MsgResumeGameReq : Serializer<MsgResumeGameReq>
     {
         public string PlayerSessionId;
     }
@@ -13,10 +13,16 @@ namespace RWGameProtocol.Msg
 
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgReconnectGameAck : Serializer<MsgReconnectGameAck>
+    public class MsgResumeGameAck : Serializer<MsgResumeGameAck>
     {
         public short ErrorCode;
-        public int Wave;
-        public MsgPlayerInfo PlayerInfo;
+    }
+
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class MsgResumeGameNotify : Serializer<MsgResumeGameNotify>
+    {
+        public int PlayerUId;
     }
 }
