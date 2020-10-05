@@ -201,6 +201,55 @@ namespace RWGameProtocol
         }
 
 
+        public override void PauseGameReq(Peer peer, string playerSessionId) 
+        {
+            MsgPauseGameReq msg = new MsgPauseGameReq();
+            msg.PlayerSessionId = playerSessionId;
+            peer.SendPacket((int)GameProtocol.PAUSE_GAME_REQ, msg.Serialize());
+        }
+
+
+        public override void PauseGameAck(Peer peer, GameErrorCode code)
+        {
+            MsgPauseGameAck msg = new MsgPauseGameAck();
+            msg.ErrorCode = (short)code;
+            peer.SendPacket((int)GameProtocol.PAUSE_GAME_ACK, msg.Serialize());
+        }
+
+
+        public override void PauseGameNotify(Peer peer, int playerUId) 
+        {
+            MsgPauseGameNotify msg = new MsgPauseGameNotify();
+            msg.PlayerUId = playerUId;
+            peer.SendPacket((int)GameProtocol.PAUSE_GAME_NOTIFY, msg.Serialize());
+        }
+
+
+        public override void ResumeGameReq(Peer peer, string playerSessionId) 
+        {
+            MsgResumeGameReq msg = new MsgResumeGameReq();
+            msg.PlayerSessionId = playerSessionId;
+            peer.SendPacket((int)GameProtocol.RESUME_GAME_REQ, msg.Serialize());
+        }
+
+
+        public override void ResumeGameAck(Peer peer, GameErrorCode code) 
+        {
+            MsgResumeGameAck msg = new MsgResumeGameAck();
+            msg.ErrorCode = (short)code;
+            peer.SendPacket((int)GameProtocol.RESUME_GAME_ACK, msg.Serialize());
+        }
+
+
+        public override void ResumeGameNotify(Peer peer, int playerUId) 
+        {
+            MsgResumeGameNotify msg = new MsgResumeGameNotify();
+            msg.PlayerUId = playerUId;
+            peer.SendPacket((int)GameProtocol.RESUME_GAME_NOTIFY, msg.Serialize());
+        }
+
+
+
         #region Notify Protocol                
 
         /// <summary>

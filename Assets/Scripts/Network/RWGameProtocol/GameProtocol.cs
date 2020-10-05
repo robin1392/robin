@@ -2,7 +2,7 @@ using System;
 
 namespace RWGameProtocol
 {
-    public enum GameProtocol : short
+    public enum GameProtocol : int
     {
         BEGIN = 0,
 
@@ -12,52 +12,56 @@ namespace RWGameProtocol
 
         JOIN_GAME_REQ,
         JOIN_GAME_ACK,
+        JOIN_GAME_NOTIFY,
 
         LEAVE_GAME_REQ,
         LEAVE_GAME_ACK,
+        LEAVE_GAME_NOTIFY,
 
         READY_GAME_REQ,
         READY_GAME_ACK,
 
         RECONNECT_GAME_REQ,
         RECONNECT_GAME_ACK,
+        RECONNECT_GAME_NOTIFY,
 
-        CHANGE_LAYER_REQ,
-        CHANGE_LAYER_ACK,
+        PAUSE_GAME_REQ,
+        PAUSE_GAME_ACK,
+        PAUSE_GAME_NOTIFY,
+
+        RESUME_GAME_REQ,
+        RESUME_GAME_ACK,
+        RESUME_GAME_NOTIFY,
 
         GET_DICE_REQ,
         GET_DICE_ACK,
+        GET_DICE_NOTIFY,
 
         HIT_DAMAGE_REQ,
         HIT_DAMAGE_ACK,
+        HIT_DAMAGE_NOTIFY,
 
         LEVEL_UP_DICE_REQ,
         LEVEL_UP_DICE_ACK,
+        LEVEL_UP_DICE_NOTIFY,
 
         INGAME_UP_DICE_REQ,
         INGAME_UP_DICE_ACK,
+        INGAME_UP_DICE_NOTIFY,
 
         UPGRADE_SP_REQ,
         UPGRADE_SP_ACK,
+        UPGRADE_SP_NOTIFY,
 
 
         // ----------------------------------------------------------------------------------------------------
         // Notify protocols
         // ----------------------------------------------------------------------------------------------------
-
-        JOIN_GAME_NOTIFY = 10001,
-        LEAVE_GAME_NOTIFY,
-        DEACTIVE_WAITING_OBJECT_NOTIFY,
-        GET_DICE_NOTIFY,
-        LEVEL_UP_DICE_NOTIFY,
-        INGAME_UP_DICE_NOTIFY,
-        UPGRADE_SP_NOTIFY,
+        DEACTIVE_WAITING_OBJECT_NOTIFY = 10001,
         ADD_SP_NOTIFY,
         SPAWN_NOTIFY,
-        HIT_DAMAGE_NOTIFY,
         END_GAME_NOTIFY,
         DISCONNECT_GAME_NOTIFY,
-        RECONNECT_GAME_NOTIFY,
 
 
         // ----------------------------------------------------------------------------------------------------

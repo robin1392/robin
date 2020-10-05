@@ -140,6 +140,48 @@ namespace RWGameProtocol
                         ReconnectGameAck(peer, MsgReconnectGameAck.Deserialize(msg));
                     }
                     break;
+                case GameProtocol.PAUSE_GAME_REQ:
+                    {
+                        if (PauseGameReq == null)
+                            return false;
+                        PauseGameReq(peer, MsgPauseGameReq.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.PAUSE_GAME_ACK:
+                    {
+                        if (PauseGameAck == null)
+                            return false;
+                        PauseGameAck(peer, MsgPauseGameAck.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.PAUSE_GAME_NOTIFY:
+                    {
+                        if (PauseGameNotify == null)
+                            return false;
+                        PauseGameNotify(peer, MsgPauseGameNotify.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.RESUME_GAME_REQ:
+                    {
+                        if (ResumeGameReq == null)
+                            return false;
+                        ResumeGameReq(peer, MsgResumeGameReq.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.RESUME_GAME_ACK:
+                    {
+                        if (ResumeGameAck == null)
+                            return false;
+                        ResumeGameAck(peer, MsgResumeGameAck.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.RESUME_GAME_NOTIFY:
+                    {
+                        if (ResumeGameNotify == null)
+                            return false;
+                        ResumeGameNotify(peer, MsgResumeGameNotify.Deserialize(msg));
+                    }
+                    break;
 
                 #region Notify Protocol                
                 case GameProtocol.JOIN_GAME_NOTIFY:
