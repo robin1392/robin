@@ -7,6 +7,7 @@ namespace RWGameProtocol.Msg
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class MsgReconnectGameReq : Serializer<MsgReconnectGameReq>
     {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 60)]
         public string PlayerSessionId;
     }
 
