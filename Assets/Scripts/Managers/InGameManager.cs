@@ -15,8 +15,12 @@ using TMPro;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
-using UnityEditor;
 using Random = UnityEngine.Random;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 
 #region USING PHOTON
 //using Photon.Pun;
@@ -1168,6 +1172,7 @@ namespace ED
         }
         
 
+#if UNITY_EDITOR
         // 에디터에서 테스트용도로 사용하기 위해
         public void OnEditorAppPause(PauseState pause)
         {
@@ -1184,7 +1189,7 @@ namespace ED
                 //SendInGameManager(GameProtocol.RESUME_GAME_REQ);
             }
         }
-
+#endif
 
         
 
