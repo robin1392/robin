@@ -291,12 +291,12 @@ public class SocketSendEvent
             // reconnect , pause , etc...
             case GameProtocol.PAUSE_GAME_REQ:
             {
-                _sender.PauseGameReq(peer , (string)param[0]);
+                _sender.PauseGameReq(peer);
                 break;
             }
             case GameProtocol.RESUME_GAME_REQ:
             {
-                _sender.ResumeGameReq(peer , (string)param[0]);
+                _sender.ResumeGameReq(peer);
                 break;
             }
             case GameProtocol.RECONNECT_GAME_REQ:

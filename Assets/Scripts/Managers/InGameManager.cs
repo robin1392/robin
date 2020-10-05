@@ -1118,13 +1118,13 @@ namespace ED
             {
                 print("Application Pause");
                 // 일시정지
-                //SendInGameManager(GameProtocol.PAUSE_GAME_REQ , NetworkManager.Get().gameSession);
+                //SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
             }
             else
             {
                 print("Application Resume");
                 // resume
-                //SendInGameManager(GameProtocol.RESUME_GAME_REQ , NetworkManager.Get().gameSession);
+                //SendInGameManager(GameProtocol.RESUME_GAME_REQ);
             }
         }
 
