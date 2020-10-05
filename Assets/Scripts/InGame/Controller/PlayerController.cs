@@ -135,6 +135,7 @@ namespace ED
         private readonly string recvMessage = "RecvPlayer";
         private static readonly int Break = Animator.StringToHash("Break");
         private bool isHalfHealth;
+        public bool isPlayingAI { get; protected set; }
 
         #endregion
 
@@ -192,6 +193,7 @@ namespace ED
 
         public void DestroyPlayer()
         {
+            NetworkManager.Get().event_OtherPuase.RemoveListener(OtherPlayerPause);
             _arrDice = null;
             _arrDiceDeck = null;
             _arrUpgradeLevel = null;
@@ -199,6 +201,7 @@ namespace ED
 
         public void StartPlayerControll()
         {
+            NetworkManager.Get().event_OtherPuase.AddListener(OtherPlayerPause);
 
             isHalfHealth = false;
 
@@ -289,7 +292,7 @@ namespace ED
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
             */
         }
-
+        
         protected override void SetColor(E_MaterialType type)
         {
             var mr = GetComponentsInChildren<MeshRenderer>();
@@ -323,6 +326,8 @@ namespace ED
         //[PunRPC]
         public void Spawn()
         {
+            if (NetworkManager.Get().IsOtherPause) targetPlayer.Spawn();
+            
             var magicCastDelay = 0.05f;
             robotPieceCount = 0;
             robotEyeTotalLevel = 0;
@@ -852,6 +857,22 @@ namespace ED
                 }
             }
             */
+        }
+
+        public void OtherPlayerPause(bool isPuase)
+        {
+            targetPlayer.SetPlayingAI(isPuase);
+        }
+
+        public void SetPlayingAI(bool isPlayingAI)
+        {
+            this.isPlayingAI = isPlayingAI;
+
+            foreach (var minion in _listMinion)
+            {
+                if (isPlayingAI) minion.behaviourTreeOwner.behaviour.Resume();
+                else minion.behaviourTreeOwner.behaviour.Pause();
+            }
         }
         
         #endregion

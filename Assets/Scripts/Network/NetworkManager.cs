@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System;
 using RWGameProtocol;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +12,8 @@ using UnityEngine;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
 using RWGameProtocol;
-    
+using UnityEngine.Events;
+
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -104,6 +109,8 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         get { return _isOtherPause; }
     }
+
+    public UnityEvent<bool> event_OtherPuase = new UnityEvent<bool>();
     #endregion
     
     #region dev test var
@@ -279,6 +286,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void SetOtherPause(bool pause)
     {
+        event_OtherPuase.Invoke(pause);
         _isOtherPause = pause;
     }
     

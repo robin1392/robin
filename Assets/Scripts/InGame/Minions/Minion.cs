@@ -61,7 +61,7 @@ namespace ED
 
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
-        private BehaviourTreeOwner _behaviourTreeOwner;
+        public BehaviourTreeOwner behaviourTreeOwner { get; protected set; }
         protected PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
         public NavMeshAgent agent;
         protected Collider _collider;
@@ -80,7 +80,7 @@ namespace ED
         protected virtual void Awake()
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
-            _behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
+            behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
             agent = GetComponent<NavMeshAgent>();
             _collider = GetComponentInChildren<Collider>();
         }
@@ -166,14 +166,14 @@ namespace ED
             //if (PhotonNetwork.IsConnected)
             if(InGameManager.IsNetwork)
             {
-                if (isMine)
+                if (isMine || controller.isPlayingAI)
                 {
-                    _behaviourTreeOwner.behaviour.Resume();
+                    behaviourTreeOwner.behaviour.Resume();
                     //agent.enabled = true;
                 }
                 else
                 {
-                    _behaviourTreeOwner.behaviour.Pause();
+                    behaviourTreeOwner.behaviour.Pause();
                     //agent.enabled = false;
                 }
             }

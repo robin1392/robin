@@ -96,8 +96,6 @@ namespace ED
                         {
                             var bs = col.transform.GetComponentInParent<BaseStat>();
 
-                            if (bs.id == id) continue;
-
                             DamageToTarget(bs);
                         }
                     }
