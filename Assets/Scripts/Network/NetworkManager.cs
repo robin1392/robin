@@ -402,6 +402,15 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.ReconnectGameNotify = _socketRecv.OnReconnectGameNotify;
         
         
+        // reconnect , pause , resume
+        _packetRecv.ReconnectGameAck = _socketRecv.OnReconnectGameAck;
+        _packetRecv.PauseGameAck = _socketRecv.OnPauseGameAck;
+        _packetRecv.PauseGameNotify = _socketRecv.OnPauseGameNotify;
+        _packetRecv.ResumeGameAck = _socketRecv.OnResumeGameAck;
+        _packetRecv.ResumeGameNotify = _socketRecv.OnResumeGameNotify;
+        
+        
+        
 
         _clientSocket.Init(_packetRecv);
     }

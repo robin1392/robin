@@ -2,6 +2,7 @@
 #define ENABLE_LOG
 #endif
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using RWGameProtocol;
@@ -14,6 +15,7 @@ using TMPro;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
+using Random = UnityEngine.Random;
 
 #region USING PHOTON
 //using Photon.Pun;
@@ -1110,6 +1112,23 @@ namespace ED
         }
 
 
+        public void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                print("Application Pause");
+                // 일시정지
+                //SendInGameManager(GameProtocol.PAUSE_GAME_REQ , NetworkManager.Get().gameSession);
+            }
+            else
+            {
+                print("Application Resume");
+                // resume
+                //SendInGameManager(GameProtocol.RESUME_GAME_REQ , NetworkManager.Get().gameSession);
+            }
+        }
+
+        
 
         // photon remove
         /*

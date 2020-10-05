@@ -286,6 +286,25 @@ public class SocketSendEvent
             }
             
             
+            
+            
+            // reconnect , pause , etc...
+            case GameProtocol.PAUSE_GAME_REQ:
+            {
+                _sender.PauseGameReq(peer , (string)param[0]);
+                break;
+            }
+            case GameProtocol.RESUME_GAME_REQ:
+            {
+                _sender.ResumeGameReq(peer , (string)param[0]);
+                break;
+            }
+            case GameProtocol.RECONNECT_GAME_REQ:
+            {
+                _sender.ReconnectGameReq(peer , (string)param[0]);
+                break;
+            }
+            
             #endregion
             
         }
