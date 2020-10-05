@@ -36,7 +36,7 @@ namespace ED
             list.Clear();
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
                 StartCoroutine(AttackCoroutine());
             }

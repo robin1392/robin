@@ -31,7 +31,7 @@ namespace ED
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
 
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
@@ -44,7 +44,7 @@ namespace ED
             if (target != null)
             {
                 //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
                 {
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRECANNONBALL, E_CannonType.BOMBER, ts_ShootingPos.position, target.transform.position, power, 2f);
                     controller.ActionFireCannonBall(E_CannonType.BOMBER , ts_ShootingPos.position, target.transform.position, power, 2f);

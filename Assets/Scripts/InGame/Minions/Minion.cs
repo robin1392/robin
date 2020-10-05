@@ -225,7 +225,7 @@ namespace ED
             if (currentHealth <= 0)
             {
                 //if (PhotonNetwork.IsConnected && !isMine)
-                if(InGameManager.IsNetwork && !isMine)
+                if(InGameManager.IsNetwork && !isMine && controller.isPlayingAI == false)
                     return;
 
                 currentHealth = 0;
@@ -688,7 +688,7 @@ namespace ED
             isAttacking = !isEnable;
             //rb.isKinematic = isEnable;
 
-            if (isMine)
+            if (isMine || controller.isPlayingAI)
             {
                 if (isEnable && agent.enabled == false)
                 {

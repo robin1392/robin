@@ -57,7 +57,7 @@ namespace  ED
                 controller.MinionAniTrigger(id, "Attack", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -75,7 +75,7 @@ namespace  ED
                 return;
             }
             
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
                 controller.ActionFireBullet(E_BulletType.MAGICIAN , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
             }

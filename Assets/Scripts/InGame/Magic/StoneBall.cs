@@ -63,7 +63,7 @@ namespace  ED
                 PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
 
                 //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
+                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
                 {
                     controller.AttackEnemyMinionOrMagic(bs.id, power, 0f);
                 }

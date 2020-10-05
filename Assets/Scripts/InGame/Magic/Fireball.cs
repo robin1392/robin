@@ -64,7 +64,7 @@ namespace ED
                     controller.ActionFireBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false )
+                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
                 {
                     SplashDamage();
                     Bomb();
@@ -90,7 +90,7 @@ namespace ED
                     controller.ActionFireBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false )
+                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
                 {
                     SplashDamage();
                     Bomb();

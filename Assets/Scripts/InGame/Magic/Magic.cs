@@ -190,7 +190,7 @@ namespace ED
                 }
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 if (target != null)
@@ -213,7 +213,7 @@ namespace ED
                 StartCoroutine(Move());
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
                 StartCoroutine(Move());

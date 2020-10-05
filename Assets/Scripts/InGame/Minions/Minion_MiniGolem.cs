@@ -19,7 +19,7 @@ namespace ED
                 controller.MinionAniTrigger(id, "Attack", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

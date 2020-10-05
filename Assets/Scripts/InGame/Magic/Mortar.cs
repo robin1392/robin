@@ -45,7 +45,7 @@ namespace ED
             }
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
                 StartCoroutine(AttackCoroutine());
             }
@@ -153,7 +153,7 @@ namespace ED
             Invoke("FireLightOff", 0.15f);
             
             //if (longTarget != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
-            if (longTarget != null && ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false))
+            if (longTarget != null && ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI))
             {
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIRECANNONBALL , E_CannonType.DEFAULT, ts_ShootingPos.position, longTarget.position, power, range);
                 controller.ActionFireCannonBall(E_CannonType.DEFAULT ,ts_ShootingPos.position, longTarget.position, power, range);

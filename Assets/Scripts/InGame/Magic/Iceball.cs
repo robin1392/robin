@@ -86,7 +86,7 @@ namespace ED
                     controller.ActionIceBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false)
+                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
                 {
                     if (target != null)
                     {
@@ -123,7 +123,7 @@ namespace ED
                     controller.ActionIceBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false)
+                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
                 {
                     if (target != null)
                     {

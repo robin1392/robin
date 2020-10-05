@@ -37,7 +37,7 @@ namespace ED
                 controller.HealerMinion(target.id, effect);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

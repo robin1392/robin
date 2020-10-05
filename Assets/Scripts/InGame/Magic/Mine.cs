@@ -63,7 +63,7 @@ namespace ED
                 controller.ActionMineBomb(id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 Bomb();
             }
@@ -87,7 +87,7 @@ namespace ED
         private void EndMove()
         {
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
                 isTriggerOn = true;
                 image_HealthBar.transform.parent.gameObject.SetActive(true);
@@ -100,7 +100,7 @@ namespace ED
         {
             if (isTriggerOn && 
                 //((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
-                ( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false ) && 
+                ( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI ) && 
                 1 << collision.gameObject.layer == targetLayer)
             {
                 StopAllCoroutines();
@@ -127,7 +127,7 @@ namespace ED
             image_HealthBar.transform.parent.gameObject.SetActive(false);
             
             //if (((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false )
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
                 var cols = Physics.OverlapSphere(transform.position, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
                 foreach (var col in cols)

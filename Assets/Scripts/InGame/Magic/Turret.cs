@@ -41,7 +41,7 @@ namespace ED
             SetColor();
 
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
+            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 StartCoroutine(AttackCoroutine());
             }
@@ -81,7 +81,7 @@ namespace ED
 
         public void FireArrow()
         {
-            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
+            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 controller.ActionFireBullet(E_BulletType.ARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
             }

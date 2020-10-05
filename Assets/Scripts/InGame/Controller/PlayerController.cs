@@ -326,7 +326,7 @@ namespace ED
         //[PunRPC]
         public void Spawn()
         {
-            if (NetworkManager.Get().IsOtherPause) targetPlayer.Spawn();
+            //if (NetworkManager.Get().IsOtherPause) targetPlayer.Spawn();
             
             var magicCastDelay = 0.05f;
             robotPieceCount = 0;
@@ -1100,7 +1100,7 @@ namespace ED
                     int convDamage = (int) (damage * Global.g_networkBaseValue);
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, convDamage);
                 }
-                else if (InGameManager.IsNetwork == false)
+                else if (InGameManager.IsNetwork == false || isPlayingAI)
                 {
                     HitDamage(damage);
                 }

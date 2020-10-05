@@ -37,7 +37,7 @@ namespace ED
                 controller.MinionAniTrigger(id, target.isFlying ? "Attack2" : "Attack1", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 base.Attack();
                 animator.SetTrigger(target.isFlying ? "Attack2" : "Attack1");
@@ -107,7 +107,7 @@ namespace ED
                 return;
             }
 
-            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
+            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 if (target.isFlying)
                     controller.ActionFireBullet(_spear, ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);

@@ -43,7 +43,7 @@ namespace ED
 
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
+            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
@@ -150,7 +150,7 @@ namespace ED
                 {
                     var targetID = bs.id;
                     //if (PhotonNetwork.IsConnected && isMine)
-                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false)
+                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
                     {
                         //controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f);
                         controller.ActionSturn(true , targetID , 1f);

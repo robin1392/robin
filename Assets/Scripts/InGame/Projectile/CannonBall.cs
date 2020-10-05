@@ -91,7 +91,7 @@ namespace ED
                 var bs = col.GetComponentInParent<BaseStat>();
                 if (bs != null)
                 {
-                    if(( InGameManager.IsNetwork && _isMine ) || InGameManager.IsNetwork == false)
+                    if(( InGameManager.IsNetwork && _isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
                         controller.AttackEnemyMinionOrMagic(bs.id, _damage, 0f);
                 }
                 
