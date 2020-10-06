@@ -916,6 +916,92 @@ namespace ED
         }
         
         #endregion
+        
+        
+        #region pause , resume , sync 
+        private void RevmoeAllMinionAndMagic()
+        {
+            playerController.RemoveAllMinionAndMagic();
+            playerController.targetPlayer.RemoveAllMinionAndMagic();
+        }
+
+
+        public void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                print("Application Pause");
+                // 일시정지
+                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+            }
+            else
+            {
+                StartCoroutine(ResumeDelay());
+            }
+        }
+
+        IEnumerator ResumeDelay()
+        {
+            // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
+            NetworkManager.Get().SetResume(true);
+            
+            // resume 을 하는 client 라면..
+            // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
+            UI_InGamePopup.Get().ViewGameIndicator(true);
+
+            RevmoeAllMinionAndMagic();
+            
+            yield return new WaitForSeconds(2.0f);
+            
+            print("Application Resume");
+            if (NetworkManager.Get().IsConnect())
+            {
+                // resume
+                SendInGameManager(GameProtocol.RESUME_GAME_REQ);
+            }
+            else
+            {
+                // 어차피 여기서 할필요가 없군..network 에서 씬을 보내버리니...
+                // reconnect --> go
+            }
+        }
+
+        public void SendAllBattleInfo()
+        {
+            // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
+            UI_InGamePopup.Get().ViewGameIndicator(true);
+            
+            // 미니언들 idle 강제 idle 상태로 만든다
+            
+            // 현재 전장에 있는 미니언 정보들 모은다 
+            // 내 미니언
+            // 상대방 미니언
+            
+            // 데이터 보냄
+            SendInGameManager(GameProtocol.START_SYNC_GAME_REQ);
+        }
+        
+
+#if UNITY_EDITOR
+        // 에디터에서 테스트용도로 사용하기 위해
+        public void OnEditorAppPause(PauseState pause)
+        {
+            if (pause == PauseState.Paused)
+            {
+                print("Application Pause");
+                // 일시정지
+                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+            }
+            else
+            {
+                print("Application Resume");
+                StartCoroutine(ResumeDelay());
+            }
+        }
+#endif
+
+        #endregion
+        
 
 
         // 매니저 외부에서 패킷을 보낼때 쓰자..
@@ -1098,9 +1184,39 @@ namespace ED
                 case GameProtocol.RESUME_GAME_NOTIFY:
                 {
                     MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
+
+                    if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
+                    {
+                        // 미니언 정보 취합 해서 보내준다..
+                        SendAllBattleInfo();
+                    }
+                    break;
+                }
+                case GameProtocol.START_SYNC_GAME_ACK:
+                {
+                    MsgStartSyncGameAck startsyncack = (MsgStartSyncGameAck) param[0];
+                    //
                     
                     break;
                 }
+                case GameProtocol.START_SYNC_GAME_NOTIFY:
+                {
+                    MsgStartSyncGameNotify syncNotify = (MsgStartSyncGameNotify) param[0];
+                    //
+                    
+                    break;
+                }
+                case GameProtocol.END_SYNC_GAME_ACK:
+                {
+                    MsgEndSyncGameAck endsynack = (MsgEndSyncGameAck) param[0];
+                    break;
+                }
+                case GameProtocol.END_SYNC_GAME_NOTIFY:
+                {
+                    MsgEndSyncGameNotify endSyncNotify = (MsgEndSyncGameNotify) param[0];
+                    break;
+                }
+                
                 
                 
                 case GameProtocol.DISCONNECT_GAME_NOTIFY:
@@ -1162,74 +1278,8 @@ namespace ED
         }
 
 
-        private void RevmoeAllMinionAndMagic()
-        {
-            playerController.RemoveAllMinionAndMagic();
-            playerController.targetPlayer.RemoveAllMinionAndMagic();
-        }
 
-
-        public void OnApplicationPause(bool pauseStatus)
-        {
-            if (pauseStatus)
-            {
-                print("Application Pause");
-                // 일시정지
-                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
-            }
-            else
-            {
-                StartCoroutine(ResumeDelay());
-            }
-        }
-
-        IEnumerator ResumeDelay()
-        {
-            // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
-            NetworkManager.Get().SetResume(true);
-            
-            // resume 을 하는 client 라면..
-            // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
-            UI_InGamePopup.Get().ViewGameIndicator(true);
-
-            RevmoeAllMinionAndMagic();
-            
-            yield return new WaitForSeconds(2.0f);
-            
-            print("Application Resume");
-            if (NetworkManager.Get().IsConnect())
-            {
-                // resume
-                SendInGameManager(GameProtocol.RESUME_GAME_REQ);
-            }
-            else
-            {
-                // 어차피 여기서 할필요가 없군..network 에서 씬을 보내버리니...
-                // reconnect --> go
-            }
-        }
-        
-
-#if UNITY_EDITOR
-        // 에디터에서 테스트용도로 사용하기 위해
-        public void OnEditorAppPause(PauseState pause)
-        {
-            if (pause == PauseState.Paused)
-            {
-                print("Application Pause");
-                // 일시정지
-                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
-            }
-            else
-            {
-                print("Application Resume");
-                StartCoroutine(ResumeDelay());
-            }
-        }
-#endif
-
-        
-
+        #region not use old code
         // photon remove
         /*
         #region rpc etc
@@ -1344,5 +1394,6 @@ namespace ED
         }
         #endregion
         */
+        #endregion
     }
 }

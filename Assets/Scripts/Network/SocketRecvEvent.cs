@@ -34,63 +34,95 @@ public class SocketRecvEvent
 
     public void OnPauseGameAck(Peer peer, MsgPauseGameAck msg)
     {
-        UnityUtil.Print("ACK => ", "PAUSE_GAME_ACK  " +msg.ErrorCode.ToString() , "green");
-        
+        UnityUtil.Print("ACK => ", "PAUSE_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
+
         // pause 응답은...처리할필요가 없을거같은데..
     }
-    
+
     public void OnResumeGameAck(Peer peer, MsgResumeGameAck msg)
     {
-        UnityUtil.Print("ACK => ", "RESUME_GAME_ACK  " +msg.ErrorCode.ToString() , "green");
-        
+        UnityUtil.Print("ACK => ", "RESUME_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
+
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.RESUME_GAME_ACK, msg);
     }
 
     public void OnReconnectGameAck(Peer peer, MsgReconnectGameAck msg)
     {
-        UnityUtil.Print("ACK => ", "RECONNECT_GAME_ACK  " +msg.ErrorCode.ToString() , "green");
-        
+        UnityUtil.Print("ACK => ", "RECONNECT_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
+
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_ACK, msg);
     }
 
-    
+
     public void OnPauseGameNotify(Peer peer, MsgPauseGameNotify msg)
     {
-        UnityUtil.Print("NOTIFY => ", "PAUSE_GAME_NOTIFY  " +msg.PlayerUId.ToString() , "green");
-        
+        UnityUtil.Print("NOTIFY => ", "PAUSE_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
+
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.PAUSE_GAME_NOTIFY, msg);
     }
 
     public void OnResumeGameNotify(Peer peer, MsgResumeGameNotify msg)
     {
-        UnityUtil.Print("NOTIFY => ", "RESUME_GAME_NOTIFY  " +msg.PlayerUId.ToString() , "green");
-        
+        UnityUtil.Print("NOTIFY => ", "RESUME_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
+
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.RESUME_GAME_NOTIFY, msg);
     }
-    
+
     public void OnDisconnectGameNotify(Peer peer, MsgDisconnectGameNotify msg)
     {
-        UnityUtil.Print("NOTIFY => ", "DISCONNECT_GAME_NOTIFY  " +msg.PlayerUId.ToString() , "green");
-        
+        UnityUtil.Print("NOTIFY => ", "DISCONNECT_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
+
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.DISCONNECT_GAME_NOTIFY, msg);
     }
 
-    
+
     public void OnReconnectGameNotify(Peer peer, MsgReconnectGameNotify msg)
     {
-        UnityUtil.Print("NOTIFY => ", "RECONNECT_GAME_NOTIFY  " +msg.PlayerUId.ToString() , "green");
-        
+        UnityUtil.Print("NOTIFY => ", "RECONNECT_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
+
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_NOTIFY, msg);
     }
-    
-    
-    #endregion
+
+    public void OnStartSyncGameAck(Peer peer, MsgStartSyncGameAck msg)
+    {
+        UnityUtil.Print("ACK => ", "START_SYNC_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.START_SYNC_GAME_ACK, msg);
+    }
+
+    public void OnStartSyncGameNotify(Peer peer, MsgStartSyncGameNotify msg)
+    {
+        UnityUtil.Print("NOTIFY => ", "START_SYNC_GAME_NOTIFY  " + msg.PlayerInfo.PlayerUId.ToString(), "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.START_SYNC_GAME_NOTIFY, msg);
+    }
+
+    public void OnEndSyncGameAck(Peer peer, MsgEndSyncGameAck msg)
+    {
+        UnityUtil.Print("ACK => ", "END_SYNC_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.END_SYNC_GAME_ACK, msg);
+    }
+
+    public void OnEndSyncGameNotify(Peer peer, MsgEndSyncGameNotify msg)
+    {
+        UnityUtil.Print("NOTIFY => ", "END_SYNC_GAME_NOTIFY  " , "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.END_SYNC_GAME_NOTIFY, msg);
+    }
+
+
+#endregion
     
     
 
