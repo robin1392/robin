@@ -7,9 +7,10 @@ using UnityEngine;
 
 public class NetSyncData
 {
+    public int userId;
     public float towerHp;
     public List<NetSyncMinionData> netSyncMinionData = null;
-
+    
     public NetSyncData()
     {
         netSyncMinionData = new List<NetSyncMinionData>();

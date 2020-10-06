@@ -977,7 +977,7 @@ namespace ED
             // 내 미니언
             // 상대방 미니언
             
-            // netSyncMinionData
+            // NetSyncData my , other 
             
             //
             // 데이터 보냄
