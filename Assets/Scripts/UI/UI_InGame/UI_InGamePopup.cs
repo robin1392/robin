@@ -18,7 +18,8 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         
     public GameObject obj_Low_HP_Effect;
     //[Header("DEV UI")] 
-    
+
+    public GameObject obj_Indicator;
     #endregion
 
 
