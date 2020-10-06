@@ -966,7 +966,7 @@ namespace ED
             }
         }
 
-        public void SendAllBattleInfo()
+        public void SendSyncAllBattleInfo()
         {
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
@@ -1191,7 +1191,7 @@ namespace ED
                     if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
                     {
                         // 미니언 정보 취합 해서 보내준다..
-                        SendAllBattleInfo();
+                        SendSyncAllBattleInfo();
                     }
                     break;
                 }
