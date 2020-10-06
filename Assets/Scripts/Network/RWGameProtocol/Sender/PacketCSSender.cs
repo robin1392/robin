@@ -246,6 +246,51 @@ namespace RWGameProtocol
             peer.SendPacket((int)GameProtocol.RESUME_GAME_NOTIFY, msg.Serialize());
         }
 
+        public override void StartSyncGameReq(Peer peer) 
+        {
+            MsgStartSyncGameReq msg = new MsgStartSyncGameReq();
+            peer.SendPacket((int)GameProtocol.START_SYNC_GAME_REQ, msg.Serialize());
+        }
+
+
+        public override void StartSyncGameAck(Peer peer, GameErrorCode code) 
+        {
+            MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
+            msg.ErrorCode = (short)code;
+            peer.SendPacket((int)GameProtocol.START_SYNC_GAME_ACK, msg.Serialize());
+        }
+
+
+        public override void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, MsgPlayerInfo otherPlayerInfo) 
+        {
+            MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
+            msg.PlayerInfo = playerInfo;
+            msg.OtherPlayerInfo = otherPlayerInfo;
+            peer.SendPacket((int)GameProtocol.START_SYNC_GAME_NOTIFY, msg.Serialize());
+        }
+
+
+        public override void EndSyncGameReq(Peer peer)
+        {
+            MsgEndSyncGameReq msg = new MsgEndSyncGameReq();
+            peer.SendPacket((int)GameProtocol.END_SYNC_GAME_REQ, msg.Serialize());
+        }
+
+
+        public override void EndSyncGameAck(Peer peer, GameErrorCode code)
+        {
+            MsgEndSyncGameAck msg = new MsgEndSyncGameAck();
+            msg.ErrorCode = (short)code;
+            peer.SendPacket((int)GameProtocol.END_SYNC_GAME_ACK, msg.Serialize());
+        }
+
+
+        public override void EndSyncGameNotify(Peer peer)
+        {
+            MsgEndSyncGameNotify msg = new MsgEndSyncGameNotify();
+            peer.SendPacket((int)GameProtocol.END_SYNC_GAME_NOTIFY, msg.Serialize());
+        }
+
 
 
         #region Notify Protocol                
