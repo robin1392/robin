@@ -977,6 +977,9 @@ namespace ED
             // 내 미니언
             // 상대방 미니언
             
+            // netSyncMinionData
+            
+            //
             // 데이터 보냄
             SendInGameManager(GameProtocol.START_SYNC_GAME_REQ);
         }
@@ -1202,7 +1205,7 @@ namespace ED
                 case GameProtocol.START_SYNC_GAME_NOTIFY:
                 {
                     MsgStartSyncGameNotify syncNotify = (MsgStartSyncGameNotify) param[0];
-                    //
+                    // 받은 데이터로 동기화 시킨다
                     
                     break;
                 }
