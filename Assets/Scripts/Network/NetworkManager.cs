@@ -103,19 +103,24 @@ public class NetworkManager : Singleton<NetworkManager>
     
     #region net game pause , resume , reconnect
 
+    // Pause
     private bool _isOtherPause;
-
-    public bool IsOtherPause
-    {
-        get { return _isOtherPause; }
-    }
-
+    public bool IsOtherPause => _isOtherPause;
     public UnityEvent<bool> event_OtherPuase = new UnityEvent<bool>();
+    
+    
+    // Resume
+    private bool _isResume;
+    public bool isResume => _isResume; 
+    
     #endregion
     
     #region dev test var
     
     [Header("Dev Test Variable")]
+
+    
+
     public bool UseLocalServer;
     public string LocalServerAddr;
     public int LocalServerPort;
@@ -242,7 +247,8 @@ public class NetworkManager : Singleton<NetworkManager>
         SaveBattleInfo();
         
         // 시작하면서 상대 멈춤 초기화
-        SetOtherPause(false);
+        SetOtherPause(false);    // pause
+        SetResume(false);        // resume
         
         playType = type;
         _clientSocket.Connect( _serverAddr , _port , callback);
@@ -270,6 +276,14 @@ public class NetworkManager : Singleton<NetworkManager>
         
         _socketSend.SendPacket(protocol , _clientSocket.Peer , param);
     }
+
+    public void GameDisconnectSignal()
+    {
+        // disconnect 감지 했다는...
+        //StopAllCoroutines();
+        
+        GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
+    }
     #endregion
 
     
@@ -289,7 +303,11 @@ public class NetworkManager : Singleton<NetworkManager>
         event_OtherPuase.Invoke(pause);
         _isOtherPause = pause;
     }
-    
+
+    public void SetResume(bool resume)
+    {
+        _isResume = resume;
+    }
     #endregion
     
     

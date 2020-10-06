@@ -6,6 +6,7 @@ using RWCoreNetwork;
 using RWCoreNetwork.NetService;
 using RWCoreNetwork.NetPacket;
 using System;
+using ED;
 
 
 class NetLogger : RWCoreLib.Log.ILog
@@ -68,8 +69,11 @@ public class SocketManager
 
     public void Disconnect()
     {
-        _netService.Disconnect();
-        _serverPeer = null;
+        if (_serverPeer != null)
+        {
+            _netService.Disconnect();
+            _serverPeer = null;    
+        }
     }
     
     public bool IsConnected()
@@ -99,6 +103,13 @@ public class SocketManager
         Disconnect();
         
         UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
+        
+        // 게임중이었다면....을 체크해야된다
+        if (InGameManager.Get() != null && InGameManager.Get().isGamePlaying == true)
+        {
+            // 게임 시작으로 보낸다
+            NetworkManager.Get().GameDisconnectSignal();
+        }
     }
 
 

@@ -1913,6 +1913,10 @@ namespace ED
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
         {
+            if (NetworkManager.Get().isResume == true)
+                return;
+            
+            
             switch (protocol)
             {
                 case GameProtocol.HIT_DAMAGE_ACK:
