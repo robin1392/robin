@@ -299,6 +299,7 @@ public class SocketSendEvent
                 _sender.ResumeGameReq(peer);
                 break;
             }
+            
             case GameProtocol.RECONNECT_GAME_REQ:
             {
                 _sender.ReconnectGameReq(peer , (string)param[0]);

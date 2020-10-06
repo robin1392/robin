@@ -802,6 +802,7 @@ namespace ED
             // 나도 나가자
             if (isGamePlaying)
             {
+                isGamePlaying = false;
                 SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             }
         }
@@ -1088,19 +1089,6 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.DISCONNECT_GAME_NOTIFY:
-                {
-                    MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
-                    
-                    break;
-                }
-                case GameProtocol.RECONNECT_GAME_NOTIFY:
-                {
-                    MsgReconnectGameNotify reconnNoti = (MsgReconnectGameNotify) param[0];
-                    
-                    break;
-                }
-                
                 case GameProtocol.RESUME_GAME_ACK:
                 {
                     MsgResumeGameAck resumeack = (MsgResumeGameAck) param[0];
@@ -1110,6 +1098,25 @@ namespace ED
                 case GameProtocol.RESUME_GAME_NOTIFY:
                 {
                     MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
+                    
+                    break;
+                }
+                
+                
+                case GameProtocol.DISCONNECT_GAME_NOTIFY:
+                {
+                    MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
+                    
+                    // 상대가 나갓다
+                    if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
+                    {
+                    }
+                    
+                    break;
+                }
+                case GameProtocol.RECONNECT_GAME_NOTIFY:
+                {
+                    MsgReconnectGameNotify reconnNoti = (MsgReconnectGameNotify) param[0];
                     
                     break;
                 }
@@ -1165,9 +1172,32 @@ namespace ED
             }
             else
             {
-                print("Application Resume");
+                StartCoroutine(ResumeDelay());
+            }
+        }
+
+        IEnumerator ResumeDelay()
+        {
+            // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
+            NetworkManager.Get().SetResume(true);
+            
+            // resume 을 하는 client 라면..
+            // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
+            UI_InGamePopup.Get().ViewGameIndicator(true);
+                    
+            
+            yield return new WaitForSeconds(2.0f);
+            
+            print("Application Resume");
+            if (NetworkManager.Get().IsConnect())
+            {
                 // resume
-                //SendInGameManager(GameProtocol.RESUME_GAME_REQ);
+                SendInGameManager(GameProtocol.RESUME_GAME_REQ);
+            }
+            else
+            {
+                // 어차피 여기서 할필요가 없군..network 에서 씬을 보내버리니...
+                // reconnect --> go
             }
         }
         
@@ -1185,8 +1215,7 @@ namespace ED
             else
             {
                 print("Application Resume");
-                // resume
-                //SendInGameManager(GameProtocol.RESUME_GAME_REQ);
+                StartCoroutine(ResumeDelay());
             }
         }
 #endif

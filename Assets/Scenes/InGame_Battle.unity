@@ -724,6 +724,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   playType: 0
+  event_OtherPuase:
+    m_PersistentCalls:
+      m_Calls: []
   UseLocalServer: 0
   LocalServerAddr: 
   LocalServerPort: 0
@@ -1051,11 +1054,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 225455319}
-    - target: {fileID: 2608280262977654798, guid: c281f5911e2a54de8a9e3a667e36a364,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 7.699997
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c281f5911e2a54de8a9e3a667e36a364, type: 3}
 --- !u!1001 &2799760152392200770
