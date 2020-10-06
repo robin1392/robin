@@ -17,7 +17,13 @@ public class UI_Indicator : MonoBehaviour
         var c = image_Blind.color;
         c.a = 0;
         image_Blind.color = c;
-        Invoke("OnIndicator", 0.5f);
+        
+        if (image_Blind != null)
+        {
+            image_Blind.DOFade(0.8f, fadeTime);
+        }
+
+        Invoke("OnIndicator", fadeTime);
     }
 
     private void OnDisable()
@@ -29,9 +35,8 @@ public class UI_Indicator : MonoBehaviour
 
     private void OnIndicator()
     {
-        if (image_Blind != null)
+        if (obj_Indicator != null)
         {
-            image_Blind.DOFade(0.8f, fadeTime);
             obj_Indicator.transform.localScale = Vector3.zero;
             obj_Indicator.SetActive(true);
             obj_Indicator.transform.DOScale(Vector3.one, 0.5f).SetDelay(0.25f).SetEase(Ease.InCirc);

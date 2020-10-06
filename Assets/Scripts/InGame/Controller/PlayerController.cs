@@ -1283,6 +1283,22 @@ namespace ED
                 DestroyMagic(baseStatId);
             }*/
         }
+
+        public void RemoveAllMinionAndMagic()
+        {
+            var arrMinion = listMinion.ToArray();
+            for (int i = 0; i < arrMinion.Length; i++)
+            {
+                arrMinion[i].Death();
+            }
+
+            var arrMagic = listMagic.ToArray();
+            for (int i = 0; i < arrMagic.Length; i++)
+            {
+                arrMagic[i].Destroy();
+            }
+        }
+        
         #endregion
         
         

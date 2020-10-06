@@ -1162,6 +1162,13 @@ namespace ED
         }
 
 
+        private void RevmoeAllMinionAndMagic()
+        {
+            playerController.RemoveAllMinionAndMagic();
+            playerController.targetPlayer.RemoveAllMinionAndMagic();
+        }
+
+
         public void OnApplicationPause(bool pauseStatus)
         {
             if (pauseStatus)
@@ -1184,7 +1191,8 @@ namespace ED
             // resume 을 하는 client 라면..
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
-                    
+
+            RevmoeAllMinionAndMagic();
             
             yield return new WaitForSeconds(2.0f);
             
