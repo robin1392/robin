@@ -182,6 +182,49 @@ namespace RWGameProtocol
                         ResumeGameNotify(peer, MsgResumeGameNotify.Deserialize(msg));
                     }
                     break;
+                case GameProtocol.START_SYNC_GAME_REQ:
+                    {
+                        if (StartSyncGameReq == null)
+                            return false;
+                        StartSyncGameReq(peer, MsgStartSyncGameReq.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.START_SYNC_GAME_ACK:
+                    {
+                        if (StartSyncGameAck == null)
+                            return false;
+                        StartSyncGameAck(peer, MsgStartSyncGameAck.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.START_SYNC_GAME_NOTIFY:
+                    {
+                        if (StartSyncGameNotify == null)
+                            return false;
+                        StartSyncGameNotify(peer, MsgStartSyncGameNotify.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.END_SYNC_GAME_REQ:
+                    {
+                        if (EndSyncGameReq == null)
+                            return false;
+                        EndSyncGameReq(peer, MsgEndSyncGameReq.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.END_SYNC_GAME_ACK:
+                    {
+                        if (EndSyncGameAck == null)
+                            return false;
+                        EndSyncGameAck(peer, MsgEndSyncGameAck.Deserialize(msg));
+                    }
+                    break;
+                case GameProtocol.END_SYNC_GAME_NOTIFY:
+                    {
+                        if (EndSyncGameNotify == null)
+                            return false;
+                        EndSyncGameNotify(peer, MsgEndSyncGameNotify.Deserialize(msg));
+                    }
+                    break;
+
 
                 #region Notify Protocol                
                 case GameProtocol.JOIN_GAME_NOTIFY:

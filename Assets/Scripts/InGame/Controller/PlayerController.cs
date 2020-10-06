@@ -1283,6 +1283,22 @@ namespace ED
                 DestroyMagic(baseStatId);
             }*/
         }
+
+        public void RemoveAllMinionAndMagic()
+        {
+            var arrMinion = listMinion.ToArray();
+            for (int i = 0; i < arrMinion.Length; i++)
+            {
+                arrMinion[i].Death();
+            }
+
+            var arrMagic = listMagic.ToArray();
+            for (int i = 0; i < arrMagic.Length; i++)
+            {
+                arrMagic[i].Destroy();
+            }
+        }
+        
         #endregion
         
         
@@ -1913,6 +1929,10 @@ namespace ED
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
         {
+            if (NetworkManager.Get().isResume == true)
+                return;
+            
+            
             switch (protocol)
             {
                 case GameProtocol.HIT_DAMAGE_ACK:

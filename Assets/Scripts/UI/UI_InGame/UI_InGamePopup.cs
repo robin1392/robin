@@ -94,4 +94,8 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         return obj_Low_HP_Effect.activeSelf;
     }
 
+    public void ViewGameIndicator(bool view)
+    {
+        obj_Indicator.SetActive(view);
+    }
 }

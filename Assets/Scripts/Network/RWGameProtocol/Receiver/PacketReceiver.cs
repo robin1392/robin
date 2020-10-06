@@ -80,6 +80,19 @@ namespace RWGameProtocol
         public delegate void ResumeGameNotifyDelegate(Peer peer, MsgResumeGameNotify msg);
         public ResumeGameNotifyDelegate ResumeGameNotify;
 
+        public delegate void StartSyncGameReqDelegate(Peer peer, MsgStartSyncGameReq msg);
+        public StartSyncGameReqDelegate StartSyncGameReq;
+        public delegate void StartSyncGameAckDelegate(Peer peer, MsgStartSyncGameAck msg);
+        public StartSyncGameAckDelegate StartSyncGameAck;
+        public delegate void StartSyncGameNotifyDelegate(Peer peer, MsgStartSyncGameNotify msg);
+        public StartSyncGameNotifyDelegate StartSyncGameNotify;
+
+        public delegate void EndSyncGameReqDelegate(Peer peer, MsgEndSyncGameReq msg);
+        public EndSyncGameReqDelegate EndSyncGameReq;
+        public delegate void EndSyncGameAckDelegate(Peer peer, MsgEndSyncGameAck msg);
+        public EndSyncGameAckDelegate EndSyncGameAck;
+        public delegate void EndSyncGameNotifyDelegate(Peer peer, MsgEndSyncGameNotify msg);
+        public EndSyncGameNotifyDelegate EndSyncGameNotify;
         #endregion
 
 

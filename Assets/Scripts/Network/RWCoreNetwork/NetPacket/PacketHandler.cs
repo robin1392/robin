@@ -61,6 +61,17 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
+        public virtual void EnqueuePacket(Peer peer, int protocolId, byte[] msg, int length)
+        {
+            Packet packet = new Packet(peer, protocolId, msg, length);
+            lock (_lockReceiveQueue)
+            {
+                _receiveQueue.Enqueue(packet);
+            }
+        }
+
+
+
         public virtual Packet DequeuePacket()
         {
             lock (_lockReceiveQueue)

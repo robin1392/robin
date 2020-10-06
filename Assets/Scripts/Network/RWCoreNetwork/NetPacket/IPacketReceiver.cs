@@ -27,5 +27,15 @@ namespace RWCoreNetwork.NetPacket
             Msg = new byte[bufferLength];
             Array.Copy(buffer, Defines.HEADER_SIZE, Msg, 0, Length);
         }
+
+
+        public Packet(Peer peer, int protocolId, byte[] buffer, int length)
+        {
+            Peer = peer;
+            ProtocolId = protocolId;
+            Length = length;
+            Msg = new byte[buffer.Length];
+            Array.Copy(buffer, 0, Msg, 0, Length);
+        }
     }
 }

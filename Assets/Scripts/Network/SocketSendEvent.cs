@@ -299,6 +299,17 @@ public class SocketSendEvent
                 _sender.ResumeGameReq(peer);
                 break;
             }
+            case GameProtocol.START_SYNC_GAME_REQ:
+            {
+                _sender.StartSyncGameReq(peer);
+                break;
+            }
+            case GameProtocol.END_SYNC_GAME_REQ:
+            {
+                _sender.EndSyncGameReq(peer);
+                break;
+            }
+            
             case GameProtocol.RECONNECT_GAME_REQ:
             {
                 _sender.ReconnectGameReq(peer , (string)param[0]);

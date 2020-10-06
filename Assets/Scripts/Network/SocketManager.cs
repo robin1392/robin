@@ -6,6 +6,7 @@ using RWCoreNetwork;
 using RWCoreNetwork.NetService;
 using RWCoreNetwork.NetPacket;
 using System;
+using ED;
 
 
 class NetLogger : RWCoreLib.Log.ILog
@@ -60,16 +61,20 @@ public class SocketManager
     }
 
 
-    public void Connect(string host, int port , Action connectCallback = null)
+    public void Connect(string host, int port , string clientSessionId, Action connectCallback = null)
     {
-        _netService.Connect(host, port, 1);
+        _netService.ClientSession.ClientSessionId = clientSessionId;
+        _netService.Connect(host, port);
         _connectCallBack = connectCallback;
     }
 
     public void Disconnect()
     {
-        _netService.Disconnect();
-        _serverPeer = null;
+        if (_serverPeer != null)
+        {
+            _netService.Disconnect();
+            _serverPeer = null;    
+        }
     }
     
     public bool IsConnected()
@@ -83,10 +88,10 @@ public class SocketManager
     /// 서버 연결 성공 콜백
     /// </summary>
     /// <param name="session">세션</param>
-    void OnClientConnected(UserToken session)
+    void OnClientConnected(ClientSession session)
     {
         _serverPeer = new Peer();
-        _serverPeer.SetUserToken(session);
+        _serverPeer.SetClientSession(session);
 
         //
         if (_connectCallBack != null)
@@ -94,11 +99,18 @@ public class SocketManager
     }
 
 
-    void OnClientDisconnected(UserToken session)
+    void OnClientDisconnected(ClientSession session)
     {
         Disconnect();
         
         UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
+        
+        // 게임중이었다면....을 체크해야된다
+        if (InGameManager.Get() != null && InGameManager.Get().isGamePlaying == true)
+        {
+            // 게임 시작으로 보낸다
+            NetworkManager.Get().GameDisconnectSignal();
+        }
     }
 
 

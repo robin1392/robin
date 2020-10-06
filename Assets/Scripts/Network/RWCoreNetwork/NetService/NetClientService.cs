@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Net;
 using System.Net.Sockets;
 using RWCoreLib.Log;
@@ -9,15 +12,20 @@ namespace RWCoreNetwork.NetService
 {
     public class NetClientService : NetBaseService
     {
+        public ClientSession ClientSession { get; set; }
+
         // 네트워크 상태 큐
-        Queue<UserToken> _netEventQueue;
+        Queue<ClientSession> _netEventQueue;
 
-
+        
 
         public NetClientService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring)
-            : base(packetHandler, logger, maxConnection, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
+            : base(packetHandler, logger, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
         {
-            _netEventQueue = new Queue<UserToken>();
+            _netEventQueue = new Queue<ClientSession>();
+
+            ClientSession = new ClientSession(_logger, _bufferSize, 1);
+            ClientSession.CompletedMessageCallback += OnMessageCompleted;
         }
 
 
@@ -26,25 +34,21 @@ namespace RWCoreNetwork.NetService
         /// </summary>
         /// <param name="serverAddr"></param>
         /// <param name="port"></param>
-        /// <param name="clientCount"></param>
-        public void Connect(string serverAddr, int port, int clientCount)
+        public void Connect(string serverAddr, int port)
         {
-            for (int i = 0; i < clientCount; i++)
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.LingerState = new LingerOption(true, 10);
+            socket.NoDelay = true;
+
+
+            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            args.Completed += OnConnectCompleted;
+            args.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(serverAddr), port);
+
+            bool pendiing = socket.ConnectAsync(args);
+            if (pendiing == false)
             {
-                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.LingerState = new LingerOption(true, 10);
-                socket.NoDelay = true;
-
-
-                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-                args.Completed += OnConnectCompleted;
-                args.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(serverAddr), port);
-
-                bool pendiing = socket.ConnectAsync(args);
-                if (pendiing == false)
-                {
-                    OnConnectCompleted(socket, args);
-                }
+                OnConnectCompleted(socket, args);
             }
         }
 
@@ -59,7 +63,37 @@ namespace RWCoreNetwork.NetService
             if (e.SocketError == SocketError.Success)
             {
                 Socket socket = sender as Socket;
-                OpenClientSocket(socket);
+
+
+                SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
+                receiveArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
+                receiveArgs.SetBuffer(new byte[_bufferSize], 0, _bufferSize);
+                receiveArgs.UserToken = ClientSession;
+
+                SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
+                sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
+                sendArgs.SetBuffer(new byte[_bufferSize], 0, _bufferSize);
+                sendArgs.UserToken = ClientSession;
+
+                // 소켓 옵션 설정.
+                socket.LingerState = new LingerOption(true, 10);
+                socket.NoDelay = true;
+
+
+                // 패킷 수신 시작
+                BeginReceive(socket, receiveArgs, sendArgs);
+
+
+                // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
+                // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
+                var bf = new BinaryFormatter();
+                using (var ms = new MemoryStream())
+                {
+                    bf.Serialize(ms, ClientSession.ClientSessionId);
+                    ClientSession.Send((int)EInternalProtocol.CHECK_SESSION_REQ, 
+                        ms.ToArray(), 
+                        ms.ToArray().Length);
+                }
             }
             else
             {
@@ -69,22 +103,38 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        protected override void CallClientConnectedCallback(UserToken userToken)
+        /// <summary>
+        /// 서버와의 연결을 끊는다.
+        /// </summary>
+        public void Disconnect()
         {
-            lock (_netEventQueue)
+            if (ClientSession.NetState == ENetState.Disconnected)
             {
-                _netEventQueue.Enqueue(userToken);
+                return;
             }
+
+            ClientSession.Disconnect();
+        }
+
+
+        public override void Update()
+        {
+            // 연결 이벤트 처리
+            ProcessConnectionEvent();
+
+
+            // 패킷을 처리한다.
+            _packetHandler.Update();
         }
 
 
         /// <summary>
         /// 연결 이벤트 처리
         /// </summary>
-        protected override void ProcessConnectionEvent()
+        protected void ProcessConnectionEvent()
         {
             // 서버 연결/해제 이벤트를 처리한다.
-            UserToken userToken = null;
+            ClientSession clientSession = null;
             lock (_netEventQueue)
             {
                 if (_netEventQueue.Count == 0)
@@ -92,17 +142,25 @@ namespace RWCoreNetwork.NetService
                     return;
                 }
 
-                userToken = _netEventQueue.Dequeue();
+                clientSession = _netEventQueue.Dequeue();
             }
 
 
-            switch (userToken.NetState)
+            switch (clientSession.NetState)
             {
                 case ENetState.Connected:
                     {
                         if (ClientConnectedCallback != null)
                         {
-                            ClientConnectedCallback(userToken);
+                            ClientConnectedCallback(clientSession);
+                        }
+                    }
+                    break;
+                case ENetState.Online:
+                    {
+                        if (ClientOnlineCallback != null)
+                        {
+                            ClientOnlineCallback(clientSession, null);
                         }
                     }
                     break;
@@ -110,35 +168,69 @@ namespace RWCoreNetwork.NetService
                     {
                         if (ClientDisconnectedCallback != null)
                         {
-                            ClientDisconnectedCallback(userToken);
+                            ClientDisconnectedCallback(clientSession);
                         }
                     }
                     break;
             }
         }
 
-
-        protected override void CallClientDisconnectedCallback(UserToken userToken)
+        
+        protected override void CloseClientsocket(ClientSession clientSession, SocketError error)
         {
+            clientSession.OnRemoved();
+            clientSession.NetState = ENetState.Disconnected;
+
+
             lock (_netEventQueue)
             {
-                _netEventQueue.Enqueue(userToken);
+                _netEventQueue.Enqueue(clientSession);
             }
         }
 
 
-        /// <summary>
-        /// 서버와의 연결을 끊는다.
-        /// </summary>
-        public void Disconnect()
+        protected override void OnMessageCompleted(ClientSession clientSession, byte[] msg)
         {
-            foreach (var elem in _userTokenMap.Values)
+            if (clientSession == null)
             {
-                elem.Disconnect();
+                return;
+            }
+
+
+            if (_packetHandler == null)
+            {
+                return;
+            }
+
+
+            int protocolId = BitConverter.ToInt32(msg, 0);
+            int length = BitConverter.ToInt32(msg, Defines.PROTOCOL_ID);
+            byte[] buffer = new byte[_bufferSize];
+            Array.Copy(msg, Defines.HEADER_SIZE, buffer, 0, length);
+
+
+            if (protocolId == (int)EInternalProtocol.CHECK_SESSION_ACK)
+            {
+                var bf = new BinaryFormatter();
+                using (var ms = new MemoryStream(buffer))
+                {
+                    bool isReconnect = (bool)bf.Deserialize(ms);
+                    clientSession.NetState = (isReconnect == false) 
+                        ? ENetState.Connected 
+                        : ENetState.Online;
+
+                    lock (_netEventQueue)
+                    {
+                        _netEventQueue.Enqueue(clientSession);
+                    }
+                }
+            }
+            else
+            {
+                // 패킷처리 큐에 추가한다.
+                _packetHandler.EnqueuePacket(clientSession.GetPeer(), msg);
+
             }
         }
-
-
-
     }
 }
