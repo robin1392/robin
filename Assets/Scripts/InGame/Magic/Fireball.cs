@@ -78,7 +78,6 @@ namespace ED
 
             if (target != null && other.gameObject == target.gameObject || other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
-                StopAllCoroutines();
                 rb.velocity = Vector3.zero;
                 isBombed = true;
 
