@@ -60,9 +60,10 @@ public class SocketManager
     }
 
 
-    public void Connect(string host, int port , Action connectCallback = null)
+    public void Connect(string host, int port , string clientSessionId, Action connectCallback = null)
     {
-        _netService.Connect(host, port, 1);
+        _netService.ClientSession.ClientSessionId = clientSessionId;
+        _netService.Connect(host, port);
         _connectCallBack = connectCallback;
     }
 
@@ -83,10 +84,10 @@ public class SocketManager
     /// 서버 연결 성공 콜백
     /// </summary>
     /// <param name="session">세션</param>
-    void OnClientConnected(UserToken session)
+    void OnClientConnected(ClientSession session)
     {
         _serverPeer = new Peer();
-        _serverPeer.SetUserToken(session);
+        _serverPeer.SetClientSession(session);
 
         //
         if (_connectCallBack != null)
@@ -94,7 +95,7 @@ public class SocketManager
     }
 
 
-    void OnClientDisconnected(UserToken session)
+    void OnClientDisconnected(ClientSession session)
     {
         Disconnect();
         

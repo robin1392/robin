@@ -47,17 +47,24 @@ namespace RWCoreNetwork.NetService
         public Dictionary<int, int> SendQueueCount { get; set; }
 
 
-        public Dictionary<int, Dictionary<int, PacketStatus>> _userPacketStatus { get; private set; }
+        ILog _logger;
 
+        private Dictionary<int, Dictionary<int, PacketStatus>> _userPacketStatus;
+        private int _totalSendPacketUsage;
+        private int _totalRecvPacketUsage;
+        private int _lastSendPacketUsage;
+        private int _lastRecvPacketUsage;
+        
 
         private object _lockObject;
         private long _monitorTick;
         private long _monitorInterval;
+        private int _monitorIndex;
 
 
-
-        public NetMonitorHandler(int interval)
+        public NetMonitorHandler(ILog logger, int interval)
         {
+            _logger = logger;
             _lockObject = new object();
             _monitorTick = DateTime.UtcNow.AddSeconds(interval).Ticks;
             _monitorInterval = interval;
@@ -74,12 +81,18 @@ namespace RWCoreNetwork.NetService
                 SendEventPoolCount = 0;
                 ReceiveQueueCount = 0;
 
-                SendQueueCount.Clear();
+                //SendQueueCount.Clear();
+                _userPacketStatus.Clear();
+                _totalSendPacketUsage = 0;
+                _totalRecvPacketUsage = 0;
+                _lastSendPacketUsage = 0;
+                _lastRecvPacketUsage = 0;
+                _monitorIndex = 0;
             }
         }
 
 
-        public void Print(ILog logger)
+        public void Print()
         {
             DateTime now = DateTime.UtcNow;
             if (_monitorTick > now.Ticks)
@@ -89,20 +102,56 @@ namespace RWCoreNetwork.NetService
 
             _monitorTick = now.AddSeconds(_monitorInterval).Ticks;
 
-            logger.Info("----------------------------------------------------------------");
-            logger.Info("Network monitoring...");
+
+            if (_userPacketStatus.Count == 0)
+            {
+                return;
+            }
+
+
+            _monitorIndex++;
+
+
+            _logger.Info("----------------------------------------------------------------------------------");
+            _logger.Info("Network monitoring");
+            _logger.Info("----------------------------------------------------------------------------------");
+            
 
             foreach (var user in _userPacketStatus)
             {
-                logger.Info(string.Format("Packet Status. UserId: {0}", user.Key));
+                _logger.Info(string.Format("Packet Status. UserId: {0}", user.Key));
+
+                // 패킷 프로토콜 아이디별 패킷 송수신 횟수 및 송수신량
                 foreach (var s in user.Value)
                 {
-                    logger.Info(string.Format("Protocol: {0}, SendCount: {1:n0}, SendUsage: {2:n0}, RecvCount: {3:n0}, RecvUsage: {4:n0}", 
-                        s.Value.ProtocolId, s.Value.SendCount, s.Value.SendUsage, s.Value.ReceiveCount, s.Value.ReceiveUsage));
+                    _logger.Info(string.Format("Protocol: {0}, SendCount: {1:n0}, SendUsage: {2:n0}, RecvCount: {3:n0}, RecvUsage: {4:n0}", 
+                        s.Value.ProtocolId, 
+                        s.Value.SendCount, 
+                        s.Value.SendUsage, 
+                        s.Value.ReceiveCount, 
+                        s.Value.ReceiveUsage));
                 }
-                logger.Info("");
             }
-            logger.Info("----------------------------------------------------------------");
+
+
+            // 총 패킷 송수신량
+            _logger.Info(string.Format("PlayTime: {0} sec, TotalSendPacketUsage: {1:n0} bytes, TotalRecvPacketUsage: {2:n0} bytes,  TotalAllPacketUsage: {3:n0} bytes", 
+                _monitorIndex * 10, 
+                _totalSendPacketUsage, 
+                _totalRecvPacketUsage, 
+                _totalSendPacketUsage + _totalRecvPacketUsage));
+
+
+            // 초당 평균 패킷 송수신량
+            _logger.Info(string.Format("AvgSendPacketUsage: {0:n0} bytes/sec, AvgRecvPacketUsage: {1:n0} bytes/sec",
+                (float)((_totalSendPacketUsage - _lastSendPacketUsage) / _monitorInterval),
+                (float)((_totalRecvPacketUsage - _lastRecvPacketUsage) / _monitorInterval)));
+
+
+            _lastSendPacketUsage = _totalSendPacketUsage;
+            _lastRecvPacketUsage = _totalRecvPacketUsage;
+
+            _logger.Info("----------------------------------------------------------------------------------");
         }
 
 
@@ -111,13 +160,18 @@ namespace RWCoreNetwork.NetService
             lock (_lockObject)
             {
                 int protocolId = BitConverter.ToInt32(buffer, 0);
+                int length = BitConverter.ToInt32(buffer, Defines.PROTOCOL_ID) + Defines.HEADER_SIZE;
+
+                _totalSendPacketUsage += length;
+
+
                 if (_userPacketStatus.ContainsKey(id) == false)
                 {
                     _userPacketStatus.Add(id, new Dictionary<int, PacketStatus> {
                             { protocolId, new PacketStatus {
                                 ProtocolId = protocolId,
                                 SendCount = 1,
-                                SendUsage = buffer.Length
+                                SendUsage = length
                             }}
                         });
                 }
@@ -129,16 +183,16 @@ namespace RWCoreNetwork.NetService
                         {
                             ProtocolId = protocolId,
                             SendCount = 1,
-                            SendUsage = buffer.Length
+                            SendUsage = length
                         });
                     }
                     else
                     {
                         _userPacketStatus[id][protocolId].SendCount += 1;
-                        _userPacketStatus[id][protocolId].SendUsage += buffer.Length;
+                        _userPacketStatus[id][protocolId].SendUsage += length;
                     }
                 }
-                //_logger.Debug("[OnReceive] protocolId: " + protocolId + ", BytesTransferred : " + transfered);
+                _logger.Debug(string.Format("[Monitor] SetSendPacket. userId: {0}, protocolId: {1}, length : {2}", id, protocolId, length));
             }
         }
 
@@ -148,7 +202,10 @@ namespace RWCoreNetwork.NetService
             lock (_lockObject)
             {
                 int protocolId = BitConverter.ToInt32(buffer, 0);
-                int length = BitConverter.ToInt32(buffer, Defines.PROTOCOL_ID);
+                int length = BitConverter.ToInt32(buffer, Defines.PROTOCOL_ID) + Defines.HEADER_SIZE;
+
+                _totalRecvPacketUsage += length;
+
 
                 if (_userPacketStatus.ContainsKey(id) == false)
                 {
@@ -177,7 +234,8 @@ namespace RWCoreNetwork.NetService
                         _userPacketStatus[id][protocolId].ReceiveUsage += length;
                     }
                 }
-                //_logger.Debug("[OnReceive] protocolId: " + protocolId + ", BytesTransferred : " + transfered);
+
+                _logger.Debug(string.Format("[Monitor] SetReceivePacket. userId: {0}, protocolId: {1}, length : {2}", id, protocolId, length));
             }
         }
     }

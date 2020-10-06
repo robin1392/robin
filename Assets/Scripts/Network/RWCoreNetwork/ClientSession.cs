@@ -12,17 +12,17 @@ using RWCoreNetwork.NetService;
 
 namespace RWCoreNetwork
 {
-    public delegate void CompletedMessageDelegate(UserToken userToken, byte[] msg);
+    public delegate void CompletedMessageDelegate(ClientSession userToken, byte[] msg);
 
 
-   
-
-    public class UserToken
+    public class ClientSession
     {
         public CompletedMessageDelegate CompletedMessageCallback;
 
 
         public int Id { get; set; }
+
+        public string ClientSessionId { get; set; }
 
         public ENetState NetState { get; set; }
 
@@ -33,6 +33,10 @@ namespace RWCoreNetwork
         public SocketAsyncEventArgs ReceiveEventArgs { get; set; }
         
         public SocketAsyncEventArgs SendEventArgs { get; set; }
+
+
+        public long AliveTimeTick { get; set; }
+
 
         // session객체. 어플리케이션 딴에서 구현하여 사용.
         Peer _peer;
@@ -50,7 +54,7 @@ namespace RWCoreNetwork
 
 
 
-        public UserToken(ILog logger, int bufferSize, int id)
+        public ClientSession(ILog logger, int bufferSize, int id)
         {
             _logger = logger;
             Id = id;
@@ -58,6 +62,7 @@ namespace RWCoreNetwork
             _messageHandler = new MessageHandler(bufferSize);
             _sendingQueue = new Queue<byte[]>();
             _lockSendingQueue = new object();
+            ClientSessionId = string.Empty;
         }
 
 

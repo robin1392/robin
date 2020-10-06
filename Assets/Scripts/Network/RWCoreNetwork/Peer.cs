@@ -4,37 +4,37 @@ namespace RWCoreNetwork
 {
     public class Peer
     {
-        protected UserToken _userToken;
+        protected ClientSession _clientSession;
 
         public bool IsDisconnected()
         {
-            return _userToken == null || _userToken.NetState == NetService.ENetState.Disconnected;
+            return _clientSession == null || _clientSession.NetState == NetService.ENetState.Disconnected;
         }
 
-        public void SetUserToken(UserToken userToken)
+        public void SetClientSession(ClientSession clientSession)
         {
-            _userToken = userToken;
+            _clientSession = clientSession;
 
-            if (_userToken != null)
+            if (_clientSession != null)
             {
-                _userToken.SetPeer(this);
+                _clientSession.SetPeer(this);
             }
         }
 
-        public UserToken GetUserToken()
+        public ClientSession GetClientSession()
         {
-            return _userToken;
+            return _clientSession;
         }
 
 
         public void SendPacket(int protocolId, byte[] msg)
         {
-            _userToken.Send(protocolId, msg, msg.Length);
+            _clientSession.Send(protocolId, msg, msg.Length);
         }
 
         public void Disconnect()
         {
-            _userToken.Disconnect();
+            _clientSession.Disconnect();
         }
 
         public bool ReceivePacket(short protocolId, byte[] msg)
@@ -44,7 +44,7 @@ namespace RWCoreNetwork
 
         public void OnRemoved()
         {
-            //_userToken = null;
+            //_clientSession = null;
         }
     }
 }

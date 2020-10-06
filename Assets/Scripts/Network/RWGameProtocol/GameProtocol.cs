@@ -4,7 +4,7 @@ namespace RWGameProtocol
 {
     public enum GameProtocol : int
     {
-        BEGIN = 0,
+        BEGIN = 100000,
 
         // ----------------------------------------------------------------------------------------------------
         // req/ack protocols
@@ -57,7 +57,7 @@ namespace RWGameProtocol
         // ----------------------------------------------------------------------------------------------------
         // Notify protocols
         // ----------------------------------------------------------------------------------------------------
-        DEACTIVE_WAITING_OBJECT_NOTIFY = 10001,
+        DEACTIVE_WAITING_OBJECT_NOTIFY = 200001,
         ADD_SP_NOTIFY,
         SPAWN_NOTIFY,
         END_GAME_NOTIFY,
@@ -67,7 +67,7 @@ namespace RWGameProtocol
         // ----------------------------------------------------------------------------------------------------
         // Relay protocols
         // ----------------------------------------------------------------------------------------------------
-        BEGIN_PROTOCOL_RELAY = 20000,
+        BEGIN_PROTOCOL_RELAY = 300000,
 
         REMOVE_MINION_RELAY,
         HIT_DAMAGE_MINION_RELAY,

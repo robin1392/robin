@@ -245,7 +245,7 @@ public class NetworkManager : Singleton<NetworkManager>
         SetOtherPause(false);
         
         playType = type;
-        _clientSocket.Connect( _serverAddr , _port , callback);
+        _clientSocket.Connect( _serverAddr , _port , _gameSession, callback);
     }
 
     
