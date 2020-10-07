@@ -637,6 +637,8 @@ public class ConvertNetMsg
 
         for (int i = 0; i < minionData.Length; i++)
         {
+            if (minionData[i].minionHp <= 0) continue;
+
             NetSyncMinionData miniondata = new NetSyncMinionData();
             
             miniondata.minionId = minionData[i].minionId;
