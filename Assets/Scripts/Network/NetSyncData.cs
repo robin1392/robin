@@ -29,6 +29,13 @@ public class NetSyncMinionData
     
     public int minionDataId;
     public float minionHp;
+    public float minionMaxHp;
+    public float minionPower;
+    public float minionEffect;
+    public float minionEffectUpgrade;
+    public float minionEffectIngameUpgrade;
+    public float minionDuration;
+    public float minionCooltime;
     public Vector3 minionPos;
 
 

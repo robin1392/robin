@@ -794,5 +794,23 @@ namespace ED
             animator.SetTrigger(_animatorHashIdle);
             controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, NetworkManager.Get().UserUID, id, (int)E_AniTrigger.Idle, target.id);
         }
+
+        public NetSyncMinionData GetNetSyncMinionData()
+        {
+            NetSyncMinionData data = new NetSyncMinionData();
+
+            data.minionId = id;
+            data.minionHp = currentHealth;
+            data.minionMaxHp = maxHealth;
+            data.minionPower = power;
+            data.minionEffect = effect;
+            data.minionEffectUpgrade = effectUpByUpgrade;
+            data.minionEffectIngameUpgrade = effectUpByInGameUp;
+            data.minionDuration = effectDuration;
+            data.minionCooltime = effectCooltime;
+            data.minionPos = transform.position;
+
+            return data;
+        }
     }
 }

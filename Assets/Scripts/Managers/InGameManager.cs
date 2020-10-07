@@ -972,12 +972,67 @@ namespace ED
             UI_InGamePopup.Get().ViewGameIndicator(true);
             
             // 미니언들 idle 강제 idle 상태로 만든다
+            foreach (var minion in playerController.listMinion)
+            {
+                minion.StopAllCoroutines();
+                minion.animator.SetTrigger("Idle");
+            }
+            foreach (var minion in playerController.targetPlayer.listMinion)
+            {
+                minion.StopAllCoroutines();
+                minion.animator.SetTrigger("Idle");
+            }
             
             // 현재 전장에 있는 미니언 정보들 모은다 
+            NetSyncData myData = new NetSyncData();
+            NetSyncData otherData = new NetSyncData();
             // 내 미니언
+            myData.towerHp = playerController.currentHealth;
+            myData.userId = NetworkManager.Get().UserUID;
+            
             // 상대방 미니언
+            otherData.towerHp = playerController.targetPlayer.currentHealth;
+            otherData.userId = NetworkManager.Get().OtherUID;
             
             // NetSyncData my , other 
+            if (playerController.isBottomPlayer)
+            {
+                foreach (var stat in listBottomPlayer)
+                {
+                    var m = stat as Minion;
+                    if (m != null)
+                    {
+                        myData.netSyncMinionData.Add(m.GetNetSyncMinionData());
+                    }
+                }
+                foreach (var stat in listTopPlayer)
+                {
+                    var m = stat as Minion;
+                    if (m != null)
+                    {
+                        otherData.netSyncMinionData.Add(m.GetNetSyncMinionData());
+                    }
+                }
+            }
+            else
+            {
+                foreach (var stat in listTopPlayer)
+                {
+                    var m = stat as Minion;
+                    if (m != null)
+                    {
+                        myData.netSyncMinionData.Add(m.GetNetSyncMinionData());
+                    }
+                }
+                foreach (var stat in listBottomPlayer)
+                {
+                    var m = stat as Minion;
+                    if (m != null)
+                    {
+                        otherData.netSyncMinionData.Add(m.GetNetSyncMinionData());
+                    }
+                }
+            }
             
             //
             // 데이터 보냄
