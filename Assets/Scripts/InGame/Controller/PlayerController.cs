@@ -1946,6 +1946,9 @@ namespace ED
         {
             if (InGameManager.Get().isGamePlaying == false)
                 return;
+            
+            if (NetworkManager.Get().isResume == true)
+                return;
 
             if (InGameManager.IsNetwork == true)
             {
