@@ -1086,6 +1086,10 @@ namespace ED
                 m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
                 m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
             }
+
+
+            //
+            SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);
         }
         
 
@@ -1294,6 +1298,7 @@ namespace ED
 
                     if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
                     {
+                        NetworkManager.Get().SetResume(true);
                         // 미니언 정보 취합 해서 보내준다..
                         SendSyncAllBattleInfo();
                     }
