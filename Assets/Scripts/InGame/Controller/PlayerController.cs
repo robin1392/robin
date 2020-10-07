@@ -1868,6 +1868,9 @@ namespace ED
 
         public void SetDiceField(MsgGameDice[] arrDiceData)
         {
+            if(arrDice != null)
+                arrDice = null;
+            
             arrDice = new Dice[arrDiceData.Length];
             for (int i = 0; i < arrDiceData.Length; i++)
             {
