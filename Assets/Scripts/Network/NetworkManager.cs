@@ -457,6 +457,11 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.PauseGameNotify = _socketRecv.OnPauseGameNotify;
         _packetRecv.ResumeGameAck = _socketRecv.OnResumeGameAck;
         _packetRecv.ResumeGameNotify = _socketRecv.OnResumeGameNotify;
+
+        _packetRecv.StartSyncGameAck = _socketRecv.OnStartSyncGameAck;
+        _packetRecv.StartSyncGameNotify = _socketRecv.OnStartSyncGameNotify;
+        _packetRecv.EndSyncGameAck = _socketRecv.OnEndSyncGameAck;
+        _packetRecv.EndSyncGameNotify = _socketRecv.OnEndSyncGameNotify;
         
         
         
