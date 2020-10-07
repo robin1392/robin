@@ -510,6 +510,7 @@ namespace ED
             {
                 m.castType = (DICE_CAST_TYPE)data.castType;
                 m.id = _spawnCount++;
+                m.diceId = data.id;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;

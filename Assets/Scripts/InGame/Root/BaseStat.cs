@@ -10,6 +10,7 @@ namespace ED
     public class BaseStat : MonoBehaviourPun
     {
         public bool isMine;
+        public int diceId;
         public int id;
         public PlayerController controller;
         public Rigidbody rb;
