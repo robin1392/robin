@@ -800,6 +800,7 @@ namespace ED
             NetSyncMinionData data = new NetSyncMinionData();
 
             data.minionId = id;
+            data.minionDataId = diceId;
             data.minionHp = currentHealth;
             data.minionMaxHp = maxHealth;
             data.minionPower = power;
