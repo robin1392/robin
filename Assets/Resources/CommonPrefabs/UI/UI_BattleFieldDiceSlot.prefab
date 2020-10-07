@@ -1889,7 +1889,7 @@ MonoBehaviour:
   ts_Canvas: {fileID: 0}
   dice:
     diceFieldNum: 0
-    level: 0
+    eyeLevel: 0
   ani_Blind: {fileID: 0}
   ui_Card: {fileID: 0}
   ps: {fileID: 3399664150422792290}
@@ -2783,7 +2783,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10000
+      scalar: 5000
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -3213,7 +3213,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 0
+    enabled: 1
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -3238,8 +3238,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 0
+        atime1: 31804
+        atime2: 65535
         atime3: 0
         atime4: 0
         atime5: 0
@@ -3247,7 +3247,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -6685,7 +6685,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
