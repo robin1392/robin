@@ -267,14 +267,16 @@ namespace RWGameProtocol
         }
 
 
-        public override void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgSyncMinionData[] syncMinionData, MsgPlayerInfo otherPlayerInfo, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgSyncMinionData[] otherSyncMinionData) 
+        public override void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, int playerSpawnCount, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgSyncMinionData[] syncMinionData, MsgPlayerInfo otherPlayerInfo, int otherPlayerSpawnCount, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgSyncMinionData[] otherSyncMinionData) 
         {
             MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
             msg.PlayerInfo = playerInfo;
+            msg.PlayerSpawnCount = playerSpawnCount;
             msg.GameDiceData = gameDiceData;
             msg.InGameUp = inGameUp;
             msg.SyncMinionData = syncMinionData;
             msg.OtherPlayerInfo = otherPlayerInfo;
+            msg.OtherPlayerSpawnCount = otherPlayerSpawnCount;
             msg.OtherGameDiceData = otherGameDiceData;
             msg.OtherInGameUp = otherInGameUp;
             msg.OtherSyncMinionData = otherSyncMinionData;
