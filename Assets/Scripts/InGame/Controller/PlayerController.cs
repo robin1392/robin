@@ -1868,16 +1868,26 @@ namespace ED
 
         public void SetDiceField(MsgGameDice[] arrDiceData)
         {
-            if(arrDice != null)
-                arrDice = null;
+            if (arrDice != null)
+            {
+                for(int i = 0 ; i < arrDice.Length ; i++)
+                    arrDice[i].Reset();
+            }
+            else
+            {
+                arrDice = new Dice[arrDiceData.Length];    
+            }
             
-            arrDice = new Dice[arrDiceData.Length];
             for (int i = 0; i < arrDiceData.Length; i++)
             {
-                arrDice[i] = new Dice
+                int servLevel = arrDiceData[i].Level - 1;
+                if (servLevel < 0)
+                    servLevel = 0;
+                
+                arrDice[arrDiceData[i].SlotNum] = new Dice
                 {
                     diceData = InGameManager.Get().data_DiceInfo.GetData(arrDiceData[i].DiceId),
-                    eyeLevel = arrDiceData[i].Level,
+                    eyeLevel = servLevel,
                     diceFieldNum = arrDiceData[i].SlotNum
                 };
             }
