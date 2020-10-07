@@ -1220,6 +1220,17 @@ namespace ED
                 }
                 case GameProtocol.SPAWN_NOTIFY:
                 {
+                    // 시작이 되었으니...
+                    if (NetworkManager.Get().isResume == true)
+                    {
+                        NetworkManager.Get().SetResume(false);
+                    }
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+                    
                     NetSpawnNotify((int) param[0]);
                     break;
                 }
