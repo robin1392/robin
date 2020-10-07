@@ -1056,6 +1056,11 @@ namespace ED
             //gameData.OtherInGameUp
             //gameData.OtherSyncMinionData
             
+            // 정보 셋팅
+            NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
+            NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
+            
+            
             List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
             
             
@@ -1293,11 +1298,35 @@ namespace ED
                 case GameProtocol.END_SYNC_GAME_ACK:
                 {
                     MsgEndSyncGameAck endsynack = (MsgEndSyncGameAck) param[0];
+                    
+                    // 시작이 되었으니...
+                    if (NetworkManager.Get().isResume == true)
+                    {
+                        NetworkManager.Get().SetResume(false);
+                    }
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+                    
                     break;
                 }
                 case GameProtocol.END_SYNC_GAME_NOTIFY:
                 {
                     MsgEndSyncGameNotify endSyncNotify = (MsgEndSyncGameNotify) param[0];
+                    
+                    // 시작이 되었으니...
+                    if (NetworkManager.Get().isResume == true)
+                    {
+                        NetworkManager.Get().SetResume(false);
+                    }
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+                    
                     break;
                 }
                 

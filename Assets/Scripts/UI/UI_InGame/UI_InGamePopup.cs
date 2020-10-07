@@ -98,4 +98,9 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     {
         obj_Indicator.SetActive(view);
     }
+
+    public bool IsIndicatorActive()
+    {
+        return obj_Indicator.activeSelf;
+    }
 }
