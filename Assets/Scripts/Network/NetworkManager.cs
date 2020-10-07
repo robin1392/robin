@@ -620,7 +620,8 @@ public class ConvertNetMsg
             convData[i].minionPower = MsgFloatToInt(syncData.netSyncMinionData[i].minionPower);
             convData[i].minionEffect = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffect);
             convData[i].minionEffectUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectUpgrade);
-            convData[i].minionEffectIngameUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
+            convData[i].minionEffectIngameUpgrade =
+                MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
             convData[i].minionDuration = MsgFloatToInt(syncData.netSyncMinionData[i].minionDuration);
             convData[i].minionCooltime = MsgFloatToInt(syncData.netSyncMinionData[i].minionCooltime);
             
@@ -636,6 +637,8 @@ public class ConvertNetMsg
 
         for (int i = 0; i < minionData.Length; i++)
         {
+            if (minionData[i].minionHp <= 0) continue;
+
             NetSyncMinionData miniondata = new NetSyncMinionData();
             
             miniondata.minionId = minionData[i].minionId;
@@ -648,6 +651,8 @@ public class ConvertNetMsg
             miniondata.minionEffectIngameUpgrade = MsgIntToFloat(minionData[i].minionEffectIngameUpgrade);
             miniondata.minionDuration = MsgIntToFloat(minionData[i].minionDuration);
             miniondata.minionCooltime = MsgIntToFloat(minionData[i].minionCooltime);
+
+            miniondata.minionPos = MsgToVector(minionData[i].minionPos);
             
             syncData.Add(miniondata);
         }

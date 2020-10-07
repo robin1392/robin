@@ -936,11 +936,16 @@ namespace ED
             }
             else
             {
-                StartCoroutine(ResumeDelay());
+                if (isGamePlaying == false)
+                    return;
+                
+                //StartCoroutine(ResumeDelay());
+                ResumeDelay();
             }
         }
 
-        IEnumerator ResumeDelay()
+        //IEnumerator ResumeDelay()
+        void ResumeDelay()
         {
             // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
             NetworkManager.Get().SetResume(true);
@@ -949,9 +954,9 @@ namespace ED
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
 
+            //yield return new WaitForSeconds(2.0f);
             RevmoeAllMinionAndMagic();
             
-            yield return new WaitForSeconds(2.0f);
             
             print("Application Resume");
             if (NetworkManager.Get().IsConnect())
@@ -968,6 +973,9 @@ namespace ED
 
         public void SendSyncAllBattleInfo()
         {
+            if (isGamePlaying == false)
+                return;
+            
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
             
@@ -975,11 +983,13 @@ namespace ED
             foreach (var minion in playerController.listMinion)
             {
                 minion.StopAllCoroutines();
+                minion.behaviourTreeOwner.behaviour.Pause();
                 minion.animator.SetTrigger("Idle");
             }
             foreach (var minion in playerController.targetPlayer.listMinion)
             {
                 minion.StopAllCoroutines();
+                minion.behaviourTreeOwner.behaviour.Pause();
                 minion.animator.SetTrigger("Idle");
             }
             
@@ -1060,12 +1070,36 @@ namespace ED
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
             
+            // 주사위필드 데이터 셋팅
+            playerController.SetDiceField(gameData.GameDiceData);
+            playerController.targetPlayer.SetDiceField(gameData.OtherGameDiceData);
             
+            // 인게임 업 셋팅
+            
+            // 미니언 셋팅
             List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
-            
+            foreach (var data in myMinionData)
+            {
+                var diceData = data_DiceInfo.GetData(data.minionDataId);
+                var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1);
+                m.SetNetSyncMinionData(data);
+                m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
+                m.Initialize(playerController.MinionDestroyCallback);
+            }
             
             List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
+            foreach (var data in otherMinionData)
+            {
+                var diceData = data_DiceInfo.GetData(data.minionDataId);
+                var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1);
+                m.SetNetSyncMinionData(data);
+                m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+                m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
+            }
 
+
+            //
+            SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);
         }
         
 
@@ -1082,7 +1116,11 @@ namespace ED
             else
             {
                 print("Application Resume");
-                StartCoroutine(ResumeDelay());
+                if (isGamePlaying == false)
+                    return;
+                
+                //StartCoroutine(ResumeDelay());
+                ResumeDelay();
             }
         }
 #endif
@@ -1194,6 +1232,17 @@ namespace ED
                 }
                 case GameProtocol.SPAWN_NOTIFY:
                 {
+                    // 시작이 되었으니...
+                    if (NetworkManager.Get().isResume == true)
+                    {
+                        NetworkManager.Get().SetResume(false);
+                    }
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+                    
                     NetSpawnNotify((int) param[0]);
                     break;
                 }
@@ -1274,6 +1323,7 @@ namespace ED
 
                     if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
                     {
+                        NetworkManager.Get().SetResume(true);
                         // 미니언 정보 취합 해서 보내준다..
                         SendSyncAllBattleInfo();
                     }
@@ -1309,7 +1359,7 @@ namespace ED
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
-                    
+
                     break;
                 }
                 case GameProtocol.END_SYNC_GAME_NOTIFY:
