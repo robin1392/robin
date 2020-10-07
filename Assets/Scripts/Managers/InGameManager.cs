@@ -949,9 +949,9 @@ namespace ED
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
 
+            yield return new WaitForSeconds(2.0f);
             RevmoeAllMinionAndMagic();
             
-            yield return new WaitForSeconds(2.0f);
             
             print("Application Resume");
             if (NetworkManager.Get().IsConnect())

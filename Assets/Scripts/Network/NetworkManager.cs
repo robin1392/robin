@@ -615,14 +615,15 @@ public class ConvertNetMsg
         {
             convData[i].minionId = syncData.netSyncMinionData[i].minionId;
             convData[i].minionDataId = syncData.netSyncMinionData[i].minionDataId;
-            convData[i].minionHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionHp) * 100;
-            convData[i].minionMaxHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionMaxHp) * 100;
-            convData[i].minionPower = MsgFloatToInt(syncData.netSyncMinionData[i].minionPower) * 100;
-            convData[i].minionEffect = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffect) * 100;
-            convData[i].minionEffectUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectUpgrade) * 100;
-            convData[i].minionEffectIngameUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectIngameUpgrade) * 100;
-            convData[i].minionDuration = MsgFloatToInt(syncData.netSyncMinionData[i].minionDuration) * 100;
-            convData[i].minionCooltime = MsgFloatToInt(syncData.netSyncMinionData[i].minionCooltime) * 100;
+            convData[i].minionHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionHp);
+            convData[i].minionMaxHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionMaxHp);
+            convData[i].minionPower = MsgFloatToInt(syncData.netSyncMinionData[i].minionPower);
+            convData[i].minionEffect = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffect);
+            convData[i].minionEffectUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectUpgrade);
+            convData[i].minionEffectIngameUpgrade =
+                MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
+            convData[i].minionDuration = MsgFloatToInt(syncData.netSyncMinionData[i].minionDuration);
+            convData[i].minionCooltime = MsgFloatToInt(syncData.netSyncMinionData[i].minionCooltime);
             
             convData[i].minionPos = VectorToMsg(syncData.netSyncMinionData[i].minionPos);
         }
@@ -640,14 +641,16 @@ public class ConvertNetMsg
             
             miniondata.minionId = minionData[i].minionId;
             miniondata.minionDataId = minionData[i].minionDataId;
-            miniondata.minionHp = MsgIntToFloat(minionData[i].minionHp) * 0.01f;
-            miniondata.minionMaxHp = MsgIntToFloat(minionData[i].minionMaxHp) * 0.01f;
-            miniondata.minionPower = MsgIntToFloat(minionData[i].minionPower) * 0.01f;
-            miniondata.minionEffect = MsgIntToFloat(minionData[i].minionEffect) * 0.01f;
-            miniondata.minionEffectUpgrade = MsgIntToFloat(minionData[i].minionEffectUpgrade) * 0.01f;
-            miniondata.minionEffectIngameUpgrade = MsgIntToFloat(minionData[i].minionEffectIngameUpgrade) * 0.01f;
-            miniondata.minionDuration = MsgIntToFloat(minionData[i].minionDuration) * 0.01f;
-            miniondata.minionCooltime = MsgIntToFloat(minionData[i].minionCooltime) * 0.01f;
+            miniondata.minionHp = MsgIntToFloat(minionData[i].minionHp);
+            miniondata.minionMaxHp = MsgIntToFloat(minionData[i].minionMaxHp);
+            miniondata.minionPower = MsgIntToFloat(minionData[i].minionPower);
+            miniondata.minionEffect = MsgIntToFloat(minionData[i].minionEffect);
+            miniondata.minionEffectUpgrade = MsgIntToFloat(minionData[i].minionEffectUpgrade);
+            miniondata.minionEffectIngameUpgrade = MsgIntToFloat(minionData[i].minionEffectIngameUpgrade);
+            miniondata.minionDuration = MsgIntToFloat(minionData[i].minionDuration);
+            miniondata.minionCooltime = MsgIntToFloat(minionData[i].minionCooltime);
+
+            miniondata.minionPos = MsgToVector(minionData[i].minionPos);
             
             syncData.Add(miniondata);
         }
