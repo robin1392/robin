@@ -93,5 +93,9 @@ namespace RWGameProtocol.Msg
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
         public MsgSyncMinionData[] OtherSyncMinionData = new MsgSyncMinionData[100];
+
+        public int PlayerSpawnCount;
+        public int OtherPlayerSpawnCount;
+
     }
 }
