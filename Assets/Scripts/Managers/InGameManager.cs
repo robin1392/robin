@@ -936,11 +936,16 @@ namespace ED
             }
             else
             {
-                StartCoroutine(ResumeDelay());
+                if (isGamePlaying == false)
+                    return;
+                
+                //StartCoroutine(ResumeDelay());
+                ResumeDelay();
             }
         }
 
-        IEnumerator ResumeDelay()
+        //IEnumerator ResumeDelay()
+        void ResumeDelay()
         {
             // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
             NetworkManager.Get().SetResume(true);
@@ -949,7 +954,7 @@ namespace ED
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
 
-            yield return new WaitForSeconds(2.0f);
+            //yield return new WaitForSeconds(2.0f);
             RevmoeAllMinionAndMagic();
             
             
@@ -968,6 +973,9 @@ namespace ED
 
         public void SendSyncAllBattleInfo()
         {
+            if (isGamePlaying == false)
+                return;
+            
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
             
@@ -1108,7 +1116,11 @@ namespace ED
             else
             {
                 print("Application Resume");
-                StartCoroutine(ResumeDelay());
+                if (isGamePlaying == false)
+                    return;
+                
+                //StartCoroutine(ResumeDelay());
+                ResumeDelay();
             }
         }
 #endif
