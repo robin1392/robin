@@ -19,6 +19,8 @@ namespace RWGameProtocol.Msg
 
         // 현재 sp
         public int CurrentSp;
+        public int TowerHp;
+        public short SpGrade;
 
         // 주사위 아이디 배열
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
