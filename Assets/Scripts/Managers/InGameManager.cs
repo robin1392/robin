@@ -1100,7 +1100,7 @@ namespace ED
             // Spawn Count
             playerController._spawnCount = gameData.PlayerSpawnCount;
             playerController.targetPlayer._spawnCount = gameData.OtherPlayerSpawnCount;
-
+            
             //
             SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);
         }
@@ -1239,6 +1239,12 @@ namespace ED
                     if (NetworkManager.Get().isResume == true)
                     {
                         NetworkManager.Get().SetResume(false);
+                        
+                        // 아군유닛 비헤이비어트리 활성화
+                        foreach (var minion in playerController.listMinion)
+                        {
+                            minion.behaviourTreeOwner.behaviour.Resume();
+                        }
                     }
                     // 인디케이터도 다시 안보이게..
                     if (UI_InGamePopup.Get().IsIndicatorActive() == true)
@@ -1379,7 +1385,7 @@ namespace ED
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
-                    
+
                     break;
                 }
                 

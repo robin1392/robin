@@ -66,7 +66,7 @@ namespace ED
                 yield return null;
             }
 
-            if (isBombed == false)
+            if ((InGameManager.IsNetwork && isMine || InGameManager.IsNetwork == false || controller.isPlayingAI) && isBombed == false)
             {
                 isBombed = true;
                 
@@ -103,9 +103,10 @@ namespace ED
         {
             if (InGameManager.Get().isGamePlaying == false || destroyRoutine != null || isBombed) return;
 
-            if (target != null && other.gameObject == target.gameObject || other.gameObject.layer == LayerMask.NameToLayer("Map"))
+            if ((InGameManager.IsNetwork && isMine || InGameManager.IsNetwork == false || controller.isPlayingAI) &&
+                target != null && other.gameObject == target.gameObject ||
+                other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
-                StopAllCoroutines();
                 isBombed = true;
                 rb.velocity = Vector3.zero;
 

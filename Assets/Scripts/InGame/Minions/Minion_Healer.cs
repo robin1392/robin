@@ -88,7 +88,7 @@ namespace ED
         public override void SetAnimationTrigger(string triggerName, int targetID)
         {
             var target = controller.GetBaseStatFromId(targetID);
-            transform.LookAt(target.transform);
+            if (target != null) transform.LookAt(target.transform);
             
             animator.SetTrigger(triggerName);
         }
