@@ -72,6 +72,8 @@ namespace RWGameProtocol.Msg
         // 플레이어 정보.
         public MsgPlayerInfo PlayerInfo;
 
+        public int PlayerSpawnCount;
+
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 15)]
         public MsgGameDice[] GameDiceData = new MsgGameDice[15];
 
@@ -84,6 +86,8 @@ namespace RWGameProtocol.Msg
 
         // 상대방 정보
         public MsgPlayerInfo OtherPlayerInfo;
+        
+        public int OtherPlayerSpawnCount;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 15)]
         public MsgGameDice[] OtherGameDiceData = new MsgGameDice[15];
