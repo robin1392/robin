@@ -813,5 +813,21 @@ namespace ED
 
             return data;
         }
+
+        public void SetNetSyncMinionData(NetSyncMinionData data)
+        {
+            id = data.minionId;
+            diceId = data.minionDataId;
+            currentHealth = data.minionHp;
+            maxHealth = data.minionMaxHp;
+            RefreshHealthBar();
+            power = data.minionPower;
+            effect = data.minionEffect;
+            effectUpByUpgrade = data.minionEffectUpgrade;
+            effectUpByInGameUp = data.minionEffectIngameUpgrade;
+            effectDuration = data.minionDuration;
+            effectCooltime = data.minionCooltime;
+            transform.position = data.minionPos;
+        }
     }
 }

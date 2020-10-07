@@ -1208,7 +1208,7 @@ namespace ED
             }
         }
 
-        private void MinionDestroyCallback(Minion minion)
+        public void MinionDestroyCallback(Minion minion)
         {
             if (InGameManager.IsNetwork && isMine)
             {
@@ -1863,6 +1863,24 @@ namespace ED
 
         #endregion
         
+        
+        #region sync dice field
+
+        public void SetDiceField(MsgGameDice[] arrDiceData)
+        {
+            arrDice = new Dice[arrDiceData.Length];
+            for (int i = 0; i < arrDiceData.Length; i++)
+            {
+                arrDice[i] = new Dice
+                {
+                    diceData = InGameManager.Get().data_DiceInfo.GetData(arrDiceData[i].DiceId),
+                    eyeLevel = arrDiceData[i].Level,
+                    diceFieldNum = arrDiceData[i].SlotNum
+                };
+            }
+        }
+        
+        #endregion
         
         
         

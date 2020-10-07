@@ -1060,12 +1060,32 @@ namespace ED
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
             
+            // 주사위필드 데이터 셋팅
+            playerController.SetDiceField(gameData.GameDiceData);
+            playerController.targetPlayer.SetDiceField(gameData.OtherGameDiceData);
             
+            // 인게임 업 셋팅
+            
+            // 미니언 셋팅
             List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
-            
+            foreach (var data in myMinionData)
+            {
+                var diceData = data_DiceInfo.GetData(data.minionDataId);
+                var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1);
+                m.SetNetSyncMinionData(data);
+                m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
+                m.Initialize(playerController.MinionDestroyCallback);
+            }
             
             List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
-
+            foreach (var data in otherMinionData)
+            {
+                var diceData = data_DiceInfo.GetData(data.minionDataId);
+                var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1);
+                m.SetNetSyncMinionData(data);
+                m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+                m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
+            }
         }
         
 
