@@ -34,9 +34,9 @@ namespace RWGameProtocol
         public virtual void ResumeGameAck(Peer peer, GameErrorCode code) { }
         public virtual void ResumeGameNotify(Peer peer, int playerUId) { }
 
-        public virtual void StartSyncGameReq(Peer peer) { }
+        public virtual void StartSyncGameReq(Peer peer, int playerId, MsgSyncMinionData[] syncMinionData, int otherPlayerId, MsgSyncMinionData[] otherSyncMinionData) { }
         public virtual void StartSyncGameAck(Peer peer, GameErrorCode code) { }
-        public virtual void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, MsgPlayerInfo otherPlayerInfo) { }
+        public virtual void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgSyncMinionData[] syncMinionData, MsgPlayerInfo otherPlayerInfo, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgSyncMinionData[] otherSyncMinionData) { }
         public virtual void EndSyncGameReq(Peer peer) { }
         public virtual void EndSyncGameAck(Peer peer, GameErrorCode code) { }
         public virtual void EndSyncGameNotify(Peer peer) { }

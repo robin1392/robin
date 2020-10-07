@@ -246,9 +246,13 @@ namespace RWGameProtocol
             peer.SendPacket((int)GameProtocol.RESUME_GAME_NOTIFY, msg.Serialize());
         }
 
-        public override void StartSyncGameReq(Peer peer) 
+        public override void StartSyncGameReq(Peer peer, int playerId, MsgSyncMinionData[] syncMinionData, int otherPlayerId, MsgSyncMinionData[] otherSyncMinionData) 
         {
             MsgStartSyncGameReq msg = new MsgStartSyncGameReq();
+            msg.PlayerId = playerId;
+            msg.SyncMinionData = syncMinionData;
+            msg.OtherPlayerId = otherPlayerId;
+            msg.OtherSyncMinionData = otherSyncMinionData;
             peer.SendPacket((int)GameProtocol.START_SYNC_GAME_REQ, msg.Serialize());
         }
 
@@ -261,11 +265,17 @@ namespace RWGameProtocol
         }
 
 
-        public override void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, MsgPlayerInfo otherPlayerInfo) 
+        public override void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgSyncMinionData[] syncMinionData, MsgPlayerInfo otherPlayerInfo, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgSyncMinionData[] otherSyncMinionData) 
         {
             MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
             msg.PlayerInfo = playerInfo;
+            msg.GameDiceData = gameDiceData;
+            msg.InGameUp = inGameUp;
+            msg.SyncMinionData = syncMinionData;
             msg.OtherPlayerInfo = otherPlayerInfo;
+            msg.OtherGameDiceData = otherGameDiceData;
+            msg.OtherInGameUp = otherInGameUp;
+            msg.OtherSyncMinionData = otherSyncMinionData;
             peer.SendPacket((int)GameProtocol.START_SYNC_GAME_NOTIFY, msg.Serialize());
         }
 
