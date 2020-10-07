@@ -1098,7 +1098,7 @@ namespace ED
                     //transform.GetChild(2).gameObject.SetActive(false);
                     
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
-                    int convDamage = (int) (damage * Global.g_networkBaseValue);
+                    int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, convDamage);
                 }
                 else if (InGameManager.IsNetwork == false || isPlayingAI)
@@ -1192,8 +1192,8 @@ namespace ED
                 if (InGameManager.IsNetwork && isMine)
                 {
                     //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage);
-                    int chX = (int) ((float) param[0] * Global.g_networkBaseValue);
-                    int chZ = (int) ((float) param[1] * Global.g_networkBaseValue);
+                    int chX = ConvertNetMsg.MsgFloatToInt((float) param[0]);
+                    int chZ = ConvertNetMsg.MsgFloatToInt((float) param[1] );
                     NetSendPlayer(GameProtocol.SET_MAGIC_TARGET_POS_RELAY , NetworkManager.Get().UserUID , baseStatId , chX , chZ );
                 }
                 SetMagicTarget(baseStatId, (float) param[0], (float) param[1]);
@@ -1384,7 +1384,7 @@ namespace ED
         }
         public void ActionSturn(bool other , int baseStatId, float duration)
         {
-            int chDur = (int) (duration * Global.g_networkBaseValue);
+            int chDur = ConvertNetMsg.MsgFloatToInt(duration );
             if (other == true)
             {
                 if (InGameManager.IsNetwork )
@@ -1436,14 +1436,14 @@ namespace ED
         {
             if (InGameManager.IsNetwork && isMine)
             {
-                int convFactor = (int) (factor * Global.g_networkBaseValue);
+                int convFactor = ConvertNetMsg.MsgFloatToInt(factor);
                 NetSendPlayer(GameProtocol.MINION_FOG_OF_WAR_RELAY, NetworkManager.Get().UserUID, bastStatId ,convFactor , isIn );
             }
             FlagOfWar(bastStatId , isIn , factor);
         }
         public void ActionMinionScareCrow(bool other , int targetId, float eyeLevel)
         {
-            int chEyeLv = (int)(eyeLevel * Global.g_networkBaseValue);
+            int chEyeLv = ConvertNetMsg.MsgFloatToInt(eyeLevel );
             if (other == true)
             {
                 if (InGameManager.IsNetwork )
@@ -1469,7 +1469,7 @@ namespace ED
 
         public void ActionInvincibility(int baseStatId, float time)
         {
-            int convTime = (int)(time * Global.g_networkBaseValue);
+            int convTime = ConvertNetMsg.MsgFloatToInt(time );
             if (InGameManager.IsNetwork && isMine)
                 NetSendPlayer(GameProtocol.MINION_INVINCIBILITY_RELAY, NetworkManager.Get().UserUID, baseStatId , convTime );
             
@@ -1481,11 +1481,11 @@ namespace ED
             // 상대방 미니언을 푸쉬한다..
             if (InGameManager.IsNetwork && isMine)
             {
-                int x = (int) (dir.x * Global.g_networkBaseValue);
-                int y = (int) (dir.y * Global.g_networkBaseValue);
-                int z = (int) (dir.z * Global.g_networkBaseValue);
+                int x = ConvertNetMsg.MsgFloatToInt(dir.x );
+                int y = ConvertNetMsg.MsgFloatToInt(dir.y );
+                int z = ConvertNetMsg.MsgFloatToInt(dir.z );
                 
-                int convPush  = (int)(pushPower * Global.g_networkBaseValue);
+                int convPush  = ConvertNetMsg.MsgFloatToInt(pushPower );
                 
                 NetSendPlayer(GameProtocol.PUSH_MINION_RELAY, NetworkManager.Get().OtherUID, baseStatId ,x, y, z, convPush);
             }
@@ -1686,11 +1686,11 @@ namespace ED
         {
             if (InGameManager.IsNetwork && isMine)
             {
-                int x = (int) (startPos.x * Global.g_networkBaseValue);
-                int y = (int) (startPos.y * Global.g_networkBaseValue);
-                int z = (int) (startPos.z * Global.g_networkBaseValue);
-                int chDamage = (int) (damage * Global.g_networkBaseValue);
-                int chSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
+                int x = ConvertNetMsg.MsgFloatToInt(startPos.x );
+                int y = ConvertNetMsg.MsgFloatToInt(startPos.y );
+                int z = ConvertNetMsg.MsgFloatToInt(startPos.z );
+                int chDamage = ConvertNetMsg.MsgFloatToInt(damage );
+                int chSpeed = ConvertNetMsg.MsgFloatToInt(moveSpeed );
                 
                 //NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
                 NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed , (int)bulletType);
@@ -1780,8 +1780,8 @@ namespace ED
         {
             if (InGameManager.IsNetwork && isMine)
             {
-                int chDamage = (int)(damage * Global.g_networkBaseValue);
-                int chRange = (int)(range * Global.g_networkBaseValue);
+                int chDamage = ConvertNetMsg.MsgFloatToInt(damage );
+                int chRange = ConvertNetMsg.MsgFloatToInt(range );
                 
                 NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, NetworkManager.Get().UserUID, shootPos , targetPos , chDamage , chRange , (int)type);
             }
@@ -1888,7 +1888,7 @@ namespace ED
                         for (int i = 0; i < listMinion.Count; i++)
                         {
                             //UnityEngine.Debug.Log(listMinion[i].rb.position);
-                            msgMinPos[i] = NetworkManager.Get().VectorToMsg(listMinion[i].rb.position);
+                            msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
                     
                         NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, NetworkManager.Get().UserUID, minionCount , msgMinPos );
@@ -1902,7 +1902,7 @@ namespace ED
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
-                Vector3 chPos = NetworkManager.Get().MsgToVector(msgPoss[i]);
+                Vector3 chPos = ConvertNetMsg.MsgToVector(msgPoss[i]);
                 listMinion[i].SetNetworkValue(chPos);
             }
         }
@@ -1941,7 +1941,7 @@ namespace ED
                     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
-                    float calDamage = (float)damageack.Damage / Global.g_networkBaseValue;
+                    float calDamage = ConvertNetMsg.MsgIntToFloat(damageack.Damage );
                     //targetPlayer.HitDamage(calDamage);
                     if (NetworkManager.Get().UserUID == damageack.PlayerUId)
                     {
@@ -1958,7 +1958,7 @@ namespace ED
                 {
                     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
 
-                    float calDamage = damagenoti.Damage /  Global.g_networkBaseValue;
+                    float calDamage = ConvertNetMsg.MsgIntToFloat(damagenoti.Damage );
                     if (NetworkManager.Get().UserUID == damagenoti.PlayerUId)
                     {
                         HitDamage(calDamage);
@@ -1973,7 +1973,7 @@ namespace ED
                 case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                 {
                     MsgHitDamageMinionRelay hitminion = (MsgHitDamageMinionRelay) param[0];
-                    float damage = hitminion.Damage / Global.g_networkBaseValue;
+                    float damage = ConvertNetMsg.MsgIntToFloat(hitminion.Damage );
                     //float delay = hitminion.Delay / Global.g_networkBaseValue;
                     
                     if (NetworkManager.Get().UserUID == hitminion.PlayerUId)
@@ -2050,7 +2050,7 @@ namespace ED
                 {
                     MsgHealMinionRelay healrelay = (MsgHealMinionRelay) param[0];
 
-                    float serverHealVal =  (float)healrelay.Heal / Global.g_networkBaseValue;
+                    float serverHealVal =  ConvertNetMsg.MsgIntToFloat(healrelay.Heal);
                     if (NetworkManager.Get().UserUID == healrelay.PlayerUId)
                         HealMinion(healrelay.Id, serverHealVal);
                     else if (NetworkManager.Get().OtherUID == healrelay.PlayerUId )
@@ -2072,7 +2072,7 @@ namespace ED
                 {
                     MsgSturnMinionRelay sturelay = (MsgSturnMinionRelay) param[0];
                     
-                    float chDur = (float)sturelay.SturnTime / Global.g_networkBaseValue;
+                    float chDur = ConvertNetMsg.MsgIntToFloat(sturelay.SturnTime );
                     
                     if (NetworkManager.Get().UserUID == sturelay.PlayerUId)
                         SturnMinion(sturelay.Id, chDur);
@@ -2129,7 +2129,7 @@ namespace ED
                 {
                     MsgMinionFogOfWarRelay flagrelay = (MsgMinionFogOfWarRelay) param[0];
                     
-                    float convFactor = (float)flagrelay.Effect / Global.g_networkBaseValue;
+                    float convFactor = ConvertNetMsg.MsgIntToFloat(flagrelay.Effect );
                     
                     if (NetworkManager.Get().UserUID == flagrelay.PlayerUId)
                         FlagOfWar(flagrelay.BaseStatId , flagrelay.IsFogOfWar , convFactor);
@@ -2142,7 +2142,7 @@ namespace ED
                 {
                     MsgScarecrowRelay scarelay = (MsgScarecrowRelay) param[0];
                     
-                    float chEyeLv = (float)scarelay.EyeLevel / Global.g_networkBaseValue;
+                    float chEyeLv = ConvertNetMsg.MsgIntToFloat(scarelay.EyeLevel );
                     if (NetworkManager.Get().UserUID == scarelay.PlayerUId)
                         ScareCrow(scarelay.BaseStatId , chEyeLv);
                     else if (NetworkManager.Get().OtherUID == scarelay.PlayerUId )
@@ -2165,7 +2165,7 @@ namespace ED
                 {
                     MsgMinionInvincibilityRelay inrelay = (MsgMinionInvincibilityRelay) param[0];
                     
-                    float convTime = (float)inrelay.Time / Global.g_networkBaseValue;
+                    float convTime = ConvertNetMsg.MsgIntToFloat(inrelay.Time );
                     
                     if (NetworkManager.Get().UserUID == inrelay.PlayerUId)
                         SetMinionInvincibility(inrelay.Id, convTime);
@@ -2181,10 +2181,10 @@ namespace ED
                     MsgFireBulletRelay arrrelay = (MsgFireBulletRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = NetworkManager.Get().MsgToVector(arrrelay.Dir);
+                    Vector3 sPos = ConvertNetMsg.MsgToVector(arrrelay.Dir);
                     
-                    float calDamage = (float)arrrelay.Damage / Global.g_networkBaseValue;
-                    float calSpeed = (float)arrrelay.MoveSpeed / Global.g_networkBaseValue;
+                    float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
+                    float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
                     E_BulletType bulletType = (E_BulletType) arrrelay.Type;
                     
                     if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
@@ -2200,10 +2200,10 @@ namespace ED
                     MsgFireArrowRelay arrrelay = (MsgFireArrowRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = NetworkManager.Get().MsgToVector(arrrelay.Dir);
+                    Vector3 sPos = ConvertNetMsg.MsgToVector(arrrelay.Dir);
                     
-                    float calDamage = (float)arrrelay.Damage / Global.g_networkBaseValue;
-                    float calSpeed = (float)arrrelay.MoveSpeed / Global.g_networkBaseValue;
+                    float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
+                    float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
                     
                     if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
                         FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
@@ -2215,9 +2215,9 @@ namespace ED
                 {
                     MsgFireSpearRelay spearrelay = (MsgFireSpearRelay) param[0];
 
-                    Vector3 startPos = NetworkManager.Get().MsgToVector(spearrelay.ShootPos);
-                    float chDamage = (float)spearrelay.Power / Global.g_networkBaseValue;
-                    float chSpeed = (float)spearrelay.MoveSpeed /  Global.g_networkBaseValue;
+                    Vector3 startPos = ConvertNetMsg.MsgToVector(spearrelay.ShootPos);
+                    float chDamage = ConvertNetMsg.MsgIntToFloat(spearrelay.Power );
+                    float chSpeed = ConvertNetMsg.MsgIntToFloat(spearrelay.MoveSpeed );
                     
                     if (NetworkManager.Get().UserUID == spearrelay.PlayerUId)
                         FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
@@ -2230,7 +2230,7 @@ namespace ED
                 {
                     MsgNecromancerBulletRelay necrorelay = (MsgNecromancerBulletRelay) param[0];
 
-                    Vector3 shootPos = NetworkManager.Get().MsgToVector(necrorelay.ShootPos);
+                    Vector3 shootPos = ConvertNetMsg.MsgToVector(necrorelay.ShootPos);
                         
                     if (NetworkManager.Get().UserUID == necrorelay.PlayerUId)
                         FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
@@ -2243,10 +2243,10 @@ namespace ED
                 {
                     MsgFireCannonBallRelay fcannonrelay = (MsgFireCannonBallRelay) param[0];
 
-                    Vector3 startPos = NetworkManager.Get().MsgToVector(fcannonrelay.ShootPos);
-                    Vector3 targetPos = NetworkManager.Get().MsgToVector(fcannonrelay.TargetPos);
-                    float chDamage = (float)fcannonrelay.Power / Global.g_networkBaseValue;
-                    float chRange = (float)fcannonrelay.Range / Global.g_networkBaseValue;
+                    Vector3 startPos = ConvertNetMsg.MsgToVector(fcannonrelay.ShootPos);
+                    Vector3 targetPos = ConvertNetMsg.MsgToVector(fcannonrelay.TargetPos);
+                    float chDamage = ConvertNetMsg.MsgIntToFloat(fcannonrelay.Power );
+                    float chRange = ConvertNetMsg.MsgIntToFloat(fcannonrelay.Range );
                     E_CannonType cannonType = (E_CannonType) fcannonrelay.Type;
         
                     if (NetworkManager.Get().UserUID == fcannonrelay.PlayerUId)
@@ -2287,8 +2287,8 @@ namespace ED
                 {
                     MsgSetMagicTargetRelay smtrelay = (MsgSetMagicTargetRelay) param[0];
                     
-                    float chX =  (float)smtrelay.X / Global.g_networkBaseValue;
-                    float chZ =  (float)smtrelay.Z / Global.g_networkBaseValue;
+                    float chX =  ConvertNetMsg.MsgIntToFloat(smtrelay.X );
+                    float chZ =  ConvertNetMsg.MsgIntToFloat(smtrelay.Z );
                     
                     if (NetworkManager.Get().UserUID == smtrelay.PlayerUId)
                         SetMagicTarget(smtrelay.Id, chX , chZ);
@@ -2301,9 +2301,9 @@ namespace ED
                 {
                     MsgActivatePoolObjectRelay actrelay = (MsgActivatePoolObjectRelay) param[0];
                     
-                    Vector3 stPos = NetworkManager.Get().MsgToVector(actrelay.HitPos);
-                    Vector3 localScale = NetworkManager.Get().MsgToVector(actrelay.LocalScale);
-                    Quaternion rotate = NetworkManager.Get().MsgToQuaternion(actrelay.Rotation);
+                    Vector3 stPos = ConvertNetMsg.MsgToVector(actrelay.HitPos);
+                    Vector3 localScale = ConvertNetMsg.MsgToVector(actrelay.LocalScale);
+                    Quaternion rotate = ConvertNetMsg.MsgToQuaternion(actrelay.Rotation);
                     
                     string strObjName = ((E_PoolName) actrelay.PoolName).ToString();
 
@@ -2355,8 +2355,8 @@ namespace ED
                 {
                     MsgPushMinionRelay pushrelay = (MsgPushMinionRelay) param[0];
 
-                    Vector3 conVecDir = NetworkManager.Get().MsgToVector(pushrelay.Dir);
-                    float convPower = (float)pushrelay.PushPower / Global.g_networkBaseValue;
+                    Vector3 conVecDir = ConvertNetMsg.MsgToVector(pushrelay.Dir);
+                    float convPower = ConvertNetMsg.MsgIntToFloat(pushrelay.PushPower );
                     
                     
                     if (NetworkManager.Get().UserUID == pushrelay.PlayerUId)

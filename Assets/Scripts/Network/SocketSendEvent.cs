@@ -61,7 +61,6 @@ public class SocketSendEvent
             }
             case GameProtocol.HIT_DAMAGE_REQ:
             {
-                //float damage = (float)param[1] * Global.g_networkBaseValue;
                 _sender.HitDamageReq(peer , (int)param[0] , (int)param[1]);
                 break;
             }
@@ -91,9 +90,9 @@ public class SocketSendEvent
             }
             case GameProtocol.HIT_DAMAGE_MINION_RELAY:
             {
-                float damage = (float)param[2] * Global.g_networkBaseValue;
-                float delay = (float)param[3] * Global.g_networkBaseValue;
-                _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , (int)damage , (int)delay);
+                int damage = ConvertNetMsg.MsgFloatToInt( (float)param[2] );
+                int delay = ConvertNetMsg.MsgFloatToInt( (float)param[3] );
+                _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , damage , delay);
                 break;
             }
             
@@ -120,8 +119,8 @@ public class SocketSendEvent
             
             case GameProtocol.HEAL_MINION_RELAY:
             {
-                float serverHeal = (float)param[2] * Global.g_networkBaseValue;
-                _sender.HealMinionRelay(peer , (int)param[0] , (int)param[1] ,(int)serverHeal);
+                int serverHeal = ConvertNetMsg.MsgFloatToInt((float)param[2] );
+                _sender.HealMinionRelay(peer , (int)param[0] , (int)param[1] , serverHeal);
                 break;
             }
             case GameProtocol.FIRE_BALL_BOMB_RELAY:
@@ -207,7 +206,7 @@ public class SocketSendEvent
             {
                 //FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
                 
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
+                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
                 
                 _sender.FireSpearRelay(peer , (int)param[0] , chStPos , (int)param[2] , (int)param[3] , (int)param[4]);
                 break;
@@ -216,7 +215,7 @@ public class SocketSendEvent
             {
                 //NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
                 
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
+                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
                 
                 _sender.NecromancerBulletRelay(peer , (int)param[0] , chStPos , (int)param[2] , (int)param[3] , (int)param[4]);
                 
@@ -226,8 +225,8 @@ public class SocketSendEvent
             {
                 //MsgFireCannonBall(IPeer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
                 
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[1]);
-                MsgVector3 chTgPos = NetworkManager.Get().VectorToMsg((Vector3) param[2]);
+                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
+                MsgVector3 chTgPos = ConvertNetMsg.VectorToMsg((Vector3) param[2]);
                 
                 _sender.MsgFireCannonBall(peer ,(int)param[0] ,chStPos , chTgPos , (int)param[3] , (int)param[4] , (int)param[5]);
                 break;
@@ -240,9 +239,9 @@ public class SocketSendEvent
             {
                 //ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
                 
-                MsgVector3 chStPos = NetworkManager.Get().VectorToMsg((Vector3) param[2]);
-                MsgVector3 chScale = NetworkManager.Get().VectorToMsg((Vector3) param[3]);
-                MsgQuaternion chRot = NetworkManager.Get().QuaternionToMsg((Quaternion) param[4]);
+                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[2]);
+                MsgVector3 chScale = ConvertNetMsg.VectorToMsg((Vector3) param[3]);
+                MsgQuaternion chRot = ConvertNetMsg.QuaternionToMsg((Quaternion) param[4]);
                 
                 _sender.ActivatePoolObjectRelay(peer , (int)param[0] , (int)param[1] , chStPos , chScale , chRot);
                 
@@ -301,7 +300,7 @@ public class SocketSendEvent
             }
             case GameProtocol.START_SYNC_GAME_REQ:
             {
-                _sender.StartSyncGameReq(peer);
+                _sender.StartSyncGameReq(peer , (int)param[0] ,(MsgSyncMinionData[])param[1] , (int)param[2] ,  (MsgSyncMinionData[])param[3]);
                 break;
             }
             case GameProtocol.END_SYNC_GAME_REQ:

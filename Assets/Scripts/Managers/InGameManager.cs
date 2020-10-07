@@ -1033,10 +1033,34 @@ namespace ED
                     }
                 }
             }
+
+            MsgSyncMinionData[] syncMyMinionData = ConvertNetMsg.ConvertNetSyncToMsg(myData);
+            MsgSyncMinionData[] syncOtherMinionData = ConvertNetMsg.ConvertNetSyncToMsg(otherData);
             
             //
+            //Peer peer, int playerId, MsgSyncMinionData[] syncMinionData, int otherPlayerId, MsgSyncMinionData[] otherSyncMinionData
             // 데이터 보냄
-            SendInGameManager(GameProtocol.START_SYNC_GAME_REQ);
+            SendInGameManager(GameProtocol.START_SYNC_GAME_REQ , myData.userId , syncMyMinionData , otherData.userId , syncOtherMinionData);
+        }
+
+        public void SyncGameData(MsgStartSyncGameNotify gameData)
+        {
+            //gameData.PlayerInfo
+            //gameData.OtherPlayerInfo
+            
+            //gameData.GameDiceData
+            //gameData.InGameUp
+            //gameData.SyncMinionData
+            
+            //gameData.OtherGameDiceData
+            //gameData.OtherInGameUp
+            //gameData.OtherSyncMinionData
+            
+            List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
+            
+            
+            List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
+
         }
         
 
@@ -1261,6 +1285,8 @@ namespace ED
                 {
                     MsgStartSyncGameNotify syncNotify = (MsgStartSyncGameNotify) param[0];
                     // 받은 데이터로 동기화 시킨다
+
+                    SyncGameData(syncNotify);
                     
                     break;
                 }

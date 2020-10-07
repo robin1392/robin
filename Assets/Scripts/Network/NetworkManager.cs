@@ -311,68 +311,6 @@ public class NetworkManager : Singleton<NetworkManager>
     #endregion
     
     
-    #region server msg convert
-    
-    public MsgVector3 VectorToMsg(Vector3 val)
-    {
-        MsgVector3 chVec = new MsgVector3();
-                
-        chVec.X = (int)(val.x * Global.g_networkBaseValue);
-        chVec.Y = (int)(val.y * Global.g_networkBaseValue);
-        chVec.Z = (int)(val.z * Global.g_networkBaseValue);
-
-        return chVec;
-    }
-
-    public MsgQuaternion QuaternionToMsg(Quaternion quat)
-    {
-        MsgQuaternion chMsgQuat = new MsgQuaternion();
-        
-        chMsgQuat.X = (int)(quat.x * Global.g_networkBaseValue);
-        chMsgQuat.Y = (int)(quat.y * Global.g_networkBaseValue);
-        chMsgQuat.Z = (int)(quat.z * Global.g_networkBaseValue);
-        chMsgQuat.W = (int)(quat.w * Global.g_networkBaseValue);
-        
-        return chMsgQuat;
-    }
-
-    public Vector3 MsgToVector(MsgVector3 msgVec)
-    {
-        Vector3 vecVal = new Vector3();
-
-        vecVal.x = (float) msgVec.X / Global.g_networkBaseValue;
-        vecVal.y = (float) msgVec.Y / Global.g_networkBaseValue;
-        vecVal.z = (float) msgVec.Z / Global.g_networkBaseValue;
-
-        return vecVal;
-    }
-    
-    public Vector3 MsgToVector(int[] msgVec)
-    {
-        Vector3 vecVal = new Vector3();
-
-        vecVal.x = (float) msgVec[0] / Global.g_networkBaseValue;
-        vecVal.y = (float) msgVec[1] / Global.g_networkBaseValue;
-        vecVal.z = (float) msgVec[2] / Global.g_networkBaseValue;
-
-        return vecVal;
-    }
-
-    public Quaternion MsgToQuaternion(MsgQuaternion quat)
-    {
-        Quaternion quatVal = new Quaternion();
-        
-        quatVal.x = (float) quat.X / Global.g_networkBaseValue;
-        quatVal.y = (float) quat.Y / Global.g_networkBaseValue;
-        quatVal.z = (float) quat.Z / Global.g_networkBaseValue;
-        quatVal.w = (float) quat.W / Global.g_networkBaseValue;
-
-        return quatVal;
-    }
-
-    #endregion
-
-
     #region socket delegate
 
     public void CombineRecvDelegate()
@@ -647,4 +585,152 @@ public class NetInfo
     
 }
 #endregion
+
+
+#region net convert class
+
+public class ConvertNetMsg
+{
+    
+    #region convert minion data
+    public static MsgSyncMinionData[] ConvertNetSyncToMsg(NetSyncData syncData)
+    {
+        //MsgSyncMinionData[] convData
+        /*public int minionId;
+        public int minionDataId;
+        public int minionHp;
+        public int minionMaxHp;
+        public int minionPower;
+        public int minionEffect;
+        public int minionEffectUpgrade;
+        public int minionEffectIngameUpgrade;
+        public int minionDuration;
+        public int minionCooltime;
+        public MsgVector3 minionPos;*/
+        
+        //syncData.netSyncMinionData.Count
+        MsgSyncMinionData[] convData = new MsgSyncMinionData[100];
+        // 설마 100개를 넘진...
+        for (int i = 0; i < syncData.netSyncMinionData.Count; i++)
+        {
+            convData[i].minionId = syncData.netSyncMinionData[i].minionId;
+            convData[i].minionDataId = syncData.netSyncMinionData[i].minionDataId;
+            convData[i].minionHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionHp);
+            convData[i].minionMaxHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionMaxHp);
+            convData[i].minionPower = MsgFloatToInt(syncData.netSyncMinionData[i].minionPower);
+            convData[i].minionEffect = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffect);
+            convData[i].minionEffectUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectUpgrade);
+            convData[i].minionEffectIngameUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
+            convData[i].minionDuration = MsgFloatToInt(syncData.netSyncMinionData[i].minionDuration);
+            convData[i].minionCooltime = MsgFloatToInt(syncData.netSyncMinionData[i].minionCooltime);
+            
+            convData[i].minionPos = VectorToMsg(syncData.netSyncMinionData[i].minionPos);
+        }
+
+        return convData;
+    }
+
+    public static List<NetSyncMinionData> ConvertMsgToSync(MsgSyncMinionData[] minionData)
+    {
+        List<NetSyncMinionData> syncData = new List<NetSyncMinionData>();
+
+        for (int i = 0; i < minionData.Length; i++)
+        {
+            NetSyncMinionData miniondata = new NetSyncMinionData();
+            
+            miniondata.minionId = minionData[i].minionId;
+            miniondata.minionDataId = minionData[i].minionDataId;
+            miniondata.minionHp = MsgIntToFloat(minionData[i].minionHp);
+            miniondata.minionMaxHp = MsgIntToFloat(minionData[i].minionMaxHp);
+            miniondata.minionPower = MsgIntToFloat(minionData[i].minionPower);
+            miniondata.minionEffect = MsgIntToFloat(minionData[i].minionEffect);
+            miniondata.minionEffectUpgrade = MsgIntToFloat(minionData[i].minionEffectUpgrade);
+            miniondata.minionEffectIngameUpgrade = MsgIntToFloat(minionData[i].minionEffectIngameUpgrade);
+            miniondata.minionDuration = MsgIntToFloat(minionData[i].minionDuration);
+            miniondata.minionCooltime = MsgIntToFloat(minionData[i].minionCooltime);
+            
+            syncData.Add(miniondata);
+        }
+        
+        return syncData;
+    }
+    #endregion
+    
+    #region server msg convert
+
+    public static int MsgFloatToInt(float value)
+    {
+        int convValue = (int)(value * Global.g_networkBaseValue);
+
+        return convValue;
+    }
+
+    public static float MsgIntToFloat(int netValue)
+    {
+        float convValue = (float)netValue / Global.g_networkBaseValue;
+        return convValue;
+    }
+    
+    public static MsgVector3 VectorToMsg(Vector3 val)
+    {
+        MsgVector3 chVec = new MsgVector3();
+                
+        chVec.X = MsgFloatToInt(val.x);
+        chVec.Y = MsgFloatToInt(val.y);
+        chVec.Z = MsgFloatToInt(val.z);
+
+        return chVec;
+    }
+
+    public static MsgQuaternion QuaternionToMsg(Quaternion quat)
+    {
+        MsgQuaternion chMsgQuat = new MsgQuaternion();
+        
+        chMsgQuat.X = MsgFloatToInt(quat.x);
+        chMsgQuat.Y = MsgFloatToInt(quat.y);
+        chMsgQuat.Z = MsgFloatToInt(quat.z);
+        chMsgQuat.W = MsgFloatToInt(quat.w);
+        
+        return chMsgQuat;
+    }
+
+    public static Vector3 MsgToVector(MsgVector3 msgVec)
+    {
+        Vector3 vecVal = new Vector3();
+
+        vecVal.x = MsgIntToFloat(msgVec.X);
+        vecVal.y = MsgIntToFloat( msgVec.Y);
+        vecVal.z = MsgIntToFloat( msgVec.Z);
+
+        return vecVal;
+    }
+    
+    public static Vector3 MsgToVector(int[] msgVec)
+    {
+        Vector3 vecVal = new Vector3();
+
+        vecVal.x = MsgIntToFloat(msgVec[0] );
+        vecVal.y = MsgIntToFloat(msgVec[1] );
+        vecVal.z = MsgIntToFloat(msgVec[2] );
+
+        return vecVal;
+    }
+
+    public static Quaternion MsgToQuaternion(MsgQuaternion quat)
+    {
+        Quaternion quatVal = new Quaternion();
+        
+        quatVal.x = MsgIntToFloat( quat.X );
+        quatVal.y = MsgIntToFloat(quat.Y );
+        quatVal.z = MsgIntToFloat( quat.Z );
+        quatVal.w = MsgIntToFloat( quat.W);
+
+        return quatVal;
+    }
+
+    #endregion
+
+}
+#endregion
+
 
