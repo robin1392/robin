@@ -246,12 +246,14 @@ namespace RWGameProtocol
             peer.SendPacket((int)GameProtocol.RESUME_GAME_NOTIFY, msg.Serialize());
         }
 
-        public override void StartSyncGameReq(Peer peer, int playerId, MsgSyncMinionData[] syncMinionData, int otherPlayerId, MsgSyncMinionData[] otherSyncMinionData) 
+        public override void StartSyncGameReq(Peer peer, int playerId, int playerSpawnCount, MsgSyncMinionData[] syncMinionData, int otherPlayerId, int otherPlayerSpawnCount, MsgSyncMinionData[] otherSyncMinionData) 
         {
             MsgStartSyncGameReq msg = new MsgStartSyncGameReq();
             msg.PlayerId = playerId;
+            msg.PlayerSpawnCount = playerSpawnCount;
             msg.SyncMinionData = syncMinionData;
             msg.OtherPlayerId = otherPlayerId;
+            msg.OtherPlayerSpawnCount = otherPlayerSpawnCount;
             msg.OtherSyncMinionData = otherSyncMinionData;
             peer.SendPacket((int)GameProtocol.START_SYNC_GAME_REQ, msg.Serialize());
         }
