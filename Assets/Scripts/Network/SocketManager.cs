@@ -58,6 +58,7 @@ public class SocketManager
         _netService = new NetClientService(handler, new NetLogger(), 1, 4096, 5000, 1000, false);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;
+        _netService.ClientOnlineCallback += OnClientReconnected;
     }
 
 
@@ -96,6 +97,17 @@ public class SocketManager
         //
         if (_connectCallBack != null)
             _connectCallBack();
+    }
+
+
+    /// <summary>
+    /// 재연결 성공 콜백
+    /// </summary>
+    /// <param name="session"></param>
+    /// <param name="peer"></param>
+    void OnClientReconnected(ClientSession session, Peer peer)
+    {
+
     }
 
 
