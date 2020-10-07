@@ -975,11 +975,13 @@ namespace ED
             foreach (var minion in playerController.listMinion)
             {
                 minion.StopAllCoroutines();
+                minion.behaviourTreeOwner.behaviour.Pause();
                 minion.animator.SetTrigger("Idle");
             }
             foreach (var minion in playerController.targetPlayer.listMinion)
             {
                 minion.StopAllCoroutines();
+                minion.behaviourTreeOwner.behaviour.Pause();
                 minion.animator.SetTrigger("Idle");
             }
             
@@ -1334,7 +1336,7 @@ namespace ED
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
-                    
+
                     break;
                 }
                 case GameProtocol.END_SYNC_GAME_NOTIFY:
