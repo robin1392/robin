@@ -300,7 +300,7 @@ public class SocketSendEvent
             }
             case GameProtocol.START_SYNC_GAME_REQ:
             {
-                _sender.StartSyncGameReq(peer , (int)param[0] ,(MsgSyncMinionData[])param[1] , (int)param[2] ,  (MsgSyncMinionData[])param[3]);
+                _sender.StartSyncGameReq(peer , (int)param[0] , (int)param[1], (MsgSyncMinionData[])param[2] , (int)param[3] , (int)param[4], (MsgSyncMinionData[])param[5]);
                 break;
             }
             case GameProtocol.END_SYNC_GAME_REQ:
