@@ -21,12 +21,6 @@ using Random = UnityEngine.Random;
 using UnityEditor;
 #endif
 
-
-#region USING PHOTON
-//using Photon.Pun;
-//using Photon.Realtime;
-#endregion
-
 namespace ED
 {
     public class InGameManager : SingletonDestroy<InGameManager> //, IPunObservable

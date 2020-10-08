@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Photon.Pun;
 using UnityEngine;
 
 /// <summary>
@@ -119,7 +118,7 @@ public class SingletonDestroy<T> : MonoBehaviour where T : SingletonDestroy<T>
 
 
 
-public class SingletonPhoton<T> : MonoBehaviourPunCallbacks where T : SingletonPhoton<T>
+public class SingletonPhoton<T> : MonoBehaviour where T : SingletonPhoton<T>
 {
     private static T _instance = null;
     public int instanceID;

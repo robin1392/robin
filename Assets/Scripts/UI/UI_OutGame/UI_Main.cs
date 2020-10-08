@@ -4,7 +4,6 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Photon.Pun;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 

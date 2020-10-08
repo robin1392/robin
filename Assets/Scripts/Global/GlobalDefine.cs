@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+public enum PLAY_TYPE
+{
+    BATTLE,
+    CO_OP,
+}
 
 /// <summary>
 /// 포톤 통신 타입 정의

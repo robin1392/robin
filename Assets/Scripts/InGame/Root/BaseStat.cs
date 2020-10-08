@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
-using Photon.Realtime;
 
 namespace ED
 {
     [System.Serializable]
-    public class BaseStat : MonoBehaviourPun
+    public class BaseStat : MonoBehaviour
     {
         public bool isMine;
         public int diceId;

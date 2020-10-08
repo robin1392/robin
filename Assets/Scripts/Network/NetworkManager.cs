@@ -15,8 +15,6 @@ using RWGameProtocol.Serializer;
 using UnityEngine.Events;
 using RWCoreNetwork.NetPacket;
 
-
-
 public class NetworkManager : Singleton<NetworkManager>
 {
     #region net variable

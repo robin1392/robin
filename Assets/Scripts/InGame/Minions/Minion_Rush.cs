@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 
 namespace ED
 {
