@@ -783,7 +783,6 @@ namespace ED
                 GameStateManager.Get().MoveMainScene();
             }
             */
-
         }
 
         // 내자신이 나간다고 눌럿을때 응답 받은것

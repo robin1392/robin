@@ -44,7 +44,6 @@ public class GameStateStart : BaseSceneState
         
         //  state 에 들어오면 할일
         startState = Global.E_STARTSTEP.START_CONNECT;
-        StartStateAction();
     }
 
     public override void UpdateState(float deltaTime)
@@ -65,6 +64,7 @@ public class GameStateStart : BaseSceneState
         base.OnSceneLoadFinish(scene, mode);
         
         // 씬로딩이 끝나고 난후
+        StartStateAction();
     }
 
     #endregion
