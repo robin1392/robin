@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgInGameUpDiceReq : Serializer<MsgInGameUpDiceReq>
+    public class MsgInGameUpDiceReq
     {
         // 업그레이드 대상 주사위 아이디
         public int DiceId;
@@ -13,8 +11,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgInGameUpDiceAck : Serializer<MsgInGameUpDiceAck>
+    public class MsgInGameUpDiceAck
     {
         public short ErrorCode;
 
@@ -30,8 +27,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgInGameUpDiceNotify : Serializer<MsgInGameUpDiceNotify>
+    public class MsgInGameUpDiceNotify
     {
         // 플레이어 UID
         public int PlayerUId;

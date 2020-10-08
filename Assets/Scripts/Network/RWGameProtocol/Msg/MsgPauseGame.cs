@@ -1,26 +1,22 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgPauseGameReq : Serializer<MsgPauseGameReq>
+    public class MsgPauseGameReq
     {
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgPauseGameAck : Serializer<MsgPauseGameAck>
+    public class MsgPauseGameAck
     {
         public short ErrorCode;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgPauseGameNotify : Serializer<MsgPauseGameNotify>
+    public class MsgPauseGameNotify
     {
         public int PlayerUId;
     }

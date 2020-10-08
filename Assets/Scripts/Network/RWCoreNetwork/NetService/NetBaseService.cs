@@ -18,14 +18,14 @@ namespace RWCoreNetwork.NetService
         // 신규 소켓 연결 상태
         Connected,
 
-        // 연결 해제 상태(세션 제거)
-        Disconnected,
-
         // 온라인 상태(재접속)
         Online,
 
         // 오프라인 상태(소켓 닫힘)
         Offline,
+
+        // 연결 해제 상태(세션 제거)
+        Disconnected,
 
         // 종료
         End,
@@ -34,8 +34,8 @@ namespace RWCoreNetwork.NetService
 
     internal enum EInternalProtocol
     {
-        CHECK_SESSION_REQ = 1,
-        CHECK_SESSION_ACK,
+        AUTH_CLIENT_SESSION_REQ = 1,
+        AUTH_CLIENT_SESSION_ACK,
     }
 
 

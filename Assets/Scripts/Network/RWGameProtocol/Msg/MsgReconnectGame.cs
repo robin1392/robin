@@ -1,23 +1,25 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgReconnectGameReq : Serializer<MsgReconnectGameReq>
+    public class MsgReconnectGameReq
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 60)]
-        public string PlayerSessionId;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgReconnectGameAck : Serializer<MsgReconnectGameAck>
+    public class MsgReconnectGameAck
     {
         public short ErrorCode;
-        public int Wave;
-        public MsgPlayerInfo PlayerInfo;
+        public MsgPlayerBase PlayerBase;
+        public MsgPlayerBase OtherPlayerBase;
+    }
+
+
+    [Serializable]
+    public class MsgReconnectGameNotify
+    {
+        public int PlayerUId;
     }
 }

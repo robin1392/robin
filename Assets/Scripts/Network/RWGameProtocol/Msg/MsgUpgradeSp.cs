@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgUpgradeSpReq : Serializer<MsgUpgradeSpReq>
+    public class MsgUpgradeSpReq
     {
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgUpgradeSpAck : Serializer<MsgUpgradeSpAck>
+    public class MsgUpgradeSpAck
     {
         public short ErrorCode;
 
@@ -25,8 +22,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgUpgradeSpNotify : Serializer<MsgUpgradeSpNotify>
+    public class MsgUpgradeSpNotify
     {
         // 플레이어 UID
         public int PlayerUId;

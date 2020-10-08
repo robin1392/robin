@@ -6,6 +6,7 @@ using System.Text;
 using RWCoreNetwork;
 using RWGameProtocol;
 using RWGameProtocol.Msg;
+using RWGameProtocol.Serializer;
 
 
 
@@ -311,7 +312,7 @@ public class SocketSendEvent
             
             case GameProtocol.RECONNECT_GAME_REQ:
             {
-                _sender.ReconnectGameReq(peer , (string)param[0]);
+                _sender.ReconnectGameReq(peer);
                 break;
             }
             

@@ -11,14 +11,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
-using RWGameProtocol;
+using RWGameProtocol.Serializer;
 using UnityEngine.Events;
-
+using RWCoreNetwork.NetPacket;
 
 public class NetworkManager : Singleton<NetworkManager>
 {
     #region net variable
-    
+
     // web
     public WebNetworkCommon webNetCommon { get; private set; }
     public WebPacket webPacket { get; private set; }
@@ -27,7 +27,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private SocketManager _clientSocket = null;
     // sender 
     private PacketSender _packetSend;
-    
+
     /*public GamePacketSender SendSocket
     {
         get => _packetSend;
@@ -35,9 +35,9 @@ public class NetworkManager : Singleton<NetworkManager>
     }*/
 
     // 외부에서 얘를 건들일은 없도록하지
-    private PacketCSReceiver _packetRecv;
+    private PacketReceiver _packetRecv;
 
-    
+
     //
     // 패킷 리시브 함수들 모아놓는곳
     private SocketRecvEvent _socketRecv;
@@ -45,7 +45,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private SocketSendEvent _socketSend;
 
     #endregion
-    
+
     #region socket addr
 
     private string _serverAddr;
@@ -74,12 +74,12 @@ public class NetworkManager : Singleton<NetworkManager>
     private string _battlePath = "/BattleInfo.bytes";
 
     #endregion
-    
-    
+
+
     #region game process var
 
     private bool _recvJoinPlayerInfoCheck = false;
-    
+
     public PLAY_TYPE playType;
 
     private bool _isMaster;
@@ -99,27 +99,27 @@ public class NetworkManager : Singleton<NetworkManager>
         get => GetNetInfo().OtherUID();
     }
     #endregion
-    
-    
+
+
     #region net game pause , resume , reconnect
 
     // Pause
     private bool _isOtherPause;
     public bool IsOtherPause => _isOtherPause;
     public UnityEvent<bool> event_OtherPuase = new UnityEvent<bool>();
-    
-    
+
+
     // Resume
     private bool _isResume;
-    public bool isResume => _isResume; 
-    
+    public bool isResume => _isResume;
+
     #endregion
-    
+
     #region dev test var
-    
+
     [Header("Dev Test Variable")]
 
-    
+
 
     public bool UseLocalServer;
     public string LocalServerAddr;
@@ -136,7 +136,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private NetBattleInfo _battleInfo = null;
     #endregion
-    
+
     #region unity base
 
     public override void Awake()
@@ -165,13 +165,13 @@ public class NetworkManager : Singleton<NetworkManager>
     public override void OnDestroy()
     {
         DestroyNetwork();
-        
+
         base.OnDestroy();
     }
 
     #endregion
-    
-    
+
+
     #region net add
 
     private void InitNetwork()
@@ -179,29 +179,29 @@ public class NetworkManager : Singleton<NetworkManager>
         //
         _netInfo = new NetInfo();
         _recvJoinPlayerInfoCheck = false;
-        
+
         webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
         webPacket = this.gameObject.AddComponent<WebPacket>();
 
         _clientSocket = new SocketManager();
-        _packetSend = new PacketCSSender();
+        _packetSend = new StreamPacketSender();
 
         // 
         _socketRecv = new SocketRecvEvent();
         _socketSend = new SocketSendEvent(_packetSend);
-        
+
         // recv 셋팅
         CombineRecvDelegate();
     }
 
-    
+
     private void DestroyNetwork()
     {
         if (IsConnect())
         {
             DisconnectSocket();
         }
-        
+
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
 
@@ -210,25 +210,25 @@ public class NetworkManager : Singleton<NetworkManager>
 
         _socketRecv = null;
         _socketSend = null;
-        
+
         _clientSocket = null;
 
         _netInfo = null;
     }
     #endregion
-    
+
     #region update packet
-    
+
     private void UpdateSocket()
     {
-        if(_clientSocket != null)
+        if (_clientSocket != null)
             _clientSocket.Update();
 
     }
 
     #endregion
-     
-    
+
+
     #region connent
 
     public void SetAddr(string serveraddr, int port, string gamesession)
@@ -236,28 +236,28 @@ public class NetworkManager : Singleton<NetworkManager>
         _serverAddr = serveraddr;
         _port = port;
         _gameSession = gamesession;
-        
+
         _recvJoinPlayerInfoCheck = true;
         _netInfo.Clear();
     }
 
-    public void ConnectServer( PLAY_TYPE type , Action callback = null)
+    public void ConnectServer(PLAY_TYPE type, Action callback = null)
     {
         // 배틀정보..저장
         SaveBattleInfo();
-        
+
         // 시작하면서 상대 멈춤 초기화
         SetOtherPause(false);    // pause
         SetResume(false);        // resume
-        
+
         playType = type;
-        _clientSocket.Connect( _serverAddr , _port , _gameSession, callback);
+        _clientSocket.Connect(_serverAddr, _port, _gameSession, callback);
     }
 
-    
+
     public void DisconnectSocket()
     {
-        if(_clientSocket != null && _clientSocket.IsConnected() == true)
+        if (_clientSocket != null && _clientSocket.IsConnected() == true)
             _clientSocket.Disconnect();
     }
 
@@ -265,37 +265,37 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (_clientSocket == null)
             return false;
-        
+
         return _clientSocket.IsConnected();
     }
 
-    public void Send(GameProtocol protocol , params object[] param)
+    public void Send(GameProtocol protocol, params object[] param)
     {
-        if(protocol != GameProtocol.MINION_STATUS_RELAY)
-            UnityUtil.Print("SEND =>  " , protocol.ToString() , "magenta");
-        
-        _socketSend.SendPacket(protocol , _clientSocket.Peer , param);
+        if (protocol != GameProtocol.MINION_STATUS_RELAY)
+            UnityUtil.Print("SEND =>  ", protocol.ToString(), "magenta");
+
+        _socketSend.SendPacket(protocol, _clientSocket.Peer, param);
     }
 
     public void GameDisconnectSignal()
     {
         // disconnect 감지 했다는...
         //StopAllCoroutines();
-        
+
         GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
     }
     #endregion
 
-    
+
     #region get net info
 
     public NetInfo GetNetInfo()
     {
         return _netInfo;
     }
-    
+
     #endregion
-    
+
     #region pause resume reconnect
 
     public void SetOtherPause(bool pause)
@@ -309,26 +309,26 @@ public class NetworkManager : Singleton<NetworkManager>
         _isResume = resume;
     }
     #endregion
-    
-    
+
+
     #region socket delegate
 
     public void CombineRecvDelegate()
     {
         // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
-        _packetRecv = new PacketCSReceiver();
-        
+        _packetRecv = new StreamPacketReceiver();
+
         _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
         _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
         _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
         _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
-        
+
         _packetRecv.UpgradeSpAck = _socketRecv.OnUpgradeSpAck;
         _packetRecv.InGameUpDiceAck = _socketRecv.OnInGameUpDiceAck;
-        
+
         _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
-        
+
         // notify
         _packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
         _packetRecv.LeaveGameNotify = _socketRecv.OnLeaveGameNotify;
@@ -340,11 +340,11 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.LevelUpDiceNotify = _socketRecv.OnLevelUpDiceNotify;
         _packetRecv.UpgradeSpNotify = _socketRecv.OnUpgradeSpNotify;
         _packetRecv.InGameUpDiceNotify = _socketRecv.OnInGameUpDiceNotify;
-        
+
         _packetRecv.HitDamageNotify = _socketRecv.HitDamageNotify;
         _packetRecv.EndGameNotify = _socketRecv.OnEndGameNotify;
-        
-            
+
+
         // relay
         _packetRecv.RemoveMinionRelay = _socketRecv.OnRemoveMinionRelay;
         _packetRecv.HitDamageMinionRelay = _socketRecv.OnHitDamageMinionRelay;
@@ -358,7 +358,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.MineBombRelay = _socketRecv.OnMineBombRelay;
         _packetRecv.SetMagicTargetIdRelay = _socketRecv.OnSetMagicTargetIdRelay;
         _packetRecv.SetMagicTargetRelay = _socketRecv.OnSetMagicTargetRelay;
-        
+
         //
         _packetRecv.SturnMinionRelay = _socketRecv.OnSturnMinionRelay;
         _packetRecv.RocketBombRelay = _socketRecv.OnRocketBombRelay;
@@ -374,21 +374,21 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.SendMessageParam1Relay = _socketRecv.OnSendMessageParam1Relay;
         _packetRecv.NecromancerBulletRelay = _socketRecv.OnNecromancerBulletRelay;
         _packetRecv.SetMinionTargetRelay = _socketRecv.OnSetMinionTargetRelay;
-        
+
         _packetRecv.ScarecrowRelay = _socketRecv.OnScarecrowRelay;
         _packetRecv.LazerTargetRelay = _socketRecv.OnLazerTargetRelay;
-        
+
         _packetRecv.MinionStatusRelay = _socketRecv.OnMinionStatusRelay;
-        
-        
+
+
         _packetRecv.FireBulletRelay = _socketRecv.OnFireBulletRelay;
         _packetRecv.MinionInvincibilityRelay = _socketRecv.OnMinionInvincibilityRelay;
 
         //
         _packetRecv.DisconnectGameNotify = _socketRecv.OnDisconnectGameNotify;
         _packetRecv.ReconnectGameNotify = _socketRecv.OnReconnectGameNotify;
-        
-        
+
+
         // reconnect , pause , resume
         _packetRecv.ReconnectGameAck = _socketRecv.OnReconnectGameAck;
         _packetRecv.PauseGameAck = _socketRecv.OnPauseGameAck;
@@ -400,16 +400,16 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.StartSyncGameNotify = _socketRecv.OnStartSyncGameNotify;
         _packetRecv.EndSyncGameAck = _socketRecv.OnEndSyncGameAck;
         _packetRecv.EndSyncGameNotify = _socketRecv.OnEndSyncGameNotify;
-        
-        
-        
 
-        _clientSocket.Init(_packetRecv);
+
+
+
+        _clientSocket.Init((IPacketReceiver)_packetRecv);
     }
-    
+
     #endregion
-    
-    
+
+
     #region read write file
     public void BinarySerialize(NetBattleInfo data, string filePath)
     {
@@ -418,7 +418,7 @@ public class NetworkManager : Singleton<NetworkManager>
         formatter.Serialize(stream, data);
         stream.Close();
     }
-    
+
     public NetBattleInfo BinaryDeserialize(string filePath)
     {
         try
@@ -435,7 +435,7 @@ public class NetworkManager : Singleton<NetworkManager>
             // game frame -- init
             return null;
         }
-        
+
     }
 
     // 배틀 인포 파일이 잇는가??
@@ -454,8 +454,8 @@ public class NetworkManager : Singleton<NetworkManager>
     public void SaveBattleInfo()
     {
         string battlePath = Application.persistentDataPath + _battlePath;
-        
-        if(_battleInfo == null)
+
+        if (_battleInfo == null)
             _battleInfo = new NetBattleInfo();
 
         _battleInfo.serverAddr = _serverAddr;
@@ -475,18 +475,18 @@ public class NetworkManager : Singleton<NetworkManager>
 
         if (_battleInfo == null)
             return;
-        
+
         print(_battleInfo.battleStartTime);
-        
+
         _battleInfo.ResetInfo();
-        
+
         // 파일 삭제
         File.Delete(battlePath);
 
         _battleInfo = null;
         //BinarySerialize(_battleInfo, battlePath);
     }
-    
+
     #endregion
 }
 
@@ -508,7 +508,7 @@ public class NetBattleInfo
         serverPort = 0;
         serverSession = "";
         battleStart = false;
-        
+
         battleStartTime = DateTime.UtcNow;
     }
 }
@@ -523,16 +523,16 @@ public class NetBattleInfo
 /// </summary>
 public class NetInfo
 {
-    
+
     //
     public MsgPlayerInfo playerInfo;
     public MsgPlayerInfo otherInfo;
     public bool myInfoGet = false;
     public bool otherInfoGet = false;
-    
+
     public NetInfo()
     {
-        
+
     }
 
     public void Clear()
@@ -582,7 +582,7 @@ public class NetInfo
 
         return false;
     }
-    
+
 }
 #endregion
 
@@ -591,7 +591,7 @@ public class NetInfo
 
 public class ConvertNetMsg
 {
-    
+
     #region convert minion data
     public static MsgSyncMinionData[] ConvertNetSyncToMsg(NetSyncData syncData)
     {
@@ -607,7 +607,7 @@ public class ConvertNetMsg
         public int minionDuration;
         public int minionCooltime;
         public MsgVector3 minionPos;*/
-        
+
         //syncData.netSyncMinionData.Count
         MsgSyncMinionData[] convData = new MsgSyncMinionData[100];
         // 설마 100개를 넘진...
@@ -624,7 +624,7 @@ public class ConvertNetMsg
                 MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
             convData[i].minionDuration = MsgFloatToInt(syncData.netSyncMinionData[i].minionDuration);
             convData[i].minionCooltime = MsgFloatToInt(syncData.netSyncMinionData[i].minionCooltime);
-            
+
             convData[i].minionPos = VectorToMsg(syncData.netSyncMinionData[i].minionPos);
         }
 
@@ -640,7 +640,7 @@ public class ConvertNetMsg
             if (minionData[i].minionHp <= 0) continue;
 
             NetSyncMinionData miniondata = new NetSyncMinionData();
-            
+
             miniondata.minionId = minionData[i].minionId;
             miniondata.minionDataId = minionData[i].minionDataId;
             miniondata.minionHp = MsgIntToFloat(minionData[i].minionHp);
@@ -653,14 +653,14 @@ public class ConvertNetMsg
             miniondata.minionCooltime = MsgIntToFloat(minionData[i].minionCooltime);
 
             miniondata.minionPos = MsgToVector(minionData[i].minionPos);
-            
+
             syncData.Add(miniondata);
         }
-        
+
         return syncData;
     }
     #endregion
-    
+
     #region server msg convert
 
     public static int MsgFloatToInt(float value)
@@ -675,11 +675,11 @@ public class ConvertNetMsg
         float convValue = (float)netValue / Global.g_networkBaseValue;
         return convValue;
     }
-    
+
     public static MsgVector3 VectorToMsg(Vector3 val)
     {
         MsgVector3 chVec = new MsgVector3();
-                
+
         chVec.X = MsgFloatToInt(val.x);
         chVec.Y = MsgFloatToInt(val.y);
         chVec.Z = MsgFloatToInt(val.z);
@@ -690,12 +690,12 @@ public class ConvertNetMsg
     public static MsgQuaternion QuaternionToMsg(Quaternion quat)
     {
         MsgQuaternion chMsgQuat = new MsgQuaternion();
-        
+
         chMsgQuat.X = MsgFloatToInt(quat.x);
         chMsgQuat.Y = MsgFloatToInt(quat.y);
         chMsgQuat.Z = MsgFloatToInt(quat.z);
         chMsgQuat.W = MsgFloatToInt(quat.w);
-        
+
         return chMsgQuat;
     }
 
@@ -704,19 +704,19 @@ public class ConvertNetMsg
         Vector3 vecVal = new Vector3();
 
         vecVal.x = MsgIntToFloat(msgVec.X);
-        vecVal.y = MsgIntToFloat( msgVec.Y);
-        vecVal.z = MsgIntToFloat( msgVec.Z);
+        vecVal.y = MsgIntToFloat(msgVec.Y);
+        vecVal.z = MsgIntToFloat(msgVec.Z);
 
         return vecVal;
     }
-    
+
     public static Vector3 MsgToVector(int[] msgVec)
     {
         Vector3 vecVal = new Vector3();
 
-        vecVal.x = MsgIntToFloat(msgVec[0] );
-        vecVal.y = MsgIntToFloat(msgVec[1] );
-        vecVal.z = MsgIntToFloat(msgVec[2] );
+        vecVal.x = MsgIntToFloat(msgVec[0]);
+        vecVal.y = MsgIntToFloat(msgVec[1]);
+        vecVal.z = MsgIntToFloat(msgVec[2]);
 
         return vecVal;
     }
@@ -724,11 +724,11 @@ public class ConvertNetMsg
     public static Quaternion MsgToQuaternion(MsgQuaternion quat)
     {
         Quaternion quatVal = new Quaternion();
-        
-        quatVal.x = MsgIntToFloat( quat.X );
-        quatVal.y = MsgIntToFloat(quat.Y );
-        quatVal.z = MsgIntToFloat( quat.Z );
-        quatVal.w = MsgIntToFloat( quat.W);
+
+        quatVal.x = MsgIntToFloat(quat.X);
+        quatVal.y = MsgIntToFloat(quat.Y);
+        quatVal.z = MsgIntToFloat(quat.Z);
+        quatVal.w = MsgIntToFloat(quat.W);
 
         return quatVal;
     }

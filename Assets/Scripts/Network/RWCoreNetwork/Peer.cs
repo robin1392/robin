@@ -29,7 +29,10 @@ namespace RWCoreNetwork
 
         public void SendPacket(int protocolId, byte[] msg)
         {
-            _clientSession.Send(protocolId, msg, msg.Length);
+            if (_clientSession.NetState < NetService.ENetState.Offline)
+            {
+                _clientSession.Send(protocolId, msg, msg.Length);
+            }
         }
 
         public void Disconnect()

@@ -90,7 +90,7 @@ namespace RWCoreNetwork.NetService
                 using (var ms = new MemoryStream())
                 {
                     bf.Serialize(ms, ClientSession.ClientSessionId);
-                    ClientSession.Send((int)EInternalProtocol.CHECK_SESSION_REQ, 
+                    ClientSession.Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ, 
                         ms.ToArray(), 
                         ms.ToArray().Length);
                 }
@@ -112,7 +112,7 @@ namespace RWCoreNetwork.NetService
             {
                 return;
             }
-
+            
             ClientSession.Disconnect();
         }
 
@@ -209,7 +209,7 @@ namespace RWCoreNetwork.NetService
             Array.Copy(msg, Defines.HEADER_SIZE, buffer, 0, length);
 
 
-            if (protocolId == (int)EInternalProtocol.CHECK_SESSION_ACK)
+            if (protocolId == (int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK)
             {
                 var bf = new BinaryFormatter();
                 using (var ms = new MemoryStream(buffer))

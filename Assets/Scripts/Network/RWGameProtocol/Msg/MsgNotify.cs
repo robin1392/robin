@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgDeactiveWaitingObjectNotify : Serializer<MsgDeactiveWaitingObjectNotify>
+    public class MsgDeactiveWaitingObjectNotify
     {
         public int PlayerUId;
         public int CurrentSp;
@@ -13,8 +11,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgAddSpNotify : Serializer<MsgAddSpNotify>
+    public class MsgAddSpNotify
     {
         public int PlayerUId;
         public int CurrentSp;
@@ -22,32 +19,21 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSpawnNotify : Serializer<MsgSpawnNotify>
+    public class MsgSpawnNotify
     {
         public int Wave;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgEndGameNotify : Serializer<MsgEndGameNotify>
+    public class MsgEndGameNotify
     {
         public int WinPlayerUId;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgDisconnectGameNotify : Serializer<MsgDisconnectGameNotify>
-    {
-        public int PlayerUId;
-    }
-
-
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgReconnectGameNotify : Serializer<MsgReconnectGameNotify>
+    public class MsgDisconnectGameNotify 
     {
         public int PlayerUId;
     }

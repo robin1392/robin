@@ -1,3 +1,4 @@
+using RWCoreLib.Log;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -14,8 +15,8 @@ namespace RWCoreNetwork.NetPacket
 		AutoResetEvent _loopEvent;
 
 
-        public PacketHandlerThread(IPacketReceiver packetReceiver, int packetProcessCount, int bufferSize)
-            : base(packetReceiver, packetProcessCount, bufferSize)
+        public PacketHandlerThread(IPacketReceiver packetReceiver, ILog logger, int packetProcessCount, int bufferSize)
+            : base(packetReceiver, logger, packetProcessCount, bufferSize)
         {
             _loopEvent = new AutoResetEvent(false);
             _thread = new Thread(new ThreadStart(ProcessReceive));

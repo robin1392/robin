@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RWCoreLib.Log;
 
 namespace RWCoreNetwork.NetPacket
 {
@@ -16,6 +17,9 @@ namespace RWCoreNetwork.NetPacket
 
         protected IPacketReceiver PacketReceiver { get; private set; }
 
+        protected ILog _logger { get; private set; }
+
+
         protected bool _isActivated { get; set; }
 
         // 수신 큐
@@ -27,9 +31,11 @@ namespace RWCoreNetwork.NetPacket
 
 
 
-        public PacketHandler(IPacketReceiver packetReceiver, int packetProcessCount, int bufferSize)
+        public PacketHandler(IPacketReceiver packetReceiver, ILog logger, int packetProcessCount, int bufferSize)
         {
             PacketReceiver = packetReceiver;
+            _logger = logger;
+
             _packetProcessCount = packetProcessCount;
             _bufferSize = bufferSize;
 
@@ -121,7 +127,10 @@ namespace RWCoreNetwork.NetPacket
                 }
 
 
-                PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Msg);
+               if (PacketReceiver.Process(packet.Peer, packet.ProtocolId, packet.Msg) == false)
+                {
+                    throw new Exception(string.Format("failed to process receive packet. protocol {0}", packet.ProtocolId));
+                }
             }
         }
     }

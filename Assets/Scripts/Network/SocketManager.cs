@@ -54,8 +54,9 @@ public class SocketManager
 
     public void Init(IPacketReceiver recvProcessor)
     {
-        PacketHandler handler = new PacketHandler(recvProcessor, 30, 20480);
-        _netService = new NetClientService(handler, new NetLogger(), 1, 20480, 5000, 1000, false);
+        NetLogger netLogger = new NetLogger();
+        PacketHandler handler = new PacketHandler(recvProcessor, netLogger, 30, 20480);
+        _netService = new NetClientService(handler, netLogger, 1, 20480, 5000, 1000, false);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;
         _netService.ClientOnlineCallback += OnClientReconnected;

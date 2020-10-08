@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgLevelUpDiceReq : Serializer<MsgLevelUpDiceReq>
+    public class MsgLevelUpDiceReq
     {
         public short ResetFieldNum;
         public short LeveupFieldNum;
@@ -13,8 +11,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgLevelUpDiceAck : Serializer<MsgLevelUpDiceAck>
+    public class MsgLevelUpDiceAck
     {
         public short ErrorCode;
         public short ResetFieldNum;
@@ -25,8 +22,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgLevelUpDiceNotify : Serializer<MsgLevelUpDiceNotify>
+    public class MsgLevelUpDiceNotify
     {
         public int PlayerUId;
         public short ResetFieldNum;

@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgGetDiceReq : Serializer<MsgGetDiceReq>
+    public class MsgGetDiceReq
     {
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgGetDiceAck : Serializer<MsgGetDiceAck>
+    public class MsgGetDiceAck
     {
         public short ErrorCode;
 
@@ -31,8 +28,7 @@ namespace RWGameProtocol.Msg
     }
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgGetDiceNotify : Serializer<MsgGetDiceNotify>
+    public class MsgGetDiceNotify
     {
         // 플레이어 UId
         public int PlayerUId;

@@ -4,7 +4,7 @@ using RWCoreNetwork;
 using RWGameProtocol.Msg;
 
 
-namespace RWGameProtocol
+namespace RWGameProtocol.Serializer
 {
     public class PacketSender
     {
@@ -25,8 +25,8 @@ namespace RWGameProtocol
         public virtual void UpgradeSpNotify(Peer peer, int playerUId, short upgrade) { }
         public virtual void HitDamageReq(Peer peer, int playerUId, int damage) { }
         public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage) { }
-        public virtual void ReconnectGameReq(Peer peer, string playerSessionId) { }
-        public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int wave) { }
+        public virtual void ReconnectGameReq(Peer peer) { }
+        public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerBase playerBase, MsgPlayerBase otherPlayerBase) { }
         public virtual void PauseGameReq(Peer peer) { }
         public virtual void PauseGameAck(Peer peer, GameErrorCode code) { }
         public virtual void PauseGameNotify(Peer peer, int playerUId) { }

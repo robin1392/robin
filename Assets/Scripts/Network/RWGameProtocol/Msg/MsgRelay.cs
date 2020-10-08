@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Unicode)]
     public struct MsgVector3
     {
         public int X;
@@ -13,7 +11,6 @@ namespace RWGameProtocol.Msg
     }
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Unicode)]
     public struct MsgQuaternion
     {
         public int X;
@@ -25,8 +22,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgRemoveMinionRelay : Serializer<MsgRemoveMinionRelay>
+    public class MsgRemoveMinionRelay
     {
         public int PlayerUId;
         public int Id;
@@ -34,8 +30,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgHitDamageMinionRelay : Serializer<MsgHitDamageMinionRelay>
+    public class MsgHitDamageMinionRelay
     {
         public int PlayerUId;
         public int Id;
@@ -45,8 +40,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgDestroyMinionRelay : Serializer<MsgDestroyMinionRelay>
+    public class MsgDestroyMinionRelay
     {
         public int PlayerUId;
         public int Id;
@@ -54,8 +48,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgHealMinionRelay : Serializer<MsgHealMinionRelay>
+    public class MsgHealMinionRelay
     {
         public int PlayerUId;
         public int Id;
@@ -64,22 +57,17 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgPushMinionRelay : Serializer<MsgPushMinionRelay>
+    public class MsgPushMinionRelay
     {
         public int PlayerUId;
         public int Id;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public int[] Dir = new int[3];
-
         public int PushPower;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSetMinionAnimationTriggerRelay : Serializer<MsgSetMinionAnimationTriggerRelay>
+    public class MsgSetMinionAnimationTriggerRelay
     {
         public int PlayerUId;
         public int Id;
@@ -89,8 +77,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgRemoveMagicRelay : Serializer<MsgRemoveMagicRelay>
+    public class MsgRemoveMagicRelay
     {
         public int PlayerUId;
         public int Id;
@@ -98,23 +85,19 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgFireArrowRelay : Serializer<MsgFireArrowRelay>
+    
+    public class MsgFireArrowRelay
     {
         public int PlayerUId;
         public int Id;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public int[] Dir = new int[3];
-
         public int Damage;
         public int MoveSpeed;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgFireballBombRelay : Serializer<MsgFireballBombRelay>
+    public class MsgFireballBombRelay
     {
         public int PlayerUId;
         public int Id;
@@ -122,8 +105,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgMineBombRelay : Serializer<MsgMineBombRelay>
+    public class MsgMineBombRelay
     {
         public int PlayerUId;
         public int Id;
@@ -131,8 +113,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSetMagicTargetIdRelay : Serializer<MsgSetMagicTargetIdRelay>
+    public class MsgSetMagicTargetIdRelay
     {
         public int PlayerUId;
         public int Id;
@@ -141,8 +122,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSetMagicTargetRelay : Serializer<MsgSetMagicTargetRelay>
+    public class MsgSetMagicTargetRelay
     {
         public int PlayerUId;
         public int Id;
@@ -152,8 +132,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSturnMinionRelay : Serializer<MsgSturnMinionRelay>
+    public class MsgSturnMinionRelay
     {
         public int PlayerUId;
         public int Id;
@@ -162,8 +141,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgRocketBombRelay : Serializer<MsgRocketBombRelay>
+    public class MsgRocketBombRelay
     {
         public int PlayerUId;
         public int Id;
@@ -171,8 +149,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgIceBombRelay : Serializer<MsgIceBombRelay>
+    public class MsgIceBombRelay
     {
         public int PlayerUId;
         public int Id;
@@ -180,8 +157,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgDestroyMagicRelay : Serializer<MsgDestroyMagicRelay>
+    public class MsgDestroyMagicRelay
     {
         public int PlayerUId;
         public int BaseStatId;
@@ -189,8 +165,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgFireCannonBallRelay : Serializer<MsgFireCannonBallRelay>
+    public class MsgFireCannonBallRelay
     {
         public int PlayerUId;
         public MsgVector3 ShootPos;
@@ -202,8 +177,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgFireSpearRelay : Serializer<MsgFireSpearRelay>
+    public class MsgFireSpearRelay
     {
         public int PlayerUId;
         public MsgVector3 ShootPos;
@@ -214,8 +188,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgFireManFireRelay : Serializer<MsgFireManFireRelay>
+    public class MsgFireManFireRelay
     {
         public int PlayerUId;
         public int Id;
@@ -223,8 +196,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgActivatePoolObjectRelay : Serializer<MsgActivatePoolObjectRelay>
+    public class MsgActivatePoolObjectRelay
     {
         public int PlayerUId;
         public int PoolName;
@@ -235,8 +207,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgMinionCloackingRelay : Serializer<MsgMinionCloackingRelay>
+    public class MsgMinionCloackingRelay
     {
         public int PlayerUId;
         public int Id;
@@ -245,8 +216,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgMinionFogOfWarRelay : Serializer<MsgMinionFogOfWarRelay>
+    public class MsgMinionFogOfWarRelay
     {
         public int PlayerUId;
         public int BaseStatId;
@@ -256,8 +226,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSendMessageVoidRelay : Serializer<MsgSendMessageVoidRelay>
+    public class MsgSendMessageVoidRelay
     {
         public int PlayerUId;
         public int Id;
@@ -266,8 +235,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSendMessageParam1Relay : Serializer<MsgSendMessageParam1Relay>
+    public class MsgSendMessageParam1Relay
     {
         public int PlayerUId;
         public int Id;
@@ -277,8 +245,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgNecromancerBulletRelay : Serializer<MsgNecromancerBulletRelay>
+    public class MsgNecromancerBulletRelay
     {
         public int PlayerUId;
         public MsgVector3 ShootPos;
@@ -289,8 +256,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgSetMinionTargetRelay : Serializer<MsgSetMinionTargetRelay>
+    public class MsgSetMinionTargetRelay
     {
         public int PlayerUId;
         public int Id;
@@ -299,8 +265,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgScarecrowRelay : Serializer<MsgScarecrowRelay>
+    public class MsgScarecrowRelay
     {
         public int PlayerUId;
         public int BaseStatId;
@@ -309,41 +274,29 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgLazerTargetRelay : Serializer<MsgLazerTargetRelay>
+    public class MsgLazerTargetRelay
     {
         public int PlayerUId;
         public int Id;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
-        public int[] TargetIdArray = new int[30];
+        public int[] TargetIdArray;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgMinionStatusRelay : Serializer<MsgMinionStatusRelay>
+    public class MsgMinionStatusRelay
     {
         public int PlayerUId;
-
-        // Pos배열 분할 인덱스
         public byte PosIndex;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
-        public MsgVector3[] Pos = new MsgVector3[100];
+        public MsgVector3[] Pos;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgFireBulletRelay : Serializer<MsgFireBulletRelay>
+    public class MsgFireBulletRelay
     {
         public int PlayerUId;
         public int Id;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public int[] Dir = new int[3];
-
         public int Damage;
         public int MoveSpeed;
         public int Type;
@@ -351,8 +304,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgMinionInvincibilityRelay : Serializer<MsgMinionInvincibilityRelay>
+    public class MsgMinionInvincibilityRelay
     {
         public int PlayerUId;
         public int Id;

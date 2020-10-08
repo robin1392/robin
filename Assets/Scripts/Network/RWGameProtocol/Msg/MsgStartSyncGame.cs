@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace RWGameProtocol.Msg
 {
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct MsgSyncMinionData
     {
         public int minionId;
@@ -21,7 +19,6 @@ namespace RWGameProtocol.Msg
     }
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct MsgGameDice
     {
         public int DiceId;
@@ -31,7 +28,6 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct MsgInGameUp
     {
         public int DiceId;
@@ -40,62 +36,40 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgStartSyncGameReq : Serializer<MsgStartSyncGameReq>
+    public class MsgStartSyncGameReq
     {
         public int PlayerId;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
-        public MsgSyncMinionData[] SyncMinionData = new MsgSyncMinionData[100];
-
+        public int PlayerSpawnCount;
+        public MsgSyncMinionData[] SyncMinionData;
         
         public int OtherPlayerId;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
-        public MsgSyncMinionData[] OtherSyncMinionData = new MsgSyncMinionData[100];
-
-        public int PlayerSpawnCount;
         public int OtherPlayerSpawnCount;
+        public MsgSyncMinionData[] OtherSyncMinionData;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgStartSyncGameAck : Serializer<MsgStartSyncGameAck>
+    public class MsgStartSyncGameAck
     {
         public short ErrorCode;
     }
 
 
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MsgStartSyncGameNotify : Serializer<MsgStartSyncGameNotify>
+    public class MsgStartSyncGameNotify
     {
         // 플레이어 정보.
         public MsgPlayerInfo PlayerInfo;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 15)]
-        public MsgGameDice[] GameDiceData = new MsgGameDice[15];
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
-        public MsgInGameUp[] InGameUp = new MsgInGameUp[5];
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
-        public MsgSyncMinionData[] SyncMinionData = new MsgSyncMinionData[100];
-
+        public MsgGameDice[] GameDiceData;
+        public MsgInGameUp[] InGameUp;
+        public MsgSyncMinionData[] SyncMinionData;
+        public int PlayerSpawnCount;
 
         // 상대방 정보
         public MsgPlayerInfo OtherPlayerInfo;
-        
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 15)]
-        public MsgGameDice[] OtherGameDiceData = new MsgGameDice[15];
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
-        public MsgInGameUp[] OtherInGameUp = new MsgInGameUp[5];
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
-        public MsgSyncMinionData[] OtherSyncMinionData = new MsgSyncMinionData[100];
-
-        public int PlayerSpawnCount;
+        public MsgGameDice[] OtherGameDiceData;
+        public MsgInGameUp[] OtherInGameUp;
+        public MsgSyncMinionData[] OtherSyncMinionData;
         public int OtherPlayerSpawnCount;
-
     }
 }

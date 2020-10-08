@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RWCoreNetwork;
 using RWGameProtocol.Msg;
 
-namespace RWGameProtocol
+namespace RWGameProtocol.Serializer
 {
     public class PacketReceiver
     {
@@ -56,15 +56,16 @@ namespace RWGameProtocol
 
         public delegate void HitDamageReqDelegate(Peer peer, MsgHitDamageReq msg);
         public HitDamageReqDelegate HitDamageReq;
-
         public delegate void HitDamageAckDelegate(Peer peer, MsgHitDamageAck msg);
         public HitDamageAckDelegate HitDamageAck;
 
         public delegate void ReconnectGameReqDelegate(Peer peer, MsgReconnectGameReq msg);
         public ReconnectGameReqDelegate ReconnectGameReq;
-
         public delegate void ReconnectGameAckDelegate(Peer peer, MsgReconnectGameAck msg);
         public ReconnectGameAckDelegate ReconnectGameAck;
+        public delegate void ReconnectGameNotifyDelegate(Peer peer, MsgReconnectGameNotify msg);
+        public ReconnectGameNotifyDelegate ReconnectGameNotify;
+
 
         public delegate void PauseGameReqDelegate(Peer peer, MsgPauseGameReq msg);
         public PauseGameReqDelegate PauseGameReq;
@@ -133,9 +134,6 @@ namespace RWGameProtocol
 
         public delegate void DisconnectGameNotifyDelegate(Peer peer, MsgDisconnectGameNotify msg);
         public DisconnectGameNotifyDelegate DisconnectGameNotify;
-
-        public delegate void ReconnectGameNotifyDelegate(Peer peer, MsgReconnectGameNotify msg);
-        public ReconnectGameNotifyDelegate ReconnectGameNotify;
 
         #endregion
 
