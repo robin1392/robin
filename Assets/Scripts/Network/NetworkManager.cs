@@ -15,6 +15,8 @@ using RWGameProtocol.Serializer;
 using UnityEngine.Events;
 using RWCoreNetwork.NetPacket;
 
+
+
 public class NetworkManager : Singleton<NetworkManager>
 {
     #region net variable
@@ -118,14 +120,10 @@ public class NetworkManager : Singleton<NetworkManager>
     #region dev test var
 
     [Header("Dev Test Variable")]
-
-
-
     public bool UseLocalServer;
     public string LocalServerAddr;
     public int LocalServerPort;
     public string UserId;
-
     #endregion
 
 
@@ -223,7 +221,6 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (_clientSocket != null)
             _clientSocket.Update();
-
     }
 
     #endregion
@@ -595,21 +592,8 @@ public class ConvertNetMsg
     #region convert minion data
     public static MsgSyncMinionData[] ConvertNetSyncToMsg(NetSyncData syncData)
     {
-        //MsgSyncMinionData[] convData
-        /*public int minionId;
-        public int minionDataId;
-        public int minionHp;
-        public int minionMaxHp;
-        public int minionPower;
-        public int minionEffect;
-        public int minionEffectUpgrade;
-        public int minionEffectIngameUpgrade;
-        public int minionDuration;
-        public int minionCooltime;
-        public MsgVector3 minionPos;*/
-
         //syncData.netSyncMinionData.Count
-        MsgSyncMinionData[] convData = new MsgSyncMinionData[100];
+        MsgSyncMinionData[] convData = new MsgSyncMinionData[syncData.netSyncMinionData.Count];
         // 설마 100개를 넘진...
         for (int i = 0; i < syncData.netSyncMinionData.Count; i++)
         {

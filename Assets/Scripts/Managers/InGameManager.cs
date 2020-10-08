@@ -759,6 +759,12 @@ namespace ED
         {
             if (IsNetwork == true)
             {
+                // 자신이 포기한경우 게임중을 꺼주자
+                if (isGamePlaying)
+                {
+                    isGamePlaying = false;
+                }
+                
                 SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             }
             else
@@ -919,6 +925,7 @@ namespace ED
         
         
         #region pause , resume , sync 
+        
         private void RevmoeAllMinionAndMagic()
         {
             playerController.RemoveAllMinionAndMagic();
@@ -928,6 +935,7 @@ namespace ED
 
         public void OnApplicationPause(bool pauseStatus)
         {
+            /*
             if (pauseStatus)
             {
                 print("Application Pause");
@@ -942,9 +950,32 @@ namespace ED
                 //StartCoroutine(ResumeDelay());
                 ResumeDelay();
             }
+            */
         }
 
-        //IEnumerator ResumeDelay()
+#if UNITY_EDITOR
+        // 에디터에서 테스트용도로 사용하기 위해
+        public void OnEditorAppPause(PauseState pause)
+        {
+            /*
+            if (pause == PauseState.Paused)
+            {
+                print("Application Pause");
+                // 일시정지
+                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+            }
+            else
+            {
+                print("Application Resume");
+                if (isGamePlaying == false)
+                    return;
+                
+                //StartCoroutine(ResumeDelay());
+                ResumeDelay();
+            }
+            */
+        }
+#endif
         void ResumeDelay()
         {
             // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
@@ -1055,17 +1086,6 @@ namespace ED
 
         public void SyncGameData(MsgStartSyncGameNotify gameData)
         {
-            //gameData.PlayerInfo
-            //gameData.OtherPlayerInfo
-            
-            //gameData.GameDiceData
-            //gameData.InGameUp
-            //gameData.SyncMinionData
-            
-            //gameData.OtherGameDiceData
-            //gameData.OtherInGameUp
-            //gameData.OtherSyncMinionData
-            
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
@@ -1105,28 +1125,6 @@ namespace ED
             SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);
         }
         
-
-#if UNITY_EDITOR
-        // 에디터에서 테스트용도로 사용하기 위해
-        public void OnEditorAppPause(PauseState pause)
-        {
-            if (pause == PauseState.Paused)
-            {
-                print("Application Pause");
-                // 일시정지
-                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
-            }
-            else
-            {
-                print("Application Resume");
-                if (isGamePlaying == false)
-                    return;
-                
-                //StartCoroutine(ResumeDelay());
-                ResumeDelay();
-            }
-        }
-#endif
 
         #endregion
         
