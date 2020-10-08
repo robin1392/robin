@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 4658676096167050152}
@@ -90,6 +91,7 @@ MonoBehaviour:
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
+  isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: -7956154699669209687}
@@ -417,6 +419,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5081294253336761971}
     m_Modifications:
+    - target: {fileID: 6326624217840255359, guid: dc4ce9f05a62c4db293ec593f93011c3,
+        type: 3}
+      propertyPath: _minion
+      value: 
+      objectReference: {fileID: 7151462512115405395}
     - target: {fileID: 7938598275987206460, guid: dc4ce9f05a62c4db293ec593f93011c3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 4658676096167050152}
@@ -90,6 +91,7 @@ MonoBehaviour:
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
+  isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: -7956154699669209687}
@@ -424,6 +426,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4936972389321514915, guid: d819789c2930c40c6bafdd474c41c730,
+        type: 3}
+      propertyPath: _minion
+      value: 
+      objectReference: {fileID: 8315656876777631932}
     - target: {fileID: 5859615549728078405, guid: d819789c2930c40c6bafdd474c41c730,
         type: 3}
       propertyPath: m_Name
