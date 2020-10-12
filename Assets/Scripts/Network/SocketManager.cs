@@ -67,7 +67,7 @@ public class SocketManager
 
     public void Connect(string host, int port , string clientSessionId, Action connectCallback = null)
     {
-        _netService.ClientSession.ClientSessionId = clientSessionId;
+        _netService.ClientSession.SessionId = clientSessionId;
         _netService.Connect(host, port);
         _connectCallBack = connectCallback;
     }
@@ -99,7 +99,7 @@ public class SocketManager
     /// 서버 연결 성공 콜백
     /// </summary>
     /// <param name="session">세션</param>
-    void OnClientConnected(ClientSession session)
+    void OnClientConnected(ClientSession session, ESessionState sessionState)
     {
         _serverPeer = new Peer();
         _serverPeer.SetClientSession(session);
@@ -130,7 +130,7 @@ public class SocketManager
     }
 
 
-    void OnClientDisconnected(ClientSession session)
+    void OnClientDisconnected(ClientSession session, ESessionState sessionState)
     {
         UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
         

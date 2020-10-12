@@ -5,12 +5,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
 namespace ED
 {
-    public class Coop_AI : BaseStat, IPunObservable
+    public class Coop_AI : BaseStat
     {
         protected override void Start()
         {
@@ -88,11 +86,6 @@ namespace ED
             //        }
             //    }
             //}
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            
         }
     }
 }

@@ -12,6 +12,15 @@ using RWCoreNetwork.NetService;
 
 namespace RWCoreNetwork
 {
+    public enum ESessionState : short
+    {
+        None = 0,
+        // 서버에 의한 블럭
+        Blocked,
+        // 만료된 세션
+        Expired
+    }
+
     public delegate void CompletedMessageDelegate(ClientSession userToken, byte[] msg);
 
 
@@ -20,13 +29,11 @@ namespace RWCoreNetwork
         public CompletedMessageDelegate CompletedMessageCallback;
 
 
-        public int Id { get; set; }
-
-        public string ClientSessionId { get; set; }
+        public string SessionId { get; set; }
 
         public ENetState NetState { get; set; }
 
-        public SocketError Error { get; set; }
+        public ESessionState SessionState { get; set; }
 
         public Socket Socket { get; set; }
         
@@ -54,15 +61,15 @@ namespace RWCoreNetwork
 
 
 
-        public ClientSession(ILog logger, int bufferSize, int id)
+        public ClientSession(ILog logger, int bufferSize)
         {
             _logger = logger;
-            Id = id;
             _peer = null;
             _messageHandler = new MessageHandler(bufferSize);
             _sendingQueue = new Queue<byte[]>();
             _lockSendingQueue = new object();
-            ClientSessionId = string.Empty;
+            SessionId = string.Empty;
+            SessionState = ESessionState.None;
         }
 
 
@@ -82,6 +89,7 @@ namespace RWCoreNetwork
         {
             ReceiveEventArgs = receiveArgs;
             SendEventArgs = sendArgs;
+
 
             lock (_lockSendingQueue)
             {

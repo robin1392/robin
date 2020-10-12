@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
-using Photon.Pun;
-using Photon.Realtime;
 using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace ED
@@ -19,29 +17,29 @@ namespace ED
             arrUpgradeLevel = new int[6];
             event_SP_Edit = new UnityEvent<int>();
 
-            if (PhotonNetwork.IsConnected)
+            if (NetworkManager.Get().IsConnect())
             {
-                if (PlayerController.Get() == null)
-                {
-                    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.identifier);
-
-                    Vector3 startPos = FieldManager.Get().GetPlayerPos(PhotonNetwork.IsMasterClient);
-                    GameObject obj = PhotonNetwork.Instantiate("Tower/"+pref_Player.name, startPos, Quaternion.identity, 0);
-                    obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
-                    playerController = obj.GetComponent<PlayerController>();
-                    
-                    //playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_CHANGELAYER , true);
-
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        obj = PhotonNetwork.Instantiate(pref_Enemy_AI.name, FieldManager.Get().GetPlayerPos(false), Quaternion.identity, 0);
-                        obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);;
-                    }
-                }
-                else
-                {
-                    Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
-                }
+                // if (PlayerController.Get() == null)
+                // {
+                //     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.identifier);
+                //
+                //     Vector3 startPos = FieldManager.Get().GetPlayerPos(PhotonNetwork.IsMasterClient);
+                //     GameObject obj = PhotonNetwork.Instantiate("Tower/"+pref_Player.name, startPos, Quaternion.identity, 0);
+                //     obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
+                //     playerController = obj.GetComponent<PlayerController>();
+                //     
+                //     //playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_CHANGELAYER , true);
+                //
+                //     if (PhotonNetwork.IsMasterClient)
+                //     {
+                //         obj = PhotonNetwork.Instantiate(pref_Enemy_AI.name, FieldManager.Get().GetPlayerPos(false), Quaternion.identity, 0);
+                //         obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);;
+                //     }
+                // }
+                // else
+                // {
+                //     Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+                // }
             }
             else
             {

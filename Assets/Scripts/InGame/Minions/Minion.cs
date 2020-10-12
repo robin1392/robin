@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using NodeCanvas.BehaviourTrees;
 using UnityEngine;
 using UnityEngine.AI;
-using Photon.Pun;
 using RWGameProtocol;
 using Random = UnityEngine.Random;
 

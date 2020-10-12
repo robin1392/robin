@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 using UnityEngine.Events;
 
 namespace ED
@@ -164,14 +163,14 @@ namespace ED
             poolDeactive.Deactive();
         }
 
-        public void SetNetworkValue(Vector3 position, Vector3 velocity, double sentServerTime)
-        {
-            networkPosition = position;
-            if (rb != null) rb.velocity = velocity;
-
-            var lag = Mathf.Abs((float)(PhotonNetwork.Time - sentServerTime));
-            networkPosition += rb.velocity * lag;
-        }
+        // public void SetNetworkValue(Vector3 position, Vector3 velocity, double sentServerTime)
+        // {
+        //     networkPosition = position;
+        //     if (rb != null) rb.velocity = velocity;
+        //
+        //     var lag = Mathf.Abs((float)(PhotonNetwork.Time - sentServerTime));
+        //     networkPosition += rb.velocity * lag;
+        // }
 
         public virtual void SetTarget() { SetTargetBaseStat(); }
 

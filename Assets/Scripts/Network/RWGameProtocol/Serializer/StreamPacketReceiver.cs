@@ -210,6 +210,7 @@ namespace RWGameProtocol.Serializer
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgEndGameNotify msg = new MsgEndGameNotify();
+                            msg.ErrorCode = (short)_bf.Deserialize(ms);
                             msg.WinPlayerUId = (int)_bf.Deserialize(ms);
                             EndGameNotify(peer, msg);
                         }

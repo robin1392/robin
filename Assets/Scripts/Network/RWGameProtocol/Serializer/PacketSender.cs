@@ -51,7 +51,7 @@ namespace RWGameProtocol.Serializer
         public virtual void InGameUpDiceNotify(Peer peer, int playerUId, int diceId, short inGameUp) { }
         public virtual void AddSpNotify(Peer peer, int playerUId, int currentSp) { }
         public virtual void SpawnNotify(Peer peer, int wave) { }
-        public virtual void EndGameNotify(Peer peer, int winPlayerUId) { }
+        public virtual void EndGameNotify(Peer peer, GameErrorCode code, int winPlayerUId) { }
         public virtual void DisconnectGameNotify(Peer peer, int playerUId) { }
         public virtual void ReconnectGameNotify(Peer peer, int playerUId) { }
 

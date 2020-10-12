@@ -559,10 +559,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   playType: 0
+  event_OtherPuase:
+    m_PersistentCalls:
+      m_Calls: []
   UseLocalServer: 0
-  LocalServerAddr: 127.0.0.1
+  LocalServerAddr: 192.168.0.149
   LocalServerPort: 40001
-  PlayerSessionId: 1
+  UserId: e8eacdc1-3f07-46ef-89d1-b66605e1ad6a
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0

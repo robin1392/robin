@@ -49,7 +49,7 @@ namespace RWCoreNetwork.NetService
 
         ILog _logger;
 
-        private Dictionary<int, Dictionary<int, PacketStatus>> _userPacketStatus;
+        private Dictionary<string, Dictionary<int, PacketStatus>> _userPacketStatus;
         private int _totalSendPacketUsage;
         private int _totalRecvPacketUsage;
         private int _lastSendPacketUsage;
@@ -68,7 +68,7 @@ namespace RWCoreNetwork.NetService
             _lockObject = new object();
             _monitorTick = DateTime.UtcNow.AddSeconds(interval).Ticks;
             _monitorInterval = interval;
-            _userPacketStatus = new Dictionary<int, Dictionary<int, PacketStatus>>();
+            _userPacketStatus = new Dictionary<string, Dictionary<int, PacketStatus>>();
         }
 
 
@@ -155,7 +155,7 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        public void SetSendPacket(int id, byte[] buffer)
+        public void SetSendPacket(string sessionId, byte[] buffer)
         {
             lock (_lockObject)
             {
@@ -165,9 +165,9 @@ namespace RWCoreNetwork.NetService
                 _totalSendPacketUsage += length;
 
 
-                if (_userPacketStatus.ContainsKey(id) == false)
+                if (_userPacketStatus.ContainsKey(sessionId) == false)
                 {
-                    _userPacketStatus.Add(id, new Dictionary<int, PacketStatus> {
+                    _userPacketStatus.Add(sessionId, new Dictionary<int, PacketStatus> {
                             { protocolId, new PacketStatus {
                                 ProtocolId = protocolId,
                                 SendCount = 1,
@@ -177,9 +177,9 @@ namespace RWCoreNetwork.NetService
                 }
                 else
                 {
-                    if (_userPacketStatus[id].ContainsKey(protocolId) == false)
+                    if (_userPacketStatus[sessionId].ContainsKey(protocolId) == false)
                     {
-                        _userPacketStatus[id].Add(protocolId, new PacketStatus
+                        _userPacketStatus[sessionId].Add(protocolId, new PacketStatus
                         {
                             ProtocolId = protocolId,
                             SendCount = 1,
@@ -188,16 +188,16 @@ namespace RWCoreNetwork.NetService
                     }
                     else
                     {
-                        _userPacketStatus[id][protocolId].SendCount += 1;
-                        _userPacketStatus[id][protocolId].SendUsage += length;
+                        _userPacketStatus[sessionId][protocolId].SendCount += 1;
+                        _userPacketStatus[sessionId][protocolId].SendUsage += length;
                     }
                 }
-                _logger.Debug(string.Format("[Monitor] SetSendPacket. userId: {0}, protocolId: {1}, length : {2}", id, protocolId, length));
+                _logger.Debug(string.Format("[Monitor] SetSendPacket. sessionId: {0}, protocolId: {1}, length : {2}", sessionId, protocolId, length));
             }
         }
 
 
-        public void SetReceivePacket(int id, byte[] buffer)
+        public void SetReceivePacket(string sessionId, byte[] buffer)
         {
             lock (_lockObject)
             {
@@ -207,9 +207,9 @@ namespace RWCoreNetwork.NetService
                 _totalRecvPacketUsage += length;
 
 
-                if (_userPacketStatus.ContainsKey(id) == false)
+                if (_userPacketStatus.ContainsKey(sessionId) == false)
                 {
-                    _userPacketStatus.Add(id, new Dictionary<int, PacketStatus> {
+                    _userPacketStatus.Add(sessionId, new Dictionary<int, PacketStatus> {
                             { protocolId, new PacketStatus {
                                 ProtocolId = protocolId,
                                 ReceiveCount = 1,
@@ -219,9 +219,9 @@ namespace RWCoreNetwork.NetService
                 }
                 else
                 {
-                    if (_userPacketStatus[id].ContainsKey(protocolId) == false)
+                    if (_userPacketStatus[sessionId].ContainsKey(protocolId) == false)
                     {
-                        _userPacketStatus[id].Add(protocolId, new PacketStatus
+                        _userPacketStatus[sessionId].Add(protocolId, new PacketStatus
                         {
                             ProtocolId = protocolId,
                             ReceiveCount = 1,
@@ -230,12 +230,12 @@ namespace RWCoreNetwork.NetService
                     }
                     else
                     {
-                        _userPacketStatus[id][protocolId].ReceiveCount += 1;
-                        _userPacketStatus[id][protocolId].ReceiveUsage += length;
+                        _userPacketStatus[sessionId][protocolId].ReceiveCount += 1;
+                        _userPacketStatus[sessionId][protocolId].ReceiveUsage += length;
                     }
                 }
 
-                _logger.Debug(string.Format("[Monitor] SetReceivePacket. userId: {0}, protocolId: {1}, length : {2}", id, protocolId, length));
+                _logger.Debug(string.Format("[Monitor] SetReceivePacket. sessionId: {0}, protocolId: {1}, length : {2}", sessionId, protocolId, length));
             }
         }
     }

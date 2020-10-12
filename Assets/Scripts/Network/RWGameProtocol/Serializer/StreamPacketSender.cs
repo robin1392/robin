@@ -277,9 +277,36 @@ namespace RWGameProtocol.Serializer
         }
 
 
+        public override void EndSyncGameReq(Peer peer) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                peer.SendPacket((int)GameProtocol.END_SYNC_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void EndSyncGameAck(Peer peer, GameErrorCode code) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                _bf.Serialize(ms, (short)code);
+                peer.SendPacket((int)GameProtocol.END_SYNC_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void EndSyncGameNotify(Peer peer) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                peer.SendPacket((int)GameProtocol.END_SYNC_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
         public override void GetDiceReq(Peer peer)
         {
-            
             using (var ms = new MemoryStream())
             {
                 peer.SendPacket((int)GameProtocol.GET_DICE_REQ, ms.ToArray());
@@ -468,11 +495,12 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void EndGameNotify(Peer peer, int winPlayerUId) 
+        public override void EndGameNotify(Peer peer, GameErrorCode code, int winPlayerUId) 
         {
             
             using (var ms = new MemoryStream())
             {
+                _bf.Serialize(ms, (short)code);
                 _bf.Serialize(ms, winPlayerUId);
                 peer.SendPacket((int)GameProtocol.END_GAME_NOTIFY, ms.ToArray());
             }

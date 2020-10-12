@@ -24,7 +24,7 @@ namespace RWCoreNetwork.NetService
         {
             _netEventQueue = new Queue<ClientSession>();
 
-            ClientSession = new ClientSession(_logger, _bufferSize, 1);
+            ClientSession = new ClientSession(_logger, _bufferSize);
             ClientSession.CompletedMessageCallback += OnMessageCompleted;
         }
 
@@ -89,7 +89,7 @@ namespace RWCoreNetwork.NetService
                 var bf = new BinaryFormatter();
                 using (var ms = new MemoryStream())
                 {
-                    bf.Serialize(ms, ClientSession.ClientSessionId);
+                    bf.Serialize(ms, ClientSession.SessionId);
                     ClientSession.Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ, 
                         ms.ToArray(), 
                         ms.ToArray().Length);
@@ -152,7 +152,7 @@ namespace RWCoreNetwork.NetService
                     {
                         if (ClientConnectedCallback != null)
                         {
-                            ClientConnectedCallback(clientSession);
+                            ClientConnectedCallback(clientSession, clientSession.SessionState);
                         }
                     }
                     break;
@@ -160,7 +160,7 @@ namespace RWCoreNetwork.NetService
                     {
                         if (ClientOnlineCallback != null)
                         {
-                            ClientOnlineCallback(clientSession, null);
+                            ClientOnlineCallback(clientSession, clientSession.GetPeer());
                         }
                     }
                     break;
@@ -168,7 +168,7 @@ namespace RWCoreNetwork.NetService
                     {
                         if (ClientDisconnectedCallback != null)
                         {
-                            ClientDisconnectedCallback(clientSession);
+                            ClientDisconnectedCallback(clientSession, clientSession.SessionState);
                         }
                     }
                     break;
@@ -215,9 +215,15 @@ namespace RWCoreNetwork.NetService
                 using (var ms = new MemoryStream(buffer))
                 {
                     bool isReconnect = (bool)bf.Deserialize(ms);
+                    short sessionState = (short)bf.Deserialize(ms);
+
+
                     clientSession.NetState = (isReconnect == false) 
                         ? ENetState.Connected 
                         : ENetState.Online;
+
+                    clientSession.SessionState = (ESessionState)sessionState;
+
 
                     lock (_netEventQueue)
                     {
