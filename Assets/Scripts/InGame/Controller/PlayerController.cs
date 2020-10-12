@@ -1158,8 +1158,8 @@ namespace ED
     
         public void AttackEnemyMinionOrMagic(int baseStatId, float damage, float delay)
         {
-            if(baseStatId == 0)
-                print("  id ---- 0 :  "+baseStatId);
+            //if(baseStatId == 0)
+                //print("  id ---- 0 :  "+baseStatId);
             
             StartCoroutine(AttackEnemyMinionOrMagicCoroutine(baseStatId, damage, delay));
         }

@@ -266,7 +266,8 @@ public class NetworkManager : Singleton<NetworkManager>
         // 시작하면서 상대 멈춤 초기화
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
-        
+
+        print("ReConnecting....");
 
         playType = type;
         _clientSocket.ReConnect(_serverAddr, _port, _gameSession, callback);
