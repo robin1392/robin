@@ -1890,6 +1890,12 @@ namespace ED
                     eyeLevel = servLevel,
                     diceFieldNum = arrDiceData[i].SlotNum
                 };
+                
+                if (uiDiceField != null)
+                {
+                    uiDiceField.arrSlot[arrDiceData[i].SlotNum].ani.SetTrigger("BBoing");
+                    uiDiceField.SetField(arrDice);
+                }
             }
             
             //
