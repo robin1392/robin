@@ -38,6 +38,8 @@ namespace ED
 
         [Header("Panals")] 
         public UI_Panel_Dice panel_Dice;
+        
+        private readonly int[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
 
         public override void Awake()
         {
@@ -217,15 +219,14 @@ namespace ED
 
         #region Main UI
 
-        public Ease ease = Ease.OutBack;
+        private readonly Ease ease = Ease.OutQuint;
 
         public void Click_MainButton(int num)
         {
             currentPageNum = num;
             const float duration = 0.3f;
-            int[] posX = {2484, 1242, 0, -1242, -2484};
 
-            rts_MainPages.DOAnchorPosX(posX[num], duration).SetEase(ease);
+            rts_MainPages.DOAnchorPosX(mainPagePosX[num], duration).SetEase(ease);
 
             for (var i = 0; i < arrRts_MainButtons.Length; i++)
             {
