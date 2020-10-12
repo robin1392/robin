@@ -74,7 +74,7 @@ public class SocketManager
     
     public void ReConnect(string host, int port , string clientSessionId, Action reconnectCallback = null)
     {
-        _netService.ClientSession.ClientSessionId = clientSessionId;
+        _netService.ClientSession.SessionId = clientSessionId;
         _netService.Connect(host, port);
         _reconnectCallBack = reconnectCallback;
     }
