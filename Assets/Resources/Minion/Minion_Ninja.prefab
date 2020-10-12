@@ -83,6 +83,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 2000
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 9161220351375259538}
@@ -120,12 +121,11 @@ MonoBehaviour:
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
+  isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
   isPolymorph: 0
-  pref_Effect: {fileID: 9017776126007456575, guid: 81c5f0038f2914eabbbcac37316143b9,
-    type: 3}
 --- !u!114 &4086450853476115766
 MonoBehaviour:
   m_ObjectHideFlags: 0

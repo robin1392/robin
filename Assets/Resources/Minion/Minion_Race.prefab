@@ -114,6 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 2005
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 3843816562420455791}
@@ -151,6 +152,7 @@ MonoBehaviour:
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
+  isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
   upgradeLevel: 0
   agent: {fileID: 0}
