@@ -4,50 +4,49 @@ namespace RWCoreNetwork
 {
     public class Peer
     {
-        protected ClientSession _clientSession;
+        public  ClientSession ClientSession { get; private set; }
 
         public bool IsDisconnected()
         {
-            return _clientSession == null || _clientSession.NetState == NetService.ENetState.Disconnected;
+            return ClientSession == null || ClientSession.NetState == NetService.ENetState.Disconnected;
         }
 
         public void SetClientSession(ClientSession clientSession)
         {
-            _clientSession = clientSession;
+            ClientSession = clientSession;
 
-            if (_clientSession != null)
+            if (ClientSession != null)
             {
-                _clientSession.SetPeer(this);
+                ClientSession.SetPeer(this);
             }
         }
 
-        public ClientSession GetClientSession()
-        {
-            return _clientSession;
-        }
-
-
+  
         public void SendPacket(int protocolId, byte[] msg)
         {
-            if (_clientSession.NetState < NetService.ENetState.Offline)
+            if (ClientSession.NetState < NetService.ENetState.Offline)
             {
-                _clientSession.Send(protocolId, msg, msg.Length);
+                ClientSession.Send(protocolId, msg, msg.Length);
             }
         }
 
-        public void Disconnect()
+
+        public void Disconnect(ESessionState sessionState)
         {
-            _clientSession.Disconnect();
+            ClientSession.SessionState = sessionState;
+            ClientSession.Disconnect();
         }
+
 
         public bool ReceivePacket(short protocolId, byte[] msg)
         {
             return true;
         }
 
+
         public void OnRemoved()
         {
-            //_clientSession = null;
+            //ClientSession = null;
         }
     }
 }

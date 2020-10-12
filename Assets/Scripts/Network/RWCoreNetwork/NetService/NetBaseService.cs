@@ -51,7 +51,7 @@ namespace RWCoreNetwork.NetService
     public class NetBaseService
     {
         public delegate void ClientReconnectDelegate(ClientSession clientSession, Peer peer);
-        public delegate void ClientConnectDelegate(ClientSession clientSession);
+        public delegate void ClientConnectDelegate(ClientSession clientSession, ESessionState sessionState);
 
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
@@ -208,7 +208,7 @@ namespace RWCoreNetwork.NetService
 
             if (_onMonitoring == true)
             {
-                _netMonitorHandler.SetSendPacket(clientSession.Id, msg);
+                _netMonitorHandler.SetSendPacket(clientSession.SessionId, msg);
             }
         }
 
