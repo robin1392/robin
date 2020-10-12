@@ -409,7 +409,7 @@ namespace ED
             spUpgradeLevel = upgradeLv;
         }
         
-        private void RefreshHealthBar()
+        public void RefreshHealthBar()
         {
             image_HealthBar.fillAmount = currentHealth / maxHealth;
             text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
