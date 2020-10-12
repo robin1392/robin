@@ -535,6 +535,8 @@ public class NetworkManager : Singleton<NetworkManager>
             return;
         }
         
+        print("my info : " + msg.PlayerBase.PlayerUId +  "  " + msg.PlayerBase.IsBottomPlayer + "    " + msg.PlayerBase.Name );
+        print("other info : " + msg.PlayerBase.PlayerUId +  "  " + msg.PlayerBase.IsBottomPlayer + "    " + msg.PlayerBase.Name );
         _netInfo.SetPlayerBase(msg.PlayerBase);
         _netInfo.SetOtherBase(msg.OtherPlayerBase);
         
