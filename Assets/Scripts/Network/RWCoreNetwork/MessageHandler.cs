@@ -55,7 +55,7 @@ namespace RWCoreNetwork
         /// <param name="offset">데이터의 시작 위치를 나타내는 정수 값</param>
         /// <param name="transfered">수신된 데이터의 바이트 수</param>
 		/// <param name="callback">패킷 완성시 호출할 콜백 함수</param>
-        public void OnReceive(ClientSession userToken, byte[] buffer, int offset, int transfered, CompletedMessageDelegate callback)
+        public void OnReceive(ClientSession clientSession, byte[] buffer, int offset, int transfered, CompletedMessageDelegate callback)
         {
             // 이번 receive로 읽어오게 될 바이트 수.
             _remainBytes = transfered;
@@ -93,11 +93,17 @@ namespace RWCoreNetwork
                     _positionToRead += _bodySize;
                 }
 
+
                 // 메시지를 읽는다.
                 completed = ReadBuffer(buffer, ref srcPosition);
                 if (completed == true)
                 {
-                    callback(userToken, _receiveBuffer);
+                    int protocolId = BitConverter.ToInt32(_receiveBuffer, 0);
+                    int length = BitConverter.ToInt32(_receiveBuffer, Defines.PROTOCOL_ID);
+                    byte[] msg = new byte[_bufferSize];
+                    Array.Copy(_receiveBuffer, Defines.HEADER_SIZE, msg, 0, length);
+
+                    callback(clientSession, protocolId, msg, length);
                     ClearBuffer();
                 }
             }

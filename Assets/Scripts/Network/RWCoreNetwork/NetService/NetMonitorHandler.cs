@@ -197,15 +197,11 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        public void SetReceivePacket(string sessionId, byte[] buffer)
+        public void SetReceivePacket(string sessionId, int protocolId, byte[] msg, int length)
         {
             lock (_lockObject)
             {
-                int protocolId = BitConverter.ToInt32(buffer, 0);
-                int length = BitConverter.ToInt32(buffer, Defines.PROTOCOL_ID) + Defines.HEADER_SIZE;
-
                 _totalRecvPacketUsage += length;
-
 
                 if (_userPacketStatus.ContainsKey(sessionId) == false)
                 {

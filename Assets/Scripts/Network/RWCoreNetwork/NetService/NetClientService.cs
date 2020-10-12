@@ -86,14 +86,7 @@ namespace RWCoreNetwork.NetService
 
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
-                var bf = new BinaryFormatter();
-                using (var ms = new MemoryStream())
-                {
-                    bf.Serialize(ms, ClientSession.SessionId);
-                    ClientSession.Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ, 
-                        ms.ToArray(), 
-                        ms.ToArray().Length);
-                }
+                SendInternalAuthSessionReq(ClientSession.SessionId);
             }
             else
             {
@@ -160,7 +153,7 @@ namespace RWCoreNetwork.NetService
                     {
                         if (ClientOnlineCallback != null)
                         {
-                            ClientOnlineCallback(clientSession, clientSession.GetPeer());
+                            ClientOnlineCallback(clientSession, clientSession.SessionState);
                         }
                     }
                     break;
@@ -189,7 +182,7 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        protected override void OnMessageCompleted(ClientSession clientSession, byte[] msg)
+        protected override void OnMessageCompleted(ClientSession clientSession, int protocolId, byte[] msg, int length)
         {
             if (clientSession == null)
             {
@@ -203,16 +196,10 @@ namespace RWCoreNetwork.NetService
             }
 
 
-            int protocolId = BitConverter.ToInt32(msg, 0);
-            int length = BitConverter.ToInt32(msg, Defines.PROTOCOL_ID);
-            byte[] buffer = new byte[_bufferSize];
-            Array.Copy(msg, Defines.HEADER_SIZE, buffer, 0, length);
-
-
             if (protocolId == (int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK)
             {
                 var bf = new BinaryFormatter();
-                using (var ms = new MemoryStream(buffer))
+                using (var ms = new MemoryStream(msg))
                 {
                     bool isReconnect = (bool)bf.Deserialize(ms);
                     short sessionState = (short)bf.Deserialize(ms);
@@ -231,11 +218,28 @@ namespace RWCoreNetwork.NetService
                     }
                 }
             }
+            else if (protocolId == (int)EInternalProtocol.DUPLICATED_SESSION_NOTIFY)
+            {
+                // 서버로 부터 중복 세션 알림을 받음.
+                clientSession.SessionState = ESessionState.Duplicated;
+                clientSession.Disconnect();
+            }
             else
             {
                 // 패킷처리 큐에 추가한다.
-                _packetHandler.EnqueuePacket(clientSession.GetPeer(), msg);
+                _packetHandler.EnqueuePacket(clientSession.GetPeer(), protocolId, msg, length);
+            }
+        }
 
+        void SendInternalAuthSessionReq(string sessionId)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, ClientSession.SessionId);
+                ClientSession.Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
             }
         }
     }

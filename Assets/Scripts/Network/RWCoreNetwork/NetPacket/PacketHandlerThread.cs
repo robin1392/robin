@@ -35,13 +35,6 @@ namespace RWCoreNetwork.NetPacket
         }
 
 
-        public override void EnqueuePacket(Peer peer, byte[] msg)
-        {
-            base.EnqueuePacket(peer, msg);
-            _loopEvent.Set();
-        }
-
-
         public override void EnqueuePacket(Peer peer, int protocolId, byte[] msg, int length)
         {
             base.EnqueuePacket(peer, protocolId, msg, length);
