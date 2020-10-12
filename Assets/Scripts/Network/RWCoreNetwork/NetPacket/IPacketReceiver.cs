@@ -19,23 +19,13 @@ namespace RWCoreNetwork.NetPacket
         public byte[] Msg { get; private set; }
         public Peer Peer { get; private set; }
 
-        public Packet(Peer peer, byte[] buffer, int bufferLength)
-        {
-            Peer = peer;
-            ProtocolId = BitConverter.ToInt32(buffer, 0);
-            Length = BitConverter.ToInt32(buffer, Defines.PROTOCOL_ID);
-            Msg = new byte[bufferLength];
-            Array.Copy(buffer, Defines.HEADER_SIZE, Msg, 0, Length);
-        }
 
-
-        public Packet(Peer peer, int protocolId, byte[] buffer, int length)
+        public Packet(Peer peer, int protocolId, byte[] msg, int length)
         {
             Peer = peer;
             ProtocolId = protocolId;
             Length = length;
-            Msg = new byte[buffer.Length];
-            Array.Copy(buffer, 0, Msg, 0, Length);
+            Msg = msg;
         }
     }
 }

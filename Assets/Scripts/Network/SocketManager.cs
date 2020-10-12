@@ -114,9 +114,10 @@ public class SocketManager
     /// 재연결 성공 콜백
     /// </summary>
     /// <param name="session"></param>
-    /// <param name="peer"></param>
-    void OnClientReconnected(ClientSession session, Peer peer)
+    /// <param name="sessionState"></param>
+    void OnClientReconnected(ClientSession session, ESessionState sessionState)
     {
+        Peer peer = session.GetPeer();
         if (peer == null)
             _serverPeer = new Peer();    
         else

@@ -34,8 +34,12 @@ namespace RWCoreNetwork.NetService
 
     internal enum EInternalProtocol
     {
+        // 세션 인증 요청/응답
         AUTH_CLIENT_SESSION_REQ = 1,
         AUTH_CLIENT_SESSION_ACK,
+
+        // 세션 중복 알림
+        DUPLICATED_SESSION_NOTIFY,
     }
 
 
@@ -50,12 +54,11 @@ namespace RWCoreNetwork.NetService
     /// </summary>
     public class NetBaseService
     {
-        public delegate void ClientReconnectDelegate(ClientSession clientSession, Peer peer);
         public delegate void ClientConnectDelegate(ClientSession clientSession, ESessionState sessionState);
 
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
-        public ClientReconnectDelegate ClientOnlineCallback { get; set; }
+        public ClientConnectDelegate ClientOnlineCallback { get; set; }
         public ClientConnectDelegate ClientOfflineCallback { get; set; }
 
 
@@ -97,7 +100,7 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        public void Clear()
+        public virtual void Clear()
         {
             if (_netMonitorHandler != null)
             {
@@ -219,7 +222,7 @@ namespace RWCoreNetwork.NetService
         /// <param name="clientSession"></param>
         /// <param name="protocolId"></param>
         /// <param name="msg"></param>
-        protected virtual void OnMessageCompleted(ClientSession clientSession, byte[] msg)
+        protected virtual void OnMessageCompleted(ClientSession clientSession, int protocolId, byte[] msg, int length)
         {
         }
     }

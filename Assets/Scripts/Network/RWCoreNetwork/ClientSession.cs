@@ -18,10 +18,12 @@ namespace RWCoreNetwork
         // 서버에 의한 블럭
         Blocked,
         // 만료된 세션
-        Expired
+        Expired,
+        // 중복 세션
+        Duplicated,
     }
 
-    public delegate void CompletedMessageDelegate(ClientSession userToken, byte[] msg);
+    public delegate void CompletedMessageDelegate(ClientSession clientSession, int protocolId, byte[] msg, int length);
 
 
     public class ClientSession
