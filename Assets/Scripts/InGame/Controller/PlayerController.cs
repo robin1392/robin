@@ -193,7 +193,8 @@ namespace ED
 
         public void DestroyPlayer()
         {
-            NetworkManager.Get().event_OtherDisconnect.RemoveListener(OtherPlayerPause);
+            if(NetworkManager.Get() != null)
+                NetworkManager.Get().event_OtherDisconnect.RemoveListener(OtherPlayerPause);
             _arrDice = null;
             _arrDiceDeck = null;
             _arrUpgradeLevel = null;
