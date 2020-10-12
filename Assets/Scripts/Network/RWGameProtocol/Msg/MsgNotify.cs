@@ -28,6 +28,7 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgEndGameNotify
     {
+        public short ErrorCode;
         public int WinPlayerUId;
     }
 
