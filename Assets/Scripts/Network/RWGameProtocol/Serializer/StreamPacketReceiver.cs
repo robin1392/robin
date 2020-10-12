@@ -50,7 +50,7 @@ namespace RWGameProtocol.Serializer
                         if (JoinGameReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgJoinGameReq msg = new MsgJoinGameReq();
@@ -65,7 +65,7 @@ namespace RWGameProtocol.Serializer
                         if (JoinGameAck == null)
                             return false;
 
-                        //// var bf = new BinaryFormatter();
+                        //
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgJoinGameAck msg = new MsgJoinGameAck();
@@ -80,7 +80,7 @@ namespace RWGameProtocol.Serializer
                         if (JoinGameNotify == null)
                             return false;
 
-                        //// var bf = new BinaryFormatter();
+                        //
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgJoinGameNotify msg = new MsgJoinGameNotify();
@@ -94,7 +94,7 @@ namespace RWGameProtocol.Serializer
                         if (LeaveGameReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgLeaveGameReq msg = new MsgLeaveGameReq();
@@ -107,7 +107,7 @@ namespace RWGameProtocol.Serializer
                         if (LeaveGameAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgLeaveGameAck msg = new MsgLeaveGameAck();
@@ -121,7 +121,7 @@ namespace RWGameProtocol.Serializer
                         if (LeaveGameNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgLeaveGameNotify msg = new MsgLeaveGameNotify();
@@ -135,7 +135,7 @@ namespace RWGameProtocol.Serializer
                         if (ReadyGameReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgReadyGameReq msg = new MsgReadyGameReq();
@@ -148,7 +148,7 @@ namespace RWGameProtocol.Serializer
                         if (ReadyGameAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgReadyGameAck msg = new MsgReadyGameAck();
@@ -162,7 +162,7 @@ namespace RWGameProtocol.Serializer
                         if (DeactiveWaitingObjectNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
@@ -177,7 +177,7 @@ namespace RWGameProtocol.Serializer
                         if (AddSpNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgAddSpNotify msg = new MsgAddSpNotify();
@@ -192,7 +192,7 @@ namespace RWGameProtocol.Serializer
                         if (SpawnNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSpawnNotify msg = new MsgSpawnNotify();
@@ -206,7 +206,7 @@ namespace RWGameProtocol.Serializer
                         if (EndGameNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgEndGameNotify msg = new MsgEndGameNotify();
@@ -221,7 +221,7 @@ namespace RWGameProtocol.Serializer
                         if (DisconnectGameNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgDisconnectGameNotify msg = new MsgDisconnectGameNotify();
@@ -235,7 +235,7 @@ namespace RWGameProtocol.Serializer
                         if (PauseGameReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgPauseGameReq msg = new MsgPauseGameReq();
@@ -248,7 +248,7 @@ namespace RWGameProtocol.Serializer
                         if (PauseGameAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgPauseGameAck msg = new MsgPauseGameAck();
@@ -262,7 +262,7 @@ namespace RWGameProtocol.Serializer
                         if (PauseGameNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgPauseGameNotify msg = new MsgPauseGameNotify();
@@ -276,7 +276,7 @@ namespace RWGameProtocol.Serializer
                         if (ResumeGameReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgResumeGameReq msg = new MsgResumeGameReq();
@@ -289,7 +289,7 @@ namespace RWGameProtocol.Serializer
                         if (ResumeGameAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgResumeGameAck msg = new MsgResumeGameAck();
@@ -303,7 +303,7 @@ namespace RWGameProtocol.Serializer
                         if (ResumeGameNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgResumeGameNotify msg = new MsgResumeGameNotify();
@@ -329,7 +329,7 @@ namespace RWGameProtocol.Serializer
                         if (ReconnectGameAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgReconnectGameAck msg = new MsgReconnectGameAck();
@@ -353,13 +353,53 @@ namespace RWGameProtocol.Serializer
                         }
                     }
                     break;
+                case GameProtocol.READY_SYNC_GAME_REQ:
+                    {
+                        if (ReadySyncGameReq == null)
+                            return false;
 
+                        
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            MsgReadySyncGameReq msg = new MsgReadySyncGameReq();
+                            ReadySyncGameReq(peer, msg);
+                        }
+                    }
+                    break;
+                case GameProtocol.READY_SYNC_GAME_ACK:
+                    {
+                        if (ReadySyncGameAck == null)
+                            return false;
+
+                        
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            MsgReadySyncGameAck msg = new MsgReadySyncGameAck();
+                            msg.ErrorCode = (short)_bf.Deserialize(ms);
+                            ReadySyncGameAck(peer, msg);
+                        }
+                    }
+                    break;
+                case GameProtocol.READY_SYNC_GAME_NOTIFY:
+                    {
+                        if (ReadySyncGameNotify == null)
+                            return false;
+
+                        
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            MsgReadySyncGameNotify msg = new MsgReadySyncGameNotify();
+                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            ReadySyncGameNotify(peer, msg);
+                        }
+                    }
+                    break;
                 case GameProtocol.START_SYNC_GAME_REQ:
                     {
                         if (StartSyncGameReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgStartSyncGameReq msg = new MsgStartSyncGameReq();
@@ -378,7 +418,7 @@ namespace RWGameProtocol.Serializer
                         if (StartSyncGameAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
@@ -392,7 +432,7 @@ namespace RWGameProtocol.Serializer
                         if (StartSyncGameNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
@@ -417,7 +457,7 @@ namespace RWGameProtocol.Serializer
                         if (EndSyncGameReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgEndSyncGameReq msg = new MsgEndSyncGameReq();
@@ -430,7 +470,7 @@ namespace RWGameProtocol.Serializer
                         if (EndSyncGameAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgEndSyncGameAck msg = new MsgEndSyncGameAck();
@@ -444,7 +484,7 @@ namespace RWGameProtocol.Serializer
                         if (EndSyncGameNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgEndSyncGameNotify msg = new MsgEndSyncGameNotify();
@@ -458,7 +498,7 @@ namespace RWGameProtocol.Serializer
                         if (GetDiceReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgGetDiceReq msg = new MsgGetDiceReq();
@@ -471,7 +511,7 @@ namespace RWGameProtocol.Serializer
                         if (GetDiceAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgGetDiceAck msg = new MsgGetDiceAck();
@@ -489,7 +529,7 @@ namespace RWGameProtocol.Serializer
                         if (GetDiceNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgGetDiceNotify msg = new MsgGetDiceNotify();
@@ -506,7 +546,7 @@ namespace RWGameProtocol.Serializer
                         if (LevelUpDiceReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
@@ -521,7 +561,7 @@ namespace RWGameProtocol.Serializer
                         if (LevelUpDiceAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgLevelUpDiceAck msg = new MsgLevelUpDiceAck();
@@ -539,7 +579,7 @@ namespace RWGameProtocol.Serializer
                         if (LevelUpDiceNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgLevelUpDiceNotify msg = new MsgLevelUpDiceNotify();
@@ -557,7 +597,7 @@ namespace RWGameProtocol.Serializer
                         if (InGameUpDiceReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgInGameUpDiceReq msg = new MsgInGameUpDiceReq();
@@ -571,7 +611,7 @@ namespace RWGameProtocol.Serializer
                         if (InGameUpDiceAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgInGameUpDiceAck msg = new MsgInGameUpDiceAck();
@@ -588,7 +628,7 @@ namespace RWGameProtocol.Serializer
                         if (InGameUpDiceNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgInGameUpDiceNotify msg = new MsgInGameUpDiceNotify();
@@ -604,7 +644,7 @@ namespace RWGameProtocol.Serializer
                         if (UpgradeSpReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgUpgradeSpReq msg = new MsgUpgradeSpReq();
@@ -617,7 +657,7 @@ namespace RWGameProtocol.Serializer
                         if (UpgradeSpAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgUpgradeSpAck msg = new MsgUpgradeSpAck();
@@ -633,7 +673,7 @@ namespace RWGameProtocol.Serializer
                         if (UpgradeSpNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgUpgradeSpNotify msg = new MsgUpgradeSpNotify();
@@ -648,7 +688,7 @@ namespace RWGameProtocol.Serializer
                         if (HitDamageReq == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgHitDamageReq msg = new MsgHitDamageReq();
@@ -663,7 +703,7 @@ namespace RWGameProtocol.Serializer
                         if (HitDamageAck == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgHitDamageAck msg = new MsgHitDamageAck();
@@ -679,7 +719,7 @@ namespace RWGameProtocol.Serializer
                         if (HitDamageNotify == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgHitDamageNotify msg = new MsgHitDamageNotify();
@@ -697,7 +737,7 @@ namespace RWGameProtocol.Serializer
                         if (RemoveMinionRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
@@ -712,7 +752,7 @@ namespace RWGameProtocol.Serializer
                         if (HitDamageMinionRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
@@ -729,7 +769,7 @@ namespace RWGameProtocol.Serializer
                         if (DestroyMinionRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
@@ -744,7 +784,7 @@ namespace RWGameProtocol.Serializer
                         if (HealMinionRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgHealMinionRelay msg = new MsgHealMinionRelay();
@@ -760,7 +800,7 @@ namespace RWGameProtocol.Serializer
                         if (PushMinionRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgPushMinionRelay msg = new MsgPushMinionRelay();
@@ -777,7 +817,7 @@ namespace RWGameProtocol.Serializer
                         if (SetMinionAnimationTriggerRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
@@ -794,7 +834,7 @@ namespace RWGameProtocol.Serializer
                         if (FireArrowRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgFireArrowRelay msg = new MsgFireArrowRelay();
@@ -812,7 +852,7 @@ namespace RWGameProtocol.Serializer
                         if (FireballBombRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgFireballBombRelay msg = new MsgFireballBombRelay();
@@ -827,7 +867,7 @@ namespace RWGameProtocol.Serializer
                         if (MineBombRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgMineBombRelay msg = new MsgMineBombRelay();
@@ -842,7 +882,7 @@ namespace RWGameProtocol.Serializer
                         if (RemoveMagicRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
@@ -857,7 +897,7 @@ namespace RWGameProtocol.Serializer
                         if (SetMagicTargetIdRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
@@ -873,7 +913,7 @@ namespace RWGameProtocol.Serializer
                         if (SetMagicTargetRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
@@ -890,7 +930,7 @@ namespace RWGameProtocol.Serializer
                         if (SturnMinionRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
@@ -906,7 +946,7 @@ namespace RWGameProtocol.Serializer
                         if (RocketBombRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgRocketBombRelay msg = new MsgRocketBombRelay();
@@ -921,7 +961,7 @@ namespace RWGameProtocol.Serializer
                         if (IceBombRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgIceBombRelay msg = new MsgIceBombRelay();
@@ -936,7 +976,7 @@ namespace RWGameProtocol.Serializer
                         if (DestroyMagicRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
@@ -951,7 +991,7 @@ namespace RWGameProtocol.Serializer
                         if (FireCannonBallRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
@@ -970,7 +1010,7 @@ namespace RWGameProtocol.Serializer
                         if (FireSpearRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgFireSpearRelay msg = new MsgFireSpearRelay();
@@ -988,7 +1028,7 @@ namespace RWGameProtocol.Serializer
                         if (FireManFireRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgFireManFireRelay msg = new MsgFireManFireRelay();
@@ -1003,7 +1043,7 @@ namespace RWGameProtocol.Serializer
                         if (ActivatePoolObjectRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
@@ -1021,7 +1061,7 @@ namespace RWGameProtocol.Serializer
                         if (MinionCloackingRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
@@ -1037,7 +1077,7 @@ namespace RWGameProtocol.Serializer
                         if (MinionFogOfWarRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgMinionFogOfWarRelay msg = new MsgMinionFogOfWarRelay();
@@ -1054,7 +1094,7 @@ namespace RWGameProtocol.Serializer
                         if (SendMessageVoidRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
@@ -1070,7 +1110,7 @@ namespace RWGameProtocol.Serializer
                         if (SendMessageParam1Relay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
@@ -1087,7 +1127,7 @@ namespace RWGameProtocol.Serializer
                         if (NecromancerBulletRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgNecromancerBulletRelay msg = new MsgNecromancerBulletRelay();
@@ -1105,7 +1145,7 @@ namespace RWGameProtocol.Serializer
                         if (SetMinionTargetRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
@@ -1121,7 +1161,7 @@ namespace RWGameProtocol.Serializer
                         if (MinionStatusRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
@@ -1137,7 +1177,7 @@ namespace RWGameProtocol.Serializer
                         if (ScarecrowRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgScarecrowRelay msg = new MsgScarecrowRelay();
@@ -1153,7 +1193,7 @@ namespace RWGameProtocol.Serializer
                         if (LazerTargetRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgLazerTargetRelay msg = new MsgLazerTargetRelay();
@@ -1169,7 +1209,7 @@ namespace RWGameProtocol.Serializer
                         if (FireBulletRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgFireBulletRelay msg = new MsgFireBulletRelay();
@@ -1188,7 +1228,7 @@ namespace RWGameProtocol.Serializer
                         if (MinionInvincibilityRelay == null)
                             return false;
 
-                        // var bf = new BinaryFormatter();
+                        
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();

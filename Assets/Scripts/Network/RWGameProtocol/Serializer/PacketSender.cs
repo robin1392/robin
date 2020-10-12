@@ -33,6 +33,10 @@ namespace RWGameProtocol.Serializer
         public virtual void ResumeGameReq(Peer peer) { }
         public virtual void ResumeGameAck(Peer peer, GameErrorCode code) { }
         public virtual void ResumeGameNotify(Peer peer, int playerUId) { }
+        
+        public virtual void ReadySyncGameReq(Peer peer) { }
+        public virtual void ReadySyncGameAck(Peer peer, GameErrorCode code) { }
+        public virtual void ReadySyncGameNotify(Peer peer, int playerUId) { }
 
         public virtual void StartSyncGameReq(Peer peer, int playerId, int playerSpawnCount, MsgSyncMinionData[] syncMinionData, int otherPlayerId, int otherPlayerSpawnCount, MsgSyncMinionData[] otherSyncMinionData) { }
         public virtual void StartSyncGameAck(Peer peer, GameErrorCode code) { }

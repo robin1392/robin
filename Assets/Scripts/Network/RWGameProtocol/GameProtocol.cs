@@ -33,6 +33,10 @@ namespace RWGameProtocol
         RESUME_GAME_ACK,
         RESUME_GAME_NOTIFY,
 
+        READY_SYNC_GAME_REQ,
+        READY_SYNC_GAME_ACK,
+        READY_SYNC_GAME_NOTIFY,
+
         START_SYNC_GAME_REQ,
         START_SYNC_GAME_ACK,
         START_SYNC_GAME_NOTIFY,

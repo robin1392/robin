@@ -230,6 +230,35 @@ namespace RWGameProtocol.Serializer
         }
 
 
+        public override void ReadySyncGameReq(Peer peer) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                peer.SendPacket((int)GameProtocol.READY_SYNC_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void ReadySyncGameAck(Peer peer, GameErrorCode code) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                _bf.Serialize(ms, (short)code);
+                peer.SendPacket((int)GameProtocol.READY_SYNC_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void ReadySyncGameNotify(Peer peer, int playerUId) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                _bf.Serialize(ms, playerUId);
+                peer.SendPacket((int)GameProtocol.READY_SYNC_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
         public override void StartSyncGameReq(Peer peer, int playerId, int playerSpawnCount, MsgSyncMinionData[] syncMinionData, int otherPlayerId, int otherPlayerSpawnCount, MsgSyncMinionData[] otherSyncMinionData)
         {
             
