@@ -1079,10 +1079,10 @@ namespace ED
             
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
-            playerController.currentHealth = NetworkManager.Get().GetNetInfo().playerInfo.TowerHp;
+            playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(NetworkManager.Get().GetNetInfo().playerInfo.TowerHp);
             playerController.RefreshHealthBar();
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
-            playerController.targetPlayer.currentHealth = NetworkManager.Get().GetNetInfo().otherInfo.TowerHp;
+            playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             playerController.targetPlayer.RefreshHealthBar();
 
             //
