@@ -1119,6 +1119,9 @@ namespace ED
 
             
             NetworkManager.Get().SetReconnect(false);
+
+            // timer 돌려야됨
+            NetStartGame();
             
             //
             SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);
@@ -1153,7 +1156,6 @@ namespace ED
                 }
             }
             
-            DeactivateWaitingObject();
         }
 
         #endregion
