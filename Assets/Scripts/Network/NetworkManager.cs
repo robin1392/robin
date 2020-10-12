@@ -317,10 +317,10 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #region pause resume reconnect
 
-    public void SetOtherDisconnect(bool pause)
+    public void SetOtherDisconnect(bool disconnect)
     {
-        event_OtherDisconnect.Invoke(pause);
-        _isOtherDisconnect = pause;
+        event_OtherDisconnect.Invoke(disconnect);
+        _isOtherDisconnect = disconnect;
     }
 
     public void SetResume(bool resume)
@@ -416,6 +416,10 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.StartSyncGameNotify = _socketRecv.OnStartSyncGameNotify;
         _packetRecv.EndSyncGameAck = _socketRecv.OnEndSyncGameAck;
         _packetRecv.EndSyncGameNotify = _socketRecv.OnEndSyncGameNotify;
+
+        _packetRecv.ReadySyncGameAck = _socketRecv.OnReadySyncGameAck;
+        _packetRecv.ReadySyncGameNotify = _socketRecv.OnReadySyncGameNotify;
+        
         
         // not use...
         _packetRecv.PauseGameAck = _socketRecv.OnPauseGameAck;
@@ -532,6 +536,9 @@ public class NetworkManager : Singleton<NetworkManager>
         
         _netInfo.SetPlayerBase(msg.PlayerBase);
         _netInfo.SetOtherBase(msg.OtherPlayerBase);
+        
+        //
+        IsMaster = _netInfo.playerInfo.IsBottomPlayer;
         
         //
         GameStateManager.Get().MoveInGameBattle();

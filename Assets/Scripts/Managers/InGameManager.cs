@@ -131,10 +131,6 @@ namespace ED
 
         public override void OnDestroy()
         {
-            //if(Instance == this)
-            //{
-            //Instance = null;
-            //}
             
 #if UNITY_EDITOR
             EditorApplication.pauseStateChanged -= OnEditorAppPause;
@@ -255,6 +251,23 @@ namespace ED
                 otherTObj.SendMessage("ChangeLayer", false);
                 isAIMode = true;
             }
+            
+            
+            UI_InGame.Get().ViewTargetDice(!IsNetwork);
+
+            event_SP_Edit.AddListener(RefreshSP);
+            event_SP_Edit.AddListener(SetSPUpgradeButton);
+
+
+            //
+            if (NetworkManager.Get().isReconnect)
+            {
+                UI_InGamePopup.Get().ViewGameIndicator(true);
+                
+                SendInGameManager(GameProtocol.READY_SYNC_GAME_REQ);
+                return;
+            }
+            
 
             // deck setting
             if (IsNetwork == true)
@@ -292,12 +305,6 @@ namespace ED
                     ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
                 }
             }
-
-            //obj_ViewTargetDiceField.SetActive(!PhotonNetwork.IsConnected);
-            UI_InGame.Get().ViewTargetDice(!IsNetwork);
-
-            event_SP_Edit.AddListener(RefreshSP);
-            event_SP_Edit.AddListener(SetSPUpgradeButton);
 
             if (IsNetwork == true)
             {
@@ -1070,6 +1077,9 @@ namespace ED
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
+
+            //
+            SyncInfo();
             
             // 주사위필드 데이터 셋팅
             playerController.SetDiceField(gameData.GameDiceData);
@@ -1105,7 +1115,38 @@ namespace ED
             //
             SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);
         }
-        
+
+
+        public void SyncInfo()
+        {
+            // deck setting
+            if (IsNetwork == true)
+            {
+                // my
+                for(int i = 0 ; i < NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray.Length; i++)
+                    print(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray[i]);
+                
+                playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
+                //other
+                playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
+            }
+            
+            // Upgrade buttons
+            // ui 셋팅
+            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
+
+            if (IsNetwork == true)
+            {
+                if (NetworkManager.Get().IsMaster == false)
+                {
+                    ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
+                    ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
+                    ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
+                }
+            }
+            
+            DeactivateWaitingObject();
+        }
 
         #endregion
         
@@ -1291,6 +1332,7 @@ namespace ED
                 }
                 
                 
+                
                 case GameProtocol.START_SYNC_GAME_ACK:
                 {
                     MsgStartSyncGameAck startsyncack = (MsgStartSyncGameAck) param[0];
@@ -1306,6 +1348,7 @@ namespace ED
                     
                     break;
                 }
+                
                 case GameProtocol.END_SYNC_GAME_ACK:
                 {
                     MsgEndSyncGameAck endsynack = (MsgEndSyncGameAck) param[0];
@@ -1353,20 +1396,30 @@ namespace ED
                     
                     break;
                 }
+
+
+
+                case GameProtocol.READY_SYNC_GAME_ACK:
+                {
+                    MsgReadySyncGameAck readyack = (MsgReadySyncGameAck) param[0];
+                    
+                    break;
+                }
+                case GameProtocol.READY_SYNC_GAME_NOTIFY:
+                {
+                    MsgReadySyncGameNotify readynoti = (MsgReadySyncGameNotify) param[0];
+                    
+                    if (NetworkManager.Get().UserUID != readynoti.PlayerUId)
+                    {
+                        NetworkManager.Get().SetResume(true);
+                        // 미니언 정보 취합 해서 보내준다..
+                        SendSyncAllBattleInfo();
+                    }
+                    
+                    break;
+                }
                 
-                case GameProtocol.RECONNECT_GAME_NOTIFY:
-                {
-                    MsgReconnectGameNotify reconnNoti = (MsgReconnectGameNotify) param[0];
-                    break;
-                }
-                case GameProtocol.RECONNECT_GAME_ACK:
-                {
-                    MsgReconnectGameAck reconnack = (MsgReconnectGameAck) param[0];
-                    break;
-                }
-
-
-
+                
                 
                 
                 case GameProtocol.PAUSE_GAME_ACK:

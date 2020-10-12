@@ -315,6 +315,11 @@ public class SocketSendEvent
                 _sender.ReconnectGameReq(peer);
                 break;
             }
+            case GameProtocol.READY_SYNC_GAME_REQ:
+            {
+                _sender.ReadySyncGameReq(peer);
+                break;
+            }
             
             #endregion
             

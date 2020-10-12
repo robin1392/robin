@@ -49,18 +49,6 @@ public class SocketRecvEvent
             InGameManager.Get().RecvInGameManager(GameProtocol.RESUME_GAME_ACK, msg);
     }
 
-    public void OnReconnectGameAck(Peer peer, MsgReconnectGameAck msg)
-    {
-        UnityUtil.Print("ACK => ", "RECONNECT_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
-
-        //if (InGameManager.Get() != null)
-            //InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_ACK, msg);
-            
-        if(NetworkManager.Get() != null)
-            NetworkManager.Get().ReconnectPacket(msg);
-    }
-
-
     public void OnPauseGameNotify(Peer peer, MsgPauseGameNotify msg)
     {
         UnityUtil.Print("NOTIFY => ", "PAUSE_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
@@ -76,16 +64,7 @@ public class SocketRecvEvent
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.RESUME_GAME_NOTIFY, msg);
     }
-
-    public void OnDisconnectGameNotify(Peer peer, MsgDisconnectGameNotify msg)
-    {
-        UnityUtil.Print("NOTIFY => ", "DISCONNECT_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
-
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.DISCONNECT_GAME_NOTIFY, msg);
-    }
-
-
+    
     public void OnReconnectGameNotify(Peer peer, MsgReconnectGameNotify msg)
     {
         UnityUtil.Print("NOTIFY => ", "RECONNECT_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
@@ -93,7 +72,44 @@ public class SocketRecvEvent
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_NOTIFY, msg);
     }
+    
+    
+    
+    
+    public void OnDisconnectGameNotify(Peer peer, MsgDisconnectGameNotify msg)
+    {
+        UnityUtil.Print("NOTIFY => ", "DISCONNECT_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
 
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.DISCONNECT_GAME_NOTIFY, msg);
+    }
+    public void OnReconnectGameAck(Peer peer, MsgReconnectGameAck msg)
+    {
+        UnityUtil.Print("ACK => ", "RECONNECT_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
+
+        //if (InGameManager.Get() != null)
+        //InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_ACK, msg);
+            
+        if(NetworkManager.Get() != null)
+            NetworkManager.Get().ReconnectPacket(msg);
+    }
+    public void OnReadySyncGameAck(Peer peer, MsgReadySyncGameAck msg)
+    {
+        UnityUtil.Print("ACK => ", "READY_SYNC_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.READY_SYNC_GAME_ACK, msg);
+    }
+    public void OnReadySyncGameNotify(Peer peer, MsgReadySyncGameNotify msg)
+    {
+        UnityUtil.Print("NOTIFY => ", "READY_SYNC_GAME_NOTIFY  " + msg.PlayerUId.ToString(), "green");
+        
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.READY_SYNC_GAME_NOTIFY, msg);
+    }
+    
+    
+    
     public void OnStartSyncGameAck(Peer peer, MsgStartSyncGameAck msg)
     {
         UnityUtil.Print("ACK => ", "START_SYNC_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
