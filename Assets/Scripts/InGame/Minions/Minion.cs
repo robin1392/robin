@@ -339,10 +339,10 @@ namespace ED
                 //switch (PhotonManager.Instance.playType)
                 switch (NetworkManager.Get().playType)
                 {
-                    case PLAY_TYPE.BATTLE:
+                    case Global.PLAY_TYPE.BATTLE:
                         image_HealthBar.color = isMine ? Color.green : Color.red;
                         break;
-                    case PLAY_TYPE.CO_OP:
+                    case Global.PLAY_TYPE.CO_OP:
                         image_HealthBar.color = Color.green;
                         break;
                 }

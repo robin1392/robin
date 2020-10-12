@@ -82,7 +82,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private bool _recvJoinPlayerInfoCheck = false;
 
-    public PLAY_TYPE playType;
+    public Global.PLAY_TYPE playType;
 
     private bool _isMaster;
     public bool IsMaster
@@ -106,14 +106,18 @@ public class NetworkManager : Singleton<NetworkManager>
     #region net game pause , resume , reconnect
 
     // Pause
-    private bool _isOtherPause;
-    public bool IsOtherPause => _isOtherPause;
-    public UnityEvent<bool> event_OtherPuase = new UnityEvent<bool>();
+    private bool _isOtherDisconnect;
+    public bool IsOtherPause => _isOtherDisconnect;
+    public UnityEvent<bool> event_OtherDisconnect = new UnityEvent<bool>();
 
 
     // Resume
     private bool _isResume;
     public bool isResume => _isResume;
+
+
+    private bool _isReconnect;
+    public bool isReconnect => _isReconnect;
 
     #endregion
 
@@ -188,6 +192,8 @@ public class NetworkManager : Singleton<NetworkManager>
         _socketRecv = new SocketRecvEvent();
         _socketSend = new SocketSendEvent(_packetSend);
 
+        SetReconnect(false);
+        
         // recv 셋팅
         CombineRecvDelegate();
     }
@@ -238,17 +244,34 @@ public class NetworkManager : Singleton<NetworkManager>
         _netInfo.Clear();
     }
 
-    public void ConnectServer(PLAY_TYPE type, Action callback = null)
+    public void ConnectServer(Global.PLAY_TYPE type, Action callback = null)
     {
         // 배틀정보..저장
         SaveBattleInfo();
 
-        // 시작하면서 상대 멈춤 초기화
-        SetOtherPause(false);    // pause
+        // 시작하면서 상대 디스커넥트
+        SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
+        
+        SetReconnect(false);        // reconnect
 
         playType = type;
         _clientSocket.Connect(_serverAddr, _port, _gameSession, callback);
+    }
+
+    public void ReConnectServer(Global.PLAY_TYPE type ,  string serverAddr , int port , string session , Action callback = null)
+    {
+        _serverAddr = serverAddr;
+        _port = port;
+        _gameSession = session;
+        
+        // 시작하면서 상대 멈춤 초기화
+        SetOtherDisconnect(false);    // disconnect
+        SetResume(false);        // resume
+        
+
+        playType = type;
+        _clientSocket.ReConnect(_serverAddr, _port, _gameSession, callback);
     }
 
 
@@ -279,6 +302,7 @@ public class NetworkManager : Singleton<NetworkManager>
         // disconnect 감지 했다는...
         //StopAllCoroutines();
 
+        //
         GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
     }
     #endregion
@@ -295,15 +319,20 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #region pause resume reconnect
 
-    public void SetOtherPause(bool pause)
+    public void SetOtherDisconnect(bool pause)
     {
-        event_OtherPuase.Invoke(pause);
-        _isOtherPause = pause;
+        event_OtherDisconnect.Invoke(pause);
+        _isOtherDisconnect = pause;
     }
 
     public void SetResume(bool resume)
     {
         _isResume = resume;
+    }
+
+    public void SetReconnect(bool reconnect)
+    {
+        _isReconnect = reconnect;
     }
     #endregion
 
@@ -377,29 +406,24 @@ public class NetworkManager : Singleton<NetworkManager>
 
         _packetRecv.MinionStatusRelay = _socketRecv.OnMinionStatusRelay;
 
-
         _packetRecv.FireBulletRelay = _socketRecv.OnFireBulletRelay;
         _packetRecv.MinionInvincibilityRelay = _socketRecv.OnMinionInvincibilityRelay;
 
-        //
+        // reconnect , pause , resume
         _packetRecv.DisconnectGameNotify = _socketRecv.OnDisconnectGameNotify;
         _packetRecv.ReconnectGameNotify = _socketRecv.OnReconnectGameNotify;
-
-
-        // reconnect , pause , resume
         _packetRecv.ReconnectGameAck = _socketRecv.OnReconnectGameAck;
-        _packetRecv.PauseGameAck = _socketRecv.OnPauseGameAck;
-        _packetRecv.PauseGameNotify = _socketRecv.OnPauseGameNotify;
-        _packetRecv.ResumeGameAck = _socketRecv.OnResumeGameAck;
-        _packetRecv.ResumeGameNotify = _socketRecv.OnResumeGameNotify;
-
+        
         _packetRecv.StartSyncGameAck = _socketRecv.OnStartSyncGameAck;
         _packetRecv.StartSyncGameNotify = _socketRecv.OnStartSyncGameNotify;
         _packetRecv.EndSyncGameAck = _socketRecv.OnEndSyncGameAck;
         _packetRecv.EndSyncGameNotify = _socketRecv.OnEndSyncGameNotify;
-
-
-
+        
+        // not use...
+        _packetRecv.PauseGameAck = _socketRecv.OnPauseGameAck;
+        _packetRecv.PauseGameNotify = _socketRecv.OnPauseGameNotify;
+        _packetRecv.ResumeGameAck = _socketRecv.OnResumeGameAck;
+        _packetRecv.ResumeGameNotify = _socketRecv.OnResumeGameNotify;
 
         _clientSocket.Init((IPacketReceiver)_packetRecv);
     }
@@ -436,17 +460,20 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     // 배틀 인포 파일이 잇는가??
-    public bool CheckBattleInfoFile()
+    public NetBattleInfo ReadBattleInfo()
     {
         string battlePath = Application.persistentDataPath + _battlePath;
-        return File.Exists(battlePath);
+        if (File.Exists(battlePath) == false)
+        {
+            return null;
+        }
+        else
+        {
+            _battleInfo = BinaryDeserialize(battlePath);
+            return _battleInfo;    
+        }
     }
-
-    public void ReadBattleInfo()
-    {
-        string battlePath = Application.persistentDataPath + _battlePath;
-        _battleInfo = BinaryDeserialize(battlePath);
-    }
+    
 
     public void SaveBattleInfo()
     {
@@ -461,6 +488,8 @@ public class NetworkManager : Singleton<NetworkManager>
         _battleInfo.battleStartTime = DateTime.UtcNow;
 
         _battleInfo.battleStart = true;
+        
+        print(_battleInfo.battleStartTime);
 
         BinarySerialize(_battleInfo, battlePath);
     }
@@ -481,9 +510,34 @@ public class NetworkManager : Singleton<NetworkManager>
         File.Delete(battlePath);
 
         _battleInfo = null;
-        //BinarySerialize(_battleInfo, battlePath);
     }
 
+    #endregion
+    
+    
+    #region reconnect to do
+
+    public void ReconnectPacket(MsgReconnectGameAck msg)
+    {
+        // 에러코드가 0 이 아닐경우는 게임에 이상이 있다는 서버 메세지니...그냥 리턴 시켜서..메인으로
+        if (msg.ErrorCode != 0)
+        {
+            DeleteBattleInfo();
+            DisconnectSocket();
+            
+            SetReconnect(false);
+            
+            //
+            GameStateManager.Get().MoveMainScene();
+            return;
+        }
+        
+        _netInfo.SetPlayerBase(msg.PlayerBase);
+        _netInfo.SetOtherBase(msg.OtherPlayerBase);
+        
+        //
+        GameStateManager.Get().MoveInGameBattle();
+    }
     #endregion
 }
 
@@ -552,6 +606,28 @@ public class NetInfo
         /*for(int i = 0 ; i < otherInfo.DiceIdArray.Length ; i++ )
             UnityEngine.Debug.Log(otherInfo.DiceIdArray[i]);*/
         otherInfoGet = true;
+    }
+
+    public void SetPlayerBase(MsgPlayerBase baseinfo)
+    {
+        MsgPlayerInfo pinfo = new MsgPlayerInfo();
+
+        pinfo.PlayerUId = baseinfo.PlayerUId;
+        pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;
+        pinfo.Name = baseinfo.Name;
+        
+        playerInfo = pinfo;
+    }
+
+    public void SetOtherBase(MsgPlayerBase baseinfo)
+    {
+        MsgPlayerInfo pinfo = new MsgPlayerInfo();
+
+        pinfo.PlayerUId = baseinfo.PlayerUId;
+        pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;
+        pinfo.Name = baseinfo.Name;
+        
+        otherInfo = pinfo;
     }
 
     public bool IsMyUID(int userUid)

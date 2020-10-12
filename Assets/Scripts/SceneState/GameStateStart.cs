@@ -9,7 +9,9 @@ public class GameStateStart : BaseSceneState
     
     #region variable
     // start scene 에서 행동할 상황들
-    public Global.E_STARTSTEP startState = Global.E_STARTSTEP.START_NONE; 
+    public Global.E_STARTSTEP startState = Global.E_STARTSTEP.START_NONE;
+
+    public bool applicateStart = false;
     #endregion
     
     #region override
@@ -26,7 +28,7 @@ public class GameStateStart : BaseSceneState
         base.InitializeState(_entity);
         
         //
-        sceneName = "Start Scene";
+        sceneName = "StartScene";
     }
 
     public override void OnRelease()
@@ -44,6 +46,9 @@ public class GameStateStart : BaseSceneState
         
         //  state 에 들어오면 할일
         startState = Global.E_STARTSTEP.START_CONNECT;
+
+        if (applicateStart)
+            LoadScene(sceneName);
     }
 
     public override void UpdateState(float deltaTime)
@@ -62,15 +67,33 @@ public class GameStateStart : BaseSceneState
     public override void OnSceneLoadFinish(Scene scene, LoadSceneMode mode)
     {
         base.OnSceneLoadFinish(scene, mode);
+      
+        if(applicateStart == false)
+            applicateStart = true;
         
         // 씬로딩이 끝나고 난후
         StartStateAction();
+        
     }
 
     #endregion
 
 
     #region start state
+
+    IEnumerator waitStarSceneName()
+    {
+        while (true)
+        {
+            if (SceneManager.GetActiveScene().name == Global.g_sceneStartName)
+            {
+                StartStateAction();
+                break;
+            }
+            
+            yield return null;
+        }
+    }
 
     public void SetStartState(Global.E_STARTSTEP state)
     {

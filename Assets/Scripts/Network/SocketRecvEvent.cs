@@ -37,6 +37,8 @@ public class SocketRecvEvent
         UnityUtil.Print("ACK => ", "PAUSE_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
 
         // pause 응답은...처리할필요가 없을거같은데..
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.PAUSE_GAME_ACK, msg);
     }
 
     public void OnResumeGameAck(Peer peer, MsgResumeGameAck msg)
@@ -51,8 +53,11 @@ public class SocketRecvEvent
     {
         UnityUtil.Print("ACK => ", "RECONNECT_GAME_ACK  " + msg.ErrorCode.ToString(), "green");
 
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_ACK, msg);
+        //if (InGameManager.Get() != null)
+            //InGameManager.Get().RecvInGameManager(GameProtocol.RECONNECT_GAME_ACK, msg);
+            
+        if(NetworkManager.Get() != null)
+            NetworkManager.Get().ReconnectPacket(msg);
     }
 
 

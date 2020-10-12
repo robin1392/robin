@@ -82,7 +82,7 @@ namespace ED
         private void SetColor()
         {
             var isBlue = _isMine;
-            if (InGameManager.Get().playType == PLAY_TYPE.CO_OP)
+            if (InGameManager.Get().playType == Global.PLAY_TYPE.CO_OP)
             {
                 isBlue = _isBottomPlayer;
             }

@@ -38,11 +38,7 @@ public class GameStateMain : BaseSceneState
         //  state 에 들어오면 할일
         if( !GameStateManager.Get().isDevMode )
             LoadScene(sceneName);
-        else
-        {
-            // 개발 버전이라..중간에서 실행햇을시에..
-            //DataPatchManager.Get().JsonDownLoad();
-        }
+        
     }
 
     public override void UpdateState(float deltaTime)

@@ -24,8 +24,10 @@ public class GameStateManager : Singleton<GameStateManager>
     
     
     #region game variable
-
+    
     public bool isDevMode = false;
+
+    private bool firstStartUser = false;
     #endregion
 
 
@@ -248,8 +250,12 @@ public class GameStateManager : Singleton<GameStateManager>
         }
         else
         {
-            //string userid = UserInfoManager.Get().GetUserInfo().userID;
-            string userid = "";
+            string userid = UserInfoManager.Get().GetUserInfo().userID;
+            if (firstStartUser == false)
+            {
+                userid = "";
+                firstStartUser = true;
+            }
             WebPacket.Get().SendUserAuth(userid, UserAuthOK);
             // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
             if (userid == "")
@@ -269,7 +275,38 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
-        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+        
+        NetBattleInfo battleinfo = NetworkManager.Get().ReadBattleInfo();
+        if (battleinfo == null)
+        {
+            ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+        }
+        else
+        {
+            // 배틀 정보 파일 체크 하자
+            print("check file true ");
+            if ( battleinfo.battleStart == true)
+            {
+                TimeSpan timecheck = DateTime.UtcNow - battleinfo.battleStartTime;
+                print("total Seconds : " + timecheck.TotalSeconds);
+                // 정해진 시간 이내이냐 ?? --> 게임 재접속으로 가자
+                if (timecheck.TotalSeconds <= Global.g_reconnectGameTimeCheck)
+                {
+                    //battleinfo.serverAddr  , battleinfo.serverPort , battleinfo.serverSession
+                    // go reconnect
+                    NetworkManager.Get().ReConnectServer(Global.PLAY_TYPE.BATTLE , battleinfo.serverAddr  , battleinfo.serverPort , battleinfo.serverSession , ServerReconnectCallBack);
+                }
+                else
+                {
+                    ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+                }
+            }
+            else
+            {
+                ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+            }
+        }
+        
     }
     #endregion
     
@@ -289,8 +326,19 @@ public class GameStateManager : Singleton<GameStateManager>
         {
             MoveInGameBattle();
         }
-            
     }
+
+    public void ServerReconnectCallBack()
+    {
+        UnityUtil.Print("Server ReConnect" , "Connect OK" , "blue");
+        
+        NetworkManager.Get().SetReconnect(true);        // reconnect
+        
+        // reconnect req
+        if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+            NetworkManager.Get().Send(GameProtocol.RECONNECT_GAME_REQ);
+    }
+
     #endregion
     
     #region main scene to do
