@@ -1088,8 +1088,6 @@ namespace ED
             playerController.SetDiceField(gameData.GameDiceData);
             playerController.targetPlayer.SetDiceField(gameData.OtherGameDiceData);
             
-            // 인게임 업 셋팅
-            
             // 미니언 셋팅
             List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
             foreach (var data in myMinionData)
@@ -1114,6 +1112,9 @@ namespace ED
             // Spawn Count
             playerController._spawnCount = gameData.PlayerSpawnCount;
             playerController.targetPlayer._spawnCount = gameData.OtherPlayerSpawnCount;
+
+            
+            NetworkManager.Get().SetReconnect(false);
             
             //
             SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);

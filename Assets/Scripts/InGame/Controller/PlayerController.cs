@@ -1891,6 +1891,10 @@ namespace ED
                     diceFieldNum = arrDiceData[i].SlotNum
                 };
             }
+            
+            //
+            if(isMine)
+                uiDiceField.RefreshField();    
         }
         
         #endregion
@@ -1946,7 +1950,7 @@ namespace ED
             if (InGameManager.Get().isGamePlaying == false)
                 return;
             
-            if (NetworkManager.Get().isResume == true)
+            if (NetworkManager.Get().isReconnect == true)
                 return;
 
             if (InGameManager.IsNetwork == true)
@@ -1963,7 +1967,7 @@ namespace ED
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
         {
-            if (NetworkManager.Get().isResume == true)
+            if (NetworkManager.Get().isReconnect == true)
                 return;
             
             
