@@ -154,7 +154,7 @@ namespace ED
             }
             instanceID = GetInstanceID();
             
-            if (InGameManager.Get().playType != PLAY_TYPE.CO_OP)
+            if (InGameManager.Get().playType != Global.PLAY_TYPE.CO_OP)
             {
                 base.Start();
             }
@@ -193,7 +193,7 @@ namespace ED
 
         public void DestroyPlayer()
         {
-            NetworkManager.Get().event_OtherPuase.RemoveListener(OtherPlayerPause);
+            NetworkManager.Get().event_OtherDisconnect.RemoveListener(OtherPlayerPause);
             _arrDice = null;
             _arrDiceDeck = null;
             _arrUpgradeLevel = null;
@@ -201,7 +201,7 @@ namespace ED
 
         public void StartPlayerControll()
         {
-            NetworkManager.Get().event_OtherPuase.AddListener(OtherPlayerPause);
+            NetworkManager.Get().event_OtherDisconnect.AddListener(OtherPlayerPause);
 
             isHalfHealth = false;
 
@@ -323,11 +323,8 @@ namespace ED
         
         #region spawn
         
-        //[PunRPC]
         public void Spawn()
         {
-            //if (NetworkManager.Get().IsOtherPause) targetPlayer.Spawn();
-            
             var magicCastDelay = 0.05f;
             robotPieceCount = 0;
             robotEyeTotalLevel = 0;
@@ -486,7 +483,7 @@ namespace ED
             }
 
             //if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
-            if (InGameManager.IsNetwork && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !isMine)
+            if (InGameManager.IsNetwork && InGameManager.Get().playType != Global.PLAY_TYPE.CO_OP && !isMine)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;
@@ -646,7 +643,7 @@ namespace ED
             }
 
             //if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
-            if (InGameManager.IsNetwork && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !isMine)
+            if (InGameManager.IsNetwork && InGameManager.Get().playType != Global.PLAY_TYPE.CO_OP && !isMine)
             {
                 spawnPos.x *= -1f;
                 spawnPos.z *= -1f;
@@ -836,7 +833,7 @@ namespace ED
             objCollider.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
             this.isBottomPlayer = pIsBottomPlayer;
 
-            if (InGameManager.IsNetwork == true && this.isBottomPlayer == false && NetworkManager.Get().playType == PLAY_TYPE.BATTLE)
+            if (InGameManager.IsNetwork == true && this.isBottomPlayer == false && NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
             {
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }

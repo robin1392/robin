@@ -26,6 +26,9 @@ public partial class Global
     #region system value
     // 덱의 개수
     public static int g_countDeck = 3;
+
+
+    public static float g_reconnectGameTimeCheck = 180.0f;
     
     #endregion
     

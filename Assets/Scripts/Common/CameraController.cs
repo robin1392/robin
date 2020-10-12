@@ -38,7 +38,7 @@ namespace ED
 
             if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
             {
-                SetPosition(NetworkManager.Get().playType != PLAY_TYPE.BATTLE || NetworkManager.Get().IsMaster , height );
+                SetPosition(NetworkManager.Get().playType != Global.PLAY_TYPE.BATTLE || NetworkManager.Get().IsMaster , height );
             }
             else
             {

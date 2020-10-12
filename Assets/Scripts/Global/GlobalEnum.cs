@@ -34,6 +34,13 @@ namespace ED
 
 public partial class Global
 {
+    public enum PLAY_TYPE
+    {
+        BATTLE,
+        CO_OP,
+    }
+
+    
     #region game state & action enum
     public enum E_GAMESTATE
     {

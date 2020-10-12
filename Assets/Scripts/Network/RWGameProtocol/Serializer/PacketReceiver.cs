@@ -81,6 +81,13 @@ namespace RWGameProtocol.Serializer
         public delegate void ResumeGameNotifyDelegate(Peer peer, MsgResumeGameNotify msg);
         public ResumeGameNotifyDelegate ResumeGameNotify;
 
+        public delegate void ReadySyncGameReqDelegate(Peer peer, MsgReadySyncGameReq msg);
+        public ReadySyncGameReqDelegate ReadySyncGameReq;
+        public delegate void ReadySyncGameAckDelegate(Peer peer, MsgReadySyncGameAck msg);
+        public ReadySyncGameAckDelegate ReadySyncGameAck;
+        public delegate void ReadySyncGameNotifyDelegate(Peer peer, MsgReadySyncGameNotify msg);
+        public ReadySyncGameNotifyDelegate ReadySyncGameNotify;
+
         public delegate void StartSyncGameReqDelegate(Peer peer, MsgStartSyncGameReq msg);
         public StartSyncGameReqDelegate StartSyncGameReq;
         public delegate void StartSyncGameAckDelegate(Peer peer, MsgStartSyncGameAck msg);

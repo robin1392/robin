@@ -6,6 +6,7 @@ using RWCoreNetwork;
 using RWCoreNetwork.NetService;
 using RWCoreNetwork.NetPacket;
 using System;
+using System.Runtime.InteropServices;
 using ED;
 
 
@@ -45,6 +46,7 @@ public class SocketManager
 
 
     private Action _connectCallBack;
+    private Action _reconnectCallBack;
     
     public SocketManager()
     {
@@ -68,6 +70,13 @@ public class SocketManager
         _netService.ClientSession.SessionId = clientSessionId;
         _netService.Connect(host, port);
         _connectCallBack = connectCallback;
+    }
+    
+    public void ReConnect(string host, int port , string clientSessionId, Action reconnectCallback = null)
+    {
+        _netService.ClientSession.SessionId = clientSessionId;
+        _netService.Connect(host, port);
+        _reconnectCallBack = reconnectCallback;
     }
 
     public void Disconnect()
@@ -108,15 +117,24 @@ public class SocketManager
     /// <param name="peer"></param>
     void OnClientReconnected(ClientSession session, Peer peer)
     {
-
+        if (peer == null)
+            _serverPeer = new Peer();    
+        else
+            _serverPeer = peer;
+        
+        _serverPeer.SetClientSession(session);
+        
+        //
+        if (_reconnectCallBack != null)
+            _reconnectCallBack();
     }
 
 
     void OnClientDisconnected(ClientSession session, ESessionState sessionState)
     {
-        Disconnect();
-        
         UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
+        
+        Disconnect();
         
         // 게임중이었다면....을 체크해야된다
         if (InGameManager.Get() != null && InGameManager.Get().isGamePlaying == true)

@@ -30,7 +30,7 @@ namespace ED
         #region game system variable
 
         [Header("SYSTEN INFO")] 
-        public PLAY_TYPE playType;
+        public Global.PLAY_TYPE playType;
 
         //public Data_AllDice data_AllDice;
         // new all dice info
@@ -785,8 +785,8 @@ namespace ED
             if(IsNetwork)
                 NetworkManager.Get().DisconnectSocket();
 
+            // 잠시 테스트로 주석
             NetworkManager.Get().DeleteBattleInfo();
-            
             GameStateManager.Get().MoveMainScene();
         }
 
@@ -928,11 +928,9 @@ namespace ED
 
         public void OnApplicationPause(bool pauseStatus)
         {
-            /*
             if (pauseStatus)
             {
                 print("Application Pause");
-                // 일시정지
                 SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
             }
             else
@@ -940,21 +938,17 @@ namespace ED
                 if (isGamePlaying == false)
                     return;
                 
-                //StartCoroutine(ResumeDelay());
                 ResumeDelay();
             }
-            */
         }
 
 #if UNITY_EDITOR
         // 에디터에서 테스트용도로 사용하기 위해
         public void OnEditorAppPause(PauseState pause)
         {
-            /*
             if (pause == PauseState.Paused)
             {
                 print("Application Pause");
-                // 일시정지
                 SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
             }
             else
@@ -963,14 +957,14 @@ namespace ED
                 if (isGamePlaying == false)
                     return;
                 
-                //StartCoroutine(ResumeDelay());
                 ResumeDelay();
             }
-            */
+
         }
 #endif
         void ResumeDelay()
         {
+            /*
             // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
             NetworkManager.Get().SetResume(true);
             
@@ -980,18 +974,12 @@ namespace ED
 
             //yield return new WaitForSeconds(2.0f);
             RevmoeAllMinionAndMagic();
+            */
             
-            
-            print("Application Resume");
             if (NetworkManager.Get().IsConnect())
             {
                 // resume
                 SendInGameManager(GameProtocol.RESUME_GAME_REQ);
-            }
-            else
-            {
-                // 어차피 여기서 할필요가 없군..network 에서 씬을 보내버리니...
-                // reconnect --> go
             }
         }
 
@@ -1237,6 +1225,7 @@ namespace ED
                             minion.behaviourTreeOwner.behaviour.Resume();
                         }
                     }
+                    
                     // 인디케이터도 다시 안보이게..
                     if (UI_InGamePopup.Get().IsIndicatorActive() == true)
                     {
@@ -1300,47 +1289,19 @@ namespace ED
                     }
                     break;
                 }
-                case GameProtocol.PAUSE_GAME_NOTIFY:
-                {
-                    MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
-
-                    if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
-                    {
-                        NetworkManager.Get().SetOtherPause(true);
-                    }
-                    
-                    break;
-                }
-                case GameProtocol.RESUME_GAME_ACK:
-                {
-                    MsgResumeGameAck resumeack = (MsgResumeGameAck) param[0];
-                    
-                    break;
-                }
-                case GameProtocol.RESUME_GAME_NOTIFY:
-                {
-                    MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
-
-                    if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
-                    {
-                        NetworkManager.Get().SetResume(true);
-                        // 미니언 정보 취합 해서 보내준다..
-                        SendSyncAllBattleInfo();
-                    }
-                    break;
-                }
+                
+                
                 case GameProtocol.START_SYNC_GAME_ACK:
                 {
                     MsgStartSyncGameAck startsyncack = (MsgStartSyncGameAck) param[0];
-                    //
-                    
+                    // 할일없다
                     break;
                 }
                 case GameProtocol.START_SYNC_GAME_NOTIFY:
                 {
                     MsgStartSyncGameNotify syncNotify = (MsgStartSyncGameNotify) param[0];
+                    
                     // 받은 데이터로 동기화 시킨다
-
                     SyncGameData(syncNotify);
                     
                     break;
@@ -1376,35 +1337,73 @@ namespace ED
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
-
                     break;
                 }
                 
                 
-                
+                // 상대방의 접속이 끊겼다
                 case GameProtocol.DISCONNECT_GAME_NOTIFY:
                 {
                     MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
                     
-                    // 상대가 나갓다
                     if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
                     {
+                        NetworkManager.Get().SetOtherDisconnect(true);
                     }
                     
                     break;
                 }
+                
                 case GameProtocol.RECONNECT_GAME_NOTIFY:
                 {
                     MsgReconnectGameNotify reconnNoti = (MsgReconnectGameNotify) param[0];
-                    
                     break;
                 }
                 case GameProtocol.RECONNECT_GAME_ACK:
                 {
                     MsgReconnectGameAck reconnack = (MsgReconnectGameAck) param[0];
+                    break;
+                }
+
+
+
+                
+                
+                case GameProtocol.PAUSE_GAME_ACK:
+                {
+                    MsgPauseGameAck pauseack = (MsgPauseGameAck) param[0];
+                    break;
+                }
+                case GameProtocol.PAUSE_GAME_NOTIFY: // 안씀...
+                {
+                    MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
+
+                    /*if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
+                    {
+                        NetworkManager.Get().SetOtherPause(true);
+                    }*/
                     
                     break;
                 }
+                case GameProtocol.RESUME_GAME_ACK: // 안씀...
+                {
+                    MsgResumeGameAck resumeack = (MsgResumeGameAck) param[0];
+                    
+                    break;
+                }
+                case GameProtocol.RESUME_GAME_NOTIFY: // 안씀...
+                {
+                    MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
+
+                    /*if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
+                    {
+                        NetworkManager.Get().SetResume(true);
+                        // 미니언 정보 취합 해서 보내준다..
+                        SendSyncAllBattleInfo();
+                    }*/
+                    break;
+                }
+
                 #endregion
                 
                 
