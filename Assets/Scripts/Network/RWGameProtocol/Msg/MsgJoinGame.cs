@@ -21,6 +21,7 @@ namespace RWGameProtocol.Msg
         public int CurrentSp;
         public int TowerHp;
         public short SpGrade;
+        public short GetDiceCount;
         public int[] DiceIdArray;
         public short[] DiceUpgradeArray;
     }
