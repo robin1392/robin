@@ -139,7 +139,6 @@ namespace RWCoreNetwork.NetService
             // 생성된 클라이언트 소켓을 보관해 놓고 통신할 때 사용함
             clientSession.Socket = clientSocket;
             clientSession.SetKeepAlive(_keepAliveTime, _keepAliveInterval);
-            clientSession.NetState = ENetState.Connecting;
 
 
             // 데이터를 받을 수 있도록 소켓 메소드를 호출해준다.
