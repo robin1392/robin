@@ -24,7 +24,7 @@ namespace RWGameProtocol.Serializer
         public virtual void UpgradeSpAck(Peer peer, GameErrorCode code, short upgrade, int currentSp) { }
         public virtual void UpgradeSpNotify(Peer peer, int playerUId, short upgrade) { }
         public virtual void HitDamageReq(Peer peer, int playerUId, int damage) { }
-        public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage) { }
+        public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage, int currentHp) { }
         public virtual void ReconnectGameReq(Peer peer) { }
         public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerBase playerBase, MsgPlayerBase otherPlayerBase) { }
         public virtual void PauseGameReq(Peer peer) { }
@@ -46,7 +46,7 @@ namespace RWGameProtocol.Serializer
         public virtual void EndSyncGameNotify(Peer peer) { }
 
 
-        public virtual void HitDamageNotify(Peer peer, int playerUId, int damage) { }
+        public virtual void HitDamageNotify(Peer peer, int playerUId, int damage, int currentHp) { }
         public virtual void JoinGameNotify(Peer peer, MsgPlayerInfo info) { }
         public virtual void LeaveGameNotify(Peer peer, int playerUId) { }
         public virtual void DeactiveWaitingObjectNotify(Peer peer, int playerUId, int currentSp) { }

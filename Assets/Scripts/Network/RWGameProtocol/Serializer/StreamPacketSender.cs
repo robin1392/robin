@@ -499,26 +499,26 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage) 
+        public override void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage, int currentHp) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 _bf.Serialize(ms, (short)code);
                 _bf.Serialize(ms, playerUId);
                 _bf.Serialize(ms, damage);
+                _bf.Serialize(ms, currentHp);
                 peer.SendPacket((int)GameProtocol.HIT_DAMAGE_ACK, ms.ToArray());
             }
         }
 
 
-        public override void HitDamageNotify(Peer peer, int playerUId, int damage)
+        public override void HitDamageNotify(Peer peer, int playerUId, int damage, int currentHp)
         {
-            
             using (var ms = new MemoryStream())
             {
                 _bf.Serialize(ms, playerUId);
                 _bf.Serialize(ms, damage);
+                _bf.Serialize(ms, currentHp);
                 peer.SendPacket((int)GameProtocol.HIT_DAMAGE_NOTIFY, ms.ToArray());
             }
         }

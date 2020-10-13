@@ -710,6 +710,7 @@ namespace RWGameProtocol.Serializer
                             msg.ErrorCode = (short)_bf.Deserialize(ms);
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.Damage = (int)_bf.Deserialize(ms);
+                            msg.CurrentHp = (int)_bf.Deserialize(ms);
                             HitDamageAck(peer, msg);
                         }
                     }
@@ -725,6 +726,7 @@ namespace RWGameProtocol.Serializer
                             MsgHitDamageNotify msg = new MsgHitDamageNotify();
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.Damage = (int)_bf.Deserialize(ms);
+                            msg.CurrentHp = (int)_bf.Deserialize(ms);
                             HitDamageNotify(peer, msg);
                         }
                     }
