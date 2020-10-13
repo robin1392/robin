@@ -67,6 +67,7 @@ public class SocketManager
 
     public void Connect(string host, int port , string clientSessionId, Action connectCallback = null)
     {
+        _netService.ClientSession.NetState = ENetState.Connecting;
         _netService.ClientSession.SessionId = clientSessionId;
         _netService.Connect(host, port);
         _connectCallBack = connectCallback;
@@ -74,6 +75,7 @@ public class SocketManager
     
     public void ReConnect(string host, int port , string clientSessionId, Action reconnectCallback = null)
     {
+        _netService.ClientSession.NetState = ENetState.Reconnecting;
         _netService.ClientSession.SessionId = clientSessionId;
         _netService.Connect(host, port);
         _reconnectCallBack = reconnectCallback;
