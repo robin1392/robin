@@ -206,6 +206,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
+        
+        _battleInfo = null;
 
         _packetSend = null;
         _packetRecv = null;

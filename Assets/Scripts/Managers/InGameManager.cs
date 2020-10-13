@@ -614,9 +614,13 @@ namespace ED
             WorldUIManager.Get().SetWave(wave);
 
             Debug.Log("spawn  : " + wave);
-
+            
             playerController.Spawn();
             playerController.targetPlayer.Spawn();
+
+            // 스폰이 불릴때마다 시간갱신을 위해 저장
+            if (NetworkManager.Get() && IsNetwork)
+                NetworkManager.Get().SaveBattleInfo();
         }
 
         #endregion

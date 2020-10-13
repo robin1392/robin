@@ -292,7 +292,7 @@ public class GameStateManager : Singleton<GameStateManager>
                 // 정해진 시간 이내이냐 ?? --> 게임 재접속으로 가자
                 if (timecheck.TotalSeconds <= Global.g_reconnectGameTimeCheck)
                 {
-                    //battleinfo.serverAddr  , battleinfo.serverPort , battleinfo.serverSession
+                    NetworkManager.Get().SetReconnect(true);        // reconnect
                     // go reconnect
                     NetworkManager.Get().ReConnectServer(Global.PLAY_TYPE.BATTLE , battleinfo.serverAddr  , battleinfo.serverPort , battleinfo.serverSession , ServerReconnectCallBack);
                 }
@@ -331,8 +331,6 @@ public class GameStateManager : Singleton<GameStateManager>
     public void ServerReconnectCallBack()
     {
         UnityUtil.Print("Server ReConnect" , "Connect OK" , "blue");
-        
-        NetworkManager.Get().SetReconnect(true);        // reconnect
         
         // reconnect req
         if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())

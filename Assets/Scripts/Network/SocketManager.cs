@@ -117,6 +117,16 @@ public class SocketManager
     /// <param name="sessionState"></param>
     void OnClientReconnected(ClientSession session, ESessionState sessionState)
     {
+        if (NetworkManager.Get().isReconnect == true || sessionState != ESessionState.None)
+        {
+            NetworkManager.Get().DeleteBattleInfo();
+            NetworkManager.Get().SetReconnect(false);
+            //
+            GameStateManager.Get().MoveMainScene();
+            return;
+        }
+        
+        
         Peer peer = session.GetPeer();
         if (peer == null)
             _serverPeer = new Peer();    
@@ -134,8 +144,15 @@ public class SocketManager
     void OnClientDisconnected(ClientSession session, ESessionState sessionState)
     {
         UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
-        
-        Disconnect();
+
+        if (NetworkManager.Get().isReconnect == true || sessionState != ESessionState.None)
+        {
+            NetworkManager.Get().DeleteBattleInfo();
+            NetworkManager.Get().SetReconnect(false);
+            //
+            GameStateManager.Get().MoveMainScene();
+            return;
+        }
         
         // 게임중이었다면....을 체크해야된다
         if (InGameManager.Get() != null && InGameManager.Get().isGamePlaying == true)

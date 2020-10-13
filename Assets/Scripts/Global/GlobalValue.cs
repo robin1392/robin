@@ -28,7 +28,8 @@ public partial class Global
     public static int g_countDeck = 3;
 
 
-    public static float g_reconnectGameTimeCheck = 180.0f;
+    // 재접속 시간 체크를 위해 - 2wave 시간 정도..
+    public static float g_reconnectGameTimeCheck = 40.0f;
     
     #endregion
     
