@@ -1079,11 +1079,22 @@ namespace ED
             
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
-            playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(NetworkManager.Get().GetNetInfo().playerInfo.TowerHp);
+            playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
             playerController.RefreshHealthBar();
+            playerController.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.PlayerInfo.IsBottomPlayer);
+            playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
+            playerController.isMine = true;
+            playerController.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
+            
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
-            playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
+            playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.OtherPlayerInfo.TowerHp);
             playerController.targetPlayer.RefreshHealthBar();
+            playerController.targetPlayer.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.OtherPlayerInfo.IsBottomPlayer);
+            playerController.targetPlayer.transform.position = FieldManager.Get().GetPlayerPos(gameData.OtherPlayerInfo.IsBottomPlayer);
+            playerController.targetPlayer.isMine = false;
+            playerController.targetPlayer.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+            
+            CameraController.Get().Start();
 
             //
             SyncInfo();
