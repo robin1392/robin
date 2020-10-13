@@ -612,6 +612,8 @@ namespace ED
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
+            // 시간 리셋
+            time = startSpawnTime;
 
             Debug.Log("spawn  : " + wave);
             
