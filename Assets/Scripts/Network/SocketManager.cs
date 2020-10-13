@@ -117,7 +117,8 @@ public class SocketManager
     /// <param name="sessionState"></param>
     void OnClientReconnected(ClientSession session, ESessionState sessionState)
     {
-        if (NetworkManager.Get().isReconnect == true || sessionState != ESessionState.None)
+        //
+        if (sessionState != ESessionState.None)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
@@ -125,7 +126,6 @@ public class SocketManager
             GameStateManager.Get().MoveMainScene();
             return;
         }
-        
         
         Peer peer = session.GetPeer();
         if (peer == null)
