@@ -1018,6 +1018,7 @@ namespace ED
                 minion.animator.SetTrigger("Idle");
             }
             
+            
             // 현재 전장에 있는 미니언 정보들 모은다 
             NetSyncData myData = new NetSyncData();
             NetSyncData otherData = new NetSyncData();
@@ -1072,6 +1073,9 @@ namespace ED
             MsgSyncMinionData[] syncMyMinionData = ConvertNetMsg.ConvertNetSyncToMsg(myData);
             MsgSyncMinionData[] syncOtherMinionData = ConvertNetMsg.ConvertNetSyncToMsg(otherData);
             
+            // 돌리던 ai false
+            NetworkManager.Get().SetOtherDisconnect(false);
+
             //
             //Peer peer, int playerId, MsgSyncMinionData[] syncMinionData, int otherPlayerId, MsgSyncMinionData[] otherSyncMinionData
             // 데이터 보냄
