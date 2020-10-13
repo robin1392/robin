@@ -13,18 +13,22 @@ namespace RWCoreNetwork.NetService
 {
     public enum ENetState : byte
     {
+        // 신규 접속 중
         Connecting,
 
-        // 신규 소켓 연결 상태
+        // 신규 접속 완료
         Connected,
 
-        // 온라인 상태(재접속)
-        Online,
+        // 재접속 중
+        Reconnecting,
 
-        // 오프라인 상태(소켓 닫힘)
-        Offline,
+        // 재접속 완료
+        Reconnected,
 
-        // 연결 해제 상태(세션 제거)
+        // 연결 해제 중
+        Disconnecting,
+
+        // 연결 해제 완료
         Disconnected,
 
         // 종료
@@ -43,11 +47,6 @@ namespace RWCoreNetwork.NetService
     }
 
 
-    internal struct SocketConnectedNotify
-    {
-    }
-
-
     /// <summary>
     /// 네트워크 기본 서비스 클래스
     /// 소켓 연결 및 패킷의 송수신과 관련된 전반적인 처리를 담당한다.
@@ -58,7 +57,7 @@ namespace RWCoreNetwork.NetService
 
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
-        public ClientConnectDelegate ClientOnlineCallback { get; set; }
+        public ClientConnectDelegate ClientReconnectedCallback { get; set; }
         public ClientConnectDelegate ClientOfflineCallback { get; set; }
 
 

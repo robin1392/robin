@@ -24,7 +24,7 @@ namespace RWCoreNetwork
   
         public void SendPacket(int protocolId, byte[] msg)
         {
-            if (ClientSession.NetState < NetService.ENetState.Offline)
+            if (ClientSession.NetState == NetService.ENetState.Connected)
             {
                 ClientSession.Send(protocolId, msg, msg.Length);
             }
@@ -33,6 +33,11 @@ namespace RWCoreNetwork
 
         public void Disconnect(ESessionState sessionState)
         {
+            if (ClientSession.SessionState != ESessionState.None)
+            {
+                return;
+            }
+
             ClientSession.SessionState = sessionState;
             ClientSession.Disconnect();
         }

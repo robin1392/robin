@@ -61,7 +61,7 @@ public class SocketManager
         _netService = new NetClientService(handler, netLogger, 1, 20480, 5000, 1000, false);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;
-        _netService.ClientOnlineCallback += OnClientReconnected;
+        _netService.ClientReconnectedCallback += OnClientReconnected;
     }
 
 

@@ -26,11 +26,11 @@ namespace RWCoreNetwork.NetService
 
 
         // 대기 세션
-        protected List<ClientSession> _waitClientSessions;
+        protected List<ClientSession> _reconnectClientSessions;
 
 
-        // 접속이 막힌 세션
-        protected HashSet<string> _expiredClientSessions;
+        // 만료된 세션
+        protected Dictionary<string, ClientSession> _expiredClientSessions;
 
 
         // 인증된 클라이언트 세션
@@ -92,8 +92,8 @@ namespace RWCoreNetwork.NetService
 
 
             _authedClientSessions = new Dictionary<string, ClientSession>();
-            _waitClientSessions = new List<ClientSession>();
-            _expiredClientSessions = new HashSet<string>();
+            _reconnectClientSessions = new List<ClientSession>();
+            _expiredClientSessions = new Dictionary<string, ClientSession>();
 
             _removeClientSessionTick = DateTime.UtcNow.AddSeconds(10).Ticks;
             _lockClientSessionContainer = new object();
@@ -120,7 +120,7 @@ namespace RWCoreNetwork.NetService
                 }
                 _authedClientSessions.Clear();
 
-                foreach (var session in _waitClientSessions)
+                foreach (var session in _reconnectClientSessions)
                 {
                     if (_receiveEventAragePool != null)
                     {
@@ -132,8 +132,24 @@ namespace RWCoreNetwork.NetService
                         _sendEventAragePool.Push(session.SendEventArgs);
                     }
                 }
-                _waitClientSessions.Clear();
+                _reconnectClientSessions.Clear();
+
+
+                foreach (var session in _expiredClientSessions.Values)
+                {
+                    if (_receiveEventAragePool != null)
+                    {
+                        _receiveEventAragePool.Push(session.ReceiveEventArgs);
+                    }
+
+                    if (_sendEventAragePool != null)
+                    {
+                        _sendEventAragePool.Push(session.SendEventArgs);
+                    }
+                }
                 _expiredClientSessions.Clear();
+
+                _logger.Info(string.Format("_receiveEventAragePool: {0}, _sendEventAragePool: {1}", _receiveEventAragePool.Count, _sendEventAragePool.Count));
             }
         }
 
@@ -187,19 +203,19 @@ namespace RWCoreNetwork.NetService
             {
                 _removeClientSessionTick = DateTime.UtcNow.AddSeconds(10).Ticks;
 
-                if (_waitClientSessions.Count > 0)
+                if (_reconnectClientSessions.Count > 0)
                 {
                     List<ClientSession> removeSessions = new List<ClientSession>();
                     lock (_lockClientSessionContainer)
                     {
-                        ClientSession clientSession = _waitClientSessions.Last();
+                        ClientSession clientSession = _reconnectClientSessions.Last();
                         while (clientSession != null && clientSession.AliveTimeTick < nowTick)
                         {
-                            _waitClientSessions.RemoveAt(_waitClientSessions.Count - 1);
+                            _reconnectClientSessions.RemoveAt(_reconnectClientSessions.Count - 1);
 
 
                             clientSession.NetState = ENetState.Disconnected;
-                            _expiredClientSessions.Add(clientSession.SessionId);
+                            _expiredClientSessions.Add(clientSession.SessionId, clientSession);
 
 
                             if (ClientDisconnectedCallback != null)
@@ -210,11 +226,11 @@ namespace RWCoreNetwork.NetService
 
                             removeSessions.Add(clientSession);
 
-                            if (_waitClientSessions.Count == 0)
+                            if (_reconnectClientSessions.Count == 0)
                             {
                                 break;
                             }
-                            clientSession = _waitClientSessions.Last();
+                            clientSession = _reconnectClientSessions.Last();
                         }
                     }
 
@@ -266,10 +282,12 @@ namespace RWCoreNetwork.NetService
             if (protocolId == (int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ)
             {
                 string clientSessionId = string.Empty;
+                ENetState clientNetState = ENetState.End;
                 var bf = new BinaryFormatter();
                 using (var ms = new MemoryStream(msg))
                 {
                     clientSessionId = (string)bf.Deserialize(ms);
+                    clientNetState = (ENetState)(byte)bf.Deserialize(ms);
                 }
 
 
@@ -284,17 +302,18 @@ namespace RWCoreNetwork.NetService
 
 
                 // 만료된 세션은 인증에서 제외시킨다.
-                ClientSession duplicatedSession = null;
-                if (_expiredClientSessions.Contains(clientSessionId) == false)
+                ClientSession reconnectSession = null;
+                if (_expiredClientSessions.ContainsKey(clientSessionId) == false)
                 {
                     clientSession.SessionId = clientSessionId;
-                    clientSession.NetState = ENetState.Connected;
                     clientSession.SessionState = ESessionState.None;
+                    clientSession.NetState = ENetState.Connected;
 
 
                     lock (_lockClientSessionContainer)
                     {
                         // 중복 세션 접속시 기존 세션 접속을 종료시킨다.
+                        ClientSession duplicatedSession = null;
                         if (_authedClientSessions.TryGetValue(clientSessionId, out duplicatedSession) == true)
                         {
                             // 기존 접속 세션에 중복 세션 알림 패킷을 전송한다.
@@ -307,59 +326,69 @@ namespace RWCoreNetwork.NetService
 
 
                         // 재연결이면 대기 목록에서 제외하고 인증된 세션목록에 추가한다.
-                        duplicatedSession = _waitClientSessions.Find(x => x.SessionId == clientSessionId);
-                        if (duplicatedSession == null)
-                        {
-                            // 신규 접속
-                            if (ClientConnectedCallback != null)
-                            {
-                                ClientConnectedCallback(clientSession, clientSession.SessionState);
-                            }
-                        }
-                        else
+                        reconnectSession = _reconnectClientSessions.Find(x => x.SessionId == clientSessionId);
+                        if (reconnectSession != null)
                         {
                             // 재접속
-                            _waitClientSessions.Remove(duplicatedSession);
+                            _reconnectClientSessions.Remove(reconnectSession);
 
 
                             // 세션을 설정한다.
-                            duplicatedSession.GetPeer().SetClientSession(clientSession);
+                            reconnectSession.GetPeer().SetClientSession(clientSession);
 
 
-                            if (ClientOnlineCallback != null)
+                            // 인증 세션 목록에 추가
+                            _authedClientSessions.Add(clientSessionId, clientSession);
+
+
+                            if (ClientReconnectedCallback != null)
                             {
-                                ClientOnlineCallback(clientSession, clientSession.SessionState);
+                                ClientReconnectedCallback(clientSession, clientSession.SessionState);
                             }
 
                             // 기존 세션 사용 리소스는 pool에 반환한다.
                             if (_receiveEventAragePool != null)
                             {
-                                _receiveEventAragePool.Push(duplicatedSession.ReceiveEventArgs);
+                                _receiveEventAragePool.Push(reconnectSession.ReceiveEventArgs);
                             }
 
                             if (_sendEventAragePool != null)
                             {
-                                _sendEventAragePool.Push(duplicatedSession.SendEventArgs);
+                                _sendEventAragePool.Push(reconnectSession.SendEventArgs);
                             }
-
-                            _logger.Info(string.Format("_receiveEventAragePool: {0}, _sendEventAragePool: {1}", _receiveEventAragePool.Count, _sendEventAragePool.Count));
                         }
+                        else
+                        {
+                            // 신규 접속 요청 처리
+                            if (clientNetState == ENetState.Connecting)
+                            {
+                                // 인증 세션 목록에 추가
+                                _authedClientSessions.Add(clientSessionId, clientSession);
 
 
-                        // 인증 세션 목록에 추가
-                        _authedClientSessions.Add(clientSessionId, clientSession);
+                                if (ClientConnectedCallback != null)
+                                {
+                                    ClientConnectedCallback(clientSession, clientSession.SessionState);
+                                }
+                            }
+                            // 재접속 요청시 재접속 대상 세션이 존재하지 않으므로 실패를 알린다.
+                            else if (clientNetState == ENetState.Reconnecting)
+                            {
+                                clientSession.SessionState = ESessionState.Expired;
+                            }
+                        }
                     }
                 }
                 else
                 {
                     clientSession.SessionState = ESessionState.Expired;
-
-                    _logger.Info(string.Format("[OnMessageCompleted] Expired session. clientSessionId: {0}", clientSessionId));
                 }
 
 
                 // 세션 인증 응답 패킷 전송
-                SendInternalAuthSessionAck(clientSession, (duplicatedSession != null));
+                SendInternalAuthSessionAck(clientSession, clientSession.NetState);
+
+                _logger.Info(string.Format("_receiveEventAragePool: {0}, _sendEventAragePool: {1}", _receiveEventAragePool.Count, _sendEventAragePool.Count));
             }
             else
             {
@@ -383,69 +412,62 @@ namespace RWCoreNetwork.NetService
         protected override void CloseClientsocket(ClientSession clientSession, SocketError error)
         {
             clientSession.OnRemoved();
-            clientSession.NetState = ENetState.Offline;
 
 
-            List<ClientSession> tempRemoveSession = new List<ClientSession>();
             lock (_lockClientSessionContainer)
             {
+                if (_authedClientSessions.ContainsKey(clientSession.SessionId) == false)
+                {
+
+                    if (_receiveEventAragePool != null)
+                    {
+                        _receiveEventAragePool.Push(clientSession.ReceiveEventArgs);
+                    }
+
+                    if (_sendEventAragePool != null)
+                    {
+                        _sendEventAragePool.Push(clientSession.SendEventArgs);
+                    }
+
+                    return;
+                }
                 _authedClientSessions.Remove(clientSession.SessionId);
 
-                if (_authedClientSessions.Count == 0)
+
+                if (clientSession.SessionState != ESessionState.None)
                 {
-                    foreach(var elem in _waitClientSessions)
-                    {
-                        tempRemoveSession.Add(elem);
-                    }
-                    _waitClientSessions.Clear();
+                    clientSession.NetState = ENetState.Disconnected;
+                    _expiredClientSessions.Add(clientSession.SessionId, clientSession);
                 }
                 else
                 {
-                    if (clientSession.SessionState != ESessionState.None)
-                    {
-                        _expiredClientSessions.Add(clientSession.SessionId);
-                    }
-                    else
-                    {
-                        clientSession.AliveTimeTick = DateTime.UtcNow.AddSeconds(30).Ticks;
-                        _waitClientSessions.Insert(0, clientSession);
-                    }
+                    clientSession.NetState = ENetState.Reconnecting;
+                    clientSession.AliveTimeTick = DateTime.UtcNow.AddSeconds(30).Ticks;
+                    _reconnectClientSessions.Insert(0, clientSession);
                 }
             }
 
 
-            foreach (var elem in tempRemoveSession)
-            {
-                if (_receiveEventAragePool != null)
-                {
-                    _receiveEventAragePool.Push(elem.ReceiveEventArgs);
-                }
-
-                if (_sendEventAragePool != null)
-                {
-                    _sendEventAragePool.Push(elem.SendEventArgs);
-                }
-            }
-
-
-            if (ClientOfflineCallback != null)
+            if (ClientOfflineCallback != null && clientSession.GetPeer() != null)
             {
                 ClientOfflineCallback(clientSession, clientSession.SessionState);
             }
         }
 
-        void SendInternalAuthSessionAck(ClientSession clientSession, bool isReconnected)
+
+        void SendInternalAuthSessionAck(ClientSession clientSession, ENetState netState)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, isReconnected);
+                bf.Serialize(ms, (byte)netState);
                 bf.Serialize(ms, (short)clientSession.SessionState);
                 clientSession.Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
         }
+
 
         void SendInternalDuplicatSessionNotify(ClientSession clientSession)
         {
