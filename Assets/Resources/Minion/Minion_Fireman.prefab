@@ -85,6 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 2003
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 4658676096167050152}
