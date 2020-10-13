@@ -86,7 +86,7 @@ namespace RWCoreNetwork.NetService
 
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
-                SendInternalAuthSessionReq(ClientSession.SessionId);
+                SendInternalAuthSessionReq(ClientSession.SessionId, ClientSession.NetState);
             }
             else
             {
@@ -149,11 +149,18 @@ namespace RWCoreNetwork.NetService
                         }
                     }
                     break;
-                case ENetState.Online:
+                case ENetState.Reconnected:
                     {
-                        if (ClientOnlineCallback != null)
+                        clientSession.NetState = ENetState.Connected;
+
+                        if (ClientReconnectedCallback != null)
                         {
-                            ClientOnlineCallback(clientSession, clientSession.SessionState);
+                            ClientReconnectedCallback(clientSession, clientSession.SessionState);
+                        }
+
+                        if (clientSession.SessionState != ESessionState.None)
+                        {
+                            ClientSession.Disconnect();
                         }
                     }
                     break;
@@ -198,24 +205,35 @@ namespace RWCoreNetwork.NetService
 
             if (protocolId == (int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK)
             {
+                ENetState netState;
+                ESessionState sessionState;
                 var bf = new BinaryFormatter();
                 using (var ms = new MemoryStream(msg))
                 {
-                    bool isReconnect = (bool)bf.Deserialize(ms);
-                    short sessionState = (short)bf.Deserialize(ms);
+                    netState = (ENetState)(byte)bf.Deserialize(ms);
+                    sessionState = (ESessionState)(short)bf.Deserialize(ms);
+                }
 
 
-                    clientSession.NetState = (isReconnect == false) 
-                        ? ENetState.Connected 
-                        : ENetState.Online;
-
-                    clientSession.SessionState = (ESessionState)sessionState;
-
-
-                    lock (_netEventQueue)
+                if (netState == ENetState.Connected)
+                {
+                    if (clientSession.NetState == ENetState.Connecting)
                     {
-                        _netEventQueue.Enqueue(clientSession);
+                        clientSession.NetState = ENetState.Connected;
                     }
+                    else
+                    {
+                        clientSession.NetState = ENetState.Reconnected;
+                    }
+                }
+
+
+                clientSession.SessionState = sessionState;
+
+
+                lock (_netEventQueue)
+                {
+                    _netEventQueue.Enqueue(clientSession);
                 }
             }
             else if (protocolId == (int)EInternalProtocol.DUPLICATED_SESSION_NOTIFY)
@@ -231,12 +249,13 @@ namespace RWCoreNetwork.NetService
             }
         }
 
-        void SendInternalAuthSessionReq(string sessionId)
+        void SendInternalAuthSessionReq(string sessionId, ENetState netState)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
                 bf.Serialize(ms, ClientSession.SessionId);
+                bf.Serialize(ms, (byte)netState);
                 ClientSession.Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ,
                     ms.ToArray(),
                     ms.ToArray().Length);
