@@ -816,6 +816,7 @@ namespace ED
         public void SetNetSyncMinionData(NetSyncMinionData data)
         {
             id = data.minionId;
+            if (id > controller.subSpawnCount) controller.subSpawnCount = id + 1;
             diceId = data.minionDataId;
             currentHealth = data.minionHp;
             maxHealth = data.minionMaxHp;
