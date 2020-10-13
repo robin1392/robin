@@ -101,7 +101,8 @@ namespace ED
         public GameObject pref_Guardian;
         
         [SerializeField]
-        public int _spawnCount = 1;
+        public int spawnCount = 1;
+        public int subSpawnCount = 1000;
         
         [SerializeField]
         protected int _sp = 0;
@@ -420,7 +421,7 @@ namespace ED
         
         #region minion
 
-        public Minion CreateMinion(GameObject pref, Vector3 spawnPos, int eyeLevel, int upgradeLevel)
+        public Minion CreateMinion(GameObject pref, Vector3 spawnPos, int eyeLevel, int upgradeLevel, bool isSpawnCountUp = true)
         {
             var m = PoolManager.instance.ActivateObject<Minion>(pref.name, spawnPos, InGameManager.Get().transform);
 
@@ -433,7 +434,7 @@ namespace ED
 
             if (m != null)
             {
-                m.id = _spawnCount++;
+                if (isSpawnCountUp) m.id = subSpawnCount++;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
@@ -507,7 +508,7 @@ namespace ED
             if (m != null)
             {
                 m.castType = (DICE_CAST_TYPE)data.castType;
-                m.id = _spawnCount++;
+                m.id = spawnCount++;
                 m.diceId = data.id;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
@@ -659,7 +660,7 @@ namespace ED
                 {
                     //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : (InGameManager.Get().playerController == this);
                     m.isMine = InGameManager.IsNetwork ? isMine : (InGameManager.Get().playerController == this);
-                    m.id = _spawnCount++;
+                    m.id = spawnCount++;
                     m.controller = this;
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;

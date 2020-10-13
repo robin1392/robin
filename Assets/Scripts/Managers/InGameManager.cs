@@ -1069,7 +1069,7 @@ namespace ED
             //
             //Peer peer, int playerId, MsgSyncMinionData[] syncMinionData, int otherPlayerId, MsgSyncMinionData[] otherSyncMinionData
             // 데이터 보냄
-            SendInGameManager(GameProtocol.START_SYNC_GAME_REQ , myData.userId, playerController._spawnCount , syncMyMinionData , otherData.userId, playerController.targetPlayer._spawnCount , syncOtherMinionData);
+            SendInGameManager(GameProtocol.START_SYNC_GAME_REQ , myData.userId, playerController.spawnCount , syncMyMinionData , otherData.userId, playerController.targetPlayer.spawnCount , syncOtherMinionData);
         }
 
         public void SyncGameData(MsgStartSyncGameNotify gameData)
@@ -1097,7 +1097,7 @@ namespace ED
             foreach (var data in myMinionData)
             {
                 var diceData = data_DiceInfo.GetData(data.minionDataId);
-                var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1);
+                var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
                 m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
                 m.Initialize(playerController.MinionDestroyCallback);
                 m.SetNetSyncMinionData(data);
@@ -1107,15 +1107,15 @@ namespace ED
             foreach (var data in otherMinionData)
             {
                 var diceData = data_DiceInfo.GetData(data.minionDataId);
-                var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1);
+                var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
                 m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
                 m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
                 m.SetNetSyncMinionData(data);
             }
 
             // Spawn Count
-            playerController._spawnCount = gameData.PlayerSpawnCount;
-            playerController.targetPlayer._spawnCount = gameData.OtherPlayerSpawnCount;
+            playerController.spawnCount = gameData.PlayerSpawnCount;
+            playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
 
             
             NetworkManager.Get().SetReconnect(false);
