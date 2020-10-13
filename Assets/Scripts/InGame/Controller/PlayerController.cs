@@ -1987,14 +1987,19 @@ namespace ED
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
                     float calDamage = ConvertNetMsg.MsgIntToFloat(damageack.Damage );
+                    float calCurrentHP = ConvertNetMsg.MsgIntToFloat(damageack.CurrentHp);
                     //targetPlayer.HitDamage(calDamage);
                     if (NetworkManager.Get().UserUID == damageack.PlayerUId)
                     {
-                        HitDamage(calDamage);
+                        currentHealth = calCurrentHP;
+                        RefreshHealthBar();
+                        HitDamage(0);
                     }
                     else if (NetworkManager.Get().OtherUID == damageack.PlayerUId )
                     {
-                        targetPlayer.HitDamage(calDamage);
+                        targetPlayer.currentHealth = calCurrentHP;
+                        targetPlayer.RefreshHealthBar();
+                        targetPlayer.HitDamage(0);
                     }
                     
                     break;
@@ -2004,13 +2009,19 @@ namespace ED
                     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
 
                     float calDamage = ConvertNetMsg.MsgIntToFloat(damagenoti.Damage );
+                    float calCurrentHP = ConvertNetMsg.MsgIntToFloat(damagenoti.CurrentHp);
+                    
                     if (NetworkManager.Get().UserUID == damagenoti.PlayerUId)
                     {
-                        HitDamage(calDamage);
+                        currentHealth = calCurrentHP;
+                        RefreshHealthBar();
+                        HitDamage(0);
                     }
                     else if (NetworkManager.Get().OtherUID == damagenoti.PlayerUId )
                     {
-                        targetPlayer.HitDamage(calDamage);
+                        targetPlayer.currentHealth = calCurrentHP;
+                        targetPlayer.RefreshHealthBar();
+                        targetPlayer.HitDamage(0);
                     }
                     
                     break;
