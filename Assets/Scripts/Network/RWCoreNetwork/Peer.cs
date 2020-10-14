@@ -22,16 +22,18 @@ namespace RWCoreNetwork
         }
 
   
-        public void SendPacket(int protocolId, byte[] msg)
+        public virtual void SendPacket(int protocolId, byte[] msg)
         {
-            if (ClientSession.NetState == NetService.ENetState.Connected)
+            if (ClientSession.NetState != NetService.ENetState.Connected)
             {
-                ClientSession.Send(protocolId, msg, msg.Length);
+                return;
             }
+
+            ClientSession.Send(protocolId, msg, msg.Length);
         }
 
 
-        public void Disconnect(ESessionState sessionState)
+        public virtual void Disconnect(ESessionState sessionState)
         {
             if (ClientSession.SessionState != ESessionState.None)
             {
@@ -52,6 +54,24 @@ namespace RWCoreNetwork
         public void OnRemoved()
         {
             //ClientSession = null;
+        }
+    }
+
+
+    public class ServerPeer : Peer
+    {
+        public override void Disconnect(ESessionState sessionState)
+        {
+            if (ClientSession.SessionState != ESessionState.None)
+            {
+                return;
+            }
+
+
+            ClientSession.SessionState = sessionState;
+
+            // 세션 접속 종료 상태를 클라이언트에게 먼저 알리고 소켓 연결을 끊는다.
+            ClientSession.SendInternalDisconnectSessionNotify();
         }
     }
 }

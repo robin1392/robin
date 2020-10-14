@@ -86,7 +86,7 @@ namespace RWCoreNetwork.NetService
 
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
-                SendInternalAuthSessionReq(ClientSession.SessionId, ClientSession.NetState);
+                ClientSession.SendInternalAuthSessionReq(ClientSession.NetState);
             }
             else
             {
@@ -158,7 +158,7 @@ namespace RWCoreNetwork.NetService
                             ClientReconnectedCallback(clientSession, clientSession.SessionState);
                         }
 
-                        if (clientSession.SessionState != ESessionState.None)
+                        if (clientSession.SessionState == ESessionState.None)
                         {
                             ClientSession.Disconnect();
                         }
@@ -236,29 +236,20 @@ namespace RWCoreNetwork.NetService
                     _netEventQueue.Enqueue(clientSession);
                 }
             }
-            else if (protocolId == (int)EInternalProtocol.DUPLICATED_SESSION_NOTIFY)
+            else if (protocolId == (int)EInternalProtocol.DISCONNECT_SESSION_NOTIFY)
             {
-                // 서버로 부터 중복 세션 알림을 받음.
-                clientSession.SessionState = ESessionState.Duplicated;
-                clientSession.Disconnect();
+                ESessionState sessionState;
+                var bf = new BinaryFormatter();
+                using (var ms = new MemoryStream(msg))
+                {
+                    sessionState = (ESessionState)(short)bf.Deserialize(ms);
+                }
+                clientSession.SessionState = sessionState;
             }
             else
             {
                 // 패킷처리 큐에 추가한다.
                 _packetHandler.EnqueuePacket(clientSession.GetPeer(), protocolId, msg, length);
-            }
-        }
-
-        void SendInternalAuthSessionReq(string sessionId, ENetState netState)
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, ClientSession.SessionId);
-                bf.Serialize(ms, (byte)netState);
-                ClientSession.Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
             }
         }
     }

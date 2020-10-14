@@ -44,6 +44,10 @@ namespace RWCoreNetwork.NetService
 
         // 세션 중복 알림
         DUPLICATED_SESSION_NOTIFY,
+
+        // 세션 접속 종료 알림.
+        DISCONNECT_SESSION_NOTIFY,
+        DISCONNECT_SESSION_CONFIRM
     }
 
 

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Net.Sockets;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using RWCoreLib.Log;
 using RWCoreNetwork.NetPacket;
@@ -15,9 +17,11 @@ namespace RWCoreNetwork
     public enum ESessionState : short
     {
         None = 0,
-        // 서버에 의한 블럭
+        // 재연결 대기 상태
+        Wait,
+        // 서버에 의한 블럭 상태
         Blocked,
-        // 만료된 세션
+        // 세션 만료 상태
         Expired,
         // 중복 세션
         Duplicated,
@@ -267,6 +271,58 @@ namespace RWCoreNetwork
             catch (Exception)
             {
                 return;
+            }
+        }
+
+
+        public void SendInternalAuthSessionReq(ENetState netState)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, SessionId);
+                bf.Serialize(ms, (byte)netState);
+                Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+        public void SendInternalAuthSessionAck(ENetState netState)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, (byte)netState);
+                bf.Serialize(ms, (short)SessionState);
+                Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        public void SendInternalDisconnectSessionNotify()
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, (short)SessionState);
+                Send((int)EInternalProtocol.DISCONNECT_SESSION_NOTIFY,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+        public void SendInternalDisconnectSessionConfirm()
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, (short)SessionState);
+                Send((int)EInternalProtocol.DISCONNECT_SESSION_CONFIRM,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
             }
         }
     }
