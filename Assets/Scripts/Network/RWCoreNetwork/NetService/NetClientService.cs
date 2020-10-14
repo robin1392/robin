@@ -157,11 +157,6 @@ namespace RWCoreNetwork.NetService
                         {
                             ClientReconnectedCallback(clientSession, clientSession.SessionState);
                         }
-
-                        if (clientSession.SessionState == ESessionState.None)
-                        {
-                            ClientSession.Disconnect();
-                        }
                     }
                     break;
                 case ENetState.Disconnected:
