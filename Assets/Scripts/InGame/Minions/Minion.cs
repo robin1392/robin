@@ -791,7 +791,7 @@ namespace ED
             SetControllEnable(true);
 
             animator.SetTrigger(_animatorHashIdle);
-            controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, NetworkManager.Get().UserUID, id, (int)E_AniTrigger.Idle, target.id);
+            controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int)E_AniTrigger.Idle, target.id);
         }
 
         public NetSyncMinionData GetNetSyncMinionData()
