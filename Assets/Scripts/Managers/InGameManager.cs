@@ -1005,18 +1005,19 @@ namespace ED
             UI_InGamePopup.Get().ViewGameIndicator(true);
             
             // 미니언들 idle 강제 idle 상태로 만든다
-            foreach (var minion in playerController.listMinion)
-            {
-                minion.StopAllCoroutines();
-                minion.behaviourTreeOwner.behaviour.Pause();
-                minion.animator.SetTrigger("Idle");
-            }
-            foreach (var minion in playerController.targetPlayer.listMinion)
-            {
-                minion.StopAllCoroutines();
-                minion.behaviourTreeOwner.behaviour.Pause();
-                minion.animator.SetTrigger("Idle");
-            }
+            // foreach (var minion in playerController.listMinion)
+            // {
+            //     minion.StopAllCoroutines();
+            //     minion.behaviourTreeOwner.behaviour.Pause();
+            //     minion.animator.SetTrigger("Idle");
+            // }
+            // foreach (var minion in playerController.targetPlayer.listMinion)
+            // {
+            //     minion.StopAllCoroutines();
+            //     minion.behaviourTreeOwner.behaviour.Pause();
+            //     minion.animator.SetTrigger("Idle");
+            // }
+            //Time.timeScale = 0;
             
             
             // 현재 전장에 있는 미니언 정보들 모은다 
@@ -1086,7 +1087,7 @@ namespace ED
         {
             print("recv p info " + gameData.PlayerInfo.PlayerUId + "  " + gameData.PlayerInfo.Name);
             print("recv other info " + gameData.OtherPlayerInfo.PlayerUId + "  " + gameData.OtherPlayerInfo.Name);
-            
+
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
@@ -1395,6 +1396,8 @@ namespace ED
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
 
+                    Time.timeScale = 1f;
+
                     break;
                 }
                 case GameProtocol.END_SYNC_GAME_NOTIFY:
@@ -1411,6 +1414,9 @@ namespace ED
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
+
+                    Time.timeScale = 1f;
+                    
                     break;
                 }
                 
@@ -1434,6 +1440,8 @@ namespace ED
                 {
                     MsgReadySyncGameAck readyack = (MsgReadySyncGameAck) param[0];
                     
+                    Time.timeScale = 0;
+
                     break;
                 }
                 case GameProtocol.READY_SYNC_GAME_NOTIFY:
@@ -1442,6 +1450,8 @@ namespace ED
                     
                     if (NetworkManager.Get().UserUID != readynoti.PlayerUId)
                     {
+                        Time.timeScale = 0;
+
                         NetworkManager.Get().SetResume(true);
                         // 미니언 정보 취합 해서 보내준다..
                         SendSyncAllBattleInfo();

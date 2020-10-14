@@ -20,10 +20,11 @@ public class UI_Indicator : MonoBehaviour
         
         if (image_Blind != null)
         {
-            image_Blind.DOFade(0.8f, fadeTime);
+            image_Blind.DOFade(0.8f, fadeTime).SetUpdate(true);
         }
 
-        Invoke("OnIndicator", fadeTime);
+        //Invoke("OnIndicator", fadeTime);
+        StartCoroutine(OnIndicator());
     }
 
     private void OnDisable()
@@ -33,13 +34,15 @@ public class UI_Indicator : MonoBehaviour
         obj_Indicator.SetActive(false);
     }
 
-    private void OnIndicator()
+    private IEnumerator OnIndicator()
     {
+        yield return new WaitForSecondsRealtime(fadeTime);
+        
         if (obj_Indicator != null)
         {
             obj_Indicator.transform.localScale = Vector3.zero;
             obj_Indicator.SetActive(true);
-            obj_Indicator.transform.DOScale(Vector3.one, 0.5f).SetDelay(0.25f).SetEase(Ease.InCirc);
+            obj_Indicator.transform.DOScale(Vector3.one, 0.5f).SetDelay(0.25f).SetEase(Ease.InCirc).SetUpdate(true);
         }
     }
 }
