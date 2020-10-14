@@ -822,9 +822,6 @@ namespace ED
 
         public void EndGame(bool winLose)
         {
-            isGamePlaying = false;
-            StopAllCoroutines();
-            
             // 게임이 끝낫으니까 그냥..
             if (NetworkManager.Get().isResume == true)
             {
@@ -836,7 +833,10 @@ namespace ED
                 UI_InGamePopup.Get().ViewGameIndicator(false);
             }
 
-            
+            isGamePlaying = false;
+            StopAllCoroutines();
+
+
             UI_InGamePopup.Get().SetPopupResult(true);
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
             
