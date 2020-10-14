@@ -89,15 +89,15 @@ namespace ED
             else
             {
                 // 취소중이라면 none 상태가 될때까지 기다리자...
-                if (WebPacket.Get() != null && WebPacket.Get().netMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
-                    return;
+                //if (WebPacket.Get() != null && WebPacket.Get().netMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+                //{
+                    //return;
+                //}
 
                 btn_PlayBattle.interactable = false;
                 searchPopup.gameObject.SetActive(true);
                 
                 ConnectBattle();
-                
-                //StartCoroutine(ConnectBattle());
             }
         }
 
