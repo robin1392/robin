@@ -147,7 +147,7 @@ public class SocketManager
     {
         UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
 
-        if (NetworkManager.Get().isReconnect == true && sessionState != ESessionState.None)
+        if (sessionState == ESessionState.Blocked)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
