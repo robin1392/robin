@@ -1302,6 +1302,8 @@ namespace ED
                     // 시작이 되었으니...
                     if (NetworkManager.Get().isResume == true)
                     {
+                        Time.timeScale = 1f;
+                        
                         NetworkManager.Get().SetResume(false);
                         
                         // 아군유닛 비헤이비어트리 활성화
