@@ -825,6 +825,18 @@ namespace ED
             isGamePlaying = false;
             StopAllCoroutines();
             
+            // 게임이 끝낫으니까 그냥..
+            if (NetworkManager.Get().isResume == true)
+            {
+                NetworkManager.Get().SetResume(false);
+            }
+            // 인디케이터도 다시 안보이게..
+            if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+            {
+                UI_InGamePopup.Get().ViewGameIndicator(false);
+            }
+
+            
             UI_InGamePopup.Get().SetPopupResult(true);
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
             
