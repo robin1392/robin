@@ -1089,18 +1089,12 @@ namespace ED
             if (baseStatId == 0)
             {
                 //if (PhotonNetwork.IsConnected)
-                if( InGameManager.IsNetwork == true && isMine)
+                if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
-                    //GetComponentInChildren<Collider>().enabled = false;
-                    //objCollider.GetComponent<Collider>().enabled = false;
-                    //transform.GetChild(1).gameObject.SetActive(false);
-                    //transform.GetChild(2).gameObject.SetActive(false);
-                    
-                    //SendPlayer(RpcTarget.All , E_PTDefine.PT_HITDAMAGE , damage, delay);
                     int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , NetworkManager.Get().UserUID, convDamage);
                 }
-                else if (InGameManager.IsNetwork == false || isPlayingAI)
+                else if (InGameManager.IsNetwork == false)
                 {
                     HitDamage(damage);
                 }
