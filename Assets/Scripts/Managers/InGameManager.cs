@@ -1107,6 +1107,7 @@ namespace ED
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
+            if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true; 
             playerController.RefreshHealthBar();
             playerController.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.PlayerInfo.IsBottomPlayer);
             playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
@@ -1115,6 +1116,7 @@ namespace ED
             
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
             playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.OtherPlayerInfo.TowerHp);
+            if (playerController.targetPlayer.currentHealth <= 20000) playerController.targetPlayer.isHalfHealth = true; 
             playerController.targetPlayer.RefreshHealthBar();
             playerController.targetPlayer.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.OtherPlayerInfo.IsBottomPlayer);
             playerController.targetPlayer.transform.position = FieldManager.Get().GetPlayerPos(gameData.OtherPlayerInfo.IsBottomPlayer);

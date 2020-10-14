@@ -135,7 +135,7 @@ namespace ED
         protected List<Magic> listMagic = new List<Magic>();
         private readonly string recvMessage = "RecvPlayer";
         private static readonly int Break = Animator.StringToHash("Break");
-        private bool isHalfHealth;
+        public bool isHalfHealth;
         public bool isPlayingAI { get; protected set; }
 
         #endregion
