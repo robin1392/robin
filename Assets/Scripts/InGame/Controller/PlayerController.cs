@@ -1136,7 +1136,7 @@ namespace ED
                             
             if (other == true)
             {
-                if (InGameManager.IsNetwork )
+                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , minionId , damage, 0);
                 }
@@ -1144,7 +1144,7 @@ namespace ED
             }
             else
             {
-                if (InGameManager.IsNetwork)
+                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , minionId , damage , 0);
                 }
@@ -1165,7 +1165,7 @@ namespace ED
             if (delay > 0) yield return new WaitForSeconds(delay);
 
             //if (PhotonNetwork.IsConnected && isMine && PhotonNetwork.CurrentRoom.PlayerCount > 1)
-            if (InGameManager.IsNetwork)
+            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, baseStatId, damage);
                 NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , baseStatId , damage, delay);
@@ -1248,7 +1248,7 @@ namespace ED
         
         public void MagicDestroyCallback(Magic magic)
         {
-            if (InGameManager.IsNetwork)
+            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 NetSendPlayer(GameProtocol.REMOVE_MAGIC_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , magic.id );
             }
@@ -1266,7 +1266,7 @@ namespace ED
         
         public void DeathMagic(int baseStatId)
         {
-            if (InGameManager.IsNetwork)
+            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 NetSendPlayer(GameProtocol.DESTROY_MAGIC_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , baseStatId );
             }
@@ -1384,13 +1384,13 @@ namespace ED
             int chDur = ConvertNetMsg.MsgFloatToInt(duration );
             if (other == true)
             {
-                if (InGameManager.IsNetwork )
+                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                     NetSendPlayer(GameProtocol.STURN_MINION_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, baseStatId, chDur);
                 targetPlayer.SturnMinion(baseStatId , duration);
             }
             else
             {
-                if (InGameManager.IsNetwork )
+                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                     NetSendPlayer(GameProtocol.STURN_MINION_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, baseStatId, chDur);
                 SturnMinion(baseStatId , duration);
             }
@@ -1443,13 +1443,13 @@ namespace ED
             int chEyeLv = ConvertNetMsg.MsgFloatToInt(eyeLevel );
             if (other == true)
             {
-                if (InGameManager.IsNetwork )
+                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                     NetSendPlayer(GameProtocol.STURN_MINION_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, targetId, chEyeLv);
                 targetPlayer.ScareCrow(targetId , eyeLevel);
             }
             else
             {
-                if (InGameManager.IsNetwork )
+                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                     NetSendPlayer(GameProtocol.STURN_MINION_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, targetId, chEyeLv);
                 ScareCrow(targetId , eyeLevel);
             }
