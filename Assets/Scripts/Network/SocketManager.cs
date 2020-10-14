@@ -103,6 +103,8 @@ public class SocketManager
     /// <param name="session">세션</param>
     void OnClientConnected(ClientSession session, ESessionState sessionState)
     {
+        UnityUtil.Print(" CONNECT   ", " CLINET CONNECT !!! state : " + sessionState, "blue");
+        
         _serverPeer = new Peer();
         _serverPeer.SetClientSession(session);
 
@@ -119,6 +121,7 @@ public class SocketManager
     /// <param name="sessionState"></param>
     void OnClientReconnected(ClientSession session, ESessionState sessionState)
     {
+        UnityUtil.Print(" RECONNECT   ", " CLINET RECONNECT !!! state : " + sessionState, "blue");
         //
         if (sessionState != ESessionState.None)
         {
@@ -145,7 +148,7 @@ public class SocketManager
 
     void OnClientDisconnected(ClientSession session, ESessionState sessionState)
     {
-        UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! ", "blue");
+        UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! state : " + sessionState, "blue");
 
         if (sessionState == ESessionState.Blocked)
         {
