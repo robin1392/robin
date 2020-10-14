@@ -56,14 +56,14 @@ namespace ED
                 isBombed = true;
                 
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.IsNetwork && isMine )
+                if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
                     SplashDamage();
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBALLBOMB, id);
                     controller.ActionFireBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+                else if(InGameManager.IsNetwork == false)
                 {
                     SplashDamage();
                     Bomb();
@@ -83,14 +83,14 @@ namespace ED
                 isBombed = true;
 
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.IsNetwork && isMine )
+                if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
                 {
                     SplashDamage();
                     //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREBALLBOMB ,id);
                     controller.ActionFireBallBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+                else if(InGameManager.IsNetwork == false)
                 {
                     SplashDamage();
                     Bomb();

@@ -56,13 +56,13 @@ namespace ED
             // Bomb
             isTriggerOn = false;
             //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && isMine)
+            if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
             {
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINEBOMB, id);
                 controller.ActionMineBomb(id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+            else if(InGameManager.IsNetwork == false)
             {
                 Bomb();
             }

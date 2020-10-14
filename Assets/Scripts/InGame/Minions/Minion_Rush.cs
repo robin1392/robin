@@ -28,14 +28,14 @@ namespace ED
             
             ps_Rush.Stop();
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
+            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
                 controller.MinionAniTrigger(id, "Attack", target.id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+            else if(InGameManager.IsNetwork == false)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

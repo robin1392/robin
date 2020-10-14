@@ -26,7 +26,7 @@ namespace ED
             if (target == null || !IsFriendlyLayer(target.gameObject) || target.currentHealth >= target.maxHealth) return;
             
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
+            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
                 base.Attack();
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
@@ -36,7 +36,7 @@ namespace ED
                 controller.HealerMinion(target.id, effect);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+            else if(InGameManager.IsNetwork == false)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

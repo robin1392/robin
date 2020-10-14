@@ -827,7 +827,10 @@ namespace ED
             effectUpByInGameUp = data.minionEffectIngameUpgrade;
             effectDuration = data.minionDuration;
             effectCooltime = data.minionCooltime;
+
+            agent.enabled = false;
             transform.position = data.minionPos;
+            agent.enabled = true;
         }
     }
 }

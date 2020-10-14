@@ -177,7 +177,7 @@ namespace ED
         private void SetTargetBaseStat()
         {
             //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && isMine )
+            if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 if (target != null)
@@ -189,7 +189,7 @@ namespace ED
                 }
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+            else if(InGameManager.IsNetwork == false)
             {
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 if (target != null)
@@ -202,7 +202,7 @@ namespace ED
         protected void SetTargetPosition()
         {
             //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && isMine )
+            if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
                 
@@ -212,7 +212,7 @@ namespace ED
                 StartCoroutine(Move());
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+            else if(InGameManager.IsNetwork == false)
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
                 StartCoroutine(Move());

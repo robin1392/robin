@@ -1227,12 +1227,15 @@ namespace ED
         }
         public void DeathMinion(int baseStatId)
         {
-            if (InGameManager.IsNetwork && isMine)
+            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 NetSendPlayer(GameProtocol.DESTROY_MINION_RELAY , NetworkManager.Get().UserUID , baseStatId);
             }
+            else if (InGameManager.IsNetwork == false)
+            {
+                DestroyMinion(baseStatId);
+            }
             
-            DestroyMinion(baseStatId);
             
             /*if (PhotonNetwork.IsConnected && isMine)
             {

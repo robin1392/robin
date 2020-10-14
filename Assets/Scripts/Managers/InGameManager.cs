@@ -1051,6 +1051,7 @@ namespace ED
                     var m = stat as Minion;
                     if (m != null)
                     {
+                        Debug.LogFormat("Send My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
                         myData.netSyncMinionData.Add(m.GetNetSyncMinionData());
                     }
                 }
@@ -1059,6 +1060,7 @@ namespace ED
                     var m = stat as Minion;
                     if (m != null)
                     {
+                        Debug.LogFormat("Send Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
                         otherData.netSyncMinionData.Add(m.GetNetSyncMinionData());
                     }
                 }
@@ -1070,6 +1072,7 @@ namespace ED
                     var m = stat as Minion;
                     if (m != null)
                     {
+                        Debug.LogFormat("Send My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
                         myData.netSyncMinionData.Add(m.GetNetSyncMinionData());
                     }
                 }
@@ -1078,6 +1081,7 @@ namespace ED
                     var m = stat as Minion;
                     if (m != null)
                     {
+                        Debug.LogFormat("Send Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
                         otherData.netSyncMinionData.Add(m.GetNetSyncMinionData());
                     }
                 }
@@ -1135,6 +1139,7 @@ namespace ED
                 m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
                 m.Initialize(playerController.MinionDestroyCallback);
                 m.SetNetSyncMinionData(data);
+                Debug.LogFormat("Recv My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
             }
             
             List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
@@ -1145,6 +1150,7 @@ namespace ED
                 m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
                 m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
                 m.SetNetSyncMinionData(data);
+                Debug.LogFormat("Recv Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
             }
 
             // Spawn Count

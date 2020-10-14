@@ -43,7 +43,7 @@ namespace ED
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
             
             //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
+            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
                 base.Attack();
                 
@@ -54,7 +54,7 @@ namespace ED
                 controller.ActionFireManFire(id);
             }
             //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+            else if(InGameManager.IsNetwork == false)
             {
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);

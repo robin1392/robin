@@ -58,7 +58,7 @@ namespace ED
                 isBombed = true;
                 
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.IsNetwork && isMine)
+                if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
                     if (target != null)
                         controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
@@ -69,7 +69,7 @@ namespace ED
                     controller.ActionRocketBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+                else if(InGameManager.IsNetwork == false)
                 {
                     if (target != null)
                     {
@@ -93,7 +93,7 @@ namespace ED
                 isBombed = true;
 
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.IsNetwork && isMine)
+                if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
                     if (target != null)
                         controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
@@ -104,7 +104,7 @@ namespace ED
                     controller.ActionRocketBomb(id);
                 }
                 //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false || controller.isPlayingAI)
+                else if(InGameManager.IsNetwork == false)
                 {
                     if (target != null)
                     {
