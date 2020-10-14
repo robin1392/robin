@@ -123,7 +123,7 @@ public class SocketManager
     {
         UnityUtil.Print(" RECONNECT   ", " CLINET RECONNECT !!! state : " + sessionState, "blue");
         //
-        if (sessionState != ESessionState.None)
+        if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
@@ -150,7 +150,7 @@ public class SocketManager
     {
         UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! state : " + sessionState, "blue");
 
-        if (sessionState == ESessionState.Blocked)
+        if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
