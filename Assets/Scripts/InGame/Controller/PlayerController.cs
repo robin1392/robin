@@ -1231,10 +1231,8 @@ namespace ED
             {
                 NetSendPlayer(GameProtocol.DESTROY_MINION_RELAY , NetworkManager.Get().UserUID , baseStatId);
             }
-            else if (InGameManager.IsNetwork == false)
-            {
-                DestroyMinion(baseStatId);
-            }
+            
+            DestroyMinion(baseStatId);
             
             
             /*if (PhotonNetwork.IsConnected && isMine)
