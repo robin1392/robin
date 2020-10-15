@@ -95,7 +95,15 @@ namespace ED
                 if(InGameManager.IsNetwork && !isMine && agent.enabled)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
-                    agent.SetDestination(networkPosition);
+                    if (controller.isMinionAgentMove)
+                    {
+                        agent.SetDestination(networkPosition);
+                    }
+                    else
+                    {
+                        transform.LookAt(networkPosition);
+                        transform.position = networkPosition;
+                    }
                 }
 
                 var velocityMagnitude = rb.velocity.magnitude;
@@ -530,10 +538,18 @@ namespace ED
 
         public void SetVelocityTarget()
         {
-            if (target != null && isAlive && agent.enabled && agent.updatePosition)
+            if (controller.isMinionAgentMove)
             {
-                Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
+                if (target != null && isAlive && agent.enabled && agent.updatePosition)
+                {
+                    Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
+                    agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
+                }
+            }
+            else
+            {
+                transform.LookAt(networkPosition);
+                transform.position = networkPosition;
             }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
 //            {

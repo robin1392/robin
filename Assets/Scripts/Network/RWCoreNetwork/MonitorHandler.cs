@@ -19,7 +19,7 @@ namespace RWCoreNetwork.NetService
     }
 
 
-    public class NetMonitorHandler
+    public class MonitorHandler
     {
         /// <summary>
         /// 핸재 접속 클라이언트 수
@@ -62,7 +62,7 @@ namespace RWCoreNetwork.NetService
         private int _monitorIndex;
 
 
-        public NetMonitorHandler(ILog logger, int interval)
+        public MonitorHandler(ILog logger, int interval)
         {
             _logger = logger;
             _lockObject = new object();

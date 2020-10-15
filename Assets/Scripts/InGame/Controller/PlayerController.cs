@@ -111,7 +111,8 @@ namespace ED
             get => _sp;
             protected set
             {
-                _sp = value; InGameManager.Get().event_SP_Edit.Invoke(_sp);
+                _sp = value;
+                if (isMine) InGameManager.Get().event_SP_Edit.Invoke(_sp);
             }
         }
 
@@ -137,6 +138,8 @@ namespace ED
         private static readonly int Break = Animator.StringToHash("Break");
         public bool isHalfHealth;
         public bool isPlayingAI { get; protected set; }
+        public bool isMinionAgentMove = true;
+        protected Coroutine crt_SyncMinion;
 
         #endregion
 
@@ -194,8 +197,7 @@ namespace ED
 
         public void DestroyPlayer()
         {
-            if(NetworkManager.Get() != null)
-                NetworkManager.Get().event_OtherDisconnect.RemoveListener(OtherPlayerPause);
+            if(NetworkManager.Get() != null && isMine) NetworkManager.Get().event_OtherPause.RemoveListener(OtherPlayerPause);
             _arrDice = null;
             _arrDiceDeck = null;
             _arrUpgradeLevel = null;
@@ -203,7 +205,7 @@ namespace ED
 
         public void StartPlayerControll()
         {
-            NetworkManager.Get().event_OtherDisconnect.AddListener(OtherPlayerPause);
+            if (isMine) NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
 
             isHalfHealth = false;
 
@@ -230,7 +232,8 @@ namespace ED
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
 
             //
-            StartCoroutine(SyncMinionStatus());
+            //StartCoroutine(SyncMinionStatus());
+            StartSyncMinion();
 
             // not use
             /*
@@ -873,6 +876,9 @@ namespace ED
                 if (isPlayingAI) minion.behaviourTreeOwner.behaviour.Resume();
                 else minion.behaviourTreeOwner.behaviour.Pause();
             }
+            
+            if (isPlayingAI) StartSyncMinion();
+            else StopSyncMinion();
         }
         
         #endregion
@@ -1906,6 +1912,20 @@ namespace ED
         
         #region sync minion --
 
+        public void StartSyncMinion()
+        {
+            StopSyncMinion();
+            crt_SyncMinion = StartCoroutine(SyncMinionStatus());
+        }
+
+        public void StopSyncMinion()
+        {
+            if (crt_SyncMinion != null)
+            {
+                StopCoroutine(crt_SyncMinion);
+            }
+        }
+        
         public IEnumerator SyncMinionStatus()
         {
             
@@ -1916,7 +1936,7 @@ namespace ED
             {
                 yield return new WaitForSeconds(0.2f);
 
-                if (InGameManager.IsNetwork && isMine)
+                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
                     if (listMinion.Count > 0)
                     {
@@ -1928,7 +1948,7 @@ namespace ED
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
                     
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, NetworkManager.Get().UserUID, minionCount , msgMinPos );
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos );
                     }
                 }
             }
@@ -1943,6 +1963,21 @@ namespace ED
                 listMinion[i].SetNetworkValue(chPos);
             }
         }
+
+        public void SyncMinionResume()
+        {
+            isMinionAgentMove = false;
+
+            StartCoroutine(ResumeCoroutine(1f));
+        }
+
+        IEnumerator ResumeCoroutine(float time)
+        {
+            yield return new WaitForSecondsRealtime(time);
+            
+            isMinionAgentMove = true;
+        }
+        
         #endregion
 
 
@@ -2425,6 +2460,8 @@ namespace ED
 
                     if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
                         targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos);
+                    else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
+                        SyncMinion(statusrelay.PosIndex, statusrelay.Pos);
                     
                     break;
                 }

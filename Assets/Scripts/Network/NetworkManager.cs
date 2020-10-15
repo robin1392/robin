@@ -104,9 +104,9 @@ public class NetworkManager : Singleton<NetworkManager>
     #region net game pause , resume , reconnect
 
     // Pause
-    private bool _isOtherDisconnect;
-    public bool IsOtherPause => _isOtherDisconnect;
-    public UnityEvent<bool> event_OtherDisconnect = new UnityEvent<bool>();
+    private bool _isOtherPause;
+    public bool IsOtherPause => _isOtherPause;
+    public UnityEvent<bool> event_OtherPause = new UnityEvent<bool>();
 
 
     // Resume
@@ -306,6 +306,25 @@ public class NetworkManager : Singleton<NetworkManager>
         //
         GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
     }
+
+    public void PrintNetworkStatus()
+    {
+        _clientSocket.PrintNetworkStatus();
+    }
+
+
+    public void PauseGame()
+    {
+        _clientSocket.Pause();
+    }
+
+
+    public void ResumeGame()
+    {
+        _clientSocket.Resume();
+    }
+
+
     #endregion
 
 
@@ -322,8 +341,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void SetOtherDisconnect(bool disconnect)
     {
-        event_OtherDisconnect.Invoke(disconnect);
-        _isOtherDisconnect = disconnect;
+        event_OtherPause.Invoke(disconnect);
+        _isOtherPause = disconnect;
     }
 
     public void SetResume(bool resume)

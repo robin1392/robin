@@ -1,6 +1,6 @@
 using System;
 
-namespace RWCoreNetwork
+namespace RWCoreNetwork.NetService
 {
     public class Peer
     {
@@ -8,7 +8,7 @@ namespace RWCoreNetwork
 
         public bool IsDisconnected()
         {
-            return ClientSession == null || ClientSession.NetState == NetService.ENetState.Disconnected;
+            return ClientSession == null || ClientSession.NetState == ENetState.Disconnected;
         }
 
         public void SetClientSession(ClientSession clientSession)
@@ -24,7 +24,7 @@ namespace RWCoreNetwork
   
         public virtual void SendPacket(int protocolId, byte[] msg)
         {
-            if (ClientSession.NetState != NetService.ENetState.Connected)
+            if (ClientSession.NetState != ENetState.Connected)
             {
                 return;
             }
@@ -33,14 +33,14 @@ namespace RWCoreNetwork
         }
 
 
-        public virtual void Disconnect(ESessionState sessionState)
+        public virtual void Disconnect(EDisconnectState sessionState)
         {
-            if (ClientSession.SessionState != ESessionState.None)
+            if (ClientSession.DisconnectState != EDisconnectState.None)
             {
                 return;
             }
 
-            ClientSession.SessionState = sessionState;
+            ClientSession.DisconnectState = sessionState;
             ClientSession.Disconnect();
         }
 
@@ -60,18 +60,13 @@ namespace RWCoreNetwork
 
     public class ServerPeer : Peer
     {
-        public override void Disconnect(ESessionState sessionState)
+        public override void Disconnect(EDisconnectState sessionState)
         {
-            if (ClientSession.SessionState != ESessionState.None)
+            if (ClientSession.DisconnectState != EDisconnectState.None)
             {
                 return;
             }
-
-
-            ClientSession.SessionState = sessionState;
-
-            // 세션 접속 종료 상태를 클라이언트에게 먼저 알리고 소켓 연결을 끊는다.
-            ClientSession.SendInternalDisconnectSessionNotify();
+            ClientSession.DisconnectState = sessionState;
         }
     }
 }

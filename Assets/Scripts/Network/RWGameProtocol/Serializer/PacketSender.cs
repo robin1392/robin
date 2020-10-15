@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using RWCoreNetwork;
+using RWCoreNetwork.NetService;
 using RWGameProtocol.Msg;
 
 

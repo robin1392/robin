@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using RWCoreLib.Log;
 using RWCoreNetwork.NetPacket;
-
+using System.Reflection;
 
 namespace RWCoreNetwork.NetService
 {
@@ -86,7 +86,7 @@ namespace RWCoreNetwork.NetService
 
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
-                ClientSession.SendInternalAuthSessionReq(ClientSession.NetState);
+                SendInternalAuthSessionReq(ClientSession);
             }
             else
             {
@@ -145,7 +145,7 @@ namespace RWCoreNetwork.NetService
                     {
                         if (ClientConnectedCallback != null)
                         {
-                            ClientConnectedCallback(clientSession, clientSession.SessionState);
+                            ClientConnectedCallback(clientSession, clientSession.DisconnectState);
                         }
                     }
                     break;
@@ -155,7 +155,7 @@ namespace RWCoreNetwork.NetService
 
                         if (ClientReconnectedCallback != null)
                         {
-                            ClientReconnectedCallback(clientSession, clientSession.SessionState);
+                            ClientReconnectedCallback(clientSession, clientSession.DisconnectState);
                         }
                     }
                     break;
@@ -163,7 +163,7 @@ namespace RWCoreNetwork.NetService
                     {
                         if (ClientDisconnectedCallback != null)
                         {
-                            ClientDisconnectedCallback(clientSession, clientSession.SessionState);
+                            ClientDisconnectedCallback(clientSession, clientSession.DisconnectState);
                         }
                     }
                     break;
@@ -198,54 +198,100 @@ namespace RWCoreNetwork.NetService
             }
 
 
-            if (protocolId == (int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK)
-            {
-                ENetState netState;
-                ESessionState sessionState;
-                var bf = new BinaryFormatter();
-                using (var ms = new MemoryStream(msg))
-                {
-                    netState = (ENetState)(byte)bf.Deserialize(ms);
-                    sessionState = (ESessionState)(short)bf.Deserialize(ms);
-                }
-
-
-                if (netState == ENetState.Connected)
-                {
-                    if (clientSession.NetState == ENetState.Connecting)
-                    {
-                        clientSession.NetState = ENetState.Connected;
-                    }
-                    else
-                    {
-                        clientSession.NetState = ENetState.Reconnected;
-                    }
-                }
-
-
-                clientSession.SessionState = sessionState;
-
-
-                lock (_netEventQueue)
-                {
-                    _netEventQueue.Enqueue(clientSession);
-                }
-            }
-            else if (protocolId == (int)EInternalProtocol.DISCONNECT_SESSION_NOTIFY)
-            {
-                ESessionState sessionState;
-                var bf = new BinaryFormatter();
-                using (var ms = new MemoryStream(msg))
-                {
-                    sessionState = (ESessionState)(short)bf.Deserialize(ms);
-                }
-                clientSession.SessionState = sessionState;
-            }
-            else
+            if (ProcessInternalPacket(clientSession, protocolId, msg, length) == false)
             {
                 // 패킷처리 큐에 추가한다.
                 _packetHandler.EnqueuePacket(clientSession.GetPeer(), protocolId, msg, length);
             }
+        }
+
+
+        protected override bool ProcessInternalPacket(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        {
+            switch((EInternalProtocol)protocolId)
+            {
+                case EInternalProtocol.AUTH_SESSION_ACK:
+                    {
+                        ENetState netState;
+                        EDisconnectState sessionState;
+                        var bf = new BinaryFormatter();
+                        using (var ms = new MemoryStream(msg))
+                        {
+                            netState = (ENetState)(byte)bf.Deserialize(ms);
+                            sessionState = (EDisconnectState)(short)bf.Deserialize(ms);
+                        }
+
+
+                        if (netState == ENetState.Connected)
+                        {
+                            if (clientSession.NetState == ENetState.Connecting)
+                            {
+                                clientSession.NetState = ENetState.Connected;
+                            }
+                            else
+                            {
+                                clientSession.NetState = ENetState.Reconnected;
+                            }
+                        }
+
+
+                        clientSession.DisconnectState = sessionState;
+                        lock (_netEventQueue)
+                        {
+                            _netEventQueue.Enqueue(clientSession);
+                        }
+                    }
+                    break;
+                case EInternalProtocol.DISCONNECT_SESSION_NOTIFY:
+                    {
+                        EDisconnectState sessionState;
+                        var bf = new BinaryFormatter();
+                        using (var ms = new MemoryStream(msg))
+                        {
+                            sessionState = (EDisconnectState)(short)bf.Deserialize(ms);
+                        }
+
+                        clientSession.DisconnectState = sessionState;
+                    }
+                    break;
+                case EInternalProtocol.PAUSE_SESSION_ACK:
+                case EInternalProtocol.RESUME_SESSION_ACK:
+                    {
+                    }
+                    break;
+                default:
+                    {
+                        return false;
+                    }
+            }
+
+            return true;
+        }
+
+
+        public void PauseSession(ClientSession clientSession)
+        {
+            clientSession.NetState = ENetState.Pause;
+            clientSession.PauseStartTimeTick = DateTime.UtcNow.Ticks;
+            SendInternalPauseSessionReq(clientSession);
+        }
+
+
+        public void ResumeSession(ClientSession clientSession)
+        {
+            if (clientSession.NetState != ENetState.Pause)
+            {
+                return;
+            }
+
+            if (clientSession.PauseStartTimeTick + (TimeSpan.TicksPerSecond * 10) < DateTime.UtcNow.Ticks)
+            {
+                clientSession.GetPeer().Disconnect(EDisconnectState.Wait);
+                return;
+            }
+
+            clientSession.NetState = ENetState.Connected;
+            SendInternalResumeSessionReq(clientSession);
         }
     }
 }

@@ -953,10 +953,12 @@ namespace ED
 
         public void OnApplicationPause(bool pauseStatus)
         {
+            NetworkManager.Get().PrintNetworkStatus();
+
             if (pauseStatus)
             {
                 print("Application Pause");
-                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+                NetworkManager.Get().PauseGame();
             }
             else
             {
@@ -971,10 +973,12 @@ namespace ED
         // 에디터에서 테스트용도로 사용하기 위해
         public void OnEditorAppPause(PauseState pause)
         {
+            NetworkManager.Get().PrintNetworkStatus();
+
             if (pause == PauseState.Paused)
             {
                 print("Application Pause");
-                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+                NetworkManager.Get().PauseGame();
             }
             else
             {
@@ -1000,11 +1004,15 @@ namespace ED
             //yield return new WaitForSeconds(2.0f);
             RevmoeAllMinionAndMagic();
             */
-            
+
             if (NetworkManager.Get().IsConnect())
             {
                 // resume
-                SendInGameManager(GameProtocol.RESUME_GAME_REQ);
+                NetworkManager.Get().ResumeGame();
+
+                // 1초 동안 NavMeshAgent를 사용하지 않고 즉시 이동하도록
+                playerController.SyncMinionResume();
+                playerController.targetPlayer.SyncMinionResume();
             }
         }
 
@@ -1113,7 +1121,9 @@ namespace ED
             playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
             playerController.isMine = true;
             playerController.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
-            
+            getDiceCount = gameData.PlayerInfo.GetDiceCount;
+            playerController.SetSp(gameData.PlayerInfo.CurrentSp);
+
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
             playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.OtherPlayerInfo.TowerHp);
             if (playerController.targetPlayer.currentHealth <= 20000) playerController.targetPlayer.isHalfHealth = true; 
@@ -1122,6 +1132,7 @@ namespace ED
             playerController.targetPlayer.transform.position = FieldManager.Get().GetPlayerPos(gameData.OtherPlayerInfo.IsBottomPlayer);
             playerController.targetPlayer.isMine = false;
             playerController.targetPlayer.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+            playerController.targetPlayer.SetSp(gameData.OtherPlayerInfo.CurrentSp);
             
             CameraController.Get().Start();
 
@@ -1158,7 +1169,6 @@ namespace ED
             // Spawn Count
             playerController.spawnCount = gameData.PlayerSpawnCount;
             playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
-
             
             NetworkManager.Get().SetReconnect(false);
 
@@ -1448,10 +1458,10 @@ namespace ED
                 {
                     MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
                     
-                    if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
-                    {
-                        NetworkManager.Get().SetOtherDisconnect(true);
-                    }
+                    // if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
+                    // {
+                    //     NetworkManager.Get().SetOtherDisconnect(true);
+                    // }
                     
                     break;
                 }
@@ -1490,14 +1500,14 @@ namespace ED
                     MsgPauseGameAck pauseack = (MsgPauseGameAck) param[0];
                     break;
                 }
-                case GameProtocol.PAUSE_GAME_NOTIFY: // 안씀...
+                case GameProtocol.PAUSE_GAME_NOTIFY:
                 {
                     MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
 
-                    /*if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
+                    if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
                     {
-                        NetworkManager.Get().SetOtherPause(true);
-                    }*/
+                        NetworkManager.Get().SetOtherDisconnect(true);
+                    }
                     
                     break;
                 }
@@ -1507,16 +1517,17 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.RESUME_GAME_NOTIFY: // 안씀...
+                case GameProtocol.RESUME_GAME_NOTIFY:
                 {
                     MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
 
-                    /*if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
+                    if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
                     {
                         NetworkManager.Get().SetResume(true);
+                        NetworkManager.Get().SetOtherDisconnect(false);
                         // 미니언 정보 취합 해서 보내준다..
-                        SendSyncAllBattleInfo();
-                    }*/
+                        //SendSyncAllBattleInfo();
+                    }
                     break;
                 }
 

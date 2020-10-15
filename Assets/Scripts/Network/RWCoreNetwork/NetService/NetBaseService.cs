@@ -13,10 +13,10 @@ namespace RWCoreNetwork.NetService
 {
     public enum ENetState : byte
     {
-        // 신규 접속 중
+        // 접속 중
         Connecting,
 
-        // 신규 접속 완료
+        // 접속 완료
         Connected,
 
         // 재접속 중
@@ -31,6 +31,8 @@ namespace RWCoreNetwork.NetService
         // 연결 해제 완료
         Disconnected,
 
+        Pause,
+
         // 종료
         End,
     }
@@ -38,16 +40,20 @@ namespace RWCoreNetwork.NetService
 
     internal enum EInternalProtocol
     {
-        // 세션 인증 요청/응답
-        AUTH_CLIENT_SESSION_REQ = 1,
-        AUTH_CLIENT_SESSION_ACK,
-
-        // 세션 중복 알림
-        DUPLICATED_SESSION_NOTIFY,
+        // 세션 인증
+        AUTH_SESSION_REQ = 1,
+        AUTH_SESSION_ACK,
 
         // 세션 접속 종료 알림.
         DISCONNECT_SESSION_NOTIFY,
-        DISCONNECT_SESSION_CONFIRM
+
+        // 세션 일시 정지
+        PAUSE_SESSION_REQ,
+        PAUSE_SESSION_ACK,
+
+        // 세션 재개
+        RESUME_SESSION_REQ,
+        RESUME_SESSION_ACK,
     }
 
 
@@ -57,8 +63,7 @@ namespace RWCoreNetwork.NetService
     /// </summary>
     public class NetBaseService
     {
-        public delegate void ClientConnectDelegate(ClientSession clientSession, ESessionState sessionState);
-
+        public delegate void ClientConnectDelegate(ClientSession clientSession, EDisconnectState sessionState);
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
         public ClientConnectDelegate ClientReconnectedCallback { get; set; }
@@ -69,8 +74,9 @@ namespace RWCoreNetwork.NetService
         // 패킷 핸들러
         protected PacketHandler _packetHandler;
 
+
         // 네트워크 상태 모니터링 핸들러
-        protected NetMonitorHandler _netMonitorHandler;
+        protected MonitorHandler _netMonitorHandler;
 
 
         // 로그
@@ -89,9 +95,10 @@ namespace RWCoreNetwork.NetService
         {
             ClientConnectedCallback = null;
             ClientDisconnectedCallback = null;
-            _netMonitorHandler = new NetMonitorHandler(logger, 10);
+            ClientReconnectedCallback = null;
+            ClientOfflineCallback = null;
 
-
+            _netMonitorHandler = new MonitorHandler(logger, 10);
             _packetHandler = packetHandler;
             _logger = logger;
 
@@ -226,6 +233,107 @@ namespace RWCoreNetwork.NetService
         /// <param name="msg"></param>
         protected virtual void OnMessageCompleted(ClientSession clientSession, int protocolId, byte[] msg, int length)
         {
+        }
+
+
+        public int ReceiveQueueCount()
+        {
+            return _packetHandler.Count();
+        }
+
+
+        protected virtual bool ProcessInternalPacket(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        {
+            return false;
+        }
+
+
+        internal void SendInternalAuthSessionReq(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, clientSession.SessionId);
+                bf.Serialize(ms, (byte)clientSession.NetState);
+                clientSession.Send((int)EInternalProtocol.AUTH_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+        internal void SendInternalAuthSessionAck(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, (byte)clientSession.NetState);
+                bf.Serialize(ms, (short)clientSession.DisconnectState);
+                clientSession.Send((int)EInternalProtocol.AUTH_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalDisconnectSessionNotify(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, (short)clientSession.DisconnectState);
+                clientSession.Send((int)EInternalProtocol.DISCONNECT_SESSION_NOTIFY,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalPauseSessionReq(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, clientSession.PauseStartTimeTick);
+                clientSession.Send((int)EInternalProtocol.PAUSE_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalPauseSessionAck(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                clientSession.Send((int)EInternalProtocol.PAUSE_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalResumeSessionReq(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                clientSession.Send((int)EInternalProtocol.RESUME_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalResumeSessionAck(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                clientSession.Send((int)EInternalProtocol.RESUME_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
         }
     }
 }
