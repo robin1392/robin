@@ -138,7 +138,7 @@ namespace ED
         private static readonly int Break = Animator.StringToHash("Break");
         public bool isHalfHealth;
         public bool isPlayingAI { get; protected set; }
-        protected bool isMinionAgentMove = true;
+        public bool isMinionAgentMove = true;
         protected Coroutine crt_SyncMinion;
 
         #endregion
@@ -1960,7 +1960,7 @@ namespace ED
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
                 Vector3 chPos = ConvertNetMsg.MsgToVector(msgPoss[i]);
-                listMinion[i].SetNetworkValue(chPos, isMinionAgentMove);
+                listMinion[i].SetNetworkValue(chPos);
             }
         }
 

@@ -75,7 +75,6 @@ namespace ED
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
         protected BaseStat _attackedTarget;
-        protected bool isAgentMove = true;
 
         protected virtual void Awake()
         {
@@ -96,7 +95,7 @@ namespace ED
                 if(InGameManager.IsNetwork && !isMine && agent.enabled)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
-                    if (isAgentMove)
+                    if (controller.isMinionAgentMove)
                     {
                         agent.SetDestination(networkPosition);
                     }
@@ -466,9 +465,8 @@ namespace ED
             }
         }
 
-        public void SetNetworkValue(Vector3 position, bool isAgentMove = true)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
+        public void SetNetworkValue(Vector3 position)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
         {
-            this.isAgentMove = isAgentMove;
             networkPosition = position;
             //rb.rotation = rotation;
             //rb.velocity = velocity;
@@ -540,10 +538,18 @@ namespace ED
 
         public void SetVelocityTarget()
         {
-            if (target != null && isAlive && agent.enabled && agent.updatePosition)
+            if (controller.isMinionAgentMove)
             {
-                Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
+                if (target != null && isAlive && agent.enabled && agent.updatePosition)
+                {
+                    Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
+                    agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
+                }
+            }
+            else
+            {
+                transform.LookAt(networkPosition);
+                transform.position = networkPosition;
             }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
 //            {
