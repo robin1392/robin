@@ -75,6 +75,7 @@ namespace ED
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
         protected BaseStat _attackedTarget;
+        protected bool isAgentMove = true;
 
         protected virtual void Awake()
         {
@@ -95,7 +96,15 @@ namespace ED
                 if(InGameManager.IsNetwork && !isMine && agent.enabled)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
-                    agent.SetDestination(networkPosition);
+                    if (isAgentMove)
+                    {
+                        agent.SetDestination(networkPosition);
+                    }
+                    else
+                    {
+                        transform.LookAt(networkPosition);
+                        transform.position = networkPosition;
+                    }
                 }
 
                 var velocityMagnitude = rb.velocity.magnitude;
@@ -457,8 +466,9 @@ namespace ED
             }
         }
 
-        public void SetNetworkValue(Vector3 position)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
+        public void SetNetworkValue(Vector3 position, bool isAgentMove = true)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
         {
+            this.isAgentMove = isAgentMove;
             networkPosition = position;
             //rb.rotation = rotation;
             //rb.velocity = velocity;

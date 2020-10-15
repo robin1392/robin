@@ -1007,6 +1007,10 @@ namespace ED
             {
                 // resume
                 SendInGameManager(GameProtocol.RESUME_GAME_REQ);
+                
+                // 1초 동안 NavMeshAgent를 사용하지 않고 즉시 이동하도록
+                playerController.SyncMinionResume();
+                playerController.targetPlayer.SyncMinionResume();
             }
         }
 
@@ -1163,7 +1167,6 @@ namespace ED
             // Spawn Count
             playerController.spawnCount = gameData.PlayerSpawnCount;
             playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
-
             
             NetworkManager.Get().SetReconnect(false);
 
@@ -1495,7 +1498,7 @@ namespace ED
                     MsgPauseGameAck pauseack = (MsgPauseGameAck) param[0];
                     break;
                 }
-                case GameProtocol.PAUSE_GAME_NOTIFY: // 안씀...
+                case GameProtocol.PAUSE_GAME_NOTIFY:
                 {
                     MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
 
@@ -1512,7 +1515,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.RESUME_GAME_NOTIFY: // 안씀...
+                case GameProtocol.RESUME_GAME_NOTIFY:
                 {
                     MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
 
