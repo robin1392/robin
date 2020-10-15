@@ -627,7 +627,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   playType: 0
-  event_OtherDisconnect:
+  event_OtherPause:
     m_PersistentCalls:
       m_Calls: []
   UseLocalServer: 0
