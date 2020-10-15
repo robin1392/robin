@@ -198,7 +198,7 @@ namespace RWCoreNetwork.NetService
             }
 
 
-            if (protocolId == (int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK)
+            if (protocolId == (int)EInternalProtocol.AUTH_SESSION_ACK)
             {
                 ENetState netState;
                 ESessionState sessionState;
@@ -230,6 +230,14 @@ namespace RWCoreNetwork.NetService
                 {
                     _netEventQueue.Enqueue(clientSession);
                 }
+            }
+            else if (protocolId == (int)EInternalProtocol.PAUSE_SESSION_ACK)
+            {
+
+            }
+            else if (protocolId == (int)EInternalProtocol.RESUME_SESSION_ACK)
+            {
+
             }
             else if (protocolId == (int)EInternalProtocol.DISCONNECT_SESSION_NOTIFY)
             {

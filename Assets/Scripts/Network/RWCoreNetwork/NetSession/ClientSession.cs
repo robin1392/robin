@@ -129,6 +129,12 @@ namespace RWCoreNetwork
         /// <param name="msg"></param>
         public void Send(int protocolId, byte[] msg, int length)
         {
+            if (Socket.Connected == false)
+            {
+                return;
+            }
+
+
             byte[] buffer = _messageHandler.WriteBuffer(protocolId, msg, length);
             lock (_lockSendingQueue)
             {
@@ -282,7 +288,7 @@ namespace RWCoreNetwork
             {
                 bf.Serialize(ms, SessionId);
                 bf.Serialize(ms, (byte)netState);
-                Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_REQ,
+                Send((int)EInternalProtocol.AUTH_SESSION_REQ,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
@@ -295,7 +301,7 @@ namespace RWCoreNetwork
             {
                 bf.Serialize(ms, (byte)netState);
                 bf.Serialize(ms, (short)SessionState);
-                Send((int)EInternalProtocol.AUTH_CLIENT_SESSION_ACK,
+                Send((int)EInternalProtocol.AUTH_SESSION_ACK,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
@@ -314,13 +320,49 @@ namespace RWCoreNetwork
             }
         }
 
-        public void SendInternalDisconnectSessionConfirm()
+
+        public void SendInternalPauseSessionReq(ENetState netState)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, (short)SessionState);
-                Send((int)EInternalProtocol.DISCONNECT_SESSION_CONFIRM,
+                Send((int)EInternalProtocol.PAUSE_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        public void SendInternalPauseSessionAck(ENetState netState)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                Send((int)EInternalProtocol.PAUSE_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        public void SendInternalResumeSessionReq(ENetState netState)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                Send((int)EInternalProtocol.RESUME_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        public void SendInternalResumeSessionAck(ENetState netState)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                Send((int)EInternalProtocol.RESUME_SESSION_ACK,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }

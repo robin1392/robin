@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using RWCoreNetwork;
+using RWCoreNetwork.NetService;
 using RWGameProtocol.Msg;
 
 

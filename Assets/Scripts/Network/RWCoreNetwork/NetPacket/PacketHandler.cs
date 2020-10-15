@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using RWCoreLib.Log;
+using RWCoreNetwork.NetService;
 
 namespace RWCoreNetwork.NetPacket
 {

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
 using System.IO;
-using RWCoreNetwork;
+using RWCoreNetwork.NetService;
 using RWCoreNetwork.NetPacket;
 using RWGameProtocol.Msg;
 

@@ -5,7 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RWCoreNetwork;
+using RWCoreNetwork.NetService;
 using RWGameProtocol;
 using RWGameProtocol.Msg;
 using UnityEngine;

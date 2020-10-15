@@ -7,7 +7,7 @@ namespace RWCoreNetwork
     /// <summary>
     /// 소켓 I/O용 버퍼를 SocketAsyncEventArgs objects에 할당/해제함.(not thread safe)
     /// </summary>
-    internal class BufferManager
+    internal class BufferHandler
     {
         int m_numBytes;
         byte[] m_buffer;
@@ -16,7 +16,7 @@ namespace RWCoreNetwork
         int m_bufferSize;
 
 
-        public BufferManager(int totalBytes, int bufferSize)
+        public BufferHandler(int totalBytes, int bufferSize)
         {
             m_numBytes = totalBytes;
             m_currentIndex = 0;

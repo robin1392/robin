@@ -13,10 +13,10 @@ namespace RWCoreNetwork.NetService
 {
     public enum ENetState : byte
     {
-        // 신규 접속 중
+        // 접속 중
         Connecting,
 
-        // 신규 접속 완료
+        // 접속 완료
         Connected,
 
         // 재접속 중
@@ -31,6 +31,9 @@ namespace RWCoreNetwork.NetService
         // 연결 해제 완료
         Disconnected,
 
+        // 일시 정지
+        Pause,
+
         // 종료
         End,
     }
@@ -38,16 +41,20 @@ namespace RWCoreNetwork.NetService
 
     internal enum EInternalProtocol
     {
-        // 세션 인증 요청/응답
-        AUTH_CLIENT_SESSION_REQ = 1,
-        AUTH_CLIENT_SESSION_ACK,
-
-        // 세션 중복 알림
-        DUPLICATED_SESSION_NOTIFY,
+        // 세션 인증
+        AUTH_SESSION_REQ = 1,
+        AUTH_SESSION_ACK,
 
         // 세션 접속 종료 알림.
         DISCONNECT_SESSION_NOTIFY,
-        DISCONNECT_SESSION_CONFIRM
+
+        // 세션 일시 정지
+        PAUSE_SESSION_REQ,
+        PAUSE_SESSION_ACK,
+
+        // 세션 재개
+        RESUME_SESSION_REQ,
+        RESUME_SESSION_ACK,
     }
 
 
@@ -58,19 +65,21 @@ namespace RWCoreNetwork.NetService
     public class NetBaseService
     {
         public delegate void ClientConnectDelegate(ClientSession clientSession, ESessionState sessionState);
-
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
         public ClientConnectDelegate ClientReconnectedCallback { get; set; }
         public ClientConnectDelegate ClientOfflineCallback { get; set; }
+        public ClientConnectDelegate ClientPauseCallback { get; set; }
+        public ClientConnectDelegate ClientResumeCallback { get; set; }
 
 
 
         // 패킷 핸들러
         protected PacketHandler _packetHandler;
 
+
         // 네트워크 상태 모니터링 핸들러
-        protected NetMonitorHandler _netMonitorHandler;
+        protected MonitorHandler _netMonitorHandler;
 
 
         // 로그
@@ -89,9 +98,13 @@ namespace RWCoreNetwork.NetService
         {
             ClientConnectedCallback = null;
             ClientDisconnectedCallback = null;
-            _netMonitorHandler = new NetMonitorHandler(logger, 10);
+            ClientReconnectedCallback = null;
+            ClientOfflineCallback = null;
+            ClientPauseCallback = null;
+            ClientResumeCallback = null;
 
 
+            _netMonitorHandler = new MonitorHandler(logger, 10);
             _packetHandler = packetHandler;
             _logger = logger;
 

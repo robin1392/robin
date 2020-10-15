@@ -1,6 +1,6 @@
 using System;
 
-namespace RWCoreNetwork
+namespace RWCoreNetwork.NetService
 {
     public class Peer
     {
@@ -8,7 +8,7 @@ namespace RWCoreNetwork
 
         public bool IsDisconnected()
         {
-            return ClientSession == null || ClientSession.NetState == NetService.ENetState.Disconnected;
+            return ClientSession == null || ClientSession.NetState == ENetState.Disconnected;
         }
 
         public void SetClientSession(ClientSession clientSession)
@@ -24,7 +24,7 @@ namespace RWCoreNetwork
   
         public virtual void SendPacket(int protocolId, byte[] msg)
         {
-            if (ClientSession.NetState != NetService.ENetState.Connected)
+            if (ClientSession.NetState != ENetState.Connected)
             {
                 return;
             }
