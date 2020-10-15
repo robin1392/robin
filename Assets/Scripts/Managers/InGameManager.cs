@@ -1000,7 +1000,9 @@ namespace ED
             //yield return new WaitForSeconds(2.0f);
             RevmoeAllMinionAndMagic();
             */
-            
+
+            NetworkManager.Get().PrintNetworkStatus();
+
             if (NetworkManager.Get().IsConnect())
             {
                 // resume

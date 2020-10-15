@@ -48,7 +48,10 @@ namespace RWCoreNetwork.NetPacket
 
         public int Count()
         {
-            return _receiveQueue.Count;
+            lock (_lockReceiveQueue)
+            {
+                return _receiveQueue.Count;
+            }
         }
 
 

@@ -95,6 +95,10 @@ public class SocketManager
         return _serverPeer != null;
     }
     
+    public int ReceiveQueueCount()
+    {
+        return _netService.GetReceivePacketQueueCount();
+    }
     
     
     /// <summary>

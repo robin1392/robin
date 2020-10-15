@@ -240,5 +240,11 @@ namespace RWCoreNetwork.NetService
         protected virtual void OnMessageCompleted(ClientSession clientSession, int protocolId, byte[] msg, int length)
         {
         }
+
+
+        public int GetReceivePacketQueueCount()
+        {
+            return _packetHandler.Count();
+        }
     }
 }

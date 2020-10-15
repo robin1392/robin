@@ -306,6 +306,12 @@ public class NetworkManager : Singleton<NetworkManager>
         //
         GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
     }
+
+    public void PrintNetworkStatus()
+    {
+        UnityUtil.Print("RECV QUEUE COUNT =>  ", _clientSocket.ReceiveQueueCount().ToString(), "magenta");
+    }
+
     #endregion
 
 
