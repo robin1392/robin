@@ -1448,10 +1448,10 @@ namespace ED
                 {
                     MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
                     
-                    if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
-                    {
-                        NetworkManager.Get().SetOtherDisconnect(true);
-                    }
+                    // if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
+                    // {
+                    //     NetworkManager.Get().SetOtherDisconnect(true);
+                    // }
                     
                     break;
                 }
@@ -1494,10 +1494,10 @@ namespace ED
                 {
                     MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
 
-                    /*if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
+                    if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
                     {
-                        NetworkManager.Get().SetOtherPause(true);
-                    }*/
+                        NetworkManager.Get().SetOtherDisconnect(true);
+                    }
                     
                     break;
                 }
@@ -1511,12 +1511,13 @@ namespace ED
                 {
                     MsgResumeGameNotify resumeNoti = (MsgResumeGameNotify) param[0];
 
-                    /*if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
+                    if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
                     {
                         NetworkManager.Get().SetResume(true);
+                        NetworkManager.Get().SetOtherDisconnect(false);
                         // 미니언 정보 취합 해서 보내준다..
-                        SendSyncAllBattleInfo();
-                    }*/
+                        //SendSyncAllBattleInfo();
+                    }
                     break;
                 }
 
