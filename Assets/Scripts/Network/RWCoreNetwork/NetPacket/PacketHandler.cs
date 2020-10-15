@@ -87,8 +87,6 @@ namespace RWCoreNetwork.NetPacket
 
         /// <summary>
         /// 큐에서 패킷을 하나 꺼내서 처리한다.
-        /// 외부 스레드의 루프문 내에서 호출되어야 한다.
-        /// (유니티 클라이언트에서 사용할 목적으로 구현됨)
         /// </summary>
         public virtual void Update()
         {

@@ -89,7 +89,19 @@ public class SocketManager
             _serverPeer = null;    
         }
     }
-    
+
+    public void Pause()
+    {
+        _netService.PauseSession(_netService.ClientSession);
+    }
+
+
+    public void Resume()
+    {
+        _netService.ResumeSession(_netService.ClientSession);
+    }
+
+
     public bool IsConnected()
     {
         return _serverPeer != null;
@@ -99,7 +111,7 @@ public class SocketManager
     public void PrintNetworkStatus()
     {
         UnityUtil.Print("NETWORK STATUS  ", 
-            "Recv queue count: " + _netService.GetReceivePacketQueueCount().ToString() 
+            "Recv queue count: " + _netService.ReceiveQueueCount().ToString() 
             + ", Send queue count: " + _netService.ClientSession.SendQueueCount().ToString(), "magenta");
     }
     
@@ -108,9 +120,9 @@ public class SocketManager
     /// 서버 연결 성공 콜백
     /// </summary>
     /// <param name="session">세션</param>
-    void OnClientConnected(ClientSession session, ESessionState sessionState)
+    void OnClientConnected(ClientSession session, EDisconnectState disconnectState)
     {
-        UnityUtil.Print(" CONNECT   ", " CLINET CONNECT !!! state : " + sessionState, "blue");
+        UnityUtil.Print(" CONNECT   ", " CLINET CONNECT !!! state : " + disconnectState, "blue");
         
         _serverPeer = new Peer();
         _serverPeer.SetClientSession(session);
@@ -125,12 +137,12 @@ public class SocketManager
     /// 재연결 성공 콜백
     /// </summary>
     /// <param name="session"></param>
-    /// <param name="sessionState"></param>
-    void OnClientReconnected(ClientSession session, ESessionState sessionState)
+    /// <param name="disconnectState"></param>
+    void OnClientReconnected(ClientSession session, EDisconnectState disconnectState)
     {
-        UnityUtil.Print(" RECONNECT   ", " CLINET RECONNECT !!! state : " + sessionState, "blue");
+        UnityUtil.Print(" RECONNECT   ", " CLINET RECONNECT !!! state : " + disconnectState, "blue");
         //
-        if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
+        if (disconnectState != EDisconnectState.None && disconnectState != EDisconnectState.Wait)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
@@ -153,11 +165,11 @@ public class SocketManager
     }
 
 
-    void OnClientDisconnected(ClientSession session, ESessionState sessionState)
+    void OnClientDisconnected(ClientSession session, EDisconnectState disconnectState)
     {
-        UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! state : " + sessionState, "blue");
+        UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! state : " + disconnectState, "blue");
 
-        if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
+        if (disconnectState != EDisconnectState.None && disconnectState != EDisconnectState.Wait)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Net.Sockets;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 using RWCoreLib.Log;
 using RWCoreNetwork.NetPacket;
@@ -14,7 +12,7 @@ using RWCoreNetwork.NetService;
 
 namespace RWCoreNetwork
 {
-    public enum ESessionState : short
+    public enum EDisconnectState : short
     {
         None = 0,
         // 재연결 대기 상태
@@ -39,7 +37,7 @@ namespace RWCoreNetwork
 
         public ENetState NetState { get; set; }
 
-        public ESessionState SessionState { get; set; }
+        public EDisconnectState DisconnectState { get; set; }
 
         public Socket Socket { get; set; }
         
@@ -49,6 +47,7 @@ namespace RWCoreNetwork
 
 
         public long AliveTimeTick { get; set; }
+        public long PauseStartTimeTick { get; set; }
 
 
         // session객체. 어플리케이션 딴에서 구현하여 사용.
@@ -75,7 +74,9 @@ namespace RWCoreNetwork
             _sendingQueue = new Queue<byte[]>();
             _lockSendingQueue = new object();
             SessionId = string.Empty;
-            SessionState = ESessionState.None;
+            DisconnectState = EDisconnectState.None;
+            AliveTimeTick = 0;
+            PauseStartTimeTick = 0;
         }
 
 
@@ -90,7 +91,6 @@ namespace RWCoreNetwork
             return _peer;
         }
 
-
         public int SendQueueCount()
         {
             lock (_lockSendingQueue)
@@ -98,6 +98,7 @@ namespace RWCoreNetwork
                 return _sendingQueue.Count;
             }
         }
+
 
         public void SetEventArgs(SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
@@ -139,6 +140,7 @@ namespace RWCoreNetwork
         {
             if (Socket.Connected == false)
             {
+                _logger.Error(string.Format("[Send] socket disconnectd!!! SessionId: {0}, protocolId: {1}", SessionId, protocolId));
                 return;
             }
 
@@ -257,6 +259,7 @@ namespace RWCoreNetwork
             Socket.Close();
         }
 
+
         public void SetKeepAlive(int keepaliveTime, int keepaliveInterval)
         {
             byte[] inOptionValues = new byte[12];
@@ -289,91 +292,9 @@ namespace RWCoreNetwork
         }
 
 
-        public void SendInternalAuthSessionReq(ENetState netState)
+        public bool ExpiredPauseTime()
         {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, SessionId);
-                bf.Serialize(ms, (byte)netState);
-                Send((int)EInternalProtocol.AUTH_SESSION_REQ,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
-        }
-
-        public void SendInternalAuthSessionAck(ENetState netState)
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, (byte)netState);
-                bf.Serialize(ms, (short)SessionState);
-                Send((int)EInternalProtocol.AUTH_SESSION_ACK,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
-        }
-
-
-        public void SendInternalDisconnectSessionNotify()
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, (short)SessionState);
-                Send((int)EInternalProtocol.DISCONNECT_SESSION_NOTIFY,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
-        }
-
-
-        public void SendInternalPauseSessionReq(ENetState netState)
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                Send((int)EInternalProtocol.PAUSE_SESSION_REQ,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
-        }
-
-
-        public void SendInternalPauseSessionAck(ENetState netState)
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                Send((int)EInternalProtocol.PAUSE_SESSION_ACK,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
-        }
-
-
-        public void SendInternalResumeSessionReq(ENetState netState)
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                Send((int)EInternalProtocol.RESUME_SESSION_REQ,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
-        }
-
-
-        public void SendInternalResumeSessionAck(ENetState netState)
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                Send((int)EInternalProtocol.RESUME_SESSION_ACK,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
+            return PauseStartTimeTick != 0 && PauseStartTimeTick + (TimeSpan.TicksPerSecond * 10) < DateTime.UtcNow.Ticks;
         }
     }
 }

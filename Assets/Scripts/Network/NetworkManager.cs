@@ -312,6 +312,19 @@ public class NetworkManager : Singleton<NetworkManager>
         _clientSocket.PrintNetworkStatus();
     }
 
+
+    public void PauseGame()
+    {
+        _clientSocket.Pause();
+    }
+
+
+    public void ResumeGame()
+    {
+        _clientSocket.Resume();
+    }
+
+
     #endregion
 
 

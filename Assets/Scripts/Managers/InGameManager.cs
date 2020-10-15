@@ -958,7 +958,7 @@ namespace ED
             if (pauseStatus)
             {
                 print("Application Pause");
-                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+                NetworkManager.Get().PauseGame();
             }
             else
             {
@@ -973,10 +973,12 @@ namespace ED
         // 에디터에서 테스트용도로 사용하기 위해
         public void OnEditorAppPause(PauseState pause)
         {
+            NetworkManager.Get().PrintNetworkStatus();
+
             if (pause == PauseState.Paused)
             {
                 print("Application Pause");
-                SendInGameManager(GameProtocol.PAUSE_GAME_REQ);
+                NetworkManager.Get().PauseGame();
             }
             else
             {
@@ -1006,8 +1008,8 @@ namespace ED
             if (NetworkManager.Get().IsConnect())
             {
                 // resume
-                SendInGameManager(GameProtocol.RESUME_GAME_REQ);
-                
+                NetworkManager.Get().ResumeGame();
+
                 // 1초 동안 NavMeshAgent를 사용하지 않고 즉시 이동하도록
                 playerController.SyncMinionResume();
                 playerController.targetPlayer.SyncMinionResume();

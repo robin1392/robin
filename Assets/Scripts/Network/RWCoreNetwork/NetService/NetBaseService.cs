@@ -31,7 +31,6 @@ namespace RWCoreNetwork.NetService
         // 연결 해제 완료
         Disconnected,
 
-        // 일시 정지
         Pause,
 
         // 종료
@@ -64,13 +63,11 @@ namespace RWCoreNetwork.NetService
     /// </summary>
     public class NetBaseService
     {
-        public delegate void ClientConnectDelegate(ClientSession clientSession, ESessionState sessionState);
+        public delegate void ClientConnectDelegate(ClientSession clientSession, EDisconnectState sessionState);
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
         public ClientConnectDelegate ClientReconnectedCallback { get; set; }
         public ClientConnectDelegate ClientOfflineCallback { get; set; }
-        public ClientConnectDelegate ClientPauseCallback { get; set; }
-        public ClientConnectDelegate ClientResumeCallback { get; set; }
 
 
 
@@ -100,9 +97,6 @@ namespace RWCoreNetwork.NetService
             ClientDisconnectedCallback = null;
             ClientReconnectedCallback = null;
             ClientOfflineCallback = null;
-            ClientPauseCallback = null;
-            ClientResumeCallback = null;
-
 
             _netMonitorHandler = new MonitorHandler(logger, 10);
             _packetHandler = packetHandler;
@@ -242,9 +236,104 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        public int GetReceivePacketQueueCount()
+        public int ReceiveQueueCount()
         {
             return _packetHandler.Count();
+        }
+
+
+        protected virtual bool ProcessInternalPacket(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        {
+            return false;
+        }
+
+
+        internal void SendInternalAuthSessionReq(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, clientSession.SessionId);
+                bf.Serialize(ms, (byte)clientSession.NetState);
+                clientSession.Send((int)EInternalProtocol.AUTH_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+        internal void SendInternalAuthSessionAck(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, (byte)clientSession.NetState);
+                bf.Serialize(ms, (short)clientSession.DisconnectState);
+                clientSession.Send((int)EInternalProtocol.AUTH_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalDisconnectSessionNotify(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, (short)clientSession.DisconnectState);
+                clientSession.Send((int)EInternalProtocol.DISCONNECT_SESSION_NOTIFY,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalPauseSessionReq(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, clientSession.PauseStartTimeTick);
+                clientSession.Send((int)EInternalProtocol.PAUSE_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalPauseSessionAck(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                clientSession.Send((int)EInternalProtocol.PAUSE_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalResumeSessionReq(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                clientSession.Send((int)EInternalProtocol.RESUME_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        internal void SendInternalResumeSessionAck(ClientSession clientSession)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                clientSession.Send((int)EInternalProtocol.RESUME_SESSION_ACK,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
         }
     }
 }
