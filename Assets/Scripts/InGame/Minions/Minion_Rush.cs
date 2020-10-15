@@ -117,7 +117,7 @@ namespace ED
             var ts = transform;
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "Skill", target.id);
+            controller.MinionAniTrigger(id, "Skill", -1);
             
             float tick = 0.1f;
             while (dashTarget != null)
