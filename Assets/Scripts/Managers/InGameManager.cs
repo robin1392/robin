@@ -1115,7 +1115,9 @@ namespace ED
             playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
             playerController.isMine = true;
             playerController.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
-            
+            getDiceCount = gameData.PlayerInfo.GetDiceCount;
+            playerController.SetSp(gameData.PlayerInfo.CurrentSp);
+
             NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
             playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.OtherPlayerInfo.TowerHp);
             if (playerController.targetPlayer.currentHealth <= 20000) playerController.targetPlayer.isHalfHealth = true; 
@@ -1124,6 +1126,7 @@ namespace ED
             playerController.targetPlayer.transform.position = FieldManager.Get().GetPlayerPos(gameData.OtherPlayerInfo.IsBottomPlayer);
             playerController.targetPlayer.isMine = false;
             playerController.targetPlayer.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+            playerController.targetPlayer.SetSp(gameData.OtherPlayerInfo.CurrentSp);
             
             CameraController.Get().Start();
 

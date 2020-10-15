@@ -111,7 +111,8 @@ namespace ED
             get => _sp;
             protected set
             {
-                _sp = value; InGameManager.Get().event_SP_Edit.Invoke(_sp);
+                _sp = value;
+                if (isMine) InGameManager.Get().event_SP_Edit.Invoke(_sp);
             }
         }
 
