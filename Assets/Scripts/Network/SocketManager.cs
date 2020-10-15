@@ -95,9 +95,12 @@ public class SocketManager
         return _serverPeer != null;
     }
     
-    public int ReceiveQueueCount()
+
+    public void PrintNetworkStatus()
     {
-        return _netService.GetReceivePacketQueueCount();
+        UnityUtil.Print("NETWORK STATUS  ", 
+            "Recv queue count: " + _netService.GetReceivePacketQueueCount().ToString() 
+            + ", Send queue count: " + _netService.ClientSession.SendQueueCount().ToString(), "magenta");
     }
     
     

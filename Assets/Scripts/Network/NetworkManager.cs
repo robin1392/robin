@@ -309,7 +309,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void PrintNetworkStatus()
     {
-        UnityUtil.Print("RECV QUEUE COUNT =>  ", _clientSocket.ReceiveQueueCount().ToString(), "magenta");
+        _clientSocket.PrintNetworkStatus();
     }
 
     #endregion

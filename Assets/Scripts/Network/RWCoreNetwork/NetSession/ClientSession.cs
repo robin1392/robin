@@ -91,6 +91,14 @@ namespace RWCoreNetwork
         }
 
 
+        public int SendQueueCount()
+        {
+            lock (_lockSendingQueue)
+            {
+                return _sendingQueue.Count;
+            }
+        }
+
         public void SetEventArgs(SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
             ReceiveEventArgs = receiveArgs;
