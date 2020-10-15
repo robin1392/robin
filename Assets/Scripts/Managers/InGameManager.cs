@@ -953,6 +953,8 @@ namespace ED
 
         public void OnApplicationPause(bool pauseStatus)
         {
+            NetworkManager.Get().PrintNetworkStatus();
+
             if (pauseStatus)
             {
                 print("Application Pause");
@@ -1000,8 +1002,6 @@ namespace ED
             //yield return new WaitForSeconds(2.0f);
             RevmoeAllMinionAndMagic();
             */
-
-            NetworkManager.Get().PrintNetworkStatus();
 
             if (NetworkManager.Get().IsConnect())
             {
