@@ -195,8 +195,7 @@ namespace ED
 
         public void DestroyPlayer()
         {
-            if(NetworkManager.Get() != null)
-                NetworkManager.Get().event_OtherPause.RemoveListener(OtherPlayerPause);
+            if(NetworkManager.Get() != null && isMine) NetworkManager.Get().event_OtherPause.RemoveListener(OtherPlayerPause);
             _arrDice = null;
             _arrDiceDeck = null;
             _arrUpgradeLevel = null;
@@ -204,7 +203,7 @@ namespace ED
 
         public void StartPlayerControll()
         {
-            NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
+            if (isMine) NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
 
             isHalfHealth = false;
 
