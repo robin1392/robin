@@ -47,6 +47,9 @@ public partial class WebPacket : Singleton<WebPacket>
 }
 
 
+
+#region web packet define
+
 [Serializable]
 public class UserAuthReq
 {
@@ -100,3 +103,5 @@ public class DeckUpdateAck
     public int[] diceIds = new int[5];
 }
 
+
+#endregion

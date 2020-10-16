@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
 
 public class UserInfo
 {
 
+    #region user info variable
+    
     private string _userID;
     public string userID
     {
@@ -43,6 +44,11 @@ public class UserInfo
         get => _slotDeck;
         private set => _slotDeck = value;
     }
+    
+    #endregion
+    
+    
+    #region init func
 
     public UserInfo()
     {
@@ -80,6 +86,8 @@ public class UserInfo
             ObscuredPrefs.Save();    
         }
     }
+    
+    #endregion
 
     public void FixDeckOld()
     {
@@ -103,6 +111,8 @@ public class UserInfo
         
         ObscuredPrefs.Save();
     }
+    
+    
     
     #region set
 
