@@ -218,8 +218,7 @@ namespace RWCoreNetwork.NetService
                             SendInternalDisconnectSessionNotify(clientSession);
                             clientSession.Disconnect();
                         }
-                        else if (clientSession.NetState == ENetState.Pause 
-                            && clientSession.ExpiredPauseTime())
+                        else if (clientSession.ExpiredPauseTime() == true)
                         {
                             // Pause 허용 시간 초과시 세션 연결을 끊는다.
                             clientSession.Disconnect();
@@ -486,20 +485,17 @@ namespace RWCoreNetwork.NetService
                         }
 
 
+                        clientSession.PauseStartTimeTick = timeTick;
+                        
                         if (ClientPauseCallback != null)
                         {
                             ClientPauseCallback(clientSession, clientSession.DisconnectState);
                         }
-
-
-                        clientSession.PauseStartTimeTick = timeTick;
-                        clientSession.NetState = ENetState.Pause;
                     }
                     break;
                 case EInternalProtocol.RESUME_SESSION_REQ:
                     {
                         clientSession.PauseStartTimeTick = 0;
-                        clientSession.NetState = ENetState.Connected;
 
                         if (ClientResumeCallback != null)
                         {

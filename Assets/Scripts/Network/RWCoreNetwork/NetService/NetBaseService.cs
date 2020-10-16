@@ -31,8 +31,6 @@ namespace RWCoreNetwork.NetService
         // 연결 해제 완료
         Disconnected,
 
-        Pause,
-
         // 종료
         End,
     }
