@@ -826,6 +826,8 @@ namespace ED
             if (NetworkManager.Get().isResume == true)
             {
                 NetworkManager.Get().SetResume(false);
+                //
+                UI_InGamePopup.Get().SetViewWaiting(false);
             }
             // 인디케이터도 다시 안보이게..
             if (UI_InGamePopup.Get().IsIndicatorActive() == true)
