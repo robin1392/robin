@@ -1148,8 +1148,8 @@ namespace ED
             SyncInfo();
             
             // 주사위필드 데이터 셋팅
-            playerController.SetDiceField(gameData.GameDiceData);
             playerController.targetPlayer.SetDiceField(gameData.OtherGameDiceData);
+            playerController.SetDiceField(gameData.GameDiceData);
             
             // 미니언 셋팅
             List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
