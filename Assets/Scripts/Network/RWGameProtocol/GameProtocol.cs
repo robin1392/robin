@@ -25,14 +25,6 @@ namespace RWGameProtocol
         RECONNECT_GAME_ACK,
         RECONNECT_GAME_NOTIFY,
 
-        PAUSE_GAME_REQ,
-        PAUSE_GAME_ACK,
-        PAUSE_GAME_NOTIFY,
-
-        RESUME_GAME_REQ,
-        RESUME_GAME_ACK,
-        RESUME_GAME_NOTIFY,
-
         READY_SYNC_GAME_REQ,
         READY_SYNC_GAME_ACK,
         READY_SYNC_GAME_NOTIFY,
@@ -74,6 +66,8 @@ namespace RWGameProtocol
         SPAWN_NOTIFY,
         END_GAME_NOTIFY,
         DISCONNECT_GAME_NOTIFY,
+        PAUSE_GAME_NOTIFY,
+        RESUME_GAME_NOTIFY,
 
 
         // ----------------------------------------------------------------------------------------------------

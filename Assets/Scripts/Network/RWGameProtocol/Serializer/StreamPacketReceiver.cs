@@ -230,33 +230,6 @@ namespace RWGameProtocol.Serializer
                         }
                     }
                     break;
-                case GameProtocol.PAUSE_GAME_REQ:
-                    {
-                        if (PauseGameReq == null)
-                            return false;
-
-                        
-                        using (var ms = new MemoryStream(buffer))
-                        {
-                            MsgPauseGameReq msg = new MsgPauseGameReq();
-                            PauseGameReq(peer, msg);
-                        }
-                    }
-                    break;
-                case GameProtocol.PAUSE_GAME_ACK:
-                    {
-                        if (PauseGameAck == null)
-                            return false;
-
-                        
-                        using (var ms = new MemoryStream(buffer))
-                        {
-                            MsgPauseGameAck msg = new MsgPauseGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            PauseGameAck(peer, msg);
-                        }
-                    }
-                    break;
                 case GameProtocol.PAUSE_GAME_NOTIFY:
                     {
                         if (PauseGameNotify == null)
@@ -268,33 +241,6 @@ namespace RWGameProtocol.Serializer
                             MsgPauseGameNotify msg = new MsgPauseGameNotify();
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             PauseGameNotify(peer, msg);
-                        }
-                    }
-                    break;
-                case GameProtocol.RESUME_GAME_REQ:
-                    {
-                        if (ResumeGameReq == null)
-                            return false;
-
-                        
-                        using (var ms = new MemoryStream(buffer))
-                        {
-                            MsgResumeGameReq msg = new MsgResumeGameReq();
-                            ResumeGameReq(peer, msg);
-                        }
-                    }
-                    break;
-                case GameProtocol.RESUME_GAME_ACK:
-                    {
-                        if (ResumeGameAck == null)
-                            return false;
-
-                        
-                        using (var ms = new MemoryStream(buffer))
-                        {
-                            MsgResumeGameAck msg = new MsgResumeGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            ResumeGameAck(peer, msg);
                         }
                     }
                     break;

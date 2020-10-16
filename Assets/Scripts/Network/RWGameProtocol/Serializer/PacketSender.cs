@@ -27,12 +27,6 @@ namespace RWGameProtocol.Serializer
         public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage, int currentHp) { }
         public virtual void ReconnectGameReq(Peer peer) { }
         public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerBase playerBase, MsgPlayerBase otherPlayerBase) { }
-        public virtual void PauseGameReq(Peer peer) { }
-        public virtual void PauseGameAck(Peer peer, GameErrorCode code) { }
-        public virtual void PauseGameNotify(Peer peer, int playerUId) { }
-        public virtual void ResumeGameReq(Peer peer) { }
-        public virtual void ResumeGameAck(Peer peer, GameErrorCode code) { }
-        public virtual void ResumeGameNotify(Peer peer, int playerUId) { }
         
         public virtual void ReadySyncGameReq(Peer peer) { }
         public virtual void ReadySyncGameAck(Peer peer, GameErrorCode code) { }
@@ -58,6 +52,9 @@ namespace RWGameProtocol.Serializer
         public virtual void EndGameNotify(Peer peer, GameErrorCode code, int winPlayerUId) { }
         public virtual void DisconnectGameNotify(Peer peer, int playerUId) { }
         public virtual void ReconnectGameNotify(Peer peer, int playerUId) { }
+        public virtual void PauseGameNotify(Peer peer, int playerUId) { }
+        public virtual void ResumeGameNotify(Peer peer, int playerUId) { }
+
 
         public virtual void RemoveMinionRelay(Peer peer, int playerUId, int id) { }
         public virtual void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage, int delay) { }

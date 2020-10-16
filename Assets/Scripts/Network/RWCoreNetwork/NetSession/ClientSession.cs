@@ -294,7 +294,8 @@ namespace RWCoreNetwork
 
         public bool ExpiredPauseTime()
         {
-            return PauseStartTimeTick != 0 && PauseStartTimeTick + (TimeSpan.TicksPerSecond * 10) < DateTime.UtcNow.Ticks;
+            return PauseStartTimeTick != 0 
+                && PauseStartTimeTick + (TimeSpan.TicksPerSecond * 11) < DateTime.UtcNow.Ticks;
         }
     }
 }
