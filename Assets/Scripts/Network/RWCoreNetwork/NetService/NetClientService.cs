@@ -271,7 +271,6 @@ namespace RWCoreNetwork.NetService
 
         public void PauseSession(ClientSession clientSession)
         {
-            clientSession.NetState = ENetState.Pause;
             clientSession.PauseStartTimeTick = DateTime.UtcNow.Ticks;
             SendInternalPauseSessionReq(clientSession);
         }
@@ -279,7 +278,7 @@ namespace RWCoreNetwork.NetService
 
         public void ResumeSession(ClientSession clientSession)
         {
-            if (clientSession.NetState != ENetState.Pause)
+            if (clientSession.PauseStartTimeTick == 0)
             {
                 return;
             }

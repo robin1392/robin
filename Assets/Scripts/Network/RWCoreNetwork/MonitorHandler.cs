@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+
 using RWCoreLib.Log;
 
 
@@ -47,27 +49,26 @@ namespace RWCoreNetwork.NetService
         public Dictionary<int, int> SendQueueCount { get; set; }
 
 
-        ILog _logger;
+        private ILog _logger;
+
 
         private Dictionary<string, Dictionary<int, PacketStatus>> _userPacketStatus;
         private int _totalSendPacketUsage;
         private int _totalRecvPacketUsage;
-        private int _lastSendPacketUsage;
-        private int _lastRecvPacketUsage;
         
 
         private object _lockObject;
-        private long _monitorTick;
-        private long _monitorInterval;
-        private int _monitorIndex;
+
+        private long _startTimeTick;
+        private long _endTimeTick;
 
 
         public MonitorHandler(ILog logger, int interval)
         {
             _logger = logger;
             _lockObject = new object();
-            _monitorTick = DateTime.UtcNow.AddSeconds(interval).Ticks;
-            _monitorInterval = interval;
+            _startTimeTick = 0;
+            _endTimeTick = 0;
             _userPacketStatus = new Dictionary<string, Dictionary<int, PacketStatus>>();
         }
 
@@ -85,31 +86,32 @@ namespace RWCoreNetwork.NetService
                 _userPacketStatus.Clear();
                 _totalSendPacketUsage = 0;
                 _totalRecvPacketUsage = 0;
-                _lastSendPacketUsage = 0;
-                _lastRecvPacketUsage = 0;
-                _monitorIndex = 0;
+                _startTimeTick = 0;
+                _endTimeTick = 0;
+
             }
         }
 
 
-        public void Print()
+        public void Start()
         {
-            DateTime now = DateTime.UtcNow;
-            if (_monitorTick > now.Ticks)
-            {
-                return;
-            }
-
-            _monitorTick = now.AddSeconds(_monitorInterval).Ticks;
+            Clear();
+            _startTimeTick = DateTime.UtcNow.Ticks;
+        }
 
 
+        public void End()
+        {
+            _endTimeTick = DateTime.UtcNow.Ticks;
+        }
+
+
+        public void ShowResult()
+        {
             if (_userPacketStatus.Count == 0)
             {
                 return;
             }
-
-
-            _monitorIndex++;
 
 
             _logger.Info("----------------------------------------------------------------------------------");
@@ -135,8 +137,9 @@ namespace RWCoreNetwork.NetService
 
 
             // 총 패킷 송수신량
-            _logger.Info(string.Format("PlayTime: {0} sec, TotalSendPacketUsage: {1:n0} bytes, TotalRecvPacketUsage: {2:n0} bytes,  TotalAllPacketUsage: {3:n0} bytes", 
-                _monitorIndex * 10, 
+            long elapsedSecond = (_endTimeTick - _startTimeTick) / TimeSpan.TicksPerSecond;
+            _logger.Info(string.Format("PlayTime: {0} sec, TotalSendPacketUsage: {1:n0} bytes, TotalRecvPacketUsage: {2:n0} bytes,  TotalAllPacketUsage: {3:n0} bytes",
+                elapsedSecond, 
                 _totalSendPacketUsage, 
                 _totalRecvPacketUsage, 
                 _totalSendPacketUsage + _totalRecvPacketUsage));
@@ -144,12 +147,9 @@ namespace RWCoreNetwork.NetService
 
             // 초당 평균 패킷 송수신량
             _logger.Info(string.Format("AvgSendPacketUsage: {0:n0} bytes/sec, AvgRecvPacketUsage: {1:n0} bytes/sec",
-                (float)((_totalSendPacketUsage - _lastSendPacketUsage) / _monitorInterval),
-                (float)((_totalRecvPacketUsage - _lastRecvPacketUsage) / _monitorInterval)));
+                (float)_totalSendPacketUsage / elapsedSecond,
+                (float)_totalRecvPacketUsage / elapsedSecond));
 
-
-            _lastSendPacketUsage = _totalSendPacketUsage;
-            _lastRecvPacketUsage = _totalRecvPacketUsage;
 
             _logger.Info("----------------------------------------------------------------------------------");
         }

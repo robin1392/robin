@@ -66,21 +66,6 @@ namespace RWGameProtocol.Serializer
         public delegate void ReconnectGameNotifyDelegate(Peer peer, MsgReconnectGameNotify msg);
         public ReconnectGameNotifyDelegate ReconnectGameNotify;
 
-
-        public delegate void PauseGameReqDelegate(Peer peer, MsgPauseGameReq msg);
-        public PauseGameReqDelegate PauseGameReq;
-        public delegate void PauseGameAckDelegate(Peer peer, MsgPauseGameAck msg);
-        public PauseGameAckDelegate PauseGameAck;
-        public delegate void PauseGameNotifyDelegate(Peer peer, MsgPauseGameNotify msg);
-        public PauseGameNotifyDelegate PauseGameNotify;
-
-        public delegate void ResumeGameReqDelegate(Peer peer, MsgResumeGameReq msg);
-        public ResumeGameReqDelegate ResumeGameReq;
-        public delegate void ResumeGameAckDelegate(Peer peer, MsgResumeGameAck msg);
-        public ResumeGameAckDelegate ResumeGameAck;
-        public delegate void ResumeGameNotifyDelegate(Peer peer, MsgResumeGameNotify msg);
-        public ResumeGameNotifyDelegate ResumeGameNotify;
-
         public delegate void ReadySyncGameReqDelegate(Peer peer, MsgReadySyncGameReq msg);
         public ReadySyncGameReqDelegate ReadySyncGameReq;
         public delegate void ReadySyncGameAckDelegate(Peer peer, MsgReadySyncGameAck msg);
@@ -141,6 +126,12 @@ namespace RWGameProtocol.Serializer
 
         public delegate void DisconnectGameNotifyDelegate(Peer peer, MsgDisconnectGameNotify msg);
         public DisconnectGameNotifyDelegate DisconnectGameNotify;
+
+        public delegate void PauseGameNotifyDelegate(Peer peer, MsgPauseGameNotify msg);
+        public PauseGameNotifyDelegate PauseGameNotify;
+
+        public delegate void ResumeGameNotifyDelegate(Peer peer, MsgResumeGameNotify msg);
+        public ResumeGameNotifyDelegate ResumeGameNotify;
 
         #endregion
 

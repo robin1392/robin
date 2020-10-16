@@ -38,4 +38,18 @@ namespace RWGameProtocol.Msg
     {
         public int PlayerUId;
     }
+
+
+    [Serializable]
+    public class MsgPauseGameNotify
+    {
+        public int PlayerUId;
+    }
+
+
+    [Serializable]
+    public class MsgResumeGameNotify
+    {
+        public int PlayerUId;
+    }
 }

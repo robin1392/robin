@@ -31,8 +31,6 @@ namespace RWCoreNetwork.NetService
         // 연결 해제 완료
         Disconnected,
 
-        Pause,
-
         // 종료
         End,
     }
@@ -75,10 +73,6 @@ namespace RWCoreNetwork.NetService
         protected PacketHandler _packetHandler;
 
 
-        // 네트워크 상태 모니터링 핸들러
-        protected MonitorHandler _netMonitorHandler;
-
-
         // 로그
         protected ILog _logger;
 
@@ -98,7 +92,6 @@ namespace RWCoreNetwork.NetService
             ClientReconnectedCallback = null;
             ClientOfflineCallback = null;
 
-            _netMonitorHandler = new MonitorHandler(logger, 10);
             _packetHandler = packetHandler;
             _logger = logger;
 
@@ -112,11 +105,6 @@ namespace RWCoreNetwork.NetService
 
         public virtual void Clear()
         {
-            if (_netMonitorHandler != null)
-            {
-                _netMonitorHandler.Print();
-                _netMonitorHandler.Clear();
-            }
         }
 
 
@@ -213,15 +201,10 @@ namespace RWCoreNetwork.NetService
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void OnSendCompleted(object sender, SocketAsyncEventArgs e)
+        protected virtual void OnSendCompleted(object sender, SocketAsyncEventArgs e)
         {
             ClientSession clientSession = e.UserToken as ClientSession;
             byte[] msg = clientSession.ProcessSend(e);
-
-            if (_onMonitoring == true)
-            {
-                _netMonitorHandler.SetSendPacket(clientSession.SessionId, msg);
-            }
         }
 
 
