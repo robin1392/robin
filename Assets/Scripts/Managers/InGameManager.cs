@@ -70,6 +70,7 @@ namespace ED
         private float st => wave < 1 ? 10f : 20f;
 
         public float time { get; protected set; }
+        private DateTime pauseTime;
 
         #endregion
 
@@ -959,6 +960,7 @@ namespace ED
 
             if (pauseStatus)
             {
+                pauseTime = DateTime.UtcNow;
                 print("Application Pause");
                 NetworkManager.Get().PauseGame();
             }
@@ -966,7 +968,9 @@ namespace ED
             {
                 if (isGamePlaying == false)
                     return;
-                
+
+                time -= (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
+                print("Application Resume : " + ((float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds));
                 ResumeDelay();
             }
         }
@@ -979,12 +983,14 @@ namespace ED
 
             if (pause == PauseState.Paused)
             {
+                pauseTime = DateTime.UtcNow;
                 print("Application Pause");
                 NetworkManager.Get().PauseGame();
             }
             else
             {
-                print("Application Resume");
+                time -= (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
+                print("Application Resume : " + ((float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds));
                 if (isGamePlaying == false)
                     return;
                 
@@ -1460,10 +1466,10 @@ namespace ED
                 {
                     MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
                     
-                    // if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
-                    // {
-                    //     NetworkManager.Get().SetOtherDisconnect(true);
-                    // }
+                    if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
+                    {
+                        NetworkManager.Get().SetOtherDisconnect(true);
+                    }
                     
                     break;
                 }
