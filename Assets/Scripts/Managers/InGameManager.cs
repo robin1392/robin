@@ -1159,6 +1159,11 @@ namespace ED
                 var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
                 m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
                 m.Initialize(playerController.MinionDestroyCallback);
+                if (data.minionDataId == 4004)
+                {
+                    m.CancelInvoke("Fusion");
+                    ((Minion_Robot)m).Transform();
+                }
                 m.SetNetSyncMinionData(data);
                 Debug.LogFormat("Recv My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
             }
@@ -1170,6 +1175,11 @@ namespace ED
                 var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
                 m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
                 m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
+                if (data.minionDataId == 4004)
+                {
+                    m.CancelInvoke("Fusion");
+                    ((Minion_Robot)m).Transform();
+                }
                 m.SetNetSyncMinionData(data);
                 Debug.LogFormat("Recv Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
             }

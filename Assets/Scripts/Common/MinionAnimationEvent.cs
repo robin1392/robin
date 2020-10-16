@@ -28,7 +28,7 @@ namespace ED
         public void Attack()
         {
             //if (_minion != null && _minion.isAlive && _minion.target != null && ((PhotonNetwork.IsConnected && _minion.isMine) || PhotonNetwork.IsConnected == false))
-            if (_minion != null && _minion.isAlive && _minion.target != null && _minion.target.isAlive && ((InGameManager.IsNetwork && _minion.isMine) || InGameManager.IsNetwork == false || _minion.controller.isPlayingAI))
+            if (_minion != null && _minion.isAlive && _minion.target != null && _minion.target.isAlive && ((InGameManager.IsNetwork && (_minion.isMine || _minion.controller.isPlayingAI)) || InGameManager.IsNetwork == false))
             {
                 Minion m = _minion as Minion;
                 if (m != null)
@@ -43,13 +43,13 @@ namespace ED
         public void FireArrow()
         {
             //if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
-            if( _minion != null && (InGameManager.IsNetwork && _minion.isMine && _minion.target != null) || InGameManager.IsNetwork == false || _minion.controller.isPlayingAI)
+            if( _minion != null && (InGameManager.IsNetwork && (_minion.isMine || _minion.controller.isPlayingAI) && _minion.target != null) || InGameManager.IsNetwork == false)
             {
                 //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
                 event_FireLight?.Invoke();
 
                 //if (PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null || PhotonNetwork.IsConnected == false)
-                if( (InGameManager.IsNetwork && _minion.isMine && _minion.target != null ) || InGameManager.IsNetwork == false || _minion.controller.isPlayingAI)
+                if( (InGameManager.IsNetwork && (_minion.isMine || _minion.controller.isPlayingAI) && _minion.target != null ) || InGameManager.IsNetwork == false)
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
                     event_FireArrow?.Invoke();
@@ -78,13 +78,13 @@ namespace ED
             // }
             
             //if ((PhotonNetwork.IsConnected && _minion.isMine && _minion.target != null) || PhotonNetwork.IsConnected == false)
-            if( _minion != null && _minion.target != null && (InGameManager.IsNetwork && _minion.isMine && _minion.target != null) || InGameManager.IsNetwork == false || _minion.controller.isPlayingAI)
+            if( _minion != null && _minion.target != null && (InGameManager.IsNetwork && (_minion.isMine || _minion.controller.isPlayingAI) && _minion.target != null) || InGameManager.IsNetwork == false)
             {
                 //_minion.SendMessage("FireLightOn", SendMessageOptions.DontRequireReceiver);
                 event_FireLight?.Invoke();
 
                 //if (PhotonNetwork.IsConnected && _minion.isMine || PhotonNetwork.IsConnected == false)
-                if( (InGameManager.IsNetwork && _minion.isMine) || InGameManager.IsNetwork == false || _minion.controller.isPlayingAI)
+                if( (InGameManager.IsNetwork && (_minion.isMine || _minion.controller.isPlayingAI)) || InGameManager.IsNetwork == false)
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
                     event_FireSpear?.Invoke();
