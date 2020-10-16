@@ -1495,11 +1495,6 @@ namespace ED
                 
                 
                 
-                case GameProtocol.PAUSE_GAME_ACK:
-                {
-                    MsgPauseGameAck pauseack = (MsgPauseGameAck) param[0];
-                    break;
-                }
                 case GameProtocol.PAUSE_GAME_NOTIFY:
                 {
                     MsgPauseGameNotify pauseNoti = (MsgPauseGameNotify) param[0];
@@ -1508,12 +1503,6 @@ namespace ED
                     {
                         NetworkManager.Get().SetOtherDisconnect(true);
                     }
-                    
-                    break;
-                }
-                case GameProtocol.RESUME_GAME_ACK: // 안씀...
-                {
-                    MsgResumeGameAck resumeack = (MsgResumeGameAck) param[0];
                     
                     break;
                 }

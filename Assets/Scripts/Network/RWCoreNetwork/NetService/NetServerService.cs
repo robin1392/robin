@@ -16,17 +16,8 @@ namespace RWCoreNetwork.NetService
         public ClientConnectDelegate ClientResumeCallback { get; set; }
 
 
-        private Listener _listener;
-
-        private bool _onRelayQueue;
-
-        // 메시지 송수신시 필요한 오브젝트
-        private SocketAsyncEventArgsPool _receiveEventAragePool;
-        private SocketAsyncEventArgsPool _sendEventAragePool;
-
-
-        // 메시지 수신, 전송시 비동기 소켓에서 사용할 버퍼를 관리하는 객체
-        private BufferHandler _bufferManager;
+        // 네트워크 상태 모니터링 핸들러
+        protected MonitorHandler _netMonitorHandler;
 
 
         // 인증된 클라이언트 세션
@@ -41,10 +32,23 @@ namespace RWCoreNetwork.NetService
         protected List<string> _expiredClientSessions;
 
 
-        object _lockSessionContainer = new object();
+        private Listener _listener;
 
-        private long _removeClientSessionTick;
+
+        // 메시지 송수신시 필요한 오브젝트
+        private SocketAsyncEventArgsPool _receiveEventAragePool;
+        private SocketAsyncEventArgsPool _sendEventAragePool;
+
+
+        // 메시지 수신, 전송시 비동기 소켓에서 사용할 버퍼를 관리하는 객체
+        private BufferHandler _bufferHandler;
+
+
+        private readonly object _lockSessionContainer = new object();
         private readonly int preAllocCount = 2;
+        private readonly bool _onRelayQueue;
+        private long _removeClientSessionTick;
+
 
 
         public NetServerService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring, bool onRelayQueue)
@@ -62,8 +66,8 @@ namespace RWCoreNetwork.NetService
 
 
             // 버퍼 할당
-            _bufferManager = new BufferHandler(maxConnection * bufferSize * preAllocCount, bufferSize);
-            _bufferManager.InitBuffer();
+            _bufferHandler = new BufferHandler(maxConnection * bufferSize * preAllocCount, bufferSize);
+            _bufferHandler.InitBuffer();
 
 
             // SocketAsyncEventArgs object pool 할당
@@ -80,7 +84,7 @@ namespace RWCoreNetwork.NetService
                     args.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
                     args.UserToken = clientSession;
 
-                    _bufferManager.SetBuffer(args);
+                    _bufferHandler.SetBuffer(args);
                     _receiveEventAragePool.Push(args);
                 }
 
@@ -90,7 +94,7 @@ namespace RWCoreNetwork.NetService
                     args.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
                     args.UserToken = clientSession;
 
-                    _bufferManager.SetBuffer(args);
+                    _bufferHandler.SetBuffer(args);
                     _sendEventAragePool.Push(args);
                 }
             }
@@ -101,13 +105,15 @@ namespace RWCoreNetwork.NetService
             _expiredClientSessions = new List<string>();
 
             _removeClientSessionTick = DateTime.UtcNow.AddSeconds(10).Ticks;
+
+            _netMonitorHandler = new MonitorHandler(logger, 10);
+
         }
 
 
         public override void Clear()
         {
             base.Clear();
-
             lock (_lockSessionContainer)
             {
                 foreach (var session in _authedClientSessions.Values)
@@ -144,6 +150,18 @@ namespace RWCoreNetwork.NetService
             return _listener.Start(host, port, backlog);
         }
 
+
+        public void StartGameSession()
+        {
+            _netMonitorHandler.Start();
+        }
+
+
+        public void EndGameSession()
+        {
+            _netMonitorHandler.End();
+            _netMonitorHandler.ShowResult();
+        }
 
         /// <summary>
         /// 새로운 클라이언트가 접속 성공 했을 때 호출됩니다.
@@ -221,6 +239,7 @@ namespace RWCoreNetwork.NetService
                         else if (clientSession.ExpiredPauseTime() == true)
                         {
                             // Pause 허용 시간 초과시 세션 연결을 끊는다.
+                            clientSession.PauseStartTimeTick = 0;
                             clientSession.Disconnect();
                         }
                     }
@@ -228,6 +247,17 @@ namespace RWCoreNetwork.NetService
             }
         }
 
+
+        protected override void OnSendCompleted(object sender, SocketAsyncEventArgs e)
+        {
+            ClientSession clientSession = e.UserToken as ClientSession;
+            byte[] msg = clientSession.ProcessSend(e);
+
+            if (_onMonitoring == true)
+            {
+                _netMonitorHandler.SetSendPacket(clientSession.SessionId, msg);
+            }
+        }
 
         protected override void OnMessageCompleted(ClientSession clientSession, int protocolId, byte[] msg, int length)
         {
@@ -246,7 +276,7 @@ namespace RWCoreNetwork.NetService
             if (_onMonitoring == true)
             {
                 _netMonitorHandler.SetReceivePacket(clientSession.SessionId, protocolId, msg, length);
-                _logger.Info(string.Format("OnMessageCompleted. protocolId: {0}, length: {1}", protocolId, length));
+                _logger.Debug(string.Format("OnMessageCompleted. protocolId: {0}, length: {1}", protocolId, length));
             }
 
 

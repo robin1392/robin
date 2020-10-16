@@ -134,31 +134,8 @@ namespace RWGameProtocol.Serializer
             }
         }
 
-
-        public override void PauseGameReq(Peer peer)
-        {
-            
-            using (var ms = new MemoryStream())
-            {
-                peer.SendPacket((int)GameProtocol.PAUSE_GAME_REQ, ms.ToArray());
-            }
-        }
-
-
-        public override void PauseGameAck(Peer peer, GameErrorCode code)
-        {
-            
-            using (var ms = new MemoryStream())
-            {
-                _bf.Serialize(ms, (short)code);
-                peer.SendPacket((int)GameProtocol.PAUSE_GAME_ACK, ms.ToArray());
-            }
-        }
-
-
         public override void PauseGameNotify(Peer peer, int playerUId)
         {
-            
             using (var ms = new MemoryStream())
             {
                 _bf.Serialize(ms, playerUId);
@@ -166,31 +143,8 @@ namespace RWGameProtocol.Serializer
             }
         }
 
-
-        public override void ResumeGameReq(Peer peer)
-        {
-            
-            using (var ms = new MemoryStream())
-            {
-                peer.SendPacket((int)GameProtocol.RESUME_GAME_REQ, ms.ToArray());
-            }
-        }
-
-
-        public override void ResumeGameAck(Peer peer, GameErrorCode code)
-        {
-            
-            using (var ms = new MemoryStream())
-            {
-                _bf.Serialize(ms, (short)code);
-                peer.SendPacket((int)GameProtocol.RESUME_GAME_ACK, ms.ToArray());
-            }
-        }
-
-
         public override void ResumeGameNotify(Peer peer, int playerUId)
         {
-            
             using (var ms = new MemoryStream())
             {
                 _bf.Serialize(ms, playerUId);

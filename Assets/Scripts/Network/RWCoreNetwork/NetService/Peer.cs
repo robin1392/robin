@@ -21,7 +21,7 @@ namespace RWCoreNetwork.NetService
             }
         }
 
-  
+
         public virtual void SendPacket(int protocolId, byte[] msg)
         {
             if (ClientSession.NetState != ENetState.Connected)
@@ -30,6 +30,17 @@ namespace RWCoreNetwork.NetService
             }
 
             ClientSession.Send(protocolId, msg, msg.Length);
+        }
+
+
+        public virtual void SendPacket(int protocolId, byte[] msg, int length)
+        {
+            if (ClientSession.NetState != ENetState.Connected)
+            {
+                return;
+            }
+
+            ClientSession.Send(protocolId, msg, length);
         }
 
 
