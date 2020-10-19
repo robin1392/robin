@@ -3,6 +3,7 @@
 #endif
 
 using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -1926,9 +1927,10 @@ namespace ED
             }
         }
         
+        private Dictionary<GameProtocol, List<object[]>> _syncDictionary = new Dictionary<GameProtocol, List<object[]>>();
+        
         public IEnumerator SyncMinionStatus()
         {
-            
             if (InGameManager.IsNetwork == false)
                 yield break;
             
@@ -1948,19 +1950,24 @@ namespace ED
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
                     
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos );
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary );
+                        _syncDictionary.Clear();
                     }
                 }
             }
-            
         }
 
-        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss)
+        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<object[]>> relay)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
                 Vector3 chPos = ConvertNetMsg.MsgToVector(msgPoss[i]);
                 listMinion[i].SetNetworkValue(chPos);
+            }
+
+            foreach (var msg in relay)
+            {
+                NetRecvPlayer(msg.Key, msg.Value);
             }
         }
 
@@ -1991,16 +1998,21 @@ namespace ED
             if (NetworkManager.Get().isReconnect == true)
                 return;
 
-            if (InGameManager.IsNetwork == true)
+            if (protocol == GameProtocol.MINION_STATUS_RELAY)
             {
-                NetworkManager.Get().Send(protocol, param);
+                if (InGameManager.IsNetwork == true)
+                {
+                    NetworkManager.Get().Send(protocol, param);
+                }
             }
-            
-            // 네트워크는 이렇게 하면안된다...파라메터에 uid 부터 들어가서...변수가 틀려진다
-            /*else
+            else
             {
-                NetRecvPlayer(protocol, param);
-            }*/
+                if (_syncDictionary.ContainsKey(protocol) == false)
+                {
+                    _syncDictionary.Add(protocol, new List<object[]>());
+                }
+                _syncDictionary[protocol].Add(param);
+            }
         }
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
@@ -2459,9 +2471,9 @@ namespace ED
                     MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
 
                     if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
-                        targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos);
+                        targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Relay);
                     else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
-                        SyncMinion(statusrelay.PosIndex, statusrelay.Pos);
+                        SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Relay);
                     
                     break;
                 }

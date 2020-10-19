@@ -82,7 +82,7 @@ namespace RWGameProtocol.Serializer
         public virtual void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, int message) { }
         public virtual void NecromancerBulletRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed) { }
         public virtual void SetMinionTargetRelay(Peer peer, int playerUId, int id, int targetId) { }
-        public virtual void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos) { }
+        public virtual void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos, Dictionary<GameProtocol, List<object[]>> relay) { }
         public virtual void ScarecrowRelay(Peer peer, int playerUId, int baseStatId, int eyeLevel) { }
         public virtual void LayzerTargetRelay(Peer peer, int playerUId, int id, int[] targetId) { }
         public virtual void FireBulletRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeedk, int type) { }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using RWCoreNetwork.NetService;
@@ -847,14 +848,14 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos) 
+        public override void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos, Dictionary<GameProtocol, List<object[]>> relay) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 _bf.Serialize(ms, playerUId);
                 _bf.Serialize(ms, posIndex);
                 _bf.Serialize(ms, pos);
+                _bf.Serialize(ms, relay);
                 peer.SendPacket((int)GameProtocol.MINION_STATUS_RELAY, ms.ToArray());
             }
         }

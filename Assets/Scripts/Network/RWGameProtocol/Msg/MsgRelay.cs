@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RWGameProtocol.Msg
 {
@@ -288,6 +289,7 @@ namespace RWGameProtocol.Msg
         public int PlayerUId;
         public byte PosIndex;
         public MsgVector3[] Pos;
+        public Dictionary<GameProtocol, List<object[]>> Relay;
     }
 
 
