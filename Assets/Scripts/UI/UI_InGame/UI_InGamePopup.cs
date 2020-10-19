@@ -77,7 +77,9 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     public void SetPopupResult(bool view)
     {
         popup_Result.SetActive(view);
-        obj_Indicator.SetActive(false);
+        ViewGameIndicator(false);
+        ViewLowHP(false);
+        SetViewWaiting(false);
     }
 
     public void SetResultText(string text)

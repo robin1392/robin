@@ -772,7 +772,8 @@ namespace ED
                 {
                     isGamePlaying = false;
                 }
-                
+
+                Time.timeScale = 1f;
                 SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             }
             else

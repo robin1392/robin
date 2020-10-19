@@ -794,11 +794,11 @@ namespace ED
                 if (uiDiceField != null)
                 {
                     uiDiceField.SetField(arrDice);
+                    
                 }
-                //
-                uiDiceField.RefreshField();    
+                
+                uiDiceField.RefreshField();
             }
-
         }
         
         public void InGameDiceUpgrade(int diceId , int upgradeLv)
