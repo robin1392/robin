@@ -31,6 +31,7 @@ namespace  ED
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             if (isBottomPlayer == false) transform.rotation = Quaternion.Euler(0, 180, 0);
+            else transform.rotation = Quaternion.identity;
             ts_Model.gameObject.SetActive(true);
             
             SetColor();
