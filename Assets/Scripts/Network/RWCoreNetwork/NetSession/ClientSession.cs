@@ -12,7 +12,7 @@ using RWCoreNetwork.NetService;
 
 namespace RWCoreNetwork
 {
-    public enum EDisconnectState : short
+    public enum ESessionState : short
     {
         None = 0,
         // 재연결 대기 상태
@@ -23,6 +23,8 @@ namespace RWCoreNetwork
         Expired,
         // 중복 세션
         Duplicated,
+        // 타임아웃
+        TimeOut,
     }
 
     public delegate void CompletedMessageDelegate(ClientSession clientSession, int protocolId, byte[] msg, int length);
@@ -37,7 +39,7 @@ namespace RWCoreNetwork
 
         public ENetState NetState { get; set; }
 
-        public EDisconnectState DisconnectState { get; set; }
+        public ESessionState DisconnectState { get; set; }
 
         public Socket Socket { get; set; }
         
@@ -74,7 +76,7 @@ namespace RWCoreNetwork
             _sendingQueue = new Queue<byte[]>();
             _lockSendingQueue = new object();
             SessionId = string.Empty;
-            DisconnectState = EDisconnectState.None;
+            DisconnectState = ESessionState.None;
             AliveTimeTick = 0;
             PauseStartTimeTick = 0;
         }

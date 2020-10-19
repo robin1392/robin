@@ -46,17 +46,15 @@ namespace RWCoreNetwork.NetService
 
         private readonly object _lockSessionContainer = new object();
         private readonly int preAllocCount = 2;
-        private readonly bool _onRelayQueue;
         private long _removeClientSessionTick;
 
 
 
-        public NetServerService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring, bool onRelayQueue)
+        public NetServerService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring)
             : base(packetHandler, logger, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
         {
             _listener = new Listener();
             _listener.OnNewClientCallback += OnConnectedClient;
-            _onRelayQueue = onRelayQueue;
 
 
             // SocketAsyncEventArgs object pool 생성
@@ -151,43 +149,6 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        public void StartGameSession()
-        {
-            _netMonitorHandler.Start();
-        }
-
-
-        public void EndGameSession()
-        {
-            _netMonitorHandler.End();
-            _netMonitorHandler.ShowResult();
-        }
-
-        /// <summary>
-        /// 새로운 클라이언트가 접속 성공 했을 때 호출됩니다.
-        /// AcceptAsync의 콜백 매소드에서 호출되며 여러 스레드에서 동시에 호출될 수 있기 때문에 공유자원에 접근할 때는 주의해야 합니다.
-        /// </summary>
-        /// <param name="client_socket"></param>
-        /// <param name="token"></param>
-        private void OnConnectedClient(Socket clientSocket, object token)
-        {
-            SocketAsyncEventArgs receiveArgs = _receiveEventAragePool.Pop();
-            SocketAsyncEventArgs sendArgs = _sendEventAragePool.Pop();
-
-            _logger.Info(string.Format("[OnConnectedClient] _receiveEventAragePool: {0}, _sendEventAragePool: {1}", _receiveEventAragePool.Count, _sendEventAragePool.Count));
-
-
-            // 소켓 옵션 설정.
-            clientSocket.LingerState = new LingerOption(true, 10);
-            clientSocket.NoDelay = true;
-
-
-            // 패킷 수신 시작
-            ClientSession clientSession = receiveArgs.UserToken as ClientSession;
-            BeginReceive(clientSocket, receiveArgs, sendArgs);
-        }
-
-
         public override void Update()
         {
             // 패킷을 처리한다.
@@ -230,7 +191,7 @@ namespace RWCoreNetwork.NetService
 
                     foreach (var clientSession in _authedClientSessions.Values)
                     {
-                        if (clientSession.DisconnectState != EDisconnectState.None && clientSession.Socket.Connected == true)
+                        if (clientSession.DisconnectState != ESessionState.None && clientSession.Socket.Connected == true)
                         {
                             // 접속 해제 상태이면 접속 해제를 먼저 알리고 세션 연결을 끊는다.
                             SendInternalDisconnectSessionNotify(clientSession);
@@ -248,57 +209,52 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        protected override void OnSendCompleted(object sender, SocketAsyncEventArgs e)
+        public void StartGameSession()
         {
-            ClientSession clientSession = e.UserToken as ClientSession;
-            byte[] msg = clientSession.ProcessSend(e);
-
-            if (_onMonitoring == true)
-            {
-                _netMonitorHandler.SetSendPacket(clientSession.SessionId, msg);
-            }
-        }
-
-        protected override void OnMessageCompleted(ClientSession clientSession, int protocolId, byte[] msg, int length)
-        {
-            if (clientSession == null)
-            {
-                return;
-            }
-
-
-            if (_packetHandler == null)
-            {
-                return;
-            }
-
-
-            if (_onMonitoring == true)
-            {
-                _netMonitorHandler.SetReceivePacket(clientSession.SessionId, protocolId, msg, length);
-                _logger.Debug(string.Format("OnMessageCompleted. protocolId: {0}, length: {1}", protocolId, length));
-            }
-
-
-            // 네트워크 서비스 내부 패킷을 처리한다.
-            if (ProcessInternalPacket(clientSession, protocolId, msg, length) == false)
-            {
-                if (_onRelayQueue == false && _packetHandler.InterceptProtocol != null)
-                {
-                    if (_packetHandler.InterceptProtocol(clientSession.GetPeer(), protocolId, msg, length) == true)
-                    {
-                        return;
-                    }
-                }
-
-
-                // 패킷처리 큐에 추가한다.
-                _packetHandler.EnqueuePacket(clientSession.GetPeer(), protocolId, msg, length);
-            }
+            _netMonitorHandler.Start();
+            _logger.Info(string.Format("[NetServerService] StartGameSession."));
         }
 
 
-        protected override void CloseClientsocket(ClientSession clientSession, SocketError error)
+        public void EndGameSession()
+        {
+            _netMonitorHandler.End();
+            _netMonitorHandler.ShowResult();
+            _logger.Info(string.Format("[NetServerService] EndGameSession."));
+        }
+
+        /// <summary>
+        /// 새로운 클라이언트가 접속 성공 했을 때 호출됩니다.
+        /// AcceptAsync의 콜백 매소드에서 호출되며 여러 스레드에서 동시에 호출될 수 있기 때문에 공유자원에 접근할 때는 주의해야 합니다.
+        /// </summary>
+        /// <param name="client_socket"></param>
+        /// <param name="token"></param>
+        private void OnConnectedClient(Socket clientSocket, object token)
+        {
+            SocketAsyncEventArgs receiveArgs = _receiveEventAragePool.Pop();
+            SocketAsyncEventArgs sendArgs = _sendEventAragePool.Pop();
+
+            _logger.Info(string.Format("[OnConnectedClient] _receiveEventAragePool: {0}, _sendEventAragePool: {1}", _receiveEventAragePool.Count, _sendEventAragePool.Count));
+
+
+            // 소켓 옵션 설정.
+            clientSocket.LingerState = new LingerOption(true, 10);
+            clientSocket.NoDelay = true;
+
+
+            if (_authedClientSessions.Count == 0)
+            {
+                StartGameSession();
+            }
+
+
+            // 패킷 수신 시작
+            ClientSession clientSession = receiveArgs.UserToken as ClientSession;
+            BeginReceive(clientSocket, receiveArgs, sendArgs);
+        }
+
+
+        protected override void OnCloseClientsocket(ClientSession clientSession, SocketError error)
         {
             clientSession.OnRemoved();
 
@@ -309,7 +265,8 @@ namespace RWCoreNetwork.NetService
 
 
                 // 재연결 대기 목록에 추가한다.
-                if (clientSession.DisconnectState == EDisconnectState.None || clientSession.DisconnectState == EDisconnectState.Wait)
+                if (clientSession.DisconnectState == ESessionState.None
+                    || clientSession.DisconnectState == ESessionState.Wait)
                 {
                     clientSession.NetState = ENetState.Reconnecting;
                     clientSession.AliveTimeTick = DateTime.UtcNow.AddSeconds(30).Ticks;
@@ -321,8 +278,6 @@ namespace RWCoreNetwork.NetService
                     }
 
                     _reconnectClientSessions.Insert(0, clientSession);
-
-
                     _logger.Info(string.Format("[CloseClientsocket] reconnect session. clientSessionId: {0}", clientSession.SessionId));
                 }
                 else
@@ -334,9 +289,14 @@ namespace RWCoreNetwork.NetService
                             _expiredClientSessions.Add(clientSession.SessionId);
                         }
                     }
-                    
-
                     _logger.Info(string.Format("[CloseClientsocket] expired session. clientSessionId: {0}", clientSession.SessionId));
+                }
+
+
+                // 
+                if (_authedClientSessions.Count == 0)
+                {
+                    EndGameSession();
                 }
             }
 
@@ -363,6 +323,60 @@ namespace RWCoreNetwork.NetService
         }
 
 
+        protected override void OnSendCompleted(object sender, SocketAsyncEventArgs e)
+        {
+            ClientSession clientSession = e.UserToken as ClientSession;
+            byte[] msg = clientSession.ProcessSend(e);
+
+            if (_onMonitoring == true)
+            {
+                _netMonitorHandler.SetSendPacket(clientSession.SessionId, msg);
+            }
+        }
+
+
+        protected override void OnMessageCompleted(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        {
+            if (clientSession == null)
+            {
+                return;
+            }
+
+
+            if (_packetHandler == null)
+            {
+                return;
+            }
+
+
+            // 서비스 내부 패킷을 우선 처리한다.
+            if (ProcessInternalPacket(clientSession, protocolId, msg, length) == false)
+            {
+                if (_packetHandler.InterceptProtocol != null)
+                {
+                    if (_packetHandler.InterceptProtocol(clientSession.GetPeer(), protocolId, msg, length) == true)
+                    {
+                        if (_onMonitoring == true)
+                        {
+                            _netMonitorHandler.SetReceivePacket(clientSession.SessionId, protocolId, msg, length);
+                        }
+                        return;
+                    }
+                }
+
+
+                // 패킷 프로세서 큐에 추가한다.
+                _packetHandler.EnqueuePacket(clientSession.GetPeer(), protocolId, msg, length);
+            }
+
+
+            if (_onMonitoring == true)
+            {
+                _netMonitorHandler.SetReceivePacket(clientSession.SessionId, protocolId, msg, length);
+            }
+        }
+
+
         protected override bool ProcessInternalPacket(ClientSession clientSession, int protocolId, byte[] msg, int length)
         {
             switch((EInternalProtocol)protocolId)
@@ -386,49 +400,42 @@ namespace RWCoreNetwork.NetService
                         }
 
 
+                        // 세션 기본 정보 설정.
                         clientSession.SessionId = clientSessionId;
-                        clientSession.DisconnectState = EDisconnectState.None;
+                        clientSession.DisconnectState = ESessionState.None;
                         clientSession.NetState = ENetState.Connected;
 
 
                         lock (_lockSessionContainer)
                         {
-                            // 중복 세션 접속시 기존 세션 접속을 종료시킨다.
-                            ClientSession duplicatedSession = null;
-                            if (_authedClientSessions.TryGetValue(clientSessionId, out duplicatedSession) == true)
-                            {
-                                _logger.Info(string.Format("[OnMessageCompleted] duplicated session. clientSessionId: {0}", clientSessionId));
-
-
-                                // 인증 세션 목록에서 제거한다.
-                                _authedClientSessions.Remove(duplicatedSession.SessionId);
-
-
-                                // 중복 세션 접속 종료
-                                //duplicatedSession.GetPeer().Disconnect(EDisconnectState.Duplicated);
-                                clientSession.DisconnectState = EDisconnectState.Expired;
-                                SendInternalDisconnectSessionNotify(clientSession);
-                                _authedClientSessions.Add(clientSession.SessionId, clientSession);
-
-                            }
-
-
                             // 신규 접속 요청 처리
                             if (clientNetState == ENetState.Connecting)
                             {
                                 _logger.Info(string.Format("[OnMessageCompleted] connect session. clientSessionId: {0}", clientSessionId));
 
 
+                                // 만료된 세션은 상태를 클라에게 전달하고 접속을 끊는다.
                                 if (_expiredClientSessions.Contains(clientSessionId) == true)
                                 {
                                     _logger.Info(string.Format("[OnMessageCompleted] expired session. clientSessionId: {0}", clientSessionId));
 
-                                    clientSession.DisconnectState = EDisconnectState.Expired;
+                                    clientSession.DisconnectState = ESessionState.Expired;
                                     SendInternalDisconnectSessionNotify(clientSession);
                                     _authedClientSessions.Add(clientSession.SessionId, clientSession);
                                     return true;
                                 }
 
+
+                                // 중복 세션 접속시 기존 세션 접속을 종료시킨다.
+                                ClientSession duplicatedSession = null;
+                                if (_authedClientSessions.TryGetValue(clientSessionId, out duplicatedSession) == true)
+                                {
+                                    _logger.Info(string.Format("[OnMessageCompleted] duplicated session. clientSessionId: {0}", clientSessionId));
+
+                                    // 중복 세션 접속 종료
+                                    clientSession.DisconnectState = ESessionState.Duplicated;
+                                    SendInternalDisconnectSessionNotify(clientSession);
+                                }
 
 
                                 if (_authedClientSessions.ContainsKey(clientSessionId) == true)
@@ -459,23 +466,33 @@ namespace RWCoreNetwork.NetService
                             {
                                 _logger.Info(string.Format("[OnMessageCompleted] reconnect session. clientSessionId: {0}", clientSessionId));
 
-
-                                // 재접속이면 대기 목록에서 제외하고 인증된 세션목록에 추가한다.
-                                ClientSession reconnectSession = _reconnectClientSessions.Find(x => x.SessionId == clientSessionId);
-                                if (reconnectSession == null)
+                                ClientSession reconnectSession = null;
+                                if (_authedClientSessions.TryGetValue(clientSessionId, out reconnectSession) == true)
                                 {
-                                    _logger.Info(string.Format("[OnMessageCompleted] not found reconnect session. clientSessionId: {0}", clientSessionId));
-
-                                    clientSession.NetState = ENetState.Reconnecting;
-                                    clientSession.DisconnectState = EDisconnectState.Expired;
-                                    SendInternalDisconnectSessionNotify(clientSession);
-                                    _authedClientSessions.Add(clientSession.SessionId, clientSession);
-                                    return true;
+                                    // 인증 세션 목록에 존재하면서 재접속 요청이 왔다.(wifi 전환 등의 경우)
+                                    reconnectSession.NetState = ENetState.Reconnecting;
+                                    reconnectSession.DisconnectState = ESessionState.Expired;
+                                    SendInternalDisconnectSessionNotify(reconnectSession);
                                 }
+                                else
+                                {
+                                    // 재접속이면 대기 목록에서 제외하고 인증된 세션목록에 추가한다.
+                                    reconnectSession = _reconnectClientSessions.Find(x => x.SessionId == clientSessionId);
+                                    if (reconnectSession == null)
+                                    {
+                                        _logger.Info(string.Format("[OnMessageCompleted] not found reconnect session. clientSessionId: {0}", clientSessionId));
+
+                                        clientSession.NetState = ENetState.Reconnecting;
+                                        clientSession.DisconnectState = ESessionState.Expired;
+                                        SendInternalDisconnectSessionNotify(clientSession);
+                                        _authedClientSessions.Add(clientSession.SessionId, clientSession);
+                                        return true;
+                                    }
 
 
-                                // 대기 목록에서 제거한다.
-                                _reconnectClientSessions.Remove(reconnectSession);
+                                    // 대기 목록에서 제거한다.
+                                    _reconnectClientSessions.Remove(reconnectSession);
+                                }
 
 
                                 // 기존 peer에 새로운 세션을 설정한다.

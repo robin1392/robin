@@ -120,10 +120,19 @@ public class SocketManager
     /// 서버 연결 성공 콜백
     /// </summary>
     /// <param name="session">세션</param>
-    void OnClientConnected(ClientSession session, EDisconnectState disconnectState)
+    void OnClientConnected(ClientSession session, ESessionState sessionState)
     {
-        UnityUtil.Print(" CONNECT   ", " CLINET CONNECT !!! state : " + disconnectState, "blue");
-        
+        UnityUtil.Print(" CONNECT   ", " CLINET CONNECT !!! state : " + sessionState, "blue");
+
+        if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
+        {
+            NetworkManager.Get().DeleteBattleInfo();
+            NetworkManager.Get().SetReconnect(false);
+            //
+            GameStateManager.Get().MoveMainScene();
+            return;
+        }
+
         _serverPeer = new Peer();
         _serverPeer.SetClientSession(session);
 
@@ -137,12 +146,13 @@ public class SocketManager
     /// 재연결 성공 콜백
     /// </summary>
     /// <param name="session"></param>
-    /// <param name="disconnectState"></param>
-    void OnClientReconnected(ClientSession session, EDisconnectState disconnectState)
+    /// <param name="sessionState"></param>
+    void OnClientReconnected(ClientSession session, ESessionState sessionState)
     {
-        UnityUtil.Print(" RECONNECT   ", " CLINET RECONNECT !!! state : " + disconnectState, "blue");
+        UnityUtil.Print(" RECONNECT   ", " CLINET RECONNECT !!! state : " + sessionState, "blue");
+
         //
-        if (disconnectState != EDisconnectState.None && disconnectState != EDisconnectState.Wait)
+        if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
@@ -165,11 +175,11 @@ public class SocketManager
     }
 
 
-    void OnClientDisconnected(ClientSession session, EDisconnectState disconnectState)
+    void OnClientDisconnected(ClientSession session, ESessionState sessionState)
     {
-        UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! state : " + disconnectState, "blue");
+        UnityUtil.Print(" DISCONNECT !!!!  ", " CLINET DISCONNECT !!! state : " + sessionState, "blue");
 
-        if (disconnectState != EDisconnectState.None && disconnectState != EDisconnectState.Wait)
+        if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
             NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);

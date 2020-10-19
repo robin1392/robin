@@ -61,7 +61,7 @@ namespace RWCoreNetwork.NetService
     /// </summary>
     public class NetBaseService
     {
-        public delegate void ClientConnectDelegate(ClientSession clientSession, EDisconnectState sessionState);
+        public delegate void ClientConnectDelegate(ClientSession clientSession, ESessionState sessionState);
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
         public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
         public ClientConnectDelegate ClientReconnectedCallback { get; set; }
@@ -117,7 +117,7 @@ namespace RWCoreNetwork.NetService
         /// 소켓을 닫는다.
         /// </summary>
         /// <param name="clientSession"></param>
-        protected virtual void CloseClientsocket(ClientSession clientSession, SocketError error)
+        protected virtual void OnCloseClientsocket(ClientSession clientSession, SocketError error)
         {
         }
 
@@ -191,7 +191,7 @@ namespace RWCoreNetwork.NetService
             }
             else
             {
-                CloseClientsocket(clientSession, e.SocketError);
+                OnCloseClientsocket(clientSession, e.SocketError);
             }
         }
 

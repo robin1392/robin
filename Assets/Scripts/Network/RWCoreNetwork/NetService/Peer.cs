@@ -44,9 +44,9 @@ namespace RWCoreNetwork.NetService
         }
 
 
-        public virtual void Disconnect(EDisconnectState sessionState)
+        public virtual void Disconnect(ESessionState sessionState)
         {
-            if (ClientSession.DisconnectState != EDisconnectState.None)
+            if (ClientSession.DisconnectState != ESessionState.None)
             {
                 return;
             }
@@ -71,9 +71,9 @@ namespace RWCoreNetwork.NetService
 
     public class ServerPeer : Peer
     {
-        public override void Disconnect(EDisconnectState sessionState)
+        public override void Disconnect(ESessionState sessionState)
         {
-            if (ClientSession.DisconnectState != EDisconnectState.None)
+            if (ClientSession.DisconnectState != ESessionState.None)
             {
                 return;
             }

@@ -15,9 +15,10 @@ namespace RWCoreNetwork.NetService
         public ClientSession ClientSession { get; set; }
 
         // 네트워크 상태 큐
-        Queue<ClientSession> _netEventQueue;
+        private Queue<ClientSession> _netEventQueue;
 
-        
+        private byte _retryConnectCount;
+
 
         public NetClientService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring)
             : base(packetHandler, logger, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
@@ -26,6 +27,19 @@ namespace RWCoreNetwork.NetService
 
             ClientSession = new ClientSession(_logger, _bufferSize);
             ClientSession.CompletedMessageCallback += OnMessageCompleted;
+
+            _retryConnectCount = 0;
+        }
+
+
+        public override void Update()
+        {
+            // 연결 이벤트 처리
+            ProcessConnectionEvent();
+
+
+            // 패킷을 처리한다.
+            _packetHandler.Update();
         }
 
 
@@ -84,14 +98,37 @@ namespace RWCoreNetwork.NetService
                 BeginReceive(socket, receiveArgs, sendArgs);
 
 
+                _retryConnectCount = 0;
+
+
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
                 SendInternalAuthSessionReq(ClientSession);
             }
             else
             {
-                // failed.
-                //Console.WriteLine(string.Format("Failed to connect. {0}", e.SocketError));
+                if (_retryConnectCount++ > 4)
+                {
+                    if (ClientSession.NetState == ENetState.Connecting)
+                    {
+                        ClientSession.NetState = ENetState.Connected;
+                    }
+                    else
+                    {
+                        ClientSession.NetState = ENetState.Reconnected;
+                    }
+
+                    ClientSession.DisconnectState = ESessionState.TimeOut;
+                    lock (_netEventQueue)
+                    {
+                        _netEventQueue.Enqueue(ClientSession);
+                    }
+                    return;
+                }
+
+                IPEndPoint remoteIpEndPoint = e.RemoteEndPoint as IPEndPoint;
+                Connect(remoteIpEndPoint.Address.ToString(), remoteIpEndPoint.Port);
+                _logger.Error(string.Format("Failed to connect server(error: {0}), Retry to connect. address: {1}", e.SocketError, remoteIpEndPoint.Address + ":" + remoteIpEndPoint.Port));
             }
         }
 
@@ -107,17 +144,6 @@ namespace RWCoreNetwork.NetService
             }
             
             ClientSession.Disconnect();
-        }
-
-
-        public override void Update()
-        {
-            // 연결 이벤트 처리
-            ProcessConnectionEvent();
-
-
-            // 패킷을 처리한다.
-            _packetHandler.Update();
         }
 
 
@@ -171,7 +197,7 @@ namespace RWCoreNetwork.NetService
         }
 
         
-        protected override void CloseClientsocket(ClientSession clientSession, SocketError error)
+        protected override void OnCloseClientsocket(ClientSession clientSession, SocketError error)
         {
             clientSession.OnRemoved();
             clientSession.NetState = ENetState.Disconnected;
@@ -213,12 +239,12 @@ namespace RWCoreNetwork.NetService
                 case EInternalProtocol.AUTH_SESSION_ACK:
                     {
                         ENetState netState;
-                        EDisconnectState sessionState;
+                        ESessionState sessionState;
                         var bf = new BinaryFormatter();
                         using (var ms = new MemoryStream(msg))
                         {
                             netState = (ENetState)(byte)bf.Deserialize(ms);
-                            sessionState = (EDisconnectState)(short)bf.Deserialize(ms);
+                            sessionState = (ESessionState)(short)bf.Deserialize(ms);
                         }
 
 
@@ -244,11 +270,11 @@ namespace RWCoreNetwork.NetService
                     break;
                 case EInternalProtocol.DISCONNECT_SESSION_NOTIFY:
                     {
-                        EDisconnectState sessionState;
+                        ESessionState sessionState;
                         var bf = new BinaryFormatter();
                         using (var ms = new MemoryStream(msg))
                         {
-                            sessionState = (EDisconnectState)(short)bf.Deserialize(ms);
+                            sessionState = (ESessionState)(short)bf.Deserialize(ms);
                         }
 
                         clientSession.DisconnectState = sessionState;
@@ -285,7 +311,7 @@ namespace RWCoreNetwork.NetService
 
             if (clientSession.PauseStartTimeTick + (TimeSpan.TicksPerSecond * 10) < DateTime.UtcNow.Ticks)
             {
-                clientSession.GetPeer().Disconnect(EDisconnectState.Wait);
+                clientSession.GetPeer().Disconnect(ESessionState.Wait);
                 return;
             }
 
