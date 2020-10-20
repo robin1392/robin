@@ -820,15 +820,24 @@ public class ConvertNetMsg
         return quatVal;
     }
 
-    public static MsgHitDamageMinionRelay HitDamageMinionRelay(int uid, int id, float damage)
+    static BinaryFormatter _bf = new BinaryFormatter();
+    public static byte[] HitDamageMinionRelay(int uid, int id, float damage)
     {
-        MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
-
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.Damage = MsgFloatToInt(damage);
-
-        return msg;
+        // MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
+        //
+        // msg.PlayerUId = uid;
+        // msg.Id = id;
+        // msg.Damage = MsgFloatToInt(damage);
+        //
+        // return msg;
+        
+        using (var ms = new MemoryStream())
+        {
+            _bf.Serialize(ms, uid);
+            _bf.Serialize(ms, id);
+            _bf.Serialize(ms, damage);
+            return ms.ToArray();
+        }
     }
 
     #endregion

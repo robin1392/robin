@@ -848,7 +848,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos, Dictionary<GameProtocol, List<object>> relay) 
+        public override void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos, Dictionary<GameProtocol, List<byte[]>> relay) 
         {
             using (var ms = new MemoryStream())
             {
