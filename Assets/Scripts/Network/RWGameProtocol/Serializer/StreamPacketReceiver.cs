@@ -1116,7 +1116,7 @@ namespace RWGameProtocol.Serializer
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.PosIndex = (byte)_bf.Deserialize(ms);
                             msg.Pos = (MsgVector3[])_bf.Deserialize(ms);
-                            msg.Relay = (Dictionary<GameProtocol, List<byte[]>>) _bf.Deserialize(ms);
+                            msg.Relay = (Dictionary<GameProtocol, List<object>>) _bf.Deserialize(ms);
                             MinionStatusRelay(peer, msg);
                         }
                     }

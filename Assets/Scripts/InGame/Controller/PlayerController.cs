@@ -1927,7 +1927,7 @@ namespace ED
             }
         }
         
-        private Dictionary<GameProtocol, List<byte[]>> _syncDictionary = new Dictionary<GameProtocol, List<byte[]>>();
+        private Dictionary<GameProtocol, List<object>> _syncDictionary = new Dictionary<GameProtocol, List<object>>();
         
         public IEnumerator SyncMinionStatus()
         {
@@ -1958,7 +1958,7 @@ namespace ED
             }
         }
 
-        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<byte[]>> relay)
+        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<object>> relay)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
@@ -2016,7 +2016,7 @@ namespace ED
             {
                 if (_syncDictionary.ContainsKey(protocol) == false)
                 {
-                    _syncDictionary.Add(protocol, new List<byte[]>());
+                    _syncDictionary.Add(protocol, new List<object>());
                 }
 
                 switch (protocol)
