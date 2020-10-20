@@ -288,7 +288,7 @@ namespace RWGameProtocol.Msg
         public int PlayerUId;
         public byte PosIndex;
         public MsgVector3[] Pos;
-        public Dictionary<GameProtocol, List<object>> Relay;
+        public Dictionary<GameProtocol, List<byte[]>> Relay;
     }
 
 
