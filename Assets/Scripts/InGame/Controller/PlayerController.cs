@@ -1950,6 +1950,7 @@ namespace ED
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
                     
+                        Debug.Log("SEND : MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count);
                         NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary );
                         _syncDictionary.Clear();
                     }
@@ -1967,7 +1968,13 @@ namespace ED
 
             foreach (var msg in relay)
             {
-                NetRecvPlayer(msg.Key, msg.Value);
+                if (msg.Value.Count > 0)
+                {
+                    foreach (var obj in msg.Value)
+                    {
+                        NetRecvPlayer(msg.Key, obj);
+                    }
+                }
             }
         }
 
@@ -2025,6 +2032,8 @@ namespace ED
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
         {
+            Debug.Log("RECV : " + protocol.ToString());
+            
             if (NetworkManager.Get().isReconnect == true)
                 return;
             
