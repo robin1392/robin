@@ -2005,28 +2005,40 @@ namespace ED
             if (NetworkManager.Get().isReconnect == true)
                 return;
 
-            if (protocol == GameProtocol.MINION_STATUS_RELAY)
+            if ((int) protocol >= 30000)
+            {
+                if (protocol == GameProtocol.MINION_STATUS_RELAY)
+                {
+                    if (InGameManager.IsNetwork == true)
+                    {
+                        NetworkManager.Get().Send(protocol, param);
+                    }
+                }
+                else
+                {
+                    if (_syncDictionary.ContainsKey(protocol) == false)
+                    {
+                        _syncDictionary.Add(protocol, new List<object>());
+                    }
+
+                    switch (protocol)
+                    {
+                        case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                            _syncDictionary[protocol]
+                                .Add(ConvertNetMsg.HitDamageMinionRelay((int) param[0], (int) param[1],
+                                    (float) param[2]));
+                            break;
+                    }
+
+                    //_syncDictionary[protocol].Add(param);
+                }
+            }
+            else
             {
                 if (InGameManager.IsNetwork == true)
                 {
                     NetworkManager.Get().Send(protocol, param);
                 }
-            }
-            else
-            {
-                if (_syncDictionary.ContainsKey(protocol) == false)
-                {
-                    _syncDictionary.Add(protocol, new List<object>());
-                }
-
-                switch (protocol)
-                {
-                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
-                        _syncDictionary[protocol].Add(ConvertNetMsg.HitDamageMinionRelay((int)param[0], (int)param[1], (float)param[2]));
-                        break;
-                }
-                
-                //_syncDictionary[protocol].Add(param);
             }
         }
         
