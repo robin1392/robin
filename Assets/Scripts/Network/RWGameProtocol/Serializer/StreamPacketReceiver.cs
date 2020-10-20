@@ -707,7 +707,7 @@ namespace RWGameProtocol.Serializer
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.Id = (int)_bf.Deserialize(ms);
                             msg.Damage = (int)_bf.Deserialize(ms);
-                            msg.Delay = (int)_bf.Deserialize(ms);
+                            //msg.Delay = (int)_bf.Deserialize(ms);
                             HitDamageMinionRelay(peer, msg);
                         }
                     }
@@ -1116,7 +1116,7 @@ namespace RWGameProtocol.Serializer
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.PosIndex = (byte)_bf.Deserialize(ms);
                             msg.Pos = (MsgVector3[])_bf.Deserialize(ms);
-                            msg.Relay = (Dictionary<GameProtocol, List<object[]>>) _bf.Deserialize(ms);
+                            msg.Relay = (Dictionary<GameProtocol, List<object>>) _bf.Deserialize(ms);
                             MinionStatusRelay(peer, msg);
                         }
                     }

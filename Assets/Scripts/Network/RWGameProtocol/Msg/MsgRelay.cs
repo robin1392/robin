@@ -36,7 +36,6 @@ namespace RWGameProtocol.Msg
         public int PlayerUId;
         public int Id;
         public int Damage;
-        public int Delay;
     }
 
 
@@ -289,7 +288,7 @@ namespace RWGameProtocol.Msg
         public int PlayerUId;
         public byte PosIndex;
         public MsgVector3[] Pos;
-        public Dictionary<GameProtocol, List<object[]>> Relay;
+        public Dictionary<GameProtocol, List<object>> Relay;
     }
 
 

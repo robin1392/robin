@@ -1927,7 +1927,7 @@ namespace ED
             }
         }
         
-        private Dictionary<GameProtocol, List<object[]>> _syncDictionary = new Dictionary<GameProtocol, List<object[]>>();
+        private Dictionary<GameProtocol, List<object>> _syncDictionary = new Dictionary<GameProtocol, List<object>>();
         
         public IEnumerator SyncMinionStatus()
         {
@@ -1957,7 +1957,7 @@ namespace ED
             }
         }
 
-        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<object[]>> relay)
+        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<object>> relay)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
@@ -2009,9 +2009,17 @@ namespace ED
             {
                 if (_syncDictionary.ContainsKey(protocol) == false)
                 {
-                    _syncDictionary.Add(protocol, new List<object[]>());
+                    _syncDictionary.Add(protocol, new List<object>());
                 }
-                _syncDictionary[protocol].Add(param);
+
+                switch (protocol)
+                {
+                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                        _syncDictionary[protocol].Add(ConvertNetMsg.HitDamageMinionRelay((int)param[0], (int)param[1], (float)param[2]));
+                        break;
+                }
+                
+                //_syncDictionary[protocol].Add(param);
             }
         }
         
