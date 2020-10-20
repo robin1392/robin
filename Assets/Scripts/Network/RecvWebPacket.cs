@@ -65,7 +65,7 @@ public partial class WebPacket : Singleton<WebPacket>
             case WebProtocol.WebPD_UserAuth:
             {
                 UserAuthRes res = JsonUtility.FromJson<UserAuthRes>(content);
-                RecvUserAuth(res.userId);
+                RecvUserAuth(res.userInfo, res.userDeck, res.userDice);
                 break;
             }
             case WebProtocol.WebPD_Match:
@@ -97,9 +97,9 @@ public partial class WebPacket : Singleton<WebPacket>
 
     #region user auth
 
-    private void RecvUserAuth(string userkey)
+    private void RecvUserAuth(User userInfo, UserDeck[] userDeck, UserDice[] userDice)
     {
-        UserInfoManager.Get().SetUserKey(userkey);
+        UserInfoManager.Get().SetUserKey(userInfo.userId);
     }
     #endregion
     
