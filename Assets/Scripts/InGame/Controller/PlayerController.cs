@@ -2028,7 +2028,7 @@ namespace ED
                         case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                             _syncDictionary[protocol]
                                 .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
-                                    (int) param[2]));
+                                    (float) param[2]));
                             break;
                         case GameProtocol.REMOVE_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetRemoveMinionRelayMsg((int)param[0], (int)param[1]));
