@@ -1930,7 +1930,8 @@ namespace ED
         }
         
         private Dictionary<GameProtocol, List<object>> _syncDictionary = new Dictionary<GameProtocol, List<object>>();
-        
+
+        private int packetCount;
         public IEnumerator SyncMinionStatus()
         {
             if (InGameManager.IsNetwork == false)
@@ -1960,15 +1961,15 @@ namespace ED
                                 str += string.Format("\n{0} count {1}", sync.Key, sync.Value.Count);
                             }
                         }
-                        UnityUtil.Print("SEND : ", str, "red");
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary );
+                        UnityUtil.Print(string.Format("SEND[{0}] : ", packetCount), str, "red");
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary, packetCount);
                         _syncDictionary.Clear();
                     }
                 }
             }
         }
 
-        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<object>> relay)
+        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<object>> relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
@@ -1989,7 +1990,7 @@ namespace ED
                     }
                 }
             }
-            UnityUtil.Print("RECV : ", str, "blue");
+            UnityUtil.Print(string.Format("RECV[{0}] : ", packetCount), str, "green");
         }
 
         public void SyncMinionResume()
@@ -2590,9 +2591,9 @@ namespace ED
                     MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
 
                     if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
-                        targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Relay);
+                        targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Relay, statusrelay.packetCount);
                     else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
-                        SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Relay);
+                        SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Relay, statusrelay.packetCount);
                     
                     break;
                 }

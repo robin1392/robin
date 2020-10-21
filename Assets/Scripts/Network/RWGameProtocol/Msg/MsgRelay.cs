@@ -288,6 +288,7 @@ namespace RWGameProtocol.Msg
         public byte PosIndex;
         public MsgVector3[] Pos;
         public Dictionary<GameProtocol, List<object>> Relay;
+        public int packetCount;
     }
 
 
