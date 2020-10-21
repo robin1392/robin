@@ -241,10 +241,10 @@ public class SocketSendEvent
                 //ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
                 
                 MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[2]);
-                MsgVector3 chScale = ConvertNetMsg.VectorToMsg((Vector3) param[3]);
-                MsgQuaternion chRot = ConvertNetMsg.QuaternionToMsg((Quaternion) param[4]);
+                MsgQuaternion chRot = ConvertNetMsg.QuaternionToMsg((Quaternion) param[3]);
+                MsgVector3 chScale = ConvertNetMsg.VectorToMsg((Vector3) param[4]);
                 
-                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , (int)param[1] , chStPos , chScale , chRot);
+                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , chStPos , chRot, chScale);
                 
                 break;
             }

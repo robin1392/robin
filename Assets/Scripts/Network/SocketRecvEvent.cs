@@ -542,7 +542,7 @@ public class SocketRecvEvent
 
     public void OnActivatePoolObjectRelay(Peer peer, MsgActivatePoolObjectRelay msg)
     {
-        UnityUtil.Print("RECV => ", "ACTIVATE_POOL_OBJECT_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        UnityUtil.Print("RECV => ", "ACTIVATE_POOL_OBJECT_RELAY  " /*+msg.PlayerUId.ToString() */, "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, msg);

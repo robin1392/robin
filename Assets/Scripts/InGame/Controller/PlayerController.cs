@@ -1349,7 +1349,7 @@ namespace ED
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 int enumObj = (int) UnityUtil.StringToEnum<E_PoolName>(objName);
-                NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, enumObj , startPos , scale , rotate);
+                NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, enumObj , startPos , rotate , scale);
             }
             ActivationPoolObject(objName , startPos , rotate , scale);
         }
@@ -2084,6 +2084,30 @@ namespace ED
                         case GameProtocol.FIRE_CANNON_BALL_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireCannonBallRelayMsg((int)param[0], (MsgVector3)param[1], (MsgVector3)param[2], (int)param[3], (int)param[4], (int)param[5]));
                             break;
+                        case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionAnimationTriggerRelayMsg((int)param[0],(int)param[1], (int)param[2], (int)param[3]));
+                            break;
+                        case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMagicTargetIDRelayMsg((int)param[0],(int)param[1], (int)param[2]));
+                            break;
+                        case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMagicTargetPosRelayMsg((int)param[0],(int)param[1], (int)param[2], (int)param[3]));
+                            break;
+                        case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetActivatePoolObjectRelayMsg((int)param[0], (Vector3)param[1], (Quaternion)param[2], (Vector3)param[3]));
+                            break;
+                        case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetSendMessageVoidRelayMsg((int)param[0],(int)param[1], (int)param[2]));
+                            break;
+                        case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetSendMessageParam1RelayMsg((int)param[0],(int)param[1], (int)param[2], (int)param[3]));
+                            break;
+                        case GameProtocol.SET_MINION_TARGET_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionTargetRelayMsg((int)param[0],(int)param[1], (int)param[2]));
+                            break;
+                        case GameProtocol.PUSH_MINION_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetPushMinionRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4], (int)param[5]));
+                            break;
                     }
                 }
             }
@@ -2488,10 +2512,10 @@ namespace ED
                     
                     string strObjName = ((E_PoolName) actrelay.PoolName).ToString();
 
-                    if (NetworkManager.Get().UserUID == actrelay.PlayerUId)
+                    //if (NetworkManager.Get().UserUID == actrelay.PlayerUId)
                         ActivationPoolObject(strObjName, stPos, rotate, localScale);
-                    else if (NetworkManager.Get().OtherUID == actrelay.PlayerUId )
-                        targetPlayer.ActivationPoolObject(strObjName, stPos, rotate, localScale);
+                    //else if (NetworkManager.Get().OtherUID == actrelay.PlayerUId )
+//                        targetPlayer.ActivationPoolObject(strObjName, stPos, rotate, localScale);
 
                     break;
                 }

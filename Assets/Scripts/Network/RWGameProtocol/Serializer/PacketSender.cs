@@ -75,7 +75,7 @@ namespace RWGameProtocol.Serializer
         public virtual void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range, int type) { }
         public virtual void FireSpearRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int moveSpeed) { }
         public virtual void FireManFireRelay(Peer peer, int playerUId, int id) { }
-        public virtual void ActivatePoolObjectRelay(Peer peer, int playerUId, int poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation) { }
+        public virtual void ActivatePoolObjectRelay(Peer peer, int poolName, MsgVector3 hitPos, MsgQuaternion rotation, MsgVector3 localScale) { }
         public virtual void MinionCloackingRelay(Peer peer, int playerUId, int id, bool isCloacking) { }
         public virtual void MinionFogOfWarRelay(Peer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar) { }
         public virtual void SendMessageVoidRelay(Peer peer, int playerUId, int id, int message) { }

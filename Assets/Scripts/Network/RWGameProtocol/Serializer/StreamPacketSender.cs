@@ -751,12 +751,11 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void ActivatePoolObjectRelay(Peer peer, int playerUId, int poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation) 
+        public override void ActivatePoolObjectRelay(Peer peer, int poolName, MsgVector3 hitPos, MsgQuaternion rotation, MsgVector3 localScale) 
         {
             
             using (var ms = new MemoryStream())
             {
-                _bf.Serialize(ms, playerUId);
                 _bf.Serialize(ms, poolName);
                 _bf.Serialize(ms, hitPos);
                 _bf.Serialize(ms, localScale);

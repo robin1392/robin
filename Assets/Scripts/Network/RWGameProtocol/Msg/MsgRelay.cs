@@ -198,7 +198,6 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgActivatePoolObjectRelay
     {
-        public int PlayerUId;
         public int PoolName;
         public MsgVector3 HitPos;
         public MsgQuaternion Rotation;

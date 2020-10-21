@@ -995,11 +995,11 @@ namespace RWGameProtocol.Serializer
                         using (var ms = new MemoryStream(buffer))
                         {
                             MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            //msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.PoolName = (int)_bf.Deserialize(ms);
                             msg.HitPos = (MsgVector3)_bf.Deserialize(ms);
-                            msg.LocalScale = (MsgVector3)_bf.Deserialize(ms);
                             msg.Rotation = (MsgQuaternion)_bf.Deserialize(ms);
+                            msg.LocalScale = (MsgVector3)_bf.Deserialize(ms);
                             ActivatePoolObjectRelay(peer, msg);
                         }
                     }

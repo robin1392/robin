@@ -1028,6 +1028,100 @@ public class ConvertNetMsg
         return msg;
     }
 
+    public static MsgSetMinionAnimationTriggerRelay GetMinionAnimationTriggerRelayMsg(int uid, int id, int trigger,
+        int target)
+    {
+        MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
+
+        msg.PlayerUId = uid;
+        msg.Id = id;
+        msg.Trigger = trigger;
+        msg.TargetId = target;
+
+        return msg;
+    }
+
+    public static MsgSetMagicTargetIdRelay GetMagicTargetIDRelayMsg(int uid, int id, int targetID)
+    {
+        MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
+
+        msg.PlayerUId = uid;
+        msg.Id = id;
+        msg.TargetId = targetID;
+        
+        return msg;
+    }
+
+    public static MsgSetMagicTargetRelay GetMagicTargetPosRelayMsg(int uid, int id, int x, int z)
+    {
+        MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
+
+        msg.PlayerUId = uid;
+        msg.Id = id;
+        msg.X = x;
+        msg.Z = z;
+        
+        return msg;
+    }
+
+    public static MsgActivatePoolObjectRelay GetActivatePoolObjectRelayMsg(int poolName, Vector3 pos, Quaternion rot, Vector3 scale)
+    {
+        MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
+
+        msg.PoolName = poolName;
+        msg.HitPos = VectorToMsg(pos);
+        msg.Rotation = QuaternionToMsg(rot);
+        msg.LocalScale = VectorToMsg(scale);
+        
+        return msg;
+    }
+
+    public static MsgSendMessageVoidRelay GetSendMessageVoidRelayMsg(int uid, int id, int message)
+    {
+        MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
+
+        msg.PlayerUId = uid;
+        msg.Id = id;
+        msg.Message = message;
+        
+        return msg;
+    }
+
+    public static MsgSendMessageParam1Relay GetSendMessageParam1RelayMsg(int uid, int id, int message, int targetID)
+    {
+        MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
+
+        msg.PlayerUId = uid;
+        msg.Id = id;
+        msg.Message = message;
+        msg.TargetId = targetID;
+        
+        return msg;
+    }
+
+    public static MsgSetMinionTargetRelay GetMinionTargetRelayMsg(int uid, int id, int targetID)
+    {
+        MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
+
+        msg.PlayerUId = uid;
+        msg.Id = id;
+        msg.TargetId = targetID;
+        
+        return msg;
+    }
+
+    public static MsgPushMinionRelay GetPushMinionRelayMsg(int uid, int id, int x, int y, int z, int power)
+    {
+        MsgPushMinionRelay msg = new MsgPushMinionRelay();
+
+        msg.PlayerUId = uid;
+        msg.Id = id;
+        msg.Dir = new int[3] {x, y, z};
+        msg.PushPower = power;
+        
+        return msg;
+    }
+
     #endregion
 
 }
