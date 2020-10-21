@@ -280,6 +280,37 @@ namespace RWGameProtocol.Msg
         public int[] TargetIdArray;
     }
 
+    [Serializable]
+    public class MsgMinionStatus
+    {
+        public MsgHitDamageMinionRelay[] arrHitDamageMinionRelay;
+        public MsgRemoveMinionRelay[] arrRemoveMinionRelay;
+        public MsgDestroyMinionRelay[] arrDestroyMinionRelay;
+        public MsgRemoveMagicRelay[] arrRemoveMagicRelay;
+        public MsgDestroyMagicRelay[] arrDestroyMagicRelay;
+        public MsgFireballBombRelay[] arrFireballBombRelay;
+        public MsgHealMinionRelay[] arrHealMinionRelay;
+        public MsgMineBombRelay[] arrMineBombRelay;
+        public MsgSturnMinionRelay[] arrSturnMinionRelay;
+        public MsgRocketBombRelay[] arrRocketBombRelay;
+        public MsgIceBombRelay[] arrIceBombRelay;
+        public MsgFireManFireRelay[] arrFireManFireRelay;
+        public MsgMinionCloackingRelay[] arrMinionCloackingRelay;
+        public MsgMinionFlagOfWarRelay[] arrMinionFlagOfWarRelay;
+        public MsgScarecrowRelay[] arrScarercrowRelay;
+        public MsgLayzerTargetRelay[] arrLayzerTargetRelay;
+        public MsgMinionInvincibilityRelay[] arrMinionInvincibilityRelay;
+        public MsgFireBulletRelay[] arrFireBulletRelay;
+        public MsgFireCannonBallRelay[] arrFireCannonBallRelay;
+        public MsgSetMinionAnimationTriggerRelay[] arrMinionAnimationTriggerRelay;
+        public MsgSetMagicTargetIdRelay[] arrMagicTargetIdRelay;
+        public MsgSetMagicTargetRelay[] arrMagicTargetRelay;
+        public MsgActivatePoolObjectRelay[] arrActivatePoolObjectRelay;
+        public MsgSendMessageVoidRelay[] arrSendMessageVoidRelay;
+        public MsgSendMessageParam1Relay[] arrSendMessageParam1Relay;
+        public MsgSetMinionTargetRelay[] arrMinionTargetRelay;
+        public MsgPushMinionRelay[] arrPushMinionRelay;
+    }
 
     [Serializable]
     public class MsgMinionStatusRelay
@@ -287,7 +318,7 @@ namespace RWGameProtocol.Msg
         public int PlayerUId;
         public byte PosIndex;
         public MsgVector3[] Pos;
-        public Dictionary<GameProtocol, List<object>> Relay;
+        public MsgMinionStatus Relay;
         public int packetCount;
     }
 

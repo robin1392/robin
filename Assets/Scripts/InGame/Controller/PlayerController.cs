@@ -1952,6 +1952,8 @@ namespace ED
                     {
                         byte minionCount = (byte) listMinion.Count;
                         MsgVector3[] msgMinPos = new MsgVector3[listMinion.Count];
+                        MsgMinionStatus relay = new MsgMinionStatus();
+
                         for (int i = 0; i < listMinion.Count; i++)
                         {
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
@@ -1962,19 +1964,105 @@ namespace ED
                         {
                             foreach (var sync in _syncDictionary)
                             {
+                                switch (sync.Key)
+                                {
+                                    case GameProtocol.REMOVE_MINION_RELAY:
+                                        relay.arrRemoveMinionRelay = (MsgRemoveMinionRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                                        relay.arrHitDamageMinionRelay = (MsgHitDamageMinionRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.DESTROY_MINION_RELAY:
+                                        relay.arrDestroyMinionRelay = (MsgDestroyMinionRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.HEAL_MINION_RELAY:
+                                        relay.arrHealMinionRelay = (MsgHealMinionRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.PUSH_MINION_RELAY:
+                                        relay.arrPushMinionRelay = (MsgPushMinionRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+                                        relay.arrMinionAnimationTriggerRelay = (MsgSetMinionAnimationTriggerRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.FIRE_BALL_BOMB_RELAY:
+                                        relay.arrFireballBombRelay = (MsgFireballBombRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.MINE_BOMB_RELAY:
+                                        relay.arrMineBombRelay = (MsgMineBombRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.REMOVE_MAGIC_RELAY:
+                                        relay.arrRemoveMagicRelay = (MsgRemoveMagicRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.DESTROY_MAGIC_RELAY:
+                                        relay.arrDestroyMagicRelay = (MsgDestroyMagicRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+                                        relay.arrMagicTargetIdRelay = (MsgSetMagicTargetIdRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+                                        relay.arrMagicTargetRelay = (MsgSetMagicTargetRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.STURN_MINION_RELAY:
+                                        relay.arrSturnMinionRelay = (MsgSturnMinionRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.ROCKET_BOMB_RELAY:
+                                        relay.arrRocketBombRelay = (MsgRocketBombRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.ICE_BOMB_RELAY:
+                                        relay.arrIceBombRelay = (MsgIceBombRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.FIRE_CANNON_BALL_RELAY:
+                                        relay.arrFireCannonBallRelay = (MsgFireCannonBallRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.FIRE_MAN_FIRE_RELAY:
+                                        relay.arrFireManFireRelay = (MsgFireManFireRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                                        relay.arrActivatePoolObjectRelay = (MsgActivatePoolObjectRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.MINION_CLOACKING_RELAY:
+                                        relay.arrMinionCloackingRelay = (MsgMinionCloackingRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
+                                        relay.arrMinionFlagOfWarRelay = (MsgMinionFlagOfWarRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+                                        relay.arrSendMessageVoidRelay = (MsgSendMessageVoidRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+                                        relay.arrSendMessageParam1Relay = (MsgSendMessageParam1Relay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.SET_MINION_TARGET_RELAY:
+                                        relay.arrMinionTargetRelay = (MsgSetMinionTargetRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.SCARECROW_RELAY:
+                                        relay.arrScarercrowRelay = (MsgScarecrowRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.LAYZER_TARGET_RELAY:
+                                        relay.arrLayzerTargetRelay = (MsgLayzerTargetRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.FIRE_BULLET_RELAY:
+                                        relay.arrFireBulletRelay = (MsgFireBulletRelay[])sync.Value.ToArray();
+                                        break;
+                                    case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                                        relay.arrMinionInvincibilityRelay = (MsgMinionInvincibilityRelay[])sync.Value.ToArray();
+                                        break;
+                                }
+                                
+                                // Log
                                 str += string.Format("\n{0} -> List count : {1}", sync.Key, sync.Value.Count);
                             }
                         }
                         
                         UnityUtil.Print(string.Format("SEND [{0}] : ", packetCount), str, "red");
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary, packetCount++);
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, relay, packetCount++);
                         _syncDictionary.Clear();
                     }
                 }
             }
         }
 
-        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, Dictionary<GameProtocol, List<object>> relay, int packetCount)
+        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
@@ -1982,9 +2070,11 @@ namespace ED
                 listMinion[i].SetNetworkValue(chPos);
             }
 
-            string str = "MINION_STATUS_RELAY -> Dictionary count : " + relay.Keys.Count;
-            
-            foreach (var msg in relay)
+            var dic = MsgMinionStatusToDictionary(relay);
+
+            string str = "MINION_STATUS_RELAY -> Dictionary count : " + dic.Keys.Count;
+
+            foreach (var msg in dic)
             {
                 str += string.Format("\n{0} -> List count : {1}", msg.Key, msg.Value.Count);
                 if (msg.Value.Count > 0)
@@ -1995,7 +2085,43 @@ namespace ED
                     }
                 }
             }
+                
             UnityUtil.Print(string.Format("RECV [{0}] : ", packetCount), str, "green");
+        }
+
+        Dictionary<GameProtocol, List<object>> MsgMinionStatusToDictionary(MsgMinionStatus msg)
+        {
+            Dictionary<GameProtocol, List<object>> dic = new Dictionary<GameProtocol, List<object>>();
+
+            if (msg.arrHitDamageMinionRelay != null) dic.Add(GameProtocol.HIT_DAMAGE_MINION_RELAY, new List<object>(msg.arrHitDamageMinionRelay));
+            if (msg.arrRemoveMinionRelay != null) dic.Add(GameProtocol.REMOVE_MINION_RELAY, new List<object>(msg.arrRemoveMinionRelay));
+            if (msg.arrDestroyMinionRelay != null) dic.Add(GameProtocol.DESTROY_MINION_RELAY, new List<object>(msg.arrDestroyMinionRelay));
+            if (msg.arrRemoveMagicRelay != null) dic.Add(GameProtocol.REMOVE_MAGIC_RELAY, new List<object>(msg.arrRemoveMagicRelay));
+            if (msg.arrDestroyMagicRelay != null) dic.Add(GameProtocol.DESTROY_MAGIC_RELAY, new List<object>(msg.arrDestroyMagicRelay));
+            if (msg.arrFireballBombRelay != null) dic.Add(GameProtocol.FIRE_BALL_BOMB_RELAY, new List<object>(msg.arrFireballBombRelay));
+            if (msg.arrHealMinionRelay != null) dic.Add(GameProtocol.HEAL_MINION_RELAY, new List<object>(msg.arrHealMinionRelay));
+            if (msg.arrMineBombRelay != null) dic.Add(GameProtocol.MINE_BOMB_RELAY, new List<object>(msg.arrMineBombRelay));
+            if (msg.arrSturnMinionRelay != null) dic.Add(GameProtocol.STURN_MINION_RELAY, new List<object>(msg.arrSturnMinionRelay));
+            if (msg.arrRocketBombRelay != null) dic.Add(GameProtocol.ROCKET_BOMB_RELAY, new List<object>(msg.arrRocketBombRelay));
+            if (msg.arrIceBombRelay != null) dic.Add(GameProtocol.ICE_BOMB_RELAY, new List<object>(msg.arrIceBombRelay));
+            if (msg.arrFireManFireRelay != null) dic.Add(GameProtocol.FIRE_MAN_FIRE_RELAY, new List<object>(msg.arrFireManFireRelay));
+            if (msg.arrMinionCloackingRelay != null) dic.Add(GameProtocol.MINION_CLOACKING_RELAY, new List<object>(msg.arrMinionCloackingRelay));
+            if (msg.arrMinionFlagOfWarRelay != null) dic.Add(GameProtocol.MINION_FLAG_OF_WAR_RELAY, new List<object>(msg.arrMinionFlagOfWarRelay));
+            if (msg.arrScarercrowRelay != null) dic.Add(GameProtocol.SCARECROW_RELAY, new List<object>(msg.arrScarercrowRelay));
+            if (msg.arrLayzerTargetRelay != null) dic.Add(GameProtocol.LAYZER_TARGET_RELAY, new List<object>(msg.arrLayzerTargetRelay));
+            if (msg.arrMinionInvincibilityRelay != null) dic.Add(GameProtocol.MINION_INVINCIBILITY_RELAY, new List<object>(msg.arrMinionInvincibilityRelay));
+            if (msg.arrFireBulletRelay != null) dic.Add(GameProtocol.FIRE_BULLET_RELAY, new List<object>(msg.arrFireBulletRelay));
+            if (msg.arrFireCannonBallRelay != null) dic.Add(GameProtocol.FIRE_CANNON_BALL_RELAY, new List<object>(msg.arrFireCannonBallRelay));
+            if (msg.arrMinionAnimationTriggerRelay != null) dic.Add(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, new List<object>(msg.arrMinionAnimationTriggerRelay));
+            if (msg.arrMagicTargetIdRelay != null) dic.Add(GameProtocol.SET_MAGIC_TARGET_ID_RELAY, new List<object>(msg.arrMagicTargetIdRelay));
+            if (msg.arrMagicTargetRelay != null) dic.Add(GameProtocol.SET_MAGIC_TARGET_POS_RELAY, new List<object>(msg.arrMagicTargetRelay));
+            if (msg.arrActivatePoolObjectRelay != null) dic.Add(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, new List<object>(msg.arrActivatePoolObjectRelay));
+            if (msg.arrSendMessageVoidRelay != null) dic.Add(GameProtocol.SEND_MESSAGE_VOID_RELAY, new List<object>(msg.arrSendMessageVoidRelay));
+            if (msg.arrSendMessageParam1Relay != null) dic.Add(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, new List<object>(msg.arrSendMessageParam1Relay));
+            if (msg.arrMinionTargetRelay != null) dic.Add(GameProtocol.SET_MINION_TARGET_RELAY, new List<object>(msg.arrMinionTargetRelay));
+            if (msg.arrPushMinionRelay != null) dic.Add(GameProtocol.PUSH_MINION_RELAY, new List<object>(msg.arrPushMinionRelay));
+
+            return dic;
         }
 
         public void SyncMinionResume()
