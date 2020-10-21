@@ -415,14 +415,14 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.FireManFireRelay = _socketRecv.OnFireManFireRelay;
         _packetRecv.ActivatePoolObjectRelay = _socketRecv.OnActivatePoolObjectRelay;
         _packetRecv.MinionCloackingRelay = _socketRecv.OnMinionCloackingRelay;
-        _packetRecv.MinionFogOfWarRelay = _socketRecv.OnMinionFogOfWarRelay;
+        _packetRecv.MinionFlagOfWarRelay = _socketRecv.OnMinionFogOfWarRelay;
         _packetRecv.SendMessageVoidRelay = _socketRecv.OnSendMessageVoidRelay;
         _packetRecv.SendMessageParam1Relay = _socketRecv.OnSendMessageParam1Relay;
         _packetRecv.NecromancerBulletRelay = _socketRecv.OnNecromancerBulletRelay;
         _packetRecv.SetMinionTargetRelay = _socketRecv.OnSetMinionTargetRelay;
 
         _packetRecv.ScarecrowRelay = _socketRecv.OnScarecrowRelay;
-        _packetRecv.LazerTargetRelay = _socketRecv.OnLazerTargetRelay;
+        _packetRecv.LayzerTargetRelay = _socketRecv.OnLazerTargetRelay;
 
         _packetRecv.MinionStatusRelay = _socketRecv.OnMinionStatusRelay;
 
@@ -1005,7 +1005,7 @@ public class ConvertNetMsg
 
         msg.PlayerUId = uid;
         msg.Id = id;
-        msg.Dir = new int[3] {x, y, z};
+        msg.Dir = new MsgVector3 { X = x, Y = y, Z = z};
         msg.Damage = damage;
         msg.MoveSpeed = speed;
         msg.Type = type;
@@ -1116,7 +1116,7 @@ public class ConvertNetMsg
 
         msg.PlayerUId = uid;
         msg.Id = id;
-        msg.Dir = new int[3] {x, y, z};
+        msg.Dir = new MsgVector3 { X = x, Y = y, Z = z };
         msg.PushPower = power;
         
         return msg;

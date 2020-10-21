@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace RWGameProtocol.Msg
 {
@@ -16,6 +17,36 @@ namespace RWGameProtocol.Msg
         public int minionDuration;
         public int minionCooltime;
         public MsgVector3 minionPos;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(minionId);
+            bw.Write(minionDataId);
+            bw.Write(minionHp);
+            bw.Write(minionMaxHp);
+            bw.Write(minionPower);
+            bw.Write(minionEffect);
+            bw.Write(minionEffectUpgrade);
+            bw.Write(minionEffectIngameUpgrade);
+            bw.Write(minionDuration);
+            bw.Write(minionCooltime);
+            minionPos.Write(bw);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            minionId = br.ReadInt32();
+            minionDataId = br.ReadInt32();
+            minionHp = br.ReadInt32();
+            minionMaxHp = br.ReadInt32();
+            minionPower = br.ReadInt32();
+            minionEffect = br.ReadInt32();
+            minionEffectUpgrade = br.ReadInt32();
+            minionEffectIngameUpgrade = br.ReadInt32();
+            minionDuration = br.ReadInt32();
+            minionCooltime = br.ReadInt32();
+            minionPos = MsgVector3.Read(br);
+        }
     }
 
     [Serializable]
@@ -24,6 +55,20 @@ namespace RWGameProtocol.Msg
         public int DiceId;
         public short SlotNum;
         public short Level;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(DiceId);
+            bw.Write(SlotNum);
+            bw.Write(Level);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            DiceId = br.ReadInt32();
+            SlotNum = br.ReadInt16();
+            Level = br.ReadInt16();
+        }
     }
 
 
@@ -32,6 +77,18 @@ namespace RWGameProtocol.Msg
     {
         public int DiceId;
         public short Grade;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(DiceId);
+            bw.Write(Grade);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            DiceId = br.ReadInt32();
+            Grade = br.ReadInt16();
+        }
     }
 
 

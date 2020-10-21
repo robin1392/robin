@@ -194,12 +194,12 @@ public class SocketSendEvent
             case GameProtocol.FIRE_BULLET_RELAY:
             {
                 //FireBulletRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeedk, int type)
-                _sender.FireBulletRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] , (int)param[7] );
+                _sender.FireBulletRelay(peer , (int)param[0] , (int)param[1] , new MsgVector3 { X = (int)param[2], Y = (int)param[3], Z = (int)param[4] } ,(int)param[5] ,(int)param[6] , (int)param[7] );
                 break;
             }
             case GameProtocol.FIRE_ARROW_RELAY:
             {
-                _sender.FireArrowRelay(peer , (int)param[0] , (int)param[1] ,(int)param[2] ,(int)param[3] ,(int)param[4] ,(int)param[5] ,(int)param[6] );
+                _sender.FireArrowRelay(peer , (int)param[0] , (int)param[1] , new MsgVector3 { X = (int)param[2], Y = (int)param[3], Z = (int)param[4] }, (int)param[5] ,(int)param[6] );
                 break;
             }
             case GameProtocol.FIRE_SPEAR_RELAY:
@@ -243,7 +243,7 @@ public class SocketSendEvent
                 MsgQuaternion chRot = ConvertNetMsg.QuaternionToMsg((Quaternion) param[2]);
                 MsgVector3 chScale = ConvertNetMsg.VectorToMsg((Vector3) param[3]);
                 
-                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , chStPos , chRot, chScale);
+                _sender.ActivatePoolObjectRelay(peer , (int)param[0] , chStPos , chScale, chRot);
                 
                 break;
             }
@@ -270,7 +270,7 @@ public class SocketSendEvent
             {
                 //PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
                 
-                _sender.PushMinionRelay(peer , (int)param[0] , (int)param[1] , (int)param[2], (int)param[3], (int)param[4], (int)param[5] );
+                _sender.PushMinionRelay(peer , (int)param[0] , (int)param[1] , new MsgVector3 { X = (int)param[2], Y = (int)param[3], Z = (int)param[4] }, (int)param[5] );
                 break;
             }
             

@@ -31,16 +31,6 @@ namespace RWGameProtocol.Serializer
 
     public class StreamPacketReceiver : PacketReceiver, IPacketReceiver
     {
-        BinaryFormatter _bf;
-
-
-        public StreamPacketReceiver()
-        {
-            _bf = new BinaryFormatter();
-            _bf.Binder = new CustomizedBinder();
-        }
-
-
         public bool Process(Peer peer, int protocolId, byte[] buffer)
         {
             switch ((GameProtocol)protocolId)
@@ -53,9 +43,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameReq msg = new MsgJoinGameReq();
-                            msg.PlayerSessionId = (string)_bf.Deserialize(ms);
-                            msg.DeckIndex = (sbyte)_bf.Deserialize(ms);
+                            msg.PlayerSessionId = br.ReadString();
+                            msg.DeckIndex = br.ReadSByte();
                             JoinGameReq(peer, msg);
                         }
                     }
@@ -68,9 +59,12 @@ namespace RWGameProtocol.Serializer
                         //
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameAck msg = new MsgJoinGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.PlayerInfo = (MsgPlayerInfo)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+
+                            msg.PlayerInfo = new MsgPlayerInfo();
+                            msg.PlayerInfo.Read(br);
                             JoinGameAck(peer, msg);
                         }
                     }
@@ -83,8 +77,10 @@ namespace RWGameProtocol.Serializer
                         //
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameNotify msg = new MsgJoinGameNotify();
-                            msg.OtherPlayerInfo = (MsgPlayerInfo)_bf.Deserialize(ms);
+                            msg.OtherPlayerInfo = new MsgPlayerInfo();
+                            msg.OtherPlayerInfo.Read(br);
                             JoinGameNotify(peer, msg);
                         }
                     }
@@ -97,6 +93,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgLeaveGameReq msg = new MsgLeaveGameReq();
                             LeaveGameReq(peer, msg);
                         }
@@ -110,8 +107,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgLeaveGameAck msg = new MsgLeaveGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
                             LeaveGameAck(peer, msg);
                         }
                     }
@@ -124,8 +122,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgLeaveGameNotify msg = new MsgLeaveGameNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
                             LeaveGameNotify(peer, msg);
                         }
                     }
@@ -138,6 +137,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReadyGameReq msg = new MsgReadyGameReq();
                             ReadyGameReq(peer, msg);
                         }
@@ -151,8 +151,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReadyGameAck msg = new MsgReadyGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
                             ReadyGameAck(peer, msg);
                         }
                     }
@@ -165,9 +166,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.CurrentSp = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.CurrentSp = br.ReadInt32();
                             DeactiveWaitingObjectNotify(peer, msg);
                         }
                     }
@@ -180,9 +182,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgAddSpNotify msg = new MsgAddSpNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.CurrentSp = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.CurrentSp = br.ReadInt32();
                             AddSpNotify(peer, msg);
                         }
                     }
@@ -195,8 +198,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSpawnNotify msg = new MsgSpawnNotify();
-                            msg.Wave = (int)_bf.Deserialize(ms);
+                            msg.Wave = br.ReadInt32();
                             SpawnNotify(peer, msg);
                         }
                     }
@@ -209,9 +213,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgEndGameNotify msg = new MsgEndGameNotify();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.WinPlayerUId = (int)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+                            msg.WinPlayerUId = br.ReadInt32();
                             EndGameNotify(peer, msg);
                         }
                     }
@@ -224,8 +229,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgDisconnectGameNotify msg = new MsgDisconnectGameNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
                             DisconnectGameNotify(peer, msg);
                         }
                     }
@@ -238,8 +244,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgPauseGameNotify msg = new MsgPauseGameNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
                             PauseGameNotify(peer, msg);
                         }
                     }
@@ -252,8 +259,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgResumeGameNotify msg = new MsgResumeGameNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
                             ResumeGameNotify(peer, msg);
                         }
                     }
@@ -265,6 +273,7 @@ namespace RWGameProtocol.Serializer
 
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReconnectGameReq msg = new MsgReconnectGameReq();
                             ReconnectGameReq(peer, msg);
                         }
@@ -278,10 +287,15 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReconnectGameAck msg = new MsgReconnectGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.PlayerBase = (MsgPlayerBase)_bf.Deserialize(ms);
-                            msg.OtherPlayerBase = (MsgPlayerBase)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+
+                            msg.PlayerBase = new MsgPlayerBase();
+                            msg.PlayerBase.Read(br);
+
+                            msg.OtherPlayerBase = new MsgPlayerBase();
+                            msg.OtherPlayerBase.Read(br);
                             ReconnectGameAck(peer, msg);
                         }
                     }
@@ -293,8 +307,9 @@ namespace RWGameProtocol.Serializer
 
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReconnectGameNotify msg = new MsgReconnectGameNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
                             ReconnectGameNotify(peer, msg);
                         }
                     }
@@ -307,6 +322,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReadySyncGameReq msg = new MsgReadySyncGameReq();
                             ReadySyncGameReq(peer, msg);
                         }
@@ -320,8 +336,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReadySyncGameAck msg = new MsgReadySyncGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
                             ReadySyncGameAck(peer, msg);
                         }
                     }
@@ -334,8 +351,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgReadySyncGameNotify msg = new MsgReadySyncGameNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
                             ReadySyncGameNotify(peer, msg);
                         }
                     }
@@ -348,13 +366,28 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameReq msg = new MsgStartSyncGameReq();
-                            msg.PlayerId = (int)_bf.Deserialize(ms);
-                            msg.PlayerSpawnCount = (int)_bf.Deserialize(ms);
-                            msg.SyncMinionData = (MsgSyncMinionData[])_bf.Deserialize(ms);
-                            msg.OtherPlayerId = (int)_bf.Deserialize(ms);
-                            msg.OtherPlayerSpawnCount = (int)_bf.Deserialize(ms);
-                            msg.OtherSyncMinionData = (MsgSyncMinionData[])_bf.Deserialize(ms);
+                            msg.PlayerId = br.ReadInt32();
+                            msg.PlayerSpawnCount = br.ReadInt32();
+                            int length = br.ReadInt32();
+                            msg.SyncMinionData = new MsgSyncMinionData[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.SyncMinionData[i] = new MsgSyncMinionData();
+                                msg.SyncMinionData[i].Read(br);
+                            }
+
+                            msg.OtherPlayerId = br.ReadInt32();
+                            msg.OtherPlayerSpawnCount = br.ReadInt32();
+                            length = br.ReadInt32();
+                            msg.OtherSyncMinionData = new MsgSyncMinionData[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.OtherSyncMinionData[i] = new MsgSyncMinionData();
+                                msg.OtherSyncMinionData[i].Read(br);
+                            }
+
                             StartSyncGameReq(peer, msg);
                         }
                     }
@@ -367,8 +400,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
                             StartSyncGameAck(peer, msg);
                         }
                     }
@@ -381,18 +415,56 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
-                            msg.PlayerInfo = (MsgPlayerInfo)_bf.Deserialize(ms);
-                            msg.GameDiceData = (MsgGameDice[])_bf.Deserialize(ms);
-                            msg.InGameUp = (MsgInGameUp[])_bf.Deserialize(ms);
-                            msg.SyncMinionData = (MsgSyncMinionData[])_bf.Deserialize(ms);
-                            msg.PlayerSpawnCount = (int)_bf.Deserialize(ms);
+                            msg.PlayerInfo.Read(br);
 
-                            msg.OtherPlayerInfo = (MsgPlayerInfo)_bf.Deserialize(ms);
-                            msg.OtherGameDiceData = (MsgGameDice[])_bf.Deserialize(ms);
-                            msg.OtherInGameUp = (MsgInGameUp[])_bf.Deserialize(ms);
-                            msg.OtherSyncMinionData = (MsgSyncMinionData[])_bf.Deserialize(ms);
-                            msg.OtherPlayerSpawnCount = (int)_bf.Deserialize(ms);
+                            int length = br.ReadInt32();
+                            msg.GameDiceData = new MsgGameDice[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.GameDiceData[i].Read(br);
+                            }
+
+                            length = br.ReadInt32();
+                            msg.InGameUp = new MsgInGameUp[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.InGameUp[i].Read(br);
+                            }
+
+                            length = br.ReadInt32();
+                            msg.SyncMinionData = new MsgSyncMinionData[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.SyncMinionData[i].Read(br);
+                            }
+
+                            msg.PlayerSpawnCount = br.ReadInt32();
+                            msg.OtherPlayerInfo.Read(br);
+
+                            length = br.ReadInt32();
+                            msg.OtherGameDiceData = new MsgGameDice[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.OtherGameDiceData[i].Read(br);
+                            }
+
+                            length = br.ReadInt32();
+                            msg.OtherInGameUp = new MsgInGameUp[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.OtherInGameUp[i].Read(br);
+                            }
+
+                            length = br.ReadInt32();
+                            msg.OtherSyncMinionData = new MsgSyncMinionData[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.OtherSyncMinionData[i].Read(br);
+                            }
+
+                            msg.OtherPlayerSpawnCount = br.ReadInt32();
 
                             StartSyncGameNotify(peer, msg);
                         }
@@ -406,6 +478,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameReq msg = new MsgEndSyncGameReq();
                             EndSyncGameReq(peer, msg);
                         }
@@ -419,8 +492,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameAck msg = new MsgEndSyncGameAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
                             EndSyncGameAck(peer, msg);
                         }
                     }
@@ -433,8 +507,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameNotify msg = new MsgEndSyncGameNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
                             EndSyncGameNotify(peer, msg);
                         }
                     }
@@ -447,6 +522,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgGetDiceReq msg = new MsgGetDiceReq();
                             GetDiceReq(peer, msg);
                         }
@@ -460,12 +536,13 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgGetDiceAck msg = new MsgGetDiceAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.DiceId = (int)_bf.Deserialize(ms);
-                            msg.SlotNum = (short)_bf.Deserialize(ms);
-                            msg.Level = (short)_bf.Deserialize(ms);
-                            msg.CurrentSp = (int)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+                            msg.DiceId = br.ReadInt32();
+                            msg.SlotNum = br.ReadInt16();
+                            msg.Level = br.ReadInt16();
+                            msg.CurrentSp = br.ReadInt32();
                             GetDiceAck(peer, msg);
                         }
                     }
@@ -478,11 +555,12 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgGetDiceNotify msg = new MsgGetDiceNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.DiceId = (int)_bf.Deserialize(ms);
-                            msg.SlotNum = (short)_bf.Deserialize(ms);
-                            msg.Level = (short)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.DiceId = br.ReadInt32();
+                            msg.SlotNum = br.ReadInt16();
+                            msg.Level = br.ReadInt16();
                             GetDiceNotify(peer, msg);
                         }
                     }
@@ -495,9 +573,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
-                            msg.ResetFieldNum = (short)_bf.Deserialize(ms);
-                            msg.LeveupFieldNum = (short)_bf.Deserialize(ms);
+                            msg.ResetFieldNum = br.ReadInt16();
+                            msg.LeveupFieldNum = br.ReadInt16();
                             LevelUpDiceReq(peer, msg);
                         }
                     }
@@ -510,12 +589,13 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgLevelUpDiceAck msg = new MsgLevelUpDiceAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.ResetFieldNum = (short)_bf.Deserialize(ms);
-                            msg.LeveupFieldNum = (short)_bf.Deserialize(ms);
-                            msg.LevelupDiceId = (int)_bf.Deserialize(ms);
-                            msg.Level = (short)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+                            msg.ResetFieldNum = br.ReadInt16();
+                            msg.LeveupFieldNum = br.ReadInt16();
+                            msg.LevelupDiceId = br.ReadInt32();
+                            msg.Level = br.ReadInt16();
                             LevelUpDiceAck(peer, msg);
                         }
                     }
@@ -528,12 +608,13 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgLevelUpDiceNotify msg = new MsgLevelUpDiceNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.ResetFieldNum = (short)_bf.Deserialize(ms);
-                            msg.LeveupFieldNum = (short)_bf.Deserialize(ms);
-                            msg.LevelupDiceId = (int)_bf.Deserialize(ms);
-                            msg.Level = (short)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.ResetFieldNum = br.ReadInt16();
+                            msg.LeveupFieldNum = br.ReadInt16();
+                            msg.LevelupDiceId = br.ReadInt32();
+                            msg.Level = br.ReadInt16();
                             LevelUpDiceNotify(peer, msg);
                         }
                     }
@@ -546,8 +627,9 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgInGameUpDiceReq msg = new MsgInGameUpDiceReq();
-                            msg.DiceId = (int)_bf.Deserialize(ms);
+                            msg.DiceId = br.ReadInt32();
                             InGameUpDiceReq(peer, msg);
                         }
                     }
@@ -560,11 +642,12 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgInGameUpDiceAck msg = new MsgInGameUpDiceAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.DiceId = (int)_bf.Deserialize(ms);
-                            msg.InGameUp = (short)_bf.Deserialize(ms);
-                            msg.CurrentSp = (int)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+                            msg.DiceId = br.ReadInt32();
+                            msg.InGameUp = br.ReadInt16();
+                            msg.CurrentSp = br.ReadInt32();
                             InGameUpDiceAck(peer, msg);
                         }
                     }
@@ -577,10 +660,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgInGameUpDiceNotify msg = new MsgInGameUpDiceNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.DiceId = (int)_bf.Deserialize(ms);
-                            msg.InGameUp = (short)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.DiceId = br.ReadInt32();
+                            msg.InGameUp = br.ReadInt16();
                             InGameUpDiceNotify(peer, msg);
                         }
                     }
@@ -593,6 +677,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgUpgradeSpReq msg = new MsgUpgradeSpReq();
                             UpgradeSpReq(peer, msg);
                         }
@@ -606,10 +691,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgUpgradeSpAck msg = new MsgUpgradeSpAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.Upgrade = (short)_bf.Deserialize(ms);
-                            msg.CurrentSp = (int)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+                            msg.Upgrade = br.ReadInt16();
+                            msg.CurrentSp = br.ReadInt32();
                             UpgradeSpAck(peer, msg);
                         }
                     }
@@ -622,9 +708,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgUpgradeSpNotify msg = new MsgUpgradeSpNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Upgrade = (short)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Upgrade = br.ReadInt16();
                             UpgradeSpNotify(peer, msg);
                         }
                     }
@@ -637,9 +724,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageReq msg = new MsgHitDamageReq();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Damage = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Damage = br.ReadInt32();
                             HitDamageReq(peer, msg);
                         }
                     }
@@ -652,11 +740,12 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageAck msg = new MsgHitDamageAck();
-                            msg.ErrorCode = (short)_bf.Deserialize(ms);
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Damage = (int)_bf.Deserialize(ms);
-                            msg.CurrentHp = (int)_bf.Deserialize(ms);
+                            msg.ErrorCode = br.ReadInt16();
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Damage = br.ReadInt32();
+                            msg.CurrentHp = br.ReadInt32();
                             HitDamageAck(peer, msg);
                         }
                     }
@@ -669,10 +758,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageNotify msg = new MsgHitDamageNotify();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Damage = (int)_bf.Deserialize(ms);
-                            msg.CurrentHp = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Damage = br.ReadInt32();
+                            msg.CurrentHp = br.ReadInt32();
                             HitDamageNotify(peer, msg);
                         }
                     }
@@ -688,9 +778,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             RemoveMinionRelay(peer, msg);
                         }
                     }
@@ -703,11 +794,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.Damage = (int)_bf.Deserialize(ms);
-                            //msg.Delay = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.Damage = br.ReadInt32();
                             HitDamageMinionRelay(peer, msg);
                         }
                     }
@@ -720,9 +811,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             DestroyMinionRelay(peer, msg);
                         }
                     }
@@ -735,10 +827,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgHealMinionRelay msg = new MsgHealMinionRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.Heal = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.Heal = br.ReadInt32();
                             HealMinionRelay(peer, msg);
                         }
                     }
@@ -751,11 +844,12 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgPushMinionRelay msg = new MsgPushMinionRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.Dir = (int[])_bf.Deserialize(ms);
-                            msg.PushPower = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.Dir = MsgVector3.Read(br);
+                            msg.PushPower = br.ReadInt32();
                             PushMinionRelay(peer, msg);
                         }
                     }
@@ -768,11 +862,12 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.TargetId = (int)_bf.Deserialize(ms);
-                            msg.Trigger = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.TargetId = br.ReadInt32();
+                            msg.Trigger = br.ReadInt32();
                             SetMinionAnimationTriggerRelay(peer, msg);
                         }
                     }
@@ -785,12 +880,13 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgFireArrowRelay msg = new MsgFireArrowRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.Dir = (int[])_bf.Deserialize(ms);
-                            msg.Damage = (int)_bf.Deserialize(ms);
-                            msg.MoveSpeed = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.Dir = MsgVector3.Read(br);
+                            msg.Damage = br.ReadInt32();
+                            msg.MoveSpeed = br.ReadInt32();
                             FireArrowRelay(peer, msg);
                         }
                     }
@@ -803,9 +899,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgFireballBombRelay msg = new MsgFireballBombRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             FireballBombRelay(peer, msg);
                         }
                     }
@@ -818,9 +915,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgMineBombRelay msg = new MsgMineBombRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             MineBombRelay(peer, msg);
                         }
                     }
@@ -833,9 +931,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             RemoveMagicRelay(peer, msg);
                         }
                     }
@@ -848,10 +947,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.TargetId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.TargetId = br.ReadInt32();
                             SetMagicTargetIdRelay(peer, msg);
                         }
                     }
@@ -864,11 +964,12 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.X = (int)_bf.Deserialize(ms);
-                            msg.Z = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.X = br.ReadInt32();
+                            msg.Z = br.ReadInt32();
                             SetMagicTargetRelay(peer, msg);
                         }
                     }
@@ -881,10 +982,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.SturnTime = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.SturnTime = br.ReadInt32();
                             SturnMinionRelay(peer, msg);
                         }
                     }
@@ -897,9 +999,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgRocketBombRelay msg = new MsgRocketBombRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             RocketBombRelay(peer, msg);
                         }
                     }
@@ -912,9 +1015,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgIceBombRelay msg = new MsgIceBombRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             IceBombRelay(peer, msg);
                         }
                     }
@@ -927,9 +1031,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.BaseStatId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.BaseStatId = br.ReadInt32();
                             DestroyMagicRelay(peer, msg);
                         }
                     }
@@ -942,13 +1047,14 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.ShootPos = (MsgVector3)_bf.Deserialize(ms);
-                            msg.TargetPos = (MsgVector3)_bf.Deserialize(ms);
-                            msg.Power = (int)_bf.Deserialize(ms);
-                            msg.Range = (int)_bf.Deserialize(ms);
-                            msg.Type = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.ShootPos = MsgVector3.Read(br);
+                            msg.TargetPos = MsgVector3.Read(br);
+                            msg.Power = br.ReadInt32();
+                            msg.Range = br.ReadInt32();
+                            msg.Type = br.ReadInt32();
                             FireCannonBallRelay(peer, msg);
                         }
                     }
@@ -961,12 +1067,13 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgFireSpearRelay msg = new MsgFireSpearRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.ShootPos = (MsgVector3)_bf.Deserialize(ms);
-                            msg.TargetId = (int)_bf.Deserialize(ms);
-                            msg.Power = (int)_bf.Deserialize(ms);
-                            msg.MoveSpeed = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.ShootPos = MsgVector3.Read(br);
+                            msg.TargetId = br.ReadInt32();
+                            msg.Power = br.ReadInt32();
+                            msg.MoveSpeed = br.ReadInt32();
                             FireSpearRelay(peer, msg);
                         }
                     }
@@ -979,9 +1086,10 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgFireManFireRelay msg = new MsgFireManFireRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
                             FireManFireRelay(peer, msg);
                         }
                     }
@@ -994,12 +1102,13 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
-                            //msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.PoolName = (int)_bf.Deserialize(ms);
-                            msg.HitPos = (MsgVector3)_bf.Deserialize(ms);
-                            msg.Rotation = (MsgQuaternion)_bf.Deserialize(ms);
-                            msg.LocalScale = (MsgVector3)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.PoolName = br.ReadInt32();
+                            msg.HitPos = MsgVector3.Read(br);
+                            msg.LocalScale = MsgVector3.Read(br);
+                            msg.Rotation = MsgQuaternion.Read(br);
                             ActivatePoolObjectRelay(peer, msg);
                         }
                     }
@@ -1012,28 +1121,30 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.IsCloacking = (bool)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.IsCloacking = br.ReadBoolean();
                             MinionCloackingRelay(peer, msg);
                         }
                     }
                     break;
                 case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
                     {
-                        if (MinionFogOfWarRelay == null)
+                        if (MinionFlagOfWarRelay == null)
                             return false;
 
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgMinionFlagOfWarRelay msg = new MsgMinionFlagOfWarRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.BaseStatId = (int)_bf.Deserialize(ms);
-                            msg.Effect = (int)_bf.Deserialize(ms);
-                            msg.IsFogOfWar = (bool)_bf.Deserialize(ms);
-                            MinionFogOfWarRelay(peer, msg);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.BaseStatId = br.ReadInt32();
+                            msg.Effect = br.ReadInt32();
+                            msg.IsFogOfWar = br.ReadBoolean();
+                            MinionFlagOfWarRelay(peer, msg);
                         }
                     }
                     break;
@@ -1045,10 +1156,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.Message = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.Message = br.ReadInt32();
                             SendMessageVoidRelay(peer, msg);
                         }
                     }
@@ -1061,11 +1173,12 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.TargetId = (int)_bf.Deserialize(ms);
-                            msg.Message = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.TargetId = br.ReadInt32();
+                            msg.Message = br.ReadInt32();
                             SendMessageParam1Relay(peer, msg);
                         }
                     }
@@ -1078,12 +1191,13 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgNecromancerBulletRelay msg = new MsgNecromancerBulletRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.ShootPos = (MsgVector3)_bf.Deserialize(ms);
-                            msg.TargetId = (int)_bf.Deserialize(ms);
-                            msg.Power = (int)_bf.Deserialize(ms);
-                            msg.BulletMoveSpeed = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.ShootPos = MsgVector3.Read(br);
+                            msg.TargetId = br.ReadInt32();
+                            msg.Power = br.ReadInt32();
+                            msg.BulletMoveSpeed = br.ReadInt32();
                             NecromancerBulletRelay(peer, msg);
                         }
                     }
@@ -1096,10 +1210,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.TargetId = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.TargetId = br.ReadInt32();
                             SetMinionTargetRelay(peer, msg);
                         }
                     }
@@ -1112,12 +1227,18 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.PosIndex = (byte)_bf.Deserialize(ms);
-                            msg.Pos = (MsgVector3[])_bf.Deserialize(ms);
-                            msg.Relay = (MsgMinionStatus) _bf.Deserialize(ms);
-                            msg.packetCount = (int) _bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.PosIndex = br.ReadByte();
+
+                            int length = br.ReadInt32();
+                            msg.Pos = new MsgVector3[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.Pos[i] = MsgVector3.Read(br);
+                            }
+
                             MinionStatusRelay(peer, msg);
                         }
                     }
@@ -1130,27 +1251,36 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgScarecrowRelay msg = new MsgScarecrowRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.BaseStatId = (int)_bf.Deserialize(ms);
-                            msg.EyeLevel = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.BaseStatId = br.ReadInt32();
+                            msg.EyeLevel = br.ReadInt32();
                             ScarecrowRelay(peer, msg);
                         }
                     }
                     break;
                 case GameProtocol.LAYZER_TARGET_RELAY:
                     {
-                        if (LazerTargetRelay == null)
+                        if (LayzerTargetRelay == null)
                             return false;
 
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgLayzerTargetRelay msg = new MsgLayzerTargetRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.TargetIdArray = (int[])_bf.Deserialize(ms);
-                            LazerTargetRelay(peer, msg);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+
+                            int length = br.ReadInt32();
+                            byte[] bytes = br.ReadBytes(length * sizeof(int));
+                            msg.TargetIdArray = new int[length];
+                            for (var index = 0; index < length; index++)
+                            {
+                                msg.TargetIdArray[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+                            }
+                            LayzerTargetRelay(peer, msg);
                         }
                     }
                     break;
@@ -1162,13 +1292,14 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgFireBulletRelay msg = new MsgFireBulletRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.Dir = (int[])_bf.Deserialize(ms);
-                            msg.Damage = (int)_bf.Deserialize(ms);
-                            msg.MoveSpeed = (int)_bf.Deserialize(ms);
-                            msg.Type = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.Dir = MsgVector3.Read(br);
+                            msg.Damage = br.ReadInt32();
+                            msg.MoveSpeed = br.ReadInt32();
+                            msg.Type = br.ReadInt32();
                             FireBulletRelay(peer, msg);
                         }
                     }
@@ -1181,10 +1312,11 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
+                            BinaryReader br = new BinaryReader(ms);
                             MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();
-                            msg.PlayerUId = (int)_bf.Deserialize(ms);
-                            msg.Id = (int)_bf.Deserialize(ms);
-                            msg.Time = (int)_bf.Deserialize(ms);
+                            msg.PlayerUId = br.ReadInt32();
+                            msg.Id = br.ReadInt32();
+                            msg.Time = br.ReadInt32();
                             MinionInvincibilityRelay(peer, msg);
                         }
                     }
