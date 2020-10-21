@@ -2058,7 +2058,7 @@ namespace ED
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireballBombRelayMsg((int)param[0], (int)param[1]));
                             break;
                         case GameProtocol.HEAL_MINION_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetHealMinionRelayMsg((int)param[0], (int)param[1], (int)param[2]));
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetHealMinionRelayMsg((int)param[0], (int)param[1], (float)param[2]));
                             break;
                         case GameProtocol.MINE_BOMB_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMineBombRelayMsg((int)param[0], (int)param[1]));

@@ -92,8 +92,7 @@ public class SocketSendEvent
             case GameProtocol.HIT_DAMAGE_MINION_RELAY:
             {
                 int damage = ConvertNetMsg.MsgFloatToInt( (float)param[2] );
-                int delay = ConvertNetMsg.MsgFloatToInt( (float)param[3] );
-                _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , damage , delay);
+                _sender.HitDamageMinionRelay(peer , (int)param[0] , (int)param[1] , damage);
                 break;
             }
             

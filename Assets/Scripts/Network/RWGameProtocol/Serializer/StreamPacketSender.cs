@@ -514,7 +514,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage, int delay) 
+        public override void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage) 
         {
             
             using (var ms = new MemoryStream())
@@ -522,7 +522,6 @@ namespace RWGameProtocol.Serializer
                 _bf.Serialize(ms, playerUId);
                 _bf.Serialize(ms, id);
                 _bf.Serialize(ms, damage);
-                _bf.Serialize(ms, delay);
                 peer.SendPacket((int)GameProtocol.HIT_DAMAGE_MINION_RELAY, ms.ToArray());
             }
         }

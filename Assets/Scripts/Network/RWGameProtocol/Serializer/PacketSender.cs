@@ -57,7 +57,7 @@ namespace RWGameProtocol.Serializer
 
 
         public virtual void RemoveMinionRelay(Peer peer, int playerUId, int id) { }
-        public virtual void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage, int delay) { }
+        public virtual void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage) { }
         public virtual void DestroyMinionRelay(Peer peer, int playerUId, int id) { }
         public virtual void HealMinionRelay(Peer peer, int playerUId, int id, int heal) { }
         public virtual void PushMinionRelay(Peer peer, int playerUId, int id, int x, int y, int z, int pushPower) { }

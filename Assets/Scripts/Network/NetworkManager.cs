@@ -881,13 +881,13 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgHealMinionRelay GetHealMinionRelayMsg(int uid, int id, int heal)
+    public static MsgHealMinionRelay GetHealMinionRelayMsg(int uid, int id, float heal)
     {
         MsgHealMinionRelay msg = new MsgHealMinionRelay();
 
         msg.PlayerUId = uid;
         msg.Id = id;
-        msg.Heal = heal;
+        msg.Heal = MsgFloatToInt(heal);
 
         return msg;
     }
