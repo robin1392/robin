@@ -1948,13 +1948,12 @@ namespace ED
 
                 if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
-                    if (listMinion.Count > 0)
+                    if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
                         MsgVector3[] msgMinPos = new MsgVector3[listMinion.Count];
                         for (int i = 0; i < listMinion.Count; i++)
                         {
-                            //UnityEngine.Debug.Log(listMinion[i].rb.position);
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
 
@@ -1966,6 +1965,7 @@ namespace ED
                                 str += string.Format("\n{0} -> List count : {1}", sync.Key, sync.Value.Count);
                             }
                         }
+                        
                         UnityUtil.Print(string.Format("SEND [{0}] : ", packetCount), str, "red");
                         NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary, packetCount++);
                         _syncDictionary.Clear();
