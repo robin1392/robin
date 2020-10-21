@@ -1952,12 +1952,12 @@ namespace ED
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
 
-                        string str = "MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count + "\n";
+                        string str = "MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count;
                         if (_syncDictionary.Keys.Count > 0)
                         {
                             foreach (var sync in _syncDictionary)
                             {
-                                str += string.Format("{0} count {1}\n", sync.Key, sync.Value.Count);
+                                str += string.Format("\n{0} count {1}", sync.Key, sync.Value.Count);
                             }
                         }
                         UnityUtil.Print("SEND : ", str, "red");
@@ -1976,11 +1976,11 @@ namespace ED
                 listMinion[i].SetNetworkValue(chPos);
             }
 
-            string str = "MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count + "\n";
+            string str = "MINION_STATUS_RELAY -> " + relay.Keys.Count;
             
             foreach (var msg in relay)
             {
-                str += string.Format("{0} count {1}\n", msg.Key, msg.Value.Count);
+                str += string.Format("\n{0} count {1}", msg.Key, msg.Value.Count);
                 if (msg.Value.Count > 0)
                 {
                     foreach (var obj in msg.Value)
