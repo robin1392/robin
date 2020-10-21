@@ -59,7 +59,9 @@ public class UserAuthReq
 [Serializable]
 public class UserAuthRes
 {
-    public string userId;
+    public User userInfo;
+    public UserDeck[] userDeck;
+    public UserDice[] userDice;
 }
 
 [Serializable]
@@ -101,6 +103,42 @@ public class DeckUpdateAck
 {
     public sbyte deckIndex;
     public int[] diceIds = new int[5];
+}
+
+[Serializable]
+public class UserTotalInfo
+{
+    public User userInfo;
+    public UserDeck[] userDeck;
+    public UserDice[] userDice;
+}
+
+
+[Serializable]
+public class User
+{
+    public string userId;
+    public string name;
+    public int trophy;
+    public int gold;
+    public int diamond;
+}
+
+
+[Serializable]
+public class UserDeck
+{
+    public sbyte index;
+    public int[] deckInfo;
+}
+
+
+[Serializable]
+public class UserDice
+{
+    public int diceId;
+    public short grade;
+    public short count;
 }
 
 
