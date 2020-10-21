@@ -1942,7 +1942,7 @@ namespace ED
             if (InGameManager.IsNetwork == false)
                 yield break;
             
-            while (true)
+            while (InGameManager.Get().isGamePlaying)
             {
                 yield return new WaitForSeconds(0.2f);
 
