@@ -1951,8 +1951,16 @@ namespace ED
                             //UnityEngine.Debug.Log(listMinion[i].rb.position);
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
-                    
-                        Debug.Log("SEND : MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count);
+
+                        string str = "MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count + "\n";
+                        if (_syncDictionary.Keys.Count > 0)
+                        {
+                            foreach (var sync in _syncDictionary)
+                            {
+                                str += string.Format("{0} count {1}\n", sync.Key, sync.Value.Count);
+                            }
+                        }
+                        UnityUtil.Print("SEND : ", str, "red");
                         NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary );
                         _syncDictionary.Clear();
                     }
@@ -1968,8 +1976,11 @@ namespace ED
                 listMinion[i].SetNetworkValue(chPos);
             }
 
+            string str = "MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count + "\n";
+            
             foreach (var msg in relay)
             {
+                str += string.Format("{0} count {1}\n", msg.Key, msg.Value.Count);
                 if (msg.Value.Count > 0)
                 {
                     foreach (var obj in msg.Value)
@@ -1978,6 +1989,7 @@ namespace ED
                     }
                 }
             }
+            UnityUtil.Print("RECV : ", str, "blue");
         }
 
         public void SyncMinionResume()
@@ -2122,7 +2134,7 @@ namespace ED
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
         {
-            Debug.Log("RECV : " + protocol.ToString());
+            //Debug.Log("RECV : " + protocol.ToString());
             
             if (NetworkManager.Get().isReconnect == true)
                 return;
