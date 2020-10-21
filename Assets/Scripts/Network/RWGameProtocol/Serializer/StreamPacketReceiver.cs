@@ -1239,6 +1239,10 @@ namespace RWGameProtocol.Serializer
                                 msg.Pos[i] = MsgVector3.Read(br);
                             }
 
+                            msg.Relay = new MsgMinionStatus();
+                            msg.Relay.Read(br);
+                            msg.packetCount = br.ReadInt32();
+
                             MinionStatusRelay(peer, msg);
                         }
                     }

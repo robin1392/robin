@@ -1941,8 +1941,9 @@ namespace ED
         {
             if (InGameManager.IsNetwork == false)
                 yield break;
-            
-            while (InGameManager.Get().isGamePlaying)
+
+            //while (InGameManager.Get().isGamePlaying)
+            while (true)
             {
                 yield return new WaitForSeconds(0.2f);
 
@@ -1967,88 +1968,88 @@ namespace ED
                                 switch (sync.Key)
                                 {
                                     case GameProtocol.REMOVE_MINION_RELAY:
-                                        relay.arrRemoveMinionRelay = (MsgRemoveMinionRelay[])sync.Value.ToArray();
+                                        relay.arrRemoveMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgRemoveMinionRelay)element);
                                         break;
                                     case GameProtocol.HIT_DAMAGE_MINION_RELAY:
-                                        relay.arrHitDamageMinionRelay = (MsgHitDamageMinionRelay[])sync.Value.ToArray();
+                                        relay.arrHitDamageMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgHitDamageMinionRelay)element);
                                         break;
                                     case GameProtocol.DESTROY_MINION_RELAY:
-                                        relay.arrDestroyMinionRelay = (MsgDestroyMinionRelay[])sync.Value.ToArray();
+                                        relay.arrDestroyMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgDestroyMinionRelay)element);
                                         break;
                                     case GameProtocol.HEAL_MINION_RELAY:
-                                        relay.arrHealMinionRelay = (MsgHealMinionRelay[])sync.Value.ToArray();
+                                        relay.arrHealMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgHealMinionRelay)element);
                                         break;
                                     case GameProtocol.PUSH_MINION_RELAY:
-                                        relay.arrPushMinionRelay = (MsgPushMinionRelay[])sync.Value.ToArray();
+                                        relay.arrPushMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgPushMinionRelay)element);
                                         break;
                                     case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
-                                        relay.arrMinionAnimationTriggerRelay = (MsgSetMinionAnimationTriggerRelay[])sync.Value.ToArray();
+                                        relay.arrMinionAnimationTriggerRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMinionAnimationTriggerRelay)element);
                                         break;
                                     case GameProtocol.FIRE_BALL_BOMB_RELAY:
-                                        relay.arrFireballBombRelay = (MsgFireballBombRelay[])sync.Value.ToArray();
+                                        relay.arrFireballBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireballBombRelay)element);
                                         break;
                                     case GameProtocol.MINE_BOMB_RELAY:
-                                        relay.arrMineBombRelay = (MsgMineBombRelay[])sync.Value.ToArray();
+                                        relay.arrMineBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMineBombRelay)element);
                                         break;
                                     case GameProtocol.REMOVE_MAGIC_RELAY:
-                                        relay.arrRemoveMagicRelay = (MsgRemoveMagicRelay[])sync.Value.ToArray();
+                                        relay.arrRemoveMagicRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgRemoveMagicRelay)element);
                                         break;
                                     case GameProtocol.DESTROY_MAGIC_RELAY:
-                                        relay.arrDestroyMagicRelay = (MsgDestroyMagicRelay[])sync.Value.ToArray();
+                                        relay.arrDestroyMagicRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgDestroyMagicRelay)element);
                                         break;
                                     case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
-                                        relay.arrMagicTargetIdRelay = (MsgSetMagicTargetIdRelay[])sync.Value.ToArray();
+                                        relay.arrMagicTargetIdRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMagicTargetIdRelay)element);
                                         break;
                                     case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
-                                        relay.arrMagicTargetRelay = (MsgSetMagicTargetRelay[])sync.Value.ToArray();
+                                        relay.arrMagicTargetRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMagicTargetRelay)element);
                                         break;
                                     case GameProtocol.STURN_MINION_RELAY:
-                                        relay.arrSturnMinionRelay = (MsgSturnMinionRelay[])sync.Value.ToArray();
+                                        relay.arrSturnMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSturnMinionRelay)element);
                                         break;
                                     case GameProtocol.ROCKET_BOMB_RELAY:
-                                        relay.arrRocketBombRelay = (MsgRocketBombRelay[])sync.Value.ToArray();
+                                        relay.arrRocketBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgRocketBombRelay)element);
                                         break;
                                     case GameProtocol.ICE_BOMB_RELAY:
-                                        relay.arrIceBombRelay = (MsgIceBombRelay[])sync.Value.ToArray();
+                                        relay.arrIceBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgIceBombRelay)element);
                                         break;
                                     case GameProtocol.FIRE_CANNON_BALL_RELAY:
-                                        relay.arrFireCannonBallRelay = (MsgFireCannonBallRelay[])sync.Value.ToArray();
+                                        relay.arrFireCannonBallRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireCannonBallRelay)element);
                                         break;
                                     case GameProtocol.FIRE_MAN_FIRE_RELAY:
-                                        relay.arrFireManFireRelay = (MsgFireManFireRelay[])sync.Value.ToArray();
+                                        relay.arrFireManFireRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireManFireRelay)element);
                                         break;
                                     case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
-                                        relay.arrActivatePoolObjectRelay = (MsgActivatePoolObjectRelay[])sync.Value.ToArray();
+                                        relay.arrActivatePoolObjectRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgActivatePoolObjectRelay)element);
                                         break;
                                     case GameProtocol.MINION_CLOACKING_RELAY:
-                                        relay.arrMinionCloackingRelay = (MsgMinionCloackingRelay[])sync.Value.ToArray();
+                                        relay.arrMinionCloackingRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMinionCloackingRelay)element);
                                         break;
                                     case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
-                                        relay.arrMinionFlagOfWarRelay = (MsgMinionFlagOfWarRelay[])sync.Value.ToArray();
+                                        relay.arrMinionFlagOfWarRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMinionFlagOfWarRelay)element);
                                         break;
                                     case GameProtocol.SEND_MESSAGE_VOID_RELAY:
-                                        relay.arrSendMessageVoidRelay = (MsgSendMessageVoidRelay[])sync.Value.ToArray();
+                                        relay.arrSendMessageVoidRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSendMessageVoidRelay)element);
                                         break;
                                     case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
-                                        relay.arrSendMessageParam1Relay = (MsgSendMessageParam1Relay[])sync.Value.ToArray();
+                                        relay.arrSendMessageParam1Relay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSendMessageParam1Relay)element);
                                         break;
                                     case GameProtocol.SET_MINION_TARGET_RELAY:
-                                        relay.arrMinionTargetRelay = (MsgSetMinionTargetRelay[])sync.Value.ToArray();
+                                        relay.arrMinionTargetRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMinionTargetRelay)element);
                                         break;
                                     case GameProtocol.SCARECROW_RELAY:
-                                        relay.arrScarercrowRelay = (MsgScarecrowRelay[])sync.Value.ToArray();
+                                        relay.arrScarercrowRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgScarecrowRelay)element);
                                         break;
                                     case GameProtocol.LAYZER_TARGET_RELAY:
-                                        relay.arrLayzerTargetRelay = (MsgLayzerTargetRelay[])sync.Value.ToArray();
+                                        relay.arrLayzerTargetRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgLayzerTargetRelay)element);
                                         break;
                                     case GameProtocol.FIRE_BULLET_RELAY:
-                                        relay.arrFireBulletRelay = (MsgFireBulletRelay[])sync.Value.ToArray();
+                                        relay.arrFireBulletRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireBulletRelay)element);
                                         break;
                                     case GameProtocol.MINION_INVINCIBILITY_RELAY:
-                                        relay.arrMinionInvincibilityRelay = (MsgMinionInvincibilityRelay[])sync.Value.ToArray();
+                                        relay.arrMinionInvincibilityRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMinionInvincibilityRelay)element);
                                         break;
                                 }
-                                
+
                                 // Log
                                 str += string.Format("\n{0} -> List count : {1}", sync.Key, sync.Value.Count);
                             }
