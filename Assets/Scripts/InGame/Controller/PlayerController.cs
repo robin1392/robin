@@ -1961,8 +1961,8 @@ namespace ED
                                 str += string.Format("\n{0} count {1}", sync.Key, sync.Value.Count);
                             }
                         }
-                        UnityUtil.Print(string.Format("SEND[{0}] : ", packetCount), str, "red");
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary, packetCount);
+                        UnityUtil.Print(string.Format("SEND [{0}] : ", packetCount), str, "red");
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, _syncDictionary, packetCount++);
                         _syncDictionary.Clear();
                     }
                 }
@@ -1990,7 +1990,7 @@ namespace ED
                     }
                 }
             }
-            UnityUtil.Print(string.Format("RECV[{0}] : ", packetCount), str, "green");
+            UnityUtil.Print(string.Format("RECV [{0}] : ", packetCount), str, "green");
         }
 
         public void SyncMinionResume()
