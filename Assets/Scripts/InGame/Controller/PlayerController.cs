@@ -126,11 +126,12 @@ namespace ED
         
         //protected List<Minion> _listMinion = new List<Minion>();
 
+        protected List<Minion> _listMinion = new List<Minion>();
         [SerializeField]
         public List<Minion> listMinion
         {
-            get;
-            protected set;
+            get { return _listMinion; }
+            protected set { _listMinion = value; }
         }
         // {
         //     get => _listMinion;
