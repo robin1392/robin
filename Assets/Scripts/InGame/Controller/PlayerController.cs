@@ -1349,7 +1349,7 @@ namespace ED
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 int enumObj = (int) UnityUtil.StringToEnum<E_PoolName>(objName);
-                NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, enumObj , startPos , rotate , scale);
+                NetSendPlayer(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, /*isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID,*/ enumObj , startPos , rotate , scale);
             }
             ActivationPoolObject(objName , startPos , rotate , scale);
         }
