@@ -164,7 +164,7 @@ public class SocketSendEvent
                 _sender.MinionCloackingRelay(peer, (int) param[0], (int) param[1] ,(bool) param[2]);
                 break;
             }
-            case GameProtocol.MINION_FOG_OF_WAR_RELAY:
+            case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
             {
                 //MinionFogOfWarRelay(IPeer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
                 _sender.MinionFogOfWarRelay(peer , (int)param[0], (int)param[1] , (int)param[2] , (bool)param[3]);

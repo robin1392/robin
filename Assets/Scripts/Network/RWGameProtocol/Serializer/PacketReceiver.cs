@@ -200,7 +200,7 @@ namespace RWGameProtocol.Serializer
         public delegate void MinionCloackingRelayDelegate(Peer peer, MsgMinionCloackingRelay msg);
         public MinionCloackingRelayDelegate MinionCloackingRelay;
 
-        public delegate void MinionFogOfWarRelayDelegate(Peer peer, MsgMinionFogOfWarRelay msg);
+        public delegate void MinionFogOfWarRelayDelegate(Peer peer, MsgMinionFlagOfWarRelay msg);
         public MinionFogOfWarRelayDelegate MinionFogOfWarRelay;
 
         public delegate void SendMessageVoidRelayDelegate(Peer peer, MsgSendMessageVoidRelay msg);
@@ -221,7 +221,7 @@ namespace RWGameProtocol.Serializer
         public delegate void ScarecrowRelayDelegate(Peer peer, MsgScarecrowRelay msg);
         public ScarecrowRelayDelegate ScarecrowRelay;
 
-        public delegate void LazerTargetRelayDelegate(Peer peer, MsgLazerTargetRelay msg);
+        public delegate void LazerTargetRelayDelegate(Peer peer, MsgLayzerTargetRelay msg);
         public LazerTargetRelayDelegate LazerTargetRelay;
 
         public delegate void FireBulletRelayDelegate(Peer peer, MsgFireBulletRelay msg);

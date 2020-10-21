@@ -1020,7 +1020,7 @@ namespace RWGameProtocol.Serializer
                         }
                     }
                     break;
-                case GameProtocol.MINION_FOG_OF_WAR_RELAY:
+                case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
                     {
                         if (MinionFogOfWarRelay == null)
                             return false;
@@ -1028,7 +1028,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
-                            MsgMinionFogOfWarRelay msg = new MsgMinionFogOfWarRelay();
+                            MsgMinionFlagOfWarRelay msg = new MsgMinionFlagOfWarRelay();
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.BaseStatId = (int)_bf.Deserialize(ms);
                             msg.Effect = (int)_bf.Deserialize(ms);
@@ -1145,7 +1145,7 @@ namespace RWGameProtocol.Serializer
                         
                         using (var ms = new MemoryStream(buffer))
                         {
-                            MsgLazerTargetRelay msg = new MsgLazerTargetRelay();
+                            MsgLayzerTargetRelay msg = new MsgLayzerTargetRelay();
                             msg.PlayerUId = (int)_bf.Deserialize(ms);
                             msg.Id = (int)_bf.Deserialize(ms);
                             msg.TargetIdArray = (int[])_bf.Deserialize(ms);

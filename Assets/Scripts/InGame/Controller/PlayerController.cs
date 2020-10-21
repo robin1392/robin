@@ -1441,7 +1441,7 @@ namespace ED
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 int convFactor = ConvertNetMsg.MsgFloatToInt(factor);
-                NetSendPlayer(GameProtocol.MINION_FOG_OF_WAR_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, bastStatId ,convFactor , isIn );
+                NetSendPlayer(GameProtocol.MINION_FLAG_OF_WAR_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, bastStatId ,convFactor , isIn );
             }
             FlagOfWar(bastStatId , isIn , factor);
         }
@@ -1451,13 +1451,13 @@ namespace ED
             if (other == true)
             {
                 if (InGameManager.IsNetwork && (isMine || isPlayingAI))
-                    NetSendPlayer(GameProtocol.STURN_MINION_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, targetId, chEyeLv);
+                    NetSendPlayer(GameProtocol.SCARECROW_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, targetId, chEyeLv);
                 targetPlayer.ScareCrow(targetId , eyeLevel);
             }
             else
             {
                 if (InGameManager.IsNetwork && (isMine || isPlayingAI))
-                    NetSendPlayer(GameProtocol.STURN_MINION_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, targetId, chEyeLv);
+                    NetSendPlayer(GameProtocol.SCARECROW_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, targetId, chEyeLv);
                 ScareCrow(targetId , eyeLevel);
             }
         }
@@ -1784,10 +1784,12 @@ namespace ED
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
-                int chDamage = ConvertNetMsg.MsgFloatToInt(damage );
-                int chRange = ConvertNetMsg.MsgFloatToInt(range );
+                int chDamage = ConvertNetMsg.MsgFloatToInt(damage);
+                int chRange = ConvertNetMsg.MsgFloatToInt(range);
+                MsgVector3 msgShootPos = ConvertNetMsg.VectorToMsg(shootPos);
+                MsgVector3 msgTargetPos = ConvertNetMsg.VectorToMsg(targetPos);
                 
-                NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, shootPos , targetPos , chDamage , chRange , (int)type);
+                NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, msgShootPos , msgTargetPos , chDamage , chRange , (int)type);
             }
             FireCannonBall(type ,shootPos, targetPos, damage, range);
         }
@@ -2005,7 +2007,7 @@ namespace ED
             if (NetworkManager.Get().isReconnect == true)
                 return;
 
-            if ((int) protocol >= 30000)
+            if ((int) protocol >= 300000)
             {
                 if (protocol == GameProtocol.MINION_STATUS_RELAY)
                 {
@@ -2025,12 +2027,64 @@ namespace ED
                     {
                         case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                             _syncDictionary[protocol]
-                                .Add(ConvertNetMsg.HitDamageMinionRelay((int) param[0], (int) param[1],
-                                    (float) param[2]));
+                                .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
+                                    (int) param[2]));
+                            break;
+                        case GameProtocol.REMOVE_MINION_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetRemoveMinionRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.DESTROY_MINION_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMinionRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.REMOVE_MAGIC_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetRemoveMagicRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.DESTROY_MAGIC_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMagicRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.FIRE_BALL_BOMB_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireballBombRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.HEAL_MINION_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetHealMinionRelayMsg((int)param[0], (int)param[1], (int)param[2]));
+                            break;
+                        case GameProtocol.MINE_BOMB_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMineBombRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.STURN_MINION_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetSturnMinionRelayMsg((int)param[0], (int)param[1], (int)param[2]));
+                            break;
+                        case GameProtocol.ROCKET_BOMB_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetRocketBombRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.ICE_BOMB_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetIceBombRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.FIRE_MAN_FIRE_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireManFireRelayMsg((int)param[0], (int)param[1]));
+                            break;
+                        case GameProtocol.MINION_CLOACKING_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionCloackingRelayMsg((int)param[0], (int)param[1], (bool)param[2]));
+                            break;
+                        case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionFlagOfWarRelayMsg((int)param[0], (int)param[1], (int)param[2], (bool)param[3]));
+                            break;
+                        case GameProtocol.SCARECROW_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetScarecrowRelayMsg((int)param[0], (int)param[1], (int)param[2]));
+                            break;
+                        case GameProtocol.LAYZER_TARGET_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetLayzerTargetRelayMsg((int)param[0], (int)param[1], (int[])param[2]));
+                            break;
+                        case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionInvincibilityRelayMsg((int)param[0], (int)param[1], (int)param[2]));
+                            break;
+                        case GameProtocol.FIRE_BULLET_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireBulletRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4], (int)param[5], (int)param[6], (int)param[7]));
+                            break;
+                        case GameProtocol.FIRE_CANNON_BALL_RELAY:
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireCannonBallRelayMsg((int)param[0], (MsgVector3)param[1], (MsgVector3)param[2], (int)param[3], (int)param[4], (int)param[5]));
                             break;
                     }
-
-                    //_syncDictionary[protocol].Add(param);
                 }
             }
             else
@@ -2252,9 +2306,9 @@ namespace ED
 
                     break;
                 }
-                case GameProtocol.MINION_FOG_OF_WAR_RELAY:
+                case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
                 {
-                    MsgMinionFogOfWarRelay flagrelay = (MsgMinionFogOfWarRelay) param[0];
+                    MsgMinionFlagOfWarRelay flagrelay = (MsgMinionFlagOfWarRelay) param[0];
                     
                     float convFactor = ConvertNetMsg.MsgIntToFloat(flagrelay.Effect );
                     
@@ -2279,7 +2333,7 @@ namespace ED
                 }
                 case GameProtocol.LAYZER_TARGET_RELAY:
                 {
-                    MsgLazerTargetRelay lazerrelay = (MsgLazerTargetRelay) param[0];
+                    MsgLayzerTargetRelay lazerrelay = (MsgLayzerTargetRelay) param[0];
                     
                     if (NetworkManager.Get().UserUID == lazerrelay.PlayerUId)
                         LayzerMinion(lazerrelay.Id, lazerrelay.TargetIdArray);

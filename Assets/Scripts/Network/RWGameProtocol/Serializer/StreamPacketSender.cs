@@ -788,7 +788,7 @@ namespace RWGameProtocol.Serializer
                 _bf.Serialize(ms, baseStatId);
                 _bf.Serialize(ms, effect);
                 _bf.Serialize(ms, isFogOfWar);
-                peer.SendPacket((int)GameProtocol.MINION_FOG_OF_WAR_RELAY, ms.ToArray());
+                peer.SendPacket((int)GameProtocol.MINION_FLAG_OF_WAR_RELAY, ms.ToArray());
             }
         }
 

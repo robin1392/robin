@@ -556,12 +556,12 @@ public class SocketRecvEvent
             InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_CLOACKING_RELAY, msg);
     }
 
-    public void OnMinionFogOfWarRelay(Peer peer, MsgMinionFogOfWarRelay msg)
+    public void OnMinionFogOfWarRelay(Peer peer, MsgMinionFlagOfWarRelay msg)
     {
         UnityUtil.Print("RECV => ", "MINION_FOG_OF_WAR_RELAY  " +msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_FOG_OF_WAR_RELAY, msg);
+            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_FLAG_OF_WAR_RELAY, msg);
     }
 
     public void OnSendMessageVoidRelay(Peer peer, MsgSendMessageVoidRelay msg)
@@ -604,7 +604,7 @@ public class SocketRecvEvent
             InGameManager.Get().RecvPlayerManager(GameProtocol.SCARECROW_RELAY, msg);
     }
 
-    public void OnLazerTargetRelay(Peer peer, MsgLazerTargetRelay msg)
+    public void OnLazerTargetRelay(Peer peer, MsgLayzerTargetRelay msg)
     {
         UnityUtil.Print("RECV => ", "LAYZER_TARGET_RELAY  " +msg.PlayerUId.ToString() , "yellow");
         

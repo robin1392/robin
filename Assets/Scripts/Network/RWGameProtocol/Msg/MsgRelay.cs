@@ -216,7 +216,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    public class MsgMinionFogOfWarRelay
+    public class MsgMinionFlagOfWarRelay
     {
         public int PlayerUId;
         public int BaseStatId;
@@ -274,7 +274,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    public class MsgLazerTargetRelay
+    public class MsgLayzerTargetRelay
     {
         public int PlayerUId;
         public int Id;
