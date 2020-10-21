@@ -124,14 +124,18 @@ namespace ED
         
         #region minion & magic
         
-        protected List<Minion> _listMinion = new List<Minion>();
+        //protected List<Minion> _listMinion = new List<Minion>();
 
         [SerializeField]
         public List<Minion> listMinion
         {
-            get => _listMinion;
-            protected set => _listMinion = value;
+            get;
+            protected set;
         }
+        // {
+        //     get => _listMinion;
+        //     protected set => _listMinion = value;
+        // }
         
         [SerializeField]
         protected List<Magic> listMagic = new List<Magic>();
@@ -872,7 +876,7 @@ namespace ED
         {
             this.isPlayingAI = isPlayingAI;
 
-            foreach (var minion in _listMinion)
+            foreach (var minion in listMinion)
             {
                 if (isPlayingAI) minion.behaviourTreeOwner.behaviour.Resume();
                 else minion.behaviourTreeOwner.behaviour.Pause();
@@ -1953,12 +1957,12 @@ namespace ED
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
 
-                        string str = "MINION_STATUS_RELAY -> " + _syncDictionary.Keys.Count;
+                        string str = "MINION_STATUS_RELAY -> Dictionary count : " + _syncDictionary.Keys.Count;
                         if (_syncDictionary.Keys.Count > 0)
                         {
                             foreach (var sync in _syncDictionary)
                             {
-                                str += string.Format("\n{0} count {1}", sync.Key, sync.Value.Count);
+                                str += string.Format("\n{0} -> List count : {1}", sync.Key, sync.Value.Count);
                             }
                         }
                         UnityUtil.Print(string.Format("SEND [{0}] : ", packetCount), str, "red");
@@ -1977,16 +1981,16 @@ namespace ED
                 listMinion[i].SetNetworkValue(chPos);
             }
 
-            string str = "MINION_STATUS_RELAY -> " + relay.Keys.Count;
+            string str = "MINION_STATUS_RELAY -> Dictionary count : " + relay.Keys.Count;
             
             foreach (var msg in relay)
             {
-                str += string.Format("\n{0} count {1}", msg.Key, msg.Value.Count);
+                str += string.Format("\n{0} -> List count : {1}", msg.Key, msg.Value.Count);
                 if (msg.Value.Count > 0)
                 {
                     foreach (var obj in msg.Value)
                     {
-                        NetRecvPlayer(msg.Key, obj);
+                        targetPlayer.NetRecvPlayer(msg.Key, obj);
                     }
                 }
             }
@@ -2191,6 +2195,7 @@ namespace ED
                 case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                 {
                     MsgHitDamageMinionRelay hitminion = (MsgHitDamageMinionRelay) param[0];
+                    //Debug.LogFormat("HIT_DAMAGE_MINION_RELAY = UID:{0}, ID:{1}, DMG:{2}", hitminion.PlayerUId, hitminion.Id, hitminion.Damage);
                     float damage = ConvertNetMsg.MsgIntToFloat(hitminion.Damage );
                     //float delay = hitminion.Delay / Global.g_networkBaseValue;
                     
@@ -2483,6 +2488,8 @@ namespace ED
                     
                     //UnityEngine.Debug.Log(anirelay.Trigger);
                     string aniName = ((E_AniTrigger)anirelay.Trigger).ToString();
+                    
+                    //Debug.LogFormat("ANI TRIGGER = UID:{0}, ID:{1}, TRIGGER:{2}, TARGET:{3}", anirelay.PlayerUId, anirelay.Id, aniName, anirelay.TargetId);
                     
                     if (NetworkManager.Get().UserUID == anirelay.PlayerUId)
                         SetMinionAnimationTrigger(anirelay.Id, aniName , anirelay.TargetId);
