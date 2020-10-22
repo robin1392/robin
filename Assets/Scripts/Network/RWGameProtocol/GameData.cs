@@ -11,7 +11,7 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgPlayerBase
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public bool IsBottomPlayer;
         public string Name;
 
@@ -25,7 +25,7 @@ namespace RWGameProtocol
         public static MsgPlayerBase Read(BinaryReader br)
         {
             MsgPlayerBase data = new MsgPlayerBase();
-            data.PlayerUId = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
             data.IsBottomPlayer = br.ReadBoolean();
             data.Name = br.ReadString();
             return data;
@@ -37,7 +37,7 @@ namespace RWGameProtocol
     public class MsgPlayerInfo
     {
         // 플레이어 유니크 아이디(게임 세션별 유니크 생성)
-        public int PlayerUId;
+        public ushort PlayerUId;
         public bool IsBottomPlayer;
         public string Name;
         public int CurrentSp;
@@ -71,7 +71,7 @@ namespace RWGameProtocol
         public static MsgPlayerInfo Read(BinaryReader br)
         {
             MsgPlayerInfo data = new MsgPlayerInfo();
-            data.PlayerUId = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
             data.IsBottomPlayer = br.ReadBoolean();
             data.Name = br.ReadString();
             data.CurrentSp = br.ReadInt32();
@@ -104,7 +104,7 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSyncMinionData
     {
-        public short minionId;
+        public ushort minionId;
         public int minionDataId;
         public int minionHp;
         public int minionMaxHp;
@@ -134,7 +134,7 @@ namespace RWGameProtocol
         public static MsgSyncMinionData Read(BinaryReader br)
         {
             MsgSyncMinionData data = new MsgSyncMinionData();
-            data.minionId = br.ReadInt16();
+            data.minionId = br.ReadUInt16();
             data.minionDataId = br.ReadInt32();
             data.minionHp = br.ReadInt32();
             data.minionMaxHp = br.ReadInt32();
@@ -717,8 +717,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgRemoveMinionRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -729,8 +729,8 @@ namespace RWGameProtocol
         public static MsgRemoveMinionRelay Read(BinaryReader br)
         {
             MsgRemoveMinionRelay data = new MsgRemoveMinionRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -739,8 +739,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgHitDamageMinionRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
         public int Damage;
 
         public void Write(BinaryWriter bw)
@@ -753,8 +753,8 @@ namespace RWGameProtocol
         public static MsgHitDamageMinionRelay Read(BinaryReader br)
         {
             MsgHitDamageMinionRelay data = new MsgHitDamageMinionRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             data.Damage = br.ReadInt32();
             return data;
         }
@@ -764,8 +764,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgDestroyMinionRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -776,8 +776,8 @@ namespace RWGameProtocol
         public static MsgDestroyMinionRelay Read(BinaryReader br)
         {
             MsgDestroyMinionRelay data = new MsgDestroyMinionRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -786,8 +786,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgHealMinionRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
         public int Heal;
 
 
@@ -801,8 +801,8 @@ namespace RWGameProtocol
         public static MsgHealMinionRelay Read(BinaryReader br)
         {
             MsgHealMinionRelay data = new MsgHealMinionRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             data.Heal = br.ReadInt32();
             return data;
         }
@@ -812,10 +812,10 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgPushMinionRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
         public MsgVector3 Dir;
-        public int PushPower;
+        public short PushPower;
 
         public void Write(BinaryWriter bw)
         {
@@ -828,10 +828,10 @@ namespace RWGameProtocol
         public static MsgPushMinionRelay Read(BinaryReader br)
         {
             MsgPushMinionRelay data = new MsgPushMinionRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             data.Dir = MsgVector3.Read(br);
-            data.PushPower = br.ReadInt32();
+            data.PushPower = br.ReadInt16();
             return data;
         }
     }
@@ -840,10 +840,10 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSetMinionAnimationTriggerRelay
     {
-        public int PlayerUId;
-        public short Id;
-        public short TargetId;
-        public int Trigger;
+        public ushort PlayerUId;
+        public ushort Id;
+        public ushort TargetId;
+        public byte Trigger;
 
         public void Write(BinaryWriter bw)
         {
@@ -856,10 +856,10 @@ namespace RWGameProtocol
         public static MsgSetMinionAnimationTriggerRelay Read(BinaryReader br)
         {
             MsgSetMinionAnimationTriggerRelay data = new MsgSetMinionAnimationTriggerRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
-            data.TargetId = br.ReadInt16();
-            data.Trigger = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
+            data.TargetId = br.ReadUInt16();
+            data.Trigger = br.ReadByte();
             return data;
         }
     }
@@ -868,8 +868,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgRemoveMagicRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -880,8 +880,8 @@ namespace RWGameProtocol
         public static MsgRemoveMagicRelay Read(BinaryReader br)
         {
             MsgRemoveMagicRelay data = new MsgRemoveMagicRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -891,11 +891,11 @@ namespace RWGameProtocol
 
     public class MsgFireArrowRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
         public MsgVector3 Dir;
         public int Damage;
-        public int MoveSpeed;
+        public short MoveSpeed;
 
         public void Write(BinaryWriter bw)
         {
@@ -909,11 +909,11 @@ namespace RWGameProtocol
         public static MsgFireArrowRelay Read(BinaryReader br)
         {
             MsgFireArrowRelay data = new MsgFireArrowRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             data.Dir = MsgVector3.Read(br);
             data.Damage = br.ReadInt32();
-            data.MoveSpeed = br.ReadInt32();
+            data.MoveSpeed = br.ReadInt16();
             return data;
         }
     }
@@ -922,8 +922,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgFireballBombRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -934,8 +934,8 @@ namespace RWGameProtocol
         public static MsgFireballBombRelay Read(BinaryReader br)
         {
             MsgFireballBombRelay data = new MsgFireballBombRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -944,8 +944,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgMineBombRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -956,8 +956,8 @@ namespace RWGameProtocol
         public static MsgMineBombRelay Read(BinaryReader br)
         {
             MsgMineBombRelay data = new MsgMineBombRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -966,9 +966,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSetMagicTargetIdRelay
     {
-        public int PlayerUId;
-        public short Id;
-        public short TargetId;
+        public ushort PlayerUId;
+        public ushort Id;
+        public ushort TargetId;
 
         public void Write(BinaryWriter bw)
         {
@@ -980,9 +980,9 @@ namespace RWGameProtocol
         public static MsgSetMagicTargetIdRelay Read(BinaryReader br)
         {
             MsgSetMagicTargetIdRelay data = new MsgSetMagicTargetIdRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
-            data.TargetId = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
+            data.TargetId = br.ReadUInt16();
             return data;
         }
     }
@@ -991,8 +991,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSetMagicTargetRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
         public short X;
         public short Z;
 
@@ -1007,8 +1007,8 @@ namespace RWGameProtocol
         public static MsgSetMagicTargetRelay Read(BinaryReader br)
         {
             MsgSetMagicTargetRelay data = new MsgSetMagicTargetRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             data.X = br.ReadInt16();
             data.Z = br.ReadInt16();
             return data;
@@ -1019,9 +1019,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSturnMinionRelay
     {
-        public int PlayerUId;
-        public short Id;
-        public int SturnTime;
+        public ushort PlayerUId;
+        public ushort Id;
+        public short SturnTime;
 
         public void Write(BinaryWriter bw)
         {
@@ -1033,9 +1033,9 @@ namespace RWGameProtocol
         public static MsgSturnMinionRelay Read(BinaryReader br)
         {
             MsgSturnMinionRelay data = new MsgSturnMinionRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
-            data.SturnTime = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
+            data.SturnTime = br.ReadInt16();
             return data;
         }
     }
@@ -1044,8 +1044,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgRocketBombRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -1056,8 +1056,8 @@ namespace RWGameProtocol
         public static MsgRocketBombRelay Read(BinaryReader br)
         {
             MsgRocketBombRelay data = new MsgRocketBombRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -1066,8 +1066,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgIceBombRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -1078,8 +1078,8 @@ namespace RWGameProtocol
         public static MsgIceBombRelay Read(BinaryReader br)
         {
             MsgIceBombRelay data = new MsgIceBombRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -1088,8 +1088,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgDestroyMagicRelay
     {
-        public int PlayerUId;
-        public int BaseStatId;
+        public ushort PlayerUId;
+        public ushort BaseStatId;
 
         public void Write(BinaryWriter bw)
         {
@@ -1100,8 +1100,8 @@ namespace RWGameProtocol
         public static MsgDestroyMagicRelay Read(BinaryReader br)
         {
             MsgDestroyMagicRelay data = new MsgDestroyMagicRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.BaseStatId = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.BaseStatId = br.ReadUInt16();
             return data;
         }
     }
@@ -1110,12 +1110,12 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgFireCannonBallRelay
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public MsgVector3 ShootPos;
         public MsgVector3 TargetPos;
         public int Power;
-        public int Range;
-        public int Type;
+        public short Range;
+        public byte Type;
 
         public void Write(BinaryWriter bw)
         {
@@ -1130,12 +1130,12 @@ namespace RWGameProtocol
         public static MsgFireCannonBallRelay Read(BinaryReader br)
         {
             MsgFireCannonBallRelay data = new MsgFireCannonBallRelay();
-            data.PlayerUId = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
             data.ShootPos = MsgVector3.Read(br);
             data.TargetPos = MsgVector3.Read(br);
             data.Power = br.ReadInt32();
-            data.Range = br.ReadInt32();
-            data.Type = br.ReadInt32();
+            data.Range = br.ReadInt16();
+            data.Type = br.ReadByte();
             return data;
         }
     }
@@ -1144,11 +1144,11 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgFireSpearRelay
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public MsgVector3 ShootPos;
-        public short TargetId;
+        public ushort TargetId;
         public int Power;
-        public int MoveSpeed;
+        public short MoveSpeed;
 
         public void Write(BinaryWriter bw)
         {
@@ -1162,11 +1162,11 @@ namespace RWGameProtocol
         public static MsgFireSpearRelay Read(BinaryReader br)
         {
             MsgFireSpearRelay data = new MsgFireSpearRelay();
-            data.PlayerUId = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
             data.ShootPos = MsgVector3.Read(br);
-            data.TargetId = br.ReadInt16();
+            data.TargetId = br.ReadUInt16();
             data.Power = br.ReadInt32();
-            data.MoveSpeed = br.ReadInt32();
+            data.MoveSpeed = br.ReadInt16();
             return data;
         }
 
@@ -1176,8 +1176,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgFireManFireRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
 
         public void Write(BinaryWriter bw)
         {
@@ -1188,8 +1188,8 @@ namespace RWGameProtocol
         public static MsgFireManFireRelay Read(BinaryReader br)
         {
             MsgFireManFireRelay data = new MsgFireManFireRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             return data;
         }
     }
@@ -1226,8 +1226,8 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgMinionCloackingRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
         public bool IsCloacking;
 
         public void Write(BinaryWriter bw)
@@ -1240,8 +1240,8 @@ namespace RWGameProtocol
         public static MsgMinionCloackingRelay Read(BinaryReader br)
         {
             MsgMinionCloackingRelay data = new MsgMinionCloackingRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             data.IsCloacking = br.ReadBoolean();
             return data;
         }
@@ -1251,9 +1251,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgMinionFlagOfWarRelay
     {
-        public int PlayerUId;
-        public int BaseStatId;
-        public int Effect;
+        public ushort PlayerUId;
+        public ushort BaseStatId;
+        public short Effect;
         public bool IsFogOfWar;
 
         public void Write(BinaryWriter bw)
@@ -1267,9 +1267,9 @@ namespace RWGameProtocol
         public static MsgMinionFlagOfWarRelay Read(BinaryReader br)
         {
             MsgMinionFlagOfWarRelay data = new MsgMinionFlagOfWarRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.BaseStatId = br.ReadInt32();
-            data.Effect = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.BaseStatId = br.ReadUInt16();
+            data.Effect = br.ReadInt16();
             data.IsFogOfWar = br.ReadBoolean();
             return data;
         }
@@ -1279,9 +1279,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSendMessageVoidRelay
     {
-        public int PlayerUId;
-        public short Id;
-        public int Message;
+        public ushort PlayerUId;
+        public ushort Id;
+        public byte Message;
 
         public void Write(BinaryWriter bw)
         {
@@ -1293,9 +1293,9 @@ namespace RWGameProtocol
         public static MsgSendMessageVoidRelay Read(BinaryReader br)
         {
             MsgSendMessageVoidRelay data = new MsgSendMessageVoidRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
-            data.Message = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
+            data.Message = br.ReadByte();
             return data;
         }
     }
@@ -1304,10 +1304,10 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSendMessageParam1Relay
     {
-        public int PlayerUId;
-        public short Id;
-        public short TargetId;
-        public int Message;
+        public ushort PlayerUId;
+        public ushort Id;
+        public ushort TargetId;
+        public byte Message;
 
         public void Write(BinaryWriter bw)
         {
@@ -1320,10 +1320,10 @@ namespace RWGameProtocol
         public static MsgSendMessageParam1Relay Read(BinaryReader br)
         {
             MsgSendMessageParam1Relay data = new MsgSendMessageParam1Relay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
-            data.TargetId = br.ReadInt16();
-            data.Message = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
+            data.TargetId = br.ReadUInt16();
+            data.Message = br.ReadByte();
             return data;
         }
     }
@@ -1332,11 +1332,11 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgNecromancerBulletRelay
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public MsgVector3 ShootPos;
-        public short TargetId;
+        public ushort TargetId;
         public int Power;
-        public int BulletMoveSpeed;
+        public short BulletMoveSpeed;
 
         public void Write(BinaryWriter bw)
         {
@@ -1350,11 +1350,11 @@ namespace RWGameProtocol
         public static MsgNecromancerBulletRelay Read(BinaryReader br)
         {
             MsgNecromancerBulletRelay data = new MsgNecromancerBulletRelay();
-            data.PlayerUId = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
             data.ShootPos = MsgVector3.Read(br);
-            data.TargetId = br.ReadInt16();
+            data.TargetId = br.ReadUInt16();
             data.Power = br.ReadInt32();
-            data.BulletMoveSpeed = br.ReadInt32();
+            data.BulletMoveSpeed = br.ReadInt16();
             return data;
         }
     }
@@ -1363,9 +1363,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgSetMinionTargetRelay
     {
-        public int PlayerUId;
-        public short Id;
-        public short TargetId;
+        public ushort PlayerUId;
+        public ushort Id;
+        public ushort TargetId;
 
         public void Write(BinaryWriter bw)
         {
@@ -1377,9 +1377,9 @@ namespace RWGameProtocol
         public static MsgSetMinionTargetRelay Read(BinaryReader br)
         {
             MsgSetMinionTargetRelay data = new MsgSetMinionTargetRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
-            data.TargetId = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
+            data.TargetId = br.ReadUInt16();
             return data;
         }
     }
@@ -1388,9 +1388,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgScarecrowRelay
     {
-        public int PlayerUId;
-        public int BaseStatId;
-        public int EyeLevel;
+        public ushort PlayerUId;
+        public ushort BaseStatId;
+        public byte EyeLevel;
 
         public void Write(BinaryWriter bw)
         {
@@ -1402,9 +1402,9 @@ namespace RWGameProtocol
         public static MsgScarecrowRelay Read(BinaryReader br)
         {
             MsgScarecrowRelay data = new MsgScarecrowRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.BaseStatId = br.ReadInt32();
-            data.EyeLevel = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.BaseStatId = br.ReadUInt16();
+            data.EyeLevel = br.ReadByte();
             return data;
         }
     }
@@ -1413,9 +1413,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgLayzerTargetRelay
     {
-        public int PlayerUId;
-        public short Id;
-        public int[] TargetIdArray;
+        public ushort PlayerUId;
+        public ushort Id;
+        public ushort[] TargetIdArray;
 
         public void Write(BinaryWriter bw)
         {
@@ -1430,15 +1430,15 @@ namespace RWGameProtocol
         public static MsgLayzerTargetRelay Read(BinaryReader br)
         {
             MsgLayzerTargetRelay data = new MsgLayzerTargetRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
 
             int length = br.ReadInt32();
             byte[] bytes = br.ReadBytes(length * sizeof(int));
-            data.TargetIdArray = new int[length];
+            data.TargetIdArray = new ushort[length];
             for (var index = 0; index < length; index++)
             {
-                data.TargetIdArray[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+                data.TargetIdArray[index] = BitConverter.ToUInt16(bytes, index * sizeof(ushort));
             }
 
             return data;
@@ -1449,7 +1449,7 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgMinionStatusRelay
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public byte PosIndex;
         public MsgVector3[] Pos;
         public MsgMinionStatus Relay;
@@ -1460,12 +1460,12 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgFireBulletRelay
     {
-        public int PlayerUId;
-        public short Id;
+        public ushort PlayerUId;
+        public ushort Id;
         public MsgVector3 Dir;
         public int Damage;
-        public int MoveSpeed;
-        public int Type;
+        public short MoveSpeed;
+        public byte Type;
 
         public void Write(BinaryWriter bw)
         {
@@ -1480,12 +1480,12 @@ namespace RWGameProtocol
         public static MsgFireBulletRelay Read(BinaryReader br)
         {
             MsgFireBulletRelay data = new MsgFireBulletRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
             data.Dir = MsgVector3.Read(br);
             data.Damage = br.ReadInt32();
-            data.MoveSpeed = br.ReadInt32();
-            data.Type = br.ReadInt32();
+            data.MoveSpeed = br.ReadInt16();
+            data.Type = br.ReadByte();
             return data;
         }
     }
@@ -1494,9 +1494,9 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgMinionInvincibilityRelay
     {
-        public int PlayerUId;
-        public short Id;
-        public int Time;
+        public ushort PlayerUId;
+        public ushort Id;
+        public short Time;
 
         public void Write(BinaryWriter bw)
         {
@@ -1508,9 +1508,9 @@ namespace RWGameProtocol
         public static MsgMinionInvincibilityRelay Read(BinaryReader br)
         {
             MsgMinionInvincibilityRelay data = new MsgMinionInvincibilityRelay();
-            data.PlayerUId = br.ReadInt32();
-            data.Id = br.ReadInt16();
-            data.Time = br.ReadInt32();
+            data.PlayerUId = br.ReadUInt16();
+            data.Id = br.ReadUInt16();
+            data.Time = br.ReadInt16();
             return data;
         }
     }

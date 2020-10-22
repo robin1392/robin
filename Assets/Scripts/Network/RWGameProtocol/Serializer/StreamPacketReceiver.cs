@@ -772,8 +772,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             HitDamageMinionRelay(peer, msg);
                         }
@@ -789,8 +789,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             DestroyMinionRelay(peer, msg);
                         }
                     }
@@ -805,8 +805,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgHealMinionRelay msg = new MsgHealMinionRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.Heal = br.ReadInt32();
                             HealMinionRelay(peer, msg);
                         }
@@ -822,10 +822,10 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgPushMinionRelay msg = new MsgPushMinionRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.Dir = MsgVector3.Read(br);
-                            msg.PushPower = br.ReadInt32();
+                            msg.PushPower = br.ReadInt16();
                             PushMinionRelay(peer, msg);
                         }
                     }
@@ -840,10 +840,10 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
-                            msg.TargetId = br.ReadInt16();
-                            msg.Trigger = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
+                            msg.TargetId = br.ReadUInt16();
+                            msg.Trigger = br.ReadByte();
                             SetMinionAnimationTriggerRelay(peer, msg);
                         }
                     }
@@ -858,11 +858,11 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireArrowRelay msg = new MsgFireArrowRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.Dir = MsgVector3.Read(br);
                             msg.Damage = br.ReadInt32();
-                            msg.MoveSpeed = br.ReadInt32();
+                            msg.MoveSpeed = br.ReadInt16();
                             FireArrowRelay(peer, msg);
                         }
                     }
@@ -877,8 +877,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireballBombRelay msg = new MsgFireballBombRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             FireballBombRelay(peer, msg);
                         }
                     }
@@ -893,8 +893,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMineBombRelay msg = new MsgMineBombRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             MineBombRelay(peer, msg);
                         }
                     }
@@ -909,9 +909,9 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
-                            msg.TargetId = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
+                            msg.TargetId = br.ReadUInt16();
                             SetMagicTargetIdRelay(peer, msg);
                         }
                     }
@@ -926,8 +926,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.X = br.ReadInt16();
                             msg.Z = br.ReadInt16();
                             SetMagicTargetRelay(peer, msg);
@@ -944,9 +944,9 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
-                            msg.SturnTime = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
+                            msg.SturnTime = br.ReadInt16();
                             SturnMinionRelay(peer, msg);
                         }
                     }
@@ -961,8 +961,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgRocketBombRelay msg = new MsgRocketBombRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             RocketBombRelay(peer, msg);
                         }
                     }
@@ -977,8 +977,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgIceBombRelay msg = new MsgIceBombRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             IceBombRelay(peer, msg);
                         }
                     }
@@ -993,8 +993,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.BaseStatId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.BaseStatId = br.ReadUInt16();
                             DestroyMagicRelay(peer, msg);
                         }
                     }
@@ -1009,12 +1009,12 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.ShootPos = MsgVector3.Read(br);
                             msg.TargetPos = MsgVector3.Read(br);
                             msg.Power = br.ReadInt32();
-                            msg.Range = br.ReadInt32();
-                            msg.Type = br.ReadInt32();
+                            msg.Range = br.ReadInt16();
+                            msg.Type = br.ReadByte();
                             FireCannonBallRelay(peer, msg);
                         }
                     }
@@ -1029,11 +1029,11 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireSpearRelay msg = new MsgFireSpearRelay();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.ShootPos = MsgVector3.Read(br);
-                            msg.TargetId = br.ReadInt16();
+                            msg.TargetId = br.ReadUInt16();
                             msg.Power = br.ReadInt32();
-                            msg.MoveSpeed = br.ReadInt32();
+                            msg.MoveSpeed = br.ReadInt16();
                             FireSpearRelay(peer, msg);
                         }
                     }
@@ -1048,8 +1048,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireManFireRelay msg = new MsgFireManFireRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             FireManFireRelay(peer, msg);
                         }
                     }
@@ -1082,8 +1082,8 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.IsCloacking = br.ReadBoolean();
                             MinionCloackingRelay(peer, msg);
                         }
@@ -1099,9 +1099,9 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMinionFlagOfWarRelay msg = new MsgMinionFlagOfWarRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.BaseStatId = br.ReadInt32();
-                            msg.Effect = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.BaseStatId = br.ReadUInt16();
+                            msg.Effect = br.ReadByte();
                             msg.IsFogOfWar = br.ReadBoolean();
                             MinionFlagOfWarRelay(peer, msg);
                         }
@@ -1117,9 +1117,9 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
-                            msg.Message = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
+                            msg.Message = br.ReadByte();
                             SendMessageVoidRelay(peer, msg);
                         }
                     }
@@ -1134,10 +1134,10 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
-                            msg.TargetId = br.ReadInt16();
-                            msg.Message = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
+                            msg.TargetId = br.ReadUInt16();
+                            msg.Message = br.ReadByte();
                             SendMessageParam1Relay(peer, msg);
                         }
                     }
@@ -1152,11 +1152,11 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgNecromancerBulletRelay msg = new MsgNecromancerBulletRelay();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.ShootPos = MsgVector3.Read(br);
-                            msg.TargetId = br.ReadInt16();
+                            msg.TargetId = br.ReadUInt16();
                             msg.Power = br.ReadInt32();
-                            msg.BulletMoveSpeed = br.ReadInt32();
+                            msg.BulletMoveSpeed = br.ReadInt16();
                             NecromancerBulletRelay(peer, msg);
                         }
                     }
@@ -1171,9 +1171,9 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
-                            msg.TargetId = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
+                            msg.TargetId = br.ReadUInt16();
                             SetMinionTargetRelay(peer, msg);
                         }
                     }
@@ -1188,7 +1188,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.PosIndex = br.ReadByte();
 
                             int length = br.ReadInt32();
@@ -1215,9 +1215,9 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgScarecrowRelay msg = new MsgScarecrowRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.BaseStatId = br.ReadInt32();
-                            msg.EyeLevel = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.BaseStatId = br.ReadUInt16();
+                            msg.EyeLevel = br.ReadByte();
                             ScarecrowRelay(peer, msg);
                         }
                     }
@@ -1232,15 +1232,15 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgLayzerTargetRelay msg = new MsgLayzerTargetRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
 
                             int length = br.ReadInt32();
-                            byte[] bytes = br.ReadBytes(length * sizeof(int));
-                            msg.TargetIdArray = new int[length];
+                            byte[] bytes = br.ReadBytes(length * sizeof(ushort));
+                            msg.TargetIdArray = new ushort[length];
                             for (var index = 0; index < length; index++)
                             {
-                                msg.TargetIdArray[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+                                msg.TargetIdArray[index] = BitConverter.ToUInt16(bytes, index * sizeof(ushort));
                             }
                             LayzerTargetRelay(peer, msg);
                         }
@@ -1256,12 +1256,12 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireBulletRelay msg = new MsgFireBulletRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.Dir = MsgVector3.Read(br);
                             msg.Damage = br.ReadInt32();
-                            msg.MoveSpeed = br.ReadInt32();
-                            msg.Type = br.ReadInt32();
+                            msg.MoveSpeed = br.ReadInt16();
+                            msg.Type = br.ReadByte();
                             FireBulletRelay(peer, msg);
                         }
                     }
@@ -1276,9 +1276,9 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt16();
-                            msg.Time = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
+                            msg.Time = br.ReadInt16();
                             MinionInvincibilityRelay(peer, msg);
                         }
                     }
