@@ -68,19 +68,9 @@ public class SocketSendEvent
             
             #region relay
 
-            case GameProtocol.REMOVE_MINION_RELAY:
-            {
-                _sender.RemoveMinionRelay(peer , (int)param[0] , (int)param[1]);
-                break;
-            }
             case GameProtocol.DESTROY_MINION_RELAY:
             {
                 _sender.DestroyMinionRelay(peer , (int)param[0] , (int)param[1]);
-                break;
-            }
-            case GameProtocol.REMOVE_MAGIC_RELAY:
-            {
-                _sender.RemoveMagicRelay(peer , (int)param[0] , (int)param[1]);
                 break;
             }
             case GameProtocol.DESTROY_MAGIC_RELAY:

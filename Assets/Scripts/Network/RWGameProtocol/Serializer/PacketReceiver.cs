@@ -137,9 +137,6 @@ namespace RWGameProtocol.Serializer
 
 
         #region Relay delegate
-        public delegate void RemoveMinionDelegate(Peer peer, MsgRemoveMinionRelay msg);
-        public RemoveMinionDelegate RemoveMinionRelay;
-
         public delegate void HitDamageMinionDelegate(Peer peer, MsgHitDamageMinionRelay msg);
         public HitDamageMinionDelegate HitDamageMinionRelay;
 
@@ -154,9 +151,6 @@ namespace RWGameProtocol.Serializer
 
         public delegate void SetMinionAnimationTriggerDelegate(Peer peer, MsgSetMinionAnimationTriggerRelay msg);
         public SetMinionAnimationTriggerDelegate SetMinionAnimationTriggerRelay;
-
-        public delegate void RemoveMagicDelegate(Peer peer, MsgRemoveMagicRelay msg);
-        public RemoveMagicDelegate RemoveMagicRelay;
 
         public delegate void FireArrowDelegate(Peer peer, MsgFireArrowRelay msg);
         public FireArrowDelegate FireArrowRelay;

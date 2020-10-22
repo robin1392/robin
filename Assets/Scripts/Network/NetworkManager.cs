@@ -392,13 +392,11 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
         // relay
-        _packetRecv.RemoveMinionRelay = _socketRecv.OnRemoveMinionRelay;
         _packetRecv.HitDamageMinionRelay = _socketRecv.OnHitDamageMinionRelay;
         _packetRecv.DestroyMinionRelay = _socketRecv.OnDestroyMinionRelay;
         _packetRecv.HealMinionRelay = _socketRecv.OnHealMinionRelay;
         _packetRecv.PushMinionRelay = _socketRecv.OnPushMinionRelay;
         _packetRecv.SetMinionAnimationTriggerRelay = _socketRecv.OnSetMinionAnimationTriggerRelay;
-        _packetRecv.RemoveMagicRelay = _socketRecv.OnRemoveMagicRelay;
         _packetRecv.FireArrowRelay = _socketRecv.OnFireArrowRelay;
         _packetRecv.FireballBombRelay = _socketRecv.OnFireballBombRelay;
         _packetRecv.MineBombRelay = _socketRecv.OnMineBombRelay;

@@ -565,20 +565,7 @@ namespace RWGameProtocol.Serializer
                 peer.SendPacket((int)GameProtocol.DISCONNECT_GAME_NOTIFY, ms.ToArray());
             }
         }
-
-
-        public override void RemoveMinionRelay(Peer peer, int playerUId, int id) 
-        {
-            
-            using (var ms = new MemoryStream())
-            {
-                BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write(playerUId);
-                bw.Write(id);
-                peer.SendPacket((int)GameProtocol.REMOVE_MINION_RELAY, ms.ToArray());
-            }
-        }
-
+        
 
         public override void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage) 
         {
@@ -688,20 +675,7 @@ namespace RWGameProtocol.Serializer
                 peer.SendPacket((int)GameProtocol.MINE_BOMB_RELAY, ms.ToArray());
             }
         }
-
-
-        public override void RemoveMagicRelay(Peer peer, int playerUId, int id) 
-        {
-            
-            using (var ms = new MemoryStream())
-            {
-                BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write(playerUId);
-                bw.Write(id);
-                peer.SendPacket((int)GameProtocol.REMOVE_MAGIC_RELAY, ms.ToArray());
-            }
-        }
-
+        
 
         public override void SetMagicTargetIdRelay(Peer peer, int playerUId, int id, int targetId) 
         {

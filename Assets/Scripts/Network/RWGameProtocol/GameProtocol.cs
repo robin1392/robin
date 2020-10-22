@@ -75,7 +75,6 @@ namespace RWGameProtocol
         // ----------------------------------------------------------------------------------------------------
         BEGIN_PROTOCOL_RELAY = 300000,
 
-        REMOVE_MINION_RELAY,
         HIT_DAMAGE_MINION_RELAY,
         DESTROY_MINION_RELAY,
         HEAL_MINION_RELAY,
@@ -84,7 +83,6 @@ namespace RWGameProtocol
         FIRE_ARROW_RELAY,
         FIRE_BALL_BOMB_RELAY,
         MINE_BOMB_RELAY,
-        REMOVE_MAGIC_RELAY,
         DESTROY_MAGIC_RELAY,
         SET_MAGIC_TARGET_ID_RELAY,
         SET_MAGIC_TARGET_POS_RELAY,

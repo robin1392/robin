@@ -769,23 +769,7 @@ namespace RWGameProtocol.Serializer
                     break;
 
 
-                #region Relay Protocol                
-                case GameProtocol.REMOVE_MINION_RELAY:
-                    {
-                        if (RemoveMinionRelay == null)
-                            return false;
-
-                        
-                        using (var ms = new MemoryStream(buffer))
-                        {
-                            BinaryReader br = new BinaryReader(ms);
-                            MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt32();
-                            RemoveMinionRelay(peer, msg);
-                        }
-                    }
-                    break;
+                #region Relay Protocol
                 case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                     {
                         if (HitDamageMinionRelay == null)
@@ -920,22 +904,6 @@ namespace RWGameProtocol.Serializer
                             msg.PlayerUId = br.ReadInt32();
                             msg.Id = br.ReadInt32();
                             MineBombRelay(peer, msg);
-                        }
-                    }
-                    break;
-                case GameProtocol.REMOVE_MAGIC_RELAY:
-                    {
-                        if (RemoveMagicRelay == null)
-                            return false;
-
-                        
-                        using (var ms = new MemoryStream(buffer))
-                        {
-                            BinaryReader br = new BinaryReader(ms);
-                            MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
-                            msg.PlayerUId = br.ReadInt32();
-                            msg.Id = br.ReadInt32();
-                            RemoveMagicRelay(peer, msg);
                         }
                     }
                     break;

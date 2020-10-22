@@ -1218,10 +1218,10 @@ namespace ED
 
         public void MinionDestroyCallback(Minion minion)
         {
-            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
-            {
-                NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , minion.id);
-            }
+            // if (InGameManager.IsNetwork && (isMine || isPlayingAI))
+            // {
+            //     NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , minion.id);
+            // }
             
             RemoveMinion(minion.id);
             // not use
@@ -1260,10 +1260,10 @@ namespace ED
         
         public void MagicDestroyCallback(Magic magic)
         {
-            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
-            {
-                NetSendPlayer(GameProtocol.REMOVE_MAGIC_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , magic.id );
-            }
+            // if (InGameManager.IsNetwork && (isMine || isPlayingAI))
+            // {
+            //     NetSendPlayer(GameProtocol.REMOVE_MAGIC_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , magic.id );
+            // }
             RemoveMagic(magic.id);
             
             /*if (PhotonNetwork.IsConnected)
@@ -1967,9 +1967,6 @@ namespace ED
                             {
                                 switch (sync.Key)
                                 {
-                                    case GameProtocol.REMOVE_MINION_RELAY:
-                                        relay.arrRemoveMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgRemoveMinionRelay)element);
-                                        break;
                                     case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                                         relay.arrHitDamageMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgHitDamageMinionRelay)element);
                                         break;
@@ -1990,9 +1987,6 @@ namespace ED
                                         break;
                                     case GameProtocol.MINE_BOMB_RELAY:
                                         relay.arrMineBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMineBombRelay)element);
-                                        break;
-                                    case GameProtocol.REMOVE_MAGIC_RELAY:
-                                        relay.arrRemoveMagicRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgRemoveMagicRelay)element);
                                         break;
                                     case GameProtocol.DESTROY_MAGIC_RELAY:
                                         relay.arrDestroyMagicRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgDestroyMagicRelay)element);
@@ -2095,10 +2089,6 @@ namespace ED
             Dictionary<GameProtocol, List<object>> dic = new Dictionary<GameProtocol, List<object>>();
 
             if (msg.arrHitDamageMinionRelay != null) dic.Add(GameProtocol.HIT_DAMAGE_MINION_RELAY, new List<object>(msg.arrHitDamageMinionRelay));
-            if (msg.arrRemoveMinionRelay != null) dic.Add(GameProtocol.REMOVE_MINION_RELAY, new List<object>(msg.arrRemoveMinionRelay));
-            if (msg.arrDestroyMinionRelay != null) dic.Add(GameProtocol.DESTROY_MINION_RELAY, new List<object>(msg.arrDestroyMinionRelay));
-            if (msg.arrRemoveMagicRelay != null) dic.Add(GameProtocol.REMOVE_MAGIC_RELAY, new List<object>(msg.arrRemoveMagicRelay));
-            if (msg.arrDestroyMagicRelay != null) dic.Add(GameProtocol.DESTROY_MAGIC_RELAY, new List<object>(msg.arrDestroyMagicRelay));
             if (msg.arrFireballBombRelay != null) dic.Add(GameProtocol.FIRE_BALL_BOMB_RELAY, new List<object>(msg.arrFireballBombRelay));
             if (msg.arrHealMinionRelay != null) dic.Add(GameProtocol.HEAL_MINION_RELAY, new List<object>(msg.arrHealMinionRelay));
             if (msg.arrMineBombRelay != null) dic.Add(GameProtocol.MINE_BOMB_RELAY, new List<object>(msg.arrMineBombRelay));
@@ -2121,6 +2111,8 @@ namespace ED
             if (msg.arrSendMessageParam1Relay != null) dic.Add(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, new List<object>(msg.arrSendMessageParam1Relay));
             if (msg.arrMinionTargetRelay != null) dic.Add(GameProtocol.SET_MINION_TARGET_RELAY, new List<object>(msg.arrMinionTargetRelay));
             if (msg.arrPushMinionRelay != null) dic.Add(GameProtocol.PUSH_MINION_RELAY, new List<object>(msg.arrPushMinionRelay));
+            if (msg.arrDestroyMinionRelay != null) dic.Add(GameProtocol.DESTROY_MINION_RELAY, new List<object>(msg.arrDestroyMinionRelay));
+            if (msg.arrDestroyMagicRelay != null) dic.Add(GameProtocol.DESTROY_MAGIC_RELAY, new List<object>(msg.arrDestroyMagicRelay));
 
             return dic;
         }
@@ -2175,14 +2167,8 @@ namespace ED
                                 .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
                                     (float) param[2]));
                             break;
-                        case GameProtocol.REMOVE_MINION_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetRemoveMinionRelayMsg((int)param[0], (int)param[1]));
-                            break;
                         case GameProtocol.DESTROY_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMinionRelayMsg((int)param[0], (int)param[1]));
-                            break;
-                        case GameProtocol.REMOVE_MAGIC_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetRemoveMagicRelayMsg((int)param[0], (int)param[1]));
                             break;
                         case GameProtocol.DESTROY_MAGIC_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMagicRelayMsg((int)param[0], (int)param[1]));
@@ -2335,17 +2321,6 @@ namespace ED
                     break;
                 }
                 
-                case GameProtocol.REMOVE_MINION_RELAY:
-                {
-                    MsgRemoveMinionRelay ralayremove = (MsgRemoveMinionRelay) param[0];
-                    
-                    if (NetworkManager.Get().UserUID == ralayremove.PlayerUId )
-                        RemoveMinion(ralayremove.Id);
-                    else if (NetworkManager.Get().OtherUID == ralayremove.PlayerUId )
-                        targetPlayer.RemoveMinion(ralayremove.Id);
-                    
-                    break;
-                }
                 case GameProtocol.DESTROY_MINION_RELAY:
                 {
                     MsgDestroyMinionRelay destrelay = (MsgDestroyMinionRelay) param[0];
@@ -2358,17 +2333,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.REMOVE_MAGIC_RELAY:
-                {
-                    MsgRemoveMagicRelay remrelay = (MsgRemoveMagicRelay) param[0];
-                    
-                    if (NetworkManager.Get().UserUID == remrelay.PlayerUId)
-                        RemoveMagic(remrelay.Id);
-                    else if (NetworkManager.Get().OtherUID == remrelay.PlayerUId )
-                        targetPlayer.RemoveMagic(remrelay.Id);
-                    
-                    break;
-                }
+                
                 case GameProtocol.DESTROY_MAGIC_RELAY:
                 {
                     MsgDestroyMagicRelay desmagic = (MsgDestroyMagicRelay) param[0];

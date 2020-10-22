@@ -56,7 +56,6 @@ namespace RWGameProtocol.Serializer
         public virtual void ResumeGameNotify(Peer peer, int playerUId) { }
 
 
-        public virtual void RemoveMinionRelay(Peer peer, int playerUId, int id) { }
         public virtual void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage) { }
         public virtual void DestroyMinionRelay(Peer peer, int playerUId, int id) { }
         public virtual void HealMinionRelay(Peer peer, int playerUId, int id, int heal) { }
@@ -65,7 +64,6 @@ namespace RWGameProtocol.Serializer
         public virtual void FireArrowRelay(Peer peer, int playerUId, int id, MsgVector3 pos, int damage, int moveSpeed) { }
         public virtual void FireballBombRelay(Peer peer, int playerUId, int id) { }
         public virtual void MineBombRelay(Peer peer, int playerUId, int id) { }
-        public virtual void RemoveMagicRelay(Peer peer, int playerUId, int id) { }
         public virtual void SetMagicTargetIdRelay(Peer peer, int playerUId, int id, int targetId) { }
         public virtual void SetMagicTargetRelay(Peer peer, int playerUId, int id, int x, int z) { }
         public virtual void SturnMinionRelay(Peer peer, int playerUId, int id, int sturnTime) { }

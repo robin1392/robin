@@ -61,9 +61,7 @@ namespace RWGameProtocol.Msg
     public class MsgMinionStatus
     {
         public MsgHitDamageMinionRelay[] arrHitDamageMinionRelay;
-        public MsgRemoveMinionRelay[] arrRemoveMinionRelay;
         public MsgDestroyMinionRelay[] arrDestroyMinionRelay;
-        public MsgRemoveMagicRelay[] arrRemoveMagicRelay;
         public MsgDestroyMagicRelay[] arrDestroyMagicRelay;
         public MsgFireballBombRelay[] arrFireballBombRelay;
         public MsgHealMinionRelay[] arrHealMinionRelay;
@@ -98,25 +96,11 @@ namespace RWGameProtocol.Msg
                 arrHitDamageMinionRelay[i].Write(bw);
             }
 
-            length = (arrRemoveMinionRelay == null) ? 0 : arrRemoveMinionRelay.Length;
-            bw.Write(length);
-            for (int i = 0; i < length; i++)
-            {
-                arrRemoveMinionRelay[i].Write(bw);
-            }
-
             length = (arrDestroyMinionRelay == null) ? 0 : arrDestroyMinionRelay.Length;
             bw.Write(length);
             for (int i = 0; i < length; i++)
             {
                 arrDestroyMinionRelay[i].Write(bw);
-            }
-
-            length = (arrRemoveMagicRelay == null) ? 0 : arrRemoveMagicRelay.Length;
-            bw.Write(length);
-            for (int i = 0; i < length; i++)
-            {
-                arrRemoveMagicRelay[i].Write(bw);
             }
 
             length = (arrDestroyMagicRelay == null) ? 0 : arrDestroyMagicRelay.Length;
@@ -296,30 +280,10 @@ namespace RWGameProtocol.Msg
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrRemoveMinionRelay = new MsgRemoveMinionRelay[length];
-                for (int i = 0; i < length; i++)
-                {
-                    arrRemoveMinionRelay[i] = MsgRemoveMinionRelay.Read(br);
-                }
-            }
-
-            length = br.ReadInt32();
-            if (length > 0)
-            {
                 arrDestroyMinionRelay = new MsgDestroyMinionRelay[length];
                 for (int i = 0; i < length; i++)
                 {
                     arrDestroyMinionRelay[i] = MsgDestroyMinionRelay.Read(br);
-                }
-            }
-
-            length = br.ReadInt32();
-            if (length > 0)
-            {
-                arrRemoveMagicRelay = new MsgRemoveMagicRelay[length];
-                for (int i = 0; i < length; i++)
-                {
-                    arrRemoveMagicRelay[i] = MsgRemoveMagicRelay.Read(br);
                 }
             }
 

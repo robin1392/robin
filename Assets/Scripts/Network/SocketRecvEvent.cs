@@ -386,14 +386,6 @@ public class SocketRecvEvent
     
     #region relay
 
-    public void OnRemoveMinionRelay(Peer peer, MsgRemoveMinionRelay msg)
-    {
-        UnityUtil.Print("RECV => ", "REMOVE_MINION_RELAY  " +msg.PlayerUId.ToString() + "  minion id " + msg.Id  , "yellow");
-        
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MINION_RELAY, msg);
-    }
-
     public void OnHitDamageMinionRelay(Peer peer, MsgHitDamageMinionRelay msg)
     {
         UnityUtil.Print("RECV => ", "HIT_DAMAGE_MINION_RELAY " + msg.PlayerUId.ToString() + "  minion id " + msg.Id , "yellow");
@@ -441,14 +433,6 @@ public class SocketRecvEvent
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_ARROW_RELAY, msg);
-    }
-
-    public void OnRemoveMagicRelay(Peer peer, MsgRemoveMagicRelay msg)
-    {
-        UnityUtil.Print("RECV => ", "REMOVE_MAGIC_RELAY  " +msg.PlayerUId.ToString() , "yellow");
-        
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MAGIC_RELAY, msg);
     }
 
     public void OnFireballBombRelay(Peer peer, MsgFireballBombRelay msg)
