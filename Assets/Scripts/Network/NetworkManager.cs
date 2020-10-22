@@ -699,17 +699,17 @@ public class ConvertNetMsg
         for (int i = 0; i < syncData.netSyncMinionData.Count; i++)
         {
             convData[i] = new MsgSyncMinionData();
-            convData[i].minionId = syncData.netSyncMinionData[i].minionId;
+            convData[i].minionId = MsgIntToUshort(syncData.netSyncMinionData[i].minionId);
             convData[i].minionDataId = syncData.netSyncMinionData[i].minionDataId;
             convData[i].minionHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionHp);
             convData[i].minionMaxHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionMaxHp);
             convData[i].minionPower = MsgFloatToInt(syncData.netSyncMinionData[i].minionPower);
             convData[i].minionEffect = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffect);
-            convData[i].minionEffectUpgrade = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectUpgrade);
+            convData[i].minionEffectUpgrade = MsgFloatToByte(syncData.netSyncMinionData[i].minionEffectUpgrade);
             convData[i].minionEffectIngameUpgrade =
-                MsgFloatToInt(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
-            convData[i].minionDuration = MsgFloatToInt(syncData.netSyncMinionData[i].minionDuration);
-            convData[i].minionCooltime = MsgFloatToInt(syncData.netSyncMinionData[i].minionCooltime);
+                MsgFloatToByte(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
+            convData[i].minionDuration = MsgFloatToShort(syncData.netSyncMinionData[i].minionDuration);
+            convData[i].minionCooltime = MsgFloatToShort(syncData.netSyncMinionData[i].minionCooltime);
 
             convData[i].minionPos = VectorToMsg(syncData.netSyncMinionData[i].minionPos);
         }
@@ -749,6 +749,90 @@ public class ConvertNetMsg
 
     #region server msg convert
 
+    public static ushort[] MsgIntArrToUshortArr(int[] value)
+    {
+        ushort[] rtn = new ushort[value.Length];
+        for (int i = 0; i < value.Length; i++)
+        {
+            rtn[i] = MsgIntToUshort(value[i]);
+        }
+
+        return rtn;
+    }
+
+    public static int[] MsgUshortArrToIntArr(ushort[] value)
+    {
+        int[] rtn = new int[value.Length];
+        for (int i = 0; i < value.Length; i++)
+        {
+            rtn[i] = MsgUshortToInt(value[i]);
+        }
+
+        return rtn;
+    }
+    
+    public static int MsgByteToInt(byte value)
+    {
+        int convValue = (int) value;
+
+        return convValue;
+    }
+
+    public static byte MsgIntToByte(int value)
+    {
+        return (byte) value;
+    }
+
+    public static short MsgIntToShort(int value)
+    {
+        return (short) value;
+    }
+
+    public static int MsgShortToInt(short value)
+    {
+        return (int) value;
+    }
+
+    public static ushort MsgIntToUshort(int value)
+    {
+        return (ushort) value;
+    }
+
+    public static int MsgUshortToInt(ushort value)
+    {
+        return (int) value;
+    }
+
+    public static short MsgFloatToShort(float value)
+    {
+        return (short) (value * 100);
+    }
+
+    public static float MsgShortToFloat(short value)
+    {
+        return value * 0.01f;
+    }
+
+    public static ushort MsgFloatToUshort(float value)
+    {
+        return (ushort) (value * 100);
+    }
+
+    public static float MsgUshortToFloat(ushort value)
+    {
+        return value * 0.01f;
+    }
+
+    public static byte MsgFloatToByte(float value)
+    {
+        return (byte) (value * 100);
+    }
+
+    public static float MsgByteToFloat(byte value)
+    {
+        return value * 0.01f;
+    }
+    
     public static int MsgFloatToInt(float value)
     {
         int convValue = (int)(value * Global.g_networkBaseValue);
@@ -766,9 +850,9 @@ public class ConvertNetMsg
     {
         MsgVector3 chVec = new MsgVector3();
 
-        chVec.X = MsgFloatToInt(val.x);
-        chVec.Y = MsgFloatToInt(val.y);
-        chVec.Z = MsgFloatToInt(val.z);
+        chVec.X = MsgFloatToShort(val.x);
+        chVec.Y = MsgFloatToShort(val.y);
+        chVec.Z = MsgFloatToShort(val.z);
 
         return chVec;
     }
@@ -777,10 +861,10 @@ public class ConvertNetMsg
     {
         MsgQuaternion chMsgQuat = new MsgQuaternion();
 
-        chMsgQuat.X = MsgFloatToInt(quat.x);
-        chMsgQuat.Y = MsgFloatToInt(quat.y);
-        chMsgQuat.Z = MsgFloatToInt(quat.z);
-        chMsgQuat.W = MsgFloatToInt(quat.w);
+        chMsgQuat.X = MsgFloatToShort(quat.x);
+        chMsgQuat.Y = MsgFloatToShort(quat.y);
+        chMsgQuat.Z = MsgFloatToShort(quat.z);
+        chMsgQuat.W = MsgFloatToShort(quat.w);
 
         return chMsgQuat;
     }
@@ -823,8 +907,8 @@ public class ConvertNetMsg
     {
         MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
         msg.Damage = MsgFloatToInt(damage);
 
         return msg;
@@ -834,8 +918,8 @@ public class ConvertNetMsg
     {
         MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -844,8 +928,8 @@ public class ConvertNetMsg
     {
         MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -854,8 +938,8 @@ public class ConvertNetMsg
     {
         MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -864,8 +948,8 @@ public class ConvertNetMsg
     {
         MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
 
-        msg.PlayerUId = uid;
-        msg.BaseStatId = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.BaseStatId = MsgIntToUshort(id);
 
         return msg;
     }
@@ -874,8 +958,8 @@ public class ConvertNetMsg
     {
         MsgFireballBombRelay msg = new MsgFireballBombRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -884,8 +968,8 @@ public class ConvertNetMsg
     {
         MsgHealMinionRelay msg = new MsgHealMinionRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
         msg.Heal = MsgFloatToInt(heal);
 
         return msg;
@@ -895,8 +979,8 @@ public class ConvertNetMsg
     {
         MsgMineBombRelay msg = new MsgMineBombRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -905,9 +989,9 @@ public class ConvertNetMsg
     {
         MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.SturnTime = sturnTime;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.SturnTime = MsgIntToShort(sturnTime);
 
         return msg;
     }
@@ -916,8 +1000,8 @@ public class ConvertNetMsg
     {
         MsgRocketBombRelay msg = new MsgRocketBombRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -926,8 +1010,8 @@ public class ConvertNetMsg
     {
         MsgIceBombRelay msg = new MsgIceBombRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -936,8 +1020,8 @@ public class ConvertNetMsg
     {
         MsgFireManFireRelay msg = new MsgFireManFireRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
@@ -946,8 +1030,8 @@ public class ConvertNetMsg
     {
         MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
         msg.IsCloacking = isCloacking;
 
         return msg;
@@ -957,9 +1041,9 @@ public class ConvertNetMsg
     {
         MsgMinionFlagOfWarRelay msg = new MsgMinionFlagOfWarRelay();
 
-        msg.PlayerUId = uid;
-        msg.BaseStatId = id;
-        msg.Effect = effect;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.BaseStatId = MsgIntToUshort(id);
+        msg.Effect = MsgIntToShort(effect);
         msg.IsFogOfWar = isFlagOfWar;
 
         return msg;
@@ -969,9 +1053,9 @@ public class ConvertNetMsg
     {
         MsgScarecrowRelay msg = new MsgScarecrowRelay();
 
-        msg.PlayerUId = uid;
-        msg.BaseStatId = id;
-        msg.EyeLevel = eyeLevel;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.BaseStatId = MsgIntToUshort(id);
+        msg.EyeLevel = MsgIntToByte(eyeLevel);
 
         return msg;
     }
@@ -980,9 +1064,9 @@ public class ConvertNetMsg
     {
         MsgLayzerTargetRelay msg = new MsgLayzerTargetRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.TargetIdArray = target;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.TargetIdArray = MsgIntArrToUshortArr(target);
 
         return msg;
     }
@@ -991,9 +1075,9 @@ public class ConvertNetMsg
     {
         MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.Time = time;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.Time = MsgIntToShort(time);
 
         return msg;
     }
@@ -1002,12 +1086,12 @@ public class ConvertNetMsg
     {
         MsgFireBulletRelay msg = new MsgFireBulletRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.Dir = new MsgVector3 { X = x, Y = y, Z = z};
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.Dir = new MsgVector3 { X = MsgIntToShort(x), Y = MsgIntToShort(y), Z = MsgIntToShort(z) };
         msg.Damage = damage;
-        msg.MoveSpeed = speed;
-        msg.Type = type;
+        msg.MoveSpeed = MsgIntToShort(speed);
+        msg.Type = MsgIntToByte(type);
 
         return msg;
     }
@@ -1017,12 +1101,12 @@ public class ConvertNetMsg
     {
         MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
 
-        msg.PlayerUId = uid;
+        msg.PlayerUId = MsgIntToUshort(uid);
         msg.ShootPos = shootPos;
         msg.TargetPos = targetPos;
         msg.Power = damage;
-        msg.Range = range;
-        msg.Type = type;
+        msg.Range = MsgIntToShort(range);
+        msg.Type = MsgIntToByte(type);
 
         return msg;
     }
@@ -1032,10 +1116,10 @@ public class ConvertNetMsg
     {
         MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.Trigger = trigger;
-        msg.TargetId = target;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.Trigger = MsgIntToByte(trigger);
+        msg.TargetId = MsgIntToUshort(target);
 
         return msg;
     }
@@ -1044,9 +1128,9 @@ public class ConvertNetMsg
     {
         MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.TargetId = targetID;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.TargetId = MsgIntToUshort(targetID);
         
         return msg;
     }
@@ -1055,10 +1139,10 @@ public class ConvertNetMsg
     {
         MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.X = x;
-        msg.Z = z;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.X = MsgIntToShort(x);
+        msg.Z = MsgIntToShort(z);
         
         return msg;
     }
@@ -1079,9 +1163,9 @@ public class ConvertNetMsg
     {
         MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.Message = message;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.Message = MsgIntToByte(message);
         
         return msg;
     }
@@ -1090,10 +1174,10 @@ public class ConvertNetMsg
     {
         MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.Message = message;
-        msg.TargetId = targetID;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.Message = MsgIntToByte(message);
+        msg.TargetId = MsgIntToUshort(targetID);
         
         return msg;
     }
@@ -1102,9 +1186,9 @@ public class ConvertNetMsg
     {
         MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.TargetId = targetID;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.TargetId = MsgIntToUshort(targetID);
         
         return msg;
     }
@@ -1113,10 +1197,10 @@ public class ConvertNetMsg
     {
         MsgPushMinionRelay msg = new MsgPushMinionRelay();
 
-        msg.PlayerUId = uid;
-        msg.Id = id;
-        msg.Dir = new MsgVector3 { X = x, Y = y, Z = z };
-        msg.PushPower = power;
+        msg.PlayerUId = MsgIntToUshort(uid);
+        msg.Id = MsgIntToUshort(id);
+        msg.Dir = new MsgVector3 { X = MsgIntToShort(x), Y = MsgIntToShort(y), Z = MsgIntToShort(z) };
+        msg.PushPower = MsgIntToShort(power);
         
         return msg;
     }

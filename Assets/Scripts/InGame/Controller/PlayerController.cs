@@ -2056,8 +2056,39 @@ namespace ED
                                         foreach (var value in sync.Value)
                                         {
                                             MsgHitDamageMinionRelay msg = (MsgHitDamageMinionRelay) value;
-                                            str += string.Format("\n    UID: {0},  ID:{1}, DMG:{2}", msg.PlayerUId,
+                                            str += string.Format("\n      UID: {0},  ID:{1}, DMG:{2}", msg.PlayerUId,
                                                 msg.Id, msg.Damage);
+                                        }
+                                        break;
+                                    case GameProtocol.HEAL_MINION_RELAY:
+                                        foreach (var value in sync.Value)
+                                        {
+                                            MsgHealMinionRelay msg = (MsgHealMinionRelay) value;
+                                            str += string.Format("\n      UID: {0},  ID:{1}, HEAL:{2}", msg.PlayerUId,
+                                                msg.Id, msg.Heal);
+                                        }
+                                        break;
+                                    case GameProtocol.DESTROY_MINION_RELAY:
+                                        foreach (var value in sync.Value)
+                                        {
+                                            MsgDestroyMinionRelay msg = (MsgDestroyMinionRelay) value;
+                                            str += string.Format("\n      UID: {0},  ID:{1}", msg.PlayerUId,
+                                                msg.Id);
+                                        }
+                                        break;
+                                    case GameProtocol.DESTROY_MAGIC_RELAY:
+                                        foreach (var value in sync.Value)
+                                        {
+                                            MsgDestroyMagicRelay msg = (MsgDestroyMagicRelay) value;
+                                            str += string.Format("\n      UID: {0},  ID:{1}", msg.PlayerUId,
+                                                msg.BaseStatId);
+                                        }
+                                        break;
+                                    case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                                        foreach (var value in sync.Value)
+                                        {
+                                            MsgActivatePoolObjectRelay msg = (MsgActivatePoolObjectRelay) value;
+                                            str += string.Format("\n      POOL: {0}", ((E_PoolName)msg.PoolName).ToString());
                                         }
                                         break;
                                 }
@@ -2098,8 +2129,39 @@ namespace ED
                         foreach (var value in msg.Value)
                         {
                             MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
-                            str += string.Format("\n    UID: {0},  ID:{1}, DMG:{2}", m.PlayerUId,
+                            str += string.Format("\n      UID: {0},  ID:{1}, DMG:{2}", m.PlayerUId,
                                 m.Id, m.Damage);
+                        }
+                        break;
+                    case GameProtocol.HEAL_MINION_RELAY:
+                        foreach (var value in msg.Value)
+                        {
+                            MsgHealMinionRelay m = (MsgHealMinionRelay) value;
+                            str += string.Format("\n      UID: {0},  ID:{1}, HEAL:{2}", m.PlayerUId,
+                                m.Id, m.Heal);
+                        }
+                        break;
+                    case GameProtocol.DESTROY_MINION_RELAY:
+                        foreach (var value in msg.Value)
+                        {
+                            MsgDestroyMinionRelay m = (MsgDestroyMinionRelay) value;
+                            str += string.Format("\n      UID: {0},  ID:{1}", m.PlayerUId,
+                                m.Id);
+                        }
+                        break;
+                    case GameProtocol.DESTROY_MAGIC_RELAY:
+                        foreach (var value in msg.Value)
+                        {
+                            MsgDestroyMagicRelay m = (MsgDestroyMagicRelay) value;
+                            str += string.Format("\n      UID: {0},  ID:{1}", m.PlayerUId,
+                                m.BaseStatId);
+                        }
+                        break;
+                    case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                        foreach (var value in msg.Value)
+                        {
+                            MsgActivatePoolObjectRelay m = (MsgActivatePoolObjectRelay) value;
+                            str += string.Format("\n      POOL: {0}", ((E_PoolName)m.PoolName).ToString());
                         }
                         break;
                 }
@@ -2504,9 +2566,9 @@ namespace ED
                     MsgLayzerTargetRelay lazerrelay = (MsgLayzerTargetRelay) param[0];
                     
                     if (NetworkManager.Get().UserUID == lazerrelay.PlayerUId)
-                        LayzerMinion(lazerrelay.Id, lazerrelay.TargetIdArray);
+                        LayzerMinion(lazerrelay.Id, ConvertNetMsg.MsgUshortArrToIntArr(lazerrelay.TargetIdArray));
                     else if (NetworkManager.Get().OtherUID == lazerrelay.PlayerUId )
-                        targetPlayer.LayzerMinion(lazerrelay.Id, lazerrelay.TargetIdArray);
+                        targetPlayer.LayzerMinion(lazerrelay.Id, ConvertNetMsg.MsgUshortArrToIntArr(lazerrelay.TargetIdArray));
                     
                     break;
                 }
