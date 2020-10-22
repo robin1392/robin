@@ -1198,7 +1198,6 @@ namespace RWGameProtocol
     [Serializable]
     public class MsgActivatePoolObjectRelay
     {
-        public int PlayerUId;
         public int PoolName;
         public MsgVector3 HitPos;
         public MsgVector3 LocalScale;
@@ -1206,7 +1205,6 @@ namespace RWGameProtocol
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write(PlayerUId);
             bw.Write(PoolName);
             HitPos.Write(bw);
             LocalScale.Write(bw);
@@ -1216,7 +1214,6 @@ namespace RWGameProtocol
         public static MsgActivatePoolObjectRelay Read(BinaryReader br)
         {
             MsgActivatePoolObjectRelay data = new MsgActivatePoolObjectRelay();
-            data.PlayerUId = br.ReadInt32();
             data.PoolName = br.ReadInt32();
             data.HitPos = MsgVector3.Read(br);
             data.LocalScale = MsgVector3.Read(br);

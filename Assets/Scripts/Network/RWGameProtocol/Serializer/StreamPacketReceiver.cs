@@ -1064,7 +1064,6 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
-                            msg.PlayerUId = br.ReadInt32();
                             msg.PoolName = br.ReadInt32();
                             msg.HitPos = MsgVector3.Read(br);
                             msg.LocalScale = MsgVector3.Read(br);
