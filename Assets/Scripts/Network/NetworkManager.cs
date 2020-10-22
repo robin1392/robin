@@ -773,77 +773,72 @@ public class ConvertNetMsg
     
     public static int MsgByteToInt(byte value)
     {
-        int convValue = (int) value;
-
-        return convValue;
+        return Convert.ToInt32(value);
     }
 
     public static byte MsgIntToByte(int value)
     {
-        return (byte) value;
+        return Convert.ToByte(value);
     }
 
     public static short MsgIntToShort(int value)
     {
-        return (short) value;
+        return Convert.ToInt16(value);
     }
 
     public static int MsgShortToInt(short value)
     {
-        return (int) value;
+        return Convert.ToInt32(value);
     }
 
     public static ushort MsgIntToUshort(int value)
     {
-        return (ushort) value;
+        return Convert.ToUInt16(value);
     }
 
     public static int MsgUshortToInt(ushort value)
     {
-        return (int) value;
+        return Convert.ToInt32(value);
     }
 
     public static short MsgFloatToShort(float value)
     {
-        return (short) (value * 100);
+        return Convert.ToInt16(value * 100);
     }
 
     public static float MsgShortToFloat(short value)
     {
-        return value * 0.01f;
+        return Convert.ToInt32(value) * 0.01f;
     }
 
     public static ushort MsgFloatToUshort(float value)
     {
-        return (ushort) (value * 100);
+        return Convert.ToUInt16(value * 100);
     }
 
     public static float MsgUshortToFloat(ushort value)
     {
-        return value * 0.01f;
+        return Convert.ToInt32(value) * 0.01f;
     }
 
     public static byte MsgFloatToByte(float value)
     {
-        return (byte) (value * 100);
+        return Convert.ToByte(value * 100);
     }
 
     public static float MsgByteToFloat(byte value)
     {
-        return value * 0.01f;
+        return Convert.ToInt32(value) * 0.01f;
     }
     
     public static int MsgFloatToInt(float value)
     {
-        int convValue = (int)(value * Global.g_networkBaseValue);
-
-        return convValue;
+        return Convert.ToInt32(value * 100);
     }
 
-    public static float MsgIntToFloat(int netValue)
+    public static float MsgIntToFloat(int value)
     {
-        float convValue = (float)netValue / Global.g_networkBaseValue;
-        return convValue;
+        return value * 0.01f;
     }
 
     public static MsgVector3 VectorToMsg(Vector3 val)
