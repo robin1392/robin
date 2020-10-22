@@ -1,12 +1,192 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace RWGameProtocol.Msg
+namespace RWGameProtocol
 {
     [Serializable]
-    public struct MsgVector3
+    public class MsgPlayerBase
+    {
+        public int PlayerUId;
+        public bool IsBottomPlayer;
+        public string Name;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(PlayerUId);
+            bw.Write(IsBottomPlayer);
+            bw.Write(Name);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            PlayerUId = br.ReadInt32();
+            IsBottomPlayer = br.ReadBoolean();
+            Name = br.ReadString();
+        }
+    }
+
+
+    [Serializable]
+    public class MsgPlayerInfo
+    {
+        // 플레이어 유니크 아이디(게임 세션별 유니크 생성)
+        public int PlayerUId;
+        public bool IsBottomPlayer;
+        public string Name;
+        public int CurrentSp;
+        public int TowerHp;
+        public short SpGrade;
+        public short GetDiceCount;
+        public int[] DiceIdArray;
+        public short[] DiceUpgradeArray;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(PlayerUId);
+            bw.Write(IsBottomPlayer);
+            bw.Write(Name);
+            bw.Write(CurrentSp);
+            bw.Write(TowerHp);
+            bw.Write(SpGrade);
+            bw.Write(GetDiceCount);
+
+            bw.Write(DiceIdArray.Length);
+            byte[] bytes = new byte[DiceIdArray.Length * sizeof(int)];
+            Buffer.BlockCopy(DiceIdArray, 0, bytes, 0, bytes.Length);
+            bw.Write(bytes);
+
+            bw.Write(DiceUpgradeArray.Length);
+            bytes = new byte[DiceUpgradeArray.Length * sizeof(short)];
+            Buffer.BlockCopy(DiceUpgradeArray, 0, bytes, 0, bytes.Length);
+            bw.Write(bytes);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            PlayerUId = br.ReadInt32();
+            IsBottomPlayer = br.ReadBoolean();
+            Name = br.ReadString();
+            CurrentSp = br.ReadInt32();
+            TowerHp = br.ReadInt32();
+            SpGrade = br.ReadInt16();
+            GetDiceCount = br.ReadInt16();
+
+            int length = br.ReadInt32();
+            byte[] bytes = br.ReadBytes(length * sizeof(int));
+
+            DiceIdArray = new int[length];
+            for (var index = 0; index < length; index++)
+            {
+                DiceIdArray[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+            }
+
+            length = br.ReadInt32();
+            bytes = br.ReadBytes(length * sizeof(short));
+            DiceUpgradeArray = new short[length];
+            for (var index = 0; index < length; index++)
+            {
+                DiceUpgradeArray[index] = BitConverter.ToInt16(bytes, index * sizeof(short));
+            }
+        }
+    }
+
+
+    [Serializable]
+    public class MsgSyncMinionData
+    {
+        public int minionId;
+        public int minionDataId;
+        public int minionHp;
+        public int minionMaxHp;
+        public int minionPower;
+        public int minionEffect;
+        public int minionEffectUpgrade;
+        public int minionEffectIngameUpgrade;
+        public int minionDuration;
+        public int minionCooltime;
+        public MsgVector3 minionPos;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(minionId);
+            bw.Write(minionDataId);
+            bw.Write(minionHp);
+            bw.Write(minionMaxHp);
+            bw.Write(minionPower);
+            bw.Write(minionEffect);
+            bw.Write(minionEffectUpgrade);
+            bw.Write(minionEffectIngameUpgrade);
+            bw.Write(minionDuration);
+            bw.Write(minionCooltime);
+            minionPos.Write(bw);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            minionId = br.ReadInt32();
+            minionDataId = br.ReadInt32();
+            minionHp = br.ReadInt32();
+            minionMaxHp = br.ReadInt32();
+            minionPower = br.ReadInt32();
+            minionEffect = br.ReadInt32();
+            minionEffectUpgrade = br.ReadInt32();
+            minionEffectIngameUpgrade = br.ReadInt32();
+            minionDuration = br.ReadInt32();
+            minionCooltime = br.ReadInt32();
+            minionPos = MsgVector3.Read(br);
+        }
+    }
+
+    [Serializable]
+    public class MsgGameDice
+    {
+        public int DiceId;
+        public short SlotNum;
+        public short Level;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(DiceId);
+            bw.Write(SlotNum);
+            bw.Write(Level);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            DiceId = br.ReadInt32();
+            SlotNum = br.ReadInt16();
+            Level = br.ReadInt16();
+        }
+    }
+
+
+    [Serializable]
+    public class MsgInGameUp
+    {
+        public int DiceId;
+        public short Grade;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(DiceId);
+            bw.Write(Grade);
+        }
+
+        public void Read(BinaryReader br)
+        {
+            DiceId = br.ReadInt32();
+            Grade = br.ReadInt16();
+        }
+    }
+
+
+    [Serializable]
+    public class MsgVector3
     {
         public int X;
         public int Y;
@@ -30,7 +210,7 @@ namespace RWGameProtocol.Msg
     }
 
     [Serializable]
-    public struct MsgQuaternion
+    public class MsgQuaternion
     {
         public int X;
         public int Y;
@@ -85,7 +265,6 @@ namespace RWGameProtocol.Msg
         public MsgSendMessageParam1Relay[] arrSendMessageParam1Relay;
         public MsgSetMinionTargetRelay[] arrMinionTargetRelay;
         public MsgPushMinionRelay[] arrPushMinionRelay;
-
 
         public void Write(BinaryWriter bw)
         {
@@ -694,7 +873,7 @@ namespace RWGameProtocol.Msg
 
 
     [Serializable]
-    
+
     public class MsgFireArrowRelay
     {
         public int PlayerUId;

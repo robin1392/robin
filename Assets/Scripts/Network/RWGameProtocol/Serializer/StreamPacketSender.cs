@@ -2,7 +2,6 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using RWCoreNetwork.NetService;
-using RWGameProtocol.Msg;
 
 namespace RWGameProtocol.Serializer
 {
@@ -77,7 +76,6 @@ namespace RWGameProtocol.Serializer
 
         public override void ReadyGameReq(Peer peer)
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -88,7 +86,6 @@ namespace RWGameProtocol.Serializer
 
         public override void ReadyGameAck(Peer peer, GameErrorCode code)
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -100,7 +97,6 @@ namespace RWGameProtocol.Serializer
 
         public override void DeactiveWaitingObjectNotify(Peer peer, int playerUid, int currentSp)
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -113,7 +109,6 @@ namespace RWGameProtocol.Serializer
 
         public override void AddSpNotify(Peer peer, int playerUId, int currentSp)
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -126,7 +121,6 @@ namespace RWGameProtocol.Serializer
 
         public override void SpawnNotify(Peer peer, int wave)
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -565,7 +559,7 @@ namespace RWGameProtocol.Serializer
                 peer.SendPacket((int)GameProtocol.DISCONNECT_GAME_NOTIFY, ms.ToArray());
             }
         }
-        
+
 
         public override void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage) 
         {
@@ -675,7 +669,7 @@ namespace RWGameProtocol.Serializer
                 peer.SendPacket((int)GameProtocol.MINE_BOMB_RELAY, ms.ToArray());
             }
         }
-        
+
 
         public override void SetMagicTargetIdRelay(Peer peer, int playerUId, int id, int targetId) 
         {
@@ -915,7 +909,9 @@ namespace RWGameProtocol.Serializer
                     pos[i].Write(bw);
                 }
 
+
                 relay.Write(bw);
+
                 bw.Write(packetCount);
                 peer.SendPacket((int)GameProtocol.MINION_STATUS_RELAY, ms.ToArray());
             }

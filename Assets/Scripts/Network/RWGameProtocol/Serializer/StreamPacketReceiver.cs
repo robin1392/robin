@@ -769,7 +769,7 @@ namespace RWGameProtocol.Serializer
                     break;
 
 
-                #region Relay Protocol
+                #region Relay Protocol                
                 case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                     {
                         if (HitDamageMinionRelay == null)
