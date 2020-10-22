@@ -223,16 +223,20 @@ namespace RWGameProtocol.Serializer
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(playerId);
                 bw.Write(playerSpawnCount);
-                bw.Write(syncMinionData.Length);
-                for (int i = 0; i < syncMinionData.Length; i++)
+
+                int length = (syncMinionData == null) ? 0 : syncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
                 {
                     syncMinionData[i].Write(bw);
                 }
 
                 bw.Write(otherPlayerId);
                 bw.Write(otherPlayerSpawnCount);
-                bw.Write(otherSyncMinionData.Length);
-                for (int i = 0; i < otherSyncMinionData.Length; i++)
+
+                length = (otherSyncMinionData == null) ? 0 : otherSyncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
                 {
                     otherSyncMinionData[i].Write(bw);
                 }
@@ -244,7 +248,6 @@ namespace RWGameProtocol.Serializer
 
         public override void StartSyncGameAck(Peer peer, GameErrorCode code)
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -261,38 +264,50 @@ namespace RWGameProtocol.Serializer
                 BinaryWriter bw = new BinaryWriter(ms);
                 playerInfo.Write(bw);
 
-                bw.Write(gameDiceData.Length);
-                byte[] bytes = new byte[gameDiceData.Length * sizeof(int)];
-                Buffer.BlockCopy(gameDiceData, 0, bytes, 0, sizeof(byte));
-                bw.Write(bytes);
+                int length = (gameDiceData == null) ? 0 : gameDiceData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    gameDiceData[i].Write(bw);
+                }
 
-                bw.Write(inGameUp.Length);
-                bytes = new byte[inGameUp.Length * sizeof(int)];
-                Buffer.BlockCopy(inGameUp, 0, bytes, 0, sizeof(byte));
-                bw.Write(bytes);
+                length = (inGameUp == null) ? 0 : inGameUp.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    inGameUp[i].Write(bw);
+                }
 
-                bw.Write(syncMinionData.Length);
-                bytes = new byte[syncMinionData.Length * sizeof(int)];
-                Buffer.BlockCopy(syncMinionData, 0, bytes, 0, sizeof(byte));
-                bw.Write(bytes);
+                length = (syncMinionData == null) ? 0 : syncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    syncMinionData[i].Write(bw);
+                }
 
                 bw.Write(playerSpawnCount);
                 otherPlayerInfo.Write(bw);
 
-                bw.Write(otherGameDiceData.Length);
-                bytes = new byte[otherGameDiceData.Length * sizeof(int)];
-                Buffer.BlockCopy(otherGameDiceData, 0, bytes, 0, sizeof(byte));
-                bw.Write(bytes);
+                length = (otherGameDiceData == null) ? 0 : otherGameDiceData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    otherGameDiceData[i].Write(bw);
+                }
 
-                bw.Write(otherInGameUp.Length);
-                bytes = new byte[otherInGameUp.Length * sizeof(int)];
-                Buffer.BlockCopy(otherInGameUp, 0, bytes, 0, sizeof(byte));
-                bw.Write(bytes);
+                length = (otherInGameUp == null) ? 0 : otherInGameUp.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    otherInGameUp[i].Write(bw);
+                }
 
-                bw.Write(otherSyncMinionData.Length);
-                bytes = new byte[otherSyncMinionData.Length * sizeof(int)];
-                Buffer.BlockCopy(otherSyncMinionData, 0, bytes, 0, sizeof(byte));
-                bw.Write(bytes);
+                length = (otherSyncMinionData == null) ? 0 : otherSyncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    otherSyncMinionData[i].Write(bw);
+                }
 
                 bw.Write(otherPlayerSpawnCount);
                 peer.SendPacket((int)GameProtocol.START_SYNC_GAME_NOTIFY, ms.ToArray());

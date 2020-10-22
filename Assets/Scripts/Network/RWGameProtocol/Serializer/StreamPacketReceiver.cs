@@ -62,9 +62,7 @@ namespace RWGameProtocol.Serializer
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameAck msg = new MsgJoinGameAck();
                             msg.ErrorCode = br.ReadInt16();
-
-                            msg.PlayerInfo = new MsgPlayerInfo();
-                            msg.PlayerInfo.Read(br);
+                            msg.PlayerInfo = MsgPlayerInfo.Read(br);
                             JoinGameAck(peer, msg);
                         }
                     }
@@ -79,8 +77,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameNotify msg = new MsgJoinGameNotify();
-                            msg.OtherPlayerInfo = new MsgPlayerInfo();
-                            msg.OtherPlayerInfo.Read(br);
+                            msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
                             JoinGameNotify(peer, msg);
                         }
                     }
@@ -290,12 +287,8 @@ namespace RWGameProtocol.Serializer
                             BinaryReader br = new BinaryReader(ms);
                             MsgReconnectGameAck msg = new MsgReconnectGameAck();
                             msg.ErrorCode = br.ReadInt16();
-
-                            msg.PlayerBase = new MsgPlayerBase();
-                            msg.PlayerBase.Read(br);
-
-                            msg.OtherPlayerBase = new MsgPlayerBase();
-                            msg.OtherPlayerBase.Read(br);
+                            msg.PlayerBase = MsgPlayerBase.Read(br);
+                            msg.OtherPlayerBase = MsgPlayerBase.Read(br);
                             ReconnectGameAck(peer, msg);
                         }
                     }
@@ -370,22 +363,22 @@ namespace RWGameProtocol.Serializer
                             MsgStartSyncGameReq msg = new MsgStartSyncGameReq();
                             msg.PlayerId = br.ReadInt32();
                             msg.PlayerSpawnCount = br.ReadInt32();
+
                             int length = br.ReadInt32();
                             msg.SyncMinionData = new MsgSyncMinionData[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.SyncMinionData[i] = new MsgSyncMinionData();
-                                msg.SyncMinionData[i].Read(br);
+                                msg.SyncMinionData[i] = MsgSyncMinionData.Read(br);
                             }
 
                             msg.OtherPlayerId = br.ReadInt32();
                             msg.OtherPlayerSpawnCount = br.ReadInt32();
+
                             length = br.ReadInt32();
                             msg.OtherSyncMinionData = new MsgSyncMinionData[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.OtherSyncMinionData[i] = new MsgSyncMinionData();
-                                msg.OtherSyncMinionData[i].Read(br);
+                                msg.OtherSyncMinionData[i] = MsgSyncMinionData.Read(br);
                             }
 
                             StartSyncGameReq(peer, msg);
@@ -417,55 +410,54 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
-                            msg.PlayerInfo.Read(br);
+                            msg.PlayerInfo = MsgPlayerInfo.Read(br);
 
                             int length = br.ReadInt32();
                             msg.GameDiceData = new MsgGameDice[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.GameDiceData[i].Read(br);
+                                msg.GameDiceData[i] = MsgGameDice.Read(br);
                             }
 
                             length = br.ReadInt32();
                             msg.InGameUp = new MsgInGameUp[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.InGameUp[i].Read(br);
+                                msg.InGameUp[i] = MsgInGameUp.Read(br);
                             }
 
                             length = br.ReadInt32();
                             msg.SyncMinionData = new MsgSyncMinionData[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.SyncMinionData[i].Read(br);
+                                msg.SyncMinionData[i] = MsgSyncMinionData.Read(br);
                             }
 
                             msg.PlayerSpawnCount = br.ReadInt32();
-                            msg.OtherPlayerInfo.Read(br);
+                            msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
 
                             length = br.ReadInt32();
                             msg.OtherGameDiceData = new MsgGameDice[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.OtherGameDiceData[i].Read(br);
+                                msg.OtherGameDiceData[i] = MsgGameDice.Read(br);
                             }
 
                             length = br.ReadInt32();
                             msg.OtherInGameUp = new MsgInGameUp[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.OtherInGameUp[i].Read(br);
+                                msg.OtherInGameUp[i] = MsgInGameUp.Read(br);
                             }
 
                             length = br.ReadInt32();
                             msg.OtherSyncMinionData = new MsgSyncMinionData[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.OtherSyncMinionData[i].Read(br);
+                                msg.OtherSyncMinionData[i] = MsgSyncMinionData.Read(br);
                             }
 
                             msg.OtherPlayerSpawnCount = br.ReadInt32();
-
                             StartSyncGameNotify(peer, msg);
                         }
                     }
@@ -1207,8 +1199,7 @@ namespace RWGameProtocol.Serializer
                                 msg.Pos[i] = MsgVector3.Read(br);
                             }
 
-                            msg.Relay = new MsgMinionStatus();
-                            msg.Relay.Read(br);
+                            msg.Relay = MsgMinionStatus.Read(br);
                             msg.packetCount = br.ReadInt32();
 
                             MinionStatusRelay(peer, msg);

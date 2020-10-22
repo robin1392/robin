@@ -698,6 +698,7 @@ public class ConvertNetMsg
         // 설마 100개를 넘진...
         for (int i = 0; i < syncData.netSyncMinionData.Count; i++)
         {
+            convData[i] = new MsgSyncMinionData();
             convData[i].minionId = syncData.netSyncMinionData[i].minionId;
             convData[i].minionDataId = syncData.netSyncMinionData[i].minionDataId;
             convData[i].minionHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionHp);

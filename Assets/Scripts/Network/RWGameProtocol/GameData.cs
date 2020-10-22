@@ -22,11 +22,13 @@ namespace RWGameProtocol
             bw.Write(Name);
         }
 
-        public void Read(BinaryReader br)
+        public static MsgPlayerBase Read(BinaryReader br)
         {
-            PlayerUId = br.ReadInt32();
-            IsBottomPlayer = br.ReadBoolean();
-            Name = br.ReadString();
+            MsgPlayerBase data = new MsgPlayerBase();
+            data.PlayerUId = br.ReadInt32();
+            data.IsBottomPlayer = br.ReadBoolean();
+            data.Name = br.ReadString();
+            return data;
         }
     }
 
@@ -66,32 +68,35 @@ namespace RWGameProtocol
             bw.Write(bytes);
         }
 
-        public void Read(BinaryReader br)
+        public static MsgPlayerInfo Read(BinaryReader br)
         {
-            PlayerUId = br.ReadInt32();
-            IsBottomPlayer = br.ReadBoolean();
-            Name = br.ReadString();
-            CurrentSp = br.ReadInt32();
-            TowerHp = br.ReadInt32();
-            SpGrade = br.ReadInt16();
-            GetDiceCount = br.ReadInt16();
+            MsgPlayerInfo data = new MsgPlayerInfo();
+            data.PlayerUId = br.ReadInt32();
+            data.IsBottomPlayer = br.ReadBoolean();
+            data.Name = br.ReadString();
+            data.CurrentSp = br.ReadInt32();
+            data.TowerHp = br.ReadInt32();
+            data.SpGrade = br.ReadInt16();
+            data.GetDiceCount = br.ReadInt16();
 
             int length = br.ReadInt32();
             byte[] bytes = br.ReadBytes(length * sizeof(int));
 
-            DiceIdArray = new int[length];
+            data.DiceIdArray = new int[length];
             for (var index = 0; index < length; index++)
             {
-                DiceIdArray[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+                data.DiceIdArray[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
             }
 
             length = br.ReadInt32();
             bytes = br.ReadBytes(length * sizeof(short));
-            DiceUpgradeArray = new short[length];
+            data.DiceUpgradeArray = new short[length];
             for (var index = 0; index < length; index++)
             {
-                DiceUpgradeArray[index] = BitConverter.ToInt16(bytes, index * sizeof(short));
+                data.DiceUpgradeArray[index] = BitConverter.ToInt16(bytes, index * sizeof(short));
             }
+
+            return data;
         }
     }
 
@@ -126,19 +131,21 @@ namespace RWGameProtocol
             minionPos.Write(bw);
         }
 
-        public void Read(BinaryReader br)
+        public static MsgSyncMinionData Read(BinaryReader br)
         {
-            minionId = br.ReadInt32();
-            minionDataId = br.ReadInt32();
-            minionHp = br.ReadInt32();
-            minionMaxHp = br.ReadInt32();
-            minionPower = br.ReadInt32();
-            minionEffect = br.ReadInt32();
-            minionEffectUpgrade = br.ReadInt32();
-            minionEffectIngameUpgrade = br.ReadInt32();
-            minionDuration = br.ReadInt32();
-            minionCooltime = br.ReadInt32();
-            minionPos = MsgVector3.Read(br);
+            MsgSyncMinionData data = new MsgSyncMinionData();
+            data.minionId = br.ReadInt32();
+            data.minionDataId = br.ReadInt32();
+            data.minionHp = br.ReadInt32();
+            data.minionMaxHp = br.ReadInt32();
+            data.minionPower = br.ReadInt32();
+            data.minionEffect = br.ReadInt32();
+            data.minionEffectUpgrade = br.ReadInt32();
+            data.minionEffectIngameUpgrade = br.ReadInt32();
+            data.minionDuration = br.ReadInt32();
+            data.minionCooltime = br.ReadInt32();
+            data.minionPos = MsgVector3.Read(br);
+            return data;
         }
     }
 
@@ -156,11 +163,13 @@ namespace RWGameProtocol
             bw.Write(Level);
         }
 
-        public void Read(BinaryReader br)
+        public static MsgGameDice Read(BinaryReader br)
         {
-            DiceId = br.ReadInt32();
-            SlotNum = br.ReadInt16();
-            Level = br.ReadInt16();
+            MsgGameDice data = new MsgGameDice();
+            data.DiceId = br.ReadInt32();
+            data.SlotNum = br.ReadInt16();
+            data.Level = br.ReadInt16();
+            return data;
         }
     }
 
@@ -177,10 +186,12 @@ namespace RWGameProtocol
             bw.Write(Grade);
         }
 
-        public void Read(BinaryReader br)
+        public static MsgInGameUp Read(BinaryReader br)
         {
-            DiceId = br.ReadInt32();
-            Grade = br.ReadInt16();
+            MsgInGameUp data = new MsgInGameUp();
+            data.DiceId = br.ReadInt32();
+            data.Grade = br.ReadInt16();
+            return data;
         }
     }
 
@@ -444,257 +455,261 @@ namespace RWGameProtocol
             }
         }
 
-        public void Read(BinaryReader br)
+        public static MsgMinionStatus Read(BinaryReader br)
         {
+            MsgMinionStatus data = new MsgMinionStatus();
+
             int length = br.ReadInt32();
             if (length > 0)
             {
-                arrHitDamageMinionRelay = new MsgHitDamageMinionRelay[length];
+                data.arrHitDamageMinionRelay = new MsgHitDamageMinionRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrHitDamageMinionRelay[i] = MsgHitDamageMinionRelay.Read(br);
+                    data.arrHitDamageMinionRelay[i] = MsgHitDamageMinionRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrDestroyMinionRelay = new MsgDestroyMinionRelay[length];
+                data.arrDestroyMinionRelay = new MsgDestroyMinionRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrDestroyMinionRelay[i] = MsgDestroyMinionRelay.Read(br);
+                    data.arrDestroyMinionRelay[i] = MsgDestroyMinionRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrDestroyMagicRelay = new MsgDestroyMagicRelay[length];
+                data.arrDestroyMagicRelay = new MsgDestroyMagicRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrDestroyMagicRelay[i] = MsgDestroyMagicRelay.Read(br);
+                    data.arrDestroyMagicRelay[i] = MsgDestroyMagicRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrFireballBombRelay = new MsgFireballBombRelay[length];
+                data.arrFireballBombRelay = new MsgFireballBombRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrFireballBombRelay[i] = MsgFireballBombRelay.Read(br);
+                    data.arrFireballBombRelay[i] = MsgFireballBombRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrHealMinionRelay = new MsgHealMinionRelay[length];
+                data.arrHealMinionRelay = new MsgHealMinionRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrHealMinionRelay[i] = MsgHealMinionRelay.Read(br);
+                    data.arrHealMinionRelay[i] = MsgHealMinionRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMineBombRelay = new MsgMineBombRelay[length];
+                data.arrMineBombRelay = new MsgMineBombRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMineBombRelay[i] = MsgMineBombRelay.Read(br);
+                    data.arrMineBombRelay[i] = MsgMineBombRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrSturnMinionRelay = new MsgSturnMinionRelay[length];
+                data.arrSturnMinionRelay = new MsgSturnMinionRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrSturnMinionRelay[i] = MsgSturnMinionRelay.Read(br);
+                    data.arrSturnMinionRelay[i] = MsgSturnMinionRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrRocketBombRelay = new MsgRocketBombRelay[length];
+                data.arrRocketBombRelay = new MsgRocketBombRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrRocketBombRelay[i] = MsgRocketBombRelay.Read(br);
+                    data.arrRocketBombRelay[i] = MsgRocketBombRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrIceBombRelay = new MsgIceBombRelay[length];
+                data.arrIceBombRelay = new MsgIceBombRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrIceBombRelay[i] = MsgIceBombRelay.Read(br);
+                    data.arrIceBombRelay[i] = MsgIceBombRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrFireManFireRelay = new MsgFireManFireRelay[length];
+                data.arrFireManFireRelay = new MsgFireManFireRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrFireManFireRelay[i] = MsgFireManFireRelay.Read(br);
+                    data.arrFireManFireRelay[i] = MsgFireManFireRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMinionCloackingRelay = new MsgMinionCloackingRelay[length];
+                data.arrMinionCloackingRelay = new MsgMinionCloackingRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMinionCloackingRelay[i] = MsgMinionCloackingRelay.Read(br);
+                    data.arrMinionCloackingRelay[i] = MsgMinionCloackingRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMinionFlagOfWarRelay = new MsgMinionFlagOfWarRelay[length];
+                data.arrMinionFlagOfWarRelay = new MsgMinionFlagOfWarRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMinionFlagOfWarRelay[i] = MsgMinionFlagOfWarRelay.Read(br);
+                    data.arrMinionFlagOfWarRelay[i] = MsgMinionFlagOfWarRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrScarercrowRelay = new MsgScarecrowRelay[length];
+                data.arrScarercrowRelay = new MsgScarecrowRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrScarercrowRelay[i] = MsgScarecrowRelay.Read(br);
+                    data.arrScarercrowRelay[i] = MsgScarecrowRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrLayzerTargetRelay = new MsgLayzerTargetRelay[length];
+                data.arrLayzerTargetRelay = new MsgLayzerTargetRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrLayzerTargetRelay[i] = MsgLayzerTargetRelay.Read(br);
+                    data.arrLayzerTargetRelay[i] = MsgLayzerTargetRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMinionInvincibilityRelay = new MsgMinionInvincibilityRelay[length];
+                data.arrMinionInvincibilityRelay = new MsgMinionInvincibilityRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMinionInvincibilityRelay[i] = MsgMinionInvincibilityRelay.Read(br);
+                    data.arrMinionInvincibilityRelay[i] = MsgMinionInvincibilityRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrFireBulletRelay = new MsgFireBulletRelay[length];
+                data.arrFireBulletRelay = new MsgFireBulletRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrFireBulletRelay[i] = MsgFireBulletRelay.Read(br);
+                    data.arrFireBulletRelay[i] = MsgFireBulletRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrFireCannonBallRelay = new MsgFireCannonBallRelay[length];
+                data.arrFireCannonBallRelay = new MsgFireCannonBallRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrFireCannonBallRelay[i] = MsgFireCannonBallRelay.Read(br);
+                    data.arrFireCannonBallRelay[i] = MsgFireCannonBallRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMinionAnimationTriggerRelay = new MsgSetMinionAnimationTriggerRelay[length];
+                data.arrMinionAnimationTriggerRelay = new MsgSetMinionAnimationTriggerRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMinionAnimationTriggerRelay[i] = MsgSetMinionAnimationTriggerRelay.Read(br);
+                    data.arrMinionAnimationTriggerRelay[i] = MsgSetMinionAnimationTriggerRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMagicTargetIdRelay = new MsgSetMagicTargetIdRelay[length];
+                data.arrMagicTargetIdRelay = new MsgSetMagicTargetIdRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMagicTargetIdRelay[i] = MsgSetMagicTargetIdRelay.Read(br);
+                    data.arrMagicTargetIdRelay[i] = MsgSetMagicTargetIdRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMagicTargetRelay = new MsgSetMagicTargetRelay[length];
+                data.arrMagicTargetRelay = new MsgSetMagicTargetRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMagicTargetRelay[i] = MsgSetMagicTargetRelay.Read(br);
+                    data.arrMagicTargetRelay[i] = MsgSetMagicTargetRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrActivatePoolObjectRelay = new MsgActivatePoolObjectRelay[length];
+                data.arrActivatePoolObjectRelay = new MsgActivatePoolObjectRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrActivatePoolObjectRelay[i] = MsgActivatePoolObjectRelay.Read(br);
+                    data.arrActivatePoolObjectRelay[i] = MsgActivatePoolObjectRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrSendMessageVoidRelay = new MsgSendMessageVoidRelay[length];
+                data.arrSendMessageVoidRelay = new MsgSendMessageVoidRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrSendMessageVoidRelay[i] = MsgSendMessageVoidRelay.Read(br);
+                    data.arrSendMessageVoidRelay[i] = MsgSendMessageVoidRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrSendMessageParam1Relay = new MsgSendMessageParam1Relay[length];
+                data.arrSendMessageParam1Relay = new MsgSendMessageParam1Relay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrSendMessageParam1Relay[i] = MsgSendMessageParam1Relay.Read(br);
+                    data.arrSendMessageParam1Relay[i] = MsgSendMessageParam1Relay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrMinionTargetRelay = new MsgSetMinionTargetRelay[length];
+                data.arrMinionTargetRelay = new MsgSetMinionTargetRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrMinionTargetRelay[i] = MsgSetMinionTargetRelay.Read(br);
+                    data.arrMinionTargetRelay[i] = MsgSetMinionTargetRelay.Read(br);
                 }
             }
 
             length = br.ReadInt32();
             if (length > 0)
             {
-                arrPushMinionRelay = new MsgPushMinionRelay[length];
+                data.arrPushMinionRelay = new MsgPushMinionRelay[length];
                 for (int i = 0; i < length; i++)
                 {
-                    arrPushMinionRelay[i] = MsgPushMinionRelay.Read(br);
+                    data.arrPushMinionRelay[i] = MsgPushMinionRelay.Read(br);
                 }
             }
+
+            return data;
         }
     }
 
