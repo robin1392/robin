@@ -336,6 +336,7 @@ namespace ED
         
         public void Spawn()
         {
+            packetCount = 0;
             var magicCastDelay = 0.05f;
             robotPieceCount = 0;
             robotEyeTotalLevel = 0;
@@ -1947,9 +1948,9 @@ namespace ED
             {
                 yield return new WaitForSeconds(0.2f);
 
-                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
+                if (InGameManager.Get().isGamePlaying && InGameManager.Get().wave > 0 && InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
-                    if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
+                    //if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
                         MsgVector3[] msgMinPos = new MsgVector3[listMinion.Count];
@@ -1960,7 +1961,9 @@ namespace ED
                             msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
                         }
 
+                        #if ENABLE_LOG
                         string str = "MINION_STATUS_RELAY -> Dictionary count : " + _syncDictionary.Keys.Count;
+                        #endif
                         if (_syncDictionary.Keys.Count > 0)
                         {
                             foreach (var sync in _syncDictionary)
@@ -2044,14 +2047,28 @@ namespace ED
                                         break;
                                 }
 
+                                #if ENABLE_LOG
                                 // Log
                                 str += string.Format("\n{0} -> List count : {1}", sync.Key, sync.Value.Count);
+                                switch (sync.Key)
+                                {
+                                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                                        foreach (var value in sync.Value)
+                                        {
+                                            MsgHitDamageMinionRelay msg = (MsgHitDamageMinionRelay) value;
+                                            str += string.Format("\n    UID: {0},  ID:{1}, DMG:{2}", msg.PlayerUId,
+                                                msg.Id, msg.Damage);
+                                        }
+                                        break;
+                                }
+                                #endif
                             }
                         }
                         
-                        UnityUtil.Print(string.Format("SEND [{0}] : ", packetCount), str, "red");
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, relay, packetCount++);
+                        UnityUtil.Print(string.Format("SEND [{0}] : ", InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
                         _syncDictionary.Clear();
+                        packetCount++;
                     }
                 }
             }
@@ -2067,11 +2084,27 @@ namespace ED
 
             var dic = MsgMinionStatusToDictionary(relay);
 
+            #if ENABLE_LOG
             string str = "MINION_STATUS_RELAY -> Dictionary count : " + dic.Keys.Count;
+            #endif
 
             foreach (var msg in dic)
             {
+                #if ENABLE_LOG
                 str += string.Format("\n{0} -> List count : {1}", msg.Key, msg.Value.Count);
+                switch (msg.Key)
+                {
+                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                        foreach (var value in msg.Value)
+                        {
+                            MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
+                            str += string.Format("\n    UID: {0},  ID:{1}, DMG:{2}", m.PlayerUId,
+                                m.Id, m.Damage);
+                        }
+                        break;
+                }
+                #endif
+                
                 if (msg.Value.Count > 0)
                 {
                     foreach (var obj in msg.Value)
@@ -2080,7 +2113,7 @@ namespace ED
                     }
                 }
             }
-                
+            
             UnityUtil.Print(string.Format("RECV [{0}] : ", packetCount), str, "green");
         }
 
