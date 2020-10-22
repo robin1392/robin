@@ -197,6 +197,15 @@ namespace RWGameProtocol
 
 
     [Serializable]
+    public class MsgGameResult
+    {
+        public int Trophy;
+        public int Gold;
+        public int BoxKey;
+    }
+
+
+    [Serializable]
     public class MsgVector3
     {
         public short X;
@@ -715,28 +724,6 @@ namespace RWGameProtocol
 
 
     [Serializable]
-    public class MsgRemoveMinionRelay
-    {
-        public ushort PlayerUId;
-        public ushort Id;
-
-        public void Write(BinaryWriter bw)
-        {
-            bw.Write(PlayerUId);
-            bw.Write(Id);
-        }
-
-        public static MsgRemoveMinionRelay Read(BinaryReader br)
-        {
-            MsgRemoveMinionRelay data = new MsgRemoveMinionRelay();
-            data.PlayerUId = br.ReadUInt16();
-            data.Id = br.ReadUInt16();
-            return data;
-        }
-    }
-
-
-    [Serializable]
     public class MsgHitDamageMinionRelay
     {
         public ushort PlayerUId;
@@ -860,28 +847,6 @@ namespace RWGameProtocol
             data.Id = br.ReadUInt16();
             data.TargetId = br.ReadUInt16();
             data.Trigger = br.ReadByte();
-            return data;
-        }
-    }
-
-
-    [Serializable]
-    public class MsgRemoveMagicRelay
-    {
-        public ushort PlayerUId;
-        public ushort Id;
-
-        public void Write(BinaryWriter bw)
-        {
-            bw.Write(PlayerUId);
-            bw.Write(Id);
-        }
-
-        public static MsgRemoveMagicRelay Read(BinaryReader br)
-        {
-            MsgRemoveMagicRelay data = new MsgRemoveMagicRelay();
-            data.PlayerUId = br.ReadUInt16();
-            data.Id = br.ReadUInt16();
             return data;
         }
     }

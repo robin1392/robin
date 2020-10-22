@@ -909,15 +909,6 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgRemoveMinionRelay GetRemoveMinionRelayMsg(int uid, int id)
-    {
-        MsgRemoveMinionRelay msg = new MsgRemoveMinionRelay();
-
-        msg.PlayerUId = MsgIntToUshort(uid);
-        msg.Id = MsgIntToUshort(id);
-
-        return msg;
-    }
 
     public static MsgDestroyMinionRelay GetDestroyMinionRelayMsg(int uid, int id)
     {
@@ -929,15 +920,6 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgRemoveMagicRelay GetRemoveMagicRelayMsg(int uid, int id)
-    {
-        MsgRemoveMagicRelay msg = new MsgRemoveMagicRelay();
-
-        msg.PlayerUId = MsgIntToUshort(uid);
-        msg.Id = MsgIntToUshort(id);
-
-        return msg;
-    }
 
     public static MsgDestroyMagicRelay GetDestroyMagicRelayMsg(int uid, int id)
     {

@@ -20,9 +20,9 @@ namespace RWGameProtocol.Serializer
         public virtual void InGameUpDiceAck(Peer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp) { }
         public virtual void UpgradeSpReq(Peer peer) { }
         public virtual void UpgradeSpAck(Peer peer, GameErrorCode code, short upgrade, int currentSp) { }
-        public virtual void UpgradeSpNotify(Peer peer, int playerUId, short upgrade) { }
-        public virtual void HitDamageReq(Peer peer, int playerUId, int damage) { }
-        public virtual void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage, int currentHp) { }
+        public virtual void UpgradeSpNotify(Peer peer, ushort playerUId, short upgrade) { }
+        public virtual void HitDamageReq(Peer peer, ushort playerUId, int damage) { }
+        public virtual void HitDamageAck(Peer peer, GameErrorCode code, ushort playerUId, int damage, int currentHp) { }
         public virtual void ReconnectGameReq(Peer peer) { }
         public virtual void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerBase playerBase, MsgPlayerBase otherPlayerBase) { }
         
@@ -38,14 +38,14 @@ namespace RWGameProtocol.Serializer
         public virtual void EndSyncGameNotify(Peer peer) { }
 
 
-        public virtual void HitDamageNotify(Peer peer, int playerUId, int damage, int currentHp) { }
+        public virtual void HitDamageNotify(Peer peer, ushort playerUId, int damage, int currentHp) { }
         public virtual void JoinGameNotify(Peer peer, MsgPlayerInfo info) { }
         public virtual void LeaveGameNotify(Peer peer, int playerUId) { }
-        public virtual void DeactiveWaitingObjectNotify(Peer peer, int playerUId, int currentSp) { }
-        public virtual void GetDiceNotify(Peer peer, int playerUId, int diceId, short slotNum, short level) { }
-        public virtual void LevelUpDiceNotify(Peer peer, int playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) { }
-        public virtual void InGameUpDiceNotify(Peer peer, int playerUId, int diceId, short inGameUp) { }
-        public virtual void AddSpNotify(Peer peer, int playerUId, int currentSp) { }
+        public virtual void DeactiveWaitingObjectNotify(Peer peer, ushort playerUId, int currentSp) { }
+        public virtual void GetDiceNotify(Peer peer, ushort playerUId, int diceId, short slotNum, short level) { }
+        public virtual void LevelUpDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) { }
+        public virtual void InGameUpDiceNotify(Peer peer, ushort playerUId, int diceId, short inGameUp) { }
+        public virtual void AddSpNotify(Peer peer, ushort playerUId, int currentSp) { }
         public virtual void SpawnNotify(Peer peer, int wave) { }
         public virtual void EndGameNotify(Peer peer, GameErrorCode code, int winPlayerUId) { }
         public virtual void DisconnectGameNotify(Peer peer, int playerUId) { }
@@ -54,35 +54,35 @@ namespace RWGameProtocol.Serializer
         public virtual void ResumeGameNotify(Peer peer, int playerUId) { }
 
 
-        public virtual void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage) { }
-        public virtual void DestroyMinionRelay(Peer peer, int playerUId, int id) { }
-        public virtual void HealMinionRelay(Peer peer, int playerUId, int id, int heal) { }
-        public virtual void PushMinionRelay(Peer peer, int playerUId, int id, MsgVector3 pos, int pushPower) { }
-        public virtual void SetMinionAnimationTriggerRelay(Peer peer, int playerUId, int id, int targetId, int trigger) { }
-        public virtual void FireArrowRelay(Peer peer, int playerUId, int id, MsgVector3 pos, int damage, int moveSpeed) { }
-        public virtual void FireballBombRelay(Peer peer, int playerUId, int id) { }
-        public virtual void MineBombRelay(Peer peer, int playerUId, int id) { }
-        public virtual void SetMagicTargetIdRelay(Peer peer, int playerUId, int id, int targetId) { }
-        public virtual void SetMagicTargetRelay(Peer peer, int playerUId, int id, int x, int z) { }
-        public virtual void SturnMinionRelay(Peer peer, int playerUId, int id, int sturnTime) { }
-        public virtual void RocketBombRelay(Peer peer, int playerUId, int id) { }
-        public virtual void IceBombRelay(Peer peer, int playerUId, int id) { }
-        public virtual void MsgDestroyMagic(Peer peer, int playerUId, int baseStatId) { }
-        public virtual void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range, int type) { }
-        public virtual void FireSpearRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int moveSpeed) { }
-        public virtual void FireManFireRelay(Peer peer, int playerUId, int id) { }
+        public virtual void HitDamageMinionRelay(Peer peer, ushort playerUId, ushort id, int damage) { }
+        public virtual void DestroyMinionRelay(Peer peer, ushort playerUId, ushort id) { }
+        public virtual void HealMinionRelay(Peer peer, ushort playerUId, ushort id, int heal) { }
+        public virtual void PushMinionRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, short pushPower) { }
+        public virtual void SetMinionAnimationTriggerRelay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte trigger) { }
+        public virtual void FireArrowRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeed) { }
+        public virtual void FireballBombRelay(Peer peer, ushort playerUId, ushort id) { }
+        public virtual void MineBombRelay(Peer peer, ushort playerUId, ushort id) { }
+        public virtual void SetMagicTargetIdRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) { }
+        public virtual void SetMagicTargetRelay(Peer peer, ushort playerUId, ushort id, short x, short z) { }
+        public virtual void SturnMinionRelay(Peer peer, ushort playerUId, ushort id, short sturnTime) { }
+        public virtual void RocketBombRelay(Peer peer, ushort playerUId, ushort id) { }
+        public virtual void IceBombRelay(Peer peer, ushort playerUId, ushort id) { }
+        public virtual void MsgDestroyMagic(Peer peer, ushort playerUId, ushort baseStatId) { }
+        public virtual void MsgFireCannonBall(Peer peer, ushort playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, short range, byte type) { }
+        public virtual void FireSpearRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short moveSpeed) { }
+        public virtual void FireManFireRelay(Peer peer, ushort playerUId, ushort id) { }
         public virtual void ActivatePoolObjectRelay(Peer peer, int poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation) { }
-        public virtual void MinionCloackingRelay(Peer peer, int playerUId, int id, bool isCloacking) { }
-        public virtual void MinionFogOfWarRelay(Peer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar) { }
-        public virtual void SendMessageVoidRelay(Peer peer, int playerUId, int id, int message) { }
-        public virtual void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, int message) { }
-        public virtual void NecromancerBulletRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed) { }
-        public virtual void SetMinionTargetRelay(Peer peer, int playerUId, int id, int targetId) { }
-        public virtual void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos, MsgMinionStatus relay, int packetCount) { }
-        public virtual void ScarecrowRelay(Peer peer, int playerUId, int baseStatId, int eyeLevel) { }
-        public virtual void LayzerTargetRelay(Peer peer, int playerUId, int id, int[] targetId) { }
-        public virtual void FireBulletRelay(Peer peer, int playerUId, int id, MsgVector3 pos, int damage, int moveSpeedk, int type) { }
-        public virtual void MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time) { }
+        public virtual void MinionCloackingRelay(Peer peer, ushort playerUId, ushort id, bool isCloacking) { }
+        public virtual void MinionFogOfWarRelay(Peer peer, ushort playerUId, ushort baseStatId, short effect, bool isFogOfWar) { }
+        public virtual void SendMessageVoidRelay(Peer peer, ushort playerUId, ushort id, byte message) { }
+        public virtual void SendMessageParam1Relay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte message) { }
+        public virtual void NecromancerBulletRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short bulletMoveSpeed) { }
+        public virtual void SetMinionTargetRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) { }
+        public virtual void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector3[] pos, MsgMinionStatus relay, int packetCount) { }
+        public virtual void ScarecrowRelay(Peer peer, ushort playerUId, ushort baseStatId, byte eyeLevel) { }
+        public virtual void LayzerTargetRelay(Peer peer, ushort playerUId, ushort id, ushort[] targetId) { }
+        public virtual void FireBulletRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeedk, byte type) { }
+        public virtual void MinionInvincibilityRelay(Peer peer, ushort playerUId, ushort id, short time) { }
 
 
     }

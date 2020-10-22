@@ -95,7 +95,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void DeactiveWaitingObjectNotify(Peer peer, int playerUid, int currentSp)
+        public override void DeactiveWaitingObjectNotify(Peer peer, ushort playerUid, int currentSp)
         {
             using (var ms = new MemoryStream())
             {
@@ -107,7 +107,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void AddSpNotify(Peer peer, int playerUId, int currentSp)
+        public override void AddSpNotify(Peer peer, ushort playerUId, int currentSp)
         {
             using (var ms = new MemoryStream())
             {
@@ -372,7 +372,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void GetDiceNotify(Peer peer, int playerUId, int diceId, short slotNum, short level)
+        public override void GetDiceNotify(Peer peer, ushort playerUId, int diceId, short slotNum, short level)
         {
             
             using (var ms = new MemoryStream())
@@ -416,7 +416,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void LevelUpDiceNotify(Peer peer, int playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
+        public override void LevelUpDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
         {
             
             using (var ms = new MemoryStream())
@@ -459,7 +459,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void InGameUpDiceNotify(Peer peer, int playerUId, int diceId, short inGameUp) 
+        public override void InGameUpDiceNotify(Peer peer, ushort playerUId, int diceId, short inGameUp) 
         {
             
             using (var ms = new MemoryStream())
@@ -498,7 +498,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void UpgradeSpNotify(Peer peer, int playerUId, short upgrade) 
+        public override void UpgradeSpNotify(Peer peer, ushort playerUId, short upgrade) 
         {
             
             using (var ms = new MemoryStream())
@@ -511,7 +511,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void HitDamageReq(Peer peer, int playerUId, int damage) 
+        public override void HitDamageReq(Peer peer, ushort playerUId, int damage) 
         {
             
             using (var ms = new MemoryStream())
@@ -524,7 +524,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void HitDamageAck(Peer peer, GameErrorCode code, int playerUId, int damage, int currentHp) 
+        public override void HitDamageAck(Peer peer, GameErrorCode code, ushort playerUId, int damage, int currentHp) 
         {
             using (var ms = new MemoryStream())
             {
@@ -538,7 +538,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void HitDamageNotify(Peer peer, int playerUId, int damage, int currentHp)
+        public override void HitDamageNotify(Peer peer, ushort playerUId, int damage, int currentHp)
         {
             using (var ms = new MemoryStream())
             {
@@ -576,7 +576,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void HitDamageMinionRelay(Peer peer, int playerUId, int id, int damage) 
+        public override void HitDamageMinionRelay(Peer peer, ushort playerUId, ushort id, int damage) 
         {
             using (var ms = new MemoryStream())
             {
@@ -589,9 +589,8 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void DestroyMinionRelay(Peer peer, int playerUId, int id) 
+        public override void DestroyMinionRelay(Peer peer, ushort playerUId, ushort id) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -602,9 +601,8 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void HealMinionRelay(Peer peer, int playerUId, int id, int heal) 
+        public override void HealMinionRelay(Peer peer, ushort playerUId, ushort id, int heal) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -616,7 +614,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void PushMinionRelay(Peer peer, int playerUId, int id, MsgVector3 pos, int pushPower) 
+        public override void PushMinionRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, short pushPower) 
         {
             using (var ms = new MemoryStream())
             {
@@ -630,9 +628,8 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void SetMinionAnimationTriggerRelay(Peer peer, int playerUId, int id, int targetId, int trigger) 
+        public override void SetMinionAnimationTriggerRelay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte trigger) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -645,7 +642,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void FireArrowRelay(Peer peer, int playerUId, int id, MsgVector3 pos, int damage, int moveSpeed) 
+        public override void FireArrowRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeed) 
         {
             using (var ms = new MemoryStream())
             {
@@ -660,7 +657,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void FireballBombRelay(Peer peer, int playerUId, int id) 
+        public override void FireballBombRelay(Peer peer, ushort playerUId, ushort id) 
         {
             
             using (var ms = new MemoryStream())
@@ -673,7 +670,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MineBombRelay(Peer peer, int playerUId, int id) 
+        public override void MineBombRelay(Peer peer, ushort playerUId, ushort id) 
         {
             
             using (var ms = new MemoryStream())
@@ -686,7 +683,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void SetMagicTargetIdRelay(Peer peer, int playerUId, int id, int targetId) 
+        public override void SetMagicTargetIdRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) 
         {
             
             using (var ms = new MemoryStream())
@@ -700,7 +697,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void SetMagicTargetRelay(Peer peer, int playerUId, int id, int x, int z)
+        public override void SetMagicTargetRelay(Peer peer, ushort playerUId, ushort id, short x, short z)
         {
             
             using (var ms = new MemoryStream())
@@ -715,7 +712,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void SturnMinionRelay(Peer peer, int playerUId, int id, int sturnTime)
+        public override void SturnMinionRelay(Peer peer, ushort playerUId, ushort id, short sturnTime)
         {
             
             using (var ms = new MemoryStream())
@@ -729,7 +726,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void RocketBombRelay(Peer peer, int playerUId, int id) 
+        public override void RocketBombRelay(Peer peer, ushort playerUId, ushort id) 
         {
             
             using (var ms = new MemoryStream())
@@ -742,7 +739,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void IceBombRelay(Peer peer, int playerUId, int id) 
+        public override void IceBombRelay(Peer peer, ushort playerUId, ushort id) 
         {
             
             using (var ms = new MemoryStream())
@@ -755,7 +752,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MsgDestroyMagic(Peer peer, int playerUId, int baseStatId) 
+        public override void MsgDestroyMagic(Peer peer, ushort playerUId, ushort baseStatId) 
         {
             
             using (var ms = new MemoryStream())
@@ -768,7 +765,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MsgFireCannonBall(Peer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range, int type) 
+        public override void MsgFireCannonBall(Peer peer, ushort playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, short range, byte type) 
         {
             
             using (var ms = new MemoryStream())
@@ -785,7 +782,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void FireSpearRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int moveSpeed)
+        public override void FireSpearRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short moveSpeed)
         {
             using (var ms = new MemoryStream())
             {
@@ -800,7 +797,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void FireManFireRelay(Peer peer, int playerUId, int id) 
+        public override void FireManFireRelay(Peer peer, ushort playerUId, ushort id) 
         {
             using (var ms = new MemoryStream())
             {
@@ -826,7 +823,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MinionCloackingRelay(Peer peer, int playerUId, int id, bool isCloacking)
+        public override void MinionCloackingRelay(Peer peer, ushort playerUId, ushort id, bool isCloacking)
         {
             
             using (var ms = new MemoryStream())
@@ -840,7 +837,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MinionFogOfWarRelay(Peer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar) 
+        public override void MinionFogOfWarRelay(Peer peer, ushort playerUId, ushort baseStatId, short effect, bool isFogOfWar) 
         {
             using (var ms = new MemoryStream())
             {
@@ -854,7 +851,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void SendMessageVoidRelay(Peer peer, int playerUId, int id, int message) 
+        public override void SendMessageVoidRelay(Peer peer, ushort playerUId, ushort id, byte message) 
         {
             using (var ms = new MemoryStream())
             {
@@ -867,7 +864,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void SendMessageParam1Relay(Peer peer, int playerUId, int id, int targetId, int message) 
+        public override void SendMessageParam1Relay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte message) 
         {
             using (var ms = new MemoryStream())
             {
@@ -881,7 +878,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void NecromancerBulletRelay(Peer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed) 
+        public override void NecromancerBulletRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short bulletMoveSpeed) 
         {
             using (var ms = new MemoryStream())
             {
@@ -896,7 +893,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void SetMinionTargetRelay(Peer peer, int playerUId, int id, int targetId) 
+        public override void SetMinionTargetRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) 
         {
             
             using (var ms = new MemoryStream())
@@ -910,7 +907,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MinionStatusRelay(Peer peer, int playerUId, byte posIndex, MsgVector3[] pos, MsgMinionStatus relay, int packetCount) 
+        public override void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector3[] pos, MsgMinionStatus relay, int packetCount) 
         {
             using (var ms = new MemoryStream())
             {
@@ -933,7 +930,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void ScarecrowRelay(Peer peer, int playerUId, int baseStatId, int eyeLevel)
+        public override void ScarecrowRelay(Peer peer, ushort playerUId, ushort baseStatId, byte eyeLevel)
         {
             
             using (var ms = new MemoryStream())
@@ -947,7 +944,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void LayzerTargetRelay(Peer peer, int playerUId, int id, int[] targetId) 
+        public override void LayzerTargetRelay(Peer peer, ushort playerUId, ushort id, ushort[] targetId) 
         {
             
             using (var ms = new MemoryStream())
@@ -965,14 +962,14 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void FireBulletRelay(Peer peer, int playerUId, int id, MsgVector3 dir, int damage, int moveSpeedk, int type) 
+        public override void FireBulletRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeedk, byte type) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(playerUId);
                 bw.Write(id);
-                dir.Write(bw);
+                pos.Write(bw);
                 bw.Write(damage);
                 bw.Write(moveSpeedk);
                 bw.Write(type);
@@ -981,7 +978,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time) 
+        public override void MinionInvincibilityRelay(Peer peer, ushort playerUId, ushort id, short time) 
         {
             using (var ms = new MemoryStream())
             {
