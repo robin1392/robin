@@ -25,7 +25,7 @@ namespace RWGameProtocol.Msg
     public class MsgUpgradeSpNotify
     {
         // 플레이어 UID
-        public int PlayerUId;
+        public ushort PlayerUId;
 
         // 인게임 업그레이드 수치
         public short Upgrade;

@@ -31,7 +31,7 @@ namespace RWGameProtocol.Msg
     public class MsgGetDiceNotify
     {
         // 플레이어 UId
-        public int PlayerUId;
+        public ushort PlayerUId;
 
         // 주사위 아이디
         public int DiceId;

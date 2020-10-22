@@ -2784,6 +2784,7 @@ namespace ED
                 case GameProtocol.MINION_STATUS_RELAY:
                 {
                     MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
+                    
 
                     if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
                         targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Relay, statusrelay.packetCount);

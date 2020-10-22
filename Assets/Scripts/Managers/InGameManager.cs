@@ -1313,11 +1313,11 @@ namespace ED
 
                 #region case notify
                 case GameProtocol.LEAVE_GAME_NOTIFY:
-                    OnOtherLeft((int) param[0]);
+                    OnOtherLeft(Convert.ToUInt16(param[0]));
                     break;
                 case GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY:
                 {
-                    if (NetworkManager.Get().UserUID == (int) param[0]) // param 0 = useruid
+                    if (NetworkManager.Get().UserUID == Convert.ToUInt16(param[0])) // param 0 = useruid
                     {
                         NetSetSp((int) param[1]); // param1 wave
                     }
@@ -1327,7 +1327,7 @@ namespace ED
                 }
                 case GameProtocol.ADD_SP_NOTIFY:
                 {
-                    if (NetworkManager.Get().UserUID == (int) param[0] ) // param 0 = useruid
+                    if (NetworkManager.Get().UserUID == Convert.ToUInt16(param[0])) // param 0 = useruid
                     {
                         NetSetSp((int) param[1]); // param1 wave
                     }

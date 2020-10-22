@@ -30,7 +30,7 @@ namespace RWGameProtocol.Msg
     public class MsgInGameUpDiceNotify
     {
         // 플레이어 UID
-        public int PlayerUId;
+        public ushort PlayerUId;
 
         // 업그레이드 대상 주사위 아이디
         public int DiceId;

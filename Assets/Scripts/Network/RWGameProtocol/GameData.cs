@@ -1387,7 +1387,7 @@ namespace RWGameProtocol
             bw.Write(PlayerUId);
             bw.Write(Id);
             bw.Write(TargetIdArray.Length);
-            byte[] bytes = new byte[TargetIdArray.Length * sizeof(int)];
+            byte[] bytes = new byte[TargetIdArray.Length * sizeof(ushort)];
             Buffer.BlockCopy(TargetIdArray, 0, bytes, 0, bytes.Length);
             bw.Write(bytes);
         }
@@ -1399,7 +1399,7 @@ namespace RWGameProtocol
             data.Id = br.ReadUInt16();
 
             int length = br.ReadInt32();
-            byte[] bytes = br.ReadBytes(length * sizeof(int));
+            byte[] bytes = br.ReadBytes(length * sizeof(ushort));
             data.TargetIdArray = new ushort[length];
             for (var index = 0; index < length; index++)
             {

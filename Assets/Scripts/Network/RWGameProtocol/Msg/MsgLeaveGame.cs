@@ -18,7 +18,7 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgLeaveGameNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
     }
 
 

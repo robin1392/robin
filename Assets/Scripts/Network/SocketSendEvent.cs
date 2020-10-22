@@ -62,7 +62,7 @@ public class SocketSendEvent
             }
             case GameProtocol.HIT_DAMAGE_REQ:
             {
-                _sender.HitDamageReq(peer , (ushort)param[0] , (int)param[1]);
+                _sender.HitDamageReq(peer, Convert.ToUInt16(param[0]), (int)param[1]);
                 break;
             }
             
@@ -269,8 +269,8 @@ public class SocketSendEvent
             
             case GameProtocol.MINION_STATUS_RELAY:
             {
-                //MinionStatusRelay(IPeer peer, int playerUId, byte posIndex, MsgVector3[] pos)
-                _sender.MinionStatusRelay(peer , (ushort)param[0] , (byte)param[1] , (MsgVector3[])param[2], (MsgMinionStatus)param[3], (int)param[4]);
+                    //MinionStatusRelay(IPeer peer, int playerUId, byte posIndex, MsgVector3[] pos)
+                    _sender.MinionStatusRelay(peer , Convert.ToUInt16(param[0]), (byte)param[1] , (MsgVector3[])param[2], (MsgMinionStatus)param[3], (int)param[4]);
                 break;
             }
             

@@ -18,6 +18,6 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgReadySyncGameNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
     }
 }

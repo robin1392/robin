@@ -20,6 +20,6 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgReconnectGameNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
     }
 }

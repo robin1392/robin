@@ -5,7 +5,7 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgDeactiveWaitingObjectNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public int CurrentSp;
     }
 
@@ -13,7 +13,7 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgAddSpNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public int CurrentSp;
     }
 
@@ -36,20 +36,20 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgDisconnectGameNotify 
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
     }
 
 
     [Serializable]
     public class MsgPauseGameNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
     }
 
 
     [Serializable]
     public class MsgResumeGameNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
     }
 }

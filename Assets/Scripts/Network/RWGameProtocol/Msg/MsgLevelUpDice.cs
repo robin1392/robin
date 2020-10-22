@@ -24,7 +24,7 @@ namespace RWGameProtocol.Msg
     [Serializable]
     public class MsgLevelUpDiceNotify
     {
-        public int PlayerUId;
+        public ushort PlayerUId;
         public short ResetFieldNum;
         public short LeveupFieldNum;
         public int LevelupDiceId;

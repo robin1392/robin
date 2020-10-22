@@ -121,7 +121,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgLeaveGameNotify msg = new MsgLeaveGameNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             LeaveGameNotify(peer, msg);
                         }
                     }
@@ -165,7 +165,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgDeactiveWaitingObjectNotify msg = new MsgDeactiveWaitingObjectNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.CurrentSp = br.ReadInt32();
                             DeactiveWaitingObjectNotify(peer, msg);
                         }
@@ -181,7 +181,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgAddSpNotify msg = new MsgAddSpNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.CurrentSp = br.ReadInt32();
                             AddSpNotify(peer, msg);
                         }
@@ -228,7 +228,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgDisconnectGameNotify msg = new MsgDisconnectGameNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             DisconnectGameNotify(peer, msg);
                         }
                     }
@@ -243,7 +243,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgPauseGameNotify msg = new MsgPauseGameNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             PauseGameNotify(peer, msg);
                         }
                     }
@@ -258,7 +258,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgResumeGameNotify msg = new MsgResumeGameNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             ResumeGameNotify(peer, msg);
                         }
                     }
@@ -302,7 +302,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgReconnectGameNotify msg = new MsgReconnectGameNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             ReconnectGameNotify(peer, msg);
                         }
                     }
@@ -346,7 +346,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgReadySyncGameNotify msg = new MsgReadySyncGameNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             ReadySyncGameNotify(peer, msg);
                         }
                     }
@@ -501,7 +501,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameNotify msg = new MsgEndSyncGameNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             EndSyncGameNotify(peer, msg);
                         }
                     }
@@ -549,7 +549,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgGetDiceNotify msg = new MsgGetDiceNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.DiceId = br.ReadInt32();
                             msg.SlotNum = br.ReadInt16();
                             msg.Level = br.ReadInt16();
@@ -602,7 +602,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgLevelUpDiceNotify msg = new MsgLevelUpDiceNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.ResetFieldNum = br.ReadInt16();
                             msg.LeveupFieldNum = br.ReadInt16();
                             msg.LevelupDiceId = br.ReadInt32();
@@ -654,7 +654,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgInGameUpDiceNotify msg = new MsgInGameUpDiceNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.DiceId = br.ReadInt32();
                             msg.InGameUp = br.ReadInt16();
                             InGameUpDiceNotify(peer, msg);
@@ -702,7 +702,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgUpgradeSpNotify msg = new MsgUpgradeSpNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.Upgrade = br.ReadInt16();
                             UpgradeSpNotify(peer, msg);
                         }
@@ -718,7 +718,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageReq msg = new MsgHitDamageReq();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             HitDamageReq(peer, msg);
                         }
@@ -735,7 +735,7 @@ namespace RWGameProtocol.Serializer
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageAck msg = new MsgHitDamageAck();
                             msg.ErrorCode = br.ReadInt16();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             msg.CurrentHp = br.ReadInt32();
                             HitDamageAck(peer, msg);
@@ -752,7 +752,7 @@ namespace RWGameProtocol.Serializer
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageNotify msg = new MsgHitDamageNotify();
-                            msg.PlayerUId = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             msg.CurrentHp = br.ReadInt32();
                             HitDamageNotify(peer, msg);
