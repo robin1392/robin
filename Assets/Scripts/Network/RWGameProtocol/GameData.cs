@@ -45,7 +45,7 @@ namespace RWGameProtocol
         public short SpGrade;
         public short GetDiceCount;
         public int[] DiceIdArray;
-        public short[] DiceUpgradeArray;
+        public short[] DiceLevelArray;
 
         public void Write(BinaryWriter bw)
         {
@@ -62,9 +62,9 @@ namespace RWGameProtocol
             Buffer.BlockCopy(DiceIdArray, 0, bytes, 0, bytes.Length);
             bw.Write(bytes);
 
-            bw.Write(DiceUpgradeArray.Length);
-            bytes = new byte[DiceUpgradeArray.Length * sizeof(short)];
-            Buffer.BlockCopy(DiceUpgradeArray, 0, bytes, 0, bytes.Length);
+            bw.Write(DiceLevelArray.Length);
+            bytes = new byte[DiceLevelArray.Length * sizeof(short)];
+            Buffer.BlockCopy(DiceLevelArray, 0, bytes, 0, bytes.Length);
             bw.Write(bytes);
         }
 
@@ -90,10 +90,10 @@ namespace RWGameProtocol
 
             length = br.ReadInt32();
             bytes = br.ReadBytes(length * sizeof(short));
-            data.DiceUpgradeArray = new short[length];
+            data.DiceLevelArray = new short[length];
             for (var index = 0; index < length; index++)
             {
-                data.DiceUpgradeArray[index] = BitConverter.ToInt16(bytes, index * sizeof(short));
+                data.DiceLevelArray[index] = BitConverter.ToInt16(bytes, index * sizeof(short));
             }
 
             return data;

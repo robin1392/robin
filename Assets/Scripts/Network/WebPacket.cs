@@ -137,8 +137,8 @@ public class UserDeck
 public class UserDice
 {
     public int diceId;
-    public short grade;
-    public short count;
+    public short level = 1;
+    public short count = 1;
 }
 
 
