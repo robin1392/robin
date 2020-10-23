@@ -1417,6 +1417,7 @@ namespace RWGameProtocol
         public ushort PlayerUId;
         public byte PosIndex;
         public MsgVector3[] Pos;
+        public int[] Hp;
         public MsgMinionStatus Relay;
         public int packetCount;
     }

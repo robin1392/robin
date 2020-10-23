@@ -907,7 +907,7 @@ namespace RWGameProtocol.Serializer
         }
 
 
-        public override void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector3[] pos, MsgMinionStatus relay, int packetCount) 
+        public override void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector3[] pos, int[] hp, MsgMinionStatus relay, int packetCount) 
         {
             using (var ms = new MemoryStream())
             {
@@ -921,9 +921,13 @@ namespace RWGameProtocol.Serializer
                     pos[i].Write(bw);
                 }
 
+                bw.Write(hp.Length);
+                for (int i = 0; i < hp.Length; i++)
+                {
+                    bw.Write(hp[i]);
+                }
 
                 relay.Write(bw);
-
                 bw.Write(packetCount);
                 peer.SendPacket((int)GameProtocol.MINION_STATUS_RELAY, ms.ToArray());
             }

@@ -1198,6 +1198,12 @@ namespace RWGameProtocol.Serializer
                                 msg.Pos[i] = MsgVector3.Read(br);
                             }
 
+                            msg.Hp = new int[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.Hp[i] = br.ReadInt32();
+                            }
+
                             msg.Relay = MsgMinionStatus.Read(br);
                             msg.packetCount = br.ReadInt32();
 
