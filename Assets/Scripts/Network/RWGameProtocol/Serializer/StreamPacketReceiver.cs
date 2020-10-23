@@ -1198,6 +1198,7 @@ namespace RWGameProtocol.Serializer
                                 msg.Pos[i] = MsgVector3.Read(br);
                             }
 
+                            length = br.ReadInt32();
                             msg.Hp = new int[length];
                             for (int i = 0; i < length; i++)
                             {
