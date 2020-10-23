@@ -106,8 +106,8 @@ namespace RandomWarsProtocol
         public int minionMaxHp;
         public int minionPower;
         public int minionEffect;
-        public byte minionEffectUpgrade;
-        public byte minionEffectIngameUpgrade;
+        public short minionEffectUpgrade;
+        public short minionEffectIngameUpgrade;
         public short minionDuration;
         public short minionCooltime;
         public MsgVector3 minionPos;
@@ -136,8 +136,8 @@ namespace RandomWarsProtocol
             data.minionMaxHp = br.ReadInt32();
             data.minionPower = br.ReadInt32();
             data.minionEffect = br.ReadInt32();
-            data.minionEffectUpgrade = br.ReadByte();
-            data.minionEffectIngameUpgrade = br.ReadByte();
+            data.minionEffectUpgrade = br.ReadInt16();
+            data.minionEffectIngameUpgrade = br.ReadInt16();
             data.minionDuration = br.ReadInt16();
             data.minionCooltime = br.ReadInt16();
             data.minionPos = MsgVector3.Read(br);

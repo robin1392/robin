@@ -706,9 +706,9 @@ public class ConvertNetMsg
             convData[i].minionMaxHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionMaxHp);
             convData[i].minionPower = MsgFloatToInt(syncData.netSyncMinionData[i].minionPower);
             convData[i].minionEffect = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffect);
-            convData[i].minionEffectUpgrade = MsgFloatToByte(syncData.netSyncMinionData[i].minionEffectUpgrade);
+            convData[i].minionEffectUpgrade = MsgFloatToShort(syncData.netSyncMinionData[i].minionEffectUpgrade);
             convData[i].minionEffectIngameUpgrade =
-                MsgFloatToByte(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
+                MsgFloatToShort(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
             convData[i].minionDuration = MsgFloatToShort(syncData.netSyncMinionData[i].minionDuration);
             convData[i].minionCooltime = MsgFloatToShort(syncData.netSyncMinionData[i].minionCooltime);
 
