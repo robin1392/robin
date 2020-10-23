@@ -465,13 +465,14 @@ namespace ED
             }
         }
 
-        public void SetNetworkValue(Vector3 position)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
+        public void SetNetworkValue(Vector3 position, float hp)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
         {
             networkPosition = position;
             //rb.rotation = rotation;
             //rb.velocity = velocity;
             //agent.velocity = velocity;
-            //currentHealth = health;
+            currentHealth = hp;
+            RefreshHealthBar();
 
             //var lag = Mathf.Abs((float)(PhotonNetwork.Time - sendServerTime));
             //networkPosition += rb.velocity * lag;
