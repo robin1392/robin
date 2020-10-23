@@ -30,6 +30,7 @@ namespace ED
         private Transform _grandParent;
 
         public Image image_GradeBG;
+        public Sprite[] arrSprite_GradeBG;
         
 
         private void Awake()
@@ -53,7 +54,8 @@ namespace ED
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(()=>{_panelDice.Click_Dice_Info(pData.id);});
 
-            image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[pData.grade]);
+            //image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[pData.grade]);
+            image_GradeBG.sprite = arrSprite_GradeBG[pData.grade];
         }
 
         public void Click_Dice()

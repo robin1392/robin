@@ -38,11 +38,24 @@ public class UserInfo
     }
 
     // 서버가 정식으로 붙기 전까진 playerpref 에 저장해두고 가져오고 쓰자
-    private string[] _slotDeck = new string[Global.g_countDeck];
-    public string[] slotDeck
+    // private string[] _slotDeck = new string[Global.g_countDeck];
+    // public string[] slotDeck
+    // {
+    //     get => _slotDeck;
+    //     private set => _slotDeck = value;
+    // }
+    private int[][] _arrDeck = new int[3][];
+
+    public int[][] arrDeck
     {
-        get => _slotDeck;
-        private set => _slotDeck = value;
+        get => _arrDeck;
+        private set => _arrDeck = value;
+    }
+
+    public Dictionary<int, int[]> dicGettedDice
+    {
+        get;
+        private set;
     }
     
     #endregion
@@ -52,27 +65,33 @@ public class UserInfo
 
     public UserInfo()
     {
-        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004" );
-        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004" );
-        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004" );
+        arrDeck[0] = new int[5] {1000, 1001, 1002, 1003, 1004};
+        arrDeck[1] = new int[5] {1000, 1001, 1002, 1003, 1004};
+        arrDeck[2] = new int[5] {1000, 1001, 1002, 1003, 1004};
 
-        FixDeckOld();
+        dicGettedDice = new Dictionary<int, int[]>();
+        
+        // _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004" );
+        // _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004" );
+        // _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004" );
+
+        //FixDeckOld();
         
         _userNickName = ObscuredPrefs.GetString("Nickname", "" );
         _userID = ObscuredPrefs.GetString("UserKey", "" );
         
-        if (_slotDeck[0].Length < 20 || _slotDeck[1].Length < 20 || _slotDeck[2].Length < 20)
-        {
-
-            ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004");
-            ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
-            ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
-            ObscuredPrefs.Save();
-            
-            _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
-            _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
-            _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
-        }
+        // if (_slotDeck[0].Length < 20 || _slotDeck[1].Length < 20 || _slotDeck[2].Length < 20)
+        // {
+        //
+        //     ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004");
+        //     ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
+        //     ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
+        //     ObscuredPrefs.Save();
+        //     
+        //     _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+        //     _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
+        //     _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
+        // }
 
         if (_userNickName == "")
         {
@@ -89,30 +108,30 @@ public class UserInfo
     
     #endregion
 
-    public void FixDeckOld()
-    {
-        string[] deckstr =_slotDeck[0].Split('/');
-        if (int.Parse(deckstr[0]) < 1000)
-        {
-            ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004" );
-        }
-        
-        deckstr =_slotDeck[1].Split('/');
-        if (int.Parse(deckstr[0]) < 1000)
-        {
-            ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004" );
-        }
-        
-        deckstr =_slotDeck[2].Split('/');
-        if (int.Parse(deckstr[0]) < 1000)
-        {
-            ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004" );
-        }
-        
-        ObscuredPrefs.Save();
-    }
-    
-    
+    // public void FixDeckOld()
+    // {
+    //     string[] deckstr =_slotDeck[0].Split('/');
+    //     if (int.Parse(deckstr[0]) < 1000)
+    //     {
+    //         ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004" );
+    //     }
+    //     
+    //     deckstr =_slotDeck[1].Split('/');
+    //     if (int.Parse(deckstr[0]) < 1000)
+    //     {
+    //         ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004" );
+    //     }
+    //     
+    //     deckstr =_slotDeck[2].Split('/');
+    //     if (int.Parse(deckstr[0]) < 1000)
+    //     {
+    //         ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004" );
+    //     }
+    //     
+    //     ObscuredPrefs.Save();
+    // }
+    //
+    //
     
     #region set
 
@@ -142,57 +161,62 @@ public class UserInfo
         activateDeckIndex = index;
     }
 
-    public void SetDeck(string deck)
-    {
-        _slotDeck[activateDeckIndex] = deck;
+    // public void SetDeck(string deck)
+    // {
+    //     _slotDeck[activateDeckIndex] = deck;
+    //
+    //     switch (activateDeckIndex)
+    //     {
+    //         case 0:
+    //             ObscuredPrefs.SetString("Deck", _slotDeck[activateDeckIndex]);
+    //             break;
+    //         case 1:
+    //             ObscuredPrefs.SetString("Deck2", _slotDeck[activateDeckIndex]);
+    //             break;
+    //         case 2:
+    //             ObscuredPrefs.SetString("Deck3", _slotDeck[activateDeckIndex]);
+    //             break;
+    //     }
+    //     
+    //     ObscuredPrefs.Save();
+    // }
 
-        switch (activateDeckIndex)
-        {
-            case 0:
-                ObscuredPrefs.SetString("Deck", _slotDeck[activateDeckIndex]);
-                break;
-            case 1:
-                ObscuredPrefs.SetString("Deck2", _slotDeck[activateDeckIndex]);
-                break;
-            case 2:
-                ObscuredPrefs.SetString("Deck3", _slotDeck[activateDeckIndex]);
-                break;
-        }
+    public void SetDeck(int index, int[] deck)
+    {
+        //_slotDeck[index] = deck;
         
-        ObscuredPrefs.Save();
+        // switch (index)
+        // {
+        //     case 0:
+        //         //ObscuredPrefs.SetString("Deck", _slotDeck[index]);
+        //         arrDeck[]
+        //         break;
+        //     case 1:
+        //         //ObscuredPrefs.SetString("Deck2", _slotDeck[index]);
+        //         break;
+        //     case 2:
+        //         //ObscuredPrefs.SetString("Deck3", _slotDeck[index]);
+        //         break;
+        //}
+        
+        //ObscuredPrefs.Save();
+
+        arrDeck[index] = deck;
     }
 
-    public void SetDeck(int index, string deck)
-    {
-        _slotDeck[index] = deck;
-        
-        switch (index)
-        {
-            case 0:
-                ObscuredPrefs.SetString("Deck", _slotDeck[index]);
-                break;
-            case 1:
-                ObscuredPrefs.SetString("Deck2", _slotDeck[index]);
-                break;
-            case 2:
-                ObscuredPrefs.SetString("Deck3", _slotDeck[index]);
-                break;
-        }
-        
-        ObscuredPrefs.Save();
-    }
-
-    public void ResetDeck()
-    {
-        ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004");
-        ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
-        ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
-        ObscuredPrefs.Save();
-        
-        _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
-        _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
-        _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
-    }
+    // public void ResetDeck()
+    // {
+    //     // ObscuredPrefs.SetString("Deck", "1000/1001/1002/1003/1004");
+    //     // ObscuredPrefs.SetString("Deck2", "1000/1001/1002/1003/1004");
+    //     // ObscuredPrefs.SetString("Deck3", "1000/1001/1002/1003/1004");
+    //     // ObscuredPrefs.Save();
+    //     //
+    //     // _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+    //     // _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
+    //     // _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
+    //     
+    //     
+    // }
     #endregion
     
 
@@ -275,14 +299,14 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.SetTicketId(ticket);
     }
 
-    public string GetActiveDeck()
+    public int[] GetActiveDeck()
     {
-        return _userInfo.slotDeck[_userInfo.activateDeckIndex];
+        return _userInfo.arrDeck[_userInfo.activateDeckIndex];
     }
 
-    public string GetSelectDeck(int index)
+    public int[] GetSelectDeck(int index)
     {
-        return _userInfo.slotDeck[index];
+        return _userInfo.arrDeck[index];
     }
 
     public void SetActiveDeckIndex(int index)
@@ -293,6 +317,28 @@ public class UserInfoManager : Singleton<UserInfoManager>
     public int GetActiveDeckIndex()
     {
         return _userInfo.activateDeckIndex;
+    }
+
+    public void SetDeck(UserDeck[] userDeck)
+    {
+        for (int i = 0; i < userDeck.Length; i++)
+        {
+            // string strDeck = string.Format("{0}/{1}/{2}/{3}/{4}", userDeck[i].deckInfo[0], userDeck[i].deckInfo[1],
+            //     userDeck[i].deckInfo[2], userDeck[i].deckInfo[3], userDeck[i].deckInfo[4]);
+            //Debug.LogFormat("SetDeck[{0}] : {1}", i, strDeck);
+            _userInfo.SetDeck(i, userDeck[i].deckInfo);
+        }
+    }
+
+    public void SetDice(UserDice[] userDice)
+    {
+        _userInfo.dicGettedDice.Clear();
+
+        for (int i = 0; i < userDice.Length; i++)
+        {
+            Debug.LogFormat("SetDice: ID:{0}, Level:{1}, Count:{2}", userDice[i].diceId, userDice[i].level, userDice[i].count);
+            _userInfo.dicGettedDice.Add(userDice[i].diceId, new int[2] { userDice[i].level, userDice[i].count });
+        }
     }
     #endregion
 }

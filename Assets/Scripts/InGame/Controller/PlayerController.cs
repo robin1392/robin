@@ -926,33 +926,33 @@ namespace ED
             }
         }
        
-        public void SetDeck(string deck)
-        {
-            var splitDeck = deck.Split('/');
- 
-            if(arrDiceDeck == null)
-                _arrDiceDeck = new DiceInfoData[5];
-
-            for (var i = 0; i < splitDeck.Length; i++)
-            {
-                var num = int.Parse(splitDeck[i]);
-                
-                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
-                
-                // add pool
-                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
-                
-                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
-                }
-                else
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
-                }
-                
-            }
-        }
+        // public void SetDeck(string deck)
+        // {
+        //     var splitDeck = deck.Split('/');
+        //
+        //     if(arrDiceDeck == null)
+        //         _arrDiceDeck = new DiceInfoData[5];
+        //
+        //     for (var i = 0; i < splitDeck.Length; i++)
+        //     {
+        //         var num = int.Parse(splitDeck[i]);
+        //         
+        //         arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
+        //         
+        //         // add pool
+        //         if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
+        //         
+        //         if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
+        //         {
+        //             PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+        //         }
+        //         else
+        //         {
+        //             PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+        //         }
+        //         
+        //     }
+        // }
         
         public void GetDice(int deckNum, int slotNum)
         {

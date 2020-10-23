@@ -100,6 +100,8 @@ public partial class WebPacket : Singleton<WebPacket>
     private void RecvUserAuth(User userInfo, UserDeck[] userDeck, UserDice[] userDice)
     {
         UserInfoManager.Get().SetUserKey(userInfo.userId);
+        UserInfoManager.Get().SetDeck(userDeck);
+        UserInfoManager.Get().SetDice(userDice);
     }
     #endregion
     
@@ -159,7 +161,8 @@ public partial class WebPacket : Singleton<WebPacket>
     private void RecvDeckUpdate(DeckUpdateAck res)
     {
         //
-        UserInfoManager.Get().GetUserInfo().SetDeck(res.deckIndex, $"{res.diceIds[0]}/{res.diceIds[1]}/{res.diceIds[2]}/{res.diceIds[3]}/{res.diceIds[4]}");
+        //UserInfoManager.Get().GetUserInfo().SetDeck(res.deckIndex, $"{res.diceIds[0]}/{res.diceIds[1]}/{res.diceIds[2]}/{res.diceIds[3]}/{res.diceIds[4]}");
+        UserInfoManager.Get().GetUserInfo().SetDeck(res.deckIndex, res.diceIds);
         
         _isPacketSend = false;
     }
