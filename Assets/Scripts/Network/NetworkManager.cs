@@ -10,15 +10,25 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Events;
-using RandomWarsService.Network.NetPacket;
+using RandomWarsService.Network.Socket.NetPacket;
+using RandomWarsService.Network.Http;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
-using RandomWarsProtocol.Serializer;
-
+using UnityEditor;
 
 public class NetworkManager : Singleton<NetworkManager>
 {
     #region net variable
+
+
+    SocketService _socketService;
+    WebService _webService;
+
+    public WebService Web
+    {
+        get => _webService;
+    }
+
 
     // web
     public WebNetworkCommon webNetCommon { get; private set; }
@@ -27,7 +37,7 @@ public class NetworkManager : Singleton<NetworkManager>
     // socket
     private SocketManager _clientSocket = null;
     // sender 
-    private PacketSender _packetSend;
+    private SocketSender _packetSend;
 
     /*public GamePacketSender SendSocket
     {
@@ -36,8 +46,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }*/
 
     // 외부에서 얘를 건들일은 없도록하지
-    private PacketReceiver _packetRecv;
-
+    private SocketReceiver _packetRecv;
 
     //
     // 패킷 리시브 함수들 모아놓는곳
@@ -161,6 +170,16 @@ public class NetworkManager : Singleton<NetworkManager>
     void Update()
     {
         UpdateSocket();
+
+        if (_socketService != null)
+        {
+            _socketService.Update();
+        }
+
+        if (_webService != null)
+        {
+            _webService.Update();
+        }
     }
 
     public override void OnDestroy()
@@ -177,6 +196,9 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private void InitNetwork()
     {
+        _socketService = new SocketService();
+        _webService = new WebService("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod");
+
         //
         _netInfo = new NetInfo();
         _recvJoinPlayerInfoCheck = false;
@@ -185,7 +207,7 @@ public class NetworkManager : Singleton<NetworkManager>
         webPacket = this.gameObject.AddComponent<WebPacket>();
 
         _clientSocket = new SocketManager();
-        _packetSend = new StreamPacketSender();
+        _packetSend = new SocketSender();
 
         // 
         _socketRecv = new SocketRecvEvent();
@@ -299,6 +321,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _socketSend.SendPacket(protocol, _clientSocket.Peer, param);
     }
 
+
     public void GameDisconnectSignal()
     {
         // disconnect 감지 했다는...
@@ -363,7 +386,7 @@ public class NetworkManager : Singleton<NetworkManager>
     public void CombineRecvDelegate()
     {
         // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
-        _packetRecv = new StreamPacketReceiver();
+        _packetRecv = new SocketReceiver();
 
         _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;

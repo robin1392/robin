@@ -5,9 +5,9 @@ using System.Net;
 using System;
 using System.Runtime.InteropServices;
 using ED;
-using RandomWarsService.Network;
-using RandomWarsService.Network.NetService;
-using RandomWarsService.Network.NetPacket;
+using RandomWarsService.Network.Socket.NetSession;
+using RandomWarsService.Network.Socket.NetService;
+using RandomWarsService.Network.Socket.NetPacket;
 
 
 class NetLogger : RandomWarsService.Core.ILog
@@ -57,7 +57,7 @@ public class SocketManager
     public void Init(IPacketReceiver recvProcessor)
     {
         NetLogger netLogger = new NetLogger();
-        PacketHandler handler = new PacketHandler(recvProcessor, netLogger, 30, 20480);
+        PacketHandler handler = new PacketHandler(recvProcessor, netLogger, 100, 10240);
         _netService = new NetClientService(handler, netLogger, 1, 10240, 5000, 1000, false);
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;

@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Text;
-using RandomWarsService.Network.NetService;
+using RandomWarsService.Network.Socket.NetService;
 using RandomWarsProtocol;
-using RandomWarsProtocol.Serializer;
 
 
 
 public class SocketSendEvent
 {
 
-    private PacketSender _sender; 
-    public SocketSendEvent(PacketSender sender)
+    private SocketSender _sender; 
+    public SocketSendEvent(SocketSender sender)
     {
         this._sender = sender;
     }
