@@ -7,12 +7,12 @@ using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using RWGameProtocol;
 
 using UnityEngine;
 using UnityEngine.AI;
 
-using RWGameProtocol.Msg;
+using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 
 //
 using UnityEngine.Serialization;

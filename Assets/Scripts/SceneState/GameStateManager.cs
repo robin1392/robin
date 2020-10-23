@@ -8,9 +8,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using RWGameProtocol;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using RandomWarsProtocol;
 
 public class GameStateManager : Singleton<GameStateManager>
 {

@@ -1,0 +1,996 @@
+﻿using System;
+using System.IO;
+using RandomWarsService.Network.NetService;
+
+namespace RandomWarsProtocol.Serializer
+{
+    public class StreamPacketSender : PacketSender
+    {
+        public override void JoinGameReq(Peer peer, string playerSessionId, sbyte deckIndex)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerSessionId);
+                bw.Write(deckIndex);
+                peer.SendPacket((int)GameProtocol.JOIN_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void JoinGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                playerInfo.Write(bw);
+                peer.SendPacket((int)GameProtocol.JOIN_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void JoinGameNotify(Peer peer, MsgPlayerInfo playerInfo)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                playerInfo.Write(bw);
+                peer.SendPacket((int)GameProtocol.JOIN_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void LeaveGameReq(Peer peer) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.LEAVE_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void LeaveGameAck(Peer peer, GameErrorCode code) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                peer.SendPacket((int)GameProtocol.LEAVE_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void LeaveGameNotify(Peer peer, int playerUId) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                peer.SendPacket((int)GameProtocol.LEAVE_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void ReadyGameReq(Peer peer)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.READY_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void ReadyGameAck(Peer peer, GameErrorCode code)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                peer.SendPacket((int)GameProtocol.READY_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void DeactiveWaitingObjectNotify(Peer peer, ushort playerUid, int currentSp)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUid);
+                bw.Write(currentSp);
+                peer.SendPacket((int)GameProtocol.DEACTIVE_WAITING_OBJECT_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void AddSpNotify(Peer peer, ushort playerUId, int currentSp)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(currentSp);
+                peer.SendPacket((int)GameProtocol.ADD_SP_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void SpawnNotify(Peer peer, int wave)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(wave);
+                peer.SendPacket((int)GameProtocol.SPAWN_NOTIFY, ms.ToArray());
+            }
+        }
+
+        public override void PauseGameNotify(Peer peer, int playerUId)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                peer.SendPacket((int)GameProtocol.PAUSE_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+        public override void ResumeGameNotify(Peer peer, int playerUId)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                peer.SendPacket((int)GameProtocol.RESUME_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void ReconnectGameReq(Peer peer)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.RECONNECT_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void ReconnectGameAck(Peer peer, GameErrorCode code, MsgPlayerBase playerBase, MsgPlayerBase otherPlayerBase)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                playerBase.Write(bw);
+                otherPlayerBase.Write(bw);
+                peer.SendPacket((int)GameProtocol.RECONNECT_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void ReconnectGameNotify(Peer peer, int playerUId)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                peer.SendPacket((int)GameProtocol.RECONNECT_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void ReadySyncGameReq(Peer peer) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.READY_SYNC_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void ReadySyncGameAck(Peer peer, GameErrorCode code) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                peer.SendPacket((int)GameProtocol.READY_SYNC_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void ReadySyncGameNotify(Peer peer, int playerUId) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                peer.SendPacket((int)GameProtocol.READY_SYNC_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void StartSyncGameReq(Peer peer, int playerId, int playerSpawnCount, MsgSyncMinionData[] syncMinionData, int otherPlayerId, int otherPlayerSpawnCount, MsgSyncMinionData[] otherSyncMinionData)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerId);
+                bw.Write(playerSpawnCount);
+
+                int length = (syncMinionData == null) ? 0 : syncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    syncMinionData[i].Write(bw);
+                }
+
+                bw.Write(otherPlayerId);
+                bw.Write(otherPlayerSpawnCount);
+
+                length = (otherSyncMinionData == null) ? 0 : otherSyncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    otherSyncMinionData[i].Write(bw);
+                }
+
+                peer.SendPacket((int)GameProtocol.START_SYNC_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void StartSyncGameAck(Peer peer, GameErrorCode code)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                peer.SendPacket((int)GameProtocol.START_SYNC_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, int playerSpawnCount, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgSyncMinionData[] syncMinionData, MsgPlayerInfo otherPlayerInfo, int otherPlayerSpawnCount, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgSyncMinionData[] otherSyncMinionData)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                playerInfo.Write(bw);
+
+                int length = (gameDiceData == null) ? 0 : gameDiceData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    gameDiceData[i].Write(bw);
+                }
+
+                length = (inGameUp == null) ? 0 : inGameUp.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    inGameUp[i].Write(bw);
+                }
+
+                length = (syncMinionData == null) ? 0 : syncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    syncMinionData[i].Write(bw);
+                }
+
+                bw.Write(playerSpawnCount);
+                otherPlayerInfo.Write(bw);
+
+                length = (otherGameDiceData == null) ? 0 : otherGameDiceData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    otherGameDiceData[i].Write(bw);
+                }
+
+                length = (otherInGameUp == null) ? 0 : otherInGameUp.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    otherInGameUp[i].Write(bw);
+                }
+
+                length = (otherSyncMinionData == null) ? 0 : otherSyncMinionData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    otherSyncMinionData[i].Write(bw);
+                }
+
+                bw.Write(otherPlayerSpawnCount);
+                peer.SendPacket((int)GameProtocol.START_SYNC_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void EndSyncGameReq(Peer peer) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.END_SYNC_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void EndSyncGameAck(Peer peer, GameErrorCode code) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                peer.SendPacket((int)GameProtocol.END_SYNC_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void EndSyncGameNotify(Peer peer) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.END_SYNC_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void GetDiceReq(Peer peer)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.GET_DICE_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void GetDiceAck(Peer peer, GameErrorCode code, int diceId, short slotNum, short level, int currentSp)
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                bw.Write(diceId);
+                bw.Write(slotNum);
+                bw.Write(level);
+                bw.Write(currentSp);
+                peer.SendPacket((int)GameProtocol.GET_DICE_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void GetDiceNotify(Peer peer, ushort playerUId, int diceId, short slotNum, short level)
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(diceId);
+                bw.Write(slotNum);
+                bw.Write(level);
+                peer.SendPacket((int)GameProtocol.GET_DICE_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void LevelUpDiceReq(Peer peer, short resetFieldNum, short leveupFieldNum) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(resetFieldNum);
+                bw.Write(leveupFieldNum);
+                peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void LevelUpDiceAck(Peer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                bw.Write(resetFieldNum);
+                bw.Write(leveupFieldNum);
+                bw.Write(levelUpDiceId);
+                bw.Write(level);
+                peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void LevelUpDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(resetFieldNum);
+                bw.Write(leveupFieldNum);
+                bw.Write(levelUpDiceId);
+                bw.Write(level);
+                peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void InGameUpDiceReq(Peer peer, int diceId) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(diceId);
+                peer.SendPacket((int)GameProtocol.INGAME_UP_DICE_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void InGameUpDiceAck(Peer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                bw.Write(diceId);
+                bw.Write(inGameUp);
+                bw.Write(currentSp);
+                peer.SendPacket((int)GameProtocol.INGAME_UP_DICE_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void InGameUpDiceNotify(Peer peer, ushort playerUId, int diceId, short inGameUp) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(diceId);
+                bw.Write(inGameUp);
+                peer.SendPacket((int)GameProtocol.INGAME_UP_DICE_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void UpgradeSpReq(Peer peer) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                peer.SendPacket((int)GameProtocol.UPGRADE_SP_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void UpgradeSpAck(Peer peer, GameErrorCode code, short upgrade, int currentSp) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                bw.Write(upgrade);
+                bw.Write(currentSp);
+                peer.SendPacket((int)GameProtocol.UPGRADE_SP_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void UpgradeSpNotify(Peer peer, ushort playerUId, short upgrade) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(upgrade);
+                peer.SendPacket((int)GameProtocol.UPGRADE_SP_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void HitDamageReq(Peer peer, ushort playerUId, int damage) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(damage);
+                peer.SendPacket((int)GameProtocol.HIT_DAMAGE_REQ, ms.ToArray());
+            }
+        }
+
+
+        public override void HitDamageAck(Peer peer, GameErrorCode code, ushort playerUId, int damage, int currentHp) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                bw.Write(playerUId);
+                bw.Write(damage);
+                bw.Write(currentHp);
+                peer.SendPacket((int)GameProtocol.HIT_DAMAGE_ACK, ms.ToArray());
+            }
+        }
+
+
+        public override void HitDamageNotify(Peer peer, ushort playerUId, int damage, int currentHp)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(damage);
+                bw.Write(currentHp);
+                peer.SendPacket((int)GameProtocol.HIT_DAMAGE_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void EndGameNotify(Peer peer, GameErrorCode code, int winPlayerUId) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((short)code);
+                bw.Write(winPlayerUId);
+                peer.SendPacket((int)GameProtocol.END_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void DisconnectGameNotify(Peer peer, int playerUId) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                peer.SendPacket((int)GameProtocol.DISCONNECT_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
+        public override void HitDamageMinionRelay(Peer peer, ushort playerUId, ushort id, int damage) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(damage);
+                peer.SendPacket((int)GameProtocol.HIT_DAMAGE_MINION_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void DestroyMinionRelay(Peer peer, ushort playerUId, ushort id) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                peer.SendPacket((int)GameProtocol.DESTROY_MINION_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void HealMinionRelay(Peer peer, ushort playerUId, ushort id, int heal) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(heal);
+                peer.SendPacket((int)GameProtocol.HEAL_MINION_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void PushMinionRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, short pushPower) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                pos.Write(bw);
+                bw.Write(pushPower);
+                peer.SendPacket((int)GameProtocol.PUSH_MINION_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void SetMinionAnimationTriggerRelay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte trigger) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(targetId);
+                bw.Write(trigger);
+                peer.SendPacket((int)GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void FireArrowRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeed) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                pos.Write(bw);
+                bw.Write(damage);
+                bw.Write(moveSpeed);
+                peer.SendPacket((int)GameProtocol.FIRE_ARROW_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void FireballBombRelay(Peer peer, ushort playerUId, ushort id) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                peer.SendPacket((int)GameProtocol.FIRE_BALL_BOMB_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void MineBombRelay(Peer peer, ushort playerUId, ushort id) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                peer.SendPacket((int)GameProtocol.MINE_BOMB_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void SetMagicTargetIdRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(targetId);
+                peer.SendPacket((int)GameProtocol.SET_MAGIC_TARGET_ID_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void SetMagicTargetRelay(Peer peer, ushort playerUId, ushort id, short x, short z)
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(x);
+                bw.Write(z);
+                peer.SendPacket((int)GameProtocol.SET_MAGIC_TARGET_POS_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void SturnMinionRelay(Peer peer, ushort playerUId, ushort id, short sturnTime)
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(sturnTime);
+                peer.SendPacket((int)GameProtocol.STURN_MINION_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void RocketBombRelay(Peer peer, ushort playerUId, ushort id) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                peer.SendPacket((int)GameProtocol.ROCKET_BOMB_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void IceBombRelay(Peer peer, ushort playerUId, ushort id) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                peer.SendPacket((int)GameProtocol.ICE_BOMB_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void MsgDestroyMagic(Peer peer, ushort playerUId, ushort baseStatId) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(baseStatId);
+                peer.SendPacket((int)GameProtocol.DESTROY_MAGIC_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void MsgFireCannonBall(Peer peer, ushort playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, short range, byte type) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                shootPos.Write(bw);
+                targetPos.Write(bw);
+                bw.Write(power);
+                bw.Write(range);
+                bw.Write(type);
+                peer.SendPacket((int)GameProtocol.FIRE_CANNON_BALL_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void FireSpearRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short moveSpeed)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                shootPos.Write(bw);
+                bw.Write(targetId);
+                bw.Write(power);
+                bw.Write(moveSpeed);
+                peer.SendPacket((int)GameProtocol.FIRE_SPEAR_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void FireManFireRelay(Peer peer, ushort playerUId, ushort id) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                peer.SendPacket((int)GameProtocol.FIRE_MAN_FIRE_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void ActivatePoolObjectRelay(Peer peer, int poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(poolName);
+                hitPos.Write(bw);
+                localScale.Write(bw);
+                rotation.Write(bw);
+                peer.SendPacket((int)GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void MinionCloackingRelay(Peer peer, ushort playerUId, ushort id, bool isCloacking)
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(isCloacking);
+                peer.SendPacket((int)GameProtocol.MINION_CLOACKING_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void MinionFogOfWarRelay(Peer peer, ushort playerUId, ushort baseStatId, short effect, bool isFogOfWar) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(baseStatId);
+                bw.Write(effect);
+                bw.Write(isFogOfWar);
+                peer.SendPacket((int)GameProtocol.MINION_FLAG_OF_WAR_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void SendMessageVoidRelay(Peer peer, ushort playerUId, ushort id, byte message) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(message);
+                peer.SendPacket((int)GameProtocol.SEND_MESSAGE_VOID_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void SendMessageParam1Relay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte message) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(targetId);
+                bw.Write(message);
+                peer.SendPacket((int)GameProtocol.SEND_MESSAGE_PARAM1_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void NecromancerBulletRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short bulletMoveSpeed) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                shootPos.Write(bw);
+                bw.Write(targetId);
+                bw.Write(power);
+                bw.Write(bulletMoveSpeed);
+                peer.SendPacket((int)GameProtocol.NECROMANCER_BULLET_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void SetMinionTargetRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(targetId);
+                peer.SendPacket((int)GameProtocol.SET_MINION_TARGET_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector3[] pos, int[] hp, MsgMinionStatus relay, int packetCount) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(posIndex);
+
+                bw.Write(pos.Length);
+                for (int i = 0; i < pos.Length; i++)
+                {
+                    pos[i].Write(bw);
+                }
+
+                bw.Write(hp.Length);
+                for (int i = 0; i < hp.Length; i++)
+                {
+                    bw.Write(hp[i]);
+                }
+
+                relay.Write(bw);
+                bw.Write(packetCount);
+                peer.SendPacket((int)GameProtocol.MINION_STATUS_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void ScarecrowRelay(Peer peer, ushort playerUId, ushort baseStatId, byte eyeLevel)
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(baseStatId);
+                bw.Write(eyeLevel);
+                peer.SendPacket((int)GameProtocol.SCARECROW_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void LayzerTargetRelay(Peer peer, ushort playerUId, ushort id, ushort[] targetId) 
+        {
+            
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+
+                bw.Write(targetId.Length);
+                byte[] bytes = new byte[targetId.Length * sizeof(int)];
+                Buffer.BlockCopy(targetId, 0, bytes, 0, sizeof(byte));
+                bw.Write(bytes);
+                peer.SendPacket((int)GameProtocol.LAYZER_TARGET_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void FireBulletRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeedk, byte type) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                pos.Write(bw);
+                bw.Write(damage);
+                bw.Write(moveSpeedk);
+                bw.Write(type);
+                peer.SendPacket((int)GameProtocol.FIRE_BULLET_RELAY, ms.ToArray());
+            }
+        }
+
+
+        public override void MinionInvincibilityRelay(Peer peer, ushort playerUId, ushort id, short time) 
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(id);
+                bw.Write(time);
+                peer.SendPacket((int)GameProtocol.MINION_INVINCIBILITY_RELAY, ms.ToArray());
+            }
+        }
+    }
+}

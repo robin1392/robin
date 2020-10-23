@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
-using RWCoreNetwork;
-using RWCoreNetwork.NetService;
-using RWCoreNetwork.NetPacket;
 using System;
 using System.Runtime.InteropServices;
 using ED;
+using RandomWarsService.Network;
+using RandomWarsService.Network.NetService;
+using RandomWarsService.Network.NetPacket;
 
 
-class NetLogger : RWCoreLib.Log.ILog
+class NetLogger : RandomWarsService.Core.ILog
 {
     public void Info(string log)
     {

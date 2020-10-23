@@ -5,10 +5,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RWCoreNetwork.NetService;
-using RWGameProtocol;
-using RWGameProtocol.Msg;
 using UnityEngine;
+using RandomWarsService.Network.NetService;
+using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 
 
 public class SocketRecvEvent

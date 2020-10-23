@@ -3,17 +3,18 @@
 #endif
 
 using System;
-using RWGameProtocol;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using RWCoreNetwork;
-using RWGameProtocol.Msg;
-using RWGameProtocol.Serializer;
 using UnityEngine.Events;
-using RWCoreNetwork.NetPacket;
+using RandomWarsService.Network.NetPacket;
+using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
+using RandomWarsProtocol.Serializer;
+
 
 public class NetworkManager : Singleton<NetworkManager>
 {

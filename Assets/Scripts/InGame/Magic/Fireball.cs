@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
-using RWGameProtocol;
+using RandomWarsProtocol;
 
 namespace ED
 {

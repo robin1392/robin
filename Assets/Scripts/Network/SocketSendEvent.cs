@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Text;
-using RWCoreNetwork.NetService;
-using RWGameProtocol;
-using RWGameProtocol.Msg;
-using RWGameProtocol.Serializer;
+using RandomWarsService.Network.NetService;
+using RandomWarsProtocol;
+using RandomWarsProtocol.Serializer;
 
 
 

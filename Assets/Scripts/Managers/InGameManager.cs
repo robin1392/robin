@@ -5,8 +5,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using RWGameProtocol;
-using RWGameProtocol.Msg;
+using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;

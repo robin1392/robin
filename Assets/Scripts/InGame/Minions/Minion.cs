@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using NodeCanvas.BehaviourTrees;
 using UnityEngine;
 using UnityEngine.AI;
-using RWGameProtocol;
 using Random = UnityEngine.Random;
+using RandomWarsProtocol;
 
 namespace ED
 {
