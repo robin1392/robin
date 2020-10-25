@@ -336,7 +336,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
         for (int i = 0; i < userDice.Length; i++)
         {
-            Debug.LogFormat("SetDice: ID:{0}, Level:{1}, Count:{2}", userDice[i].diceId, userDice[i].level, userDice[i].count);
+            //Debug.LogFormat("SetDice: ID:{0}, Level:{1}, Count:{2}", userDice[i].diceId, userDice[i].level, userDice[i].count);
             _userInfo.dicGettedDice.Add(userDice[i].diceId, new int[2] { userDice[i].level, userDice[i].count });
         }
     }

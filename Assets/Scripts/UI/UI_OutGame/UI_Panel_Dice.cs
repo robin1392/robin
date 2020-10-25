@@ -25,6 +25,7 @@ namespace ED
         public Image[] arrImageDeckEye_Main;
         public RectTransform tsGettedDiceParent;
         public RectTransform tsUngettedDiceParent;
+        public RectTransform tsUngettedDiceLine;
         public List<UI_Getted_Dice> listGettedDice = new List<UI_Getted_Dice>();
         public List<UI_Getted_Dice> listUngettedDice = new List<UI_Getted_Dice>();
         public GameObject objSelectBlind;
@@ -133,6 +134,13 @@ namespace ED
                         listGettedDice.Add(ugd);
                         ugd.slotNum = gettedSlotCount++;
                         ugd.Initialize(info.Value);
+
+                        obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
+                        ugd = obj.GetComponent<UI_Getted_Dice>();
+                        listUngettedDice.Add(ugd);
+                        ugd.slotNum = ungettedSlotCount++;
+                        ugd.Initialize(info.Value);
+                        ugd.SetGrayscale();
                     }
                 }
             }
@@ -190,7 +198,14 @@ namespace ED
             
             // Grid 즉시 업데이트
             LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
-            rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + 1460 + 300);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedDiceParent);
+
+            var pos = tsUngettedDiceParent.anchoredPosition;
+            pos.y = -980 - (tsGettedDiceParent.sizeDelta.y + 300);
+            tsUngettedDiceParent.anchoredPosition = pos;
+            tsUngettedDiceLine.anchoredPosition = new Vector2(0, pos.y + 150);
+
+            rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 + 300);
         }
 
         public void ResetYPos()

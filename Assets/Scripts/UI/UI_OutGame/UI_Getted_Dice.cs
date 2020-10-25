@@ -31,7 +31,9 @@ namespace ED
 
         public Image image_GradeBG;
         public Sprite[] arrSprite_GradeBG;
-        
+        public Material mtl_Grayscale;
+
+        private bool isUngetted;
 
         private void Awake()
         {
@@ -54,7 +56,6 @@ namespace ED
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(()=>{_panelDice.Click_Dice_Info(pData.id);});
 
-            //image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[pData.grade]);
             image_GradeBG.sprite = arrSprite_GradeBG[pData.grade];
         }
 
@@ -65,16 +66,26 @@ namespace ED
             ts_Move.SetParent(_grandParent);
 
             var parent = transform.parent.parent;
-            ((RectTransform) parent).DOAnchorPosY(
-                Mathf.Clamp(Mathf.Abs(((RectTransform) transform).anchoredPosition.y - 200), 0,
-                    (((RectTransform) parent).sizeDelta.y - ((float) Screen.height - 440f))) *
-                ((RectTransform) parent.parent.parent).anchorMax.y, 0.3f);
+            ((RectTransform)parent).DOAnchorPosY(
+                Mathf.Clamp(Mathf.Abs((((RectTransform)transform.parent).anchoredPosition.y + 980) + ((RectTransform)transform).anchoredPosition.y - 200), 0,
+                    ((RectTransform)parent).sizeDelta.y - ((RectTransform)parent.parent).rect.height), 0.3f);
         }
 
         public void DeactivateSelectedObject()
         {
             obj_Selected.SetActive(false);
             ts_Move.SetParent(transform);
+        }
+
+        public void SetGrayscale()
+        {
+            isUngetted = true;
+
+            var images = GetComponentsInChildren<Image>();
+            foreach(var item in images)
+            {
+                item.material = mtl_Grayscale;
+            }
         }
     }
 }

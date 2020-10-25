@@ -1121,6 +1121,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 559459e79a45a420cafb803faa2fb787, type: 3}
   - {fileID: 21300000, guid: 15a753a21798348ab85a21db27e3f0aa, type: 3}
   - {fileID: 21300000, guid: 2420303f696e04b6fa08ba2c756c7109, type: 3}
+  mtl_Grayscale: {fileID: 2100000, guid: 220abc303df33e24aa68030ee6cd65b5, type: 2}
 --- !u!1 &7851210546027284496
 GameObject:
   m_ObjectHideFlags: 0
