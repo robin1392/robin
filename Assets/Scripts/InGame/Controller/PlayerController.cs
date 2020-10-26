@@ -2242,7 +2242,7 @@ namespace ED
             if (NetworkManager.Get().isReconnect == true)
                 return;
 
-            if ((int) protocol >= 300000)
+            if (protocol > GameProtocol.BEGIN_RELAY)
             {
                 if (protocol == GameProtocol.MINION_STATUS_RELAY)
                 {
