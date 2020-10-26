@@ -1407,6 +1407,9 @@ MonoBehaviour:
   text_Name: {fileID: 6362351360384489424}
   text_Discription: {fileID: 6362351359773227396}
   text_Grade: {fileID: 6362351360168756497}
+  btn_Upgrade: {fileID: 6362351360099728495}
+  text_UpgradeGold: {fileID: 6362351360331843158}
+  btn_Use: {fileID: 6362351360018517934}
   infosTranform: {fileID: 6362351360584251095}
 --- !u!1 &6362351359322374670
 GameObject:

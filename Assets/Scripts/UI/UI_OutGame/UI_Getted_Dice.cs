@@ -23,12 +23,19 @@ namespace ED
         public Transform ts_Move;
         public int slotNum;
 
+        [Header("Dice Info")]
+        public Image image_DiceGuageBG;
+        public Image image_DiceGuage;
+        public Text text_DiceCount;
+        public Text text_DiceLevel;
+
         //private Data_Dice _data;
         private DiceInfoData _data;
         
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
 
+        [Space]
         public Image image_GradeBG;
         public Sprite[] arrSprite_GradeBG;
         public Material mtl_Grayscale;
@@ -46,15 +53,19 @@ namespace ED
             }
         }
 
-        public void Initialize(DiceInfoData pData)
+        public void Initialize(DiceInfoData pData, int level, int count)
         {
-            this._data = pData;
-            //if(FileHelper.GetIcon( pData.iconName ) == null)
-                //print("eoroerejorjagasjdf   " + pData.iconName);
+            _data = pData;
+            
             image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
             image_Eye.color = FileHelper.GetColor(pData.color);
+
+            text_DiceLevel.text = $"{Global.g_level} {level}";
+            text_DiceCount.text = $"{count}/{Global.g_needDiceCount[level]}";
+            image_DiceGuage.fillAmount = count / (float)Global.g_needDiceCount[level];
+            
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
-            button_Info.onClick.AddListener(()=>{_panelDice.Click_Dice_Info(pData.id);});
+            button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
 
             image_GradeBG.sprite = arrSprite_GradeBG[pData.grade];
         }
@@ -62,9 +73,17 @@ namespace ED
         public void Click_Dice()
         {
             _grandParent.BroadcastMessage("DeactivateSelectedObject", SendMessageOptions.DontRequireReceiver);
-            obj_Selected.SetActive(true);
-            ts_Move.SetParent(_grandParent);
 
+            if (isUngetted)
+            {
+                _panelDice.Click_Dice_Info(_data.id);
+            }
+            else
+            {
+                obj_Selected.SetActive(true);
+                ts_Move.SetParent(_grandParent);
+            }
+            
             var parent = transform.parent.parent;
             ((RectTransform)parent).DOAnchorPosY(
                 Mathf.Clamp(Mathf.Abs((((RectTransform)transform.parent).anchoredPosition.y + 980) + ((RectTransform)transform).anchoredPosition.y - 200), 0,
@@ -86,6 +105,10 @@ namespace ED
             {
                 item.material = mtl_Grayscale;
             }
+            
+            text_DiceLevel.transform.parent.gameObject.SetActive(false);
+            image_DiceGuageBG.gameObject.SetActive(false);
+            text_DiceCount.text = $"{Global.g_grade[_data.grade]}";
         }
     }
 }

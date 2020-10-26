@@ -133,79 +133,47 @@ namespace ED
                         var ugd = obj.GetComponent<UI_Getted_Dice>();
                         listGettedDice.Add(ugd);
                         ugd.slotNum = gettedSlotCount++;
-                        ugd.Initialize(info.Value);
-
+                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                        
                         obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
                         ugd = obj.GetComponent<UI_Getted_Dice>();
                         listUngettedDice.Add(ugd);
                         ugd.slotNum = ungettedSlotCount++;
-                        ugd.Initialize(info.Value);
+                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                        ugd.SetGrayscale();
+                    }
+                    else
+                    {
+                        var obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
+                        var ugd = obj.GetComponent<UI_Getted_Dice>();
+                        listUngettedDice.Add(ugd);
+                        ugd.slotNum = ungettedSlotCount++;
+                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
                         ugd.SetGrayscale();
                     }
                 }
             }
             
-            // TODO : 획득하지 않은 주사위 만들 차례
-            
-            
-            // UserInfoManager.Get().GetUserInfo().
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            // var isCreated = false;
-            //
-            // int enableCount = 0;
-            // foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
-            // {
-            //     if (info.Value.enableDice == true)
-            //         enableCount++;
-            // }
-            //
-            // if (listGettedDice == null)
-            // {
-            //     isCreated = true;
-            //     listGettedDice = new List<UI_Getted_Dice>();
-            // }
-            // else if (listGettedDice.Count < enableCount)
-            // {
-            //     isCreated = true;
-            //     listGettedDice.Clear();
-            // }
-            //
-            // if (isCreated)
-            // {
-            //     for (var i = 0; i < enableCount; i++)
-            //     {
-            //         var obj = Instantiate(prefGettedDice, tsGettedDiceParent);
-            //         arrGettedDice[i] = obj.GetComponent<UI_Getted_Dice>();
-            //         arrGettedDice[i].slotNum = i;
-            //     }
-            // }
-            //
-            // int countindex = 0;
-            // foreach (KeyValuePair<int, DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
-            // {
-            //     if (info.Value.enableDice)
-            //     {
-            //         arrGettedDice[countindex].Initialize(info.Value);
-            //         countindex++;
-            //     }
-            // }
-            
             // Grid 즉시 업데이트
             LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
             LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedDiceParent);
 
-            var pos = tsUngettedDiceParent.anchoredPosition;
-            pos.y = -980 - (tsGettedDiceParent.sizeDelta.y + 300);
-            tsUngettedDiceParent.anchoredPosition = pos;
-            tsUngettedDiceLine.anchoredPosition = new Vector2(0, pos.y + 150);
+            if (ungettedSlotCount > 0)
+            {
+                var pos = tsUngettedDiceParent.anchoredPosition;
+                pos.y = -980 - (tsGettedDiceParent.sizeDelta.y + 300);
+                tsUngettedDiceParent.anchoredPosition = pos;
+                tsUngettedDiceLine.anchoredPosition = new Vector2(0, pos.y + 150);
+                tsUngettedDiceLine.gameObject.SetActive(true);
+            }
+            else
+            {
+                tsUngettedDiceLine.gameObject.SetActive(false);
+            }
+            
 
-            rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 + 300);
+            rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 +
+                                                   (ungettedSlotCount > 0 ? 300 : 0));
         }
 
         public void ResetYPos()

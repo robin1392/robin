@@ -30,6 +30,11 @@ namespace ED
         public Text text_Discription;
         public Text text_Grade;
 
+        [Header("Button")]
+        public Button btn_Upgrade;
+        public Text text_UpgradeGold;
+        public Button btn_Use;
+
         //private Data_Dice data;
         private DiceInfoData data;
 
@@ -57,7 +62,7 @@ namespace ED
         public void Initialize(DiceInfoData pData)
         {
             data = pData;
-            ui_getted_dice.Initialize(data);
+            ui_getted_dice.Initialize(data, 0, 0);
             
             text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
@@ -170,11 +175,11 @@ namespace ED
             }
             
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Type].textValue.text = LocalizationManager.GetLangDesc( castLangIndex);
-            listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].textValue.text = string.Format("{0}", data.maxHealth);
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = string.Format("{0:f1}", data.power);
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = string.Format("{0:f1}", data.attackSpeed);
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = string.Format("{0:f1}", data.moveSpeed);
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_SearchRange].textValue.text = string.Format("{0:f1}", data.searchRange);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textValue.text = $"{data.maxHealth}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = $"{data.power:f1}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = $"{data.attackSpeed:f1}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = $"{data.moveSpeed:f1}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_SearchRange].textValue.text = $"{data.searchRange:f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_etc].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Sp].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
 
