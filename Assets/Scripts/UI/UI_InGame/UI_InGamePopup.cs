@@ -33,17 +33,16 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         InitUIElement();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    #if UNITY_EDITOR
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            popup_Result.gameObject.SetActive(true);
+            popup_Result.Initialize();
+        }
     }
+    #endif
 
     public override void OnDestroy()
     {

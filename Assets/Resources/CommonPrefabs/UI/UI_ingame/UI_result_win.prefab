@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 819639781928068865}
   - component: {fileID: 819639781926778899}
   m_Layer: 5
-  m_Name: ConfettiDirectionalRainbow
+  m_Name: particle_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 819639781912769623}
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 4
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: -140, y: -90, z: 90}
 --- !u!198 &819639781928068865
 ParticleSystem:
@@ -9491,11 +9491,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3293831073244522931}
-  - {fileID: 6646706638625391660}
   - {fileID: 1091094875408562674}
-  - {fileID: 3428874999308701472}
-  - {fileID: 819639781912858821}
-  - {fileID: 1091094876459565200}
   - {fileID: 1091094875183077999}
   - {fileID: 1091094875044618382}
   - {fileID: 1091094876981777086}
@@ -9504,6 +9500,10 @@ RectTransform:
   - {fileID: 1091094876249935322}
   - {fileID: 1091094876580493707}
   - {fileID: 1091094875578418173}
+  - {fileID: 6646706638625391660}
+  - {fileID: 3428874999308701472}
+  - {fileID: 819639781912858821}
+  - {fileID: 1091094876459565200}
   - {fileID: 1565278192914718626}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -9562,7 +9562,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 7
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9637,7 +9637,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 6
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9712,7 +9712,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 9
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9787,7 +9787,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9862,7 +9862,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 13
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9937,7 +9937,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 10
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10012,7 +10012,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 11
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10069,7 +10069,7 @@ GameObject:
   - component: {fileID: 1091094876459565202}
   - component: {fileID: 1091094876459565203}
   m_Layer: 5
-  m_Name: ConfettiDirectionalRainbow (1)
+  m_Name: particle_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10088,7 +10088,7 @@ Transform:
   m_Children:
   - {fileID: 3428875000873681524}
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 5
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: -40, y: -90, z: 90}
 --- !u!198 &1091094876459565202
 ParticleSystem:
@@ -14769,7 +14769,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 12
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14844,7 +14844,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 8
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14901,7 +14901,7 @@ GameObject:
   - component: {fileID: 1565278192899506820}
   - component: {fileID: 1565278192899335020}
   m_Layer: 5
-  m_Name: SparkleGreen
+  m_Name: particle_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24508,7 +24508,7 @@ GameObject:
   - component: {fileID: 3428874999308701474}
   - component: {fileID: 3428874999308701475}
   m_Layer: 5
-  m_Name: Glow (1)
+  m_Name: particle_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24528,7 +24528,7 @@ Transform:
   - {fileID: 3428875000989191285}
   - {fileID: 3428875000832502940}
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 3
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &3428874999308701474
 ParticleSystem:
@@ -43714,7 +43714,7 @@ GameObject:
   - component: {fileID: 6646706638606035896}
   - component: {fileID: 6646706638605100840}
   m_Layer: 5
-  m_Name: PowerupGlow1
+  m_Name: particle_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43732,7 +43732,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 1091094875038087682}
-  m_RootOrder: 1
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &6646706638606035896
 ParticleSystem:
