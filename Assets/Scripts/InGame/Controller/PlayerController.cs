@@ -146,6 +146,7 @@ namespace ED
         public bool isPlayingAI { get; protected set; }
         public bool isMinionAgentMove = true;
         protected Coroutine crt_SyncMinion;
+        protected Queue<int> queueHitDamage = new Queue<int>();
 
         #endregion
 
@@ -211,11 +212,15 @@ namespace ED
 
         public void StartPlayerControll()
         {
-            if (isMine) NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
+            if (isMine)
+            {
+                NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
+                StartCoroutine(HitDamageQueueCoroutine());
+            }
 
             isHalfHealth = false;
 
-            if(InGameManager.IsNetwork == false )
+            if( InGameManager.IsNetwork == false )
                 sp = 200;
             
             currentHealth = maxHealth;
@@ -1095,6 +1100,26 @@ namespace ED
         
         
         #region minion damage
+
+        IEnumerator HitDamageQueueCoroutine()
+        {
+            int damage = 0;
+            while (true)
+            {
+                yield return new WaitForSeconds(0.2f);
+
+                damage = 0;
+                while (queueHitDamage.Count > 0)
+                {
+                    damage += queueHitDamage.Dequeue();
+                }
+
+                if (damage > 0)
+                {
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, damage);
+                }
+            }
+        }
         
         public void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
@@ -1105,7 +1130,8 @@ namespace ED
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
                     int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, convDamage);
+                    //NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, convDamage);
+                    queueHitDamage.Enqueue(convDamage);
                 }
                 else if (InGameManager.IsNetwork == false)
                 {
@@ -1118,6 +1144,9 @@ namespace ED
                 if (m != null)
                 {
                     m.HitDamage(damage);
+                    var obj = PoolManager.instance.ActivateObject("Effect_ArrowHit", m.ts_HitPos.position);
+                    obj.rotation = Quaternion.identity;
+                    obj.localScale = Vector3.one * 0.6f;
                 }
                 else
                 {
