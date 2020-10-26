@@ -1189,10 +1189,10 @@ namespace RandomWarsProtocol.Serializer
                             msg.PosIndex = br.ReadByte();
 
                             int length = br.ReadInt32();
-                            msg.Pos = new MsgVector3[length];
+                            msg.Pos = new MsgVector2[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.Pos[i] = MsgVector3.Read(br);
+                                msg.Pos[i] = MsgVector2.Read(br);
                             }
 
                             length = br.ReadInt32();

@@ -5,6 +5,128 @@ using System.IO;
 namespace RandomWarsProtocol
 {
     [Serializable]
+    public class MsgUserInfo
+    {
+        // 유저 아이디
+        public string UserId;
+        // 유저명
+        public string Name;
+        // 트로피 수
+        public int Trophy;
+        // 보유 골드 수량
+        public int Gold;
+        // 보유 다이아몬드 수량
+        public int Diamond;
+        // 주사위 등급별 레벨업 횟수(타워hp에 추가)
+        public int[] DiceLevelupCount;
+        // 레벨
+        public short Level;
+        // 연승 횟수 (최대 15회)
+        public byte WinStreak;
+
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(UserId);
+            bw.Write(Name);
+            bw.Write(Trophy);
+            bw.Write(Gold);
+            bw.Write(Diamond);
+
+            bw.Write(DiceLevelupCount.Length);
+            byte[] bytes = new byte[DiceLevelupCount.Length * sizeof(int)];
+            Buffer.BlockCopy(DiceLevelupCount, 0, bytes, 0, bytes.Length);
+            bw.Write(bytes);
+
+            bw.Write(Level);
+            bw.Write(WinStreak);
+        }
+
+        public static MsgUserInfo Read(BinaryReader br)
+        {
+            MsgUserInfo data = new MsgUserInfo();
+            data.UserId = br.ReadString();
+            data.Name = br.ReadString();
+            data.Trophy = br.ReadInt32();
+            data.Gold = br.ReadInt32();
+            data.Diamond = br.ReadInt32();
+
+            int length = br.ReadInt32();
+            byte[] bytes = br.ReadBytes(length * sizeof(int));
+            data.DiceLevelupCount = new int[length];
+            for (var index = 0; index < length; index++)
+            {
+                data.DiceLevelupCount[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+            }
+
+            data.Level = br.ReadInt16();
+            data.WinStreak = br.ReadByte();
+            return data;
+        }
+    }
+
+
+    [Serializable]
+    public class MsgUserDeck
+    {
+        // 덱 인덱스
+        public sbyte Index;
+        // 덱 정보(주사위 아이디 배열)
+        public int[] DeckInfo;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Index);
+
+            bw.Write(DeckInfo.Length);
+            byte[] bytes = new byte[DeckInfo.Length * sizeof(int)];
+            Buffer.BlockCopy(DeckInfo, 0, bytes, 0, bytes.Length);
+            bw.Write(bytes);
+        }
+
+        public static MsgUserDeck Read(BinaryReader br)
+        {
+            MsgUserDeck data = new MsgUserDeck();
+            data.Index = br.ReadSByte();
+
+            int length = br.ReadInt32();
+            byte[] bytes = br.ReadBytes(length * sizeof(int));
+            data.DeckInfo = new int[length];
+            for (var index = 0; index < length; index++)
+            {
+                data.DeckInfo[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+            }
+            return data;
+        }
+    }
+
+
+    [Serializable]
+    public class MsgUserDice
+    {
+        public int DiceId;
+        public short Level;
+        public short Count;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(DiceId);
+            bw.Write(Level);
+            bw.Write(Count);
+        }
+
+        public static MsgUserDice Read(BinaryReader br)
+        {
+            MsgUserDice data = new MsgUserDice();
+            data.DiceId = br.ReadInt32();
+            data.Level = br.ReadInt16();
+            data.Count = br.ReadInt16();
+            return data;
+        }
+    }
+
+
+    [Serializable]
     public class MsgPlayerBase
     {
         public ushort PlayerUId;
@@ -77,7 +199,6 @@ namespace RandomWarsProtocol
 
             int length = br.ReadInt32();
             byte[] bytes = br.ReadBytes(length * sizeof(int));
-
             data.DiceIdArray = new int[length];
             for (var index = 0; index < length; index++)
             {
@@ -145,6 +266,7 @@ namespace RandomWarsProtocol
         }
     }
 
+
     [Serializable]
     public class MsgGameDice
     {
@@ -193,11 +315,24 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
-    public class MsgGameResult
+    public class MsgVector2
     {
-        public int Trophy;
-        public int Gold;
-        public int BoxKey;
+        public short X;
+        public short Y;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(X);
+            bw.Write(Y);
+        }
+
+        public static MsgVector2 Read(BinaryReader br)
+        {
+            MsgVector2 data = new MsgVector2();
+            data.X = br.ReadInt16();
+            data.Y = br.ReadInt16();
+            return data;
+        }
     }
 
 
@@ -224,6 +359,7 @@ namespace RandomWarsProtocol
             return data;
         }
     }
+
 
     [Serializable]
     public class MsgQuaternion
@@ -1412,7 +1548,7 @@ namespace RandomWarsProtocol
     {
         public ushort PlayerUId;
         public byte PosIndex;
-        public MsgVector3[] Pos;
+        public MsgVector2[] Pos;
         public int[] Hp;
         public MsgMinionStatus Relay;
         public int packetCount;

@@ -78,7 +78,7 @@ namespace RandomWarsProtocol.Serializer
         public virtual void SendMessageParam1Relay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte message) { }
         public virtual void NecromancerBulletRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short bulletMoveSpeed) { }
         public virtual void SetMinionTargetRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) { }
-        public virtual void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector3[] pos, int[] hp, MsgMinionStatus relay, int packetCount) { }
+        public virtual void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector2[] pos, int[] hp, MsgMinionStatus relay, int packetCount) { }
         public virtual void ScarecrowRelay(Peer peer, ushort playerUId, ushort baseStatId, byte eyeLevel) { }
         public virtual void LayzerTargetRelay(Peer peer, ushort playerUId, ushort id, ushort[] targetId) { }
         public virtual void FireBulletRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeedk, byte type) { }
