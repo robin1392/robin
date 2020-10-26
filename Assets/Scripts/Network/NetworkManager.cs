@@ -22,12 +22,11 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
     SocketService _socketService;
-    WebService _webService;
 
-    public WebService Web
-    {
-        get => _webService;
-    }
+    private HttpSender _httpSender;
+    private HttpReceiver _httpReceiver;
+    private HttpClient _httpClient;
+
 
 
     // web
@@ -176,9 +175,9 @@ public class NetworkManager : Singleton<NetworkManager>
             _socketService.Update();
         }
 
-        if (_webService != null)
+        if (_httpClient != null)
         {
-            _webService.Update();
+            _httpClient.Update();
         }
     }
 
@@ -197,7 +196,13 @@ public class NetworkManager : Singleton<NetworkManager>
     private void InitNetwork()
     {
         _socketService = new SocketService();
-        _webService = new WebService("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod");
+
+        IJsonSerializer jsonSerializer = new HttpJsonSerializer();
+        _httpReceiver = new HttpReceiver(jsonSerializer);
+        _httpReceiver.AuthUserAck = OnAuthUserAck;
+        _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
+        _httpSender = new HttpSender(_httpClient, jsonSerializer);
+
 
         //
         _netInfo = new NetInfo();
@@ -588,6 +593,22 @@ public class NetworkManager : Singleton<NetworkManager>
         GameStateManager.Get().MoveInGameBattle();
     }
     #endregion
+
+
+    public void AuthUserReq(string userId)
+    {
+        MsgUserAuthReq msg = new MsgUserAuthReq();
+        msg.UserId = userId;
+        _httpSender.UserAuthReq(msg);
+    }
+
+
+    void OnAuthUserAck(MsgUserAuthAck msg)
+    {
+        UserInfoManager.Get().SetUserKey(msg.UserInfo.UserId);
+        GameStateManager.Get().UserAuthOK();
+    }
+
 }
 
 #region net battle save info
@@ -1233,3 +1254,23 @@ public class ConvertNetMsg
 #endregion
 
 
+
+
+public class HttpJsonSerializer : IJsonSerializer
+{
+    public string SerializeObject<T>(T jObject)
+    {
+        return JsonHelper.ToJson<T>(jObject);
+    }
+
+    public T DeserializeObject<T>(string json)
+    {
+        return JsonHelper.Deserialize<T>(json);
+    }
+
+    public T[] DeserializeObjectArray<T>(string json)
+    {
+        return JsonHelper.DeserializeArray<T>(json);
+    }
+
+}
