@@ -634,6 +634,7 @@ public class NetworkManager : Singleton<NetworkManager>
         MsgStartMatchReq msg = new MsgStartMatchReq();
         msg.UserId = userId;
         _httpSender.StartMatchReq(msg);
+        UnityUtil.Print("[MATCH] StartMatchReq. userid: " + userId);
     }
 
 
@@ -647,6 +648,9 @@ public class NetworkManager : Singleton<NetworkManager>
 
         _matchTryCount = 0;
         UserInfoManager.Get().SetTicketId(msg.TicketId);
+        UnityUtil.Print("[MATCH] OnStartMatchAck. ticketId: " + msg.TicketId);
+
+
         StartCoroutine(WaitForMatch());
     }
 
@@ -656,12 +660,15 @@ public class NetworkManager : Singleton<NetworkManager>
         _matchTryCount++;
         MsgStatusMatchReq msg = new MsgStatusMatchReq();
         msg.TicketId = ticketId;
+
         _httpSender.StatusMatchReq(msg);
+        UnityUtil.Print("[MATCH] StatusMatchReq. ticketId: " + ticketId + ", try: " + _matchTryCount);
     }
 
 
     void OnStatusMatchAck(MsgStatusMatchAck msg)
     {
+        UnityUtil.Print("[MATCH] OnStatusMatchAck. serverAddr: " + msg.ServerAddr + ": " + msg.Port + ", playserSession: " + msg.PlayerSessionId);
         if (string.IsNullOrEmpty(msg.PlayerSessionId))
         {
             if (_matchTryCount > 5)
@@ -689,11 +696,13 @@ public class NetworkManager : Singleton<NetworkManager>
         MsgStopMatchReq msg = new MsgStopMatchReq();
         msg.TicketId = ticketId;
         _httpSender.StopMatchReq(msg);
+        UnityUtil.Print("[MATCH] StopMatchReq. ticketId: " + ticketId);
     }
 
 
     void OnStopMatchAck(MsgStopMatchAck msg)
     {
+        UnityUtil.Print("[MATCH] OnStopMatchAck. ");
         StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
     }
 
