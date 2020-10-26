@@ -26,14 +26,14 @@ namespace ED
             int active = UserInfoManager.Get().GetActiveDeckIndex();
             var deck = UserInfoManager.Get().GetSelectDeck(active);
             
-            var splitDeck = deck.Split('/');
+            //var splitDeck = deck.Split('/');
 
             for (var i = 0; i < arrAni_Model.Length; i++)
             {
                 if (arrAni_Model[i] != null) Destroy(arrAni_Model[i].gameObject);
                 
-                var num = int.Parse(splitDeck[i]);
-                var data = JsonDataManager.Get().dataDiceInfo.GetData(num);
+                //var num = int.Parse(splitDeck[i]);
+                var data = JsonDataManager.Get().dataDiceInfo.GetData(deck[i]);
                 
                 var obj = FileHelper.LoadPrefab(data.modelName, data.loadType == 0 ? Global.E_LOADTYPE.LOAD_MAIN_MINION : Global.E_LOADTYPE.LOAD_MAIN_MAGIC);
 

@@ -23,14 +23,24 @@ namespace ED
         public Transform ts_Move;
         public int slotNum;
 
+        [Header("Dice Info")]
+        public Image image_DiceGuageBG;
+        public Image image_DiceGuage;
+        public Text text_DiceCount;
+        public Text text_DiceLevel;
+
         //private Data_Dice _data;
         private DiceInfoData _data;
         
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
 
+        [Space]
         public Image image_GradeBG;
-        
+        public Sprite[] arrSprite_GradeBG;
+        public Material mtl_Grayscale;
+
+        private bool isUngetted;
 
         private void Awake()
         {
@@ -43,36 +53,62 @@ namespace ED
             }
         }
 
-        public void Initialize(DiceInfoData pData)
+        public void Initialize(DiceInfoData pData, int level, int count)
         {
-            this._data = pData;
-            //if(FileHelper.GetIcon( pData.iconName ) == null)
-                //print("eoroerejorjagasjdf   " + pData.iconName);
+            _data = pData;
+            
             image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
             image_Eye.color = FileHelper.GetColor(pData.color);
-            button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
-            button_Info.onClick.AddListener(()=>{_panelDice.Click_Dice_Info(pData.id);});
 
-            image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[pData.grade]);
+            text_DiceLevel.text = $"{Global.g_level} {level}";
+            text_DiceCount.text = $"{count}/{Global.g_needDiceCount[level]}";
+            image_DiceGuage.fillAmount = count / (float)Global.g_needDiceCount[level];
+            
+            button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
+            button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
+
+            image_GradeBG.sprite = arrSprite_GradeBG[pData.grade];
         }
 
         public void Click_Dice()
         {
             _grandParent.BroadcastMessage("DeactivateSelectedObject", SendMessageOptions.DontRequireReceiver);
-            obj_Selected.SetActive(true);
-            ts_Move.SetParent(_grandParent);
 
+            if (isUngetted)
+            {
+                _panelDice.Click_Dice_Info(_data.id);
+            }
+            else
+            {
+                obj_Selected.SetActive(true);
+                ts_Move.SetParent(_grandParent);
+            }
+            
             var parent = transform.parent.parent;
-            ((RectTransform) parent).DOAnchorPosY(
-                Mathf.Clamp(Mathf.Abs(((RectTransform) transform).anchoredPosition.y - 200), 0,
-                    (((RectTransform) parent).sizeDelta.y - ((float) Screen.height - 440f))) *
-                ((RectTransform) parent.parent.parent).anchorMax.y, 0.3f);
+            ((RectTransform)parent).DOAnchorPosY(
+                Mathf.Clamp(Mathf.Abs((((RectTransform)transform.parent).anchoredPosition.y + 980) + ((RectTransform)transform).anchoredPosition.y - 200), 0,
+                    ((RectTransform)parent).sizeDelta.y - ((RectTransform)parent.parent).rect.height), 0.3f);
         }
 
         public void DeactivateSelectedObject()
         {
             obj_Selected.SetActive(false);
             ts_Move.SetParent(transform);
+        }
+
+        public void SetGrayscale()
+        {
+            isUngetted = true;
+
+            var images = GetComponentsInChildren<Image>();
+            foreach(var item in images)
+            {
+                item.material = mtl_Grayscale;
+            }
+            
+            text_DiceLevel.transform.parent.gameObject.SetActive(false);
+            image_DiceGuageBG.gameObject.SetActive(false);
+            text_DiceCount.text = $"{Global.g_grade[_data.grade]}";
         }
     }
 }

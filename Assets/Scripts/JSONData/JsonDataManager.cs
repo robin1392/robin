@@ -42,13 +42,23 @@ public class JsonDataManager : MonoBehaviour
     //
     public void DestroyJsonData()
     {
-		dataDiceInfo.DestroyData();
-		dataDiceInfo = null;
-		dataLangKO.DestroyData();
-		dataLangKO = null;
-		dataLangEN.DestroyData();
-		dataLangEN = null;
+	    if (dataDiceInfo != null)
+	    {
+		    dataDiceInfo.DestroyData();
+		    dataDiceInfo = null;
+	    }
 
+	    if (dataLangKO != null)
+	    {
+		    dataLangKO.DestroyData();
+		    dataLangKO = null;
+	    }
+
+	    if (dataLangEN != null)
+	    {
+		    dataLangEN.DestroyData();
+		    dataLangEN = null;
+	    }
     }
 
 }

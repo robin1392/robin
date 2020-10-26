@@ -30,6 +30,8 @@ public partial class Global
 
     // 재접속 시간 체크를 위해 - 2wave 시간 정도..
     public static float g_reconnectGameTimeCheck = 40.0f;
+
+    public static readonly int[] g_needDiceCount = {1, 2, 4, 10, 20, 50, 100, 200, 400, 800, 2000, 5000, 10000, 20000, 50000};
     
     #endregion
     
@@ -42,14 +44,16 @@ public partial class Global
     /// </summary>
     #region ui string
 
-    public static string g_startStatusConnect = "Server Connecting..";
-    public static string g_startStatusVersionCheck = "Game Version Check..";
-    public static string g_startStatusDataDown = "Game Data Download..";
-    public static string g_startStatusUserData = "User Data Setting..";
+    public static readonly string g_startStatusConnect = "Server Connecting..";
+    public static readonly string g_startStatusVersionCheck = "Game Version Check..";
+    public static readonly string g_startStatusDataDown = "Game Data Download..";
+    public static readonly string g_startStatusUserData = "User Data Setting..";
 
 
-    public static string g_inGameWin = "승리";
-    public static string g_inGameLose = "패배";
+    public static readonly string g_inGameWin = "승리";
+    public static readonly string g_inGameLose = "패배";
+    public static readonly string g_level = "레벨";
+    public static readonly string[] g_grade = {"일반", "매직", "에픽", "전설"};
 
     public static string[] g_gradeColor = {"000000", "43C0FF", "851CEA", "FCC017"};
 

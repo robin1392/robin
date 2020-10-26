@@ -5,10 +5,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RWCoreNetwork.NetService;
-using RWGameProtocol;
-using RWGameProtocol.Msg;
 using UnityEngine;
+using RandomWarsService.Network.NetService;
+using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 
 
 public class SocketRecvEvent
@@ -386,14 +386,6 @@ public class SocketRecvEvent
     
     #region relay
 
-    public void OnRemoveMinionRelay(Peer peer, MsgRemoveMinionRelay msg)
-    {
-        UnityUtil.Print("RECV => ", "REMOVE_MINION_RELAY  " +msg.PlayerUId.ToString() + "  minion id " + msg.Id  , "yellow");
-        
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MINION_RELAY, msg);
-    }
-
     public void OnHitDamageMinionRelay(Peer peer, MsgHitDamageMinionRelay msg)
     {
         UnityUtil.Print("RECV => ", "HIT_DAMAGE_MINION_RELAY " + msg.PlayerUId.ToString() + "  minion id " + msg.Id , "yellow");
@@ -441,14 +433,6 @@ public class SocketRecvEvent
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.FIRE_ARROW_RELAY, msg);
-    }
-
-    public void OnRemoveMagicRelay(Peer peer, MsgRemoveMagicRelay msg)
-    {
-        UnityUtil.Print("RECV => ", "REMOVE_MAGIC_RELAY  " +msg.PlayerUId.ToString() , "yellow");
-        
-        if (InGameManager.Get() != null)
-            InGameManager.Get().RecvPlayerManager(GameProtocol.REMOVE_MAGIC_RELAY, msg);
     }
 
     public void OnFireballBombRelay(Peer peer, MsgFireballBombRelay msg)
@@ -542,7 +526,7 @@ public class SocketRecvEvent
 
     public void OnActivatePoolObjectRelay(Peer peer, MsgActivatePoolObjectRelay msg)
     {
-        UnityUtil.Print("RECV => ", "ACTIVATE_POOL_OBJECT_RELAY  " +msg.PlayerUId.ToString() , "yellow");
+        UnityUtil.Print("RECV => ", "ACTIVATE_POOL_OBJECT_RELAY  " /*+msg.PlayerUId.ToString() */, "yellow");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvPlayerManager(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, msg);
@@ -556,12 +540,12 @@ public class SocketRecvEvent
             InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_CLOACKING_RELAY, msg);
     }
 
-    public void OnMinionFogOfWarRelay(Peer peer, MsgMinionFogOfWarRelay msg)
+    public void OnMinionFogOfWarRelay(Peer peer, MsgMinionFlagOfWarRelay msg)
     {
         UnityUtil.Print("RECV => ", "MINION_FOG_OF_WAR_RELAY  " +msg.PlayerUId.ToString() , "yellow");
         
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_FOG_OF_WAR_RELAY, msg);
+            InGameManager.Get().RecvPlayerManager(GameProtocol.MINION_FLAG_OF_WAR_RELAY, msg);
     }
 
     public void OnSendMessageVoidRelay(Peer peer, MsgSendMessageVoidRelay msg)
@@ -604,7 +588,7 @@ public class SocketRecvEvent
             InGameManager.Get().RecvPlayerManager(GameProtocol.SCARECROW_RELAY, msg);
     }
 
-    public void OnLazerTargetRelay(Peer peer, MsgLazerTargetRelay msg)
+    public void OnLazerTargetRelay(Peer peer, MsgLayzerTargetRelay msg)
     {
         UnityUtil.Print("RECV => ", "LAYZER_TARGET_RELAY  " +msg.PlayerUId.ToString() , "yellow");
         

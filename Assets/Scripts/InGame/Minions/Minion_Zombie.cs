@@ -13,6 +13,9 @@ namespace ED
         [SerializeField]
         private int _reviveCount = 1;
 
+        private MeshRenderer[] arrMeshRenderer2;
+        private SkinnedMeshRenderer[] arrSkinnedMeshRenderer2;
+
         public override void Initialize(DestroyCallback destroy)
         {
             animator = animator_Alive;
@@ -51,6 +54,75 @@ namespace ED
             else
             {
                 base.Death();
+            }
+        }
+        
+        protected override void SetColor(E_MaterialType type)
+        {
+            if (_reviveCount > 0 && arrMeshRenderer == null)
+            {
+                arrMeshRenderer = GetComponentsInChildren<MeshRenderer>();
+            }
+            else if (_reviveCount == 0 && arrMeshRenderer2 == null)
+            {
+                arrMeshRenderer2 = GetComponentsInChildren<MeshRenderer>();
+            }
+            
+            foreach (var m in (_reviveCount > 0 ? arrMeshRenderer : arrMeshRenderer2))
+            {
+                m.material = arrMaterial[isMine ? 0 : 1];
+                switch (type)
+                {
+                    case E_MaterialType.BOTTOM:
+                    case E_MaterialType.TOP:
+                        Color c = m.material.color;
+                        c.a = 1f;
+                        m.material.color = c;
+                        break;
+                    case E_MaterialType.HALFTRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.2f;
+                        m.material.color = c;
+                        break;
+                    case E_MaterialType.TRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.1f;
+                        m.material.color = c;
+                        break;
+                }
+            }
+
+            if (_reviveCount > 0 && arrSkinnedMeshRenderer == null)
+            {
+                arrSkinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+            }
+            else if (_reviveCount == 0 && arrSkinnedMeshRenderer2 == null)
+            {
+                arrSkinnedMeshRenderer2 = GetComponentsInChildren<SkinnedMeshRenderer>();
+            }
+
+            foreach (var m in (_reviveCount > 0 ? arrSkinnedMeshRenderer : arrSkinnedMeshRenderer2))
+            {
+                m.material = arrMaterial[isMine ? 0 : 1];
+                switch (type)
+                {
+                    case E_MaterialType.BOTTOM:
+                    case E_MaterialType.TOP:
+                        Color c = m.material.color;
+                        c.a = 1f;
+                        m.material.color = c;
+                        break;
+                    case E_MaterialType.HALFTRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.2f;
+                        m.material.color = c;
+                        break;
+                    case E_MaterialType.TRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.1f;
+                        m.material.color = c;
+                        break;
+                }
             }
         }
 
