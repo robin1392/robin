@@ -195,7 +195,7 @@ public class SocketSendEvent
             {
                 //FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
                 
-                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
+                MsgVector3 chStPos = ConvertNetMsg.Vector3ToMsg((Vector3) param[1]);
                 
                 _sender.FireSpearRelay(peer , (ushort)param[0] , chStPos , (ushort)param[2] , (int)param[3] , (short)param[4]);
                 break;
@@ -204,7 +204,7 @@ public class SocketSendEvent
             {
                 //NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
                 
-                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
+                MsgVector3 chStPos = ConvertNetMsg.Vector3ToMsg((Vector3) param[1]);
                 
                 _sender.NecromancerBulletRelay(peer , (ushort)param[0] , chStPos , (ushort)param[2] , (int)param[3] , (short)param[4]);
                 
@@ -214,8 +214,8 @@ public class SocketSendEvent
             {
                 //MsgFireCannonBall(IPeer peer, int playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, int range)
                 
-                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
-                MsgVector3 chTgPos = ConvertNetMsg.VectorToMsg((Vector3) param[2]);
+                MsgVector3 chStPos = ConvertNetMsg.Vector3ToMsg((Vector3) param[1]);
+                MsgVector3 chTgPos = ConvertNetMsg.Vector3ToMsg((Vector3) param[2]);
                 
                 _sender.MsgFireCannonBall(peer ,(ushort)param[0] ,chStPos , chTgPos , (int)param[3] , (short)param[4] , (byte)param[5]);
                 break;
@@ -228,9 +228,9 @@ public class SocketSendEvent
             {
                 //ActivatePoolObjectRelay(IPeer peer, int playerUId, string poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
                 
-                MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
+                MsgVector3 chStPos = ConvertNetMsg.Vector3ToMsg((Vector3) param[1]);
                 MsgQuaternion chRot = ConvertNetMsg.QuaternionToMsg((Quaternion) param[2]);
-                MsgVector3 chScale = ConvertNetMsg.VectorToMsg((Vector3) param[3]);
+                MsgVector3 chScale = ConvertNetMsg.Vector3ToMsg((Vector3) param[3]);
                 
                 _sender.ActivatePoolObjectRelay(peer , (int)param[0] , chStPos , chScale, chRot);
                 

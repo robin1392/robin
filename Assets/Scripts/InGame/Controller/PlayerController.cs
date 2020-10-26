@@ -1821,8 +1821,8 @@ namespace ED
             {
                 int chDamage = ConvertNetMsg.MsgFloatToInt(damage);
                 int chRange = ConvertNetMsg.MsgFloatToInt(range);
-                MsgVector3 msgShootPos = ConvertNetMsg.VectorToMsg(shootPos);
-                MsgVector3 msgTargetPos = ConvertNetMsg.VectorToMsg(targetPos);
+                MsgVector3 msgShootPos = ConvertNetMsg.Vector3ToMsg(shootPos);
+                MsgVector3 msgTargetPos = ConvertNetMsg.Vector3ToMsg(targetPos);
                 
                 NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, msgShootPos , msgTargetPos , chDamage , chRange , (int)type);
             }
@@ -1982,13 +1982,13 @@ namespace ED
                     //if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgVector3[] msgMinPos = new MsgVector3[listMinion.Count];
+                        MsgVector2[] msgMinPos = new MsgVector2[listMinion.Count];
                         int[] hp = new int[listMinion.Count];
                         MsgMinionStatus relay = new MsgMinionStatus();
 
                         for (int i = 0; i < listMinion.Count; i++)
                         {
-                            msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
+                            msgMinPos[i] = ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x, listMinion[i].rb.position.z));
                             hp[i] = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                         }
 
@@ -2136,11 +2136,11 @@ namespace ED
             }
         }
 
-        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        public void SyncMinion(byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
-                Vector3 chPos = ConvertNetMsg.MsgToVector(msgPoss[i]);
+                Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPoss[i]);
                 float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
                 listMinion[i].SetNetworkValue(chPos, chHP);
             }
@@ -2637,7 +2637,7 @@ namespace ED
                     MsgFireBulletRelay arrrelay = (MsgFireBulletRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = ConvertNetMsg.MsgToVector(arrrelay.Dir);
+                    Vector3 sPos = ConvertNetMsg.MsgToVector3(arrrelay.Dir);
                     
                     float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
                     float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
@@ -2656,7 +2656,7 @@ namespace ED
                     MsgFireArrowRelay arrrelay = (MsgFireArrowRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = ConvertNetMsg.MsgToVector(arrrelay.Dir);
+                    Vector3 sPos = ConvertNetMsg.MsgToVector3(arrrelay.Dir);
                     
                     float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
                     float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
@@ -2671,7 +2671,7 @@ namespace ED
                 {
                     MsgFireSpearRelay spearrelay = (MsgFireSpearRelay) param[0];
 
-                    Vector3 startPos = ConvertNetMsg.MsgToVector(spearrelay.ShootPos);
+                    Vector3 startPos = ConvertNetMsg.MsgToVector3(spearrelay.ShootPos);
                     float chDamage = ConvertNetMsg.MsgIntToFloat(spearrelay.Power );
                     float chSpeed = ConvertNetMsg.MsgIntToFloat(spearrelay.MoveSpeed );
                     
@@ -2686,7 +2686,7 @@ namespace ED
                 {
                     MsgNecromancerBulletRelay necrorelay = (MsgNecromancerBulletRelay) param[0];
 
-                    Vector3 shootPos = ConvertNetMsg.MsgToVector(necrorelay.ShootPos);
+                    Vector3 shootPos = ConvertNetMsg.MsgToVector3(necrorelay.ShootPos);
                         
                     if (NetworkManager.Get().UserUID == necrorelay.PlayerUId)
                         FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
@@ -2699,8 +2699,8 @@ namespace ED
                 {
                     MsgFireCannonBallRelay fcannonrelay = (MsgFireCannonBallRelay) param[0];
 
-                    Vector3 startPos = ConvertNetMsg.MsgToVector(fcannonrelay.ShootPos);
-                    Vector3 targetPos = ConvertNetMsg.MsgToVector(fcannonrelay.TargetPos);
+                    Vector3 startPos = ConvertNetMsg.MsgToVector3(fcannonrelay.ShootPos);
+                    Vector3 targetPos = ConvertNetMsg.MsgToVector3(fcannonrelay.TargetPos);
                     float chDamage = ConvertNetMsg.MsgIntToFloat(fcannonrelay.Power );
                     float chRange = ConvertNetMsg.MsgIntToFloat(fcannonrelay.Range );
                     E_CannonType cannonType = (E_CannonType) fcannonrelay.Type;
@@ -2759,8 +2759,8 @@ namespace ED
                 {
                     MsgActivatePoolObjectRelay actrelay = (MsgActivatePoolObjectRelay) param[0];
                     
-                    Vector3 stPos = ConvertNetMsg.MsgToVector(actrelay.HitPos);
-                    Vector3 localScale = ConvertNetMsg.MsgToVector(actrelay.LocalScale);
+                    Vector3 stPos = ConvertNetMsg.MsgToVector3(actrelay.HitPos);
+                    Vector3 localScale = ConvertNetMsg.MsgToVector3(actrelay.LocalScale);
                     Quaternion rotate = ConvertNetMsg.MsgToQuaternion(actrelay.Rotation);
                     
                     string strObjName = ((E_PoolName) actrelay.PoolName).ToString();
@@ -2813,7 +2813,7 @@ namespace ED
                 {
                     MsgPushMinionRelay pushrelay = (MsgPushMinionRelay) param[0];
 
-                    Vector3 conVecDir = ConvertNetMsg.MsgToVector(pushrelay.Dir);
+                    Vector3 conVecDir = ConvertNetMsg.MsgToVector3(pushrelay.Dir);
                     float convPower = ConvertNetMsg.MsgIntToFloat(pushrelay.PushPower );
                     
                     

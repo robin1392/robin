@@ -135,12 +135,12 @@ namespace ED
                         ugd.slotNum = gettedSlotCount++;
                         ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
                         
-                        obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
-                        ugd = obj.GetComponent<UI_Getted_Dice>();
-                        listUngettedDice.Add(ugd);
-                        ugd.slotNum = ungettedSlotCount++;
-                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
-                        ugd.SetGrayscale();
+                        // obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
+                        // ugd = obj.GetComponent<UI_Getted_Dice>();
+                        // listUngettedDice.Add(ugd);
+                        // ugd.slotNum = ungettedSlotCount++;
+                        // ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                        // ugd.SetGrayscale();
                     }
                     else
                     {
