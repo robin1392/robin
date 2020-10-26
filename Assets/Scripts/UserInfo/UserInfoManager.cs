@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
+using RandomWarsProtocol;
 
 public class UserInfo
 {
@@ -319,25 +320,25 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo.activateDeckIndex;
     }
 
-    public void SetDeck(UserDeck[] userDeck)
+    public void SetDeck(MsgUserDeck[] userDeck)
     {
         for (int i = 0; i < userDeck.Length; i++)
         {
             // string strDeck = string.Format("{0}/{1}/{2}/{3}/{4}", userDeck[i].deckInfo[0], userDeck[i].deckInfo[1],
             //     userDeck[i].deckInfo[2], userDeck[i].deckInfo[3], userDeck[i].deckInfo[4]);
             //Debug.LogFormat("SetDeck[{0}] : {1}", i, strDeck);
-            _userInfo.SetDeck(i, userDeck[i].deckInfo);
+            _userInfo.SetDeck(i, userDeck[i].DeckInfo);
         }
     }
 
-    public void SetDice(UserDice[] userDice)
+    public void SetDice(MsgUserDice[] userDice)
     {
         _userInfo.dicGettedDice.Clear();
 
         for (int i = 0; i < userDice.Length; i++)
         {
             //Debug.LogFormat("SetDice: ID:{0}, Level:{1}, Count:{2}", userDice[i].diceId, userDice[i].level, userDice[i].count);
-            _userInfo.dicGettedDice.Add(userDice[i].diceId, new int[2] { userDice[i].level, userDice[i].count });
+            _userInfo.dicGettedDice.Add(userDice[i].DiceId, new int[2] { userDice[i].Level, userDice[i].Count });
         }
     }
     #endregion
