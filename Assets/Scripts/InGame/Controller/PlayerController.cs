@@ -2290,9 +2290,22 @@ namespace ED
                     switch (protocol)
                     {
                         case GameProtocol.HIT_DAMAGE_MINION_RELAY:
-                            _syncDictionary[protocol]
-                                .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
-                                    (float) param[2]));
+                        {
+                            var msg = _syncDictionary[protocol].Find(m =>
+                                (((MsgHitDamageMinionRelay) m).PlayerUId == (int) param[0] &&
+                                 ((MsgHitDamageMinionRelay) m).Id == (int) param[1]));
+
+                            if (msg != null)
+                            {
+                                ((MsgHitDamageMinionRelay) msg).Damage += ConvertNetMsg.MsgFloatToInt((float)param[2]);
+                            }
+                            else
+                            {
+                                _syncDictionary[protocol]
+                                    .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
+                                        (float) param[2]));
+                            }
+                        }
                             break;
                         case GameProtocol.DESTROY_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMinionRelayMsg((int)param[0], (int)param[1]));
