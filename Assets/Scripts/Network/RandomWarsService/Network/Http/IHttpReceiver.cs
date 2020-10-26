@@ -7,7 +7,7 @@ namespace RandomWarsService.Network.Http
 {
     public interface IHttpReceiver
     {
-        Task<string> ProcessRequest(int protocolId, string json);
-        bool ProcessResponse(int protocolId, string json);
+        Task<string> ProcessAsync(int protocolId, string json);
+        bool Process(int protocolId, string json);
     }
 }

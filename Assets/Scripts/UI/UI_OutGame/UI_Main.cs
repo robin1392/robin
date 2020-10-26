@@ -128,7 +128,8 @@ namespace ED
                 return;
             }
 
-            WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
+            //WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
         }
         
         /*

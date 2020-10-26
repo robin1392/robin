@@ -20,6 +20,7 @@ public class NetworkManager : Singleton<NetworkManager>
 {
     #region net variable
 
+    public Global.E_MATCHSTEP netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
 
     SocketService _socketService;
 
@@ -27,6 +28,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private HttpReceiver _httpReceiver;
     private HttpClient _httpClient;
 
+    private int _matchTryCount;
 
 
     // web
@@ -199,9 +201,17 @@ public class NetworkManager : Singleton<NetworkManager>
 
         IJsonSerializer jsonSerializer = new HttpJsonSerializer();
         _httpReceiver = new HttpReceiver(jsonSerializer);
-        _httpReceiver.AuthUserAck = OnAuthUserAck;
         _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
         _httpSender = new HttpSender(_httpClient, jsonSerializer);
+
+        _httpReceiver.AuthUserAck = OnAuthUserAck;
+        _httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
+        _httpReceiver.StartMatchAck = OnStartMatchAck;
+        _httpReceiver.StatusMatchAck = OnStatusMatchAck;
+        _httpReceiver.StopMatchAck = OnStopMatchAck;
+
+
+
 
 
         //
@@ -595,6 +605,8 @@ public class NetworkManager : Singleton<NetworkManager>
     #endregion
 
 
+    #region http
+
     public void AuthUserReq(string userId)
     {
         MsgUserAuthReq msg = new MsgUserAuthReq();
@@ -609,6 +621,95 @@ public class NetworkManager : Singleton<NetworkManager>
         GameStateManager.Get().UserAuthOK();
     }
 
+    
+    IEnumerator WaitForMatch()
+    {
+        yield return new WaitForSeconds(1.0f);
+        StatusMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
+    }
+
+    
+    public void StartMatchReq(string userId)
+    {
+        MsgStartMatchReq msg = new MsgStartMatchReq();
+        msg.UserId = userId;
+        _httpSender.StartMatchReq(msg);
+    }
+
+
+    void OnStartMatchAck(MsgStartMatchAck msg)
+    {
+        if (string.IsNullOrEmpty(msg.TicketId))
+        {
+            UnityUtil.Print("ticket id null");
+            return;
+        }
+
+        _matchTryCount = 0;
+        UserInfoManager.Get().SetTicketId(msg.TicketId);
+        StartCoroutine(WaitForMatch());
+    }
+
+
+    public void StatusMatchReq(string ticketId)
+    {
+        _matchTryCount++;
+        MsgStatusMatchReq msg = new MsgStatusMatchReq();
+        msg.TicketId = ticketId;
+        _httpSender.StatusMatchReq(msg);
+    }
+
+
+    void OnStatusMatchAck(MsgStatusMatchAck msg)
+    {
+        if (string.IsNullOrEmpty(msg.PlayerSessionId))
+        {
+            if (_matchTryCount > 5)
+            {
+                StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
+            }
+            else
+            {
+                StartCoroutine(WaitForMatch());
+            }
+            return;
+        }
+
+
+        // go match -> socket
+        SetAddr(msg.ServerAddr, msg.Port, msg.PlayerSessionId);
+
+        // 우선 그냥 배틀로 지정하자
+        ConnectServer(Global.PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+    }
+
+
+    public void StopMatchReq(string ticketId)
+    {
+        MsgStopMatchReq msg = new MsgStopMatchReq();
+        msg.TicketId = ticketId;
+        _httpSender.StopMatchReq(msg);
+    }
+
+
+    void OnStopMatchAck(MsgStopMatchAck msg)
+    {
+        StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+    }
+
+
+    public void UpdateDeckReq(string userId)
+    {
+        MsgUpdateDeckReq msg = new MsgUpdateDeckReq();
+        _httpSender.UpdateDeckReq(msg);
+    }
+
+
+    void OnUpdateDeckAck(MsgUpdateDeckAck msg)
+    {
+    }
+
+    #endregion
 }
 
 #region net battle save info

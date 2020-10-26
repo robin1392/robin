@@ -80,7 +80,7 @@ namespace RandomWarsService.Network.Http
                 ackJson = ackJson.Replace("\\n", "");
                 ackJson = ackJson.Replace("\"{", "{");
                 ackJson = ackJson.Replace("}\"", "}");
-                _httpReceiver.ProcessResponse(protocolId + 1, ackJson);
+                _httpReceiver.Process(protocolId + 1, ackJson);
             }
 
             return true;

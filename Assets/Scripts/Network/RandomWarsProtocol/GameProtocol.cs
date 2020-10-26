@@ -7,7 +7,7 @@ namespace RandomWarsProtocol
         // ----------------------------------------------------------------------------------------------------
         // http protocols
         // ----------------------------------------------------------------------------------------------------
-        BEGIN_HTTP = 10000,
+        BEGIN_HTTP = 1000,
 
         AUTH_USER_REQ,
         AUTH_USER_ACK,
@@ -18,11 +18,11 @@ namespace RandomWarsProtocol
         START_MATCH_REQ,
         START_MATCH_ACK,
 
-        CHECK_MATCH_REQ,
-        CHECK_MATCH_ACK,
+        STATUS_MATCH_REQ,
+        STATUS_MATCH_ACK,
 
-        END_MATCH_REQ,
-        END_MATCH_ACK,
+        STOP_MATCH_REQ,
+        STOP_MATCH_ACK,
 
 
         END_HTTP,
@@ -30,7 +30,7 @@ namespace RandomWarsProtocol
         // ----------------------------------------------------------------------------------------------------
         // socket protocols
         // ----------------------------------------------------------------------------------------------------
-        BEGIN_SOCKET = 20000,
+        BEGIN_SOCKET = 100000,
         
         // ----------------------------------------------------------------------------------------------------
         // req/ack protocols
@@ -85,7 +85,7 @@ namespace RandomWarsProtocol
         // ----------------------------------------------------------------------------------------------------
         // Notify protocols
         // ----------------------------------------------------------------------------------------------------
-        DEACTIVE_WAITING_OBJECT_NOTIFY = 30001,
+        DEACTIVE_WAITING_OBJECT_NOTIFY = 200001,
         ADD_SP_NOTIFY,
         SPAWN_NOTIFY,
         END_GAME_NOTIFY,
@@ -96,7 +96,7 @@ namespace RandomWarsProtocol
         // ----------------------------------------------------------------------------------------------------
         // Relay protocols
         // ----------------------------------------------------------------------------------------------------
-        BEGIN_RELAY = 40001,
+        BEGIN_RELAY = 300000,
 
         HIT_DAMAGE_MINION_RELAY,
         DESTROY_MINION_RELAY,
