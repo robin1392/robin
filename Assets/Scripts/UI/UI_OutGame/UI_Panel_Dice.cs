@@ -24,12 +24,16 @@ namespace ED
         public Image[] arrImageDeck_Main;
         public Image[] arrImageDeckEye_Main;
         public RectTransform tsGettedDiceParent;
-        public UI_Getted_Dice[] arrGettedDice;
+        public RectTransform tsUngettedDiceParent;
+        public RectTransform tsUngettedDiceLine;
+        public List<UI_Getted_Dice> listGettedDice = new List<UI_Getted_Dice>();
+        public List<UI_Getted_Dice> listUngettedDice = new List<UI_Getted_Dice>();
         public GameObject objSelectBlind;
         public RectTransform rts_ScrollView;
         public ScrollRect scrollView;
         public RectTransform rts_Content;
         public Text text_Getted;
+        public Text text_Ungetted;
         public GameObject obj_Ciritical;
 
         public Sprite sprite_Use;
@@ -81,12 +85,12 @@ namespace ED
             int active = UserInfoManager.Get().GetActiveDeckIndex();
             var deck = UserInfoManager.Get().GetSelectDeck(active);
             
-            var splitDeck = deck.Split('/');
+            //var splitDeck = deck.Split('/');
 
             for (var i = 0; i < arrImageDeck.Length; i++)
             {
-                var num = int.Parse(splitDeck[i]);
-                var data = JsonDataManager.Get().dataDiceInfo.GetData(num);
+                //var num = int.Parse(splitDeck[i]);
+                var data = JsonDataManager.Get().dataDiceInfo.GetData(deck[i]);
                 arrImageDeck[i].sprite = FileHelper.GetIcon(data.iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeckEye[i].color = FileHelper.GetColor(data.color);
                 arrImageDeck_Main[i].sprite = FileHelper.GetIcon(data.iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
@@ -98,57 +102,78 @@ namespace ED
 
         private void RefreshGettedDice()
         {
-            var isCreated = false;
-
-            int enableCount = 0;
-            foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
+            if (listGettedDice.Count > 0)
             {
-                if (info.Value.enableDice == true)
-                    enableCount++;
-            }
-            
-            
-            if (arrGettedDice == null)
-            {
-                isCreated = true;
-                //arrGettedDice = new UI_Getted_Dice[JsonDataManager.Get().dataDiceInfo.dicData.Count];
-                arrGettedDice = new UI_Getted_Dice[enableCount];
-            }
-            //else if (arrGettedDice.Length < JsonDataManager.Get().dataDiceInfo.dicData.Count)
-            else if (arrGettedDice.Length < enableCount)
-            {
-                isCreated = true;
-                arrGettedDice = new UI_Getted_Dice[enableCount];
-            }
-
-            if (isCreated)
-            {
-                //for (var i = 0; i < JsonDataManager.Get().dataDiceInfo.dicData.Count; i++)
-                for (var i = 0; i < enableCount; i++)
+                for (int i = listGettedDice.Count - 1; i >= 0; --i)
                 {
-                    var obj = Instantiate(prefGettedDice, tsGettedDiceParent);
-                    arrGettedDice[i] = obj.GetComponent<UI_Getted_Dice>();
-                    arrGettedDice[i].slotNum = i;
+                    Destroy(listGettedDice[i].gameObject);
                 }
             }
-
-            //for (var i = 0; i < dataAllDice.listDice.Count; i++)
-            //{
-                //arrGettedDice[i].Initialize(dataAllDice.listDice[i]);
-            //}
-            int countindex = 0;
-            foreach (KeyValuePair<int, DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
+            
+            if (listUngettedDice.Count > 0)
+            {
+                for (int i = listUngettedDice.Count - 1; i >= 0; --i)
+                {
+                    Destroy(listUngettedDice[i].gameObject);
+                }
+            }
+            
+            listGettedDice.Clear();
+            listUngettedDice.Clear();
+            int gettedSlotCount = 0;
+            int ungettedSlotCount = 0;
+            
+            foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
             {
                 if (info.Value.enableDice)
                 {
-                    arrGettedDice[countindex].Initialize(info.Value);
-                    countindex++;
+                    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.Value.id))
+                    {
+                        var obj = Instantiate(prefGettedDice, tsGettedDiceParent);
+                        var ugd = obj.GetComponent<UI_Getted_Dice>();
+                        listGettedDice.Add(ugd);
+                        ugd.slotNum = gettedSlotCount++;
+                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                        
+                        // obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
+                        // ugd = obj.GetComponent<UI_Getted_Dice>();
+                        // listUngettedDice.Add(ugd);
+                        // ugd.slotNum = ungettedSlotCount++;
+                        // ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                        // ugd.SetGrayscale();
+                    }
+                    else
+                    {
+                        var obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
+                        var ugd = obj.GetComponent<UI_Getted_Dice>();
+                        listUngettedDice.Add(ugd);
+                        ugd.slotNum = ungettedSlotCount++;
+                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                        ugd.SetGrayscale();
+                    }
                 }
             }
             
             // Grid 즉시 업데이트
             LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
-            rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + 1460 + 300);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedDiceParent);
+
+            if (ungettedSlotCount > 0)
+            {
+                var pos = tsUngettedDiceParent.anchoredPosition;
+                pos.y = -980 - (tsGettedDiceParent.sizeDelta.y + 300);
+                tsUngettedDiceParent.anchoredPosition = pos;
+                tsUngettedDiceLine.anchoredPosition = new Vector2(0, pos.y + 150);
+                tsUngettedDiceLine.gameObject.SetActive(true);
+            }
+            else
+            {
+                tsUngettedDiceLine.gameObject.SetActive(false);
+            }
+            
+
+            rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 +
+                                                   (ungettedSlotCount > 0 ? 300 : 0));
         }
 
         public void ResetYPos()
@@ -194,13 +219,13 @@ namespace ED
             {
                 //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
                 int active = UserInfoManager.Get().GetActiveDeckIndex();
-                var deck = UserInfoManager.Get().GetSelectDeck(active);
+                //var deck = UserInfoManager.Get().GetSelectDeck(active);
                 
-                var splitDeck = deck.Split('/');
-                var intDeck = new int[5];
+                //var splitDeck = deck.Split('/');
+                var intDeck = UserInfoManager.Get().GetSelectDeck(active);
                 var isChanged = false;
                 
-                for (var i = 0; i < intDeck.Length; i++) intDeck[i] = int.Parse(splitDeck[i]);
+                //for (var i = 0; i < intDeck.Length; i++) intDeck[i] = int.Parse(splitDeck[i]);
                 for (var i = 0; i < intDeck.Length; i++)
                 {
                     if (i == deckSlotNum) continue;
@@ -224,7 +249,8 @@ namespace ED
                 else
                 {
                     //ObscuredPrefs.SetString("Deck", $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
-                    UserInfoManager.Get().GetUserInfo().SetDeck(active, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                    //UserInfoManager.Get().GetUserInfo().SetDeck(active, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
+                    UserInfoManager.Get().GetUserInfo().SetDeck(active, intDeck);
                 }
 
                 tsGettedDiceParent.gameObject.SetActive(true);

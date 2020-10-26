@@ -262,7 +262,7 @@ public class GameStateManager : Singleton<GameStateManager>
             // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
             if (userid == "")
             {
-                UserInfoManager.Get().GetUserInfo().ResetDeck();
+                //UserInfoManager.Get().GetUserInfo().ResetDeck();
             }
         }
 #else

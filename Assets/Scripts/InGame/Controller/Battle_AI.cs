@@ -7,7 +7,7 @@ namespace ED
 {
     public class Battle_AI : PlayerController
     {
-        public string deck;
+        public int[] deck;
         public override int sp
         {
             get => _sp;
@@ -45,7 +45,7 @@ namespace ED
             targetPlayer = InGameManager.Get().playerController;
             InGameManager.Get().playerController.targetPlayer = this;
 
-            if (string.IsNullOrEmpty(deck))
+            if (deck == null)
             {
                 var listDeck = new List<int>();
                 for (var i = 0; i < _arrDiceDeck.Length; i++)
@@ -71,7 +71,8 @@ namespace ED
                     listDeck.Add(rndDiceNum);
                 }
 
-                deck = $"{listDeck[0]}/{listDeck[1]}/{listDeck[2]}/{listDeck[3]}/{listDeck[4]}";
+                //deck = $"{listDeck[0]}/{listDeck[1]}/{listDeck[2]}/{listDeck[3]}/{listDeck[4]}";
+                deck = listDeck.ToArray();
             }
 
             SetDeck(deck);

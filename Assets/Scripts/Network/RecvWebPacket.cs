@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using ErrorDefine;
 using WebPacketDefine;
+using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 //using WebSocketSharp;
 
 public partial class WebPacket : Singleton<WebPacket>
@@ -64,8 +66,8 @@ public partial class WebPacket : Singleton<WebPacket>
         {
             case WebProtocol.WebPD_UserAuth:
             {
-                UserAuthRes res = JsonUtility.FromJson<UserAuthRes>(content);
-                RecvUserAuth(res.userInfo, res.userDeck, res.userDice);
+                MsgUserAuthAck res = JsonUtility.FromJson<MsgUserAuthAck>(content);
+                RecvUserAuth(res.UserInfo, res.UserDeck, res.UserDice);
                 break;
             }
             case WebProtocol.WebPD_Match:
@@ -97,9 +99,11 @@ public partial class WebPacket : Singleton<WebPacket>
 
     #region user auth
 
-    private void RecvUserAuth(User userInfo, UserDeck[] userDeck, UserDice[] userDice)
+    private void RecvUserAuth(MsgUserInfo userInfo, MsgUserDeck[] userDeck, MsgUserDice[] userDice)
     {
-        UserInfoManager.Get().SetUserKey(userInfo.userId);
+        UserInfoManager.Get().SetUserKey(userInfo.UserId);
+        UserInfoManager.Get().SetDeck(userDeck);
+        UserInfoManager.Get().SetDice(userDice);
     }
     #endregion
     
@@ -159,7 +163,8 @@ public partial class WebPacket : Singleton<WebPacket>
     private void RecvDeckUpdate(DeckUpdateAck res)
     {
         //
-        UserInfoManager.Get().GetUserInfo().SetDeck(res.deckIndex, $"{res.diceIds[0]}/{res.diceIds[1]}/{res.diceIds[2]}/{res.diceIds[3]}/{res.diceIds[4]}");
+        //UserInfoManager.Get().GetUserInfo().SetDeck(res.deckIndex, $"{res.diceIds[0]}/{res.diceIds[1]}/{res.diceIds[2]}/{res.diceIds[3]}/{res.diceIds[4]}");
+        UserInfoManager.Get().GetUserInfo().SetDeck(res.deckIndex, res.diceIds);
         
         _isPacketSend = false;
     }

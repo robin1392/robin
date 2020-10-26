@@ -284,13 +284,13 @@ namespace ED
             else
             {
                 // 네트워크 안쓰니까...개발용으로
-                var deck = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+                //var deck = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
                 if (UserInfoManager.Get() != null)
                 {
-                    deck = UserInfoManager.Get().GetActiveDeck();
+                    var deck = UserInfoManager.Get().GetActiveDeck();
+                    playerController.SetDeck(deck);
                 }
 
-                playerController.SetDeck(deck);
             }
 
             // Upgrade buttons

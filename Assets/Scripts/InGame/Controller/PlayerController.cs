@@ -146,6 +146,7 @@ namespace ED
         public bool isPlayingAI { get; protected set; }
         public bool isMinionAgentMove = true;
         protected Coroutine crt_SyncMinion;
+        protected Queue<int> queueHitDamage = new Queue<int>();
 
         #endregion
 
@@ -211,11 +212,15 @@ namespace ED
 
         public void StartPlayerControll()
         {
-            if (isMine) NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
+            if (isMine)
+            {
+                NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
+                StartCoroutine(HitDamageQueueCoroutine());
+            }
 
             isHalfHealth = false;
 
-            if(InGameManager.IsNetwork == false )
+            if( InGameManager.IsNetwork == false )
                 sp = 200;
             
             currentHealth = maxHealth;
@@ -926,33 +931,33 @@ namespace ED
             }
         }
        
-        public void SetDeck(string deck)
-        {
-            var splitDeck = deck.Split('/');
- 
-            if(arrDiceDeck == null)
-                _arrDiceDeck = new DiceInfoData[5];
-
-            for (var i = 0; i < splitDeck.Length; i++)
-            {
-                var num = int.Parse(splitDeck[i]);
-                
-                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
-                
-                // add pool
-                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
-                
-                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
-                }
-                else
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
-                }
-                
-            }
-        }
+        // public void SetDeck(string deck)
+        // {
+        //     var splitDeck = deck.Split('/');
+        //
+        //     if(arrDiceDeck == null)
+        //         _arrDiceDeck = new DiceInfoData[5];
+        //
+        //     for (var i = 0; i < splitDeck.Length; i++)
+        //     {
+        //         var num = int.Parse(splitDeck[i]);
+        //         
+        //         arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
+        //         
+        //         // add pool
+        //         if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
+        //         
+        //         if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
+        //         {
+        //             PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+        //         }
+        //         else
+        //         {
+        //             PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+        //         }
+        //         
+        //     }
+        // }
         
         public void GetDice(int deckNum, int slotNum)
         {
@@ -1095,6 +1100,26 @@ namespace ED
         
         
         #region minion damage
+
+        IEnumerator HitDamageQueueCoroutine()
+        {
+            int damage = 0;
+            while (true)
+            {
+                yield return new WaitForSeconds(0.2f);
+
+                damage = 0;
+                while (queueHitDamage.Count > 0)
+                {
+                    damage += queueHitDamage.Dequeue();
+                }
+
+                if (damage > 0)
+                {
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, damage);
+                }
+            }
+        }
         
         public void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
@@ -1105,7 +1130,8 @@ namespace ED
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
                     int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, convDamage);
+                    //NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, convDamage);
+                    queueHitDamage.Enqueue(convDamage);
                 }
                 else if (InGameManager.IsNetwork == false)
                 {
@@ -1118,6 +1144,9 @@ namespace ED
                 if (m != null)
                 {
                     m.HitDamage(damage);
+                    var obj = PoolManager.instance.ActivateObject("Effect_ArrowHit", m.ts_HitPos.position);
+                    obj.rotation = Quaternion.identity;
+                    obj.localScale = Vector3.one * 0.6f;
                 }
                 else
                 {
@@ -1792,8 +1821,8 @@ namespace ED
             {
                 int chDamage = ConvertNetMsg.MsgFloatToInt(damage);
                 int chRange = ConvertNetMsg.MsgFloatToInt(range);
-                MsgVector3 msgShootPos = ConvertNetMsg.VectorToMsg(shootPos);
-                MsgVector3 msgTargetPos = ConvertNetMsg.VectorToMsg(targetPos);
+                MsgVector3 msgShootPos = ConvertNetMsg.Vector3ToMsg(shootPos);
+                MsgVector3 msgTargetPos = ConvertNetMsg.Vector3ToMsg(targetPos);
                 
                 NetSendPlayer(GameProtocol.FIRE_CANNON_BALL_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, msgShootPos , msgTargetPos , chDamage , chRange , (int)type);
             }
@@ -1953,13 +1982,13 @@ namespace ED
                     //if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgVector3[] msgMinPos = new MsgVector3[listMinion.Count];
+                        MsgVector2[] msgMinPos = new MsgVector2[listMinion.Count];
                         int[] hp = new int[listMinion.Count];
                         MsgMinionStatus relay = new MsgMinionStatus();
 
                         for (int i = 0; i < listMinion.Count; i++)
                         {
-                            msgMinPos[i] = ConvertNetMsg.VectorToMsg(listMinion[i].rb.position);
+                            msgMinPos[i] = ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x, listMinion[i].rb.position.z));
                             hp[i] = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                         }
 
@@ -2107,11 +2136,11 @@ namespace ED
             }
         }
 
-        public void SyncMinion(byte minionCount , MsgVector3[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        public void SyncMinion(byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
-                Vector3 chPos = ConvertNetMsg.MsgToVector(msgPoss[i]);
+                Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPoss[i]);
                 float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
                 listMinion[i].SetNetworkValue(chPos, chHP);
             }
@@ -2261,9 +2290,22 @@ namespace ED
                     switch (protocol)
                     {
                         case GameProtocol.HIT_DAMAGE_MINION_RELAY:
-                            _syncDictionary[protocol]
-                                .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
-                                    (float) param[2]));
+                        {
+                            var msg = _syncDictionary[protocol].Find(m =>
+                                (((MsgHitDamageMinionRelay) m).PlayerUId == (int) param[0] &&
+                                 ((MsgHitDamageMinionRelay) m).Id == (int) param[1]));
+
+                            if (msg != null)
+                            {
+                                ((MsgHitDamageMinionRelay) msg).Damage += ConvertNetMsg.MsgFloatToInt((float)param[2]);
+                            }
+                            else
+                            {
+                                _syncDictionary[protocol]
+                                    .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
+                                        (float) param[2]));
+                            }
+                        }
                             break;
                         case GameProtocol.DESTROY_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMinionRelayMsg((int)param[0], (int)param[1]));
@@ -2595,7 +2637,7 @@ namespace ED
                     MsgFireBulletRelay arrrelay = (MsgFireBulletRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = ConvertNetMsg.MsgToVector(arrrelay.Dir);
+                    Vector3 sPos = ConvertNetMsg.MsgToVector3(arrrelay.Dir);
                     
                     float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
                     float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
@@ -2614,7 +2656,7 @@ namespace ED
                     MsgFireArrowRelay arrrelay = (MsgFireArrowRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = ConvertNetMsg.MsgToVector(arrrelay.Dir);
+                    Vector3 sPos = ConvertNetMsg.MsgToVector3(arrrelay.Dir);
                     
                     float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
                     float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
@@ -2629,7 +2671,7 @@ namespace ED
                 {
                     MsgFireSpearRelay spearrelay = (MsgFireSpearRelay) param[0];
 
-                    Vector3 startPos = ConvertNetMsg.MsgToVector(spearrelay.ShootPos);
+                    Vector3 startPos = ConvertNetMsg.MsgToVector3(spearrelay.ShootPos);
                     float chDamage = ConvertNetMsg.MsgIntToFloat(spearrelay.Power );
                     float chSpeed = ConvertNetMsg.MsgIntToFloat(spearrelay.MoveSpeed );
                     
@@ -2644,7 +2686,7 @@ namespace ED
                 {
                     MsgNecromancerBulletRelay necrorelay = (MsgNecromancerBulletRelay) param[0];
 
-                    Vector3 shootPos = ConvertNetMsg.MsgToVector(necrorelay.ShootPos);
+                    Vector3 shootPos = ConvertNetMsg.MsgToVector3(necrorelay.ShootPos);
                         
                     if (NetworkManager.Get().UserUID == necrorelay.PlayerUId)
                         FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
@@ -2657,8 +2699,8 @@ namespace ED
                 {
                     MsgFireCannonBallRelay fcannonrelay = (MsgFireCannonBallRelay) param[0];
 
-                    Vector3 startPos = ConvertNetMsg.MsgToVector(fcannonrelay.ShootPos);
-                    Vector3 targetPos = ConvertNetMsg.MsgToVector(fcannonrelay.TargetPos);
+                    Vector3 startPos = ConvertNetMsg.MsgToVector3(fcannonrelay.ShootPos);
+                    Vector3 targetPos = ConvertNetMsg.MsgToVector3(fcannonrelay.TargetPos);
                     float chDamage = ConvertNetMsg.MsgIntToFloat(fcannonrelay.Power );
                     float chRange = ConvertNetMsg.MsgIntToFloat(fcannonrelay.Range );
                     E_CannonType cannonType = (E_CannonType) fcannonrelay.Type;
@@ -2717,8 +2759,8 @@ namespace ED
                 {
                     MsgActivatePoolObjectRelay actrelay = (MsgActivatePoolObjectRelay) param[0];
                     
-                    Vector3 stPos = ConvertNetMsg.MsgToVector(actrelay.HitPos);
-                    Vector3 localScale = ConvertNetMsg.MsgToVector(actrelay.LocalScale);
+                    Vector3 stPos = ConvertNetMsg.MsgToVector3(actrelay.HitPos);
+                    Vector3 localScale = ConvertNetMsg.MsgToVector3(actrelay.LocalScale);
                     Quaternion rotate = ConvertNetMsg.MsgToQuaternion(actrelay.Rotation);
                     
                     string strObjName = ((E_PoolName) actrelay.PoolName).ToString();
@@ -2771,7 +2813,7 @@ namespace ED
                 {
                     MsgPushMinionRelay pushrelay = (MsgPushMinionRelay) param[0];
 
-                    Vector3 conVecDir = ConvertNetMsg.MsgToVector(pushrelay.Dir);
+                    Vector3 conVecDir = ConvertNetMsg.MsgToVector3(pushrelay.Dir);
                     float convPower = ConvertNetMsg.MsgIntToFloat(pushrelay.PushPower );
                     
                     

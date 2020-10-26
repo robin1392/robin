@@ -735,7 +735,7 @@ public class ConvertNetMsg
             convData[i].minionDuration = MsgFloatToShort(syncData.netSyncMinionData[i].minionDuration);
             convData[i].minionCooltime = MsgFloatToShort(syncData.netSyncMinionData[i].minionCooltime);
 
-            convData[i].minionPos = VectorToMsg(syncData.netSyncMinionData[i].minionPos);
+            convData[i].minionPos = Vector3ToMsg(syncData.netSyncMinionData[i].minionPos);
         }
 
         return convData;
@@ -762,7 +762,7 @@ public class ConvertNetMsg
             miniondata.minionDuration = MsgIntToFloat(minionData[i].minionDuration);
             miniondata.minionCooltime = MsgIntToFloat(minionData[i].minionCooltime);
 
-            miniondata.minionPos = MsgToVector(minionData[i].minionPos);
+            miniondata.minionPos = MsgToVector3(minionData[i].minionPos);
 
             syncData.Add(miniondata);
         }
@@ -865,7 +865,17 @@ public class ConvertNetMsg
         return value * 0.01f;
     }
 
-    public static MsgVector3 VectorToMsg(Vector3 val)
+    public static MsgVector2 Vector3ToMsg(Vector2 val)
+    {
+        MsgVector2 chVec = new MsgVector2();
+
+        chVec.X = MsgFloatToShort(val.x);
+        chVec.Y = MsgFloatToShort(val.y);
+
+        return chVec;
+    }
+
+    public static MsgVector3 Vector3ToMsg(Vector3 val)
     {
         MsgVector3 chVec = new MsgVector3();
 
@@ -888,7 +898,18 @@ public class ConvertNetMsg
         return chMsgQuat;
     }
 
-    public static Vector3 MsgToVector(MsgVector3 msgVec)
+    public static Vector3 MsgToVector3(MsgVector2 msgVec)
+    {
+        Vector3 vecVal = new Vector3();
+
+        vecVal.x = MsgIntToFloat(msgVec.X);
+        vecVal.y = 0;
+        vecVal.z = MsgIntToFloat(msgVec.Y);
+
+        return vecVal;
+    }
+
+    public static Vector3 MsgToVector3(MsgVector3 msgVec)
     {
         Vector3 vecVal = new Vector3();
 
@@ -899,7 +920,7 @@ public class ConvertNetMsg
         return vecVal;
     }
 
-    public static Vector3 MsgToVector(int[] msgVec)
+    public static Vector3 MsgToVector3(int[] msgVec)
     {
         Vector3 vecVal = new Vector3();
 
@@ -1153,9 +1174,9 @@ public class ConvertNetMsg
         MsgActivatePoolObjectRelay msg = new MsgActivatePoolObjectRelay();
 
         msg.PoolName = poolName;
-        msg.HitPos = VectorToMsg(pos);
+        msg.HitPos = Vector3ToMsg(pos);
         msg.Rotation = QuaternionToMsg(rot);
-        msg.LocalScale = VectorToMsg(scale);
+        msg.LocalScale = Vector3ToMsg(scale);
         
         return msg;
     }
