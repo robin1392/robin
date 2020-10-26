@@ -11,7 +11,7 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     
     #region ui element variable
     public GameObject popup_Waiting;
-    public GameObject popup_Result;
+    public UI_InGamePopup_Result popup_Result;
     public Text text_Result;
     
 
@@ -76,7 +76,8 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void SetPopupResult(bool view)
     {
-        popup_Result.SetActive(view);
+        popup_Result.gameObject.SetActive(view);
+        if (view) popup_Result.Initialize();
         ViewGameIndicator(false);
         ViewLowHP(false);
         SetViewWaiting(false);
