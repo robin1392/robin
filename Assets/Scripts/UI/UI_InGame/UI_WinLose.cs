@@ -7,6 +7,7 @@ public class UI_WinLose : MonoBehaviour
 {
     public GameObject obj_Win;
     public GameObject obj_Lose;
+    public GameObject obj_Perfect;
     public Image image_DeckBG;
     public Sprite[] arrSprite_DeckBG;
     public Image[] arrImage_Deck;
@@ -14,10 +15,11 @@ public class UI_WinLose : MonoBehaviour
     public Text text_Nickname;
     public Text text_Trophy;
 
-    public void Initialize(bool isWin, int[] deck, string nickname, int trophy)
+    public void Initialize(bool isWin, bool isPerfect, int[] deck, string nickname, int trophy)
     {
         obj_Win.SetActive(isWin);
         obj_Win.SetActive(!isWin);
+        obj_Perfect.SetActive(isPerfect);
         image_DeckBG.sprite = arrSprite_DeckBG[isWin ? 1 : 0];
         
         for (int i = 0; i < arrImage_Deck.Length; i++)
