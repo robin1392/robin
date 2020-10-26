@@ -148,7 +148,7 @@ namespace ED
                         var ugd = obj.GetComponent<UI_Getted_Dice>();
                         listUngettedDice.Add(ugd);
                         ugd.slotNum = ungettedSlotCount++;
-                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                        ugd.Initialize(info.Value, 0, 0);
                         ugd.SetGrayscale();
                     }
                 }

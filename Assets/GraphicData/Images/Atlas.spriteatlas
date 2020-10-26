@@ -65,7 +65,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
     - {fileID: 102900000, guid: 484506e1f5f3b405d99003974efd1299, type: 3}
-    totalSpriteSurfaceArea: 9049933
+    totalSpriteSurfaceArea: 9107533
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -77,6 +77,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e2502530470af49b6a0c9e6c7bea6c79, type: 3}
   - {fileID: 21300000, guid: 68ae7140f7af54bd4bc1fdc450870004, type: 3}
   - {fileID: 21300000, guid: 79d81d500243a43cda57bceb3b57faa9, type: 3}
+  - {fileID: 21300000, guid: e004ef60688bf49a6bfc22a00b8d8919, type: 3}
   - {fileID: 21300000, guid: 207571703f8f74a87a65fa4682bffd36, type: 3}
   - {fileID: 21300000, guid: c7184e70d9e5c4ed1915284b6de09fdc, type: 3}
   - {fileID: 21300000, guid: d0b91380a99ec49aaa02bee5983a1f31, type: 3}
@@ -204,6 +205,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4ce9e2ab13faa4006bd5713e53fb22bb, type: 3}
   - {fileID: 21300000, guid: b1f2afcbf618b4d1f9680e414abbd684, type: 3}
   - {fileID: 21300000, guid: a0d2d4eb3fdfb467186385f572478af1, type: 3}
+  - {fileID: 21300000, guid: 1181e5fb115dd45ad96e22508eb472f8, type: 3}
   - {fileID: 21300000, guid: 0e98632c03c6a4eff8ae0626fb91d4f1, type: 3}
   - {fileID: 21300000, guid: e34a1c2c32ba048d9a8d2a6aaa822536, type: 3}
   - {fileID: 21300000, guid: cf4a325ccaac24703b92f2147a34cc89, type: 3}
@@ -230,8 +232,10 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e391578e1b5724809b32931c41284a14, type: 3}
   - {fileID: 21300000, guid: f456d98e17f044b6cb0717fe1cc1bb75, type: 3}
   - {fileID: 21300000, guid: 597b27bef1dd745ec8baa229ac77145b, type: 3}
+  - {fileID: 21300000, guid: a36de5ee336464a81928c998a2337fdc, type: 3}
   - {fileID: 21300000, guid: 2420303f696e04b6fa08ba2c756c7109, type: 3}
   - {fileID: 21300000, guid: 72a8334f866234ba8963b35f533c60f2, type: 3}
+  - {fileID: 21300000, guid: 10e3674fa53794b9fbc991790486a1fb, type: 3}
   - {fileID: 21300000, guid: 80a3ba4f4929a41398e707d9afdcd78f, type: 3}
   - {fileID: 21300000, guid: 483b4e4f881d249b79ea3ae72b7afe2f, type: 3}
   - {fileID: 21300000, guid: 139d1f6f94657429fb55f4437004b912, type: 3}
@@ -248,12 +252,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3fa8c3efd02f64c438d9b5613022b7fe, type: 3}
   - {fileID: 21300000, guid: 714bbfffd0bf24d3fadf43dfd12fdf89, type: 3}
   m_PackedSpriteNamesToIndex:
-  - result_win_BG
+  - result_lose_BG
   - dice_arbiter
   - class_6
   - lobby_dice_line1
   - ingame_name_tag
   - result_win_2_2
+  - icon_lose
   - class_9
   - coin_add
   - dice_layzer
@@ -284,7 +289,7 @@ SpriteAtlas:
   - dice_sinzed
   - dice_sniper
   - result_lose_2
-  - result_lose_BG
+  - result_win_BG
   - result_win_8
   - popup_box
   - popup_empty
@@ -381,6 +386,7 @@ SpriteAtlas:
   - lobby_botton2
   - result_win_2_1
   - ingame_wave
+  - icon_perfect
   - dice_dagger
   - box_nomal_2
   - dice_posu
@@ -407,8 +413,10 @@ SpriteAtlas:
   - dice_support
   - hp_bar
   - hp
+  - icon_wins
   - dice_BG_legend
   - popup_close
+  - icon_win
   - lobby_dice_gradient
   - dice_mine
   - card_fire
