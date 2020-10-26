@@ -68,19 +68,19 @@ public class SocketSendEvent
 
             case GameProtocol.DESTROY_MINION_RELAY:
             {
-                _sender.DestroyMinionRelay(peer , (ushort)param[0] , (ushort)param[1]);
+                _sender.DestroyMinionRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1]);
                 break;
             }
             case GameProtocol.DESTROY_MAGIC_RELAY:
             {
                 //MsgDestroyMagic(IPeer peer, int playerUId, int baseStatId)
-                _sender.MsgDestroyMagic(peer ,(ushort)param[0] , (ushort)param[1]  );
+                _sender.MsgDestroyMagic(peer ,Convert.ToUInt16(param[0]) , (ushort)param[1]  );
                 break;
             }
             case GameProtocol.HIT_DAMAGE_MINION_RELAY:
             {
                 int damage = ConvertNetMsg.MsgFloatToInt( (float)param[2] );
-                _sender.HitDamageMinionRelay(peer , (ushort)param[0] , (ushort)param[1] , damage);
+                _sender.HitDamageMinionRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , damage);
                 break;
             }
             
@@ -94,12 +94,12 @@ public class SocketSendEvent
             }
             case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
             {
-                _sender.SetMagicTargetIdRelay(peer , (ushort)param[0] , (ushort)param[1] , (ushort)param[2]);
+                _sender.SetMagicTargetIdRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (ushort)param[2]);
                 break;
             }
             case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
             {
-                _sender.SetMagicTargetRelay(peer , (ushort)param[0] , (ushort)param[1] , (short)param[2], (short)param[3]);
+                _sender.SetMagicTargetRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (short)param[2], (short)param[3]);
                 break;
             }
             
@@ -108,41 +108,41 @@ public class SocketSendEvent
             case GameProtocol.HEAL_MINION_RELAY:
             {
                 int serverHeal = ConvertNetMsg.MsgFloatToInt((float)param[2] );
-                _sender.HealMinionRelay(peer , (ushort)param[0] , (ushort)param[1] , serverHeal);
+                _sender.HealMinionRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , serverHeal);
                 break;
             }
             case GameProtocol.FIRE_BALL_BOMB_RELAY:
             {
-                _sender.FireballBombRelay(peer ,(ushort)param[0] , (ushort)param[1]);
+                _sender.FireballBombRelay(peer ,Convert.ToUInt16(param[0]) , (ushort)param[1]);
                 break;
             }
             case GameProtocol.MINE_BOMB_RELAY:
             {
-                _sender.MineBombRelay(peer , (ushort)param[0] , (ushort)param[1]);
+                _sender.MineBombRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1]);
                 break;
             }
             case GameProtocol.STURN_MINION_RELAY:
             {
                 //SturnMinionRelay(IPeer peer, int playerUId, int id, int sturnTime)
-                _sender.SturnMinionRelay(peer , (ushort)param[0] , (ushort)param[1] , (short)param[2]);
+                _sender.SturnMinionRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (short)param[2]);
                 break;
             }
             case GameProtocol.ROCKET_BOMB_RELAY:
             {
                 //RocketBombRelay(IPeer peer, int playerUId, int id)
-                _sender.RocketBombRelay(peer  , (ushort)param[0] , (ushort)param[1] );
+                _sender.RocketBombRelay(peer  , Convert.ToUInt16(param[0]) , (ushort)param[1] );
                 break;
             }
             case GameProtocol.ICE_BOMB_RELAY:
             {
                 //IceBombRelay(IPeer peer, int playerUId, int id)
-                _sender.IceBombRelay(peer  , (ushort)param[0] ,(ushort)param[1]);
+                _sender.IceBombRelay(peer  , Convert.ToUInt16(param[0]) ,(ushort)param[1]);
                 break;
             }
             case GameProtocol.FIRE_MAN_FIRE_RELAY:
             {
                 //FireManFireRelay(IPeer peer, int playerUId, int id)
-                _sender.FireManFireRelay(peer, (ushort)param[0] , (ushort)param[1]);
+                _sender.FireManFireRelay(peer, Convert.ToUInt16(param[0]) , (ushort)param[1]);
                 break;
             }
             case GameProtocol.MINION_CLOACKING_RELAY:
@@ -154,26 +154,26 @@ public class SocketSendEvent
             case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
             {
                 //MinionFogOfWarRelay(IPeer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
-                _sender.MinionFogOfWarRelay(peer , (ushort)param[0], (ushort)param[1] , (short)param[2] , (bool)param[3]);
+                _sender.MinionFogOfWarRelay(peer , Convert.ToUInt16(param[0]), (ushort)param[1] , (short)param[2] , (bool)param[3]);
                 break;
             }
             case GameProtocol.SCARECROW_RELAY:
             {
                 //ScarecrowRelay(IPeer peer, int playerUId, int baseStatId, int eyeLevel)
-                _sender.ScarecrowRelay(peer , (ushort)param[0] , (ushort)param[1] , (byte)param[2]);
+                _sender.ScarecrowRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (byte)param[2]);
                 break;
             }
             case GameProtocol.LAYZER_TARGET_RELAY:
             {
                 //LayzerTargetRelay(IPeer peer, int playerUId, int id, int[] targetId)
-                _sender.LayzerTargetRelay(peer , (ushort)param[0] , (ushort)param[1] , (ushort[]) param[2]);
+                _sender.LayzerTargetRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (ushort[]) param[2]);
                 
                 break;
             }
             case GameProtocol.MINION_INVINCIBILITY_RELAY:
             {
                 //MinionInvincibilityRelay(Peer peer, int playerUId, int id, int time)
-                _sender.MinionInvincibilityRelay(peer , (ushort)param[0] , (ushort)param[1] , (short)param[2]);
+                _sender.MinionInvincibilityRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (short)param[2]);
                 break;
             }
             
@@ -182,12 +182,12 @@ public class SocketSendEvent
             case GameProtocol.FIRE_BULLET_RELAY:
             {
                 //FireBulletRelay(Peer peer, int playerUId, int id, int x, int y, int z, int damage, int moveSpeedk, int type)
-                _sender.FireBulletRelay(peer , (ushort)param[0] , (ushort)param[1] , new MsgVector3 { X = (short)param[2], Y = (short)param[3], Z = (short)param[4] } ,(int)param[5] ,(short)param[6] , (byte)param[7] );
+                _sender.FireBulletRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , new MsgVector3 { X = (short)param[2], Y = (short)param[3], Z = (short)param[4] } ,(int)param[5] ,(short)param[6] , (byte)param[7] );
                 break;
             }
             case GameProtocol.FIRE_ARROW_RELAY:
             {
-                _sender.FireArrowRelay(peer , (ushort)param[0] , (ushort)param[1] , new MsgVector3 { X = (short)param[2], Y = (short)param[3], Z = (short)param[4] }, (int)param[5] ,(short)param[6] );
+                _sender.FireArrowRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , new MsgVector3 { X = (short)param[2], Y = (short)param[3], Z = (short)param[4] }, (int)param[5] ,(short)param[6] );
                 break;
             }
             case GameProtocol.FIRE_SPEAR_RELAY:
@@ -196,7 +196,7 @@ public class SocketSendEvent
                 
                 MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
                 
-                _sender.FireSpearRelay(peer , (ushort)param[0] , chStPos , (ushort)param[2] , (int)param[3] , (short)param[4]);
+                _sender.FireSpearRelay(peer , Convert.ToUInt16(param[0]) , chStPos , (ushort)param[2] , (int)param[3] , (short)param[4]);
                 break;
             }
             case GameProtocol.NECROMANCER_BULLET_RELAY:
@@ -205,7 +205,7 @@ public class SocketSendEvent
                 
                 MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
                 
-                _sender.NecromancerBulletRelay(peer , (ushort)param[0] , chStPos , (ushort)param[2] , (int)param[3] , (short)param[4]);
+                _sender.NecromancerBulletRelay(peer , Convert.ToUInt16(param[0]) , chStPos , (ushort)param[2] , (int)param[3] , (short)param[4]);
                 
                 break;
             }
@@ -216,7 +216,7 @@ public class SocketSendEvent
                 MsgVector3 chStPos = ConvertNetMsg.VectorToMsg((Vector3) param[1]);
                 MsgVector3 chTgPos = ConvertNetMsg.VectorToMsg((Vector3) param[2]);
                 
-                _sender.MsgFireCannonBall(peer ,(ushort)param[0] ,chStPos , chTgPos , (int)param[3] , (short)param[4] , (byte)param[5]);
+                _sender.MsgFireCannonBall(peer ,Convert.ToUInt16(param[0]) ,chStPos , chTgPos , (int)param[3] , (short)param[4] , (byte)param[5]);
                 break;
             }
             
@@ -238,27 +238,27 @@ public class SocketSendEvent
             case GameProtocol.SEND_MESSAGE_VOID_RELAY:
             {
                 //SendMessageVoidRelay(IPeer peer, int playerUId, int id, string message)
-                _sender.SendMessageVoidRelay(peer , (ushort)param[0] , (ushort)param[1] , (byte)param[2]);
+                _sender.SendMessageVoidRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (byte)param[2]);
                 break;
             }
             case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
             {
                 //SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
-                _sender.SendMessageParam1Relay(peer , (ushort)param[0] , (ushort)param[1] , (ushort)param[3] , (byte)param[2]);
+                _sender.SendMessageParam1Relay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (ushort)param[3] , (byte)param[2]);
                 break;
             }
             case GameProtocol.SET_MINION_TARGET_RELAY:
             {
                 //SetMinionTargetRelay(IPeer peer, int playerUId, int id, int targetId)
                 
-                _sender.SetMinionTargetRelay(peer , (ushort)param[0] , (ushort)param[1] , (ushort)param[2]);
+                _sender.SetMinionTargetRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (ushort)param[2]);
                 break;
             }
             case GameProtocol.PUSH_MINION_RELAY:
             {
                 //PushMinionRelay(IPeer peer, int playerUId, int id, int x, int y, int z, int pushPower)
                 
-                _sender.PushMinionRelay(peer , (ushort)param[0] , (ushort)param[1] , new MsgVector3 { X = (short)param[2], Y = (short)param[3], Z = (short)param[4] }, (short)param[5] );
+                _sender.PushMinionRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , new MsgVector3 { X = (short)param[2], Y = (short)param[3], Z = (short)param[4] }, (short)param[5] );
                 break;
             }
             
