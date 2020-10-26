@@ -315,6 +315,28 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
+    public class MsgVector2
+    {
+        public short X;
+        public short Y;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(X);
+            bw.Write(Y);
+        }
+
+        public static MsgVector2 Read(BinaryReader br)
+        {
+            MsgVector2 data = new MsgVector2();
+            data.X = br.ReadInt16();
+            data.Y = br.ReadInt16();
+            return data;
+        }
+    }
+
+
+    [Serializable]
     public class MsgVector3
     {
         public short X;
@@ -337,6 +359,7 @@ namespace RandomWarsProtocol
             return data;
         }
     }
+
 
     [Serializable]
     public class MsgQuaternion
@@ -1525,7 +1548,7 @@ namespace RandomWarsProtocol
     {
         public ushort PlayerUId;
         public byte PosIndex;
-        public MsgVector3[] Pos;
+        public MsgVector2[] Pos;
         public int[] Hp;
         public MsgMinionStatus Relay;
         public int packetCount;

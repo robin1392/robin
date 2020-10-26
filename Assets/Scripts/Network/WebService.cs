@@ -2,30 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RandomWarsService.Network.Http;
-using Newtonsoft.Json;
 using RandomWarsProtocol;
+
+
+public class HttpJsonSerializer : IJsonSerializer
+{
+    public string SerializeObject<T>(T jObject)
+    {
+        return JsonHelper.ToJson<T>(jObject);
+    }
+
+    public T DeserializeObject<T>(string json)
+    {
+        return JsonHelper.Deserialize<T>(json);
+    }
+
+    public T[] DeserializeObjectArray<T>(string json)
+    {
+        return JsonHelper.DeserializeArray<T>(json);
+    }
+
+}
 
 public class WebService
 {
     private HttpSender _httpSender;
-    private HttpService _httpService;
+    private HttpClient _httpClient;
     private HttpReceiver _httpReceiver;
 
 
     public WebService(string url)
     {
-        _httpReceiver = new HttpReceiver();
+        IJsonSerializer jsonSerializer = new HttpJsonSerializer();
+
+        _httpReceiver = new HttpReceiver(jsonSerializer);
         _httpReceiver.AuthUserAck = OnAuthUserAck;
 
 
-        _httpService = new HttpService(url, _httpReceiver);
-        _httpSender = new HttpSender(_httpService);
+        _httpClient = new HttpClient(url, _httpReceiver);
+        _httpSender = new HttpSender(_httpClient, jsonSerializer);
     }
 
 
     public void Update()
     {
-        _httpService.Update();
+        _httpClient.Update();
     }
 
 

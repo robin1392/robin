@@ -1,27 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using RandomWarsService.Network.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace RandomWarsProtocol
 {
     public class HttpSender
     {
-        HttpService _httpService;
+        HttpClient _httpService;
+        IJsonSerializer _jsonSerializer;
 
-        public HttpSender(HttpService httpService)
+
+        public HttpSender(HttpClient httpService, IJsonSerializer jsonSerializer)
         {
             _httpService = httpService;
+            _jsonSerializer = jsonSerializer;
         }
 
 
         public void UserAuthReq(string userId)
         {
-            var json = new JObject();
-            json.Add("userId", userId);
-            _httpService.Enqueue((int)GameProtocol.AUTH_USER_REQ, "userauth", json.ToString());
+            var jObjcet = new JsonObject();
+            jObjcet.Add("userId", userId);
+
+            string json = _jsonSerializer.SerializeObject(jObjcet);
+            _httpService.Send((int)GameProtocol.AUTH_USER_REQ, "userauth", json);
+        }
+
+
+        public string AuthUserAck(GameErrorCode errorCode, MsgUserInfo userInfo, MsgUserDeck[] userDeck, MsgUserDice[] userDice)
+        {
+            var jObjcet = new JsonObject();
+            jObjcet.Add("errorCode", errorCode);
+            jObjcet.Add("userInfo", userInfo);
+            jObjcet.Add("userDeck", userDeck);
+            jObjcet.Add("userDice", userDice);
+            return _jsonSerializer.SerializeObject(jObjcet);
         }
     }
 }

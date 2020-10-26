@@ -14,14 +14,14 @@ namespace RandomWarsService.Network.Http
     }
 
 
-    public class HttpService
+    public class HttpClient
     {
         private string _baseUrl;
         private Queue<HttpRequest> _requestQueue;
         private IHttpReceiver _httpReceiver;
 
 
-        public HttpService(string url, IHttpReceiver httpReceiver)
+        public HttpClient(string url, IHttpReceiver httpReceiver)
         {
             _baseUrl = url;
             _requestQueue = new Queue<HttpRequest>();
@@ -29,34 +29,7 @@ namespace RandomWarsService.Network.Http
         }
 
 
-        bool HttpPost(int protocolId, string url, string json)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-            }
-
-            var response = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(response.GetResponseStream()))
-            {
-                var ackJson = streamReader.ReadToEnd();
-                ackJson = ackJson.Replace("\\u0022", "\"");
-                ackJson = ackJson.Replace("\\n", "");
-                ackJson = ackJson.Replace("\"{", "{");
-                ackJson = ackJson.Replace("}\"", "}");
-
-                _httpReceiver.Process(protocolId + 1, ackJson);
-            }
-
-            return true;
-        }
-
-
-        public void Enqueue(int protocolId, string methodUrl, string json)
+        public void Send(int protocolId, string methodUrl, string json)
         {
             lock (_requestQueue)
             {
@@ -80,11 +53,34 @@ namespace RandomWarsService.Network.Http
                 }
 
                 HttpRequest request = _requestQueue.Peek();
-                if (HttpPost(request.ProtocolId, request.Url, request.Json) == true)
+                if (RequestPost(request.ProtocolId, request.Url, request.Json) == true)
                 {
                     _requestQueue.Dequeue();
                 }
             }
         }
+
+
+        bool RequestPost(int protocolId, string url, string json)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+            }
+
+            var response = (HttpWebResponse)request.GetResponse();
+            using (var streamReader = new StreamReader(response.GetResponseStream()))
+            {
+                var ackJson = streamReader.ReadToEnd();
+                _httpReceiver.ProcessResponse(protocolId + 1, ackJson);
+            }
+
+            return true;
+        }
+
     }
 }
