@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using RandomWarsService.Network.Http;
+using RandomWarsProtocol.Msg;
 
 namespace RandomWarsProtocol
 {
     public class HttpReceiver : IHttpReceiver
     {
-        public delegate Task<string> AuthUserReqDelegate(string userId);
+        public delegate Task<string> AuthUserReqDelegate(MsgUserAuthReq msg);
         public AuthUserReqDelegate AuthUserReq;
-        public delegate void AuthUserAckDelegate(GameErrorCode error, MsgUserInfo userInfo, MsgUserDeck[] userDeck, MsgUserDice[] userDice);
+        public delegate void AuthUserAckDelegate(MsgUserAuthAck msg);
         public AuthUserAckDelegate AuthUserAck;
 
 
@@ -32,8 +33,8 @@ namespace RandomWarsProtocol
                         if (AuthUserReq == null)
                             return ackJson;
 
-                        string userId = "";
-                        ackJson = await AuthUserReq(userId);
+                        MsgUserAuthReq msg = _jsonSerializer.DeserializeObject<MsgUserAuthReq>(json);
+                        ackJson = await AuthUserReq(msg);
                     }
                     break;
             }
@@ -51,11 +52,8 @@ namespace RandomWarsProtocol
                         if (AuthUserAck == null)
                             return false;
 
-                        GameErrorCode errorCode = GameErrorCode.SUCCESS;
-                        MsgUserInfo userInfo = null;
-                        MsgUserDeck[] userDeck = null;
-                        MsgUserDice[] userDice = null;
-                        AuthUserAck(errorCode, userInfo, userDeck, userDice);
+                        MsgUserAuthAck msg = _jsonSerializer.DeserializeObject<MsgUserAuthAck>(json);
+                        AuthUserAck(msg);
                     }
                     break;
             }

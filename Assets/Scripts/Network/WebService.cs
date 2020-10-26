@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RandomWarsService.Network.Http;
 using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 
 
 public class HttpJsonSerializer : IJsonSerializer
@@ -52,13 +53,15 @@ public class WebService
 
     public void AuthUserReq(string userId)
     {
-        _httpSender.UserAuthReq(userId);
+        MsgUserAuthReq msg = new MsgUserAuthReq();
+        msg.UserId = userId;
+        _httpSender.UserAuthReq(msg);
     }
 
 
-    void OnAuthUserAck(GameErrorCode error, MsgUserInfo userInfo, MsgUserDeck[] userDeck, MsgUserDice[] userDice)
+    void OnAuthUserAck(MsgUserAuthAck msg)
     {
-        UserInfoManager.Get().SetUserKey(userInfo.UserId);
+        UserInfoManager.Get().SetUserKey(msg.UserInfo.UserId);
         GameStateManager.Get().UserAuthOK();
     }
 }
