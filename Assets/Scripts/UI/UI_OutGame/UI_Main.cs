@@ -55,12 +55,12 @@ namespace ED
         {
             DOTween.Init();
 
-            string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
-            if (string.IsNullOrEmpty(nickname))
-            {
-                nickname = string.Format("RW{0}", Random.Range(1000, 9999));
-                UserInfoManager.Get().SetUserNickName(nickname);
-            }
+            // string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
+            // if (string.IsNullOrEmpty(nickname))
+            // {
+            //     nickname = string.Format("RW{0}", Random.Range(1000, 9999));
+            //     UserInfoManager.Get().SetUserNickName(nickname);
+            // }
             
             /*string nickname = ObscuredPrefs.GetString("Nickname");
             if (string.IsNullOrEmpty(nickname))

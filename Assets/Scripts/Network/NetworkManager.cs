@@ -618,7 +618,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void OnAuthUserAck(MsgUserAuthAck msg)
     {
-        UserInfoManager.Get().SetUserKey(msg.UserInfo.UserId);
+        UserInfoManager.Get().SetUserInfo(msg.UserInfo);
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);
 

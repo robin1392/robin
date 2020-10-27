@@ -84,7 +84,6 @@ public class UserInfo
 
         //FixDeckOld();
         
-        _userNickName = ObscuredPrefs.GetString("Nickname", "" );
         _userID = ObscuredPrefs.GetString("UserKey", "" );
         
         // if (_slotDeck[0].Length < 20 || _slotDeck[1].Length < 20 || _slotDeck[2].Length < 20)
@@ -99,12 +98,6 @@ public class UserInfo
         //     _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004");
         //     _slotDeck[2] = ObscuredPrefs.GetString("Deck3", "1000/1001/1002/1003/1004");
         // }
-
-        if (_userNickName == "")
-        {
-            ObscuredPrefs.SetString("Nickname", "");
-            ObscuredPrefs.Save();
-        }
 
         if (_userID == "")
         {
@@ -153,9 +146,6 @@ public class UserInfo
     public void SetNickName(string nickname)
     {
         _userNickName = nickname;
-        
-        ObscuredPrefs.SetString("Nickname", _userNickName );
-        ObscuredPrefs.Save();
     }
 
     public void SetTicketId(string ticket)
