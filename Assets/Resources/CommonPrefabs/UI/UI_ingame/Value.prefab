@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 8263079865010708591}
   - component: {fileID: 6492587817613776302}
   m_Layer: 11
-  m_Name: Image_Gold_Icon (1)
+  m_Name: Image_Key_Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -595,3 +595,9 @@ MonoBehaviour:
   text_Trophy: {fileID: 8010410974373843650}
   text_Gold: {fileID: 7604430210609785018}
   text_Key: {fileID: 7945964424493317524}
+  arrImages:
+  - {fileID: 2395575638857165469}
+  - {fileID: 5425693880126013867}
+  - {fileID: 2020856489115349705}
+  - {fileID: 6492587817613776302}
+  mtl_Grayscale: {fileID: 2100000, guid: 220abc303df33e24aa68030ee6cd65b5, type: 2}

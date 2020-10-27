@@ -33,8 +33,8 @@ public class UI_InGamePopup_Result : MonoBehaviour
 // #else
         isWin = winLose;
 
-        winlose_My.Initialize(isWin, winningStreak, NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().playerInfo.Name, NetworkManager.Get().GetNetInfo().playerInfo.Trophy);
-        winlose_Other.Initialize(!isWin, winningStreak, NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
+        winlose_My.Initialize(isWin, perfectReward.Length > 0, winningStreak, NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().playerInfo.Name, NetworkManager.Get().GetNetInfo().playerInfo.Trophy);
+        winlose_Other.Initialize(!isWin, InGameManager.Get().playerController.targetPlayer.currentHealth > 20000, winningStreak, NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
         btn_ShowValues.interactable = false;
 
         List<MsgReward> list = new List<MsgReward>(normalReward);
@@ -61,6 +61,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
         if (nt != null) streakKey = nt.Value;
         arrValue[1].Initialize(streakTrophy, streakGold, streakKey);
         text_WinningStreak.text = winningStreak.ToString();
+        text_WinningStreak.color = winningStreak > 0 ? text_WinningStreak.color : Color.gray; 
         
         list = new List<MsgReward>(perfectReward);
         int perfectTrophy = 0;
@@ -73,12 +74,15 @@ public class UI_InGamePopup_Result : MonoBehaviour
         nt = list.Find(msg => msg.RewardType == ERewardType.Key);
         if (nt != null) perfectKey = nt.Value;
         arrValue[2].Initialize(perfectTrophy, perfectGold, perfectKey);
-        
-        arrValue[3].Initialize(
-            normalTrophy + streakTrophy + perfectTrophy,
-            normalGold + streakGold + perfectGold,
-            normalKey + streakKey + perfectKey
-            );
+
+        int totalTrophy = normalTrophy + streakTrophy + perfectTrophy;
+        int totalGold = normalGold + streakGold + perfectGold;
+        int totalKey = normalKey + streakKey + perfectKey;
+        arrValue[3].Initialize(totalTrophy, totalGold, totalKey);
+
+        UserInfoManager.Get().GetUserInfo().trophy += totalTrophy;
+        UserInfoManager.Get().GetUserInfo().gold += totalGold;
+        UserInfoManager.Get().GetUserInfo().key += totalKey;
 
         Invoke("EnableShowValuesButton", 2f);
 //#endif
