@@ -340,7 +340,6 @@ MonoBehaviour:
   instanceID: 0
   popup_Waiting: {fileID: 2608280262829655048}
   popup_Result: {fileID: 13976348040501860}
-  text_Result: {fileID: 2608280262390197769}
   obj_Low_HP_Effect: {fileID: 299128485}
   obj_Indicator: {fileID: 1418562628409244295}
 --- !u!1 &2608280261560334344
@@ -728,6 +727,7 @@ MonoBehaviour:
   winlose_Other: {fileID: 1945592721947162988}
   winlose_My: {fileID: 3006799232194475393}
   text_VS: {fileID: 2608280262390197769}
+  text_WinningStreak: {fileID: 3378164535593299325}
   arrValue:
   - {fileID: 594193384943135272}
   - {fileID: 1172406572993984199}

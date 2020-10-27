@@ -428,6 +428,7 @@ namespace RandomWarsProtocol
                             MsgEndGameNotify msg = new MsgEndGameNotify();
                             msg.ErrorCode = br.ReadInt16();
                             msg.GameResult = (EGameResult)br.ReadByte();
+                            msg.WinningStreak = br.ReadByte();
 
                             int length = br.ReadInt32();
                             msg.NormalReward = new MsgReward[length];

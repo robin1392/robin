@@ -14,8 +14,13 @@ namespace RandomWarsProtocol
     public enum EGameResult
     {
         None,
+        // 승리
         Victory,
+        // 부전승
+        VictoryByDefault,
+        // 패배
         Defeat,
+        // 무승부
         Draw
     }
 

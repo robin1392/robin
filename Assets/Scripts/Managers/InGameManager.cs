@@ -15,6 +15,7 @@ using TMPro;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
+using UnityEngine.U2D;
 using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
@@ -824,7 +825,7 @@ namespace ED
         }
 
 
-        public void EndGame(bool winLose)
+        public void EndGame(bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
         {
             // 게임이 끝낫으니까 그냥..
             if (NetworkManager.Get().isResume == true)
@@ -843,10 +844,8 @@ namespace ED
             StopAllCoroutines();
 
 
-            UI_InGamePopup.Get().SetPopupResult(true);
+            UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
-            
-            UI_InGamePopup.Get().SetResultText(winLose ? Global.g_inGameWin : Global.g_inGameLose);
         }
         
         /*public void EndGame(PhotonMessageInfo info)
@@ -1402,17 +1401,9 @@ namespace ED
                 case GameProtocol.END_GAME_NOTIFY:
                 {
                     MsgEndGameNotify endNoti = (MsgEndGameNotify) param[0];
-
-                    // 이긴 사람 id 가 나면 내가 승
-                    if (EGameResult.Victory == endNoti.GameResult )
-                    {
-                        EndGame(true);
-                    }
-                    else
-                    {
-                        // 승리자 uid 내가 아닌 상대방
-                        EndGame(false);
-                    }
+                    
+                    EndGame(EGameResult.Victory == endNoti.GameResult, Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward);
+                    
                     break;
                 }
                 
