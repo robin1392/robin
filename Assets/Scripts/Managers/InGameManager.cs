@@ -168,6 +168,8 @@ namespace ED
                 UI_InGame.Get().SetNickname("AI");
             }
             */
+            
+            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
         }
 
         protected void Update()

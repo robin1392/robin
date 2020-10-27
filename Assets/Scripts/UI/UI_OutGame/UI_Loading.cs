@@ -17,17 +17,11 @@ public class UI_Loading : SingletonDestroy<UI_Loading>
         InitUIElement();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        SoundManager.instance.StopBGM();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     #endregion
     
     #region ui component

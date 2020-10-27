@@ -34,6 +34,8 @@ namespace ED
                 if (m != null)
                 {
                     m.DamageToTarget(m.target, delay);
+                    
+                    SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
                     //PlayerController.Get().SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_ArrowHit", m.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);
                     //PlayerController.Get().ActionActivePoolObject("Effect_ArrowHit", m.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);
                 }
@@ -53,6 +55,7 @@ namespace ED
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
                     event_FireArrow?.Invoke();
+                    SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_BOW_SHOT);
                 }
             }
             
@@ -88,6 +91,7 @@ namespace ED
                 {
                     //_minion.SendMessage("FireArrow", SendMessageOptions.DontRequireReceiver);
                     event_FireSpear?.Invoke();
+                    SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_BOW_SHOT);
                 }
             }
         }
