@@ -114,6 +114,50 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
+    public class MsgReward
+    {
+        public ERewardType RewardType;
+        public int Value;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write((byte)RewardType);
+            bw.Write(Value);
+        }
+
+        public static MsgReward Read(BinaryReader br)
+        {
+            MsgReward data = new MsgReward();
+            data.RewardType = (ERewardType)br.ReadByte();
+            data.Value = br.ReadInt32();
+            return data;
+        }
+    }
+
+
+    [Serializable]
+    public class MsgUserBox
+    {
+        public EBoxType BoxType;
+        public int Value;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write((byte)BoxType);
+            bw.Write(Value);
+        }
+
+        public static MsgUserBox Read(BinaryReader br)
+        {
+            MsgUserBox data = new MsgUserBox();
+            data.BoxType = (EBoxType)br.ReadByte();
+            data.Value = br.ReadInt32();
+            return data;
+        }
+    }
+
+
+    [Serializable]
     public class MsgPlayerBase
     {
         public ushort PlayerUId;
