@@ -68,6 +68,8 @@ namespace ED
 
             inputfield_Nicnname.text = nickname;
             text_Nickname.text = nickname;
+            
+            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_LOBBY);
         }
 
         public void Toggle(bool isOn)

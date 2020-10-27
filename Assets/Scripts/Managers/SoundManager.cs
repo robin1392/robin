@@ -13,13 +13,13 @@ public class SoundManager : MonoBehaviour {
     [System.Serializable]
     public class NAME_AUDIOCLIP
     {
-        public string name;
+        public Global.E_SOUND name;
         public AudioClip clip;
     }
     [System.Serializable]
     public class NAME_AUDIOCLIPS
     {
-        public string name;
+        public Global.E_SOUND name;
         public AudioClip[] clips;
     }
     #endregion
@@ -28,30 +28,36 @@ public class SoundManager : MonoBehaviour {
     [Range(0, 1f)]
     public float BGMVolume = 1f;
     [Range(0, 1f)]
-    public float SFXVolume = 0.8f;
+    public float SFXVolume = 1f;
     public bool SFXMute = false;
 
-    public int audioSourceCount = 20;
+    public int audioSourceCount = 10;
     [Header("Clips")]
-    public AudioClip[] clips;
+    public NAME_AUDIOCLIP[] clips;
     //public NAME_AUDIOCLIP[] clips;
     public NAME_AUDIOCLIPS[] randomClips;
 
     private AudioSource[] audios;
     [HideInInspector]
     public AudioSource bgm;
-    public Dictionary<string, AudioClip> dic_clips;
-    public Dictionary<string, AudioClip[]> dic_randomClips;
     #endregion
 
     #region UNITY_METHOD
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         audios = new AudioSource[audioSourceCount];
-        dic_randomClips = new Dictionary<string, AudioClip[]>();
+        //dic_randomClips = new Dictionary<Global.E_SOUND, AudioClip[]>();
 
         for(var i = 0; i < audioSourceCount; ++i)
         {
@@ -59,16 +65,10 @@ public class SoundManager : MonoBehaviour {
             audios[i].playOnAwake = false;
         }
 
-        for(var i = 0; i < randomClips.Length; ++i)
-        {
-            dic_randomClips.Add(randomClips[i].name, randomClips[i].clips);
-        }
-
-        if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            PlayBGM("bgm_lobby");
-            MuteBGM(!ObscuredPrefs.GetBool("BGM", true));
-        }
+        // for(var i = 0; i < randomClips.Length; ++i)
+        // {
+        //     dic_randomClips.Add(randomClips[i].name, randomClips[i].clips);
+        // }
     }
     #endregion
 
@@ -81,7 +81,7 @@ public class SoundManager : MonoBehaviour {
     /// <param name="clipName">클립 이름</param>
     /// <param name="isLoop">반복 재생 여부</param>
     /// <returns></returns>
-    public AudioSource Play(string clipName, bool isLoop = false, float pitch = 1f, float volume = -1f)
+    public AudioSource Play(Global.E_SOUND clipName, bool isLoop = false, float pitch = 1f, float volume = -1f)
     {
         if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
         {
@@ -97,7 +97,7 @@ public class SoundManager : MonoBehaviour {
                 if(clipName == clips[i].name)
                 {
                     audio.volume = volume > 0 ? volume : SFXVolume;
-                    audio.clip = clips[i];
+                    audio.clip = clips[i].clip;
                     audio.loop = isLoop;
                     audio.pitch = pitch;
                     audio.Play();
@@ -109,12 +109,39 @@ public class SoundManager : MonoBehaviour {
         return audio;
     }
 
-    public void Play(string clipName)
+    public void Play(Global.E_SOUND clipName)
     {
         Play(clipName, false);
     }
 
-    public AudioSource PlayOnlyOnce(string clipName, bool isLoop = false)
+    // public AudioSource PlayOnlyOnce(Global.E_SOUND clipName, bool isLoop = false)
+    // {
+    //     if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
+    //     {
+    //         return null;
+    //     }
+    //
+    //     var audio = GetNonPlayingAudioSource();
+    //
+    //     if (audio != null)
+    //     {
+    //         for(var i = 0; i < audioSourceCount; ++i)
+    //         {
+    //             if(audios[i].clip != null && audios[i].clip.name == clipName)
+    //             {
+    //                 if(!audios[i].isPlaying)
+    //                     audios[i].Play();
+    //                 return audios[i];
+    //             }
+    //         }
+    //
+    //         audio = Play(clipName, isLoop);
+    //     }
+    //
+    //     return audio;
+    // }
+
+    public AudioSource PlayRandom(Global.E_SOUND randomClipName, bool isLoop = false)
     {
         if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
         {
@@ -125,37 +152,17 @@ public class SoundManager : MonoBehaviour {
 
         if (audio != null)
         {
-            for(var i = 0; i < audioSourceCount; ++i)
+            for(var i = 0; i < randomClips.Length; i++)
             {
-                if(audios[i].clip != null && audios[i].clip.name == clipName)
+                if(randomClipName == randomClips[i].name)
                 {
-                    if(!audios[i].isPlaying)
-                        audios[i].Play();
-                    return audios[i];
+                    audio.volume = SFXVolume;
+                    audio.clip = randomClips[i].clips[Random.Range(0, randomClips[i].clips.Length)];
+                    audio.loop = isLoop;
+                    audio.Play();
+                    break;
                 }
             }
-
-            audio = Play(clipName, isLoop);
-        }
-
-        return audio;
-    }
-
-    public AudioSource PlayRandom(string randomClipName, bool isLoop = false)
-    {
-        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
-        {
-            return null;
-        }
-
-        var audio = GetNonPlayingAudioSource();
-
-        if(audio != null && dic_randomClips.ContainsKey(randomClipName) && dic_randomClips.Count > 0)
-        {
-            audio.volume = SFXVolume;
-            audio.clip = dic_randomClips[randomClipName][Random.Range(0, dic_randomClips[randomClipName].Length)];
-            audio.loop = isLoop;
-            audio.Play();
         }
 
         return audio;
@@ -166,7 +173,7 @@ public class SoundManager : MonoBehaviour {
     /// </summary>
     /// <param name="clipName">클립 이름</param>
     /// <param name="isLoop">반복 재생 여부</param>
-    public void PlayBGM(string clipName)
+    public void PlayBGM(Global.E_SOUND clipName)
     {
         if (bgm == null)
             bgm = GetNonPlayingAudioSource();
@@ -179,7 +186,7 @@ public class SoundManager : MonoBehaviour {
             if(clipName == clips[i].name)
             {
                 bgm.volume = BGMVolume;
-                bgm.clip = clips[i];
+                bgm.clip = clips[i].clip;
                 bgm.loop = true;
                 bgm.Play();
                 break;
@@ -187,7 +194,7 @@ public class SoundManager : MonoBehaviour {
         }
     }
 
-    public void PlayBGM(string clipName, float time = 0)
+    public void PlayBGM(Global.E_SOUND clipName, float time = 0)
     {
         if (bgm == null)
             bgm = GetNonPlayingAudioSource();
@@ -200,7 +207,7 @@ public class SoundManager : MonoBehaviour {
             if(clipName == clips[i].name)
             {
                 bgm.volume = BGMVolume;
-                bgm.clip = clips[i];
+                bgm.clip = clips[i].clip;
                 bgm.loop = true;
                 bgm.time = time;
                 bgm.Play();
@@ -289,12 +296,12 @@ public class SoundManager : MonoBehaviour {
         audio.clip = null;
     }
 
-    public void ChangeBGM(string clipName)
+    public void ChangeBGM(Global.E_SOUND clipName)
     {
         StartCoroutine(ChangeBGMCoroutine(clipName));
     }
 
-    IEnumerator ChangeBGMCoroutine(string clipName)
+    IEnumerator ChangeBGMCoroutine(Global.E_SOUND clipName)
     {
         float t = 0;
         while(t < 1f)

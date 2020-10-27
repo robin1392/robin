@@ -584,6 +584,8 @@ namespace ED
                     lr.endColor = FileHelper.GetColor(data.color);//data.color;
                 }
             }
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
 
         public BaseStat GetBaseStatFromId(int baseStatId)

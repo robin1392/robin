@@ -258,6 +258,8 @@ namespace ED
                 autoDeactivate.Value.Deactive();
             }
             _poolObjectAutoDeactivate.Deactive();
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         protected void RefreshHealthBar()

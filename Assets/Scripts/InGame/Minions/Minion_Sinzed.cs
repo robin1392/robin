@@ -53,6 +53,8 @@ namespace ED
             controller.ActionActivePoolObject("Effect_Poison", position, Quaternion.identity, Vector3.one);
             
             StartCoroutine(DeathCoroutine());
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         IEnumerator DeathCoroutine()
