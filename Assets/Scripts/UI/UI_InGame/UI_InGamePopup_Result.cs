@@ -38,22 +38,40 @@ public class UI_InGamePopup_Result : MonoBehaviour
         btn_ShowValues.interactable = false;
 
         List<MsgReward> list = new List<MsgReward>(normalReward);
-        int normalTrophy = list.Find(msg => msg.RewardType == ERewardType.Trophy).Value;
-        int normalGold = list.Find(msg => msg.RewardType == ERewardType.Gold).Value;
-        int normalKey = list.Find(msg => msg.RewardType == ERewardType.Key).Value;
+        int normalTrophy = 0;
+        var nt = list.Find(msg => msg.RewardType == ERewardType.Trophy);
+        if (nt != null) normalTrophy = nt.Value;
+        int normalGold = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Gold);
+        if (nt != null) normalGold = nt.Value;
+        int normalKey = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Key);
+        if (nt != null) normalKey = nt.Value;
         arrValue[0].Initialize(normalTrophy, normalGold, normalKey);
         
         list = new List<MsgReward>(streakReward);
-        int streakTrophy = list.Find(msg => msg.RewardType == ERewardType.Trophy).Value;
-        int streakGold = list.Find(msg => msg.RewardType == ERewardType.Gold).Value;
-        int streakKey = list.Find(msg => msg.RewardType == ERewardType.Key).Value;
+        int streakTrophy = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Trophy);
+        if (nt != null) streakTrophy = nt.Value;
+        int streakGold = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Gold);
+        if (nt != null) streakGold = nt.Value;
+        int streakKey = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Key);
+        if (nt != null) streakKey = nt.Value;
         arrValue[1].Initialize(streakTrophy, streakGold, streakKey);
         text_WinningStreak.text = winningStreak.ToString();
         
         list = new List<MsgReward>(perfectReward);
-        int perfectTrophy = list.Find(msg => msg.RewardType == ERewardType.Trophy).Value;
-        int perfectGold = list.Find(msg => msg.RewardType == ERewardType.Gold).Value;
-        int perfectKey = list.Find(msg => msg.RewardType == ERewardType.Key).Value;
+        int perfectTrophy = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Trophy);
+        if (nt != null) perfectTrophy = nt.Value;
+        int perfectGold = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Gold);
+        if (nt != null) perfectGold = nt.Value;
+        int perfectKey = 0;
+        nt = list.Find(msg => msg.RewardType == ERewardType.Key);
+        if (nt != null) perfectKey = nt.Value;
         arrValue[2].Initialize(perfectTrophy, perfectGold, perfectKey);
         
         arrValue[3].Initialize(
