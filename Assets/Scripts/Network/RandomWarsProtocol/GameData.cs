@@ -191,6 +191,7 @@ namespace RandomWarsProtocol
         public string Name;
         public int CurrentSp;
         public int TowerHp;
+        public int Trophy;
         public short SpGrade;
         public short GetDiceCount;
         public int[] DiceIdArray;
@@ -203,6 +204,7 @@ namespace RandomWarsProtocol
             bw.Write(Name);
             bw.Write(CurrentSp);
             bw.Write(TowerHp);
+            bw.Write(Trophy);
             bw.Write(SpGrade);
             bw.Write(GetDiceCount);
 
@@ -225,6 +227,7 @@ namespace RandomWarsProtocol
             data.Name = br.ReadString();
             data.CurrentSp = br.ReadInt32();
             data.TowerHp = br.ReadInt32();
+            data.Trophy = br.ReadInt32();
             data.SpGrade = br.ReadInt16();
             data.GetDiceCount = br.ReadInt16();
 
