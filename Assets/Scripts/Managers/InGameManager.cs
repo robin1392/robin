@@ -1402,7 +1402,7 @@ namespace ED
                 {
                     MsgEndGameNotify endNoti = (MsgEndGameNotify) param[0];
                     
-                    EndGame(EGameResult.Victory == endNoti.GameResult, Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward);
+                    EndGame((EGameResult.Victory == endNoti.GameResult || EGameResult.VictoryByDefault == endNoti.GameResult), Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward);
                     
                     break;
                 }
