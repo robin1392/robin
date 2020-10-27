@@ -11,8 +11,8 @@ public class UI_ResultValue : MonoBehaviour
 
     public void Initialize(int trophy, int gold, int key)
     {
-        text_Trophy.text = trophy.ToString();
-        text_Gold.text = gold.ToString();
-        text_Key.text = key.ToString();
+        text_Trophy.text = $"{(trophy < 0 ? string.Empty : "+")}{trophy}";
+        text_Gold.text = $"{(gold < 0 ? string.Empty : "+")}{gold}";
+        text_Key.text = $"{(key < 0 ? string.Empty : "+")}{key}";
     }
 }

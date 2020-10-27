@@ -22,16 +22,19 @@ namespace ED
         public Button btn_PlayBattle;
         public Button btn_PlayCoop;
         public Button btn_SearchCancel;
-        public Image image_Progress;
-        public Text text_Progress;
-        public Text text_Nickname;
         
         [Header("Popup")]
         public UI_SearchingPopup searchPopup;
         public GameObject obj_IndicatorPopup;
         
-        [Header("Nicnname")] 
+        [Header("User Info")] 
         public InputField inputfield_Nicnname;
+        public Text text_Nickname;
+        public Text text_Class;
+        public Text text_Trophy;
+        public Text text_Diamond;
+        public Text text_Gold;
+        public Text text_Key;
 
         [Space]
         public bool isAIMode;
@@ -66,16 +69,26 @@ namespace ED
                 ObscuredPrefs.SetString("Nickname", nickname);
             }*/
 
+            RefreshUserInfoUI();
+
+            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_LOBBY);
+        }
+
+        public void RefreshUserInfoUI()
+        {
+            string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
             inputfield_Nicnname.text = nickname;
             text_Nickname.text = nickname;
-            
-            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_LOBBY);
+            text_Trophy.text = UserInfoManager.Get().GetUserInfo().trophy.ToString();
+            text_Class.text = $"클래스 {UserInfoManager.Get().GetUserInfo().nClass}";
+            text_Diamond.text = UserInfoManager.Get().GetUserInfo().diamond.ToString();
+            text_Gold.text = UserInfoManager.Get().GetUserInfo().gold.ToString();
+            text_Key.text = UserInfoManager.Get().GetUserInfo().key.ToString();
         }
 
         public void Toggle(bool isOn)
         {
             isAIMode = isOn;
-
         }
 
         public void Click_PlayBattle()

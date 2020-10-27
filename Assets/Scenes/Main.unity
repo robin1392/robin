@@ -1122,6 +1122,11 @@ PrefabInstance:
       propertyPath: obj_IndicatorPopup
       value: 
       objectReference: {fileID: 6362351360819374708}
+    - target: {fileID: 4236744650293910018, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: btn_SearchCancel
+      value: 
+      objectReference: {fileID: 6362351360819374709}
     - target: {fileID: 4236744650293910019, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1709,3 +1714,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6362351360819374707}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6362351360819374709 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6362351360729102033, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+    type: 3}
+  m_PrefabInstance: {fileID: 6362351360819374707}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
