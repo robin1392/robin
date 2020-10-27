@@ -20,7 +20,7 @@ public class NetworkManager : Singleton<NetworkManager>
 {
     #region net variable
 
-    public Global.E_MATCHSTEP netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+    public Global.E_MATCHSTEP NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
 
     SocketService _socketService;
 
@@ -612,6 +612,7 @@ public class NetworkManager : Singleton<NetworkManager>
         MsgUserAuthReq msg = new MsgUserAuthReq();
         msg.UserId = userId;
         _httpSender.UserAuthReq(msg);
+        UnityUtil.Print("SEND AUTH => userid", userId, "green");
     }
 
 
@@ -619,9 +620,10 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         UserInfoManager.Get().SetUserKey(msg.UserInfo.UserId);
         GameStateManager.Get().UserAuthOK();
+        UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
     }
 
-    
+
     IEnumerator WaitForMatch()
     {
         yield return new WaitForSeconds(1.0f);
@@ -631,10 +633,19 @@ public class NetworkManager : Singleton<NetworkManager>
     
     public void StartMatchReq(string userId)
     {
+        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START 
+            || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
+        {
+            // 매칭 중이면 요청할 수 없다.
+            return;
+        }
+
+        NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
+
         MsgStartMatchReq msg = new MsgStartMatchReq();
         msg.UserId = userId;
         _httpSender.StartMatchReq(msg);
-        UnityUtil.Print("[MATCH] StartMatchReq. userid: " + userId);
+        UnityUtil.Print("SEND MATCH START => userid", userId, "green");
     }
 
 
@@ -648,8 +659,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
         _matchTryCount = 0;
         UserInfoManager.Get().SetTicketId(msg.TicketId);
-        UnityUtil.Print("[MATCH] OnStartMatchAck. ticketId: " + msg.TicketId);
-
+        UnityUtil.Print("RECV MATCH START => ticketId", msg.TicketId, "green");
 
         StartCoroutine(WaitForMatch());
     }
@@ -657,21 +667,27 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void StatusMatchReq(string ticketId)
     {
+        if (NetMatchStep != Global.E_MATCHSTEP.MATCH_START)
+        {
+            // 매칭 중에서 상태 요청을 할 수 있다ㅏ.
+            return;
+        }
+
+
         _matchTryCount++;
         MsgStatusMatchReq msg = new MsgStatusMatchReq();
         msg.TicketId = ticketId;
 
         _httpSender.StatusMatchReq(msg);
-        UnityUtil.Print("[MATCH] StatusMatchReq. ticketId: " + ticketId + ", try: " + _matchTryCount);
+        UnityUtil.Print("SEND MATCH STATUS => ticketid", ticketId, "green");
     }
 
 
     void OnStatusMatchAck(MsgStatusMatchAck msg)
     {
-        UnityUtil.Print("[MATCH] OnStatusMatchAck. serverAddr: " + msg.ServerAddr + ": " + msg.Port + ", playserSession: " + msg.PlayerSessionId);
         if (string.IsNullOrEmpty(msg.PlayerSessionId))
         {
-            if (_matchTryCount > 5)
+            if (_matchTryCount > 10)
             {
                 StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
             }
@@ -679,43 +695,54 @@ public class NetworkManager : Singleton<NetworkManager>
             {
                 StartCoroutine(WaitForMatch());
             }
-            return;
         }
+        else
+        {
+            NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
 
+            // go match -> socket
+            SetAddr(msg.ServerAddr, msg.Port, msg.PlayerSessionId);
 
-        // go match -> socket
-        SetAddr(msg.ServerAddr, msg.Port, msg.PlayerSessionId);
-
-        // 우선 그냥 배틀로 지정하자
-        ConnectServer(Global.PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+            // 우선 그냥 배틀로 지정하자
+            ConnectServer(Global.PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+        }
+        UnityUtil.Print("RECV MATCH STATUS => ", string.Format("server:{0}, player-session-id:{1}", msg.ServerAddr + ":" + msg.Port, msg.PlayerSessionId), "green");
     }
 
 
     public void StopMatchReq(string ticketId)
     {
+        NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+
         MsgStopMatchReq msg = new MsgStopMatchReq();
         msg.TicketId = ticketId;
         _httpSender.StopMatchReq(msg);
-        UnityUtil.Print("[MATCH] StopMatchReq. ticketId: " + ticketId);
+        UnityUtil.Print("SEND MATCH STOP => ticketid", ticketId, "green");
     }
 
 
     void OnStopMatchAck(MsgStopMatchAck msg)
     {
-        UnityUtil.Print("[MATCH] OnStopMatchAck. ");
-        StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+        UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
 
 
-    public void UpdateDeckReq(string userId)
+    public void UpdateDeckReq(sbyte deckIndex, int[] deckIds)
     {
         MsgUpdateDeckReq msg = new MsgUpdateDeckReq();
+        msg.DeckIndex = deckIndex;
+        msg.DiceIds = deckIds;
         _httpSender.UpdateDeckReq(msg);
+        UnityUtil.Print("SEND DECK UPDATE => index", string.Format("index:{0}, deck:[{1}]", deckIndex, string.Join(",", deckIds)), "green");
     }
 
 
     void OnUpdateDeckAck(MsgUpdateDeckAck msg)
     {
+        UserInfoManager.Get().GetUserInfo().SetDeck(msg.DeckIndex, msg.DiceIds);
+
+        ED.UI_Panel_Dice panelDice = FindObjectOfType<ED.UI_Panel_Dice>();
+        panelDice.CallBackDeckUpdate();
     }
 
     #endregion

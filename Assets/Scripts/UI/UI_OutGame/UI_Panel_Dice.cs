@@ -243,7 +243,8 @@ namespace ED
                 //
                 if (WebPacket.Get() != null)
                 {
-                    WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
+                    //WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
+                    NetworkManager.Get().UpdateDeckReq((sbyte)active, intDeck);
                     UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 }
                 else
