@@ -30,6 +30,7 @@ namespace RandomWarsProtocol.Msg
     {
         public short ErrorCode;
         public EGameResult GameResult;
+        public byte WinningStreak;
         public MsgReward[] NormalReward;
         public MsgReward[] StreakReward;
         public MsgReward[] PerfectReward;

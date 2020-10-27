@@ -545,13 +545,14 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, EGameResult gameResult, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, EGameResult gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((short)code);
                 bw.Write((byte)gameResult);
+                bw.Write(WinningStreak);
 
                 int length = (normalReward == null) ? 0 : normalReward.Length;
                 bw.Write(length);
