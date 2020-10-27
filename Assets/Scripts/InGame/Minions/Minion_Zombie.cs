@@ -50,6 +50,8 @@ namespace ED
             if (_reviveCount > 0)
             {
                 StartCoroutine(ReviveCoroutine());
+                
+                SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
             }
             else
             {

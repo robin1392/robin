@@ -91,9 +91,11 @@ namespace ED
             {
                 //var num = int.Parse(splitDeck[i]);
                 var data = JsonDataManager.Get().dataDiceInfo.GetData(deck[i]);
-                arrImageDeck[i].sprite = FileHelper.GetIcon(data.iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeck[i].sprite =
+                    FileHelper.GetIcon(data.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeckEye[i].color = FileHelper.GetColor(data.color);
-                arrImageDeck_Main[i].sprite = FileHelper.GetIcon(data.iconName);//dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeck_Main[i].sprite =
+                    FileHelper.GetIcon(data.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeckEye_Main[i].color = FileHelper.GetColor(data.color);
             }
             
