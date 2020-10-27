@@ -41,7 +41,7 @@ namespace ED
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
                 if (InGameManager.IsNetwork == false && isMine)
                 {
-                    InGameManager.Get().EndGame(false);
+                    //InGameManager.Get().EndGame(false);
                 }
             }
             

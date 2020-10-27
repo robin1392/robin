@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
+using RandomWarsProtocol;
 
 public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 {
@@ -12,10 +13,6 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     #region ui element variable
     public GameObject popup_Waiting;
     public UI_InGamePopup_Result popup_Result;
-    public Text text_Result;
-    
-
-        
     public GameObject obj_Low_HP_Effect;
     //[Header("DEV UI")] 
 
@@ -32,17 +29,6 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
         InitUIElement();
     }
-
-    #if UNITY_EDITOR
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            popup_Result.gameObject.SetActive(true);
-            popup_Result.Initialize();
-        }
-    }
-    #endif
 
     public override void OnDestroy()
     {
@@ -73,18 +59,13 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         popup_Waiting.SetActive(view);
     }
 
-    public void SetPopupResult(bool view)
+    public void SetPopupResult(bool view, bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
     {
         popup_Result.gameObject.SetActive(view);
-        if (view) popup_Result.Initialize();
+        if (view) popup_Result.Initialize(winLose, winningStreak, normalReward, streakReward, perfectReward);
         ViewGameIndicator(false);
         ViewLowHP(false);
         SetViewWaiting(false);
-    }
-
-    public void SetResultText(string text)
-    {
-        text_Result.text = text;
     }
 
     public void ViewLowHP(bool view)
