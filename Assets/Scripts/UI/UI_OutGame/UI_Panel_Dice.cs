@@ -244,7 +244,7 @@ namespace ED
                 if (WebPacket.Get() != null)
                 {
                     //WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
-                    NetworkManager.Get().UpdateDeckReq((sbyte)active, intDeck);
+                    NetworkManager.Get().UpdateDeckReq(UserInfoManager.Get().GetUserInfo().userID,(sbyte)active, intDeck);
                     UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 }
                 else

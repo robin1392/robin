@@ -619,6 +619,9 @@ public class NetworkManager : Singleton<NetworkManager>
     void OnAuthUserAck(MsgUserAuthAck msg)
     {
         UserInfoManager.Get().SetUserKey(msg.UserInfo.UserId);
+        UserInfoManager.Get().SetDeck(msg.UserDeck);
+        UserInfoManager.Get().SetDice(msg.UserDice);
+
         GameStateManager.Get().UserAuthOK();
         UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
     }
@@ -727,9 +730,10 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void UpdateDeckReq(sbyte deckIndex, int[] deckIds)
+    public void UpdateDeckReq(string userId, sbyte deckIndex, int[] deckIds)
     {
         MsgUpdateDeckReq msg = new MsgUpdateDeckReq();
+        msg.UserId = userId;
         msg.DeckIndex = deckIndex;
         msg.DiceIds = deckIds;
         _httpSender.UpdateDeckReq(msg);
