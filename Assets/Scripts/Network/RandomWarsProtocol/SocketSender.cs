@@ -388,7 +388,6 @@ namespace RandomWarsProtocol
 
         public void LevelUpDiceReq(Peer peer, short resetFieldNum, short leveupFieldNum) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -401,7 +400,6 @@ namespace RandomWarsProtocol
 
         public void LevelUpDiceAck(Peer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -417,7 +415,6 @@ namespace RandomWarsProtocol
 
         public void LevelUpDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -433,7 +430,6 @@ namespace RandomWarsProtocol
 
         public void InGameUpDiceReq(Peer peer, int diceId) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -445,7 +441,6 @@ namespace RandomWarsProtocol
 
         public void InGameUpDiceAck(Peer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -550,14 +545,35 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, int winPlayerUId) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, EGameResult gameResult, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((short)code);
-                bw.Write(winPlayerUId);
+                bw.Write((byte)gameResult);
+
+                int length = (normalReward == null) ? 0 : normalReward.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    normalReward[i].Write(bw);
+                }
+
+                length = (streakReward == null) ? 0 : streakReward.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    streakReward[i].Write(bw);
+                }
+
+                length = (perfectReward == null) ? 0 : perfectReward.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    perfectReward[i].Write(bw);
+                }
+
                 peer.SendPacket((int)GameProtocol.END_GAME_NOTIFY, ms.ToArray());
             }
         }

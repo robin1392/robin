@@ -9,4 +9,32 @@ namespace RandomWarsProtocol
         Red,
         Blue
     }
+
+
+    public enum EGameResult
+    {
+        None,
+        Victory,
+        Defeat,
+        Draw
+    }
+
+
+    public enum ERewardType : byte
+    {
+        None,
+        Trophy,
+        Gold,
+        Diamond,
+        Key,
+        Box,
+    }
+
+
+    public enum EBoxType
+    {
+        None,
+        TeamMatch,
+        Boss,
+    }
 }

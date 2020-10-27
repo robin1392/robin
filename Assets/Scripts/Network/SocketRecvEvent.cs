@@ -370,7 +370,7 @@ public class SocketRecvEvent
     
     public void OnEndGameNotify(Peer peer, MsgEndGameNotify msg)
     {
-        UnityUtil.Print("end game Notify", msg.WinPlayerUId.ToString() , "white");
+        UnityUtil.Print("end game Notify", msg.GameResult.ToString() , "white");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.END_GAME_NOTIFY, msg);
