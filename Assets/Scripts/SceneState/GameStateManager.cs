@@ -348,7 +348,8 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public void MoveInGameBattle()
     {
-        WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+        //WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+        NetworkManager.Get().NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
         ActionEvent(Global.E_STATEACTION.ACTION_INGAME);
     }
     #endregion
