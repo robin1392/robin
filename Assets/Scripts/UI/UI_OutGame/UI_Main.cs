@@ -128,7 +128,8 @@ namespace ED
                 return;
             }
 
-            WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
+            //WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
         }
         
         /*
@@ -210,8 +211,12 @@ namespace ED
         {
             StopAllCoroutines();
             
-            if(WebPacket.Get() != null)
-                WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+            //if(WebPacket.Get() != null)
+            //    WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+            if (NetworkManager.Get() != null)
+            {
+                NetworkManager.Get().NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+            }
             
             btn_PlayBattle.interactable = true;
             //PhotonManager.Instance.Disconnect();
