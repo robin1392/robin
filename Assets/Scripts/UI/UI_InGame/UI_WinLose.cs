@@ -16,11 +16,11 @@ public class UI_WinLose : MonoBehaviour
     public Text text_Nickname;
     public Text text_Trophy;
 
-    public void Initialize(bool isWin, int winningStreak, int[] deck, string nickname, int trophy)
+    public void Initialize(bool isWin, bool isPerfect, int winningStreak, int[] deck, string nickname, int trophy)
     {
         obj_Win.SetActive(isWin);
         obj_Lose.SetActive(!isWin);
-        if (winningStreak > 1)
+        if (isWin && isPerfect)
         {
             Invoke("ActivatePerfect", 2f);
         }
