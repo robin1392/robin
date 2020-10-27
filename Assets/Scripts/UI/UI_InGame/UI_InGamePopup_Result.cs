@@ -38,21 +38,30 @@ public class UI_InGamePopup_Result : MonoBehaviour
         btn_ShowValues.interactable = false;
 
         List<MsgReward> list = new List<MsgReward>(normalReward);
-        arrValue[0].text_Trophy.text = list.Find(msg => msg.RewardType == ERewardType.Trophy)?.Value.ToString();
-        arrValue[0].text_Gold.text = list.Find(msg => msg.RewardType == ERewardType.Gold)?.Value.ToString();
-        arrValue[0].text_Key.text = list.Find(msg => msg.RewardType == ERewardType.Key)?.Value.ToString();
+        int normalTrophy = list.Find(msg => msg.RewardType == ERewardType.Trophy).Value;
+        int normalGold = list.Find(msg => msg.RewardType == ERewardType.Gold).Value;
+        int normalKey = list.Find(msg => msg.RewardType == ERewardType.Key).Value;
+        arrValue[0].Initialize(normalTrophy, normalGold, normalKey);
         
         list = new List<MsgReward>(streakReward);
-        arrValue[1].text_Trophy.text = list.Find(msg => msg.RewardType == ERewardType.Trophy)?.Value.ToString();
-        arrValue[1].text_Gold.text = list.Find(msg => msg.RewardType == ERewardType.Gold)?.Value.ToString();
-        arrValue[1].text_Key.text = list.Find(msg => msg.RewardType == ERewardType.Key)?.Value.ToString();
+        int streakTrophy = list.Find(msg => msg.RewardType == ERewardType.Trophy).Value;
+        int streakGold = list.Find(msg => msg.RewardType == ERewardType.Gold).Value;
+        int streakKey = list.Find(msg => msg.RewardType == ERewardType.Key).Value;
+        arrValue[1].Initialize(streakTrophy, streakGold, streakKey);
         text_WinningStreak.text = winningStreak.ToString();
         
         list = new List<MsgReward>(perfectReward);
-        arrValue[2].text_Trophy.text = list.Find(msg => msg.RewardType == ERewardType.Trophy)?.Value.ToString();
-        arrValue[2].text_Gold.text = list.Find(msg => msg.RewardType == ERewardType.Gold)?.Value.ToString();
-        arrValue[2].text_Key.text = list.Find(msg => msg.RewardType == ERewardType.Key)?.Value.ToString();
+        int perfectTrophy = list.Find(msg => msg.RewardType == ERewardType.Trophy).Value;
+        int perfectGold = list.Find(msg => msg.RewardType == ERewardType.Gold).Value;
+        int perfectKey = list.Find(msg => msg.RewardType == ERewardType.Key).Value;
+        arrValue[2].Initialize(perfectTrophy, perfectGold, perfectKey);
         
+        arrValue[3].Initialize(
+            normalTrophy + streakTrophy + perfectTrophy,
+            normalGold + streakGold + perfectGold,
+            normalKey + streakKey + perfectKey
+            );
+
         Invoke("EnableShowValuesButton", 2f);
 //#endif
 
@@ -71,7 +80,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
 
     IEnumerator ShowResultValuesCoroutine()
     {
-        Ease ease = Ease.OutQuint;
+        Ease ease = Ease.OutBack;
         ((RectTransform) winlose_Other.transform).DOScale(Vector3.zero, 0.3f).SetEase(ease);
         ((RectTransform) text_VS.transform).DOScale(Vector3.zero, 0.3f).SetEase(ease);
         ((RectTransform) winlose_My.transform).DOAnchorPosY(-320 + 840, 0.5f).SetEase(ease);
@@ -81,7 +90,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
             arrValue[i].gameObject.SetActive(true);
             arrValue[i].transform.localScale = Vector3.zero;
             arrValue[i].transform.DOScale(Vector3.one, 0.3f).SetEase(ease);
-            arrValue[i].Initialize(9999, 9999, 9999);
+            //arrValue[i].Initialize(9999, 9999, 9999);
             yield return new WaitForSeconds(0.15f);
         }
         btn_End.gameObject.SetActive(true);

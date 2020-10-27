@@ -101,7 +101,7 @@ public partial class WebPacket : Singleton<WebPacket>
 
     private void RecvUserAuth(MsgUserInfo userInfo, MsgUserDeck[] userDeck, MsgUserDice[] userDice)
     {
-        UserInfoManager.Get().SetUserKey(userInfo.UserId);
+        UserInfoManager.Get().SetUserInfo(userInfo);
         UserInfoManager.Get().SetDeck(userDeck);
         UserInfoManager.Get().SetDice(userDice);
     }

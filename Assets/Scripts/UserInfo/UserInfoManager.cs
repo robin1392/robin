@@ -24,7 +24,13 @@ public class UserInfo
         private set => _userNickName = value;
     }
 
-
+    public int trophy;
+    public int nClass;
+    public int diamond;
+    public int gold;
+    public int key;
+    public int winStreak;
+    
     private string _ticketId;
     public string ticketId
     {
@@ -283,6 +289,18 @@ public class UserInfoManager : Singleton<UserInfoManager>
     public UserInfo GetUserInfo()
     {
         return _userInfo;
+    }
+
+    public void SetUserInfo(MsgUserInfo info)
+    {
+        SetUserKey(info.UserId);
+        
+        _userInfo.SetNickName(info.Name);
+        _userInfo.diamond = info.Diamond;
+        _userInfo.gold = info.Gold;
+        _userInfo.key = info.Key;
+        _userInfo.nClass = Convert.ToInt32(info.Class);
+        _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
     }
     
     public void SetUserKey(string userid)
