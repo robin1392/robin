@@ -584,6 +584,8 @@ namespace ED
                     lr.endColor = FileHelper.GetColor(data.color);//data.color;
                 }
             }
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
 
         public BaseStat GetBaseStatFromId(int baseStatId)
@@ -2271,7 +2273,7 @@ namespace ED
             if (NetworkManager.Get().isReconnect == true)
                 return;
 
-            if ((int) protocol >= 300000)
+            if (protocol > GameProtocol.BEGIN_RELAY)
             {
                 if (protocol == GameProtocol.MINION_STATUS_RELAY)
                 {

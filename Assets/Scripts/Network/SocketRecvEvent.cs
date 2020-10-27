@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ED;
 using UnityEngine;
-using RandomWarsService.Network.NetService;
+using RandomWarsService.Network.Socket.NetService;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 

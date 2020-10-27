@@ -141,4 +141,19 @@ public partial class Global
     #endregion
     
     
+    #region sound
+
+    public enum E_SOUND
+    {
+        BGM_LOBBY,
+        BGM_INGAME_BATTLE,
+        SFX_MINION_DEATH,
+        SFX_MINION_GENERATE,
+        SFX_MINION_HIT,
+        SFX_MINION_BOW_SHOT,
+        SFX_UI_BUTTON,
+    }
+    
+    #endregion
+    
 }
