@@ -240,13 +240,17 @@ public class GameStateManager : Singleton<GameStateManager>
         UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
         
         yield return new WaitForSeconds(0.1f);
-        
+
 #if NETWORK_ACT
+
+
         
+
         // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
         if (NetworkManager.Get().UserId.Length > 0)
         {
-            WebPacket.Get().SendUserAuth(NetworkManager.Get().UserId, UserAuthOK);
+            //WebPacket.Get().SendUserAuth(NetworkManager.Get().UserId, UserAuthOK);
+            NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
         }
         else
         {
@@ -256,7 +260,8 @@ public class GameStateManager : Singleton<GameStateManager>
                 userid = "";
                 firstStartUser = true;
             }
-            WebPacket.Get().SendUserAuth(userid, UserAuthOK);
+            //WebPacket.Get().SendUserAuth(userid, UserAuthOK);
+            NetworkManager.Get().AuthUserReq(userid);
             // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
             if (userid == "")
             {
@@ -343,7 +348,8 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public void MoveInGameBattle()
     {
-        WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+        //WebPacket.Get().netMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+        NetworkManager.Get().NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
         ActionEvent(Global.E_STATEACTION.ACTION_INGAME);
     }
     #endregion

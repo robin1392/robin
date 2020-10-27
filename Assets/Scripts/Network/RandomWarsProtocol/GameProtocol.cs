@@ -4,12 +4,37 @@ namespace RandomWarsProtocol
 {
     public enum GameProtocol : int
     {
-        BEGIN = 100000,
+        // ----------------------------------------------------------------------------------------------------
+        // http protocols
+        // ----------------------------------------------------------------------------------------------------
+        BEGIN_HTTP = 1000,
 
+        AUTH_USER_REQ,
+        AUTH_USER_ACK,
+
+        UPDATE_DECK_REQ,
+        UPDATE_DECK_ACK,
+
+        START_MATCH_REQ,
+        START_MATCH_ACK,
+
+        STATUS_MATCH_REQ,
+        STATUS_MATCH_ACK,
+
+        STOP_MATCH_REQ,
+        STOP_MATCH_ACK,
+
+
+        END_HTTP,
+        
+        // ----------------------------------------------------------------------------------------------------
+        // socket protocols
+        // ----------------------------------------------------------------------------------------------------
+        BEGIN_SOCKET = 100000,
+        
         // ----------------------------------------------------------------------------------------------------
         // req/ack protocols
         // ----------------------------------------------------------------------------------------------------
-
         JOIN_GAME_REQ,
         JOIN_GAME_ACK,
         JOIN_GAME_NOTIFY,
@@ -57,7 +82,6 @@ namespace RandomWarsProtocol
         UPGRADE_SP_ACK,
         UPGRADE_SP_NOTIFY,
 
-
         // ----------------------------------------------------------------------------------------------------
         // Notify protocols
         // ----------------------------------------------------------------------------------------------------
@@ -69,11 +93,10 @@ namespace RandomWarsProtocol
         PAUSE_GAME_NOTIFY,
         RESUME_GAME_NOTIFY,
 
-
         // ----------------------------------------------------------------------------------------------------
         // Relay protocols
         // ----------------------------------------------------------------------------------------------------
-        BEGIN_PROTOCOL_RELAY = 300000,
+        BEGIN_RELAY = 300000,
 
         HIT_DAMAGE_MINION_RELAY,
         DESTROY_MINION_RELAY,
@@ -105,9 +128,7 @@ namespace RandomWarsProtocol
         FIRE_BULLET_RELAY,
         MINION_INVINCIBILITY_RELAY,
 
-
-        END_PROTOCOL_RELAY,
-
-        END,
+        END_RELAY,
+        END_SOCKET,
     };
 }

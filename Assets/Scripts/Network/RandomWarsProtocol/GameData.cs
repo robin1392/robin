@@ -17,10 +17,10 @@ namespace RandomWarsProtocol
         public int Gold;
         // 보유 다이아몬드 수량
         public int Diamond;
-        // 주사위 등급별 레벨업 횟수(타워hp에 추가)
-        public int[] DiceLevelupCount;
-        // 레벨
-        public short Level;
+        // 보유 열쇠 수량
+        public int Key;
+        // 유저 클래스
+        public short Class;
         // 연승 횟수 (최대 15회)
         public byte WinStreak;
 
@@ -32,13 +32,8 @@ namespace RandomWarsProtocol
             bw.Write(Trophy);
             bw.Write(Gold);
             bw.Write(Diamond);
-
-            bw.Write(DiceLevelupCount.Length);
-            byte[] bytes = new byte[DiceLevelupCount.Length * sizeof(int)];
-            Buffer.BlockCopy(DiceLevelupCount, 0, bytes, 0, bytes.Length);
-            bw.Write(bytes);
-
-            bw.Write(Level);
+            bw.Write(Key);
+            bw.Write(Class);
             bw.Write(WinStreak);
         }
 
@@ -50,16 +45,8 @@ namespace RandomWarsProtocol
             data.Trophy = br.ReadInt32();
             data.Gold = br.ReadInt32();
             data.Diamond = br.ReadInt32();
-
-            int length = br.ReadInt32();
-            byte[] bytes = br.ReadBytes(length * sizeof(int));
-            data.DiceLevelupCount = new int[length];
-            for (var index = 0; index < length; index++)
-            {
-                data.DiceLevelupCount[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
-            }
-
-            data.Level = br.ReadInt16();
+            data.Key = br.ReadInt32();
+            data.Class = br.ReadInt16();
             data.WinStreak = br.ReadByte();
             return data;
         }
