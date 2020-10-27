@@ -747,6 +747,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
         ED.UI_Panel_Dice panelDice = FindObjectOfType<ED.UI_Panel_Dice>();
         panelDice.CallBackDeckUpdate();
+        UnityUtil.Print("RECV DECK UPDATE => userid", string.Format("index:{0}, deck:[{1}]", msg.DeckIndex, string.Join(",", msg.DiceIds)), "green");
     }
 
     #endregion
