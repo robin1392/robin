@@ -16,7 +16,7 @@ namespace ED
         {
             rts_Frame.localScale = Vector3.zero;
             rts_Frame.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack);
-            image_BG.DOFade(0.7f, 0.2f);
+            image_BG.DOFade(0.95f, 0.2f);
         }
 
         public virtual void Close()

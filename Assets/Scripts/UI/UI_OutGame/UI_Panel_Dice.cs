@@ -200,6 +200,8 @@ namespace ED
             objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(diceId).iconName);
             
             rts_Content.DOAnchorPosY(0, 0.1f);
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
 
         public void Click_Dice_Info(int diceId)
@@ -208,6 +210,8 @@ namespace ED
             ui_Popup_Dice_Info.gameObject.SetActive(true);
             //ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
             ui_Popup_Dice_Info.Initialize(JsonDataManager.Get().dataDiceInfo.GetData(diceId));
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
 
         public void DeactivateSelectedObjectChild()
