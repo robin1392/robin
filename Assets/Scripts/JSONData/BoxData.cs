@@ -17,6 +17,7 @@ public class RewardData
 public class BoxInfoData
 {
     public int id;
+    public int needKey;
     public EBoxType boxType;
     public RewardData[] rewardRate;
     public RewardData[] rewardKindNum;

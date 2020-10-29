@@ -621,6 +621,7 @@ public class NetworkManager : Singleton<NetworkManager>
         UserInfoManager.Get().SetUserInfo(msg.UserInfo);
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);
+        UserInfoManager.Get().SetBox(msg.UserBox);
 
         GameStateManager.Get().UserAuthOK();
         UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");

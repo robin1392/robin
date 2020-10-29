@@ -1,6 +1,7 @@
 {
     "1" : {
 		"id" : 1,
+        "needKey" : 1,
         "boxType" : "CooperationBox",
         "rewardRate" : [
             {
@@ -137,6 +138,7 @@
     },
     "2" : {
 		"id" : 2,
+        "needKey" : 1,
         "boxType" : "BossBox",
         "rewardRate" : [
             {
