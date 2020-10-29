@@ -199,10 +199,9 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         _socketService = new SocketService();
 
-        IJsonSerializer jsonSerializer = new HttpJsonSerializer();
-        _httpReceiver = new HttpReceiver(jsonSerializer);
+        _httpReceiver = new HttpReceiver();
         _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
-        _httpSender = new HttpSender(_httpClient, jsonSerializer);
+        _httpSender = new HttpSender(_httpClient);
 
         _httpReceiver.AuthUserAck = OnAuthUserAck;
         _httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
@@ -1396,23 +1395,3 @@ public class ConvertNetMsg
 #endregion
 
 
-
-
-public class HttpJsonSerializer : IJsonSerializer
-{
-    public string SerializeObject<T>(T jObject)
-    {
-        return JsonHelper.ToJson<T>(jObject);
-    }
-
-    public T DeserializeObject<T>(string json)
-    {
-        return JsonHelper.Deserialize<T>(json);
-    }
-
-    public T[] DeserializeObjectArray<T>(string json)
-    {
-        return JsonHelper.DeserializeArray<T>(json);
-    }
-
-}

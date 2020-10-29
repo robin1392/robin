@@ -25,6 +25,7 @@ namespace ED
         
         [Header("Popup")]
         public UI_SearchingPopup searchPopup;
+        public UI_BoxPopup boxPopup;
         public GameObject obj_IndicatorPopup;
         
         [Header("User Info")] 
@@ -54,20 +55,6 @@ namespace ED
         private void Start()
         {
             DOTween.Init();
-
-            // string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
-            // if (string.IsNullOrEmpty(nickname))
-            // {
-            //     nickname = string.Format("RW{0}", Random.Range(1000, 9999));
-            //     UserInfoManager.Get().SetUserNickName(nickname);
-            // }
-            
-            /*string nickname = ObscuredPrefs.GetString("Nickname");
-            if (string.IsNullOrEmpty(nickname))
-            {
-                nickname = string.Format("RW{0}", Random.Range(1000, 9999));
-                ObscuredPrefs.SetString("Nickname", nickname);
-            }*/
 
             RefreshUserInfoUI();
 
@@ -116,10 +103,20 @@ namespace ED
             }
         }
 
+        public void Click_BoxButton()
+        {
+            boxPopup.gameObject.SetActive(true);
+            boxPopup.Initialize();
+        }
+
+        public void Click_SessonPassButton()
+        {
+            
+        }
+
         public void EditNickname(string str)
         {
             UserInfoManager.Get().SetUserNickName(str);
-            //ObscuredPrefs.SetString("Nickname", str);
             
             text_Nickname.text = str;
         }
@@ -128,7 +125,6 @@ namespace ED
         {
             yield return new WaitForSeconds(1f);
 
-            //SceneManager.LoadScene("InGame_Battle");
             GameStateManager.Get().MoveInGameBattle();
         }
 
@@ -143,84 +139,13 @@ namespace ED
                 return;
             }
 
-            //WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
             NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
         }
         
-        /*
-        private IEnumerator ConnectBattle()
-        {
-            if (PhotonNetwork.IsConnected == false)
-                PhotonManager.Instance.Connect();
-
-            while (PhotonManager.Instance.isConnecting == true)
-            {
-                yield return null;
-            }
-
-            PhotonManager.Instance.JoinRoom(PLAY_TYPE.BATTLE);
-
-            while (PhotonNetwork.IsConnected && PhotonNetwork.LevelLoadingProgress <= 0 || PhotonNetwork.LevelLoadingProgress > 0.9f)
-            {
-                yield return null;
-            }
-
-            if (PhotonNetwork.IsConnected)
-            {
-                btn_Cancel.interactable = false;
-                while (true)
-                {
-                    image_Progress.fillAmount = PhotonNetwork.LevelLoadingProgress;
-                    text_Progress.text = $"{(int) (PhotonNetwork.LevelLoadingProgress * 100)}%";
-                    yield return new WaitForEndOfFrame();
-                }
-            }
-            else
-            {
-                btn_Cancel.interactable = false;
-                while (PhotonManager.Instance.async != null && PhotonManager.Instance.async.isDone == false)
-                {
-                    image_Progress.fillAmount = PhotonManager.Instance.async.progress / 0.9f;
-                    text_Progress.text = $"{(int) (PhotonManager.Instance.async.progress / 0.9f * 100)}%";
-                    yield return null;
-                }
-            }
-        }
-        */
-
         public void Click_PlayCoop()
         {
             //StartCoroutine(ConnectCoop());
         }
-
-        /*
-        private IEnumerator ConnectCoop()
-        {
-            if (PhotonNetwork.IsConnected == false)
-                PhotonManager.Instance.Connect();
-
-            while (PhotonNetwork.IsConnected == false || PhotonNetwork.IsConnectedAndReady == false ||
-                   PhotonManager.Instance.isConnecting == true)
-            {
-                yield return null;
-            }
-
-            PhotonManager.Instance.JoinRoom(PLAY_TYPE.CO_OP);
-
-            while (PhotonNetwork.LevelLoadingProgress <= 0 || PhotonNetwork.LevelLoadingProgress > 0.9f)
-            {
-                yield return null;
-            }
-
-            btn_Cancel.interactable = false;
-            while (true)
-            {
-                image_Progress.fillAmount = PhotonNetwork.LevelLoadingProgress;
-                text_Progress.text = $"{(int) (PhotonNetwork.LevelLoadingProgress * 100)}%";
-                yield return new WaitForEndOfFrame();
-            }
-        }
-        */
 
         public void Click_DisconnectButton()
         {
@@ -234,7 +159,6 @@ namespace ED
             }
             
             btn_PlayBattle.interactable = true;
-            //PhotonManager.Instance.Disconnect();
         }
 
         #region Main UI
@@ -314,22 +238,5 @@ namespace ED
             isDragging = false;
         }
         #endregion
-        
-        /*
-        #region test
-        public void OnClickBtn1()
-        {
-            if (NetworkManager.Get().UseLocalServer == true)
-            {
-                NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().PlayerSessionId);
-                NetworkManager.Get().ConnectServer(PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
-                return;
-            }
-
-            //WebPacket.Get().SendUserAuth( string.Empty , null );
-            WebPacket.Get().SendMatchRequest(UserInfoManager.Get().GetUserInfo().userID , null);
-        }        
-        #endregion
-        */
     }
 }

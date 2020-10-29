@@ -17,6 +17,7 @@ namespace RandomWarsProtocol.Msg
         public MsgUserInfo UserInfo;
         public MsgUserDeck[] UserDeck;
         public MsgUserDice[] UserDice;
+        public MsgUserBox[] UserBox;
     }
 
 

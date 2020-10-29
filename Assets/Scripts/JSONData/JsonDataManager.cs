@@ -28,6 +28,7 @@ public class JsonDataManager : MonoBehaviour
 	public DiceInfo dataDiceInfo = null;
 	public LangKO dataLangKO = null;
 	public LangEN dataLangEN = null;
+    public BoxInfo dataBoxInfo = null;
 
 
     //
@@ -36,7 +37,7 @@ public class JsonDataManager : MonoBehaviour
 		dataDiceInfo = new DiceInfo(filePath , callBack);
 		dataLangKO = new LangKO(filePath , callBack);
 		dataLangEN = new LangEN(filePath , callBack);
-
+        dataBoxInfo = new BoxInfo(filePath, callBack);
     }
 
     //
@@ -59,6 +60,13 @@ public class JsonDataManager : MonoBehaviour
 		    dataLangEN.DestroyData();
 		    dataLangEN = null;
 	    }
+
+        if (dataBoxInfo != null)
+        {
+            dataBoxInfo.DestroyData();
+            dataBoxInfo = null;
+        }
+
     }
 
 }
