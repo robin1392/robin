@@ -145,13 +145,20 @@ public partial class Global
 
     public enum E_SOUND
     {
-        BGM_LOBBY,
+        // BGM
+        BGM_LOBBY = 0,
         BGM_INGAME_BATTLE,
+        
+        // SFX
+        SFX_WIN = 100,
+        SFX_LOSE,
         SFX_MINION_DEATH,
         SFX_MINION_GENERATE,
         SFX_MINION_HIT,
         SFX_MINION_BOW_SHOT,
-        SFX_UI_BUTTON,
+        
+        // UI
+        SFX_UI_BUTTON = 10000,
     }
     
     #endregion

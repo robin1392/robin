@@ -26,6 +26,7 @@ namespace ED
         [Header("Popup")]
         public UI_SearchingPopup searchPopup;
         public UI_BoxPopup boxPopup;
+        public UI_BoxOpenPopup boxOpenPopup;
         public GameObject obj_IndicatorPopup;
         
         [Header("User Info")] 
@@ -159,6 +160,12 @@ namespace ED
             }
             
             btn_PlayBattle.interactable = true;
+        }
+
+        public void Click_BoxOpen(int id, UI_BoxOpenPopup.COST_TYPE costType, int cost)
+        {
+            boxOpenPopup.gameObject.SetActive(true);
+            boxOpenPopup.Initialize(id, costType, cost);
         }
 
         #region Main UI

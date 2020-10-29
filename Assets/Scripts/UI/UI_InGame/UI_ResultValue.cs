@@ -20,7 +20,7 @@ public class UI_ResultValue : MonoBehaviour
         if (trophy <= 0)
         {
             text_Trophy.color = trophy < 0 ? ParadoxNotion.ColorUtils.HexToColor("DF362D") : Color.gray;
-            arrImages[1].material = mtl_Grayscale;
+            arrImages[1].material = trophy == 0 ? mtl_Grayscale : null;
         }
 
         if (gold <= 0)

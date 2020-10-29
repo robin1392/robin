@@ -64,6 +64,12 @@ public class UserInfo
         get;
         private set;
     }
+
+    public Dictionary<int, int> dicBox
+    {
+        get;
+        private set;
+    }
     
     #endregion
     
@@ -76,7 +82,6 @@ public class UserInfo
         arrDeck[1] = new int[5] {1000, 1001, 1002, 1003, 1004};
         arrDeck[2] = new int[5] {1000, 1001, 1002, 1003, 1004};
 
-        dicGettedDice = new Dictionary<int, int[]>();
         
         // _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004" );
         // _slotDeck[1] = ObscuredPrefs.GetString("Deck2", "1000/1001/1002/1003/1004" );
@@ -104,6 +109,9 @@ public class UserInfo
             ObscuredPrefs.SetString("UserKey", "");
             ObscuredPrefs.Save();    
         }
+        
+        dicGettedDice = new Dictionary<int, int[]>();
+        dicBox = new Dictionary<int, int>();
     }
     
     #endregion
@@ -348,6 +356,16 @@ public class UserInfoManager : Singleton<UserInfoManager>
         {
             //Debug.LogFormat("SetDice: ID:{0}, Level:{1}, Count:{2}", userDice[i].diceId, userDice[i].level, userDice[i].count);
             _userInfo.dicGettedDice.Add(userDice[i].DiceId, new int[2] { userDice[i].Level, userDice[i].Count });
+        }
+    }
+
+    public void SetBox(MsgUserBox[] msgUserBox)
+    {
+        _userInfo.dicBox.Clear();
+
+        for (int i = 0; i < msgUserBox.Length; i++)
+        {
+            _userInfo.dicBox.Add(msgUserBox[i].BoxId, msgUserBox[i].Count);
         }
     }
     #endregion
