@@ -208,6 +208,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.StartMatchAck = OnStartMatchAck;
         _httpReceiver.StatusMatchAck = OnStatusMatchAck;
         _httpReceiver.StopMatchAck = OnStopMatchAck;
+        _httpReceiver.OpenBoxAck = OnOpenBoxAck;
 
 
 
@@ -749,6 +750,21 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV DECK UPDATE => userid", string.Format("index:{0}, deck:[{1}]", msg.DeckIndex, string.Join(",", msg.DiceIds)), "green");
     }
 
+
+
+    public void OpenBoxReq(string userId, int boxId)
+    {
+        MsgOpenBoxReq msg = new MsgOpenBoxReq();
+        msg.UserId = userId;
+        msg.BoxId = boxId;
+        _httpSender.OpenBoxReq(msg);
+        UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
+    }
+
+    void OnOpenBoxAck(MsgOpenBoxAck msg)
+    {
+        UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    }
     #endregion
 }
 

@@ -78,4 +78,21 @@ namespace RandomWarsProtocol.Msg
     public class MsgStopMatchAck
     {
     }
+
+
+    [Serializable]
+    public class MsgOpenBoxReq
+    {
+        public string UserId;
+        public int BoxId;
+    }
+
+
+    [Serializable]
+    public class MsgOpenBoxAck
+    {
+        public short ErrorCode;
+        public MsgReward[] BoxReward;
+        public int Key;
+    }
 }

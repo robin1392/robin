@@ -24,6 +24,8 @@ namespace RandomWarsProtocol
         STOP_MATCH_REQ,
         STOP_MATCH_ACK,
 
+        OPEN_BOX_REQ,
+        OPEN_BOX_ACK,
 
         END_HTTP,
         

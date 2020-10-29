@@ -35,6 +35,10 @@ namespace RandomWarsProtocol
         public delegate void StopMatchAckDelegate(MsgStopMatchAck msg);
         public StopMatchAckDelegate StopMatchAck;
 
+        public delegate Task<string> OpenBoxReqDelegate(MsgOpenBoxReq msg);
+        public OpenBoxReqDelegate OpenBoxReq;
+        public delegate void OpenBoxAckDelegate(MsgOpenBoxAck msg);
+        public OpenBoxAckDelegate OpenBoxAck;
 
 
         public async Task<string> ProcessAsync(int protocolId, string json)
@@ -85,6 +89,15 @@ namespace RandomWarsProtocol
 
                         MsgStopMatchReq msg = JsonConvert.DeserializeObject<MsgStopMatchReq>(json);
                         ackJson = await StopMatchReq(msg);
+                    }
+                    break;
+                case GameProtocol.OPEN_BOX_REQ:
+                    {
+                        if (OpenBoxReq == null)
+                            return ackJson;
+
+                        MsgOpenBoxReq msg = JsonConvert.DeserializeObject<MsgOpenBoxReq>(json);
+                        ackJson = await OpenBoxReq(msg);
                     }
                     break;
             }
@@ -140,6 +153,15 @@ namespace RandomWarsProtocol
 
                         MsgStopMatchAck msg = JsonConvert.DeserializeObject<MsgStopMatchAck>(json);
                         StopMatchAck(msg);
+                    }
+                    break;
+                case GameProtocol.OPEN_BOX_ACK:
+                    {
+                        if (OpenBoxAck == null)
+                            return false;
+
+                        MsgOpenBoxAck msg = JsonConvert.DeserializeObject<MsgOpenBoxAck>(json);
+                        OpenBoxAck(msg);
                     }
                     break;
             }
