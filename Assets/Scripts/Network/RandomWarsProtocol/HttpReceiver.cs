@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RandomWarsService.Network.Http;
 using RandomWarsProtocol.Msg;
+using Newtonsoft.Json;
 
 namespace RandomWarsProtocol
 {
@@ -36,14 +37,6 @@ namespace RandomWarsProtocol
 
 
 
-        IJsonSerializer _jsonSerializer;
-
-        public HttpReceiver(IJsonSerializer jsonSerializer)
-        {
-            _jsonSerializer = jsonSerializer;
-        }
-
-
         public async Task<string> ProcessAsync(int protocolId, string json)
         {
             string ackJson = string.Empty;
@@ -54,7 +47,7 @@ namespace RandomWarsProtocol
                         if (AuthUserReq == null)
                             return ackJson;
 
-                        MsgUserAuthReq msg = _jsonSerializer.DeserializeObject<MsgUserAuthReq>(json);
+                        MsgUserAuthReq msg = JsonConvert.DeserializeObject<MsgUserAuthReq>(json);
                         ackJson = await AuthUserReq(msg);
                     }
                     break;
@@ -63,7 +56,7 @@ namespace RandomWarsProtocol
                         if (UpdateDeckReq == null)
                             return ackJson;
 
-                        MsgUpdateDeckReq msg = _jsonSerializer.DeserializeObject<MsgUpdateDeckReq>(json);
+                        MsgUpdateDeckReq msg = JsonConvert.DeserializeObject<MsgUpdateDeckReq>(json);
                         ackJson = await UpdateDeckReq(msg);
                     }
                     break;
@@ -72,7 +65,7 @@ namespace RandomWarsProtocol
                         if (StartMatchReq == null)
                             return ackJson;
 
-                        MsgStartMatchReq msg = _jsonSerializer.DeserializeObject<MsgStartMatchReq>(json);
+                        MsgStartMatchReq msg = JsonConvert.DeserializeObject<MsgStartMatchReq>(json);
                         ackJson = await StartMatchReq(msg);
                     }
                     break;
@@ -81,7 +74,7 @@ namespace RandomWarsProtocol
                         if (StatusMatchReq == null)
                             return ackJson;
 
-                        MsgStatusMatchReq msg = _jsonSerializer.DeserializeObject<MsgStatusMatchReq>(json);
+                        MsgStatusMatchReq msg = JsonConvert.DeserializeObject<MsgStatusMatchReq>(json);
                         ackJson = await StatusMatchReq(msg);
                     }
                     break;
@@ -90,7 +83,7 @@ namespace RandomWarsProtocol
                         if (StopMatchReq == null)
                             return ackJson;
 
-                        MsgStopMatchReq msg = _jsonSerializer.DeserializeObject<MsgStopMatchReq>(json);
+                        MsgStopMatchReq msg = JsonConvert.DeserializeObject<MsgStopMatchReq>(json);
                         ackJson = await StopMatchReq(msg);
                     }
                     break;
@@ -109,7 +102,7 @@ namespace RandomWarsProtocol
                         if (AuthUserAck == null)
                             return false;
 
-                        MsgUserAuthAck msg = _jsonSerializer.DeserializeObject<MsgUserAuthAck>(json);
+                        MsgUserAuthAck msg = JsonConvert.DeserializeObject<MsgUserAuthAck>(json);
                         AuthUserAck(msg);
                     }
                     break;
@@ -118,7 +111,7 @@ namespace RandomWarsProtocol
                         if (UpdateDeckAck == null)
                             return false;
 
-                        MsgUpdateDeckAck msg = _jsonSerializer.DeserializeObject<MsgUpdateDeckAck>(json);
+                        MsgUpdateDeckAck msg = JsonConvert.DeserializeObject<MsgUpdateDeckAck>(json);
                         UpdateDeckAck(msg);
                     }
                     break;
@@ -127,7 +120,7 @@ namespace RandomWarsProtocol
                         if (StartMatchAck == null)
                             return false;
 
-                        MsgStartMatchAck msg = _jsonSerializer.DeserializeObject<MsgStartMatchAck>(json);
+                        MsgStartMatchAck msg = JsonConvert.DeserializeObject<MsgStartMatchAck>(json);
                         StartMatchAck(msg);
                     }
                     break;
@@ -136,7 +129,7 @@ namespace RandomWarsProtocol
                         if (StatusMatchAck == null)
                             return false;
 
-                        MsgStatusMatchAck msg = _jsonSerializer.DeserializeObject<MsgStatusMatchAck>(json);
+                        MsgStatusMatchAck msg = JsonConvert.DeserializeObject<MsgStatusMatchAck>(json);
                         StatusMatchAck(msg);
                     }
                     break;
@@ -145,7 +138,7 @@ namespace RandomWarsProtocol
                         if (StopMatchAck == null)
                             return false;
 
-                        MsgStopMatchAck msg = _jsonSerializer.DeserializeObject<MsgStopMatchAck>(json);
+                        MsgStopMatchAck msg = JsonConvert.DeserializeObject<MsgStopMatchAck>(json);
                         StopMatchAck(msg);
                     }
                     break;

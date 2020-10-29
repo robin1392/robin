@@ -138,20 +138,20 @@ namespace RandomWarsProtocol
     [Serializable]
     public class MsgUserBox
     {
-        public EBoxType BoxType;
-        public int Value;
+        public int BoxId;
+        public int Count;
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write((byte)BoxType);
-            bw.Write(Value);
+            bw.Write(BoxId);
+            bw.Write(Count);
         }
 
         public static MsgUserBox Read(BinaryReader br)
         {
             MsgUserBox data = new MsgUserBox();
-            data.BoxType = (EBoxType)br.ReadByte();
-            data.Value = br.ReadInt32();
+            data.BoxId = br.ReadInt32();
+            data.Count = br.ReadInt32();
             return data;
         }
     }
