@@ -146,6 +146,8 @@ public class NetworkManager : Singleton<NetworkManager>
     private NetInfo _netInfo = null;
 
     private NetBattleInfo _battleInfo = null;
+
+    private Action<MsgOpenBoxAck> _boxOpenCallback;
     #endregion
 
     #region unity base
@@ -753,17 +755,22 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
 
-    public void OpenBoxReq(string userId, int boxId)
+    public void OpenBoxReq(string userId, int boxId, Action<MsgOpenBoxAck> callback)
     {
         MsgOpenBoxReq msg = new MsgOpenBoxReq();
         msg.UserId = userId;
         msg.BoxId = boxId;
+        _boxOpenCallback = callback;
         _httpSender.OpenBoxReq(msg);
         UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
     }
 
     void OnOpenBoxAck(MsgOpenBoxAck msg)
     {
+        if (_boxOpenCallback != null)
+        {
+            _boxOpenCallback.Invoke(msg);
+        }
         UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
     #endregion

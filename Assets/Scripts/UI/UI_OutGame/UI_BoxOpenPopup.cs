@@ -1,7 +1,12 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
+
+using System.Collections;
 using System.Collections.Generic;
 using ED;
 using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,9 +50,13 @@ public class UI_BoxOpenPopup : UI_Popup
 
     [Header("Sprite")]
     public Sprite[] arrSprite_CostType;
+
+    private int boxID;
     
     public void Initialize(int id, COST_TYPE costType, int cost)
     {
+        boxID = id;
+        
         var data = JsonDataManager.Get().dataBoxInfo.GetData(id);
         var classData = new List<RewardData>(data.classRewards[UserInfoManager.Get().GetUserInfo().nClass]);
         
@@ -106,6 +115,14 @@ public class UI_BoxOpenPopup : UI_Popup
 
     public void Click_Open()
     {
-        
+        NetworkManager.Get().OpenBoxReq(UserInfoManager.Get().GetUserInfo().userID, boxID, Callback_BoxOpen);
+    }
+
+    public void Callback_BoxOpen(MsgOpenBoxAck msg)
+    {
+        for (int i = 0; i < msg.BoxReward.Length; i++)
+        {
+            Debug.Log($"Reward   ID:{msg.BoxReward[i].Id} , Type:{msg.BoxReward[i].RewardType.ToString()}, Count:{msg.BoxReward[i].Value}");
+        }
     }
 }

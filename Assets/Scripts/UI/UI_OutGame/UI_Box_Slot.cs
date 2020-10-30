@@ -1,4 +1,6 @@
-﻿#define ENABLE_LOG
+﻿#if UNITY_EDITOR
+#define ENABLE_LOG
+#endif
 
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +36,7 @@ public class UI_Box_Slot : MonoBehaviour
         needKey = needKeyCount;
         //Debug.LogFormat("ID:{0}, COUNT:{1}, KEY:{2}", id, count, needKeyCount);
 
-        bool isEnable = true;//needKeyCount <= UserInfoManager.Get().GetUserInfo().key;
+        bool isEnable = needKeyCount <= UserInfoManager.Get().GetUserInfo().key;
         btn.interactable = isEnable;
         text_Cost.text = needKeyCount.ToString();
         text_Count.text = $"x{count}";

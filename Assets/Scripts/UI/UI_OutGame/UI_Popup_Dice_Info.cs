@@ -62,10 +62,17 @@ namespace ED
         public void Initialize(DiceInfoData pData)
         {
             data = pData;
-            ui_getted_dice.Initialize(data, 0, 0);
+            int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
+            int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
+            int goldCost = 0;
+            ui_getted_dice.Initialize(data, diceLevel, diceCount);
             
             text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
+
+            btn_Use.interactable = diceLevel > 0;
+            btn_Upgrade.interactable = (UserInfoManager.Get().GetUserInfo().gold >= goldCost) &&
+                                       (diceCount >= Global.g_needDiceCount[diceLevel]);
 
             SetUnitGrade();
             SetInfoDesc();

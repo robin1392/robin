@@ -98,6 +98,8 @@ public class UI_InGamePopup_Result : MonoBehaviour
     {
         btn_ShowValues.gameObject.SetActive(false);
         StartCoroutine(ShowResultValuesCoroutine());
+
+        SoundManager.instance.Play(isWin ? Global.E_SOUND.SFX_WIN : Global.E_SOUND.SFX_LOSE);
     }
 
     IEnumerator ShowResultValuesCoroutine()

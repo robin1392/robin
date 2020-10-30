@@ -1381,6 +1381,7 @@ MonoBehaviour:
   slotNum: 0
   image_DiceGuageBG: {fileID: 5046297151549663768}
   image_DiceGuage: {fileID: 159409965}
+  obj_UpgradeIcon: {fileID: 1927294114}
   text_DiceCount: {fileID: 143046286}
   text_DiceLevel: {fileID: 3561196426392618691}
   image_GradeBG: {fileID: 5173148601974419704}

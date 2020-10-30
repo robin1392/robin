@@ -846,6 +846,9 @@ namespace ED
 
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
+
+            SoundManager.instance.StopBGM();
+            SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }
         
         /*public void EndGame(PhotonMessageInfo info)

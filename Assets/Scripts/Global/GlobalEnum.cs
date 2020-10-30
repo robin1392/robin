@@ -148,17 +148,22 @@ public partial class Global
         // BGM
         BGM_LOBBY = 0,
         BGM_INGAME_BATTLE,
+        BGM_INGAME_WIN,
+        BGM_INGAME_LOSE,
         
         // SFX
-        SFX_WIN = 100,
-        SFX_LOSE,
-        SFX_MINION_DEATH,
+        SFX_MINION_DEATH = 100,
         SFX_MINION_GENERATE,
         SFX_MINION_HIT,
         SFX_MINION_BOW_SHOT,
-        
+        SFX_FIREBALL_FIRE,
+        SFX_FIREBALL_EXPLOSION,
+
         // UI
         SFX_UI_BUTTON = 10000,
+        SFX_WIN,
+        SFX_LOSE,
+        SFX_UI_PERFECT,
     }
     
     #endregion

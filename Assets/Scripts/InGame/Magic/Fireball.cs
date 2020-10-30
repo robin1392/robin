@@ -26,6 +26,8 @@ namespace ED
             isBombed = false;
             ps_Tail.transform.localScale = Vector3.one * Mathf.Lerp(1f, 3f, (eyeLevel - 1) / 5f);
             ps_BombEffect.transform.localScale = Vector3.one * Mathf.Lerp(0.7f, 1f, (eyeLevel - 1) / 5f);
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_FIREBALL_FIRE);
         }
 
         protected override IEnumerator Move()
@@ -121,6 +123,8 @@ namespace ED
             rb.velocity = Vector3.zero;
             ps_Tail.Stop();
             ps_BombEffect.Play();
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_FIREBALL_EXPLOSION);
 
             Destroy(1.1f);
         }
