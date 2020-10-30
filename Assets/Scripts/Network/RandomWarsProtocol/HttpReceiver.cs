@@ -40,6 +40,11 @@ namespace RandomWarsProtocol
         public delegate void OpenBoxAckDelegate(MsgOpenBoxAck msg);
         public OpenBoxAckDelegate OpenBoxAck;
 
+        public delegate Task<string> LevelUpDiceReqDelegate(MsgLevelUpDiceReq msg);
+        public LevelUpDiceReqDelegate LevelUpDiceReq;
+        public delegate void LevelUpDiceAckDelegate(MsgLevelUpDiceAck msg);
+        public LevelUpDiceAckDelegate LevelUpDiceAck;
+
 
         public async Task<string> ProcessAsync(int protocolId, string json)
         {
@@ -98,6 +103,15 @@ namespace RandomWarsProtocol
 
                         MsgOpenBoxReq msg = JsonConvert.DeserializeObject<MsgOpenBoxReq>(json);
                         ackJson = await OpenBoxReq(msg);
+                    }
+                    break;
+                case GameProtocol.LEVELUP_DICE_REQ:
+                    {
+                        if (LevelUpDiceReq == null)
+                            return ackJson;
+
+                        MsgLevelUpDiceReq msg = JsonConvert.DeserializeObject<MsgLevelUpDiceReq>(json);
+                        ackJson = await LevelUpDiceReq(msg);
                     }
                     break;
             }
@@ -162,6 +176,15 @@ namespace RandomWarsProtocol
 
                         MsgOpenBoxAck msg = JsonConvert.DeserializeObject<MsgOpenBoxAck>(json);
                         OpenBoxAck(msg);
+                    }
+                    break;
+                case GameProtocol.LEVELUP_DICE_ACK:
+                    {
+                        if (LevelUpDiceAck == null)
+                            return false;
+
+                        MsgLevelUpDiceAck msg = JsonConvert.DeserializeObject<MsgLevelUpDiceAck>(json);
+                        LevelUpDiceAck(msg);
                     }
                     break;
             }

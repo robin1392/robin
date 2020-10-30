@@ -86,5 +86,16 @@ namespace RandomWarsProtocol
         {
             return JsonConvert.SerializeObject(msg);
         }
+
+        public void LevelUpDiceReq(MsgLevelUpDiceReq msg)
+        {
+            _httpService.Send((int)GameProtocol.LEVELUP_DICE_REQ, "dicelevelup", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string LevelUpDiceAck(MsgLevelUpDiceAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
     }
 }

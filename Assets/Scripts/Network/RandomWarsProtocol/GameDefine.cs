@@ -25,6 +25,15 @@ namespace RandomWarsProtocol
     }
 
 
+    public enum DICE_GRADE
+    {
+        NORMAL = 0,
+        MAGIC = 1,
+        EPIC = 2,
+        LEGEND = 3,
+    }
+
+
     public enum ERewardType : byte
     {
         None = 0,
