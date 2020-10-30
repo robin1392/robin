@@ -62,8 +62,15 @@ namespace ED
         public void Initialize(DiceInfoData pData)
         {
             data = pData;
-            int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
-            int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
+            int diceLevel = 0;
+            int diceCount = 0;
+            
+            if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(data.id))
+            {
+                diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
+                diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
+            }
+            
             int goldCost = 0;
             ui_getted_dice.Initialize(data, diceLevel, diceCount);
             
