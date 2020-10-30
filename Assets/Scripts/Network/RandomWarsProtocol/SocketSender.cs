@@ -386,19 +386,19 @@ namespace RandomWarsProtocol
         }
 
 
-        public void LevelUpDiceReq(Peer peer, short resetFieldNum, short leveupFieldNum) 
+        public void MergeDiceReq(Peer peer, short resetFieldNum, short leveupFieldNum) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(resetFieldNum);
                 bw.Write(leveupFieldNum);
-                peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_REQ, ms.ToArray());
+                peer.SendPacket((int)GameProtocol.MERGE_DICE_REQ, ms.ToArray());
             }
         }
 
 
-        public void LevelUpDiceAck(Peer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
+        public void MergeDiceAck(Peer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
         {
             using (var ms = new MemoryStream())
             {
@@ -408,12 +408,12 @@ namespace RandomWarsProtocol
                 bw.Write(leveupFieldNum);
                 bw.Write(levelUpDiceId);
                 bw.Write(level);
-                peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_ACK, ms.ToArray());
+                peer.SendPacket((int)GameProtocol.MERGE_DICE_ACK, ms.ToArray());
             }
         }
 
 
-        public void LevelUpDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
+        public void MergeDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
         {
             using (var ms = new MemoryStream())
             {
@@ -423,7 +423,7 @@ namespace RandomWarsProtocol
                 bw.Write(leveupFieldNum);
                 bw.Write(levelUpDiceId);
                 bw.Write(level);
-                peer.SendPacket((int)GameProtocol.LEVEL_UP_DICE_NOTIFY, ms.ToArray());
+                peer.SendPacket((int)GameProtocol.MERGE_DICE_NOTIFY, ms.ToArray());
             }
         }
 
@@ -545,7 +545,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, EGameResult gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
         {
             using (var ms = new MemoryStream())
             {

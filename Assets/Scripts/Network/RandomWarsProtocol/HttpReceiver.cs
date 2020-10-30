@@ -35,6 +35,15 @@ namespace RandomWarsProtocol
         public delegate void StopMatchAckDelegate(MsgStopMatchAck msg);
         public StopMatchAckDelegate StopMatchAck;
 
+        public delegate Task<string> OpenBoxReqDelegate(MsgOpenBoxReq msg);
+        public OpenBoxReqDelegate OpenBoxReq;
+        public delegate void OpenBoxAckDelegate(MsgOpenBoxAck msg);
+        public OpenBoxAckDelegate OpenBoxAck;
+
+        public delegate Task<string> LevelUpDiceReqDelegate(MsgLevelUpDiceReq msg);
+        public LevelUpDiceReqDelegate LevelUpDiceReq;
+        public delegate void LevelUpDiceAckDelegate(MsgLevelUpDiceAck msg);
+        public LevelUpDiceAckDelegate LevelUpDiceAck;
 
 
         public async Task<string> ProcessAsync(int protocolId, string json)
@@ -85,6 +94,24 @@ namespace RandomWarsProtocol
 
                         MsgStopMatchReq msg = JsonConvert.DeserializeObject<MsgStopMatchReq>(json);
                         ackJson = await StopMatchReq(msg);
+                    }
+                    break;
+                case GameProtocol.OPEN_BOX_REQ:
+                    {
+                        if (OpenBoxReq == null)
+                            return ackJson;
+
+                        MsgOpenBoxReq msg = JsonConvert.DeserializeObject<MsgOpenBoxReq>(json);
+                        ackJson = await OpenBoxReq(msg);
+                    }
+                    break;
+                case GameProtocol.LEVELUP_DICE_REQ:
+                    {
+                        if (LevelUpDiceReq == null)
+                            return ackJson;
+
+                        MsgLevelUpDiceReq msg = JsonConvert.DeserializeObject<MsgLevelUpDiceReq>(json);
+                        ackJson = await LevelUpDiceReq(msg);
                     }
                     break;
             }
@@ -140,6 +167,24 @@ namespace RandomWarsProtocol
 
                         MsgStopMatchAck msg = JsonConvert.DeserializeObject<MsgStopMatchAck>(json);
                         StopMatchAck(msg);
+                    }
+                    break;
+                case GameProtocol.OPEN_BOX_ACK:
+                    {
+                        if (OpenBoxAck == null)
+                            return false;
+
+                        MsgOpenBoxAck msg = JsonConvert.DeserializeObject<MsgOpenBoxAck>(json);
+                        OpenBoxAck(msg);
+                    }
+                    break;
+                case GameProtocol.LEVELUP_DICE_ACK:
+                    {
+                        if (LevelUpDiceAck == null)
+                            return false;
+
+                        MsgLevelUpDiceAck msg = JsonConvert.DeserializeObject<MsgLevelUpDiceAck>(json);
+                        LevelUpDiceAck(msg);
                     }
                     break;
             }

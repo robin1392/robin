@@ -228,13 +228,14 @@ GameObject:
   - component: {fileID: 1927294115}
   - component: {fileID: 1927294117}
   - component: {fileID: 1927294116}
+  - component: {fileID: 4105698667641019382}
   m_Layer: 5
   m_Name: Image_Upgrade_Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1927294115
 RectTransform:
   m_ObjectHideFlags: 0
@@ -251,7 +252,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -88, y: 0}
+  m_AnchoredPosition: {x: -88, y: 15.3}
   m_SizeDelta: {x: 64, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1927294117
@@ -292,6 +293,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &4105698667641019382
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927294114}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 64b2f6e91e35740d3ad7401d10da42b4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1362471056029492224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1381,6 +1401,7 @@ MonoBehaviour:
   slotNum: 0
   image_DiceGuageBG: {fileID: 5046297151549663768}
   image_DiceGuage: {fileID: 159409965}
+  obj_UpgradeIcon: {fileID: 1927294114}
   text_DiceCount: {fileID: 143046286}
   text_DiceLevel: {fileID: 3561196426392618691}
   image_GradeBG: {fileID: 5173148601974419704}

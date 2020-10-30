@@ -41,5 +41,7 @@ public class UI_WinLose : MonoBehaviour
     private void ActivatePerfect()
     {
         obj_Perfect.SetActive(true);
+
+        SoundManager.instance.Play(Global.E_SOUND.SFX_UI_PERFECT);
     }
 }

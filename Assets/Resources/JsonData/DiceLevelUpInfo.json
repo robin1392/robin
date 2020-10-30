@@ -1,0 +1,207 @@
+{
+    "1": {
+        "level" : 1,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 1,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            }
+        ]
+    },
+    "2": {
+        "level" : 2,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 2,
+                "needGold" : 5,
+                "addTowerHp" : 10
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            }
+        ]
+    },
+    "3": {
+        "level" : 3,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 4,
+                "needGold" : 20,
+                "addTowerHp" : 10
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 1,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            }
+        ]
+    },
+    "5": {
+        "level" : 5,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 20,
+                "needGold" : 150,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 4,
+                "needGold" : 150,
+                "addTowerHp" : 10
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 1,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            }
+        ]
+    },
+    "6": {
+        "level" : 6,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 50,
+                "needGold" : 400,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 10,
+                "needGold" : 400,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 2,
+                "needGold" : 400,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            }
+        ]
+    },
+    "7": {
+        "level" : 7,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 100,
+                "needGold" : 1000,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 20,
+                "needGold" : 1000,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 4,
+                "needGold" : 1000,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 1,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            }
+        ]
+    },
+    "8": {
+        "level" : 8,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 200,
+                "needGold" : 2000,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 50,
+                "needGold" : 2000,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 10,
+                "needGold" : 2000,
+                "addTowerHp" : 15
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 2,
+                "needGold" : 4000,
+                "addTowerHp" : 20
+            }
+        ]
+    }
+
+
+}

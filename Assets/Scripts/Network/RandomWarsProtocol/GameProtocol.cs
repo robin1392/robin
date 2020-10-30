@@ -24,6 +24,12 @@ namespace RandomWarsProtocol
         STOP_MATCH_REQ,
         STOP_MATCH_ACK,
 
+        OPEN_BOX_REQ,
+        OPEN_BOX_ACK,
+
+        LEVELUP_DICE_REQ,
+        LEVELUP_DICE_ACK,
+
 
         END_HTTP,
         
@@ -70,9 +76,9 @@ namespace RandomWarsProtocol
         HIT_DAMAGE_ACK,
         HIT_DAMAGE_NOTIFY,
 
-        LEVEL_UP_DICE_REQ,
-        LEVEL_UP_DICE_ACK,
-        LEVEL_UP_DICE_NOTIFY,
+        MERGE_DICE_REQ,
+        MERGE_DICE_ACK,
+        MERGE_DICE_NOTIFY,
 
         INGAME_UP_DICE_REQ,
         INGAME_UP_DICE_ACK,

@@ -146,6 +146,8 @@ public class NetworkManager : Singleton<NetworkManager>
     private NetInfo _netInfo = null;
 
     private NetBattleInfo _battleInfo = null;
+
+    private Action<MsgOpenBoxAck> _boxOpenCallback;
     #endregion
 
     #region unity base
@@ -208,6 +210,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.StartMatchAck = OnStartMatchAck;
         _httpReceiver.StatusMatchAck = OnStatusMatchAck;
         _httpReceiver.StopMatchAck = OnStopMatchAck;
+        _httpReceiver.OpenBoxAck = OnOpenBoxAck;
 
 
 
@@ -406,7 +409,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
         _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
         _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
-        _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
+        _packetRecv.MergeDiceAck = _socketRecv.OnMergeDiceAck;
 
         _packetRecv.UpgradeSpAck = _socketRecv.OnUpgradeSpAck;
         _packetRecv.InGameUpDiceAck = _socketRecv.OnInGameUpDiceAck;
@@ -421,7 +424,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.SpawnNotify = _socketRecv.OnSpawnNotify;
         _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
 
-        _packetRecv.LevelUpDiceNotify = _socketRecv.OnLevelUpDiceNotify;
+        _packetRecv.MergeDiceNotify = _socketRecv.OnMergeDiceNotify;
         _packetRecv.UpgradeSpNotify = _socketRecv.OnUpgradeSpNotify;
         _packetRecv.InGameUpDiceNotify = _socketRecv.OnInGameUpDiceNotify;
 
@@ -620,6 +623,7 @@ public class NetworkManager : Singleton<NetworkManager>
         UserInfoManager.Get().SetUserInfo(msg.UserInfo);
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);
+        UserInfoManager.Get().SetBox(msg.UserBox);
 
         GameStateManager.Get().UserAuthOK();
         UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
@@ -749,6 +753,26 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV DECK UPDATE => userid", string.Format("index:{0}, deck:[{1}]", msg.DeckIndex, string.Join(",", msg.DiceIds)), "green");
     }
 
+
+
+    public void OpenBoxReq(string userId, int boxId, Action<MsgOpenBoxAck> callback)
+    {
+        MsgOpenBoxReq msg = new MsgOpenBoxReq();
+        msg.UserId = userId;
+        msg.BoxId = boxId;
+        _boxOpenCallback = callback;
+        _httpSender.OpenBoxReq(msg);
+        UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
+    }
+
+    void OnOpenBoxAck(MsgOpenBoxAck msg)
+    {
+        if (_boxOpenCallback != null)
+        {
+            _boxOpenCallback.Invoke(msg);
+        }
+        UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    }
     #endregion
 }
 

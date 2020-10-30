@@ -846,6 +846,9 @@ namespace ED
 
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
+
+            SoundManager.instance.StopBGM();
+            SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }
         
         /*public void EndGame(PhotonMessageInfo info)
@@ -1240,7 +1243,7 @@ namespace ED
 
         public void SendDiceLevelUp(int resetFieldNum, int levelUpFieldNum)
         {
-            SendInGameManager(GameProtocol.LEVEL_UP_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
+            SendInGameManager(GameProtocol.MERGE_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
         }
 
         public void SendInGameUpgrade(int diceId, int slotNum)
@@ -1291,9 +1294,9 @@ namespace ED
 
                     break;
                 }
-                case GameProtocol.LEVEL_UP_DICE_ACK:
+                case GameProtocol.MERGE_DICE_ACK:
                 {
-                    MsgLevelUpDiceAck lvupDiceack = (MsgLevelUpDiceAck) param[0];
+                    MsgMergeDiceAck lvupDiceack = (MsgMergeDiceAck) param[0];
                     playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum, lvupDiceack.LevelupDiceId, lvupDiceack.Level);
 
                     break;
@@ -1371,9 +1374,9 @@ namespace ED
 
                     break;
                 }
-                case GameProtocol.LEVEL_UP_DICE_NOTIFY:
+                case GameProtocol.MERGE_DICE_NOTIFY:
                 {
-                    MsgLevelUpDiceNotify lvupdiceNoti = (MsgLevelUpDiceNotify) param[0];
+                    MsgMergeDiceNotify lvupdiceNoti = (MsgMergeDiceNotify) param[0];
                     
                     if (NetworkManager.Get().OtherUID == lvupdiceNoti.PlayerUId )
                         playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);
@@ -1402,7 +1405,7 @@ namespace ED
                 {
                     MsgEndGameNotify endNoti = (MsgEndGameNotify) param[0];
                     
-                    EndGame((EGameResult.Victory == endNoti.GameResult || EGameResult.VictoryByDefault == endNoti.GameResult), Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward);
+                    EndGame((GAME_RESULT.VICTORY == endNoti.GameResult || GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.GameResult), Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward);
                     
                     break;
                 }

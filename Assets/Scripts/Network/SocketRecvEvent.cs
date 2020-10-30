@@ -202,20 +202,20 @@ public class SocketRecvEvent
 
     }
 
-    public void OnLevelUpDiceAck(Peer peer, MsgLevelUpDiceAck msg)
+    public void OnMergeDiceAck(Peer peer, MsgMergeDiceAck msg)
     {
-        UnityUtil.Print(" level up dice recv ", "errocode : " + msg.ErrorCode, "white");
+        UnityUtil.Print(" merge dice recv ", "errocode : " + msg.ErrorCode, "white");
         
         // 차후엔 에러처리를 해야된다..
         if (msg.ErrorCode != 0)
         {
-            UnityUtil.Print(" level up dice recv ", "errocode : " + msg.ErrorCode, "red");
+            UnityUtil.Print(" merge dice recv ", "errocode : " + msg.ErrorCode, "red");
             return;
         }
             
 
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.LEVEL_UP_DICE_ACK, msg);
+            InGameManager.Get().RecvInGameManager(GameProtocol.MERGE_DICE_ACK, msg);
     }
 
     public void OnUpgradeSpAck(Peer peer, MsgUpgradeSpAck msg)
@@ -341,13 +341,13 @@ public class SocketRecvEvent
 
     }
 
-    public void OnLevelUpDiceNotify(Peer peer, MsgLevelUpDiceNotify msg)
+    public void OnMergeDiceNotify(Peer peer, MsgMergeDiceNotify msg)
     {
-        UnityUtil.Print("level up dice Notify", msg.PlayerUId.ToString() + "  " + msg.LevelupDiceId.ToString(), "white");
+        UnityUtil.Print("merge dice Notify", msg.PlayerUId.ToString() + "  " + msg.LevelupDiceId.ToString(), "white");
 
         // other dice level up
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.LEVEL_UP_DICE_NOTIFY, msg);
+            InGameManager.Get().RecvInGameManager(GameProtocol.MERGE_DICE_NOTIFY, msg);
     }
 
     public void OnUpgradeSpNotify(Peer peer, MsgUpgradeSpNotify msg)

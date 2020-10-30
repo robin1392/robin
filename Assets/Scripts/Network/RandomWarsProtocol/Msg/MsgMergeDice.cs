@@ -3,7 +3,7 @@
 namespace RandomWarsProtocol.Msg
 {
     [Serializable]
-    public class MsgLevelUpDiceReq
+    public class MsgMergeDiceReq
     {
         public short ResetFieldNum;
         public short LeveupFieldNum;
@@ -11,7 +11,7 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
-    public class MsgLevelUpDiceAck
+    public class MsgMergeDiceAck
     {
         public short ErrorCode;
         public short ResetFieldNum;
@@ -22,7 +22,7 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
-    public class MsgLevelUpDiceNotify
+    public class MsgMergeDiceNotify
     {
         public ushort PlayerUId;
         public short ResetFieldNum;

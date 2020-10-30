@@ -43,9 +43,9 @@ public class SocketSendEvent
                 _sender.GetDiceReq(peer);
                 break;
             }
-            case GameProtocol.LEVEL_UP_DICE_REQ:
+            case GameProtocol.MERGE_DICE_REQ:
             {
-                _sender.LevelUpDiceReq(peer , (short)param[0] , (short)param[1]);
+                _sender.MergeDiceReq(peer , (short)param[0] , (short)param[1]);
                 break;
             }
             case GameProtocol.UPGRADE_SP_REQ:

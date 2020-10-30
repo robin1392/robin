@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG;
 using DG.Tweening;
-
+using RandomWarsProtocol;
 
 namespace ED
 {
@@ -62,10 +62,17 @@ namespace ED
         public void Initialize(DiceInfoData pData)
         {
             data = pData;
-            ui_getted_dice.Initialize(data, 0, 0);
+            int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
+            int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
+            int goldCost = 0;
+            ui_getted_dice.Initialize(data, diceLevel, diceCount);
             
             text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
+
+            btn_Use.interactable = diceLevel > 0;
+            btn_Upgrade.interactable = (UserInfoManager.Get().GetUserInfo().gold >= goldCost) &&
+                                       (diceCount >= Global.g_needDiceCount[diceLevel]);
 
             SetUnitGrade();
             SetInfoDesc();
@@ -134,10 +141,10 @@ namespace ED
                 case (int)DICE_GRADE.MAGIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_MAGIC;
                     break;
-                case (int)DICE_GRADE.HEROIC:
+                case (int)DICE_GRADE.EPIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_EPIC;
                     break;
-                case (int)DICE_GRADE.LEGENDARY:
+                case (int)DICE_GRADE.LEGEND:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_LEGEND;
                     break;
             }

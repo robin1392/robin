@@ -8,14 +8,6 @@ using UnityEngine;
 /// </summary>
 namespace ED
 {
-    public enum DICE_GRADE
-    {
-        NORMAL = 0,
-        MAGIC = 1,
-        HEROIC = 2,
-        LEGENDARY = 3,
-    }
-    
     public enum DICE_CAST_TYPE
     {
         MINION = 0,
@@ -145,13 +137,25 @@ public partial class Global
 
     public enum E_SOUND
     {
-        BGM_LOBBY,
+        // BGM
+        BGM_LOBBY = 0,
         BGM_INGAME_BATTLE,
-        SFX_MINION_DEATH,
+        BGM_INGAME_WIN,
+        BGM_INGAME_LOSE,
+        
+        // SFX
+        SFX_MINION_DEATH = 100,
         SFX_MINION_GENERATE,
         SFX_MINION_HIT,
         SFX_MINION_BOW_SHOT,
-        SFX_UI_BUTTON,
+        SFX_FIREBALL_FIRE,
+        SFX_FIREBALL_EXPLOSION,
+
+        // UI
+        SFX_UI_BUTTON = 10000,
+        SFX_WIN,
+        SFX_LOSE,
+        SFX_UI_PERFECT,
     }
     
     #endregion

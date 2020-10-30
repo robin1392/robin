@@ -39,25 +39,25 @@ public class UI_InGamePopup_Result : MonoBehaviour
 
         List<MsgReward> list = new List<MsgReward>(normalReward);
         int normalTrophy = 0;
-        var nt = list.Find(msg => msg.RewardType == ERewardType.Trophy);
+        var nt = list.Find(msg => msg.RewardType == REWARD_TYPE.TROPHY);
         if (nt != null) normalTrophy = nt.Value;
         int normalGold = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Gold);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.GOLD);
         if (nt != null) normalGold = nt.Value;
         int normalKey = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Key);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.KEY);
         if (nt != null) normalKey = nt.Value;
         arrValue[0].Initialize(normalTrophy, normalGold, normalKey);
         
         list = new List<MsgReward>(streakReward);
         int streakTrophy = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Trophy);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.TROPHY);
         if (nt != null) streakTrophy = nt.Value;
         int streakGold = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Gold);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.GOLD);
         if (nt != null) streakGold = nt.Value;
         int streakKey = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Key);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.KEY);
         if (nt != null) streakKey = nt.Value;
         arrValue[1].Initialize(streakTrophy, streakGold, streakKey);
         text_WinningStreak.text = winningStreak.ToString();
@@ -65,13 +65,13 @@ public class UI_InGamePopup_Result : MonoBehaviour
         
         list = new List<MsgReward>(perfectReward);
         int perfectTrophy = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Trophy);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.TROPHY);
         if (nt != null) perfectTrophy = nt.Value;
         int perfectGold = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Gold);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.GOLD);
         if (nt != null) perfectGold = nt.Value;
         int perfectKey = 0;
-        nt = list.Find(msg => msg.RewardType == ERewardType.Key);
+        nt = list.Find(msg => msg.RewardType == REWARD_TYPE.KEY);
         if (nt != null) perfectKey = nt.Value;
         arrValue[2].Initialize(perfectTrophy, perfectGold, perfectKey);
 
@@ -98,6 +98,8 @@ public class UI_InGamePopup_Result : MonoBehaviour
     {
         btn_ShowValues.gameObject.SetActive(false);
         StartCoroutine(ShowResultValuesCoroutine());
+
+        SoundManager.instance.Play(isWin ? Global.E_SOUND.SFX_WIN : Global.E_SOUND.SFX_LOSE);
     }
 
     IEnumerator ShowResultValuesCoroutine()

@@ -24,5 +24,8 @@ namespace RandomWarsProtocol
 
         ERROR_PAUSE_LIMIT                               = 20001,
 
+
+        ERROR_BOX_NOT_FOUND                         = 30001,                // box를 찾을 수 없습니다.
+        ERROR_BOX_COUNT_LACK                         = 30002,                // box 수량이 부족하다.
     }
 }

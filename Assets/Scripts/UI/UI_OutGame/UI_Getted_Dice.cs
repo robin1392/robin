@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using ParadoxNotion.Design;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,6 +27,7 @@ namespace ED
         [Header("Dice Info")]
         public Image image_DiceGuageBG;
         public Image image_DiceGuage;
+        public GameObject obj_UpgradeIcon;
         public Text text_DiceCount;
         public Text text_DiceLevel;
 
@@ -63,6 +65,9 @@ namespace ED
             text_DiceLevel.text = $"{Global.g_level} {level}";
             text_DiceCount.text = $"{count}/{Global.g_needDiceCount[level]}";
             image_DiceGuage.fillAmount = count / (float)Global.g_needDiceCount[level];
+            image_DiceGuage.color =
+                count >= Global.g_needDiceCount[level] ? Color.green : UnityUtil.HexToColor("6AD3E5");
+            obj_UpgradeIcon.SetActive(count >= Global.g_needDiceCount[level]);
             
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
