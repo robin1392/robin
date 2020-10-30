@@ -407,7 +407,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
         _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
         _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
-        _packetRecv.LevelUpDiceAck = _socketRecv.OnLevelUpDiceAck;
+        _packetRecv.MergeDiceAck = _socketRecv.OnMergeDiceAck;
 
         _packetRecv.UpgradeSpAck = _socketRecv.OnUpgradeSpAck;
         _packetRecv.InGameUpDiceAck = _socketRecv.OnInGameUpDiceAck;
@@ -422,7 +422,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.SpawnNotify = _socketRecv.OnSpawnNotify;
         _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
 
-        _packetRecv.LevelUpDiceNotify = _socketRecv.OnLevelUpDiceNotify;
+        _packetRecv.MergeDiceNotify = _socketRecv.OnMergeDiceNotify;
         _packetRecv.UpgradeSpNotify = _socketRecv.OnUpgradeSpNotify;
         _packetRecv.InGameUpDiceNotify = _socketRecv.OnInGameUpDiceNotify;
 

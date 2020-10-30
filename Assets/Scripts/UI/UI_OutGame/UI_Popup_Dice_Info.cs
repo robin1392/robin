@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG;
 using DG.Tweening;
-
+using RandomWarsProtocol;
 
 namespace ED
 {
@@ -134,10 +134,10 @@ namespace ED
                 case (int)DICE_GRADE.MAGIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_MAGIC;
                     break;
-                case (int)DICE_GRADE.HEROIC:
+                case (int)DICE_GRADE.EPIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_EPIC;
                     break;
-                case (int)DICE_GRADE.LEGENDARY:
+                case (int)DICE_GRADE.LEGEND:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_LEGEND;
                     break;
             }

@@ -95,4 +95,19 @@ namespace RandomWarsProtocol.Msg
         public MsgReward[] BoxReward;
         public int Key;
     }
+
+
+    [Serializable]
+    public class MsgLevelUpDiceReq
+    {
+        public string UserId;
+        public int DiceId;
+    }
+
+
+    [Serializable]
+    public class MsgLevelUpDiceAck
+    {
+        public short ErrorCode;
+    }
 }

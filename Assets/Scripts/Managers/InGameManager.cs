@@ -1240,7 +1240,7 @@ namespace ED
 
         public void SendDiceLevelUp(int resetFieldNum, int levelUpFieldNum)
         {
-            SendInGameManager(GameProtocol.LEVEL_UP_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
+            SendInGameManager(GameProtocol.MERGE_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
         }
 
         public void SendInGameUpgrade(int diceId, int slotNum)
@@ -1291,9 +1291,9 @@ namespace ED
 
                     break;
                 }
-                case GameProtocol.LEVEL_UP_DICE_ACK:
+                case GameProtocol.MERGE_DICE_ACK:
                 {
-                    MsgLevelUpDiceAck lvupDiceack = (MsgLevelUpDiceAck) param[0];
+                    MsgMergeDiceAck lvupDiceack = (MsgMergeDiceAck) param[0];
                     playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum, lvupDiceack.LevelupDiceId, lvupDiceack.Level);
 
                     break;
@@ -1371,9 +1371,9 @@ namespace ED
 
                     break;
                 }
-                case GameProtocol.LEVEL_UP_DICE_NOTIFY:
+                case GameProtocol.MERGE_DICE_NOTIFY:
                 {
-                    MsgLevelUpDiceNotify lvupdiceNoti = (MsgLevelUpDiceNotify) param[0];
+                    MsgMergeDiceNotify lvupdiceNoti = (MsgMergeDiceNotify) param[0];
                     
                     if (NetworkManager.Get().OtherUID == lvupdiceNoti.PlayerUId )
                         playerController.targetPlayer.LevelUpDice(lvupdiceNoti.ResetFieldNum,lvupdiceNoti.LeveupFieldNum, lvupdiceNoti.LevelupDiceId, lvupdiceNoti.Level);

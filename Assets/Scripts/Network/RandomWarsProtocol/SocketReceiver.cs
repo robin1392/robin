@@ -54,11 +54,11 @@ namespace RandomWarsProtocol
         public delegate void GetDiceAckDelegate(Peer peer, MsgGetDiceAck msg);
         public GetDiceAckDelegate GetDiceAck;
 
-        public delegate void LevelUpDiceReqDelegate(Peer peer, MsgLevelUpDiceReq msg);
-        public LevelUpDiceReqDelegate LevelUpDiceReq;
+        public delegate void MergeDiceReqDelegate(Peer peer, MsgMergeDiceReq msg);
+        public MergeDiceReqDelegate MergeDiceReq;
 
-        public delegate void LevelUpDiceAckDelegate(Peer peer, MsgLevelUpDiceAck msg);
-        public LevelUpDiceAckDelegate LevelUpDiceAck;
+        public delegate void MergeDiceAckDelegate(Peer peer, MsgMergeDiceAck msg);
+        public MergeDiceAckDelegate MergeDiceAck;
 
         public delegate void InGameUpDiceReqDelegate(Peer peer, MsgInGameUpDiceReq msg);
         public InGameUpDiceReqDelegate InGameUpDiceReq;
@@ -118,8 +118,8 @@ namespace RandomWarsProtocol
         public delegate void GetDiceNotifyDelegate(Peer peer, MsgGetDiceNotify msg);
         public GetDiceNotifyDelegate GetDiceNotify;
 
-        public delegate void LevelUpDiceNotifyDelegate(Peer peer, MsgLevelUpDiceNotify msg);
-        public LevelUpDiceNotifyDelegate LevelUpDiceNotify;
+        public delegate void MergeDiceNotifyDelegate(Peer peer, MsgMergeDiceNotify msg);
+        public MergeDiceNotifyDelegate MergeDiceNotify;
 
         public delegate void InGameUpDiceNotifyDelegate(Peer peer, MsgInGameUpDiceNotify msg);
         public InGameUpDiceNotifyDelegate InGameUpDiceNotify;
@@ -794,57 +794,57 @@ namespace RandomWarsProtocol
                         }
                     }
                     break;
-                case GameProtocol.LEVEL_UP_DICE_REQ:
+                case GameProtocol.MERGE_DICE_REQ:
                     {
-                        if (LevelUpDiceReq == null)
+                        if (MergeDiceReq == null)
                             return false;
 
                         
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
-                            MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
+                            MsgMergeDiceReq msg = new MsgMergeDiceReq();
                             msg.ResetFieldNum = br.ReadInt16();
                             msg.LeveupFieldNum = br.ReadInt16();
-                            LevelUpDiceReq(peer, msg);
+                            MergeDiceReq(peer, msg);
                         }
                     }
                     break;
-                case GameProtocol.LEVEL_UP_DICE_ACK:
+                case GameProtocol.MERGE_DICE_ACK:
                     {
-                        if (LevelUpDiceAck == null)
+                        if (MergeDiceAck == null)
                             return false;
 
                         
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
-                            MsgLevelUpDiceAck msg = new MsgLevelUpDiceAck();
+                            MsgMergeDiceAck msg = new MsgMergeDiceAck();
                             msg.ErrorCode = br.ReadInt16();
                             msg.ResetFieldNum = br.ReadInt16();
                             msg.LeveupFieldNum = br.ReadInt16();
                             msg.LevelupDiceId = br.ReadInt32();
                             msg.Level = br.ReadInt16();
-                            LevelUpDiceAck(peer, msg);
+                            MergeDiceAck(peer, msg);
                         }
                     }
                     break;
-                case GameProtocol.LEVEL_UP_DICE_NOTIFY:
+                case GameProtocol.MERGE_DICE_NOTIFY:
                     {
-                        if (LevelUpDiceNotify == null)
+                        if (MergeDiceNotify == null)
                             return false;
 
                         
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
-                            MsgLevelUpDiceNotify msg = new MsgLevelUpDiceNotify();
+                            MsgMergeDiceNotify msg = new MsgMergeDiceNotify();
                             msg.PlayerUId = br.ReadUInt16();
                             msg.ResetFieldNum = br.ReadInt16();
                             msg.LeveupFieldNum = br.ReadInt16();
                             msg.LevelupDiceId = br.ReadInt32();
                             msg.Level = br.ReadInt16();
-                            LevelUpDiceNotify(peer, msg);
+                            MergeDiceNotify(peer, msg);
                         }
                     }
                     break;
