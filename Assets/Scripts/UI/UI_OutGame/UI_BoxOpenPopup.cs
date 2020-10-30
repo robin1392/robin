@@ -66,7 +66,7 @@ public class UI_BoxOpenPopup : UI_Popup
         var classData = new List<RewardData>(data.classRewards[UserInfoManager.Get().GetUserInfo().nClass]);
         
         // Gold
-        var goldData = classData.Find(d => d.rewardType == ERewardType.Gold);
+        var goldData = classData.Find(d => d.rewardType == REWARD_TYPE.GOLD);
         obj_Gold.SetActive(goldData != null);
         if (goldData != null)
         {
@@ -75,19 +75,19 @@ public class UI_BoxOpenPopup : UI_Popup
         
         int totalDiceCount = 0;
         // Normal Dice
-        var normalDiceData = classData.Find(d => d.rewardType == ERewardType.DiceNormal);
+        var normalDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_NORMAL);
         if (normalDiceData != null) totalDiceCount += normalDiceData.value;
         
         // Magic Dice
-        var magicDiceData = classData.Find(d => d.rewardType == ERewardType.DiceMagic);
+        var magicDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_MAGIC);
         if (magicDiceData != null) totalDiceCount += magicDiceData.value;
 
         // Epic Dice
-        var epicDiceData = classData.Find(d => d.rewardType == ERewardType.DiceEpic);
+        var epicDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_EPIC);
         if (epicDiceData != null) totalDiceCount += epicDiceData.value;
 
         // Legend Dice
-        var legendDiceData = classData.Find(d => d.rewardType == ERewardType.DiceLegend);
+        var legendDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_LEGEND);
         if (legendDiceData != null) totalDiceCount += legendDiceData.value;
         
         // Total Dice
@@ -95,7 +95,7 @@ public class UI_BoxOpenPopup : UI_Popup
         if (totalDiceCount > 0) text_Dice.text = $"x{totalDiceCount}";
         
         // Diamond
-        var diamondData = classData.Find(d => d.rewardType == ERewardType.Diamond);
+        var diamondData = classData.Find(d => d.rewardType == REWARD_TYPE.DIAMOND);
         obj_Diamond.SetActive(diamondData != null);
         if (diamondData != null)
         {

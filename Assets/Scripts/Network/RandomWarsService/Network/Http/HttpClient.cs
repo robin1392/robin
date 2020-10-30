@@ -52,10 +52,10 @@ namespace RandomWarsService.Network.Http
                     return;
                 }
 
-                HttpRequest request = _requestQueue.Peek();
+                HttpRequest request = _requestQueue.Dequeue();
                 if (RequestPost(request.ProtocolId, request.Url, request.Json) == true)
                 {
-                    _requestQueue.Dequeue();
+                    //_requestQueue.Dequeue();
                 }
             }
         }

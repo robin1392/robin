@@ -4,28 +4,21 @@ using System.Text;
 
 namespace RandomWarsProtocol
 {
-    public enum ETeamKind
+    public enum GAME_RESULT : byte
     {
-        Red,
-        Blue
-    }
-
-
-    public enum EGameResult
-    {
-        None,
+        NONE,
         // 승리
-        Victory,
+        VICTORY,
         // 부전승
-        VictoryByDefault,
+        VICTORY_BY_DEFAULT,
         // 패배
-        Defeat,
+        DEFEAT,
         // 무승부
-        Draw
+        DRAW
     }
 
 
-    public enum DICE_GRADE
+    public enum DICE_GRADE : byte
     {
         NORMAL = 0,
         MAGIC = 1,
@@ -33,34 +26,33 @@ namespace RandomWarsProtocol
         LEGEND = 3,
     }
 
-
-    public enum ERewardType : byte
+    public enum REWARD_TYPE : byte
     {
-        None = 0,
-        Trophy,
-        Gold,
-        Diamond,
-        Key,
-        Box,
-        DiceNormal,
-        DiceMagic,
-        DiceEpic,
-        DiceLegend,
+        NONE = 0,
+        TROPHY,
+        GOLD,
+        DIAMOND,
+        KEY,
+        BOX,
+        DICE_NORMAL,
+        DICE_MAGIC,
+        DICE_EPIC,
+        DICE_LEGEND,
     }
 
 
-    public enum EBoxType
+    public enum BOX_TYPE
     {
-        None,
-        CooperationBox,
-        BossBox,
+        NONE,
+        COOPERATION_BOX,
+        BOSS_BOX,
     }
 
 
-    public enum EGlobalDataType
+    public enum GLOBAL_DATA_KEY
     {
-        None,
-        startCoolTime,
-        waveTime,
+        NONE,
+        START_COOLTIME,
+        WAVE_TIME,
     }
 }

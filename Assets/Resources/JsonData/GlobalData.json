@@ -1,0 +1,9 @@
+{
+    "START_COOLTIME" : {
+        "value" : 10
+    },
+    "WAVE_TIME" : {
+        "value" : 20
+    }
+}
+

@@ -116,7 +116,7 @@ namespace RandomWarsProtocol
     [Serializable]
     public class MsgReward
     {
-        public ERewardType RewardType;
+        public REWARD_TYPE RewardType;
         public int Id;
         public int Value;
 
@@ -130,7 +130,7 @@ namespace RandomWarsProtocol
         public static MsgReward Read(BinaryReader br)
         {
             MsgReward data = new MsgReward();
-            data.RewardType = (ERewardType)br.ReadByte();
+            data.RewardType = (REWARD_TYPE)br.ReadByte();
             data.Id = br.ReadInt32();
             data.Value = br.ReadInt32();
             return data;

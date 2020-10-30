@@ -545,7 +545,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, EGameResult gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
         {
             using (var ms = new MemoryStream())
             {

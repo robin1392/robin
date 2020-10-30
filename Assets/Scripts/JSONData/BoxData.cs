@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 [Serializable]
 public class RewardData
 {
-    public ERewardType rewardType;
+    public REWARD_TYPE rewardType;
     public int value;
 }
 
@@ -18,7 +18,7 @@ public class BoxInfoData
 {
     public int id;
     public int needKey;
-    public EBoxType boxType;
+    public BOX_TYPE boxType;
     public RewardData[] rewardRate;
     public RewardData[] rewardKindNum;
     public Dictionary<int, RewardData[]> classRewards;
