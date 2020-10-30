@@ -159,19 +159,19 @@ public class UI_BoxOpenPopup : UI_Popup
 
             switch (msg.BoxReward[i].RewardType)
             {
-                case ERewardType.Trophy:
+                case REWARD_TYPE.TROPHY:
                     UserInfoManager.Get().GetUserInfo().trophy += msg.BoxReward[i].Value;
                     break;
-                case ERewardType.Gold:
+                case REWARD_TYPE.GOLD:
                     UserInfoManager.Get().GetUserInfo().gold += msg.BoxReward[i].Value;
                     break;
-                case ERewardType.Diamond:
+                case REWARD_TYPE.DIAMOND:
                     UserInfoManager.Get().GetUserInfo().diamond += msg.BoxReward[i].Value;
                     break;
-                case ERewardType.Key:
+                case REWARD_TYPE.KEY:
                     UserInfoManager.Get().GetUserInfo().key += msg.BoxReward[i].Value;
                     break;
-                case ERewardType.Box:
+                case REWARD_TYPE.BOX:
                     if (UserInfoManager.Get().GetUserInfo().dicBox.ContainsKey(msg.BoxReward[i].Id))
                     {
                         UserInfoManager.Get().GetUserInfo().dicBox[msg.BoxReward[i].Id] += msg.BoxReward[i].Value;
@@ -181,7 +181,7 @@ public class UI_BoxOpenPopup : UI_Popup
                         UserInfoManager.Get().GetUserInfo().dicBox.Add(msg.BoxReward[i].Id, msg.BoxReward[i].Value);
                     }
                     break;
-                case ERewardType.DiceNormal:
+                case REWARD_TYPE.DICE_NORMAL:
                 {
                     if (level == 0)
                     {
@@ -196,7 +196,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     }
                 }
                     break;
-                case ERewardType.DiceMagic:
+                case REWARD_TYPE.DICE_MAGIC:
                 {
                     if (level == 0)
                     {
@@ -211,7 +211,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     }
                 }
                     break;
-                case ERewardType.DiceEpic:
+                case REWARD_TYPE.DICE_EPIC:
                 {
                     if (level == 0)
                     {
@@ -226,7 +226,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     }
                 }
                     break;
-                case ERewardType.DiceLegend:
+                case REWARD_TYPE.DICE_LEGEND:
                 {
                     if (level == 0)
                     {
