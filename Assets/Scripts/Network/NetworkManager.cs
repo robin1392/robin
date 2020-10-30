@@ -211,6 +211,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.StatusMatchAck = OnStatusMatchAck;
         _httpReceiver.StopMatchAck = OnStopMatchAck;
         _httpReceiver.OpenBoxAck = OnOpenBoxAck;
+        _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
 
 
 
@@ -772,6 +773,23 @@ public class NetworkManager : Singleton<NetworkManager>
             _boxOpenCallback.Invoke(msg);
         }
         UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    }
+
+
+
+
+    public void LevelUpDiceReq(string userId, int diceId)
+    {
+        MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
+        msg.UserId = userId;
+        msg.DiceId = diceId;
+        _httpSender.LevelUpDiceReq(msg);
+        UnityUtil.Print("SEND LEVELUP DICE => index", string.Format("diceId:{0}", diceId), "green");
+    }
+
+    void OnLevelUpDiceAck(MsgLevelUpDiceAck msg)
+    {
+        UnityUtil.Print("RECV LEVELUP DICE => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
     #endregion
 }
