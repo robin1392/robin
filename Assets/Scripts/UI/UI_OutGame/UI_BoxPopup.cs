@@ -16,16 +16,14 @@ public class UI_BoxPopup : UI_Popup
     public RectTransform rts_Content;
     public RectTransform rts_Grid;
 
-    private void Update()
+    public void Initialize()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Instantiate(pref_BoxSlot, rts_Grid);
-            ResizeFrame();
-        }
+        Clear();
+        SetBoxs();
+        ResizeFrame();
     }
 
-    public void Initialize()
+    public void RefreshBox()
     {
         Clear();
         SetBoxs();

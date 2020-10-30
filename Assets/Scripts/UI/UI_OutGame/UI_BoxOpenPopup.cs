@@ -2,6 +2,7 @@
 #define ENABLE_LOG
 #endif
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ED;
@@ -52,10 +53,14 @@ public class UI_BoxOpenPopup : UI_Popup
     public Sprite[] arrSprite_CostType;
 
     private int boxID;
+    private COST_TYPE costType;
+    private int cost;
     
     public void Initialize(int id, COST_TYPE costType, int cost)
     {
-        boxID = id;
+        this.boxID = id;
+        this.costType = costType;
+        this.cost = cost;
         
         var data = JsonDataManager.Get().dataBoxInfo.GetData(id);
         var classData = new List<RewardData>(data.classRewards[UserInfoManager.Get().GetUserInfo().nClass]);
@@ -120,9 +125,127 @@ public class UI_BoxOpenPopup : UI_Popup
 
     public void Callback_BoxOpen(MsgOpenBoxAck msg)
     {
+        // 재화 감소
+        switch (costType)
+        {
+            case COST_TYPE.KEY:
+                UserInfoManager.Get().GetUserInfo().key -= cost;
+                break;
+            case COST_TYPE.GOLD:
+                UserInfoManager.Get().GetUserInfo().gold -= cost;
+                break;
+            case COST_TYPE.DIAMOND:
+                UserInfoManager.Get().GetUserInfo().diamond -= cost;
+                break;
+        }
+
+        UserInfoManager.Get().GetUserInfo().dicBox[boxID]--;
+        if (UserInfoManager.Get().GetUserInfo().dicBox[boxID] == 0)
+        {
+            UserInfoManager.Get().GetUserInfo().dicBox.Remove(boxID);
+        }
+        
         for (int i = 0; i < msg.BoxReward.Length; i++)
         {
             Debug.Log($"Reward   ID:{msg.BoxReward[i].Id} , Type:{msg.BoxReward[i].RewardType.ToString()}, Count:{msg.BoxReward[i].Value}");
+
+            var level = 0;
+            var count = 0;
+            if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(msg.BoxReward[i].Id))
+            {
+                level = UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][0];
+                count = UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1];
+            }
+
+            switch (msg.BoxReward[i].RewardType)
+            {
+                case ERewardType.Trophy:
+                    UserInfoManager.Get().GetUserInfo().trophy += msg.BoxReward[i].Value;
+                    break;
+                case ERewardType.Gold:
+                    UserInfoManager.Get().GetUserInfo().gold += msg.BoxReward[i].Value;
+                    break;
+                case ERewardType.Diamond:
+                    UserInfoManager.Get().GetUserInfo().diamond += msg.BoxReward[i].Value;
+                    break;
+                case ERewardType.Key:
+                    UserInfoManager.Get().GetUserInfo().key += msg.BoxReward[i].Value;
+                    break;
+                case ERewardType.Box:
+                    if (UserInfoManager.Get().GetUserInfo().dicBox.ContainsKey(msg.BoxReward[i].Id))
+                    {
+                        UserInfoManager.Get().GetUserInfo().dicBox[msg.BoxReward[i].Id] += msg.BoxReward[i].Value;
+                    }
+                    else
+                    {
+                        UserInfoManager.Get().GetUserInfo().dicBox.Add(msg.BoxReward[i].Id, msg.BoxReward[i].Value);
+                    }
+                    break;
+                case ERewardType.DiceNormal:
+                {
+                    if (level == 0)
+                    {
+                        level = 1;
+                        count = msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                    }
+                    else
+                    {
+                        count += msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                    }
+                }
+                    break;
+                case ERewardType.DiceMagic:
+                {
+                    if (level == 0)
+                    {
+                        level = 3;
+                        count = msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                    }
+                    else
+                    {
+                        count += msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                    }
+                }
+                    break;
+                case ERewardType.DiceEpic:
+                {
+                    if (level == 0)
+                    {
+                        level = 5;
+                        count = msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                    }
+                    else
+                    {
+                        count += msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                    }
+                }
+                    break;
+                case ERewardType.DiceLegend:
+                {
+                    if (level == 0)
+                    {
+                        level = 7;
+                        count = msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                    }
+                    else
+                    {
+                        count += msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                    }
+                }
+                    break;
+            }
         }
+        
+        UI_Main.Get().boxPopup.RefreshBox();
+        UI_Main.Get().RefreshUserInfoUI();
+        UI_Main.Get().panel_Dice.RefreshGettedDice();
     }
 }

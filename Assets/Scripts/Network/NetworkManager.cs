@@ -769,7 +769,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (_boxOpenCallback != null)
         {
-            _boxOpenCallback.Invoke(msg);
+            _boxOpenCallback(msg);
         }
         UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
