@@ -185,7 +185,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = 1;
+                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_NORMAL).value;
                         count = msg.BoxReward[i].Value;
                         UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
                     }
@@ -200,7 +200,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = 3;
+                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_MAGIC).value;
                         count = msg.BoxReward[i].Value;
                         UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
                     }
@@ -215,7 +215,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = 5;
+                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_EPIC).value;
                         count = msg.BoxReward[i].Value;
                         UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
                     }
@@ -230,7 +230,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = 7;
+                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_LEGEND).value;
                         count = msg.BoxReward[i].Value;
                         UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
                     }
