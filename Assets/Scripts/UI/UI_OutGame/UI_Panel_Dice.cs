@@ -102,13 +102,13 @@ namespace ED
             ui_MainStage.Set();
         }
 
-        private void RefreshGettedDice()
+        public void RefreshGettedDice()
         {
             if (listGettedDice.Count > 0)
             {
                 for (int i = listGettedDice.Count - 1; i >= 0; --i)
                 {
-                    Destroy(listGettedDice[i].gameObject);
+                    DestroyImmediate(listGettedDice[i].gameObject);
                 }
             }
             
@@ -116,7 +116,7 @@ namespace ED
             {
                 for (int i = listUngettedDice.Count - 1; i >= 0; --i)
                 {
-                    Destroy(listUngettedDice[i].gameObject);
+                    DestroyImmediate(listUngettedDice[i].gameObject);
                 }
             }
             

@@ -65,7 +65,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
     - {fileID: 102900000, guid: 49e7240e681ef4b7abcca0678fbbe76c, type: 3}
     - {fileID: 102900000, guid: 484506e1f5f3b405d99003974efd1299, type: 3}
-    totalSpriteSurfaceArea: 11730035
+    totalSpriteSurfaceArea: 11733171
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -240,6 +240,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f5317c0da4daf48eab5a44761d1401c8, type: 3}
   - {fileID: 21300000, guid: cde7ce3d3794244b5830b67f4cb2a9ad, type: 3}
   - {fileID: 21300000, guid: d881f04de72204d5d966f7e0b09213a3, type: 3}
+  - {fileID: 21300000, guid: 5627616dc64514ac59c967369917d640, type: 3}
   - {fileID: 21300000, guid: 9640f56d99415452589c1b386a1989b3, type: 3}
   - {fileID: 21300000, guid: 94710c7dee16f418994af5221e9ab680, type: 3}
   - {fileID: 21300000, guid: bf01a88d87bbd4e199c01fa2a7786fb7, type: 3}
@@ -449,6 +450,7 @@ SpriteAtlas:
   - shop_BG_magic
   - shop_get_epic
   - shop_diamond1
+  - lobby_dice_upgrade_light
   - result_lose_8
   - shop_diamond3
   - ingame_dice_button

@@ -28,6 +28,7 @@ namespace ED
         public Image image_DiceGuageBG;
         public Image image_DiceGuage;
         public GameObject obj_UpgradeIcon;
+        public GameObject obj_UpgradeLight;
         public Text text_DiceCount;
         public Text text_DiceLevel;
 
@@ -68,6 +69,7 @@ namespace ED
             image_DiceGuage.color =
                 count >= Global.g_needDiceCount[level] ? Color.green : UnityUtil.HexToColor("6AD3E5");
             obj_UpgradeIcon.SetActive(count >= Global.g_needDiceCount[level]);
+            obj_UpgradeLight.SetActive(obj_UpgradeIcon.activeSelf);
             
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
