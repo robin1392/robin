@@ -2129,7 +2129,9 @@ namespace ED
                             }
                         }
                         
+                        #if ENABLE_LOG
                         UnityUtil.Print(string.Format("SEND [{0}] : ", InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
+                        #endif
                         NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, minionCount , msgMinPos, hp, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
                         _syncDictionary.Clear();
                         packetCount++;
@@ -2210,7 +2212,9 @@ namespace ED
                 }
             }
             
+            #if ENABLE_LOG
             UnityUtil.Print(string.Format("RECV [{0}] : ", packetCount), str, "green");
+            #endif
         }
 
         Dictionary<GameProtocol, List<object>> MsgMinionStatusToDictionary(MsgMinionStatus msg)

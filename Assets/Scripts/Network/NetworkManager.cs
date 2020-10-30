@@ -199,16 +199,16 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         _socketService = new SocketService();
 
-        IJsonSerializer jsonSerializer = new HttpJsonSerializer();
-        _httpReceiver = new HttpReceiver(jsonSerializer);
+        _httpReceiver = new HttpReceiver();
         _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
-        _httpSender = new HttpSender(_httpClient, jsonSerializer);
+        _httpSender = new HttpSender(_httpClient);
 
         _httpReceiver.AuthUserAck = OnAuthUserAck;
         _httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
         _httpReceiver.StartMatchAck = OnStartMatchAck;
         _httpReceiver.StatusMatchAck = OnStatusMatchAck;
         _httpReceiver.StopMatchAck = OnStopMatchAck;
+        _httpReceiver.OpenBoxAck = OnOpenBoxAck;
 
 
 
@@ -621,6 +621,7 @@ public class NetworkManager : Singleton<NetworkManager>
         UserInfoManager.Get().SetUserInfo(msg.UserInfo);
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);
+        UserInfoManager.Get().SetBox(msg.UserBox);
 
         GameStateManager.Get().UserAuthOK();
         UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
@@ -750,6 +751,21 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV DECK UPDATE => userid", string.Format("index:{0}, deck:[{1}]", msg.DeckIndex, string.Join(",", msg.DiceIds)), "green");
     }
 
+
+
+    public void OpenBoxReq(string userId, int boxId)
+    {
+        MsgOpenBoxReq msg = new MsgOpenBoxReq();
+        msg.UserId = userId;
+        msg.BoxId = boxId;
+        _httpSender.OpenBoxReq(msg);
+        UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
+    }
+
+    void OnOpenBoxAck(MsgOpenBoxAck msg)
+    {
+        UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    }
     #endregion
 }
 
@@ -1396,23 +1412,3 @@ public class ConvertNetMsg
 #endregion
 
 
-
-
-public class HttpJsonSerializer : IJsonSerializer
-{
-    public string SerializeObject<T>(T jObject)
-    {
-        return JsonHelper.ToJson<T>(jObject);
-    }
-
-    public T DeserializeObject<T>(string json)
-    {
-        return JsonHelper.Deserialize<T>(json);
-    }
-
-    public T[] DeserializeObjectArray<T>(string json)
-    {
-        return JsonHelper.DeserializeArray<T>(json);
-    }
-
-}

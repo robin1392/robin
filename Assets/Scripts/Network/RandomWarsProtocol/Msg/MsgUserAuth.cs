@@ -17,6 +17,7 @@ namespace RandomWarsProtocol.Msg
         public MsgUserInfo UserInfo;
         public MsgUserDeck[] UserDeck;
         public MsgUserDice[] UserDice;
+        public MsgUserBox[] UserBox;
     }
 
 
@@ -76,5 +77,22 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStopMatchAck
     {
+    }
+
+
+    [Serializable]
+    public class MsgOpenBoxReq
+    {
+        public string UserId;
+        public int BoxId;
+    }
+
+
+    [Serializable]
+    public class MsgOpenBoxAck
+    {
+        public short ErrorCode;
+        public MsgReward[] BoxReward;
+        public int Key;
     }
 }

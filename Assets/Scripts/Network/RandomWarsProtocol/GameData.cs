@@ -117,11 +117,13 @@ namespace RandomWarsProtocol
     public class MsgReward
     {
         public ERewardType RewardType;
+        public int Id;
         public int Value;
 
         public void Write(BinaryWriter bw)
         {
             bw.Write((byte)RewardType);
+            bw.Write(Id);
             bw.Write(Value);
         }
 
@@ -129,6 +131,7 @@ namespace RandomWarsProtocol
         {
             MsgReward data = new MsgReward();
             data.RewardType = (ERewardType)br.ReadByte();
+            data.Id = br.ReadInt32();
             data.Value = br.ReadInt32();
             return data;
         }
@@ -138,20 +141,20 @@ namespace RandomWarsProtocol
     [Serializable]
     public class MsgUserBox
     {
-        public EBoxType BoxType;
-        public int Value;
+        public int BoxId;
+        public int Count;
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write((byte)BoxType);
-            bw.Write(Value);
+            bw.Write(BoxId);
+            bw.Write(Count);
         }
 
         public static MsgUserBox Read(BinaryReader br)
         {
             MsgUserBox data = new MsgUserBox();
-            data.BoxType = (EBoxType)br.ReadByte();
-            data.Value = br.ReadInt32();
+            data.BoxId = br.ReadInt32();
+            data.Count = br.ReadInt32();
             return data;
         }
     }

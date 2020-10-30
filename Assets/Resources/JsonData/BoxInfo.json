@@ -1,0 +1,277 @@
+{
+    "1" : {
+		"id" : 1,
+        "needKey" : 1,
+        "boxType" : "CooperationBox",
+        "rewardRate" : [
+            {
+                "rewardType" : "DiceNormal",
+                "value" : 100
+            },
+            {
+                "rewardType" : "DiceMagic",
+                "value" : 100
+            },
+            {
+                "rewardType" : "DiceEpic",
+                "value" : 100
+            },
+            {
+                "rewardType" : "DiceLegend",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Gold",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Diamond",
+                "value" : 0
+            }
+        ],
+        "rewardKindNum" : [
+            {
+                "rewardType" : "DiceNormal",
+                "value" : 1
+            },
+            {
+                "rewardType" : "DiceMagic",
+                "value" : 1
+            },
+            {
+                "rewardType" : "DiceEpic",
+                "value" : 1
+            },
+            {
+                "rewardType" : "DiceLegend",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Gold",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Diamond",
+                "value" : 0
+            }
+        ],
+        "classRewards" : {
+            "1" : [
+                {
+                    "rewardType"	: "DiceNormal",
+                    "value" 		: 14
+                },
+                {
+                    "rewardType"	: "DiceMagic",
+                    "value" 		: 4
+                },
+                {
+                    "rewardType"	: "DiceEpic",
+                    "value" 		: 2
+                },
+                {
+                    "rewardType"	: "DiceLegend",
+                    "value" 		: 0
+                },
+                {
+                    "rewardType"	: "Gold",
+                    "value" 		: 320
+                },
+                {
+                    "rewardType"	: "Diamond",
+                    "value" 		: 3
+                }
+            ],
+            "2" : [
+                {
+                    "rewardType"	: "DiceNormal",
+                    "value" 		: 20
+                },
+                {
+                    "rewardType"	: "DiceMagic",
+                    "value" 		: 5
+                },
+                {
+                    "rewardType"	: "DiceEpic",
+                    "value" 		: 2
+                },
+                {
+                    "rewardType"	: "DiceLegend",
+                    "value" 		: 0
+                },
+                {
+                    "rewardType"	: "Gold",
+                    "value" 		: 432
+                },
+                {
+                    "rewardType"	: "Diamond",
+                    "value" 		: 3
+                }
+            ],
+            "3" : [
+                {
+                    "rewardType"	: "DiceNormal",
+                    "value" 		: 25
+                },
+                {
+                    "rewardType"	: "DiceMagic",
+                    "value" 		: 6
+                },
+                {
+                    "rewardType"	: "DiceEpic",
+                    "value" 		: 3
+                },
+                {
+                    "rewardType"	: "DiceLegend",
+                    "value" 		: 0
+                },
+                {
+                    "rewardType"	: "Gold",
+                    "value" 		: 544
+                },
+                {
+                    "rewardType"	: "Diamond",
+                    "value" 		: 3
+                }
+            ]
+        }
+    },
+    "2" : {
+		"id" : 2,
+        "needKey" : 1,
+        "boxType" : "BossBox",
+        "rewardRate" : [
+            {
+                "rewardType" : "DiceNormal",
+                "value" : 100
+            },
+            {
+                "rewardType" : "DiceMagic",
+                "value" : 100
+            },
+            {
+                "rewardType" : "DiceEpic",
+                "value" : 100
+            },
+            {
+                "rewardType" : "DiceLegend",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Gold",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Diamond",
+                "value" : 0
+            }
+        ],
+        "rewardKindNum" : [
+            {
+                "rewardType" : "DiceNormal",
+                "value" : 1
+            },
+            {
+                "rewardType" : "DiceMagic",
+                "value" : 1
+            },
+            {
+                "rewardType" : "DiceEpic",
+                "value" : 1
+            },
+            {
+                "rewardType" : "DiceLegend",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Gold",
+                "value" : 0
+            },
+            {
+                "rewardType" : "Diamond",
+                "value" : 0
+            }
+        ],
+        "classRewards" : {
+            "1" : [
+                {
+                    "rewardType"	: "DiceNormal",
+                    "value" 		: 14
+                },
+                {
+                    "rewardType"	: "DiceMagic",
+                    "value" 		: 4
+                },
+                {
+                    "rewardType"	: "DiceEpic",
+                    "value" 		: 2
+                },
+                {
+                    "rewardType"	: "DiceLegend",
+                    "value" 		: 0
+                },
+                {
+                    "rewardType"	: "Gold",
+                    "value" 		: 320
+                },
+                {
+                    "rewardType"	: "Diamond",
+                    "value" 		: 3
+                }
+            ],
+            "2" : [
+                {
+                    "rewardType"	: "DiceNormal",
+                    "value" 		: 20
+                },
+                {
+                    "rewardType"	: "DiceMagic",
+                    "value" 		: 5
+                },
+                {
+                    "rewardType"	: "DiceEpic",
+                    "value" 		: 2
+                },
+                {
+                    "rewardType"	: "DiceLegend",
+                    "value" 		: 0
+                },
+                {
+                    "rewardType"	: "Gold",
+                    "value" 		: 432
+                },
+                {
+                    "rewardType"	: "Diamond",
+                    "value" 		: 3
+                }
+            ],
+            "3" : [
+                {
+                    "rewardType"	: "DiceNormal",
+                    "value" 		: 25
+                },
+                {
+                    "rewardType"	: "DiceMagic",
+                    "value" 		: 6
+                },
+                {
+                    "rewardType"	: "DiceEpic",
+                    "value" 		: 3
+                },
+                {
+                    "rewardType"	: "DiceLegend",
+                    "value" 		: 0
+                },
+                {
+                    "rewardType"	: "Gold",
+                    "value" 		: 544
+                },
+                {
+                    "rewardType"	: "Diamond",
+                    "value" 		: 3
+                }
+            ]
+        }
+    }
+}
+
