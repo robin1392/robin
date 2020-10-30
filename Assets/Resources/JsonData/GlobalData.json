@@ -4,6 +4,18 @@
     },
     "WAVE_TIME" : {
         "value" : 20
+    },
+    "DICE_START_LEVEL_NORMAL" : {
+        "value" : 1
+    },
+    "DICE_START_LEVEL_MAGIC" : {
+        "value" : 3
+    },
+    "DICE_START_LEVEL_EPIC" : {
+        "value" : 5
+    },
+    "DICE_START_LEVEL_LEGEND" : {
+        "value" : 7
     }
 }
 

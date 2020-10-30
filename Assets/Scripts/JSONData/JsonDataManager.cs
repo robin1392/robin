@@ -30,6 +30,7 @@ public class JsonDataManager : MonoBehaviour
 	public LangEN dataLangEN = null;
     public BoxInfo dataBoxInfo = null;
     public DiceLevelUpInfo dataDiceLevelUpInfo = null;
+    public GlobalDataInfo dataGlobalDataInfo = null;
 
 
     //
@@ -40,6 +41,7 @@ public class JsonDataManager : MonoBehaviour
 		dataLangEN = new LangEN(filePath , callBack);
         dataBoxInfo = new BoxInfo(filePath, callBack);
         dataDiceLevelUpInfo = new DiceLevelUpInfo(filePath, callBack);
+        dataGlobalDataInfo = new GlobalDataInfo(filePath, callBack);
     }
 
     //
