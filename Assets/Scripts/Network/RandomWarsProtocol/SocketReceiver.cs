@@ -427,7 +427,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgEndGameNotify msg = new MsgEndGameNotify();
                             msg.ErrorCode = br.ReadInt16();
-                            msg.GameResult = (EGameResult)br.ReadByte();
+                            msg.GameResult = (GAME_RESULT)br.ReadByte();
                             msg.WinningStreak = br.ReadByte();
 
                             int length = br.ReadInt32();
