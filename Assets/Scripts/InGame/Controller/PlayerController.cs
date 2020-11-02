@@ -229,7 +229,7 @@ namespace ED
             {
                 arrDice[i] = new Dice {diceFieldNum = i};
             }
-            uiDiceField = FindObjectOfType<UI_DiceField>();            
+            uiDiceField = FindObjectOfType<UI_DiceField>();
             uiDiceField.SetField(arrDice);
 
             

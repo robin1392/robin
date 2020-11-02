@@ -8,6 +8,9 @@ public enum LANG_ENUM
     DICE_NAME = 10000,
     DICE_DESC = 20000,
     
+    GOLD = 30000,
+    DIAMOND,
+
     //
     UI_DESC = 31000,
     UI_NONEVALUE1 = 31006,

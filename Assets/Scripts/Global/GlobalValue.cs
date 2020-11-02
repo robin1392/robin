@@ -55,7 +55,7 @@ public partial class Global
     public static readonly string g_level = "레벨";
     public static readonly string[] g_grade = {"일반", "매직", "에픽", "전설"};
 
-    public static string[] g_gradeColor = {"000000", "43C0FF", "851CEA", "FCC017"};
+    public static string[] g_gradeColor = {"FFFFFF", "5A96E8", "805DE6", "FFA318"};
 
     #endregion
 }
