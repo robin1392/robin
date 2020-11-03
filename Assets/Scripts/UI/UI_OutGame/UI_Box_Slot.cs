@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
+using RandomWarsProtocol;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,12 +39,14 @@ public class UI_Box_Slot : MonoBehaviour
 
         bool isEnable = needKeyCount <= UserInfoManager.Get().GetUserInfo().key;
         btn.interactable = isEnable;
+        text_Name.text = LocalizationManager.GetLangDesc(40000 + id);
         text_Cost.text = needKeyCount.ToString();
         text_Count.text = $"x{count}";
         
         text_Cost.color = isEnable ? Color.white : ParadoxNotion.ColorUtils.HexToColor("DF362D");
         // text_Name.color = isEnable ? Color.white : Color.gray;
         // text_Count.color = isEnable ? Color.white : Color.gray;
+        image_Icon.sprite = arrSprite_BoxIcon[id - 1];
 
         if (isEnable == false)
         {

@@ -2,7 +2,7 @@
     "1" : {
         "id" : 1,
         "needKey" : 1,
-        "boxType" : "COOPERATION_BOX",
+        "boxType" : "NORMAL_BOX",
         "rewardRate" : [
             {
                 "rewardType" : "DICE_NORMAL",
@@ -145,7 +145,7 @@
     "2" : {
         "id" : 2,
         "needKey" : 3,
-        "boxType" : "BOSS_BOX",
+        "boxType" : "COOP_BOX",
         "rewardRate" : [
             {
                 "rewardType" : "DICE_NORMAL",

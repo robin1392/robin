@@ -32,6 +32,7 @@ namespace ED
 
         [Header("Button")]
         public Button btn_Upgrade;
+        public Text text_Upgrade;
         public Text text_UpgradeGold;
         public Button btn_Use;
 
@@ -72,8 +73,8 @@ namespace ED
                 diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
             }
-            
-            int goldCost = 0;
+
+            int goldCost = 0;//JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel].;
             ui_getted_dice.Initialize(data, diceLevel, diceCount);
             
             text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
@@ -82,6 +83,15 @@ namespace ED
             btn_Use.interactable = diceLevel > 0;
             btn_Upgrade.interactable = (UserInfoManager.Get().GetUserInfo().gold >= goldCost) &&
                                        (diceCount >= Global.g_needDiceCount[diceLevel]);
+            var images = btn_Upgrade.GetComponentsInChildren<Image>();
+            foreach (var image in images)
+            {
+                image.color = btn_Upgrade.interactable ? Color.white : Color.gray;
+            }
+
+            var interactable = btn_Upgrade.interactable;
+            text_Upgrade.color = interactable ? Color.white : Color.gray;
+            text_UpgradeGold.color = interactable ? Color.white : Color.gray;
 
             SetUnitGrade();
             SetInfoDesc();

@@ -44,8 +44,8 @@ namespace RandomWarsProtocol
     public enum BOX_TYPE
     {
         NONE,
-        COOPERATION_BOX,
-        BOSS_BOX,
+        NORMAL_BOX,
+        COOP_BOX,
     }
 
 

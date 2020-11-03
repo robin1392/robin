@@ -22,13 +22,14 @@ public class UI_BoxOpenPopup : UI_Popup
     }
 
     [Header("Link")]
+    public Text text_BoxName;
     public Button btn_Open;
     public Image image_CostIcon;
     public Text text_Cost;
 
     [Header("Box")]
     public Animator ani_Box;
-    public Image image_Box;
+    public RuntimeAnimatorController[] arrAniController_Box;
     public GameObject obj_BoxOpenParticle;
 
     [Header("Items")]
@@ -96,6 +97,8 @@ public class UI_BoxOpenPopup : UI_Popup
         
         var data = JsonDataManager.Get().dataBoxInfo.GetData(id);
         var classData = new List<RewardData>(data.classRewards[UserInfoManager.Get().GetUserInfo().nClass]);
+
+        text_BoxName.text = LocalizationManager.GetLangDesc(40000 + id);
         
         // Gold
         var goldData = classData.Find(d => d.rewardType == REWARD_TYPE.GOLD);
@@ -159,6 +162,7 @@ public class UI_BoxOpenPopup : UI_Popup
         image_Blind.DOFade(0, 0);
         image_Pattern.DOFade(0, 0);
         ani_Item.gameObject.SetActive(false);
+        ani_Box.runtimeAnimatorController = arrAniController_Box[id - 1];
         ani_Box.gameObject.SetActive(true);
         obj_Result.SetActive(false);
     }
@@ -382,7 +386,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
                     Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    0.6f));
+                    1.2f));
                 break;
             case REWARD_TYPE.DICE_MAGIC:
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
@@ -399,7 +403,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
                     Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    0.6f));
+                    1.2f));
                 break;
             case REWARD_TYPE.DICE_EPIC:
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
@@ -416,7 +420,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
                     Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    0.6f));
+                    1.2f));
                 break;
             case REWARD_TYPE.DICE_LEGEND:
                 btn_Blind.interactable = false;
@@ -429,7 +433,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
                     Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    3f));
+                    3.7f));
                 break;
         }
         
