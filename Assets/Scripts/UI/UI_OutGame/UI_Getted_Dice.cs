@@ -18,6 +18,8 @@ namespace ED
     {
         public Image image_Icon;
         public Image image_Eye;
+        public Button button_LevelUp;
+        public Text text_LevelUpCost;
         public Button button_Use;
         public Button button_Info;
         public GameObject obj_Selected;
@@ -76,6 +78,7 @@ namespace ED
             
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
+            button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
 
             image_GradeBG.sprite = arrSprite_GradeBG[pData.grade];
         }
@@ -92,6 +95,27 @@ namespace ED
             {
                 obj_Selected.SetActive(true);
                 ts_Move.SetParent(_grandParent);
+
+                int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][1];
+                int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][0];
+                int needCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1]
+                    .levelUpNeedInfo[_data.grade].needDiceCount;
+                int needGold = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1]
+                    .levelUpNeedInfo[_data.grade].needGold;
+                bool isEnableLevelUp = diceCount >= needCount;
+
+                if (isEnableLevelUp)
+                {
+                    button_Info.gameObject.SetActive(false);
+                    button_LevelUp.gameObject.SetActive(true);
+
+                    text_LevelUpCost.text = needGold.ToString();
+                }
+                else
+                {
+                    button_Info.gameObject.SetActive(true);
+                    button_LevelUp.gameObject.SetActive(false);
+                }
             }
             
             var parent = transform.parent.parent;

@@ -40,12 +40,24 @@ namespace ED
         public Button btn_Use;
         public Text text_Use;
 
+        [Header("Dice LevelUp Result")]
+        public GameObject obj_Result;
+        public Image image_ResultBG;
+        public RawImage image_ResubtBGPattern;
+        public Image image_ResultDiceIcon;
+        public Text text_ResultDiceName;
+        public Text text_ResultDiceLevel;
+        public RectTransform rts_ResultStatParent;
+        public GameObject pref_ResultStatSlot;
+
         //private Data_Dice data;
         private DiceInfoData data;
 
+        [Space]
         public Transform infosTranform;
         //
         private List<InfoUI> listInfoUI = new List<InfoUI>();
+        private int diceLevel;
         private int needGold;
         private int needDiceCount;
         
@@ -69,7 +81,7 @@ namespace ED
         public void Initialize(DiceInfoData pData)
         {
             data = pData;
-            int diceLevel = 0;
+            diceLevel = 0;
             int diceCount = 0;
 
             image_Character.sprite = FileHelper.GetIllust(JsonDataManager.Get().dataDiceInfo.dicData[pData.id].illustName);
@@ -162,8 +174,77 @@ namespace ED
                     UI_Main.Get().panel_Dice.RefreshGettedDice();
                     UI_Main.Get().RefreshUserInfoUI();
                     Initialize(data);
+                    
+                    obj_Result.SetActive(true);
+                    StartCoroutine(SetDiceLevelUpResultCoroutine());
                 }
             }
+        }
+
+        private IEnumerator SetDiceLevelUpResultCoroutine()
+        {
+            image_ResultDiceIcon.transform.localScale = Vector3.zero;
+            text_ResultDiceName.transform.localScale = Vector3.zero;
+            text_ResultDiceLevel.transform.localScale = Vector3.zero;
+            //rts_ResultStatParent.localScale = Vector3.zero;
+            
+            // Data set
+            image_ResultDiceIcon.sprite = FileHelper.GetIcon(data.iconName);
+            text_ResultDiceName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
+            text_ResultDiceLevel.text = $"LEVEL {diceLevel}";
+            
+            image_ResultBG.DOFade(0f, 0f);
+            image_ResubtBGPattern.DOFade(0f, 0f);
+            image_ResultBG.DOFade(1f, 0.2f);
+            image_ResubtBGPattern.DOFade(0.007843f, 0.2f);
+            
+            for (int i = rts_ResultStatParent.childCount - 1; i >= 0; --i)
+            {
+                DestroyImmediate(rts_ResultStatParent.GetChild(i).gameObject);
+            }
+
+            yield return new WaitForSeconds(0.2f);
+
+            image_Character.rectTransform.DOScale(1.2f, 0.1f).SetEase(Ease.OutBack).OnComplete(() =>
+            {
+                image_Character.rectTransform.DOScale(1f, 0.1f);
+            });
+
+            image_ResultDiceIcon.rectTransform.DOScale(1.4f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
+            text_ResultDiceName.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.5f);
+            text_ResultDiceLevel.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.7f);
+            //rts_ResultStatParent.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.8f);
+
+            for (int i = 0; i < 2; i++)
+            {
+                var obj = Instantiate(pref_ResultStatSlot, rts_ResultStatParent);
+                var ui = obj.GetComponent<UI_DiceLevelUpResultSlot>();
+                float current = 0f;
+                float add = 0f;
+
+                switch (i)
+                {
+                    case 0:
+                        current = data.maxHealth + data.maxHpUpgrade * diceLevel;
+                        add = data.maxHpUpgrade;
+                        break;
+                    case 1:
+                        current = data.power + data.powerUpgrade * diceLevel;
+                        add = data.powerUpgrade;
+                        break;
+                }
+                
+                ui.Initialize(i == 0 ? Global.E_DICEINFOSLOT.Info_Hp : Global.E_DICEINFOSLOT.Info_AtkPower,
+                    current, add);
+                
+                obj.transform.localScale = Vector3.zero;
+                obj.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.9f + 0.2f * i);
+            }
+        }
+
+        public void Click_DiceLevelUpResult()
+        {
+            obj_Result.SetActive(false);
         }
 
         public void Click_Use()
@@ -256,8 +337,8 @@ namespace ED
             }
             
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Type].textValue.text = LocalizationManager.GetLangDesc( castLangIndex);
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textValue.text = $"{data.maxHealth}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = $"{data.power:f1}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textValue.text = $"{data.maxHealth + data.maxHpUpgrade * diceLevel}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = $"{(data.power + data.powerUpgrade * diceLevel):f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = $"{data.attackSpeed:f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = $"{data.moveSpeed:f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_SearchRange].textValue.text = $"{data.range:f1}";
