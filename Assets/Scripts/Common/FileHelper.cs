@@ -67,6 +67,18 @@ public class FileHelper
         return cardSpr;
     }
 
+    public static Sprite GetIllust(string name)
+    {
+        string cardpath = "Image/dice_illust/";
+        
+        Sprite cardSpr = Resources.Load<Sprite>(cardpath + name);// as Sprite;
+        if (cardSpr == null)
+        {
+            Debug.LogWarning("<color=yellow> " + name + "</color>" + "  card Not exist ");
+        }
+        
+        return cardSpr;
+    }
 
     public static Color GetColor(int r, int g, int b)
     {
