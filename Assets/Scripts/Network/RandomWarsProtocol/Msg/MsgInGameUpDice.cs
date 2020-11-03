@@ -13,7 +13,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgInGameUpDiceAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
 
         // 업그레이드 대상 주사위 아이디
         public int DiceId;

@@ -28,7 +28,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgEndGameNotify
     {
-        public short ErrorCode;
+        public int ErrorCode;
         public GAME_RESULT GameResult;
         public byte WinningStreak;
         public MsgReward[] NormalReward;

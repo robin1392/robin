@@ -11,7 +11,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgReadySyncGameAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
     }
 
 

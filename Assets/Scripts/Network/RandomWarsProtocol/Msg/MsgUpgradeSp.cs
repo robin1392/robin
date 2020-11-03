@@ -11,7 +11,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgUpgradeSpAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
 
         // 인게임 업그레이드 수치
         public short Upgrade;

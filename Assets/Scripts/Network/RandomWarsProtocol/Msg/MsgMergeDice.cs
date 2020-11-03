@@ -13,7 +13,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgMergeDiceAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
         public short ResetFieldNum;
         public short LeveupFieldNum;
         public int LevelupDiceId;

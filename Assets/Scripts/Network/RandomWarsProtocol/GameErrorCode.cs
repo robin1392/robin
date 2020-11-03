@@ -4,12 +4,13 @@ using System.Text;
 
 namespace RandomWarsProtocol
 {
-    public enum GameErrorCode : short
+    public enum GameErrorCode : int
     {
         SUCCESS = 0,
 
         ERROR_GAMELIFT_ACCEPT_PLAYER_SESSION                         = 10001,            // 게임 리프트 플레이어 세션 ID를 확인 할 수 없습니다.
         ERROR_GAMELIFT_REMOVE_PLAYER_SESSION                        = 10002,        // 게임 리프트 플레이어 세션 ID를 제거 할 수 없습니다.
+        ERROR_GAMELIFT_MATCH_PLACING                                    = 10003,
 
         ERROR_DATABASE_UNEXPECTED                          = 10011,             // 데이터베이스의 예상치 못한 에러
 
@@ -27,5 +28,9 @@ namespace RandomWarsProtocol
 
         ERROR_BOX_NOT_FOUND                         = 30001,                // box를 찾을 수 없습니다.
         ERROR_BOX_COUNT_LACK                         = 30002,                // box 수량이 부족하다.
+
+        ERROR_DICE_LEVELUP_LACK_GOLD                = 40001,            // 주사위 레벨업 골드 부족
+        ERROR_DICE_LEVELUP_LACK_DICE                    = 40002,            // 주사위 레벨업 필요 주사위 부족
+        ERROR_DICE_LEVELUP_DATA_NOT_FOUND           = 40003,            // 주사위 레벨업 데이터 없음.
     }
 }

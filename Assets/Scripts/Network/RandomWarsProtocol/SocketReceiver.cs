@@ -275,7 +275,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameAck msg = new MsgJoinGameAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.PlayerInfo = MsgPlayerInfo.Read(br);
                             JoinGameAck(peer, msg);
                         }
@@ -320,7 +320,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgLeaveGameAck msg = new MsgLeaveGameAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             LeaveGameAck(peer, msg);
                         }
                     }
@@ -364,7 +364,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgReadyGameAck msg = new MsgReadyGameAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             ReadyGameAck(peer, msg);
                         }
                     }
@@ -426,7 +426,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgEndGameNotify msg = new MsgEndGameNotify();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.GameResult = (GAME_RESULT)br.ReadByte();
                             msg.WinningStreak = br.ReadByte();
 
@@ -523,7 +523,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgReconnectGameAck msg = new MsgReconnectGameAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.PlayerBase = MsgPlayerBase.Read(br);
                             msg.OtherPlayerBase = MsgPlayerBase.Read(br);
                             ReconnectGameAck(peer, msg);
@@ -568,7 +568,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgReadySyncGameAck msg = new MsgReadySyncGameAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             ReadySyncGameAck(peer, msg);
                         }
                     }
@@ -632,7 +632,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             StartSyncGameAck(peer, msg);
                         }
                     }
@@ -723,7 +723,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameAck msg = new MsgEndSyncGameAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             EndSyncGameAck(peer, msg);
                         }
                     }
@@ -767,7 +767,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgGetDiceAck msg = new MsgGetDiceAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.DiceId = br.ReadInt32();
                             msg.SlotNum = br.ReadInt16();
                             msg.Level = br.ReadInt16();
@@ -820,7 +820,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMergeDiceAck msg = new MsgMergeDiceAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.ResetFieldNum = br.ReadInt16();
                             msg.LeveupFieldNum = br.ReadInt16();
                             msg.LevelupDiceId = br.ReadInt32();
@@ -873,7 +873,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgInGameUpDiceAck msg = new MsgInGameUpDiceAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.DiceId = br.ReadInt32();
                             msg.InGameUp = br.ReadInt16();
                             msg.CurrentSp = br.ReadInt32();
@@ -922,7 +922,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgUpgradeSpAck msg = new MsgUpgradeSpAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.Upgrade = br.ReadInt16();
                             msg.CurrentSp = br.ReadInt32();
                             UpgradeSpAck(peer, msg);
@@ -971,7 +971,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageAck msg = new MsgHitDamageAck();
-                            msg.ErrorCode = br.ReadInt16();
+                            msg.ErrorCode = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             msg.CurrentHp = br.ReadInt32();

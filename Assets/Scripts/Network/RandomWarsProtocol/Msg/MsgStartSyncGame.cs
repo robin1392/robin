@@ -21,7 +21,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStartSyncGameAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
     }
 
 

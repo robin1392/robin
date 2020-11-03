@@ -16,7 +16,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgHitDamageAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
 
         // 플레이어 UID
         public ushort PlayerUId;

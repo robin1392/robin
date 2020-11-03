@@ -13,7 +13,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgUserAuthAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
         public MsgUserInfo UserInfo;
         public MsgUserDeck[] UserDeck;
         public MsgUserDice[] UserDice;
@@ -74,12 +74,15 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStopMatchReq
     {
+        public string UserId;
         public string TicketId;
     }
 
     [Serializable]
     public class MsgStopMatchAck
     {
+        public int ErrorCode;
+        public string UserId;
     }
 
 
@@ -94,7 +97,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgOpenBoxAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
         public MsgReward[] BoxReward;
     }
 
@@ -110,6 +113,6 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgLevelUpDiceAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
     }
 }

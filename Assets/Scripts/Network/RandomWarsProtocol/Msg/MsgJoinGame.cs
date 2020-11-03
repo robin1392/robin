@@ -18,7 +18,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgJoinGameAck
     {
         // 에러 코드
-        public short ErrorCode;
+        public int ErrorCode;
 
         // 플레이어 정보.
         public MsgPlayerInfo PlayerInfo;

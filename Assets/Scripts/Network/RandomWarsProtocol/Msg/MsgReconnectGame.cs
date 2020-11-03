@@ -11,7 +11,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgReconnectGameAck
     {
-        public short ErrorCode;
+        public int ErrorCode;
         public MsgPlayerBase PlayerBase;
         public MsgPlayerBase OtherPlayerBase;
     }
