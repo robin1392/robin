@@ -683,6 +683,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
         _matchTryCount++;
         MsgStatusMatchReq msg = new MsgStatusMatchReq();
+        msg.UserId = UserInfoManager.Get().GetUserInfo().userID;
         msg.TicketId = ticketId;
 
         _httpSender.StatusMatchReq(msg);

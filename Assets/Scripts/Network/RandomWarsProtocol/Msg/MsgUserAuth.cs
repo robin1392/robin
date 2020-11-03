@@ -48,6 +48,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStartMatchAck
     {
+        public string UserId;
         public string TicketId;
     }
 
@@ -55,6 +56,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStatusMatchReq
     {
+        public string UserId;
         public string TicketId;
     }
 
@@ -62,6 +64,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStatusMatchAck
     {
+        public string UserId;
         public string ServerAddr;
         public int Port;
         public string PlayerSessionId;
@@ -93,7 +96,6 @@ namespace RandomWarsProtocol.Msg
     {
         public short ErrorCode;
         public MsgReward[] BoxReward;
-        public int Key;
     }
 
 

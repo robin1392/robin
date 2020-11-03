@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
-using System.Linq;
+using System.Threading;
 
 namespace RandomWarsService.Network.Http
 {
@@ -24,9 +24,9 @@ namespace RandomWarsService.Network.Http
     public class HttpClient
     {
         private string _baseUrl;
-        private Queue<HttpResponse> _responseQueue;
         private IHttpReceiver _httpReceiver;
-
+        private static Queue<HttpResponse> _responseQueue;
+        private static ManualResetEvent allDone = new ManualResetEvent(false);
 
         public HttpClient(string url, IHttpReceiver httpReceiver)
         {
@@ -68,9 +68,15 @@ namespace RandomWarsService.Network.Http
                 streamWriter.Write(json);
             }
 
-            HttpResponseAsync(request, (response) =>
+
+            request.BeginGetResponse(new AsyncCallback((asynchronousResult) =>
             {
-                var ackJson = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                // End the operation
+                HttpWebResponse response = (HttpWebResponse)((HttpWebRequest)asynchronousResult.AsyncState).EndGetResponse(asynchronousResult);
+                Stream streamResponse = response.GetResponseStream();
+                StreamReader streamRead = new StreamReader(streamResponse);
+
+                string ackJson = streamRead.ReadToEnd();
                 ackJson = ackJson.Replace("\\u0022", "\"");
                 ackJson = ackJson.Replace("\\n", "");
                 ackJson = ackJson.Replace("\"{", "{");
@@ -84,24 +90,19 @@ namespace RandomWarsService.Network.Http
                         Json = ackJson
                     });
                 }
-            });
-        }
 
-        void HttpResponseAsync(HttpWebRequest request, Action<HttpWebResponse> responseAction)
-        {
-            Action wrapperAction = () =>
-            {
-                request.BeginGetResponse(new AsyncCallback((iar) =>
-                {
-                    var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
-                    responseAction(response);
-                }), request);
-            };
-            wrapperAction.BeginInvoke(new AsyncCallback((iar) =>
-            {
-                var action = (Action)iar.AsyncState;
-                action.EndInvoke(iar);
-            }), wrapperAction);
+
+                // Close the stream object
+                streamResponse.Close();
+                streamRead.Close();
+
+                // Release the HttpWebResponse
+                response.Close();
+                allDone.Set();
+
+            }), request);
+
+            allDone.WaitOne();
         }
 
 
