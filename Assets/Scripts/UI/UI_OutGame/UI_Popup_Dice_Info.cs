@@ -210,9 +210,9 @@ namespace ED
                 image_Character.rectTransform.DOScale(1f, 0.1f);
             });
 
-            image_ResultDiceIcon.rectTransform.DOScale(1.4f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
-            text_ResultDiceName.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.5f);
-            text_ResultDiceLevel.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.7f);
+            image_ResultDiceIcon.rectTransform.DOScale(1.4f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.2f);
+            text_ResultDiceName.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.3f);
+            text_ResultDiceLevel.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.4f);
             //rts_ResultStatParent.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.8f);
 
             for (int i = 0; i < 2; i++)
@@ -235,10 +235,10 @@ namespace ED
                 }
                 
                 ui.Initialize(i == 0 ? Global.E_DICEINFOSLOT.Info_Hp : Global.E_DICEINFOSLOT.Info_AtkPower,
-                    current, add);
+                    current, add, 1.2f + 0.1f * i);
                 
                 obj.transform.localScale = Vector3.zero;
-                obj.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.9f + 0.2f * i);
+                obj.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.5f + 0.1f * i);
             }
         }
 
