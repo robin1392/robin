@@ -53,7 +53,7 @@ namespace ED
             var anchPos = image_Character.rectTransform.anchoredPosition;
             //anchPos.y -= 1000f;
             //image_Character.rectTransform.anchoredPosition = anchPos;
-            image_Character.rectTransform.DOAnchorPosY(anchPos.y + 1000f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
+            image_Character.rectTransform.DOAnchorPosY(0, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
 
             ContentUIInfo();
         }
@@ -64,7 +64,9 @@ namespace ED
             data = pData;
             int diceLevel = 0;
             int diceCount = 0;
-            
+
+            image_Character.sprite = FileHelper.GetIllust(JsonDataManager.Get().dataDiceInfo.dicData[pData.id].illustName);
+                
             if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(data.id))
             {
                 diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];

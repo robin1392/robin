@@ -17,6 +17,7 @@ public class DiceInfoData
 	public string modelName = "";
 	public int spawnMultiply = 0;
 	public string iconName = "";
+	public string illustName = "";
 	public string cardName = "";
 	public List<int> color = new List<int>();
 	public float power = 0.0f;
@@ -80,6 +81,7 @@ public class DiceInfo
 			info.modelName = (string)JsonDataParse.GetParseData(info.modelName.GetType(), jsonData[i]["modelName"].ToString());
 			info.spawnMultiply = (int)JsonDataParse.GetParseData(info.spawnMultiply.GetType(), jsonData[i]["spawnMultiply"].ToString());
 			info.iconName = (string)JsonDataParse.GetParseData(info.iconName.GetType(), jsonData[i]["iconName"].ToString());
+			info.illustName = (string)JsonDataParse.GetParseData(info.illustName.GetType(), jsonData[i]["illustName"].ToString());
 			info.cardName = (string)JsonDataParse.GetParseData(info.cardName.GetType(), jsonData[i]["cardName"].ToString());
 			info.color = (List<int>)JsonDataParse.GetParseData(info.color.GetType(), jsonData[i]["color"].ToString());
 			info.power = (float)JsonDataParse.GetParseData(info.power.GetType(), jsonData[i]["power"].ToString());

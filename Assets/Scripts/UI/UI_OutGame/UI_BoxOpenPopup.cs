@@ -72,6 +72,15 @@ public class UI_BoxOpenPopup : UI_Popup
     public Sprite[] arrSprite_CostType;
     public Sprite sprite_Gold;
     public Sprite sprite_Diamond;
+    public Sprite[] arrSprite_UnknownDiceIcon;
+
+    [Header("Result")]
+    public GameObject obj_Result;
+    public Image image_ResultTitle;
+    public Text text_ResultGold;
+    public Text text_ResultDiamond;
+    public RectTransform rts_ResultDiceParent;
+    public GameObject pref_ResultDice;
 
     private int boxID;
     private COST_TYPE costType;
@@ -150,6 +159,8 @@ public class UI_BoxOpenPopup : UI_Popup
         image_Blind.DOFade(0, 0);
         image_Pattern.DOFade(0, 0);
         ani_Item.gameObject.SetActive(false);
+        ani_Box.gameObject.SetActive(true);
+        obj_Result.SetActive(false);
     }
 
     public void Click_Open()
@@ -304,8 +315,6 @@ public class UI_BoxOpenPopup : UI_Popup
 
     public void Click_NextButton()
     {
-        Debug.Log("Click NextButotn");
-
         if (msg != null && openCount < msg.BoxReward.Length)
         {
             ani_Box.SetTrigger("Open");
@@ -321,6 +330,11 @@ public class UI_BoxOpenPopup : UI_Popup
                 ItemAnimation();
             }
         }
+        else if (openCount == msg.BoxReward.Length)
+        {
+            ani_Item.gameObject.SetActive(false);
+            StartCoroutine(ShowResultCoroutine());
+        }
         else
         {
             gameObject.SetActive(false);
@@ -329,6 +343,8 @@ public class UI_BoxOpenPopup : UI_Popup
 
     private void ItemAnimation()
     {
+        if (crt_IconChange != null) StopCoroutine(crt_IconChange);
+        if (crt_TextCount != null) StopCoroutine(crt_TextCount);
         ani_Item.gameObject.SetActive(true);
 
         MsgReward reward = msg.BoxReward[openCount];
@@ -356,14 +372,17 @@ public class UI_BoxOpenPopup : UI_Popup
                     var module = arrPs_ItemNormal[i].main;
                     module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[0]);
                 }
-                image_ItemIcon.sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName);
+
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[0]; 
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]]));
+                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
+                    0.6f));
                 break;
             case REWARD_TYPE.DICE_MAGIC:
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
@@ -371,14 +390,16 @@ public class UI_BoxOpenPopup : UI_Popup
                     var module = arrPs_ItemNormal[i].main;
                     module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[1]);
                 }
-                image_ItemIcon.sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName);
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[1]; 
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]]));
+                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
+                    0.6f));
                 break;
             case REWARD_TYPE.DICE_EPIC:
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
@@ -386,30 +407,35 @@ public class UI_BoxOpenPopup : UI_Popup
                     var module = arrPs_ItemNormal[i].main;
                     module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[2]);
                 }
-                image_ItemIcon.sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName);
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[2]; 
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]]));
+                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
+                    0.6f));
                 break;
             case REWARD_TYPE.DICE_LEGEND:
-                image_ItemIcon.sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName);
+                btn_Blind.interactable = false;
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3]; 
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 3f));
                 image_ItemIcon.SetNativeSize();
                 ani_Item.SetTrigger("GetLegend");
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]]));
-                btn_Blind.interactable = false;
+                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
+                    3f));
                 break;
         }
         
         // 애니메이션
         RectTransform rts = (RectTransform) ani_Item.transform;
+        rts.DOKill();
         rts.anchoredPosition = new Vector2(0, -250);
         rts.DOAnchorPosY(350f, 0.5f);
         rts.localScale = Vector3.zero;
@@ -418,7 +444,17 @@ public class UI_BoxOpenPopup : UI_Popup
         openCount++;
     }
 
-    IEnumerator TextCountCoroutine(int current, int add, int max)
+    private Coroutine crt_IconChange;
+    IEnumerator IconChangeCoroutine(Sprite icon, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        image_ItemIcon.sprite = icon;
+        image_ItemIcon.SetNativeSize();
+    }
+
+    private Coroutine crt_TextCount;
+    IEnumerator TextCountCoroutine(int current, int add, int max, float delay)
     {
         int before = current - add;
         text_ItemGuageCount.text = $"{before}/{max}";
@@ -427,7 +463,7 @@ public class UI_BoxOpenPopup : UI_Popup
         image_ItemGuage.color = before >= max ? Color.green : UnityUtil.HexToColor("6AD3E5");
         image_UpgradeIcon.gameObject.SetActive(before >= max);
         
-        yield return new WaitForSeconds(1.3f);
+        yield return new WaitForSeconds(delay);
 
         float t = 0;
         float timeMax = Mathf.Clamp(0.1f * add, 0, 0.5f);
@@ -463,4 +499,50 @@ public class UI_BoxOpenPopup : UI_Popup
             image_UpgradeIcon.rectTransform.DOScale(1f, 0.25f);
         }
     }
+
+    IEnumerator ShowResultCoroutine()
+    {
+        obj_Result.SetActive(true);
+        ani_Box.gameObject.SetActive(false);
+        
+        List<MsgReward> list = new List<MsgReward>(msg.BoxReward);
+        
+        var gold = list.Find(m => m.RewardType == REWARD_TYPE.GOLD);
+        text_ResultGold.text = $"{gold?.Value ?? 0}";
+        
+        var diamond = list.Find(m => m.RewardType == REWARD_TYPE.DIAMOND);
+        text_ResultDiamond.text = $"{diamond?.Value ?? 0}";
+
+        int childCount = rts_ResultDiceParent.childCount;
+        for (int i = childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(rts_ResultDiceParent.GetChild(i).gameObject);
+        }
+
+        int loopCount = 0;
+        foreach (var msgReward in list)
+        {
+            switch (msgReward.RewardType)
+            {
+                case REWARD_TYPE.DICE_NORMAL:
+                case REWARD_TYPE.DICE_MAGIC:
+                case REWARD_TYPE.DICE_EPIC:
+                case REWARD_TYPE.DICE_LEGEND:
+                {
+                    var dice = Instantiate(pref_ResultDice, rts_ResultDiceParent);
+                    var data = JsonDataManager.Get().dataDiceInfo.dicData[msgReward.Id];
+                    dice.GetComponent<Image>().sprite = FileHelper.GetIcon(data.iconName);
+                    dice.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
+                    dice.transform.GetChild(1).GetComponent<Text>().text = $"x{msgReward.Value}";
+                    dice.transform.localScale = Vector3.zero;
+                    dice.transform.DOScale(Vector3.one, 0.2f).SetDelay(0.05f * loopCount++).SetEase(Ease.OutBack);
+                }
+                    break;
+            }
+        }
+
+        openCount++;
+        yield return null;
+    }
+    
 }
