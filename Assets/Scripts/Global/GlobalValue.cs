@@ -31,7 +31,7 @@ public partial class Global
     // 재접속 시간 체크를 위해 - 2wave 시간 정도..
     public static float g_reconnectGameTimeCheck = 40.0f;
 
-    public static readonly int[] g_needDiceCount = {1, 2, 4, 10, 20, 50, 100, 200, 400, 800, 2000, 5000, 10000, 20000, 50000};
+    //public static readonly int[] g_needDiceCount = {1, 2, 4, 10, 20, 50, 100, 200, 400, 800, 2000, 5000, 10000, 20000, 50000};
     
     #endregion
     

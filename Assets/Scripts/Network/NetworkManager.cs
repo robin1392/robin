@@ -148,6 +148,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private NetBattleInfo _battleInfo = null;
 
     private Action<MsgOpenBoxAck> _boxOpenCallback;
+    private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     #endregion
 
     #region unity base
@@ -779,17 +780,22 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
 
-    public void LevelUpDiceReq(string userId, int diceId)
+    public void LevelUpDiceReq(string userId, int diceId, Action<MsgLevelUpDiceAck> callback)
     {
         MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
         msg.UserId = userId;
         msg.DiceId = diceId;
+        _diceLevelUpCallback = callback;
         _httpSender.LevelUpDiceReq(msg);
         UnityUtil.Print("SEND LEVELUP DICE => index", string.Format("diceId:{0}", diceId), "green");
     }
 
     void OnLevelUpDiceAck(MsgLevelUpDiceAck msg)
     {
+        if (_diceLevelUpCallback != null)
+        {
+            _diceLevelUpCallback(msg);
+        }
         UnityUtil.Print("RECV LEVELUP DICE => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
     #endregion

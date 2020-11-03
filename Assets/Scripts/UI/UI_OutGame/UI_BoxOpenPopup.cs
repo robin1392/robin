@@ -371,69 +371,115 @@ public class UI_BoxOpenPopup : UI_Popup
                 text_ItemCount.text = $"x{reward.Value}";
                 break;
             case REWARD_TYPE.DICE_NORMAL:
+            {
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
                 {
                     var module = arrPs_ItemNormal[i].main;
                     module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[0]);
                 }
 
-                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[0]; 
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[0];
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(
+                    FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
-                text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
+                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
-                    reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    1.2f));
+                int level = 0;
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+                {
+                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+                }
+
+                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
+                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade]
+                    .needDiceCount;
+                crt_TextCount = StartCoroutine(TextCountCoroutine(
+                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                    reward.Value, needDiceCount, 1.2f));
+            }
                 break;
             case REWARD_TYPE.DICE_MAGIC:
+            {
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
                 {
                     var module = arrPs_ItemNormal[i].main;
                     module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[1]);
                 }
-                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[1]; 
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
+
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[1];
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(
+                    FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
-                text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
+                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
-                    reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    1.2f));
+                int level = 0;
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+                {
+                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+                }
+
+                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
+                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade]
+                    .needDiceCount;
+                crt_TextCount = StartCoroutine(TextCountCoroutine(
+                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                    reward.Value, needDiceCount, 1.2f));
+            }
                 break;
             case REWARD_TYPE.DICE_EPIC:
+            {
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
                 {
                     var module = arrPs_ItemNormal[i].main;
                     module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[2]);
                 }
-                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[2]; 
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
+
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[2];
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(
+                    FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
-                text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
+                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
-                    reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    1.2f));
+                int level = 0;
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+                {
+                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+                }
+
+                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
+                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade]
+                    .needDiceCount;
+                crt_TextCount = StartCoroutine(TextCountCoroutine(
+                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                    reward.Value, needDiceCount, 1.2f));
+            }
                 break;
             case REWARD_TYPE.DICE_LEGEND:
+            {
                 btn_Blind.interactable = false;
-                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3]; 
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 3f));
+                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3];
+                crt_IconChange =
+                    StartCoroutine(IconChangeCoroutine(
+                        FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 3f));
                 image_ItemIcon.SetNativeSize();
                 ani_Item.SetTrigger("GetLegend");
-                text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + reward.Id);
+                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
                 text_ItemCount.text = $"x{reward.Value}";
-                crt_TextCount = StartCoroutine(TextCountCoroutine(UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
-                    reward.Value,
-                    Global.g_needDiceCount[UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0]],
-                    3.7f));
+                int level = 0;
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+                {
+                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+                }
+
+                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
+                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade].needDiceCount;
+                crt_TextCount = StartCoroutine(TextCountCoroutine(
+                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                    reward.Value, needDiceCount, 3.7f));
+            }
                 break;
         }
         

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using DG;
 using DG.Tweening;
 using RandomWarsProtocol;
+using RandomWarsProtocol.Msg;
 
 namespace ED
 {
@@ -24,6 +25,8 @@ namespace ED
         public UI_Panel_Dice ui_Panel_Dice;
         public UI_Getted_Dice ui_getted_dice;
         public Image image_Character;
+        public GameObject obj_NormalCharacterEffect;
+        public GameObject obj_LegendCharacterEffect;
 
         [Header("Info")] 
         public Text text_Name;
@@ -35,6 +38,7 @@ namespace ED
         public Text text_Upgrade;
         public Text text_UpgradeGold;
         public Button btn_Use;
+        public Text text_Use;
 
         //private Data_Dice data;
         private DiceInfoData data;
@@ -42,6 +46,8 @@ namespace ED
         public Transform infosTranform;
         //
         private List<InfoUI> listInfoUI = new List<InfoUI>();
+        private int needGold;
+        private int needDiceCount;
         
         #region Base Region
         
@@ -67,6 +73,18 @@ namespace ED
             int diceCount = 0;
 
             image_Character.sprite = FileHelper.GetIllust(JsonDataManager.Get().dataDiceInfo.dicData[pData.id].illustName);
+            obj_LegendCharacterEffect.SetActive(pData.grade == (int)DICE_GRADE.LEGEND);
+            obj_NormalCharacterEffect.SetActive(!obj_LegendCharacterEffect.activeSelf);
+
+            if (obj_NormalCharacterEffect.gameObject.activeSelf)
+            {
+                var particles = obj_NormalCharacterEffect.GetComponentsInChildren<ParticleSystem>();
+                for (int i = 0; i < particles.Length; i++)
+                {
+                    var module = particles[i].main;
+                    module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[pData.grade]);
+                }
+            }
                 
             if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(data.id))
             {
@@ -74,24 +92,34 @@ namespace ED
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
             }
 
-            int goldCost = 0;//JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel].;
+            needGold = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1].levelUpNeedInfo[pData.grade].needGold;
+            needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1].levelUpNeedInfo[pData.grade].needDiceCount;
             ui_getted_dice.Initialize(data, diceLevel, diceCount);
             
             text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
+            text_UpgradeGold.text = needGold.ToString();
 
             btn_Use.interactable = diceLevel > 0;
-            btn_Upgrade.interactable = (UserInfoManager.Get().GetUserInfo().gold >= goldCost) &&
-                                       (diceCount >= Global.g_needDiceCount[diceLevel]);
+            btn_Upgrade.interactable = (diceLevel > 0) &&
+                                        (UserInfoManager.Get().GetUserInfo().gold >= needGold) &&
+                                       (diceCount >= needDiceCount);
             var images = btn_Upgrade.GetComponentsInChildren<Image>();
-            foreach (var image in images)
+            for (int i = 1; i < images.Length; ++i)
             {
-                image.color = btn_Upgrade.interactable ? Color.white : Color.gray;
+                images[i].color = btn_Upgrade.interactable ? Color.white : Color.gray;
             }
 
             var interactable = btn_Upgrade.interactable;
             text_Upgrade.color = interactable ? Color.white : Color.gray;
             text_UpgradeGold.color = interactable ? Color.white : Color.gray;
+            
+            images = btn_Use.GetComponentsInChildren<Image>();
+            for (int i = 1; i < images.Length; ++i)
+            {
+                images[i].color = btn_Use.interactable ? Color.white : Color.gray;
+            }
+            text_Use.color = btn_Use.interactable ? Color.white : Color.gray;
 
             SetUnitGrade();
             SetInfoDesc();
@@ -109,6 +137,33 @@ namespace ED
                 gameObject.SetActive(false);
             });
 
+        }
+
+        public void Click_Upgrade()
+        {
+            NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
+            
+            UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+        }
+
+        public void DiceUpgradeCallback(MsgLevelUpDiceAck msg)
+        {
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+
+            if (msg.ErrorCode == 0)
+            {
+                var info = UserInfoManager.Get().GetUserInfo();
+                if (info.dicGettedDice.ContainsKey(data.id))
+                {
+                    info.gold -= needGold;
+                    info.dicGettedDice[data.id][0]++;
+                    info.dicGettedDice[data.id][1] -= needDiceCount;
+                    
+                    UI_Main.Get().panel_Dice.RefreshGettedDice();
+                    UI_Main.Get().RefreshUserInfoUI();
+                    Initialize(data);
+                }
+            }
         }
 
         public void Click_Use()
@@ -205,7 +260,7 @@ namespace ED
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = $"{data.power:f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = $"{data.attackSpeed:f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = $"{data.moveSpeed:f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_SearchRange].textValue.text = $"{data.searchRange:f1}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_SearchRange].textValue.text = $"{data.range:f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_etc].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Sp].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
 

@@ -86,6 +86,35 @@
             }
         ]
     },
+    "4": {
+        "level" : 4,
+        "levelUpNeedInfo" : [
+            {
+                "diceGrade" : "NORMAL",
+                "needDiceCount" : 10,
+                "needGold" : 50,
+                "addTowerHp" : 10
+            },
+            {
+                "diceGrade" : "MAGIC",
+                "needDiceCount" : 2,
+                "needGold" : 50,
+                "addTowerHp" : 10
+            },
+            {
+                "diceGrade" : "EPIC",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            },
+            {
+                "diceGrade" : "LEGEND",
+                "needDiceCount" : 0,
+                "needGold" : 0,
+                "addTowerHp" : 0
+            }
+        ]
+    },
     "5": {
         "level" : 5,
         "levelUpNeedInfo" : [

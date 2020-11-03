@@ -60,15 +60,18 @@ namespace ED
         {
             _data = pData;
             
+            int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[pData.grade].needDiceCount;
+            if (needDiceCount == 0) needDiceCount = 1;
+            
             image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
             image_Eye.color = FileHelper.GetColor(pData.color);
 
             text_DiceLevel.text = $"{Global.g_level} {level}";
-            text_DiceCount.text = $"{count}/{Global.g_needDiceCount[level]}";
-            image_DiceGuage.fillAmount = count / (float)Global.g_needDiceCount[level];
+            text_DiceCount.text = $"{count}/{needDiceCount}";
+            image_DiceGuage.fillAmount = count / (float)needDiceCount;
             image_DiceGuage.color =
-                count >= Global.g_needDiceCount[level] ? Color.green : UnityUtil.HexToColor("6AD3E5");
-            obj_UpgradeIcon.SetActive(count >= Global.g_needDiceCount[level]);
+                count >= needDiceCount ? Color.green : UnityUtil.HexToColor("6AD3E5");
+            obj_UpgradeIcon.SetActive(count >= needDiceCount);
             obj_UpgradeLight.SetActive(obj_UpgradeIcon.activeSelf);
             
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
