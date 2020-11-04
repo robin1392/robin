@@ -32,7 +32,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgEditUserNameAck
     {
-        public int ErrorCode;
+        public GameErrorCode ErrorCode;
         public string UserId;
         public string UserName;
     }
@@ -65,6 +65,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStartMatchAck
     {
+        public int ErrorCode;
         public string UserId;
         public string TicketId;
     }
@@ -81,6 +82,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStatusMatchAck
     {
+        public GameErrorCode ErrorCode;
         public string UserId;
         public string ServerAddr;
         public int Port;
