@@ -1101,7 +1101,7 @@ GameObject:
   - component: {fileID: 4236744648728289194}
   - component: {fileID: 4236744648728289195}
   m_Layer: 5
-  m_Name: Text_Critical
+  m_Name: Text_Bonus_HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2882,7 +2882,7 @@ GameObject:
   - component: {fileID: 4236744649242696753}
   - component: {fileID: 4236744649242696758}
   m_Layer: 5
-  m_Name: Image_Critical
+  m_Name: Image_Bonus_HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4319,6 +4319,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2938589550264807585}
         m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
         m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4236744650293910018}
+        m_TargetAssemblyTypeName: ED.UI_Main, Assembly-CSharp
+        m_MethodName: Click_MenuButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6583,6 +6595,7 @@ MonoBehaviour:
   boxPopup: {fileID: 0}
   boxOpenPopup: {fileID: 0}
   obj_IndicatorPopup: {fileID: 0}
+  userinfoPopup: {fileID: 0}
   inputfield_Nicnname: {fileID: 4236744648750966870}
   text_Nickname: {fileID: 4236744649421432681}
   text_Class: {fileID: 4236744650009280238}
@@ -7028,6 +7041,7 @@ MonoBehaviour:
   rts_ScrollView: {fileID: 4236744648862158026}
   scrollView: {fileID: 4236744648862158021}
   rts_Content: {fileID: 4236744649525689480}
+  text_BonusHP: {fileID: 4236744648728289195}
   text_Getted: {fileID: 4236744650205201876}
   text_Ungetted: {fileID: 0}
   obj_Ciritical: {fileID: 4236744649242696756}

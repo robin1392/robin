@@ -28,6 +28,7 @@ namespace ED
         public UI_BoxPopup boxPopup;
         public UI_BoxOpenPopup boxOpenPopup;
         public GameObject obj_IndicatorPopup;
+        public UI_Popup_Userinfo userinfoPopup;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;
@@ -113,6 +114,11 @@ namespace ED
         public void Click_SessonPassButton()
         {
             
+        }
+
+        public void Click_MenuButton()
+        {
+            userinfoPopup.gameObject.SetActive(true);
         }
 
         public void EditNickname(string str)

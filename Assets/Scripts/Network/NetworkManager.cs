@@ -149,6 +149,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private Action<MsgOpenBoxAck> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
+    private Action<MsgEditUserNameAck> _editUserNameCallback;
     #endregion
 
     #region unity base
@@ -632,11 +633,12 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void EditUserNameReq(string userId, string userName)
+    public void EditUserNameReq(string userId, string userName, Action<MsgEditUserNameAck> callback)
     {
         MsgEditUserNameReq msg = new MsgEditUserNameReq();
         msg.UserId = userId;
         msg.UserName = userName;
+        _editUserNameCallback = callback;
         _httpSender.EditUserNameReq(msg);
         UnityUtil.Print("SEND EDIT USER NAME => name", userName, "green");
     }
@@ -644,6 +646,11 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void OnEditUserNameAck(MsgEditUserNameAck msg)
     {
+        if (_editUserNameCallback != null)
+        {
+            _editUserNameCallback(msg);
+        }
+        
         UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
     }
 

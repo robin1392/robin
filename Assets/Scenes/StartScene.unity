@@ -649,7 +649,7 @@ MonoBehaviour:
   UseLocalServer: 0
   LocalServerAddr: 192.168.0.149
   LocalServerPort: 40002
-  UserId: 61dfb75e-1c44-4eee-af32-56b18ac6780a
+  UserId: 
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0

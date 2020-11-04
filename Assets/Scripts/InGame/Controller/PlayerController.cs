@@ -1018,8 +1018,8 @@ namespace ED
             var m = CreateMinion(pref_Guardian, pos, 1, 0);
             m.targetMoveType = DICE_MOVE_TYPE.GROUND;
             m.ChangeLayer(isBottomPlayer);
-            m.power = 200f;
-            m.maxHealth = 7500f;
+            m.power = maxHealth / 50f;
+            m.maxHealth = maxHealth * 0.3333f;
             m.attackSpeed = 0.8f;
             m.moveSpeed = 0.8f;
             m.range = 0.7f;

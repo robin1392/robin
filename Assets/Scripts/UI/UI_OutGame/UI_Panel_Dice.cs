@@ -32,6 +32,7 @@ namespace ED
         public RectTransform rts_ScrollView;
         public ScrollRect scrollView;
         public RectTransform rts_Content;
+        public Text text_BonusHP;
         public Text text_Getted;
         public Text text_Ungetted;
         public GameObject obj_Ciritical;
