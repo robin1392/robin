@@ -13,14 +13,29 @@ public class RewardData
 }
 
 [Serializable]
+public class RewardRate
+{
+    public REWARD_TYPE rewardType;
+    public int rate;
+}
+
+[Serializable]
+public class RewardKindNum
+{
+    public REWARD_TYPE rewardType;
+    public int min;
+    public int max;
+}
+
+[Serializable]
 
 public class BoxInfoData
 {
     public int id;
     public int needKey;
     public BOX_TYPE boxType;
-    public RewardData[] rewardRate;
-    public RewardData[] rewardKindNum;
+    public RewardRate[] rewardRate;
+    public RewardKindNum[] rewardKindNum;
     public Dictionary<int, RewardData[]> classRewards;
 }
 
