@@ -223,7 +223,7 @@ namespace ED
             if( InGameManager.IsNetwork == false )
                 sp = 200;
 
-            maxHealth = isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp;
+            maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             currentHealth = maxHealth;
             RefreshHealthBar();
 
