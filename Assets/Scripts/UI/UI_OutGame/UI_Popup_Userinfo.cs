@@ -49,6 +49,7 @@ public class UI_Popup_Userinfo : UI_Popup
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
         UserInfoManager.Get().GetUserInfo().SetNickName(msg.UserName);
+        oldNickname = msg.UserName;
         UI_Main.Get().RefreshUserInfoUI();
         SetEditButton(false);
     }

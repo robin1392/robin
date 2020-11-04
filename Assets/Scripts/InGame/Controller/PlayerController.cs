@@ -222,9 +222,11 @@ namespace ED
 
             if( InGameManager.IsNetwork == false )
                 sp = 200;
-            
+
+            maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             currentHealth = maxHealth;
-            
+            RefreshHealthBar();
+
             for (var i = 0; i < arrDice.Length; i++)
             {
                 arrDice[i] = new Dice {diceFieldNum = i};
@@ -533,17 +535,30 @@ namespace ED
 
                 // new code - by nevill
                 int wave = InGameManager.Get().wave;
-                m.power = data.power + (data.powerInGameUp * upgradeLevel);
+                var myInfo = isMine
+                    ? NetworkManager.Get().GetNetInfo().playerInfo
+                    : NetworkManager.Get().GetNetInfo().otherInfo;
+                var arrDiceLevel = myInfo.DiceLevelArray;
+                int deckNum = -1;
+                for (int i = 0; i < arrDiceDeck.Length; i++)
+                {
+                    if (arrDiceDeck[i] == data)
+                    {
+                        deckNum = i;
+                        break;
+                    }
+                }
+                m.power = data.power + (data.powerUpgrade * arrDiceLevel[deckNum]) + (data.powerInGameUp * upgradeLevel);
                 if (wave > 10)
                 {
                     m.power *= Mathf.Pow(2f, wave - 10);
                 }
                 m.powerUpByUpgrade = data.powerUpgrade;
                 m.powerUpByInGameUp = data.powerInGameUp;
-                m.maxHealth = data.maxHealth + (data.maxHpInGameUp * upgradeLevel);
+                m.maxHealth = data.maxHealth + (data.maxHpUpgrade * arrDiceLevel[deckNum]) + (data.maxHpInGameUp * upgradeLevel);
                 m.maxHealthUpByUpgrade = data.maxHpUpgrade;
                 m.maxHealthUpByInGameUp = data.maxHpInGameUp;
-                m.effect = data.effect + (data.effectInGameUp * upgradeLevel);
+                m.effect = data.effect + (data.effectUpgrade * arrDiceLevel[deckNum]) + (data.effectInGameUp * upgradeLevel);
                 m.effectUpByUpgrade = data.effectUpgrade;
                 m.effectUpByInGameUp = data.effectInGameUp;
                 m.effectDuration = data.effectDuration;
