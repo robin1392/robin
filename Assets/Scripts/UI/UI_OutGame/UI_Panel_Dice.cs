@@ -125,6 +125,7 @@ namespace ED
             listUngettedDice.Clear();
             int gettedSlotCount = 0;
             int ungettedSlotCount = 0;
+            int bonusHP = 0;
             
             foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
             {
@@ -144,6 +145,9 @@ namespace ED
                         // ugd.slotNum = ungettedSlotCount++;
                         // ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
                         // ugd.SetGrayscale();
+                        int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0];
+                        bonusHP += JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level]
+                            .levelUpNeedInfo[info.Value.grade].addTowerHp;
                     }
                     else
                     {
@@ -177,6 +181,8 @@ namespace ED
 
             rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 +
                                                    (ungettedSlotCount > 0 ? 300 : 0));
+
+            text_BonusHP.text = $"타워 추가 체력 : {bonusHP}";
         }
 
         public void ResetYPos()

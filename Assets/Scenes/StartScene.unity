@@ -236,6 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  btn_GuestAccount: {fileID: 0}
 --- !u!1 &525998194
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,7 +650,7 @@ MonoBehaviour:
   UseLocalServer: 0
   LocalServerAddr: 192.168.0.149
   LocalServerPort: 40002
-  UserId: 3a3a516b-dfc1-4c6d-a680-00347cb9f34f
+  UserId: 
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0

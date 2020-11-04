@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
 using UnityEngine.Events;
 using RandomWarsService.Network.Socket.NetPacket;
@@ -624,6 +625,21 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void OnAuthUserAck(MsgUserAuthAck msg)
     {
+        if (msg.ErrorCode == (int)GameErrorCode.ERROR_USER_NOT_FOUND)
+        {
+            ObscuredPrefs.SetString("UserKey", string.Empty);
+            ObscuredPrefs.Save();
+            UI_Start.Get().SetTextStatus(string.Empty);
+            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
+            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
+            {
+                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+                AuthUserReq(string.Empty);
+            });
+            return;
+        }
+        
         UserInfoManager.Get().SetUserInfo(msg.UserInfo);
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);

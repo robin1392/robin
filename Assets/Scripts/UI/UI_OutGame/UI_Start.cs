@@ -7,10 +7,11 @@ using UnityEngine.UI;
 
 public class UI_Start : SingletonDestroy<UI_Start>
 {
+    public Button btn_GuestAccount;
 
     private Text textGameStatus;
-    
-    
+
+
     #region unity base
 
     public override void Awake()
