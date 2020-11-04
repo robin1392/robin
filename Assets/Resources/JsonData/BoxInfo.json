@@ -3,141 +3,141 @@
         "id" : 1,
         "needKey" : 1,
         "boxType" : "NORMAL_BOX",
-        "rewardRate" : [
+        "rewardRate": [
             {
-                "rewardType" : "DICE_NORMAL",
-                "rate" : 100
+                "rewardType": "GOLD",
+                "rate": 100
             },
             {
-                "rewardType" : "DICE_MAGIC",
-                "rate" : 100
+                "rewardType": "DIAMOND",
+                "rate": 0
             },
             {
-                "rewardType" : "DICE_EPIC",
-                "rate" : 100
+                "rewardType": "DICE_NORMAL",
+                "rate": 100
             },
             {
-                "rewardType"	: "DICE_LEGEND",
-                "rate" : 0
+                "rewardType": "DICE_MAGIC",
+                "rate": 100
             },
             {
-                "rewardType"	: "GOLD",
-                "rate" : 100
+                "rewardType": "DICE_EPIC",
+                "rate": 100
             },
             {
-                "rewardType"	: "DIAMOND",
-                "rate" : 0
+                "rewardType": "DICE_LEGEND",
+                "rate": 0
             }
         ],
-        "rewardKindNum" : [
+        "rewardKindNum": [
             {
-                "rewardType" : "DICE_NORMAL",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "GOLD",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType" : "DICE_MAGIC",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DIAMOND",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType" : "DICE_EPIC",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DICE_NORMAL",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType"	: "DICE_LEGEND",
-                "min" : 0,
-                "max" : 0
+                "rewardType": "DICE_MAGIC",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType"	: "GOLD",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DICE_EPIC",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType"	: "DIAMOND",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DICE_LEGEND",
+                "min": 0,
+                "max": 0
             }
         ],
         "classRewards" : {
-            "1" : [
+            "1": [
                 {
-                    "rewardType"	: "DICE_NORMAL",
-                    "value" 		: 14
+                    "rewardType": "GOLD",
+                    "value": 320
                 },
                 {
-                    "rewardType"	: "DICE_MAGIC",
-                    "value" 		: 4
+                    "rewardType": "DIAMOND",
+                    "value": 3
                 },
                 {
-                    "rewardType"	: "DICE_EPIC",
-                    "value" 		: 2
+                    "rewardType": "DICE_NORMAL",
+                    "value": 14
                 },
                 {
-                    "rewardType"	: "DICE_LEGEND",
-                    "value" 		: 0
+                    "rewardType": "DICE_MAGIC",
+                    "value": 4
                 },
                 {
-                    "rewardType"	: "GOLD",
-                    "value" 		: 320
+                    "rewardType": "DICE_EPIC",
+                    "value": 2
                 },
                 {
-                    "rewardType"	: "DIAMOND",
-                    "value" 		: 3
+                    "rewardType": "DICE_LEGEND",
+                    "value": 0
                 }
             ],
-            "2" : [
+            "2": [
                 {
-                    "rewardType"	: "DICE_NORMAL",
-                    "value" 		: 20
+                    "rewardType": "GOLD",
+                    "value": 432
                 },
                 {
-                    "rewardType"	: "DICE_MAGIC",
-                    "value" 		: 5
+                    "rewardType": "DIAMOND",
+                    "value": 3
                 },
                 {
-                    "rewardType"	: "DICE_EPIC",
-                    "value" 		: 2
+                    "rewardType": "DICE_NORMAL",
+                    "value": 20
                 },
                 {
-                    "rewardType"	: "DICE_LEGEND",
-                    "value" 		: 0
+                    "rewardType": "DICE_MAGIC",
+                    "value": 5
                 },
                 {
-                    "rewardType"	: "GOLD",
-                    "value" 		: 432
+                    "rewardType": "DICE_EPIC",
+                    "value": 2
                 },
                 {
-                    "rewardType"	: "DIAMOND",
-                    "value" 		: 3
+                    "rewardType": "DICE_LEGEND",
+                    "value": 0
                 }
             ],
-            "3" : [
+            "3": [
                 {
-                    "rewardType"	: "DICE_NORMAL",
-                    "value" 		: 25
+                    "rewardType": "GOLD",
+                    "value": 544
                 },
                 {
-                    "rewardType"	: "DICE_MAGIC",
-                    "value" 		: 6
+                    "rewardType": "DIAMOND",
+                    "value": 3
                 },
                 {
-                    "rewardType"	: "DICE_EPIC",
-                    "value" 		: 3
+                    "rewardType": "DICE_NORMAL",
+                    "value": 25
                 },
                 {
-                    "rewardType"	: "DICE_LEGEND",
-                    "value" 		: 0
+                    "rewardType": "DICE_MAGIC",
+                    "value": 6
                 },
                 {
-                    "rewardType"	: "GOLD",
-                    "value" 		: 544
+                    "rewardType": "DICE_EPIC",
+                    "value": 3
                 },
                 {
-                    "rewardType"	: "DIAMOND",
-                    "value" 		: 3
+                    "rewardType": "DICE_LEGEND",
+                    "value": 0
                 }
             ]
         }
@@ -146,141 +146,141 @@
         "id" : 2,
         "needKey" : 3,
         "boxType" : "COOP_BOX",
-        "rewardRate" : [
+        "rewardRate": [
             {
-                "rewardType" : "DICE_NORMAL",
-                "rate" : 100
+                "rewardType": "GOLD",
+                "rate": 100
             },
             {
-                "rewardType" : "DICE_MAGIC",
-                "rate" : 100
+                "rewardType": "DIAMOND",
+                "rate": 0
             },
             {
-                "rewardType" : "DICE_EPIC",
-                "rate" : 100
+                "rewardType": "DICE_NORMAL",
+                "rate": 100
             },
             {
-                "rewardType" : "DICE_LEGEND",
-                "rate" : 100
+                "rewardType": "DICE_MAGIC",
+                "rate": 100
             },
             {
-                "rewardType" : "GOLD",
-                "rate" : 100
+                "rewardType": "DICE_EPIC",
+                "rate": 100
             },
             {
-                "rewardType" : "DIAMOND",
-                "rate" : 0
+                "rewardType": "DICE_LEGEND",
+                "rate": 100
             }
         ],
-        "rewardKindNum" : [
+        "rewardKindNum": [
             {
-                "rewardType" : "DICE_NORMAL",
-                "min" : 5,
-                "max" : 5
+                "rewardType": "GOLD",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType" : "DICE_MAGIC",
-                "min" : 3,
-                "max" : 3
+                "rewardType": "DIAMOND",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType" : "DICE_EPIC",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DICE_NORMAL",
+                "min": 5,
+                "max": 5
             },
             {
-                "rewardType" : "DICE_LEGEND",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DICE_MAGIC",
+                "min": 3,
+                "max": 3
             },
             {
-                "rewardType" : "GOLD",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DICE_EPIC",
+                "min": 1,
+                "max": 1
             },
             {
-                "rewardType" : "DIAMOND",
-                "min" : 1,
-                "max" : 1
+                "rewardType": "DICE_LEGEND",
+                "min": 1,
+                "max": 1
             }
         ],
         "classRewards" : {
-            "1" : [
+            "1": [
                 {
-                    "rewardType"	: "DICE_NORMAL",
-                    "value" 		: 141
+                    "rewardType": "GOLD",
+                    "value": 2320
                 },
                 {
-                    "rewardType"	: "DICE_MAGIC",
-                    "value" 		: 38
+                    "rewardType": "DIAMOND",
+                    "value": 0
                 },
                 {
-                    "rewardType"	: "DICE_EPIC",
-                    "value" 		: 16
+                    "rewardType": "DICE_NORMAL",
+                    "value": 141
                 },
                 {
-                    "rewardType"	: "DICE_LEGEND",
-                    "value" 		: 1
+                    "rewardType": "DICE_MAGIC",
+                    "value": 38
                 },
                 {
-                    "rewardType"	: "GOLD",
-                    "value" 		: 2320
+                    "rewardType": "DICE_EPIC",
+                    "value": 16
                 },
                 {
-                    "rewardType"	: "DIAMOND",
-                    "value" 		: 0
+                    "rewardType": "DICE_LEGEND",
+                    "value": 1
                 }
             ],
-            "2" : [
+            "2": [
                 {
-                    "rewardType"	: "DICE_NORMAL",
-                    "value" 		: 147
+                    "rewardType": "DICE_LEGEND",
+                    "value": 1
                 },
                 {
-                    "rewardType"	: "DICE_MAGIC",
-                    "value" 		: 40
+                    "rewardType": "GOLD",
+                    "value": 2400
                 },
                 {
-                    "rewardType"	: "DICE_EPIC",
-                    "value" 		: 16
+                    "rewardType": "DIAMOND",
+                    "value": 0
                 },
                 {
-                    "rewardType"	: "DICE_LEGEND",
-                    "value" 		: 1
+                    "rewardType": "DICE_NORMAL",
+                    "value": 147
                 },
                 {
-                    "rewardType"	: "GOLD",
-                    "value" 		: 2400
+                    "rewardType": "DICE_MAGIC",
+                    "value": 40
                 },
                 {
-                    "rewardType"	: "DIAMOND",
-                    "value" 		: 0
+                    "rewardType": "DICE_EPIC",
+                    "value": 16
                 }
             ],
-            "3" : [
+            "3": [
                 {
-                    "rewardType"	: "DICE_NORMAL",
-                    "value" 		: 153
+                    "rewardType": "GOLD",
+                    "value": 2480
                 },
                 {
-                    "rewardType"	: "DICE_MAGIC",
-                    "value" 		: 42
+                    "rewardType": "DIAMOND",
+                    "value": 0
                 },
                 {
-                    "rewardType"	: "DICE_EPIC",
-                    "value" 		: 17
+                    "rewardType": "DICE_NORMAL",
+                    "value": 153
                 },
                 {
-                    "rewardType"	: "DICE_LEGEND",
-                    "value" 		: 1
+                    "rewardType": "DICE_MAGIC",
+                    "value": 42
                 },
                 {
-                    "rewardType"	: "GOLD",
-                    "value" 		: 2480
+                    "rewardType": "DICE_EPIC",
+                    "value": 17
                 },
                 {
-                    "rewardType"	: "DIAMOND",
-                    "value" 		: 0
+                    "rewardType": "DICE_LEGEND",
+                    "value": 1
                 }
             ]
         }
