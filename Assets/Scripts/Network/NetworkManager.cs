@@ -615,7 +615,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         MsgUserAuthReq msg = new MsgUserAuthReq();
         msg.UserId = userId;
-        _httpSender.UserAuthReq(msg);
+        _httpSender.AuthUserReq(msg);
         UnityUtil.Print("SEND AUTH => userid", userId, "green");
     }
 
@@ -629,6 +629,22 @@ public class NetworkManager : Singleton<NetworkManager>
 
         GameStateManager.Get().UserAuthOK();
         UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
+    }
+
+
+    public void EditUserNameReq(string userId, string userName)
+    {
+        MsgEditUserNameReq msg = new MsgEditUserNameReq();
+        msg.UserId = userId;
+        msg.UserName = userName;
+        _httpSender.EditUserNameReq(msg);
+        UnityUtil.Print("SEND EDIT USER NAME => name", userName, "green");
+    }
+
+
+    void OnEditUserNameAck(MsgEditUserNameAck msg)
+    {
+        UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
     }
 
 

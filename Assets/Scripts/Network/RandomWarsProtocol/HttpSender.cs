@@ -17,13 +17,25 @@ namespace RandomWarsProtocol
         }
 
 
-        public void UserAuthReq(MsgUserAuthReq msg)
+        public void AuthUserReq(MsgUserAuthReq msg)
         {
             _httpService.Send((int)GameProtocol.AUTH_USER_REQ, "userauth", JsonConvert.SerializeObject(msg));
         }
 
 
         public string AuthUserAck(MsgUserAuthAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
+        public void EditUserNameReq(MsgEditUserNameReq msg)
+        {
+            _httpService.Send((int)GameProtocol.EDIT_USER_NAME_REQ, "usernameedit", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string EditUserNameAck(MsgEditUserNameAck msg)
         {
             return JsonConvert.SerializeObject(msg);
         }

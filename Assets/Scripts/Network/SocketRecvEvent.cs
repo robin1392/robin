@@ -9,7 +9,7 @@ using UnityEngine;
 using RandomWarsService.Network.Socket.NetService;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
-
+using Newtonsoft.Json;
 
 public class SocketRecvEvent
 {
@@ -146,7 +146,9 @@ public class SocketRecvEvent
         //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
         //SendSocket.ReadyGameReq(peer);
         UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
-        UnityUtil.Print("join my info ", msg.PlayerInfo.PlayerUId + "  " +msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print("join my info ", msg.PlayerInfo.PlayerUId + "  " + msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.PlayerInfo), "white");
+
 
         //
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
@@ -286,6 +288,8 @@ public class SocketRecvEvent
     public void OnJoinGameNotify(Peer peer, MsgJoinGameNotify msg)
     {
         UnityUtil.Print("other info ", msg.OtherPlayerInfo.PlayerUId + "  " + msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.OtherPlayerInfo), "white");
+
 
         // menu
         NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);

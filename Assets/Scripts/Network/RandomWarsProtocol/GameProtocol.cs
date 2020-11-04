@@ -12,6 +12,9 @@ namespace RandomWarsProtocol
         AUTH_USER_REQ,
         AUTH_USER_ACK,
 
+        EDIT_USER_NAME_REQ,
+        EDIT_USER_NAME_ACK,
+
         UPDATE_DECK_REQ,
         UPDATE_DECK_ACK,
 

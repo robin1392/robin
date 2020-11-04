@@ -22,6 +22,23 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
+    public class MsgEditUserNameReq
+    {
+        public string UserId;
+        public string UserName;
+    }
+
+
+    [Serializable]
+    public class MsgEditUserNameAck
+    {
+        public int ErrorCode;
+        public string UserId;
+        public string UserName;
+    }
+
+
+    [Serializable]
     public class MsgUpdateDeckReq
     {
         public string UserId;

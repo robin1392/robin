@@ -23,7 +23,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 playerInfo.Write(bw);
                 peer.SendPacket((int)GameProtocol.JOIN_GAME_ACK, ms.ToArray());
             }
@@ -56,7 +56,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 peer.SendPacket((int)GameProtocol.LEAVE_GAME_ACK, ms.ToArray());
             }
         }
@@ -88,7 +88,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 peer.SendPacket((int)GameProtocol.READY_GAME_ACK, ms.ToArray());
             }
         }
@@ -164,7 +164,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 playerBase.Write(bw);
                 otherPlayerBase.Write(bw);
                 peer.SendPacket((int)GameProtocol.RECONNECT_GAME_ACK, ms.ToArray());
@@ -198,7 +198,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 peer.SendPacket((int)GameProtocol.READY_SYNC_GAME_ACK, ms.ToArray());
             }
         }
@@ -250,7 +250,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 peer.SendPacket((int)GameProtocol.START_SYNC_GAME_ACK, ms.ToArray());
             }
         }
@@ -329,7 +329,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 peer.SendPacket((int)GameProtocol.END_SYNC_GAME_ACK, ms.ToArray());
             }
         }
@@ -361,7 +361,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 bw.Write(diceId);
                 bw.Write(slotNum);
                 bw.Write(level);
@@ -403,7 +403,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 bw.Write(resetFieldNum);
                 bw.Write(leveupFieldNum);
                 bw.Write(levelUpDiceId);
@@ -444,7 +444,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 bw.Write(diceId);
                 bw.Write(inGameUp);
                 bw.Write(currentSp);
@@ -484,7 +484,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 bw.Write(upgrade);
                 bw.Write(currentSp);
                 peer.SendPacket((int)GameProtocol.UPGRADE_SP_ACK, ms.ToArray());
@@ -523,7 +523,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 bw.Write(playerUId);
                 bw.Write(damage);
                 bw.Write(currentHp);
@@ -550,7 +550,7 @@ namespace RandomWarsProtocol
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((short)code);
+                bw.Write((int)code);
                 bw.Write((byte)gameResult);
                 bw.Write(WinningStreak);
 

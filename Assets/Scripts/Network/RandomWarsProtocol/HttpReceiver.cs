@@ -15,6 +15,11 @@ namespace RandomWarsProtocol
         public delegate void AuthUserAckDelegate(MsgUserAuthAck msg);
         public AuthUserAckDelegate AuthUserAck;
 
+        public delegate Task<string> EditUserNameReqDelegate(MsgEditUserNameReq msg);
+        public EditUserNameReqDelegate EditUserNameReq;
+        public delegate void EditUserNameAckDelegate(MsgEditUserNameAck msg);
+        public EditUserNameAckDelegate EditUserNameAck;
+
         public delegate Task<string> UpdateDeckReqDelegate(MsgUpdateDeckReq msg);
         public UpdateDeckReqDelegate UpdateDeckReq;
         public delegate void UpdateDeckAckDelegate(MsgUpdateDeckAck msg);
@@ -58,6 +63,15 @@ namespace RandomWarsProtocol
 
                         MsgUserAuthReq msg = JsonConvert.DeserializeObject<MsgUserAuthReq>(json);
                         ackJson = await AuthUserReq(msg);
+                    }
+                    break;
+                case GameProtocol.EDIT_USER_NAME_REQ:
+                    {
+                        if (EditUserNameReq == null)
+                            return ackJson;
+
+                        MsgEditUserNameReq msg = JsonConvert.DeserializeObject<MsgEditUserNameReq>(json);
+                        ackJson = await EditUserNameReq(msg);
                     }
                     break;
                 case GameProtocol.UPDATE_DECK_REQ:
@@ -131,6 +145,15 @@ namespace RandomWarsProtocol
 
                         MsgUserAuthAck msg = JsonConvert.DeserializeObject<MsgUserAuthAck>(json);
                         AuthUserAck(msg);
+                    }
+                    break;
+                case GameProtocol.EDIT_USER_NAME_ACK:
+                    {
+                        if (EditUserNameAck == null)
+                            return false;
+
+                        MsgEditUserNameAck msg = JsonConvert.DeserializeObject<MsgEditUserNameAck>(json);
+                        EditUserNameAck(msg);
                     }
                     break;
                 case GameProtocol.UPDATE_DECK_ACK:

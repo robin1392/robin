@@ -14,23 +14,30 @@ namespace RandomWarsProtocol
 
         ERROR_DATABASE_UNEXPECTED                          = 10011,             // 데이터베이스의 예상치 못한 에러
 
-        ERROR_GAME_ROOM_NOT_FOUND           = 10101,          // 게임방을 찾을 수 없습니다.
-        ERROR_GAME_ROOM_PLAYER_JOIN             = 10102,          // 게임방 참여에 실패했습니다.
-        ERROR_GAME_ROOM_PLAYER_LEAVE            = 10103,          // 게임방 퇴장에 실패했습니다.
-        ERROR_GAME_PLAYER_NOT_FOUND             = 10104,            // 플레이어를 찾을 수 없습니다.
-        ERROR_GAME_PLAYER_INVALID_STATE         = 10105,            // 플레이어를 상태가 유효하지 않습니다.
-        ERROR_GET_DICE_FAILED                           = 10106,            // 주사위 생성에 실패했습니다.
-        ERROR_LEVELUP_DICE_FAILED                   = 10107,            // 주사위 강화에 실패했습니다.
-        ERROR_INGAME_UP_DICE_FAILED                   = 10108,            // 주사위 강화에 실패했습니다.
-
-        ERROR_PAUSE_LIMIT                               = 20001,
 
 
-        ERROR_BOX_NOT_FOUND                         = 30001,                // box를 찾을 수 없습니다.
-        ERROR_BOX_COUNT_LACK                         = 30002,                // box 수량이 부족하다.
+        ERROR_USER_NOT_FOUND = 10001,               // 유저를 찾을 수 없음.
+        ERROR_USER_NAME_DUPLICATED = 10001,     // 유저명 중복
 
-        ERROR_DICE_LEVELUP_LACK_GOLD                = 40001,            // 주사위 레벨업 골드 부족
-        ERROR_DICE_LEVELUP_LACK_DICE                    = 40002,            // 주사위 레벨업 필요 주사위 부족
-        ERROR_DICE_LEVELUP_DATA_NOT_FOUND           = 40003,            // 주사위 레벨업 데이터 없음.
+        ERROR_BOX_NOT_FOUND = 10101,                // box를 찾을 수 없습니다.
+        ERROR_BOX_COUNT_LACK = 10102,                // box 수량이 부족하다.
+
+        ERROR_DICE_LEVELUP_DATA_NOT_FOUND = 10201,            // 주사위 레벨업 골드 부족
+        ERROR_DICE_LEVELUP_LACK_GOLD = 10202,            // 주사위 레벨업 골드 부족
+        ERROR_DICE_LEVELUP_LACK_DICE = 10203,            // 주사위 레벨업 필요 주사위 부족
+
+
+        ERROR_GAME_ROOM_NOT_FOUND = 20101,          // 게임방을 찾을 수 없습니다.
+        ERROR_GAME_ROOM_PLAYER_JOIN             = 20102,          // 게임방 참여에 실패했습니다.
+        ERROR_GAME_ROOM_PLAYER_LEAVE            = 20103,          // 게임방 퇴장에 실패했습니다.
+        ERROR_GAME_PLAYER_NOT_FOUND             = 20104,            // 플레이어를 찾을 수 없습니다.
+        ERROR_GAME_PLAYER_INVALID_STATE         = 20105,            // 플레이어를 상태가 유효하지 않습니다.
+        ERROR_GET_DICE_FAILED                           = 20106,            // 주사위 생성에 실패했습니다.
+        ERROR_LEVELUP_DICE_FAILED                   = 20107,            // 주사위 강화에 실패했습니다.
+        ERROR_INGAME_UP_DICE_FAILED                   = 20108,            // 주사위 강화에 실패했습니다.
+
+
+
+
     }
 }
