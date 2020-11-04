@@ -328,6 +328,7 @@ public class UI_BoxOpenPopup : UI_Popup
         {
             ani_Box.SetTrigger("Open");
 
+            btn_Blind.interactable = false;
             if (openCount == 0)
             {
                 obj_BoxOpenParticle.SetActive(true);
@@ -341,6 +342,7 @@ public class UI_BoxOpenPopup : UI_Popup
         }
         else if (openCount == msg.BoxReward.Length)
         {
+            btn_Blind.interactable = false;
             ani_Item.gameObject.SetActive(false);
             StartCoroutine(ShowResultCoroutine());
         }
@@ -364,6 +366,7 @@ public class UI_BoxOpenPopup : UI_Popup
             case REWARD_TYPE.GOLD:
                 image_ItemIcon.sprite = sprite_Gold;
                 image_ItemIcon.SetNativeSize();
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Gold, 0.6f));
                 ani_Item.SetTrigger("Get");
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.GOLD);
                 text_ItemCount.text = $"x{reward.Value}";
@@ -372,6 +375,7 @@ public class UI_BoxOpenPopup : UI_Popup
             case REWARD_TYPE.DIAMOND:
                 image_ItemIcon.sprite = sprite_Diamond;
                 image_ItemIcon.SetNativeSize();
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Gold, 0.6f));
                 ani_Item.SetTrigger("Get");
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DIAMOND);
                 text_ItemCount.text = $"x{reward.Value}";
@@ -470,7 +474,6 @@ public class UI_BoxOpenPopup : UI_Popup
             case REWARD_TYPE.DICE_LEGEND:
             {
                 obj_Guage.SetActive(true);
-                btn_Blind.interactable = false;
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3];
                 crt_IconChange =
                     StartCoroutine(IconChangeCoroutine(
@@ -510,6 +513,7 @@ public class UI_BoxOpenPopup : UI_Popup
     {
         yield return new WaitForSeconds(delay);
 
+        btn_Blind.interactable = true;
         image_ItemIcon.sprite = icon;
         image_ItemIcon.SetNativeSize();
     }
@@ -603,7 +607,8 @@ public class UI_BoxOpenPopup : UI_Popup
         }
 
         openCount++;
-        yield return null;
+        yield return new WaitForSeconds(3f);
+        btn_Blind.interactable = true;
     }
     
 }

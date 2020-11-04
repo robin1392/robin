@@ -4723,7 +4723,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -4865,7 +4865,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.7
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4999,7 +4999,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 30
-      minScalar: 20
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5284,7 +5284,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -1
+      scalar: 0
       minScalar: -1
       maxCurve:
         serializedVersion: 2
@@ -5336,7 +5336,7 @@ ParticleSystem:
         m_RotationOrder: 4
   ShapeModule:
     serializedVersion: 6
-    enabled: 0
+    enabled: 1
     type: 0
     angle: 25
     length: 5
@@ -5424,7 +5424,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.01
+      value: 0.6
       mode: 0
       spread: 0
       speed:
@@ -5543,7 +5543,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 11
+      scalar: 8
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -9464,7 +9464,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0

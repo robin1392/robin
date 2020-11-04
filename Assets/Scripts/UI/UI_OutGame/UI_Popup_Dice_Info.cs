@@ -172,18 +172,17 @@ namespace ED
                     info.dicGettedDice[data.id][0]++;
                     info.dicGettedDice[data.id][1] -= needDiceCount;
                     
-                    UI_Main.Get().panel_Dice.RefreshGettedDice();
-                    UI_Main.Get().RefreshUserInfoUI();
-                    Initialize(data);
-                    
                     obj_Result.SetActive(true);
                     StartCoroutine(SetDiceLevelUpResultCoroutine());
                 }
             }
         }
 
+        private bool isDiceLevelUpCompleted;
         private IEnumerator SetDiceLevelUpResultCoroutine()
         {
+            isDiceLevelUpCompleted = false;
+            
             image_ResultDiceIcon.transform.localScale = Vector3.zero;
             text_ResultDiceName.transform.localScale = Vector3.zero;
             text_ResultDiceLevel.transform.localScale = Vector3.zero;
@@ -254,11 +253,23 @@ namespace ED
             {
                 text_ResultDiceLevel.transform.DOScale(1f, 0.2f);
             });
+            
+            yield return new WaitForSeconds(1f);
+            
+            UI_Main.Get().panel_Dice.RefreshGettedDice();
+            UI_Main.Get().RefreshUserInfoUI();
+            Initialize(data);
+
+            yield return new WaitForSeconds(1f);
+            isDiceLevelUpCompleted = true;
         }
 
         public void Click_DiceLevelUpResult()
         {
-            obj_Result.SetActive(false);
+            if (isDiceLevelUpCompleted)
+            {
+                obj_Result.SetActive(false);
+            }
         }
 
         public void Click_Use()

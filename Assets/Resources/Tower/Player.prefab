@@ -94,7 +94,7 @@ MonoBehaviour:
   power: 0
   powerUpByUpgrade: 0
   powerUpByInGameUp: 0
-  maxHealth: 30000
+  maxHealth: 20001
   currentHealth: 0
   maxHealthUpByUpgrade: 0
   maxHealthUpByInGameUp: 0
@@ -118,13 +118,16 @@ MonoBehaviour:
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 7007598002378707877}
   ps_ShieldOff: {fileID: 6893542662049175148}
-  pref_Guardian: {fileID: 5081294253336761964, guid: 007e05ebde8f64b2a96c1f5ab77bc495,
+  pref_Guardian: {fileID: 5081294253336761964, guid: 9d0b9ace6ba4c4164b1ff7d70e014e02,
     type: 3}
-  _spawnCount: 1
+  spawnCount: 1
+  subSpawnCount: 1000
   _sp: 200
   robotPieceCount: 0
   robotEyeTotalLevel: 0
   listMagic: []
+  isHalfHealth: 0
+  isMinionAgentMove: 1
 --- !u!54 &4956517791549293242
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -12,10 +12,20 @@ namespace ED
         private static readonly int Idle2 = Animator.StringToHash("Idle2");
         private static readonly int Set1 = Animator.StringToHash("Set");
 
-        private void Start()
+        private Dictionary<int, GameObject[]> dicAura = new Dictionary<int, GameObject[]>();
+
+    private void Start()
         {
             if (arrAni_Model == null) arrAni_Model = new Animator[arrTs_SpawnPos.Length];
             StartCoroutine(Idle2Coroutine());
+            for (int i = 0; i < arrTs_SpawnPos.Length; i++)
+            {
+                dicAura.Add(i, new GameObject[4]);
+                dicAura[i][0] = arrTs_SpawnPos[i].GetChild(0).gameObject;
+                dicAura[i][1] = arrTs_SpawnPos[i].GetChild(1).gameObject;
+                dicAura[i][2] = arrTs_SpawnPos[i].GetChild(2).gameObject;
+                dicAura[i][3] = arrTs_SpawnPos[i].GetChild(3).gameObject;
+            }
             Set();
         }
 
@@ -46,6 +56,14 @@ namespace ED
                     arrAni_Model[i].transform.localPosition = Vector3.zero;
                     arrAni_Model[i].transform.localRotation = Quaternion.identity;
                     arrAni_Model[i].SetTrigger(Set1);
+
+                    if (dicAura.Count > 0)
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            dicAura[i][j].SetActive(j == data.grade);
+                        }
+                    }
                 }
 
                 if (data.moveType == 1)
@@ -59,7 +77,7 @@ namespace ED
         {
             while (true)
             {
-                yield return new WaitForSeconds(Random.Range(1f, 10f));
+                yield return new WaitForSeconds(Random.Range(1f, 8f));
 
                 var rnd = Random.Range(0, arrAni_Model.Length);
                 if (arrAni_Model != null && arrAni_Model[rnd] != null)

@@ -1308,6 +1308,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Main_Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6180031956623453757, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6180031956912710742, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: ui_MainStage
@@ -2575,11 +2580,6 @@ PrefabInstance:
     - target: {fileID: 6362351358718849229, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6362351359155974312, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6362351359210239237, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
