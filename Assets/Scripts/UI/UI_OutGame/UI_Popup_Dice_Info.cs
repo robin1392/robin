@@ -49,6 +49,7 @@ namespace ED
         public Text text_ResultDiceLevel;
         public RectTransform rts_ResultStatParent;
         public GameObject pref_ResultStatSlot;
+        public ParticleSystem ps_ResultIconBackground;
 
         //private Data_Dice data;
         private DiceInfoData data;
@@ -191,7 +192,8 @@ namespace ED
             // Data set
             image_ResultDiceIcon.sprite = FileHelper.GetIcon(data.iconName);
             text_ResultDiceName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
-            text_ResultDiceLevel.text = $"LEVEL {diceLevel}";
+            text_ResultDiceLevel.text = $"LEVEL {diceLevel - 1}";
+            text_ResultDiceLevel.color = Color.white;
             
             image_ResultBG.DOFade(0f, 0f);
             image_ResubtBGPattern.DOFade(0f, 0f);
@@ -240,6 +242,18 @@ namespace ED
                 obj.transform.localScale = Vector3.zero;
                 obj.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.5f + 0.1f * i);
             }
+            
+            image_ResultDiceIcon.transform.DOScale(1.6f, 0.2f).SetDelay(1.7f).OnComplete(() =>
+            {
+                text_ResultDiceLevel.text = $"LEVEL {diceLevel}";
+                text_ResultDiceLevel.color = UnityUtil.HexToColor("71FA4A");
+                image_ResultDiceIcon.transform.DOScale(1.4f, 0.2f);
+                ps_ResultIconBackground.Play();
+            });
+            text_ResultDiceLevel.transform.DOScale(1.2f, 0.2f).SetDelay(1.7f).OnComplete(() =>
+            {
+                text_ResultDiceLevel.transform.DOScale(1f, 0.2f);
+            });
         }
 
         public void Click_DiceLevelUpResult()

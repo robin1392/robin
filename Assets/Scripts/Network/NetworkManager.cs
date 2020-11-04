@@ -214,6 +214,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.StopMatchAck = OnStopMatchAck;
         _httpReceiver.OpenBoxAck = OnOpenBoxAck;
         _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
+        _httpReceiver.EditUserNameAck = OnEditUserNameAck;
 
 
 

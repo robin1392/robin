@@ -34,7 +34,7 @@ public class UI_Popup_Userinfo : UI_Popup
     
     public void OnChangeInputNickname(string value)
     {
-        SetEditButton(String.Compare(oldNickname, value) != 0);
+        SetEditButton(String.Compare(oldNickname, value) != 0 && string.IsNullOrEmpty(value) == false);
     }
 
     public void Click_EditNickname()
@@ -48,6 +48,7 @@ public class UI_Popup_Userinfo : UI_Popup
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
+        UserInfoManager.Get().GetUserInfo().SetNickName(msg.UserName);
         UI_Main.Get().RefreshUserInfoUI();
         SetEditButton(false);
     }
