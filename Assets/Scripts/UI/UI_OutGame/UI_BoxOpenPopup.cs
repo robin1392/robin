@@ -41,6 +41,7 @@ public class UI_BoxOpenPopup : UI_Popup
     public Text text_ItemName;
     public Text text_ItemCount;
     public Text text_ItemGuageCount;
+    public GameObject obj_Guage;
     public Image image_ItemGuage;
     public Image image_UpgradeIcon;
     public ParticleSystem[] arrPs_ItemNormal;
@@ -96,33 +97,36 @@ public class UI_BoxOpenPopup : UI_Popup
         this.cost = cost;
         
         var data = JsonDataManager.Get().dataBoxInfo.GetData(id);
-        var classData = new List<RewardData>(data.classRewards[UserInfoManager.Get().GetUserInfo().nClass]);
+        var classRewardData = new List<RewardData>(data.classRewards[UserInfoManager.Get().GetUserInfo().nClass]);
+        var classRateData = new List<RewardRate>(data.rewardRate);
+        var classKindData = new List<RewardKindNum>(data.rewardKindNum);
 
         text_BoxName.text = LocalizationManager.GetLangDesc(40000 + id);
         
         // Gold
-        var goldData = classData.Find(d => d.rewardType == REWARD_TYPE.GOLD);
-        obj_Gold.SetActive(goldData != null);
-        if (goldData != null)
+        var goldData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.GOLD);
+        var goldRate = classRateData.Find(d => d.rewardType == REWARD_TYPE.GOLD);
+        obj_Gold.SetActive(goldData != null && goldRate != null && goldRate.rate == 100);
+        if (obj_Gold.activeSelf)
         {
             text_Gold.text = goldData.value.ToString();
         }
         
         int totalDiceCount = 0;
         // Normal Dice
-        var normalDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_NORMAL);
+        var normalDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_NORMAL);
         if (normalDiceData != null) totalDiceCount += normalDiceData.value;
         
         // Magic Dice
-        var magicDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_MAGIC);
+        var magicDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_MAGIC);
         if (magicDiceData != null) totalDiceCount += magicDiceData.value;
 
         // Epic Dice
-        var epicDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_EPIC);
+        var epicDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_EPIC);
         if (epicDiceData != null) totalDiceCount += epicDiceData.value;
 
         // Legend Dice
-        var legendDiceData = classData.Find(d => d.rewardType == REWARD_TYPE.DICE_LEGEND);
+        var legendDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_LEGEND);
         if (legendDiceData != null) totalDiceCount += legendDiceData.value;
         
         // Total Dice
@@ -130,9 +134,10 @@ public class UI_BoxOpenPopup : UI_Popup
         if (totalDiceCount > 0) text_Dice.text = $"x{totalDiceCount}";
         
         // Diamond
-        var diamondData = classData.Find(d => d.rewardType == REWARD_TYPE.DIAMOND);
-        obj_Diamond.SetActive(diamondData != null);
-        if (diamondData != null)
+        var diamondData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DIAMOND);
+        var diamondRate = classRateData.Find(d => d.rewardType == REWARD_TYPE.DIAMOND);
+        obj_Diamond.SetActive(diamondData != null && diamondRate != null && diamondRate.rate == 100);
+        if (obj_Diamond.activeSelf)
         {
             text_Diamond.text = diamondData.value.ToString();
         }
@@ -362,6 +367,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 ani_Item.SetTrigger("Get");
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.GOLD);
                 text_ItemCount.text = $"x{reward.Value}";
+                obj_Guage.SetActive(false);
                 break;
             case REWARD_TYPE.DIAMOND:
                 image_ItemIcon.sprite = sprite_Diamond;
@@ -369,9 +375,11 @@ public class UI_BoxOpenPopup : UI_Popup
                 ani_Item.SetTrigger("Get");
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DIAMOND);
                 text_ItemCount.text = $"x{reward.Value}";
+                obj_Guage.SetActive(false);
                 break;
             case REWARD_TYPE.DICE_NORMAL:
             {
+                obj_Guage.SetActive(true);
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
                 {
                     var module = arrPs_ItemNormal[i].main;
@@ -401,6 +409,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 break;
             case REWARD_TYPE.DICE_MAGIC:
             {
+                obj_Guage.SetActive(true);
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
                 {
                     var module = arrPs_ItemNormal[i].main;
@@ -430,6 +439,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 break;
             case REWARD_TYPE.DICE_EPIC:
             {
+                obj_Guage.SetActive(true);
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
                 {
                     var module = arrPs_ItemNormal[i].main;
@@ -459,6 +469,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 break;
             case REWARD_TYPE.DICE_LEGEND:
             {
+                obj_Guage.SetActive(true);
                 btn_Blind.interactable = false;
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3];
                 crt_IconChange =
