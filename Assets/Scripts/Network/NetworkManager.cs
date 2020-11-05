@@ -151,6 +151,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgOpenBoxAck> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     private Action<MsgEditUserNameAck> _editUserNameCallback;
+    private Action<MsgGetRankAck> _getRankCallback;
     #endregion
 
     #region unity base
@@ -841,16 +842,21 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    void GetRankReq(string userId)
+    public void GetRankReq(string userId, Action<MsgGetRankAck> callback)
     {
         MsgGetRankReq msg = new MsgGetRankReq();
         msg.UserId = userId;
+        _getRankCallback = callback;
         _httpSender.GetRankReq(msg);
         UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");
     }
 
     void OnGetRankAck(MsgGetRankAck msg)
     {
+        if (_getRankCallback != null)
+        {
+            _getRankCallback(msg);
+        }
     }
 
     #endregion
