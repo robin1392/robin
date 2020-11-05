@@ -294,9 +294,9 @@ public class UserInfoManager : Singleton<UserInfoManager>
         SetUserKey(info.UserId);
         
         _userInfo.SetNickName(info.Name);
-        _userInfo.diamond = info.Diamond;
-        _userInfo.gold = info.Gold;
-        _userInfo.key = info.Key;
+        _userInfo.diamond = info.Goods.Diamond;
+        _userInfo.gold = info.Goods.Gold;
+        _userInfo.key = info.Goods.Key;
         _userInfo.trophy = info.Trophy;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);

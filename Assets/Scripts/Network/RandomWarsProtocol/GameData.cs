@@ -5,6 +5,34 @@ using System.IO;
 namespace RandomWarsProtocol
 {
     [Serializable]
+    public class MsgUserGoods
+    {
+        // 골드 수량
+        public int Gold;
+        // 다이아몬드 수량
+        public int Diamond;
+        // 열쇠 수량
+        public int Key;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Gold);
+            bw.Write(Diamond);
+            bw.Write(Key);
+        }
+
+        public static MsgUserGoods Read(BinaryReader br)
+        {
+            MsgUserGoods data = new MsgUserGoods();
+            data.Gold = br.ReadInt32();
+            data.Diamond = br.ReadInt16();
+            data.Key = br.ReadInt16();
+            return data;
+        }
+    }
+
+
+    [Serializable]
     public class MsgUserInfo
     {
         // 유저 아이디
@@ -13,12 +41,8 @@ namespace RandomWarsProtocol
         public string Name;
         // 트로피 수
         public int Trophy;
-        // 보유 골드 수량
-        public int Gold;
-        // 보유 다이아몬드 수량
-        public int Diamond;
-        // 보유 열쇠 수량
-        public int Key;
+        // 유저 재화
+        public MsgUserGoods Goods;
         // 유저 클래스
         public short Class;
         // 연승 횟수 (최대 15회)
@@ -30,9 +54,7 @@ namespace RandomWarsProtocol
             bw.Write(UserId);
             bw.Write(Name);
             bw.Write(Trophy);
-            bw.Write(Gold);
-            bw.Write(Diamond);
-            bw.Write(Key);
+            Goods.Write(bw);
             bw.Write(Class);
             bw.Write(WinStreak);
         }
@@ -43,9 +65,7 @@ namespace RandomWarsProtocol
             data.UserId = br.ReadString();
             data.Name = br.ReadString();
             data.Trophy = br.ReadInt32();
-            data.Gold = br.ReadInt32();
-            data.Diamond = br.ReadInt32();
-            data.Key = br.ReadInt32();
+            data.Goods = MsgUserGoods.Read(br);
             data.Class = br.ReadInt16();
             data.WinStreak = br.ReadByte();
             return data;
@@ -64,7 +84,6 @@ namespace RandomWarsProtocol
         public void Write(BinaryWriter bw)
         {
             bw.Write(Index);
-
             bw.Write(DeckInfo.Length);
             byte[] bytes = new byte[DeckInfo.Length * sizeof(int)];
             Buffer.BlockCopy(DeckInfo, 0, bytes, 0, bytes.Length);
@@ -75,7 +94,7 @@ namespace RandomWarsProtocol
         {
             MsgUserDeck data = new MsgUserDeck();
             data.Index = br.ReadSByte();
-
+            
             int length = br.ReadInt32();
             byte[] bytes = br.ReadBytes(length * sizeof(int));
             data.DeckInfo = new int[length];

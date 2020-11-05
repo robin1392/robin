@@ -119,6 +119,8 @@ namespace RandomWarsProtocol.Msg
     {
         public GameErrorCode ErrorCode;
         public MsgReward[] BoxReward;
+        public MsgUserBox BoxInfo;
+        public MsgUserGoods UserGoods;
     }
 
 
@@ -134,6 +136,8 @@ namespace RandomWarsProtocol.Msg
     public class MsgLevelUpDiceAck
     {
         public GameErrorCode ErrorCode;
+        public MsgUserDice UserDice;
+        public MsgUserGoods UserGoods;
     }
 
 
