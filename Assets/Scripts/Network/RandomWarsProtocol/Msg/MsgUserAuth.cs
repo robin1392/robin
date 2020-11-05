@@ -148,5 +148,6 @@ namespace RandomWarsProtocol.Msg
     public class MsgGetRankAck
     {
         public GameErrorCode ErrorCode;
+        public MsgUserRank[] RankInfo;
     }
 }
