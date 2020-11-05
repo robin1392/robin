@@ -216,6 +216,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.OpenBoxAck = OnOpenBoxAck;
         _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
         _httpReceiver.EditUserNameAck = OnEditUserNameAck;
+        _httpReceiver.GetRankAck = OnGetRankAck;
 
 
 
@@ -625,7 +626,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void OnAuthUserAck(MsgUserAuthAck msg)
     {
-        if (msg.ErrorCode == (int)GameErrorCode.ERROR_USER_NOT_FOUND)
+        if (msg.ErrorCode == GameErrorCode.ERROR_USER_NOT_FOUND)
         {
             ObscuredPrefs.SetString("UserKey", string.Empty);
             ObscuredPrefs.Save();
@@ -838,6 +839,20 @@ public class NetworkManager : Singleton<NetworkManager>
         }
         UnityUtil.Print("RECV LEVELUP DICE => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
+
+
+    void GetRankReq(string userId)
+    {
+        MsgGetRankReq msg = new MsgGetRankReq();
+        msg.UserId = userId;
+        _httpSender.GetRankReq(msg);
+        UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");
+    }
+
+    void OnGetRankAck(MsgGetRankAck msg)
+    {
+    }
+
     #endregion
 }
 

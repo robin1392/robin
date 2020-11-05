@@ -13,7 +13,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgUserAuthAck
     {
-        public int ErrorCode;
+        public GameErrorCode ErrorCode;
         public MsgUserInfo UserInfo;
         public MsgUserDeck[] UserDeck;
         public MsgUserDice[] UserDice;
@@ -50,6 +50,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgUpdateDeckAck
     {
+        public GameErrorCode ErrorCode;
         public sbyte DeckIndex;
         public int[] DiceIds;
     }
@@ -65,7 +66,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStartMatchAck
     {
-        public int ErrorCode;
+        public GameErrorCode ErrorCode;
         public string UserId;
         public string TicketId;
     }
@@ -100,7 +101,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStopMatchAck
     {
-        public int ErrorCode;
+        public GameErrorCode ErrorCode;
         public string UserId;
     }
 
@@ -116,7 +117,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgOpenBoxAck
     {
-        public int ErrorCode;
+        public GameErrorCode ErrorCode;
         public MsgReward[] BoxReward;
     }
 
@@ -132,6 +133,20 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgLevelUpDiceAck
     {
-        public int ErrorCode;
+        public GameErrorCode ErrorCode;
+    }
+
+
+    [Serializable]
+    public class MsgGetRankReq
+    {
+        public string UserId;
+    }
+
+
+    [Serializable]
+    public class MsgGetRankAck
+    {
+        public GameErrorCode ErrorCode;
     }
 }

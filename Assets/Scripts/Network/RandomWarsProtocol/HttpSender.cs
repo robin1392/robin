@@ -109,5 +109,16 @@ namespace RandomWarsProtocol
         {
             return JsonConvert.SerializeObject(msg);
         }
+
+        public void GetRankReq(MsgGetRankReq msg)
+        {
+            _httpService.Send((int)GameProtocol.GET_RANK_REQ, "getrank", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string GetRankAck(MsgGetRankAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
     }
 }

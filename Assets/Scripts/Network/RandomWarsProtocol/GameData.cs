@@ -200,6 +200,7 @@ namespace RandomWarsProtocol
         public int[] DiceIdArray;
         public short[] DiceLevelArray;
 
+
         public void Write(BinaryWriter bw)
         {
             bw.Write(PlayerUId);

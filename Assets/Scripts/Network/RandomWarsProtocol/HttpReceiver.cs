@@ -50,6 +50,11 @@ namespace RandomWarsProtocol
         public delegate void LevelUpDiceAckDelegate(MsgLevelUpDiceAck msg);
         public LevelUpDiceAckDelegate LevelUpDiceAck;
 
+        public delegate Task<string> GetRankReqDelegate(MsgGetRankReq msg);
+        public GetRankReqDelegate GetRankReq;
+        public delegate void GetRankAckDelegate(MsgGetRankAck msg);
+        public GetRankAckDelegate GetRankAck;
+
 
         public async Task<string> ProcessAsync(int protocolId, string json)
         {
@@ -126,6 +131,15 @@ namespace RandomWarsProtocol
 
                         MsgLevelUpDiceReq msg = JsonConvert.DeserializeObject<MsgLevelUpDiceReq>(json);
                         ackJson = await LevelUpDiceReq(msg);
+                    }
+                    break;
+                case GameProtocol.GET_RANK_REQ:
+                    {
+                        if (GetRankReq == null)
+                            return ackJson;
+
+                        MsgGetRankReq msg = JsonConvert.DeserializeObject<MsgGetRankReq>(json);
+                        ackJson = await GetRankReq(msg);
                     }
                     break;
             }
@@ -208,6 +222,15 @@ namespace RandomWarsProtocol
 
                         MsgLevelUpDiceAck msg = JsonConvert.DeserializeObject<MsgLevelUpDiceAck>(json);
                         LevelUpDiceAck(msg);
+                    }
+                    break;
+                case GameProtocol.GET_RANK_ACK:
+                    {
+                        if (GetRankAck == null)
+                            return false;
+
+                        MsgGetRankAck msg = JsonConvert.DeserializeObject<MsgGetRankAck>(json);
+                        GetRankAck(msg);
                     }
                     break;
             }
