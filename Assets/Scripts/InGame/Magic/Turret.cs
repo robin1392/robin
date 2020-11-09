@@ -103,7 +103,7 @@ namespace ED
         {
             var distance = float.MaxValue;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
-            Collider colTarget = null;
+            //Collider colTarget = null;
 
             foreach (var col in cols)
             {
@@ -119,10 +119,10 @@ namespace ED
                 }
             }
 
-            if (colTarget != null)
+            if (flyingTarget != null)
             {
                 shootTime = Time.time;
-                flyingTarget = colTarget.GetComponentInParent<Minion>();
+                //flyingTarget = colTarget.GetComponentInParent<Minion>();
                 
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
                 controller.ActionSendMsg(id, "LookAndAniTrigger", flyingTarget.id);
@@ -135,7 +135,6 @@ namespace ED
             if (flyingTarget)
             {
                 StartCoroutine(LookAtTargetCoroutine());
-                animator.SetTrigger("Attack");
             }
         }
 
@@ -150,6 +149,7 @@ namespace ED
                 t += Time.deltaTime;
                 yield return null;
             }
+            animator.SetTrigger("Attack");
         }
 
         public void EndGameUnit()
