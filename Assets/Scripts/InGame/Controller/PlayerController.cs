@@ -223,7 +223,11 @@ namespace ED
             if( InGameManager.IsNetwork == false )
                 sp = 200;
 
-            maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
+            if (InGameManager.Get().isAIMode)
+                maxHealth = 30000;
+            else
+                maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
+            
             currentHealth = maxHealth;
             RefreshHealthBar();
 
@@ -605,6 +609,7 @@ namespace ED
 
         public BaseStat GetBaseStatFromId(int baseStatId)
         {
+            if (baseStatId < 0) return null;
             if (baseStatId == 0) return this;
 
             var minion = listMinion.Find(m => m.id == baseStatId);

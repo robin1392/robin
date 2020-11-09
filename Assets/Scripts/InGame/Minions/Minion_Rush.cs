@@ -14,6 +14,9 @@ namespace ED
         //private Collider _col;
         public ParticleSystem ps_Rush;
 
+        [SerializeField]
+        private Collider dashTarget;
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -73,12 +76,14 @@ namespace ED
                 }
             }
 
+#if UNITY_EDITOR
             if (dashTarget != null)
             {
                 //_skillCastedTime = _spawnedTime;
                 //StartCoroutine(DashCoroutine(dashTarget));
                 Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
+#endif
         }
 
         private IEnumerator DashCoroutine(/*Collider dashTarget*/)
@@ -88,7 +93,7 @@ namespace ED
             // target
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             var distance = 0f;
-            Collider dashTarget = null;
+            dashTarget = null;
             var hitPoint = Vector3.zero;
             foreach (var col in cols)
             {
@@ -102,12 +107,14 @@ namespace ED
                 }
             }
 
+#if UNITY_EDITOR
             if (dashTarget != null)
             {
                 //_skillCastedTime = _spawnedTime;
                 //StartCoroutine(DashCoroutine(dashTarget));
                 Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
+#endif
             
             
             // dash
@@ -117,7 +124,7 @@ namespace ED
             var ts = transform;
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "Skill", -1);
+            controller.MinionAniTrigger(id, "Skill", 0);
             
             float tick = 0.1f;
             while (dashTarget != null)
@@ -149,7 +156,7 @@ namespace ED
                     } 
                 }
 
-                if (Vector3.Distance(dashTarget.transform.position, transform.position) < range)
+                if (Vector3.Distance(dashTarget.transform.position, transform.position) <= range)
                     break;
 
                 tick -= Time.deltaTime;
@@ -158,6 +165,7 @@ namespace ED
             
             //rb.velocity = Vector3.zero;
             //isPushing = false;
+            dashTarget = null;
             SetControllEnable(true);
             _collider.enabled = true;
             ps_Rush.Stop();
