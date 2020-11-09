@@ -5118,6 +5118,7 @@ MonoBehaviour:
   boxOpenPopup: {fileID: 0}
   obj_IndicatorPopup: {fileID: 0}
   userinfoPopup: {fileID: 0}
+  rankPopup: {fileID: 0}
   inputfield_Nicnname: {fileID: 6180031956554800236}
   text_Nickname: {fileID: 6180031955885183827}
   text_Class: {fileID: 6180031957443971796}
@@ -10269,11 +10270,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5996957540804946963, guid: 82c538fb4e5c64ca4a3ba99b1ba0bf93,
-        type: 3}
-      propertyPath: m_Interactable
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5996957540804946963, guid: 82c538fb4e5c64ca4a3ba99b1ba0bf93,
         type: 3}

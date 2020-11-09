@@ -87,6 +87,7 @@ namespace ED
             if (isAIMode)
             {
                 btn_PlayBattle.interactable = false;
+                btn_PlayCoop.interactable = false;
                 searchPopup.gameObject.SetActive(true);
                 
                 StartCoroutine(AIMode());
@@ -100,10 +101,23 @@ namespace ED
                 //}
 
                 btn_PlayBattle.interactable = false;
+                btn_PlayCoop.interactable = false;
                 searchPopup.gameObject.SetActive(true);
                 
                 ConnectBattle();
             }
+        }
+
+        public void Click_PlayCoop()
+        {
+            //StartCoroutine(ConnectCoop());
+            StopAllCoroutines();
+            
+            btn_PlayBattle.interactable = false;
+            btn_PlayCoop.interactable = false;
+            searchPopup.gameObject.SetActive(true);
+                
+            ConnectCoop();
         }
 
         public void Click_BoxButton()
@@ -155,12 +169,19 @@ namespace ED
 
             NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
         }
-        
-        public void Click_PlayCoop()
-        {
-            //StartCoroutine(ConnectCoop());
-        }
 
+        private void ConnectCoop()
+        {
+            if (NetworkManager.Get().UseLocalServer == true)
+            {
+                NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
+                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.COOP, GameStateManager.Get().ServerConnectCallBack);
+                return;
+            }
+
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+        }
+        
         public void Click_DisconnectButton()
         {
             StopAllCoroutines();

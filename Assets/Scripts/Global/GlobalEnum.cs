@@ -29,7 +29,7 @@ public partial class Global
     public enum PLAY_TYPE
     {
         BATTLE,
-        CO_OP,
+        COOP,
     }
 
     
