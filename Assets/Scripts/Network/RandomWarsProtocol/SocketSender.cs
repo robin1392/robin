@@ -65,12 +65,17 @@ namespace RandomWarsProtocol
         }
 
 
-        public void JoinCoopGameNotify(Peer peer, MsgPlayerInfo playerInfo)
+        public void JoinCoopGameNotify(Peer peer, MsgPlayerInfo[] playerInfo)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                playerInfo.Write(bw);
+                int length = (playerInfo == null) ? 0 : playerInfo.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    playerInfo[i].Write(bw);
+                }
                 peer.SendPacket((int)GameProtocol.JOIN_COOP_GAME_NOTIFY, ms.ToArray());
             }
         }
@@ -163,13 +168,14 @@ namespace RandomWarsProtocol
             }
         }
 
-        public void CoopSpawnNotify(Peer peer, int wave, ushort PlayerUId)
+        public void CoopSpawnNotify(Peer peer, int wave, ushort PlayerUId, MsgBossMonster spawnBossMonster)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(wave);
                 bw.Write(PlayerUId);
+                spawnBossMonster.Write(bw);
                 peer.SendPacket((int)GameProtocol.COOP_SPAWN_NOTIFY, ms.ToArray());
             }
         }

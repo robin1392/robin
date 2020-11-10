@@ -298,6 +298,31 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
+    public class MsgBossMonster
+    {
+        public ushort Id;
+        public int DataId;
+        public int Hp;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Id);
+            bw.Write(DataId);
+            bw.Write(Hp);
+        }
+
+        public static MsgBossMonster Read(BinaryReader br)
+        {
+            MsgBossMonster data = new MsgBossMonster();
+            data.Id = br.ReadUInt16();
+            data.DataId = br.ReadInt32();
+            data.Hp = br.ReadInt32();
+            return data;
+        }
+    }
+
+
+    [Serializable]
     public class MsgSyncMinionData
     {
         public ushort minionId;

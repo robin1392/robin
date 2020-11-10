@@ -30,6 +30,7 @@ namespace RandomWarsProtocol.Msg
     {
         public int Wave;
         public int PlayerUId;
+        public MsgBossMonster SpawnBossMonster;
     }
 
 

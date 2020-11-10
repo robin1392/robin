@@ -342,7 +342,14 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinCoopGameNotify msg = new MsgJoinCoopGameNotify();
-                            msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
+
+                            int length = br.ReadInt32();
+                            msg.OtherPlayerInfo = new MsgPlayerInfo[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.OtherPlayerInfo[i] = MsgPlayerInfo.Read(br);
+                            }
+
                             JoinCoopGameNotify(peer, msg);
                         }
                     }
@@ -479,6 +486,7 @@ namespace RandomWarsProtocol
                             MsgCoopSpawnNotify msg = new MsgCoopSpawnNotify();
                             msg.Wave = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
+                            msg.SpawnBossMonster = MsgBossMonster.Read(br);
                             CoopSpawnNotify(peer, msg);
                         }
                     }
