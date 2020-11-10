@@ -316,15 +316,31 @@ public class GameStateManager : Singleton<GameStateManager>
     public void ServerConnectCallBack()
     {
         UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
-        
-        NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+
+        switch (NetworkManager.Get().playType)
+        {
+            case Global.PLAY_TYPE.BATTLE:
+                NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                break;
+            case Global.PLAY_TYPE.COOP:
+                NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                break;
+        }
     }
 
     public void CheckSendInGame()
     {
         if (NetworkManager.Get().GetNetInfo().myInfoGet == true && NetworkManager.Get().GetNetInfo().otherInfoGet == true)
         {
-            MoveInGameBattle();
+            switch (NetworkManager.Get().playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    MoveInGameBattle();
+                    break;
+                case Global.PLAY_TYPE.COOP:
+                    MoveInGameCoop();
+                    break;
+            }
         }
     }
 
@@ -347,6 +363,13 @@ public class GameStateManager : Singleton<GameStateManager>
         NetworkManager.Get().NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
         ActionEvent(Global.E_STATEACTION.ACTION_INGAME);
     }
+
+    public void MoveInGameCoop()
+    {
+        NetworkManager.Get().NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+        ActionEvent(Global.E_STATEACTION.ACTION_COOP);
+    }
+    
     #endregion
     
     #region in game to do

@@ -36,6 +36,8 @@ public class GameStateCoop : BaseSceneState
         base.EnterState(callback, param);
         
         //  state 에 들어오면 할일
+        if( !GameStateManager.Get().isDevMode )
+            LoadScene(sceneName);
     }
 
     public override void UpdateState(float deltaTime)

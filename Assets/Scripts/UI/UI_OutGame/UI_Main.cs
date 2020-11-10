@@ -160,6 +160,8 @@ namespace ED
         // send battle network
         private void ConnectBattle()
         {
+            NetworkManager.Get().playType = Global.PLAY_TYPE.BATTLE;
+            
             if (NetworkManager.Get().UseLocalServer == true)
             {
                 NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
@@ -172,6 +174,8 @@ namespace ED
 
         private void ConnectCoop()
         {
+            NetworkManager.Get().playType = Global.PLAY_TYPE.COOP;
+            
             if (NetworkManager.Get().UseLocalServer == true)
             {
                 NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
