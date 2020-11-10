@@ -41,7 +41,7 @@ namespace RandomWarsProtocol
     }
 
 
-    public enum BOX_TYPE
+    public enum BOX_TYPE : byte
     {
         NONE,
         NORMAL_BOX,
@@ -58,5 +58,38 @@ namespace RandomWarsProtocol
         DICE_START_LEVEL_MAGIC,
         DICE_START_LEVEL_EPIC,
         DICE_START_LEVEL_LEGEND,
+    }
+
+
+    public enum BOSS_TYPE : byte
+    {
+        NONE,
+        GROUND,
+        SKY,
+        BOTH
+    }
+
+    public enum BOSS_TARGET_TYPE : byte
+    {
+        NONE,
+        GROUND,
+        SKY,
+        BOTH
+    }
+
+    public enum BOSS_ATK_SPEED : byte
+    {
+        NONE,
+        SLOW,
+        NORMAL,
+        FAST,
+    }
+
+    public enum BOSS_MOVE_SPEED : byte
+    {
+        NONE,
+        SLOW,
+        NORMAL,
+        FAST,
     }
 }

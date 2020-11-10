@@ -1,0 +1,14 @@
+{
+  "1": {
+    "id": 1,
+    "hp": 10000,
+    "skillCoolTime": 10,
+    "skillInterval": 10,
+    "atk": 10,
+    "skillAtk": 10,
+    "bossType": "GROUND",
+    "targetType": "GROUND",
+    "atkSpeed": "SLOW",
+    "moveSpeed": "SLOW"
+  }
+}

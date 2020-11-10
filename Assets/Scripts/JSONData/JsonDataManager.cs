@@ -31,6 +31,7 @@ public class JsonDataManager : MonoBehaviour
     public BoxInfo dataBoxInfo = null;
     public DiceLevelUpInfo dataDiceLevelUpInfo = null;
     public GlobalDataInfo dataGlobalDataInfo = null;
+    public BossInfo dataBossInfo = null;
 
 
     //
@@ -42,6 +43,7 @@ public class JsonDataManager : MonoBehaviour
         dataBoxInfo = new BoxInfo(filePath, callBack);
         dataDiceLevelUpInfo = new DiceLevelUpInfo(filePath, callBack);
         dataGlobalDataInfo = new GlobalDataInfo(filePath, callBack);
+        dataBossInfo = new BossInfo(filePath, callBack);
     }
 
     //
@@ -71,6 +73,11 @@ public class JsonDataManager : MonoBehaviour
             dataBoxInfo = null;
         }
 
+        if (dataBossInfo != null)
+        {
+            dataBossInfo.DestroyData();
+            dataBossInfo = null;
+        }
     }
 
 }
