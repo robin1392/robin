@@ -326,6 +326,7 @@ public class SocketRecvEvent
             InGameManager.Get().RecvInGameManager(GameProtocol.SPAWN_NOTIFY, msg.Wave);
 
     }
+        
 
     public void OnAddSpNotify(Peer peer, MsgAddSpNotify msg)
     {
@@ -381,13 +382,25 @@ public class SocketRecvEvent
     }
 
 
-    
+    public void OnJoinCoopGameAck(Peer peer, MsgJoinCoopGameAck msg)
+    {
+
+    }
+
+
+    public void OnCoopSpawnNotify(Peer peer, MsgCoopSpawnNotify msg)
+    {
+    }
+
+
+
+
 
     #endregion
-    
-    
-    
-    
+
+
+
+
     #region relay
 
     public void OnHitDamageMinionRelay(Peer peer, MsgHitDamageMinionRelay msg)

@@ -413,6 +413,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv = new SocketReceiver();
 
         _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
+        _packetRecv.JoinCoopGameAck = _socketRecv.OnJoinCoopGameAck;
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
         _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
         _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
@@ -429,6 +430,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.GetDiceNotify = _socketRecv.OnGetDiceNotify;
         _packetRecv.DeactiveWaitingObjectNotify = _socketRecv.OnDeactiveWaitingObjectNotify;
         _packetRecv.SpawnNotify = _socketRecv.OnSpawnNotify;
+        _packetRecv.CoopSpawnNotify = _socketRecv.OnCoopSpawnNotify;
         _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
 
         _packetRecv.MergeDiceNotify = _socketRecv.OnMergeDiceNotify;
