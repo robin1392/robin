@@ -351,7 +351,7 @@ namespace ED
                     case Global.PLAY_TYPE.BATTLE:
                         image_HealthBar.color = isMine ? Color.green : Color.red;
                         break;
-                    case Global.PLAY_TYPE.CO_OP:
+                    case Global.PLAY_TYPE.COOP:
                         image_HealthBar.color = Color.green;
                         break;
                 }

@@ -165,7 +165,7 @@ namespace ED
             }
             instanceID = GetInstanceID();
             
-            if (InGameManager.Get().playType != Global.PLAY_TYPE.CO_OP)
+            if (InGameManager.Get().playType != Global.PLAY_TYPE.COOP)
             {
                 base.Start();
             }
@@ -223,10 +223,7 @@ namespace ED
             if( InGameManager.IsNetwork == false )
                 sp = 200;
 
-            if (InGameManager.Get().isAIMode)
-                maxHealth = 30000;
-            else
-                maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
+            maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             
             currentHealth = maxHealth;
             RefreshHealthBar();
@@ -506,7 +503,7 @@ namespace ED
             }
 
             //if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
-            if (InGameManager.IsNetwork && InGameManager.Get().playType != Global.PLAY_TYPE.CO_OP && !isMine)
+            if (InGameManager.IsNetwork && InGameManager.Get().playType != Global.PLAY_TYPE.COOP && !isMine)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;
@@ -682,7 +679,7 @@ namespace ED
             }
 
             //if (PhotonNetwork.IsConnected && InGameManager.Get().playType != PLAY_TYPE.CO_OP && !photonView.IsMine)
-            if (InGameManager.IsNetwork && InGameManager.Get().playType != Global.PLAY_TYPE.CO_OP && !isMine)
+            if (InGameManager.IsNetwork && InGameManager.Get().playType != Global.PLAY_TYPE.COOP && !isMine)
             {
                 spawnPos.x *= -1f;
                 spawnPos.z *= -1f;
@@ -875,6 +872,20 @@ namespace ED
             if (InGameManager.IsNetwork == true && this.isBottomPlayer == false && NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
             {
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
+            }
+            
+            if(InGameManager.IsNetwork)
+            {
+                //switch (PhotonManager.Instance.playType)
+                switch (NetworkManager.Get().playType)
+                {
+                    case Global.PLAY_TYPE.BATTLE:
+                        image_HealthBar.color = isMine ? Color.green : Color.red;
+                        break;
+                    case Global.PLAY_TYPE.COOP:
+                        image_HealthBar.color = Color.green;
+                        break;
+                }
             }
             
             /*

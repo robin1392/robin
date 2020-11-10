@@ -169,6 +169,7 @@ namespace ED
                 if (info.dicGettedDice.ContainsKey(data.id))
                 {
                     info.gold -= needGold;
+                    diceLevel++;
                     info.dicGettedDice[data.id][0]++;
                     info.dicGettedDice[data.id][1] -= needDiceCount;
                     
@@ -242,16 +243,16 @@ namespace ED
                 obj.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.5f + 0.1f * i);
             }
             
-            image_ResultDiceIcon.transform.DOScale(1.6f, 0.2f).SetDelay(1.7f).OnComplete(() =>
+            image_ResultDiceIcon.transform.DOScale(1.6f, 0.15f).SetDelay(1.7f).OnComplete(() =>
             {
                 text_ResultDiceLevel.text = $"LEVEL {diceLevel}";
                 text_ResultDiceLevel.color = UnityUtil.HexToColor("71FA4A");
-                image_ResultDiceIcon.transform.DOScale(1.4f, 0.2f);
+                image_ResultDiceIcon.transform.DOScale(1.4f, 0.15f);
                 ps_ResultIconBackground.Play();
             });
-            text_ResultDiceLevel.transform.DOScale(1.2f, 0.2f).SetDelay(1.7f).OnComplete(() =>
+            text_ResultDiceLevel.transform.DOScale(1.2f, 0.15f).SetDelay(1.7f).OnComplete(() =>
             {
-                text_ResultDiceLevel.transform.DOScale(1f, 0.2f);
+                text_ResultDiceLevel.transform.DOScale(1f, 0.15f);
             });
             
             yield return new WaitForSeconds(1f);
