@@ -68,10 +68,10 @@ namespace ED
         public float startSpawnTime = 10f;
         public float spawnTime = 45f;
 
-        private float st => wave < 1 ? 10f : 20f;
+        protected float st => wave < 1 ? 10f : 20f;
 
         public float time { get; protected set; }
-        private DateTime pauseTime;
+        protected DateTime pauseTime;
 
         #endregion
 
@@ -203,9 +203,8 @@ namespace ED
 
         
 
-        public void StartManager()
+        public virtual void StartManager()
         {
-
             if (IsNetwork == true)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
@@ -634,7 +633,7 @@ namespace ED
 
         #region update event
 
-        private void RefreshSP(int sp)
+        protected void RefreshSP(int sp)
         {
             UI_InGame.Get().SetSP(sp);
         }
@@ -753,7 +752,7 @@ namespace ED
             return new Vector3(x, 0, z);
         }
 
-        private void SetSPUpgradeButton(int sp)
+        protected void SetSPUpgradeButton(int sp)
         {
             //button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
             //text_SP_Upgrade.text = $"SP Lv.{playerController.spUpgradeLevel + 1}";
