@@ -103,9 +103,9 @@ public class FieldManager : SingletonDestroy<FieldManager>
         return listBottomPosition[index];
     }
 
-    public Vector3 GetPlayerPos(bool player)
+    public Vector3 GetPlayerPos(bool isBottomPlayer)
     {
-        Vector3 pos = player ? ts_BottomPlayer.position:ts_TopPlayer.position;
+        Vector3 pos = isBottomPlayer ? ts_BottomPlayer.position : ts_TopPlayer.position;
         return pos;
     }
 

@@ -5,122 +5,119 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using CodeStage.AntiCheat.ObscuredTypes;
+using RandomWarsProtocol;
 
 namespace ED
 {
     public class InGameManager_Coop : InGameManager //, IPunObservable
     {
+        [Header("Coop")]
+        public GameObject pref_PlayerEmpty;
         public GameObject pref_Enemy_AI;
 
-        protected override void Start()
+        public override void StartManager()
         {
-            arrUpgradeLevel = new int[6];
-            event_SP_Edit = new UnityEvent<int>();
-
-            if (NetworkManager.Get().IsConnect())
-            {
-                // if (PlayerController.Get() == null)
-                // {
-                //     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.identifier);
-                //
-                //     Vector3 startPos = FieldManager.Get().GetPlayerPos(PhotonNetwork.IsMasterClient);
-                //     GameObject obj = PhotonNetwork.Instantiate("Tower/"+pref_Player.name, startPos, Quaternion.identity, 0);
-                //     obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
-                //     playerController = obj.GetComponent<PlayerController>();
-                //     
-                //     //playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_CHANGELAYER , true);
-                //
-                //     if (PhotonNetwork.IsMasterClient)
-                //     {
-                //         obj = PhotonNetwork.Instantiate(pref_Enemy_AI.name, FieldManager.Get().GetPlayerPos(false), Quaternion.identity, 0);
-                //         obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);;
-                //     }
-                // }
-                // else
-                // {
-                //     Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
-                // }
-            }
-            else
-            {
-                GameObject obj = Instantiate(pref_Player, FieldManager.Get().GetPlayerPos(true), Quaternion.identity);
-                obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
-                obj.layer = LayerMask.NameToLayer("BottomPlayer");
-                playerController = obj.GetComponent<PlayerController>();
-                playerController.isBottomPlayer = true;
-                playerController.isMine = true;
-
-                obj = Instantiate(pref_Player, FieldManager.Get().GetPlayerPos(true), Quaternion.identity);
-                obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
-                obj.layer = LayerMask.NameToLayer("BottomPlayer");
-
-                // 적 생성
-                obj = Instantiate(pref_Enemy_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
-                obj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
-            }
-
-            // string deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4/5");
-            // if (UserInfoManager.Get() != null)
-            // {
-            //     deck = UserInfoManager.Get().GetActiveDeck();
-            // }
+            if (IsNetwork == false) return;
             
-            /*if (PhotonNetwork.IsConnected)
+            UI_InGamePopup.Get().SetViewWaiting(true);
+
+            // player controller create...my and other
+            Vector3 towerPos = FieldManager.Get().GetPlayerPos(true);
+
+            GameObject myTObj = null;
+            GameObject otherTObj = null;
+            if (NetworkManager.Get().IsMaster)
             {
-                //playerController.SendPlayer(RpcTarget.All , E_PTDefine.PT_SETDECK , deck);
+                myTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
+                otherTObj = UnityUtil.Instantiate("Tower/" + pref_PlayerEmpty.name);
             }
             else
             {
-                playerController.SetDeck(deck);
-            }*/
+                myTObj = UnityUtil.Instantiate("Tower/" + pref_PlayerEmpty.name);
+                otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);                
+            }
 
+            myTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+            myTObj.transform.position = towerPos;
+            playerController = myTObj.GetComponent<PlayerController>();
+            playerController.isMine = true;
+            playerController.isBottomPlayer = NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer;
+            playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+            
+            otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+            otherTObj.transform.position = towerPos;
+            playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
+            playerController.targetPlayer.isMine = false;
+            playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
+            playerController.targetPlayer.targetPlayer = playerController;
+            
+            playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+            
+            //
+            UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
+            
+            
+            UI_InGame.Get().ViewTargetDice(true);
+            
+            event_SP_Edit.AddListener(RefreshSP);
+            event_SP_Edit.AddListener(SetSPUpgradeButton);
+            
+            //
+            if (NetworkManager.Get().isReconnect)
+            {
+                UI_InGamePopup.Get().ViewGameIndicator(true);
+                
+                SendInGameManager(GameProtocol.READY_SYNC_GAME_REQ);
+                return;
+            }
+            
+            // deck setting
+            if (IsNetwork == true)
+            {
+                // my
+                for(int i = 0 ; i < NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray.Length; i++)
+                    print(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray[i]);
+                
+                playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
+                //other
+                playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
+            }
+            else
+            {
+                // 네트워크 안쓰니까...개발용으로
+                //var deck = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
+                if (UserInfoManager.Get() != null)
+                {
+                    var deck = UserInfoManager.Get().GetActiveDeck();
+                    playerController.SetDeck(deck);
+                }
+
+            }
+            
             // Upgrade buttons
-            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck , arrUpgradeLevel);
+            // ui 셋팅
+            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
 
-            StartGame();
-            RefreshTimeUI(true);
-        }
-
-        
-        // photon remove
-        /*
-        public override void OnPlayerEnteredRoom(Player newPlayer)
-        {
-
-        }
-
-        public override void OnPlayerLeftRoom(Player otherPlayer)
-        {
-
-        }
-
-        public override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
+            if (IsNetwork == true)
             {
-                stream.SendNext(time);
-                stream.SendNext(wave);
+                if (NetworkManager.Get().IsMaster == false)
+                {
+                    ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
+                    ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
+                    ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
+                }
+            }
+
+            if (IsNetwork == true)
+            {
+                WorldUIManager.Get().SetWave(wave);
+                SendInGameManager(GameProtocol.READY_GAME_REQ);
             }
             else
             {
-                time = (float)stream.ReceiveNext();
-                wave = (int)stream.ReceiveNext();
+                StartGame();
+                RefreshTimeUI(true);
             }
         }
-
-        public void ShowTeamField(bool isShow)
-        {
-            if (isShow)
-            {
-                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-                playerController.uiDiceField.RefreshField(0.5f);
-            }
-            else
-            {
-                playerController.uiDiceField.SetField(playerController.arrDice);
-                playerController.uiDiceField.RefreshField();
-            }
-        }
-        */
     }
 }

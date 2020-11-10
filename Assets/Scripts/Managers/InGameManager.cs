@@ -68,10 +68,10 @@ namespace ED
         public float startSpawnTime = 10f;
         public float spawnTime = 45f;
 
-        private float st => wave < 1 ? 10f : 20f;
+        protected float st => wave < 1 ? 10f : 20f;
 
         public float time { get; protected set; }
-        private DateTime pauseTime;
+        protected DateTime pauseTime;
 
         #endregion
 
@@ -203,9 +203,8 @@ namespace ED
 
         
 
-        public void StartManager()
+        public virtual void StartManager()
         {
-
             if (IsNetwork == true)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
@@ -612,7 +611,7 @@ namespace ED
             playerController.SetSp(sp);
         }
 
-        public void NetSpawnNotify(int wave)
+        public void NetSpawnNotify(int wave, int uid = 0)
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
@@ -621,8 +620,22 @@ namespace ED
 
             Debug.Log("spawn  : " + wave);
             
-            playerController.Spawn();
-            playerController.targetPlayer.Spawn();
+            switch (NetworkManager.Get().playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    playerController.Spawn();
+                    playerController.targetPlayer.Spawn();
+                    break;
+                case Global.PLAY_TYPE.COOP:
+                    if (uid > 0)
+                    {
+                        if (NetworkManager.Get().UserUID == uid)
+                            playerController.Spawn();
+                        else if (NetworkManager.Get().OtherUID == uid)
+                            playerController.targetPlayer.Spawn();
+                    }
+                    break;
+            }
 
             // 스폰이 불릴때마다 시간갱신을 위해 저장
             if (NetworkManager.Get() && IsNetwork)
@@ -634,7 +647,7 @@ namespace ED
 
         #region update event
 
-        private void RefreshSP(int sp)
+        protected void RefreshSP(int sp)
         {
             UI_InGame.Get().SetSP(sp);
         }
@@ -753,7 +766,7 @@ namespace ED
             return new Vector3(x, 0, z);
         }
 
-        private void SetSPUpgradeButton(int sp)
+        protected void SetSPUpgradeButton(int sp)
         {
             //button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
             //text_SP_Upgrade.text = $"SP Lv.{playerController.spUpgradeLevel + 1}";
@@ -1361,6 +1374,33 @@ namespace ED
                     }
                     
                     NetSpawnNotify((int) param[0]);
+                    break;
+                }
+                case GameProtocol.COOP_SPAWN_NOTIFY:
+                {
+                    // 시작이 되었으니...
+                    if (NetworkManager.Get().isResume == true)
+                    {
+                        Time.timeScale = 1f;
+                        
+                        NetworkManager.Get().SetResume(false);
+                        
+                        // 아군유닛 비헤이비어트리 활성화
+                        foreach (var minion in playerController.listMinion)
+                        {
+                            minion.behaviourTreeOwner.behaviour.Resume();
+                        }
+                    }
+                    
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+
+                    MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
+                    NetSpawnNotify(msg.Wave, msg.PlayerUId);
+
                     break;
                 }
                 case GameProtocol.GET_DICE_NOTIFY:
