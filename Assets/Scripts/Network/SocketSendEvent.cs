@@ -28,6 +28,11 @@ public class SocketSendEvent
                 _sender.JoinGameReq(peer , (string)param[0], (sbyte)param[1]);
                 break;
             }
+            case GameProtocol.JOIN_COOP_GAME_REQ:
+            {
+                _sender.JoinCoopGameReq(peer, (string)param[0], (sbyte)param[1]);
+                break;
+            }
             case GameProtocol.LEAVE_GAME_REQ:
             {
                 _sender.LeaveGameReq(peer);
