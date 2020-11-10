@@ -1376,13 +1376,13 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgFireBulletRelay GetFireBulletRelayMsg(int uid, int id, int x, int y, int z, int damage, int speed, int type)
+    public static MsgFireBulletRelay GetFireBulletRelayMsg(int uid, int id, int targetId, int damage, int speed, int type)
     {
         MsgFireBulletRelay msg = new MsgFireBulletRelay();
 
         msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
-        msg.Dir = new MsgVector3 { X = MsgIntToShort(x), Y = MsgIntToShort(y), Z = MsgIntToShort(z) };
+        msg.targetId = MsgIntToUshort(targetId);
         msg.Damage = damage;
         msg.MoveSpeed = MsgIntToShort(speed);
         msg.Type = MsgIntToByte(type);

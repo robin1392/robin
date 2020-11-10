@@ -109,9 +109,9 @@ namespace ED
             if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 if (target.isFlying)
-                    controller.ActionFireBullet(_spear, ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
+                    controller.ActionFireBullet(_spear, id, target.id, effect, bulletMoveSpeedByFlying);
                 else 
-                    controller.ActionFireBullet(_arrow, ts_ShootingPos2.position, target.id, power, bulletMoveSpeedByGround);
+                    controller.ActionFireBullet(_arrow, id, target.id, power, bulletMoveSpeedByGround);
             }
             
             /*//if (PhotonNetwork.IsConnected && isMine)

@@ -1639,7 +1639,7 @@ namespace RandomWarsProtocol
     {
         public ushort PlayerUId;
         public ushort Id;
-        public MsgVector3 Dir;
+        public ushort targetId;
         public int Damage;
         public short MoveSpeed;
         public byte Type;
@@ -1648,7 +1648,7 @@ namespace RandomWarsProtocol
         {
             bw.Write(PlayerUId);
             bw.Write(Id);
-            Dir.Write(bw);
+            bw.Write(targetId);
             bw.Write(Damage);
             bw.Write(MoveSpeed);
             bw.Write(Type);
@@ -1659,7 +1659,7 @@ namespace RandomWarsProtocol
             MsgFireBulletRelay data = new MsgFireBulletRelay();
             data.PlayerUId = br.ReadUInt16();
             data.Id = br.ReadUInt16();
-            data.Dir = MsgVector3.Read(br);
+            data.targetId = br.ReadUInt16();
             data.Damage = br.ReadInt32();
             data.MoveSpeed = br.ReadInt16();
             data.Type = br.ReadByte();

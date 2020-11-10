@@ -92,7 +92,7 @@ namespace ED
 
             if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
-                controller.ActionFireBullet(E_BulletType.BABYDRAGON , ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                controller.ActionFireBullet(E_BulletType.BABYDRAGON , id, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
 
             /*//if (PhotonNetwork.IsConnected && isMine)

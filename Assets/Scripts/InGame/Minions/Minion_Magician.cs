@@ -76,7 +76,7 @@ namespace  ED
             
             if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
-                controller.ActionFireBullet(E_BulletType.MAGICIAN , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.MAGICIAN , id, target.id, power, bulletMoveSpeed);
             }
             
             /*//if (PhotonNetwork.IsConnected && isMine)

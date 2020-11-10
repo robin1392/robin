@@ -61,12 +61,12 @@ namespace ED
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(_arrow ,ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(_arrow ,id, target.id, power, bulletMoveSpeed);
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false)
             {
-                controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.FireBullet(_arrow, id, target.id, power, bulletMoveSpeed);
             }
         }
 

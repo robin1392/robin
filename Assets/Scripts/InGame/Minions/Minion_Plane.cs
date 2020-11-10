@@ -52,7 +52,7 @@ namespace ED
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _spear, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
-                controller.ActionFireBullet(_spear ,ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
+                controller.ActionFireBullet(_spear ,id, target.id, power , bulletMoveSpeed);
             }
         }
         
@@ -72,7 +72,7 @@ namespace ED
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(_arrow ,ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
+                controller.ActionFireBullet(_arrow ,id, target.id, power , bulletMoveSpeed);
             }
         }
     }

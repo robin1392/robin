@@ -1741,25 +1741,27 @@ namespace ED
         
         #region fire bullet
 
-        public void ActionFireBullet(E_BulletType bulletType, Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void ActionFireBullet(E_BulletType bulletType, int id, int targetId, float damage, float moveSpeed)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
-                int x = ConvertNetMsg.MsgFloatToInt(startPos.x );
-                int y = ConvertNetMsg.MsgFloatToInt(startPos.y );
-                int z = ConvertNetMsg.MsgFloatToInt(startPos.z );
+                // int x = ConvertNetMsg.MsgFloatToInt(startPos.x );
+                // int y = ConvertNetMsg.MsgFloatToInt(startPos.y );
+                // int z = ConvertNetMsg.MsgFloatToInt(startPos.z );
                 int chDamage = ConvertNetMsg.MsgFloatToInt(damage );
                 int chSpeed = ConvertNetMsg.MsgFloatToInt(moveSpeed );
                 
                 //NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
-                NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID , targetId , x, y, z ,chDamage , chSpeed , (int)bulletType);
+                NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, targetId , chDamage ,chSpeed , (int)bulletType);
             }
-            FireBullet(bulletType ,startPos, targetId, damage, moveSpeed);
+            FireBullet(bulletType , id, targetId, damage, moveSpeed);
         }
         
-        public void FireBullet(E_BulletType bulletType, Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void FireBullet(E_BulletType bulletType, int id, int targetId, float damage, float moveSpeed)
         {
             Bullet b = null;
+            Vector3 startPos = listMinion.Find(m => m.id == id).ts_ShootingPos.position;
+            
             switch (bulletType)
             {
                 case E_BulletType.ARROW:
@@ -2374,7 +2376,7 @@ namespace ED
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionInvincibilityRelayMsg((int)param[0], (int)param[1], (int)param[2]));
                             break;
                         case GameProtocol.FIRE_BULLET_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireBulletRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4], (int)param[5], (int)param[6], (int)param[7]));
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireBulletRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4], (int)param[5]));
                             break;
                         case GameProtocol.FIRE_CANNON_BALL_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireCannonBallRelayMsg((int)param[0], (MsgVector3)param[1], (MsgVector3)param[2], (int)param[3], (int)param[4], (int)param[5]));
@@ -2661,16 +2663,16 @@ namespace ED
                     MsgFireBulletRelay arrrelay = (MsgFireBulletRelay) param[0];
                     
                     //Dir Damage MoveSpeed
-                    Vector3 sPos = ConvertNetMsg.MsgToVector3(arrrelay.Dir);
-                    
                     float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
                     float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
                     E_BulletType bulletType = (E_BulletType) arrrelay.Type;
                     
+                    //NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, targetId , chDamage ,chSpeed , (int)bulletType);
+                    
                     if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
-                        FireBullet(bulletType , sPos , arrrelay.Id, calDamage , calSpeed);
+                        FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
                     else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
-                        targetPlayer.FireBullet(bulletType , sPos , arrrelay.Id, calDamage , calSpeed);
+                        targetPlayer.FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
                     
                     break;
                 }

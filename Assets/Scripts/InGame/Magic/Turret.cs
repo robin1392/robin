@@ -82,7 +82,7 @@ namespace ED
         {
             if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
-                controller.ActionFireBullet(E_BulletType.ARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.ARROW , id, flyingTarget.id, power, bulletMoveSpeed);
             }
             
             /*//if (PhotonNetwork.IsConnected && isMine)

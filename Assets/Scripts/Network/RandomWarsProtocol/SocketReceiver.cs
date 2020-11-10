@@ -1502,7 +1502,7 @@ namespace RandomWarsProtocol
                             MsgFireBulletRelay msg = new MsgFireBulletRelay();
                             msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
-                            msg.Dir = MsgVector3.Read(br);
+                            msg.targetId = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             msg.MoveSpeed = br.ReadInt16();
                             msg.Type = br.ReadByte();

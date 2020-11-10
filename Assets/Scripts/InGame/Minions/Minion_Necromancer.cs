@@ -92,7 +92,7 @@ namespace ED
             
             if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
-                controller.ActionFireBullet(E_BulletType.NECROMANCER , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.NECROMANCER , id, target.id, power, bulletMoveSpeed);
             }
             
             /*
