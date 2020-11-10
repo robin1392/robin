@@ -41,6 +41,41 @@ namespace RandomWarsProtocol
         }
 
 
+        public void JoinCoopGameReq(Peer peer, string playerSessionId, sbyte deckIndex)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerSessionId);
+                bw.Write(deckIndex);
+                peer.SendPacket((int)GameProtocol.JOIN_COOP_GAME_REQ, ms.ToArray());
+            }
+        }
+
+
+        public void JoinCoopGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((int)code);
+                playerInfo.Write(bw);
+                peer.SendPacket((int)GameProtocol.JOIN_COOP_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public void JoinCoopGameNotify(Peer peer, MsgPlayerInfo playerInfo)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                playerInfo.Write(bw);
+                peer.SendPacket((int)GameProtocol.JOIN_COOP_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
         public void LeaveGameReq(Peer peer) 
         {
             using (var ms = new MemoryStream())
@@ -127,6 +162,18 @@ namespace RandomWarsProtocol
                 peer.SendPacket((int)GameProtocol.SPAWN_NOTIFY, ms.ToArray());
             }
         }
+
+        public void CoopSpawnNotify(Peer peer, int wave, ushort PlayerUId)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(wave);
+                bw.Write(PlayerUId);
+                peer.SendPacket((int)GameProtocol.COOP_SPAWN_NOTIFY, ms.ToArray());
+            }
+        }
+
 
         public void PauseGameNotify(Peer peer, int playerUId)
         {

@@ -26,6 +26,14 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
+    public class MsgCoopSpawnNotify
+    {
+        public int Wave;
+        public int PlayerUId;
+    }
+
+
+    [Serializable]
     public class MsgEndGameNotify
     {
         public int ErrorCode;

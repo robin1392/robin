@@ -32,43 +32,41 @@ namespace RandomWarsProtocol
 
         public delegate void JoinGameReqDelegate(Peer peer, MsgJoinGameReq msg);
         public JoinGameReqDelegate JoinGameReq;
-
         public delegate void JoinGameAckDelegate(Peer peer, MsgJoinGameAck msg);
         public JoinGameAckDelegate JoinGameAck;
 
+        public delegate void JoinCoopGameReqDelegate(Peer peer, MsgJoinCoopGameReq msg);
+        public JoinCoopGameReqDelegate JoinCoopGameReq;
+        public delegate void JoinCoopGameAckDelegate(Peer peer, MsgJoinCoopGameAck msg);
+        public JoinCoopGameAckDelegate JoinCoopGameAck;
+
         public delegate void LeaveGameReqDelegate(Peer peer, MsgLeaveGameReq msg);
         public LeaveGameReqDelegate LeaveGameReq;
-
         public delegate void LeaveGameAckDelegate(Peer peer, MsgLeaveGameAck msg);
         public LeaveGameAckDelegate LeaveGameAck;
 
         public delegate void ReadyGameReqDelegate(Peer peer, MsgReadyGameReq msg);
         public ReadyGameReqDelegate ReadyGameReq;
-
         public delegate void ReadyGameAckDelegate(Peer peer, MsgReadyGameAck msg);
         public ReadyGameAckDelegate ReadyGameAck;
 
         public delegate void GetDiceReqDelegate(Peer peer, MsgGetDiceReq msg);
         public GetDiceReqDelegate GetDiceReq;
-
         public delegate void GetDiceAckDelegate(Peer peer, MsgGetDiceAck msg);
         public GetDiceAckDelegate GetDiceAck;
 
         public delegate void MergeDiceReqDelegate(Peer peer, MsgMergeDiceReq msg);
         public MergeDiceReqDelegate MergeDiceReq;
-
         public delegate void MergeDiceAckDelegate(Peer peer, MsgMergeDiceAck msg);
         public MergeDiceAckDelegate MergeDiceAck;
 
         public delegate void InGameUpDiceReqDelegate(Peer peer, MsgInGameUpDiceReq msg);
         public InGameUpDiceReqDelegate InGameUpDiceReq;
-
         public delegate void InGameUpDiceAckDelegate(Peer peer, MsgInGameUpDiceAck msg);
         public InGameUpDiceAckDelegate InGameUpDiceAck;
 
         public delegate void UpgradeSpReqDelegate(Peer peer, MsgUpgradeSpReq msg);
         public UpgradeSpReqDelegate UpgradeSpReq;
-
         public delegate void UpgradeSpAckDelegate(Peer peer, MsgUpgradeSpAck msg);
         public UpgradeSpAckDelegate UpgradeSpAck;
 
@@ -112,6 +110,9 @@ namespace RandomWarsProtocol
         public delegate void JoinGameNotifyDelegate(Peer peer, MsgJoinGameNotify msg);
         public JoinGameNotifyDelegate JoinGameNotify;
 
+        public delegate void JoinCoopGameNotifyDelegate(Peer peer, MsgJoinCoopGameNotify msg);
+        public JoinCoopGameNotifyDelegate JoinCoopGameNotify;
+
         public delegate void LeaveGameNotifyDelegate(Peer peer, MsgLeaveGameNotify msg);
         public LeaveGameNotifyDelegate LeaveGameNotify;
 
@@ -135,6 +136,9 @@ namespace RandomWarsProtocol
 
         public delegate void SpawnNotifyDelegate(Peer peer, MsgSpawnNotify msg);
         public SpawnNotifyDelegate SpawnNotify;
+
+        public delegate void CoopSpawnNotifyDelegate(Peer peer, MsgCoopSpawnNotify msg);
+        public CoopSpawnNotifyDelegate CoopSpawnNotify;
 
         public delegate void HitDamageNotifyDelegate(Peer peer, MsgHitDamageNotify msg);
         public HitDamageNotifyDelegate HitDamageNotify;
@@ -296,6 +300,53 @@ namespace RandomWarsProtocol
                         }
                     }
                     break;
+                case GameProtocol.JOIN_COOP_GAME_REQ:
+                    {
+                        if (JoinCoopGameReq == null)
+                            return false;
+
+
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            BinaryReader br = new BinaryReader(ms);
+                            MsgJoinCoopGameReq msg = new MsgJoinCoopGameReq();
+                            msg.PlayerSessionId = br.ReadString();
+                            msg.DeckIndex = br.ReadSByte();
+                            JoinCoopGameReq(peer, msg);
+                        }
+                    }
+                    break;
+                case GameProtocol.JOIN_COOP_GAME_ACK:
+                    {
+                        if (JoinGameAck == null)
+                            return false;
+
+                        //
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            BinaryReader br = new BinaryReader(ms);
+                            MsgJoinCoopGameAck msg = new MsgJoinCoopGameAck();
+                            msg.ErrorCode = br.ReadInt32();
+                            msg.PlayerInfo = MsgPlayerInfo.Read(br);
+                            JoinCoopGameAck(peer, msg);
+                        }
+                    }
+                    break;
+                case GameProtocol.JOIN_COOP_GAME_NOTIFY:
+                    {
+                        if (JoinCoopGameNotify == null)
+                            return false;
+
+                        //
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            BinaryReader br = new BinaryReader(ms);
+                            MsgJoinCoopGameNotify msg = new MsgJoinCoopGameNotify();
+                            msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
+                            JoinCoopGameNotify(peer, msg);
+                        }
+                    }
+                    break;
                 case GameProtocol.LEAVE_GAME_REQ:
                     {
                         if (LeaveGameReq == null)
@@ -413,6 +464,22 @@ namespace RandomWarsProtocol
                             MsgSpawnNotify msg = new MsgSpawnNotify();
                             msg.Wave = br.ReadInt32();
                             SpawnNotify(peer, msg);
+                        }
+                    }
+                    break;
+                case GameProtocol.COOP_SPAWN_NOTIFY:
+                    {
+                        if (CoopSpawnNotify == null)
+                            return false;
+
+
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            BinaryReader br = new BinaryReader(ms);
+                            MsgCoopSpawnNotify msg = new MsgCoopSpawnNotify();
+                            msg.Wave = br.ReadInt32();
+                            msg.PlayerUId = br.ReadUInt16();
+                            CoopSpawnNotify(peer, msg);
                         }
                     }
                     break;

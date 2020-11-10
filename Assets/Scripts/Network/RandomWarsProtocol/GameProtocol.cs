@@ -93,6 +93,12 @@ namespace RandomWarsProtocol
         UPGRADE_SP_ACK,
         UPGRADE_SP_NOTIFY,
 
+
+        JOIN_COOP_GAME_REQ,
+        JOIN_COOP_GAME_ACK,
+        JOIN_COOP_GAME_NOTIFY,
+
+
         // ----------------------------------------------------------------------------------------------------
         // Notify protocols
         // ----------------------------------------------------------------------------------------------------
@@ -103,6 +109,7 @@ namespace RandomWarsProtocol
         DISCONNECT_GAME_NOTIFY,
         PAUSE_GAME_NOTIFY,
         RESUME_GAME_NOTIFY,
+        COOP_SPAWN_NOTIFY,
 
         // ----------------------------------------------------------------------------------------------------
         // Relay protocols
