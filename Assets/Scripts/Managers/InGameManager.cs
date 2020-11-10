@@ -621,7 +621,11 @@ namespace ED
             Debug.Log("spawn  : " + wave);
             
             playerController.Spawn();
-            playerController.targetPlayer.Spawn();
+
+            if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+            {
+                playerController.targetPlayer.Spawn();
+            }
 
             // 스폰이 불릴때마다 시간갱신을 위해 저장
             if (NetworkManager.Get() && IsNetwork)
@@ -1360,6 +1364,36 @@ namespace ED
                     }
                     
                     NetSpawnNotify((int) param[0]);
+                    break;
+                }
+                case GameProtocol.COOP_SPAWN_NOTIFY:
+                {
+                    // 시작이 되었으니...
+                    if (NetworkManager.Get().isResume == true)
+                    {
+                        Time.timeScale = 1f;
+                        
+                        NetworkManager.Get().SetResume(false);
+                        
+                        // 아군유닛 비헤이비어트리 활성화
+                        foreach (var minion in playerController.listMinion)
+                        {
+                            minion.behaviourTreeOwner.behaviour.Resume();
+                        }
+                    }
+                    
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+
+                    MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
+                    if (msg.PlayerUId == NetworkManager.Get().UserUID)
+                    {
+                        NetSpawnNotify(msg.Wave);
+                    }
+
                     break;
                 }
                 case GameProtocol.GET_DICE_NOTIFY:

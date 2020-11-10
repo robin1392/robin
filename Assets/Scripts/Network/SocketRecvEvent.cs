@@ -414,6 +414,10 @@ public class SocketRecvEvent
 
     public void OnCoopSpawnNotify(Peer peer, MsgCoopSpawnNotify msg)
     {
+        UnityUtil.Print("coop spawn Notify ", $"Wave:{msg.Wave}, UID:{msg.PlayerUId}", "white");
+        //
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.COOP_SPAWN_NOTIFY, msg);
     }
 
 
