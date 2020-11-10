@@ -31,6 +31,7 @@ namespace ED
 
         public void Set()
         {
+            Debug.Log("Main stage set");
             if (arrAni_Model == null) arrAni_Model = new Animator[arrTs_SpawnPos.Length];
             
             int active = UserInfoManager.Get().GetActiveDeckIndex();
