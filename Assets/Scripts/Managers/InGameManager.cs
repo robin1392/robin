@@ -611,7 +611,7 @@ namespace ED
             playerController.SetSp(sp);
         }
 
-        public void NetSpawnNotify(int wave)
+        public void NetSpawnNotify(int wave, int uid = 0)
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
@@ -620,11 +620,21 @@ namespace ED
 
             Debug.Log("spawn  : " + wave);
             
-            playerController.Spawn();
-
-            if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+            switch (NetworkManager.Get().playType)
             {
-                playerController.targetPlayer.Spawn();
+                case Global.PLAY_TYPE.BATTLE:
+                    playerController.Spawn();
+                    playerController.targetPlayer.Spawn();
+                    break;
+                case Global.PLAY_TYPE.COOP:
+                    if (uid > 0)
+                    {
+                        if (NetworkManager.Get().UserUID == uid)
+                            playerController.Spawn();
+                        else if (NetworkManager.Get().OtherUID == uid)
+                            playerController.targetPlayer.Spawn();
+                    }
+                    break;
             }
 
             // 스폰이 불릴때마다 시간갱신을 위해 저장
@@ -1389,10 +1399,7 @@ namespace ED
                     }
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
-                    if (msg.PlayerUId == NetworkManager.Get().UserUID)
-                    {
-                        NetSpawnNotify(msg.Wave);
-                    }
+                    NetSpawnNotify(msg.Wave, msg.PlayerUId);
 
                     break;
                 }
