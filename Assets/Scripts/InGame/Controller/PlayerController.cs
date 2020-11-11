@@ -2464,9 +2464,9 @@ namespace ED
                     //float delay = hitminion.Delay / Global.g_networkBaseValue;
                     
                     if (NetworkManager.Get().UserUID == hitminion.PlayerUId)
-                        targetPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
-                    else if (NetworkManager.Get().OtherUID == hitminion.PlayerUId )
                         HitDamageMinionAndMagic(hitminion.Id, damage);
+                    else if (NetworkManager.Get().OtherUID == hitminion.PlayerUId )
+                        targetPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
                     else if (NetworkManager.Get().CoopUID == hitminion.PlayerUId )
                         coopPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
                     
