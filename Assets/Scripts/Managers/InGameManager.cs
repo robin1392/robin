@@ -1618,7 +1618,7 @@ namespace ED
         public BaseStat GetBaseStatFromId(int baseStatId)
         {
             int uid = baseStatId / 10000;
-            int bsID = baseStatId % 10000;
+            //int bsID = baseStatId % 10000;
 
             PlayerController pc = null;
             if (NetworkManager.Get().UserUID == uid)
@@ -1628,8 +1628,8 @@ namespace ED
             else if (NetworkManager.Get().CoopUID == uid)
                 pc = playerController.coopPlayer;
             
-            if (bsID < 0) return null;
-            if (bsID == 0) return pc;
+            if (baseStatId < 0) return null;
+            if (baseStatId == 0) return pc;
 
             var minion = pc.listMinion.Find(m => m.id == baseStatId);
             if (minion != null)

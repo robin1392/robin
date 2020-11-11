@@ -14,6 +14,7 @@ namespace ED
         protected override void StartPlayerControll()
         {
             _myUID = NetworkManager.Get().CoopUID;
+            id = myUID * 10000;
             
             if (isMine)
             {

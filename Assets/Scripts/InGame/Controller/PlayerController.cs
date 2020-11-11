@@ -221,6 +221,7 @@ namespace ED
         protected virtual void StartPlayerControll()
         {
             _myUID = isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID;
+            id = myUID * 10000;
             
             if (isMine)
             {
@@ -1107,7 +1108,7 @@ namespace ED
         public void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
             // baseStatId == 0 => Player tower
-            if (baseStatId == 0)
+            if (baseStatId == id)
             {
                 //if (PhotonNetwork.IsConnected)
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
