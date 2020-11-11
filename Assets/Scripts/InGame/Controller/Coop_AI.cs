@@ -87,7 +87,7 @@ namespace ED
             packetCount = 0;
             
             Debug.LogFormat("COOP_AI_SPAWN : boss={0}", boss != null);
-            if (boss != null)
+            if (boss != null && boss.DataId > 0)
             {
                 Debug.LogFormat("BOSS : hp={0}, id={1}", boss.Hp, boss.DataId);
 
@@ -98,8 +98,8 @@ namespace ED
                 var bossData = JsonDataManager.Get().dataBossInfo.dicData[boss.DataId];
 
                 m.id = boss.Id;
-                m.maxHealth = ConvertNetMsg.MsgIntToFloat(bossData.hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(bossData.atk);
+                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
                 m.Initialize(MinionDestroyCallback);
             }
 
