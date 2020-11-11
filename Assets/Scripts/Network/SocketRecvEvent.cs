@@ -152,7 +152,7 @@ public class SocketRecvEvent
 
         //
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
-        NetworkManager.Get().IsMaster = msg.PlayerInfo.IsBottomPlayer;
+        NetworkManager.Get().IsMaster = msg.PlayerInfo.IsMaster;
         GameStateManager.Get().CheckSendInGame();
 
     }
@@ -170,7 +170,7 @@ public class SocketRecvEvent
 
         //
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
-        NetworkManager.Get().IsMaster = msg.PlayerInfo.PlayerUId == 1;
+        NetworkManager.Get().IsMaster = msg.PlayerInfo.IsMaster;
         GameStateManager.Get().CheckSendInGame();
     }
 
@@ -322,8 +322,8 @@ public class SocketRecvEvent
 
 
         // menu
-        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo[0]);
-        NetworkManager.Get().GetNetInfo().SetCoopInfo(msg.OtherPlayerInfo[1]);
+        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.CoopPlayerInfo);
+        NetworkManager.Get().GetNetInfo().SetCoopInfo(msg.OtherPlayerInfo[0]);
         GameStateManager.Get().CheckSendInGame();
     }
 
