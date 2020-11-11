@@ -261,7 +261,11 @@ namespace ED
             {
                 if (m.gameObject.CompareTag("Finish")) continue;
 
-                m.material = arrMaterial[isMine ? 0 : 1];
+                if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+                    m.material = arrMaterial[isMine ? 0 : 1];
+                else if (NetworkManager.Get().playType == Global.PLAY_TYPE.COOP)
+                    m.material = arrMaterial[isBottomPlayer ? 0 : 1];
+                    
                 switch (type)
                 {
                     case E_MaterialType.BOTTOM:
