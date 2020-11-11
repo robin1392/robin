@@ -118,16 +118,6 @@ namespace ED
 
             if (IsNetwork == true)
             {
-                if (NetworkManager.Get().IsMaster == false)
-                {
-                    ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
-                    ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
-                    ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
-                }
-            }
-
-            if (IsNetwork == true)
-            {
                 WorldUIManager.Get().SetWave(wave);
                 SendInGameManager(GameProtocol.READY_GAME_REQ);
             }
