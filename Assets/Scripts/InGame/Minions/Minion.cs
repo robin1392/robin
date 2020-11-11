@@ -820,7 +820,7 @@ namespace ED
 
         public virtual void SetAnimationTrigger(string triggerName, int targetID)
         {
-            var target = controller.targetPlayer.GetBaseStatFromId(targetID);
+            var target = InGameManager.Get().GetBaseStatFromId(targetID);
             if (target != null) transform.LookAt(target.transform);
             
             animator.SetTrigger(triggerName);

@@ -102,7 +102,7 @@ namespace ED
 
         public override void SetAnimationTrigger(string triggerName, int targetID)
         {
-            var target = controller.GetBaseStatFromId(targetID);
+            var target = InGameManager.Get().GetBaseStatFromId(targetID);
             if (target != null) transform.LookAt(target.transform);
             
             animator.SetTrigger(triggerName);

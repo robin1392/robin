@@ -131,7 +131,7 @@ namespace ED
 
         public void LookAndAniTrigger(int targetID)
         {
-            flyingTarget = controller.targetPlayer.GetBaseStatFromId(targetID) as Minion;
+            flyingTarget = InGameManager.Get().GetBaseStatFromId(targetID) as Minion;
             if (flyingTarget)
             {
                 StartCoroutine(LookAtTargetCoroutine());

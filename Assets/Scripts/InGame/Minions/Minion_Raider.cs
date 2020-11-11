@@ -103,7 +103,7 @@ namespace ED
 
         public void DashMessage(int targetID)
         {
-            var bs = controller.targetPlayer.GetBaseStatFromId(targetID);
+            var bs = InGameManager.Get().GetBaseStatFromId(targetID);
             if (bs != null)
             {
                 Transform ts = bs.transform;

@@ -221,7 +221,7 @@ namespace ED
 
         public void SetTarget(int id)
         {
-            target = controller.targetPlayer.GetBaseStatFromId(id);
+            target = InGameManager.Get().GetBaseStatFromId(id);
             StartCoroutine(Move());
         }
 

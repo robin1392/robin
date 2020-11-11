@@ -140,7 +140,12 @@ namespace ED
         // }
         
         [SerializeField]
-        protected List<Magic> listMagic = new List<Magic>();
+        protected List<Magic> _listMagic = new List<Magic>();
+        public List<Magic> listMagic
+        {
+            get { return _listMagic; }
+            protected set { _listMagic = value; }
+        }
         private readonly string recvMessage = "RecvPlayer";
         private static readonly int Break = Animator.StringToHash("Break");
         public bool isHalfHealth;
@@ -399,7 +404,7 @@ namespace ED
 
             if (m != null)
             {
-                if (isSpawnCountUp) m.id = subSpawnCount++;
+                if (isSpawnCountUp) m.id = myUID * 10000 + subSpawnCount++;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
@@ -473,7 +478,7 @@ namespace ED
             if (m != null)
             {
                 m.castType = (DICE_CAST_TYPE)data.castType;
-                m.id = spawnCount++;
+                m.id = myUID * 10000 + spawnCount++;
                 m.diceId = data.id;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
@@ -550,30 +555,30 @@ namespace ED
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
-
-        public BaseStat GetBaseStatFromId(int baseStatId)
-        {
-            if (baseStatId < 0) return null;
-            if (baseStatId == 0) return this;
-
-            var minion = listMinion.Find(m => m.id == baseStatId);
-            if (minion != null)
-            {
-                return minion;
-            }
-            else
-            {
-                var magic = listMagic.Find(m => m.id == baseStatId);
-                if (magic != null)
-                {
-                    return magic;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
+        //
+        // public BaseStat GetBaseStatFromId(int baseStatId)
+        // {
+        //     if (baseStatId < 0) return null;
+        //     if (baseStatId == 0) return this;
+        //
+        //     var minion = listMinion.Find(m => m.id == baseStatId);
+        //     if (minion != null)
+        //     {
+        //         return minion;
+        //     }
+        //     else
+        //     {
+        //         var magic = _listMagic.Find(m => m.id == baseStatId);
+        //         if (magic != null)
+        //         {
+        //             return magic;
+        //         }
+        //         else
+        //         {
+        //             return null;
+        //         }
+        //     }
+        // }
 
         public Minion GetRandomMinion()
         {
@@ -679,7 +684,7 @@ namespace ED
                     m.Initialize(isBottomPlayer);
                     m.SetTarget();
                     
-                    listMagic.Add(m);
+                    _listMagic.Add(m);
                 }
             }
         }
@@ -1128,7 +1133,7 @@ namespace ED
                 }
                 else
                 {
-                    var mg = listMagic.Find(magic => magic.id == baseStatId);
+                    var mg = _listMagic.Find(magic => magic.id == baseStatId);
                     if (mg != null)
                     {
                         mg.HitDamage(damage);
@@ -1318,7 +1323,7 @@ namespace ED
                 arrMinion[i].Death();
             }
 
-            var arrMagic = listMagic.ToArray();
+            var arrMagic = _listMagic.ToArray();
             for (int i = 0; i < arrMagic.Length; i++)
             {
                 arrMagic[i].Destroy();
@@ -1529,7 +1534,7 @@ namespace ED
         }
         private void RemoveMagic(int baseStatId)
         {
-            listMagic.Remove(listMagic.Find(magic => magic.id == baseStatId));
+            _listMagic.Remove(_listMagic.Find(magic => magic.id == baseStatId));
         }
         private void DestroyMinion(int baseStatId)
         {
@@ -1537,7 +1542,7 @@ namespace ED
         }
         private void DestroyMagic(int baseStatId)
         {
-            listMagic.Find(magic => magic.id == baseStatId)?.Destroy();
+            _listMagic.Find(magic => magic.id == baseStatId)?.Destroy();
         }
         
         #endregion
@@ -1553,11 +1558,11 @@ namespace ED
         }
         public void FireballBomb(int baseStatId)
         {
-            ((Fireball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+            ((Fireball)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
         public void MineBomb(int baseStatId)
         {
-            ((Mine)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+            ((Mine)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
         public void SturnMinion(int baseStatId, float duration)
         {
@@ -1565,11 +1570,11 @@ namespace ED
         }
         public void RocketBomb(int baseStatId)
         {
-            ((Rocket)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+            ((Rocket)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
         public void IceballBomb(int baseStatId)
         {
-            ((Iceball)listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
+            ((Iceball)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
         public void FiremanFire(int baseStatId)
         {
@@ -1624,9 +1629,9 @@ namespace ED
         }
         private IEnumerator SetMagicTargetCoroutine(int baseStatId, int targetId)
         {
-            while (listMagic.Find(magic => magic.id == baseStatId) == null) 
+            while (_listMagic.Find(magic => magic.id == baseStatId) == null) 
                 yield return null;
-            listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(targetId);
+            _listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(targetId);
         }
 
         public void SetMagicTarget(int baseStatId, float x, float z)
@@ -1635,14 +1640,14 @@ namespace ED
         }
         private IEnumerator SetMagicTargetCoroutine(int baseStatId, float x, float z)
         {
-            while (listMagic.Find(magic => magic.id == baseStatId) == null)
+            while (_listMagic.Find(magic => magic.id == baseStatId) == null)
                 yield return null;
-            listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(x, z);
+            _listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(x, z);
         }
 
         public void SetMinionTarget(int bastStatId , int targetId )
         {
-            listMinion.Find(minion => minion.id == bastStatId).target = targetPlayer.GetBaseStatFromId(targetId);
+            listMinion.Find(minion => minion.id == bastStatId).target = InGameManager.Get().GetBaseStatFromId(targetId);
         }
 
         public void SetMinionInvincibility(int bastStatId ,float time)
@@ -1675,12 +1680,12 @@ namespace ED
             if (targetId == -1)
             {
                 listMinion.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, SendMessageOptions.DontRequireReceiver);
-                listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, SendMessageOptions.DontRequireReceiver);
+                _listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, SendMessageOptions.DontRequireReceiver);
             }
             else
             {
                 listMinion.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, targetId, SendMessageOptions.DontRequireReceiver);
-                listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, targetId, SendMessageOptions.DontRequireReceiver);
+                _listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, targetId, SendMessageOptions.DontRequireReceiver);
             }
         }
         public void ActivationPoolObject(string objectName , Vector3 startPos , Quaternion rotate , Vector3 scale )

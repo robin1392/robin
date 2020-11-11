@@ -1614,8 +1614,41 @@ namespace ED
                 yield return null;
             }
         }
+        
+        public BaseStat GetBaseStatFromId(int baseStatId)
+        {
+            int uid = baseStatId / 10000;
+            int bsID = baseStatId % 10000;
 
+            PlayerController pc = null;
+            if (NetworkManager.Get().UserUID == uid)
+                pc = playerController;
+            else if (NetworkManager.Get().OtherUID == uid)
+                pc = playerController.targetPlayer;
+            else if (NetworkManager.Get().CoopUID == uid)
+                pc = playerController.coopPlayer;
+            
+            if (bsID < 0) return null;
+            if (bsID == 0) return pc;
 
+            var minion = pc.listMinion.Find(m => m.id == baseStatId);
+            if (minion != null)
+            {
+                return minion;
+            }
+            else
+            {
+                var magic = pc.listMagic.Find(m => m.id == baseStatId);
+                if (magic != null)
+                {
+                    return magic;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         #region not use old code
         // photon remove

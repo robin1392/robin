@@ -51,7 +51,7 @@ namespace ED
             _splashRange = splashRange;
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
-            _target = controller.targetPlayer.GetBaseStatFromId(pTargetId);
+            _target = InGameManager.Get().GetBaseStatFromId(pTargetId);
             
             if (_target)
             {

@@ -123,7 +123,7 @@ namespace ED
 
         public void LookAndAniTrigger(int targetID)
         {
-            longTarget = controller.targetPlayer.GetBaseStatFromId(targetID)?.transform;
+            longTarget = InGameManager.Get().GetBaseStatFromId(targetID)?.transform;
             if (longTarget != null)
             {
                 StartCoroutine(LookAtTargetCoroutine());
