@@ -630,13 +630,14 @@ namespace ED
                     if (uid > 0)
                     {
                         if (NetworkManager.Get().UserUID == uid)
-                            playerController.Spawn();
-                        else if (NetworkManager.Get().OtherUID == uid)
-                            playerController.targetPlayer.Spawn();
-                        else if (NetworkManager.Get().CoopUID == uid)
                         {
-                            ((Coop_AI)playerController.coopPlayer).Spawn(boss);
+                            playerController.Spawn();
                         }
+                        else if (NetworkManager.Get().OtherUID == uid)
+                        {
+                            playerController.targetPlayer.Spawn();
+                        }
+                        ((Coop_AI) playerController.coopPlayer).Spawn(boss);
                     }
                     break;
             }

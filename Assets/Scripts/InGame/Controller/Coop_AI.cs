@@ -90,6 +90,27 @@ namespace ED
             if (boss != null)
             {
                 Debug.LogFormat("BOSS : hp={0}, id={1}", boss.Hp, boss.DataId);
+
+                var pos = FieldManager.Get().GetTopListPos(0);
+                var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
+                    Global.E_LOADTYPE.LOAD_MINION);
+                var m = CreateMinion(obj, pos, 1, 1);
+
+                m.id = boss.Id;
+                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+            }
+
+            int minionCount = Mathf.Clamp(InGameManager.Get().wave, 1, 15);
+            for (int i = 0; i < minionCount; i++)
+            {
+                var pos = FieldManager.Get().GetTopListPos(i);
+                var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
+                    Global.E_LOADTYPE.LOAD_MINION);
+                var m = CreateMinion(obj, pos, 1, 1);
+                
+                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
             }
         }
     }
