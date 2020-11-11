@@ -164,7 +164,7 @@ public class SocketRecvEvent
         //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
         //SendSocket.ReadyGameReq(peer);
         UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
-        UnityUtil.Print("join my info ", msg.PlayerInfo.PlayerUId + "  " + msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print("join my info ", $"UID{msg.PlayerInfo.PlayerUId} Name{msg.PlayerInfo.Name} isBottom:{msg.PlayerInfo.IsBottomPlayer} isMaster:{msg.PlayerInfo.IsMaster}", "white");
         UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.PlayerInfo), "white");
 
 
@@ -316,8 +316,8 @@ public class SocketRecvEvent
 
     public void OnJoinCoopGameNotify(Peer peer, MsgJoinCoopGameNotify msg)
     {
-        UnityUtil.Print("other info ", msg.OtherPlayerInfo[0].PlayerUId + "  " + msg.OtherPlayerInfo[0].Name + " , " + msg.OtherPlayerInfo[0].IsBottomPlayer, "white");
-        UnityUtil.Print("coop info ", msg.OtherPlayerInfo[1].PlayerUId + "  " + msg.OtherPlayerInfo[1].Name + " , " + msg.OtherPlayerInfo[1].IsBottomPlayer, "white");
+        UnityUtil.Print("other info ", $"UID{msg.CoopPlayerInfo.PlayerUId} Name{msg.CoopPlayerInfo.Name} isBottom:{msg.CoopPlayerInfo.IsBottomPlayer} isMaster:{msg.CoopPlayerInfo.IsMaster}", "white");
+        UnityUtil.Print("coop info ", $"UID{msg.OtherPlayerInfo[0].PlayerUId} Name{msg.OtherPlayerInfo[0].Name} isBottom:{msg.CoopPlayerInfo.IsBottomPlayer} isMaster:{msg.OtherPlayerInfo[0].IsMaster}", "white");
         UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.OtherPlayerInfo), "white");
 
 
