@@ -82,7 +82,7 @@ namespace ED
             }
         }
 
-        public void Spawn(MsgBossMonster boss)
+        public void Spawn(MsgBossMonster boss = null)
         {
             packetCount = 0;
             
