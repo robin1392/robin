@@ -330,17 +330,24 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public void CheckSendInGame()
     {
-        if (NetworkManager.Get().GetNetInfo().myInfoGet == true && NetworkManager.Get().GetNetInfo().otherInfoGet == true)
+        switch (NetworkManager.Get().playType)
         {
-            switch (NetworkManager.Get().playType)
-            {
-                case Global.PLAY_TYPE.BATTLE:
+            case Global.PLAY_TYPE.BATTLE:
+                if (NetworkManager.Get().GetNetInfo().myInfoGet == true &&
+                    NetworkManager.Get().GetNetInfo().otherInfoGet == true)
+                {
                     MoveInGameBattle();
-                    break;
-                case Global.PLAY_TYPE.COOP:
+                }
+                break;
+            case Global.PLAY_TYPE.COOP:
+                if (NetworkManager.Get().GetNetInfo().myInfoGet == true &&
+                    NetworkManager.Get().GetNetInfo().otherInfoGet == true &&
+                    NetworkManager.Get().GetNetInfo().coopInfoGet == true)
+                {
                     MoveInGameCoop();
-                    break;
-            }
+                }
+
+                break;
         }
     }
 

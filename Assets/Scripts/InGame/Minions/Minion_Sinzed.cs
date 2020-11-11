@@ -20,7 +20,17 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            target = controller.targetPlayer;
+            switch (NetworkManager.Get().playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    target = controller.targetPlayer;
+                    break;
+                case Global.PLAY_TYPE.COOP:
+                    target = controller.coopPlayer;
+                    break;
+                default:
+                    return null;
+            }
 
             if (isAlive)
             {
@@ -28,7 +38,7 @@ namespace ED
                 {
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
                     // 이건 자신이 데미지 입는것이기 때문에...
-                    controller.HitMinionDamage( false , id , 10000.0f );
+                    controller.HitMinionDamage( false , id , float.MaxValue );
                 }
             }
             

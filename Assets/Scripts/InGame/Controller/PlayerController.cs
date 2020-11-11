@@ -59,6 +59,7 @@ namespace ED
         #region player variable.
         
         public PlayerController targetPlayer;
+        public PlayerController coopPlayer;
         #endregion
         
         

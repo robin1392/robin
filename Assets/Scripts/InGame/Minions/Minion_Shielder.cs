@@ -72,7 +72,15 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            return controller.targetPlayer;
+            switch (NetworkManager.Get().playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    return controller.targetPlayer;
+                case Global.PLAY_TYPE.COOP:
+                    return controller.coopPlayer;
+                default:
+                    return null;
+            }
         }
     }
 }

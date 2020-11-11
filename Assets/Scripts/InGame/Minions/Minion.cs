@@ -2,6 +2,7 @@
 #define ENABLE_LOG
 #endif
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NodeCanvas.BehaviourTrees;
@@ -158,7 +159,15 @@ namespace ED
             //_isNexusAttacked = false;
             currentHealth = maxHealth;
             image_HealthBar.fillAmount = 1f;
-            image_HealthBar.color = isMine ? Color.green : Color.red;
+            switch (NetworkManager.Get().playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    image_HealthBar.color = isMine ? Color.green : Color.red;
+                    break;
+                case Global.PLAY_TYPE.COOP:
+                    image_HealthBar.color = isBottomPlayer ? Color.green : Color.red;
+                    break;
+            }
             
             if (animator != null)
             {
@@ -269,6 +278,21 @@ namespace ED
 
         public virtual BaseStat SetTarget()
         {
+            BaseStat defaultTarget = null;
+
+            switch (NetworkManager.Get().playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    defaultTarget = controller.targetPlayer;
+                    break;
+                case Global.PLAY_TYPE.COOP:
+                    defaultTarget = controller.coopPlayer;
+                    break;
+                default:
+                    defaultTarget = null;
+                    break;
+            }
+            
             if (isPushing)
             {
                 return null;
@@ -293,7 +317,7 @@ namespace ED
             {
                 if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
                 {
-                    return controller.targetPlayer;
+                    return defaultTarget;
                 }
                 else
                 {
@@ -327,7 +351,7 @@ namespace ED
                 animator.SetTrigger(_animatorHashIdle);
             }
 
-            return firstTarget ? firstTarget.GetComponentInParent<BaseStat>() : controller.targetPlayer;
+            return firstTarget ? firstTarget.GetComponentInParent<BaseStat>() : defaultTarget;
         }
 
         public void ChangeLayer(bool pIsBottomPlayer)

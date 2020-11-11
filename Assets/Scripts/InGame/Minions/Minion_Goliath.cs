@@ -55,7 +55,15 @@ namespace ED
             {
                 if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
                 {
-                    return controller.targetPlayer;
+                    switch (NetworkManager.Get().playType)
+                    {
+                        case Global.PLAY_TYPE.BATTLE:
+                            return controller.targetPlayer;
+                        case Global.PLAY_TYPE.COOP:
+                            return controller.coopPlayer;
+                        default:
+                            return null;
+                    }
                 }
                 else
                 {
@@ -89,7 +97,22 @@ namespace ED
                 animator.SetTrigger(_animatorHashIdle);
             }
 
-            return firstTarget ? firstTarget.GetComponentInParent<BaseStat>() : controller.targetPlayer;
+            if (firstTarget)
+            {
+                return firstTarget.GetComponentInParent<BaseStat>();
+            }
+            else
+            {
+                switch (NetworkManager.Get().playType)
+                {
+                    case Global.PLAY_TYPE.BATTLE:
+                        return controller.targetPlayer;
+                    case Global.PLAY_TYPE.COOP:
+                        return controller.coopPlayer;
+                    default:
+                        return null;
+                }
+            }
         }
 
         public void FireArrow()

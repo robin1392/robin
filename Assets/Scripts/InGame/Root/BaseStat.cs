@@ -109,7 +109,7 @@ namespace ED
                 if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
                     m.material = arrMaterial[isMine ? 0 : 1];
                 else
-                    m.material = arrMaterial[0];
+                    m.material = arrMaterial[isBottomPlayer ? 0 : 1];
                 
                 switch (type)
                 {
@@ -142,7 +142,7 @@ namespace ED
                 if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
                     m.material = arrMaterial[isMine ? 0 : 1];
                 else
-                    m.material = arrMaterial[0];
+                    m.material = arrMaterial[isBottomPlayer ? 0 : 1];
                 
                 switch (type)
                 {

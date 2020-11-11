@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ED
 {
@@ -32,7 +34,15 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            return controller.targetPlayer;
+            switch (NetworkManager.Get().playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    return controller.targetPlayer;
+                case Global.PLAY_TYPE.COOP:
+                    return controller.coopPlayer;
+                default:
+                    return null;
+            }
         }
 
         public override void Death()

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace ED
@@ -81,7 +82,22 @@ namespace ED
                 return firstTarget.GetComponentInParent<BaseStat>();
             }
 
-            return closeToTarget != null ? closeToTarget.GetComponentInParent<BaseStat>() : controller.targetPlayer;
+            if (closeToTarget != null)
+            {
+                return closeToTarget.GetComponentInParent<BaseStat>();
+            }
+            else
+            {
+                switch (NetworkManager.Get().playType)
+                {
+                    case Global.PLAY_TYPE.BATTLE:
+                        return controller.targetPlayer;
+                    case Global.PLAY_TYPE.COOP:
+                        return controller.coopPlayer;
+                    default:
+                        return null;
+                }
+            }
         }
 
         public override void SetAnimationTrigger(string triggerName, int targetID)

@@ -13,7 +13,9 @@ namespace ED
     {
         [Header("Coop")]
         public GameObject pref_PlayerEmpty;
-        public GameObject pref_Enemy_AI;
+        public GameObject pref_Coop_AI;
+
+        private bool isMaster;
 
         public override void StartManager()
         {
@@ -23,10 +25,13 @@ namespace ED
 
             // player controller create...my and other
             Vector3 towerPos = FieldManager.Get().GetPlayerPos(true);
+            Vector3 AIPos = FieldManager.Get().GetPlayerPos(false);
 
             GameObject myTObj = null;
             GameObject otherTObj = null;
-            if (NetworkManager.Get().IsMaster)
+            GameObject coopTObj = null;
+            isMaster = NetworkManager.Get().IsMaster;
+            if (isMaster)
             {
                 myTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
                 otherTObj = UnityUtil.Instantiate("Tower/" + pref_PlayerEmpty.name);
@@ -36,6 +41,7 @@ namespace ED
                 myTObj = UnityUtil.Instantiate("Tower/" + pref_PlayerEmpty.name);
                 otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);                
             }
+            coopTObj = UnityUtil.Instantiate("Tower/" + pref_Coop_AI.name);
 
             myTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
             myTObj.transform.position = towerPos;
@@ -53,6 +59,16 @@ namespace ED
             
             playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
             
+            // AI
+            coopTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
+            coopTObj.transform.position = AIPos;
+            var AI = coopTObj.GetComponent<PlayerController>();
+            playerController.coopPlayer = AI;
+            playerController.targetPlayer.coopPlayer = AI;
+            AI.isMine = playerController.isMine;
+            AI.isBottomPlayer = false;
+            AI.ChangeLayer(false);
+
             //
             UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
             

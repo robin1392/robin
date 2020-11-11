@@ -902,8 +902,10 @@ public class NetInfo
     //
     public MsgPlayerInfo playerInfo;
     public MsgPlayerInfo otherInfo;
+    public MsgPlayerInfo coopInfo;
     public bool myInfoGet = false;
     public bool otherInfoGet = false;
+    public bool coopInfoGet = false;
 
     public NetInfo()
     {
@@ -914,6 +916,7 @@ public class NetInfo
     {
         myInfoGet = false;
         otherInfoGet = false;
+        coopInfoGet = false;
     }
 
     public void SetPlayerInfo(MsgPlayerInfo info)
@@ -930,6 +933,12 @@ public class NetInfo
         /*for(int i = 0 ; i < otherInfo.DiceIdArray.Length ; i++ )
             UnityEngine.Debug.Log(otherInfo.DiceIdArray[i]);*/
         otherInfoGet = true;
+    }
+
+    public void SetCoopInfo(MsgPlayerInfo info)
+    {
+        coopInfo = info;
+        coopInfoGet = true;
     }
 
     public void SetPlayerBase(MsgPlayerBase baseinfo)
@@ -970,6 +979,11 @@ public class NetInfo
     public int OtherUID()
     {
         return otherInfo.PlayerUId;
+    }
+
+    public int CoopUID()
+    {
+        return coopInfo.PlayerUId;
     }
 
     public bool IsOtherUID(int userUid)

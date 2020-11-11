@@ -316,12 +316,14 @@ public class SocketRecvEvent
 
     public void OnJoinCoopGameNotify(Peer peer, MsgJoinCoopGameNotify msg)
     {
-        UnityUtil.Print("other info ", msg.OtherPlayerInfo.PlayerUId + "  " + msg.OtherPlayerInfo.Name + " , " + msg.OtherPlayerInfo.IsBottomPlayer, "white");
+        UnityUtil.Print("other info ", msg.OtherPlayerInfo[0].PlayerUId + "  " + msg.OtherPlayerInfo[0].Name + " , " + msg.OtherPlayerInfo[0].IsBottomPlayer, "white");
+        UnityUtil.Print("coop info ", msg.OtherPlayerInfo[1].PlayerUId + "  " + msg.OtherPlayerInfo[1].Name + " , " + msg.OtherPlayerInfo[1].IsBottomPlayer, "white");
         UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.OtherPlayerInfo), "white");
 
 
         // menu
-        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
+        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo[0]);
+        NetworkManager.Get().GetNetInfo().SetCoopInfo(msg.OtherPlayerInfo[1]);
         GameStateManager.Get().CheckSendInGame();
     }
 

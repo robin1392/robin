@@ -309,7 +309,7 @@ MonoBehaviour:
   listTopPlayer: []
   pref_PlayerEmpty: {fileID: 5883888954613411290, guid: ba3aa20b8a7e64ad981caaa6b6aa9365,
     type: 3}
-  pref_Enemy_AI: {fileID: 5883888954613411290, guid: 8f7b1cdad1a3e40b9885c5edf7f31803,
+  pref_Coop_AI: {fileID: 5883888954613411290, guid: c0d8d3bf7121b44508be80cde2cc8186,
     type: 3}
 --- !u!114 &225455321
 MonoBehaviour:
