@@ -65,16 +65,18 @@ namespace RandomWarsProtocol
         }
 
 
-        public void JoinCoopGameNotify(Peer peer, MsgPlayerInfo[] playerInfo)
+        public void JoinCoopGameNotify(Peer peer, MsgPlayerInfo coopPlayerInfo, MsgPlayerInfo[] otherPlayerInfo)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                int length = (playerInfo == null) ? 0 : playerInfo.Length;
+                coopPlayerInfo.Write(bw);
+
+                int length = (otherPlayerInfo == null) ? 0 : otherPlayerInfo.Length;
                 bw.Write(length);
                 for (int i = 0; i < length; i++)
                 {
-                    playerInfo[i].Write(bw);
+                    otherPlayerInfo[i].Write(bw);
                 }
                 peer.SendPacket((int)GameProtocol.JOIN_COOP_GAME_NOTIFY, ms.ToArray());
             }

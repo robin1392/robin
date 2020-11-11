@@ -232,6 +232,7 @@ namespace RandomWarsProtocol
         // 플레이어 유니크 아이디(게임 세션별 유니크 생성)
         public ushort PlayerUId;
         public bool IsBottomPlayer;
+        public bool IsMaster;
         public string Name;
         public int CurrentSp;
         public int TowerHp;
@@ -246,6 +247,7 @@ namespace RandomWarsProtocol
         {
             bw.Write(PlayerUId);
             bw.Write(IsBottomPlayer);
+            bw.Write(IsMaster);
             bw.Write(Name);
             bw.Write(CurrentSp);
             bw.Write(TowerHp);
@@ -269,6 +271,7 @@ namespace RandomWarsProtocol
             MsgPlayerInfo data = new MsgPlayerInfo();
             data.PlayerUId = br.ReadUInt16();
             data.IsBottomPlayer = br.ReadBoolean();
+            data.IsMaster = br.ReadBoolean();
             data.Name = br.ReadString();
             data.CurrentSp = br.ReadInt32();
             data.TowerHp = br.ReadInt32();

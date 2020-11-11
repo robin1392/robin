@@ -56,7 +56,10 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgJoinCoopGameNotify
     {
-        // 다른 플레이어 정보
+        // 아군(협동) 플레이어 정보
+        public MsgPlayerInfo CoopPlayerInfo;
+
+        // 상대방 플레이어 정보
         public MsgPlayerInfo[] OtherPlayerInfo;
     }
 }

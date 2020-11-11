@@ -345,6 +345,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinCoopGameNotify msg = new MsgJoinCoopGameNotify();
+                            msg.CoopPlayerInfo = MsgPlayerInfo.Read(br);
 
                             int length = br.ReadInt32();
                             msg.OtherPlayerInfo = new MsgPlayerInfo[length];
