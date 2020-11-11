@@ -1939,9 +1939,9 @@ namespace ED
             }
         }
         
-        private Dictionary<GameProtocol, List<object>> _syncDictionary = new Dictionary<GameProtocol, List<object>>();
+        protected Dictionary<GameProtocol, List<object>> _syncDictionary = new Dictionary<GameProtocol, List<object>>();
 
-        private int packetCount;
+        protected int packetCount;
         public IEnumerator SyncMinionStatus()
         {
             if (InGameManager.IsNetwork == false)

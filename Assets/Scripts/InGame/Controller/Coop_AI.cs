@@ -56,5 +56,41 @@ namespace ED
                 }
             }
         }
+        protected override void SetColor(E_MaterialType type)
+        {
+            var mr = GetComponentsInChildren<MeshRenderer>();
+            foreach (var m in mr)
+            {
+                if (m.gameObject.CompareTag("Finish")) continue;
+
+                m.material = arrMaterial[1];
+                switch (type)
+                {
+                    case E_MaterialType.BOTTOM:
+                    case E_MaterialType.TOP:
+                        Color c = m.material.color;
+                        c.a = 1f;
+                        m.material.color = c;
+                        break;
+                    case E_MaterialType.HALFTRANSPARENT:
+                    case E_MaterialType.TRANSPARENT:
+                        c = m.material.color;
+                        c.a = 0.3f;
+                        m.material.color = c;
+                        break;
+                }
+            }
+        }
+
+        public void Spawn(MsgBossMonster boss)
+        {
+            packetCount = 0;
+            
+            Debug.LogFormat("COOP_AI_SPAWN : boss={0}", boss != null);
+            if (boss != null)
+            {
+                Debug.LogFormat("BOSS : hp={0}, id={1}", boss.Hp, boss.DataId);
+            }
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace ED
             var AI = coopTObj.GetComponent<Coop_AI>();
             playerController.coopPlayer = AI;
             playerController.targetPlayer.coopPlayer = AI;
-            AI.isMine = playerController.isMine;
+            AI.isMine = isMaster;
             AI.isBottomPlayer = false;
             AI.ChangeLayer(false);
 

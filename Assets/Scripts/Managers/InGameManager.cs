@@ -611,7 +611,7 @@ namespace ED
             playerController.SetSp(sp);
         }
 
-        public void NetSpawnNotify(int wave, int uid = 0)
+        public void NetSpawnNotify(int wave, int uid = 0, MsgBossMonster boss = null)
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
@@ -633,6 +633,10 @@ namespace ED
                             playerController.Spawn();
                         else if (NetworkManager.Get().OtherUID == uid)
                             playerController.targetPlayer.Spawn();
+                        else if (NetworkManager.Get().CoopUID == uid)
+                        {
+                            ((Coop_AI)playerController.coopPlayer).Spawn(boss);
+                        }
                     }
                     break;
             }
@@ -1399,7 +1403,7 @@ namespace ED
                     }
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
-                    NetSpawnNotify(msg.Wave, msg.PlayerUId);
+                    NetSpawnNotify(msg.Wave, msg.PlayerUId, msg.SpawnBossMonster);
 
                     break;
                 }
