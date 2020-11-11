@@ -170,7 +170,7 @@ public class SocketRecvEvent
 
         //
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
-        NetworkManager.Get().IsMaster = msg.PlayerInfo.IsBottomPlayer;
+        NetworkManager.Get().IsMaster = msg.PlayerInfo.PlayerUId == 1;
         GameStateManager.Get().CheckSendInGame();
     }
 

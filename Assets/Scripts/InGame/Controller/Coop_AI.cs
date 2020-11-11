@@ -109,10 +109,19 @@ namespace ED
                 var pos = FieldManager.Get().GetTopListPos(i);
                 var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
                     Global.E_LOADTYPE.LOAD_MINION);
-                var m = CreateMinion(obj, pos, 1, 1);
+                var m = CreateMinion(obj, pos, 1, 0);
                 
                 //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                 //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+                
+                m.targetMoveType = DICE_MOVE_TYPE.ALL;
+                m.ChangeLayer(isBottomPlayer);
+                m.power = 100f;
+                m.maxHealth = 500f;
+                m.attackSpeed = 1f;
+                m.moveSpeed = 1f;
+                m.eyeLevel = 1;
+                m.upgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
             }
         }
