@@ -95,10 +95,12 @@ namespace ED
                 var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
                     Global.E_LOADTYPE.LOAD_MINION);
                 var m = CreateMinion(obj, pos, 1, 1);
+                var bossData = JsonDataManager.Get().dataBossInfo.dicData[boss.DataId];
 
                 m.id = boss.Id;
-                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+                m.maxHealth = ConvertNetMsg.MsgIntToFloat(bossData.hp);
+                m.power = ConvertNetMsg.MsgShortToFloat(bossData.atk);
+                m.Initialize(MinionDestroyCallback);
             }
 
             int minionCount = Mathf.Clamp(InGameManager.Get().wave, 1, 15);
@@ -109,8 +111,9 @@ namespace ED
                     Global.E_LOADTYPE.LOAD_MINION);
                 var m = CreateMinion(obj, pos, 1, 1);
                 
-                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+                //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+                m.Initialize(MinionDestroyCallback);
             }
         }
     }
