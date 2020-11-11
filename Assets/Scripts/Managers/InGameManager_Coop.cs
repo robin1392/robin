@@ -47,17 +47,17 @@ namespace ED
             myTObj.transform.position = towerPos;
             playerController = myTObj.GetComponent<PlayerController>();
             playerController.isMine = true;
-            playerController.isBottomPlayer = NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer;
-            playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+            playerController.isBottomPlayer = true;
+            playerController.ChangeLayer(true);
             
             otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
             otherTObj.transform.position = towerPos;
             playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
             playerController.targetPlayer.isMine = false;
-            playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
+            playerController.targetPlayer.isBottomPlayer = true;
             playerController.targetPlayer.targetPlayer = playerController;
             
-            playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+            playerController.targetPlayer.ChangeLayer(true);
             
             // AI
             coopTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
@@ -67,6 +67,7 @@ namespace ED
             playerController.targetPlayer.coopPlayer = AI;
             AI.isMine = isMaster;
             AI.isBottomPlayer = false;
+            AI.targetPlayer = isMaster ? playerController : playerController.targetPlayer;
             AI.ChangeLayer(false);
 
             //
