@@ -400,7 +400,7 @@ namespace ED
         {
             if (m == null || m.isAlive == false) return;
 
-                controller.AttackEnemyMinionOrMagic(m.id, power * factor, delay);
+                controller.AttackEnemyMinionOrMagic(m.UID, m.id, power * factor, delay);
                 //controller.AttackEnemyMinion(m.id, power * factor, delay);
         }
 

@@ -50,6 +50,7 @@ namespace ED
         private static readonly string GROUND_TAG_NAME = "Minion_Ground";
         private static readonly string FLYING_TAG_NAME = "Minion_Flying";
         public bool isFlying => gameObject.CompareTag(FLYING_TAG_NAME);
+        public int UID => controller.UID;
         
         //public int targetLayer => 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
         public int targetLayer

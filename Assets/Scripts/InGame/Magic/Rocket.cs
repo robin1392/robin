@@ -61,7 +61,7 @@ namespace ED
                 if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
                     if (target != null)
-                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
                     
                     //controller.HitMinionDamage( true , target.id , power, 0f);
                     //controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id, power, 0f);
@@ -73,7 +73,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
                         //controller.HitMinionDamage( true , target.id , power, 0f);
                     }
 
@@ -96,7 +96,7 @@ namespace ED
                 if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
                     if (target != null)
-                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
                     
                     //controller.HitMinionDamage( true , target.id , power, 0f);
                     //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
@@ -108,7 +108,7 @@ namespace ED
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinionOrMagic(target.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
                         //controller.HitMinionDamage( true , target.id , power, 0f);
                         //controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
                     }

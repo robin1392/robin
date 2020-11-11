@@ -91,7 +91,7 @@ namespace ED
                 if (bs != null)
                 {
                     if(( InGameManager.IsNetwork && _isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-                        controller.AttackEnemyMinionOrMagic(bs.id, _damage, 0f);
+                        controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, _damage, 0f);
                 }
                 
                 /*

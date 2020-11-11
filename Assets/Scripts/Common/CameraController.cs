@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,7 +39,17 @@ namespace ED
 
             if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
             {
-                SetPosition(NetworkManager.Get().playType != Global.PLAY_TYPE.BATTLE || NetworkManager.Get().IsMaster , height );
+                switch (NetworkManager.Get().playType)
+                {
+                    case Global.PLAY_TYPE.BATTLE:
+                        SetPosition(NetworkManager.Get().IsMaster == true, height );
+                        break;
+                    case Global.PLAY_TYPE.COOP:
+                        SetPosition(true, height );
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             else
             {

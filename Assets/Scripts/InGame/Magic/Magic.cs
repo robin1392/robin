@@ -237,7 +237,7 @@ namespace ED
         {
             if (m == null) return;
             
-            controller.AttackEnemyMinionOrMagic(m.id, power * factor, delay);
+            controller.AttackEnemyMinionOrMagic(m.UID, m.id, power * factor, delay);
         }
 
         // protected bool IsTargetLayer(GameObject targetObject)

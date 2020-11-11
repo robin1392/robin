@@ -162,7 +162,7 @@ namespace ED
                     if (bs != null && bs.id > 0 && bs.isFlying == false && bs.isAlive)
                     {
                         //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect * 10, 0f);
-                        controller.AttackEnemyMinionOrMagic(bs.id, effect, 0f);
+                        controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, effect, 0f);
                         //controller.HitMinionDamage( true , bs.id , effect * 10, 0f);
                     }
                 }

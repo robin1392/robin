@@ -149,6 +149,7 @@ namespace ED
         protected Coroutine crt_SyncMinion;
         protected Queue<int> queueHitDamage = new Queue<int>();
         protected int myUID;
+        public int UID => myUID;
 
         #endregion
 
@@ -1148,38 +1149,38 @@ namespace ED
             }#1#
         }*/
 
-        public void HitMinionDamage(bool other , int minionId , float damage )
+        public void HitMyMinionDamage(int uid , int minionId , float damage )
         {
             if(minionId == 0)
                 print("  id ---- 0 :  "+minionId);
                             
-            if (other == true)
+            //if (other == true)
             {
                 if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , myUID , minionId , damage, 0);
-                }
-                targetPlayer.HitDamageMinionAndMagic(minionId, damage);
-            }
-            else
-            {
-                if (InGameManager.IsNetwork && (isMine || isPlayingAI))
-                {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , myUID , minionId , damage , 0);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , uid , minionId , damage, 0);
                 }
                 HitDamageMinionAndMagic(minionId, damage);
-            }    
+            }
+            // else
+            // {
+            //     if (InGameManager.IsNetwork && (isMine || isPlayingAI))
+            //     {
+            //         NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , myUID , minionId , damage , 0);
+            //     }
+            //     HitDamageMinionAndMagic(minionId, damage);
+            // }    
         }
     
-        public void AttackEnemyMinionOrMagic(int baseStatId, float damage, float delay)
+        public void AttackEnemyMinionOrMagic(int uid, int baseStatId, float damage, float delay)
         {
             //if(baseStatId == 0)
                 //print("  id ---- 0 :  "+baseStatId);
             
-            StartCoroutine(AttackEnemyMinionOrMagicCoroutine(baseStatId, damage, delay));
+            StartCoroutine(AttackEnemyMinionOrMagicCoroutine(uid, baseStatId, damage, delay));
         }
         
-        IEnumerator AttackEnemyMinionOrMagicCoroutine(int baseStatId, float damage, float delay)
+        IEnumerator AttackEnemyMinionOrMagicCoroutine(int uid, int baseStatId, float damage, float delay)
         {
             if (delay > 0) yield return new WaitForSeconds(delay);
 
@@ -1187,9 +1188,17 @@ namespace ED
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, baseStatId, damage);
-                NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , myUID , baseStatId , damage, delay);
+                NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , uid , baseStatId , damage, delay);
             }
-            targetPlayer.HitDamageMinionAndMagic(baseStatId, damage);
+
+            if (targetPlayer.UID == uid)
+            {
+                targetPlayer.HitDamageMinionAndMagic(baseStatId, damage);
+            }
+            else if (coopPlayer != null && coopPlayer.UID == uid)
+            {
+                coopPlayer.HitDamageMinionAndMagic(baseStatId, damage);
+            }
         }
 
         
@@ -2107,7 +2116,7 @@ namespace ED
                         }
                         
                         #if ENABLE_LOG
-                        UnityUtil.Print(string.Format("SEND [{0}] : ", InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
+                        UnityUtil.Print(string.Format("SEND [{0}][{1}] : ", myUID, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
                         #endif
                         NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, myUID, minionCount , msgMinPos, hp, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
                         _syncDictionary.Clear();
@@ -2190,7 +2199,7 @@ namespace ED
             }
             
             #if ENABLE_LOG
-            UnityUtil.Print(string.Format("RECV [{0}] : ", packetCount), str, "green");
+            UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", myUID, packetCount), str, "green");
             #endif
         }
 
@@ -2404,6 +2413,12 @@ namespace ED
                         targetPlayer.RefreshHealthBar();
                         targetPlayer.HitDamage(0);
                     }
+                    else if (NetworkManager.Get().CoopUID == damageack.PlayerUId )
+                    {
+                        coopPlayer.currentHealth = calCurrentHP;
+                        coopPlayer.RefreshHealthBar();
+                        coopPlayer.HitDamage(0);
+                    }
                     
                     break;
                 }
@@ -2426,6 +2441,12 @@ namespace ED
                         targetPlayer.RefreshHealthBar();
                         targetPlayer.HitDamage(0);
                     }
+                    else if (NetworkManager.Get().CoopUID == damagenoti.PlayerUId )
+                    {
+                        coopPlayer.currentHealth = calCurrentHP;
+                        coopPlayer.RefreshHealthBar();
+                        coopPlayer.HitDamage(0);
+                    }
                     
                     break;
                 }
@@ -2440,6 +2461,8 @@ namespace ED
                         targetPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
                     else if (NetworkManager.Get().OtherUID == hitminion.PlayerUId )
                         HitDamageMinionAndMagic(hitminion.Id, damage);
+                    else if (NetworkManager.Get().CoopUID == hitminion.PlayerUId )
+                        coopPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
                     
                     break;
                 }
@@ -2453,6 +2476,8 @@ namespace ED
                         DestroyMinion(destrelay.Id);
                     else if (NetworkManager.Get().OtherUID == destrelay.PlayerUId )
                         targetPlayer.DestroyMinion(destrelay.Id);
+                    else if (NetworkManager.Get().CoopUID == destrelay.PlayerUId )
+                        coopPlayer.DestroyMinion(destrelay.Id);
                     
                     break;
                 }
@@ -2465,6 +2490,8 @@ namespace ED
                         DestroyMagic(desmagic.BaseStatId);
                     else if (NetworkManager.Get().OtherUID == desmagic.PlayerUId )
                         targetPlayer.DestroyMagic(desmagic.BaseStatId);
+                    else if (NetworkManager.Get().CoopUID == desmagic.PlayerUId )
+                        coopPlayer.DestroyMagic(desmagic.BaseStatId);
                     
                     break;
                 }
@@ -2482,6 +2509,8 @@ namespace ED
                         FireballBomb(fbrelay.Id);
                     else if (NetworkManager.Get().OtherUID == fbrelay.PlayerUId )
                         targetPlayer.FireballBomb(fbrelay.Id);
+                    else if (NetworkManager.Get().CoopUID == fbrelay.PlayerUId )
+                        coopPlayer.FireballBomb(fbrelay.Id);
                     
                     break;
                 }
@@ -2494,6 +2523,8 @@ namespace ED
                         HealMinion(healrelay.Id, serverHealVal);
                     else if (NetworkManager.Get().OtherUID == healrelay.PlayerUId )
                         targetPlayer.HealMinion(healrelay.Id, serverHealVal);
+                    else if (NetworkManager.Get().CoopUID == healrelay.PlayerUId )
+                        coopPlayer.HealMinion(healrelay.Id, serverHealVal);
                     
                     break;
                 }
@@ -2505,6 +2536,8 @@ namespace ED
                         MineBomb(mbrelay.Id);
                     else if (NetworkManager.Get().OtherUID == mbrelay.PlayerUId )
                         targetPlayer.MineBomb(mbrelay.Id);
+                    else if (NetworkManager.Get().CoopUID == mbrelay.PlayerUId )
+                        coopPlayer.MineBomb(mbrelay.Id);
                     break;
                 }
                 case GameProtocol.STURN_MINION_RELAY:
@@ -2517,6 +2550,8 @@ namespace ED
                         SturnMinion(sturelay.Id, chDur);
                     else if (NetworkManager.Get().OtherUID == sturelay.PlayerUId )
                         targetPlayer.SturnMinion(sturelay.Id, chDur);
+                    else if (NetworkManager.Get().CoopUID == sturelay.PlayerUId )
+                        coopPlayer.SturnMinion(sturelay.Id, chDur);
                     
                     break;
                 }
@@ -2528,6 +2563,8 @@ namespace ED
                         DestroyMagic(rockrelay.Id);
                     else if (NetworkManager.Get().OtherUID == rockrelay.PlayerUId )
                         targetPlayer.DestroyMagic(rockrelay.Id);
+                    else if (NetworkManager.Get().CoopUID == rockrelay.PlayerUId )
+                        coopPlayer.DestroyMagic(rockrelay.Id);
                     
                     break;
                 }
@@ -2539,6 +2576,8 @@ namespace ED
                         IceballBomb(icerelay.Id);
                     else if (NetworkManager.Get().OtherUID == icerelay.PlayerUId )
                         targetPlayer.IceballBomb(icerelay.Id);
+                    else if (NetworkManager.Get().CoopUID == icerelay.PlayerUId )
+                        coopPlayer.IceballBomb(icerelay.Id);
                     
                     break;
                 }
@@ -2550,6 +2589,8 @@ namespace ED
                         FiremanFire(firerelay.Id);
                     else if (NetworkManager.Get().OtherUID == firerelay.PlayerUId )
                         targetPlayer.FiremanFire(firerelay.Id);
+                    else if (NetworkManager.Get().CoopUID == firerelay.PlayerUId )
+                        coopPlayer.FiremanFire(firerelay.Id);
                     
                     break;
                 }
@@ -2561,6 +2602,8 @@ namespace ED
                         Cloacking(cloackrelay.Id, cloackrelay.IsCloacking);
                     else if (NetworkManager.Get().OtherUID == cloackrelay.PlayerUId )
                         targetPlayer.Cloacking(cloackrelay.Id, cloackrelay.IsCloacking);
+                    else if (NetworkManager.Get().CoopUID == cloackrelay.PlayerUId )
+                        coopPlayer.Cloacking(cloackrelay.Id, cloackrelay.IsCloacking);
 
                     break;
                 }
@@ -2574,6 +2617,8 @@ namespace ED
                         FlagOfWar(flagrelay.BaseStatId , flagrelay.IsFogOfWar , convFactor);
                     else if (NetworkManager.Get().OtherUID == flagrelay.PlayerUId )
                         targetPlayer.FlagOfWar(flagrelay.BaseStatId , flagrelay.IsFogOfWar , convFactor);
+                    else if (NetworkManager.Get().CoopUID == flagrelay.PlayerUId )
+                        coopPlayer.FlagOfWar(flagrelay.BaseStatId , flagrelay.IsFogOfWar , convFactor);
                     
                     break;
                 }
@@ -2586,6 +2631,8 @@ namespace ED
                         ScareCrow(scarelay.BaseStatId , chEyeLv);
                     else if (NetworkManager.Get().OtherUID == scarelay.PlayerUId )
                         targetPlayer.ScareCrow(scarelay.BaseStatId , chEyeLv);
+                    else if (NetworkManager.Get().CoopUID == scarelay.PlayerUId )
+                        coopPlayer.ScareCrow(scarelay.BaseStatId , chEyeLv);
                     
                     break;
                 }
@@ -2597,6 +2644,8 @@ namespace ED
                         LayzerMinion(lazerrelay.Id, ConvertNetMsg.MsgUshortArrToIntArr(lazerrelay.TargetIdArray));
                     else if (NetworkManager.Get().OtherUID == lazerrelay.PlayerUId )
                         targetPlayer.LayzerMinion(lazerrelay.Id, ConvertNetMsg.MsgUshortArrToIntArr(lazerrelay.TargetIdArray));
+                    else if (NetworkManager.Get().CoopUID == lazerrelay.PlayerUId )
+                        coopPlayer.LayzerMinion(lazerrelay.Id, ConvertNetMsg.MsgUshortArrToIntArr(lazerrelay.TargetIdArray));
                     
                     break;
                 }
@@ -2610,6 +2659,8 @@ namespace ED
                         SetMinionInvincibility(inrelay.Id, convTime);
                     else if (NetworkManager.Get().OtherUID == inrelay.PlayerUId )
                         targetPlayer.SetMinionInvincibility(inrelay.Id, convTime);
+                    else if (NetworkManager.Get().CoopUID == inrelay.PlayerUId )
+                        coopPlayer.SetMinionInvincibility(inrelay.Id, convTime);
                     
                     break;
                 }
@@ -2630,6 +2681,8 @@ namespace ED
                         FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
                     else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
                         targetPlayer.FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
+                    else if (NetworkManager.Get().CoopUID == arrrelay.PlayerUId )
+                        coopPlayer.FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
                     
                     break;
                 }
@@ -2648,6 +2701,8 @@ namespace ED
                         FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
                     else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
                         targetPlayer.FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
+                    else if (NetworkManager.Get().CoopUID == arrrelay.PlayerUId )
+                        coopPlayer.FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
                     break;
                 }
                 case GameProtocol.FIRE_SPEAR_RELAY:
@@ -2662,6 +2717,8 @@ namespace ED
                         FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
                     else if (NetworkManager.Get().OtherUID == spearrelay.PlayerUId )
                         targetPlayer.FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
+                    else if (NetworkManager.Get().CoopUID == spearrelay.PlayerUId )
+                        coopPlayer.FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
                     
                     break;
                 }
@@ -2675,6 +2732,8 @@ namespace ED
                         FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
                     else if (NetworkManager.Get().OtherUID == necrorelay.PlayerUId )
                         targetPlayer.FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
+                    else if (NetworkManager.Get().CoopUID == necrorelay.PlayerUId )
+                        coopPlayer.FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
                     
                     break;
                 }
@@ -2692,6 +2751,8 @@ namespace ED
                         FireCannonBall(cannonType , startPos, targetPos, chDamage, chRange);
                     else if (NetworkManager.Get().OtherUID == fcannonrelay.PlayerUId )
                         targetPlayer.FireCannonBall(cannonType ,startPos, targetPos, chDamage, chRange);
+                    else if (NetworkManager.Get().CoopUID == fcannonrelay.PlayerUId )
+                        coopPlayer.FireCannonBall(cannonType ,startPos, targetPos, chDamage, chRange);
                     
                     break;
                 }
@@ -2711,6 +2772,8 @@ namespace ED
                         SetMinionAnimationTrigger(anirelay.Id, aniName , anirelay.TargetId);
                     else if (NetworkManager.Get().OtherUID == anirelay.PlayerUId )
                         targetPlayer.SetMinionAnimationTrigger(anirelay.Id, aniName ,anirelay.TargetId);
+                    else if (NetworkManager.Get().CoopUID == anirelay.PlayerUId )
+                        coopPlayer.SetMinionAnimationTrigger(anirelay.Id, aniName ,anirelay.TargetId);
                     break;
                 }
                 case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
@@ -2721,6 +2784,8 @@ namespace ED
                         SetMagicTarget(smtidrelay.Id, smtidrelay.TargetId);
                     else if (NetworkManager.Get().OtherUID == smtidrelay.PlayerUId )
                         targetPlayer.SetMagicTarget(smtidrelay.Id, smtidrelay.TargetId);
+                    else if (NetworkManager.Get().CoopUID == smtidrelay.PlayerUId )
+                        coopPlayer.SetMagicTarget(smtidrelay.Id, smtidrelay.TargetId);
                     
                     break;
                 }
@@ -2735,6 +2800,8 @@ namespace ED
                         SetMagicTarget(smtrelay.Id, chX , chZ);
                     else if (NetworkManager.Get().OtherUID == smtrelay.PlayerUId )
                         targetPlayer.SetMagicTarget(smtrelay.Id, chX , chZ);
+                    else if (NetworkManager.Get().CoopUID == smtrelay.PlayerUId )
+                        coopPlayer.SetMagicTarget(smtrelay.Id, chX , chZ);
                     
                     break;
                 }
@@ -2765,6 +2832,8 @@ namespace ED
                         MinionSendMessage(voidmsg.Id , msgFunc);
                     else if (NetworkManager.Get().OtherUID == voidmsg.PlayerUId )
                         targetPlayer.MinionSendMessage(voidmsg.Id , msgFunc);
+                    else if (NetworkManager.Get().CoopUID == voidmsg.PlayerUId )
+                        coopPlayer.MinionSendMessage(voidmsg.Id , msgFunc);
                     
                     break;
                 }
@@ -2778,6 +2847,8 @@ namespace ED
                         MinionSendMessage(paramrelay.Id , msgFunc , paramrelay.TargetId);
                     else if (NetworkManager.Get().OtherUID == paramrelay.PlayerUId )
                         targetPlayer.MinionSendMessage(paramrelay.Id , msgFunc , paramrelay.TargetId);
+                    else if (NetworkManager.Get().CoopUID == paramrelay.PlayerUId )
+                        coopPlayer.MinionSendMessage(paramrelay.Id , msgFunc , paramrelay.TargetId);
                     
                     break;
                 }
@@ -2789,6 +2860,8 @@ namespace ED
                         SetMinionTarget(targetrelay.Id , targetrelay.TargetId);
                     else if (NetworkManager.Get().OtherUID == targetrelay.PlayerUId )
                         targetPlayer.SetMinionTarget(targetrelay.Id , targetrelay.TargetId);
+                    else if (NetworkManager.Get().CoopUID == targetrelay.PlayerUId )
+                        coopPlayer.SetMinionTarget(targetrelay.Id , targetrelay.TargetId);
                     
                     break;
                 }
@@ -2804,6 +2877,8 @@ namespace ED
                         PushMinion(pushrelay.Id ,conVecDir , convPower );
                     else if (NetworkManager.Get().OtherUID == pushrelay.PlayerUId )
                         targetPlayer.PushMinion(pushrelay.Id ,conVecDir , convPower );
+                    else if (NetworkManager.Get().CoopUID == pushrelay.PlayerUId )
+                        coopPlayer.PushMinion(pushrelay.Id ,conVecDir , convPower );
                     
                     break;
                 }
@@ -2818,6 +2893,8 @@ namespace ED
                         targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
                     else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
                         SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
+                        coopPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
                     
                     break;
                 }

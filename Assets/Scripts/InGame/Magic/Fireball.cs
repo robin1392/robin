@@ -111,7 +111,7 @@ namespace ED
                 var bs = col.GetComponentInParent<BaseStat>();
                 if (bs != null)
                 {
-                    controller.AttackEnemyMinionOrMagic(bs.id, power, 0f);
+                    controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, power, 0f);
                 }
                 //controller.HitMinionDamage( true , col.GetComponentInParent<BaseStat>().id , power, 0f);
             }

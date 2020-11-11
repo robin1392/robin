@@ -127,7 +127,7 @@ namespace ED
             _callback?.Invoke();
 
             if( (InGameManager.IsNetwork && _isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
-                controller.AttackEnemyMinionOrMagic(_target.id, _damage, 0f);
+                controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);
 
             /*
             //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)

@@ -134,7 +134,7 @@ namespace ED
                     var m = col.GetComponentInParent<Minion>();
                     if(m != null)
                     {
-                        controller.AttackEnemyMinionOrMagic(m.id, power, 0f);
+                        controller.AttackEnemyMinionOrMagic(m.UID, m.id, power, 0f);
 
                         //if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
                         //controller.HitMinionDamage( true , m.id , power, 0f);

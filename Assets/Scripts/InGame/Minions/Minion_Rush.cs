@@ -146,7 +146,7 @@ namespace ED
                             if (bs != null && bs.isAlive)
                             {
                                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
-                                controller.AttackEnemyMinionOrMagic(bs.id, effect, 0f);
+                                controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, effect, 0f);
                                 //controller.HitMinionDamage( true , bs.id , effect);
                                 
                                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);

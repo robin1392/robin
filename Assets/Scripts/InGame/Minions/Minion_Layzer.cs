@@ -69,7 +69,7 @@ namespace ED
                     _listTarget.Add(bs);
                     intList.Add(bs.id);
 
-                    controller.AttackEnemyMinionOrMagic(bs.id, power, 0f);
+                    controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, power, 0f);
                 }
             }
 
