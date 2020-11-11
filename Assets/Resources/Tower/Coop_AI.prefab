@@ -85,14 +85,16 @@ MonoBehaviour:
   controller: {fileID: 0}
   rb: {fileID: 4956517791549293242}
   animator: {fileID: 1002647512809408800}
-  arrMaterial: []
+  arrMaterial:
+  - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
+  - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
   target: {fileID: 0}
   targetMoveType: 2
   power: 0
   powerUpByUpgrade: 0
   powerUpByInGameUp: 0
-  maxHealth: 0
-  currentHealth: 0
+  maxHealth: 100000
+  currentHealth: 100000
   maxHealthUpByUpgrade: 0
   maxHealthUpByInGameUp: 0
   effect: 0
@@ -110,6 +112,21 @@ MonoBehaviour:
   image_HealthBar: {fileID: 4953143920641770040}
   text_Health: {fileID: 176264361659379970}
   isPlayable: 1
+  instanceID: 0
+  targetPlayer: {fileID: 0}
+  coopPlayer: {fileID: 0}
+  uiDiceField: {fileID: 0}
+  objCollider: {fileID: 7007598002378707877}
+  ps_ShieldOff: {fileID: 0}
+  pref_Guardian: {fileID: 0}
+  spawnCount: 1
+  subSpawnCount: 1000
+  _sp: 0
+  robotPieceCount: 0
+  robotEyeTotalLevel: 0
+  listMagic: []
+  isHalfHealth: 0
+  isMinionAgentMove: 1
 --- !u!54 &4956517791549293242
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -110,6 +110,11 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         get => GetNetInfo().OtherUID();
     }
+
+    public int CoopUID
+    {
+        get => GetNetInfo().CoopUID();
+    }
     #endregion
 
 
