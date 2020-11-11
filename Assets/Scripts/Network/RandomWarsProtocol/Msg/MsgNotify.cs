@@ -30,6 +30,13 @@ namespace RandomWarsProtocol.Msg
     {
         public int Wave;
         public int PlayerUId;
+    }
+
+
+    [Serializable]
+    public class MsgMonsterSpawnNotify
+    {
+        public int PlayerUId;
         public MsgBossMonster SpawnBossMonster;
     }
 

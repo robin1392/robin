@@ -438,6 +438,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.SpawnNotify = _socketRecv.OnSpawnNotify;
         _packetRecv.CoopSpawnNotify = _socketRecv.OnCoopSpawnNotify;
         _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
+        _packetRecv.MonsterSpawnNotify = _socketRecv.OnMonsterSpawnNotify;
 
         _packetRecv.MergeDiceNotify = _socketRecv.OnMergeDiceNotify;
         _packetRecv.UpgradeSpNotify = _socketRecv.OnUpgradeSpNotify;

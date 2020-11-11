@@ -140,6 +140,9 @@ namespace RandomWarsProtocol
         public delegate void CoopSpawnNotifyDelegate(Peer peer, MsgCoopSpawnNotify msg);
         public CoopSpawnNotifyDelegate CoopSpawnNotify;
 
+        public delegate void MonsterSpawnNotifyDelegate(Peer peer, MsgMonsterSpawnNotify msg);
+        public MonsterSpawnNotifyDelegate MonsterSpawnNotify;
+
         public delegate void HitDamageNotifyDelegate(Peer peer, MsgHitDamageNotify msg);
         public HitDamageNotifyDelegate HitDamageNotify;
 
@@ -486,8 +489,23 @@ namespace RandomWarsProtocol
                             MsgCoopSpawnNotify msg = new MsgCoopSpawnNotify();
                             msg.Wave = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.SpawnBossMonster = MsgBossMonster.Read(br);
                             CoopSpawnNotify(peer, msg);
+                        }
+                    }
+                    break;
+                case GameProtocol.MONSTER_SPAWN_NOTIFY:
+                    {
+                        if (MonsterSpawnNotify == null)
+                            return false;
+
+
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            BinaryReader br = new BinaryReader(ms);
+                            MsgMonsterSpawnNotify msg = new MsgMonsterSpawnNotify();
+                            msg.PlayerUId = br.ReadUInt16();
+                            msg.SpawnBossMonster = MsgBossMonster.Read(br);
+                            MonsterSpawnNotify(peer, msg);
                         }
                     }
                     break;

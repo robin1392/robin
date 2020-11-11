@@ -110,6 +110,8 @@ namespace RandomWarsProtocol
         PAUSE_GAME_NOTIFY,
         RESUME_GAME_NOTIFY,
         COOP_SPAWN_NOTIFY,
+        MONSTER_SPAWN_NOTIFY,
+
 
         // ----------------------------------------------------------------------------------------------------
         // Relay protocols

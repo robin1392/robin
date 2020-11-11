@@ -168,17 +168,28 @@ namespace RandomWarsProtocol
             }
         }
 
-        public void CoopSpawnNotify(Peer peer, int wave, ushort PlayerUId, MsgBossMonster spawnBossMonster)
+        public void CoopSpawnNotify(Peer peer, int wave, ushort PlayerUId)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(wave);
                 bw.Write(PlayerUId);
-                spawnBossMonster.Write(bw);
                 peer.SendPacket((int)GameProtocol.COOP_SPAWN_NOTIFY, ms.ToArray());
             }
         }
+
+        public void MonsterSpawnNotify(Peer peer, ushort PlayerUId, MsgBossMonster spawnBossMonster)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(PlayerUId);
+                spawnBossMonster.Write(bw);
+                peer.SendPacket((int)GameProtocol.MONSTER_SPAWN_NOTIFY, ms.ToArray());
+            }
+        }
+
 
 
         public void PauseGameNotify(Peer peer, int playerUId)

@@ -423,6 +423,9 @@ public class SocketRecvEvent
     }
 
 
+    public void OnMonsterSpawnNotify(Peer peer, MsgMonsterSpawnNotify msg)
+    {
+    }
 
 
 
