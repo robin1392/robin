@@ -62,7 +62,7 @@ namespace ED
             // AI
             coopTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
             coopTObj.transform.position = AIPos;
-            var AI = coopTObj.GetComponent<PlayerController>();
+            var AI = coopTObj.GetComponent<Coop_AI>();
             playerController.coopPlayer = AI;
             playerController.targetPlayer.coopPlayer = AI;
             AI.isMine = playerController.isMine;
