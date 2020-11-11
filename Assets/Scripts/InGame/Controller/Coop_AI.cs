@@ -13,7 +13,7 @@ namespace ED
     {
         protected override void StartPlayerControll()
         {
-            myUID = NetworkManager.Get().CoopUID;
+            _myUID = NetworkManager.Get().CoopUID;
             
             if (isMine)
             {
@@ -52,7 +52,7 @@ namespace ED
 
                 if (damage > 0)
                 {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , myUID, damage);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , _myUID, damage);
                 }
             }
         }
