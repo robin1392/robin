@@ -647,6 +647,22 @@ namespace ED
                 NetworkManager.Get().SaveBattleInfo();
         }
 
+        public void NetMonsterSpawnNotify(int uid, MsgBossMonster msg)
+        {
+            if (playerController.UID == uid)
+            {
+                playerController.SpawnMonster(msg);
+            }
+            else if (playerController.targetPlayer.UID == uid)
+            {
+                playerController.targetPlayer.SpawnMonster(msg);
+            }
+            else if (playerController.coopPlayer.UID == uid)
+            {
+                playerController.coopPlayer.SpawnMonster(msg);
+            }
+        }
+
         #endregion
 
 
@@ -1405,6 +1421,13 @@ namespace ED
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
                     NetSpawnNotify(msg.Wave, msg.PlayerUId);
+
+                    break;
+                }
+                case GameProtocol.MONSTER_SPAWN_NOTIFY:
+                {
+                    MsgMonsterSpawnNotify msg = (MsgMonsterSpawnNotify) param[0];
+                    NetMonsterSpawnNotify(msg.PlayerUId, msg.SpawnBossMonster);
 
                     break;
                 }

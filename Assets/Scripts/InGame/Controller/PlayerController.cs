@@ -338,6 +338,26 @@ namespace ED
             }
         }
         
+        public virtual void SpawnMonster(MsgBossMonster boss)
+        {
+            if (boss != null && boss.DataId > 0)
+            {
+                var pos = FieldManager.Get().GetTopListPos(0);
+                var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataBossInfo.dicData[boss.DataId].unitPrefabName,
+                    Global.E_LOADTYPE.LOAD_GUARDIAN);
+                var m = CreateMinion(obj, pos, 1, 1);
+                
+                m.id = boss.Id;
+                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+                m.effect = ConvertNetMsg.MsgShortToFloat(boss.SkillAtk);
+                m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.SkillInterval);
+                m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.SkillCoolTime);
+                //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
+                m.Initialize(MinionDestroyCallback);
+            }
+        }
+        
         #endregion
 
         

@@ -17,6 +17,7 @@ public class BossInfoData
     public BOSS_TARGET_TYPE targetType;
     public BOSS_ATK_SPEED atkSpeed;
     public BOSS_MOVE_SPEED moveSpeed;
+    public string unitPrefabName;
 }
 
 public class BossInfo

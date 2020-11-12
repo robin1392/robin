@@ -69,6 +69,8 @@ public partial class Global
         LOAD_MAGIC,
         LOAD_MAIN_MINION,
         LOAD_MAIN_MAGIC,
+        LOAD_GUARDIAN,
+        LOAD_COOP_BOSS,
         LOAD_MAX,
     }
     #endregion

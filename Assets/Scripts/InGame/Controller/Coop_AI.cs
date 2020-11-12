@@ -14,6 +14,8 @@ namespace ED
         [Header("Egg")]
         public Transform ts_EggParent;
         public GameObject obj_Egg;
+
+        private MsgBossMonster msgBoss;
         
         protected override void StartPlayerControll()
         {
@@ -63,27 +65,10 @@ namespace ED
         }
         protected override void SetColor(E_MaterialType type) { }
 
-        public void Spawn(MsgBossMonster boss = null)
+        public void Spawn()
         {
             packetCount = 0;
             
-            Debug.LogFormat("COOP_AI_SPAWN : boss={0}", boss != null);
-            if (boss != null && boss.DataId > 0)
-            {
-                Debug.LogFormat("BOSS : hp={0}, id={1}", boss.Hp, boss.DataId);
-
-                var pos = FieldManager.Get().GetTopListPos(0);
-                var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
-                    Global.E_LOADTYPE.LOAD_MINION);
-                var m = CreateMinion(obj, pos, 1, 1);
-                var bossData = JsonDataManager.Get().dataBossInfo.dicData[boss.DataId];
-
-                m.id = boss.Id;
-                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
-                m.Initialize(MinionDestroyCallback);
-            }
-
             int minionCount = Mathf.Clamp(InGameManager.Get().wave, 1, 15);
             for (int i = 0; i < minionCount; i++)
             {
@@ -97,13 +82,56 @@ namespace ED
                 
                 m.targetMoveType = DICE_MOVE_TYPE.ALL;
                 m.ChangeLayer(isBottomPlayer);
-                m.power = 100f;
-                m.maxHealth = 500f;
+                m.power = 100f + 10f * InGameManager.Get().wave;
+                m.maxHealth = 500f + 50f * InGameManager.Get().wave;
                 m.attackSpeed = 1f;
                 m.moveSpeed = 1f;
                 m.eyeLevel = 1;
                 m.upgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
+            }
+        }
+        
+        public override void SpawnMonster(MsgBossMonster boss)
+        {
+            if (boss != null && boss.DataId > 0)
+            {
+                var obj = FileHelper.LoadPrefab($"{JsonDataManager.Get().dataBossInfo.dicData[boss.DataId].unitPrefabName}_Egg",
+                    Global.E_LOADTYPE.LOAD_COOP_BOSS);
+
+                if (ts_EggParent.childCount > 0)
+                {
+                    DestroyImmediate(ts_EggParent.GetChild(0).gameObject);
+                }
+
+                var egg = Instantiate(obj, ts_EggParent);
+                egg.transform.localPosition = Vector3.zero;
+                egg.transform.localRotation = Quaternion.identity;
+                egg.transform.localScale = Vector3.zero;
+
+                msgBoss = boss;
+            }
+        }
+
+        private void SpawnBoss()
+        {
+            if (msgBoss != null)
+            {
+                var obj = FileHelper.LoadPrefab($"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}_Egg",
+                    Global.E_LOADTYPE.LOAD_COOP_BOSS);
+
+                var m = CreateMinion(obj, transform.position, 1, 0);
+
+                m.id = msgBoss.Id;
+                m.maxHealth = ConvertNetMsg.MsgIntToFloat(msgBoss.Hp);
+                m.power = ConvertNetMsg.MsgShortToFloat(msgBoss.Atk);
+                m.effect = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillAtk);
+                m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillInterval);
+                m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillCoolTime);
+                //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
+                m.Initialize(MinionDestroyCallback);
+
+                msgBoss = null;
             }
         }
     }

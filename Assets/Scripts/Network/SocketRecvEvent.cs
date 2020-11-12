@@ -425,6 +425,10 @@ public class SocketRecvEvent
 
     public void OnMonsterSpawnNotify(Peer peer, MsgMonsterSpawnNotify msg)
     {
+        UnityUtil.Print("coop monster spawn Notify ", $"UID:{msg.PlayerUId}, DataID:{msg.SpawnBossMonster.DataId}, ATK:{msg.SpawnBossMonster.Atk}, HP:{msg.SpawnBossMonster.Hp}", "white");
+        //
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.MONSTER_SPAWN_NOTIFY, msg);
     }
 
 

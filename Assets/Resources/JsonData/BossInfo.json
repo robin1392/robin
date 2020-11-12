@@ -9,6 +9,7 @@
     "bossType": "GROUND",
     "targetType": "GROUND",
     "atkSpeed": "SLOW",
-    "moveSpeed": "SLOW"
+    "moveSpeed": "SLOW",
+    "UnitPrefabName": "Coop_Boss_1"
   }
 }
