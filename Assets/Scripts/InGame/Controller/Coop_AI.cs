@@ -61,6 +61,8 @@ namespace ED
                     
                     // 알이 깨졌을 때.. 
                 }
+                
+                RefreshHealthBar();
             }
         }
 
@@ -85,6 +87,8 @@ namespace ED
                                 Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
                             };
                         }
+
+                        loopCount++;
                     }
                     
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
