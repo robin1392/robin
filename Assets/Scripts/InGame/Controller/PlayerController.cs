@@ -1201,6 +1201,10 @@ namespace ED
             {
                 targetPlayer.HitDamageMinionAndMagic(baseStatId, damage);
             }
+            else if (targetPlayer.targetPlayer.myUID == uid)
+            {
+                targetPlayer.targetPlayer.HitDamageMinionAndMagic(baseStatId, damage);
+            }
             else if (coopPlayer != null && coopPlayer.myUID == uid)
             {
                 coopPlayer.HitDamageMinionAndMagic(baseStatId, damage);
