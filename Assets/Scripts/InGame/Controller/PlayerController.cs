@@ -2404,7 +2404,7 @@ namespace ED
                     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
 
-                    float calDamage = ConvertNetMsg.MsgIntToFloat(damageack.Damage );
+                    //float calDamage = ConvertNetMsg.MsgIntToFloat(damageack.Damage );
                     float calCurrentHP = ConvertNetMsg.MsgIntToFloat(damageack.CurrentHp);
                     //targetPlayer.HitDamage(calDamage);
                     if (NetworkManager.Get().UserUID == damageack.PlayerUId)
@@ -2432,7 +2432,7 @@ namespace ED
                 {
                     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
 
-                    float calDamage = ConvertNetMsg.MsgIntToFloat(damagenoti.Damage );
+                    //float calDamage = ConvertNetMsg.MsgIntToFloat(damagenoti.Damage );
                     float calCurrentHP = ConvertNetMsg.MsgIntToFloat(damagenoti.CurrentHp);
                     
                     if (NetworkManager.Get().UserUID == damagenoti.PlayerUId)

@@ -1050,6 +1050,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageReq msg = new MsgHitDamageReq();
                             msg.PlayerUId = br.ReadUInt16();
+                            msg.Id = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             HitDamageReq(peer, msg);
                         }
@@ -1067,7 +1068,7 @@ namespace RandomWarsProtocol
                             MsgHitDamageAck msg = new MsgHitDamageAck();
                             msg.ErrorCode = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.Damage = br.ReadInt32();
+                            msg.Id = br.ReadUInt16();
                             msg.CurrentHp = br.ReadInt32();
                             HitDamageAck(peer, msg);
                         }
@@ -1084,7 +1085,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageNotify msg = new MsgHitDamageNotify();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.Damage = br.ReadInt32();
+                            msg.Id = br.ReadUInt16();
                             msg.CurrentHp = br.ReadInt32();
                             HitDamageNotify(peer, msg);
                         }

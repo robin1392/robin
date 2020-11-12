@@ -273,12 +273,12 @@ public class SocketRecvEvent
     public void OnHitDamageAck(Peer peer, MsgHitDamageAck msg)
     {
         //UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
-        UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.Damage + "   error code " + msg.ErrorCode , "green");
+        UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.CurrentHp + "   error code " + msg.ErrorCode , "green");
         
         // 차후엔 에러처리를 해야된다..
         if (msg.ErrorCode != 0)
         {
-            UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.Damage + "   error code " + msg.ErrorCode , "red");
+            UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.CurrentHp + "   error code " + msg.ErrorCode , "red");
             return;
         }
             
@@ -291,7 +291,7 @@ public class SocketRecvEvent
     public void HitDamageNotify(Peer peer, MsgHitDamageNotify msg)
     {
         //UnityUtil.Print("hit damage Notify", msg.PlayerUId.ToString() + "  " + msg.Damage.ToString(), "white");
-        UnityUtil.Print("RECV => ", "HIT DAMAGE NOTIFY  " +msg.PlayerUId.ToString() + "   " + msg.Damage , "white");
+        UnityUtil.Print("RECV => ", "HIT DAMAGE NOTIFY  " +msg.PlayerUId.ToString() + "   " + msg.CurrentHp, "white");
         
         
         if (InGameManager.Get() != null)

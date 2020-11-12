@@ -571,40 +571,40 @@ namespace RandomWarsProtocol
         }
 
 
-        public void HitDamageReq(Peer peer, ushort playerUId, int damage) 
+        public void HitDamageReq(Peer peer, ushort playerUId, ushort id, int damage) 
         {
-            
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(playerUId);
+                bw.Write(id);
                 bw.Write(damage);
                 peer.SendPacket((int)GameProtocol.HIT_DAMAGE_REQ, ms.ToArray());
             }
         }
 
 
-        public void HitDamageAck(Peer peer, GameErrorCode code, ushort playerUId, int damage, int currentHp) 
+        public void HitDamageAck(Peer peer, GameErrorCode code, ushort playerUId, ushort id, int currentHp) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)code);
                 bw.Write(playerUId);
-                bw.Write(damage);
+                bw.Write(id);
                 bw.Write(currentHp);
                 peer.SendPacket((int)GameProtocol.HIT_DAMAGE_ACK, ms.ToArray());
             }
         }
 
 
-        public void HitDamageNotify(Peer peer, ushort playerUId, int damage, int currentHp)
+        public void HitDamageNotify(Peer peer, ushort playerUId, ushort id, int currentHp)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(playerUId);
-                bw.Write(damage);
+                bw.Write(id);
                 bw.Write(currentHp);
                 peer.SendPacket((int)GameProtocol.HIT_DAMAGE_NOTIFY, ms.ToArray());
             }
