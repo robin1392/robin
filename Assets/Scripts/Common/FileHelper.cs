@@ -28,7 +28,7 @@ public class FileHelper
                 rscPath = "CommonPrefabs/object/";
                 break;
             case Global.E_LOADTYPE.LOAD_COOP_BOSS:
-                rscPath = "CommonPrefabs/boss/";
+                rscPath = "Boss/";
                 break;
         }
 

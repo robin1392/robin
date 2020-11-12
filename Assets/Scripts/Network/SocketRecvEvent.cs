@@ -317,6 +317,7 @@ public class SocketRecvEvent
     public void OnJoinCoopGameNotify(Peer peer, MsgJoinCoopGameNotify msg)
     {
         UnityUtil.Print("other info ", $"UID{msg.CoopPlayerInfo.PlayerUId} Name{msg.CoopPlayerInfo.Name} isBottom:{msg.CoopPlayerInfo.IsBottomPlayer} isMaster:{msg.CoopPlayerInfo.IsMaster}", "white");
+        UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.CoopPlayerInfo), "white");
         UnityUtil.Print("coop info ", $"UID{msg.OtherPlayerInfo[0].PlayerUId} Name{msg.OtherPlayerInfo[0].Name} isBottom:{msg.CoopPlayerInfo.IsBottomPlayer} isMaster:{msg.OtherPlayerInfo[0].IsMaster}", "white");
         UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.OtherPlayerInfo), "white");
 

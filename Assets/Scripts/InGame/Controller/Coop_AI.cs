@@ -13,7 +13,8 @@ namespace ED
     {
         [Header("Egg")]
         public Transform ts_EggParent;
-        public GameObject obj_Egg;
+        public GameObject obj_IncubationParticle;
+        public GameObject obj_SummonParticle;
 
         private MsgBossMonster msgBoss;
         
@@ -90,6 +91,11 @@ namespace ED
                 m.upgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
             }
+
+            if (InGameManager.Get().wave > 0 && InGameManager.Get().wave % 5 == 4)
+            {
+                StartCoroutine(EggIncubationCoroutine());
+            }
         }
         
         public override void SpawnMonster(MsgBossMonster boss)
@@ -99,15 +105,18 @@ namespace ED
                 var obj = FileHelper.LoadPrefab($"{JsonDataManager.Get().dataBossInfo.dicData[boss.DataId].unitPrefabName}_Egg",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
-                if (ts_EggParent.childCount > 0)
+                if (obj != null)
                 {
-                    DestroyImmediate(ts_EggParent.GetChild(0).gameObject);
-                }
+                    if (ts_EggParent.childCount > 0)
+                    {
+                        DestroyImmediate(ts_EggParent.GetChild(0).gameObject);
+                    }
 
-                var egg = Instantiate(obj, ts_EggParent);
-                egg.transform.localPosition = Vector3.zero;
-                egg.transform.localRotation = Quaternion.identity;
-                egg.transform.localScale = Vector3.zero;
+                    var egg = Instantiate(obj, ts_EggParent);
+                    egg.transform.localPosition = Vector3.zero;
+                    egg.transform.localRotation = Quaternion.identity;
+                    egg.transform.localScale = Vector3.one;
+                }
 
                 msgBoss = boss;
             }
@@ -133,6 +142,23 @@ namespace ED
 
                 msgBoss = null;
             }
+        }
+
+        IEnumerator EggIncubationCoroutine()
+        {
+            yield return new WaitForSeconds(15f);
+            
+            animator.SetTrigger("Incubation");
+            obj_IncubationParticle.SetActive(true);
+            
+            yield return new WaitForSeconds(5f);
+            
+            SpawnBoss();
+            obj_SummonParticle.SetActive(true);
+
+            yield return new WaitForSeconds(3f);
+            obj_IncubationParticle.SetActive(false);
+            obj_SummonParticle.SetActive(false);
         }
     }
 }
