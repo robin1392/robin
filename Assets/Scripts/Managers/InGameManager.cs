@@ -1622,14 +1622,20 @@ namespace ED
 
             PlayerController pc = null;
             if (NetworkManager.Get().UserUID == uid)
+            {
                 pc = playerController;
+            }
             else if (NetworkManager.Get().OtherUID == uid)
+            {
                 pc = playerController.targetPlayer;
+            }
             else if (NetworkManager.Get().CoopUID == uid)
+            {
                 pc = playerController.coopPlayer;
-            
+            }
+
             if (baseStatId < 0) return null;
-            if (baseStatId == 0) return pc;
+            if (baseStatId % 10000 == 0) return pc;
 
             var minion = pc.listMinion.Find(m => m.id == baseStatId);
             if (minion != null)
