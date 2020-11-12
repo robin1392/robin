@@ -11,6 +11,10 @@ namespace ED
 {
     public class Coop_AI : PlayerController
     {
+        [Header("Egg")]
+        public Transform ts_EggParent;
+        public GameObject obj_Egg;
+        
         protected override void StartPlayerControll()
         {
             _myUID = NetworkManager.Get().CoopUID;
@@ -53,7 +57,7 @@ namespace ED
 
                 if (damage > 0)
                 {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , _myUID, damage);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , _myUID, id, damage);
                 }
             }
         }

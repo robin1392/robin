@@ -1100,7 +1100,7 @@ namespace ED
 
                 if (damage > 0)
                 {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , _myUID, damage);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , _myUID, id, damage);
                 }
             }
         }
