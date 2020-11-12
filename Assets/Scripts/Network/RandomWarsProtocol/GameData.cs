@@ -350,6 +350,52 @@ namespace RandomWarsProtocol
         }
     }
 
+    [Serializable]
+
+    public class MsgDamage
+    {
+        public ushort Id;
+        public int Damage;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Id);
+            bw.Write(Damage);
+        }
+
+        public static MsgDamage Read(BinaryReader br)
+        {
+            MsgDamage data = new MsgDamage();
+            data.Id = br.ReadUInt16();
+            data.Damage = br.ReadInt32();
+            return data;
+        }
+    }
+
+
+    [Serializable]
+
+    public class MsgDamageResult
+    {
+        public ushort Id;
+        public int Hp;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Id);
+            bw.Write(Hp);
+        }
+
+        public static MsgDamageResult Read(BinaryReader br)
+        {
+            MsgDamageResult data = new MsgDamageResult();
+            data.Id = br.ReadUInt16();
+            data.Hp = br.ReadInt32();
+            return data;
+        }
+    }
+
+
 
     [Serializable]
     public class MsgSyncMinionData

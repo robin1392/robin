@@ -1050,8 +1050,13 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageReq msg = new MsgHitDamageReq();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.Id = br.ReadUInt16();
-                            msg.Damage = br.ReadInt32();
+
+                            int length = br.ReadInt32();
+                            msg.Damage = new MsgDamage[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.Damage[i] = MsgDamage.Read(br);
+                            }
                             HitDamageReq(peer, msg);
                         }
                     }
@@ -1068,8 +1073,13 @@ namespace RandomWarsProtocol
                             MsgHitDamageAck msg = new MsgHitDamageAck();
                             msg.ErrorCode = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.Id = br.ReadUInt16();
-                            msg.CurrentHp = br.ReadInt32();
+
+                            int length = br.ReadInt32();
+                            msg.DamageResult = new MsgDamageResult[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.DamageResult[i] = MsgDamageResult.Read(br);
+                            }
                             HitDamageAck(peer, msg);
                         }
                     }
@@ -1085,8 +1095,13 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageNotify msg = new MsgHitDamageNotify();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.Id = br.ReadUInt16();
-                            msg.CurrentHp = br.ReadInt32();
+
+                            int length = br.ReadInt32();
+                            msg.DamageResult = new MsgDamageResult[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.DamageResult[i] = MsgDamageResult.Read(br);
+                            }
                             HitDamageNotify(peer, msg);
                         }
                     }
