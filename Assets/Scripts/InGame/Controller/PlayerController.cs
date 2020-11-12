@@ -152,7 +152,8 @@ namespace ED
         public bool isPlayingAI { get; protected set; }
         public bool isMinionAgentMove = true;
         protected Coroutine crt_SyncMinion;
-        protected Queue<int> queueHitDamage = new Queue<int>();
+        //protected Queue<int> queueHitDamage = new Queue<int>();
+        protected Dictionary<int, float> dicHitDamage = new Dictionary<int, float>();
         protected int _myUID;
         public new int myUID => _myUID;
 
@@ -1067,6 +1068,25 @@ namespace ED
             }
         }
 
+        public virtual void HitDamageWithID(int id, float damage)
+        {
+            if (this.id == id)
+            {
+                currentHealth = damage;
+                RefreshHealthBar();
+                HitDamage(0);
+            }
+            else
+            {
+                var minion = listMinion.Find(m => m.id == id);
+                if (minion != null)
+                {
+                    minion.currentHealth = damage;
+                    minion.HitDamage(0);
+                }
+            }
+        }
+
         // 네트워크 변환하면서 필요없어지긴 했으나 
         // 싱글 모드 테스트 일때는 게임 끝내는걸 호출해준다
         // 네트워크 모드에선 게임의 끝은 서버가 판단해준다
@@ -1107,20 +1127,30 @@ namespace ED
 
         protected virtual IEnumerator HitDamageQueueCoroutine()
         {
-            int damage = 0;
             while (true)
             {
                 yield return new WaitForSeconds(0.2f);
 
-                damage = 0;
-                while (queueHitDamage.Count > 0)
+                if (dicHitDamage.Count > 0)
                 {
-                    damage += queueHitDamage.Dequeue();
-                }
+                    MsgDamage[] msg = new MsgDamage[dicHitDamage.Count];
 
-                if (damage > 0)
-                {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , _myUID, id, damage);
+                    int loopCount = 0;
+                    foreach (var dmg in dicHitDamage)
+                    {
+                        if (dmg.Value > 0f)
+                        {
+                            msg[loopCount] = new MsgDamage
+                            {
+                                Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
+                                Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
+                            };
+                        }
+                    }
+                    
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
+                    
+                    dicHitDamage.Clear();
                 }
             }
         }
@@ -1128,14 +1158,16 @@ namespace ED
         public void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
             // baseStatId == 0 => Player tower
-            if (baseStatId == id)
+            if (baseStatId == id || baseStatId < 10000)
             {
                 //if (PhotonNetwork.IsConnected)
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
                     int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
                     //NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , myUID, convDamage);
-                    queueHitDamage.Enqueue(convDamage);
+                    //queueHitDamage.Enqueue(convDamage);
+                    if (dicHitDamage.ContainsKey(baseStatId) == false) dicHitDamage.Add(baseStatId, 0f);
+                    dicHitDamage[baseStatId] += damage;
                 }
                 else if (InGameManager.IsNetwork == false)
                 {
@@ -2412,6 +2444,25 @@ namespace ED
                 }
             }
         }
+
+        private void HitDamageAck(int uid, MsgDamageResult[] msg)
+        {
+            for (int i = 0; i < msg.Length; i++)
+            {
+                if (NetworkManager.Get().UserUID == uid)
+                {
+                    HitDamageWithID(msg[i].Id, msg[i].Hp);
+                }
+                else if (NetworkManager.Get().OtherUID == uid)
+                {
+                    targetPlayer.HitDamageWithID(msg[i].Id, msg[i].Hp);
+                }
+                else if (NetworkManager.Get().CoopUID == uid)
+                {
+                    coopPlayer.HitDamageWithID(msg[i].Id, msg[i].Hp);
+                }
+            }
+        }
         
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
         {
@@ -2427,57 +2478,13 @@ namespace ED
                 {
                     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
-
-                    //float calDamage = ConvertNetMsg.MsgIntToFloat(damageack.Damage );
-                    float calCurrentHP = ConvertNetMsg.MsgIntToFloat(damageack.CurrentHp);
-                    //targetPlayer.HitDamage(calDamage);
-                    if (NetworkManager.Get().UserUID == damageack.PlayerUId)
-                    {
-                        currentHealth = calCurrentHP;
-                        RefreshHealthBar();
-                        HitDamage(0);
-                    }
-                    else if (NetworkManager.Get().OtherUID == damageack.PlayerUId )
-                    {
-                        targetPlayer.currentHealth = calCurrentHP;
-                        targetPlayer.RefreshHealthBar();
-                        targetPlayer.HitDamage(0);
-                    }
-                    else if (NetworkManager.Get().CoopUID == damageack.PlayerUId )
-                    {
-                        coopPlayer.currentHealth = calCurrentHP;
-                        coopPlayer.RefreshHealthBar();
-                        coopPlayer.HitDamage(0);
-                    }
-                    
+                    HitDamageAck(damageack.PlayerUId, damageack.DamageResult);
                     break;
                 }
                 case GameProtocol.HIT_DAMAGE_NOTIFY:
                 {
                     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
-
-                    //float calDamage = ConvertNetMsg.MsgIntToFloat(damagenoti.Damage );
-                    float calCurrentHP = ConvertNetMsg.MsgIntToFloat(damagenoti.CurrentHp);
-                    
-                    if (NetworkManager.Get().UserUID == damagenoti.PlayerUId)
-                    {
-                        currentHealth = calCurrentHP;
-                        RefreshHealthBar();
-                        HitDamage(0);
-                    }
-                    else if (NetworkManager.Get().OtherUID == damagenoti.PlayerUId )
-                    {
-                        targetPlayer.currentHealth = calCurrentHP;
-                        targetPlayer.RefreshHealthBar();
-                        targetPlayer.HitDamage(0);
-                    }
-                    else if (NetworkManager.Get().CoopUID == damagenoti.PlayerUId )
-                    {
-                        coopPlayer.currentHealth = calCurrentHP;
-                        coopPlayer.RefreshHealthBar();
-                        coopPlayer.HitDamage(0);
-                    }
-                    
+                    HitDamageAck(damagenoti.PlayerUId, damagenoti.DamageResult);
                     break;
                 }
                 case GameProtocol.HIT_DAMAGE_MINION_RELAY:

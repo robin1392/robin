@@ -16,6 +16,7 @@ namespace ED
         public GameObject obj_IncubationParticle;
         public GameObject obj_SummonParticle;
 
+        private int eggID;
         private MsgBossMonster msgBoss;
         
         protected override void StartPlayerControll()
@@ -45,27 +46,60 @@ namespace ED
 
             StartSyncMinion();
         }
+        
+        #region HitDamage
+        
+        public override void HitDamage(float damage)
+        {
+            if (currentHealth > 0)
+            {
+                currentHealth -= damage;
+                
+                if (currentHealth <= 0)
+                {
+                    currentHealth = 0;
+                    
+                    // 알이 깨졌을 때.. 
+                }
+            }
+        }
+
         protected override IEnumerator HitDamageQueueCoroutine()
         {
-            int damage = 0;
             while (true)
             {
                 yield return new WaitForSeconds(0.2f);
 
-                damage = 0;
-                while (queueHitDamage.Count > 0)
+                if (dicHitDamage.Count > 0)
                 {
-                    damage += queueHitDamage.Dequeue();
-                }
+                    MsgDamage[] msg = new MsgDamage[dicHitDamage.Count];
 
-                if (damage > 0)
-                {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , _myUID, id, damage);
+                    int loopCount = 0;
+                    foreach (var dmg in dicHitDamage)
+                    {
+                        if (dmg.Value > 0f)
+                        {
+                            msg[loopCount] = new MsgDamage
+                            {
+                                Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
+                                Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
+                            };
+                        }
+                    }
+                    
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
+                    
+                    dicHitDamage.Clear();
                 }
             }
         }
+        
+        #endregion
+        
         protected override void SetColor(E_MaterialType type) { }
 
+        #region Spawn
+        
         public void Spawn()
         {
             packetCount = 0;
@@ -80,6 +114,8 @@ namespace ED
                 
                 //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                 //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+
+                eggID = msgBoss.Id;
                 
                 m.targetMoveType = DICE_MOVE_TYPE.ALL;
                 m.ChangeLayer(isBottomPlayer);
@@ -117,6 +153,11 @@ namespace ED
                     egg.transform.localRotation = Quaternion.identity;
                     egg.transform.localScale = Vector3.one;
                 }
+                
+                // Set HP
+                maxHealth = boss.Hp;
+                currentHealth = maxHealth;
+                RefreshHealthBar();
 
                 msgBoss = boss;
             }
@@ -129,7 +170,7 @@ namespace ED
                 var obj = FileHelper.LoadPrefab($"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}_Egg",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
-                var m = CreateMinion(obj, transform.position, 1, 0);
+                var m = CreateMinion(obj, transform.position, 1, 0, false);
 
                 m.id = msgBoss.Id;
                 m.maxHealth = ConvertNetMsg.MsgIntToFloat(msgBoss.Hp);
@@ -139,6 +180,8 @@ namespace ED
                 m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillCoolTime);
                 //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
                 m.Initialize(MinionDestroyCallback);
+                m.currentHealth = currentHealth;
+                m.HitDamage(0);
 
                 msgBoss = null;
             }
@@ -160,5 +203,7 @@ namespace ED
             obj_IncubationParticle.SetActive(false);
             obj_SummonParticle.SetActive(false);
         }
+        
+        #endregion
     }
 }

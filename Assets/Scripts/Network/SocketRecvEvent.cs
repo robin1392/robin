@@ -273,12 +273,13 @@ public class SocketRecvEvent
     public void OnHitDamageAck(Peer peer, MsgHitDamageAck msg)
     {
         //UnityUtil.Print(" hit damage recv ", "errocode : " + msg.ErrorCode, "white");
-        UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.CurrentHp + "   error code " + msg.ErrorCode , "green");
-        
+        for (int i = 0; i < msg.DamageResult.Length; ++i)
+            UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.DamageResult[i].Id + "   " + msg.DamageResult[i].Hp + "   error code " + msg.ErrorCode , "green");
+
         // 차후엔 에러처리를 해야된다..
         if (msg.ErrorCode != 0)
         {
-            UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "   " + msg.CurrentHp + "   error code " + msg.ErrorCode , "red");
+            UnityUtil.Print("RECV => ", "HIT DAMAGE ACK  " +msg.PlayerUId.ToString() + "  error code " + msg.ErrorCode , "red");
             return;
         }
             
@@ -291,7 +292,8 @@ public class SocketRecvEvent
     public void HitDamageNotify(Peer peer, MsgHitDamageNotify msg)
     {
         //UnityUtil.Print("hit damage Notify", msg.PlayerUId.ToString() + "  " + msg.Damage.ToString(), "white");
-        UnityUtil.Print("RECV => ", "HIT DAMAGE NOTIFY  " +msg.PlayerUId.ToString() + "   " + msg.CurrentHp, "white");
+        for (int i = 0; i < msg.DamageResult.Length; ++i)
+            UnityUtil.Print("RECV => ", "HIT DAMAGE NOTIFY  " +msg.PlayerUId.ToString() + "   " + msg.DamageResult[i].Id + "   " + msg.DamageResult[i].Hp, "white");
         
         
         if (InGameManager.Get() != null)
