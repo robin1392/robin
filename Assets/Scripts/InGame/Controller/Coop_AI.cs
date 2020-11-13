@@ -16,7 +16,6 @@ namespace ED
         public GameObject obj_IncubationParticle;
         public GameObject obj_SummonParticle;
 
-        private int eggID;
         private MsgBossMonster msgBoss;
         
         protected override void StartPlayerControll()
@@ -119,8 +118,6 @@ namespace ED
                 //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                 //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
 
-                eggID = msgBoss.Id;
-                
                 m.targetMoveType = DICE_MOVE_TYPE.ALL;
                 m.ChangeLayer(isBottomPlayer);
                 m.power = 100f + 10f * InGameManager.Get().wave;
