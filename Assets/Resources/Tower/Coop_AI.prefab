@@ -128,7 +128,8 @@ MonoBehaviour:
   isHalfHealth: 0
   isMinionAgentMove: 1
   ts_EggParent: {fileID: 8151952964025758012}
-  obj_Egg: {fileID: 0}
+  obj_IncubationParticle: {fileID: 685887222081563914}
+  obj_SummonParticle: {fileID: 4358561870971360337}
 --- !u!54 &4956517791549293242
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -433,6 +434,18 @@ Transform:
 --- !u!95 &8151952964743677449 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5582191336472431629, guid: 39675be7c42ce48c6924053d86856706,
+    type: 3}
+  m_PrefabInstance: {fileID: 4347771848991083012}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4358561870971360337 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 12063411500342869, guid: 39675be7c42ce48c6924053d86856706,
+    type: 3}
+  m_PrefabInstance: {fileID: 4347771848991083012}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &685887222081563914 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3878340064046491406, guid: 39675be7c42ce48c6924053d86856706,
     type: 3}
   m_PrefabInstance: {fileID: 4347771848991083012}
   m_PrefabAsset: {fileID: 0}

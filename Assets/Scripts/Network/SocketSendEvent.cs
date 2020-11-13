@@ -65,7 +65,7 @@ public class SocketSendEvent
             }
             case GameProtocol.HIT_DAMAGE_REQ:
             {
-                _sender.HitDamageReq(peer, Convert.ToUInt16(param[0]), (MsgDamage[])param[2]);
+                _sender.HitDamageReq(peer, Convert.ToUInt16(param[0]), (MsgDamage[])param[1]);
                 break;
             }
             
