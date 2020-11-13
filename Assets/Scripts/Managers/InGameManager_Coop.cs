@@ -68,7 +68,7 @@ namespace ED
             AI.isMine = isMaster;
             AI.isBottomPlayer = false;
             AI.targetPlayer = isMaster ? playerController : playerController.targetPlayer;
-            AI.coopPlayer = AI.targetPlayer;
+            AI.coopPlayer = AI;
             AI.ChangeLayer(false);
 
             //
