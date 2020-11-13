@@ -287,10 +287,7 @@ namespace ED
                             //targetPlayer.NetRecvPlayer(msg.Key, obj);
                         //else if (NetworkManager.Get().CoopUID == uid)
 //                            coopPlayer.NetRecvPlayer(msg.Key, obj);
-                        if (NetworkManager.Get().UserUID == uid)
-                            InGameManager.Get().playerController.targetPlayer.NetRecvPlayer(msg.Key, obj);
-                        else if (NetworkManager.Get().OtherUID == uid)
-                            InGameManager.Get().playerController.NetRecvPlayer(msg.Key, obj);
+                        NetRecvPlayer(msg.Key, obj);
                     }
                 }
             }
