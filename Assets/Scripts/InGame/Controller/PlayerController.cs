@@ -2188,7 +2188,7 @@ namespace ED
             }
         }
 
-        private void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        protected virtual void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
@@ -2256,7 +2256,10 @@ namespace ED
                     foreach (var obj in msg.Value)
                     {
                         //if (NetworkManager.Get().OtherUID == uid)
+                        if (NetworkManager.Get().IsMaster)
                             targetPlayer.NetRecvPlayer(msg.Key, obj);
+                        else
+                            targetPlayer.targetPlayer.NetRecvPlayer(msg.Key, obj);
                         //else if (NetworkManager.Get().CoopUID == uid)
 //                            coopPlayer.NetRecvPlayer(msg.Key, obj);
                     }
