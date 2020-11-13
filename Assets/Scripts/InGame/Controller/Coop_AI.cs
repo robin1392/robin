@@ -159,6 +159,7 @@ namespace ED
                 }
                 
                 // Set HP
+                id = boss.Id;
                 maxHealth = boss.Hp;
                 currentHealth = maxHealth;
                 RefreshHealthBar();
