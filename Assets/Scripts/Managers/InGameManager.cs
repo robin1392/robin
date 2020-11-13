@@ -1640,8 +1640,11 @@ namespace ED
         
         public BaseStat GetBaseStatFromId(int baseStatId)
         {
-            int uid = baseStatId / 1000;
+            int uid = 0;
+            if (baseStatId >= 10000) uid = baseStatId / 10000;
+            else uid = baseStatId / 1000;
             //int bsID = baseStatId % 10000;
+            Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");
 
             PlayerController pc = null;
             if (NetworkManager.Get().UserUID == uid)
@@ -1658,7 +1661,7 @@ namespace ED
             }
 
             if (baseStatId < 0) return null;
-            if (baseStatId % 10000 == 0 || pc.id == baseStatId) return pc;
+            if (pc.id == baseStatId || (baseStatId >= 10000 && baseStatId % 10000 == 0)) return pc;
 
             var minion = pc.listMinion.Find(m => m.id == baseStatId);
             if (minion != null)
