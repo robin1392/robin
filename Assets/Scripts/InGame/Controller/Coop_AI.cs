@@ -160,7 +160,7 @@ namespace ED
                 
                 // Set HP
                 id = boss.Id;
-                maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                maxHealth = boss.Hp;
                 currentHealth = maxHealth;
                 RefreshHealthBar();
 
