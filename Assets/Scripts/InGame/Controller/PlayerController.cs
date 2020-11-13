@@ -2255,10 +2255,10 @@ namespace ED
                 {
                     foreach (var obj in msg.Value)
                     {
-                        if (NetworkManager.Get().OtherUID == uid)
+                        //if (NetworkManager.Get().OtherUID == uid)
                             targetPlayer.NetRecvPlayer(msg.Key, obj);
-                        else if (NetworkManager.Get().CoopUID == uid)
-                            coopPlayer.NetRecvPlayer(msg.Key, obj);
+                        //else if (NetworkManager.Get().CoopUID == uid)
+//                            coopPlayer.NetRecvPlayer(msg.Key, obj);
                     }
                 }
             }
