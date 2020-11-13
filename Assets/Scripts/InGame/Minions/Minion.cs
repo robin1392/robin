@@ -278,21 +278,8 @@ namespace ED
 
         public virtual BaseStat SetTarget()
         {
-            BaseStat defaultTarget = null;
+            BaseStat defaultTarget = controller.targetPlayer;
 
-            switch (NetworkManager.Get().playType)
-            {
-                case Global.PLAY_TYPE.BATTLE:
-                    defaultTarget = controller.targetPlayer;
-                    break;
-                case Global.PLAY_TYPE.COOP:
-                    defaultTarget = controller.coopPlayer;
-                    break;
-                default:
-                    defaultTarget = null;
-                    break;
-            }
-            
             if (isPushing)
             {
                 return null;
