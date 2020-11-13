@@ -2188,7 +2188,7 @@ namespace ED
             }
         }
 
-        public void SyncMinion(byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        private void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
@@ -2255,7 +2255,10 @@ namespace ED
                 {
                     foreach (var obj in msg.Value)
                     {
-                        targetPlayer.NetRecvPlayer(msg.Key, obj);
+                        if (NetworkManager.Get().OtherUID == uid)
+                            targetPlayer.NetRecvPlayer(msg.Key, obj);
+                        else if (NetworkManager.Get().CoopUID == uid)
+                            coopPlayer.NetRecvPlayer(msg.Key, obj);
                     }
                 }
             }
@@ -2265,7 +2268,7 @@ namespace ED
             #endif
         }
 
-        Dictionary<GameProtocol, List<object>> MsgMinionStatusToDictionary(MsgMinionStatus msg)
+        protected Dictionary<GameProtocol, List<object>> MsgMinionStatusToDictionary(MsgMinionStatus msg)
         {
             Dictionary<GameProtocol, List<object>> dic = new Dictionary<GameProtocol, List<object>>();
 
@@ -2926,12 +2929,13 @@ namespace ED
                     MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
                     
 
-                    if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
-                        targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
-                    else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
-                        SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
-                    else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
-                        coopPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    // if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
+                    //     targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    // else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
+                    //     SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    // else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
+                    //     coopPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
                     
                     break;
                 }
