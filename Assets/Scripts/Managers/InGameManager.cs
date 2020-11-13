@@ -1655,6 +1655,7 @@ namespace ED
             else if (NetworkManager.Get().CoopUID == uid)
             {
                 pc = playerController.coopPlayer;
+                if (pc.id == baseStatId) return pc;
             }
 
             if (baseStatId < 0) return null;
