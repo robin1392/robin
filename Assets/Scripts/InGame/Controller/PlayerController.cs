@@ -2929,13 +2929,14 @@ namespace ED
                     MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
                     
 
-                    // if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
-                    //     targetPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
-                    // else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
-                    //     SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
-                    // else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
-                    //     coopPlayer.SyncMinion(statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
-                    SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
+                        targetPlayer.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
+                        SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
+                        coopPlayer.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                    
+                    //SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
                     
                     break;
                 }
