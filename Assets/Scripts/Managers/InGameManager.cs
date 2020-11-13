@@ -1644,7 +1644,7 @@ namespace ED
             if (baseStatId >= 10000) uid = baseStatId / 10000;
             else uid = baseStatId / 1000;
             //int bsID = baseStatId % 10000;
-            Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");
+            //Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");
 
             PlayerController pc = null;
             if (NetworkManager.Get().UserUID == uid)
