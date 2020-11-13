@@ -239,6 +239,20 @@ Transform:
   m_Father: {fileID: 5081294253336761971}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8396431713829549939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7312714697737884413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8974a0a2439b7450f9454438c9c5d14f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
+  _minion: {fileID: 2726505167705607337}
 --- !u!1 &7939766581204017874
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,6 +296,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coop_Boss_1
       objectReference: {fileID: 0}
+    - target: {fileID: 3010605896607689781, guid: 371cbc3125bd24bc49fceb2893f6da6c,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 58fa5e95590b7449992d2fca60424193,
+        type: 2}
     - target: {fileID: 3336440966784617436, guid: 371cbc3125bd24bc49fceb2893f6da6c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -339,6 +359,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 371cbc3125bd24bc49fceb2893f6da6c, type: 3}
+--- !u!1 &7312714697737884413 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2668026319848231270, guid: 371cbc3125bd24bc49fceb2893f6da6c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4646941346521908123}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7939894424740399175 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3336440966784617436, guid: 371cbc3125bd24bc49fceb2893f6da6c,
