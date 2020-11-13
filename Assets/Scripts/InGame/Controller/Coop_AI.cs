@@ -181,6 +181,8 @@ namespace ED
                 m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillInterval);
                 m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillCoolTime);
                 //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
+                m.isMine = NetworkManager.Get().IsMaster;
+                m.ChangeLayer(false);
                 m.Initialize(MinionDestroyCallback);
                 m.currentHealth = currentHealth;
                 m.HitDamage(0);
