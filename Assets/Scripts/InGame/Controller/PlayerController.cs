@@ -2451,15 +2451,15 @@ namespace ED
             {
                 if (NetworkManager.Get().UserUID == uid)
                 {
-                    HitDamageWithID(msg[i].Id, msg[i].Hp);
+                    HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
                 }
                 else if (NetworkManager.Get().OtherUID == uid)
                 {
-                    targetPlayer.HitDamageWithID(msg[i].Id, msg[i].Hp);
+                    targetPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
                 }
                 else if (NetworkManager.Get().CoopUID == uid)
                 {
-                    coopPlayer.HitDamageWithID(msg[i].Id, msg[i].Hp);
+                    coopPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
                 }
             }
         }
