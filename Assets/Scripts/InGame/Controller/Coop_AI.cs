@@ -160,7 +160,7 @@ namespace ED
                 
                 // Set HP
                 id = boss.Id;
-                maxHealth = boss.Hp;
+                maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                 currentHealth = maxHealth;
                 RefreshHealthBar();
 
@@ -172,7 +172,7 @@ namespace ED
         {
             if (msgBoss != null)
             {
-                var obj = FileHelper.LoadPrefab($"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}_Egg",
+                var obj = FileHelper.LoadPrefab($"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
                 var m = CreateMinion(obj, transform.position, 1, 0, false);
