@@ -469,8 +469,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   num: 0
   btn: {fileID: 8791165904934940073}
-  icon: {fileID: 8791165905231316278}
-  image_sp: {fileID: 3744259316386833170}
+  image_Icon: {fileID: 8791165905231316278}
+  image_SP: {fileID: 3744259316386833170}
   text_Price: {fileID: 8791165906466207129}
   text_Level: {fileID: 653133224281942466}
 --- !u!82 &7402886422647721126

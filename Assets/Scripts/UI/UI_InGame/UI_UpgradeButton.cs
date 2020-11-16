@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +10,8 @@ namespace ED
     {
         public int num;
         public Button btn;
-        public Image icon;
-        public Image image_sp;
+        public Image image_Icon;
+        public Image image_SP;
         public Text text_Price;
         public Text text_Level;
 
@@ -24,7 +25,7 @@ namespace ED
         {
             this.pData = dataDice;
             this.level = level;
-            icon.sprite = FileHelper.GetIcon(dataDice.iconName);
+            image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
             Refresh();
 
             InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
@@ -44,7 +45,7 @@ namespace ED
             var color = btn.interactable ? Color.white : Color.gray;
             text_Price.color = color;
             text_Level.color = Color.black;
-            image_sp.color = color;
+            image_SP.color = color;
         }
 
         public void Click()
@@ -78,8 +79,16 @@ namespace ED
             text_Level.text = $"Lv.{(level < 5 ? (level + 1).ToString() : "MAX")}";
             if (level >= 5)
             {
-                image_sp.transform.parent.gameObject.SetActive(false);
+                image_SP.transform.parent.gameObject.SetActive(false);
             }
+        }
+
+        public void SetIconAlpha(float alpha)
+        {
+            image_Icon.DOFade(alpha, 0);
+            image_SP.DOFade(alpha, 0);
+            text_Level.DOFade(alpha * 1.5f, 0);
+            text_Price.DOFade(alpha * 1.5f, 0);
         }
     }
 }

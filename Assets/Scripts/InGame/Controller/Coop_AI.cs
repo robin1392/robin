@@ -58,6 +58,7 @@ namespace ED
             {
                 DestroyImmediate(ts_EggParent.GetChild(0).gameObject);
             }
+            obj_IncubationParticle.SetActive(false);
         }
         
 

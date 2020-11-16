@@ -411,7 +411,7 @@ namespace ED
 
         #endregion
         
-        #region minion
+        #region create minion
 
         public Minion CreateMinion(GameObject pref, Vector3 spawnPos, int eyeLevel, int upgradeLevel, bool isSpawnCountUp = true)
         {
@@ -617,7 +617,7 @@ namespace ED
         
         #endregion
         
-        #region magic
+        #region create magic
         
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         private void CastMagic(DiceInfoData data, int eyeLevel, int upgradeLevel, float delay, int diceNum)

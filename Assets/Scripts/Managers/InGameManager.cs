@@ -1465,8 +1465,13 @@ namespace ED
                     MsgInGameUpDiceNotify notiIngame = (MsgInGameUpDiceNotify) param[0];
 
                     // 상대방이 햇다는것을..알필요가 잇나..잇겟지...
-                    if (NetworkManager.Get().OtherUID == notiIngame.PlayerUId )
-                        playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId, notiIngame.InGameUp);
+                    if (NetworkManager.Get().OtherUID == notiIngame.PlayerUId)
+                    {
+                        int ingameup = ConvertNetMsg.MsgShortToInt(notiIngame.InGameUp); 
+                        ingameup = ingameup > 0 ? ingameup - 1 : 0; 
+                        playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId, ingameup);
+                    }
+
                     break;
                 }
                 case GameProtocol.END_GAME_NOTIFY:
@@ -1618,6 +1623,13 @@ namespace ED
             {
                 playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
                 playerController.uiDiceField.RefreshField(0.5f);
+                
+                UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
+                int count = UI_InGame.Get().arrUpgradeButtons.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
+                }
                 StartCoroutine(nameof(ShowAiFieldCoroutine));
             }
             else
@@ -1625,6 +1637,13 @@ namespace ED
                 StopCoroutine(nameof(ShowAiFieldCoroutine));
                 playerController.uiDiceField.SetField(playerController.arrDice);
                 playerController.uiDiceField.RefreshField();
+                
+                UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, playerController.arrUpgradeLevel);
+                int count = UI_InGame.Get().arrUpgradeButtons.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(1f);
+                }
             }
         }
 
@@ -1634,6 +1653,13 @@ namespace ED
             {
                 playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
                 playerController.uiDiceField.RefreshField(0.5f);
+                
+                UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
+                int count = UI_InGame.Get().arrUpgradeButtons.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
+                }
                 yield return null;
             }
         }
