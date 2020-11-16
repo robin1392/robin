@@ -18,6 +18,8 @@ namespace ED
         public GameObject obj_SummonParticle;
 
         private MsgBossMonster msgBoss;
+        private static readonly int Idle = Animator.StringToHash("Idle");
+        private static readonly int Incubation = Animator.StringToHash("Incubation");
 
         protected override void StartPlayerControll()
         {
@@ -46,6 +48,18 @@ namespace ED
 
             StartSyncMinion();
         }
+        
+        protected override void SetColor(E_MaterialType type) { }
+
+        private void DestroyEgg()
+        {
+            animator.SetTrigger(Idle);
+            if (ts_EggParent.childCount > 0)
+            {
+                DestroyImmediate(ts_EggParent.GetChild(0).gameObject);
+            }
+        }
+        
 
         #region HitDamage
 
@@ -156,11 +170,8 @@ namespace ED
         }
 
         #endregion
-
-        protected override void SetColor(E_MaterialType type)
-        {
-        }
-
+        
+        
         #region Spawn
 
         public void Spawn()
@@ -180,8 +191,8 @@ namespace ED
 
                 m.targetMoveType = DICE_MOVE_TYPE.ALL;
                 m.ChangeLayer(false);
-                m.power = 100f + 10f * InGameManager.Get().wave;
-                m.maxHealth = 500f + 50f * InGameManager.Get().wave;
+                m.power = Mathf.Clamp(100f + 3f * InGameManager.Get().wave, 0, 200f);
+                m.maxHealth = Mathf.Clamp(500f + 15f * InGameManager.Get().wave, 0, 1000f);
                 m.attackSpeed = 1f;
                 m.moveSpeed = 1f;
                 m.eyeLevel = 1;
@@ -218,7 +229,7 @@ namespace ED
                 }
 
                 // 알이 있으면 보스 소환
-                if (msgBoss != null && InGameManager.Get().wave > 4)
+                if (msgBoss != null && InGameManager.Get().wave > 1 && currentHealth > 0)
                 {
                     SpawnBoss();
                 }
@@ -265,23 +276,51 @@ namespace ED
 
         IEnumerator EggIncubationCoroutine()
         {
-            yield return new WaitForSeconds(15f);
-
-            animator.SetTrigger("Incubation");
+            float t = 0;
+            while (t < 15f)
+            {
+                t += Time.deltaTime;
+                if (isAlive == false)
+                {
+                    DestroyEgg();
+                    yield break;
+                }
+                yield return null;
+            }
+            
+            animator.SetTrigger(Incubation);
             obj_IncubationParticle.SetActive(true);
 
-            yield return new WaitForSeconds(5f);
+            t = 0;
+            while (t < 5f)
+            {
+                t += Time.deltaTime;
+                if (isAlive == false)
+                {
+                    DestroyEgg();
+                    yield break;
+                }
+                yield return null;
+            }
 
             //SpawnBoss();
             obj_SummonParticle.SetActive(true);
             obj_IncubationParticle.SetActive(false);
 
-            yield return new WaitForSeconds(3f);
+            t = 0;
+            while (t < 3f)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+
             obj_SummonParticle.SetActive(false);
         }
 
         #endregion
         
+        
+        #region Network
         
         protected override void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
@@ -363,5 +402,7 @@ namespace ED
             UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", _myUID, packetCount), str, "green");
             #endif
         }
+        
+        #endregion
     }
 }
