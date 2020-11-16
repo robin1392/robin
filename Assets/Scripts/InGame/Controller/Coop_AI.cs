@@ -138,7 +138,7 @@ namespace ED
 
         public override void HitDamageWithID(int id, float curHP)
         {
-            if (this.id == id || msgBoss.Id == id)
+            if (this.id == id || (msgBoss != null && msgBoss.Id == id))
             {
                 currentHealth = curHP;
                 RefreshHealthBar();
@@ -179,7 +179,7 @@ namespace ED
                 //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
 
                 m.targetMoveType = DICE_MOVE_TYPE.ALL;
-                m.ChangeLayer(isBottomPlayer);
+                m.ChangeLayer(false);
                 m.power = 100f + 10f * InGameManager.Get().wave;
                 m.maxHealth = 500f + 50f * InGameManager.Get().wave;
                 m.attackSpeed = 1f;
@@ -217,12 +217,17 @@ namespace ED
                     egg.transform.localScale = Vector3.one;
                 }
 
+                // 알이 있으면 보스 소환
+                if (msgBoss != null)
+                {
+                    SpawnBoss();
+                }
+
                 // Set HP
                 id = boss.Id;
                 maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                 currentHealth = maxHealth;
                 RefreshHealthBar();
-
                 msgBoss = boss;
             }
         }
@@ -238,6 +243,8 @@ namespace ED
                 var m = CreateMinion(obj, transform.position, 1, 0, false);
 
                 m.id = msgBoss.Id;
+                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
+                m.ChangeLayer(false);
                 m.maxHealth = ConvertNetMsg.MsgIntToFloat(msgBoss.Hp);
                 m.power = ConvertNetMsg.MsgShortToFloat(msgBoss.Atk);
                 m.effect = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillAtk);
@@ -245,8 +252,10 @@ namespace ED
                 m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillCoolTime);
                 //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
                 m.isMine = NetworkManager.Get().IsMaster;
-                m.ChangeLayer(false);
+                m.eyeLevel = 1;
+                m.upgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
+                
                 m.currentHealth = currentHealth;
                 m.HitDamage(0);
 
@@ -263,11 +272,11 @@ namespace ED
 
             yield return new WaitForSeconds(5f);
 
-            SpawnBoss();
+            //SpawnBoss();
             obj_SummonParticle.SetActive(true);
+            obj_IncubationParticle.SetActive(false);
 
             yield return new WaitForSeconds(3f);
-            obj_IncubationParticle.SetActive(false);
             obj_SummonParticle.SetActive(false);
         }
 
