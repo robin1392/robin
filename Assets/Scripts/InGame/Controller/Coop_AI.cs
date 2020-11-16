@@ -49,6 +49,44 @@ namespace ED
 
         #region HitDamage
 
+        public override void HitDamageMinionAndMagic(int baseStatId, float damage )
+        {
+            if (baseStatId == id || baseStatId < 10000)
+            {
+                if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
+                {
+                    int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
+                    // 타워가 맞으면 알ID로 교체해서 전송
+                    if (baseStatId == myUID * 10000) baseStatId = msgBoss.Id;
+                    if (dicHitDamage.ContainsKey(baseStatId) == false) dicHitDamage.Add(baseStatId, 0f);
+                    dicHitDamage[baseStatId] += damage;
+                }
+                else if (InGameManager.IsNetwork == false)
+                {
+                    HitDamage(damage);
+                }
+            }
+            else
+            {
+                var m = listMinion.Find(minion => minion.id == baseStatId);
+                if (m != null)
+                {
+                    m.HitDamage(damage);
+                    var obj = PoolManager.instance.ActivateObject("Effect_ArrowHit", m.ts_HitPos.position);
+                    obj.rotation = Quaternion.identity;
+                    obj.localScale = Vector3.one * 0.6f;
+                }
+                else
+                {
+                    var mg = _listMagic.Find(magic => magic.id == baseStatId);
+                    if (mg != null)
+                    {
+                        mg.HitDamage(damage);
+                    }
+                }
+            }
+        }
+
         public override void HitDamage(float damage)
         {
             if (currentHealth > 0)
@@ -98,6 +136,25 @@ namespace ED
             }
         }
 
+        public override void HitDamageWithID(int id, float curHP)
+        {
+            if (this.id == id || msgBoss.Id == id)
+            {
+                currentHealth = curHP;
+                RefreshHealthBar();
+                HitDamage(0);
+            }
+            else
+            {
+                var minion = listMinion.Find(m => m.id == id);
+                if (minion != null)
+                {
+                    minion.currentHealth = curHP;
+                    minion.HitDamage(0);
+                }
+            }
+        }
+
         #endregion
 
         protected override void SetColor(E_MaterialType type)
@@ -138,6 +195,7 @@ namespace ED
             }
         }
 
+        // Spawn Egg
         public override void SpawnMonster(MsgBossMonster boss)
         {
             if (boss != null && boss.DataId > 0)

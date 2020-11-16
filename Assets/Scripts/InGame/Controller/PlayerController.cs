@@ -1068,11 +1068,11 @@ namespace ED
             }
         }
 
-        public virtual void HitDamageWithID(int id, float damage)
+        public virtual void HitDamageWithID(int id, float curHP)
         {
             if (this.id == id)
             {
-                currentHealth = damage;
+                currentHealth = curHP;
                 RefreshHealthBar();
                 HitDamage(0);
             }
@@ -1081,7 +1081,7 @@ namespace ED
                 var minion = listMinion.Find(m => m.id == id);
                 if (minion != null)
                 {
-                    minion.currentHealth = damage;
+                    minion.currentHealth = curHP;
                     minion.HitDamage(0);
                 }
             }
@@ -1155,7 +1155,7 @@ namespace ED
             }
         }
         
-        public void HitDamageMinionAndMagic(int baseStatId, float damage )
+        public virtual void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
             // baseStatId == 0 => Player tower
             if (baseStatId == id || baseStatId < 10000)
@@ -2454,15 +2454,15 @@ namespace ED
             {
                 if (NetworkManager.Get().UserUID == uid)
                 {
-                    HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
+                    InGameManager.Get().playerController.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
                 }
                 else if (NetworkManager.Get().OtherUID == uid)
                 {
-                    targetPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
+                    InGameManager.Get().playerController.targetPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
                 }
                 else if (NetworkManager.Get().CoopUID == uid)
                 {
-                    coopPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
+                    InGameManager.Get().playerController.coopPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
                 }
             }
         }
