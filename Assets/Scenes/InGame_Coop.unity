@@ -1228,6 +1228,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 225455319}
+    - target: {fileID: 2037759839458915803, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Click_SP_Upgrade_Button
       objectReference: {fileID: 0}
     - target: {fileID: 2799760150873099685, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
