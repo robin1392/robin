@@ -218,7 +218,7 @@ namespace ED
                 }
 
                 // 알이 있으면 보스 소환
-                if (msgBoss != null)
+                if (msgBoss != null && InGameManager.Get().wave > 4)
                 {
                     SpawnBoss();
                 }
