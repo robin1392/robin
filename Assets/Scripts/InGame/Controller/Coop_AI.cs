@@ -179,7 +179,7 @@ namespace ED
         {
             packetCount = 0;
 
-            int minionCount = Mathf.Clamp(InGameManager.Get().wave * 2, 1, 15);
+            int minionCount = Mathf.Clamp(Mathf.FloorToInt(InGameManager.Get().wave * 1.5f), 1, 15);
             for (int i = 0; i < minionCount; i++)
             {
                 var pos = FieldManager.Get().GetTopListPos(i);
