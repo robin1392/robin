@@ -726,6 +726,17 @@ namespace ED
 
         // not network use
         #region get set
+
+        public BaseStat[] GetBottomMinions()
+        {
+            return listBottomPlayer.ToArray();
+        }
+
+        public Minion GetBottomMinion(int id)
+        {
+            return listBottomPlayer.Find(bs => bs.id == id) as Minion;
+        }
+        
         public void GetDice()
         {
             playerController.AddSp(-GetDiceCost());

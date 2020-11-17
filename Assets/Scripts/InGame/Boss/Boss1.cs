@@ -1,0 +1,167 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using ED;
+using Microsoft.Win32.SafeHandles;
+using UnityEngine;
+
+public class Boss1 : Minion
+{
+    private float _skillCastedTime;
+    private bool _isSkillCasting;
+
+    public override void Attack()
+    {
+        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            
+        //if (PhotonNetwork.IsConnected && isMine)
+        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+        {
+            base.Attack();
+            //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
+            controller.MinionAniTrigger(id, "Attack", target.id);
+        }
+        //else if (PhotonNetwork.IsConnected == false)
+        else if(InGameManager.IsNetwork == false)
+        {
+            base.Attack();
+            animator.SetTrigger(_animatorHashAttack);
+        }
+    }
+
+    private Minion GetLongDistanceTarget()
+    {
+        var minions = InGameManager.Get().GetBottomMinions();
+        List<BaseStat> list = new List<BaseStat>();
+        float min = 0f;
+        float max = 0f;
+            
+        foreach (var minion in minions)
+        {
+            float sqrDistance = Vector3.SqrMagnitude(minion.transform.position - transform.position);
+            
+            if (list.Count == 0)
+            {
+                list.Add(minion);
+                min = sqrDistance;
+                max = sqrDistance;
+                continue;
+            }
+            
+            if (sqrDistance > max)
+            {
+                list.Add(minion);
+                max = sqrDistance;
+            }
+            else if (sqrDistance < min)
+            {
+                list.Insert(0, minion);
+                min = sqrDistance;
+            }
+        }
+
+        if (list.Count > 0)
+            return list[Random.Range(list.Count / 2, list.Count)] as Minion;
+        else
+            return null;
+    }
+
+    public void Skill()
+    {
+        if (_spawnedTime >= _skillCastedTime + effectCooltime)
+        {
+            var m = GetLongDistanceTarget();
+            if (m != null)
+            {
+                _skillCastedTime = _spawnedTime;
+                StartCoroutine(SkillCoroutine(m));
+            }
+        }
+    }
+
+    public void Skill(int id)
+    {
+        var m = InGameManager.Get().GetBottomMinion(id);
+
+        if (m != null)
+        {
+            StartCoroutine(SkillCoroutine(m));
+        }
+    }
+    
+    private IEnumerator SkillCoroutine(Minion m)
+    {
+        //var m = GetLongDistanceTarget();
+
+        if (m == null)
+        {
+            _collider.enabled = true;
+            
+            yield break;
+        }
+        
+        _isSkillCasting = true;
+        SetControllEnable(false);
+
+        controller.MinionAniTrigger(id, "Skill" , m.GetComponent<BaseStat>().id);
+        
+        yield return new WaitForSeconds(1f);
+        
+        transform.LookAt(m.transform);
+        
+        yield return null;
+        
+        var ts = transform;
+        var startPos = ts.position;
+        var targetPos = m.transform.position;
+        var t = 0f;
+
+        float fV_x;
+        float fV_y;
+        float fV_z;
+
+        float fg;
+        float fEndTime;
+        float fMaxHeight = 2f;
+        float fHeight;
+        float fEndHeight;
+        float fTime = 0f;
+        float fMaxTime = 1f;
+
+        fEndHeight = targetPos.y - startPos.y;
+        fHeight = fMaxHeight - startPos.y;
+        fg = 2 * fHeight / (fMaxTime * fMaxTime);
+        fV_y = Mathf.Sqrt(2 * fg * fHeight);
+
+        float a = fg;
+        float b = -2 * fV_y;
+        float c = 2 * fEndHeight;
+
+        fEndTime = (-b + Mathf.Sqrt(b * b - 4 * a * c)) / (2 * a);
+
+        fV_x = -(startPos.x - targetPos.x) / fEndTime;
+        fV_z = -(startPos.z - targetPos.z) / fEndTime;
+
+        var currentPos = new Vector3();
+        while (t < fEndTime)
+        {
+            t += Time.deltaTime;
+
+            currentPos.x = startPos.x + fV_x * t;
+            currentPos.y = startPos.y + (fV_y * t) - (0.5f * fg * t * t);
+            currentPos.z = startPos.z + fV_z * t;
+
+            ts.position = currentPos;
+            
+            yield return null;
+        }
+
+        SetControllEnable(true);
+        _isSkillCasting = false;
+        _collider.enabled = true;
+        var pos = transform.position;
+        pos.y = 0.1f;
+        
+        
+        controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
+    }
+}

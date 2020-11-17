@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5081294253336761971}
-  - component: {fileID: 2726505167705607337}
+  - component: {fileID: 8840411567186587327}
   - component: {fileID: 5271869617561665627}
   - component: {fileID: 17148726258424996}
   - component: {fileID: 6486029529450410244}
@@ -40,7 +40,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2726505167705607337
+--- !u!114 &8840411567186587327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,11 +49,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5081294253336761964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cafac9e1246c34bdc863b91e11115a92, type: 3}
+  m_Script: {fileID: 11500000, guid: e0ee387eb592f4d3fb16317a7705ef53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
-  diceId: 1002
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 4658676096167050152}
@@ -123,7 +123,7 @@ MonoBehaviour:
   _lockBoundGraphPrefabOverrides: 1
   _preInitializeSubGraphs: 0
   _updateMode: 0
-  _graph: {fileID: 11400000, guid: c663654bfafef4b4fa92b4623c31fed1, type: 2}
+  _graph: {fileID: 11400000, guid: 3cd6a46cc66e04610abebdfb8774a6fa, type: 2}
   _blackboard: {fileID: 17148726258424996}
 --- !u!114 &17148726258424996
 MonoBehaviour:
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
-  _minion: {fileID: 2726505167705607337}
+  _minion: {fileID: 8840411567186587327}
 --- !u!1 &7939766581204017874
 GameObject:
   m_ObjectHideFlags: 0
