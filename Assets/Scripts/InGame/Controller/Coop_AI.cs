@@ -179,7 +179,7 @@ namespace ED
         {
             packetCount = 0;
 
-            int minionCount = Mathf.Clamp(InGameManager.Get().wave, 1, 15);
+            int minionCount = Mathf.Clamp(InGameManager.Get().wave * 2, 1, 15);
             for (int i = 0; i < minionCount; i++)
             {
                 var pos = FieldManager.Get().GetTopListPos(i);
@@ -192,8 +192,8 @@ namespace ED
 
                 m.targetMoveType = DICE_MOVE_TYPE.ALL;
                 m.ChangeLayer(false);
-                m.power = Mathf.Clamp(100f + 3f * InGameManager.Get().wave, 0, 200f);
-                m.maxHealth = Mathf.Clamp(500f + 15f * InGameManager.Get().wave, 0, 1000f);
+                m.power = Mathf.Clamp(100f + 5f * InGameManager.Get().wave, 0, 300f);
+                m.maxHealth = Mathf.Clamp(500f + 80f * InGameManager.Get().wave, 0, 1500f);
                 m.attackSpeed = 1f;
                 m.moveSpeed = 1f;
                 m.eyeLevel = 1;

@@ -77,7 +77,7 @@ MonoBehaviour:
   effectUpByInGameUp: 0
   effectDuration: 0
   effectCooltime: 0
-  attackSpeed: 0.5
+  attackSpeed: 1
   moveSpeed: 0.8
   range: 0.45
   searchRange: 2
