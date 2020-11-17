@@ -17,7 +17,7 @@ namespace ED
     private void Start()
         {
             if (arrAni_Model == null) arrAni_Model = new Animator[arrTs_SpawnPos.Length];
-            StartCoroutine(Idle2Coroutine());
+            //StartCoroutine(Idle2Coroutine());
             for (int i = 0; i < arrTs_SpawnPos.Length; i++)
             {
                 dicAura.Add(i, new GameObject[4]);
@@ -86,6 +86,11 @@ namespace ED
                     arrAni_Model[rnd].SetTrigger(Idle2);
                 }
             }
+        }
+
+        public void Click_MainDiceIcon(int num)
+        {
+            arrAni_Model[num].SetTrigger(Idle2);
         }
     }
 }
