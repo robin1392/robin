@@ -9,6 +9,12 @@ public class Boss1 : Minion
     private float _skillCastedTime;
     private bool _isSkillCasting;
 
+    public override void Initialize(DestroyCallback destroy)
+    {
+        base.Initialize(destroy);
+        _skillCastedTime = -effectCooltime;
+    }
+
     public override void Attack()
     {
         if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
