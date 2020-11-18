@@ -101,7 +101,7 @@ public class Boss1 : Minion
     {
         //var m = GetLongDistanceTarget();
         
-        스킬을 SendMessage로 처리할지.. 단독으로 처리하고 릴레이 할지..
+        //스킬을 SendMessage로 처리할지.. 단독으로 처리하고 릴레이 할지..
 
         if (m == null)
         {
