@@ -61,6 +61,12 @@ namespace ED
         
         protected override void SetColor(E_MaterialType type)
         {
+            bool mine = isMine;
+            if (NetworkManager.Get().playType == Global.PLAY_TYPE.COOP)
+            {
+                mine = isBottomPlayer;
+            }
+            
             if (_reviveCount > 0 && arrMeshRenderer == null)
             {
                 arrMeshRenderer = GetComponentsInChildren<MeshRenderer>();
@@ -72,7 +78,7 @@ namespace ED
             
             foreach (var m in (_reviveCount > 0 ? arrMeshRenderer : arrMeshRenderer2))
             {
-                m.material = arrMaterial[isMine ? 0 : 1];
+                m.material = arrMaterial[mine ? 0 : 1];
                 switch (type)
                 {
                     case E_MaterialType.BOTTOM:
@@ -105,7 +111,7 @@ namespace ED
 
             foreach (var m in (_reviveCount > 0 ? arrSkinnedMeshRenderer : arrSkinnedMeshRenderer2))
             {
-                m.material = arrMaterial[isMine ? 0 : 1];
+                m.material = arrMaterial[mine ? 0 : 1];
                 switch (type)
                 {
                     case E_MaterialType.BOTTOM:
