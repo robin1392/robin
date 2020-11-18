@@ -136,7 +136,7 @@ public class Boss1 : Minion
         float fHeight;
         float fEndHeight;
         float fTime = 0f;
-        float fMaxTime = 1f;
+        float fMaxTime = 0.5f;
 
         fEndHeight = targetPos.y - startPos.y;
         fHeight = fMaxHeight - startPos.y;
