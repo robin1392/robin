@@ -160,8 +160,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
         else
         {
-            text_SP_Upgrade.text = $"Lv.MAX";
-            text_SP_Upgrade_Price.text = $"0";
+            text_SP_Upgrade.text = $"MAX";
+            text_SP_Upgrade_Price.text = string.Empty;
         }
     }
     #endregion
