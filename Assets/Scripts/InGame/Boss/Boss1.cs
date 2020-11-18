@@ -172,7 +172,21 @@ public class Boss1 : Minion
         var pos = transform.position;
         pos.y = 0.1f;
         
-        
+        SplashDamage();
         controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
+    }
+
+    private void SplashDamage()
+    {
+        var targets = Physics.OverlapSphere(transform.position, 1f, targetLayer);
+
+        for (int i = 0; i < targets.Length; i++)
+        {
+            var bs = targets[i].GetComponentInParent<BaseStat>();
+            if (bs != null)
+            {
+                controller.HitDamageMinionAndMagic(bs.id, effect);
+            }
+        }
     }
 }
