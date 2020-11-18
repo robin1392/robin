@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Boss1 : Minion
 {
+    public GameObject pref_Dust;
+    
     private float _skillCastedTime;
     private bool _isSkillCasting;
 
@@ -13,6 +15,7 @@ public class Boss1 : Minion
     {
         base.Initialize(destroy);
         _skillCastedTime = -effectCooltime;
+        PoolManager.instance.AddPool(pref_Dust, 1);
     }
 
     public override void Attack()
@@ -97,6 +100,8 @@ public class Boss1 : Minion
     private IEnumerator SkillCoroutine(Minion m)
     {
         //var m = GetLongDistanceTarget();
+        
+        스킬을 SendMessage로 처리할지.. 단독으로 처리하고 릴레이 할지..
 
         if (m == null)
         {

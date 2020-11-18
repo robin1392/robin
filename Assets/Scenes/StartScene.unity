@@ -743,10 +743,10 @@ MonoBehaviour:
   event_OtherPause:
     m_PersistentCalls:
       m_Calls: []
-  UseLocalServer: 0
-  LocalServerAddr: 192.168.0.149
+  UseLocalServer: 1
+  LocalServerAddr: 192.168.0.184
   LocalServerPort: 40002
-  UserId: 
+  UserId: bc7a8c89-813c-4fe5-8f38-f97da75c5dc9
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0
