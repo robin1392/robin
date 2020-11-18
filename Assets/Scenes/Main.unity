@@ -251,11 +251,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lights
       objectReference: {fileID: 0}
-    - target: {fileID: 7619292689329856902, guid: 7ee9c4aa6b6074c1886c672b8935581b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7619292689329856903, guid: 7ee9c4aa6b6074c1886c672b8935581b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -310,16 +305,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.483
-      objectReference: {fileID: 0}
-    - target: {fileID: 7619292689464705633, guid: 7ee9c4aa6b6074c1886c672b8935581b,
-        type: 3}
-      propertyPath: m_Intensity
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7619292690544578312, guid: 7ee9c4aa6b6074c1886c672b8935581b,
-        type: 3}
-      propertyPath: m_Intensity
-      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ee9c4aa6b6074c1886c672b8935581b, type: 3}
@@ -509,6 +494,8 @@ GameObject:
   - component: {fileID: 1226850300}
   - component: {fileID: 1226850299}
   - component: {fileID: 1226850301}
+  - component: {fileID: 1226850302}
+  - component: {fileID: 1226850303}
   m_Layer: 0
   m_Name: Model Camera
   m_TagString: Untagged
@@ -585,6 +572,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad8d024c37eb649c3932c849c0e7a3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1226850302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226850298}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d75a7a1e2fb401bb98f2bd9723a119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blendMode: 0
+  blendIntensity: 0.793
+  vignetteIntensity: 0.579
+  vignetteMaxValue: 0.771
+  gradientTexture: {fileID: 0}
+  material: {fileID: 2100000, guid: 22b440eb0cb3745a8ab862bf24878003, type: 2}
+--- !u!114 &1226850303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226850298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d30c51d6e8f479e9a211b3aba23641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bloomColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
+  threshold: 1.5
+  intensity: 0.205
+  resolution: 1
+  blurIterations: 1
+  material: {fileID: 2100000, guid: 050512b117c564ce78f612046b53b2d1, type: 2}
 --- !u!1 &1244172204
 GameObject:
   m_ObjectHideFlags: 0
