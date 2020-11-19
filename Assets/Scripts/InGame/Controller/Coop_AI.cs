@@ -324,7 +324,7 @@ namespace ED
         
         #region Network
         
-        protected override void SyncMinion(int uid, byte minionCount , MsgVector3[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        protected override void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
