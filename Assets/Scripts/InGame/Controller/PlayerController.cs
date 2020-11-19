@@ -668,7 +668,7 @@ namespace ED
                 {
                     //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : (InGameManager.Get().playerController == this);
                     m.isMine = InGameManager.IsNetwork ? isMine : (InGameManager.Get().playerController == this);
-                    m.id = spawnCount++;
+                    m.id = _myUID * 10000 + spawnCount++;
                     m.controller = this;
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
