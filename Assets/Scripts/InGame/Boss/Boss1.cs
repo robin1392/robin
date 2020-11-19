@@ -85,12 +85,12 @@ public class Boss1 : Minion
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine(m));
                 
-                controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, "Skill", m.id);
+                controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, UID, id, E_ActionSendMessage.JumpTarget, m.id);
             }
         }
     }
 
-    public void Skill(int id)
+    public void JumpTarget(int id)
     {
         var m = InGameManager.Get().GetBottomMinion(id);
 

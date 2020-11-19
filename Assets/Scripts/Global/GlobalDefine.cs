@@ -100,6 +100,7 @@ public enum E_ActionSendMessage
     DashMessage,
     Aiming,
     StopAiming,
+    JumpTarget,
 }
 
 public enum E_PoolName
