@@ -2032,13 +2032,13 @@ namespace ED
                     //if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgVector2[] msgMinPos = new MsgVector2[listMinion.Count];
+                        MsgVector3[] msgMinPos = new MsgVector3[listMinion.Count];
                         int[] hp = new int[listMinion.Count];
                         MsgMinionStatus relay = new MsgMinionStatus();
 
                         for (int i = 0; i < listMinion.Count; i++)
                         {
-                            msgMinPos[i] = ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x, listMinion[i].rb.position.z));
+                            msgMinPos[i] = ConvertNetMsg.Vector3ToMsg(listMinion[i].rb.position);
                             hp[i] = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                         }
 
@@ -2188,7 +2188,7 @@ namespace ED
             }
         }
 
-        protected virtual void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        protected virtual void SyncMinion(int uid, byte minionCount , MsgVector3[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {

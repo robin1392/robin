@@ -113,6 +113,7 @@ namespace ED
                     currentHealth = 0;
 
                     // 알이 깨졌을 때.. 
+                    DestroyEgg();
                 }
 
                 RefreshHealthBar();
@@ -323,7 +324,7 @@ namespace ED
         
         #region Network
         
-        protected override void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        protected override void SyncMinion(int uid, byte minionCount , MsgVector3[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
             for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             {
