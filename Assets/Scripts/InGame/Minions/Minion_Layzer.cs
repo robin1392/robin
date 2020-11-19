@@ -123,8 +123,10 @@ namespace ED
                 {
                     if (arr[i] == -1) continue;
                     
-                    if (arr[i] == 0) _listTarget.Add(controller.targetPlayer);
-                    else _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
+                    //if (arr[i] == 0) _listTarget.Add(controller.targetPlayer);
+                    //else _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
+                    
+                    _listTarget.Add(InGameManager.Get().GetBaseStatFromId(arr[i]));
                 }
             }
         }

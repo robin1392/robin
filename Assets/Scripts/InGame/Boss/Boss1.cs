@@ -191,7 +191,7 @@ public class Boss1 : Minion
             var bs = targets[i].GetComponentInParent<BaseStat>();
             if (bs != null)
             {
-                controller.HitDamageMinionAndMagic(bs.id, effect);
+                DamageToTarget(bs);
             }
         }
     }
