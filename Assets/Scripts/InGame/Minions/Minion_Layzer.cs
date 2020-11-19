@@ -81,7 +81,7 @@ namespace ED
                     controller.ActionLayzer(id, intList.ToArray());
                 else
                 {
-                    int[] emptyLst = new int[6] {-1, -1, -1, -1, -1, -1};
+                    int[] emptyLst = new int[6] { 0, 0, 0, 0, 0, 0 };
                     controller.ActionLayzer(id, emptyLst);
                 }
             }
