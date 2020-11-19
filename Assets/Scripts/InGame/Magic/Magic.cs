@@ -121,7 +121,15 @@ namespace ED
             if (image_HealthBar != null)
             {
                 image_HealthBar.fillAmount = 1f;
-                image_HealthBar.color = isMine ? Color.green : Color.red;
+                switch (NetworkManager.Get().playType)
+                {
+                    case Global.PLAY_TYPE.BATTLE:
+                        image_HealthBar.color = isMine ? Color.green : Color.red;
+                        break;
+                    case Global.PLAY_TYPE.COOP:
+                        image_HealthBar.color = isBottomPlayer ? Color.green : Color.red;
+                        break;
+                }
             }
         }
 

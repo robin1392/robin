@@ -2025,7 +2025,7 @@ namespace ED
             //while (InGameManager.Get().isGamePlaying)
             while (true)
             {
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.333f);
 
                 if (InGameManager.Get().isGamePlaying && InGameManager.Get().wave > 0 && InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
