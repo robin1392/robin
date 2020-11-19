@@ -1142,12 +1142,12 @@ public class ConvertNetMsg
 
     public static byte MsgFloatToByte(float value)
     {
-        return Convert.ToByte(value * 100);
+        return Convert.ToByte(value * 10);
     }
 
     public static float MsgByteToFloat(byte value)
     {
-        return Convert.ToInt32(value) * 0.01f;
+        return Convert.ToInt32(value) * 0.1f;
     }
     
     public static int MsgFloatToInt(float value)
