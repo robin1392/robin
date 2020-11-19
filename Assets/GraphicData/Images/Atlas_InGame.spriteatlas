@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Atlas_InGame
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 597b27bef1dd745ec8baa229ac77145b, type: 3}
+    - {fileID: 2800000, guid: f456d98e17f044b6cb0717fe1cc1bb75, type: 3}
+    - {fileID: 2800000, guid: d65c7763b804e407b98b0a91a2b7d7c6, type: 3}
+    - {fileID: 2800000, guid: 0aab0365591da419d88a478317a91551, type: 3}
+    - {fileID: 2800000, guid: d7b5ddaa2f10e49408b4007ec9d74ecd, type: 3}
+    - {fileID: 2800000, guid: 488e22044bcca4cb6b6e77920a006e4f, type: 3}
+    - {fileID: 2800000, guid: 70a685492ef0f456994f8670ce003875, type: 3}
+    - {fileID: 2800000, guid: 45dddff7ccad0494c8db4081706c2335, type: 3}
+    - {fileID: 2800000, guid: 4773f2df01b4d4e99a0f5626c1438d69, type: 3}
+    - {fileID: 2800000, guid: bf01a88d87bbd4e199c01fa2a7786fb7, type: 3}
+    - {fileID: 2800000, guid: 90a7b7a9bafbc4a77842c803599330de, type: 3}
+    - {fileID: 2800000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
+    - {fileID: 2800000, guid: 8e8c7edc5bac24cd092c6c5778c3593f, type: 3}
+    - {fileID: 2800000, guid: b39cb6f33b7f14a1ebf49865641d689a, type: 3}
+    - {fileID: 2800000, guid: 2348769a6cdd34429a024966f4293634, type: 3}
+    - {fileID: 2800000, guid: eb6424cd5a81344bd8c36966fe5b2d67, type: 3}
+    - {fileID: 2800000, guid: 68b18718af7fc49ffbc91149210f6d20, type: 3}
+    - {fileID: 2800000, guid: f4202c54c55af4b819debbf8b759794b, type: 3}
+    - {fileID: 2800000, guid: 85bfbb57d7fcb40ef912dab6b00a2376, type: 3}
+    - {fileID: 2800000, guid: 77013c02259714a5081538fdfa41b91a, type: 3}
+    - {fileID: 2800000, guid: 525f1618216fc4a1aafdabc70b267259, type: 3}
+    - {fileID: 2800000, guid: b8645d8f9148c48c9976c5a14901eabf, type: 3}
+    - {fileID: 2800000, guid: a0d2d4eb3fdfb467186385f572478af1, type: 3}
+    - {fileID: 2800000, guid: e004ef60688bf49a6bfc22a00b8d8919, type: 3}
+    - {fileID: 2800000, guid: 1181e5fb115dd45ad96e22508eb472f8, type: 3}
+    - {fileID: 2800000, guid: 10e3674fa53794b9fbc991790486a1fb, type: 3}
+    - {fileID: 2800000, guid: a36de5ee336464a81928c998a2337fdc, type: 3}
+    - {fileID: 2800000, guid: 78e968e750f234ff3b28712cbfd24d7c, type: 3}
+    - {fileID: 2800000, guid: 82a6407214642467681afdeccfac8a52, type: 3}
+    totalSpriteSurfaceArea: 1394678
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: e004ef60688bf49a6bfc22a00b8d8919, type: 3}
+  - {fileID: 21300000, guid: 77013c02259714a5081538fdfa41b91a, type: 3}
+  - {fileID: 21300000, guid: 82a6407214642467681afdeccfac8a52, type: 3}
+  - {fileID: 21300000, guid: d65c7763b804e407b98b0a91a2b7d7c6, type: 3}
+  - {fileID: 21300000, guid: b39cb6f33b7f14a1ebf49865641d689a, type: 3}
+  - {fileID: 21300000, guid: 488e22044bcca4cb6b6e77920a006e4f, type: 3}
+  - {fileID: 21300000, guid: f4202c54c55af4b819debbf8b759794b, type: 3}
+  - {fileID: 21300000, guid: 0aab0365591da419d88a478317a91551, type: 3}
+  - {fileID: 21300000, guid: 85bfbb57d7fcb40ef912dab6b00a2376, type: 3}
+  - {fileID: 21300000, guid: 78e968e750f234ff3b28712cbfd24d7c, type: 3}
+  - {fileID: 21300000, guid: 45dddff7ccad0494c8db4081706c2335, type: 3}
+  - {fileID: 21300000, guid: 525f1618216fc4a1aafdabc70b267259, type: 3}
+  - {fileID: 21300000, guid: 68b18718af7fc49ffbc91149210f6d20, type: 3}
+  - {fileID: 21300000, guid: 70a685492ef0f456994f8670ce003875, type: 3}
+  - {fileID: 21300000, guid: 90a7b7a9bafbc4a77842c803599330de, type: 3}
+  - {fileID: 21300000, guid: 2348769a6cdd34429a024966f4293634, type: 3}
+  - {fileID: 21300000, guid: d7b5ddaa2f10e49408b4007ec9d74ecd, type: 3}
+  - {fileID: 21300000, guid: a0d2d4eb3fdfb467186385f572478af1, type: 3}
+  - {fileID: 21300000, guid: 1181e5fb115dd45ad96e22508eb472f8, type: 3}
+  - {fileID: 21300000, guid: 8e8c7edc5bac24cd092c6c5778c3593f, type: 3}
+  - {fileID: 21300000, guid: bf01a88d87bbd4e199c01fa2a7786fb7, type: 3}
+  - {fileID: 21300000, guid: eb6424cd5a81344bd8c36966fe5b2d67, type: 3}
+  - {fileID: 21300000, guid: f456d98e17f044b6cb0717fe1cc1bb75, type: 3}
+  - {fileID: 21300000, guid: 597b27bef1dd745ec8baa229ac77145b, type: 3}
+  - {fileID: 21300000, guid: a36de5ee336464a81928c998a2337fdc, type: 3}
+  - {fileID: 21300000, guid: 10e3674fa53794b9fbc991790486a1fb, type: 3}
+  - {fileID: 21300000, guid: b8645d8f9148c48c9976c5a14901eabf, type: 3}
+  - {fileID: 21300000, guid: 34cee5af087944327ab45d57a5fe16ab, type: 3}
+  - {fileID: 21300000, guid: 4773f2df01b4d4e99a0f5626c1438d69, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - icon_lose
+  - ingame_speech
+  - result_perfect_2
+  - icon_hp
+  - ingame_map1_popup
+  - ingame_core_BG2
+  - ingame_sp_BG
+  - icon_hp_bar
+  - ingame_sp_button
+  - result_perfect_1
+  - ingame_core_hpbar
+  - ingame_timer
+  - ingame_sp_bar
+  - ingame_core_hp
+  - ingame_dice_popup
+  - ingame_number_bar
+  - ingame_core_BG1
+  - ingame_wave
+  - icon_perfect
+  - ingame_giveup
+  - ingame_dice_button
+  - ingame_sp
+  - hp_bar
+  - hp
+  - icon_wins
+  - icon_win
+  - ingame_timerbar
+  - ingame_emoticon
+  - ingame_dice
+  m_Tag: Atlas_InGame
+  m_IsVariant: 0

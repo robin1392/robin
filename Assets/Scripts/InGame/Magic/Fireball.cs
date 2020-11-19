@@ -26,6 +26,9 @@ namespace ED
             isBombed = false;
             ps_Tail.transform.localScale = Vector3.one * Mathf.Lerp(1f, 3f, (eyeLevel - 1) / 5f);
             ps_BombEffect.transform.localScale = Vector3.one * Mathf.Lerp(0.7f, 1f, (eyeLevel - 1) / 5f);
+            
+            ps_Tail.Clear();
+            ps_BombEffect.Clear();
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_FIREBALL_FIRE);
         }

@@ -185,13 +185,13 @@ namespace ED
                         if (parent != null)
                         {
                             t.parent = parent;
-                            t.gameObject.SetActive(true);
                             t.position = position;
+                            t.gameObject.SetActive(true);
                         }
                         else
                         {
-                            t.gameObject.SetActive(true);
                             t.position = position;
+                            t.gameObject.SetActive(true);
                         }
 
                         return t.GetComponent<T>();

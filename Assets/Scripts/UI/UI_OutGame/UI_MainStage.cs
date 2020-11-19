@@ -71,6 +71,12 @@ namespace ED
                 {
                     arrAni_Model[i].transform.localPosition += Vector3.up;
                 }
+
+                var particles = arrAni_Model[i].GetComponentsInChildren<ParticleSystem>();
+                for (int j = 0; j < particles.Length; j++)
+                {
+                    particles[j].Clear();
+                }
             }
         }
 

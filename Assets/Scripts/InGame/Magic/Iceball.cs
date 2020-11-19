@@ -19,6 +19,9 @@ namespace ED
 
             isBombed = false;
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
+
+            ps_Tail.Clear();
+            ps_BombEffect.Clear();
         }
 
         public override void SetTarget()

@@ -92,13 +92,24 @@ namespace ED
             
             if (isPlayable && isPushing == false && isAttacking == false)
             {
+                float distance = Vector3.Magnitude(networkPosition - transform.position);
                 //if (PhotonNetwork.IsConnected && !isMine)
                 if(InGameManager.IsNetwork && !isMine && agent.enabled)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
                     if (controller.isMinionAgentMove)
                     {
-                        agent.SetDestination(networkPosition);
+                        //agent.SetDestination(networkPosition);
+                        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") == false
+                        && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") == false
+                        && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") == false)
+                        {
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation,
+                                Quaternion.LookRotation(networkPosition - transform.position), Time.deltaTime * 480f);
+                        }
+
+                        transform.position =
+                            Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
                     }
                     else
                     {
@@ -107,25 +118,28 @@ namespace ED
                     }
                 }
 
-                var velocityMagnitude = rb.velocity.magnitude;
+                //var velocityMagnitude = rb.velocity.magnitude;
                 if (animator != null)
                 {
                     //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
-                    animator.SetFloat(_animatorHashMoveSpeed, agent.velocity.magnitude);
+                    if (isMine)
+                        animator.SetFloat(_animatorHashMoveSpeed, agent.velocity.magnitude);
+                    else
+                        animator.SetFloat(_animatorHashMoveSpeed, distance * 5);
                 }
 
 
                 //if (PhotonNetwork.IsConnected && !isMine) return;
-                if (InGameManager.IsNetwork && !isMine) 
-                    return;
+                // if (InGameManager.IsNetwork && !isMine) 
+                //     return;
 
-                if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) 
-                    return;
+                // if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) 
+                //     return;
                 
-                var lTargetDir = rb.velocity;
-                lTargetDir.y = 0.0f;
-                //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
+                // var lTargetDir = rb.velocity;
+                // lTargetDir.y = 0.0f;
+                // //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
+                // transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
             }
         }
         
@@ -185,11 +199,13 @@ namespace ED
                 if (isMine || controller.isPlayingAI)
                 {
                     behaviourTreeOwner.behaviour.Resume();
+                    _collider.isTrigger = false;
                     //agent.enabled = true;
                 }
                 else
                 {
                     behaviourTreeOwner.behaviour.Pause();
+                    _collider.isTrigger = true;
                     //agent.enabled = false;
                 }
             }
