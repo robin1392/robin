@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ED;
 using Microsoft.Win32.SafeHandles;
+using RandomWarsProtocol;
 using UnityEngine;
 
 public class Boss1 : Minion
@@ -83,6 +84,8 @@ public class Boss1 : Minion
             {
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine(m));
+                
+                controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, "Skill", m.id);
             }
         }
     }
@@ -113,7 +116,7 @@ public class Boss1 : Minion
         _isSkillCasting = true;
         SetControllEnable(false);
 
-        controller.MinionAniTrigger(id, "Skill" , m.GetComponent<BaseStat>().id);
+        animator.SetTrigger(_animatorHashSkill);
         
         yield return new WaitForSeconds(1f);
         
@@ -172,8 +175,11 @@ public class Boss1 : Minion
         var pos = transform.position;
         pos.y = 0.1f;
         
-        SplashDamage();
-        controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
+        if (isMine || controller.isPlayingAI) SplashDamage();
+        
+        var effect = PoolManager.instance.ActivateObject("Effect_Support", pos);
+        effect.rotation = Quaternion.identity;
+        effect.localScale = Vector3.one * 0.8f;
     }
 
     private void SplashDamage()
