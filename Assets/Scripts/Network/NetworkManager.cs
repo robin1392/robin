@@ -1140,12 +1140,13 @@ public class ConvertNetMsg
         return Convert.ToInt32(value) * 0.01f;
     }
 
-    public static byte MsgFloatToByte(float value)
+    public static sbyte MsgFloatToByte(float value)
     {
-        return Convert.ToByte(Mathf.RoundToInt(value * 10));
+        Debug.Log($"FloatToByte : {value} -> {Mathf.RoundToInt(value * 10)}");
+        return Convert.ToSByte(Mathf.RoundToInt(value * 10));
     }
 
-    public static float MsgByteToFloat(byte value)
+    public static float MsgByteToFloat(sbyte value)
     {
         return Convert.ToInt32(value) * 0.1f;
     }
