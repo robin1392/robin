@@ -83,6 +83,11 @@ public class FileHelper
         return cardSpr;
     }
 
+    public static Sprite GetNullIcon()
+    {
+        return Resources.Load<Sprite>("Image/null");
+    }
+
     public static Color GetColor(int r, int g, int b)
     {
         Color newColor = new Color32((byte)r , (byte)g , (byte)b , 255);

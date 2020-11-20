@@ -36,17 +36,30 @@ public class UI_Box_Slot : MonoBehaviour
         boxID = id;
         needKey = needKeyCount;
         //Debug.LogFormat("ID:{0}, COUNT:{1}, KEY:{2}", id, count, needKeyCount);
+        bool isEnable = false;
 
-        bool isEnable = needKeyCount <= UserInfoManager.Get().GetUserInfo().key;
+        if (needKey >= 0)
+        {
+            isEnable = needKeyCount <= UserInfoManager.Get().GetUserInfo().key;
+            text_Name.text = LocalizationManager.GetLangDesc(40000 + id);
+            text_Cost.text = needKeyCount.ToString();
+            text_Count.text = $"x{count}";
+
+            text_Cost.color = isEnable ? Color.white : ParadoxNotion.ColorUtils.HexToColor("DF362D");
+            text_Name.color = isEnable ? Color.white : Color.gray;
+            text_Count.color = isEnable ? Color.white : Color.gray;
+            image_CostIcon.color = isEnable ? Color.white : Color.gray;
+            image_Icon.sprite = arrSprite_BoxIcon[id - 1];
+        }
+        else
+        {
+            text_Name.text = $"NULL";
+            image_Icon.sprite = FileHelper.GetNullIcon();
+            image_Icon.SetNativeSize();
+            text_Count.text = string.Empty;
+            text_Cost.text = string.Empty;
+        }
         btn.interactable = isEnable;
-        text_Name.text = LocalizationManager.GetLangDesc(40000 + id);
-        text_Cost.text = needKeyCount.ToString();
-        text_Count.text = $"x{count}";
-        
-        text_Cost.color = isEnable ? Color.white : ParadoxNotion.ColorUtils.HexToColor("DF362D");
-        // text_Name.color = isEnable ? Color.white : Color.gray;
-        // text_Count.color = isEnable ? Color.white : Color.gray;
-        image_Icon.sprite = arrSprite_BoxIcon[id - 1];
 
         if (isEnable == false)
         {
