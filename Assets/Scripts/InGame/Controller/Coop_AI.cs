@@ -193,8 +193,8 @@ namespace ED
 
                 m.targetMoveType = DICE_MOVE_TYPE.ALL;
                 m.ChangeLayer(false);
-                m.power = Mathf.Clamp(100f + 10f * InGameManager.Get().wave, 0, 300f);
-                m.maxHealth = Mathf.Clamp(300f + 50f * InGameManager.Get().wave, 0, 2000f);
+                m.power = Mathf.Clamp(100f + 2f * InGameManager.Get().wave, 0, 300f);
+                m.maxHealth = Mathf.Clamp(300f + 5f * InGameManager.Get().wave, 0, 2000f);
                 m.attackSpeed = 1f;
                 m.moveSpeed = 1f;
                 m.eyeLevel = 1;
