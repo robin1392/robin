@@ -110,6 +110,8 @@ namespace ED
                     button_LevelUp.gameObject.SetActive(true);
 
                     text_LevelUpCost.text = needGold.ToString();
+                    text_LevelUpCost.color =
+                        UserInfoManager.Get().GetUserInfo().gold >= needGold ? Color.white : Color.red;
                 }
                 else
                 {
