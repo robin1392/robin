@@ -217,9 +217,9 @@ namespace ED
 
             rts_MainPages.DOAnchorPosX(mainPagePosX[num], duration).SetEase(ease);
 
-            for (var i = 0; i < arrRts_MainButtons.Length; i++)
+            for (var i = 1; i < arrRts_MainButtons.Length - 1; i++)
             {
-                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 390f : 213f, 260f), duration).SetEase(ease);
+                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 600f : 321f, 260f), duration).SetEase(ease);
                 //arrRts_MainButtons[i].GetComponent<Image>().DOColor(i == num ? Color.white : Color.gray, duration);
                 arrRts_MainButtons[i]
                     .BroadcastMessage(i == num ? "Up" : "Down", SendMessageOptions.DontRequireReceiver);
@@ -266,12 +266,12 @@ namespace ED
 
                 if (data.currentInputModule.input.mousePosition.x < _pointerDownPos.x - 100f)
                 {
-                    if (currentPageNum < 4) Click_MainButton(currentPageNum + 1);
+                    if (currentPageNum < 3) Click_MainButton(currentPageNum + 1);
                     else Click_MainButton(currentPageNum);
                 }
                 else if (data.currentInputModule.input.mousePosition.x > _pointerDownPos.x + 100f)
                 {
-                    if (currentPageNum > 0) Click_MainButton(currentPageNum - 1);
+                    if (currentPageNum > 1) Click_MainButton(currentPageNum - 1);
                     else Click_MainButton(currentPageNum);
                 }
                 else

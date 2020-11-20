@@ -1142,7 +1142,6 @@ public class ConvertNetMsg
 
     public static sbyte MsgFloatToByte(float value)
     {
-        Debug.Log($"FloatToByte : {value} -> {Mathf.RoundToInt(value * 10)}");
         return Convert.ToSByte(Mathf.RoundToInt(value * 10));
     }
 
