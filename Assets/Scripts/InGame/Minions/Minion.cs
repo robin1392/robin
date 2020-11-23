@@ -542,7 +542,6 @@ namespace ED
             //if (target != null && target.id == 0) _isNexusAttacked = true;
 
             //StartCoroutine(MoveToAttackInnerRanger());
-            _seeker.CancelCurrentPathRequest();
             SetControllEnable(false);
             isAttacking = true;
             transform.LookAt(target.transform);
@@ -751,6 +750,7 @@ namespace ED
         {
             isPushing = !isEnable;
             isAttacking = !isEnable;
+            _aiPath.isStopped = !isEnable;
             //rb.isKinematic = isEnable;
 
             if (isMine || controller.isPlayingAI)
