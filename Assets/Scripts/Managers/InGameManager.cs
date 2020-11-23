@@ -922,7 +922,7 @@ namespace ED
 
         IEnumerator EndGameCoroutine(bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(4f);
 
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
 
