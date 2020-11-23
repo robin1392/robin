@@ -96,6 +96,8 @@ MonoBehaviour:
   upgradeLevel: 0
   agent: {fileID: 0}
   isPolymorph: 0
+  pref_Dust: {fileID: 8926562141571314491, guid: 1edc218f2724d433a9ae9d108e1873f9,
+    type: 3}
 --- !u!114 &5271869617561665627
 MonoBehaviour:
   m_ObjectHideFlags: 0

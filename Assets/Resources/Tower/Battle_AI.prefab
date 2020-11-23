@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 7857655242034525463}
@@ -160,15 +161,20 @@ MonoBehaviour:
   isPlayable: 1
   instanceID: 0
   targetPlayer: {fileID: 0}
+  coopPlayer: {fileID: 0}
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 3098623276119017545}
   ps_ShieldOff: {fileID: 1906823994381969063}
   pref_Guardian: {fileID: 5081294253336761964, guid: 007e05ebde8f64b2a96c1f5ab77bc495,
     type: 3}
+  spawnCount: 1
+  subSpawnCount: 1000
   _sp: 200
   robotPieceCount: 0
   robotEyeTotalLevel: 0
-  listMagic: []
+  _listMagic: []
+  isHalfHealth: 0
+  isMinionAgentMove: 1
   deck: 
   getDiceCount: 0
 --- !u!54 &7857655242034525463
@@ -250,7 +256,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5883888954613411290}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 0
   m_Extents: {x: 1, y: 5, z: 1}

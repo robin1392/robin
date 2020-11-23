@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NodeCanvas.BehaviourTrees;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -76,6 +77,7 @@ namespace ED
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
         protected BaseStat _attackedTarget;
+        protected Seeker _seeker;
 
         protected virtual void Awake()
         {
@@ -83,6 +85,7 @@ namespace ED
             behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
             agent = GetComponent<NavMeshAgent>();
             _collider = GetComponentInChildren<Collider>();
+            _seeker = GetComponent<Seeker>();
         }
 
 
@@ -108,8 +111,9 @@ namespace ED
                                 Quaternion.LookRotation(networkPosition - transform.position), Time.deltaTime * 480f);
                         }
 
-                        transform.position =
-                            Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
+                        // transform.position =
+                        //     Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
+                        _seeker.StartPath(transform.position, networkPosition);
                     }
                     else
                     {

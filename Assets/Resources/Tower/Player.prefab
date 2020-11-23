@@ -115,6 +115,7 @@ MonoBehaviour:
   isPlayable: 1
   instanceID: 0
   targetPlayer: {fileID: 0}
+  coopPlayer: {fileID: 0}
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 7007598002378707877}
   ps_ShieldOff: {fileID: 6893542662049175148}
@@ -125,7 +126,7 @@ MonoBehaviour:
   _sp: 200
   robotPieceCount: 0
   robotEyeTotalLevel: 0
-  listMagic: []
+  _listMagic: []
   isHalfHealth: 0
   isMinionAgentMove: 1
 --- !u!54 &4956517791549293242
@@ -151,7 +152,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5883888954613411290}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 0
   m_Extents: {x: 1, y: 5, z: 1}
