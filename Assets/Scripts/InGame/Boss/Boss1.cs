@@ -119,8 +119,10 @@ public class Boss1 : Minion
         animator.SetTrigger(_animatorHashSkill);
         
         yield return new WaitForSeconds(1f);
-        
-        transform.LookAt(m.transform);
+
+        var lookPos = m.transform.position;
+        lookPos.y = 0;
+        transform.LookAt(lookPos);
         
         yield return null;
         

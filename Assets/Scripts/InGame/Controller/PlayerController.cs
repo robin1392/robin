@@ -100,6 +100,7 @@ namespace ED
         public UI_DiceField uiDiceField;
         public GameObject objCollider;
         public ParticleSystem ps_ShieldOff;
+        public ParticleSystem ps_Destroy;
         public GameObject pref_Guardian;
         
         [SerializeField]
@@ -1089,7 +1090,9 @@ namespace ED
             {
                 //SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
                 ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
-                animator.gameObject.SetActive(false);
+                //animator.gameObject.SetActive(false);
+                animator.SetTrigger("Death");
+                ps_Destroy.gameObject.SetActive(true);
                 
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
                 if (InGameManager.IsNetwork == false)

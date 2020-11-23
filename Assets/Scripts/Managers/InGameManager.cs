@@ -887,12 +887,19 @@ namespace ED
 
             isGamePlaying = false;
             StopAllCoroutines();
+            SoundManager.instance.StopBGM();
+            BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
+            UI_InGame.Get().ClearUI();
 
+            StartCoroutine(EndGameCoroutine(winLose, winningStreak, normalReward, streakReward, perfectReward));
+        }
+
+        IEnumerator EndGameCoroutine(bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
+        {
+            yield return new WaitForSeconds(3f);
 
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
-            BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
 
-            SoundManager.instance.StopBGM();
             SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }
         

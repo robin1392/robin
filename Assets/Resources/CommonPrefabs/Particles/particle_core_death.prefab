@@ -24076,7 +24076,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8328120820534227232}
   serializedVersion: 6
-  lengthInSec: 3
+  lengthInSec: 0.1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -24091,7 +24091,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 1.8
+    scalar: 2
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -24151,7 +24151,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 3
+      scalar: 2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -24204,7 +24204,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3
+      scalar: 8
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -24901,7 +24901,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 14
+      scalar: 200
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -25357,7 +25357,7 @@ ParticleSystem:
         ctime7: 0
         atime0: 0
         atime1: 13107
-        atime2: 32768
+        atime2: 31997
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -26053,7 +26053,7 @@ ParticleSystem:
         m_RotationOrder: 4
     speedModifier:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 1
       scalar: 0.5
       minScalar: 1
       maxCurve:
@@ -26070,12 +26070,12 @@ ParticleSystem:
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 1
-          inSlope: 0
-          outSlope: 0
+          value: 0.1946308
+          inSlope: -1.8816905
+          outSlope: -1.8816905
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.33333334
+          inWeight: 0.07846725
           outWeight: 0.33333334
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -28861,7 +28861,7 @@ GameObject:
   - component: {fileID: 4813501986364681992}
   - component: {fileID: 3720721022169674502}
   m_Layer: 0
-  m_Name: object_core_death
+  m_Name: particle_core_death
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28890,7 +28890,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9198678099500959068}
   serializedVersion: 6
-  lengthInSec: 1
+  lengthInSec: 0.1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -28966,7 +28966,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 2
-      minScalar: 2
+      minScalar: 3
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -29715,7 +29715,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 100
       minScalar: 10
       maxCurve:
         serializedVersion: 2
