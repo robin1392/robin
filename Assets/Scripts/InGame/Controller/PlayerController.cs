@@ -1011,14 +1011,15 @@ namespace ED
         public void SummonGuardian()
         {
             ps_ShieldOff.Play();
-            Vector3 pos = isBottomPlayer ? FieldManager.Get().GetBottomListPos(12) : FieldManager.Get().GetTopListPos(12);
+            //Vector3 pos = isBottomPlayer ? FieldManager.Get().GetBottomListPos(12) : FieldManager.Get().GetTopListPos(12);
+            Vector3 pos = transform.position;
 
-            NavMeshHit navMeshHit;
-            do
-            {
-                pos.x += Random.Range(-1f, 1f);
-                pos.z += Random.Range(-1f, 1f);
-            } while (NavMesh.SamplePosition(pos, out navMeshHit, 0.2f, NavMesh.AllAreas) == false);
+            // NavMeshHit navMeshHit;
+            // do
+            // {
+            //     pos.x += Random.Range(-1f, 1f);
+            //     pos.z += Random.Range(-1f, 1f);
+            // } while (NavMesh.SamplePosition(pos, out navMeshHit, 0.2f, NavMesh.AllAreas) == false);
 
             var m = CreateMinion(pref_Guardian, pos, 1, 0);
             m.targetMoveType = DICE_MOVE_TYPE.GROUND;
