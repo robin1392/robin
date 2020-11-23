@@ -205,13 +205,13 @@ namespace ED
                 if (isMine || controller.isPlayingAI)
                 {
                     behaviourTreeOwner.behaviour.Resume();
-                    _collider.isTrigger = false;
+                    //_collider.isTrigger = false;
                     //agent.enabled = true;
                 }
                 else
                 {
                     behaviourTreeOwner.behaviour.Pause();
-                    _collider.isTrigger = true;
+                    //_collider.isTrigger = true;
                     //agent.enabled = false;
                 }
             }
