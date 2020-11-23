@@ -107,8 +107,8 @@ namespace ED
                         && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") == false
                         && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") == false)
                         {
-                            transform.rotation = Quaternion.RotateTowards(transform.rotation,
-                                Quaternion.LookRotation(networkPosition - transform.position), Time.deltaTime * 480f);
+                            // transform.rotation = Quaternion.RotateTowards(transform.rotation,
+                            //     Quaternion.LookRotation(networkPosition - transform.position), Time.deltaTime * 480f);
                         }
 
                         // transform.position =
@@ -590,7 +590,8 @@ namespace ED
                 if (target != null && isAlive && agent.enabled && agent.updatePosition)
                 {
                     Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                    agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
+                    //agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
+                    _seeker.StartPath(transform.position, targetPos);
                 }
             }
             else
