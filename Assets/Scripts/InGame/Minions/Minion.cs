@@ -259,6 +259,7 @@ namespace ED
             }
             
             currentHealth -= damage;
+            RefreshHealthBar();
 
             if (currentHealth <= 0)
             {
@@ -269,8 +270,6 @@ namespace ED
                 currentHealth = 0;
                 controller.DeathMinion(id);
             }
-
-            RefreshHealthBar();
         }
 
         public virtual void Death()
@@ -519,7 +518,7 @@ namespace ED
             //rb.rotation = rotation;
             //rb.velocity = velocity;
             //agent.velocity = velocity;
-            if (currentHealth < hp) return;
+            if (currentHealth > 0 && currentHealth < hp) return;
             
             currentHealth = hp;
             RefreshHealthBar();
