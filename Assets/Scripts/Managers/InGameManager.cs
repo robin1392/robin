@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using UnityEngine;
@@ -890,6 +891,31 @@ namespace ED
             SoundManager.instance.StopBGM();
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
             UI_InGame.Get().ClearUI();
+
+            switch (playType)
+            {
+                case Global.PLAY_TYPE.BATTLE:
+                    if (winLose)
+                    {
+                        playerController.targetPlayer.HitDamage(float.MaxValue);
+                    }
+                    else
+                    {
+                        playerController.HitDamage(float.MaxValue);
+                    }
+                    break;
+                case Global.PLAY_TYPE.COOP:
+                    if (winLose)
+                    {
+                        playerController.coopPlayer.HitDamage(float.MaxValue);
+                    }
+                    else
+                    {
+                        if (NetworkManager.Get().IsMaster) playerController.HitDamage(float.MaxValue);
+                        else playerController.targetPlayer.HitDamage(float.MaxValue);
+                    }
+                    break;
+            }
 
             StartCoroutine(EndGameCoroutine(winLose, winningStreak, normalReward, streakReward, perfectReward));
         }

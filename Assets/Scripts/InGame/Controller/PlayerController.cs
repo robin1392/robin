@@ -1052,8 +1052,6 @@ namespace ED
                     
                     Death();    // 
                 }
-                //else if (((PhotonNetwork.IsConnected && photonView.IsMine) || (!PhotonNetwork.IsConnected && isMine)) 
-                         //&& currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
                 else if( ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
                          && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
                 {
