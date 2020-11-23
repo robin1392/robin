@@ -1066,7 +1066,15 @@ namespace ED
             {
                 currentHealth = curHP;
                 RefreshHealthBar();
-                HitDamage(0);
+                
+                if (curHP > 0)
+                {
+                    HitDamage(0);
+                }
+                else
+                {
+                    Death();
+                }
             }
             else
             {
