@@ -542,7 +542,7 @@ namespace ED
             //if (target != null && target.id == 0) _isNexusAttacked = true;
 
             //StartCoroutine(MoveToAttackInnerRanger());
-            
+            _seeker.CancelCurrentPathRequest();
             SetControllEnable(false);
             isAttacking = true;
             transform.LookAt(target.transform);
