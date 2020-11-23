@@ -519,6 +519,8 @@ namespace ED
             //rb.rotation = rotation;
             //rb.velocity = velocity;
             //agent.velocity = velocity;
+            if (currentHealth < hp) return;
+            
             currentHealth = hp;
             RefreshHealthBar();
 

@@ -22,7 +22,7 @@ public class CameraGyroController : MonoBehaviour
         {
             Input.gyro.enabled = true;
         });
-        transform.DORotate(new Vector3(39f, 0, 0), 3f).SetEase(Ease.OutQuint);
+        transform.DORotate(new Vector3(35f, 0, 0), 3f).SetEase(Ease.OutQuint);
     }
 
     // Update is called once per frame
