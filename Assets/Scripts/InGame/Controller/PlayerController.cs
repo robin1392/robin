@@ -185,14 +185,6 @@ namespace ED
         private void Update()
         {
             RefreshHealthBar();
-
-#if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                PushEnemyMinions(30f);
-                SummonGuardian();
-            }
-#endif
         }
 
         public void OnDestroy()
@@ -1047,7 +1039,7 @@ namespace ED
                     isHalfHealth = true;
                     animator.SetBool(Break, true);
 
-                    PushEnemyMinions(70f);
+                    PushEnemyMinions(10f);
 
                     Invoke("SummonGuardian", 0.5f);
                 }
@@ -1570,7 +1562,7 @@ namespace ED
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 int x = ConvertNetMsg.MsgFloatToInt(dir.x );
-                int y = ConvertNetMsg.MsgFloatToInt(dir.y );
+                int y = 0;//ConvertNetMsg.MsgFloatToInt(dir.y );
                 int z = ConvertNetMsg.MsgFloatToInt(dir.z );
                 
                 int convPush  = ConvertNetMsg.MsgFloatToInt(pushPower );
