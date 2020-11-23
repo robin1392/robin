@@ -78,6 +78,7 @@ namespace ED
         protected Coroutine _invincibilityCoroutine;
         protected BaseStat _attackedTarget;
         protected Seeker _seeker;
+        protected AIPath _aiPath;
 
         protected virtual void Awake()
         {
@@ -86,6 +87,7 @@ namespace ED
             agent = GetComponent<NavMeshAgent>();
             _collider = GetComponentInChildren<Collider>();
             _seeker = GetComponent<Seeker>();
+            _aiPath = GetComponent<AIPath>();
         }
 
 
@@ -97,7 +99,7 @@ namespace ED
             {
                 float distance = Vector3.Magnitude(networkPosition - transform.position);
                 //if (PhotonNetwork.IsConnected && !isMine)
-                if(InGameManager.IsNetwork && !isMine && agent.enabled)
+                if(InGameManager.IsNetwork && !isMine)// && agent.enabled)
                 {
                     //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
                     if (controller.isMinionAgentMove)
@@ -127,7 +129,7 @@ namespace ED
                 {
                     //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
                     if (isMine)
-                        animator.SetFloat(_animatorHashMoveSpeed, agent.velocity.magnitude);
+                        animator.SetFloat(_animatorHashMoveSpeed, _aiPath.velocity.magnitude);//agent.velocity.magnitude);
                     else
                         animator.SetFloat(_animatorHashMoveSpeed, distance * 5);
                 }
@@ -159,11 +161,11 @@ namespace ED
             
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;
-            agent.speed = moveSpeed;
-            agent.enabled = true;
-            agent.isStopped = false;
-            agent.updatePosition = true;
-            agent.updateRotation = true;
+            //agent.speed = moveSpeed;
+            //agent.enabled = true;
+            //agent.isStopped = false;
+            //agent.updatePosition = true;
+            //agent.updateRotation = true;
             _collider.enabled = true;
             isPlayable = true;
             isAttacking = false;
@@ -587,7 +589,7 @@ namespace ED
         {
             if (controller.isMinionAgentMove)
             {
-                if (target != null && isAlive && agent.enabled && agent.updatePosition)
+                if (target != null && isAlive)// && agent.enabled && agent.updatePosition)
                 {
                     Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
                     //agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
@@ -753,25 +755,25 @@ namespace ED
 
             if (isMine || controller.isPlayingAI)
             {
-                if (isEnable && agent.enabled == false)
-                {
-                    agent.enabled = true;
-                    agent.isStopped = false;
-                    agent.updatePosition = true;
-                    agent.updateRotation = true;
-                }
-                else if (isEnable == false && agent.enabled == true)
-                {
-                    agent.isStopped = true;
-                    agent.updatePosition = false;
-                    agent.updateRotation = false;
-                    agent.enabled = false;
-                }
-
+                // if (isEnable && agent.enabled == false)
+                // {
+                //     agent.enabled = true;
+                //     agent.isStopped = false;
+                //     agent.updatePosition = true;
+                //     agent.updateRotation = true;
+                // }
+                // else if (isEnable == false && agent.enabled == true)
+                // {
+                //     agent.isStopped = true;
+                //     agent.updatePosition = false;
+                //     agent.updateRotation = false;
+                //     agent.enabled = false;
+                // }
+            
                 if (isEnable == false)
                 {
                     rb.velocity = Vector3.zero;
-                    agent.velocity = Vector3.zero;
+                    //agent.velocity = Vector3.zero;
                 }
             }
         }
@@ -892,9 +894,9 @@ namespace ED
             effectDuration = data.minionDuration;
             effectCooltime = data.minionCooltime;
 
-            agent.enabled = false;
+            //agent.enabled = false;
             transform.position = data.minionPos;
-            agent.enabled = true;
+            //agent.enabled = true;
         }
     }
 }
