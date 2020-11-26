@@ -545,9 +545,12 @@ namespace ED
             //StartCoroutine(MoveToAttackInnerRanger());
             SetControllEnable(false);
             isAttacking = true;
-            var lookPos = target.transform.position;
-            lookPos.y = 0;
-            transform.LookAt(lookPos);
+            var pos = transform.position;
+            pos.y = 0;
+            transform.position = pos;
+            pos = target.transform.position;
+            pos.y = 0;
+            transform.LookAt(pos);
             
             yield return new WaitForSeconds(attackSpeed);
             // while (true)

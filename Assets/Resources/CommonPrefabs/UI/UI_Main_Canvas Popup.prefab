@@ -8361,7 +8361,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8453943
 --- !u!1 &6362351359264260549
 GameObject:
   m_ObjectHideFlags: 0
@@ -8580,8 +8580,8 @@ MonoBehaviour:
   ui_Panel_Dice: {fileID: 0}
   ui_getted_dice: {fileID: 3759382770565742360}
   image_Character: {fileID: 6362351360665773094}
-  obj_NormalCharacterEffect: {fileID: 1625021789611411542}
-  obj_LegendCharacterEffect: {fileID: 750213197818657339}
+  ps_NormalCharacterEffect: {fileID: 1625021789629527468}
+  ps_LegendCharacterEffect: {fileID: 750213197818657332}
   text_Name: {fileID: 6362351360384489424}
   text_Discription: {fileID: 6362351359773227396}
   text_Grade: {fileID: 6362351360168756497}
@@ -16529,15 +16529,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe5e34d697e2a428385027337ede42f1, type: 3}
---- !u!4 &750213197818657338 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6270778954305520831, guid: fe5e34d697e2a428385027337ede42f1,
+--- !u!198 &750213197818657332 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6270778954305520817, guid: fe5e34d697e2a428385027337ede42f1,
     type: 3}
   m_PrefabInstance: {fileID: 6732603067258781317}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &750213197818657339 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6270778954305520830, guid: fe5e34d697e2a428385027337ede42f1,
+--- !u!4 &750213197818657338 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6270778954305520831, guid: fe5e34d697e2a428385027337ede42f1,
     type: 3}
   m_PrefabInstance: {fileID: 6732603067258781317}
   m_PrefabAsset: {fileID: 0}
@@ -16889,15 +16889,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c730da3d68bc460e9107ef67d5893eb, type: 3}
---- !u!4 &1625021789611160050 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7708778093179967878, guid: 5c730da3d68bc460e9107ef67d5893eb,
+--- !u!198 &1625021789629527468 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7708778093198433752, guid: 5c730da3d68bc460e9107ef67d5893eb,
     type: 3}
   m_PrefabInstance: {fileID: 8968400100774963316}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1625021789611411542 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7708778093179707426, guid: 5c730da3d68bc460e9107ef67d5893eb,
+--- !u!4 &1625021789611160050 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7708778093179967878, guid: 5c730da3d68bc460e9107ef67d5893eb,
     type: 3}
   m_PrefabInstance: {fileID: 8968400100774963316}
   m_PrefabAsset: {fileID: 0}

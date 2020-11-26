@@ -398,8 +398,11 @@ namespace ED
         
         public void RefreshHealthBar()
         {
-            image_HealthBar.fillAmount = currentHealth / maxHealth;
-            text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+            if (isAlive)
+            {
+                image_HealthBar.fillAmount = currentHealth / maxHealth;
+                text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+            }
         }
 
         #endregion
@@ -1094,9 +1097,8 @@ namespace ED
         {
             if (InGameManager.Get().isGamePlaying)
             {
-                //SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
+                image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
                 ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
-                //animator.gameObject.SetActive(false);
                 animator.SetTrigger("Death");
                 ps_Destroy.gameObject.SetActive(true);
                 
@@ -1105,15 +1107,6 @@ namespace ED
                 {
                     //InGameManager.Get().EndGame(!isMine);
                 }
-                
-                /*if (PhotonNetwork.IsConnected)
-                {                    
-                    InGameManager.Get().SendBattleManager(RpcTarget.All , E_PTDefine.PT_ENDGAME );
-                }
-                else
-                {
-                    InGameManager.Get().EndGame(new PhotonMessageInfo());
-                }*/
             }
         }
 

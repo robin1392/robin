@@ -25,8 +25,8 @@ namespace ED
         public UI_Panel_Dice ui_Panel_Dice;
         public UI_Getted_Dice ui_getted_dice;
         public Image image_Character;
-        public GameObject obj_NormalCharacterEffect;
-        public GameObject obj_LegendCharacterEffect;
+        public ParticleSystem ps_NormalCharacterEffect;
+        public ParticleSystem ps_LegendCharacterEffect;
 
         [Header("Info")] 
         public Text text_Name;
@@ -86,12 +86,12 @@ namespace ED
             int diceCount = 0;
 
             image_Character.sprite = FileHelper.GetIllust(JsonDataManager.Get().dataDiceInfo.dicData[pData.id].illustName);
-            obj_LegendCharacterEffect.SetActive(pData.grade == (int)DICE_GRADE.LEGEND);
-            obj_NormalCharacterEffect.SetActive(!obj_LegendCharacterEffect.activeSelf);
+            ps_LegendCharacterEffect.gameObject.SetActive(pData.grade == (int)DICE_GRADE.LEGEND);
+            ps_NormalCharacterEffect.gameObject.SetActive(!ps_LegendCharacterEffect.gameObject.activeSelf);
 
-            if (obj_NormalCharacterEffect.gameObject.activeSelf)
+            if (ps_NormalCharacterEffect.gameObject.activeSelf)
             {
-                var particles = obj_NormalCharacterEffect.GetComponentsInChildren<ParticleSystem>();
+                var particles = ps_NormalCharacterEffect.GetComponentsInChildren<ParticleSystem>();
                 for (int i = 0; i < particles.Length; i++)
                 {
                     var module = particles[i].main;
@@ -142,6 +142,8 @@ namespace ED
         {
             CloseContectInfo();
             
+            if (ps_LegendCharacterEffect.gameObject.activeSelf) ps_LegendCharacterEffect.Stop();
+            if (ps_NormalCharacterEffect.gameObject.activeSelf) ps_NormalCharacterEffect.Stop();
             image_Character.rectTransform.DOAnchorPosY(image_Character.rectTransform.anchoredPosition.y - 1000f, 0.2f).SetEase(Ease.InBack);
             image_Character.DOFade(0, 0.2f);
             image_BG.DOFade(0, 0.2f).SetDelay(0.1f);

@@ -175,7 +175,8 @@ public class Boss1 : Minion
         _isSkillCasting = false;
         _collider.enabled = true;
         var pos = transform.position;
-        pos.y = 0.1f;
+        pos.y = 0;
+        transform.position = pos;
         
         if (isMine || controller.isPlayingAI) SplashDamage();
         
