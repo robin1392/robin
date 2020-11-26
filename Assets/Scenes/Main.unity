@@ -976,6 +976,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 502885068276618635, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -35.100006
+      objectReference: {fileID: 0}
     - target: {fileID: 2769207660905567041, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1412,6 +1417,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6180031956809445894, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -36.300003
+      objectReference: {fileID: 0}
     - target: {fileID: 6180031956912710742, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: ui_MainStage
@@ -1422,6 +1432,11 @@ PrefabInstance:
       propertyPath: ui_Popup_Dice_Info
       value: 
       objectReference: {fileID: 1593578196}
+    - target: {fileID: 6180031956956136633, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 68.100006
+      objectReference: {fileID: 0}
     - target: {fileID: 8600908288174401488, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
