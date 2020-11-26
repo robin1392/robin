@@ -39,7 +39,7 @@ namespace ED
             else
             {
                 myTObj = UnityUtil.Instantiate("Tower/" + pref_PlayerEmpty.name);
-                otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);                
+                otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
             }
             coopTObj = UnityUtil.Instantiate("Tower/" + pref_Coop_AI.name);
 

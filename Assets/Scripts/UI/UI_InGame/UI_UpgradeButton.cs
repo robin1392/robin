@@ -77,10 +77,7 @@ namespace ED
         {
             text_Price.text = level < 5 ? arrPrice[level].ToString() : string.Empty;
             text_Level.text = $"Lv.{(level < 5 ? (level + 1).ToString() : "MAX")}";
-            if (level >= 5)
-            {
-                image_SP.transform.parent.gameObject.SetActive(false);
-            }
+            image_SP.transform.parent.gameObject.SetActive(level < 5);
         }
 
         public void SetIconAlpha(float alpha)

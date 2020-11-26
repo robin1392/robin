@@ -241,11 +241,6 @@ namespace ED
             uiDiceField.SetField(arrDice);
 
             
-            // 
-            //image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
-            //text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
-            //text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
-            
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
             
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
@@ -566,37 +561,14 @@ namespace ED
                 if (lr != null)
                 {
                     lr.SetPositions(new Vector3[2] {dicePos, m.ts_HitPos.position});
-                    lr.startColor = FileHelper.GetColor(data.color);//data.color;
-                    lr.endColor = FileHelper.GetColor(data.color);//data.color;
+                    lr.startColor = FileHelper.GetColor(data.color);
+                    lr.endColor = FileHelper.GetColor(data.color);
                 }
             }
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
-        //
-        // public BaseStat GetBaseStatFromId(int baseStatId)
-        // {
-        //     if (baseStatId < 0) return null;
-        //     if (baseStatId == 0) return this;
-        //
-        //     var minion = listMinion.Find(m => m.id == baseStatId);
-        //     if (minion != null)
-        //     {
-        //         return minion;
-        //     }
-        //     else
-        //     {
-        //         var magic = _listMagic.Find(m => m.id == baseStatId);
-        //         if (magic != null)
-        //         {
-        //             return magic;
-        //         }
-        //         else
-        //         {
-        //             return null;
-        //         }
-        //     }
-        // }
+        
 
         public Minion GetRandomMinion()
         {
@@ -846,7 +818,6 @@ namespace ED
             
             if(InGameManager.IsNetwork)
             {
-                //switch (PhotonManager.Instance.playType)
                 switch (NetworkManager.Get().playType)
                 {
                     case Global.PLAY_TYPE.BATTLE:
@@ -857,24 +828,6 @@ namespace ED
                         break;
                 }
             }
-            
-            /*
-            if (PhotonNetwork.IsConnected && PhotonNetwork.IsMasterClient == false && PhotonManager.Instance.playType == PLAY_TYPE.BATTLE)
-            {
-                transform.rotation = Quaternion.Euler(0, 180f, 0);
-            }
-
-            if (PhotonNetwork.IsConnected && PhotonManager.Instance.playType == PLAY_TYPE.CO_OP)
-            {
-                if ((PhotonNetwork.IsMasterClient && photonView.IsMine == false)
-                    || (PhotonNetwork.IsMasterClient == false && photonView.IsMine == true))
-                {
-                    GetComponentInChildren<Collider>().enabled = false;
-                    transform.GetChild(0).gameObject.SetActive(false);
-                    transform.GetChild(1).gameObject.SetActive(false);
-                }
-            }
-            */
         }
 
         public void OtherPlayerPause(bool isPuase)
@@ -1007,15 +960,7 @@ namespace ED
         public void SummonGuardian()
         {
             ps_ShieldOff.Play();
-            //Vector3 pos = isBottomPlayer ? FieldManager.Get().GetBottomListPos(12) : FieldManager.Get().GetTopListPos(12);
             Vector3 pos = transform.position;
-
-            // NavMeshHit navMeshHit;
-            // do
-            // {
-            //     pos.x += Random.Range(-1f, 1f);
-            //     pos.z += Random.Range(-1f, 1f);
-            // } while (NavMesh.SamplePosition(pos, out navMeshHit, 0.2f, NavMesh.AllAreas) == false);
 
             var m = CreateMinion(pref_Guardian, pos, 1, 0);
             m.targetMoveType = DICE_MOVE_TYPE.GROUND;
@@ -1053,7 +998,7 @@ namespace ED
                     UI_InGamePopup.Get().ViewLowHP(false);
                     currentHealth = 0;
                     
-                    Death();    // 
+                    Death();
                 }
                 else if( ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
                          && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
