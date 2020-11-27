@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Service.Template.Common;
 
 namespace RandomWarsProtocol
 {

@@ -17,17 +17,37 @@ using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using UnityEditor;
 
+using Service.Template.Common;
+using Template.Player.RandomWarsPlayer.Common;
+using Template.Stage.RandomWarsMatch.Common;
+using Template.Account.RandomWarsAccount.Common;
+using Template.Item.RandomWarsDice.Common;
+
+
 public class NetworkManager : Singleton<NetworkManager>
 {
     #region net variable
 
     public Global.E_MATCHSTEP NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
 
+    private NetClient _netClient;
+    private Service.Net.HttpClient _httpClient;
+    private RandomWarsAccountProtocol _randomWarsAccountProtocol;
+    private RandomWarsMatchProtocol _randomWarsMatchProtocol;
+    private RandomWarsPlayerProtocol _randomWarsPlayerProtocol;
+    private RandomWarsDiceProtocol _randomWarsDiceProtocol;
+
+
+
+
+
+
+
     SocketService _socketService;
 
     private HttpSender _httpSender;
     private HttpReceiver _httpReceiver;
-    private HttpClient _httpClient;
+    
 
     private int _matchTryCount;
 
@@ -153,7 +173,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private NetBattleInfo _battleInfo = null;
 
-    private Action<MsgOpenBoxAck> _boxOpenCallback;
+    private Action<OpenBoxReward[]> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     private Action<MsgEditUserNameAck> _editUserNameCallback;
     private Action<MsgGetRankAck> _getRankCallback;
@@ -208,21 +228,52 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private void InitNetwork()
     {
-        _socketService = new SocketService();
+        // protocol callback 설정
+        _randomWarsAccountProtocol = new RandomWarsAccountProtocol();
+        _randomWarsAccountProtocol.HttpReceiveLoginAccountAckCallback = OnHttpReceiveLoginAccountAck;
 
-        _httpReceiver = new HttpReceiver();
-        _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
-        _httpSender = new HttpSender(_httpClient);
+        _randomWarsPlayerProtocol = new RandomWarsPlayerProtocol();
+        _randomWarsPlayerProtocol.HttpReceiveOpenBoxAckCallback = OnHttpReceiveOpenBoxAck;
 
-        _httpReceiver.AuthUserAck = OnAuthUserAck;
-        _httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
-        _httpReceiver.StartMatchAck = OnStartMatchAck;
-        _httpReceiver.StatusMatchAck = OnStatusMatchAck;
-        _httpReceiver.StopMatchAck = OnStopMatchAck;
-        _httpReceiver.OpenBoxAck = OnOpenBoxAck;
-        _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
-        _httpReceiver.EditUserNameAck = OnEditUserNameAck;
-        _httpReceiver.GetRankAck = OnGetRankAck;
+        _randomWarsDiceProtocol = new RandomWarsDiceProtocol();
+        _randomWarsDiceProtocol.HttpReceiveLevelupDiceAckCallback = OnHttpReceiveLevelupDiceAck;
+        _randomWarsDiceProtocol.HttpReceiveUpdateDeckAckCallback = OnHttpReceiveUpdateDeckAck;
+
+        _randomWarsMatchProtocol = new RandomWarsMatchProtocol();
+        //_randomWarsMatchProtocol.HttpReceiveRequestMatchAckCallback = 
+
+
+
+
+        // http controller 등록
+        Service.Net.HttpController httpController = new Service.Net.HttpController();
+        httpController.AddControllers(_randomWarsAccountProtocol.HttpMessageControllers);
+        httpController.AddControllers(_randomWarsMatchProtocol.HttpMessageControllers);
+        httpController.AddControllers(_randomWarsPlayerProtocol.HttpMessageControllers);
+        httpController.AddControllers(_randomWarsDiceProtocol.HttpMessageControllers);
+
+
+
+        _httpClient = new Service.Net.HttpClient(
+            //"https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
+            "https://localhost:5001/api",
+            httpController);
+
+
+        //_socketService = new SocketService();
+
+        //_httpReceiver = new HttpReceiver();
+        _httpSender = new HttpSender(new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", new HttpReceiver()));
+
+        //_httpReceiver.AuthUserAck = OnAuthUserAck;
+        //_httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
+        //_httpReceiver.StartMatchAck = OnStartMatchAck;
+        //_httpReceiver.StatusMatchAck = OnStatusMatchAck;
+        //_httpReceiver.StopMatchAck = OnStopMatchAck;
+        //_httpReceiver.OpenBoxAck = OnOpenBoxAck;
+        //_httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
+        //_httpReceiver.EditUserNameAck = OnEditUserNameAck;
+        //_httpReceiver.GetRankAck = OnGetRankAck;
 
 
 
@@ -809,24 +860,24 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
 
-    public void OpenBoxReq(string userId, int boxId, Action<MsgOpenBoxAck> callback)
-    {
-        MsgOpenBoxReq msg = new MsgOpenBoxReq();
-        msg.UserId = userId;
-        msg.BoxId = boxId;
-        _boxOpenCallback = callback;
-        _httpSender.OpenBoxReq(msg);
-        UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
-    }
+    //public void OpenBoxReq(string userId, int boxId, Action<MsgOpenBoxAck> callback)
+    //{
+    //    MsgOpenBoxReq msg = new MsgOpenBoxReq();
+    //    msg.UserId = userId;
+    //    msg.BoxId = boxId;
+    //    _boxOpenCallback = callback;
+    //    _httpSender.OpenBoxReq(msg);
+    //    UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
+    //}
 
-    void OnOpenBoxAck(MsgOpenBoxAck msg)
-    {
-        if (_boxOpenCallback != null)
-        {
-            _boxOpenCallback(msg);
-        }
-        UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
-    }
+    //void OnOpenBoxAck(MsgOpenBoxAck msg)
+    //{
+    //    if (_boxOpenCallback != null)
+    //    {
+    //        _boxOpenCallback(msg);
+    //    }
+    //    UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    //}
 
 
 
@@ -869,6 +920,112 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     #endregion
+
+    public bool HttpSend(ERandomWarsAccountProtocol protocolId, params object[] param)
+    {
+        switch(protocolId)
+        {
+            case ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ:
+                {
+                    _randomWarsAccountProtocol.HttpSendLoginAccountReq(_httpClient, param[0].ToString(), (EPlatformType)param[1]);
+                    break;
+                }
+            default:
+                {
+                    return false;
+                }
+        }
+         
+        return true;
+    }
+
+    public bool HttpSend(ERandomWarsPlayerProtocol protocolId, params object[] param)
+    {
+        switch(protocolId)
+        {
+            case ERandomWarsPlayerProtocol.OPEN_BOX_REQ:
+                {
+                    _randomWarsPlayerProtocol.HttpSendOpenBoxReq(_httpClient, param[0].ToString(), (int)param[1]);
+                    break;
+                }
+            default:
+                {
+                    return false;
+                }
+        }
+
+        return true;
+    }
+
+    public bool HttpSend(ERandomWarsDiceProtocol protocolId, params object[] param)
+    {
+        switch (protocolId)
+        {
+            case ERandomWarsDiceProtocol.LEVELUP_DICE_REQ:
+                {
+                    _randomWarsDiceProtocol.HttpSendLevelupDiceReq(_httpClient, param[0].ToString(), (int)param[1]);
+                    break;
+                }
+            case ERandomWarsDiceProtocol.UPDATE_DECK_REQ:
+                {
+                    _randomWarsDiceProtocol.HttpSendUpdateDeckReq(_httpClient, param[0].ToString(), (int)param[1], (int[])param[2]);
+                    break;
+                }
+            default:
+                {
+                    return false;
+                }
+        }
+
+        return true;
+    }
+
+    bool OnHttpReceiveLoginAccountAck(ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo)
+    {
+        if (errorCode == ERandomWarsAccountErrorCode.NOT_FOUND_ACCOUNT)
+        {
+            ObscuredPrefs.SetString("UserKey", string.Empty);
+            ObscuredPrefs.Save();
+            UI_Start.Get().SetTextStatus(string.Empty);
+            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
+            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
+            {
+                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+                AuthUserReq(string.Empty);
+            });
+            return true;
+        }
+
+        UserInfoManager.Get().SetAccountInfo(accountInfo);
+        GameStateManager.Get().UserAuthOK();
+
+        UnityUtil.Print("RECV AUTH => PlayerGuid", accountInfo.PlayerInfo.PlayerGuid, "green");
+        return true;
+    }
+
+
+    bool OnHttpReceiveOpenBoxAck(ERandomWarsPlayerErrorCode errorCode, OpenBoxReward[] rewardInfo)
+    {
+        UI_BoxOpenPopup panelBoxOpen = FindObjectOfType<UI_BoxOpenPopup>();
+        panelBoxOpen.Callback_BoxOpen(rewardInfo);
+        return true;
+    }
+
+
+    bool OnHttpReceiveUpdateDeckAck(ERandomWarsDiceErrorCode errorCode, int deckIndex, int[] deckInfo)
+    {
+
+        return true;
+    }
+
+    bool OnHttpReceiveLevelupDiceAck(ERandomWarsDiceErrorCode errorCode, int diceId, short level, short count, int gold)
+    {
+        ED.UI_Popup_Dice_Info panelDiceInfo = FindObjectOfType<ED.UI_Popup_Dice_Info>();
+        panelDiceInfo.DiceUpgradeCallback
+        return true;
+    }
+
 }
 
 #region net battle save info
@@ -906,9 +1063,9 @@ public class NetInfo
 {
 
     //
-    public MsgPlayerInfo playerInfo;
-    public MsgPlayerInfo otherInfo;
-    public MsgPlayerInfo coopInfo;
+    public RandomWarsProtocol.MsgPlayerInfo playerInfo;
+    public RandomWarsProtocol.MsgPlayerInfo otherInfo;
+    public RandomWarsProtocol.MsgPlayerInfo coopInfo;
     public bool myInfoGet = false;
     public bool otherInfoGet = false;
     public bool coopInfoGet = false;
@@ -925,7 +1082,7 @@ public class NetInfo
         coopInfoGet = false;
     }
 
-    public void SetPlayerInfo(MsgPlayerInfo info)
+    public void SetPlayerInfo(RandomWarsProtocol.MsgPlayerInfo info)
     {
         playerInfo = info;
         /*for(int i = 0 ; i < playerInfo.DiceIdArray.Length ; i++ )
@@ -933,7 +1090,7 @@ public class NetInfo
         myInfoGet = true;
     }
 
-    public void SetOtherInfo(MsgPlayerInfo info)
+    public void SetOtherInfo(RandomWarsProtocol.MsgPlayerInfo info)
     {
         otherInfo = info;
         /*for(int i = 0 ; i < otherInfo.DiceIdArray.Length ; i++ )
@@ -941,7 +1098,7 @@ public class NetInfo
         otherInfoGet = true;
     }
 
-    public void SetCoopInfo(MsgPlayerInfo info)
+    public void SetCoopInfo(RandomWarsProtocol.MsgPlayerInfo info)
     {
         coopInfo = info;
         coopInfoGet = true;
@@ -949,7 +1106,7 @@ public class NetInfo
 
     public void SetPlayerBase(MsgPlayerBase baseinfo)
     {
-        MsgPlayerInfo pinfo = new MsgPlayerInfo();
+        RandomWarsProtocol.MsgPlayerInfo pinfo = new RandomWarsProtocol.MsgPlayerInfo();
 
         pinfo.PlayerUId = baseinfo.PlayerUId;
         pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;
@@ -960,7 +1117,7 @@ public class NetInfo
 
     public void SetOtherBase(MsgPlayerBase baseinfo)
     {
-        MsgPlayerInfo pinfo = new MsgPlayerInfo();
+        RandomWarsProtocol.MsgPlayerInfo pinfo = new RandomWarsProtocol.MsgPlayerInfo();
 
         pinfo.PlayerUId = baseinfo.PlayerUId;
         pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;

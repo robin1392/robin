@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using RandomWarsProtocol;
+//using RandomWarsProtocol;
+using Service.Template.Common;
 using Newtonsoft.Json.Linq;
 
 [Serializable]

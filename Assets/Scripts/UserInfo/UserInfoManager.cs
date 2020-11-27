@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
 using RandomWarsProtocol;
+using Template.Account.RandomWarsAccount.Common;
 
 public class UserInfo
 {
@@ -22,6 +23,13 @@ public class UserInfo
     {
         get => _userNickName;
         private set => _userNickName = value;
+    }
+
+    private string _playerGuid;
+    public string playerGuid
+    {
+        get => _playerGuid;
+        private set => _playerGuid = value;
     }
 
     public int trophy;
@@ -154,6 +162,11 @@ public class UserInfo
     public void SetNickName(string nickname)
     {
         _userNickName = nickname;
+    }
+
+    public void SetPlayerGuid(string playerGuid)
+    {
+        _playerGuid = playerGuid;
     }
 
     public void SetTicketId(string ticket)
@@ -301,7 +314,38 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
     }
-    
+
+
+    public void SetAccountInfo(MsgAccount info)
+    {
+        SetUserKey(info.PlatformId);
+        SetPlayerGuid(info.PlayerInfo.PlayerGuid);
+        _userInfo.SetNickName(info.PlayerInfo.Name);
+        _userInfo.diamond = info.PlayerInfo.Diamond;
+        _userInfo.gold = info.PlayerInfo.Gold;
+        _userInfo.key = info.PlayerInfo.Key;
+        _userInfo.trophy = info.PlayerInfo.Trophy;
+        _userInfo.nClass = Convert.ToInt32(info.PlayerInfo.Class);
+        _userInfo.winStreak = Convert.ToInt32(info.PlayerInfo.WinStreak);
+
+        for (int i = 0; i < info.DeckInfo.Length; i++)
+        {
+            _userInfo.SetDeck(i, info.DeckInfo[i].DiceIds);
+        }
+
+        _userInfo.dicGettedDice.Clear();
+        for (int i = 0; i < info.DiceInfo.Length; i++)
+        {
+            _userInfo.dicGettedDice.Add(info.DiceInfo[i].Id, new int[2] { info.DiceInfo[i].Level, info.DiceInfo[i].Count });
+        }
+
+        _userInfo.dicBox.Clear();
+        for (int i = 0; i < info.BoxInfo.Length; i++)
+        {
+            _userInfo.dicBox.Add(info.BoxInfo[i].Id, info.BoxInfo[i].Count);
+        }
+    }
+
     public void SetUserKey(string userid)
     {
         _userInfo.SetUserKey(userid);
@@ -310,6 +354,11 @@ public class UserInfoManager : Singleton<UserInfoManager>
     public void SetUserNickName(string nickname)
     {
         _userInfo.SetNickName(nickname);
+    }
+
+    public void SetPlayerGuid(string playerGuid)
+    {
+        _userInfo.SetPlayerGuid(playerGuid);
     }
 
     public void SetTicketId(string ticket)

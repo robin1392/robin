@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RandomWarsProtocol;
+using Service.Template.Common;
 
 namespace ED
 {
@@ -11,7 +11,7 @@ namespace ED
     public class Data_Dice : ScriptableObject
     {
         public int id;
-        public DICE_GRADE grade;
+        public ITEM_GRADE grade;
         public DICE_CAST_TYPE castType;
         public DICE_MOVE_TYPE moveType;
         public DICE_MOVE_TYPE targetMoveType;

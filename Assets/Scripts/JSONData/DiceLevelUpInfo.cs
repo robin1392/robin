@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
-using RandomWarsProtocol;
+using Service.Template.Common;
 
 public class DiceLevelUpNeedInfo
 {
-    public DICE_GRADE diceGrade;
+    public ITEM_GRADE diceGrade;
     public int needDiceCount;
     public int needGold;
     public int addTowerHp;

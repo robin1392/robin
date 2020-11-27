@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG;
 using DG.Tweening;
-using RandomWarsProtocol;
+using Service.Template.Common;
 using RandomWarsProtocol.Msg;
 
 namespace ED
@@ -86,7 +86,7 @@ namespace ED
             int diceCount = 0;
 
             image_Character.sprite = FileHelper.GetIllust(JsonDataManager.Get().dataDiceInfo.dicData[pData.id].illustName);
-            ps_LegendCharacterEffect.gameObject.SetActive(pData.grade == (int)DICE_GRADE.LEGEND);
+            ps_LegendCharacterEffect.gameObject.SetActive(pData.grade == (int)ITEM_GRADE.LEGEND);
             ps_NormalCharacterEffect.gameObject.SetActive(!ps_LegendCharacterEffect.gameObject.activeSelf);
 
             if (ps_NormalCharacterEffect.gameObject.activeSelf)
@@ -156,8 +156,11 @@ namespace ED
 
         public void Click_Upgrade()
         {
-            NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
-            
+            //NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
+            NetworkManager.Get().HttpSend(Template.Item.RandomWarsDice.Common.ERandomWarsDiceProtocol.LEVELUP_DICE_REQ,
+                UserInfoManager.Get().GetUserInfo().playerGuid, data.id);
+
+
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
 
@@ -318,23 +321,23 @@ namespace ED
             int gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
             switch (data.grade)
             {
-                case (int)DICE_GRADE.NORMAL:
+                case (int)ITEM_GRADE.NORMAL:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
                     break;
-                case (int)DICE_GRADE.MAGIC:
+                case (int)ITEM_GRADE.MAGIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_MAGIC;
                     break;
-                case (int)DICE_GRADE.EPIC:
+                case (int)ITEM_GRADE.EPIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_EPIC;
                     break;
-                case (int)DICE_GRADE.LEGEND:
+                case (int)ITEM_GRADE.LEGEND:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_LEGEND;
                     break;
             }
             
             text_Grade.text = LocalizationManager.GetLangDesc( gradeindex);
             
-            if(data.grade == (int)DICE_GRADE.NORMAL)
+            if(data.grade == (int)ITEM_GRADE.NORMAL)
                 text_Grade.color = UnityUtil.HexToColor("FFFFFF");
             else
                 text_Grade.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);

@@ -62,7 +62,8 @@ namespace RandomWarsService.Network.Http
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = "application/json";
             request.Method = "POST";
-
+                       
+            
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(json);

@@ -249,14 +249,17 @@ public class GameStateManager : Singleton<GameStateManager>
         if (NetworkManager.Get().UserId.Length > 0)
         {
             //WebPacket.Get().SendUserAuth(NetworkManager.Get().UserId, UserAuthOK);
-            NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+            //NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+            NetworkManager.Get().HttpSend(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, NetworkManager.Get().UserId, 1);
         }
         else
         {
             string userid = UserInfoManager.Get().GetUserInfo().userID;
             
             //WebPacket.Get().SendUserAuth(userid, UserAuthOK);
-            NetworkManager.Get().AuthUserReq(userid);
+           // NetworkManager.Get().AuthUserReq(userid);
+            NetworkManager.Get().HttpSend(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, userid, 1);
+
             // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
             // if (userid == "")
             // {
@@ -268,7 +271,7 @@ public class GameStateManager : Singleton<GameStateManager>
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
         ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
 #endif
-        
+
     }
 
     public void UserAuthOK()
