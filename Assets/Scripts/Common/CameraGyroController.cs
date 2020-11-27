@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class CameraGyroController : MonoBehaviour
+public class CameraGyroController : SingletonDestroy<CameraGyroController>
 {
     private float _x;
     private float _y;
@@ -52,5 +52,22 @@ public class CameraGyroController : MonoBehaviour
     private void OnDestroy()
     {
         Input.gyro.enabled = false;
+    }
+
+    public void FocusIn()
+    {
+        transform.DOKill();
+        Input.gyro.enabled = false;
+        
+        var targetPos = originPos + transform.forward * 5f;
+        transform.DOMove(targetPos, 1f).SetEase(Ease.OutQuart);
+    }
+
+    public void FocusOut()
+    {
+        transform.DOMove(originPos, 1f).SetEase(Ease.OutQuart).OnComplete(() =>
+        {
+            Input.gyro.enabled = true;
+        });
     }
 }

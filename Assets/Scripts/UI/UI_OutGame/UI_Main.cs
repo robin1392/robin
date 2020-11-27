@@ -13,6 +13,8 @@ namespace ED
     {
         [Header("Main UI")] 
         public RectTransform rts_MainPages;
+        public RectTransform rts_MainContents;
+        public RectTransform rts_SafeArea;
         public RectTransform[] arrRts_MainButtons;
         private int currentPageNum = 2;
         private bool isDragging;
@@ -162,6 +164,9 @@ namespace ED
         {
             NetworkManager.Get().playType = Global.PLAY_TYPE.BATTLE;
             
+            ShowMainUI(false);
+            CameraGyroController.Get().FocusIn();
+            
             if (NetworkManager.Get().UseLocalServer == true)
             {
                 NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
@@ -175,6 +180,9 @@ namespace ED
         private void ConnectCoop()
         {
             NetworkManager.Get().playType = Global.PLAY_TYPE.COOP;
+            
+            ShowMainUI(false);
+            CameraGyroController.Get().FocusIn();
             
             if (NetworkManager.Get().UseLocalServer == true)
             {
@@ -198,6 +206,7 @@ namespace ED
             }
             
             btn_PlayBattle.interactable = true;
+            btn_PlayCoop.interactable = true;
         }
 
         public void Click_BoxOpen(int id, UI_BoxOpenPopup.COST_TYPE costType, int cost)
@@ -228,6 +237,60 @@ namespace ED
             panel_Dice.ResetYPos();
             panel_Dice.HideSelectPanel();
             panel_Dice.BroadcastMessage("DeactivateSelectedObject", SendMessageOptions.DontRequireReceiver);
+        }
+
+        public void ShowMainUI(bool isShow)
+        {
+            var fade = 0f;
+
+            if (isShow)
+            {
+                fade = 1f;
+            }
+            
+            var images = rts_MainContents.GetComponentsInChildren<Image>();
+            for (int i = 0; i < images.Length; i++)
+            {
+                if (images[i].CompareTag("UI_AlphaImage") == false)
+                    images[i].DOFade(fade, 0.2f);
+            }
+
+            var texts = rts_MainContents.GetComponentsInChildren<Text>();
+            for (int i = 0; i < texts.Length; i++)
+            {
+                texts[i].DOFade(fade, 0.2f);
+            }
+
+            images = rts_SafeArea.GetComponentsInChildren<Image>();
+            for (int i = 0; i < images.Length; i++)
+            {
+                if (images[i].CompareTag("UI_AlphaImage") == false)
+                    images[i].DOFade(fade, 0.2f);
+            }
+
+            texts = rts_SafeArea.GetComponentsInChildren<Text>();
+            for (int i = 0; i < texts.Length; i++)
+            {
+                texts[i].DOFade(fade, 0.2f);
+            }
+
+            for (int j = 0; j < arrRts_MainButtons.Length; ++j)
+            {
+                images = arrRts_MainButtons[j].GetComponentsInChildren<Image>();
+                for (int i = 0; i < images.Length; i++)
+                {
+                    if (images[i].CompareTag("UI_AlphaImage") == false)
+                        images[i].DOFade(fade, 0.2f);
+                }
+
+                texts = arrRts_MainButtons[j].GetComponentsInChildren<Text>();
+                for (int i = 0; i < texts.Length; i++)
+                {
+                    texts[i].DOFade(fade, 0.2f);
+                }
+            }
+            
+            
         }
 
         private Vector2 _pointerDownPos;

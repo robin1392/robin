@@ -572,6 +572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad8d024c37eb649c3932c849c0e7a3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instanceID: 0
 --- !u!114 &1226850302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1307,6 +1308,11 @@ PrefabInstance:
       propertyPath: arrRts_MainButtons.Array.data[3]
       value: 
       objectReference: {fileID: 6180031957008467225}
+    - target: {fileID: 6180031956623453752, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: rts_MainContents
+      value: 
+      objectReference: {fileID: 6180031957008467228}
     - target: {fileID: 6180031956623453753, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1765,6 +1771,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &6180031957008467228 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2497836982382980185, guid: 94c073845c7dd474a92cf5a2b07597d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6180031957008467223}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6362351360819374707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3285,6 +3297,11 @@ PrefabInstance:
     - target: {fileID: 6362351358718849229, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6362351359155974312, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6362351359210239236, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
