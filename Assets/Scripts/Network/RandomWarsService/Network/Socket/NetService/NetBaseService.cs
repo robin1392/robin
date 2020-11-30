@@ -238,7 +238,6 @@ namespace RandomWarsService.Network.Socket.NetService
             using (var ms = new MemoryStream())
             {
                 bf.Serialize(ms, clientSession.SessionId);
-                bf.Serialize(ms, (byte)clientSession.NetState);
                 clientSession.Send((int)EInternalProtocol.AUTH_SESSION_REQ,
                     ms.ToArray(),
                     ms.ToArray().Length);

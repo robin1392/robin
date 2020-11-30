@@ -298,13 +298,12 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void ConnectServer(Global.PLAY_TYPE type, Action callback = null)
     {
-        // 배틀정보..저장
-        SaveBattleInfo();
+        //// 배틀정보..저장
+        //SaveBattleInfo();
 
         // 시작하면서 상대 디스커넥트
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
-        
         SetReconnect(false);        // reconnect
 
         playType = type;
@@ -509,97 +508,102 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
     #region read write file
-    public void BinarySerialize(NetBattleInfo data, string filePath)
-    {
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
-        formatter.Serialize(stream, data);
-        stream.Close();
-    }
+    //public void BinarySerialize(NetBattleInfo data, string filePath)
+    //{
+    //    BinaryFormatter formatter = new BinaryFormatter();
+    //    FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
+    //    formatter.Serialize(stream, data);
+    //    stream.Close();
+    //}
 
-    public NetBattleInfo BinaryDeserialize(string filePath)
-    {
-        try
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(filePath, FileMode.Open);
-            NetBattleInfo patchinfo = (NetBattleInfo)formatter.Deserialize(stream);
-            stream.Close();
+    //public NetBattleInfo BinaryDeserialize(string filePath)
+    //{
+    //    try
+    //    {
+    //        BinaryFormatter formatter = new BinaryFormatter();
+    //        FileStream stream = new FileStream(filePath, FileMode.Open);
+    //        NetBattleInfo patchinfo = (NetBattleInfo)formatter.Deserialize(stream);
+    //        stream.Close();
 
-            return patchinfo;
-        }
-        catch
-        {
-            // game frame -- init
-            return null;
-        }
+    //        return patchinfo;
+    //    }
+    //    catch
+    //    {
+    //        // game frame -- init
+    //        return null;
+    //    }
 
-    }
+    //}
 
-    // 배틀 인포 파일이 잇는가??
-    public NetBattleInfo ReadBattleInfo()
-    {
-        string battlePath = Application.persistentDataPath + _battlePath;
-        if (File.Exists(battlePath) == false)
-        {
-            return null;
-        }
-        else
-        {
-            _battleInfo = BinaryDeserialize(battlePath);
-            return _battleInfo;    
-        }
-    }
-    
+    //// 배틀 인포 파일이 잇는가??
+    //public NetBattleInfo ReadBattleInfo()
+    //{
+    //    string battlePath = Application.persistentDataPath + _battlePath;
+    //    if (File.Exists(battlePath) == false)
+    //    {
+    //        return null;
+    //    }
+    //    else
+    //    {
+    //        _battleInfo = BinaryDeserialize(battlePath);
+    //        return _battleInfo;    
+    //    }
+    //}
 
-    public void SaveBattleInfo()
-    {
-        string battlePath = Application.persistentDataPath + _battlePath;
 
-        if (_battleInfo == null)
-            _battleInfo = new NetBattleInfo();
+    //public void SaveBattleInfo()
+    //{
+    //    string battlePath = Application.persistentDataPath + _battlePath;
 
-        _battleInfo.serverAddr = _serverAddr;
-        _battleInfo.serverPort = _port;
-        _battleInfo.serverSession = _gameSession;
-        _battleInfo.battleStartTime = DateTime.UtcNow;
+    //    if (_battleInfo == null)
+    //        _battleInfo = new NetBattleInfo();
 
-        _battleInfo.battleStart = true;
+    //    _battleInfo.serverAddr = _serverAddr;
+    //    _battleInfo.serverPort = _port;
+    //    _battleInfo.serverSession = _gameSession;
+    //    _battleInfo.battleStartTime = DateTime.UtcNow;
+
+    //    _battleInfo.battleStart = true;
         
-        print(_battleInfo.battleStartTime);
+    //    print(_battleInfo.battleStartTime);
 
-        BinarySerialize(_battleInfo, battlePath);
-    }
+    //    BinarySerialize(_battleInfo, battlePath);
+    //}
 
-    public void DeleteBattleInfo()
-    {
-        string battlePath = Application.persistentDataPath + _battlePath;
-        _battleInfo = BinaryDeserialize(battlePath);
+    //public void DeleteBattleInfo()
+    //{
+    //    string battlePath = Application.persistentDataPath + _battlePath;
+    //    _battleInfo = BinaryDeserialize(battlePath);
 
-        if (_battleInfo == null)
-            return;
+    //    if (_battleInfo == null)
+    //        return;
 
-        print(_battleInfo.battleStartTime);
+    //    print(_battleInfo.battleStartTime);
 
-        _battleInfo.ResetInfo();
+    //    _battleInfo.ResetInfo();
 
-        // 파일 삭제
-        File.Delete(battlePath);
+    //    // 파일 삭제
+    //    File.Delete(battlePath);
 
-        _battleInfo = null;
-    }
+    //    _battleInfo = null;
+    //}
 
     #endregion
     
     
     #region reconnect to do
 
+    public bool CheckReconnection()
+    {
+        return _clientSocket.CheckReconnection();
+    }
+
     public void ReconnectPacket(MsgReconnectGameAck msg)
     {
         // 에러코드가 0 이 아닐경우는 게임에 이상이 있다는 서버 메세지니...그냥 리턴 시켜서..메인으로
         if (msg.ErrorCode != 0)
         {
-            DeleteBattleInfo();
+            //DeleteBattleInfo();
             DisconnectSocket();
             
             SetReconnect(false);

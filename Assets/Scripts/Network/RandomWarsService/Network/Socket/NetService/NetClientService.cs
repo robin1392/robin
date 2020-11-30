@@ -12,34 +12,137 @@ namespace RandomWarsService.Network.Socket.NetService
 {
     public class NetClientService : NetBaseService
     {
-        public ClientSession ClientSession { get; set; }
+        private ClientSession _clientSession;
 
         // 네트워크 상태 큐
         private Queue<ClientSession> _netEventQueue;
 
+
+        private string _binarySerializePath;
+        private string _gameSessionId;
+        private string _playerSessionId;
+        private string _serverAddr;
+        private int _port;
         private byte _retryConnectCount;
+        private DateTime _reconnectCheckTime;
+        private readonly int _reconnectCheckInterval = 5;
+        private readonly int _reconnectCheckLimit = 10;
 
 
-        public NetClientService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring)
+
+        public NetClientService(PacketHandler packetHandler, ILog logger, int maxConnection, int bufferSize, int keepAliveTime, int keepAliveInterval, bool onMonitoring, string binarySerializePath)
             : base(packetHandler, logger, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
         {
             _netEventQueue = new Queue<ClientSession>();
 
-            ClientSession = new ClientSession(_logger, _bufferSize);
-            ClientSession.CompletedMessageCallback += OnMessageCompleted;
+            _clientSession = new ClientSession(_logger, _bufferSize);
+            _clientSession.CompletedMessageCallback += OnMessageCompleted;
 
+
+            _binarySerializePath = binarySerializePath;
+            _serverAddr = string.Empty;
+            _gameSessionId = string.Empty;
+            _playerSessionId = string.Empty;
+            _port = 0;
             _retryConnectCount = 0;
+            _reconnectCheckTime = DateTime.UtcNow.AddSeconds(_reconnectCheckInterval);
         }
 
 
         public override void Update()
         {
+            if (IsConnected() == false)
+            {
+                return;
+            }
+
+
             // 연결 이벤트 처리
             ProcessConnectionEvent();
 
 
             // 패킷을 처리한다.
             _packetHandler.Update();
+
+
+            DateTime now = DateTime.UtcNow;
+            if (_reconnectCheckTime < now)
+            {
+                _reconnectCheckTime = now.AddSeconds(_reconnectCheckInterval);
+                BinarySerialize();
+            }
+        }
+
+
+        private void BinarySerialize()
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                { "serverAddr", _serverAddr },
+                { "port", _port.ToString()},
+                { "gameSessionId", _gameSessionId },
+                { "playerSessionId", _playerSessionId },
+                { "reconnectCheckTime", _reconnectCheckTime.ToString() },
+            };
+
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(_binarySerializePath, FileMode.OpenOrCreate);
+            formatter.Serialize(stream, values);
+            stream.Close();
+        }
+
+
+        private bool BinaryDeserialize()
+        {
+            if(File.Exists(_binarySerializePath) == false)
+            {
+                return false;
+            }
+
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(_binarySerializePath, FileMode.Open);
+            Dictionary<string, string> values = (Dictionary<string, string>)formatter.Deserialize(stream);
+
+            _serverAddr = values["serverAddr"];
+            _port = int.Parse(values["port"]);
+            _gameSessionId = values["gameSessionId"];
+            _playerSessionId = values["playerSessionId"];
+            _reconnectCheckTime = DateTime.Parse(values["reconnectCheckTime"]);
+            
+            stream.Close();
+            return true;
+        }
+
+
+        public bool IsConnected()
+        {
+            if (_clientSession == null || _clientSession.Socket == null)
+            {
+                return false;
+            }
+
+            return _clientSession.Socket.Connected;
+        }
+
+
+        public bool CheckReconnection()
+        {
+            if (BinaryDeserialize() == false)
+            {
+                return false;
+            }
+
+
+            if (_reconnectCheckTime.AddSeconds(_reconnectCheckLimit) < DateTime.UtcNow)
+            {
+                return false;
+            }
+
+
+            Connect(_serverAddr, _port, _playerSessionId);
+            return true;
         }
 
 
@@ -48,11 +151,19 @@ namespace RandomWarsService.Network.Socket.NetService
         /// </summary>
         /// <param name="serverAddr"></param>
         /// <param name="port"></param>
-        public void Connect(string serverAddr, int port)
+        public void Connect(string serverAddr, int port, string playerSessionId)
         {
             System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.LingerState = new LingerOption(true, 10);
             socket.NoDelay = true;
+
+
+            _clientSession.SessionId = playerSessionId;
+            _serverAddr = serverAddr;
+            _gameSessionId = string.Empty;
+            _playerSessionId = playerSessionId;
+            _port = port;
+            _reconnectCheckTime = DateTime.UtcNow;
 
 
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
@@ -81,12 +192,12 @@ namespace RandomWarsService.Network.Socket.NetService
                 SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
                 receiveArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
                 receiveArgs.SetBuffer(new byte[_bufferSize], 0, _bufferSize);
-                receiveArgs.UserToken = ClientSession;
+                receiveArgs.UserToken = _clientSession;
 
                 SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
                 sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
                 sendArgs.SetBuffer(new byte[_bufferSize], 0, _bufferSize);
-                sendArgs.UserToken = ClientSession;
+                sendArgs.UserToken = _clientSession;
 
                 // 소켓 옵션 설정.
                 socket.LingerState = new LingerOption(true, 10);
@@ -102,31 +213,31 @@ namespace RandomWarsService.Network.Socket.NetService
 
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
-                SendInternalAuthSessionReq(ClientSession);
+                SendInternalAuthSessionReq(_clientSession);
             }
             else
             {
-                if (_retryConnectCount++ > 4)
-                {
-                    if (ClientSession.NetState == ENetState.Connecting)
-                    {
-                        ClientSession.NetState = ENetState.Connected;
-                    }
-                    else
-                    {
-                        ClientSession.NetState = ENetState.Reconnected;
-                    }
+                //if (_retryConnectCount++ > 4)
+                //{
+                //    if (ClientSession.NetState == ENetState.Connecting)
+                //    {
+                //        ClientSession.NetState = ENetState.Connected;
+                //    }
+                //    else
+                //    {
+                //        ClientSession.NetState = ENetState.Reconnected;
+                //    }
 
-                    ClientSession.DisconnectState = ESessionState.TimeOut;
-                    lock (_netEventQueue)
-                    {
-                        _netEventQueue.Enqueue(ClientSession);
-                    }
-                    return;
-                }
+                //    ClientSession.DisconnectState = ESessionState.TimeOut;
+                //    lock (_netEventQueue)
+                //    {
+                //        _netEventQueue.Enqueue(ClientSession);
+                //    }
+                //    return;
+                //}
 
                 IPEndPoint remoteIpEndPoint = e.RemoteEndPoint as IPEndPoint;
-                Connect(remoteIpEndPoint.Address.ToString(), remoteIpEndPoint.Port);
+                //Connect(remoteIpEndPoint.Address.ToString(), remoteIpEndPoint.Port);
                 _logger.Error(string.Format("Failed to connect server(error: {0}), Retry to connect. address: {1}", e.SocketError, remoteIpEndPoint.Address + ":" + remoteIpEndPoint.Port));
             }
         }
@@ -137,12 +248,12 @@ namespace RandomWarsService.Network.Socket.NetService
         /// </summary>
         public void Disconnect()
         {
-            if (ClientSession.NetState == ENetState.Disconnected)
+            if (_clientSession.NetState == ENetState.Disconnected)
             {
                 return;
             }
-            
-            ClientSession.Disconnect();
+
+            _clientSession.Disconnect();
         }
 
 
@@ -237,30 +348,14 @@ namespace RandomWarsService.Network.Socket.NetService
             {
                 case EInternalProtocol.AUTH_SESSION_ACK:
                     {
-                        ENetState netState;
-                        ESessionState sessionState;
                         var bf = new BinaryFormatter();
                         using (var ms = new MemoryStream(msg))
                         {
-                            netState = (ENetState)(byte)bf.Deserialize(ms);
-                            sessionState = (ESessionState)(short)bf.Deserialize(ms);
+                            clientSession.NetState = (ENetState)(byte)bf.Deserialize(ms);
+                            clientSession.DisconnectState = (ESessionState)(short)bf.Deserialize(ms);
                         }
 
 
-                        if (netState == ENetState.Connected)
-                        {
-                            if (clientSession.NetState == ENetState.Connecting)
-                            {
-                                clientSession.NetState = ENetState.Connected;
-                            }
-                            else
-                            {
-                                clientSession.NetState = ENetState.Reconnected;
-                            }
-                        }
-
-
-                        clientSession.DisconnectState = sessionState;
                         lock (_netEventQueue)
                         {
                             _netEventQueue.Enqueue(clientSession);
@@ -294,28 +389,28 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        public void PauseSession(ClientSession clientSession)
+        public void PauseSession()
         {
-            clientSession.PauseStartTimeTick = DateTime.UtcNow.Ticks;
-            SendInternalPauseSessionReq(clientSession);
+            _clientSession.PauseStartTimeTick = DateTime.UtcNow.Ticks;
+            SendInternalPauseSessionReq(_clientSession);
         }
 
 
-        public void ResumeSession(ClientSession clientSession)
+        public void ResumeSession()
         {
-            if (clientSession.PauseStartTimeTick == 0)
+            if (_clientSession.PauseStartTimeTick == 0)
             {
                 return;
             }
 
-            if (clientSession.PauseStartTimeTick + (TimeSpan.TicksPerSecond * 10) < DateTime.UtcNow.Ticks)
+            if (_clientSession.PauseStartTimeTick + (TimeSpan.TicksPerSecond * 10) < DateTime.UtcNow.Ticks)
             {
-                clientSession.GetPeer().Disconnect(ESessionState.Wait);
+                _clientSession.GetPeer().Disconnect(ESessionState.Wait);
                 return;
             }
 
-            clientSession.NetState = ENetState.Connected;
-            SendInternalResumeSessionReq(clientSession);
+            _clientSession.NetState = ENetState.Connected;
+            SendInternalResumeSessionReq(_clientSession);
         }
     }
 }

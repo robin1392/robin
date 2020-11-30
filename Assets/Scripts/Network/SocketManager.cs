@@ -58,26 +58,26 @@ public class SocketManager
     {
         NetLogger netLogger = new NetLogger();
         PacketHandler handler = new PacketHandler(recvProcessor, netLogger, 100, 10240);
-        _netService = new NetClientService(handler, netLogger, 1, 10240, 5000, 1000, false);
+        _netService = new NetClientService(handler, netLogger, 1, 10240, 5000, 1000, false, Application.persistentDataPath + "/NetState.bytes");
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;
         _netService.ClientReconnectedCallback += OnClientReconnected;
     }
 
 
-    public void Connect(string host, int port , string clientSessionId, Action connectCallback = null)
+    public void Connect(string host, int port , string playerSessionId, Action connectCallback = null)
     {
-        _netService.ClientSession.NetState = ENetState.Connecting;
-        _netService.ClientSession.SessionId = clientSessionId;
-        _netService.Connect(host, port);
+        //_netService.ClientSession.NetState = ENetState.Connecting;
+        //_netService.ClientSession.SessionId = clientSessionId;
+        _netService.Connect(host, port, playerSessionId);
         _connectCallBack = connectCallback;
     }
     
-    public void ReConnect(string host, int port , string clientSessionId, Action reconnectCallback = null)
+    public void ReConnect(string host, int port , string playerSessionId, Action reconnectCallback = null)
     {
-        _netService.ClientSession.NetState = ENetState.Reconnecting;
-        _netService.ClientSession.SessionId = clientSessionId;
-        _netService.Connect(host, port);
+        //_netService.ClientSession.NetState = ENetState.Reconnecting;
+        //_netService.ClientSession.SessionId = clientSessionId;
+        _netService.Connect(host, port, playerSessionId);
         _reconnectCallBack = reconnectCallback;
     }
 
@@ -92,13 +92,13 @@ public class SocketManager
 
     public void Pause()
     {
-        _netService.PauseSession(_netService.ClientSession);
+        _netService.PauseSession();
     }
 
 
     public void Resume()
     {
-        _netService.ResumeSession(_netService.ClientSession);
+        _netService.ResumeSession();
     }
 
 
@@ -110,9 +110,9 @@ public class SocketManager
 
     public void PrintNetworkStatus()
     {
-        UnityUtil.Print("NETWORK STATUS  ", 
-            "Recv queue count: " + _netService.ReceiveQueueCount().ToString() 
-            + ", Send queue count: " + _netService.ClientSession.SendQueueCount().ToString(), "magenta");
+        //UnityUtil.Print("NETWORK STATUS  ", 
+        //    "Recv queue count: " + _netService.ReceiveQueueCount().ToString() 
+        //    + ", Send queue count: " + _netService.ClientSession.SendQueueCount().ToString(), "magenta");
     }
     
     
@@ -126,7 +126,7 @@ public class SocketManager
 
         if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
             //
             GameStateManager.Get().MoveMainScene();
@@ -154,7 +154,7 @@ public class SocketManager
         //
         if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
             //
             GameStateManager.Get().MoveMainScene();
@@ -181,7 +181,7 @@ public class SocketManager
 
         if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
             //
             GameStateManager.Get().MoveMainScene();
@@ -198,6 +198,7 @@ public class SocketManager
 
 
 
+
     public void Update()
     {
         _netService.Update();
@@ -210,5 +211,9 @@ public class SocketManager
     }
 
 
+    public bool CheckReconnection()
+    {
+        return _netService.CheckReconnection();
+    }
     
 }

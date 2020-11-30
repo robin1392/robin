@@ -643,9 +643,9 @@ namespace ED
                     break;
             }
 
-            // 스폰이 불릴때마다 시간갱신을 위해 저장
-            if (NetworkManager.Get() && IsNetwork)
-                NetworkManager.Get().SaveBattleInfo();
+            //// 스폰이 불릴때마다 시간갱신을 위해 저장
+            //if (NetworkManager.Get() && IsNetwork)
+            //    NetworkManager.Get().SaveBattleInfo();
         }
 
         public void NetMonsterSpawnNotify(int uid, MsgBossMonster msg)
@@ -850,7 +850,7 @@ namespace ED
                 NetworkManager.Get().DisconnectSocket();
 
             // 잠시 테스트로 주석
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             GameStateManager.Get().MoveMainScene();
         }
 
