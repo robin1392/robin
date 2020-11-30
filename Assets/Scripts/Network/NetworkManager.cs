@@ -152,7 +152,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private NetInfo _netInfo = null;
 
-    private NetBattleInfo _battleInfo = null;
+    //private NetBattleInfo _battleInfo = null;
 
     private Action<MsgOpenBoxAck> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
@@ -260,7 +260,7 @@ public class NetworkManager : Singleton<NetworkManager>
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
         
-        _battleInfo = null;
+        //_battleInfo = null;
 
         _packetSend = null;
         _packetRecv = null;
@@ -299,9 +299,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void ConnectServer(Global.PLAY_TYPE type, Action callback = null)
     {
-        //// 배틀정보..저장
-        //SaveBattleInfo();
-
         // 시작하면서 상대 디스커넥트
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
@@ -311,21 +308,21 @@ public class NetworkManager : Singleton<NetworkManager>
         _clientSocket.Connect(_serverAddr, _port, _gameSession, callback);
     }
 
-    public void ReConnectServer(Global.PLAY_TYPE type ,  string serverAddr , int port , string session , Action callback = null)
-    {
-        _serverAddr = serverAddr;
-        _port = port;
-        _gameSession = session;
+    //public void ReConnectServer(Global.PLAY_TYPE type ,  string serverAddr , int port , string session , Action callback = null)
+    //{
+    //    _serverAddr = serverAddr;
+    //    _port = port;
+    //    _gameSession = session;
         
-        // 시작하면서 상대 멈춤 초기화
-        SetOtherDisconnect(false);    // disconnect
-        SetResume(false);        // resume
+    //    // 시작하면서 상대 멈춤 초기화
+    //    SetOtherDisconnect(false);    // disconnect
+    //    SetResume(false);        // resume
 
-        print("ReConnecting....");
+    //    print("ReConnecting....");
 
-        playType = type;
-        _clientSocket.ReConnect(_serverAddr, _port, _gameSession, callback);
-    }
+    //    playType = type;
+    //    _clientSocket.ReConnect(_serverAddr, _port, _gameSession, callback);
+    //}
 
 
     public void OnClientReconnecting()
