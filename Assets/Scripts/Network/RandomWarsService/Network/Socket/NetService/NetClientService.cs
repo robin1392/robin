@@ -258,6 +258,7 @@ namespace RandomWarsService.Network.Socket.NetService
                 return;
             }
 
+            _clientSession.DisconnectState = sessionState;
             _clientSession.Disconnect();
         }
 
