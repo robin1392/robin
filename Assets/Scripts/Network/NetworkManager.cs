@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CodeStage.AntiCheat.ObscuredTypes;
+using ED;
 using UnityEngine;
 using UnityEngine.Events;
 using RandomWarsService.Network.Socket.NetPacket;
@@ -979,12 +980,18 @@ public class NetInfo
 
     public int UserUID()
     {
-        return playerInfo.PlayerUId;
+        if (NetworkManager.Get().isReconnect)
+            return playerInfo.PlayerUId;
+        else
+            return 0;
     }
 
     public int OtherUID()
     {
-        return otherInfo.PlayerUId;
+        if (NetworkManager.Get().isReconnect)
+            return otherInfo.PlayerUId;
+        else
+            return 1;
     }
 
     public int CoopUID()
