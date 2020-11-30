@@ -124,92 +124,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 22e0b04058ef97848be072c22bb95a21, type: 2}
---- !u!1 &10786391
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 10786392}
-  - component: {fileID: 10786393}
-  m_Layer: 0
-  m_Name: Quad (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 8
-  m_IsActive: 1
---- !u!4 &10786392
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 10786391}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8.4767, y: -13.95624, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8136603715242153753}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &10786393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 10786391}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78396926cbbfc4ac3b48fc5fc34a87d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  data:
-    dataString: UEsDBBQAAAgIAABIIeyhNl82igIAAHoFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGFVF1v2jAU/SvIz+uUAG3p3jagdJPaomZTH5Y+mPiGWDh25I8CrfjvvXZMk9JJk5Aczj3349x77VfCpWmgsEovNGe3igH5NiD+m3wZdMYb2NG1khl/gSPnkTNbeRINnAdquUI89W5G1WA1L77LtfDkBEEneal0PWdrmCpjDcIlFQbQpJX13hKh1wHZRYd9PF/8OTjgVwHSgv4fy8lC0LoB5qvtyFeRnI4DS6KMSEi+nvvgSghuYhXE7pugMmsq0OBlMk5RVEjvNVbA15XFP8O+731ZGrCxJE33M66xN21Q8kO1Daup2bR1PVPhfJrLi0koqg16+8l+lgZzqVV9c8ybJj6HrXixeaD7ghrb62gfnn0s3MktFRu6EvBYgbxTC62cZGi02nlXZ2A464V61zatoNh0vLbWI3hku+bzeNJuPIcgfzcVvF6Fzo9bIBMq9PvK+4DG2fzEisNSmBgJUV/FHwO/6bq/PdFwzbWxaIoJpS9vpZz2VDIPTfNqnJ0qLSHAUUkDkgq7X2IYezrDE1sv7Ynlmvp7EpNH23H9T1wC3PGT5MS0VNtuWgZ+ubpZKi5tBlQXVS+eqdT2Fkx176zgEjpF3nCHTZwqKdv9M/9wy5wuadFzs7CzTsOMWhouAdaEa8L6rtjQ4CGdEH4jgwof/C+q8L8n3+SKYl4RYHKnZLg/H84nvwhrx9nHPSfJ5fmkhAuAydVoUg6HZyuWluloVCaT8SpdpSkJF4FL7DkVy7ZpcVS4QbLTInHpj0/ZYKFpE64e03S74C+16o2fy1JlhQaQ922Ed7GgMQm+EWzOOMrMwFouw+6R15wIVWyA5e+B8tDY+c5qmndRctLwZ2U9kpNpeMByciCHN1BLAwQUAAAICAAASCHsOZsJBW0AAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IzNNVRUEovSizIKAaKGII4pZkpIHa0koG5qUVaqllqqoWlsUWakZFuUophmqGxcZqBhUmSYZKhoVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAASCHsoTZfNooCAAB6BQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAASCHsOZsJBW0AAAB4AAAACQAkAAAAAAAAAAAAAADXAgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAI8DAAAAAA==
-    upgradeData: 
-    file_cachedStartup: {fileID: 0}
-    data_cachedStartup: 
-    cacheStartup: 0
-  showNavGraphs: 1
-  showUnwalkableNodes: 1
-  debugMode: 0
-  debugFloor: 0
-  debugRoof: 1
-  manualDebugFloorRoof: 0
-  showSearchTree: 0
-  unwalkableNodeDebugSize: 0.3
-  logPathResults: 1
-  maxNearestNodeDistance: 100
-  scanOnStartup: 1
-  fullGetNearestSearch: 0
-  prioritizeGraphs: 0
-  prioritizeGraphsLimit: 1
-  colorSettings:
-    _SolidColor: {r: 0.11764706, g: 0.4, b: 0.7882353, a: 0.9}
-    _UnwalkableNode: {r: 1, g: 0, b: 0, a: 0.5}
-    _BoundsHandles: {r: 0.29, g: 0.454, b: 0.741, a: 0.9}
-    _ConnectionLowLerp: {r: 0, g: 1, b: 0, a: 0.5}
-    _ConnectionHighLerp: {r: 1, g: 0, b: 0, a: 0.5}
-    _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
-    _AreaColors:
-    - {r: 0, g: 0, b: 0, a: 0}
-  tagNames: []
-  heuristic: 2
-  heuristicScale: 1
-  threadCount: 1
-  maxFrameTime: 10
-  batchGraphUpdates: 0
-  graphUpdateBatchingInterval: 0.2
-  euclideanEmbedding:
-    mode: 0
-    seed: 0
-    pivotPointRoot: {fileID: 0}
-    spreadOutCount: 1
-  showGraphs: 1
 --- !u!114 &22690607 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 22690607, guid: 58a4a590607854fda9b7098b130c9c79,
@@ -2412,14 +2326,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1148991850, guid: 58a4a590607854fda9b7098b130c9c79, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1897541422, guid: 58a4a590607854fda9b7098b130c9c79, type: 3}
-      propertyPath: m_BlockingMask.m_Bits
-      value: 8453943
-      objectReference: {fileID: 0}
     - target: {fileID: 8136603714903428293, guid: 58a4a590607854fda9b7098b130c9c79,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2485,12 +2391,6 @@ PrefabInstance:
 --- !u!4 &8136603715242153752 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1573731755591559126, guid: 58a4a590607854fda9b7098b130c9c79,
-    type: 3}
-  m_PrefabInstance: {fileID: 8136603715242153751}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &8136603715242153753 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1173776345, guid: 58a4a590607854fda9b7098b130c9c79,
     type: 3}
   m_PrefabInstance: {fileID: 8136603715242153751}
   m_PrefabAsset: {fileID: 0}
