@@ -8,7 +8,7 @@ using ED;
 using RandomWarsService.Network.Socket.NetSession;
 using RandomWarsService.Network.Socket.NetService;
 using RandomWarsService.Network.Socket.NetPacket;
-
+using RandomWarsProtocol;
 
 class NetLogger : RandomWarsService.Core.ILog
 {
@@ -62,6 +62,7 @@ public class SocketManager
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;
         _netService.ClientReconnectedCallback += OnClientReconnected;
+        _netService.ClientReconnectingCallback += NetworkManager.Get().OnClientReconnecting;
     }
 
 
@@ -168,10 +169,12 @@ public class SocketManager
             _serverPeer = peer;
         
         _serverPeer.SetClientSession(session);
-        
+
+
+        NetworkManager.Get().Send(GameProtocol.RECONNECT_GAME_REQ);
         //
-        if (_reconnectCallBack != null)
-            _reconnectCallBack();
+        //if (_reconnectCallBack != null)
+        //    _reconnectCallBack();
     }
 
 

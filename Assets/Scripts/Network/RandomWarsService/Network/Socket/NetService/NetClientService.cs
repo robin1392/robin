@@ -12,6 +12,10 @@ namespace RandomWarsService.Network.Socket.NetService
 {
     public class NetClientService : NetBaseService
     {
+        public delegate void ClientReconnectingDelegate();
+        public ClientReconnectingDelegate ClientReconnectingCallback { get; set; }
+
+
         private ClientSession _clientSession;
 
         // 네트워크 상태 큐
@@ -142,6 +146,11 @@ namespace RandomWarsService.Network.Socket.NetService
 
 
             Connect(_serverAddr, _port, _playerSessionId);
+
+            if (ClientReconnectingCallback != null)
+            {
+                ClientReconnectingCallback();
+            }
             return true;
         }
 
@@ -297,6 +306,16 @@ namespace RandomWarsService.Network.Socket.NetService
                     break;
                 case ENetState.Disconnected:
                     {
+                        if (clientSession.DisconnectState != ESessionState.None 
+                            && clientSession.DisconnectState != ESessionState.Wait)
+                        {
+                            if (_binarySerializePath.Length != 0)
+                            {
+                                File.Delete(_binarySerializePath);
+                            }
+                        }
+                        
+
                         if (ClientDisconnectedCallback != null)
                         {
                             ClientDisconnectedCallback(clientSession, clientSession.DisconnectState);

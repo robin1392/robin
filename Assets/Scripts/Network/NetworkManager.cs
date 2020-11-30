@@ -327,6 +327,15 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
+    public void OnClientReconnecting()
+    {
+        SetReconnect(true);        // reconnect
+        // 시작하면서 상대 멈춤 초기화
+        SetOtherDisconnect(false);    // disconnect
+        SetResume(false);        // resume
+    }
+
+
     public void DisconnectSocket()
     {
         if (_clientSocket != null && _clientSocket.IsConnected() == true)
