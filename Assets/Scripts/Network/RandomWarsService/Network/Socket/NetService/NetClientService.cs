@@ -55,25 +55,21 @@ namespace RandomWarsService.Network.Socket.NetService
 
         public override void Update()
         {
-            if (IsConnected() == false)
-            {
-                return;
-            }
-
-
             // 연결 이벤트 처리
             ProcessConnectionEvent();
 
-
-            // 패킷을 처리한다.
-            _packetHandler.Update();
-
-
-            DateTime now = DateTime.UtcNow;
-            if (_reconnectCheckTime < now)
+            if (IsConnected() == true)
             {
-                _reconnectCheckTime = now.AddSeconds(_reconnectCheckInterval);
-                BinarySerialize();
+                // 패킷을 처리한다.
+                _packetHandler.Update();
+
+
+                DateTime now = DateTime.UtcNow;
+                if (_reconnectCheckTime < now)
+                {
+                    _reconnectCheckTime = now.AddSeconds(_reconnectCheckInterval);
+                    BinarySerialize();
+                }
             }
         }
 
@@ -255,7 +251,7 @@ namespace RandomWarsService.Network.Socket.NetService
         /// <summary>
         /// 서버와의 연결을 끊는다.
         /// </summary>
-        public void Disconnect()
+        public void Disconnect(ESessionState sessionState)
         {
             if (_clientSession.NetState == ENetState.Disconnected)
             {

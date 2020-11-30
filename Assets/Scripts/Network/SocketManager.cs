@@ -86,7 +86,7 @@ public class SocketManager
     {
         if (_serverPeer != null)
         {
-            _netService.Disconnect();
+            _netService.Disconnect(ESessionState.Leave);
             _serverPeer = null;    
         }
     }
