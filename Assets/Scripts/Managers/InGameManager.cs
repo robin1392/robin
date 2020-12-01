@@ -685,9 +685,9 @@ namespace ED
                     break;
             }
 
-            // 스폰이 불릴때마다 시간갱신을 위해 저장
-            if (NetworkManager.Get() && IsNetwork)
-                NetworkManager.Get().SaveBattleInfo();
+            //// 스폰이 불릴때마다 시간갱신을 위해 저장
+            //if (NetworkManager.Get() && IsNetwork)
+            //    NetworkManager.Get().SaveBattleInfo();
         }
 
         public void NetMonsterSpawnNotify(int uid, MsgBossMonster msg)
@@ -892,7 +892,7 @@ namespace ED
                 NetworkManager.Get().DisconnectSocket();
 
             // 잠시 테스트로 주석
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             GameStateManager.Get().MoveMainScene();
         }
 
@@ -1151,8 +1151,8 @@ namespace ED
 
         public void SendSyncAllBattleInfo()
         {
-            if (isGamePlaying == false)
-                return;
+            //if (isGamePlaying == false)
+            //    return;
             
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
@@ -1478,6 +1478,7 @@ namespace ED
                     if (UI_InGamePopup.Get().IsIndicatorActive() == true)
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
+                        UI_InGamePopup.Get().popup_Waiting.SetActive(false);
                     }
                     
                     NetSpawnNotify((int) param[0]);

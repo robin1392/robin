@@ -275,37 +275,41 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
-        
-        NetBattleInfo battleinfo = NetworkManager.Get().ReadBattleInfo();
-        if (battleinfo == null)
+        if (NetworkManager.Get().CheckReconnection() == false)
         {
             ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
         }
-        else
-        {
-            // 배틀 정보 파일 체크 하자
-            print("check file true ");
-            if ( battleinfo.battleStart == true)
-            {
-                TimeSpan timecheck = DateTime.UtcNow - battleinfo.battleStartTime;
-                print("total Seconds : " + timecheck.TotalSeconds);
-                // 정해진 시간 이내이냐 ?? --> 게임 재접속으로 가자
-                if (timecheck.TotalSeconds <= Global.g_reconnectGameTimeCheck)
-                {
-                    NetworkManager.Get().SetReconnect(true);        // reconnect
-                    // go reconnect
-                    NetworkManager.Get().ReConnectServer(Global.PLAY_TYPE.BATTLE , battleinfo.serverAddr  , battleinfo.serverPort , battleinfo.serverSession , ServerReconnectCallBack);
-                }
-                else
-                {
-                    ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
-                }
-            }
-            else
-            {
-                ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
-            }
-        }
+
+        //NetBattleInfo battleinfo = 
+        //if (battleinfo == null)
+        //{
+        //    ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+        //}
+        //else
+        //{
+        //    // 배틀 정보 파일 체크 하자
+        //    print("check file true ");
+        //    if ( battleinfo.battleStart == true)
+        //    {
+        //        TimeSpan timecheck = DateTime.UtcNow - battleinfo.battleStartTime;
+        //        print("total Seconds : " + timecheck.TotalSeconds);
+        //        // 정해진 시간 이내이냐 ?? --> 게임 재접속으로 가자
+        //        if (timecheck.TotalSeconds <= Global.g_reconnectGameTimeCheck)
+        //        {
+        //            NetworkManager.Get().SetReconnect(true);        // reconnect
+        //            // go reconnect
+        //            NetworkManager.Get().ReConnectServer(Global.PLAY_TYPE.BATTLE , battleinfo.serverAddr  , battleinfo.serverPort , battleinfo.serverSession , ServerReconnectCallBack);
+        //        }
+        //        else
+        //        {
+        //            ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+        //    }
+        //}
         
     }
     #endregion

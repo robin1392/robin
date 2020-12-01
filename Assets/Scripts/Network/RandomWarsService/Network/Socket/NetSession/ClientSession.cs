@@ -23,6 +23,8 @@ namespace RandomWarsService.Network.Socket.NetSession
         Duplicated,
         // 타임아웃
         TimeOut,
+        // 정상 종료
+        Leave,
     }
 
     public delegate void CompletedMessageDelegate(ClientSession clientSession, int protocolId, byte[] msg, int length);
