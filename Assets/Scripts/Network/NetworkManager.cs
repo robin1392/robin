@@ -30,8 +30,6 @@ public class NetworkManager : Singleton<NetworkManager>
     private HttpReceiver _httpReceiver;
     private HttpClient _httpClient;
 
-    private int _matchTryCount;
-
 
     // web
     public WebNetworkCommon webNetCommon { get; private set; }
@@ -727,7 +725,6 @@ public class NetworkManager : Singleton<NetworkManager>
             return;
         }
 
-        _matchTryCount = 0;
         UserInfoManager.Get().SetTicketId(msg.TicketId);
         UnityUtil.Print("RECV MATCH START => ticketId", msg.TicketId, "green");
 
@@ -744,7 +741,6 @@ public class NetworkManager : Singleton<NetworkManager>
         }
 
 
-        _matchTryCount++;
         MsgStatusMatchReq msg = new MsgStatusMatchReq();
         msg.UserId = UserInfoManager.Get().GetUserInfo().userID;
         msg.TicketId = ticketId;
@@ -758,14 +754,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (string.IsNullOrEmpty(msg.PlayerSessionId))
         {
-            if (_matchTryCount > 10)
-            {
-                StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
-            }
-            else
-            {
-                StartCoroutine(WaitForMatch());
-            }
+            StartCoroutine(WaitForMatch());
         }
         else
         {
