@@ -217,7 +217,7 @@ namespace ED
             _myUID = isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID;
             id = myUID * 10000;
             
-            if (isMine)
+            if (isMine && NetworkManager.Get().IsConnect())
             {
                 NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
                 StartCoroutine(HitDamageQueueCoroutine());
@@ -225,8 +225,14 @@ namespace ED
 
             isHalfHealth = false;
 
-            if( InGameManager.IsNetwork == false )
+            if (InGameManager.IsNetwork)
+            {
+                
+            }
+            else
+            {
                 sp = 200;
+            }
 
             maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             
@@ -1050,7 +1056,7 @@ namespace ED
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
                 if (InGameManager.IsNetwork == false)
                 {
-                    //InGameManager.Get().EndGame(!isMine);
+                    InGameManager.Get().EndGame(!isMine, 1, null, null, null);
                 }
             }
         }

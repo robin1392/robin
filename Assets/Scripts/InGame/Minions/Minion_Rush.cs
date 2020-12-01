@@ -136,7 +136,6 @@ namespace ED
                 {
                     tick = 0.1f;
                     
-                    RaycastHit hit;
                     var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range, targetLayer);
                     foreach (var raycastHit in hits)
                     {

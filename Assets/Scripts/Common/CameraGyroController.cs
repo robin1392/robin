@@ -31,32 +31,34 @@ public class CameraGyroController : SingletonDestroy<CameraGyroController>
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //transform.Rotate(-Input.gyro.rotationRateUnbiased.x, -Input.gyro.rotationRateUnbiased.y, 0);
 
+        transform.LookAt(ts_Target);
         if (isFade)
         {
-            transform.LookAt(ts_Target);
         }
         else
         {
             if (Input.gyro.rotationRateUnbiased.x < 0.5f && Input.gyro.rotationRateUnbiased.x > -0.5f &&
                 Input.gyro.rotationRateUnbiased.y < 0.5f && Input.gyro.rotationRateUnbiased.y > -0.5f)
             {
-                transform.localRotation =
-                    Quaternion.Lerp(transform.localRotation, originAngle, Time.deltaTime);
+                // transform.localRotation =
+                //     Quaternion.Lerp(transform.localRotation, originAngle, Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, originPos, Time.deltaTime);
             }
             else
             {
-                _x = -Input.gyro.rotationRateUnbiased.x * 2f;
-                _y = -Input.gyro.rotationRateUnbiased.y * 2f;
+                _x = -Input.gyro.rotationRateUnbiased.x;
+                _y = -Input.gyro.rotationRateUnbiased.y;
 
-                _x = Mathf.Clamp(_x, -5f, 5f);
-                _y = Mathf.Clamp(_y, -5f, 5f);
+                _x = Mathf.Clamp(_x, -0.5f, 0.5f);
+                _y = Mathf.Clamp(_y, -0.5f, 0.5f);
                 //Debug.LogFormat("X:{0}, Y:{1}", _x, _y);
-                transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(39f + _x, _y, 0),
-                    Time.deltaTime);
+                // transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(39f + _x, _y, 0),
+                //     Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position,  originPos + new Vector3(_x, _y, 0), Time.deltaTime);
             }
         }
     }
@@ -69,7 +71,7 @@ public class CameraGyroController : SingletonDestroy<CameraGyroController>
     public void FocusIn()
     {
         isFade = true;
-        transform.DOKill();
+        //transform.DOKill();
         Input.gyro.enabled = false;
         
         var targetPos = new Vector3(0, -995.51f, -7.38f);

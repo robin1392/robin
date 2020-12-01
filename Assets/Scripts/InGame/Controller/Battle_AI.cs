@@ -19,7 +19,11 @@ namespace ED
 
         protected override void Start()
         {
+            _myUID = NetworkManager.Get().OtherUID;
+            id = myUID * 10000;
+            
             sp = 200;
+            maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             currentHealth = maxHealth;
             _arrDice = new Dice[15];
             
@@ -45,7 +49,7 @@ namespace ED
             targetPlayer = InGameManager.Get().playerController;
             InGameManager.Get().playerController.targetPlayer = this;
 
-            if (deck == null)
+            if (deck == null || deck.Length == 0)
             {
                 var listDeck = new List<int>();
                 for (var i = 0; i < _arrDiceDeck.Length; i++)
@@ -75,6 +79,9 @@ namespace ED
                 deck = listDeck.ToArray();
             }
 
+            NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray = deck;
+            NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
+            
             SetDeck(deck);
 
             SetColor(E_MaterialType.TOP);

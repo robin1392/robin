@@ -86,6 +86,10 @@ namespace ED
         public void Click_PlayBattle()
         {
             StopAllCoroutines();
+            
+            ShowMainUI(false);
+            CameraGyroController.Get().FocusIn();
+
             if (isAIMode)
             {
                 btn_PlayBattle.interactable = false;
@@ -115,6 +119,9 @@ namespace ED
             //StartCoroutine(ConnectCoop());
             StopAllCoroutines();
             
+            ShowMainUI(false);
+            CameraGyroController.Get().FocusIn();
+
             btn_PlayBattle.interactable = false;
             btn_PlayCoop.interactable = false;
             searchPopup.gameObject.SetActive(true);
@@ -163,9 +170,6 @@ namespace ED
         private void ConnectBattle()
         {
             NetworkManager.Get().playType = Global.PLAY_TYPE.BATTLE;
-            
-            ShowMainUI(false);
-            CameraGyroController.Get().FocusIn();
             
             if (NetworkManager.Get().UseLocalServer == true)
             {

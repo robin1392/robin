@@ -245,13 +245,55 @@ namespace ED
                 playerController.ChangeLayer(true);
                 playerController.isMine = true;
                 playerController.isBottomPlayer = true;
+                
+                // Set MsgUserinfo
+                var msgUserInfo = new MsgPlayerInfo();
+                msgUserInfo.PlayerUId = 1;
+                msgUserInfo.IsBottomPlayer = true;
+                msgUserInfo.IsMaster = true;
+                msgUserInfo.Name = UserInfoManager.Get().GetUserInfo().userNickName;
+                msgUserInfo.CurrentSp = 200;
+                int bonusHP = 0;
+            
+                foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
+                {
+                    if (info.Value.enableDice)
+                    {
+                        if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.Value.id))
+                        {
+                            int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0];
+                            bonusHP += JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level]
+                                .levelUpNeedInfo[info.Value.grade].addTowerHp;
+                        }
+                    }
+                }
+                msgUserInfo.TowerHp = (30000 + bonusHP) * 100;
+                msgUserInfo.SpGrade = 0;
+                msgUserInfo.GetDiceCount = 0;
+                msgUserInfo.DiceIdArray = UserInfoManager.Get().GetUserInfo().GetActiveDeck;
+                msgUserInfo.DiceLevelArray = new short[5]
+                {
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[0]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[1]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[2]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[3]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[4]][0])
+                }; 
+                NetworkManager.Get().GetNetInfo().SetPlayerInfo(msgUserInfo);
+                msgUserInfo = new MsgPlayerInfo();
+                msgUserInfo.PlayerUId = 2;
+                msgUserInfo.IsBottomPlayer = false;
+                msgUserInfo.IsMaster = false;
+                msgUserInfo.CurrentSp = 200;
+                msgUserInfo.TowerHp = (30000 + Random.Range(0, 500)) * 100;
+                NetworkManager.Get().GetNetInfo().SetOtherInfo(msgUserInfo);
 
                 GameObject otherTObj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
                 otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 
                 // name
-                UI_InGame.Get().SetNickName(ObscuredPrefs.GetString("Nickname") , "AI");
+                UI_InGame.Get().SetNickName(UserInfoManager.Get().GetUserInfo().userNickName, "AI");
                 otherTObj.SendMessage("ChangeLayer", false);
                 isAIMode = true;
             }

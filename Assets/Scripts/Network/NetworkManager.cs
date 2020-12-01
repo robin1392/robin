@@ -980,18 +980,12 @@ public class NetInfo
 
     public int UserUID()
     {
-        if (NetworkManager.Get().IsConnect())
-            return playerInfo.PlayerUId;
-        else
-            return 0;
+        return playerInfo.PlayerUId;
     }
 
     public int OtherUID()
     {
-        if (NetworkManager.Get().IsConnect())
-            return otherInfo.PlayerUId;
-        else
-            return 1;
+        return otherInfo.PlayerUId;
     }
 
     public int CoopUID()
