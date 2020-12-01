@@ -58,16 +58,21 @@ public class UI_SearchingPopup : UI_Popup
                 return;
             }
         }
+    }
 
+
+    public void ClickSearchingCancelResult()
+    {
         btn_Cancel.interactable = false;
-        
+
         //
         UI_Main.Get().Click_DisconnectButton();
         Close();
-        
+
         UI_Main.Get().ShowMainUI(true);
         CameraGyroController.Get().FocusOut();
+
     }
     #endregion
-    
+
 }

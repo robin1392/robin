@@ -771,8 +771,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void StopMatchReq(string ticketId)
     {
-        NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
-
         MsgStopMatchReq msg = new MsgStopMatchReq();
         msg.TicketId = ticketId;
         _httpSender.StopMatchReq(msg);
@@ -781,8 +779,16 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
     void OnStopMatchAck(MsgStopMatchAck msg)
-    {
+    { 
+        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        {
+            NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+            UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
+            searchingPopup.ClickSearchingCancelResult();
+        }
+
         UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+        UnityUtil.Print("RECV MATCH STOP => ErrorCode", msg.ErrorCode.ToString(), "green");
     }
 
 
