@@ -316,20 +316,20 @@ public class GameStateManager : Singleton<GameStateManager>
     
     #region server connect ok
 
-    public void ServerConnectCallBack()
-    {
-        UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
+    //public void ServerConnectCallBack()
+    //{
+    //    UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
 
-        switch (NetworkManager.Get().playType)
-        {
-            case Global.PLAY_TYPE.BATTLE:
-                NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
-                break;
-            case Global.PLAY_TYPE.COOP:
-                NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
-                break;
-        }
-    }
+    //    switch (NetworkManager.Get().playType)
+    //    {
+    //        case Global.PLAY_TYPE.BATTLE:
+    //            NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+    //            break;
+    //        case Global.PLAY_TYPE.COOP:
+    //            NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+    //            break;
+    //    }
+    //}
 
     public void CheckSendInGame()
     {

@@ -295,15 +295,14 @@ public class NetworkManager : Singleton<NetworkManager>
         _netInfo.Clear();
     }
 
-    public void ConnectServer(Global.PLAY_TYPE type, Action callback = null)
+    public void ConnectServer(Global.PLAY_TYPE type)
     {
         // 시작하면서 상대 디스커넥트
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
         SetReconnect(false);        // reconnect
-
         playType = type;
-        _clientSocket.Connect(_serverAddr, _port, _gameSession, callback);
+        _clientSocket.Connect(_serverAddr, _port, _gameSession);
     }
 
     //public void ReConnectServer(Global.PLAY_TYPE type ,  string serverAddr , int port , string session , Action callback = null)
@@ -764,7 +763,7 @@ public class NetworkManager : Singleton<NetworkManager>
             SetAddr(msg.ServerAddr, msg.Port, msg.PlayerSessionId);
 
             // 우선 그냥 배틀로 지정하자
-            ConnectServer(Global.PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+            ConnectServer(Global.PLAY_TYPE.BATTLE);
         }
         UnityUtil.Print("RECV MATCH STATUS => ", string.Format("server:{0}, player-session-id:{1}", msg.ServerAddr + ":" + msg.Port, msg.PlayerSessionId), "green");
     }

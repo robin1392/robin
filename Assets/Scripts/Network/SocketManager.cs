@@ -66,21 +66,11 @@ public class SocketManager
     }
 
 
-    public void Connect(string host, int port , string playerSessionId, Action connectCallback = null)
+    public void Connect(string host, int port , string playerSessionId)
     {
-        //_netService.ClientSession.NetState = ENetState.Connecting;
-        //_netService.ClientSession.SessionId = clientSessionId;
         _netService.Connect(host, port, playerSessionId);
-        _connectCallBack = connectCallback;
     }
     
-    public void ReConnect(string host, int port , string playerSessionId, Action reconnectCallback = null)
-    {
-        //_netService.ClientSession.NetState = ENetState.Reconnecting;
-        //_netService.ClientSession.SessionId = clientSessionId;
-        _netService.Connect(host, port, playerSessionId);
-        _reconnectCallBack = reconnectCallback;
-    }
 
     public void Disconnect()
     {
@@ -137,9 +127,16 @@ public class SocketManager
         _serverPeer = new Peer();
         _serverPeer.SetClientSession(session);
 
-        //
-        if (_connectCallBack != null)
-            _connectCallBack();
+
+        switch (NetworkManager.Get().playType)
+        {
+            case Global.PLAY_TYPE.BATTLE:
+                NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ, NetworkManager.Get().gameSession, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                break;
+            case Global.PLAY_TYPE.COOP:
+                NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ, NetworkManager.Get().gameSession, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                break;
+        }
     }
 
 

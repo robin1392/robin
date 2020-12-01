@@ -174,7 +174,7 @@ namespace ED
             if (NetworkManager.Get().UseLocalServer == true)
             {
                 NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE);
                 return;
             }
 
@@ -191,7 +191,7 @@ namespace ED
             if (NetworkManager.Get().UseLocalServer == true)
             {
                 NetworkManager.Get().SetAddr(NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.COOP, GameStateManager.Get().ServerConnectCallBack);
+                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.COOP);
                 return;
             }
 
