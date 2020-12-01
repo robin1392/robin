@@ -33,13 +33,7 @@ public class CameraGyroController : SingletonDestroy<CameraGyroController>
     // Update is called once per frame
     void LateUpdate()
     {
-        //transform.Rotate(-Input.gyro.rotationRateUnbiased.x, -Input.gyro.rotationRateUnbiased.y, 0);
-
-        transform.LookAt(ts_Target);
-        if (isFade)
-        {
-        }
-        else
+        if (isFade == false)
         {
             if (Input.gyro.rotationRateUnbiased.x < 0.5f && Input.gyro.rotationRateUnbiased.x > -0.5f &&
                 Input.gyro.rotationRateUnbiased.y < 0.5f && Input.gyro.rotationRateUnbiased.y > -0.5f)
@@ -61,6 +55,7 @@ public class CameraGyroController : SingletonDestroy<CameraGyroController>
                 transform.position = Vector3.Lerp(transform.position,  originPos + new Vector3(_x, _y, 0), Time.deltaTime);
             }
         }
+        transform.LookAt(ts_Target);
     }
 
     private void OnDestroy()
@@ -77,7 +72,7 @@ public class CameraGyroController : SingletonDestroy<CameraGyroController>
         var targetPos = new Vector3(0, -995.51f, -7.38f);
         transform.DOMove(targetPos, 1f).SetEase(Ease.OutQuart).OnComplete(() =>
         {
-            isFade = false;
+            //isFade = false;
             originAngle = transform.localRotation;
         });
     }

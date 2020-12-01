@@ -1755,6 +1755,7 @@ namespace ED
         {
             int uid = 0;
             if (baseStatId >= 10000) uid = baseStatId / 10000;
+            else if (baseStatId < 1000) return null;
             else uid = baseStatId / 1000;
             //int bsID = baseStatId % 10000;
             //Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");
