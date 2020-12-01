@@ -57,34 +57,34 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #endregion
 
-    #region socket addr
+    //#region socket addr
 
-    private string _serverAddr;
-    public string serverAddr
-    {
-        get => _serverAddr;
-        private set => _serverAddr = value;
-    }
+    //private string _serverAddr;
+    //public string serverAddr
+    //{
+    //    get => _serverAddr;
+    //    private set => _serverAddr = value;
+    //}
 
-    private int _port;
+    //private int _port;
 
-    public int port
-    {
-        get => _port;
-        private set => _port = value;
-    }
+    //public int port
+    //{
+    //    get => _port;
+    //    private set => _port = value;
+    //}
 
-    private string _gameSession;
+    //private string _gameSession;
 
-    public string gameSession
-    {
-        get => _gameSession;
-        private set => _gameSession = value;
-    }
+    //public string gameSession
+    //{
+    //    get => _gameSession;
+    //    private set => _gameSession = value;
+    //}
 
-    private string _battlePath = "/BattleInfo.bytes";
+    //private string _battlePath = "/BattleInfo.bytes";
 
-    #endregion
+    //#endregion
 
 
     #region game process var
@@ -285,41 +285,28 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #region connent
 
-    public void SetAddr(string serveraddr, int port, string gamesession)
-    {
-        _serverAddr = serveraddr;
-        _port = port;
-        _gameSession = gamesession;
+    //public void SetAddr(string serveraddr, int port, string gamesession)
+    //{
+    //    _serverAddr = serveraddr;
+    //    _port = port;
+    //    _gameSession = gamesession;
 
-        _recvJoinPlayerInfoCheck = true;
-        _netInfo.Clear();
-    }
+    //    _recvJoinPlayerInfoCheck = true;
+    //    _netInfo.Clear();
+    //}
 
-    public void ConnectServer(Global.PLAY_TYPE type)
+    public void ConnectServer(Global.PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
     {
         // 시작하면서 상대 디스커넥트
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
         SetReconnect(false);        // reconnect
         playType = type;
-        _clientSocket.Connect(_serverAddr, _port, _gameSession);
+        _recvJoinPlayerInfoCheck = true;
+        _netInfo.Clear();
+
+        _clientSocket.Connect(serverAddr, port, playerSessionId);
     }
-
-    //public void ReConnectServer(Global.PLAY_TYPE type ,  string serverAddr , int port , string session , Action callback = null)
-    //{
-    //    _serverAddr = serverAddr;
-    //    _port = port;
-    //    _gameSession = session;
-        
-    //    // 시작하면서 상대 멈춤 초기화
-    //    SetOtherDisconnect(false);    // disconnect
-    //    SetResume(false);        // resume
-
-    //    print("ReConnecting....");
-
-    //    playType = type;
-    //    _clientSocket.ReConnect(_serverAddr, _port, _gameSession, callback);
-    //}
 
 
     public void OnClientReconnecting()
@@ -759,11 +746,8 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
 
-            // go match -> socket
-            SetAddr(msg.ServerAddr, msg.Port, msg.PlayerSessionId);
-
             // 우선 그냥 배틀로 지정하자
-            ConnectServer(Global.PLAY_TYPE.BATTLE);
+            ConnectServer(Global.PLAY_TYPE.BATTLE, msg.ServerAddr, msg.Port, msg.PlayerSessionId);
         }
         UnityUtil.Print("RECV MATCH STATUS => ", string.Format("server:{0}, player-session-id:{1}", msg.ServerAddr + ":" + msg.Port, msg.PlayerSessionId), "green");
     }

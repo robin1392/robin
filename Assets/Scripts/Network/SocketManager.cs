@@ -131,10 +131,10 @@ public class SocketManager
         switch (NetworkManager.Get().playType)
         {
             case Global.PLAY_TYPE.BATTLE:
-                NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ, NetworkManager.Get().gameSession, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
                 break;
             case Global.PLAY_TYPE.COOP:
-                NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ, NetworkManager.Get().gameSession, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
                 break;
         }
     }

@@ -25,7 +25,7 @@ public class SocketSendEvent
         {
             case GameProtocol.JOIN_GAME_REQ:
             {
-                _sender.JoinGameReq(peer , (string)param[0], (sbyte)param[1]);
+                _sender.JoinGameReq(peer , (sbyte)param[0]);
                 break;
             }
             case GameProtocol.JOIN_COOP_GAME_REQ:

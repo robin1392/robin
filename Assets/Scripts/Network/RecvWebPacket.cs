@@ -150,10 +150,10 @@ public partial class WebPacket : Singleton<WebPacket>
             UnityUtil.Print("Server Addr  Port" , res.serverAddr+ "   " + res.port.ToString() +"   " + res.playerSessionId, "yellow");
         
             // go match -> socket
-            NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.playerSessionId);
+            //NetworkManager.Get().SetAddr(res.serverAddr , res.port , res.playerSessionId);
         
-            // 우선 그냥 배틀로 지정하자
-            NetworkManager.Get().ConnectServer( Global.PLAY_TYPE.BATTLE);
+            //// 우선 그냥 배틀로 지정하자
+            //NetworkManager.Get().ConnectServer( Global.PLAY_TYPE.BATTLE);
         }
     }
     #endregion

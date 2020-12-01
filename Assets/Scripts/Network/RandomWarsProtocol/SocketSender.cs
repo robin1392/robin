@@ -6,12 +6,11 @@ namespace RandomWarsProtocol
 {
     public class SocketSender
     {
-        public void JoinGameReq(Peer peer, string playerSessionId, sbyte deckIndex)
+        public void JoinGameReq(Peer peer, sbyte deckIndex)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write(playerSessionId);
                 bw.Write(deckIndex);
                 peer.SendPacket((int)GameProtocol.JOIN_GAME_REQ, ms.ToArray());
             }
