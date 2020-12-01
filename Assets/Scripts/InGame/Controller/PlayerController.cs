@@ -850,9 +850,17 @@ namespace ED
                 if (isPlayingAI) minion.behaviourTreeOwner.behaviour.Resume();
                 else minion.behaviourTreeOwner.behaviour.Pause();
             }
-            
-            if (isPlayingAI) StartSyncMinion();
-            else StopSyncMinion();
+
+            if (isPlayingAI)
+            {
+                StartSyncMinion();
+                StartCoroutine("HitDamageQueueCoroutine");
+            }
+            else
+            {
+                StopSyncMinion();
+                StopCoroutine("HitDamageQueueCoroutine");
+            }
         }
         
         #endregion
