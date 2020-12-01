@@ -242,27 +242,28 @@ public class GameStateManager : Singleton<GameStateManager>
 
 #if NETWORK_ACT
 
-
-        
-
-        // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
-        if (NetworkManager.Get().UserId.Length > 0)
+        if (NetworkManager.Get().CheckReconnection() == false)
         {
-            //WebPacket.Get().SendUserAuth(NetworkManager.Get().UserId, UserAuthOK);
-            NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+            // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
+            if (NetworkManager.Get().UserId.Length > 0)
+            {
+                //WebPacket.Get().SendUserAuth(NetworkManager.Get().UserId, UserAuthOK);
+                NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+            }
+            else
+            {
+                string userid = UserInfoManager.Get().GetUserInfo().userID;
+
+                //WebPacket.Get().SendUserAuth(userid, UserAuthOK);
+                NetworkManager.Get().AuthUserReq(userid);
+                // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
+                // if (userid == "")
+                // {
+                //     //UserInfoManager.Get().GetUserInfo().ResetDeck();
+                // }
+            }
         }
-        else
-        {
-            string userid = UserInfoManager.Get().GetUserInfo().userID;
-            
-            //WebPacket.Get().SendUserAuth(userid, UserAuthOK);
-            NetworkManager.Get().AuthUserReq(userid);
-            // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
-            // if (userid == "")
-            // {
-            //     //UserInfoManager.Get().GetUserInfo().ResetDeck();
-            // }
-        }
+
 #else
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
@@ -275,11 +276,9 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
-        if (NetworkManager.Get().CheckReconnection() == false)
-        {
-            ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
-        }
+        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
 
+        
         //NetBattleInfo battleinfo = 
         //if (battleinfo == null)
         //{

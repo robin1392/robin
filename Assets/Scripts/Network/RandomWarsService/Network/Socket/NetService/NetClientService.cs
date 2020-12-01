@@ -27,7 +27,6 @@ namespace RandomWarsService.Network.Socket.NetService
         private string _playerSessionId;
         private string _serverAddr;
         private int _port;
-        private byte _retryConnectCount;
         private DateTime _reconnectCheckTime;
         private readonly int _reconnectCheckInterval = 5;
         private readonly int _reconnectCheckLimit = 10;
@@ -48,7 +47,6 @@ namespace RandomWarsService.Network.Socket.NetService
             _gameSessionId = string.Empty;
             _playerSessionId = string.Empty;
             _port = 0;
-            _retryConnectCount = 0;
             _reconnectCheckTime = DateTime.UtcNow.AddSeconds(_reconnectCheckInterval);
         }
 
@@ -95,7 +93,7 @@ namespace RandomWarsService.Network.Socket.NetService
 
         private bool BinaryDeserialize()
         {
-            if(File.Exists(_binarySerializePath) == false)
+            if (File.Exists(_binarySerializePath) == false)
             {
                 return false;
             }
@@ -110,7 +108,7 @@ namespace RandomWarsService.Network.Socket.NetService
             _gameSessionId = values["gameSessionId"];
             _playerSessionId = values["playerSessionId"];
             _reconnectCheckTime = DateTime.Parse(values["reconnectCheckTime"]);
-            
+
             stream.Close();
             return true;
         }
@@ -193,7 +191,7 @@ namespace RandomWarsService.Network.Socket.NetService
             if (e.SocketError == SocketError.Success)
             {
                 System.Net.Sockets.Socket socket = sender as System.Net.Sockets.Socket;
-                
+
                 SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
                 receiveArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
                 receiveArgs.SetBuffer(new byte[_bufferSize], 0, _bufferSize);
@@ -213,33 +211,18 @@ namespace RandomWarsService.Network.Socket.NetService
                 BeginReceive(socket, receiveArgs, sendArgs);
 
 
-                _retryConnectCount = 0;
-
-
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
                 SendInternalAuthSessionReq(_clientSession);
             }
             else
             {
-                //if (_retryConnectCount++ > 4)
-                //{
-                //    if (ClientSession.NetState == ENetState.Connecting)
-                //    {
-                //        ClientSession.NetState = ENetState.Connected;
-                //    }
-                //    else
-                //    {
-                //        ClientSession.NetState = ENetState.Reconnected;
-                //    }
+                _clientSession.DisconnectState = ESessionState.TimeOut;
+                lock (_netEventQueue)
+                {
+                    _netEventQueue.Enqueue(_clientSession);
+                }
 
-                //    ClientSession.DisconnectState = ESessionState.TimeOut;
-                //    lock (_netEventQueue)
-                //    {
-                //        _netEventQueue.Enqueue(ClientSession);
-                //    }
-                //    return;
-                //}
 
                 IPEndPoint remoteIpEndPoint = e.RemoteEndPoint as IPEndPoint;
                 //Connect(remoteIpEndPoint.Address.ToString(), remoteIpEndPoint.Port);
@@ -303,7 +286,7 @@ namespace RandomWarsService.Network.Socket.NetService
                     break;
                 case ENetState.Disconnected:
                     {
-                        if (clientSession.DisconnectState != ESessionState.None 
+                        if (clientSession.DisconnectState != ESessionState.None
                             && clientSession.DisconnectState != ESessionState.Wait)
                         {
                             if (_binarySerializePath.Length != 0)
@@ -311,7 +294,7 @@ namespace RandomWarsService.Network.Socket.NetService
                                 File.Delete(_binarySerializePath);
                             }
                         }
-                        
+
 
                         if (ClientDisconnectedCallback != null)
                         {
@@ -322,7 +305,7 @@ namespace RandomWarsService.Network.Socket.NetService
             }
         }
 
-        
+
         protected override void OnCloseClientsocket(ClientSession clientSession, SocketError error)
         {
             clientSession.OnRemoved();
@@ -360,7 +343,7 @@ namespace RandomWarsService.Network.Socket.NetService
 
         protected override bool ProcessInternalPacket(ClientSession clientSession, int protocolId, byte[] msg, int length)
         {
-            switch((EInternalProtocol)protocolId)
+            switch ((EInternalProtocol)protocolId)
             {
                 case EInternalProtocol.AUTH_SESSION_ACK:
                     {
@@ -391,6 +374,14 @@ namespace RandomWarsService.Network.Socket.NetService
                     }
                     break;
                 case EInternalProtocol.PAUSE_SESSION_ACK:
+                    {
+                        var bf = new BinaryFormatter();
+                        using (var ms = new MemoryStream(msg))
+                        {
+                            clientSession.PauseLimitTimeTick = (long)bf.Deserialize(ms);
+                        }
+                    }
+                    break;
                 case EInternalProtocol.RESUME_SESSION_ACK:
                     {
                     }
@@ -407,21 +398,20 @@ namespace RandomWarsService.Network.Socket.NetService
 
         public void PauseSession()
         {
-            _clientSession.PauseStartTimeTick = DateTime.UtcNow.Ticks;
             SendInternalPauseSessionReq(_clientSession);
         }
 
 
         public void ResumeSession()
         {
-            if (_clientSession.PauseStartTimeTick == 0)
+            if (_clientSession.PauseLimitTimeTick == 0)
             {
                 return;
             }
 
-            if (_clientSession.PauseStartTimeTick + (TimeSpan.TicksPerSecond * 10) < DateTime.UtcNow.Ticks)
+            if (_clientSession.PauseLimitTimeTick < DateTime.UtcNow.Ticks)
             {
-                _clientSession.GetPeer().Disconnect(ESessionState.Wait);
+                _clientSession.GetPeer().Disconnect(ESessionState.Expired);
                 return;
             }
 
