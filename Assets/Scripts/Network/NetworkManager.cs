@@ -720,7 +720,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void StatusMatchReq(string ticketId)
     {
-        if (NetMatchStep != Global.E_MATCHSTEP.MATCH_START)
+        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
         {
             // 매칭 중에서 상태 요청을 할 수 있다ㅏ.
             return;
@@ -755,6 +755,12 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void StopMatchReq(string ticketId)
     {
+        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+        {
+            return;
+        }
+
+        NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
         MsgStopMatchReq msg = new MsgStopMatchReq();
         msg.TicketId = ticketId;
         _httpSender.StopMatchReq(msg);
@@ -763,10 +769,9 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
     void OnStopMatchAck(MsgStopMatchAck msg)
-    { 
+    {
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
-            NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
             UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
             searchingPopup.ClickSearchingCancelResult();
         }

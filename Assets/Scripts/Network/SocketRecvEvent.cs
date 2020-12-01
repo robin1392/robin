@@ -150,6 +150,12 @@ public class SocketRecvEvent
         UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.PlayerInfo), "white");
 
 
+        if (msg.ErrorCode != (int)GameErrorCode.SUCCESS)
+        {
+
+            return;
+        }
+
         //
         NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
         NetworkManager.Get().IsMaster = msg.PlayerInfo.IsMaster;
