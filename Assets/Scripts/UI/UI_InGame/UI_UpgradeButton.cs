@@ -26,6 +26,7 @@ namespace ED
             this.pData = dataDice;
             this.level = level;
             image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
+            image_Icon.SetNativeSize();
             Refresh();
 
             InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
