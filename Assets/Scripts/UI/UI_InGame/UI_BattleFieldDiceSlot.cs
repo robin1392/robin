@@ -32,6 +32,7 @@ namespace ED
             if (dice != null && dice.id >= 0)
             {
                 image_Icon.sprite = dice.GetIcon();
+                image_Icon.SetNativeSize();
                 image_Icon.enabled = true;
                 var c = Color.white;
                 c.a = alpha;
