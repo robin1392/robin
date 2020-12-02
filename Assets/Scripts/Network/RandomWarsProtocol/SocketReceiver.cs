@@ -266,7 +266,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameReq msg = new MsgJoinGameReq();
-                            msg.PlayerSessionId = br.ReadString();
                             msg.DeckIndex = br.ReadSByte();
                             JoinGameReq(peer, msg);
                         }
@@ -313,7 +312,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinCoopGameReq msg = new MsgJoinCoopGameReq();
-                            msg.PlayerSessionId = br.ReadString();
                             msg.DeckIndex = br.ReadSByte();
                             JoinCoopGameReq(peer, msg);
                         }
