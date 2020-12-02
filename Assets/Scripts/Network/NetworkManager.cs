@@ -1233,11 +1233,10 @@ public class ConvertNetMsg
         return quatVal;
     }
 
-    public static MsgHitDamageMinionRelay GetHitDamageMinionRelayMsg(int uid, int id, float damage)
+    public static MsgHitDamageMinionRelay GetHitDamageMinionRelayMsg(int id, float damage)
     {
         MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Damage = MsgFloatToInt(damage);
 
@@ -1245,115 +1244,104 @@ public class ConvertNetMsg
     }
 
 
-    public static MsgDestroyMinionRelay GetDestroyMinionRelayMsg(int uid, int id)
+    public static MsgDestroyMinionRelay GetDestroyMinionRelayMsg(int id)
     {
         MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
 
-    public static MsgDestroyMagicRelay GetDestroyMagicRelayMsg(int uid, int id)
+    public static MsgDestroyMagicRelay GetDestroyMagicRelayMsg(int id)
     {
         MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.BaseStatId = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgFireballBombRelay GetFireballBombRelayMsg(int uid, int id)
+    public static MsgFireballBombRelay GetFireballBombRelayMsg(int id)
     {
         MsgFireballBombRelay msg = new MsgFireballBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgHealMinionRelay GetHealMinionRelayMsg(int uid, int id, float heal)
+    public static MsgHealMinionRelay GetHealMinionRelayMsg(int id, float heal)
     {
         MsgHealMinionRelay msg = new MsgHealMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Heal = MsgFloatToInt(heal);
 
         return msg;
     }
 
-    public static MsgMineBombRelay GetMineBombRelayMsg(int uid, int id)
+    public static MsgMineBombRelay GetMineBombRelayMsg(int id)
     {
         MsgMineBombRelay msg = new MsgMineBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgSturnMinionRelay GetSturnMinionRelayMsg(int uid, int id, int sturnTime)
+    public static MsgSturnMinionRelay GetSturnMinionRelayMsg(int id, int sturnTime)
     {
         MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.SturnTime = MsgIntToShort(sturnTime);
 
         return msg;
     }
 
-    public static MsgRocketBombRelay GetRocketBombRelayMsg(int uid, int id)
+    public static MsgRocketBombRelay GetRocketBombRelayMsg(int id)
     {
         MsgRocketBombRelay msg = new MsgRocketBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgIceBombRelay GetIceBombRelayMsg(int uid, int id)
+    public static MsgIceBombRelay GetIceBombRelayMsg(int id)
     {
         MsgIceBombRelay msg = new MsgIceBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgFireManFireRelay GetFireManFireRelayMsg(int uid, int id)
+    public static MsgFireManFireRelay GetFireManFireRelayMsg(int id)
     {
         MsgFireManFireRelay msg = new MsgFireManFireRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgMinionCloackingRelay GetMinionCloackingRelayMsg(int uid, int id, bool isCloacking)
+    public static MsgMinionCloackingRelay GetMinionCloackingRelayMsg(int id, bool isCloacking)
     {
         MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.IsCloacking = isCloacking;
 
         return msg;
     }
 
-    public static MsgMinionFlagOfWarRelay GetMinionFlagOfWarRelayMsg(int uid, int id, int effect, bool isFlagOfWar)
+    public static MsgMinionFlagOfWarRelay GetMinionFlagOfWarRelayMsg(int id, int effect, bool isFlagOfWar)
     {
         MsgMinionFlagOfWarRelay msg = new MsgMinionFlagOfWarRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.BaseStatId = MsgIntToUshort(id);
         msg.Effect = MsgIntToShort(effect);
         msg.IsFogOfWar = isFlagOfWar;
@@ -1361,44 +1349,40 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgScarecrowRelay GetScarecrowRelayMsg(int uid, int id, int eyeLevel)
+    public static MsgScarecrowRelay GetScarecrowRelayMsg(int id, int eyeLevel)
     {
         MsgScarecrowRelay msg = new MsgScarecrowRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.BaseStatId = MsgIntToUshort(id);
         msg.EyeLevel = MsgIntToByte(eyeLevel);
 
         return msg;
     }
 
-    public static MsgLayzerTargetRelay GetLayzerTargetRelayMsg(int uid, int id, int[] target)
+    public static MsgLayzerTargetRelay GetLayzerTargetRelayMsg(int id, int[] target)
     {
         MsgLayzerTargetRelay msg = new MsgLayzerTargetRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.TargetIdArray = MsgIntArrToUshortArr(target);
 
         return msg;
     }
 
-    public static MsgMinionInvincibilityRelay GetMinionInvincibilityRelayMsg(int uid, int id, int time)
+    public static MsgMinionInvincibilityRelay GetMinionInvincibilityRelayMsg(int id, int time)
     {
         MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Time = MsgIntToShort(time);
 
         return msg;
     }
 
-    public static MsgFireBulletRelay GetFireBulletRelayMsg(int uid, int id, int targetId, int damage, int speed, int type)
+    public static MsgFireBulletRelay GetFireBulletRelayMsg(int id, int targetId, int damage, int speed, int type)
     {
         MsgFireBulletRelay msg = new MsgFireBulletRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.targetId = MsgIntToUshort(targetId);
         msg.Damage = damage;
@@ -1408,12 +1392,11 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgFireCannonBallRelay GetFireCannonBallRelayMsg(int uid, MsgVector3 shootPos,
+    public static MsgFireCannonBallRelay GetFireCannonBallRelayMsg(MsgVector3 shootPos,
         MsgVector3 targetPos, int damage, int range, int type)
     {
         MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.ShootPos = shootPos;
         msg.TargetPos = targetPos;
         msg.Power = damage;
@@ -1423,12 +1406,11 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSetMinionAnimationTriggerRelay GetMinionAnimationTriggerRelayMsg(int uid, int id, int trigger,
+    public static MsgSetMinionAnimationTriggerRelay GetMinionAnimationTriggerRelayMsg(int id, int trigger,
         int target)
     {
         MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Trigger = MsgIntToByte(trigger);
         msg.TargetId = MsgIntToUshort(target);
@@ -1436,22 +1418,20 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSetMagicTargetIdRelay GetMagicTargetIDRelayMsg(int uid, int id, int targetID)
+    public static MsgSetMagicTargetIdRelay GetMagicTargetIDRelayMsg(int id, int targetID)
     {
         MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.TargetId = MsgIntToUshort(targetID);
         
         return msg;
     }
 
-    public static MsgSetMagicTargetRelay GetMagicTargetPosRelayMsg(int uid, int id, int x, int z)
+    public static MsgSetMagicTargetRelay GetMagicTargetPosRelayMsg(int id, int x, int z)
     {
         MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.X = MsgIntToShort(x);
         msg.Z = MsgIntToShort(z);
@@ -1471,22 +1451,20 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSendMessageVoidRelay GetSendMessageVoidRelayMsg(int uid, int id, int message)
+    public static MsgSendMessageVoidRelay GetSendMessageVoidRelayMsg(int id, int message)
     {
         MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Message = MsgIntToByte(message);
         
         return msg;
     }
 
-    public static MsgSendMessageParam1Relay GetSendMessageParam1RelayMsg(int uid, int id, int message, int targetID)
+    public static MsgSendMessageParam1Relay GetSendMessageParam1RelayMsg(int id, int message, int targetID)
     {
         MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Message = MsgIntToByte(message);
         msg.TargetId = MsgIntToUshort(targetID);
@@ -1494,22 +1472,20 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSetMinionTargetRelay GetMinionTargetRelayMsg(int uid, int id, int targetID)
+    public static MsgSetMinionTargetRelay GetMinionTargetRelayMsg(int id, int targetID)
     {
         MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.TargetId = MsgIntToUshort(targetID);
         
         return msg;
     }
 
-    public static MsgPushMinionRelay GetPushMinionRelayMsg(int uid, int id, int x, int y, int z, int power)
+    public static MsgPushMinionRelay GetPushMinionRelayMsg(int id, int x, int y, int z, int power)
     {
         MsgPushMinionRelay msg = new MsgPushMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Dir = new MsgVector3 { X = MsgIntToShort(x), Y = MsgIntToShort(y), Z = MsgIntToShort(z) };
         msg.PushPower = MsgIntToShort(power);
