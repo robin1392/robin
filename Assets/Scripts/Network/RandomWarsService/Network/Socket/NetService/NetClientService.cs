@@ -37,22 +37,12 @@ namespace RandomWarsService.Network.Socket.NetService
             : base(packetHandler, logger, bufferSize, keepAliveTime, keepAliveInterval, onMonitoring)
         {
             _netEventQueue = new Queue<ClientSession>();
-
-            _clientSession = new ClientSession(_logger, _bufferSize);
-            _clientSession.CompletedMessageCallback += OnMessageCompleted;
-
-
             _binarySerializePath = binarySerializePath;
             _serverAddr = string.Empty;
             _gameSessionId = string.Empty;
             _playerSessionId = string.Empty;
             _port = 0;
             _reconnectCheckTime = DateTime.UtcNow.AddSeconds(_reconnectCheckInterval);
-        }
-
-        public void Clear()
-        {
-
         }
 
 
@@ -133,13 +123,13 @@ namespace RandomWarsService.Network.Socket.NetService
 
         public bool CheckReconnection()
         {
-            _logger.Debug(string.Format("[NetClient] CheckReconnection. sessionState: {0}", _clientSession.DisconnectState));
-
-
-            if (_clientSession.DisconnectState != ESessionState.Wait)
+            if (_clientSession == null || _clientSession.DisconnectState != ESessionState.Wait)
             {
                 return false;
             }
+
+
+            _logger.Debug(string.Format("[NetClient] CheckReconnection. sessionState: {0}", _clientSession.DisconnectState));
 
 
             if (BinaryDeserialize() == false)
@@ -171,13 +161,6 @@ namespace RandomWarsService.Network.Socket.NetService
         /// <param name="port"></param>
         public void Connect(string serverAddr, int port, string playerSessionId)
         {
-            if (_clientSession.Socket != null)
-            {
-                _logger.Debug(string.Format("[NetClient] Close socket. socketHandle. {0}", _clientSession.Socket.Handle));
-                _clientSession.Socket.Close();
-                _clientSession.Socket = null;
-            }
-
             System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.LingerState = new LingerOption(true, 10);
             socket.NoDelay = true;
@@ -185,7 +168,6 @@ namespace RandomWarsService.Network.Socket.NetService
             socket.ReceiveTimeout = 1000;
 
 
-            _clientSession.SessionId = playerSessionId;
             _serverAddr = serverAddr;
             _gameSessionId = string.Empty;
             _playerSessionId = playerSessionId;
@@ -193,7 +175,7 @@ namespace RandomWarsService.Network.Socket.NetService
             _reconnectCheckTime = DateTime.UtcNow;
 
 
-            _logger.Debug(string.Format("[NetClient] Connect to server. addr: {0}:{1}, playerSessionId: {2}, gameSessionId: {3}", _serverAddr, _port, _playerSessionId, _gameSessionId));
+            _logger.Debug(string.Format("[NetClient] Connect to server. socketHandle: {0}, addr: {1}:{2}, playerSessionId: {3}, gameSessionId: {4}", socket.Handle, _serverAddr, _port, _playerSessionId, _gameSessionId));
 
 
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
@@ -219,6 +201,12 @@ namespace RandomWarsService.Network.Socket.NetService
             {
                 System.Net.Sockets.Socket socket = sender as System.Net.Sockets.Socket;
 
+
+                _clientSession = new ClientSession(_logger, _bufferSize);
+                _clientSession.CompletedMessageCallback += OnMessageCompleted;
+                _clientSession.SessionId = _playerSessionId;
+
+
                 SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
                 receiveArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
                 receiveArgs.SetBuffer(new byte[_bufferSize], 0, _bufferSize);
@@ -234,23 +222,23 @@ namespace RandomWarsService.Network.Socket.NetService
                 BeginReceive(socket, receiveArgs, sendArgs);
 
 
+                _logger.Debug(string.Format("[NetClient] Complete to connect server. socketHandle: {0} addr: {1}:{2}, playerSessionId: {3}, gameSessionId: {4}, socketFlags: {5}", socket.Handle, _serverAddr, _port, _playerSessionId, _gameSessionId, e.SocketFlags));
+
+
                 // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
                 // 응답으로 신규연결/재연결 여부를 전달 받을 수 있다.
                 SendInternalAuthSessionReq(_clientSession);
-
-                _logger.Debug(string.Format("[NetClient] Complete to connect server. addr: {0}:{1}, playerSessionId: {2}, gameSessionId: {3}, socketHandle: {4}", _serverAddr, _port, _playerSessionId, _gameSessionId, socket.Handle));
             }
             else
             {
+                IPEndPoint remoteIpEndPoint = e.RemoteEndPoint as IPEndPoint;
+                _logger.Error(string.Format("[NetClient] Failed to connect server(error: {0}), Retry to connect. address: {1}", e.SocketError, remoteIpEndPoint.Address + ":" + remoteIpEndPoint.Port));
+
+
                 lock (_netEventQueue)
                 {
                     _netEventQueue.Enqueue(_clientSession);
                 }
-
-
-                IPEndPoint remoteIpEndPoint = e.RemoteEndPoint as IPEndPoint;
-                //Connect(remoteIpEndPoint.Address.ToString(), remoteIpEndPoint.Port);
-                _logger.Error(string.Format("[NetClient] Failed to connect server(error: {0}), Retry to connect. address: {1}", e.SocketError, remoteIpEndPoint.Address + ":" + remoteIpEndPoint.Port));
             }
         }
 
@@ -265,10 +253,10 @@ namespace RandomWarsService.Network.Socket.NetService
                 return;
             }
 
+            _logger.Debug(string.Format("[NetClient] Disconnect. socketHandle: {0}, sessionState: {1}", _clientSession.Socket.Handle, sessionState));
+
             _clientSession.DisconnectState = sessionState;
             _clientSession.Disconnect();
-
-            _logger.Debug(string.Format("[NetClient] Disconnect server. sessionState: {0}", sessionState));
         }
 
 
@@ -289,6 +277,8 @@ namespace RandomWarsService.Network.Socket.NetService
                 clientSession = _netEventQueue.Dequeue();
             }
 
+            _logger.Debug(string.Format("[NetClient] ProcessConnectionEvent. socketHandle: {0}, netState: {1},  sessionState: {2}", clientSession.Socket.Handle, clientSession.NetState, clientSession.DisconnectState));
+
 
             switch (clientSession.NetState)
             {
@@ -299,7 +289,6 @@ namespace RandomWarsService.Network.Socket.NetService
                             ClientConnectedCallback(clientSession, clientSession.DisconnectState);
                         }
 
-                        _logger.Debug(string.Format("[NetClient] ProcessConnectionEvent - Connected. sessionState: {0}", clientSession.DisconnectState));
                     }
                     break;
                 case ENetState.Reconnecting:
@@ -311,7 +300,6 @@ namespace RandomWarsService.Network.Socket.NetService
                             ClientReconnectingCallback();
                         }
 
-                        _logger.Debug(string.Format("[NetClient] ProcessConnectionEvent - Reconnecting. sessionState: {0}", clientSession.DisconnectState));
                     }
                     break;
                 case ENetState.Reconnected:
@@ -323,7 +311,6 @@ namespace RandomWarsService.Network.Socket.NetService
                             ClientReconnectedCallback(clientSession, clientSession.DisconnectState);
                         }
 
-                        _logger.Debug(string.Format("[NetClient] ProcessConnectionEvent - Reconnected. sessionState: {0}", clientSession.DisconnectState));
                     }
                     break;
                 case ENetState.Disconnected:
@@ -343,7 +330,6 @@ namespace RandomWarsService.Network.Socket.NetService
                             ClientDisconnectedCallback(clientSession, clientSession.DisconnectState);
                         }
 
-                        _logger.Debug(string.Format("[NetClient] ProcessConnectionEvent - Disconnected. sessionState: {0}", clientSession.DisconnectState));
                     }
                     break;
             }
@@ -353,15 +339,17 @@ namespace RandomWarsService.Network.Socket.NetService
         protected override void OnCloseClientsocket(ClientSession clientSession, SocketError error)
         {
             clientSession.OnRemoved();
-            clientSession.NetState = ENetState.Disconnected;
 
-
-            lock (_netEventQueue)
+            if (error != SocketError.NotConnected)
             {
-                _netEventQueue.Enqueue(clientSession);
+                lock (_netEventQueue)
+                {
+                    clientSession.NetState = ENetState.Disconnected;
+                    _netEventQueue.Enqueue(clientSession);
+                }
             }
 
-            _logger.Debug(string.Format("[NetClient] OnCloseClientsocket. sessionState: {0}", clientSession.DisconnectState));
+            _logger.Debug(string.Format("[NetClient] OnCloseClientsocket. socketHandle: {0}, sessionState: {1}, error: {2}", clientSession.Socket.Handle, clientSession.DisconnectState, error));
         }
 
 

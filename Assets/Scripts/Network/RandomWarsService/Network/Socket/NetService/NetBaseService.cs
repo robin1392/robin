@@ -198,6 +198,8 @@ namespace RandomWarsService.Network.Socket.NetService
             }
             else
             {
+                _logger.Debug(string.Format("[NetClient] ProcessReceive. scoketHandle: {0} sessionState: {1}, socketError: {2} ,socketFlag: {3}", clientSession.Socket.Handle, clientSession.DisconnectState, e.SocketError, e.SocketFlags));
+
                 if (clientSession.DisconnectState == ESessionState.None)
                 {
                     clientSession.DisconnectState = ESessionState.Wait;

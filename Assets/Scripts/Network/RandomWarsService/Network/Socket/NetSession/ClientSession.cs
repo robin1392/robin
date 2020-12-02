@@ -260,7 +260,6 @@ namespace RandomWarsService.Network.Socket.NetSession
             }
 
             Socket.Close();
-            _logger.Debug(string.Format("[NetClient] Close socket. socketHandle"));
         }
 
 
