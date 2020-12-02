@@ -135,6 +135,13 @@ namespace RandomWarsService.Network.Socket.NetService
         {
             _logger.Debug(string.Format("[NetClient] CheckReconnection. sessionState: {0}", _clientSession.DisconnectState));
 
+
+            if (_clientSession.DisconnectState != ESessionState.Wait)
+            {
+                return false;
+            }
+
+
             if (BinaryDeserialize() == false)
             {
                 return false;
@@ -147,13 +154,12 @@ namespace RandomWarsService.Network.Socket.NetService
                 return false;
             }
 
-
-            Connect(_serverAddr, _port, _playerSessionId);
-
-            if (ClientReconnectingCallback != null)
+            lock (_netEventQueue)
             {
-                ClientReconnectingCallback();
+                _clientSession.NetState = ENetState.Reconnecting;
+                _netEventQueue.Enqueue(_clientSession);
             }
+
             return true;
         }
 
@@ -175,8 +181,8 @@ namespace RandomWarsService.Network.Socket.NetService
             System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.LingerState = new LingerOption(true, 10);
             socket.NoDelay = true;
-            socket.SendTimeout = 2000;
-            socket.ReceiveTimeout = 2000;
+            socket.SendTimeout = 1000;
+            socket.ReceiveTimeout = 1000;
 
 
             _clientSession.SessionId = playerSessionId;
@@ -236,7 +242,6 @@ namespace RandomWarsService.Network.Socket.NetService
             }
             else
             {
-                _clientSession.DisconnectState = ESessionState.TimeOut;
                 lock (_netEventQueue)
                 {
                     _netEventQueue.Enqueue(_clientSession);
@@ -295,6 +300,18 @@ namespace RandomWarsService.Network.Socket.NetService
                         }
 
                         _logger.Debug(string.Format("[NetClient] ProcessConnectionEvent - Connected. sessionState: {0}", clientSession.DisconnectState));
+                    }
+                    break;
+                case ENetState.Reconnecting:
+                    {
+                        Connect(_serverAddr, _port, _playerSessionId);
+
+                        if (ClientReconnectingCallback != null)
+                        {
+                            ClientReconnectingCallback();
+                        }
+
+                        _logger.Debug(string.Format("[NetClient] ProcessConnectionEvent - Reconnecting. sessionState: {0}", clientSession.DisconnectState));
                     }
                     break;
                 case ENetState.Reconnected:
