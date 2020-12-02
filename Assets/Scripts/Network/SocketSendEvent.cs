@@ -273,7 +273,7 @@ public class SocketSendEvent
             case GameProtocol.MINION_STATUS_RELAY:
             {
                     //MinionStatusRelay(IPeer peer, int playerUId, byte posIndex, MsgVector3[] pos)
-                    _sender.MinionStatusRelay(peer , Convert.ToUInt16(param[0]), (byte)param[1], (MsgVector2[])param[2], (int[])param[3], (MsgMinionStatus)param[4], (int)param[5], (MsgMinionInfo[])param[6]);
+                    _sender.MinionStatusRelay(peer , Convert.ToUInt16(param[0]), (byte)param[1], (MsgMinionInfo[])param[2], (MsgVector2[])param[3], (int[])param[4], (MsgMinionStatus)param[5], (int)param[6]);
                 break;
             }
             

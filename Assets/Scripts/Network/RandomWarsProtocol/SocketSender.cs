@@ -1003,7 +1003,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgVector2[] pos, int[] hp, MsgMinionStatus relay, int packetCount, MsgMinionInfo[] minionInfo) 
+        public void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgMinionInfo[] minionInfo, MsgVector2[] pos, int[] hp, MsgMinionStatus relay, int packetCount) 
         {
             using (var ms = new MemoryStream())
             {
