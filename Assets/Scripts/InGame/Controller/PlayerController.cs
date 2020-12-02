@@ -2931,13 +2931,13 @@ namespace ED
                 {
                     MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
                     
-                    // if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
-                    //     InGameManager.Get().playerController.targetPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
-                    // else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
-                    //     InGameManager.Get().playerController.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
-                    // else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
-                    //     InGameManager.Get().playerController.coopPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
-                    SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
+                    if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
+                        InGameManager.Get().playerController.targetPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
+                    else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
+                        InGameManager.Get().playerController.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
+                    else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
+                        InGameManager.Get().playerController.coopPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
+                    //SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
 
                     break;
                 }
