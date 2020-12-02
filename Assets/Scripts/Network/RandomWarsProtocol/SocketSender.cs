@@ -1003,30 +1003,17 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MinionStatusRelay(Peer peer, ushort playerUId, byte posIndex, MsgMinionInfo[] minionInfo, MsgVector2[] pos, int[] hp, MsgMinionStatus relay, int packetCount) 
+        public void MinionStatusRelay(Peer peer, ushort playerUId, MsgMinionInfo[] minionInfo, MsgMinionStatus relay, int packetCount) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(playerUId);
-                bw.Write(posIndex);
 
                 bw.Write(minionInfo.Length);
                 for (int i = 0; i < minionInfo.Length; i++)
                 {
                     minionInfo[i].Write(bw);
-                }
-
-                bw.Write(pos.Length);
-                for (int i = 0; i < pos.Length; i++)
-                {
-                    pos[i].Write(bw);
-                }
-
-                bw.Write(hp.Length);
-                for (int i = 0; i < hp.Length; i++)
-                {
-                    bw.Write(hp[i]);
                 }
 
                 relay.Write(bw);
