@@ -2112,28 +2112,28 @@ namespace ED
                                         foreach (var value in sync.Value)
                                         {
                                             MsgHitDamageMinionRelay msg = (MsgHitDamageMinionRelay) value;
-                                            str += string.Format("\n      ID:{1}, DMG:{2}", msg.Id, msg.Damage);
+                                            str += string.Format("\n      ID:{0}, DMG:{1}", msg.Id, msg.Damage);
                                         }
                                         break;
                                     case GameProtocol.HEAL_MINION_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgHealMinionRelay msg = (MsgHealMinionRelay) value;
-                                            str += string.Format("\n      ID:{1}, HEAL:{2}", msg.Id, msg.Heal);
+                                            str += string.Format("\n      ID:{0}, HEAL:{1}", msg.Id, msg.Heal);
                                         }
                                         break;
                                     case GameProtocol.DESTROY_MINION_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgDestroyMinionRelay msg = (MsgDestroyMinionRelay) value;
-                                            str += string.Format("\n      ID:{1}", msg.Id);
+                                            str += string.Format("\n      ID:{0}", msg.Id);
                                         }
                                         break;
                                     case GameProtocol.DESTROY_MAGIC_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgDestroyMagicRelay msg = (MsgDestroyMagicRelay) value;
-                                            str += string.Format("\n      ID:{1}", msg.BaseStatId);
+                                            str += string.Format("\n      ID:{0}", msg.BaseStatId);
                                         }
                                         break;
                                     case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
@@ -2201,28 +2201,28 @@ namespace ED
                         foreach (var value in msg.Value)
                         {
                             MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
-                            str += string.Format("\n      ID:{1}, DMG:{2}", m.Id, m.Damage);
+                            str += string.Format("\n      ID:{0}, DMG:{1}", m.Id, m.Damage);
                         }
                         break;
                     case GameProtocol.HEAL_MINION_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgHealMinionRelay m = (MsgHealMinionRelay) value;
-                            str += string.Format("\n      ID:{1}, HEAL:{2}", m.Id, m.Heal);
+                            str += string.Format("\n      ID:{0}, HEAL:{1}", m.Id, m.Heal);
                         }
                         break;
                     case GameProtocol.DESTROY_MINION_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgDestroyMinionRelay m = (MsgDestroyMinionRelay) value;
-                            str += string.Format("\n      ID:{1}", m.Id);
+                            str += string.Format("\n      ID:{0}", m.Id);
                         }
                         break;
                     case GameProtocol.DESTROY_MAGIC_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgDestroyMagicRelay m = (MsgDestroyMagicRelay) value;
-                            str += string.Format("\n      ID:{1}", m.BaseStatId);
+                            str += string.Format("\n      ID:{0}", m.BaseStatId);
                         }
                         break;
                     case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
