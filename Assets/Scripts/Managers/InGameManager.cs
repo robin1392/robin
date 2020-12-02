@@ -1635,6 +1635,7 @@ namespace ED
                     
                     if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
                     {
+                        Time.timeScale = 1f;
                         NetworkManager.Get().SetOtherDisconnect(true);
                     }
                     
@@ -1676,7 +1677,13 @@ namespace ED
 
                     if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
                     {
-                        NetworkManager.Get().SetOtherDisconnect(true);
+                        //NetworkManager.Get().SetOtherDisconnect(true);
+                        
+                        UI_InGamePopup.Get().obj_Indicator.SetActive(true);
+                        Time.timeScale = 0f;
+                        
+                        NetworkManager.Get().SetResume(false);
+                        //NetworkManager.Get().PauseGame();
                     }
                     
                     break;
@@ -1687,8 +1694,12 @@ namespace ED
 
                     if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
                     {
+                        UI_InGamePopup.Get().obj_Indicator.SetActive(false);
+                        Time.timeScale = 1f;
+                        
                         NetworkManager.Get().SetResume(true);
-                        NetworkManager.Get().SetOtherDisconnect(false);
+                        //NetworkManager.Get().ResumeGame();
+                        //NetworkManager.Get().SetOtherDisconnect(false);
                         // 미니언 정보 취합 해서 보내준다..
                         //SendSyncAllBattleInfo();
                     }
