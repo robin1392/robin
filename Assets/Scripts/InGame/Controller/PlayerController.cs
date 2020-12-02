@@ -1986,8 +1986,8 @@ namespace ED
                     //if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgVector2[] msgMinPos = new MsgVector2[listMinion.Count];
-                        int[] hp = new int[listMinion.Count];
+                        MsgVector2[] msgMinPos = new MsgVector2[0];
+                        int[] hp = new int[0];
                         MsgMinionStatus relay = new MsgMinionStatus();
                         relay.PlayerUId = ConvertNetMsg.MsgIntToUshort(myUID);
 
@@ -1997,9 +1997,9 @@ namespace ED
                         //     hp[i] = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                         // }
 
+                        MsgMinionInfo[] msgMinionInfos = new MsgMinionInfo[listMinion.Count];
                         if (listMinion.Count > 0)
                         {
-                            MsgMinionInfo[] msgMinionInfos = new MsgMinionInfo[listMinion.Count];
                             for (int i = 0; i < listMinion.Count; i++)
                             {
                                 msgMinionInfos[i] = new MsgMinionInfo();
@@ -2011,7 +2011,6 @@ namespace ED
                                         msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
                                     }
                                 }
-                                msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(listMinion[i].diceId);
                                 msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                                 msgMinionInfos[i].Pos =
                                     ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x,
@@ -2157,7 +2156,7 @@ namespace ED
                         #if ENABLE_LOG
                         UnityUtil.Print(string.Format("SEND [{0}][{1}] : ", _myUID, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
                         #endif
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, _myUID, minionCount , msgMinPos, hp, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, _myUID, minionCount, msgMinionInfos, msgMinPos, hp, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
                         _syncDictionary.Clear();
                         packetCount++;
                     }
@@ -2177,6 +2176,7 @@ namespace ED
             for (int i = 0; i < msgMinionInfos.Length; i++)
             {
                 var m = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
+                
                 if (m != null)
                 {
                     m.SetNetworkValue(
