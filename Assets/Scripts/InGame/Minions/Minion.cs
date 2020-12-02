@@ -601,11 +601,11 @@ namespace ED
                     _seeker.StartPath(transform.position, targetPos);
                 }
             }
-            else
-            {
-                transform.LookAt(networkPosition);
-                transform.position = networkPosition;
-            }
+            // else
+            // {
+            //     transform.LookAt(networkPosition);
+            //     transform.position = networkPosition;
+            // }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
 //            {
 //                _pathRefinedCount++;

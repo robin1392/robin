@@ -1633,6 +1633,12 @@ namespace ED
                 {
                     MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
                     
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+                    
                     if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
                     {
                         Time.timeScale = 1f;
