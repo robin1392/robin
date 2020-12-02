@@ -324,7 +324,7 @@ namespace ED
         
         #region Network
         
-        protected override void SyncMinion(int uid, byte minionCount, MsgMinionInfo[] msgMinionInfos, MsgVector2[] msgPos, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        protected override void SyncMinion(MsgMinionInfo[] msgMinionInfos, MsgMinionStatus relay, int packetCount)
         {
             // for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             // {
@@ -365,32 +365,28 @@ namespace ED
                         foreach (var value in msg.Value)
                         {
                             MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}, DMG:{2}", m.PlayerUId,
-                                m.Id, m.Damage);
+                            str += string.Format("\n      ID:{1}, DMG:{2}", m.Id, m.Damage);
                         }
                         break;
                     case GameProtocol.HEAL_MINION_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgHealMinionRelay m = (MsgHealMinionRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}, HEAL:{2}", m.PlayerUId,
-                                m.Id, m.Heal);
+                            str += string.Format("\n      ID:{1}, HEAL:{2}", m.Id, m.Heal);
                         }
                         break;
                     case GameProtocol.DESTROY_MINION_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgDestroyMinionRelay m = (MsgDestroyMinionRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}", m.PlayerUId,
-                                m.Id);
+                            str += string.Format("\n      ID:{1}", m.Id);
                         }
                         break;
                     case GameProtocol.DESTROY_MAGIC_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgDestroyMagicRelay m = (MsgDestroyMagicRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}", m.PlayerUId,
-                                m.BaseStatId);
+                            str += string.Format("\n      ID:{1}", m.BaseStatId);
                         }
                         break;
                     case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:

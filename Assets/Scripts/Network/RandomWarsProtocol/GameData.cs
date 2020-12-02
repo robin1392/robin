@@ -1076,11 +1076,13 @@ namespace RandomWarsProtocol
     [Serializable]
     public class MsgHitDamageMinionRelay
     {
+        public ushort PlayerUId;
         public ushort Id;
         public int Damage;
 
         public void Write(BinaryWriter bw)
         {
+            bw.Write(PlayerUId);
             bw.Write(Id);
             bw.Write(Damage);
         }
@@ -1088,6 +1090,7 @@ namespace RandomWarsProtocol
         public static MsgHitDamageMinionRelay Read(BinaryReader br)
         {
             MsgHitDamageMinionRelay data = new MsgHitDamageMinionRelay();
+            data.PlayerUId = br.ReadUInt16();
             data.Id = br.ReadUInt16();
             data.Damage = br.ReadInt32();
             return data;
