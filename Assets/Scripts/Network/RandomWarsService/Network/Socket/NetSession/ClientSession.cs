@@ -252,7 +252,6 @@ namespace RandomWarsService.Network.Socket.NetSession
         {
             try
             {
-                //Console.WriteLine( string.Format("Disconnected. Handle {0}", Socket.Handle));
                 Socket.Shutdown(SocketShutdown.Send);
             }
             catch (Exception e)
@@ -261,6 +260,7 @@ namespace RandomWarsService.Network.Socket.NetSession
             }
 
             Socket.Close();
+            _logger.Debug(string.Format("[NetClient] Close socket. socketHandle"));
         }
 
 

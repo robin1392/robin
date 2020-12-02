@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using RandomWarsService.Network.Socket.NetPacket;
 using RandomWarsService.Network.Http;
+using RandomWarsService.Network.Socket.NetSession;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using UnityEditor;
@@ -252,7 +253,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (IsConnect())
         {
-            DisconnectSocket();
+            DisconnectSocket(true);
         }
 
         GameObject.Destroy(webPacket);
@@ -318,10 +319,10 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void DisconnectSocket()
+    public void DisconnectSocket(bool unexpected)
     {
         if (_clientSocket != null && _clientSocket.IsConnected() == true)
-            _clientSocket.Disconnect();
+            _clientSocket.Disconnect(unexpected == true ? ESessionState.None : ESessionState.Leave);
     }
 
     public bool IsConnect()
@@ -595,7 +596,7 @@ public class NetworkManager : Singleton<NetworkManager>
         if (msg.ErrorCode != 0)
         {
             //DeleteBattleInfo();
-            DisconnectSocket();
+            DisconnectSocket(false);
             
             SetReconnect(false);
             

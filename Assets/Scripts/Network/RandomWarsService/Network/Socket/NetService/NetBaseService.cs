@@ -198,6 +198,11 @@ namespace RandomWarsService.Network.Socket.NetService
             }
             else
             {
+                if (clientSession.DisconnectState == ESessionState.None)
+                {
+                    clientSession.DisconnectState = ESessionState.Wait;
+                }
+
                 OnCloseClientsocket(clientSession, e.SocketError);
             }
         }

@@ -45,14 +45,12 @@ public class SocketManager
     }
 
 
-    private Action _connectCallBack;
-    private Action _reconnectCallBack;
-    
     public SocketManager()
     {
         _netService = null;
         _serverPeer = null;
     }
+
 
     public void Init(IPacketReceiver recvProcessor)
     {
@@ -72,11 +70,11 @@ public class SocketManager
     }
     
 
-    public void Disconnect()
+    public void Disconnect(ESessionState sessionState)
     {
         if (_serverPeer != null)
         {
-            _netService.Disconnect(ESessionState.Leave);
+            _netService.Disconnect(sessionState);
             _serverPeer = null;    
         }
     }
@@ -169,9 +167,6 @@ public class SocketManager
 
 
         NetworkManager.Get().Send(GameProtocol.RECONNECT_GAME_REQ);
-        //
-        //if (_reconnectCallBack != null)
-        //    _reconnectCallBack();
     }
 
 
