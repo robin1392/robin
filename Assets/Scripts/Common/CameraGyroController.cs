@@ -66,7 +66,7 @@ public class CameraGyroController : SingletonDestroy<CameraGyroController>
     public void FocusIn()
     {
         isFade = true;
-        //transform.DOKill();
+        transform.DOKill();
         Input.gyro.enabled = false;
         
         var targetPos = new Vector3(0, -995.51f, -7.38f);

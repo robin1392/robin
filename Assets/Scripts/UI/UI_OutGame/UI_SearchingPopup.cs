@@ -49,6 +49,7 @@ public class UI_SearchingPopup : UI_Popup
         {
             if (NetworkManager.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_START)
             {
+                btn_Cancel.interactable = false;
                 // 매칭 요청중이면 중단을 요청한다.
                 NetworkManager.Get().StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
             }

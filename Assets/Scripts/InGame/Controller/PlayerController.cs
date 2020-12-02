@@ -225,15 +225,7 @@ namespace ED
 
             isHalfHealth = false;
 
-            if (InGameManager.IsNetwork)
-            {
-                
-            }
-            else
-            {
-                sp = 200;
-            }
-
+            sp = isMine ? NetworkManager.Get().GetNetInfo().playerInfo.CurrentSp : NetworkManager.Get().GetNetInfo().otherInfo.CurrentSp;
             maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             
             currentHealth = maxHealth;

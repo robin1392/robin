@@ -1318,6 +1318,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2799760152246755532, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
+        type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 8453943
+      objectReference: {fileID: 0}
     - target: {fileID: 2799760152246755535, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_Name

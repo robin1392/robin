@@ -16,6 +16,7 @@ using TMPro;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
+using Pathfinding;
 using UnityEngine.U2D;
 using Random = UnityEngine.Random;
 
@@ -362,6 +363,8 @@ namespace ED
                 StartGame();
                 RefreshTimeUI(true);
             }
+
+            AstarPath.active.Scan();
 
             // not use
             /*
