@@ -1729,10 +1729,10 @@ namespace RandomWarsProtocol
     [Serializable]
     public class MsgMinionInfo
     {
-        ushort Id;
-        byte DiceIdIndex;
-        int Hp;
-        MsgVector2 Pos;
+        public ushort Id;
+        public byte DiceIdIndex;
+        public int Hp;
+        public MsgVector2 Pos;
 
         public void Write(BinaryWriter bw)
         {
