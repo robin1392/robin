@@ -1986,8 +1986,8 @@ namespace ED
                     //if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgVector2[] msgMinPos = new MsgVector2[listMinion.Count];
-                        int[] hp = new int[listMinion.Count];
+                        MsgVector2[] msgMinPos = new MsgVector2[0];
+                        int[] hp = new int[0];
                         MsgMinionStatus relay = new MsgMinionStatus();
                         relay.PlayerUId = ConvertNetMsg.MsgIntToUshort(myUID);
 
