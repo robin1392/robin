@@ -889,7 +889,7 @@ namespace ED
         public void CallBackLeaveRoom()
         {
             if(IsNetwork)
-                NetworkManager.Get().DisconnectSocket();
+                NetworkManager.Get().DisconnectSocket(false);
 
             // 잠시 테스트로 주석
             //NetworkManager.Get().DeleteBattleInfo();

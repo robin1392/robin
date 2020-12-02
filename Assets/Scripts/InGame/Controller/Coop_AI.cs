@@ -324,13 +324,29 @@ namespace ED
         
         #region Network
         
-        protected override void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        protected override void SyncMinion(int uid, byte minionCount, MsgMinionInfo[] msgMinionInfos, MsgVector2[] msgPos, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
-            for (var i = 0; i < minionCount && i < listMinion.Count; i++)
+            // for (var i = 0; i < minionCount && i < listMinion.Count; i++)
+            // {
+            //     Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPos[i]);
+            //     float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
+            //     listMinion[i].SetNetworkValue(chPos, chHP);
+            // }
+
+            for (int i = 0; i < msgMinionInfos.Length; i++)
             {
-                Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPoss[i]);
-                float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
-                listMinion[i].SetNetworkValue(chPos, chHP);
+                var m = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
+                if (m != null)
+                {
+                    m.SetNetworkValue(
+                        ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
+                        ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
+                    );
+                }
+                else // 유닛이 없을 경우 생성하기
+                {
+                    
+                }
             }
 
             var dic = MsgMinionStatusToDictionary(relay);

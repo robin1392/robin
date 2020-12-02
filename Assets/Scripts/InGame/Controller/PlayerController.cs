@@ -1989,14 +1989,37 @@ namespace ED
                         MsgVector2[] msgMinPos = new MsgVector2[listMinion.Count];
                         int[] hp = new int[listMinion.Count];
                         MsgMinionStatus relay = new MsgMinionStatus();
+                        relay.PlayerUId = ConvertNetMsg.MsgIntToUshort(myUID);
 
-                        for (int i = 0; i < listMinion.Count; i++)
+                        // for (int i = 0; i < listMinion.Count; i++)
+                        // {
+                        //     msgMinPos[i] = ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x, listMinion[i].rb.position.z));
+                        //     hp[i] = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
+                        // }
+
+                        if (listMinion.Count > 0)
                         {
-                            msgMinPos[i] = ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x, listMinion[i].rb.position.z));
-                            hp[i] = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
+                            MsgMinionInfo[] msgMinionInfos = new MsgMinionInfo[listMinion.Count];
+                            for (int i = 0; i < listMinion.Count; i++)
+                            {
+                                msgMinionInfos[i] = new MsgMinionInfo();
+                                msgMinionInfos[i].Id = ConvertNetMsg.MsgIntToUshort(listMinion[i].id);
+                                for (int j = 0; j < arrDiceDeck.Length; j++)
+                                {
+                                    if (arrDiceDeck[j].id == listMinion[i].diceId)
+                                    {
+                                        msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
+                                    }
+                                }
+                                msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(listMinion[i].diceId);
+                                msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
+                                msgMinionInfos[i].Pos =
+                                    ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x,
+                                        listMinion[i].rb.position.z));
+                            }
                         }
 
-                        #if ENABLE_LOG
+#if ENABLE_LOG
                         string str = "MINION_STATUS_RELAY -> Dictionary count : " + _syncDictionary.Keys.Count;
                         #endif
                         if (_syncDictionary.Keys.Count > 0)
@@ -2142,13 +2165,29 @@ namespace ED
             }
         }
 
-        protected virtual void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        protected virtual void SyncMinion(int uid, byte minionCount, MsgMinionInfo[] msgMinionInfos, MsgVector2[] msgPos, int[] minionHP, MsgMinionStatus relay, int packetCount)
         {
-            for (var i = 0; i < minionCount && i < listMinion.Count; i++)
+            // for (var i = 0; i < minionCount && i < listMinion.Count; i++)
+            // {
+            //     Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPos[i]);
+            //     float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
+            //     listMinion[i].SetNetworkValue(chPos, chHP);
+            // }
+
+            for (int i = 0; i < msgMinionInfos.Length; i++)
             {
-                Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPoss[i]);
-                float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
-                listMinion[i].SetNetworkValue(chPos, chHP);
+                var m = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
+                if (m != null)
+                {
+                    m.SetNetworkValue(
+                        ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
+                        ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
+                        );
+                }
+                else // 유닛이 없을 경우 생성하기
+                {
+                    
+                }
             }
 
             var dic = MsgMinionStatusToDictionary(relay);
@@ -2884,11 +2923,11 @@ namespace ED
                     
 
                     if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
-                        InGameManager.Get().playerController.targetPlayer.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                        InGameManager.Get().playerController.targetPlayer.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.MinionInfo, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
                     else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
-                        InGameManager.Get().playerController.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                        InGameManager.Get().playerController.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.MinionInfo, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
                     else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
-                        InGameManager.Get().playerController.coopPlayer.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
+                        InGameManager.Get().playerController.coopPlayer.SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.MinionInfo, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
 
                     //SyncMinion(statusrelay.PlayerUId, statusrelay.PosIndex, statusrelay.Pos, statusrelay.Hp, statusrelay.Relay, statusrelay.packetCount);
                     
