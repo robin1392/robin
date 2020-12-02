@@ -1233,10 +1233,11 @@ public class ConvertNetMsg
         return quatVal;
     }
 
-    public static MsgHitDamageMinionRelay GetHitDamageMinionRelayMsg(int id, float damage)
+    public static MsgHitDamageMinionRelay GetHitDamageMinionRelayMsg(int uid, int id, float damage)
     {
         MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
 
+        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Damage = MsgFloatToInt(damage);
 

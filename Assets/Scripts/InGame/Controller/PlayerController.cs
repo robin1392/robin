@@ -1170,7 +1170,7 @@ namespace ED
             {
                 if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY, minionId , damage, 0);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY, uid, minionId , damage, 0);
                 }
                 HitDamageMinionAndMagic(minionId, damage);
             }
@@ -1200,7 +1200,7 @@ namespace ED
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, baseStatId, damage);
-                NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY, baseStatId , damage, delay);
+                NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY, uid, baseStatId , damage, delay);
             }
 
             if (targetPlayer.myUID == uid)
@@ -2325,16 +2325,18 @@ namespace ED
                         case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                         {
                             var msg = _syncDictionary[protocol].Find(m =>
-                                (((MsgHitDamageMinionRelay) m).Id == (int) param[0]));
+                                (((MsgHitDamageMinionRelay) m).PlayerUId == (int) param[0] &&
+                                 ((MsgHitDamageMinionRelay) m).Id == (int) param[1]));
 
                             if (msg != null)
                             {
-                                ((MsgHitDamageMinionRelay) msg).Damage += ConvertNetMsg.MsgFloatToInt((float)param[1]);
+                                ((MsgHitDamageMinionRelay) msg).Damage += ConvertNetMsg.MsgFloatToInt((float)param[2]);
                             }
                             else
                             {
                                 _syncDictionary[protocol]
-                                    .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (float) param[1]));
+                                    .Add(ConvertNetMsg.GetHitDamageMinionRelayMsg((int) param[0], (int) param[1],
+                                        (float) param[2]));
                             }
                         }
                             break;
@@ -2471,13 +2473,13 @@ namespace ED
                     float damage = ConvertNetMsg.MsgIntToFloat(hitminion.Damage );
                     //float delay = hitminion.Delay / Global.g_networkBaseValue;
                     
-                    // if (NetworkManager.Get().UserUID == hitminion.PlayerUId)
-                    //     InGameManager.Get().playerController.HitDamageMinionAndMagic(hitminion.Id, damage);
-                    // else if (NetworkManager.Get().OtherUID == hitminion.PlayerUId )
-                    //     InGameManager.Get().playerController.targetPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
-                    // else if (NetworkManager.Get().CoopUID == hitminion.PlayerUId )
-                    //     InGameManager.Get().playerController.coopPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
-                    HitDamageMinionAndMagic(hitminion.Id, damage);
+                    if (NetworkManager.Get().UserUID == hitminion.PlayerUId)
+                        InGameManager.Get().playerController.HitDamageMinionAndMagic(hitminion.Id, damage);
+                    else if (NetworkManager.Get().OtherUID == hitminion.PlayerUId )
+                        InGameManager.Get().playerController.targetPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
+                    else if (NetworkManager.Get().CoopUID == hitminion.PlayerUId )
+                        InGameManager.Get().playerController.coopPlayer.HitDamageMinionAndMagic(hitminion.Id, damage);
+                    //HitDamageMinionAndMagic(hitminion.Id, damage);
                     
                     break;
                 }
