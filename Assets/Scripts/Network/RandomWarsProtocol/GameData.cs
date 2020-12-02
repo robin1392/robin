@@ -1759,7 +1759,7 @@ namespace RandomWarsProtocol
     {
         public ushort PlayerUId;
         public byte PosIndex;
-        public MsgMinionInfo MinionInfo;
+        public MsgMinionInfo[] MinionInfo;
         public MsgVector2[] Pos;
         public int[] Hp;
         public MsgMinionStatus Relay;

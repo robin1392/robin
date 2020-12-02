@@ -1537,9 +1537,15 @@ namespace RandomWarsProtocol
                             MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
                             msg.PlayerUId = br.ReadUInt16();
                             msg.PosIndex = br.ReadByte();
-                            msg.MinionInfo = MsgMinionInfo.Read(br);
 
                             int length = br.ReadInt32();
+                            msg.MinionInfo = new MsgMinionInfo[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.MinionInfo[i] = MsgMinionInfo.Read(br);
+                            }
+
+                            length = br.ReadInt32();
                             msg.Pos = new MsgVector2[length];
                             for (int i = 0; i < length; i++)
                             {
