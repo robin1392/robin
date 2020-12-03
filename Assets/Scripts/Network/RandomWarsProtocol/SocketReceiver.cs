@@ -739,6 +739,7 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
+                            msg.PlayerSpawnCount = br.ReadInt32();
                             msg.PlayerInfo = MsgPlayerInfo.Read(br);
 
                             int length = br.ReadInt32();
@@ -755,14 +756,9 @@ namespace RandomWarsProtocol
                                 msg.InGameUp[i] = MsgInGameUp.Read(br);
                             }
 
-                            length = br.ReadInt32();
-                            msg.SyncMinionData = new MsgSyncMinionData[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.SyncMinionData[i] = MsgSyncMinionData.Read(br);
-                            }
+                            msg.LastStatusRelay = MsgMinionStatusRelay.Read(br);
 
-                            msg.PlayerSpawnCount = br.ReadInt32();
+                            msg.OtherPlayerSpawnCount = br.ReadInt32();
                             msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
 
                             length = br.ReadInt32();
@@ -779,14 +775,7 @@ namespace RandomWarsProtocol
                                 msg.OtherInGameUp[i] = MsgInGameUp.Read(br);
                             }
 
-                            length = br.ReadInt32();
-                            msg.OtherSyncMinionData = new MsgSyncMinionData[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.OtherSyncMinionData[i] = MsgSyncMinionData.Read(br);
-                            }
-
-                            msg.OtherPlayerSpawnCount = br.ReadInt32();
+                            msg.OtherLastStatusRelay = MsgMinionStatusRelay.Read(br);
                             StartSyncGameNotify(peer, msg);
                         }
                     }
@@ -1509,19 +1498,7 @@ namespace RandomWarsProtocol
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
-                            MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
-                            msg.PlayerUId = br.ReadUInt16();
-
-                            int length = br.ReadInt32();
-                            msg.MinionInfo = new MsgMinionInfo[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.MinionInfo[i] = MsgMinionInfo.Read(br);
-                            }
-
-                            msg.Relay = MsgMinionStatus.Read(br);
-                            msg.packetCount = br.ReadInt32();
-
+                            MsgMinionStatusRelay msg = MsgMinionStatusRelay.Read(br);
                             MinionStatusRelay(peer, msg);
                         }
                     }

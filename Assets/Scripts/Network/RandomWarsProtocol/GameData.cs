@@ -572,10 +572,41 @@ namespace RandomWarsProtocol
     public class MsgMinionStatusRelay
     {
         public ushort PlayerUId;
-        public byte PosIndex;
+        public int packetCount;
         public MsgMinionInfo[] MinionInfo;
         public MsgMinionStatus Relay;
-        public int packetCount;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(PlayerUId);
+            bw.Write(packetCount);
+
+            int length = (MinionInfo == null) ? 0 : MinionInfo.Length;
+            bw.Write(length);
+            for (int i = 0; i < length; i++)
+            {
+                MinionInfo[i].Write(bw);
+            }
+
+            Relay.Write(bw);
+        }
+
+        public static MsgMinionStatusRelay Read(BinaryReader br)
+        {
+            MsgMinionStatusRelay data = new MsgMinionStatusRelay();
+            data.PlayerUId = br.ReadUInt16();
+            data.packetCount = br.ReadInt32();
+
+            int length = br.ReadInt32();
+            data.MinionInfo = new MsgMinionInfo[length];
+            for (int i = 0; i < length; i++)
+            {
+                data.MinionInfo[i] = MsgMinionInfo.Read(br);
+            }
+
+            data.Relay = MsgMinionStatus.Read(br);
+            return data;
+        }
     }
 
 

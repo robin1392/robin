@@ -29,17 +29,17 @@ namespace RandomWarsProtocol.Msg
     public class MsgStartSyncGameNotify
     {
         // 플레이어 정보.
+        public int PlayerSpawnCount;
         public MsgPlayerInfo PlayerInfo;
         public MsgGameDice[] GameDiceData;
         public MsgInGameUp[] InGameUp;
-        public MsgSyncMinionData[] SyncMinionData;
-        public int PlayerSpawnCount;
+        public MsgMinionStatusRelay LastStatusRelay;
 
         // 상대방 정보
+        public int OtherPlayerSpawnCount;
         public MsgPlayerInfo OtherPlayerInfo;
         public MsgGameDice[] OtherGameDiceData;
         public MsgInGameUp[] OtherInGameUp;
-        public MsgSyncMinionData[] OtherSyncMinionData;
-        public int OtherPlayerSpawnCount;
+        public MsgMinionStatusRelay OtherLastStatusRelay;
     }
 }
