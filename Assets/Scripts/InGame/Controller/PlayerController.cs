@@ -2219,8 +2219,8 @@ namespace ED
 
                         minion.Initialize(MinionDestroyCallback);
                 
-                        if (!listMinion.Contains(m)) 
-                            listMinion.Add(m);
+                        if (!listMinion.Contains(minion)) 
+                            listMinion.Add(minion);
                     }
                 }
             }
