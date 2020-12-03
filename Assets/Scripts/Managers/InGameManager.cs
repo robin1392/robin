@@ -553,8 +553,8 @@ namespace ED
 
                     if (IsNetwork == false)
                     {
-                        playerController.Spawn();
-                        playerController.targetPlayer.Spawn();
+                        playerController.Spawn(wave);
+                        playerController.targetPlayer.Spawn(wave);
 
                         wave++;
                     }
@@ -657,7 +657,7 @@ namespace ED
             playerController.SetSp(sp);
         }
 
-        public void NetSpawnNotify(int wave, int uid = 0)
+        public void NetSpawnNotify(int wave, int spawnCount, int uid = 0)
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
@@ -669,21 +669,21 @@ namespace ED
             switch (NetworkManager.Get().playType)
             {
                 case Global.PLAY_TYPE.BATTLE:
-                    playerController.Spawn();
-                    playerController.targetPlayer.Spawn();
+                    playerController.Spawn(spawnCount);
+                    playerController.targetPlayer.Spawn(spawnCount);
                     break;
                 case Global.PLAY_TYPE.COOP:
                     if (uid > 0)
                     {
                         if (NetworkManager.Get().UserUID == uid)
                         {
-                            playerController.Spawn();
+                            playerController.Spawn(spawnCount);
                         }
                         else if (NetworkManager.Get().OtherUID == uid)
                         {
-                            playerController.targetPlayer.Spawn();
+                            playerController.targetPlayer.Spawn(spawnCount);
                         }
-                        ((Coop_AI) playerController.coopPlayer).Spawn();
+                        ((Coop_AI) playerController.coopPlayer).Spawn(spawnCount);
                     }
                     break;
             }
@@ -1243,15 +1243,17 @@ namespace ED
             SendInGameManager(GameProtocol.START_SYNC_GAME_REQ , myData.userId, playerController.spawnCount , syncMyMinionData , otherData.userId, playerController.targetPlayer.spawnCount , syncOtherMinionData);
         }
 
-        public void SyncGameData(MsgStartSyncGameNotify gameData)
+        public void SyncGameData(MsgStartSyncGameAck gameData)
         {
             print("recv p info " + gameData.PlayerInfo.PlayerUId + "  " + gameData.PlayerInfo.Name);
             print("recv other info " + gameData.OtherPlayerInfo.PlayerUId + "  " + gameData.OtherPlayerInfo.Name);
 
+            wave = gameData.Wave;
+
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
-            if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true; 
+            if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true;
             playerController.RefreshHealthBar();
             playerController.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.PlayerInfo.IsBottomPlayer);
             playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
@@ -1280,37 +1282,39 @@ namespace ED
             playerController.SetDiceField(gameData.GameDiceData);
             
             // 미니언 셋팅
-            List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
-            foreach (var data in myMinionData)
-            {
-                var diceData = data_DiceInfo.GetData(data.minionDataId);
-                var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
-                m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
-                m.Initialize(playerController.MinionDestroyCallback);
-                if (data.minionDataId == 4004)
-                {
-                    m.CancelInvoke("Fusion");
-                    ((Minion_Robot)m).Transform();
-                }
-                m.SetNetSyncMinionData(data);
-                Debug.LogFormat("Recv My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-            }
+            playerController.SyncMinion(gameData.LastStatusRelay.MinionInfo, null, gameData.LastStatusRelay.packetCount);
+            // List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
+            // foreach (var data in myMinionData)
+            // {
+            //     var diceData = data_DiceInfo.GetData(data.minionDataId);
+            //     var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
+            //     m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
+            //     m.Initialize(playerController.MinionDestroyCallback);
+            //     if (data.minionDataId == 4004)
+            //     {
+            //         m.CancelInvoke("Fusion");
+            //         ((Minion_Robot)m).Transform();
+            //     }
+            //     m.SetNetSyncMinionData(data);
+            //     Debug.LogFormat("Recv My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
+            // }
             
-            List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
-            foreach (var data in otherMinionData)
-            {
-                var diceData = data_DiceInfo.GetData(data.minionDataId);
-                var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
-                m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
-                m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
-                if (data.minionDataId == 4004)
-                {
-                    m.CancelInvoke("Fusion");
-                    ((Minion_Robot)m).Transform();
-                }
-                m.SetNetSyncMinionData(data);
-                Debug.LogFormat("Recv Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-            }
+            playerController.targetPlayer.SyncMinion(gameData.OtherLastStatusRelay.MinionInfo, null, gameData.OtherLastStatusRelay.packetCount);
+            // List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
+            // foreach (var data in otherMinionData)
+            // {
+            //     var diceData = data_DiceInfo.GetData(data.minionDataId);
+            //     var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
+            //     m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+            //     m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
+            //     if (data.minionDataId == 4004)
+            //     {
+            //         m.CancelInvoke("Fusion");
+            //         ((Minion_Robot)m).Transform();
+            //     }
+            //     m.SetNetSyncMinionData(data);
+            //     Debug.LogFormat("Recv Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
+            // }
 
             // Spawn Count
             playerController.spawnCount = gameData.PlayerSpawnCount;
@@ -1483,8 +1487,9 @@ namespace ED
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                         UI_InGamePopup.Get().popup_Waiting.SetActive(false);
                     }
-                    
-                    NetSpawnNotify((int) param[0]);
+
+                    MsgSpawnNotify msgSpawnNotify = (MsgSpawnNotify)param[0];
+                    NetSpawnNotify(msgSpawnNotify.Wave, ConvertNetMsg.MsgByteToInt(msgSpawnNotify.SpawnCount));
                     break;
                 }
                 case GameProtocol.COOP_SPAWN_NOTIFY:
@@ -1510,7 +1515,7 @@ namespace ED
                     }
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
-                    NetSpawnNotify(msg.Wave, msg.PlayerUId);
+                    NetSpawnNotify(msg.Wave, msg.SpawnCount, msg.PlayerUId);
 
                     break;
                 }
@@ -1578,7 +1583,9 @@ namespace ED
                 case GameProtocol.START_SYNC_GAME_ACK:
                 {
                     MsgStartSyncGameAck startsyncack = (MsgStartSyncGameAck) param[0];
-                    // 할일없다
+                    // 데이터로 싱크 맞추기
+                    SyncGameData(startsyncack);
+                    
                     break;
                 }
                 case GameProtocol.START_SYNC_GAME_NOTIFY:
@@ -1586,7 +1593,7 @@ namespace ED
                     MsgStartSyncGameNotify syncNotify = (MsgStartSyncGameNotify) param[0];
                     
                     // 받은 데이터로 동기화 시킨다
-                    SyncGameData(syncNotify);
+                    //SyncGameData(syncNotify);
                     
                     break;
                 }
@@ -1658,6 +1665,7 @@ namespace ED
                     MsgReadySyncGameAck readyack = (MsgReadySyncGameAck) param[0];
                     
                     Time.timeScale = 0;
+                    SendInGameManager(GameProtocol.START_SYNC_GAME_REQ);
 
                     break;
                 }
@@ -1671,7 +1679,7 @@ namespace ED
 
                         NetworkManager.Get().SetResume(true);
                         // 미니언 정보 취합 해서 보내준다..
-                        SendSyncAllBattleInfo();
+                        //SendSyncAllBattleInfo();
                     }
                     
                     break;

@@ -283,7 +283,7 @@ public class SocketSendEvent
             // reconnect , pause , etc...
             case GameProtocol.START_SYNC_GAME_REQ:
             {
-                _sender.StartSyncGameReq(peer , (int)param[0] , (int)param[1], (MsgSyncMinionData[])param[2] , (int)param[3] , (int)param[4], (MsgSyncMinionData[])param[5]);
+                _sender.StartSyncGameReq(peer);
                 break;
             }
             case GameProtocol.END_SYNC_GAME_REQ:

@@ -186,7 +186,7 @@ namespace ED
                 var pos = FieldManager.Get().GetTopListPos(i);
                 var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
                     Global.E_LOADTYPE.LOAD_MINION);
-                var m = CreateMinion(obj, pos, 1, 0);
+                var m = CreateMinion(obj, pos);
 
                 //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                 //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
@@ -253,7 +253,7 @@ namespace ED
                     $"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
-                var m = CreateMinion(obj, transform.position, 1, 0, false);
+                var m = CreateMinion(obj, transform.position, false);
 
                 m.id = msgBoss.Id;
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
@@ -324,7 +324,7 @@ namespace ED
         
         #region Network
         
-        protected override void SyncMinion(MsgMinionInfo[] msgMinionInfos, MsgMinionStatus relay, int packetCount)
+        public override void SyncMinion(MsgMinionInfo[] msgMinionInfos, MsgMinionStatus relay, int packetCount)
         {
             // for (var i = 0; i < minionCount && i < listMinion.Count; i++)
             // {

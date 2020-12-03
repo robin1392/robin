@@ -103,7 +103,7 @@ public class SocketRecvEvent
 
     public void OnStartSyncGameNotify(Peer peer, MsgStartSyncGameNotify msg)
     {
-        UnityUtil.Print("NOTIFY => ", "START_SYNC_GAME_NOTIFY  " + msg.PlayerInfo.PlayerUId.ToString(), "green");
+        UnityUtil.Print("NOTIFY => ", "START_SYNC_GAME_NOTIFY", "green");
         
         if (InGameManager.Get() != null)
             InGameManager.Get().RecvInGameManager(GameProtocol.START_SYNC_GAME_NOTIFY, msg);
