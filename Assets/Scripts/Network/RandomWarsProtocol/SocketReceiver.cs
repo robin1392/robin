@@ -472,6 +472,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgSpawnNotify msg = new MsgSpawnNotify();
                             msg.Wave = br.ReadInt32();
+                            msg.SpawnCount = br.ReadByte();
                             SpawnNotify(peer, msg);
                         }
                     }
@@ -488,6 +489,7 @@ namespace RandomWarsProtocol
                             MsgCoopSpawnNotify msg = new MsgCoopSpawnNotify();
                             msg.Wave = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
+                            msg.SpawnCount = br.ReadByte();
                             CoopSpawnNotify(peer, msg);
                         }
                     }
@@ -705,7 +707,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
                             msg.ErrorCode = br.ReadInt32();
-                            msg.PlayerSpawnCount = br.ReadInt32();
+                            msg.PlayerSpawnCount = br.ReadByte();
                             msg.PlayerInfo = MsgPlayerInfo.Read(br);
 
                             int length = br.ReadInt32();
@@ -724,7 +726,7 @@ namespace RandomWarsProtocol
 
                             msg.LastStatusRelay = MsgMinionStatusRelay.Read(br);
 
-                            msg.OtherPlayerSpawnCount = br.ReadInt32();
+                            msg.OtherPlayerSpawnCount = br.ReadByte();
                             msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
 
                             length = br.ReadInt32();

@@ -22,6 +22,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgSpawnNotify
     {
         public int Wave;
+        public byte SpawnCount;
     }
 
 
@@ -30,6 +31,7 @@ namespace RandomWarsProtocol.Msg
     {
         public int Wave;
         public int PlayerUId;
+        public byte SpawnCount;
     }
 
 
