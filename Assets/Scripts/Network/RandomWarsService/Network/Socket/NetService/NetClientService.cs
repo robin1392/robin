@@ -162,6 +162,12 @@ namespace RandomWarsService.Network.Socket.NetService
             Connect(_serverAddr, _port, _playerSessionId);
             _clientSession.NetState = ENetState.Reconnecting;
 
+
+            if (ClientReconnectingCallback != null)
+            {
+                ClientReconnectingCallback();
+            }
+
             return true;
         }
 
