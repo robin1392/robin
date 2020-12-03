@@ -2207,7 +2207,7 @@ namespace ED
                         minion.moveSpeed = data.moveSpeed;
                         minion.range = data.range;
                         minion.searchRange = data.searchRange;
-                        minion.eyeLevel = info.DiceEyeLevel - 1;
+                        minion.eyeLevel = info.DiceEyeLevel;
                         minion.upgradeLevel = ingameUpgradeLevel;
                         
                         if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
