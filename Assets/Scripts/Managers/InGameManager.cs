@@ -1675,11 +1675,16 @@ namespace ED
                     
                     if (NetworkManager.Get().UserUID != readynoti.PlayerUId)
                     {
-                        Time.timeScale = 0;
-
                         NetworkManager.Get().SetResume(true);
                         // 미니언 정보 취합 해서 보내준다..
                         //SendSyncAllBattleInfo();
+                        
+                        // 돌리던 ai false
+                        NetworkManager.Get().SetOtherDisconnect(false);
+                        
+                        UI_InGamePopup.Get().obj_Indicator.SetActive(true);
+                        
+                        Time.timeScale = 0;
                     }
                     
                     break;
