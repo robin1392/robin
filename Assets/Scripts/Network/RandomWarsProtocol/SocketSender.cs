@@ -280,52 +280,23 @@ namespace RandomWarsProtocol
         }
 
 
-        public void StartSyncGameReq(Peer peer, int playerId, int playerSpawnCount, MsgSyncMinionData[] syncMinionData, int otherPlayerId, int otherPlayerSpawnCount, MsgSyncMinionData[] otherSyncMinionData)
+        public void StartSyncGameReq(Peer peer)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write(playerId);
-                bw.Write(playerSpawnCount);
-
-                int length = (syncMinionData == null) ? 0 : syncMinionData.Length;
-                bw.Write(length);
-                for (int i = 0; i < length; i++)
-                {
-                    syncMinionData[i].Write(bw);
-                }
-
-                bw.Write(otherPlayerId);
-                bw.Write(otherPlayerSpawnCount);
-
-                length = (otherSyncMinionData == null) ? 0 : otherSyncMinionData.Length;
-                bw.Write(length);
-                for (int i = 0; i < length; i++)
-                {
-                    otherSyncMinionData[i].Write(bw);
-                }
-
                 peer.SendPacket((int)GameProtocol.START_SYNC_GAME_REQ, ms.ToArray());
             }
         }
 
 
-        public void StartSyncGameAck(Peer peer, GameErrorCode code)
+        public void StartSyncGameAck(Peer peer, GameErrorCode code, MsgPlayerInfo playerInfo, int playerSpawnCount, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgMinionStatusRelay lastStatusRelay, MsgPlayerInfo otherPlayerInfo, int otherPlayerSpawnCount, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgMinionStatusRelay otherLastStatusRelay)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)code);
-                peer.SendPacket((int)GameProtocol.START_SYNC_GAME_ACK, ms.ToArray());
-            }
-        }
 
-
-        public void StartSyncGameNotify(Peer peer, MsgPlayerInfo playerInfo, int playerSpawnCount, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgMinionStatusRelay lastStatusRelay, MsgPlayerInfo otherPlayerInfo, int otherPlayerSpawnCount, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgMinionStatusRelay otherLastStatusRelay)
-        {
-            using (var ms = new MemoryStream())
-            {
-                BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(playerSpawnCount);
                 playerInfo.Write(bw);
 
@@ -365,6 +336,16 @@ namespace RandomWarsProtocol
 
                 otherLastStatusRelay.Write(bw);
 
+                peer.SendPacket((int)GameProtocol.START_SYNC_GAME_ACK, ms.ToArray());
+            }
+        }
+
+
+        public void StartSyncGameNotify(Peer peer)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
                 peer.SendPacket((int)GameProtocol.START_SYNC_GAME_NOTIFY, ms.ToArray());
             }
         }
