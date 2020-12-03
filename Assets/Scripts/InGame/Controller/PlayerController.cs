@@ -2212,12 +2212,12 @@ namespace ED
                         
                         if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
                         {
-                            m.power *= minion.eyeLevel + 1;
-                            m.maxHealth *= minion.eyeLevel + 1;
-                            m.effect *= minion.eyeLevel + 1;
+                            minion.power *= minion.eyeLevel + 1;
+                            minion.maxHealth *= minion.eyeLevel + 1;
+                            minion.effect *= minion.eyeLevel + 1;
                         }
 
-                        m.Initialize(MinionDestroyCallback);
+                        minion.Initialize(MinionDestroyCallback);
                 
                         if (!listMinion.Contains(m)) 
                             listMinion.Add(m);
