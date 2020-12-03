@@ -2207,8 +2207,20 @@ namespace ED
                         minion.moveSpeed = data.moveSpeed;
                         minion.range = data.range;
                         minion.searchRange = data.searchRange;
-                        minion.eyeLevel = info.DiceEyeLevel;
+                        minion.eyeLevel = info.DiceEyeLevel - 1;
+                        minion.upgradeLevel = ingameUpgradeLevel;
                         
+                        if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
+                        {
+                            m.power *= minion.eyeLevel + 1;
+                            m.maxHealth *= minion.eyeLevel + 1;
+                            m.effect *= minion.eyeLevel + 1;
+                        }
+
+                        m.Initialize(MinionDestroyCallback);
+                
+                        if (!listMinion.Contains(m)) 
+                            listMinion.Add(m);
                     }
                 }
             }
