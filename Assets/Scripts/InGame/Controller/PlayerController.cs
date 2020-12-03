@@ -2169,22 +2169,25 @@ namespace ED
                 }
                 else // 유닛이 없을 경우 생성하기 (ex. 재접속)
                 {
+                    if (msgMinionInfos[i].Id - _myUID * 10000 >= (spawnCount + 1) * 300)
+                        continue;
+                    
                     int wave = InGameManager.Get().wave;
                     var myInfo = isMine
                         ? NetworkManager.Get().GetNetInfo().playerInfo
                         : NetworkManager.Get().GetNetInfo().otherInfo;
                     var arrDiceLevel = myInfo.DiceLevelArray;
                     
-                    foreach (var info in msgMinionInfos)
+                    //foreach (var info in msgMinionInfos)
                     {
-                        GameObject prefab = FileHelper.LoadPrefab(arrDiceDeck[info.DiceIdIndex].prefabName,
+                        GameObject prefab = FileHelper.LoadPrefab(arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
                             Global.E_LOADTYPE.LOAD_MINION);
-                        var data = arrDiceDeck[info.DiceIdIndex];
-                        var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(info.Pos));
-                        var diceLevel = arrDiceLevel[info.DiceIdIndex];
-                        var ingameUpgradeLevel = arrUpgradeLevel[info.DiceIdIndex];
+                        var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                        var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
+                        var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
+                        var ingameUpgradeLevel = arrUpgradeLevel[msgMinionInfos[i].DiceIdIndex];
 
-                        minion.id = info.Id;
+                        minion.id = msgMinionInfos[i].Id;
                         minion.diceId = data.id;
                         minion.controller = this;
                         minion.isMine = isMine;
@@ -2197,7 +2200,7 @@ namespace ED
                             m.power *= Mathf.Pow(2f, wave - 10);
                         }
                         minion.maxHealth = data.maxHealth + (data.maxHpUpgrade * diceLevel) + (data.maxHpInGameUp * ingameUpgradeLevel);
-                        minion.currentHealth = info.Hp;
+                        minion.currentHealth = msgMinionInfos[i].Hp;
                         RefreshHealthBar();
                         minion.effect = data.effect + (data.effectUpgrade * diceLevel) +
                                         (data.effectInGameUp * ingameUpgradeLevel);
@@ -2207,7 +2210,7 @@ namespace ED
                         minion.moveSpeed = data.moveSpeed;
                         minion.range = data.range;
                         minion.searchRange = data.searchRange;
-                        minion.eyeLevel = info.DiceEyeLevel;
+                        minion.eyeLevel = msgMinionInfos[i].DiceEyeLevel;
                         minion.upgradeLevel = ingameUpgradeLevel;
                         
                         if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
