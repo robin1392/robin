@@ -1317,8 +1317,8 @@ namespace ED
             // }
 
             // Spawn Count
-            playerController.spawnCount = gameData.PlayerSpawnCount;
-            playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
+            //playerController.spawnCount = gameData.PlayerSpawnCount;
+            //playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
             
             NetworkManager.Get().SetReconnect(false);
 
@@ -1631,6 +1631,9 @@ namespace ED
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
+
+                    playerController.spawnCount = ConvertNetMsg.MsgByteToInt(endSyncNotify.SpawnCount);
+                    playerController.targetPlayer.spawnCount = ConvertNetMsg.MsgByteToInt(endSyncNotify.SpawnCount);
 
                     Time.timeScale = 1f;
                     
