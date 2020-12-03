@@ -12,6 +12,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgEndSyncGameAck
     {
         public int ErrorCode;
+        public byte SpawnCount;
     }
 
 
@@ -19,5 +20,6 @@ namespace RandomWarsProtocol.Msg
     public class MsgEndSyncGameNotify
     {
         public ushort PlayerUId;
+        public byte SpawnCount;
     }
 }

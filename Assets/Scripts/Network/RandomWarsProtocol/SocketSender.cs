@@ -360,22 +360,24 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndSyncGameAck(Peer peer, GameErrorCode code) 
+        public void EndSyncGameAck(Peer peer, GameErrorCode code, byte spawnCount) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)code);
+                bw.Write(spawnCount);
                 peer.SendPacket((int)GameProtocol.END_SYNC_GAME_ACK, ms.ToArray());
             }
         }
 
 
-        public void EndSyncGameNotify(Peer peer, byte spawnCount) 
+        public void EndSyncGameNotify(Peer peer, ushort playerUId, byte spawnCount) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
                 bw.Write(spawnCount);
                 peer.SendPacket((int)GameProtocol.END_SYNC_GAME_NOTIFY, ms.ToArray());
             }
