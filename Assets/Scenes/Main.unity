@@ -1019,15 +1019,35 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -35.100006
       objectReference: {fileID: 0}
+    - target: {fileID: 799841191847552871, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_Text
+      value: MUSIC
+      objectReference: {fileID: 0}
     - target: {fileID: 834519556178782503, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: image_Arrow_Right
       value: 
       objectReference: {fileID: 6180031957008467227}
+    - target: {fileID: 2446111367652761916, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2769207660905567041, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -65.6001
+      objectReference: {fileID: 0}
+    - target: {fileID: 5479964360344672664, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5479964360344672664, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 6086142233104664410, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
@@ -1228,6 +1248,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6180031955682643125, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -204.48999
       objectReference: {fileID: 0}
     - target: {fileID: 6180031955717966246, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
@@ -1788,6 +1813,11 @@ PrefabInstance:
     - target: {fileID: 8905260850825065729, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085359381398489538, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
