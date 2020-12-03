@@ -16,6 +16,8 @@ namespace RandomWarsProtocol.Msg
     {
         public int ErrorCode;
 
+        public int Wave;
+
         // 플레이어 정보.
         public int PlayerSpawnCount;
         public MsgPlayerInfo PlayerInfo;

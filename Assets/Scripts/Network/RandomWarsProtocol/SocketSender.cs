@@ -292,13 +292,13 @@ namespace RandomWarsProtocol
         }
 
 
-        public void StartSyncGameAck(Peer peer, GameErrorCode code, byte playerSpawnCount, MsgPlayerInfo playerInfo, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgMinionStatusRelay lastStatusRelay, byte otherPlayerSpawnCount, MsgPlayerInfo otherPlayerInfo, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgMinionStatusRelay otherLastStatusRelay)
+        public void StartSyncGameAck(Peer peer, GameErrorCode code, int wave, byte playerSpawnCount, MsgPlayerInfo playerInfo, MsgGameDice[] gameDiceData, MsgInGameUp[] inGameUp, MsgMinionStatusRelay lastStatusRelay, byte otherPlayerSpawnCount, MsgPlayerInfo otherPlayerInfo, MsgGameDice[] otherGameDiceData, MsgInGameUp[] otherInGameUp, MsgMinionStatusRelay otherLastStatusRelay)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)code);
-
+                bw.Write(wave);
                 bw.Write(playerSpawnCount);
                 playerInfo.Write(bw);
 
