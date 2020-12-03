@@ -983,6 +983,7 @@ namespace RandomWarsProtocol
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(playerUId);
+                bw.Write(packetCount);
 
                 bw.Write(minionInfo.Length);
                 for (int i = 0; i < minionInfo.Length; i++)
@@ -991,7 +992,6 @@ namespace RandomWarsProtocol
                 }
 
                 relay.Write(bw);
-                bw.Write(packetCount);
                 peer.SendPacket((int)GameProtocol.MINION_STATUS_RELAY, ms.ToArray());
             }
         }
