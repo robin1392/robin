@@ -140,13 +140,10 @@ namespace RandomWarsService.Network.Socket.NetService
 
         public bool CheckReconnection()
         {
-            if (_clientSession == null || _clientSession.DisconnectState != ESessionState.Wait)
-            {
-                return false;
-            }
-
-
-            _logger.Debug(string.Format("[NetClient] CheckReconnection. sessionState: {0}", _clientSession.DisconnectState));
+            //if (_clientSession == null || _clientSession.DisconnectState != ESessionState.Wait)
+            //{
+            //    return false;
+            //}
 
 
             if (BinaryDeserialize() == false)
