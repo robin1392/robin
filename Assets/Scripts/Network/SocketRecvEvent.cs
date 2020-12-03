@@ -363,7 +363,7 @@ public class SocketRecvEvent
         UnityUtil.Print("spawn Notify ", msg.Wave.ToString(), "white");
         //
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.SPAWN_NOTIFY, msg.Wave);
+            InGameManager.Get().RecvInGameManager(GameProtocol.SPAWN_NOTIFY, msg);
 
     }
         
