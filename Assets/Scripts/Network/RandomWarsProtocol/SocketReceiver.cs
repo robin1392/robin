@@ -708,7 +708,6 @@ namespace RandomWarsProtocol
                             MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
                             msg.ErrorCode = br.ReadInt32();
                             msg.Wave = br.ReadInt32();
-                            msg.PlayerSpawnCount = br.ReadByte();
                             msg.PlayerInfo = MsgPlayerInfo.Read(br);
 
                             int length = br.ReadInt32();
@@ -727,7 +726,6 @@ namespace RandomWarsProtocol
 
                             msg.LastStatusRelay = MsgMinionStatusRelay.Read(br);
 
-                            msg.OtherPlayerSpawnCount = br.ReadByte();
                             msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
 
                             length = br.ReadInt32();
