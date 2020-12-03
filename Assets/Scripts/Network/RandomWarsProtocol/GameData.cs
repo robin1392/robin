@@ -615,6 +615,7 @@ namespace RandomWarsProtocol
     {
         public ushort Id;
         public byte DiceIdIndex;
+        public byte DiceEyeLevel;
         public int Hp;
         public MsgVector2 Pos;
 
@@ -622,6 +623,7 @@ namespace RandomWarsProtocol
         {
             bw.Write(Id);
             bw.Write(DiceIdIndex);
+            bw.Write(DiceEyeLevel);
             bw.Write(Hp);
             Pos.Write(bw);
         }
@@ -631,6 +633,7 @@ namespace RandomWarsProtocol
             MsgMinionInfo data = new MsgMinionInfo();
             data.Id = br.ReadUInt16();
             data.DiceIdIndex = br.ReadByte();
+            data.DiceEyeLevel = br.ReadByte();
             data.Hp = br.ReadInt32();
             data.Pos = MsgVector2.Read(br);
             return data;
