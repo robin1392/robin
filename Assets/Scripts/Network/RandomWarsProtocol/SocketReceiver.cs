@@ -707,6 +707,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
                             msg.ErrorCode = br.ReadInt32();
+                            msg.Wave = br.ReadInt32();
                             msg.PlayerSpawnCount = br.ReadByte();
                             msg.PlayerInfo = MsgPlayerInfo.Read(br);
 
