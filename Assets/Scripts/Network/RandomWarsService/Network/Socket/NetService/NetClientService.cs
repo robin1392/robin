@@ -57,7 +57,6 @@ namespace RandomWarsService.Network.Socket.NetService
             ProcessConnectionEvent();
 
 
-            // 
             if (_clientSession != null 
                 && _clientSession.NetState == ENetState.Reconnecting
                 && _reconnectTryTimeTick != 0 
@@ -68,11 +67,6 @@ namespace RandomWarsService.Network.Socket.NetService
                 _reconnectTryTimeTick = _nowTime.AddSeconds(3).Ticks;
                 Connect(_serverAddr, _port, _playerSessionId);
                 _clientSession.NetState = ENetState.Reconnecting;
-
-                //lock (_netEventQueue)
-                //{
-                //    _netEventQueue.Enqueue(_clientSession);
-                //}
             }
 
             if (IsConnected() == true)
@@ -167,12 +161,9 @@ namespace RandomWarsService.Network.Socket.NetService
                 return false;
             }
 
-            lock (_netEventQueue)
-            {
-                _clientSession.NetState = ENetState.Reconnecting;
-                _reconnectTryTimeTick = _nowTime.AddSeconds(3).Ticks;
-                _netEventQueue.Enqueue(_clientSession);
-            }
+            _reconnectTryTimeTick = _nowTime.AddSeconds(3).Ticks;
+            Connect(_serverAddr, _port, _playerSessionId);
+            _clientSession.NetState = ENetState.Reconnecting;
 
             return true;
         }

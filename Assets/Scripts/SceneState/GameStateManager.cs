@@ -242,25 +242,24 @@ public class GameStateManager : Singleton<GameStateManager>
 
 #if NETWORK_ACT
 
-        if (NetworkManager.Get().CheckReconnection() == false)
+        if (NetworkManager.Get().IsConnect() == true)
+        {
+            if (NetworkManager.Get().CheckReconnection() == false)
+            {
+                MoveMainScene();
+            }
+        }
+        else
         {
             // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
             if (NetworkManager.Get().UserId.Length > 0)
             {
-                //WebPacket.Get().SendUserAuth(NetworkManager.Get().UserId, UserAuthOK);
                 NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
             }
             else
             {
                 string userid = UserInfoManager.Get().GetUserInfo().userID;
-
-                //WebPacket.Get().SendUserAuth(userid, UserAuthOK);
                 NetworkManager.Get().AuthUserReq(userid);
-                // 나중엔 서버에서 유저정보 받아서 덱 정보 셋팅및 기타 정보 셋팅해야되지만...개발중이니 잠시만 
-                // if (userid == "")
-                // {
-                //     //UserInfoManager.Get().GetUserInfo().ResetDeck();
-                // }
             }
         }
 
@@ -274,63 +273,17 @@ public class GameStateManager : Singleton<GameStateManager>
 
     public void UserAuthOK()
     {
-        // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
-        // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
-        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
-
-        
-        //NetBattleInfo battleinfo = 
-        //if (battleinfo == null)
-        //{
-        //    ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
-        //}
-        //else
-        //{
-        //    // 배틀 정보 파일 체크 하자
-        //    print("check file true ");
-        //    if ( battleinfo.battleStart == true)
-        //    {
-        //        TimeSpan timecheck = DateTime.UtcNow - battleinfo.battleStartTime;
-        //        print("total Seconds : " + timecheck.TotalSeconds);
-        //        // 정해진 시간 이내이냐 ?? --> 게임 재접속으로 가자
-        //        if (timecheck.TotalSeconds <= Global.g_reconnectGameTimeCheck)
-        //        {
-        //            NetworkManager.Get().SetReconnect(true);        // reconnect
-        //            // go reconnect
-        //            NetworkManager.Get().ReConnectServer(Global.PLAY_TYPE.BATTLE , battleinfo.serverAddr  , battleinfo.serverPort , battleinfo.serverSession , ServerReconnectCallBack);
-        //        }
-        //        else
-        //        {
-        //            ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
-        //    }
-        //}
-        
+        if (NetworkManager.Get().CheckReconnection() == false)
+        {
+            // 추후 필요에 의해 다른 스텝이 낄경우 스텝 추가  가능
+            // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
+            ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
+        }
     }
     #endregion
     
     
     #region server connect ok
-
-    //public void ServerConnectCallBack()
-    //{
-    //    UnityUtil.Print("Server Connect" , "Connect OK" , "blue");
-
-    //    switch (NetworkManager.Get().playType)
-    //    {
-    //        case Global.PLAY_TYPE.BATTLE:
-    //            NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
-    //            break;
-    //        case Global.PLAY_TYPE.COOP:
-    //            NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ , NetworkManager.Get().gameSession , (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
-    //            break;
-    //    }
-    //}
-
     public void CheckSendInGame()
     {
         switch (NetworkManager.Get().playType)
@@ -352,15 +305,6 @@ public class GameStateManager : Singleton<GameStateManager>
 
                 break;
         }
-    }
-
-    public void ServerReconnectCallBack()
-    {
-        UnityUtil.Print("Server ReConnect" , "Connect OK" , "blue");
-        
-        // reconnect req
-        if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
-            NetworkManager.Get().Send(GameProtocol.RECONNECT_GAME_REQ);
     }
 
     #endregion
