@@ -418,7 +418,7 @@ namespace ED
 
             if (m != null)
             {
-                if (isSpawnCountUp) m.id = _myUID * 10000 + subSpawnCount++;
+                if (isSpawnCountUp) m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
@@ -637,7 +637,7 @@ namespace ED
                 {
                     //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : (InGameManager.Get().playerController == this);
                     m.isMine = InGameManager.IsNetwork ? isMine : (InGameManager.Get().playerController == this);
-                    m.id = m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
+                    m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
                     m.controller = this;
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
