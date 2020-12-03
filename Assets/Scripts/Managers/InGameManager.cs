@@ -1600,7 +1600,7 @@ namespace ED
                 
                 case GameProtocol.END_SYNC_GAME_ACK:
                 {
-                    MsgEndSyncGameAck endsynack = (MsgEndSyncGameAck) param[0];
+                    MsgEndSyncGameAck endSyncAck = (MsgEndSyncGameAck) param[0];
                     
                     // 시작이 되었으니...
                     if (NetworkManager.Get().isResume == true)
@@ -1613,6 +1613,8 @@ namespace ED
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
 
+                    time = ConvertNetMsg.MsgIntToFloat(endSyncAck.RemainWaveTime);
+                    RefreshTimeUI(true);
                     Time.timeScale = 1f;
 
                     break;
@@ -1635,6 +1637,8 @@ namespace ED
                     playerController.spawnCount = ConvertNetMsg.MsgByteToInt(endSyncNotify.SpawnCount);
                     playerController.targetPlayer.spawnCount = ConvertNetMsg.MsgByteToInt(endSyncNotify.SpawnCount);
 
+                    time = ConvertNetMsg.MsgIntToFloat(endSyncNotify.RemainWaveTime);
+                    RefreshTimeUI(true);
                     Time.timeScale = 1f;
                     
                     break;
