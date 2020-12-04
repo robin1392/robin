@@ -360,7 +360,7 @@ namespace ED
                 PushEnemyMinions(10f);
                 
                 Vector3 pos = transform.position;
-                var obj = FileHelper.LoadPrefab("Gaurdian", Global.E_LOADTYPE.LOAD_GUARDIAN);
+                var obj = FileHelper.LoadPrefab("Guardian", Global.E_LOADTYPE.LOAD_GUARDIAN);
                 var m = CreateMinion(obj, pos);
                 
                 m.id = boss.Id;
