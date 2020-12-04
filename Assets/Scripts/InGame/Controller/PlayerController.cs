@@ -448,6 +448,8 @@ namespace ED
                 
                 if (!listMinion.Contains(m)) 
                     listMinion.Add(m);
+                
+                PoolManager.instance.ActivateObject("particle_necromancer", spawnPos);
             }
 
             return m;
@@ -578,6 +580,8 @@ namespace ED
                 
                 if (!listMinion.Contains(m)) 
                     listMinion.Add(m);
+
+                PoolManager.instance.ActivateObject("particle_necromancer", spawnPos);
             }
 
             if (diceNum >= 0)
