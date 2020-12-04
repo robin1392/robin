@@ -1137,7 +1137,7 @@ namespace ED
                     int loopCount = 0;
                     foreach (var dmg in dicHitDamage)
                     {
-                        msg[loopCount] = new MsgDamage
+                        msg[loopCount++] = new MsgDamage
                         {
                             Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
                             Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
