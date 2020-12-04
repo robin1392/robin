@@ -303,14 +303,14 @@ namespace ED
                     switch(data.castType)
                     {
                     case (int)DICE_CAST_TYPE.MINION:
-                        CreateMinion(data, ts.position, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                        CreateMinion(data, ts.position, infos[i].Id[j], arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
                         break;
                     case (int)DICE_CAST_TYPE.HERO:
-                        CreateMinion(data, ts.position, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                        CreateMinion(data, ts.position, infos[i].Id[j], arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
                         break;
                     case (int)DICE_CAST_TYPE.MAGIC:
                     case (int)DICE_CAST_TYPE.INSTALLATION:
-                        CastMagic(data, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                        CastMagic(data, infos[i].Id[j], arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
                         break;
                     }
                 }
@@ -452,13 +452,13 @@ namespace ED
         }
         
         //public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        public void CreateMinion(DiceInfoData data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        public void CreateMinion(DiceInfoData data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
-            StartCoroutine(CreateMinionCoroutine(data, spawnPos, eyeLevel, upgradeLevel, delay, diceNum));
+            StartCoroutine(CreateMinionCoroutine(data, spawnPos, id, eyeLevel, upgradeLevel, delay, diceNum));
         }
 
         //private IEnumerator CreateMinionCoroutine(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CreateMinionCoroutine(DiceInfoData data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CreateMinionCoroutine(DiceInfoData data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             if (delay > 0)
             {
@@ -513,7 +513,8 @@ namespace ED
             if (m != null)
             {
                 m.castType = (DICE_CAST_TYPE)data.castType;
-                m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
+                //m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
+                m.id = id;
                 m.diceId = data.id;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
@@ -610,13 +611,13 @@ namespace ED
         #region create magic
         
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private void CastMagic(DiceInfoData data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private void CastMagic(DiceInfoData data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
-            StartCoroutine(CastMagicCoroutine(data, eyeLevel, upgradeLevel, delay, diceNum));
+            StartCoroutine(CastMagicCoroutine(data, id, eyeLevel, upgradeLevel, delay, diceNum));
         }
 
         //private IEnumerator CastMagicCoroutine(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CastMagicCoroutine(DiceInfoData data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CastMagicCoroutine(DiceInfoData data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             yield return new WaitForSeconds(delay);
 
@@ -658,7 +659,8 @@ namespace ED
                 {
                     //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : (InGameManager.Get().playerController == this);
                     m.isMine = InGameManager.IsNetwork ? isMine : (InGameManager.Get().playerController == this);
-                    m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
+                    //m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
+                    m.id = id;
                     m.controller = this;
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
