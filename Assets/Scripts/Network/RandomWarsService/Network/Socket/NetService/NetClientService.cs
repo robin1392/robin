@@ -65,8 +65,7 @@ namespace RandomWarsService.Network.Socket.NetService
                 _logger.Debug(string.Format("[NetClient] Update. reconnectTryTime: {0}", _clientSession.NetState));
 
                 _reconnectTryTimeTick = _nowTime.AddSeconds(3).Ticks;
-                Connect(_serverAddr, _port, _playerSessionId);
-                _clientSession.NetState = ENetState.Reconnecting;
+                Connect(_serverAddr, _port, _playerSessionId, ENetState.Reconnecting);
             }
 
             if (IsConnected() == true)
@@ -159,8 +158,7 @@ namespace RandomWarsService.Network.Socket.NetService
             }
 
             _reconnectTryTimeTick = _nowTime.AddSeconds(3).Ticks;
-            Connect(_serverAddr, _port, _playerSessionId);
-            _clientSession.NetState = ENetState.Reconnecting;
+            Connect(_serverAddr, _port, _playerSessionId, ENetState.Reconnecting);
 
 
             if (ClientReconnectingCallback != null)
@@ -177,7 +175,7 @@ namespace RandomWarsService.Network.Socket.NetService
         /// </summary>
         /// <param name="serverAddr"></param>
         /// <param name="port"></param>
-        public void Connect(string serverAddr, int port, string playerSessionId)
+        public void Connect(string serverAddr, int port, string playerSessionId, ENetState netState)
         {
             System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.LingerState = new LingerOption(true, 10);
@@ -189,6 +187,7 @@ namespace RandomWarsService.Network.Socket.NetService
             _clientSession = new ClientSession(_logger, _bufferSize);
             _clientSession.CompletedMessageCallback += OnMessageCompleted;
             _clientSession.SessionId = playerSessionId;
+            _clientSession.NetState = netState;
 
 
             _serverAddr = serverAddr;
@@ -308,19 +307,6 @@ namespace RandomWarsService.Network.Socket.NetService
                         if (ClientConnectedCallback != null)
                         {
                             ClientConnectedCallback(clientSession, clientSession.DisconnectState);
-                        }
-
-                    }
-                    break;
-                case ENetState.Reconnecting:
-                    {
-                        Connect(_serverAddr, _port, _playerSessionId);
-                        _clientSession.NetState = ENetState.Reconnecting;
-
-
-                        if (ClientReconnectingCallback != null)
-                        {
-                            ClientReconnectingCallback();
                         }
 
                     }
