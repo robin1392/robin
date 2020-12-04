@@ -553,8 +553,8 @@ namespace ED
 
                     if (IsNetwork == false)
                     {
-                        playerController.Spawn(wave);
-                        playerController.targetPlayer.Spawn(wave);
+                        playerController.Spawn(null);
+                        playerController.targetPlayer.Spawn(null);
 
                         wave++;
                     }
@@ -657,7 +657,7 @@ namespace ED
             playerController.SetSp(sp);
         }
 
-        public void NetSpawnNotify(int wave, int spawnCount, int uid = 0)
+        public void NetSpawnNotify(int wave, MsgSpawnInfo[] spawnInfos)
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
@@ -669,21 +669,33 @@ namespace ED
             switch (NetworkManager.Get().playType)
             {
                 case Global.PLAY_TYPE.BATTLE:
-                    playerController.Spawn(spawnCount);
-                    playerController.targetPlayer.Spawn(spawnCount);
+                    for (int i = 0; i < spawnInfos.Length; i++)
+                    {
+                        if (NetworkManager.Get().UserUID == spawnInfos[i].PlayerUId)
+                        {
+                            playerController.Spawn(spawnInfos[i].SpawnMinion);
+                        }
+                        else if (NetworkManager.Get().OtherUID == spawnInfos[i].PlayerUId)
+                        {
+                            playerController.targetPlayer.Spawn(spawnInfos[i].SpawnMinion);
+                        }
+                    }
                     break;
                 case Global.PLAY_TYPE.COOP:
-                    if (uid > 0)
+                    for (int i = 0; i < spawnInfos.Length; i++)
                     {
-                        if (NetworkManager.Get().UserUID == uid)
+                        if (NetworkManager.Get().UserUID == spawnInfos[i].PlayerUId)
                         {
-                            playerController.Spawn(spawnCount);
+                            playerController.Spawn(spawnInfos[i].SpawnMinion);
                         }
-                        else if (NetworkManager.Get().OtherUID == uid)
+                        else if (NetworkManager.Get().OtherUID == spawnInfos[i].PlayerUId)
                         {
-                            playerController.targetPlayer.Spawn(spawnCount);
+                            playerController.targetPlayer.Spawn(spawnInfos[i].SpawnMinion);
                         }
-                        ((Coop_AI) playerController.coopPlayer).Spawn(spawnCount);
+                        else if (NetworkManager.Get().CoopUID == spawnInfos[i].PlayerUId)
+                        {
+                            playerController.coopPlayer.Spawn(spawnInfos[i].SpawnMinion);
+                        }
                     }
                     break;
             }
@@ -1489,7 +1501,7 @@ namespace ED
                     }
 
                     MsgSpawnNotify msgSpawnNotify = (MsgSpawnNotify)param[0];
-                    NetSpawnNotify(msgSpawnNotify.Wave, ConvertNetMsg.MsgByteToInt(msgSpawnNotify.SpawnCount));
+                    NetSpawnNotify(msgSpawnNotify.Wave, msgSpawnNotify.SpawnInfo);
                     break;
                 }
                 case GameProtocol.COOP_SPAWN_NOTIFY:
@@ -1515,7 +1527,7 @@ namespace ED
                     }
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
-                    NetSpawnNotify(msg.Wave, msg.SpawnCount, msg.PlayerUId);
+                    NetSpawnNotify(msg.Wave, msg.SpawnInfo);
 
                     break;
                 }
