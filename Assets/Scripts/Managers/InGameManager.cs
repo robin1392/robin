@@ -712,15 +712,15 @@ namespace ED
 
         public void NetMonsterSpawnNotify(int uid, MsgMonster msg)
         {
-            if (playerController.UID == uid)
+            if (NetworkManager.Get().UserUID == uid)
             {
                 playerController.SpawnMonster(msg);
             }
-            else if (playerController.targetPlayer.UID == uid)
+            else if (NetworkManager.Get().OtherUID == uid)
             {
                 playerController.targetPlayer.SpawnMonster(msg);
             }
-            else if (playerController.coopPlayer.UID == uid)
+            else if (NetworkManager.Get().CoopUID == uid)
             {
                 playerController.coopPlayer.SpawnMonster(msg);
             }

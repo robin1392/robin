@@ -30,6 +30,9 @@ public class FileHelper
             case Global.E_LOADTYPE.LOAD_COOP_BOSS:
                 rscPath = "Boss/";
                 break;
+            case Global.E_LOADTYPE.LOAD_GUARDIAN:
+                rscPath = "Guardian/";
+                break;
         }
 
         GameObject loadObj = Resources.Load(rscPath + fileName) as GameObject;

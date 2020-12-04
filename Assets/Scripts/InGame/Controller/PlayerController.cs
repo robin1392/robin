@@ -354,9 +354,13 @@ namespace ED
         {
             if (boss != null && boss.DataId > 0)
             {
-                var pos = FieldManager.Get().GetTopListPos(0);
-                var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataBossInfo.dicData[boss.DataId].unitPrefabName,
-                    Global.E_LOADTYPE.LOAD_GUARDIAN);
+                isHalfHealth = true;
+                animator.SetBool(Break, true);
+
+                PushEnemyMinions(10f);
+                
+                Vector3 pos = transform.position;
+                var obj = FileHelper.LoadPrefab("Gaurdian", Global.E_LOADTYPE.LOAD_GUARDIAN);
                 var m = CreateMinion(obj, pos);
                 
                 m.id = boss.Id;
@@ -365,8 +369,19 @@ namespace ED
                 m.effect = ConvertNetMsg.MsgShortToFloat(boss.SkillAtk);
                 m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.SkillInterval);
                 m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.SkillCoolTime);
-                //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
+                
+                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
+                m.ChangeLayer(isBottomPlayer);
+                m.attackSpeed = 0.8f;
+                m.moveSpeed = 0.8f;
+                m.range = 0.7f;
+                m.eyeLevel = 1;
+                m.upgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
+                
+                ps_ShieldOff.Play();
+
+                PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
             }
         }
         
@@ -1027,15 +1042,15 @@ namespace ED
             if (currentHealth > 0)
             {
                 currentHealth -= damage;
-                if (isHalfHealth == false && currentHealth <= 20000)
-                {
-                    isHalfHealth = true;
-                    animator.SetBool(Break, true);
-
-                    PushEnemyMinions(10f);
-
-                    Invoke("SummonGuardian", 0.5f);
-                }
+                // if (isHalfHealth == false && currentHealth <= 20000)
+                // {
+                //     isHalfHealth = true;
+                //     animator.SetBool(Break, true);
+                //
+                //     PushEnemyMinions(10f);
+                //
+                //     Invoke("SummonGuardian", 0.5f);
+                // }
 
                 if (currentHealth <= 0)
                 {
