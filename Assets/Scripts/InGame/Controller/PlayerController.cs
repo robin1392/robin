@@ -300,17 +300,19 @@ namespace ED
 
                 for (int j = 0; j < infos[i].Id.Length; j++)
                 {
+                    var objID = infos[i].Id[j] + myUID * 10000;
+                    
                     switch(data.castType)
                     {
                     case (int)DICE_CAST_TYPE.MINION:
-                        CreateMinion(data, ts.position, infos[i].Id[j], arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                        CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
                         break;
                     case (int)DICE_CAST_TYPE.HERO:
-                        CreateMinion(data, ts.position, infos[i].Id[j], arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                        CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
                         break;
                     case (int)DICE_CAST_TYPE.MAGIC:
                     case (int)DICE_CAST_TYPE.INSTALLATION:
-                        CastMagic(data, infos[i].Id[j], arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                        CastMagic(data, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
                         break;
                     }
                 }
@@ -439,7 +441,7 @@ namespace ED
 
             if (m != null)
             {
-                if (isSpawnCountUp) m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
+                if (isSpawnCountUp) m.id = spawnCount++;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
@@ -2192,8 +2194,8 @@ namespace ED
                 }
                 else // 유닛이 없을 경우 생성하기 (ex. 재접속)
                 {
-                    if (msgMinionInfos[i].Id - _myUID * 10000 >= (spawnCount + 1) * 300)
-                        continue;
+                    // if (msgMinionInfos[i].Id - _myUID * 10000 >= (spawnCount + 1) * 300)
+                    //     continue;
                     
                     int wave = InGameManager.Get().wave;
                     var myInfo = isMine
