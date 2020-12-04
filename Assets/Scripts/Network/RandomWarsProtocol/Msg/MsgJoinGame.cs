@@ -7,9 +7,7 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgJoinGameReq
     {
-        public string PlayerSessionId;
-
-        // »ç¿ë µ¦ ÀÎµ¦½º
+        // µ¦ ÀÎµ¦½º
         public sbyte DeckIndex;
     }
 
@@ -35,8 +33,6 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgJoinCoopGameReq
     {
-        public string PlayerSessionId;
-
         // »ç¿ë µ¦ ÀÎµ¦½º
         public sbyte DeckIndex;
     }
