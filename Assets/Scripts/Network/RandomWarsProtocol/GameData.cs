@@ -1817,12 +1817,14 @@ namespace RandomWarsProtocol
     [Serializable]
     public class MsgSpawnMinion
     {
+        public byte SlotIndex;
         public ushort DiceId;
         public ushort[] Id;
         
 
         public void Write(BinaryWriter bw)
         {
+            bw.Write(SlotIndex);
             bw.Write(DiceId);
 
             bw.Write(Id.Length);
@@ -1834,6 +1836,7 @@ namespace RandomWarsProtocol
         public static MsgSpawnMinion Read(BinaryReader br)
         {
             MsgSpawnMinion data = new MsgSpawnMinion();
+            data.SlotIndex = br.ReadByte();
             data.DiceId = br.ReadUInt16();
 
             int length = br.ReadInt32();
