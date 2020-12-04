@@ -364,7 +364,7 @@ namespace ED
                 RefreshTimeUI(true);
             }
 
-            AstarPath.active.Scan();
+            Invoke("MapScan", 1f);
 
             // not use
             /*
@@ -448,6 +448,11 @@ namespace ED
             StartGame();
             RefreshTimeUI(true);
             */
+        }
+
+        private void MapScan()
+        {
+            AstarPath.active.Scan();
         }
 
         #endregion
@@ -1625,6 +1630,8 @@ namespace ED
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
 
+                    wave = endSyncAck.Wave;
+                    WorldUIManager.Get().SetWave(wave);
                     time = ConvertNetMsg.MsgIntToFloat(endSyncAck.RemainWaveTime);
                     RefreshTimeUI(true);
                     Time.timeScale = 1f;
