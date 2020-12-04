@@ -12,6 +12,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgEndSyncGameAck
     {
         public int ErrorCode;
+        public int Wave;
         public int RemainWaveTime;
         public byte SpawnCount;
     }

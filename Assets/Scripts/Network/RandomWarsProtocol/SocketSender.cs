@@ -374,12 +374,13 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndSyncGameAck(Peer peer, GameErrorCode code, int remainWaveTime, byte spawnCount) 
+        public void EndSyncGameAck(Peer peer, GameErrorCode code, int wave, int remainWaveTime, byte spawnCount) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)code);
+                bw.Write(wave);
                 bw.Write(remainWaveTime);
                 bw.Write(spawnCount);
                 peer.SendPacket((int)GameProtocol.END_SYNC_GAME_ACK, ms.ToArray());
