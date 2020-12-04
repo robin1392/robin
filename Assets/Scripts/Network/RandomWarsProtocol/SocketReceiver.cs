@@ -472,7 +472,14 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgSpawnNotify msg = new MsgSpawnNotify();
                             msg.Wave = br.ReadInt32();
-                            msg.SpawnCount = br.ReadByte();
+
+                            int length = br.ReadInt32();
+                            msg.SpawnInfo = new MsgSpawnInfo[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.SpawnInfo[i] = MsgSpawnInfo.Read(br);
+                            }
+
                             SpawnNotify(peer, msg);
                         }
                     }
@@ -489,7 +496,14 @@ namespace RandomWarsProtocol
                             MsgCoopSpawnNotify msg = new MsgCoopSpawnNotify();
                             msg.Wave = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.SpawnCount = br.ReadByte();
+
+                            int length = br.ReadInt32();
+                            msg.SpawnInfo = new MsgSpawnInfo[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.SpawnInfo[i] = MsgSpawnInfo.Read(br);
+                            }
+
                             CoopSpawnNotify(peer, msg);
                         }
                     }

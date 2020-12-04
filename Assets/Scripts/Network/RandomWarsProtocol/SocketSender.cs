@@ -159,25 +159,39 @@ namespace RandomWarsProtocol
         }
 
 
-        public void SpawnNotify(Peer peer, int wave, byte spawnCount)
+        public void SpawnNotify(Peer peer, int wave, MsgSpawnInfo[] spawnInfo)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(wave);
-                bw.Write(spawnCount);
+
+                int length = (spawnInfo == null) ? 0 : spawnInfo.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    spawnInfo[i].Write(bw);
+                }
+
                 peer.SendPacket((int)GameProtocol.SPAWN_NOTIFY, ms.ToArray());
             }
         }
 
-        public void CoopSpawnNotify(Peer peer, int wave, ushort PlayerUId, byte spawnCount)
+        public void CoopSpawnNotify(Peer peer, int wave, ushort PlayerUId, MsgSpawnInfo[] spawnInfo)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write(wave);
                 bw.Write(PlayerUId);
-                bw.Write(spawnCount);
+
+                int length = (spawnInfo == null) ? 0 : spawnInfo.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    spawnInfo[i].Write(bw);
+                }
+
                 peer.SendPacket((int)GameProtocol.COOP_SPAWN_NOTIFY, ms.ToArray());
             }
         }

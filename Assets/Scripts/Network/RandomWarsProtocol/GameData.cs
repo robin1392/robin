@@ -614,6 +614,7 @@ namespace RandomWarsProtocol
     public class MsgMinionInfo
     {
         public ushort Id;
+        public ushort CustomValue;
         public byte DiceIdIndex;
         public byte DiceEyeLevel;
         public int Hp;
@@ -622,6 +623,7 @@ namespace RandomWarsProtocol
         public void Write(BinaryWriter bw)
         {
             bw.Write(Id);
+            bw.Write(CustomValue);
             bw.Write(DiceIdIndex);
             bw.Write(DiceEyeLevel);
             bw.Write(Hp);
@@ -632,6 +634,7 @@ namespace RandomWarsProtocol
         {
             MsgMinionInfo data = new MsgMinionInfo();
             data.Id = br.ReadUInt16();
+            data.CustomValue = br.ReadUInt16();
             data.DiceIdIndex = br.ReadByte();
             data.DiceEyeLevel = br.ReadByte();
             data.Hp = br.ReadInt32();
@@ -1771,6 +1774,76 @@ namespace RandomWarsProtocol
             MsgMinionInvincibilityRelay data = new MsgMinionInvincibilityRelay();
             data.Id = br.ReadUInt16();
             data.Time = br.ReadInt16();
+            return data;
+        }
+    }
+
+
+    [Serializable]
+    public class MsgSpawnInfo
+    {
+        public ushort PlayerUId;
+        public MsgSpawnMinion[] SpawnMinion;
+
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(PlayerUId);
+
+            int length = (SpawnMinion == null) ? 0 : SpawnMinion.Length;
+            bw.Write(length);
+            for (int i = 0; i < length; i++)
+            {
+                SpawnMinion[i].Write(bw);
+            }
+        }
+
+        public static MsgSpawnInfo Read(BinaryReader br)
+        {
+            MsgSpawnInfo data = new MsgSpawnInfo();
+            data.PlayerUId = br.ReadUInt16();
+
+            int length = br.ReadInt32();
+            data.SpawnMinion = new MsgSpawnMinion[length];
+            for (int i = 0; i < length; i++)
+            {
+                data.SpawnMinion[i] = MsgSpawnMinion.Read(br);
+            }
+
+            return data;
+        }
+    }
+
+    [Serializable]
+    public class MsgSpawnMinion
+    {
+        public ushort DiceId;
+        public ushort[] Id;
+        
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(DiceId);
+
+            bw.Write(Id.Length);
+            byte[] bytes = new byte[Id.Length * sizeof(ushort)];
+            Buffer.BlockCopy(Id, 0, bytes, 0, bytes.Length);
+            bw.Write(bytes);
+        }
+
+        public static MsgSpawnMinion Read(BinaryReader br)
+        {
+            MsgSpawnMinion data = new MsgSpawnMinion();
+            data.DiceId = br.ReadUInt16();
+
+            int length = br.ReadInt32();
+            byte[] bytes = br.ReadBytes(length * sizeof(ushort));
+            data.Id = new ushort[length];
+            for (var index = 0; index < length; index++)
+            {
+                data.Id[index] = BitConverter.ToUInt16(bytes, index * sizeof(ushort));
+            }
+
             return data;
         }
     }
