@@ -66,7 +66,7 @@ public class SocketManager
 
     public void Connect(string host, int port , string playerSessionId)
     {
-        _netService.Connect(host, port, playerSessionId);
+        _netService.Connect(host, port, playerSessionId, ENetState.Connecting);
     }
     
 
