@@ -800,6 +800,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameAck msg = new MsgEndSyncGameAck();
                             msg.ErrorCode = br.ReadInt32();
+                            msg.Wave = br.ReadInt32();
                             msg.RemainWaveTime = br.ReadInt32();
                             msg.SpawnCount = br.ReadByte();
                             EndSyncGameAck(peer, msg);
