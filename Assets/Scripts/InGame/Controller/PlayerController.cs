@@ -352,7 +352,7 @@ namespace ED
         
         public virtual void SpawnMonster(MsgMonster boss)
         {
-            if (boss != null && boss.DataId > 0)
+            if (boss != null)
             {
                 isHalfHealth = true;
                 animator.SetBool(Break, true);
@@ -2228,8 +2228,8 @@ namespace ED
                 }
                 else // 유닛이 없을 경우 생성하기 (ex. 재접속)
                 {
-                    // if (msgMinionInfos[i].Id - _myUID * 10000 >= (spawnCount + 1) * 300)
-                    //     continue;
+                    // 수호자일 경우 생성하지 않고 넘어가자
+                    if (msgMinionInfos[i].Id < 10000) continue;
                     
                     int wave = InGameManager.Get().wave;
                     var myInfo = isMine
