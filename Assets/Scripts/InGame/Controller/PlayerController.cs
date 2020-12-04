@@ -441,7 +441,7 @@ namespace ED
 
             if (m != null)
             {
-                if (isSpawnCountUp) m.id = spawnCount++;
+                if (isSpawnCountUp) m.id = myUID * 10000 + spawnCount++;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
@@ -1112,14 +1112,11 @@ namespace ED
                     int loopCount = 0;
                     foreach (var dmg in dicHitDamage)
                     {
-                        if (dmg.Value > 0f)
+                        msg[loopCount] = new MsgDamage
                         {
-                            msg[loopCount] = new MsgDamage
-                            {
-                                Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
-                                Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
-                            };
-                        }
+                            Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
+                            Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
+                        };
                     }
                     
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
@@ -1131,7 +1128,11 @@ namespace ED
         
         public virtual void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
-            if (damage <= 0f) return;
+            if (damage <= 0f)
+            {
+                Debug.LogError($"HitDmaage is zero !! {baseStatId} : {damage}");
+                return;
+            }
             
             // baseStatId == 0 => Player tower
             if (baseStatId == id || baseStatId < 10000)
