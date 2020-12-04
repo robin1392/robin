@@ -441,7 +441,7 @@ namespace ED
 
             if (m != null)
             {
-                if (isSpawnCountUp) m.id = spawnCount++;
+                if (isSpawnCountUp) m.id = myUID * 10000 + spawnCount++;
                 m.controller = this;
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
@@ -1128,7 +1128,11 @@ namespace ED
         
         public virtual void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
-            if (damage <= 0f) return;
+            if (damage <= 0f)
+            {
+                Debug.LogError($"HitDmaage is zero !! {baseStatId} : {damage}");
+                return;
+            }
             
             // baseStatId == 0 => Player tower
             if (baseStatId == id || baseStatId < 10000)
