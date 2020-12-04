@@ -66,15 +66,23 @@ namespace ED
 
         public override void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
+            if (damage <= 0f) return;
+            
             if (baseStatId == id || baseStatId < 10000)
             {
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
-                    int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
+                    //int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
                     // 타워가 맞으면 알ID로 교체해서 전송
                     if (baseStatId == myUID * 10000) baseStatId = msgBoss.Id;
-                    if (dicHitDamage.ContainsKey(baseStatId) == false) dicHitDamage.Add(baseStatId, 0f);
-                    dicHitDamage[baseStatId] += damage;
+                    if (dicHitDamage.ContainsKey(baseStatId) == false)
+                    {
+                        dicHitDamage.Add(baseStatId, damage);
+                    }
+                    else
+                    {
+                        dicHitDamage[baseStatId] += damage;
+                    }
                 }
                 else if (InGameManager.IsNetwork == false)
                 {

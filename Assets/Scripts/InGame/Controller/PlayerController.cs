@@ -1131,17 +1131,25 @@ namespace ED
         
         public virtual void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
+            if (damage <= 0f) return;
+            
             // baseStatId == 0 => Player tower
             if (baseStatId == id || baseStatId < 10000)
             {
                 //if (PhotonNetwork.IsConnected)
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
-                    int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
+                    //int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
                     //NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , myUID, convDamage);
                     //queueHitDamage.Enqueue(convDamage);
-                    if (dicHitDamage.ContainsKey(baseStatId) == false) dicHitDamage.Add(baseStatId, 0f);
-                    dicHitDamage[baseStatId] += damage;
+                    if (dicHitDamage.ContainsKey(baseStatId) == false)
+                    {
+                        dicHitDamage.Add(baseStatId, damage);
+                    }
+                    else
+                    {
+                        dicHitDamage[baseStatId] += damage;
+                    }
                 }
                 else if (InGameManager.IsNetwork == false)
                 {
