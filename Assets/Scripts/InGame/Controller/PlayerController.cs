@@ -458,6 +458,9 @@ namespace ED
         //public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         public void CreateMinion(DiceInfoData data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
+            var minion = listMinion.Find(m => m.id == id);
+            if (minion != null) return;
+            
             StartCoroutine(CreateMinionCoroutine(data, spawnPos, id, eyeLevel, upgradeLevel, delay, diceNum));
         }
 
@@ -619,6 +622,9 @@ namespace ED
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         private void CastMagic(DiceInfoData data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
+            var magic = listMagic.Find(m => m.id == id);
+            if (magic != null) return;
+            
             StartCoroutine(CastMagicCoroutine(data, id, eyeLevel, upgradeLevel, delay, diceNum));
         }
 
