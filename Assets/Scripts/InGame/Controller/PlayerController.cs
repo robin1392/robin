@@ -2231,7 +2231,7 @@ namespace ED
                         minion.power = data.power + (data.powerUpgrade * diceLevel) + (data.powerInGameUp * ingameUpgradeLevel);
                         if (wave > 10)
                         {
-                            m.power *= Mathf.Pow(2f, wave - 10);
+                            minion.power *= Mathf.Pow(2f, wave - 10);
                         }
                         minion.maxHealth = data.maxHealth + (data.maxHpUpgrade * diceLevel) + (data.maxHpInGameUp * ingameUpgradeLevel);
                         minion.currentHealth = msgMinionInfos[i].Hp;
