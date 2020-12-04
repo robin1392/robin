@@ -17,7 +17,7 @@ namespace ED
         public GameObject obj_IncubationParticle;
         public GameObject obj_SummonParticle;
 
-        private MsgBossMonster msgBoss;
+        private MsgMonster msgBoss;
         private static readonly int Idle = Animator.StringToHash("Idle");
         private static readonly int Incubation = Animator.StringToHash("Incubation");
 
@@ -217,7 +217,7 @@ namespace ED
         }
 
         // Spawn Egg
-        public override void SpawnMonster(MsgBossMonster boss)
+        public override void SpawnMonster(MsgMonster boss)
         {
             if (boss != null && boss.DataId > 0)
             {

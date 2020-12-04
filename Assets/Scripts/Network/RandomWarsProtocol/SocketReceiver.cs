@@ -519,7 +519,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgMonsterSpawnNotify msg = new MsgMonsterSpawnNotify();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.SpawnBossMonster = MsgBossMonster.Read(br);
+                            msg.SpawnMonster = MsgMonster.Read(br);
                             MonsterSpawnNotify(peer, msg);
                         }
                     }

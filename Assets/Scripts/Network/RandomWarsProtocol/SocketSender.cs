@@ -196,7 +196,7 @@ namespace RandomWarsProtocol
             }
         }
 
-        public void MonsterSpawnNotify(Peer peer, ushort PlayerUId, MsgBossMonster spawnBossMonster)
+        public void MonsterSpawnNotify(Peer peer, ushort PlayerUId, MsgMonster spawnBossMonster)
         {
             using (var ms = new MemoryStream())
             {

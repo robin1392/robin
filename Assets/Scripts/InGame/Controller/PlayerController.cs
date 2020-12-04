@@ -350,7 +350,7 @@ namespace ED
             // }
         }
         
-        public virtual void SpawnMonster(MsgBossMonster boss)
+        public virtual void SpawnMonster(MsgMonster boss)
         {
             if (boss != null && boss.DataId > 0)
             {

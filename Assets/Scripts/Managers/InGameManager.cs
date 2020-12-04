@@ -705,7 +705,7 @@ namespace ED
             //    NetworkManager.Get().SaveBattleInfo();
         }
 
-        public void NetMonsterSpawnNotify(int uid, MsgBossMonster msg)
+        public void NetMonsterSpawnNotify(int uid, MsgMonster msg)
         {
             if (playerController.UID == uid)
             {
@@ -1534,7 +1534,7 @@ namespace ED
                 case GameProtocol.MONSTER_SPAWN_NOTIFY:
                 {
                     MsgMonsterSpawnNotify msg = (MsgMonsterSpawnNotify) param[0];
-                    NetMonsterSpawnNotify(msg.PlayerUId, msg.SpawnBossMonster);
+                    NetMonsterSpawnNotify(msg.PlayerUId, msg.SpawnMonster);
 
                     break;
                 }

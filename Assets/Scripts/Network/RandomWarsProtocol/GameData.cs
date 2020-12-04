@@ -301,7 +301,7 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
-    public class MsgBossMonster
+    public class MsgMonster
     {
         public ushort Id;
         public int DataId;
@@ -332,9 +332,9 @@ namespace RandomWarsProtocol
             bw.Write((byte)MoveSpeed);
         }
 
-        public static MsgBossMonster Read(BinaryReader br)
+        public static MsgMonster Read(BinaryReader br)
         {
-            MsgBossMonster data = new MsgBossMonster();
+            MsgMonster data = new MsgMonster();
             data.Id = br.ReadUInt16();
             data.DataId = br.ReadInt32();
             data.Hp = br.ReadInt32();

@@ -39,7 +39,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgMonsterSpawnNotify
     {
         public int PlayerUId;
-        public MsgBossMonster SpawnBossMonster;
+        public MsgMonster SpawnMonster;
     }
 
 
