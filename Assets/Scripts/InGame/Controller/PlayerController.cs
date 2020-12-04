@@ -1112,14 +1112,11 @@ namespace ED
                     int loopCount = 0;
                     foreach (var dmg in dicHitDamage)
                     {
-                        if (dmg.Value > 0f)
+                        msg[loopCount] = new MsgDamage
                         {
-                            msg[loopCount] = new MsgDamage
-                            {
-                                Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
-                                Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
-                            };
-                        }
+                            Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
+                            Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
+                        };
                     }
                     
                     NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
