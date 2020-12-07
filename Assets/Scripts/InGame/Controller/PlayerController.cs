@@ -634,6 +634,31 @@ namespace ED
         
         #region create magic
         
+        public Magic CastMagic(GameObject pref, Vector3 spawnPos, bool isSpawnCountUp = true)
+        {
+            var m = PoolManager.instance.ActivateObject<Magic>(pref.name, spawnPos, InGameManager.Get().transform);
+
+            if (m == null)
+            { 
+                PoolManager.instance.AddPool(pref, 1);
+                m = PoolManager.instance.ActivateObject<Magic>(pref.name, spawnPos, InGameManager.Get().transform);
+            }
+
+            if (m != null)
+            {
+                if (isSpawnCountUp) m.id = myUID * 10000 + spawnCount++;
+                m.controller = this;
+                m.isMine = isMine;
+                
+                if (!listMagic.Contains(m))
+                    listMagic.Add(m);
+                
+                PoolManager.instance.ActivateObject("particle_necromancer", spawnPos);
+            }
+
+            return m;
+        }
+        
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         private void CastMagic(DiceInfoData data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
@@ -711,11 +736,6 @@ namespace ED
                     m.effectCooltime = data.effectCooltime;
                 
                     m.attackSpeed = data.attackSpeed;
-                    if (wave > 10)
-                    {
-                        m.attackSpeed *= Mathf.Pow(0.9f, wave - 10);
-                        if (m.attackSpeed < data.attackSpeed * 0.5f) m.attackSpeed = data.attackSpeed * 0.5f;
-                    }
                     m.moveSpeed = data.moveSpeed;
                     m.range = data.range;
                     m.searchRange = data.searchRange;
@@ -2042,7 +2062,17 @@ namespace ED
                         byte minionCount = (byte) listMinion.Count;
                         MsgMinionStatus relay = new MsgMinionStatus();
 
-                        MsgMinionInfo[] msgMinionInfos = new MsgMinionInfo[listMinion.Count];
+                        List<int> listInstallation = new List<int>();
+                        for (int i = 0; i < listMagic.Count; i++)
+                        {
+                            if (listMagic[i].castType == DICE_CAST_TYPE.INSTALLATION)
+                            {
+                                listInstallation.Add(i);
+                            }
+                        }
+
+                        MsgMinionInfo[] msgMinionInfos = new MsgMinionInfo[listMinion.Count + listInstallation.Count];
+                        int loop = 0;
                         if (listMinion.Count > 0)
                         {
                             for (int i = 0; i < listMinion.Count; i++)
@@ -2061,9 +2091,33 @@ namespace ED
                                 msgMinionInfos[i].Pos =
                                     ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x,
                                         listMinion[i].rb.position.z));
+                                loop++;
                             }
                         }
 
+                        if (listInstallation.Count > 0)
+                        {
+                            for (int i = 0; i < listInstallation.Count; i++)
+                            {
+                                int num = listInstallation[i];
+                                msgMinionInfos[loop] = new MsgMinionInfo();
+                                msgMinionInfos[loop].Id = ConvertNetMsg.MsgIntToUshort(listMagic[num].id);
+                                for (int j = 0; j < arrDiceDeck.Length; j++)
+                                {
+                                    if (arrDiceDeck[j].id == listMagic[num].diceId)
+                                    {
+                                        msgMinionInfos[loop].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
+                                    }
+                                }
+                                msgMinionInfos[loop].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMagic[num].eyeLevel);
+                                msgMinionInfos[loop].Hp = ConvertNetMsg.MsgFloatToInt(listMagic[num].currentHealth);
+                                msgMinionInfos[loop].Pos =
+                                    ConvertNetMsg.Vector3ToMsg(new Vector2(listMagic[num].rb.position.x,
+                                        listMagic[num].rb.position.z));
+                            }
+                        }
+
+                        #region LOG
 #if ENABLE_LOG
                         string str = "MINION_STATUS_RELAY -> Dictionary count : " + _syncDictionary.Keys.Count;
                         #endif
@@ -2198,6 +2252,8 @@ namespace ED
                         #if ENABLE_LOG
                         UnityUtil.Print(string.Format("SEND [{0}][{1}] : ", _myUID, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
                         #endif
+                        #endregion
+                        
                         NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, _myUID, msgMinionInfos, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
                         _syncDictionary.Clear();
                         packetCount++;
@@ -2217,29 +2273,46 @@ namespace ED
 
             for (int i = 0; i < msgMinionInfos.Length; i++)
             {
-                var m = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
-
-                if (m != null)
+                bool isMinion = true;
+                BaseStat bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
+                if (bs == null)
                 {
-                    m.SetNetworkValue(
-                        ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
-                        ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
-                    );
+                    isMinion = false;
+                    bs = listMagic.Find(magic => magic.id == msgMinionInfos[i].Id);
+                }
+
+                if (bs != null)
+                {
+                    if (isMinion)
+                    {
+                        ((Minion) bs).SetNetworkValue(
+                            ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
+                            ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
+                        );
+                    }
+                    else // 설치형 오브젝트일 경우
+                    {
+                        ((Magic) bs).SetNetworkValue(
+                            ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
+                            ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
+                        );
+                    }
                 }
                 else // 유닛이 없을 경우 생성하기 (ex. 재접속)
                 {
-                    // 수호자일 경우 생성하지 않고 넘어가자
-                    if (msgMinionInfos[i].Id < 10000) continue;
-                    
                     int wave = InGameManager.Get().wave;
                     var myInfo = isMine
                         ? NetworkManager.Get().GetNetInfo().playerInfo
                         : NetworkManager.Get().GetNetInfo().otherInfo;
                     var arrDiceLevel = myInfo.DiceLevelArray;
                     
-                    //foreach (var info in msgMinionInfos)
+                    if (isMinion)
                     {
-                        GameObject prefab = FileHelper.LoadPrefab(arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
+                        // 수호자일 경우 생성하지 않고 넘어가자
+                        if (msgMinionInfos[i].Id < 10000) continue;
+                        
+                        GameObject prefab = FileHelper.LoadPrefab(
+                            arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
                             Global.E_LOADTYPE.LOAD_MINION);
                         var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
@@ -2250,17 +2323,20 @@ namespace ED
                         minion.diceId = data.id;
                         minion.controller = this;
                         minion.isMine = isMine;
-                        minion.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
+                        minion.targetMoveType = (DICE_MOVE_TYPE) data.targetMoveType;
                         minion.ChangeLayer(isBottomPlayer);
 
-                        minion.power = data.power + (data.powerUpgrade * diceLevel) + (data.powerInGameUp * ingameUpgradeLevel);
+                        minion.power = data.power + (data.powerUpgrade * diceLevel) +
+                                       (data.powerInGameUp * ingameUpgradeLevel);
                         if (wave > 10)
                         {
                             minion.power *= Mathf.Pow(2f, wave - 10);
                         }
-                        minion.maxHealth = data.maxHealth + (data.maxHpUpgrade * diceLevel) + (data.maxHpInGameUp * ingameUpgradeLevel);
+
+                        minion.maxHealth = data.maxHealth + (data.maxHpUpgrade * diceLevel) +
+                                           (data.maxHpInGameUp * ingameUpgradeLevel);
                         minion.currentHealth = msgMinionInfos[i].Hp;
-                        RefreshHealthBar();
+                        minion.HitDamage(0);
                         minion.effect = data.effect + (data.effectUpgrade * diceLevel) +
                                         (data.effectInGameUp * ingameUpgradeLevel);
                         minion.effectDuration = data.effectDuration;
@@ -2271,8 +2347,8 @@ namespace ED
                         minion.searchRange = data.searchRange;
                         minion.eyeLevel = msgMinionInfos[i].DiceEyeLevel;
                         minion.upgradeLevel = ingameUpgradeLevel;
-                        
-                        if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
+
+                        if ((DICE_CAST_TYPE) data.castType == DICE_CAST_TYPE.HERO)
                         {
                             minion.power *= minion.eyeLevel + 1;
                             minion.maxHealth *= minion.eyeLevel + 1;
@@ -2280,16 +2356,58 @@ namespace ED
                         }
 
                         minion.Initialize(MinionDestroyCallback);
-                
-                        if (!listMinion.Contains(minion)) 
+
+                        if (!listMinion.Contains(minion))
                             listMinion.Add(minion);
+                    }
+                    else // 설치형 오브젝트일 경우
+                    {
+                        GameObject prefab = FileHelper.LoadPrefab(
+                            arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
+                        var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                        var magic = CastMagic(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
+                        var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
+                        var ingameUpgradeLevel = arrUpgradeLevel[msgMinionInfos[i].DiceIdIndex];
+
+                        magic.id = msgMinionInfos[i].Id;
+                        magic.diceId = data.id;
+                        magic.controller = this;
+                        magic.isMine = isMine;
+                        magic.targetMoveType = (DICE_MOVE_TYPE) data.targetMoveType;
+                        magic.castType = (DICE_CAST_TYPE) data.castType;
+
+                        magic.power = data.power + (data.powerUpgrade * diceLevel) +
+                                       (data.powerInGameUp * ingameUpgradeLevel);
+                        if (wave > 10)
+                        {
+                            magic.power *= Mathf.Pow(2f, wave - 10);
+                        }
+
+                        magic.maxHealth = data.maxHealth + (data.maxHpUpgrade * diceLevel) +
+                                           (data.maxHpInGameUp * ingameUpgradeLevel);
+                        magic.currentHealth = msgMinionInfos[i].Hp;
+                        magic.HitDamage(0);
+                        magic.effect = data.effect + (data.effectUpgrade * diceLevel) +
+                                        (data.effectInGameUp * ingameUpgradeLevel);
+                        magic.effectDuration = data.effectDuration;
+                        magic.effectCooltime = data.effectCooltime;
+                        magic.attackSpeed = data.attackSpeed;
+                        magic.moveSpeed = data.moveSpeed;
+                        magic.range = data.range;
+                        magic.searchRange = data.searchRange;
+                        magic.eyeLevel = msgMinionInfos[i].DiceEyeLevel;
+                        magic.upgradeLevel = ingameUpgradeLevel;
+
+                        magic.Initialize(isBottomPlayer);
+
+                        if (!listMagic.Contains(magic))
+                            listMagic.Add(magic);
                     }
                 }
             }
 
             if (relay != null)
             {
-
                 var dic = MsgMinionStatusToDictionary(relay);
 
 #if ENABLE_LOG
@@ -2298,6 +2416,8 @@ namespace ED
 
                 foreach (var msg in dic)
                 {
+                    #region LOG
+
 #if ENABLE_LOG
                     str += string.Format("\n{0} -> List count : {1}", msg.Key, msg.Value.Count);
                     switch (msg.Key)
@@ -2345,6 +2465,8 @@ namespace ED
                     }
 #endif
 
+                    #endregion
+                    
                     if (msg.Value.Count > 0)
                     {
                         foreach (var obj in msg.Value)
@@ -2356,10 +2478,12 @@ namespace ED
                         }
                     }
                 }
+                
 
 #if ENABLE_LOG
                 UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", _myUID, packetCount), str, "green");
 #endif
+                
             }
         }
 
