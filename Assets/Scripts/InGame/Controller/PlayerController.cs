@@ -2111,9 +2111,9 @@ namespace ED
                                 }
                                 msgMinionInfos[loop].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMagic[num].eyeLevel);
                                 msgMinionInfos[loop].Hp = ConvertNetMsg.MsgFloatToInt(listMagic[num].currentHealth);
-                                msgMinionInfos[loop].Pos =
-                                    ConvertNetMsg.Vector3ToMsg(new Vector2(listMagic[num].transform.position.x,
-                                        listMagic[num].transform.position.z));
+                                float x = Mathf.Clamp(listMagic[num].transform.position.x, -12.7f, 12.7f);
+                                float z = Mathf.Clamp(listMagic[num].transform.position.z, -12.7f, 12.7f);
+                                msgMinionInfos[loop].Pos = ConvertNetMsg.Vector3ToMsg(new Vector2(x, z));
                                 loop++;
                             }
                         }
