@@ -2278,8 +2278,9 @@ namespace ED
                 BaseStat bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
                 if (bs == null)
                 {
-                    isMinion = false;
                     bs = listMagic.Find(magic => magic.id == msgMinionInfos[i].Id);
+                    
+                    if (bs != null) isMinion = false;
                 }
 
                 if (bs != null)
@@ -2365,6 +2366,7 @@ namespace ED
                     {
                         GameObject prefab = FileHelper.LoadPrefab(
                             arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
+                        Debug.Log($"CastMagic: prefName:{arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName}, objIsNull:{prefab == null}");
                         var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         var magic = CastMagic(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
                         var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
