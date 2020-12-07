@@ -2114,6 +2114,7 @@ namespace ED
                                 msgMinionInfos[loop].Pos =
                                     ConvertNetMsg.Vector3ToMsg(new Vector2(listMagic[num].transform.position.x,
                                         listMagic[num].transform.position.z));
+                                loop++;
                             }
                         }
 
