@@ -2276,7 +2276,7 @@ namespace ED
             {
                 var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                 DICE_CAST_TYPE type = (DICE_CAST_TYPE)data.castType;
-                BaseStat bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
+                BaseStat bs = null; //listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
                 if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
                 {
                     bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
