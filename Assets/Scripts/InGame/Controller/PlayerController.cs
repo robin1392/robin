@@ -293,7 +293,11 @@ namespace ED
             
             for (int i = 0; i < infos.Length; i++)
             {
-                int fieldIndex = infos[i].SlotIndex;
+                if (listMinion.Find(minion => minion.id == infos[i].Id[0]) != null ||
+                listMagic.Find(magic => magic.id == infos[i].Id[0]) != null)
+                    continue;
+
+                    int fieldIndex = infos[i].SlotIndex;
                 var data = arrDice[fieldIndex].diceData;
                 var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
                 var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);

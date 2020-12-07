@@ -303,7 +303,7 @@ namespace ED
                 if (currentHealth <= 0)
                 {
                     EndLifetime();
-                    yield break;
+                    break;
                 }
             }
             
