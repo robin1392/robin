@@ -2274,25 +2274,28 @@ namespace ED
 
             for (int i = 0; i < msgMinionInfos.Length; i++)
             {
-                bool isMinion = true;
+                var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                DICE_CAST_TYPE type = (DICE_CAST_TYPE)data.castType;
                 BaseStat bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
-                if (bs == null)
+                if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
+                {
+                    bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
+                }
+                else if (type == DICE_CAST_TYPE.MAGIC || type == DICE_CAST_TYPE.INSTALLATION)
                 {
                     bs = listMagic.Find(magic => magic.id == msgMinionInfos[i].Id);
-                    
-                    if (bs != null) isMinion = false;
                 }
 
                 if (bs != null)
                 {
-                    if (isMinion)
+                    if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
                     {
                         ((Minion) bs).SetNetworkValue(
                             ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
                             ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
                         );
                     }
-                    else // 설치형 오브젝트일 경우
+                    else if (type == DICE_CAST_TYPE.MAGIC || type == DICE_CAST_TYPE.INSTALLATION) // 설치형 오브젝트일 경우
                     {
                         ((Magic) bs).SetNetworkValue(
                             ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
@@ -2308,7 +2311,7 @@ namespace ED
                         : NetworkManager.Get().GetNetInfo().otherInfo;
                     var arrDiceLevel = myInfo.DiceLevelArray;
                     
-                    if (isMinion)
+                    if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
                     {
                         // 수호자일 경우 생성하지 않고 넘어가자
                         if (msgMinionInfos[i].Id < 10000) continue;
@@ -2316,7 +2319,7 @@ namespace ED
                         GameObject prefab = FileHelper.LoadPrefab(
                             arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
                             Global.E_LOADTYPE.LOAD_MINION);
-                        var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                        //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
                         var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
                         var ingameUpgradeLevel = arrUpgradeLevel[msgMinionInfos[i].DiceIdIndex];
@@ -2362,12 +2365,12 @@ namespace ED
                         if (!listMinion.Contains(minion))
                             listMinion.Add(minion);
                     }
-                    else // 설치형 오브젝트일 경우
+                    else if (type == DICE_CAST_TYPE.MAGIC || type == DICE_CAST_TYPE.INSTALLATION) // 설치형 오브젝트일 경우
                     {
                         GameObject prefab = FileHelper.LoadPrefab(
                             arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
                         Debug.Log($"CastMagic: prefName:{arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName}, objIsNull:{prefab == null}");
-                        var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                        //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         var magic = CastMagic(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
                         var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
                         var ingameUpgradeLevel = arrUpgradeLevel[msgMinionInfos[i].DiceIdIndex];
