@@ -158,6 +158,7 @@ namespace ED
         protected Dictionary<int, float> dicHitDamage = new Dictionary<int, float>();
         protected int _myUID;
         public new int myUID => _myUID;
+        protected List<int> _listDeadID = new List<int>();
 
         #endregion
 
@@ -1335,6 +1336,7 @@ namespace ED
             //     NetSendPlayer(GameProtocol.REMOVE_MINION_RELAY , myUID , minion.id);
             // }
             
+            _listDeadID.Add(minion.id);
             RemoveMinion(minion.id);
             // not use
             /*
@@ -1376,6 +1378,7 @@ namespace ED
             // {
             //     NetSendPlayer(GameProtocol.REMOVE_MAGIC_RELAY , myUID , magic.id );
             // }
+            _listDeadID.Add(magic.id);
             RemoveMagic(magic.id);
             
             /*if (PhotonNetwork.IsConnected)
@@ -2280,6 +2283,8 @@ namespace ED
 
             for (int i = 0; i < msgMinionInfos.Length; i++)
             {
+                if (_listDeadID.Contains(msgMinionInfos[i].Id)) continue;
+                
                 var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                 DICE_CAST_TYPE type = (DICE_CAST_TYPE)data.castType;
                 BaseStat bs = null; //listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
