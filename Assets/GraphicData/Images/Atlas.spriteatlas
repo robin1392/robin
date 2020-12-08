@@ -90,7 +90,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 67fb708cf931641d7a9bcad0d3377ba1, type: 3}
     - {fileID: 2800000, guid: f776fbed5d50044059f0f654e393e71f, type: 3}
     - {fileID: 2800000, guid: 656b9b326f584444dbc455fbba2ebfdd, type: 3}
-    totalSpriteSurfaceArea: 5270579
+    totalSpriteSurfaceArea: 5507327
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -125,6 +125,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ee684243e25334567abf04248ad8d7c3, type: 3}
   - {fileID: 21300000, guid: 43558553866654b26a6fb34d6247808a, type: 3}
   - {fileID: 21300000, guid: ce6e2d6329ff14c669e74f9391a714a9, type: 3}
+  - {fileID: 21300000, guid: 91883aa35e5e748edb8cff599842e7d3, type: 3}
   - {fileID: 21300000, guid: 0f3f2db36ed2345c5852fc1b7db60525, type: 3}
   - {fileID: 21300000, guid: 4f3751d3772584a04ae20ccadeebb905, type: 3}
   - {fileID: 21300000, guid: d79e7ad36eba04961bffda5eeaec2dda, type: 3}
@@ -133,6 +134,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 97045b8426513437b81ce3228d6ff2b1, type: 3}
   - {fileID: 21300000, guid: 0b3bf8d4f49d140b4b7175f4c23e2d56, type: 3}
   - {fileID: 21300000, guid: d25dea15a1e1a499f8934d1d48f28453, type: 3}
+  - {fileID: 21300000, guid: 004c5f158dae145ea9a63cda47bef3c4, type: 3}
   - {fileID: 21300000, guid: 44a756357c2124767b98c1ca35563bfb, type: 3}
   - {fileID: 21300000, guid: 364ce765c733841f4ac6de8589f3363f, type: 3}
   - {fileID: 21300000, guid: f38f03e5bdf7148c682f145004764eec, type: 3}
@@ -161,6 +163,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5c3e2648a049c42a59b8b35aecb373e2, type: 3}
   - {fileID: 21300000, guid: 75784458d37d1437a8abb32828fdd611, type: 3}
   - {fileID: 21300000, guid: a90742b819c7644e080c7907cf2e2fd1, type: 3}
+  - {fileID: 21300000, guid: e2598a49eea4c49f88316e4cf371e0f8, type: 3}
   - {fileID: 21300000, guid: ec9f11691e2ba4abc80cc4f12c314874, type: 3}
   - {fileID: 21300000, guid: c525b2998e68c4527b442bbbca68835d, type: 3}
   - {fileID: 21300000, guid: f96951a92382c4974a822238612eb0c1, type: 3}
@@ -247,6 +250,7 @@ SpriteAtlas:
   - popup_box
   - popup_empty
   - botton_rank
+  - lobby_dice_deck
   - shop_diamond4
   - info_skeleton
   - coin_key
@@ -255,6 +259,7 @@ SpriteAtlas:
   - coin_diamond
   - class_4
   - box_coop_3
+  - lobby_seasonpass
   - popup_box2
   - class_10
   - lobby_tropghy
@@ -283,6 +288,7 @@ SpriteAtlas:
   - info_poison
   - lobby_event
   - shop_BG_diamond
+  - lobby_setting
   - shop_gold3
   - loading_icon2
   - dice_dice_unuse
