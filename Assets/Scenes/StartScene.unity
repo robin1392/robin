@@ -159,7 +159,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 8453943
+    m_Bits: 4294967295
 --- !u!114 &94399570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,10 +743,10 @@ MonoBehaviour:
   event_OtherPause:
     m_PersistentCalls:
       m_Calls: []
-  UseLocalServer: 1
-  LocalServerAddr: 15.164.169.221
+  UseLocalServer: 0
+  LocalServerAddr: 3.35.27.180
   LocalServerPort: 40002
-  UserId: bc7a8c89-813c-4fe5-8f38-f97da75c5dc9
+  UserId: 
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0
