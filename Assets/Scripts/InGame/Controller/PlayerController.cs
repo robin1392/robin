@@ -1828,10 +1828,15 @@ namespace ED
         public void FireBullet(E_BulletType bulletType, int id, int targetId, float damage, float moveSpeed)
         {
             Bullet b = null;
-            Vector3 startPos = listMinion.Find(m => m.id == id).ts_ShootingPos.position;
-            
-            switch (bulletType)
+            BaseStat bs = listMinion.Find(m => m.id == id);
+            if(bs == null) bs = listMagic.Find(m => m.id == id);
+
+            if(bs != null)
             {
+                Vector3 startPos = listMinion.Find(m => m.id == id).ts_ShootingPos.position;
+
+                switch(bulletType)
+                {
                 case E_BulletType.ARROW:
                     b = PoolManager.instance.ActivateObject<Bullet>("Arrow", startPos);
                     break;
@@ -1850,10 +1855,8 @@ namespace ED
                 case E_BulletType.BABYDRAGON:
                     b = PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
                     break;
-            }
-            
-            if (b != null)
-            {
+                }
+
                 b.transform.rotation = Quaternion.identity;
                 b.controller = this;
                 b.moveSpeed = moveSpeed;
