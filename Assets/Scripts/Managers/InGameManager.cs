@@ -281,6 +281,8 @@ namespace ED
                     ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[4]][0])
                 }; 
                 NetworkManager.Get().GetNetInfo().SetPlayerInfo(msgUserInfo);
+                
+                // Set AI
                 msgUserInfo = new MsgPlayerInfo();
                 msgUserInfo.PlayerUId = 2;
                 msgUserInfo.IsBottomPlayer = false;

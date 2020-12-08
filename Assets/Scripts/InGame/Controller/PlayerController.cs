@@ -283,7 +283,7 @@ namespace ED
         #endregion
         
         #region spawn
-        
+
         public void Spawn(MsgSpawnMinion[] infos)
         {
             spawnCountInWave = 0;
@@ -291,69 +291,72 @@ namespace ED
             var magicCastDelay = 0.05f;
             robotPieceCount = 0;
             robotEyeTotalLevel = 0;
-            
-            for (int i = 0; i < infos.Length; i++)
+
+            if (infos != null)
             {
-
-                int fieldIndex = infos[i].SlotIndex;
-                var data = arrDice[fieldIndex].diceData;
-                var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
-                var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
-
-                for (int j = 0; j < infos[i].Id.Length; j++)
+                for (int i = 0; i < infos.Length; i++)
                 {
-                    var objID = infos[i].Id[j] + myUID * 10000;
-                    
-                    if (listMinion.Find(minion => minion.id == objID) != null ||
-                    listMagic.Find(magic => magic.id == objID) != null)
-                        continue;
-                    
-                    switch(data.castType)
+                    int fieldIndex = infos[i].SlotIndex;
+                    var data = arrDice[fieldIndex].diceData;
+                    var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
+                    var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
+
+                    for (int j = 0; j < infos[i].Id.Length; j++)
                     {
-                    case (int)DICE_CAST_TYPE.MINION:
-                        CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
-                        break;
-                    case (int)DICE_CAST_TYPE.HERO:
-                        CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
-                        break;
-                    case (int)DICE_CAST_TYPE.MAGIC:
-                    case (int)DICE_CAST_TYPE.INSTALLATION:
-                        CastMagic(data, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
-                        break;
+                        var objID = infos[i].Id[j] + myUID * 10000;
+                    
+                        if (listMinion.Find(minion => minion.id == objID) != null ||
+                            listMagic.Find(magic => magic.id == objID) != null)
+                            continue;
+                    
+                        switch(data.castType)
+                        {
+                            case (int)DICE_CAST_TYPE.MINION:
+                                CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                                break;
+                            case (int)DICE_CAST_TYPE.HERO:
+                                CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                                break;
+                            case (int)DICE_CAST_TYPE.MAGIC:
+                            case (int)DICE_CAST_TYPE.INSTALLATION:
+                                CastMagic(data, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                                break;
+                        }
                     }
                 }
             }
-            
-            
-
-            // for (var i = 0; i < arrDice.Length; i++)
-            // {
-            //     if (arrDice[i].id >= 0 && arrDice[i].diceData != null )
-            //     {
-            //         Transform ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(i): FieldManager.Get().GetTopListTs(i);
-            //         var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
-            //         var multiply = arrDice[i].diceData.spawnMultiply;
-            //
-            //         switch(arrDice[i].diceData.castType)
-            //         {
-            //         case (int)DICE_CAST_TYPE.MINION:
-            //             for (var j = 0; j < (arrDice[i].eyeLevel + 1) * multiply; j++)
-            //             {
-            //                 CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
-            //             }
-            //             break;
-            //         case (int)DICE_CAST_TYPE.HERO:
-            //             CreateMinion(arrDice[i].diceData, ts.position, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
-            //             break;
-            //         case (int)DICE_CAST_TYPE.MAGIC:
-            //         case (int)DICE_CAST_TYPE.INSTALLATION:
-            //             CastMagic(arrDice[i].diceData, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
-            //             break;
-            //
-            //         }
-            //         magicCastDelay += 0.066666f;
-            //     }
-            // }
+            else
+            {
+                for (var i = 0; i < arrDice.Length; i++)
+                {
+                    if (arrDice[i].id >= 0 && arrDice[i].diceData != null )
+                    {
+                        int spawnID = id + spawnCount++;
+                        Transform ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(i): FieldManager.Get().GetTopListTs(i);
+                        var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
+                        var multiply = arrDice[i].diceData.spawnMultiply;
+                
+                        switch(arrDice[i].diceData.castType)
+                        {
+                        case (int)DICE_CAST_TYPE.MINION:
+                            for (var j = 0; j < (arrDice[i].eyeLevel + 1) * multiply; j++)
+                            {
+                                CreateMinion(arrDice[i].diceData, ts.position, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
+                            }
+                            break;
+                        case (int)DICE_CAST_TYPE.HERO:
+                            CreateMinion(arrDice[i].diceData, ts.position, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
+                            break;
+                        case (int)DICE_CAST_TYPE.MAGIC:
+                        case (int)DICE_CAST_TYPE.INSTALLATION:
+                            CastMagic(arrDice[i].diceData, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
+                            break;
+                
+                        }
+                        magicCastDelay += 0.066666f;
+                    }
+                }
+            }
         }
         
         public virtual void SpawnMonster(MsgMonster boss)
