@@ -301,11 +301,11 @@ namespace ED
 
                 for (int j = 0; j < infos[i].Id.Length; j++)
                 {
-                    if (listMinion.Find(minion => minion.id == infos[i].Id[j] + myUID * 10000) != null ||
-                    listMagic.Find(magic => magic.id == infos[i].Id[j] + myUID * 10000) != null)
-                        continue;
-                    
                     var objID = infos[i].Id[j] + myUID * 10000;
+                    
+                    if (listMinion.Find(minion => minion.id == objID) != null ||
+                    listMagic.Find(magic => magic.id == objID) != null)
+                        continue;
                     
                     switch(data.castType)
                     {
@@ -718,6 +718,7 @@ namespace ED
                     m.isMine = InGameManager.IsNetwork ? isMine : (InGameManager.Get().playerController == this);
                     //m.id = (_myUID * 10000) + (spawnCount * 300) + spawnCountInWave++;
                     m.id = id;
+                    m.diceId = data.id;
                     m.controller = this;
                     m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
