@@ -93,6 +93,12 @@ namespace ED
 
         protected virtual void Update()
         {
+            if (currentHealth <= 0)
+            {
+                Death();
+                return;
+            }
+            
             _spawnedTime += Time.deltaTime;
             
             if (isPlayable && isPushing == false && isAttacking == false)
@@ -119,8 +125,8 @@ namespace ED
                     }
                     else
                     {
-                        transform.LookAt(networkPosition);
-                        transform.position = networkPosition;
+                        //transform.LookAt(networkPosition);
+                        transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed * 2f);
                     }
                 }
 
@@ -601,11 +607,11 @@ namespace ED
                     _seeker.StartPath(transform.position, targetPos);
                 }
             }
-            else
-            {
-                transform.LookAt(networkPosition);
-                transform.position = networkPosition;
-            }
+            // else
+            // {
+            //     transform.LookAt(networkPosition);
+            //     transform.position = networkPosition;
+            // }
 //            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
 //            {
 //                _pathRefinedCount++;

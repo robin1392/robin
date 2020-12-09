@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: atlas_dice
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: a38bacb15ba614a11b4caf5c9ff390b2, type: 3}
+    totalSpriteSurfaceArea: 1372313
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 86cf89200df4d4278931128198b98d2a, type: 3}
+  - {fileID: 21300000, guid: d0b91380a99ec49aaa02bee5983a1f31, type: 3}
+  - {fileID: 21300000, guid: 2efe5d1191c1b41408f85119ac73724e, type: 3}
+  - {fileID: 21300000, guid: c2693b91674ce4d368dd54366812dc7e, type: 3}
+  - {fileID: 21300000, guid: 615375d19b9d3471cab1c80918021f36, type: 3}
+  - {fileID: 21300000, guid: a1cdbb028fd6249069a20170cb67e18c, type: 3}
+  - {fileID: 21300000, guid: 130d26c2454364977815fe7302ecd52b, type: 3}
+  - {fileID: 21300000, guid: 472d68e2b710b4655bc5a2463f4f924f, type: 3}
+  - {fileID: 21300000, guid: 63cfaca3a1ab74a84ab8eb72f7848801, type: 3}
+  - {fileID: 21300000, guid: 721025c34d280499ab6ff2717cf71989, type: 3}
+  - {fileID: 21300000, guid: 7cf0c43465b8540da9e16fd71248fd75, type: 3}
+  - {fileID: 21300000, guid: 14ad1344feb53499a95125809bfdbdb7, type: 3}
+  - {fileID: 21300000, guid: a2d38c845448045cab30286c5324de9e, type: 3}
+  - {fileID: 21300000, guid: ea7b5605459ac4696ae08627838e0ba8, type: 3}
+  - {fileID: 21300000, guid: b738f0459b2924919a058a0e7b310576, type: 3}
+  - {fileID: 21300000, guid: 983fb25575ead4e5d9b619c35348fce8, type: 3}
+  - {fileID: 21300000, guid: 389097a5b4b7d4e6486a838d4f2bbe7d, type: 3}
+  - {fileID: 21300000, guid: 89234546d7ee34ab880c5a1d12acd4cc, type: 3}
+  - {fileID: 21300000, guid: 75c972569836246178d1ad0b0dbbbd73, type: 3}
+  - {fileID: 21300000, guid: 6e272cb6e305c4582b9a84d4e59fc968, type: 3}
+  - {fileID: 21300000, guid: ed7433d74af2e443db3d4744e7cd1680, type: 3}
+  - {fileID: 21300000, guid: 31b15af7b3aa245388c0ce05cfdceb25, type: 3}
+  - {fileID: 21300000, guid: 5b8a2c989958146e88e27745e04bc8ca, type: 3}
+  - {fileID: 21300000, guid: e056f299a1ebb42ec962bce751727cfb, type: 3}
+  - {fileID: 21300000, guid: 73198ac96da1c40d788d4c72b9f0f570, type: 3}
+  - {fileID: 21300000, guid: d3345b1aeb3524fb082d8f9600492960, type: 3}
+  - {fileID: 21300000, guid: 33f2244ab7970462bac0b42b3d951db8, type: 3}
+  - {fileID: 21300000, guid: bec0c01bf98654bd6a28fd92bb17e707, type: 3}
+  - {fileID: 21300000, guid: 935df56be498a43a19be0043917f06a9, type: 3}
+  - {fileID: 21300000, guid: 0e98632c03c6a4eff8ae0626fb91d4f1, type: 3}
+  - {fileID: 21300000, guid: cf4a325ccaac24703b92f2147a34cc89, type: 3}
+  - {fileID: 21300000, guid: ed855acc00efe4700af1535c8a0c250c, type: 3}
+  - {fileID: 21300000, guid: 81c04cfc5b404407cbc81c23398f1bfd, type: 3}
+  - {fileID: 21300000, guid: b1d3860d14262448fbc7ce02d7903134, type: 3}
+  - {fileID: 21300000, guid: c8cc0d1e8cf3e4745aeebad8dd2cac02, type: 3}
+  - {fileID: 21300000, guid: e8d53f1e3841741c6b5dc639249cd05f, type: 3}
+  - {fileID: 21300000, guid: ca80718e1ca9e403a8384d9f8aa7b1cc, type: 3}
+  - {fileID: 21300000, guid: e391578e1b5724809b32931c41284a14, type: 3}
+  - {fileID: 21300000, guid: 483b4e4f881d249b79ea3ae72b7afe2f, type: 3}
+  - {fileID: 21300000, guid: f173d58f79ef9473689e50809f3c4bb7, type: 3}
+  - {fileID: 21300000, guid: e88832afb8fc14caf85b1c88dfb5124c, type: 3}
+  - {fileID: 21300000, guid: 3fa8c3efd02f64c438d9b5613022b7fe, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - dice_arbiter
+  - dice_layzer
+  - dice_berserker
+  - dice_iceball
+  - dice_stoneball
+  - dice_RageOfTower
+  - dice_sinzed
+  - dice_sniper
+  - dice_necromancer
+  - dice_sword
+  - dice_magician
+  - dice_pip
+  - dice_invincibility
+  - dice_turret
+  - dice_robot
+  - dice_babydragon
+  - dice_empty
+  - dice_fighterplane
+  - dice_supply
+  - dice_ninja
+  - dice_rush
+  - dice_rocket
+  - dice_zombie
+  - dice_flagofwar
+  - dice_bomber
+  - dice_healing
+  - dice_golem
+  - dice_mortar
+  - dice_fire
+  - dice_dagger
+  - dice_posu
+  - dice_fireman
+  - dice_race
+  - dice_plane
+  - dice_shielder
+  - dice_saint
+  - dice_lightningrod
+  - dice_support
+  - dice_mine
+  - dice_bow
+  - dice_raider
+  - dice_goliath
+  m_Tag: atlas_dice
+  m_IsVariant: 0

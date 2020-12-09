@@ -115,12 +115,6 @@ namespace ED
                     _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
                 }
                 
-                StartCoroutine(LifetimeCoroutine());
-            }
-
-            if (image_HealthBar != null)
-            {
-                image_HealthBar.fillAmount = 1f;
                 switch (NetworkManager.Get().playType)
                 {
                     case Global.PLAY_TYPE.BATTLE:
@@ -130,6 +124,8 @@ namespace ED
                         image_HealthBar.color = isBottomPlayer ? Color.green : Color.red;
                         break;
                 }
+                
+                StartCoroutine(LifetimeCoroutine());
             }
         }
 
@@ -307,7 +303,7 @@ namespace ED
                 if (currentHealth <= 0)
                 {
                     EndLifetime();
-                    yield break;
+                    break;
                 }
             }
             
@@ -320,6 +316,16 @@ namespace ED
         {
             StopAllCoroutines();
             controller.DeathMagic(id);
+        }
+
+        public void SetNetworkValue(Vector3 pos, float hp)
+        {
+            if (castType == DICE_CAST_TYPE.INSTALLATION)
+            {
+                transform.position = pos;
+                if (currentHealth > 0 && currentHealth < hp) return;
+                currentHealth = hp;
+            }
         }
     }
 }

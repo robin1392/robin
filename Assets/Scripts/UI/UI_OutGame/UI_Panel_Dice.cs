@@ -94,9 +94,11 @@ namespace ED
                 var data = JsonDataManager.Get().dataDiceInfo.GetData(deck[i]);
                 arrImageDeck[i].sprite =
                     FileHelper.GetIcon(data.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeck[i].SetNativeSize();
                 arrImageDeckEye[i].color = FileHelper.GetColor(data.color);
                 arrImageDeck_Main[i].sprite =
                     FileHelper.GetIcon(data.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+                arrImageDeck_Main[i].SetNativeSize();
                 arrImageDeckEye_Main[i].color = FileHelper.GetColor(data.color);
             }
             

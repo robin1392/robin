@@ -10,6 +10,7 @@ TagManager:
   - Minion_Flying
   - Installation
   - Wall
+  - UI_AlphaImage
   layers:
   - Default
   - TransparentFX

@@ -266,7 +266,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinGameReq msg = new MsgJoinGameReq();
-                            msg.PlayerSessionId = br.ReadString();
                             msg.DeckIndex = br.ReadSByte();
                             JoinGameReq(peer, msg);
                         }
@@ -313,7 +312,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgJoinCoopGameReq msg = new MsgJoinCoopGameReq();
-                            msg.PlayerSessionId = br.ReadString();
                             msg.DeckIndex = br.ReadSByte();
                             JoinCoopGameReq(peer, msg);
                         }
@@ -474,6 +472,14 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgSpawnNotify msg = new MsgSpawnNotify();
                             msg.Wave = br.ReadInt32();
+
+                            int length = br.ReadInt32();
+                            msg.SpawnInfo = new MsgSpawnInfo[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.SpawnInfo[i] = MsgSpawnInfo.Read(br);
+                            }
+
                             SpawnNotify(peer, msg);
                         }
                     }
@@ -490,6 +496,14 @@ namespace RandomWarsProtocol
                             MsgCoopSpawnNotify msg = new MsgCoopSpawnNotify();
                             msg.Wave = br.ReadInt32();
                             msg.PlayerUId = br.ReadUInt16();
+
+                            int length = br.ReadInt32();
+                            msg.SpawnInfo = new MsgSpawnInfo[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.SpawnInfo[i] = MsgSpawnInfo.Read(br);
+                            }
+
                             CoopSpawnNotify(peer, msg);
                         }
                     }
@@ -505,7 +519,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgMonsterSpawnNotify msg = new MsgMonsterSpawnNotify();
                             msg.PlayerUId = br.ReadUInt16();
-                            msg.SpawnBossMonster = MsgBossMonster.Read(br);
+                            msg.SpawnMonster = MsgMonster.Read(br);
                             MonsterSpawnNotify(peer, msg);
                         }
                     }
@@ -692,26 +706,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameReq msg = new MsgStartSyncGameReq();
-                            msg.PlayerId = br.ReadInt32();
-                            msg.PlayerSpawnCount = br.ReadInt32();
-
-                            int length = br.ReadInt32();
-                            msg.SyncMinionData = new MsgSyncMinionData[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.SyncMinionData[i] = MsgSyncMinionData.Read(br);
-                            }
-
-                            msg.OtherPlayerId = br.ReadInt32();
-                            msg.OtherPlayerSpawnCount = br.ReadInt32();
-
-                            length = br.ReadInt32();
-                            msg.OtherSyncMinionData = new MsgSyncMinionData[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.OtherSyncMinionData[i] = MsgSyncMinionData.Read(br);
-                            }
-
                             StartSyncGameReq(peer, msg);
                         }
                     }
@@ -727,20 +721,7 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgStartSyncGameAck msg = new MsgStartSyncGameAck();
                             msg.ErrorCode = br.ReadInt32();
-                            StartSyncGameAck(peer, msg);
-                        }
-                    }
-                    break;
-                case GameProtocol.START_SYNC_GAME_NOTIFY:
-                    {
-                        if (StartSyncGameNotify == null)
-                            return false;
-
-                        
-                        using (var ms = new MemoryStream(buffer))
-                        {
-                            BinaryReader br = new BinaryReader(ms);
-                            MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
+                            msg.Wave = br.ReadInt32();
                             msg.PlayerInfo = MsgPlayerInfo.Read(br);
 
                             int length = br.ReadInt32();
@@ -757,14 +738,8 @@ namespace RandomWarsProtocol
                                 msg.InGameUp[i] = MsgInGameUp.Read(br);
                             }
 
-                            length = br.ReadInt32();
-                            msg.SyncMinionData = new MsgSyncMinionData[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.SyncMinionData[i] = MsgSyncMinionData.Read(br);
-                            }
+                            msg.LastStatusRelay = MsgMinionStatusRelay.Read(br);
 
-                            msg.PlayerSpawnCount = br.ReadInt32();
                             msg.OtherPlayerInfo = MsgPlayerInfo.Read(br);
 
                             length = br.ReadInt32();
@@ -781,14 +756,21 @@ namespace RandomWarsProtocol
                                 msg.OtherInGameUp[i] = MsgInGameUp.Read(br);
                             }
 
-                            length = br.ReadInt32();
-                            msg.OtherSyncMinionData = new MsgSyncMinionData[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.OtherSyncMinionData[i] = MsgSyncMinionData.Read(br);
-                            }
+                            msg.OtherLastStatusRelay = MsgMinionStatusRelay.Read(br);
+                            StartSyncGameAck(peer, msg);
+                        }
+                    }
+                    break;
+                case GameProtocol.START_SYNC_GAME_NOTIFY:
+                    {
+                        if (StartSyncGameNotify == null)
+                            return false;
 
-                            msg.OtherPlayerSpawnCount = br.ReadInt32();
+                        
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            BinaryReader br = new BinaryReader(ms);
+                            MsgStartSyncGameNotify msg = new MsgStartSyncGameNotify();
                             StartSyncGameNotify(peer, msg);
                         }
                     }
@@ -818,6 +800,9 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameAck msg = new MsgEndSyncGameAck();
                             msg.ErrorCode = br.ReadInt32();
+                            msg.Wave = br.ReadInt32();
+                            msg.RemainWaveTime = br.ReadInt32();
+                            msg.SpawnCount = br.ReadByte();
                             EndSyncGameAck(peer, msg);
                         }
                     }
@@ -833,6 +818,8 @@ namespace RandomWarsProtocol
                             BinaryReader br = new BinaryReader(ms);
                             MsgEndSyncGameNotify msg = new MsgEndSyncGameNotify();
                             msg.PlayerUId = br.ReadUInt16();
+                            msg.RemainWaveTime = br.ReadInt32();
+                            msg.SpawnCount = br.ReadByte();
                             EndSyncGameNotify(peer, msg);
                         }
                     }
@@ -1119,7 +1106,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgHitDamageMinionRelay msg = new MsgHitDamageMinionRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
                             HitDamageMinionRelay(peer, msg);
@@ -1136,7 +1122,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             DestroyMinionRelay(peer, msg);
                         }
@@ -1152,7 +1137,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgHealMinionRelay msg = new MsgHealMinionRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.Heal = br.ReadInt32();
                             HealMinionRelay(peer, msg);
@@ -1169,7 +1153,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgPushMinionRelay msg = new MsgPushMinionRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.Dir = MsgVector3.Read(br);
                             msg.PushPower = br.ReadInt16();
@@ -1187,7 +1170,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.TargetId = br.ReadUInt16();
                             msg.Trigger = br.ReadByte();
@@ -1205,7 +1187,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireArrowRelay msg = new MsgFireArrowRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.Dir = MsgVector3.Read(br);
                             msg.Damage = br.ReadInt32();
@@ -1224,7 +1205,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireballBombRelay msg = new MsgFireballBombRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             FireballBombRelay(peer, msg);
                         }
@@ -1240,7 +1220,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMineBombRelay msg = new MsgMineBombRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             MineBombRelay(peer, msg);
                         }
@@ -1256,7 +1235,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.TargetId = br.ReadUInt16();
                             SetMagicTargetIdRelay(peer, msg);
@@ -1273,7 +1251,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.X = br.ReadInt16();
                             msg.Z = br.ReadInt16();
@@ -1291,7 +1268,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.SturnTime = br.ReadInt16();
                             SturnMinionRelay(peer, msg);
@@ -1308,7 +1284,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgRocketBombRelay msg = new MsgRocketBombRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             RocketBombRelay(peer, msg);
                         }
@@ -1324,7 +1299,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgIceBombRelay msg = new MsgIceBombRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             IceBombRelay(peer, msg);
                         }
@@ -1340,7 +1314,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.BaseStatId = br.ReadUInt16();
                             DestroyMagicRelay(peer, msg);
                         }
@@ -1356,7 +1329,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.ShootPos = MsgVector3.Read(br);
                             msg.TargetPos = MsgVector3.Read(br);
                             msg.Power = br.ReadInt32();
@@ -1376,7 +1348,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireSpearRelay msg = new MsgFireSpearRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.ShootPos = MsgVector3.Read(br);
                             msg.TargetId = br.ReadUInt16();
                             msg.Power = br.ReadInt32();
@@ -1395,7 +1366,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireManFireRelay msg = new MsgFireManFireRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             FireManFireRelay(peer, msg);
                         }
@@ -1429,7 +1399,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.IsCloacking = br.ReadBoolean();
                             MinionCloackingRelay(peer, msg);
@@ -1446,7 +1415,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMinionFlagOfWarRelay msg = new MsgMinionFlagOfWarRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.BaseStatId = br.ReadUInt16();
                             msg.Effect = br.ReadByte();
                             msg.IsFogOfWar = br.ReadBoolean();
@@ -1464,7 +1432,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.Message = br.ReadByte();
                             SendMessageVoidRelay(peer, msg);
@@ -1481,7 +1448,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.TargetId = br.ReadUInt16();
                             msg.Message = br.ReadByte();
@@ -1499,7 +1465,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgNecromancerBulletRelay msg = new MsgNecromancerBulletRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.ShootPos = MsgVector3.Read(br);
                             msg.TargetId = br.ReadUInt16();
                             msg.Power = br.ReadInt32();
@@ -1518,7 +1483,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.TargetId = br.ReadUInt16();
                             SetMinionTargetRelay(peer, msg);
@@ -1534,27 +1498,7 @@ namespace RandomWarsProtocol
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
-                            MsgMinionStatusRelay msg = new MsgMinionStatusRelay();
-                            msg.PlayerUId = br.ReadUInt16();
-                            msg.PosIndex = br.ReadByte();
-
-                            int length = br.ReadInt32();
-                            msg.Pos = new MsgVector2[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.Pos[i] = MsgVector2.Read(br);
-                            }
-
-                            length = br.ReadInt32();
-                            msg.Hp = new int[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                msg.Hp[i] = br.ReadInt32();
-                            }
-
-                            msg.Relay = MsgMinionStatus.Read(br);
-                            msg.packetCount = br.ReadInt32();
-
+                            MsgMinionStatusRelay msg = MsgMinionStatusRelay.Read(br);
                             MinionStatusRelay(peer, msg);
                         }
                     }
@@ -1569,7 +1513,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgScarecrowRelay msg = new MsgScarecrowRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.BaseStatId = br.ReadUInt16();
                             msg.EyeLevel = br.ReadByte();
                             ScarecrowRelay(peer, msg);
@@ -1586,7 +1529,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgLayzerTargetRelay msg = new MsgLayzerTargetRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
 
                             int length = br.ReadInt32();
@@ -1610,7 +1552,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgFireBulletRelay msg = new MsgFireBulletRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.targetId = br.ReadUInt16();
                             msg.Damage = br.ReadInt32();
@@ -1630,7 +1571,6 @@ namespace RandomWarsProtocol
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();
-                            msg.PlayerUId = br.ReadUInt16();
                             msg.Id = br.ReadUInt16();
                             msg.Time = br.ReadInt16();
                             MinionInvincibilityRelay(peer, msg);

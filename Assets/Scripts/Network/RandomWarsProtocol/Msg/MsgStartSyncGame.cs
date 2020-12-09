@@ -8,13 +8,6 @@ namespace RandomWarsProtocol.Msg
     [Serializable]
     public class MsgStartSyncGameReq
     {
-        public int PlayerId;
-        public int PlayerSpawnCount;
-        public MsgSyncMinionData[] SyncMinionData;
-        
-        public int OtherPlayerId;
-        public int OtherPlayerSpawnCount;
-        public MsgSyncMinionData[] OtherSyncMinionData;
     }
 
 
@@ -22,24 +15,24 @@ namespace RandomWarsProtocol.Msg
     public class MsgStartSyncGameAck
     {
         public int ErrorCode;
+        public int Wave;
+
+        // 플레이어 정보.
+        public MsgPlayerInfo PlayerInfo;
+        public MsgGameDice[] GameDiceData;
+        public MsgInGameUp[] InGameUp;
+        public MsgMinionStatusRelay LastStatusRelay;
+
+        // 상대방 정보
+        public MsgPlayerInfo OtherPlayerInfo;
+        public MsgGameDice[] OtherGameDiceData;
+        public MsgInGameUp[] OtherInGameUp;
+        public MsgMinionStatusRelay OtherLastStatusRelay;
     }
 
 
     [Serializable]
     public class MsgStartSyncGameNotify
     {
-        // 플레이어 정보.
-        public MsgPlayerInfo PlayerInfo;
-        public MsgGameDice[] GameDiceData;
-        public MsgInGameUp[] InGameUp;
-        public MsgSyncMinionData[] SyncMinionData;
-        public int PlayerSpawnCount;
-
-        // 상대방 정보
-        public MsgPlayerInfo OtherPlayerInfo;
-        public MsgGameDice[] OtherGameDiceData;
-        public MsgInGameUp[] OtherInGameUp;
-        public MsgSyncMinionData[] OtherSyncMinionData;
-        public int OtherPlayerSpawnCount;
     }
 }

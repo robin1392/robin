@@ -17,7 +17,7 @@ namespace ED
         public GameObject obj_IncubationParticle;
         public GameObject obj_SummonParticle;
 
-        private MsgBossMonster msgBoss;
+        private MsgMonster msgBoss;
         private static readonly int Idle = Animator.StringToHash("Idle");
         private static readonly int Incubation = Animator.StringToHash("Incubation");
 
@@ -66,15 +66,23 @@ namespace ED
 
         public override void HitDamageMinionAndMagic(int baseStatId, float damage )
         {
+            if (damage <= 0f) return;
+            
             if (baseStatId == id || baseStatId < 10000)
             {
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
-                    int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
+                    //int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
                     // 타워가 맞으면 알ID로 교체해서 전송
                     if (baseStatId == myUID * 10000) baseStatId = msgBoss.Id;
-                    if (dicHitDamage.ContainsKey(baseStatId) == false) dicHitDamage.Add(baseStatId, 0f);
-                    dicHitDamage[baseStatId] += damage;
+                    if (dicHitDamage.ContainsKey(baseStatId) == false)
+                    {
+                        dicHitDamage.Add(baseStatId, damage);
+                    }
+                    else
+                    {
+                        dicHitDamage[baseStatId] += damage;
+                    }
                 }
                 else if (InGameManager.IsNetwork == false)
                 {
@@ -186,7 +194,7 @@ namespace ED
                 var pos = FieldManager.Get().GetTopListPos(i);
                 var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
                     Global.E_LOADTYPE.LOAD_MINION);
-                var m = CreateMinion(obj, pos, 1, 0);
+                var m = CreateMinion(obj, pos);
 
                 //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                 //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
@@ -209,7 +217,7 @@ namespace ED
         }
 
         // Spawn Egg
-        public override void SpawnMonster(MsgBossMonster boss)
+        public override void SpawnMonster(MsgMonster boss)
         {
             if (boss != null && boss.DataId > 0)
             {
@@ -253,7 +261,7 @@ namespace ED
                     $"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
-                var m = CreateMinion(obj, transform.position, 1, 0, false);
+                var m = CreateMinion(obj, transform.position, false);
 
                 m.id = msgBoss.Id;
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
@@ -324,13 +332,29 @@ namespace ED
         
         #region Network
         
-        protected override void SyncMinion(int uid, byte minionCount , MsgVector2[] msgPoss, int[] minionHP, MsgMinionStatus relay, int packetCount)
+        public override void SyncMinion(MsgMinionInfo[] msgMinionInfos, MsgMinionStatus relay, int packetCount)
         {
-            for (var i = 0; i < minionCount && i < listMinion.Count; i++)
+            // for (var i = 0; i < minionCount && i < listMinion.Count; i++)
+            // {
+            //     Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPos[i]);
+            //     float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
+            //     listMinion[i].SetNetworkValue(chPos, chHP);
+            // }
+
+            for (int i = 0; i < msgMinionInfos.Length; i++)
             {
-                Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPoss[i]);
-                float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
-                listMinion[i].SetNetworkValue(chPos, chHP);
+                var m = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
+                if (m != null)
+                {
+                    m.SetNetworkValue(
+                        ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
+                        ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
+                    );
+                }
+                else // 유닛이 없을 경우 생성하기
+                {
+                    
+                }
             }
 
             var dic = MsgMinionStatusToDictionary(relay);
@@ -349,32 +373,28 @@ namespace ED
                         foreach (var value in msg.Value)
                         {
                             MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}, DMG:{2}", m.PlayerUId,
-                                m.Id, m.Damage);
+                            str += string.Format("\n      ID:{1}, DMG:{2}", m.Id, m.Damage);
                         }
                         break;
                     case GameProtocol.HEAL_MINION_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgHealMinionRelay m = (MsgHealMinionRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}, HEAL:{2}", m.PlayerUId,
-                                m.Id, m.Heal);
+                            str += string.Format("\n      ID:{1}, HEAL:{2}", m.Id, m.Heal);
                         }
                         break;
                     case GameProtocol.DESTROY_MINION_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgDestroyMinionRelay m = (MsgDestroyMinionRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}", m.PlayerUId,
-                                m.Id);
+                            str += string.Format("\n      ID:{1}", m.Id);
                         }
                         break;
                     case GameProtocol.DESTROY_MAGIC_RELAY:
                         foreach (var value in msg.Value)
                         {
                             MsgDestroyMagicRelay m = (MsgDestroyMagicRelay) value;
-                            str += string.Format("\n      UID: {0},  ID:{1}", m.PlayerUId,
-                                m.BaseStatId);
+                            str += string.Format("\n      ID:{1}", m.BaseStatId);
                         }
                         break;
                     case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:

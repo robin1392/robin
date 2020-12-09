@@ -23,6 +23,8 @@ namespace RandomWarsService.Network.Socket.NetSession
         Duplicated,
         // 타임아웃
         TimeOut,
+        // 정상 종료
+        Leave,
     }
 
     public delegate void CompletedMessageDelegate(ClientSession clientSession, int protocolId, byte[] msg, int length);
@@ -40,14 +42,15 @@ namespace RandomWarsService.Network.Socket.NetSession
         public ESessionState DisconnectState { get; set; }
 
         public System.Net.Sockets.Socket Socket { get; set; }
-        
+
         public SocketAsyncEventArgs ReceiveEventArgs { get; set; }
-        
+
         public SocketAsyncEventArgs SendEventArgs { get; set; }
 
 
         public long AliveTimeTick { get; set; }
-        public long PauseStartTimeTick { get; set; }
+        public long PauseLimitTimeTick { get; set; }
+        public int PauseCount { get; set; }
 
 
         // session객체. 어플리케이션 딴에서 구현하여 사용.
@@ -76,7 +79,8 @@ namespace RandomWarsService.Network.Socket.NetSession
             SessionId = string.Empty;
             DisconnectState = ESessionState.None;
             AliveTimeTick = 0;
-            PauseStartTimeTick = 0;
+            PauseLimitTimeTick = 0;
+            PauseCount = 0;
         }
 
 
@@ -162,13 +166,13 @@ namespace RandomWarsService.Network.Socket.NetSession
             }
         }
 
-		/// <summary>
-		/// 비동기 전송을 시작한다.
-		/// </summary>
+        /// <summary>
+        /// 비동기 전송을 시작한다.
+        /// </summary>
         private void StartSend()
         {
             byte[] buffer;
-            lock(_lockSendingQueue)
+            lock (_lockSendingQueue)
             {
                 // 전송이 아직 완료된 상태가 아니므로 데이터만 가져오고 큐에서 제거하진 않는다.
                 buffer = _sendingQueue.Peek();
@@ -189,10 +193,10 @@ namespace RandomWarsService.Network.Socket.NetSession
         }
 
 
-		/// <summary>
-		/// 비동기 전송 완료시 호출되는 콜백 매소드.
-		/// </summary>
-		/// <param name="e"></param>
+        /// <summary>
+        /// 비동기 전송 완료시 호출되는 콜백 매소드.
+        /// </summary>
+        /// <param name="e"></param>
         public byte[] ProcessSend(SocketAsyncEventArgs e)
         {
             if (e.BytesTransferred <= 0 || e.SocketError != SocketError.Success)
@@ -248,14 +252,13 @@ namespace RandomWarsService.Network.Socket.NetSession
         {
             try
             {
-                //Console.WriteLine( string.Format("Disconnected. Handle {0}", Socket.Handle));
                 Socket.Shutdown(SocketShutdown.Send);
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
-            
+
             Socket.Close();
         }
 
@@ -292,10 +295,16 @@ namespace RandomWarsService.Network.Socket.NetSession
         }
 
 
-        public bool ExpiredPauseTime()
+        public bool ExpiredPauseTime(long nowTick)
         {
-            return PauseStartTimeTick != 0 
-                && PauseStartTimeTick + (TimeSpan.TicksPerSecond * 11) < DateTime.UtcNow.Ticks;
+            return PauseLimitTimeTick != 0
+                && PauseLimitTimeTick < nowTick;
+        }
+
+
+        public bool OverPauseCount()
+        {
+            return ++PauseCount >= 3;
         }
     }
 }

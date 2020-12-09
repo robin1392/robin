@@ -73,6 +73,7 @@ namespace ED
 
         IEnumerator FireCoroutine()
         {
+            SetControllEnable(false);
             isFire = true;
             ps_Fire.Play();
             light.enabled = true;
@@ -107,6 +108,7 @@ namespace ED
             ps_Fire.Stop();
             light.enabled = false;
             isFire = false;
+            SetControllEnable(true);
         }
 
         public override void EndGameUnit()

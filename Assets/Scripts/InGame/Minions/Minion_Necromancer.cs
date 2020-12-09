@@ -43,7 +43,7 @@ namespace ED
         {
             base.Update();
             
-            if (isPlayable && _spawnedTime >= _skillCastedTime + _skillCooltime)
+            if (isPlayable && isMine && _spawnedTime >= _skillCastedTime + _skillCooltime)
             {
                 _skillCastedTime = _spawnedTime;
                 Summon();
@@ -135,7 +135,7 @@ namespace ED
             {
                 arrPs_Spawn[i].Play();
                 
-                var m = controller.CreateMinion(pref_Skeleton, arrSpawnPos[i].position, 1, 0);
+                var m = controller.CreateMinion(pref_Skeleton, arrSpawnPos[i].position);
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);

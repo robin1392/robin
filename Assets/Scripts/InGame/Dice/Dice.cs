@@ -12,6 +12,8 @@ namespace ED
         
         //public int id => (data != null && data.id >= 0) ? data.id : -1;
         public int id => (diceData != null && diceData.id >= 0) ? diceData.id : -1;
+        
+        // Eye 1 == int 0 
         public int eyeLevel;
 
 

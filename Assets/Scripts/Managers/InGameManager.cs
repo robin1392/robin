@@ -16,6 +16,7 @@ using TMPro;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
+using Pathfinding;
 using UnityEngine.U2D;
 using Random = UnityEngine.Random;
 
@@ -245,13 +246,57 @@ namespace ED
                 playerController.ChangeLayer(true);
                 playerController.isMine = true;
                 playerController.isBottomPlayer = true;
+                
+                // Set MsgUserinfo
+                var msgUserInfo = new MsgPlayerInfo();
+                msgUserInfo.PlayerUId = 1;
+                msgUserInfo.IsBottomPlayer = true;
+                msgUserInfo.IsMaster = true;
+                msgUserInfo.Name = UserInfoManager.Get().GetUserInfo().userNickName;
+                msgUserInfo.CurrentSp = 200;
+                int bonusHP = 0;
+            
+                foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
+                {
+                    if (info.Value.enableDice)
+                    {
+                        if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.Value.id))
+                        {
+                            int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0];
+                            bonusHP += JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level]
+                                .levelUpNeedInfo[info.Value.grade].addTowerHp;
+                        }
+                    }
+                }
+                msgUserInfo.TowerHp = (30000 + bonusHP) * 100;
+                msgUserInfo.SpGrade = 0;
+                msgUserInfo.GetDiceCount = 0;
+                msgUserInfo.DiceIdArray = UserInfoManager.Get().GetUserInfo().GetActiveDeck;
+                msgUserInfo.DiceLevelArray = new short[5]
+                {
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[0]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[1]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[2]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[3]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[4]][0])
+                }; 
+                NetworkManager.Get().GetNetInfo().SetPlayerInfo(msgUserInfo);
+                
+                // Set AI
+                msgUserInfo = new MsgPlayerInfo();
+                msgUserInfo.PlayerUId = 2;
+                msgUserInfo.IsBottomPlayer = false;
+                msgUserInfo.IsMaster = false;
+                msgUserInfo.CurrentSp = 200;
+                msgUserInfo.TowerHp = (30000 + Random.Range(0, 500)) * 100;
+                NetworkManager.Get().GetNetInfo().SetOtherInfo(msgUserInfo);
 
                 GameObject otherTObj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
                 otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 
                 // name
-                UI_InGame.Get().SetNickName(ObscuredPrefs.GetString("Nickname") , "AI");
+                UI_InGame.Get().SetNickName(UserInfoManager.Get().GetUserInfo().userNickName, "AI");
                 otherTObj.SendMessage("ChangeLayer", false);
                 isAIMode = true;
             }
@@ -320,6 +365,8 @@ namespace ED
                 StartGame();
                 RefreshTimeUI(true);
             }
+
+            Invoke("MapScan", 1f);
 
             // not use
             /*
@@ -403,6 +450,11 @@ namespace ED
             StartGame();
             RefreshTimeUI(true);
             */
+        }
+
+        private void MapScan()
+        {
+            AstarPath.active.Scan();
         }
 
         #endregion
@@ -508,8 +560,8 @@ namespace ED
 
                     if (IsNetwork == false)
                     {
-                        playerController.Spawn();
-                        playerController.targetPlayer.Spawn();
+                        playerController.Spawn(null);
+                        playerController.targetPlayer.Spawn(null);
 
                         wave++;
                     }
@@ -612,7 +664,7 @@ namespace ED
             playerController.SetSp(sp);
         }
 
-        public void NetSpawnNotify(int wave, int uid = 0)
+        public void NetSpawnNotify(int wave, MsgSpawnInfo[] spawnInfos)
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
@@ -624,41 +676,53 @@ namespace ED
             switch (NetworkManager.Get().playType)
             {
                 case Global.PLAY_TYPE.BATTLE:
-                    playerController.Spawn();
-                    playerController.targetPlayer.Spawn();
+                    for (int i = 0; i < spawnInfos.Length; i++)
+                    {
+                        if (NetworkManager.Get().UserUID == spawnInfos[i].PlayerUId)
+                        {
+                            playerController.Spawn(spawnInfos[i].SpawnMinion);
+                        }
+                        else if (NetworkManager.Get().OtherUID == spawnInfos[i].PlayerUId)
+                        {
+                            playerController.targetPlayer.Spawn(spawnInfos[i].SpawnMinion);
+                        }
+                    }
                     break;
                 case Global.PLAY_TYPE.COOP:
-                    if (uid > 0)
+                    for (int i = 0; i < spawnInfos.Length; i++)
                     {
-                        if (NetworkManager.Get().UserUID == uid)
+                        if (NetworkManager.Get().UserUID == spawnInfos[i].PlayerUId)
                         {
-                            playerController.Spawn();
+                            playerController.Spawn(spawnInfos[i].SpawnMinion);
                         }
-                        else if (NetworkManager.Get().OtherUID == uid)
+                        else if (NetworkManager.Get().OtherUID == spawnInfos[i].PlayerUId)
                         {
-                            playerController.targetPlayer.Spawn();
+                            playerController.targetPlayer.Spawn(spawnInfos[i].SpawnMinion);
                         }
-                        ((Coop_AI) playerController.coopPlayer).Spawn();
+                        else if (NetworkManager.Get().CoopUID == spawnInfos[i].PlayerUId)
+                        {
+                            playerController.coopPlayer.Spawn(spawnInfos[i].SpawnMinion);
+                        }
                     }
                     break;
             }
 
-            // 스폰이 불릴때마다 시간갱신을 위해 저장
-            if (NetworkManager.Get() && IsNetwork)
-                NetworkManager.Get().SaveBattleInfo();
+            //// 스폰이 불릴때마다 시간갱신을 위해 저장
+            //if (NetworkManager.Get() && IsNetwork)
+            //    NetworkManager.Get().SaveBattleInfo();
         }
 
-        public void NetMonsterSpawnNotify(int uid, MsgBossMonster msg)
+        public void NetMonsterSpawnNotify(int uid, MsgMonster msg)
         {
-            if (playerController.UID == uid)
+            if (NetworkManager.Get().UserUID == uid)
             {
                 playerController.SpawnMonster(msg);
             }
-            else if (playerController.targetPlayer.UID == uid)
+            else if (NetworkManager.Get().OtherUID == uid)
             {
                 playerController.targetPlayer.SpawnMonster(msg);
             }
-            else if (playerController.coopPlayer.UID == uid)
+            else if (NetworkManager.Get().CoopUID == uid)
             {
                 playerController.coopPlayer.SpawnMonster(msg);
             }
@@ -847,10 +911,10 @@ namespace ED
         public void CallBackLeaveRoom()
         {
             if(IsNetwork)
-                NetworkManager.Get().DisconnectSocket();
+                NetworkManager.Get().DisconnectSocket(false);
 
             // 잠시 테스트로 주석
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             GameStateManager.Get().MoveMainScene();
         }
 
@@ -1109,8 +1173,8 @@ namespace ED
 
         public void SendSyncAllBattleInfo()
         {
-            if (isGamePlaying == false)
-                return;
+            //if (isGamePlaying == false)
+            //    return;
             
             // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
             UI_InGamePopup.Get().ViewGameIndicator(true);
@@ -1198,15 +1262,17 @@ namespace ED
             SendInGameManager(GameProtocol.START_SYNC_GAME_REQ , myData.userId, playerController.spawnCount , syncMyMinionData , otherData.userId, playerController.targetPlayer.spawnCount , syncOtherMinionData);
         }
 
-        public void SyncGameData(MsgStartSyncGameNotify gameData)
+        public void SyncGameData(MsgStartSyncGameAck gameData)
         {
             print("recv p info " + gameData.PlayerInfo.PlayerUId + "  " + gameData.PlayerInfo.Name);
             print("recv other info " + gameData.OtherPlayerInfo.PlayerUId + "  " + gameData.OtherPlayerInfo.Name);
 
+            wave = gameData.Wave;
+
             // 정보 셋팅
             NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
             playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
-            if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true; 
+            if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true;
             playerController.RefreshHealthBar();
             playerController.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.PlayerInfo.IsBottomPlayer);
             playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
@@ -1235,41 +1301,43 @@ namespace ED
             playerController.SetDiceField(gameData.GameDiceData);
             
             // 미니언 셋팅
-            List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
-            foreach (var data in myMinionData)
-            {
-                var diceData = data_DiceInfo.GetData(data.minionDataId);
-                var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
-                m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
-                m.Initialize(playerController.MinionDestroyCallback);
-                if (data.minionDataId == 4004)
-                {
-                    m.CancelInvoke("Fusion");
-                    ((Minion_Robot)m).Transform();
-                }
-                m.SetNetSyncMinionData(data);
-                Debug.LogFormat("Recv My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-            }
+            playerController.SyncMinion(gameData.LastStatusRelay.MinionInfo, null, gameData.LastStatusRelay.packetCount);
+            // List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
+            // foreach (var data in myMinionData)
+            // {
+            //     var diceData = data_DiceInfo.GetData(data.minionDataId);
+            //     var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
+            //     m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
+            //     m.Initialize(playerController.MinionDestroyCallback);
+            //     if (data.minionDataId == 4004)
+            //     {
+            //         m.CancelInvoke("Fusion");
+            //         ((Minion_Robot)m).Transform();
+            //     }
+            //     m.SetNetSyncMinionData(data);
+            //     Debug.LogFormat("Recv My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
+            // }
             
-            List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
-            foreach (var data in otherMinionData)
-            {
-                var diceData = data_DiceInfo.GetData(data.minionDataId);
-                var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
-                m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
-                m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
-                if (data.minionDataId == 4004)
-                {
-                    m.CancelInvoke("Fusion");
-                    ((Minion_Robot)m).Transform();
-                }
-                m.SetNetSyncMinionData(data);
-                Debug.LogFormat("Recv Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-            }
+            playerController.targetPlayer.SyncMinion(gameData.OtherLastStatusRelay.MinionInfo, null, gameData.OtherLastStatusRelay.packetCount);
+            // List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
+            // foreach (var data in otherMinionData)
+            // {
+            //     var diceData = data_DiceInfo.GetData(data.minionDataId);
+            //     var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
+            //     m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+            //     m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
+            //     if (data.minionDataId == 4004)
+            //     {
+            //         m.CancelInvoke("Fusion");
+            //         ((Minion_Robot)m).Transform();
+            //     }
+            //     m.SetNetSyncMinionData(data);
+            //     Debug.LogFormat("Recv Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
+            // }
 
             // Spawn Count
-            playerController.spawnCount = gameData.PlayerSpawnCount;
-            playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
+            //playerController.spawnCount = gameData.PlayerSpawnCount;
+            //playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
             
             NetworkManager.Get().SetReconnect(false);
 
@@ -1436,9 +1504,11 @@ namespace ED
                     if (UI_InGamePopup.Get().IsIndicatorActive() == true)
                     {
                         UI_InGamePopup.Get().ViewGameIndicator(false);
+                        UI_InGamePopup.Get().popup_Waiting.SetActive(false);
                     }
-                    
-                    NetSpawnNotify((int) param[0]);
+
+                    MsgSpawnNotify msgSpawnNotify = (MsgSpawnNotify)param[0];
+                    NetSpawnNotify(msgSpawnNotify.Wave, msgSpawnNotify.SpawnInfo);
                     break;
                 }
                 case GameProtocol.COOP_SPAWN_NOTIFY:
@@ -1464,14 +1534,14 @@ namespace ED
                     }
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
-                    NetSpawnNotify(msg.Wave, msg.PlayerUId);
+                    NetSpawnNotify(msg.Wave, msg.SpawnInfo);
 
                     break;
                 }
                 case GameProtocol.MONSTER_SPAWN_NOTIFY:
                 {
                     MsgMonsterSpawnNotify msg = (MsgMonsterSpawnNotify) param[0];
-                    NetMonsterSpawnNotify(msg.PlayerUId, msg.SpawnBossMonster);
+                    NetMonsterSpawnNotify(msg.PlayerUId, msg.SpawnMonster);
 
                     break;
                 }
@@ -1532,7 +1602,9 @@ namespace ED
                 case GameProtocol.START_SYNC_GAME_ACK:
                 {
                     MsgStartSyncGameAck startsyncack = (MsgStartSyncGameAck) param[0];
-                    // 할일없다
+                    // 데이터로 싱크 맞추기
+                    SyncGameData(startsyncack);
+                    
                     break;
                 }
                 case GameProtocol.START_SYNC_GAME_NOTIFY:
@@ -1540,14 +1612,14 @@ namespace ED
                     MsgStartSyncGameNotify syncNotify = (MsgStartSyncGameNotify) param[0];
                     
                     // 받은 데이터로 동기화 시킨다
-                    SyncGameData(syncNotify);
+                    //SyncGameData(syncNotify);
                     
                     break;
                 }
                 
                 case GameProtocol.END_SYNC_GAME_ACK:
                 {
-                    MsgEndSyncGameAck endsynack = (MsgEndSyncGameAck) param[0];
+                    MsgEndSyncGameAck endSyncAck = (MsgEndSyncGameAck) param[0];
                     
                     // 시작이 되었으니...
                     if (NetworkManager.Get().isResume == true)
@@ -1560,6 +1632,10 @@ namespace ED
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
 
+                    wave = endSyncAck.Wave;
+                    WorldUIManager.Get().SetWave(wave);
+                    time = ConvertNetMsg.MsgIntToFloat(endSyncAck.RemainWaveTime);
+                    RefreshTimeUI(true);
                     Time.timeScale = 1f;
 
                     break;
@@ -1579,6 +1655,11 @@ namespace ED
                         UI_InGamePopup.Get().ViewGameIndicator(false);
                     }
 
+                    playerController.spawnCount = ConvertNetMsg.MsgByteToInt(endSyncNotify.SpawnCount);
+                    playerController.targetPlayer.spawnCount = ConvertNetMsg.MsgByteToInt(endSyncNotify.SpawnCount);
+
+                    time = ConvertNetMsg.MsgIntToFloat(endSyncNotify.RemainWaveTime);
+                    RefreshTimeUI(true);
                     Time.timeScale = 1f;
                     
                     break;
@@ -1590,8 +1671,15 @@ namespace ED
                 {
                     MsgDisconnectGameNotify disNoti = (MsgDisconnectGameNotify) param[0];
                     
+                    // 인디케이터도 다시 안보이게..
+                    if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+                    {
+                        UI_InGamePopup.Get().ViewGameIndicator(false);
+                    }
+                    
                     if (NetworkManager.Get().UserUID != disNoti.PlayerUId)
                     {
+                        Time.timeScale = 1f;
                         NetworkManager.Get().SetOtherDisconnect(true);
                     }
                     
@@ -1605,6 +1693,7 @@ namespace ED
                     MsgReadySyncGameAck readyack = (MsgReadySyncGameAck) param[0];
                     
                     Time.timeScale = 0;
+                    SendInGameManager(GameProtocol.START_SYNC_GAME_REQ);
 
                     break;
                 }
@@ -1614,11 +1703,16 @@ namespace ED
                     
                     if (NetworkManager.Get().UserUID != readynoti.PlayerUId)
                     {
-                        Time.timeScale = 0;
-
                         NetworkManager.Get().SetResume(true);
                         // 미니언 정보 취합 해서 보내준다..
-                        SendSyncAllBattleInfo();
+                        //SendSyncAllBattleInfo();
+                        
+                        // 돌리던 ai false
+                        NetworkManager.Get().SetOtherDisconnect(false);
+                        
+                        UI_InGamePopup.Get().obj_Indicator.SetActive(true);
+                        
+                        Time.timeScale = 0;
                     }
                     
                     break;
@@ -1633,7 +1727,13 @@ namespace ED
 
                     if (NetworkManager.Get().UserUID != pauseNoti.PlayerUId)
                     {
-                        NetworkManager.Get().SetOtherDisconnect(true);
+                        //NetworkManager.Get().SetOtherDisconnect(true);
+                        
+                        UI_InGamePopup.Get().obj_Indicator.SetActive(true);
+                        Time.timeScale = 0f;
+                        
+                        NetworkManager.Get().SetResume(false);
+                        //NetworkManager.Get().PauseGame();
                     }
                     
                     break;
@@ -1644,8 +1744,12 @@ namespace ED
 
                     if (NetworkManager.Get().UserUID != resumeNoti.PlayerUId)
                     {
+                        UI_InGamePopup.Get().obj_Indicator.SetActive(false);
+                        Time.timeScale = 1f;
+                        
                         NetworkManager.Get().SetResume(true);
-                        NetworkManager.Get().SetOtherDisconnect(false);
+                        //NetworkManager.Get().ResumeGame();
+                        //NetworkManager.Get().SetOtherDisconnect(false);
                         // 미니언 정보 취합 해서 보내준다..
                         //SendSyncAllBattleInfo();
                     }
@@ -1712,6 +1816,7 @@ namespace ED
         {
             int uid = 0;
             if (baseStatId >= 10000) uid = baseStatId / 10000;
+            else if (baseStatId < 1000) return null;
             else uid = baseStatId / 1000;
             //int bsID = baseStatId % 10000;
             //Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");

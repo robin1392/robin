@@ -67,6 +67,8 @@ public class UserInfo
         private set => _arrDeck = value;
     }
 
+    public int[] GetActiveDeck => arrDeck[activateDeckIndex];
+
     public Dictionary<int, int[]> dicGettedDice
     {
         get;

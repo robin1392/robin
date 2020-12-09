@@ -25,7 +25,7 @@ public class SocketSendEvent
         {
             case GameProtocol.JOIN_GAME_REQ:
             {
-                _sender.JoinGameReq(peer , (string)param[0], (sbyte)param[1]);
+                _sender.JoinGameReq(peer , (sbyte)param[0]);
                 break;
             }
             case GameProtocol.JOIN_COOP_GAME_REQ:
@@ -273,7 +273,7 @@ public class SocketSendEvent
             case GameProtocol.MINION_STATUS_RELAY:
             {
                     //MinionStatusRelay(IPeer peer, int playerUId, byte posIndex, MsgVector3[] pos)
-                    _sender.MinionStatusRelay(peer , Convert.ToUInt16(param[0]), (byte)param[1] , (MsgVector2[])param[2], (int[])param[3], (MsgMinionStatus)param[4], (int)param[5]);
+                    _sender.MinionStatusRelay(peer , Convert.ToUInt16(param[0]), (MsgMinionInfo[])param[1], (MsgMinionStatus)param[2], (int)param[3]);
                 break;
             }
             
@@ -283,7 +283,7 @@ public class SocketSendEvent
             // reconnect , pause , etc...
             case GameProtocol.START_SYNC_GAME_REQ:
             {
-                _sender.StartSyncGameReq(peer , (int)param[0] , (int)param[1], (MsgSyncMinionData[])param[2] , (int)param[3] , (int)param[4], (MsgSyncMinionData[])param[5]);
+                _sender.StartSyncGameReq(peer);
                 break;
             }
             case GameProtocol.END_SYNC_GAME_REQ:

@@ -37,7 +37,7 @@ namespace RandomWarsService.Network.Socket.NetService
     }
 
 
-    internal enum EInternalProtocol
+    public enum EInternalProtocol
     {
         // 세션 인증
         AUTH_SESSION_REQ = 1,
@@ -64,8 +64,14 @@ namespace RandomWarsService.Network.Socket.NetService
     {
         public delegate void ClientConnectDelegate(ClientSession clientSession, ESessionState sessionState);
         public ClientConnectDelegate ClientConnectedCallback { get; set; }
-        public ClientConnectDelegate ClientDisconnectedCallback { get; set; }
-        public ClientConnectDelegate ClientReconnectedCallback { get; set; }
+
+        public delegate void ClientDisconnectDelegate(ClientSession clientSession, ESessionState sessionState);
+        public ClientDisconnectDelegate ClientDisconnectedCallback { get; set; }
+
+        public delegate void ClientReconnectDelegate(ClientSession clientSession, ESessionState sessionState);
+        public ClientReconnectDelegate ClientReconnectedCallback { get; set; }
+
+        public delegate void ClientOfflineDelegate(ClientSession clientSession, ESessionState sessionState);
         public ClientConnectDelegate ClientOfflineCallback { get; set; }
 
 
@@ -109,7 +115,7 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        public virtual void Update() 
+        public virtual void Update()
         {
         }
 
@@ -181,7 +187,7 @@ namespace RandomWarsService.Network.Socket.NetService
             {
                 // 이후의 작업은 clientSession에 맡긴다.
                 clientSession.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
-    
+
 
                 // 다음 메시지 수신을 위해서 다시 ReceiveAsync 메소드를 호출한다.
                 bool pending = clientSession.Socket.ReceiveAsync(e);
@@ -192,6 +198,13 @@ namespace RandomWarsService.Network.Socket.NetService
             }
             else
             {
+                _logger.Debug(string.Format("[NetClient] ProcessReceive. scoketHandle: {0} sessionState: {1}, socketError: {2} ,socketFlag: {3}", clientSession.Socket.Handle, clientSession.DisconnectState, e.SocketError, e.SocketFlags));
+
+                if (clientSession.DisconnectState == ESessionState.None)
+                {
+                    clientSession.DisconnectState = ESessionState.Wait;
+                }
+
                 OnCloseClientsocket(clientSession, e.SocketError);
             }
         }
@@ -232,7 +245,7 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        internal void SendInternalAuthSessionReq(ClientSession clientSession)
+        protected void SendInternalAuthSessionReq(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
@@ -245,12 +258,12 @@ namespace RandomWarsService.Network.Socket.NetService
             }
         }
 
-        internal void SendInternalAuthSessionAck(ClientSession clientSession)
+        protected void SendInternalAuthSessionAck(ClientSession clientSession, ENetState netState)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, (byte)clientSession.NetState);
+                bf.Serialize(ms, (byte)netState);
                 bf.Serialize(ms, (short)clientSession.DisconnectState);
                 clientSession.Send((int)EInternalProtocol.AUTH_SESSION_ACK,
                     ms.ToArray(),
@@ -259,7 +272,7 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        internal void SendInternalDisconnectSessionNotify(ClientSession clientSession)
+        protected void SendInternalDisconnectSessionNotify(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
@@ -272,12 +285,11 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        internal void SendInternalPauseSessionReq(ClientSession clientSession)
+        protected void SendInternalPauseSessionReq(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, clientSession.PauseStartTimeTick);
                 clientSession.Send((int)EInternalProtocol.PAUSE_SESSION_REQ,
                     ms.ToArray(),
                     ms.ToArray().Length);
@@ -285,11 +297,12 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        internal void SendInternalPauseSessionAck(ClientSession clientSession)
+        protected void SendInternalPauseSessionAck(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
+                bf.Serialize(ms, clientSession.PauseLimitTimeTick);
                 clientSession.Send((int)EInternalProtocol.PAUSE_SESSION_ACK,
                     ms.ToArray(),
                     ms.ToArray().Length);
@@ -297,7 +310,7 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        internal void SendInternalResumeSessionReq(ClientSession clientSession)
+        protected void SendInternalResumeSessionReq(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
@@ -309,7 +322,7 @@ namespace RandomWarsService.Network.Socket.NetService
         }
 
 
-        internal void SendInternalResumeSessionAck(ClientSession clientSession)
+        protected void SendInternalResumeSessionAck(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())

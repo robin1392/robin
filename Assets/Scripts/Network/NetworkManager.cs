@@ -9,10 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CodeStage.AntiCheat.ObscuredTypes;
+using ED;
 using UnityEngine;
 using UnityEngine.Events;
 using RandomWarsService.Network.Socket.NetPacket;
 using RandomWarsService.Network.Http;
+using RandomWarsService.Network.Socket.NetSession;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using UnityEditor;
@@ -49,8 +51,6 @@ public class NetworkManager : Singleton<NetworkManager>
     private HttpReceiver _httpReceiver;
     
 
-    private int _matchTryCount;
-
 
     // web
     public WebNetworkCommon webNetCommon { get; private set; }
@@ -78,34 +78,34 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #endregion
 
-    #region socket addr
+    //#region socket addr
 
-    private string _serverAddr;
-    public string serverAddr
-    {
-        get => _serverAddr;
-        private set => _serverAddr = value;
-    }
+    //private string _serverAddr;
+    //public string serverAddr
+    //{
+    //    get => _serverAddr;
+    //    private set => _serverAddr = value;
+    //}
 
-    private int _port;
+    //private int _port;
 
-    public int port
-    {
-        get => _port;
-        private set => _port = value;
-    }
+    //public int port
+    //{
+    //    get => _port;
+    //    private set => _port = value;
+    //}
 
-    private string _gameSession;
+    //private string _gameSession;
 
-    public string gameSession
-    {
-        get => _gameSession;
-        private set => _gameSession = value;
-    }
+    //public string gameSession
+    //{
+    //    get => _gameSession;
+    //    private set => _gameSession = value;
+    //}
 
-    private string _battlePath = "/BattleInfo.bytes";
+    //private string _battlePath = "/BattleInfo.bytes";
 
-    #endregion
+    //#endregion
 
 
     #region game process var
@@ -171,7 +171,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private NetInfo _netInfo = null;
 
-    private NetBattleInfo _battleInfo = null;
+    //private NetBattleInfo _battleInfo = null;
 
     private Action<OpenBoxReward[]> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
@@ -304,13 +304,13 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (IsConnect())
         {
-            DisconnectSocket();
+            DisconnectSocket(true);
         }
 
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
         
-        _battleInfo = null;
+        //_battleInfo = null;
 
         _packetSend = null;
         _packetRecv = null;
@@ -337,52 +337,43 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #region connent
 
-    public void SetAddr(string serveraddr, int port, string gamesession)
+    //public void SetAddr(string serveraddr, int port, string gamesession)
+    //{
+    //    _serverAddr = serveraddr;
+    //    _port = port;
+    //    _gameSession = gamesession;
+
+    //    _recvJoinPlayerInfoCheck = true;
+    //    _netInfo.Clear();
+    //}
+
+    public void ConnectServer(Global.PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
     {
-        _serverAddr = serveraddr;
-        _port = port;
-        _gameSession = gamesession;
-
-        _recvJoinPlayerInfoCheck = true;
-        _netInfo.Clear();
-    }
-
-    public void ConnectServer(Global.PLAY_TYPE type, Action callback = null)
-    {
-        // 배틀정보..저장
-        SaveBattleInfo();
-
         // 시작하면서 상대 디스커넥트
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
-        
         SetReconnect(false);        // reconnect
-
         playType = type;
-        _clientSocket.Connect(_serverAddr, _port, _gameSession, callback);
+        _recvJoinPlayerInfoCheck = true;
+        _netInfo.Clear();
+
+        _clientSocket.Connect(serverAddr, port, playerSessionId);
     }
 
-    public void ReConnectServer(Global.PLAY_TYPE type ,  string serverAddr , int port , string session , Action callback = null)
+
+    public void OnClientReconnecting()
     {
-        _serverAddr = serverAddr;
-        _port = port;
-        _gameSession = session;
-        
+        SetReconnect(true);        // reconnect
         // 시작하면서 상대 멈춤 초기화
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
-
-        print("ReConnecting....");
-
-        playType = type;
-        _clientSocket.ReConnect(_serverAddr, _port, _gameSession, callback);
     }
 
 
-    public void DisconnectSocket()
+    public void DisconnectSocket(bool unexpected)
     {
         if (_clientSocket != null && _clientSocket.IsConnected() == true)
-            _clientSocket.Disconnect();
+            _clientSocket.Disconnect(unexpected == true ? ESessionState.None : ESessionState.Leave);
     }
 
     public bool IsConnect()
@@ -557,101 +548,21 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     #endregion
-
-
-    #region read write file
-    public void BinarySerialize(NetBattleInfo data, string filePath)
-    {
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
-        formatter.Serialize(stream, data);
-        stream.Close();
-    }
-
-    public NetBattleInfo BinaryDeserialize(string filePath)
-    {
-        try
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(filePath, FileMode.Open);
-            NetBattleInfo patchinfo = (NetBattleInfo)formatter.Deserialize(stream);
-            stream.Close();
-
-            return patchinfo;
-        }
-        catch
-        {
-            // game frame -- init
-            return null;
-        }
-
-    }
-
-    // 배틀 인포 파일이 잇는가??
-    public NetBattleInfo ReadBattleInfo()
-    {
-        string battlePath = Application.persistentDataPath + _battlePath;
-        if (File.Exists(battlePath) == false)
-        {
-            return null;
-        }
-        else
-        {
-            _battleInfo = BinaryDeserialize(battlePath);
-            return _battleInfo;    
-        }
-    }
-    
-
-    public void SaveBattleInfo()
-    {
-        string battlePath = Application.persistentDataPath + _battlePath;
-
-        if (_battleInfo == null)
-            _battleInfo = new NetBattleInfo();
-
-        _battleInfo.serverAddr = _serverAddr;
-        _battleInfo.serverPort = _port;
-        _battleInfo.serverSession = _gameSession;
-        _battleInfo.battleStartTime = DateTime.UtcNow;
-
-        _battleInfo.battleStart = true;
-        
-        print(_battleInfo.battleStartTime);
-
-        BinarySerialize(_battleInfo, battlePath);
-    }
-
-    public void DeleteBattleInfo()
-    {
-        string battlePath = Application.persistentDataPath + _battlePath;
-        _battleInfo = BinaryDeserialize(battlePath);
-
-        if (_battleInfo == null)
-            return;
-
-        print(_battleInfo.battleStartTime);
-
-        _battleInfo.ResetInfo();
-
-        // 파일 삭제
-        File.Delete(battlePath);
-
-        _battleInfo = null;
-    }
-
-    #endregion
     
     
     #region reconnect to do
+    public bool CheckReconnection()
+    {
+        return _clientSocket.CheckReconnection();
+    }
 
     public void ReconnectPacket(MsgReconnectGameAck msg)
     {
         // 에러코드가 0 이 아닐경우는 게임에 이상이 있다는 서버 메세지니...그냥 리턴 시켜서..메인으로
         if (msg.ErrorCode != 0)
         {
-            DeleteBattleInfo();
-            DisconnectSocket();
+            //DeleteBattleInfo();
+            DisconnectSocket(false);
             
             SetReconnect(false);
             
@@ -767,7 +678,6 @@ public class NetworkManager : Singleton<NetworkManager>
             return;
         }
 
-        _matchTryCount = 0;
         UserInfoManager.Get().SetTicketId(msg.TicketId);
         UnityUtil.Print("RECV MATCH START => ticketId", msg.TicketId, "green");
 
@@ -777,14 +687,13 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void StatusMatchReq(string ticketId)
     {
-        if (NetMatchStep != Global.E_MATCHSTEP.MATCH_START)
+        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
         {
             // 매칭 중에서 상태 요청을 할 수 있다ㅏ.
             return;
         }
 
 
-        _matchTryCount++;
         MsgStatusMatchReq msg = new MsgStatusMatchReq();
         msg.UserId = UserInfoManager.Get().GetUserInfo().userID;
         msg.TicketId = ticketId;
@@ -798,24 +707,14 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (string.IsNullOrEmpty(msg.PlayerSessionId))
         {
-            if (_matchTryCount > 10)
-            {
-                StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
-            }
-            else
-            {
-                StartCoroutine(WaitForMatch());
-            }
+            StartCoroutine(WaitForMatch());
         }
         else
         {
             NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
 
-            // go match -> socket
-            SetAddr(msg.ServerAddr, msg.Port, msg.PlayerSessionId);
-
             // 우선 그냥 배틀로 지정하자
-            ConnectServer(Global.PLAY_TYPE.BATTLE, GameStateManager.Get().ServerConnectCallBack);
+            ConnectServer(Global.PLAY_TYPE.BATTLE, msg.ServerAddr, msg.Port, msg.PlayerSessionId);
         }
         UnityUtil.Print("RECV MATCH STATUS => ", string.Format("server:{0}, player-session-id:{1}", msg.ServerAddr + ":" + msg.Port, msg.PlayerSessionId), "green");
     }
@@ -823,8 +722,12 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void StopMatchReq(string ticketId)
     {
-        NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+        {
+            return;
+        }
 
+        NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
         MsgStopMatchReq msg = new MsgStopMatchReq();
         msg.TicketId = ticketId;
         _httpSender.StopMatchReq(msg);
@@ -834,7 +737,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void OnStopMatchAck(MsgStopMatchAck msg)
     {
+        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        {
+            UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
+            searchingPopup.ClickSearchingCancelResult();
+        }
+
         UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+        UnityUtil.Print("RECV MATCH STOP => ErrorCode", msg.ErrorCode.ToString(), "green");
     }
 
 
@@ -943,7 +853,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         switch(protocolId)
         {
-            case ERandomWarsPlayerProtocol.OPEN_BOX_REQ:
+            case ERandomWarsPlayerProtocol.OPEN_BOXpublic _REQ:
                 {
                     _randomWarsPlayerProtocol.HttpSendOpenBoxReq(_httpClient, param[0].ToString(), (int)param[1]);
                     break;
@@ -1022,36 +932,11 @@ public class NetworkManager : Singleton<NetworkManager>
     bool OnHttpReceiveLevelupDiceAck(ERandomWarsDiceErrorCode errorCode, int diceId, short level, short count, int gold)
     {
         ED.UI_Popup_Dice_Info panelDiceInfo = FindObjectOfType<ED.UI_Popup_Dice_Info>();
-        panelDiceInfo.DiceUpgradeCallback
+        //panelDiceInfo.DiceUpgradeCallback
         return true;
     }
 
 }
-
-#region net battle save info
-
-[Serializable]
-public class NetBattleInfo
-{
-    public string serverAddr;
-    public int serverPort;
-    public string serverSession;
-    public bool battleStart;
-
-    public DateTime battleStartTime;
-
-    public void ResetInfo()
-    {
-        serverAddr = "";
-        serverPort = 0;
-        serverSession = "";
-        battleStart = false;
-
-        battleStartTime = DateTime.UtcNow;
-    }
-}
-#endregion
-
 
 
 #region net user info
@@ -1407,115 +1292,104 @@ public class ConvertNetMsg
     }
 
 
-    public static MsgDestroyMinionRelay GetDestroyMinionRelayMsg(int uid, int id)
+    public static MsgDestroyMinionRelay GetDestroyMinionRelayMsg(int id)
     {
         MsgDestroyMinionRelay msg = new MsgDestroyMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
 
-    public static MsgDestroyMagicRelay GetDestroyMagicRelayMsg(int uid, int id)
+    public static MsgDestroyMagicRelay GetDestroyMagicRelayMsg(int id)
     {
         MsgDestroyMagicRelay msg = new MsgDestroyMagicRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.BaseStatId = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgFireballBombRelay GetFireballBombRelayMsg(int uid, int id)
+    public static MsgFireballBombRelay GetFireballBombRelayMsg(int id)
     {
         MsgFireballBombRelay msg = new MsgFireballBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgHealMinionRelay GetHealMinionRelayMsg(int uid, int id, float heal)
+    public static MsgHealMinionRelay GetHealMinionRelayMsg(int id, float heal)
     {
         MsgHealMinionRelay msg = new MsgHealMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Heal = MsgFloatToInt(heal);
 
         return msg;
     }
 
-    public static MsgMineBombRelay GetMineBombRelayMsg(int uid, int id)
+    public static MsgMineBombRelay GetMineBombRelayMsg(int id)
     {
         MsgMineBombRelay msg = new MsgMineBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgSturnMinionRelay GetSturnMinionRelayMsg(int uid, int id, int sturnTime)
+    public static MsgSturnMinionRelay GetSturnMinionRelayMsg(int id, int sturnTime)
     {
         MsgSturnMinionRelay msg = new MsgSturnMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.SturnTime = MsgIntToShort(sturnTime);
 
         return msg;
     }
 
-    public static MsgRocketBombRelay GetRocketBombRelayMsg(int uid, int id)
+    public static MsgRocketBombRelay GetRocketBombRelayMsg(int id)
     {
         MsgRocketBombRelay msg = new MsgRocketBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgIceBombRelay GetIceBombRelayMsg(int uid, int id)
+    public static MsgIceBombRelay GetIceBombRelayMsg(int id)
     {
         MsgIceBombRelay msg = new MsgIceBombRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgFireManFireRelay GetFireManFireRelayMsg(int uid, int id)
+    public static MsgFireManFireRelay GetFireManFireRelayMsg(int id)
     {
         MsgFireManFireRelay msg = new MsgFireManFireRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
 
         return msg;
     }
 
-    public static MsgMinionCloackingRelay GetMinionCloackingRelayMsg(int uid, int id, bool isCloacking)
+    public static MsgMinionCloackingRelay GetMinionCloackingRelayMsg(int id, bool isCloacking)
     {
         MsgMinionCloackingRelay msg = new MsgMinionCloackingRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.IsCloacking = isCloacking;
 
         return msg;
     }
 
-    public static MsgMinionFlagOfWarRelay GetMinionFlagOfWarRelayMsg(int uid, int id, int effect, bool isFlagOfWar)
+    public static MsgMinionFlagOfWarRelay GetMinionFlagOfWarRelayMsg(int id, int effect, bool isFlagOfWar)
     {
         MsgMinionFlagOfWarRelay msg = new MsgMinionFlagOfWarRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.BaseStatId = MsgIntToUshort(id);
         msg.Effect = MsgIntToShort(effect);
         msg.IsFogOfWar = isFlagOfWar;
@@ -1523,44 +1397,40 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgScarecrowRelay GetScarecrowRelayMsg(int uid, int id, int eyeLevel)
+    public static MsgScarecrowRelay GetScarecrowRelayMsg(int id, int eyeLevel)
     {
         MsgScarecrowRelay msg = new MsgScarecrowRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.BaseStatId = MsgIntToUshort(id);
         msg.EyeLevel = MsgIntToByte(eyeLevel);
 
         return msg;
     }
 
-    public static MsgLayzerTargetRelay GetLayzerTargetRelayMsg(int uid, int id, int[] target)
+    public static MsgLayzerTargetRelay GetLayzerTargetRelayMsg(int id, int[] target)
     {
         MsgLayzerTargetRelay msg = new MsgLayzerTargetRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.TargetIdArray = MsgIntArrToUshortArr(target);
 
         return msg;
     }
 
-    public static MsgMinionInvincibilityRelay GetMinionInvincibilityRelayMsg(int uid, int id, int time)
+    public static MsgMinionInvincibilityRelay GetMinionInvincibilityRelayMsg(int id, int time)
     {
         MsgMinionInvincibilityRelay msg = new MsgMinionInvincibilityRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Time = MsgIntToShort(time);
 
         return msg;
     }
 
-    public static MsgFireBulletRelay GetFireBulletRelayMsg(int uid, int id, int targetId, int damage, int speed, int type)
+    public static MsgFireBulletRelay GetFireBulletRelayMsg(int id, int targetId, int damage, int speed, int type)
     {
         MsgFireBulletRelay msg = new MsgFireBulletRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.targetId = MsgIntToUshort(targetId);
         msg.Damage = damage;
@@ -1570,12 +1440,11 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgFireCannonBallRelay GetFireCannonBallRelayMsg(int uid, MsgVector3 shootPos,
+    public static MsgFireCannonBallRelay GetFireCannonBallRelayMsg(MsgVector3 shootPos,
         MsgVector3 targetPos, int damage, int range, int type)
     {
         MsgFireCannonBallRelay msg = new MsgFireCannonBallRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.ShootPos = shootPos;
         msg.TargetPos = targetPos;
         msg.Power = damage;
@@ -1585,12 +1454,11 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSetMinionAnimationTriggerRelay GetMinionAnimationTriggerRelayMsg(int uid, int id, int trigger,
+    public static MsgSetMinionAnimationTriggerRelay GetMinionAnimationTriggerRelayMsg(int id, int trigger,
         int target)
     {
         MsgSetMinionAnimationTriggerRelay msg = new MsgSetMinionAnimationTriggerRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Trigger = MsgIntToByte(trigger);
         msg.TargetId = MsgIntToUshort(target);
@@ -1598,22 +1466,20 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSetMagicTargetIdRelay GetMagicTargetIDRelayMsg(int uid, int id, int targetID)
+    public static MsgSetMagicTargetIdRelay GetMagicTargetIDRelayMsg(int id, int targetID)
     {
         MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.TargetId = MsgIntToUshort(targetID);
         
         return msg;
     }
 
-    public static MsgSetMagicTargetRelay GetMagicTargetPosRelayMsg(int uid, int id, int x, int z)
+    public static MsgSetMagicTargetRelay GetMagicTargetPosRelayMsg(int id, int x, int z)
     {
         MsgSetMagicTargetRelay msg = new MsgSetMagicTargetRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.X = MsgIntToShort(x);
         msg.Z = MsgIntToShort(z);
@@ -1633,22 +1499,20 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSendMessageVoidRelay GetSendMessageVoidRelayMsg(int uid, int id, int message)
+    public static MsgSendMessageVoidRelay GetSendMessageVoidRelayMsg(int id, int message)
     {
         MsgSendMessageVoidRelay msg = new MsgSendMessageVoidRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Message = MsgIntToByte(message);
         
         return msg;
     }
 
-    public static MsgSendMessageParam1Relay GetSendMessageParam1RelayMsg(int uid, int id, int message, int targetID)
+    public static MsgSendMessageParam1Relay GetSendMessageParam1RelayMsg(int id, int message, int targetID)
     {
         MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Message = MsgIntToByte(message);
         msg.TargetId = MsgIntToUshort(targetID);
@@ -1656,22 +1520,20 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSetMinionTargetRelay GetMinionTargetRelayMsg(int uid, int id, int targetID)
+    public static MsgSetMinionTargetRelay GetMinionTargetRelayMsg(int id, int targetID)
     {
         MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.TargetId = MsgIntToUshort(targetID);
         
         return msg;
     }
 
-    public static MsgPushMinionRelay GetPushMinionRelayMsg(int uid, int id, int x, int y, int z, int power)
+    public static MsgPushMinionRelay GetPushMinionRelayMsg(int id, int x, int y, int z, int power)
     {
         MsgPushMinionRelay msg = new MsgPushMinionRelay();
 
-        msg.PlayerUId = MsgIntToUshort(uid);
         msg.Id = MsgIntToUshort(id);
         msg.Dir = new MsgVector3 { X = MsgIntToShort(x), Y = MsgIntToShort(y), Z = MsgIntToShort(z) };
         msg.PushPower = MsgIntToShort(power);

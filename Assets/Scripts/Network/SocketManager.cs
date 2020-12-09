@@ -8,7 +8,7 @@ using ED;
 using RandomWarsService.Network.Socket.NetSession;
 using RandomWarsService.Network.Socket.NetService;
 using RandomWarsService.Network.Socket.NetPacket;
-
+using RandomWarsProtocol;
 
 class NetLogger : RandomWarsService.Core.ILog
 {
@@ -45,60 +45,49 @@ public class SocketManager
     }
 
 
-    private Action _connectCallBack;
-    private Action _reconnectCallBack;
-    
     public SocketManager()
     {
         _netService = null;
         _serverPeer = null;
     }
 
+
     public void Init(IPacketReceiver recvProcessor)
     {
         NetLogger netLogger = new NetLogger();
         PacketHandler handler = new PacketHandler(recvProcessor, netLogger, 100, 10240);
-        _netService = new NetClientService(handler, netLogger, 1, 10240, 5000, 1000, false);
+        _netService = new NetClientService(handler, netLogger, 1, 10240, 1000, 1000, false, Application.persistentDataPath + "/NetState.bytes");
         _netService.ClientConnectedCallback += OnClientConnected;
         _netService.ClientDisconnectedCallback += OnClientDisconnected;
         _netService.ClientReconnectedCallback += OnClientReconnected;
+        _netService.ClientReconnectingCallback += NetworkManager.Get().OnClientReconnecting;
     }
 
 
-    public void Connect(string host, int port , string clientSessionId, Action connectCallback = null)
+    public void Connect(string host, int port , string playerSessionId)
     {
-        _netService.ClientSession.NetState = ENetState.Connecting;
-        _netService.ClientSession.SessionId = clientSessionId;
-        _netService.Connect(host, port);
-        _connectCallBack = connectCallback;
+        _netService.Connect(host, port, playerSessionId, ENetState.Connecting);
     }
     
-    public void ReConnect(string host, int port , string clientSessionId, Action reconnectCallback = null)
-    {
-        _netService.ClientSession.NetState = ENetState.Reconnecting;
-        _netService.ClientSession.SessionId = clientSessionId;
-        _netService.Connect(host, port);
-        _reconnectCallBack = reconnectCallback;
-    }
 
-    public void Disconnect()
+    public void Disconnect(ESessionState sessionState)
     {
         if (_serverPeer != null)
         {
-            _netService.Disconnect();
+            _netService.Disconnect(sessionState);
             _serverPeer = null;    
         }
     }
 
     public void Pause()
     {
-        _netService.PauseSession(_netService.ClientSession);
+        _netService.PauseSession();
     }
 
 
     public void Resume()
     {
-        _netService.ResumeSession(_netService.ClientSession);
+        _netService.ResumeSession();
     }
 
 
@@ -110,9 +99,9 @@ public class SocketManager
 
     public void PrintNetworkStatus()
     {
-        UnityUtil.Print("NETWORK STATUS  ", 
-            "Recv queue count: " + _netService.ReceiveQueueCount().ToString() 
-            + ", Send queue count: " + _netService.ClientSession.SendQueueCount().ToString(), "magenta");
+        //UnityUtil.Print("NETWORK STATUS  ", 
+        //    "Recv queue count: " + _netService.ReceiveQueueCount().ToString() 
+        //    + ", Send queue count: " + _netService.ClientSession.SendQueueCount().ToString(), "magenta");
     }
     
     
@@ -126,7 +115,7 @@ public class SocketManager
 
         if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
             //
             GameStateManager.Get().MoveMainScene();
@@ -136,9 +125,16 @@ public class SocketManager
         _serverPeer = new Peer();
         _serverPeer.SetClientSession(session);
 
-        //
-        if (_connectCallBack != null)
-            _connectCallBack();
+
+        switch (NetworkManager.Get().playType)
+        {
+            case Global.PLAY_TYPE.BATTLE:
+                NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                break;
+            case Global.PLAY_TYPE.COOP:
+                NetworkManager.Get().Send(GameProtocol.JOIN_COOP_GAME_REQ, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());
+                break;
+        }
     }
 
 
@@ -154,7 +150,7 @@ public class SocketManager
         //
         if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
             //
             GameStateManager.Get().MoveMainScene();
@@ -168,10 +164,9 @@ public class SocketManager
             _serverPeer = peer;
         
         _serverPeer.SetClientSession(session);
-        
-        //
-        if (_reconnectCallBack != null)
-            _reconnectCallBack();
+
+
+        NetworkManager.Get().Send(GameProtocol.RECONNECT_GAME_REQ);
     }
 
 
@@ -181,7 +176,7 @@ public class SocketManager
 
         if (sessionState != ESessionState.None && sessionState != ESessionState.Wait)
         {
-            NetworkManager.Get().DeleteBattleInfo();
+            //NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
             //
             GameStateManager.Get().MoveMainScene();
@@ -198,6 +193,7 @@ public class SocketManager
 
 
 
+
     public void Update()
     {
         _netService.Update();
@@ -210,5 +206,9 @@ public class SocketManager
     }
 
 
+    public bool CheckReconnection()
+    {
+        return _netService.CheckReconnection();
+    }
     
 }

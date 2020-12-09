@@ -259,10 +259,10 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5081294253336761964}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.25
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!54 &3843816562420455791
 Rigidbody:
@@ -448,6 +448,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6722142075235945114}
     m_Modifications:
+    - target: {fileID: 4725370648627386715, guid: 091a6054b99da471181e75cbfb834ed2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6733236608644159801, guid: 091a6054b99da471181e75cbfb834ed2,
         type: 3}
       propertyPath: playOnAwake

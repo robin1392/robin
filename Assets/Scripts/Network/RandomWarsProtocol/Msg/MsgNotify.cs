@@ -22,6 +22,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgSpawnNotify
     {
         public int Wave;
+        public MsgSpawnInfo[] SpawnInfo;
     }
 
 
@@ -30,6 +31,7 @@ namespace RandomWarsProtocol.Msg
     {
         public int Wave;
         public int PlayerUId;
+        public MsgSpawnInfo[] SpawnInfo;
     }
 
 
@@ -37,7 +39,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgMonsterSpawnNotify
     {
         public int PlayerUId;
-        public MsgBossMonster SpawnBossMonster;
+        public MsgMonster SpawnMonster;
     }
 
 

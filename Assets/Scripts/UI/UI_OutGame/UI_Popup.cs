@@ -12,7 +12,7 @@ namespace ED
         public RectTransform rts_Frame;
         public Image image_BG;
 
-        private Button btn_BG_Close;
+        protected Button btn_BG_Close;
 
         private void Awake()
         {
