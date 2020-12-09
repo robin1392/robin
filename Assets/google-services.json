@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "163673856824",
+    "firebase_url": "https://randomwars-408c3.firebaseio.com",
+    "project_id": "randomwars-408c3",
+    "storage_bucket": "randomwars-408c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163673856824:android:65b5671825936116c3ffcd",
+        "android_client_info": {
+          "package_name": "com.percent.randomdicewars"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163673856824-mj6ih8fk1549r2s16bmmdnlhrfv6pm86.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.percent.randomdicewars",
+            "certificate_hash": "3fd9d63917a3d1ba6d706f11fdb6f703fd81ebf2"
+          }
+        },
+        {
+          "client_id": "163673856824-uer2m6dug82su7uojdska7kec8mkhpok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTPHvy5KsedhAHWPckjGakpmj1KQbeWFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163673856824-uer2m6dug82su7uojdska7kec8mkhpok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "163673856824-9t1nsr72qtlbvrvin8vrvfmd35eubm33.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.percent.randomwars"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -64,6 +64,8 @@ namespace ED
             RefreshUserInfoUI();
 
             SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_LOBBY);
+
+            FirebaseManager.Get().LogEvent("Login");
         }
 
         public void RefreshUserInfoUI()
