@@ -49,7 +49,16 @@ public class UI_Box_Slot : MonoBehaviour
             text_Name.color = isEnable ? Color.white : Color.gray;
             text_Count.color = isEnable ? Color.white : Color.gray;
             image_CostIcon.color = isEnable ? Color.white : Color.gray;
-            image_Icon.sprite = arrSprite_BoxIcon[id - 1];
+
+            //image_Icon.sprite = arrSprite_BoxIcon[id - 1];
+            if (id == 1000)
+            {
+                image_Icon.sprite = arrSprite_BoxIcon[0];
+            }
+            else
+            {
+                image_Icon.sprite = arrSprite_BoxIcon[1];
+            }
         }
         else
         {

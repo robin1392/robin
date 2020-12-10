@@ -8,7 +8,7 @@ namespace Template.Account.RandomWarsAccount.Common
 {
     public enum ERandomWarsAccountProtocol
     {
-        BEGIN = 10000000,
+        BEGIN = 1000000,
         
         LOGIN_ACCOUNT_REQ,
         LOGIN_ACCOUNT_ACK,

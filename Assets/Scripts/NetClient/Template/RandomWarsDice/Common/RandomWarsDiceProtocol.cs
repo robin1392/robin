@@ -9,7 +9,7 @@ namespace Template.Item.RandomWarsDice.Common
 {
     public enum ERandomWarsDiceProtocol
     {
-        BEGIN = 20000000,
+        BEGIN = 3000000,
         
         UPDATE_DECK_REQ,
         UPDATE_DECK_ACK,
@@ -40,8 +40,9 @@ namespace Template.Item.RandomWarsDice.Common
                 {(int)ERandomWarsDiceProtocol.UPDATE_DECK_REQ, HttpReceiveUpdateDeckReq},
                 {(int)ERandomWarsDiceProtocol.UPDATE_DECK_ACK, HttpReceiveUpdateDeckAck},
                 {(int)ERandomWarsDiceProtocol.LEVELUP_DICE_REQ, HttpReceiveLevelupDiceReq},
-                {(int)ERandomWarsDiceProtocol.LEVELUP_DICE_ACK, HttpReceiveUpdateDeckAck},
+                {(int)ERandomWarsDiceProtocol.LEVELUP_DICE_ACK, HttpReceiveLevelupDiceAck},
                 {(int)ERandomWarsDiceProtocol.OPEN_BOX_REQ, HttpReceiveOpenBoxReq},
+                {(int)ERandomWarsDiceProtocol.OPEN_BOX_ACK, HttpReceiveOpenBoxAck},
           };            
         }
 
@@ -57,7 +58,7 @@ namespace Template.Item.RandomWarsDice.Common
             json.Add("playerGuid", playerGuid);
             json.Add("deckIndex", deckIndex);
             json.Add("deckInfo", JsonConvert.SerializeObject(deckInfo));
-            client.Send((int)ERandomWarsDiceProtocol.UPDATE_DECK_REQ, "item/updatedeck", json.ToString());
+            client.Send((int)ERandomWarsDiceProtocol.UPDATE_DECK_REQ, "dice/updatedeck", json.ToString());
             return true;
         }
 
@@ -106,7 +107,7 @@ namespace Template.Item.RandomWarsDice.Common
             JObject json = new JObject();
             json.Add("playerGuid", playerGuid);
             json.Add("diceId", diceId);
-            client.Send((int)ERandomWarsDiceProtocol.LEVELUP_DICE_REQ, "item/levelupdice", json.ToString());
+            client.Send((int)ERandomWarsDiceProtocol.LEVELUP_DICE_REQ, "dice/levelupdice", json.ToString());
             return true;
         }
 
@@ -157,7 +158,7 @@ namespace Template.Item.RandomWarsDice.Common
             JObject json = new JObject();
             json.Add("playerGuid", playerGuid);
             json.Add("boxId", boxId);
-            client.Send((int)ERandomWarsDiceProtocol.OPEN_BOX_REQ, "player/openBox", json.ToString());
+            client.Send((int)ERandomWarsDiceProtocol.OPEN_BOX_REQ, "dice/openBox", json.ToString());
             return true;
         }
 

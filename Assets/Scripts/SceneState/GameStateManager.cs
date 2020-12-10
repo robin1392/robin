@@ -254,12 +254,17 @@ public class GameStateManager : Singleton<GameStateManager>
             // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
             if (NetworkManager.Get().UserId.Length > 0)
             {
-                NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+                //NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+                NetService.Get().Send(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, 
+                    NetworkManager.Get().UserId, 
+                    Template.Account.RandomWarsAccount.Common.EPlatformType.GUEST);
+
             }
             else
             {
                 string userid = UserInfoManager.Get().GetUserInfo().userID;
-                NetworkManager.Get().AuthUserReq(userid);
+                NetService.Get().Send(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, userid, Template.Account.RandomWarsAccount.Common.EPlatformType.GUEST);
+                //NetworkManager.Get().AuthUserReq(userid);
             }
         }
 

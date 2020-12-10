@@ -1,6 +1,6 @@
 {
-    "1" : {
-        "id" : 1,
+    "1000" : {
+        "id" : 1000,
         "needKey" : 1,
         "boxType" : "NORMAL_BOX",
         "rewardRate": [
@@ -142,8 +142,8 @@
             ]
         }
     },
-    "2" : {
-        "id" : 2,
+    "2000" : {
+        "id" : 2000,
         "needKey" : 3,
         "boxType" : "COOP_BOX",
         "rewardRate": [

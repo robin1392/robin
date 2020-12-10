@@ -8,7 +8,7 @@ namespace Template.Player.RandomWarsPlayer.Common
 {
     public enum ERandomWarsPlayerProtocol
     {
-        BEGIN = 20000000,
+        BEGIN = 2000000,
         
         EDIT_NAME_REQ,
         EDIT_NAME_ACK,

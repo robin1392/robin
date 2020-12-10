@@ -10,6 +10,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using Template.Item.RandomWarsDice.Common;
 using Image = UnityEngine.UI.Image;
 
 namespace ED
@@ -258,6 +259,11 @@ namespace ED
                 //
                 if (WebPacket.Get() != null)
                 {
+                    NetService.Get().Send(ERandomWarsDiceProtocol.UPDATE_DECK_REQ,
+                        UserInfoManager.Get().GetUserInfo().playerGuid,
+                        active,
+                        intDeck);
+
                     //WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
                     NetworkManager.Get().UpdateDeckReq(UserInfoManager.Get().GetUserInfo().userID,(sbyte)active, intDeck);
                     UI_Main.Get().obj_IndicatorPopup.SetActive(true);

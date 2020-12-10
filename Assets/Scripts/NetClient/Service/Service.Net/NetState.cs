@@ -3,6 +3,8 @@ namespace Service.Net
 {
     public enum ENetState : byte
     {
+        None,
+
         // 접속 중
         Connecting,
 

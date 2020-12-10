@@ -18,6 +18,7 @@ namespace Service.Net
     {
         public int ProtocolId { get; set; }
         public string Json { get; set; }
+        public byte[] msg { get; set; }
     }
 
 
@@ -39,6 +40,12 @@ namespace Service.Net
         public void Send(int protocolId, string methodUrl, string json)
         {
             RequestPostAsync(protocolId, _baseUrl + "/" + methodUrl, json);
+        }
+
+
+        public void Send(int protocolId, string methodUrl, byte[] msg)
+        {
+            RequestPostAsync(protocolId, _baseUrl + "/" + methodUrl, msg);
         }
 
 
@@ -69,13 +76,13 @@ namespace Service.Net
             }
 
 
-            request.BeginGetResponse(new AsyncCallback((asynchronousResult) => 
+            request.BeginGetResponse(new AsyncCallback((asynchronousResult) =>
             {
                 // End the operation
                 HttpWebResponse response = (HttpWebResponse)((HttpWebRequest)asynchronousResult.AsyncState).EndGetResponse(asynchronousResult);
                 Stream streamResponse = response.GetResponseStream();
                 StreamReader streamRead = new StreamReader(streamResponse);
-                
+
                 string ackJson = streamRead.ReadToEnd();
                 ackJson = ackJson.Replace("\\u0022", "\"");
                 ackJson = ackJson.Replace("\\n", "");
@@ -97,6 +104,56 @@ namespace Service.Net
                 // Close the stream object
                 streamResponse.Close();
                 streamRead.Close();
+
+                // Release the HttpWebResponse
+                response.Close();
+                allDone.Set();
+
+            }), request);
+
+            allDone.WaitOne();
+        }
+
+
+        void RequestPostAsync(int protocolId, string url, byte[] msg)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = msg.Length;
+
+            // Get the request stream.
+            Stream dataStream = request.GetRequestStream();
+            // Write the data to the request stream.
+            dataStream.Write(msg, 0, msg.Length);
+            // Close the Stream object.
+            dataStream.Close();
+
+
+            request.BeginGetResponse(new AsyncCallback((asynchronousResult) =>
+            {
+                // End the operation
+                HttpWebResponse response = (HttpWebResponse)((HttpWebRequest)asynchronousResult.AsyncState).EndGetResponse(asynchronousResult);
+                Stream streamResponse = response.GetResponseStream();
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    streamResponse.CopyTo(memoryStream);
+
+                    lock (_responseQueue)
+                    {
+                        _responseQueue.Enqueue(new HttpResponse
+                        {
+                            ProtocolId = protocolId + 1,
+                            msg = memoryStream.ToArray()
+                        });
+                    }
+                }
+
+
+                // Close the stream object
+                streamResponse.Close();
 
                 // Release the HttpWebResponse
                 response.Close();

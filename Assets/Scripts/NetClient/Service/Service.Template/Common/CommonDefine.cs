@@ -17,7 +17,10 @@ namespace Service.Template.Common
         DIAMOND,
         KEY,
         BOX,
-        DICE,
+        ITEM_NORMAL,
+        ITEM_MAGIC,
+        ITEM_EPIC,
+        ITEM_LEGEND,
     }
 
 

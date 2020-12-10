@@ -10,7 +10,6 @@ namespace Service.Net
         MessageQueue _messageQueue;
         MessageController _messageController;
 
-
         public GameSessionClient()
         {
             _messageQueue = new MessageQueue();
@@ -124,32 +123,5 @@ namespace Service.Net
 
             return _messageController.OnRecevice(msg.ClientSession.Peer, msg.ProtocolId, msg.Data);
         }
-
-
-        public void SerializeToken(NetClientToken value)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(_binarySerializePath, FileMode.OpenOrCreate);
-            formatter.Serialize(stream, value);
-            stream.Close();
-        }
-
-
-        public bool DeserializeToken(out NetClientToken outValue)
-        {
-            outValue = null;
-            if (File.Exists(_binarySerializePath) == false)
-            {
-                return false;
-            }
-
-
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(_binarySerializePath, FileMode.Open);
-            outValue = (NetClientToken)formatter.Deserialize(stream);
-            stream.Close();
-            return true;
-        }
-
     }
 }

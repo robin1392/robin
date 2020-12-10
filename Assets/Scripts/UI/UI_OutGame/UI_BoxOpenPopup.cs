@@ -9,7 +9,7 @@ using DG.Tweening;
 using ED;
 using RandomWarsProtocol;
 using Service.Template.Common;
-using Template.Player.RandomWarsPlayer.Common;
+using Template.Item.RandomWarsDice.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,7 +89,7 @@ public class UI_BoxOpenPopup : UI_Popup
     private COST_TYPE costType;
     private int cost;
     private int openCount;
-    private OpenBoxReward[] rewardInfo;
+    private MsgOpenBoxReward[] rewardInfo;
     
     public void Initialize(int id, COST_TYPE costType, int cost)
     {
@@ -168,20 +168,28 @@ public class UI_BoxOpenPopup : UI_Popup
         image_Blind.DOFade(0, 0);
         image_Pattern.DOFade(0, 0);
         ani_Item.gameObject.SetActive(false);
-        ani_Box.runtimeAnimatorController = arrAniController_Box[id - 1];
+        //ani_Box.runtimeAnimatorController = arrAniController_Box[id - 1];
+        if (id == 1000)
+        {
+            ani_Box.runtimeAnimatorController = arrAniController_Box[0];
+        }
+        else
+        {
+            ani_Box.runtimeAnimatorController = arrAniController_Box[1];
+        }
         ani_Box.gameObject.SetActive(true);
         obj_Result.SetActive(false);
     }
 
     public void Click_Open()
     {
-        NetworkManager.Get().HttpSend(ERandomWarsPlayerProtocol.OPEN_BOX_REQ,  UserInfoManager.Get().GetUserInfo().playerGuid, boxID);
+        NetService.Get().Send(ERandomWarsDiceProtocol.OPEN_BOX_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, boxID);
         //SetShowItems();
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public bool Callback_BoxOpen(OpenBoxReward[] rewardInfo)
+    public bool Callback_BoxOpen(MsgOpenBoxReward[] rewardInfo)
     {
         this.rewardInfo = rewardInfo;
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
@@ -243,64 +251,64 @@ public class UI_BoxOpenPopup : UI_Popup
                     }
                     break;
                 case REWARD_TYPE.ITEM_NORMAL:
-                {
-                    if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_NORMAL).value;
-                        count = rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        if (level == 0)
+                        {
+                            level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_NORMAL).value;
+                            count = rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        }
+                        else
+                        {
+                            count += rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
+                        }
                     }
-                    else
-                    {
-                        count += rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
-                    }
-                }
                     break;
                 case REWARD_TYPE.ITEM_MAGIC:
-                {
-                    if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_MAGIC).value;
-                        count = rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        if (level == 0)
+                        {
+                            level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_MAGIC).value;
+                            count = rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        }
+                        else
+                        {
+                            count += rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
+                        }
                     }
-                    else
-                    {
-                        count += rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
-                    }
-                }
                     break;
                 case REWARD_TYPE.ITEM_EPIC:
-                {
-                    if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_EPIC).value;
-                        count = rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        if (level == 0)
+                        {
+                            level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_EPIC).value;
+                            count = rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        }
+                        else
+                        {
+                            count += rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
+                        }
                     }
-                    else
-                    {
-                        count += rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
-                    }
-                }
                     break;
                 case REWARD_TYPE.ITEM_LEGEND:
-                {
-                    if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_LEGEND).value;
-                        count = rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        if (level == 0)
+                        {
+                            level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_LEGEND).value;
+                            count = rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(rewardInfo[i].Id, new int[] { level, count });
+                        }
+                        else
+                        {
+                            count += rewardInfo[i].Value;
+                            UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
+                        }
                     }
-                    else
-                    {
-                        count += rewardInfo[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[rewardInfo[i].Id][1] = count;
-                    }
-                }
                     break;
             }
         }
@@ -360,7 +368,7 @@ public class UI_BoxOpenPopup : UI_Popup
         if (crt_TextCount != null) StopCoroutine(crt_TextCount);
         ani_Item.gameObject.SetActive(true);
 
-        OpenBoxReward reward = rewardInfo[openCount];
+        MsgOpenBoxReward reward = rewardInfo[openCount];
         
         // 보상내용 세팅
         switch (reward.RewardType)
@@ -572,7 +580,7 @@ public class UI_BoxOpenPopup : UI_Popup
         obj_Result.SetActive(true);
         ani_Box.gameObject.SetActive(false);
         
-        List<OpenBoxReward> list = new List<OpenBoxReward>(rewardInfo);
+        List<MsgOpenBoxReward> list = new List<MsgOpenBoxReward>(rewardInfo);
         
         var gold = list.Find(m => m.RewardType == REWARD_TYPE.GOLD);
         text_ResultGold.text = $"{gold?.Value ?? 0}";

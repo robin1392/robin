@@ -9,7 +9,7 @@ namespace Template.Stage.RandomWarsMatch.Common
 {
     public enum ERandomWarsMatchProtocol
     {
-        BEGIN = 20000000,
+        BEGIN = 4000000,
         
         REQUEST_MATCH_REQ,
         REQUEST_MATCH_ACK,

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using DG;
 using DG.Tweening;
 using Service.Template.Common;
-using RandomWarsProtocol.Msg;
+using Template.Item.RandomWarsDice.Common;
 
 namespace ED
 {
@@ -156,27 +156,23 @@ namespace ED
 
         public void Click_Upgrade()
         {
-            //NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
-            NetworkManager.Get().HttpSend(Template.Item.RandomWarsDice.Common.ERandomWarsDiceProtocol.LEVELUP_DICE_REQ,
-                UserInfoManager.Get().GetUserInfo().playerGuid, data.id);
-
-
+            NetService.Get().Send(ERandomWarsDiceProtocol.LEVELUP_DICE_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, data.id);
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
 
-        public void DiceUpgradeCallback(MsgLevelUpDiceAck msg)
+        public void DiceUpgradeCallback(ERandomWarsDiceErrorCode errorCode, int diceId, short level, short count, int gold)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-            if (msg.ErrorCode == 0)
+            if (errorCode == ERandomWarsDiceErrorCode.SUCCESS)
             {
                 var info = UserInfoManager.Get().GetUserInfo();
-                if (info.dicGettedDice.ContainsKey(data.id))
+                if (info.dicGettedDice.ContainsKey(diceId))
                 {
-                    info.gold -= needGold;
-                    diceLevel++;
-                    info.dicGettedDice[data.id][0]++;
-                    info.dicGettedDice[data.id][1] -= needDiceCount;
+                    info.gold = gold;
+                    diceLevel = level;
+                    info.dicGettedDice[data.id][0] = level;
+                    info.dicGettedDice[data.id][1] = count;
                     
                     obj_Result.SetActive(true);
                     StartCoroutine(SetDiceLevelUpResultCoroutine());

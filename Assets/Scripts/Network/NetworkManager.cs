@@ -173,7 +173,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     //private NetBattleInfo _battleInfo = null;
 
-    private Action<OpenBoxReward[]> _boxOpenCallback;
+    private Action<MsgOpenBoxReward[]> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     private Action<MsgEditUserNameAck> _editUserNameCallback;
     private Action<MsgGetRankAck> _getRankCallback;
@@ -229,35 +229,35 @@ public class NetworkManager : Singleton<NetworkManager>
     private void InitNetwork()
     {
         // protocol callback 설정
-        _randomWarsAccountProtocol = new RandomWarsAccountProtocol();
-        _randomWarsAccountProtocol.HttpReceiveLoginAccountAckCallback = OnHttpReceiveLoginAccountAck;
+        //_randomWarsAccountProtocol = new RandomWarsAccountProtocol();
+        //_randomWarsAccountProtocol.HttpReceiveLoginAccountAckCallback = OnHttpReceiveLoginAccountAck;
 
-        _randomWarsPlayerProtocol = new RandomWarsPlayerProtocol();
-        _randomWarsPlayerProtocol.HttpReceiveOpenBoxAckCallback = OnHttpReceiveOpenBoxAck;
+        //_randomWarsPlayerProtocol = new RandomWarsPlayerProtocol();
 
-        _randomWarsDiceProtocol = new RandomWarsDiceProtocol();
-        _randomWarsDiceProtocol.HttpReceiveLevelupDiceAckCallback = OnHttpReceiveLevelupDiceAck;
-        _randomWarsDiceProtocol.HttpReceiveUpdateDeckAckCallback = OnHttpReceiveUpdateDeckAck;
+        //_randomWarsDiceProtocol = new RandomWarsDiceProtocol();
+        //_randomWarsDiceProtocol.HttpReceiveLevelupDiceAckCallback = OnHttpReceiveLevelupDiceAck;
+        //_randomWarsDiceProtocol.HttpReceiveUpdateDeckAckCallback = OnHttpReceiveUpdateDeckAck;
+        //_randomWarsDiceProtocol.HttpReceiveOpenBoxAckCallback = OnHttpReceiveOpenBoxAck;
 
-        _randomWarsMatchProtocol = new RandomWarsMatchProtocol();
-        //_randomWarsMatchProtocol.HttpReceiveRequestMatchAckCallback = 
-
-
-
-
-        // http controller 등록
-        Service.Net.HttpController httpController = new Service.Net.HttpController();
-        httpController.AddControllers(_randomWarsAccountProtocol.HttpMessageControllers);
-        httpController.AddControllers(_randomWarsMatchProtocol.HttpMessageControllers);
-        httpController.AddControllers(_randomWarsPlayerProtocol.HttpMessageControllers);
-        httpController.AddControllers(_randomWarsDiceProtocol.HttpMessageControllers);
+        //_randomWarsMatchProtocol = new RandomWarsMatchProtocol();
+        ////_randomWarsMatchProtocol.HttpReceiveRequestMatchAckCallback = 
 
 
 
-        _httpClient = new Service.Net.HttpClient(
-            //"https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
-            "https://localhost:5001/api",
-            httpController);
+
+        //// http controller 등록
+        //Service.Net.HttpController httpController = new Service.Net.HttpController();
+        //httpController.AddControllers(_randomWarsAccountProtocol.HttpMessageControllers);
+        //httpController.AddControllers(_randomWarsMatchProtocol.HttpMessageControllers);
+        //httpController.AddControllers(_randomWarsPlayerProtocol.HttpMessageControllers);
+        //httpController.AddControllers(_randomWarsDiceProtocol.HttpMessageControllers);
+
+
+
+        //_httpClient = new Service.Net.HttpClient(
+        //    //"https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
+        //    "https://localhost:5001/api",
+        //    httpController);
 
 
         //_socketService = new SocketService();
@@ -852,12 +852,7 @@ public class NetworkManager : Singleton<NetworkManager>
     public bool HttpSend(ERandomWarsPlayerProtocol protocolId, params object[] param)
     {
         switch(protocolId)
-        {
-            case ERandomWarsPlayerProtocol.OPEN_BOXpublic _REQ:
-                {
-                    _randomWarsPlayerProtocol.HttpSendOpenBoxReq(_httpClient, param[0].ToString(), (int)param[1]);
-                    break;
-                }
+        { 
             default:
                 {
                     return false;
@@ -915,7 +910,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    bool OnHttpReceiveOpenBoxAck(ERandomWarsPlayerErrorCode errorCode, OpenBoxReward[] rewardInfo)
+    bool OnHttpReceiveOpenBoxAck(ERandomWarsDiceErrorCode errorCode, MsgOpenBoxReward[] rewardInfo)
     {
         UI_BoxOpenPopup panelBoxOpen = FindObjectOfType<UI_BoxOpenPopup>();
         panelBoxOpen.Callback_BoxOpen(rewardInfo);

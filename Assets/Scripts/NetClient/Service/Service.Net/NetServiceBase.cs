@@ -176,13 +176,13 @@ namespace Service.Net
         {
             lock (_gameSessions)
             {
-                GameSession session;
-                if (_gameSessions.TryGetValue(id, out session) == false)
+                GameSession value;
+                if (_gameSessions.TryGetValue(id, out value) == false)
                 {
                     return null;
                 }
 
-                return session;
+                return value;
             }
         }
 

@@ -4,18 +4,18 @@ using Service.Net;
 
 public class NetClientGameSession : GameSessionClient
 {
-    public NetClientPlayer GamePlayer { get; set; }
+    public NetClientPlayer Player { get; set; }
 
 
     public NetClientGameSession()
     {
-        GamePlayer = new NetClientPlayer();
+        Player = new NetClientPlayer();
     }
 
 
     protected override void OnConnectClient(ClientSession clientSession)
     {
-        GamePlayer.SetClientSession(clientSession);
+        Player.SetClientSession(clientSession);
     }
 
     protected override void OnReconnectClient(ClientSession clientSession)
