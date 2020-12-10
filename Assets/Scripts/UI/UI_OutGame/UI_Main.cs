@@ -87,6 +87,8 @@ namespace ED
 
         public void Click_PlayBattle()
         {
+            FirebaseManager.Get().LogEvent("PlayBattle");
+
             StopAllCoroutines();
             
             ShowMainUI(false);
