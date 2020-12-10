@@ -1,13 +1,13 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-9148752649929226686
+--- !u!1102 &-4346387256487841813
 AnimatorState:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: guardian_sword_attack1
+  m_Name: guradian_viking_attack2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -20,20 +20,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 22e6660cac161cb4393591f3a3886ca3, type: 2}
+  m_Motion: {fileID: 7400000, guid: e5319dd712e2e284abff138b1dc4eb24, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-8343061577082708424
+--- !u!1102 &-1229030421391427034
 AnimatorState:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: guardian_sword_idle1
+  m_Name: guradian_viking_skill
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -46,7 +46,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: c4f3fea896546b1439a93f29a3e848d0, type: 2}
+  m_Motion: {fileID: 7400000, guid: 5e1d17bf07cfca44da8c567d83f77337, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -58,13 +58,13 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: guardian_sword
+  m_Name: guardian_viking
   serializedVersion: 5
   m_AnimatorParameters: []
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
-    m_StateMachine: {fileID: 7460977591070834499}
+    m_StateMachine: {fileID: 7616034260293859748}
     m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
@@ -74,14 +74,14 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!1102 &1464164993067869317
+--- !u!1102 &1530931622646608534
 AnimatorState:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: guardian_sword_lobby1
+  m_Name: guradian_viking_lobby
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -94,20 +94,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 1d14c2584fa664e1f89e89ce8e691a7e, type: 2}
+  m_Motion: {fileID: 7400000, guid: a62a8feb76a6e314884cada296bfcfc4, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &3854862558899037057
+--- !u!1102 &3071869817937267193
 AnimatorState:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: guardian_sword_walking
+  m_Name: guradian_viking_attack1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -120,20 +120,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e83710b2fb9dcd64ab387d5e3af366e6, type: 2}
+  m_Motion: {fileID: 7400000, guid: 3a7c3642b4d94704b8532bfa4a23e3d0, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &6392156396462643876
+--- !u!1102 &3715138234104639846
 AnimatorState:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: guardian_sword_attack2
+  m_Name: guradian_viking_walking
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -146,20 +146,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: de4de185885b38b4183b053e96b85677, type: 2}
+  m_Motion: {fileID: 7400000, guid: cdd0f5f24684f7449bec672001be67d0, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &6491151611396898477
+--- !u!1102 &4418713322560917989
 AnimatorState:
   serializedVersion: 5
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: guardian_sword_skill
+  m_Name: guradian_viking_idle1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -172,13 +172,13 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d3c9afeef24fff3479f1bb9b87597241, type: 2}
+  m_Motion: {fileID: 7400000, guid: 7f5255d2dd6cfe04b9a9ae54ecb3a400, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1107 &7460977591070834499
+--- !u!1107 &7616034260293859748
 AnimatorStateMachine:
   serializedVersion: 5
   m_ObjectHideFlags: 1
@@ -188,22 +188,22 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: 1464164993067869317}
+    m_State: {fileID: 4418713322560917989}
     m_Position: {x: 200, y: 0, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -8343061577082708424}
+    m_State: {fileID: 3715138234104639846}
     m_Position: {x: 235, y: 65, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 3854862558899037057}
+    m_State: {fileID: 3071869817937267193}
     m_Position: {x: 270, y: 130, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -9148752649929226686}
+    m_State: {fileID: -4346387256487841813}
     m_Position: {x: 305, y: 195, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 6392156396462643876}
+    m_State: {fileID: -1229030421391427034}
     m_Position: {x: 340, y: 260, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 6491151611396898477}
+    m_State: {fileID: 1530931622646608534}
     m_Position: {x: 375, y: 325, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
@@ -214,4 +214,4 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 1464164993067869317}
+  m_DefaultState: {fileID: 4418713322560917989}
