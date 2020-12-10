@@ -787,10 +787,10 @@ MonoBehaviour:
   event_OtherPause:
     m_PersistentCalls:
       m_Calls: []
-  UseLocalServer: 1
+  UseLocalServer: 0
   LocalServerAddr: 15.164.169.221
   LocalServerPort: 40002
-  UserId: bc0b7461-2249-4f67-9dc1-86b38b45952b
+  UserId: 
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0
