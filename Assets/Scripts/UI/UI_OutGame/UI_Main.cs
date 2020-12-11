@@ -24,6 +24,7 @@ namespace ED
         public Button btn_PlayBattle;
         public Button btn_PlayCoop;
         public Button btn_SearchCancel;
+        public Button btn_AD;
         
         [Header("Popup")]
         public UI_SearchingPopup searchPopup;
@@ -66,6 +67,11 @@ namespace ED
             SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_LOBBY);
 
             FirebaseManager.Get().LogEvent("Login");
+        }
+
+        private void Update()
+        {
+            btn_AD.interactable = MopubCommunicator.Instance != null && MopubCommunicator.Instance.hasVideo();
         }
 
         public void RefreshUserInfoUI()
@@ -352,5 +358,15 @@ namespace ED
             isDragging = false;
         }
         #endregion
+
+        public void Click_AD_Button()
+        {
+            MopubCommunicator.Instance.showVideo(AD_Callback);
+        }
+
+        public void AD_Callback(bool isComplete)
+        {
+            Debug.Log("AD Finished !!" + isComplete);
+        }
     }
 }

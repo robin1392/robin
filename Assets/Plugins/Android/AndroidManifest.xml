@@ -5,6 +5,11 @@
     package="com.unity3d.player"
     xmlns:tools="http://schemas.android.com/tools">
     <application>
+      <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-9932267989523399~8588618065" />
+      <meta-data android:name="applovin.sdk.key"
+          android:value="CR4KmCdD0TUPNE-ARH4HtdfmokMLxvZ8KdS4q5IqZnEx0C5STAkKoO5a6Rw2LTAg6dlxk2mHp-CqAHGdR_zEO3" />
         <activity android:name="com.unity3d.player.UnityPlayerActivity"
                   android:theme="@style/UnityThemeSelector">
             <intent-filter>

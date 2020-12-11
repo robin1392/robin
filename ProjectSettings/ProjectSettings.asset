@@ -169,11 +169,11 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.percent.randomdicewars
+    Android: com.percent.rdw
     iPhone: com.percent.randomwars
   buildNumber: {}
-  AndroidBundleVersionCode: 2
-  AndroidMinSdkVersion: 19
+  AndroidBundleVersionCode: 1
+  AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
