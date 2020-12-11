@@ -31,6 +31,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'com.adcolony:sdk:4.3.0' // Assets/MoPub/Mediation/AdColony/Editor/AdColonyDependencies.xml:9
+    implementation 'com.android.support:cardview-v7:26.0.2' // Assets/Helpshift/Editor/HelpshiftDependencies.xml:9
+    implementation 'com.android.support:design:26.0.2' // Assets/Helpshift/Editor/HelpshiftDependencies.xml:7
+    implementation 'com.android.support:recyclerview-v7:26.0.2' // Assets/Helpshift/Editor/HelpshiftDependencies.xml:11
     implementation 'com.applovin:applovin-sdk:9.14.10' // Assets/MoPub/Mediation/AppLovin/Editor/AppLovinDependencies.xml:5
     implementation 'com.google.android.gms:play-services-ads:19.5.0' // Assets/MoPub/Mediation/AdMob/Editor/AdMobDependencies.xml:5
     implementation 'com.google.android.gms:play-services-base:17.5.0' // Assets/Firebase/Editor/AppDependencies.xml:17

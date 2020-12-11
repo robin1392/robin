@@ -368,5 +368,10 @@ namespace ED
         {
             Debug.Log("AD Finished !!" + isComplete);
         }
+
+        public void Click_Helpshift_Button()
+        {
+            HelpshiftManager.Get().ShowHelpshift();
+        }
     }
 }
