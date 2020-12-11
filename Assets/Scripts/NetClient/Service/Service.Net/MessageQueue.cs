@@ -28,10 +28,10 @@ namespace Service.Net
         }
 
 
-        public virtual void Enqueue(ClientSession clientSession, byte[] buffer)
+        public virtual void Enqueue(object sender, byte[] buffer)
         {
             Message msg = _msgPool.Pop();
-            msg.Set(clientSession, buffer);
+            msg.Set(sender, buffer);
 
             lock (_msgQueue)
             {
@@ -40,10 +40,10 @@ namespace Service.Net
         }
 
         
-        public virtual void Enqueue(ClientSession clientSession, int protocolId, byte[] data, int length)
+        public virtual void Enqueue(object sender, int protocolId, byte[] data, int length)
         {
             Message msg = _msgPool.Pop();
-            msg.Set(clientSession, protocolId, data, length);
+            msg.Set(sender, protocolId, data, length);
 
             lock (_msgQueue)
             {

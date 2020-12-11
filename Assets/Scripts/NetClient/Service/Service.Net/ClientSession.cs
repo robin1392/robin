@@ -75,7 +75,7 @@ namespace Service.Net
 
             if (Peer != null)
             {
-                Peer.Clear();
+                Peer.Dispose();
             }
         }
 

@@ -831,59 +831,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #endregion
 
-    public bool HttpSend(ERandomWarsAccountProtocol protocolId, params object[] param)
-    {
-        switch(protocolId)
-        {
-            case ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ:
-                {
-                    _randomWarsAccountProtocol.HttpSendLoginAccountReq(_httpClient, param[0].ToString(), (EPlatformType)param[1]);
-                    break;
-                }
-            default:
-                {
-                    return false;
-                }
-        }
-         
-        return true;
-    }
-
-    public bool HttpSend(ERandomWarsPlayerProtocol protocolId, params object[] param)
-    {
-        switch(protocolId)
-        { 
-            default:
-                {
-                    return false;
-                }
-        }
-
-        return true;
-    }
-
-    public bool HttpSend(ERandomWarsDiceProtocol protocolId, params object[] param)
-    {
-        switch (protocolId)
-        {
-            case ERandomWarsDiceProtocol.LEVELUP_DICE_REQ:
-                {
-                    _randomWarsDiceProtocol.HttpSendLevelupDiceReq(_httpClient, param[0].ToString(), (int)param[1]);
-                    break;
-                }
-            case ERandomWarsDiceProtocol.UPDATE_DECK_REQ:
-                {
-                    _randomWarsDiceProtocol.HttpSendUpdateDeckReq(_httpClient, param[0].ToString(), (int)param[1], (int[])param[2]);
-                    break;
-                }
-            default:
-                {
-                    return false;
-                }
-        }
-
-        return true;
-    }
 
     bool OnHttpReceiveLoginAccountAck(ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo)
     {

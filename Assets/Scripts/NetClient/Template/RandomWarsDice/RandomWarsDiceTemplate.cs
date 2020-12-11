@@ -20,9 +20,9 @@ namespace Template.Item.RandomWarsDice
     {
         public RandomWarsDiceTemplate()
         {
-            HttpReceiveUpdateDeckAckCallback = OnUpdateDeckController;
-            HttpReceiveLevelupDiceAckCallback = OnLevelupDiceController;
-            HttpReceiveOpenBoxAckCallback = OnOpenBoxController;
+            ReceiveUpdateDeckAckCallback = OnUpdateDeckController;
+            //HttpReceiveLevelupDiceAckCallback = OnLevelupDiceController;
+            //HttpReceiveOpenBoxAckCallback = OnOpenBoxController;
         }
     }
 }

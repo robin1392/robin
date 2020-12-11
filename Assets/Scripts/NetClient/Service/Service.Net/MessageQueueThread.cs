@@ -49,16 +49,16 @@ namespace Service.Net
         }
         
 
-        public override void Enqueue(ClientSession clientSession, byte[] buffer)
+        public override void Enqueue(object sender, byte[] buffer)
         {
-            base.Enqueue(clientSession, buffer);
+            base.Enqueue(sender, buffer);
             _loopEvent.Set();
         }
 
 
-        public override void Enqueue(ClientSession clientSession, int protocolId, byte[] data, int length)
+        public override void Enqueue(object sender, int protocolId, byte[] data, int length)
         {
-            base.Enqueue(clientSession, protocolId, data, length);
+            base.Enqueue(sender, protocolId, data, length);
             _loopEvent.Set();
         }
     }

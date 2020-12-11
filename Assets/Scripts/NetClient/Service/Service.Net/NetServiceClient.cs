@@ -9,6 +9,7 @@ namespace Service.Net
 {
     public class NetServiceClient : NetServiceBase, IDisposable
     {
+        GameSessionClient _gameSession;
         private DateTime _nowTime;
         private string _binarySerializePath;
         private long _playTimeStampTick;
@@ -31,6 +32,11 @@ namespace Service.Net
             
         }   
 
+
+        public void SetGameSession(GameSessionClient gameSession)
+        {
+            _gameSession = gameSession;
+        }
 
         public override void Update() 
         {
@@ -266,14 +272,7 @@ namespace Service.Net
                     }
 
 
-                    // 게임 세션 
-                    GameSession gameSession = GetGameSession(gameSessionId);
-                    if (gameSession == null)
-                    {
-                        break;
-                    }
-
-                    clientSession.GameSession = gameSession;
+                    clientSession.GameSession = _gameSession;
                     clientSession.SessionState = sessionState;
                     if (netState == ENetState.Connected)
                     {

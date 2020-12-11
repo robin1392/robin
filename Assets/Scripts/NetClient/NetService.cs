@@ -33,7 +33,7 @@ public class NetService : Singleton<NetService>
     RandomWarsDiceTemplate _randomWarsDiceTemplate;
     RandomWarsMatchTemplate _randomWarsMatchTemplate;
 
-
+    NetClientGameSession _gameSession;
     NetClientPlayer _gamePlayer;
 
     string _tokenSerializePath;
@@ -69,7 +69,7 @@ public class NetService : Singleton<NetService>
     {
         UpdateNetClient();
 
-        _httpClient.Update();
+        _gameSession.Update();
     }
 
     public override void OnDestroy()
@@ -105,17 +105,21 @@ public class NetService : Singleton<NetService>
         _messageController.AddControllers(_randomWarsMatchTemplate.MessageControllers);
 
 
-        HttpController httpController = new HttpController();
-        httpController.AddControllers(_randomWarsAccountTemplate.HttpMessageControllers);
-        httpController.AddControllers(_randomWarsPlayerTemplate.HttpMessageControllers);
-        httpController.AddControllers(_randomWarsDiceTemplate.HttpMessageControllers);
-        httpController.AddControllers(_randomWarsMatchTemplate.HttpMessageControllers);
+        _gameSession = new NetClientGameSession();
+        _gameSession.Init(new GameSessionConfig
+        {
+            MessageBufferSize = 10240,
+            MessageQueueCapacity = 100,
+            MsgController = _messageController,
+        });
+
+        _netGameClient.SetGameSession(_gameSession);
 
 
         _httpClient = new HttpClient(
-            //"https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
-            "https://localhost:5001/api",
-            httpController);
+            "https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
+            //"https://localhost:5001/api",
+            _gameSession);
 
 
 
@@ -241,7 +245,7 @@ public class NetService : Singleton<NetService>
         {
             case ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ:
                 {
-                    _randomWarsAccountTemplate.HttpSendLoginAccountReq(_httpClient, param[0].ToString(), (EPlatformType)param[1]);
+                    _randomWarsAccountTemplate.SendLoginAccountReq(_httpClient, param[0].ToString(), (EPlatformType)param[1]);
                 }
                 break;
         }
@@ -261,19 +265,19 @@ public class NetService : Singleton<NetService>
         {
             case ERandomWarsDiceProtocol.UPDATE_DECK_REQ:
                 {
-                    _randomWarsDiceTemplate.HttpSendUpdateDeckReq(_httpClient, param[0].ToString(), (int)param[1], (int[])param[2]);
+                    _randomWarsDiceTemplate.SendUpdateDeckReq(_httpClient, param[0].ToString(), (int)param[1], (int[])param[2]);
                 }
                 break;
-            case ERandomWarsDiceProtocol.LEVELUP_DICE_REQ:
-                {
-                    _randomWarsDiceTemplate.HttpSendLevelupDiceReq(_httpClient, param[0].ToString(), (int)param[1]);
-                }
-                break;
-            case ERandomWarsDiceProtocol.OPEN_BOX_REQ:
-                {
-                    _randomWarsDiceTemplate.HttpSendOpenBoxReq(_httpClient, param[0].ToString(), (int)param[1]);
-                }
-                break;
+            //case ERandomWarsDiceProtocol.LEVELUP_DICE_REQ:
+            //    {
+            //        _randomWarsDiceTemplate.HttpSendLevelupDiceReq(_httpClient, param[0].ToString(), (int)param[1]);
+            //    }
+            //    break;
+            //case ERandomWarsDiceProtocol.OPEN_BOX_REQ:
+            //    {
+            //        _randomWarsDiceTemplate.HttpSendOpenBoxReq(_httpClient, param[0].ToString(), (int)param[1]);
+            //    }
+            //    break;
         }
         return true;
     }

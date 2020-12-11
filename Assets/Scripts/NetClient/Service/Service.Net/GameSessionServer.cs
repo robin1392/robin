@@ -25,19 +25,19 @@ namespace Service.Net
         }
 
 
-        public override void PushInternalMessage(ClientSession clientSession, EInternalProtocol protocolId, byte[] data, int length)
+        public override void PushInternalMessage(object sender, EInternalProtocol protocolId, byte[] msg, int length)
         {
-            _messageQueue.Enqueue(clientSession, (int)protocolId, data, length);
+            _messageQueue.Enqueue(sender, (int)protocolId, msg, length);
         }
 
 
-        public override void PushExternalMessage(ClientSession clientSession, int protocolId, byte[] data, int length)
+        public override void PushExternalMessage(object sender, int protocolId, byte[] msg, int length)
         {
-            _messageQueue.Enqueue(clientSession, protocolId, data, length);
+            _messageQueue.Enqueue(sender, protocolId, msg, length);
         }
 
 
-        public override bool PushRelayMessage(ClientSession clientSession, int protocolId, byte[] data, int length)
+        public override bool PushRelayMessage(object sender, int protocolId, byte[] msg, int length)
         {
             return false;
         }
@@ -45,36 +45,35 @@ namespace Service.Net
 
         public override bool ProcessInternalMessage(Message msg)
         {
+            ClientSession clientSession = msg.Sender as ClientSession;
             switch ((EInternalProtocol)msg.ProtocolId)
             {
                 case EInternalProtocol.CONNECT_CLIENT:
                 {
-                    _peers.Add(msg.ClientSession.Peer);
-
-                    OnConnectClient(msg.ClientSession);
+                    OnConnectClient(clientSession);
                     break;
                 }
                 case EInternalProtocol.RECONNECT_CLIENT:
                 {
-                    OnReconnectClient(msg.ClientSession);
+                    OnReconnectClient(clientSession);
                     break;  
                 }
                 case EInternalProtocol.OFFLINE_CLIENT:
                 {
-                    OnOfflineClient(msg.ClientSession);
+                    OnOfflineClient(clientSession);
                     break;  
                 }
                 case EInternalProtocol.DISCONNECT_CLIENT:
                 {
-                    OnDisconnectClient(msg.ClientSession);
+                    OnDisconnectClient(clientSession);
                     break;  
                 }
                 case EInternalProtocol.EXPIRED_CLIENT:
                 {
-                    OnExpiredClient(msg.ClientSession);
+                    OnExpiredClient(clientSession);
 
                     // 모든 클라이언트 세션이 만료되면 게임 세션을 종료시킨다.
-                    _peers.Remove(msg.ClientSession.Peer);
+                    _peers.Remove(clientSession.Peer);
                     if (_peers.Count == 0)
                     {
                         OnTerminatedGameSession(Id);
@@ -83,12 +82,12 @@ namespace Service.Net
                 }
                 case EInternalProtocol.PAUSE_CLIENT:
                 {
-                    OnPauseClient(msg.ClientSession);
+                    OnPauseClient(clientSession);
                     break;  
                 }
                 case EInternalProtocol.RESUME_CLIENT:
                 {
-                    OnResumeClient(msg.ClientSession);
+                    OnResumeClient(clientSession);
                     break;  
                 }
                 default:
@@ -109,7 +108,7 @@ namespace Service.Net
                 return false;
             }
 
-            return _msgController.OnRecevice(msg.ClientSession.Peer, msg.ProtocolId, msg.Data);
+            return _msgController.OnRecevice(msg.Sender as ISender, msg.ProtocolId, msg.Data);
         }
 
 

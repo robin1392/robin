@@ -12,7 +12,7 @@ namespace Template.Account.RandomWarsAccount
     {
         public RandomWarsAccountTemplate()
         {
-            HttpReceiveLoginAccountAckCallback = OnReceiveLoginAccountAck;
+            ReceiveLoginAccountAckCallback = OnReceiveLoginAccountAck;
         }
 
 

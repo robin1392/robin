@@ -60,7 +60,7 @@ namespace Service.Template.Table
                     List<string> cols = new List<string>(line.Split(','));
                     if (row == 0)
                     {
-                        for (int i = 0; i < cols.Count; i++)
+                        for (int i = cols.Count - 1; i >= 0; i--)
                         {
                             if (cols[i].StartsWith("~") == true)
                             {

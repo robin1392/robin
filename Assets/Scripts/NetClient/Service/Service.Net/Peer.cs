@@ -2,15 +2,22 @@ using System;
 
 namespace Service.Net
 {
-    public class Peer
+    public interface ISender : IDisposable
+    {
+        bool SendMessage(int protocolId, byte[] buffer);
+        bool SendMessage(int protocolId, string method, byte[] buffer);
+    }
+
+
+    public class Peer : ISender
     {
         public ClientSession ClientSession { get; set; }
 
 
-        public void Clear()
+        public void Dispose()
         {
             ClientSession = null;
-        }       
+        }
 
 
         public bool IsConnected()
@@ -52,7 +59,19 @@ namespace Service.Net
         }
 
 
-        public virtual bool SendPacket(int protocolId, byte[] msg)
+        // public virtual bool SendPacket(int protocolId, byte[] msg)
+        // {
+        //     if (ClientSession == null 
+        //     || ClientSession.NetState != ENetState.Connected)
+        //     {
+        //         return false;
+        //     }
+
+        //     ClientSession.Send(protocolId, msg, msg.Length);
+        //     return true;
+        // }
+
+        public bool SendMessage(int protocolId, byte[] buffer)
         {
             if (ClientSession == null 
             || ClientSession.NetState != ENetState.Connected)
@@ -60,9 +79,16 @@ namespace Service.Net
                 return false;
             }
 
-            ClientSession.Send(protocolId, msg, msg.Length);
+            ClientSession.Send(protocolId, buffer, buffer.Length);
             return true;
         }
+
+
+        public bool SendMessage(int protocolId, string method, byte[] buffer)
+        {
+            return false;
+        }
+
 
 
         public virtual void Disconnect(ESessionState sessionState)

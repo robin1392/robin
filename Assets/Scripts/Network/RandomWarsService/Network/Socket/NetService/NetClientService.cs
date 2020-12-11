@@ -106,7 +106,6 @@ namespace RandomWarsService.Network.Socket.NetService
         {
             if (File.Exists(_binarySerializePath) == false)
             {
-                _logger.Debug(string.Format("[NetClient] BinaryDeserialize. Not exist file. path: {0}", _binarySerializePath));
                 return false;
             }
 

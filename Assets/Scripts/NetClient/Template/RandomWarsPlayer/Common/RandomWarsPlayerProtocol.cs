@@ -17,18 +17,14 @@ namespace Template.Player.RandomWarsPlayer.Common
         END
     }
 
-    public class RandomWarsPlayerProtocol : BaseProtocol
+    public class RandomWarsPlayerProtocol : MessageControllerBase
     {
         public RandomWarsPlayerProtocol()
         {
             MessageControllers = new Dictionary<int, ControllerDelegate>
             {
-            };
-
-            HttpMessageControllers = new Dictionary<int, HttpControllerDelegate>
-            {
-                {(int)ERandomWarsPlayerProtocol.EDIT_NAME_REQ, HttpReceiveEditNameReq},
-           };            
+                 //{(int)ERandomWarsPlayerProtocol.EDIT_NAME_REQ, HttpReceiveEditNameReq},
+           };
         }
 
 
@@ -37,49 +33,49 @@ namespace Template.Player.RandomWarsPlayer.Common
         // -------------------------------------------------------------------
 #region Http Controller 구현부        
 
-        public bool HttpSendEditNameReq(HttpClient client, string playerGuid, string editName)
-        {
-            JObject json = new JObject();
-            json.Add("playerGuid", playerGuid);
-            json.Add("editName", editName);
-            client.Send((int)ERandomWarsPlayerProtocol.EDIT_NAME_REQ, "player/editName", json.ToString());
-            return true;
-        }
+        // public bool HttpSendEditNameReq(HttpClient client, string playerGuid, string editName)
+        // {
+        //     JObject json = new JObject();
+        //     json.Add("playerGuid", playerGuid);
+        //     json.Add("editName", editName);
+        //     client.Send((int)ERandomWarsPlayerProtocol.EDIT_NAME_REQ, "player/editName", json.ToString());
+        //     return true;
+        // }
 
 
-        public delegate (ERandomWarsPlayerErrorCode errorCode, string editName) HttpReceiveEditNameReqDelegate(string playerGuid, string editName);
-        public HttpReceiveEditNameReqDelegate HttpReceiveEditNameReqCallback;
-        public string HttpReceiveEditNameReq(string json)
-        {
-            JObject jObject = JObject.Parse(json);
-            var res = HttpReceiveEditNameReqCallback(
-                jObject["playerGuid"].ToString(),
-                jObject["editName"].ToString());
+        // public delegate (ERandomWarsPlayerErrorCode errorCode, string editName) HttpReceiveEditNameReqDelegate(string playerGuid, string editName);
+        // public HttpReceiveEditNameReqDelegate HttpReceiveEditNameReqCallback;
+        // public string HttpReceiveEditNameReq(string json)
+        // {
+        //     JObject jObject = JObject.Parse(json);
+        //     var res = HttpReceiveEditNameReqCallback(
+        //         jObject["playerGuid"].ToString(),
+        //         jObject["editName"].ToString());
 
-            return HttpSendEditNameAck(res.errorCode, res.editName);
-        }
-
-
-        public string HttpSendEditNameAck(ERandomWarsPlayerErrorCode errorCode, string editName)
-        {
-            JObject json = new JObject();
-            json.Add("errorCode", (int)errorCode);
-            json.Add("editName", editName);
-            return json.ToString();
-        }
+        //     return HttpSendEditNameAck(res.errorCode, res.editName);
+        // }
 
 
-        public delegate bool HttpReceiveEditNameAckDelegate(ERandomWarsPlayerErrorCode errorCode, string editName);
-        public HttpReceiveEditNameAckDelegate HttpReceiveEditNameAckCallback;
-        public string HttpReceiveEditNameAck(string json)
-        {
-            JObject jObject = JObject.Parse(json);
-            HttpReceiveEditNameAckCallback(
-                (ERandomWarsPlayerErrorCode)(int)jObject["errorCode"], 
-                jObject["editName"].ToString());
+        // public string HttpSendEditNameAck(ERandomWarsPlayerErrorCode errorCode, string editName)
+        // {
+        //     JObject json = new JObject();
+        //     json.Add("errorCode", (int)errorCode);
+        //     json.Add("editName", editName);
+        //     return json.ToString();
+        // }
 
-            return "";
-        }
+
+        // public delegate bool HttpReceiveEditNameAckDelegate(ERandomWarsPlayerErrorCode errorCode, string editName);
+        // public HttpReceiveEditNameAckDelegate HttpReceiveEditNameAckCallback;
+        // public string HttpReceiveEditNameAck(string json)
+        // {
+        //     JObject jObject = JObject.Parse(json);
+        //     HttpReceiveEditNameAckCallback(
+        //         (ERandomWarsPlayerErrorCode)(int)jObject["errorCode"], 
+        //         jObject["editName"].ToString());
+
+        //     return "";
+        // }
     
 #endregion
 

@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Service.Net;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace Template.Account.RandomWarsAccount.Common
 {
@@ -18,19 +17,15 @@ namespace Template.Account.RandomWarsAccount.Common
     }
 
 
-    public class RandomWarsAccountProtocol : BaseProtocol
+    public class RandomWarsAccountProtocol : MessageControllerBase
     {
         public RandomWarsAccountProtocol()
         {
             MessageControllers = new Dictionary<int, ControllerDelegate>
             {
+                {(int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, ReceiveLoginAccountReq},
+                {(int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_ACK, ReceiveLoginAccountAck},
             };
-
-            HttpMessageControllers = new Dictionary<int, HttpControllerDelegate>
-            {
-                {(int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, HttpReceiveLoginAccountReq},
-                {(int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_ACK, HttpReceiveLoginAccountAck},
-           };            
         }
 
 
@@ -38,50 +33,59 @@ namespace Template.Account.RandomWarsAccount.Common
         // Http Controller 구현부
         // -------------------------------------------------------------------
 #region Http Controller 구현부        
-        public bool HttpSendLoginAccountReq(HttpClient client, string platformId, EPlatformType platformType)
+        public bool SendLoginAccountReq(ISender sender, string platformId, EPlatformType platformType)
         {
-            JObject json = new JObject();
-            json.Add("platformId", platformId);
-            json.Add("platformType", (int)platformType);
-            client.Send((int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, "account/loginAccount", json.ToString());
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(platformId);
+                bw.Write((int)platformType);
+                sender.SendMessage((int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, "accountlogin", ms.ToArray());
+            }
             return true;
         }
 
 
-        public delegate (ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo) HttpReceiveLoginAccountReqDelegate(string platformId, EPlatformType platformType);
-        public HttpReceiveLoginAccountReqDelegate HttpReceiveLoginAccountReqCallback;
-        public string HttpReceiveLoginAccountReq(string json)
+        public delegate (ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo) ReceiveLoginAccountReqDelegate(string platformId, EPlatformType platformType);
+        public ReceiveLoginAccountReqDelegate ReceiveLoginAccountReqCallback;
+        public bool ReceiveLoginAccountReq(ISender sender, byte[] msg)
         {
-            JObject jObject = JObject.Parse(json);
-            var res = HttpReceiveLoginAccountReqCallback(
-                jObject["platformId"].ToString(),
-                (EPlatformType)(int)jObject["platformType"]);
+            using (var ms = new MemoryStream(msg))
+            {
+                BinaryReader br = new BinaryReader(ms);
+                var res = ReceiveLoginAccountReqCallback( 
+                    br.ReadString(), 
+                    (EPlatformType)br.ReadInt32());
 
-            return HttpSendLoginAccountAck(res.errorCode, res.accountInfo);
+                return SendLoginAccountAck(sender, res.errorCode, res.accountInfo);
+            }
         }
 
 
-        public string HttpSendLoginAccountAck(ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo)
+        public bool SendLoginAccountAck(ISender sender, ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo)
         {
-            JObject json = new JObject();
-            json.Add("errorCode", (int)errorCode);
-            json.Add("accountInfo", JsonConvert.SerializeObject(accountInfo, Formatting.Indented));
-            return json.ToString();
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((int)errorCode);
+                accountInfo.Write(bw);
+                return sender.SendMessage((int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_ACK, ms.ToArray());
+            }
         }
 
 
-        public delegate bool HttpReceiveLoginAccountAckDelegate(ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo);
-        public HttpReceiveLoginAccountAckDelegate HttpReceiveLoginAccountAckCallback;
-        public string HttpReceiveLoginAccountAck(string json)
+        public delegate bool ReceiveLoginAccountAckDelegate(ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo);
+        public ReceiveLoginAccountAckDelegate ReceiveLoginAccountAckCallback;
+        public bool ReceiveLoginAccountAck(ISender sender, byte[] msg)
         {
-            JObject jObject = JObject.Parse(json);
-            HttpReceiveLoginAccountAckCallback(
-                (ERandomWarsAccountErrorCode)(int)jObject["errorCode"], 
-                JsonConvert.DeserializeObject<MsgAccount>(jObject["accountInfo"].ToString()));
-
-            return "";
+            using (var ms = new MemoryStream(msg))
+            {
+                BinaryReader br = new BinaryReader(ms);
+                return ReceiveLoginAccountAckCallback( 
+                    (ERandomWarsAccountErrorCode)br.ReadInt32(), 
+                    MsgAccount.Read(br));
+            }
         }
-
 #endregion
 
     }
