@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Service.Net
 {
-    public delegate bool ControllerDelegate(ISender sender, byte[] msg);
+    public delegate bool ControllerDelegate(ISender sender, byte[] msg, int length);
 
     public class MessageController
     {
@@ -37,7 +37,7 @@ namespace Service.Net
         }
 
 
-        public virtual bool OnRecevice(ISender sender, int protocolId, byte[] msg) 
+        public virtual bool OnRecevice(ISender sender, int protocolId, byte[] msg, int length) 
         {
             ControllerDelegate controllerCallback;
             if (_controllers.TryGetValue(protocolId, out controllerCallback) == false)
@@ -45,7 +45,7 @@ namespace Service.Net
                 return false;
             }
             
-            return controllerCallback(sender, msg);
+            return controllerCallback(sender, msg, length);
         }
     }
 }

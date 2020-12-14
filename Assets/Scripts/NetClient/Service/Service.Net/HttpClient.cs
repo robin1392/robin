@@ -2,18 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 
 namespace Service.Net
 {
-    class HttpRequest
-    {
-        public int ProtocolId { get; set; }
-        public string Url { get; set; }
-        public string Json { get; set; }
-    }
-
     class HttpResponse
     {
         public int ProtocolId { get; set; }
@@ -22,30 +16,39 @@ namespace Service.Net
     }
 
 
-    public class HttpSender : ISender
+    public class HttpSendResult : ISender
     {
-        public byte[] msg { get; set; }
+        string _json;
 
 
         public void Dispose()
         {
-            msg = null;
         }
 
 
         public bool SendMessage(int protocolId, byte[] buffer)
         {
-            msg = buffer;
             return true;
         }
 
 
-        public bool SendMessage(int protocolId, string method, byte[] buffer)
+        public bool SendHttpPost(int protocolId, string method, string json)
         {
             return false;
         }
 
+        public bool SendHttpResult(string json)
+        {
+            _json = json;
+            return true;
+        }
+
+        public string HttpResult()
+        {
+            return _json;
+        }
     }
+
 
     public class HttpClient : ISender
     {
@@ -79,25 +82,20 @@ namespace Service.Net
         }
 
 
-        public bool SendMessage(int protocolId, string method, byte[] buffer)
+        public bool SendHttpPost(int protocolId, string method, string json)
         {
-            RequestPostAsync(protocolId, _baseUrl + "/" + method, buffer);
+            RequestPostAsync(protocolId, _baseUrl + "/" + method, json);
             return true;
         }
 
-
-        public void Update()
+        public bool SendHttpResult(string json)
         {
-            // lock (_responseQueue)
-            // {
-            //     if (_responseQueue.Count == 0)
-            //     {
-            //         return;
-            //     }
+            return false;
+        }
 
-            //     HttpResponse response = _responseQueue.Dequeue();
-            //     _httpController.OnRecevice(response.ProtocolId, response.msg);
-            // }
+        public string HttpResult()
+        {
+            return string.Empty;
         }
 
 
@@ -121,21 +119,26 @@ namespace Service.Net
                 StreamReader streamRead = new StreamReader(streamResponse);
 
                 string ackJson = streamRead.ReadToEnd();
-                ackJson = ackJson.Replace("\\u0022", "\"");
-                ackJson = ackJson.Replace("\\n", "");
-                ackJson = ackJson.Replace("\\r", "");
-                ackJson = ackJson.Replace("\"{", "{");
-                ackJson = ackJson.Replace("}\"", "}");
-                ackJson = ackJson.Replace("\\\\", "");
+                string tempJson = ackJson;
+                tempJson = tempJson.Replace("\\u0022", "\"");
+                tempJson = tempJson.Replace("\\n", "");
+                tempJson = tempJson.Replace("\\r", "");
+                tempJson = tempJson.Replace("\\\"{", "{");
+                tempJson = tempJson.Replace("}\\\"", "}");
+                tempJson = tempJson.Replace("\"{", "{");
+                tempJson = tempJson.Replace("}\"", "}");
+                tempJson = tempJson.Replace("\"[", "[");
+                tempJson = tempJson.Replace("]\"", "]");
+                tempJson = tempJson.Replace("\\\\\\\"", "\"");
+                tempJson = tempJson.Replace("\\\"", "\"");
 
-                lock (_responseQueue)
-                {
-                    _responseQueue.Enqueue(new HttpResponse
-                    {
-                        ProtocolId = protocolId + 1,
-                        Json = ackJson
-                    });
-                }
+
+                byte[] ackBytes = Encoding.UTF8.GetBytes(tempJson);
+                _gameSession.PushExternalMessage(
+                    this,
+                    protocolId + 1,
+                    ackBytes,
+                    ackBytes.Length);
 
 
                 // Close the stream object
@@ -149,30 +152,6 @@ namespace Service.Net
             }), request);
 
             allDone.WaitOne();
-        }
-
-
-        void RequestPostAsync(int protocolId, string url, byte[] msg)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            
-            request.Method = "POST";
-            request.ContentType = "application/octet-stream";
-            request.ContentLength = msg.Length;
-
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(msg, 0, msg.Length);
-            dataStream.Close();
-
-            WebResponse response = request.GetResponse();
-            using (dataStream = response.GetResponseStream())
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    dataStream.CopyTo(memoryStream);
-                    _gameSession.PushExternalMessage(this, protocolId + 1, memoryStream.ToArray(), (int)memoryStream.Length);
-                }
-            }
         }
     }
 }

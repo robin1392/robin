@@ -16,7 +16,7 @@ public class UI_Popup_Rank : UI_Popup
             arrSlot[i].Initialize(i + 1, -1, string.Empty);
         }
         
-        NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, GetRankCallback);
+        //NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, GetRankCallback);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         StartCoroutine(WaitCoroutine());
     }

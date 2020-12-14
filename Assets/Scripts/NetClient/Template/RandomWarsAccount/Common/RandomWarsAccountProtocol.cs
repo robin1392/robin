@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Service.Net;
 using System.IO;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Template.Account.RandomWarsAccount.Common
 {
@@ -35,56 +38,46 @@ namespace Template.Account.RandomWarsAccount.Common
 #region Http Controller 구현부        
         public bool SendLoginAccountReq(ISender sender, string platformId, EPlatformType platformType)
         {
-            using (var ms = new MemoryStream())
-            {
-                BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write(platformId);
-                bw.Write((int)platformType);
-                sender.SendMessage((int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, "accountlogin", ms.ToArray());
-            }
-            return true;
+            JObject json = new JObject();
+            json.Add("platformId", platformId);
+            json.Add("platformType", (int)platformType);
+            return sender.SendHttpPost((int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, "accountlogin", json.ToString());
         }
 
 
         public delegate (ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo) ReceiveLoginAccountReqDelegate(string platformId, EPlatformType platformType);
         public ReceiveLoginAccountReqDelegate ReceiveLoginAccountReqCallback;
-        public bool ReceiveLoginAccountReq(ISender sender, byte[] msg)
+        public bool ReceiveLoginAccountReq(ISender sender, byte[] msg, int lenght)
         {
-            using (var ms = new MemoryStream(msg))
-            {
-                BinaryReader br = new BinaryReader(ms);
-                var res = ReceiveLoginAccountReqCallback( 
-                    br.ReadString(), 
-                    (EPlatformType)br.ReadInt32());
-
-                return SendLoginAccountAck(sender, res.errorCode, res.accountInfo);
-            }
+            string json = Encoding.Default.GetString(msg, 0, lenght);
+            JObject jObject = JObject.Parse(json);
+            string platformId = (string)jObject["platformId"];
+            EPlatformType platformType = (EPlatformType)(int)jObject["platformType"];
+            var res = ReceiveLoginAccountReqCallback( 
+                platformId, 
+                platformType);
+            return SendLoginAccountAck(sender, res.errorCode, res.accountInfo);
         }
 
 
         public bool SendLoginAccountAck(ISender sender, ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo)
         {
-            using (var ms = new MemoryStream())
-            {
-                BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write((int)errorCode);
-                accountInfo.Write(bw);
-                return sender.SendMessage((int)ERandomWarsAccountProtocol.LOGIN_ACCOUNT_ACK, ms.ToArray());
-            }
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            json.Add("accountInfo", JsonConvert.SerializeObject(accountInfo));
+            return sender.SendHttpResult(json.ToString());
         }
 
 
         public delegate bool ReceiveLoginAccountAckDelegate(ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo);
         public ReceiveLoginAccountAckDelegate ReceiveLoginAccountAckCallback;
-        public bool ReceiveLoginAccountAck(ISender sender, byte[] msg)
+        public bool ReceiveLoginAccountAck(ISender sender, byte[] msg, int lenght)
         {
-            using (var ms = new MemoryStream(msg))
-            {
-                BinaryReader br = new BinaryReader(ms);
-                return ReceiveLoginAccountAckCallback( 
-                    (ERandomWarsAccountErrorCode)br.ReadInt32(), 
-                    MsgAccount.Read(br));
-            }
+            string json = Encoding.Default.GetString(msg, 0, lenght);
+            JObject jObject = JObject.Parse(json);
+            ERandomWarsAccountErrorCode errorCode = (ERandomWarsAccountErrorCode)(int)jObject["errorCode"];
+            MsgAccount accountInfo = JsonConvert.DeserializeObject<MsgAccount>(jObject["accountInfo"].ToString());
+            return ReceiveLoginAccountAckCallback(errorCode, accountInfo);
         }
 #endregion
 

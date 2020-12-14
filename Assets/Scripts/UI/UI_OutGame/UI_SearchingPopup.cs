@@ -45,15 +45,16 @@ public class UI_SearchingPopup : UI_Popup
 
     public void ClickSearchingCancel()
     {
-        if (NetworkManager.Get() != null)
+        if (NetService.Get() != null)
         {
-            if (NetworkManager.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_START)
+            if (NetService.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_START)
             {
                 btn_Cancel.interactable = false;
                 // 매칭 요청중이면 중단을 요청한다.
-                NetworkManager.Get().StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
+                //NetworkManager.Get().StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
+                NetService.Get().Send(Template.Stage.RandomWarsMatch.Common.ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, UserInfoManager.Get().GetUserInfo().ticketId);
             }
-            else if (NetworkManager.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
+            else if (NetService.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
             {
                 // 이미 상대 찾아서 커넥트 중이면 취소 못한다..
                 return;

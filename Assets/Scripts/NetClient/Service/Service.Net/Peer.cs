@@ -5,7 +5,9 @@ namespace Service.Net
     public interface ISender : IDisposable
     {
         bool SendMessage(int protocolId, byte[] buffer);
-        bool SendMessage(int protocolId, string method, byte[] buffer);
+        bool SendHttpPost(int protocolId, string method, string json);
+        bool SendHttpResult(string json);
+        string HttpResult();
     }
 
 
@@ -84,11 +86,20 @@ namespace Service.Net
         }
 
 
-        public bool SendMessage(int protocolId, string method, byte[] buffer)
+        public bool SendHttpPost(int protocolId, string method, string json)
+        {
+            return false;
+        }
+        
+        public bool SendHttpResult(string json)
         {
             return false;
         }
 
+        public string HttpResult()
+        {
+            return string.Empty;
+        }
 
 
         public virtual void Disconnect(ESessionState sessionState)

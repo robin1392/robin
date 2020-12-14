@@ -10,18 +10,18 @@ namespace Template.Stage.RandomWarsMatch.Common
     public enum ERandomWarsMatchProtocol
     {
         BEGIN = 4000000,
-        
+
         REQUEST_MATCH_REQ,
         REQUEST_MATCH_ACK,
         REQUEST_MATCH_NOTIFY,
 
-        GET_MATCH_STATUS_REQ,
-        GET_MATCH_STATUS_ACK,
-        GET_MATCH_STATUS_NOTIFY,
+        STATUS_MATCH_REQ,
+        STATUS_MATCH_ACK,
+        STATUS_MATCH_NOTIFY,
 
-        STOP_MATCH_REQ,
-        STOP_MATCH_ACK,
-        STOP_MATCH_NOTIFY,
+        CANCEL_MATCH_REQ,
+        CANCEL_MATCH_ACK,
+        CANCEL_MATCH_NOTIFY,
 
         JOIN_STAGE_REQ,
         JOIN_STAGE_ACK,
@@ -37,15 +37,19 @@ namespace Template.Stage.RandomWarsMatch.Common
         {
             MessageControllers = new Dictionary<int, ControllerDelegate>
             {
-                // {(int)ERandomWarsMatchProtocol.JOIN_STAGE_REQ, ReceiveJoinStageReq},
-                // {(int)ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, HttpReceiveRequestMatchReq},
-                // {(int)ERandomWarsMatchProtocol.GET_MATCH_STATUS_REQ, HttpReceiveGetMatchStatusReq},
-                // {(int)ERandomWarsMatchProtocol.STOP_MATCH_REQ, HttpReceiveStopMatchReq},
+                {(int)ERandomWarsMatchProtocol.JOIN_STAGE_REQ, ReceiveJoinStageReq},
+                {(int)ERandomWarsMatchProtocol.JOIN_STAGE_ACK, ReceiveJoinStageAck},
+                {(int)ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, ReceiveRequestMatchReq},
+                {(int)ERandomWarsMatchProtocol.REQUEST_MATCH_ACK, ReceiveRequestMatchAck},
+                {(int)ERandomWarsMatchProtocol.STATUS_MATCH_REQ, ReceiveStatusMatchReq},
+                {(int)ERandomWarsMatchProtocol.STATUS_MATCH_ACK, ReceiveStatusMatchAck},
+                {(int)ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, ReceiveCancelMatchReq},
+                {(int)ERandomWarsMatchProtocol.CANCEL_MATCH_ACK, ReceiveCancelMatchAck},
             };
         }
 
 
-#region Socket Controller 구현부
+        #region Socket Controller 구현부
         // -------------------------------------------------------------------
         // Socket Controller 구현부
         // -------------------------------------------------------------------
@@ -64,13 +68,13 @@ namespace Template.Stage.RandomWarsMatch.Common
 
         public delegate (ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo) JoinStageReqDelegate(ISender sender, string playerSessionId, int deckIndex);
         public JoinStageReqDelegate JoinStageReqCallback;
-        public bool ReceiveJoinStageReq(ISender sender, byte[] msg)
+        public bool ReceiveJoinStageReq(ISender sender, byte[] msg, int length)
         {
             using (var ms = new MemoryStream(msg))
             {
                 BinaryReader br = new BinaryReader(ms);
-                var res = JoinStageReqCallback(sender, 
-                    br.ReadString(), 
+                var res = JoinStageReqCallback(sender,
+                    br.ReadString(),
                     br.ReadInt32());
 
                 return SendJoinStageAck(sender, res.errorCode, res.playerInfo);
@@ -92,158 +96,153 @@ namespace Template.Stage.RandomWarsMatch.Common
 
         public delegate bool JoinStageAckDelegate(ISender sender, ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo);
         public JoinStageAckDelegate JoinStageAckCallback;
-        public bool ReceiveJoinStageAck(ISender sender, byte[] msg)
+        public bool ReceiveJoinStageAck(ISender sender, byte[] msg, int length)
         {
             using (var ms = new MemoryStream(msg))
             {
                 BinaryReader br = new BinaryReader(ms);
-                return JoinStageAckCallback(sender, 
-                    (ERandomWarsMatchErrorCode)br.ReadInt32(), 
+                return JoinStageAckCallback(sender,
+                    (ERandomWarsMatchErrorCode)br.ReadInt32(),
                     MsgPlayerInfo.Read(br));
             }
         }
 
-#endregion
-        
-
-// #region Http Controller 구현부        
-//         // -------------------------------------------------------------------
-//         // Http Controller 구현부
-//         // -------------------------------------------------------------------
-
-//         // requestmatch
-//         public bool HttpSendRequestMatchReq(HttpClient client, string playerGuid)
-//         {
-//             JObject json = new JObject();
-//             json.Add("playerGuid", playerGuid);
-//             client.Send((int)ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, "requestmatch", json.ToString());
-//             return true;
-//         }
+        #endregion
 
 
-//         public delegate (ERandomWarsMatchErrorCode errorCode, string ticketId) HttpReceiveRequestMatchReqDelegate(string playerGuid);
-//         public HttpReceiveRequestMatchReqDelegate HttpReceiveRequestMatchReqCallback;
-//         public string HttpReceiveRequestMatchReq(string json)
-//         {
-//             JObject jObject = JObject.Parse(json);
-//             var res = HttpReceiveRequestMatchReqCallback(
-//                 (string)jObject["playerGuid"]);
+        #region Http Controller 구현부        
+        // -------------------------------------------------------------------
+        // Http Controller 구현부
+        // -------------------------------------------------------------------
 
-//             return HttpSendRequestMatchAck(res.errorCode, res.ticketId);
-//         }
-
-
-//         public string HttpSendRequestMatchAck(ERandomWarsMatchErrorCode errorCode, string ticketId)
-//         {
-//             JObject json = new JObject();
-//             json.Add("errorCode", (int)errorCode);
-//             json.Add("ticketId", ticketId);
-//             return json.ToString();
-//         }
+        // requestmatch
+        public bool SendRequestMatchReq(ISender sender, string playerGuid)
+        {
+            JObject json = new JObject();
+            json.Add("playerGuid", playerGuid);
+            return sender.SendHttpPost((int)ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, "requestmatch", json.ToString());
+        }
 
 
-//         public delegate bool HttpReceiveRequestMatchAckDelegate(ERandomWarsMatchErrorCode errorCode, string ticketId);
-//         public HttpReceiveRequestMatchAckDelegate HttpReceiveRequestMatchAckCallback;
-//         public string HttpReceiveRequestMatchAck(string json)
-//         {
-//             JObject jObject = JObject.Parse(json);
-//             HttpReceiveRequestMatchAckCallback(
-//                 (ERandomWarsMatchErrorCode)(int)jObject["errorCode"], 
-//                 jObject["ticketId"].ToString());
-
-//             return "";
-//         }
-        
-
-//         // getmatchstatus
-//         public bool HttpSendGetMatchStatusReq(HttpClient client, string ticketId)
-//         {
-//             JObject json = new JObject();
-//             json.Add("ticketId", ticketId);
-//             client.Send((int)ERandomWarsMatchProtocol.GET_MATCH_STATUS_REQ, "getmatchstatus", json.ToString());
-//             return true;
-//         }
+        public delegate (ERandomWarsMatchErrorCode errorCode, string ticketId) ReceiveRequestMatchReqDelegate(string playerGuid);
+        public ReceiveRequestMatchReqDelegate ReceiveRequestMatchReqCallback;
+        public bool ReceiveRequestMatchReq(ISender sender, byte[] msg, int length)
+        {
+            string json = System.Text.Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            string playerGuid = (string)jObject["playerGuid"];
+            var res = ReceiveRequestMatchReqCallback(playerGuid);
+            return SendRequestMatchAck(sender, res.errorCode, res.ticketId);
+        }
 
 
-//         public delegate (ERandomWarsMatchErrorCode errorCode, string serverAddr, int port, string playerSessionId) HttpReceiveGetMatchStatusReqDelegate(string ticketId);
-//         public HttpReceiveGetMatchStatusReqDelegate HttpReceiveGetMatchStatusReqCallback;
-//         public string HttpReceiveGetMatchStatusReq(string json)
-//         {
-//             JObject jObject = JObject.Parse(json);
-//             var res = HttpReceiveGetMatchStatusReqCallback(
-//                 (string)jObject["ticketId"]);
-
-//             return HttpSendGetMatchStatusAck(res.errorCode, res.serverAddr, res.port, res.playerSessionId);
-//         }
+        public bool SendRequestMatchAck(ISender sender, ERandomWarsMatchErrorCode errorCode, string ticketId)
+        {
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            json.Add("ticketId", ticketId);
+            return sender.SendHttpResult(json.ToString());
+        }
 
 
-//         public string HttpSendGetMatchStatusAck(ERandomWarsMatchErrorCode errorCode, string serverAddr, int port, string playerSessionId)
-//         {
-//             JObject json = new JObject();
-//             json.Add("errorCode", (int)errorCode);
-//             json.Add("serverAddr", serverAddr);
-//             json.Add("port", port);
-//             json.Add("playerSessionId", playerSessionId);
-//             return json.ToString();
-//         }
+        public delegate bool ReceiveRequestMatchAckDelegate(ERandomWarsMatchErrorCode errorCode, string ticketId);
+        public ReceiveRequestMatchAckDelegate ReceiveRequestMatchAckCallback;
+        public bool ReceiveRequestMatchAck(ISender sender, byte[] msg, int length)
+        {
+            string json = System.Text.Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            ERandomWarsMatchErrorCode errorCode = (ERandomWarsMatchErrorCode)(int)jObject["errorCode"];
+            string ticketId = (string)jObject["ticketId"];
+            return ReceiveRequestMatchAckCallback(errorCode, ticketId);
+        }
 
 
-//         public delegate bool HttpReceiveGetMatchStatusAckDelegate(ERandomWarsMatchErrorCode errorCode, string serverAddr, int port, string playerSessionId);
-//         public HttpReceiveGetMatchStatusAckDelegate HttpReceiveGetMatchStatusAckCallback;
-//         public string HttpReceiveGetMatchStatusAck(string json)
-//         {
-//             JObject jObject = JObject.Parse(json);
-//             HttpReceiveGetMatchStatusAckCallback(
-//                 (ERandomWarsMatchErrorCode)(int)jObject["errorCode"], 
-//                 jObject["serverAddr"].ToString(),
-//                 (int)jObject["port"],
-//                 jObject["playerSessionId"].ToString());
-
-//             return "";
-//         }
-
-//         // stopmatch
-//         public bool HttpSendStopMatchReq(HttpClient client, string ticketId)
-//         {
-//             JObject json = new JObject();
-//             json.Add("ticketId", ticketId);
-//             client.Send((int)ERandomWarsMatchProtocol.STOP_MATCH_REQ, "stopmatch", json.ToString());
-//             return true;
-//         }
+        // matchstatus
+        public bool SendStatusMatchReq(ISender sender, string ticketId)
+        {
+            JObject json = new JObject();
+            json.Add("ticketId", ticketId);
+            return sender.SendHttpPost((int)ERandomWarsMatchProtocol.STATUS_MATCH_REQ, "statusmatch", json.ToString());
+        }
 
 
-//         public delegate ERandomWarsMatchErrorCode HttpReceiveStopMatchReqDelegate(string ticketId);
-//         public HttpReceiveStopMatchReqDelegate HttpReceiveStopMatchReqCallback;
-//         public string HttpReceiveStopMatchReq(string json)
-//         {
-//             JObject jObject = JObject.Parse(json);
-//             var res = HttpReceiveStopMatchReqCallback(
-//                 (string)jObject["ticketId"]);
+        public delegate (ERandomWarsMatchErrorCode errorCode, string serverAddr, int port, string playerSessionId) ReceiveStatusMatchReqDelegate(string ticketId);
+        public ReceiveStatusMatchReqDelegate ReceiveStatusMatchReqCallback;
+        public bool ReceiveStatusMatchReq(ISender sender, byte[] msg, int length)
+        {
+            string json = System.Text.Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            string ticketId = (string)jObject["ticketId"];
+            var res = ReceiveStatusMatchReqCallback(ticketId);
 
-//             return HttpSendStopMatchAck(res);
-//         }
-
-
-//         public string HttpSendStopMatchAck(ERandomWarsMatchErrorCode errorCode)
-//         {
-//             JObject json = new JObject();
-//             json.Add("errorCode", (int)errorCode);
-//             return json.ToString();
-//         }
+            return SendStatusMatchAck(sender, res.errorCode, res.serverAddr, res.port, res.playerSessionId);
+        }
 
 
-//         public delegate bool HttpReceiveStopMatchAckDelegate(ERandomWarsMatchErrorCode errorCode);
-//         public HttpReceiveStopMatchAckDelegate HttpReceiveStopMatchAckCallback;
-//         public string HttpReceiveStopMatchAck(string json)
-//         {
-//             JObject jObject = JObject.Parse(json);
-//             HttpReceiveStopMatchAckCallback(
-//                 (ERandomWarsMatchErrorCode)(int)jObject["errorCode"]);
+        public bool SendStatusMatchAck(ISender sender, ERandomWarsMatchErrorCode errorCode, string serverAddr, int port, string playerSessionId)
+        {
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            json.Add("serverAddr", serverAddr);
+            json.Add("port", port);
+            json.Add("playerSessionId", playerSessionId);
+            return sender.SendHttpResult(json.ToString());
+        }
 
-//             return "";
-//         }
-                
-// #endregion
 
+        public delegate bool ReceiveStatusMatchAckDelegate(ERandomWarsMatchErrorCode errorCode, string serverAddr, int port, string playerSessionId);
+        public ReceiveStatusMatchAckDelegate ReceiveStatusMatchAckCallback;
+        public bool ReceiveStatusMatchAck(ISender sender, byte[] msg, int length)
+        {
+            string json = System.Text.Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            return ReceiveStatusMatchAckCallback(
+                (ERandomWarsMatchErrorCode)(int)jObject["errorCode"],
+                jObject["serverAddr"].ToString(),
+                (int)jObject["port"],
+                jObject["playerSessionId"].ToString());
+        }
+
+
+        // cancelmatch
+        public bool SendCancelMatchReq(ISender sender, string ticketId)
+        {
+            JObject json = new JObject();
+            json.Add("ticketId", ticketId);
+            return sender.SendHttpPost((int)ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, "cancelmatch", json.ToString());
+        }
+
+
+        public delegate ERandomWarsMatchErrorCode ReceiveCancelMatchReqDelegate(string ticketId);
+        public ReceiveCancelMatchReqDelegate ReceiveCancelMatchReqCallback;
+        public bool ReceiveCancelMatchReq(ISender sender, byte[] msg, int length)
+        {
+            string json = System.Text.Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            var res = ReceiveCancelMatchReqCallback(
+                (string)jObject["ticketId"]);
+
+            return SendCancelMatchAck(sender, res);
+        }
+
+
+        public bool SendCancelMatchAck(ISender sender, ERandomWarsMatchErrorCode errorCode)
+        {
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            return sender.SendHttpResult(json.ToString());
+        }
+
+
+        public delegate bool ReceiveCancelMatchAckDelegate(ERandomWarsMatchErrorCode errorCode);
+        public ReceiveCancelMatchAckDelegate ReceiveCancelMatchAckCallback;
+        public bool ReceiveCancelMatchAck(ISender sender, byte[] msg, int length)
+        {
+            string json = System.Text.Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            return ReceiveCancelMatchAckCallback(
+                (ERandomWarsMatchErrorCode)(int)jObject["errorCode"]);
+        }
+        #endregion
     }
 }

@@ -7,7 +7,12 @@ using Template.Player.RandomWarsPlayer.Common;
 
 namespace Template.Player.RandomWarsPlayer
 {
-    public class RandomWarsPlayerTemplate : RandomWarsPlayerProtocol
+    public partial class RandomWarsPlayerTemplate : RandomWarsPlayerProtocol
     {
+        public RandomWarsPlayerTemplate()
+        {
+            ReceiveEditNameAckCallback = OnEditNameController;
+        }
+
     }
 }

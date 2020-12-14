@@ -207,11 +207,6 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _socketService.Update();
         }
-
-        if (_httpClient != null)
-        {
-            _httpClient.Update();
-        }
     }
 
     public override void OnDestroy()
@@ -585,299 +580,251 @@ public class NetworkManager : Singleton<NetworkManager>
     #endregion
 
 
-    #region http
+    //#region http
 
-    public void AuthUserReq(string userId)
-    {
-        MsgUserAuthReq msg = new MsgUserAuthReq();
-        msg.UserId = userId;
-        _httpSender.AuthUserReq(msg);
-        UnityUtil.Print("SEND AUTH => userid", userId, "green");
-    }
+    //public void AuthUserReq(string userId)
+    //{
+    //    MsgUserAuthReq msg = new MsgUserAuthReq();
+    //    msg.UserId = userId;
+    //    _httpSender.AuthUserReq(msg);
+    //    UnityUtil.Print("SEND AUTH => userid", userId, "green");
+    //}
 
 
-    void OnAuthUserAck(MsgUserAuthAck msg)
-    {
-        if (msg.ErrorCode == GameErrorCode.ERROR_USER_NOT_FOUND)
-        {
-            ObscuredPrefs.SetString("UserKey", string.Empty);
-            ObscuredPrefs.Save();
-            UI_Start.Get().SetTextStatus(string.Empty);
-            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
-            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
-            {
-                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
-                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-                AuthUserReq(string.Empty);
-            });
-            return;
-        }
+    //void OnAuthUserAck(MsgUserAuthAck msg)
+    //{
+    //    if (msg.ErrorCode == GameErrorCode.ERROR_USER_NOT_FOUND)
+    //    {
+    //        ObscuredPrefs.SetString("UserKey", string.Empty);
+    //        ObscuredPrefs.Save();
+    //        UI_Start.Get().SetTextStatus(string.Empty);
+    //        UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
+    //        UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
+    //        {
+    //            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+    //            UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+    //            AuthUserReq(string.Empty);
+    //        });
+    //        return;
+    //    }
         
-        UserInfoManager.Get().SetUserInfo(msg.UserInfo);
-        UserInfoManager.Get().SetDeck(msg.UserDeck);
-        UserInfoManager.Get().SetDice(msg.UserDice);
-        UserInfoManager.Get().SetBox(msg.UserBox);
+    //    UserInfoManager.Get().SetUserInfo(msg.UserInfo);
+    //    UserInfoManager.Get().SetDeck(msg.UserDeck);
+    //    UserInfoManager.Get().SetDice(msg.UserDice);
+    //    UserInfoManager.Get().SetBox(msg.UserBox);
 
-        GameStateManager.Get().UserAuthOK();
-        UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
-    }
-
-
-    public void EditUserNameReq(string userId, string userName, Action<MsgEditUserNameAck> callback)
-    {
-        MsgEditUserNameReq msg = new MsgEditUserNameReq();
-        msg.UserId = userId;
-        msg.UserName = userName;
-        _editUserNameCallback = callback;
-        _httpSender.EditUserNameReq(msg);
-        UnityUtil.Print("SEND EDIT USER NAME => name", userName, "green");
-    }
+    //    GameStateManager.Get().UserAuthOK();
+    //    UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
+    //}
 
 
-    void OnEditUserNameAck(MsgEditUserNameAck msg)
-    {
-        if (_editUserNameCallback != null)
-        {
-            _editUserNameCallback(msg);
-        }
+    //public void EditUserNameReq(string userId, string userName, Action<MsgEditUserNameAck> callback)
+    //{
+    //    MsgEditUserNameReq msg = new MsgEditUserNameReq();
+    //    msg.UserId = userId;
+    //    msg.UserName = userName;
+    //    _editUserNameCallback = callback;
+    //    _httpSender.EditUserNameReq(msg);
+    //    UnityUtil.Print("SEND EDIT USER NAME => name", userName, "green");
+    //}
+
+
+    //void OnEditUserNameAck(MsgEditUserNameAck msg)
+    //{
+    //    if (_editUserNameCallback != null)
+    //    {
+    //        _editUserNameCallback(msg);
+    //    }
         
-        UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
-    }
+    //    UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
+    //}
 
 
-    IEnumerator WaitForMatch()
-    {
-        yield return new WaitForSeconds(1.0f);
-        StatusMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
-    }
+    //IEnumerator WaitForMatch()
+    //{
+    //    yield return new WaitForSeconds(1.0f);
+    //    StatusMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
+    //}
 
     
-    public void StartMatchReq(string userId)
-    {
-        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START 
-            || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
-        {
-            // 매칭 중이면 요청할 수 없다.
-            return;
-        }
-
-        NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
-
-        MsgStartMatchReq msg = new MsgStartMatchReq();
-        msg.UserId = userId;
-        _httpSender.StartMatchReq(msg);
-        UnityUtil.Print("SEND MATCH START => userid", userId, "green");
-    }
-
-
-    void OnStartMatchAck(MsgStartMatchAck msg)
-    {
-        if (string.IsNullOrEmpty(msg.TicketId))
-        {
-            UnityUtil.Print("ticket id null");
-            return;
-        }
-
-        UserInfoManager.Get().SetTicketId(msg.TicketId);
-        UnityUtil.Print("RECV MATCH START => ticketId", msg.TicketId, "green");
-
-        StartCoroutine(WaitForMatch());
-    }
-
-
-    public void StatusMatchReq(string ticketId)
-    {
-        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
-        {
-            // 매칭 중에서 상태 요청을 할 수 있다ㅏ.
-            return;
-        }
-
-
-        MsgStatusMatchReq msg = new MsgStatusMatchReq();
-        msg.UserId = UserInfoManager.Get().GetUserInfo().userID;
-        msg.TicketId = ticketId;
-
-        _httpSender.StatusMatchReq(msg);
-        UnityUtil.Print("SEND MATCH STATUS => ticketid", ticketId, "green");
-    }
-
-
-    void OnStatusMatchAck(MsgStatusMatchAck msg)
-    {
-        if (string.IsNullOrEmpty(msg.PlayerSessionId))
-        {
-            StartCoroutine(WaitForMatch());
-        }
-        else
-        {
-            NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
-
-            // 우선 그냥 배틀로 지정하자
-            ConnectServer(Global.PLAY_TYPE.BATTLE, msg.ServerAddr, msg.Port, msg.PlayerSessionId);
-        }
-        UnityUtil.Print("RECV MATCH STATUS => ", string.Format("server:{0}, player-session-id:{1}", msg.ServerAddr + ":" + msg.Port, msg.PlayerSessionId), "green");
-    }
-
-
-    public void StopMatchReq(string ticketId)
-    {
-        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
-        {
-            return;
-        }
-
-        NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
-        MsgStopMatchReq msg = new MsgStopMatchReq();
-        msg.TicketId = ticketId;
-        _httpSender.StopMatchReq(msg);
-        UnityUtil.Print("SEND MATCH STOP => ticketid", ticketId, "green");
-    }
-
-
-    void OnStopMatchAck(MsgStopMatchAck msg)
-    {
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
-        {
-            UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
-            searchingPopup.ClickSearchingCancelResult();
-        }
-
-        UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
-        UnityUtil.Print("RECV MATCH STOP => ErrorCode", msg.ErrorCode.ToString(), "green");
-    }
-
-
-    public void UpdateDeckReq(string userId, sbyte deckIndex, int[] deckIds)
-    {
-        MsgUpdateDeckReq msg = new MsgUpdateDeckReq();
-        msg.UserId = userId;
-        msg.DeckIndex = deckIndex;
-        msg.DiceIds = deckIds;
-        _httpSender.UpdateDeckReq(msg);
-        UnityUtil.Print("SEND DECK UPDATE => index", string.Format("index:{0}, deck:[{1}]", deckIndex, string.Join(",", deckIds)), "green");
-    }
-
-
-    void OnUpdateDeckAck(MsgUpdateDeckAck msg)
-    {
-        UserInfoManager.Get().GetUserInfo().SetDeck(msg.DeckIndex, msg.DiceIds);
-
-        ED.UI_Panel_Dice panelDice = FindObjectOfType<ED.UI_Panel_Dice>();
-        panelDice.CallBackDeckUpdate();
-        UnityUtil.Print("RECV DECK UPDATE => userid", string.Format("index:{0}, deck:[{1}]", msg.DeckIndex, string.Join(",", msg.DiceIds)), "green");
-    }
-
-
-
-    //public void OpenBoxReq(string userId, int boxId, Action<MsgOpenBoxAck> callback)
+    //public void StartMatchReq(string userId)
     //{
-    //    MsgOpenBoxReq msg = new MsgOpenBoxReq();
-    //    msg.UserId = userId;
-    //    msg.BoxId = boxId;
-    //    _boxOpenCallback = callback;
-    //    _httpSender.OpenBoxReq(msg);
-    //    UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
-    //}
-
-    //void OnOpenBoxAck(MsgOpenBoxAck msg)
-    //{
-    //    if (_boxOpenCallback != null)
+    //    if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START 
+    //        || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
     //    {
-    //        _boxOpenCallback(msg);
+    //        // 매칭 중이면 요청할 수 없다.
+    //        return;
     //    }
-    //    UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+
+    //    NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
+
+    //    MsgStartMatchReq msg = new MsgStartMatchReq();
+    //    msg.UserId = userId;
+    //    _httpSender.StartMatchReq(msg);
+    //    UnityUtil.Print("SEND MATCH START => userid", userId, "green");
+    //}
+
+
+    //void OnStartMatchAck(MsgStartMatchAck msg)
+    //{
+    //    if (string.IsNullOrEmpty(msg.TicketId))
+    //    {
+    //        UnityUtil.Print("ticket id null");
+    //        return;
+    //    }
+
+    //    UserInfoManager.Get().SetTicketId(msg.TicketId);
+    //    UnityUtil.Print("RECV MATCH START => ticketId", msg.TicketId, "green");
+
+    //    StartCoroutine(WaitForMatch());
+    //}
+
+
+    //public void StatusMatchReq(string ticketId)
+    //{
+    //    if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
+    //    {
+    //        // 매칭 중에서 상태 요청을 할 수 있다ㅏ.
+    //        return;
+    //    }
+
+
+    //    MsgStatusMatchReq msg = new MsgStatusMatchReq();
+    //    msg.UserId = UserInfoManager.Get().GetUserInfo().userID;
+    //    msg.TicketId = ticketId;
+
+    //    _httpSender.StatusMatchReq(msg);
+    //    UnityUtil.Print("SEND MATCH STATUS => ticketid", ticketId, "green");
+    //}
+
+
+    //void OnStatusMatchAck(MsgStatusMatchAck msg)
+    //{
+    //    if (string.IsNullOrEmpty(msg.PlayerSessionId))
+    //    {
+    //        StartCoroutine(WaitForMatch());
+    //    }
+    //    else
+    //    {
+    //        NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
+
+    //        // 우선 그냥 배틀로 지정하자
+    //        ConnectServer(Global.PLAY_TYPE.BATTLE, msg.ServerAddr, msg.Port, msg.PlayerSessionId);
+    //    }
+    //    UnityUtil.Print("RECV MATCH STATUS => ", string.Format("server:{0}, player-session-id:{1}", msg.ServerAddr + ":" + msg.Port, msg.PlayerSessionId), "green");
+    //}
+
+
+    //public void StopMatchReq(string ticketId)
+    //{
+    //    if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+    //    {
+    //        return;
+    //    }
+
+    //    NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+    //    MsgStopMatchReq msg = new MsgStopMatchReq();
+    //    msg.TicketId = ticketId;
+    //    _httpSender.StopMatchReq(msg);
+    //    UnityUtil.Print("SEND MATCH STOP => ticketid", ticketId, "green");
+    //}
+
+
+    //void OnStopMatchAck(MsgStopMatchAck msg)
+    //{
+    //    if (msg.ErrorCode == GameErrorCode.SUCCESS)
+    //    {
+    //        UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
+    //        searchingPopup.ClickSearchingCancelResult();
+    //    }
+
+    //    UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    //    UnityUtil.Print("RECV MATCH STOP => ErrorCode", msg.ErrorCode.ToString(), "green");
+    //}
+
+
+    //public void UpdateDeckReq(string userId, sbyte deckIndex, int[] deckIds)
+    //{
+    //    MsgUpdateDeckReq msg = new MsgUpdateDeckReq();
+    //    msg.UserId = userId;
+    //    msg.DeckIndex = deckIndex;
+    //    msg.DiceIds = deckIds;
+    //    _httpSender.UpdateDeckReq(msg);
+    //    UnityUtil.Print("SEND DECK UPDATE => index", string.Format("index:{0}, deck:[{1}]", deckIndex, string.Join(",", deckIds)), "green");
+    //}
+
+
+    //void OnUpdateDeckAck(MsgUpdateDeckAck msg)
+    //{
+    //    UserInfoManager.Get().GetUserInfo().SetDeck(msg.DeckIndex, msg.DiceIds);
+
+    //    ED.UI_Panel_Dice panelDice = FindObjectOfType<ED.UI_Panel_Dice>();
+    //    panelDice.CallBackDeckUpdate();
+    //    UnityUtil.Print("RECV DECK UPDATE => userid", string.Format("index:{0}, deck:[{1}]", msg.DeckIndex, string.Join(",", msg.DiceIds)), "green");
     //}
 
 
 
+    ////public void OpenBoxReq(string userId, int boxId, Action<MsgOpenBoxAck> callback)
+    ////{
+    ////    MsgOpenBoxReq msg = new MsgOpenBoxReq();
+    ////    msg.UserId = userId;
+    ////    msg.BoxId = boxId;
+    ////    _boxOpenCallback = callback;
+    ////    _httpSender.OpenBoxReq(msg);
+    ////    UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
+    ////}
 
-    public void LevelUpDiceReq(string userId, int diceId, Action<MsgLevelUpDiceAck> callback)
-    {
-        MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
-        msg.UserId = userId;
-        msg.DiceId = diceId;
-        _diceLevelUpCallback = callback;
-        _httpSender.LevelUpDiceReq(msg);
-        UnityUtil.Print("SEND LEVELUP DICE => index", string.Format("diceId:{0}", diceId), "green");
-    }
-
-    void OnLevelUpDiceAck(MsgLevelUpDiceAck msg)
-    {
-        if (_diceLevelUpCallback != null)
-        {
-            _diceLevelUpCallback(msg);
-        }
-        UnityUtil.Print("RECV LEVELUP DICE => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
-    }
-
-
-    public void GetRankReq(string userId, Action<MsgGetRankAck> callback)
-    {
-        MsgGetRankReq msg = new MsgGetRankReq();
-        msg.UserId = userId;
-        _getRankCallback = callback;
-        _httpSender.GetRankReq(msg);
-        UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");
-    }
-
-    void OnGetRankAck(MsgGetRankAck msg)
-    {
-        if (_getRankCallback != null)
-        {
-            _getRankCallback(msg);
-        }
-    }
-
-    #endregion
+    ////void OnOpenBoxAck(MsgOpenBoxAck msg)
+    ////{
+    ////    if (_boxOpenCallback != null)
+    ////    {
+    ////        _boxOpenCallback(msg);
+    ////    }
+    ////    UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    ////}
 
 
-    bool OnHttpReceiveLoginAccountAck(ERandomWarsAccountErrorCode errorCode, MsgAccount accountInfo)
-    {
-        if (errorCode == ERandomWarsAccountErrorCode.NOT_FOUND_ACCOUNT)
-        {
-            ObscuredPrefs.SetString("UserKey", string.Empty);
-            ObscuredPrefs.Save();
-            UI_Start.Get().SetTextStatus(string.Empty);
-            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
-            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
-            {
-                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
-                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-                AuthUserReq(string.Empty);
-            });
-            return true;
-        }
-
-        UserInfoManager.Get().SetAccountInfo(accountInfo);
-        GameStateManager.Get().UserAuthOK();
-
-        UnityUtil.Print("RECV AUTH => PlayerGuid", accountInfo.PlayerInfo.PlayerGuid, "green");
-        return true;
-    }
 
 
-    bool OnHttpReceiveOpenBoxAck(ERandomWarsDiceErrorCode errorCode, MsgOpenBoxReward[] rewardInfo)
-    {
-        UI_BoxOpenPopup panelBoxOpen = FindObjectOfType<UI_BoxOpenPopup>();
-        panelBoxOpen.Callback_BoxOpen(rewardInfo);
-        return true;
-    }
+    //public void LevelUpDiceReq(string userId, int diceId, Action<MsgLevelUpDiceAck> callback)
+    //{
+    //    MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
+    //    msg.UserId = userId;
+    //    msg.DiceId = diceId;
+    //    _diceLevelUpCallback = callback;
+    //    _httpSender.LevelUpDiceReq(msg);
+    //    UnityUtil.Print("SEND LEVELUP DICE => index", string.Format("diceId:{0}", diceId), "green");
+    //}
+
+    //void OnLevelUpDiceAck(MsgLevelUpDiceAck msg)
+    //{
+    //    if (_diceLevelUpCallback != null)
+    //    {
+    //        _diceLevelUpCallback(msg);
+    //    }
+    //    UnityUtil.Print("RECV LEVELUP DICE => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    //}
 
 
-    bool OnHttpReceiveUpdateDeckAck(ERandomWarsDiceErrorCode errorCode, int deckIndex, int[] deckInfo)
-    {
+    //public void GetRankReq(string userId, Action<MsgGetRankAck> callback)
+    //{
+    //    MsgGetRankReq msg = new MsgGetRankReq();
+    //    msg.UserId = userId;
+    //    _getRankCallback = callback;
+    //    _httpSender.GetRankReq(msg);
+    //    UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");
+    //}
 
-        return true;
-    }
+    //void OnGetRankAck(MsgGetRankAck msg)
+    //{
+    //    if (_getRankCallback != null)
+    //    {
+    //        _getRankCallback(msg);
+    //    }
+    //}
 
-    bool OnHttpReceiveLevelupDiceAck(ERandomWarsDiceErrorCode errorCode, int diceId, short level, short count, int gold)
-    {
-        ED.UI_Popup_Dice_Info panelDiceInfo = FindObjectOfType<ED.UI_Popup_Dice_Info>();
-        //panelDiceInfo.DiceUpgradeCallback
-        return true;
-    }
-
+    //#endregion
 }
 
 

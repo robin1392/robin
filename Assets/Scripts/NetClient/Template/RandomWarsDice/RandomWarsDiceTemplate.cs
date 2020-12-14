@@ -21,8 +21,8 @@ namespace Template.Item.RandomWarsDice
         public RandomWarsDiceTemplate()
         {
             ReceiveUpdateDeckAckCallback = OnUpdateDeckController;
-            //HttpReceiveLevelupDiceAckCallback = OnLevelupDiceController;
-            //HttpReceiveOpenBoxAckCallback = OnOpenBoxController;
+            ReceiveLevelupDiceAckCallback = OnLevelupDiceController;
+            ReceiveOpenBoxAckCallback = OnOpenBoxController;
         }
     }
 }

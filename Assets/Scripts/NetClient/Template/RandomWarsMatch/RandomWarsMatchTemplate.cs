@@ -8,11 +8,13 @@ using Template.Stage.RandomWarsMatch.Common;
 
 namespace Template.Stage.RandomWarsMatch
 {
-    public class RandomWarsMatchTemplate : RandomWarsMatchProtocol
+    public partial class RandomWarsMatchTemplate : RandomWarsMatchProtocol
     {
         public RandomWarsMatchTemplate()
         {
-            
+            ReceiveRequestMatchAckCallback = OnRequestMatchController;
+            ReceiveStatusMatchAckCallback = OnStatusMatchController;
+            ReceiveCancelMatchAckCallback = OnCancelMatchController;
         }
     }
 }

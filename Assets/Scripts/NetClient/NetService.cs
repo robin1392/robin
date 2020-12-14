@@ -7,7 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using CodeStage.AntiCheat.ObscuredTypes;
+using UnityEngine.Events;
 
 using Service.Net;
 using Template.Account.RandomWarsAccount;
@@ -44,6 +44,8 @@ public class NetService : Singleton<NetService>
     long _playerTimeStampTick;
     long _netClientTokenSerializeTick;
 
+    public Global.E_MATCHSTEP NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
+    public Global.PLAY_TYPE playType;
 
 
     #region unity base
@@ -117,8 +119,8 @@ public class NetService : Singleton<NetService>
 
 
         _httpClient = new HttpClient(
-            "https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
-            //"https://localhost:5001/api",
+            //"https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
+            "http://localhost:5001/api",
             _gameSession);
 
 
@@ -174,8 +176,13 @@ public class NetService : Singleton<NetService>
     }
 
 
-    public void ConnectGameServer()
+    public void ConnectGameServer(Global.PLAY_TYPE playType, string serverAddr, int port, string playerSessionId)
     {
+        NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
+        _serverAddr = serverAddr;
+        _port = port;
+        _playerSessionId = playerSessionId;
+
         _netGameClient.Connect(_serverAddr, _port, _gameSessionId, _playerSessionId, ENetState.Connecting);
     }
 
@@ -255,6 +262,14 @@ public class NetService : Singleton<NetService>
 
     public bool Send(ERandomWarsPlayerProtocol protocolId, params object[] param)
     {
+        switch (protocolId)
+        {
+            case ERandomWarsPlayerProtocol.EDIT_NAME_REQ:
+                {
+                    _randomWarsPlayerTemplate.SendEditNameReq(_httpClient, param[0].ToString(), param[1].ToString());
+                }
+                break;
+        }
         return true;
     }
 
@@ -268,16 +283,16 @@ public class NetService : Singleton<NetService>
                     _randomWarsDiceTemplate.SendUpdateDeckReq(_httpClient, param[0].ToString(), (int)param[1], (int[])param[2]);
                 }
                 break;
-            //case ERandomWarsDiceProtocol.LEVELUP_DICE_REQ:
-            //    {
-            //        _randomWarsDiceTemplate.HttpSendLevelupDiceReq(_httpClient, param[0].ToString(), (int)param[1]);
-            //    }
-            //    break;
-            //case ERandomWarsDiceProtocol.OPEN_BOX_REQ:
-            //    {
-            //        _randomWarsDiceTemplate.HttpSendOpenBoxReq(_httpClient, param[0].ToString(), (int)param[1]);
-            //    }
-            //    break;
+            case ERandomWarsDiceProtocol.LEVELUP_DICE_REQ:
+                {
+                    _randomWarsDiceTemplate.SendLevelupDiceReq(_httpClient, param[0].ToString(), (int)param[1]);
+                }
+                break;
+            case ERandomWarsDiceProtocol.OPEN_BOX_REQ:
+                {
+                    _randomWarsDiceTemplate.SendOpenBoxReq(_httpClient, param[0].ToString(), (int)param[1]);
+                }
+                break;
         }
         return true;
     }
@@ -285,6 +300,52 @@ public class NetService : Singleton<NetService>
 
     public bool Send(ERandomWarsMatchProtocol protocolId, params object[] param)
     {
+        switch (protocolId)
+        {
+            case ERandomWarsMatchProtocol.REQUEST_MATCH_REQ:
+                {
+                    if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START
+                        || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
+                    {
+                        // 매칭 중이면 요청할 수 없다.
+                        break;
+                    }
+
+                    NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
+                    _randomWarsMatchTemplate.SendRequestMatchReq(_httpClient, param[0].ToString());
+                }
+                break;
+            case ERandomWarsMatchProtocol.STATUS_MATCH_REQ:
+                {
+                    if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
+                    {
+                        // 매칭 중에서 상태 요청을 할 수 있다ㅏ.
+                        break;
+                    }
+
+                    _randomWarsMatchTemplate.SendStatusMatchReq(_httpClient, param[0].ToString());
+                }
+                break;
+            case ERandomWarsMatchProtocol.CANCEL_MATCH_REQ:
+                {
+                    if (NetMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
+                    {
+                        break;
+                    }
+
+                    NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
+                    _randomWarsMatchTemplate.SendCancelMatchReq(_httpClient, param[0].ToString());
+                }
+                break;
+            case ERandomWarsMatchProtocol.JOIN_STAGE_REQ:
+                {
+                    _randomWarsMatchTemplate.SendJoinStageReq(_gamePlayer, param[0].ToString(), (int)param[1]);
+                }
+                break;
+        }
+
+        UnityUtil.Print("SEND MATCH STATUS => ", string.Format("protocolId:{0}, params:{1}", protocolId.ToString(), string.Join(", ", param)), "green");
+
         return true;
     }
 

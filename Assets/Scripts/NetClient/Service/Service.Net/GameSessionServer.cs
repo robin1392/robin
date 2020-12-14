@@ -108,7 +108,7 @@ namespace Service.Net
                 return false;
             }
 
-            return _msgController.OnRecevice(msg.Sender as ISender, msg.ProtocolId, msg.Data);
+            return _msgController.OnRecevice(msg.Sender as ISender, msg.ProtocolId, msg.Data, msg.Length);
         }
 
 

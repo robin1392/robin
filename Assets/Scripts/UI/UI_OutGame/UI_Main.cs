@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using Template.Stage.RandomWarsMatch.Common;
+
 
 namespace ED
 {
@@ -177,7 +179,8 @@ namespace ED
                 return;
             }
 
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            //NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            NetService.Get().Send(ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, UserInfoManager.Get().GetUserInfo().playerGuid);
         }
 
         private void ConnectCoop()
@@ -193,7 +196,8 @@ namespace ED
                 return;
             }
 
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            //NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            NetService.Get().Send(ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, UserInfoManager.Get().GetUserInfo().playerGuid);
         }
         
         public void Click_DisconnectButton()

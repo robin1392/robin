@@ -123,7 +123,7 @@ namespace Service.Net
             }
 
             ISender sender = msg.Sender as ISender;
-            return _messageController.OnRecevice(sender, msg.ProtocolId, msg.Data);
+            return _messageController.OnRecevice(sender, msg.ProtocolId, msg.Data, msg.Length);
         }
     }
 }
