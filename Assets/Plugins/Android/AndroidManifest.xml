@@ -4,6 +4,11 @@
   <application>
     <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-9932267989523399~8588618065" />
     <meta-data android:name="applovin.sdk.key" android:value="CR4KmCdD0TUPNE-ARH4HtdfmokMLxvZ8KdS4q5IqZnEx0C5STAkKoO5a6Rw2LTAg6dlxk2mHp-CqAHGdR_zEO3" />
+    <receiver android:exported="true" android:name="com.singular.sdk.SingularInstallReceiver" android:permission="android.permission.INSTALL_PACKAGES">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER"></action>
+      </intent-filter>
+    </receiver>
     <activity android:name="com.unity3d.player.UnityPlayerActivity" android:theme="@style/UnityThemeSelector">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -24,4 +29,6 @@
     <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled" android:value="true" />
     <provider android:name="com.facebook.FacebookContentProvider" android:authorities="com.facebook.app.FacebookContentProvider762586221036786" android:exported="true" />
   </application>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
