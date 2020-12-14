@@ -11,6 +11,7 @@ using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = ED.Debug;
 
 public class UI_BoxOpenPopup : UI_Popup
 {

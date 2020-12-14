@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "767049103433",
+    "project_id": "randomdice-wars-6148e",
+    "storage_bucket": "randomdice-wars-6148e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767049103433:android:a215809ba42ba07173a798",
+        "android_client_info": {
+          "package_name": "com.percent.rdwars"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767049103433-b2hb3c4a1fthleu8pofdabo1d58n4760.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.percent.rdwars",
+            "certificate_hash": "3fd9d63917a3d1ba6d706f11fdb6f703fd81ebf2"
+          }
+        },
+        {
+          "client_id": "767049103433-fugt90jkrupe0q0ei0ehjdgd4o25lnd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0pfz8yxOfKwQs0lROouk5JxJf6_MDXy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767049103433-fugt90jkrupe0q0ei0ehjdgd4o25lnd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

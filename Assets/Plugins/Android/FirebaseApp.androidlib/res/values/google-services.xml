@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_android_client_id,@string/default_web_client_id" xmlns:tools="http://schemas.android.com/tools">
+  <string name="gcm_defaultSenderId" translatable="false">767049103433</string>
+  <string name="google_storage_bucket" translatable="false">randomdice-wars-6148e.appspot.com</string>
+  <string name="project_id" translatable="false">randomdice-wars-6148e</string>
+  <string name="google_api_key" translatable="false">AIzaSyB0pfz8yxOfKwQs0lROouk5JxJf6_MDXy8</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyB0pfz8yxOfKwQs0lROouk5JxJf6_MDXy8</string>
+  <string name="google_app_id" translatable="false">1:767049103433:android:a215809ba42ba07173a798</string>
+  <string name="default_android_client_id" translatable="false">767049103433-b2hb3c4a1fthleu8pofdabo1d58n4760.apps.googleusercontent.com</string>
+  <string name="default_web_client_id" translatable="false">767049103433-fugt90jkrupe0q0ei0ehjdgd4o25lnd8.apps.googleusercontent.com</string>
+</resources>

@@ -2418,26 +2418,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8948819810862951789, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.0740922
-      objectReference: {fileID: 0}
-    - target: {fileID: 8948819810862951789, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.343999
-      objectReference: {fileID: 0}
-    - target: {fileID: 8948819810862951789, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.4245283
-      objectReference: {fileID: 0}
-    - target: {fileID: 8948819810862951791, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
-        type: 3}
-      propertyPath: m_Layer
-      value: 23
-      objectReference: {fileID: 0}
     - target: {fileID: 8948819811013419658, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
         type: 3}
       propertyPath: m_Name
@@ -2498,6 +2478,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8948819812043943772, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
+        type: 3}
+      propertyPath: gradientTexture
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d26ba9c6e87e4f369c2f78182ee3832, type: 3}
 --- !u!20 &8948819812043943767 stripped
@@ -2506,128 +2491,3 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 8948819812043943766}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &8948819812043943768 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8948819810862951786, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
-    type: 3}
-  m_PrefabInstance: {fileID: 8948819812043943766}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8948819812043943769 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8948819810862951791, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
-    type: 3}
-  m_PrefabInstance: {fileID: 8948819812043943766}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8948819812043943770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948819812043943769}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 55abeffb9e82a4e728aef0696f704729, type: 2}
-  isGlobal: 1
-  blendDistance: 0
-  weight: 1
-  priority: 0
---- !u!114 &8948819812043943771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948819812043943769}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volumeTrigger: {fileID: 8948819812043943768}
-  volumeLayer:
-    serializedVersion: 2
-    m_Bits: 8388608
-  stopNaNPropagation: 1
-  finalBlitToCameraTarget: 0
-  antialiasingMode: 0
-  temporalAntialiasing:
-    jitterSpread: 0.75
-    sharpness: 0.25
-    stationaryBlending: 0.95
-    motionBlending: 0.85
-  subpixelMorphologicalAntialiasing:
-    quality: 2
-  fastApproximateAntialiasing:
-    fastMode: 0
-    keepAlpha: 0
-  fog:
-    enabled: 1
-    excludeSkybox: 1
-  debugLayer:
-    lightMeter:
-      width: 512
-      height: 256
-      showCurves: 1
-    histogram:
-      width: 512
-      height: 256
-      channel: 3
-    waveform:
-      exposure: 0.12
-      height: 256
-    vectorscope:
-      size: 256
-      exposure: 0.12
-    overlaySettings:
-      linearDepth: 0
-      motionColorIntensity: 4
-      motionGridSize: 64
-      colorBlindnessType: 0
-      colorBlindnessStrength: 1
-  m_Resources: {fileID: 11400000, guid: d82512f9c8e5d4a4d938b575d47f88d4, type: 2}
-  m_ShowToolkit: 0
-  m_ShowCustomSorter: 0
-  breakBeforeColorGrading: 0
-  m_BeforeTransparentBundles: []
-  m_BeforeStackBundles: []
-  m_AfterStackBundles: []
---- !u!114 &8948819812043943772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948819812043943769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7d75a7a1e2fb401bb98f2bd9723a119, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blendMode: 0
-  blendIntensity: 0.775
-  vignetteIntensity: 0.579
-  vignetteMaxValue: 0.771
-  gradientTexture: {fileID: 0}
-  material: {fileID: 2100000, guid: 22b440eb0cb3745a8ab862bf24878003, type: 2}
---- !u!114 &8948819812043943773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948819812043943769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61d30c51d6e8f479e9a211b3aba23641, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bloomColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
-  threshold: 1.5
-  intensity: 0.205
-  resolution: 1
-  blurIterations: 1
-  material: {fileID: 2100000, guid: 050512b117c564ce78f612046b53b2d1, type: 2}

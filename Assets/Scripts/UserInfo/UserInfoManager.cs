@@ -61,6 +61,11 @@ public class UserInfo
 
     public int[] GetActiveDeck => arrDeck[activateDeckIndex];
 
+    /// <summary>
+    /// second array
+    /// 0 = dice level
+    /// 1 = dice count
+    /// </summary>
     public Dictionary<int, int[]> dicGettedDice
     {
         get;

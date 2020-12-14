@@ -427,8 +427,9 @@ namespace ED
         {
             if (m == null || m.isAlive == false) return;
 
-                controller.AttackEnemyMinionOrMagic(m.UID, m.id, power * factor, delay);
-                //controller.AttackEnemyMinion(m.id, power * factor, delay);
+            controller.AttackEnemyMinionOrMagic(m.UID, m.id, power * factor, delay);
+            //controller.AttackEnemyMinion(m.id, power * factor, delay);
+            controller.SetMaxDamageWithDiceID(diceId, power * factor);
         }
 
         public void Push(Vector3 dir, float pushPower)
