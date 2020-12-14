@@ -88,9 +88,12 @@ namespace ED
             get => _arrUpgradeLevel;
             protected set => _arrUpgradeLevel = value;
         }
-        
+
+        private Dictionary<int, float> _dicMaxDamage = new Dictionary<int, float>();
+        private Dictionary<int, int> _dicMaxEye = new Dictionary<int, int>();
+
         #endregion
-        
+
         #region game variable
         public int spUpgradeLevel
         {
@@ -248,6 +251,12 @@ namespace ED
             //
             //StartCoroutine(SyncMinionStatus());
             StartSyncMinion();
+
+            for(int i = 0; i < arrDiceDeck.Length; i++)
+            {
+                _dicMaxDamage.Add(arrDiceDeck[i].id, 0f);
+                _dicMaxEye.Add(arrDiceDeck[i].id, 0);
+            }
         }
         
         protected override void SetColor(E_MaterialType type)
@@ -1141,6 +1150,56 @@ namespace ED
                 {
                     InGameManager.Get().EndGame(!isMine, 1, null, null, null);
                 }
+                else
+                {
+                    SendEventLog_BatCheck();
+                }
+            }
+        }
+
+        private void SendEventLog_BatCheck()
+        {
+            var param = new Firebase.Analytics.Parameter[25];
+            for(int i = 0; i < arrDiceDeck.Length; i++)
+            {
+                int diceID = arrDiceDeck[i].id;
+                param[i * 5] = new Firebase.Analytics.Parameter($"dice{i + 1}_id", diceID);
+                param[i * 5 + 1] = new Firebase.Analytics.Parameter($"dice{i + 1}_level", UserInfoManager.Get().GetUserInfo().dicGettedDice[diceID][0]);
+                param[i * 5 + 2] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_eye", _dicMaxEye[diceID]);
+                param[i * 5 + 3] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_upgrade", arrUpgradeLevel[i]);
+                param[i * 5 + 4] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_damage", _dicMaxDamage[diceID]);
+            }
+
+            FirebaseManager.Get().LogEvent("bat_check", param);
+        }
+
+        public void SetMaxDamageWithDiceID(int diceID, float damage)
+        {
+            if (_dicMaxDamage.ContainsKey(diceID))
+            {
+                if (_dicMaxDamage[diceID] < damage)
+                {
+                    _dicMaxDamage[diceID] = damage;
+                }
+            }
+            else
+            {
+                _dicMaxDamage.Add(diceID, damage);
+            }
+        }
+
+        public void SetMaxEyeWithDiceID(int diceID, int eye)
+        {
+            if(_dicMaxEye.ContainsKey(diceID))
+            {
+                if(_dicMaxEye[diceID] < eye)
+                {
+                    _dicMaxEye[diceID] = eye;
+                }
+            }
+            else
+            {
+                _dicMaxEye.Add(diceID, eye);
             }
         }
 

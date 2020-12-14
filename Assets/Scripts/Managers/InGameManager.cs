@@ -1444,6 +1444,7 @@ namespace ED
                 {
                     MsgMergeDiceAck lvupDiceack = (MsgMergeDiceAck) param[0];
                     playerController.LevelUpDice(lvupDiceack.ResetFieldNum, lvupDiceack.LeveupFieldNum, lvupDiceack.LevelupDiceId, lvupDiceack.Level);
+                    playerController.SetMaxEyeWithDiceID(lvupDiceack.LevelupDiceId, lvupDiceack.Level - 1);
 
                     break;
                 }
