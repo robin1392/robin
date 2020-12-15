@@ -6,16 +6,16 @@ using JSONOBJECT;
 
 public class LangKOData
 {
-	public string stirngKey = "";
+	public int id = 0;
 	public string textDesc = "";
 
 }
 
 public class LangKO
 {
-    public Dictionary<string, LangKOData> dicData = new Dictionary<string, LangKOData>();
+    public Dictionary<int, LangKOData> dicData = new Dictionary<int, LangKOData>();
 
-    public LangKOData GetData(string key)
+    public LangKOData GetData(int key)
     {
         if (dicData.ContainsKey(key))
             return dicData[key];
@@ -24,7 +24,7 @@ public class LangKO
         return null;
     }
     
-    public bool IsContainKey(string key)
+    public bool IsContainKey(int key)
     {
         return dicData.ContainsKey(key);
     }
@@ -42,11 +42,11 @@ public class LangKO
         {
             LangKOData info = new LangKOData();
 
-			info.stirngKey = (string)JsonDataParse.GetParseData(info.stirngKey.GetType(), jsonData[i]["stirngKey"].ToString());
+			info.id = (int)JsonDataParse.GetParseData(info.id.GetType(), jsonData[i]["id"].ToString());
 			info.textDesc = (string)JsonDataParse.GetParseData(info.textDesc.GetType(), jsonData[i]["textDesc"].ToString());
 
             
-            dicData.Add(info.stirngKey , info);
+            dicData.Add(info.id , info);
         }
         
         if(callBack != null)

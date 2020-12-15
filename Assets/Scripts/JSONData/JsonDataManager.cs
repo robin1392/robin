@@ -21,18 +21,18 @@ public class JsonDataManager : MonoBehaviour
     }
     
     // load class count
-	public int loadMaxCount = 4;
+	public int loadMaxCount = 3;
     
     
     // json data
 	public DiceInfo dataDiceInfo = null;
 	public LangKO dataLangKO = null;
 	public LangEN dataLangEN = null;
-	public ErrorMessageKO dataErrorMessageKO = null;
     public BoxInfo dataBoxInfo = null;
     public DiceLevelUpInfo dataDiceLevelUpInfo = null;
     public GlobalDataInfo dataGlobalDataInfo = null;
     public BossInfo dataBossInfo = null;
+
 
     //
     public void LoadJsonData(string filePath , Action<string> callBack = null)
@@ -40,26 +40,44 @@ public class JsonDataManager : MonoBehaviour
 		dataDiceInfo = new DiceInfo(filePath , callBack);
 		dataLangKO = new LangKO(filePath , callBack);
 		dataLangEN = new LangEN(filePath , callBack);
-		dataErrorMessageKO = new ErrorMessageKO(filePath , callBack);
         dataBoxInfo = new BoxInfo(filePath, callBack);
         dataDiceLevelUpInfo = new DiceLevelUpInfo(filePath, callBack);
         dataGlobalDataInfo = new GlobalDataInfo(filePath, callBack);
         dataBossInfo = new BossInfo(filePath, callBack);
-
     }
 
     //
     public void DestroyJsonData()
     {
-		dataDiceInfo.DestroyData();
-		dataDiceInfo = null;
-		dataLangKO.DestroyData();
-		dataLangKO = null;
-		dataLangEN.DestroyData();
-		dataLangEN = null;
-		dataErrorMessageKO.DestroyData();
-		dataErrorMessageKO = null;
+	    if (dataDiceInfo != null)
+	    {
+		    dataDiceInfo.DestroyData();
+		    dataDiceInfo = null;
+	    }
 
+	    if (dataLangKO != null)
+	    {
+		    dataLangKO.DestroyData();
+		    dataLangKO = null;
+	    }
+
+	    if (dataLangEN != null)
+	    {
+		    dataLangEN.DestroyData();
+		    dataLangEN = null;
+	    }
+
+        if (dataBoxInfo != null)
+        {
+            dataBoxInfo.DestroyData();
+            dataBoxInfo = null;
+        }
+
+        if (dataBossInfo != null)
+        {
+            dataBossInfo.DestroyData();
+            dataBossInfo = null;
+        }
     }
 
 }

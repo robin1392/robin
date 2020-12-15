@@ -97,11 +97,11 @@ SpriteAtlas:
   - dice_berserker
   - dice_iceball
   - dice_stoneball
-  - dice_RageOfTower
+  - dice_razyoftower
   - dice_sinzed
   - dice_sniper
   - dice_necromancer
-  - dice_sword
+  - dice_knight
   - dice_magician
   - dice_pip
   - dice_invincibility
@@ -117,11 +117,11 @@ SpriteAtlas:
   - dice_zombie
   - dice_flagofwar
   - dice_bomber
-  - dice_healing
+  - dice_healer
   - dice_golem
   - dice_mortar
-  - dice_fire
-  - dice_dagger
+  - dice_fireball
+  - dice_zergling
   - dice_posu
   - dice_fireman
   - dice_race
@@ -131,7 +131,7 @@ SpriteAtlas:
   - dice_lightningrod
   - dice_support
   - dice_mine
-  - dice_bow
+  - dice_ranger
   - dice_raider
   - dice_goliath
   m_Tag: atlas_dice

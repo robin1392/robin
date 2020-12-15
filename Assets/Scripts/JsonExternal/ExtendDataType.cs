@@ -277,7 +277,7 @@ public class JsonDataParse
         }
         else if (type == typeof(List<int>))
         {
-            string[] values = cutString.Split(',');
+            string[] values = cutString.Split('|');
             List<int> retList = new List<int>();
             for (int i = 0; i < values.Length; i++)
             {
@@ -287,7 +287,7 @@ public class JsonDataParse
         }
         else if (type == typeof(List<long>))
         {
-            string[] values = cutString.Split(',');
+            string[] values = cutString.Split('|');
             List<long> retList = new List<long>();
             for (int i = 0; i < values.Length; i++)
             {
@@ -297,7 +297,7 @@ public class JsonDataParse
         }
         else if (type == typeof(List<string>))
         {
-            string[] values = cutString.Split(',');
+            string[] values = cutString.Split('|');
             List<string> retList = new List<string>();
             for (int i = 0; i < values.Length; i++)
             {
@@ -307,7 +307,7 @@ public class JsonDataParse
         }
         else if (type == typeof(List<float>))
         {
-            string[] values = cutString.Split(',');
+            string[] values = cutString.Split('|');
             List<float> retList = new List<float>();
             for (int i = 0; i < values.Length; i++)
             {
@@ -317,7 +317,7 @@ public class JsonDataParse
         }
         else if (type == typeof(List<bool>))
         {
-            string[] values = cutString.Split(',');
+            string[] values = cutString.Split('|');
             List<bool> retList = new List<bool>();
             for (int i = 0; i < values.Length; i++)
             {

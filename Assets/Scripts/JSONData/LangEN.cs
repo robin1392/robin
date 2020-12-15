@@ -6,7 +6,7 @@ using JSONOBJECT;
 
 public class LangENData
 {
-	public int stirngKey = 0;
+	public int id = 0;
 	public string textDesc = "";
 
 }
@@ -42,11 +42,11 @@ public class LangEN
         {
             LangENData info = new LangENData();
 
-			info.stirngKey = (int)JsonDataParse.GetParseData(info.stirngKey.GetType(), jsonData[i]["stirngKey"].ToString());
+			info.id = (int)JsonDataParse.GetParseData(info.id.GetType(), jsonData[i]["id"].ToString());
 			info.textDesc = (string)JsonDataParse.GetParseData(info.textDesc.GetType(), jsonData[i]["textDesc"].ToString());
 
             
-            dicData.Add(info.stirngKey , info);
+            dicData.Add(info.id , info);
         }
         
         if(callBack != null)
