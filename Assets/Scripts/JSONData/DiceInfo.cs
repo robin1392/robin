@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using JSONOBJECT;
 
 public class DiceInfoData
 {
@@ -36,6 +35,7 @@ public class DiceInfoData
 	public float moveSpeed = 0.0f;
 	public float range = 0.0f;
 	public float searchRange = 0.0f;
+	public int skillindex = 0;
 
 }
 
@@ -100,6 +100,7 @@ public class DiceInfo
 			info.moveSpeed = (float)JsonDataParse.GetParseData(info.moveSpeed.GetType(), jsonData[i]["moveSpeed"].ToString());
 			info.range = (float)JsonDataParse.GetParseData(info.range.GetType(), jsonData[i]["range"].ToString());
 			info.searchRange = (float)JsonDataParse.GetParseData(info.searchRange.GetType(), jsonData[i]["searchRange"].ToString());
+			info.skillindex = (int)JsonDataParse.GetParseData(info.skillindex.GetType(), jsonData[i]["skillindex"].ToString());
 
             
             dicData.Add(info.id , info);
