@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:767049103433:android:a215809ba42ba07173a798",
+        "mobilesdk_app_id": "1:767049103433:android:be6074fd1ea243a473a798",
         "android_client_info": {
-          "package_name": "com.percent.rdwars"
+          "package_name": "com.percent.aos.randomdicewars"
         }
       },
       "oauth_client": [
         {
-          "client_id": "767049103433-b2hb3c4a1fthleu8pofdabo1d58n4760.apps.googleusercontent.com",
+          "client_id": "767049103433-jghdhfkqitv3pput3h90plopq3qac19k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.percent.rdwars",
+            "package_name": "com.percent.aos.randomdicewars",
             "certificate_hash": "3fd9d63917a3d1ba6d706f11fdb6f703fd81ebf2"
           }
         },
