@@ -988,6 +988,8 @@ namespace ED
         {
             yield return new WaitForSeconds(4f);
 
+            playerController.SendEventLog_BatCheck();
+
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
 
             SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);

@@ -1150,10 +1150,6 @@ namespace ED
                 {
                     InGameManager.Get().EndGame(!isMine, 1, null, null, null);
                 }
-                else
-                {
-                    SendEventLog_BatCheck();
-                }
             }
         }
 
