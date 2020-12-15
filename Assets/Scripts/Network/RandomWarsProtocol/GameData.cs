@@ -1819,6 +1819,8 @@ namespace RandomWarsProtocol
     {
         public byte SlotIndex;
         public ushort DiceId;
+        public short DiceLevel;
+        public short DiceInGameUp;
         public ushort[] Id;
         
 
@@ -1826,6 +1828,8 @@ namespace RandomWarsProtocol
         {
             bw.Write(SlotIndex);
             bw.Write(DiceId);
+            bw.Write(DiceLevel);
+            bw.Write(DiceInGameUp);
 
             bw.Write(Id.Length);
             byte[] bytes = new byte[Id.Length * sizeof(ushort)];
@@ -1838,6 +1842,8 @@ namespace RandomWarsProtocol
             MsgSpawnMinion data = new MsgSpawnMinion();
             data.SlotIndex = br.ReadByte();
             data.DiceId = br.ReadUInt16();
+            data.DiceLevel = br.ReadInt16();
+            data.DiceInGameUp = br.ReadInt16();
 
             int length = br.ReadInt32();
             byte[] bytes = br.ReadBytes(length * sizeof(ushort));
