@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using JSONOBJECT;
 
 public class LangENData
 {
-	public int id = 0;
+	public int stirngKey = 0;
 	public string textDesc = "";
 
 }
@@ -42,11 +41,11 @@ public class LangEN
         {
             LangENData info = new LangENData();
 
-			info.id = (int)JsonDataParse.GetParseData(info.id.GetType(), jsonData[i]["id"].ToString());
+			info.stirngKey = (int)JsonDataParse.GetParseData(info.stirngKey.GetType(), jsonData[i]["stirngKey"].ToString());
 			info.textDesc = (string)JsonDataParse.GetParseData(info.textDesc.GetType(), jsonData[i]["textDesc"].ToString());
 
             
-            dicData.Add(info.id , info);
+            dicData.Add(info.stirngKey , info);
         }
         
         if(callBack != null)

@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using JSONOBJECT;
 
 public class LangKOData
 {
-	public int id = 0;
+	public string stirngKey = "";
 	public string textDesc = "";
 
 }
 
 public class LangKO
 {
-    public Dictionary<int, LangKOData> dicData = new Dictionary<int, LangKOData>();
+    public Dictionary<string, LangKOData> dicData = new Dictionary<string, LangKOData>();
 
-    public LangKOData GetData(int key)
+    public LangKOData GetData(string key)
     {
         if (dicData.ContainsKey(key))
             return dicData[key];
@@ -24,7 +23,7 @@ public class LangKO
         return null;
     }
     
-    public bool IsContainKey(int key)
+    public bool IsContainKey(string key)
     {
         return dicData.ContainsKey(key);
     }
@@ -42,11 +41,11 @@ public class LangKO
         {
             LangKOData info = new LangKOData();
 
-			info.id = (int)JsonDataParse.GetParseData(info.id.GetType(), jsonData[i]["id"].ToString());
+			info.stirngKey = (string)JsonDataParse.GetParseData(info.stirngKey.GetType(), jsonData[i]["stirngKey"].ToString());
 			info.textDesc = (string)JsonDataParse.GetParseData(info.textDesc.GetType(), jsonData[i]["textDesc"].ToString());
 
             
-            dicData.Add(info.id , info);
+            dicData.Add(info.stirngKey , info);
         }
         
         if(callBack != null)
