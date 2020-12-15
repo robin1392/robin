@@ -41,7 +41,7 @@ public class UI_Popup_Userinfo : UI_Popup
 
     public void Click_EditNickname()
     {
-        NetService.Get().Send(ERandomWarsPlayerProtocol.EDIT_NAME_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, input_Nickname.text);
+        NetService.Get().GameSession.Send(ERandomWarsPlayerProtocol.EDIT_NAME_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, input_Nickname.text);
         //NetworkManager.Get().EditUserNameReq(UserInfoManager.Get().GetUserInfo().userID, input_Nickname.text, EditNicknameCallback);
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);

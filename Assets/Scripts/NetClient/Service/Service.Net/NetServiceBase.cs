@@ -19,14 +19,14 @@ namespace Service.Net
         protected ObjectPool<NetSocketAsyncEventArgs> _sendEventAragePool;
 
         // 게임 세션 목록
-        Dictionary<string, GameSession> _gameSessions;
+        protected GameSession _gameSession;
+
 
 
         public NetServiceBase()
         {
             _receiveEventAragePool = new ObjectPool<NetSocketAsyncEventArgs>();
             _sendEventAragePool = new ObjectPool<NetSocketAsyncEventArgs>();
-            _gameSessions = new Dictionary<string, GameSession>();
         }
 
 
@@ -61,10 +61,16 @@ namespace Service.Net
 
         public virtual void Update() 
         {
-            foreach (var elem in _gameSessions)
+            if (_gameSession != null)
             {
-                elem.Value.Update();
+                _gameSession.Update();
             }
+        }
+
+
+        public void SetGameSession(GameSession gameSession)
+        {
+            _gameSession = gameSession;
         }
 
 
@@ -147,52 +153,12 @@ namespace Service.Net
             return false;
         }
 
-        // 게임 세션 추가
-        public bool AddGameSession(GameSession gameSession)
-        {
-            lock (_gameSessions)
-            {
-                if (_gameSessions.ContainsKey(gameSession.Id) == true)
-                {
-                    return false;
-                }
 
-                _gameSessions.Add(gameSession.Id, gameSession);
-            }
-            
-            return true;
-        }
-
-
-        // 게임 세션 삭제
-        public bool RemoveGameSession(string id)
-        {
-            return true;
-        }
-
-
-        // 게임 세션 검색
-        public GameSession GetGameSession(string id)
-        {
-            lock (_gameSessions)
-            {
-                GameSession value;
-                if (_gameSessions.TryGetValue(id, out value) == false)
-                {
-                    return null;
-                }
-
-                return value;
-            }
-        }
-
-
-        public void SendNetAuthSessionReq(ClientSession clientSession, string gameSessionId)
+        public void SendNetAuthSessionReq(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, gameSessionId);
                 bf.Serialize(ms, clientSession.Id);
                 bf.Serialize(ms, (byte)clientSession.NetState);
                 clientSession.Send((int)ENetProtocol.AUTH_SESSION_REQ,
@@ -201,12 +167,11 @@ namespace Service.Net
             }
         }
 
-        public void SendNetAuthSessionAck(ClientSession clientSession, string gameSessionId)
+        public void SendNetAuthSessionAck(ClientSession clientSession)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, gameSessionId);
                 bf.Serialize(ms, clientSession.Id);
                 bf.Serialize(ms, (byte)clientSession.NetState);
                 bf.Serialize(ms, (short)clientSession.SessionState);

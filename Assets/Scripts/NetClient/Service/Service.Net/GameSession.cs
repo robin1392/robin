@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Service.Core;
 
 namespace Service.Net 
 {
@@ -30,26 +31,23 @@ namespace Service.Net
 
     public class GameSessionConfig
     {
+        public ILogger Logger { get; set;}
         public string Id { get; set;}
-        public string ServerAddr { get; set;}
-        public int Port { get; set;}
         public int MessageQueueCapacity { get; set;}
         public int MessageBufferSize { get; set;}
-        public MessageController MsgController { get; set;}
     }
 
 
     public class GameSession
     {
         public string Id { get; private set; }
-        public string ServerAddr { get; private set;}
-        public int Port { get; private set;}
-
+        protected MessageController _messageController;
         protected List<Peer> _peers;
 
 
         public GameSession()
         {
+            _messageController = new MessageController();
             _peers = new List<Peer>();
         }
 
@@ -57,8 +55,6 @@ namespace Service.Net
         public virtual void Init(GameSessionConfig config)
         {
             Id = config.Id;
-            ServerAddr = config.ServerAddr;
-            Port = config.Port;
             _peers.Clear();
         }
 

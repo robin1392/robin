@@ -175,12 +175,12 @@ namespace ED
             
             if (NetworkManager.Get().UseLocalServer == true)
             {
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
+                NetService.Get().ConnectGameServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
                 return;
             }
 
             //NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
-            NetService.Get().Send(ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, UserInfoManager.Get().GetUserInfo().playerGuid);
+            NetService.Get().GameSession.Send(ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, UserInfoManager.Get().GetUserInfo().playerGuid);
         }
 
         private void ConnectCoop()
@@ -197,7 +197,7 @@ namespace ED
             }
 
             //NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
-            NetService.Get().Send(ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, UserInfoManager.Get().GetUserInfo().playerGuid);
+            NetService.Get().GameSession.Send(ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, UserInfoManager.Get().GetUserInfo().playerGuid);
         }
         
         public void Click_DisconnectButton()

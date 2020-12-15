@@ -183,7 +183,7 @@ public class UI_BoxOpenPopup : UI_Popup
 
     public void Click_Open()
     {
-        NetService.Get().Send(ERandomWarsDiceProtocol.OPEN_BOX_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, boxID);
+        NetService.Get().GameSession.Send(ERandomWarsDiceProtocol.OPEN_BOX_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, boxID);
         //SetShowItems();
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);

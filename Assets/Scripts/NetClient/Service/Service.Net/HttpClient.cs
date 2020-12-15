@@ -127,16 +127,14 @@ namespace Service.Net
                 tempJson = tempJson.Replace("}\\\"", "}");
                 tempJson = tempJson.Replace("\"{", "{");
                 tempJson = tempJson.Replace("}\"", "}");
-                tempJson = tempJson.Replace("\"[", "[");
-                tempJson = tempJson.Replace("]\"", "]");
                 tempJson = tempJson.Replace("\\\\\\\"", "\"");
                 tempJson = tempJson.Replace("\\\"", "\"");
 
 
-                byte[] ackBytes = Encoding.UTF8.GetBytes(tempJson);
+                byte[] ackBytes = Encoding.UTF8.GetBytes(tempJson); 
                 _gameSession.PushExternalMessage(
                     this,
-                    protocolId + 1,
+                    protocolId + 1, 
                     ackBytes,
                     ackBytes.Length);
 

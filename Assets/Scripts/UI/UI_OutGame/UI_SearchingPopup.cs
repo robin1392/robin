@@ -52,7 +52,7 @@ public class UI_SearchingPopup : UI_Popup
                 btn_Cancel.interactable = false;
                 // 매칭 요청중이면 중단을 요청한다.
                 //NetworkManager.Get().StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
-                NetService.Get().Send(Template.Stage.RandomWarsMatch.Common.ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, UserInfoManager.Get().GetUserInfo().ticketId);
+                NetService.Get().GameSession.Send(Template.Stage.RandomWarsMatch.Common.ERandomWarsMatchProtocol.CANCEL_MATCH_REQ, UserInfoManager.Get().GetUserInfo().ticketId);
             }
             else if (NetService.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
             {

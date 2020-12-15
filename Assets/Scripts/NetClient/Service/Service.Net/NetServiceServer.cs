@@ -186,13 +186,11 @@ namespace Service.Net
             {
                 case ENetProtocol.AUTH_SESSION_REQ:
                     {
-                        string gameSessionId = string.Empty;
                         string clientSessionId = string.Empty;
                         ENetState clientNetState = ENetState.End;
                         var bf = new BinaryFormatter();
                         using (var ms = new MemoryStream(msg))
                         {
-                            gameSessionId = (string)bf.Deserialize(ms);
                             clientSessionId = (string)bf.Deserialize(ms);
                             clientNetState = (ENetState)(byte)bf.Deserialize(ms);
                         }
@@ -209,11 +207,11 @@ namespace Service.Net
 
 
                         // 게임 세션 
-                        clientSession.GameSession = GetGameSession(gameSessionId);
+                        clientSession.GameSession = _gameSession;
                         if (clientSession.GameSession == null)
                         {
                             // 세션 인증 실패
-                            SendNetAuthSessionAck(clientSession, gameSessionId);
+                            SendNetAuthSessionAck(clientSession);
                             break;
                         }
 
@@ -245,7 +243,7 @@ namespace Service.Net
                                 clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.RECONNECT_CLIENT, null, 0);
                             }
                             
-                            SendNetAuthSessionAck(clientSession, gameSessionId);
+                            SendNetAuthSessionAck(clientSession);
                         }
                         else
                         {
@@ -354,7 +352,7 @@ namespace Service.Net
                 clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.RECONNECT_CLIENT, null, 0);
             }
 
-            SendNetAuthSessionAck(clientSession, clientSession.GameSession.Id);
+            SendNetAuthSessionAck(clientSession);
             return true;
         }
 

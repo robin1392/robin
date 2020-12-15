@@ -156,7 +156,7 @@ namespace ED
 
         public void Click_Upgrade()
         {
-            NetService.Get().Send(ERandomWarsDiceProtocol.LEVELUP_DICE_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, data.id);
+            NetService.Get().GameSession.Send(ERandomWarsDiceProtocol.LEVELUP_DICE_REQ, UserInfoManager.Get().GetUserInfo().playerGuid, data.id);
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
 

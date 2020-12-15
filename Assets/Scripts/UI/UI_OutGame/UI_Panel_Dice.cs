@@ -259,7 +259,7 @@ namespace ED
                 //
                 if (WebPacket.Get() != null)
                 {
-                    NetService.Get().Send(ERandomWarsDiceProtocol.UPDATE_DECK_REQ,
+                    NetService.Get().GameSession.Send(ERandomWarsDiceProtocol.UPDATE_DECK_REQ,
                         UserInfoManager.Get().GetUserInfo().playerGuid,
                         active,
                         intDeck);

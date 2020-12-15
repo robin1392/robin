@@ -24,7 +24,7 @@ namespace Template.Stage.RandomWarsMatch
             UserInfoManager.Get().SetTicketId(ticketId);
             UnityUtil.Print("RECV MATCH START => ticketId", ticketId, "green");
 
-            NetService.Get().Send(ERandomWarsMatchProtocol.STATUS_MATCH_REQ, ticketId);
+            NetService.Get().GameSession.Send(ERandomWarsMatchProtocol.STATUS_MATCH_REQ, ticketId);
             return true;
 
         }
@@ -34,7 +34,7 @@ namespace Template.Stage.RandomWarsMatch
         {
             if (string.IsNullOrEmpty(PlayerSessionId))
             {
-                Task.Delay(1000).ContinueWith(t => NetService.Get().Send(ERandomWarsMatchProtocol.STATUS_MATCH_REQ, UserInfoManager.Get().GetUserInfo().ticketId));
+                Task.Delay(1000).ContinueWith(t => NetService.Get().GameSession.Send(ERandomWarsMatchProtocol.STATUS_MATCH_REQ, UserInfoManager.Get().GetUserInfo().ticketId));
             }
             else
             {

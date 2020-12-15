@@ -255,7 +255,7 @@ public class GameStateManager : Singleton<GameStateManager>
             if (NetworkManager.Get().UserId.Length > 0)
             {
                 //NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
-                NetService.Get().Send(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, 
+                NetService.Get().GameSession.Send(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, 
                     NetworkManager.Get().UserId, 
                     Template.Account.RandomWarsAccount.Common.EPlatformType.GUEST);
 
@@ -263,7 +263,7 @@ public class GameStateManager : Singleton<GameStateManager>
             else
             {
                 string userid = UserInfoManager.Get().GetUserInfo().userID;
-                NetService.Get().Send(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, userid, Template.Account.RandomWarsAccount.Common.EPlatformType.GUEST);
+                NetService.Get().GameSession.Send(Template.Account.RandomWarsAccount.Common.ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, userid, Template.Account.RandomWarsAccount.Common.EPlatformType.GUEST);
                 //NetworkManager.Get().AuthUserReq(userid);
             }
         }

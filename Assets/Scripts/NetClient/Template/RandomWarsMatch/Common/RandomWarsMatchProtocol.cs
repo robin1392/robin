@@ -10,7 +10,10 @@ namespace Template.Stage.RandomWarsMatch.Common
     public enum ERandomWarsMatchProtocol
     {
         BEGIN = 4000000,
-
+        
+        // -------------------------------------------------------------------------
+        // C/S protocols
+        // -------------------------------------------------------------------------
         REQUEST_MATCH_REQ,
         REQUEST_MATCH_ACK,
         REQUEST_MATCH_NOTIFY,
@@ -23,9 +26,34 @@ namespace Template.Stage.RandomWarsMatch.Common
         CANCEL_MATCH_ACK,
         CANCEL_MATCH_NOTIFY,
 
-        JOIN_STAGE_REQ,
-        JOIN_STAGE_ACK,
-        JOIN_STAGE_NOTIFY,
+        JOIN_MATCH_REQ,
+        JOIN_MATCH_ACK,
+        JOIN_MATCH_NOTIFY,
+
+        READY_MATCH_REQ,
+        READY_MATCH_ACK,
+        READY_MATCH_NOTIFY,
+
+        LEAVE_MATCH_REQ,
+        LEAVE_MATCH_ACK,
+        LEAVE_MATCH_NOTIFY,
+
+        HIT_DAMAGE_REQ,
+        HIT_DAMAGE_ACK,
+        HIT_DAMAGE_NOTIFY,
+
+        UPGRADE_SP_REQ,
+        UPGRADE_SP_ACK,
+        UPGRADE_SP_NOTIFY,
+        
+
+        // -------------------------------------------------------------------------
+        // Notify protocols
+        // -------------------------------------------------------------------------
+        ADD_SP_NOTIFY,
+        SPAWN_NOTIFY,
+        END_GAME_NOTIFY,
+        MONSTER_SPAWN_NOTIFY,
 
 
         END
@@ -37,8 +65,8 @@ namespace Template.Stage.RandomWarsMatch.Common
         {
             MessageControllers = new Dictionary<int, ControllerDelegate>
             {
-                {(int)ERandomWarsMatchProtocol.JOIN_STAGE_REQ, ReceiveJoinStageReq},
-                {(int)ERandomWarsMatchProtocol.JOIN_STAGE_ACK, ReceiveJoinStageAck},
+                {(int)ERandomWarsMatchProtocol.JOIN_MATCH_REQ, ReceiveJoinMatchReq},
+                {(int)ERandomWarsMatchProtocol.JOIN_MATCH_ACK, ReceiveJoinMatchAck},
                 {(int)ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, ReceiveRequestMatchReq},
                 {(int)ERandomWarsMatchProtocol.REQUEST_MATCH_ACK, ReceiveRequestMatchAck},
                 {(int)ERandomWarsMatchProtocol.STATUS_MATCH_REQ, ReceiveStatusMatchReq},
@@ -49,68 +77,66 @@ namespace Template.Stage.RandomWarsMatch.Common
         }
 
 
-        #region Socket Controller 구현부
+#region Socket Controller 구현부
         // -------------------------------------------------------------------
         // Socket Controller 구현부
         // -------------------------------------------------------------------
 
-        public bool SendJoinStageReq(ISender sender, string playerSessionId, int deckIndex)
+        public bool SendJoinMatchReq(ISender sender, int deckIndex)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write(playerSessionId);
                 bw.Write(deckIndex);
-                return sender.SendMessage((int)ERandomWarsMatchProtocol.JOIN_STAGE_REQ, ms.ToArray());
+                return sender.SendMessage((int)ERandomWarsMatchProtocol.JOIN_MATCH_REQ, ms.ToArray());
             }
         }
 
 
-        public delegate (ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo) JoinStageReqDelegate(ISender sender, string playerSessionId, int deckIndex);
-        public JoinStageReqDelegate JoinStageReqCallback;
-        public bool ReceiveJoinStageReq(ISender sender, byte[] msg, int length)
+        public delegate (ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo) JoinMatchReqDelegate(ISender sender, int deckIndex);
+        public JoinMatchReqDelegate JoinMatchReqCallback;
+        public bool ReceiveJoinMatchReq(ISender sender, byte[] msg, int length)
         {
             using (var ms = new MemoryStream(msg))
             {
                 BinaryReader br = new BinaryReader(ms);
-                var res = JoinStageReqCallback(sender,
-                    br.ReadString(),
+                var res = JoinMatchReqCallback(sender, 
                     br.ReadInt32());
 
-                return SendJoinStageAck(sender, res.errorCode, res.playerInfo);
+                return SendJoinMatchAck(sender, res.errorCode, res.playerInfo);
             }
         }
 
 
-        public bool SendJoinStageAck(ISender sender, ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo)
+        public bool SendJoinMatchAck(ISender sender, ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)errorCode);
                 playerInfo.Write(bw);
-                return sender.SendMessage((int)ERandomWarsMatchProtocol.JOIN_STAGE_ACK, ms.ToArray());
+                return sender.SendMessage((int)ERandomWarsMatchProtocol.JOIN_MATCH_ACK, ms.ToArray());
             }
         }
 
 
-        public delegate bool JoinStageAckDelegate(ISender sender, ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo);
-        public JoinStageAckDelegate JoinStageAckCallback;
-        public bool ReceiveJoinStageAck(ISender sender, byte[] msg, int length)
+        public delegate bool JoinMatchAckDelegate(ISender sender, ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo);
+        public JoinMatchAckDelegate JoinMatchAckCallback;
+        public bool ReceiveJoinMatchAck(ISender sender, byte[] msg, int length)
         {
             using (var ms = new MemoryStream(msg))
             {
                 BinaryReader br = new BinaryReader(ms);
-                return JoinStageAckCallback(sender,
-                    (ERandomWarsMatchErrorCode)br.ReadInt32(),
+                return JoinMatchAckCallback(sender, 
+                    (ERandomWarsMatchErrorCode)br.ReadInt32(), 
                     MsgPlayerInfo.Read(br));
             }
         }
 
-        #endregion
+#endregion
+        
 
-
-        #region Http Controller 구현부        
+#region Http Controller 구현부        
         // -------------------------------------------------------------------
         // Http Controller 구현부
         // -------------------------------------------------------------------
@@ -155,7 +181,7 @@ namespace Template.Stage.RandomWarsMatch.Common
             string ticketId = (string)jObject["ticketId"];
             return ReceiveRequestMatchAckCallback(errorCode, ticketId);
         }
-
+        
 
         // matchstatus
         public bool SendStatusMatchReq(ISender sender, string ticketId)
@@ -197,7 +223,7 @@ namespace Template.Stage.RandomWarsMatch.Common
             string json = System.Text.Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             return ReceiveStatusMatchAckCallback(
-                (ERandomWarsMatchErrorCode)(int)jObject["errorCode"],
+                (ERandomWarsMatchErrorCode)(int)jObject["errorCode"], 
                 jObject["serverAddr"].ToString(),
                 (int)jObject["port"],
                 jObject["playerSessionId"].ToString());
@@ -226,7 +252,7 @@ namespace Template.Stage.RandomWarsMatch.Common
         }
 
 
-        public bool SendCancelMatchAck(ISender sender, ERandomWarsMatchErrorCode errorCode)
+        public bool SendCancelMatchAck(ISender sender,ERandomWarsMatchErrorCode errorCode)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -243,6 +269,6 @@ namespace Template.Stage.RandomWarsMatch.Common
             return ReceiveCancelMatchAckCallback(
                 (ERandomWarsMatchErrorCode)(int)jObject["errorCode"]);
         }
-        #endregion
+#endregion
     }
 }

@@ -9,7 +9,6 @@ namespace Service.Net
 {
     public class NetServiceClient : NetServiceBase, IDisposable
     {
-        GameSessionClient _gameSession;
         private DateTime _nowTime;
         private string _binarySerializePath;
         private long _playTimeStampTick;
@@ -32,11 +31,6 @@ namespace Service.Net
             
         }   
 
-
-        public void SetGameSession(GameSessionClient gameSession)
-        {
-            _gameSession = gameSession;
-        }
 
         public override void Update() 
         {
@@ -108,7 +102,7 @@ namespace Service.Net
         //}
 
 
-        public void Connect(string serverAddr, int port, string gameSessionId, string playerSessionId, ENetState netState)
+        public void Connect(string serverAddr, int port, string playerSessionId, ENetState netState)
         {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.LingerState = new LingerOption(true, 10);
@@ -122,7 +116,6 @@ namespace Service.Net
             { 
                 ServerAddr = serverAddr,
                 Port = port,
-                GameSessionId = gameSessionId,
                 PlayerSessionId = playerSessionId,
                 NetState = netState,
                 PlayTimeStampTick = DateTime.UtcNow.Ticks,
@@ -177,7 +170,8 @@ namespace Service.Net
             // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
             clientSession.Id = token.PlayerSessionId;
             clientSession.NetState = token.NetState;
-            SendNetAuthSessionReq(clientSession, token.GameSessionId);
+            clientSession.GameSession = _gameSession;
+            SendNetAuthSessionReq(clientSession);
         }
 
 
@@ -204,7 +198,7 @@ namespace Service.Net
                     return;
                 }
 
-                Connect(token.ServerAddr, token.Port, token.GameSessionId, token.PlayerSessionId, ENetState.Reconnecting);
+                Connect(token.ServerAddr, token.Port, token.PlayerSessionId, ENetState.Reconnecting);
                 return;
             }
 
@@ -258,14 +252,12 @@ namespace Service.Net
             {
                 case ENetProtocol.AUTH_SESSION_ACK:
                 {
-                    string gameSessionId;
                     string clientSessionId;
                     ENetState netState;
                     ESessionState sessionState;
                     var bf = new BinaryFormatter();
                     using (var ms = new MemoryStream(msg))
                     {
-                        gameSessionId = (string)bf.Deserialize(ms);
                         clientSessionId = (string)bf.Deserialize(ms);
                         netState = (ENetState)(byte)bf.Deserialize(ms);
                         sessionState = (ESessionState)(short)bf.Deserialize(ms);

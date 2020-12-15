@@ -7,7 +7,8 @@ namespace Service.Net
     {
         MessageQueueThread _messageQueue;
 
-        MessageController _msgController;
+        protected MessageController _messageController;
+        
 
 
         public GameSessionServer()
@@ -21,7 +22,6 @@ namespace Service.Net
             base.Init(config);
 
             _messageQueue.Init(config.MessageQueueCapacity, config.MessageBufferSize, OnProcessMessage);
-            _msgController = config.MsgController;
         }
 
 
@@ -103,12 +103,12 @@ namespace Service.Net
 
         public override bool ProcessExternalMessage(Message msg)
         {
-            if (_msgController == null)
+            if (_messageController == null)
             {
                 return false;
             }
 
-            return _msgController.OnRecevice(msg.Sender as ISender, msg.ProtocolId, msg.Data, msg.Length);
+            return _messageController.OnRecevice(msg.Sender as ISender, msg.ProtocolId, msg.Data, msg.Length);
         }
 
 

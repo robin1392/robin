@@ -8,7 +8,6 @@ namespace Service.Net
     public class GameSessionClient : GameSession
     {
         MessageQueue _messageQueue;
-        MessageController _messageController;
 
         public GameSessionClient()
         {
@@ -21,7 +20,6 @@ namespace Service.Net
             base.Init(config);
 
             _messageQueue.Init(config.MessageQueueCapacity, config.MessageBufferSize);
-            _messageController = config.MsgController;
         }
 
 
