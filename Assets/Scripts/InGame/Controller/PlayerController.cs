@@ -1153,7 +1153,7 @@ namespace ED
             }
         }
 
-        private void SendEventLog_BatCheck()
+        public void SendEventLog_BatCheck()
         {
             var param = new Firebase.Analytics.Parameter[25];
             for(int i = 0; i < arrDiceDeck.Length; i++)
