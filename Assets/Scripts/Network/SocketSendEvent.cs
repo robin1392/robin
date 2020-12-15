@@ -30,7 +30,7 @@ public class SocketSendEvent
             }
             case GameProtocol.JOIN_COOP_GAME_REQ:
             {
-                _sender.JoinCoopGameReq(peer, (string)param[0], (sbyte)param[1]);
+                _sender.JoinCoopGameReq(peer, (sbyte)param[0]);
                 break;
             }
             case GameProtocol.LEAVE_GAME_REQ:

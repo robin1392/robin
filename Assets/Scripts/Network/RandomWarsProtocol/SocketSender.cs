@@ -40,12 +40,11 @@ namespace RandomWarsProtocol
         }
 
 
-        public void JoinCoopGameReq(Peer peer, string playerSessionId, sbyte deckIndex)
+        public void JoinCoopGameReq(Peer peer, sbyte deckIndex)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
-                bw.Write(playerSessionId);
                 bw.Write(deckIndex);
                 peer.SendPacket((int)GameProtocol.JOIN_COOP_GAME_REQ, ms.ToArray());
             }
