@@ -29,7 +29,10 @@ public class JsonDataManager : MonoBehaviour
 	public LangKO dataLangKO = null;
 	public LangEN dataLangEN = null;
 	public ErrorMessageKO dataErrorMessageKO = null;
-
+    public BoxInfo dataBoxInfo = null;
+    public DiceLevelUpInfo dataDiceLevelUpInfo = null;
+    public GlobalDataInfo dataGlobalDataInfo = null;
+    public BossInfo dataBossInfo = null;
 
     //
     public void LoadJsonData(string filePath , Action<string> callBack = null)
@@ -38,6 +41,10 @@ public class JsonDataManager : MonoBehaviour
 		dataLangKO = new LangKO(filePath , callBack);
 		dataLangEN = new LangEN(filePath , callBack);
 		dataErrorMessageKO = new ErrorMessageKO(filePath , callBack);
+        dataBoxInfo = new BoxInfo(filePath, callBack);
+        dataDiceLevelUpInfo = new DiceLevelUpInfo(filePath, callBack);
+        dataGlobalDataInfo = new GlobalDataInfo(filePath, callBack);
+        dataBossInfo = new BossInfo(filePath, callBack);
 
     }
 
