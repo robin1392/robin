@@ -120,7 +120,7 @@ public class NetService : Singleton<NetService>
 
         _httpClient = new HttpClient(
             //"https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
-            "http://localhost:5001/api",
+            "https://localhost:5001/api",
             _gameSession);
 
 
