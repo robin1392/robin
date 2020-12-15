@@ -16,8 +16,9 @@ public class HelpshiftManager : Singleton<HelpshiftManager>
     public override void Awake()
     {
         base.Awake();
-
+#if !UNITY_EDITOR
         Initialize();
+#endif
     }
 
     public void Initialize()
