@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace ED
 {
@@ -13,21 +14,11 @@ namespace ED
         public Camera camera_Effect;
         public Camera camera_UI_Popup;
 
-        private void Awake()
-        {
-            
-            
-            /*
-            if (PhotonNetwork.IsConnected)
-            {
-                SetPosition(PhotonManager.Instance.playType != PLAY_TYPE.BATTLE || PhotonNetwork.IsMasterClient, height);
-            }
-            else
-            {
-                SetPosition(true, height);
-            }
-            */
-        }
+        public bool isMoveimmit;
+        [SerializeField]
+        private Vector3[] arrPos;
+        [SerializeField]
+        private Vector3[] arrRot;
 
         public void Start()
         {
@@ -64,6 +55,31 @@ namespace ED
             if (!isOrigin)
             {
                 transform.parent.rotation = Quaternion.Euler(90f, 0, 180f);
+            }
+        }
+
+        public void ChangeView(int num)
+        {
+            float duration = isMoveimmit ? 0 : 1f;
+            transform.DOLocalMove(arrPos[num], duration);
+            transform.DOLocalRotate(arrRot[num], duration);
+
+            switch(num)
+            {
+            case 0:
+                camera.orthographic = true;
+                camera.orthographicSize = 11.7f;
+                break;
+            case 1:
+                camera.orthographic = false;
+                break;
+            case 2:
+                camera.orthographic = true;
+                camera.orthographicSize = 14f;
+                break;
+            case 3:
+                camera.orthographic = false;
+                break;
             }
         }
     }
