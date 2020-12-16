@@ -411,7 +411,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
 
         // notify
-        _packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
+        //_packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
         _packetRecv.JoinCoopGameNotify = _socketRecv.OnJoinCoopGameNotify;
         _packetRecv.LeaveGameNotify = _socketRecv.OnLeaveGameNotify;
         _packetRecv.GetDiceNotify = _socketRecv.OnGetDiceNotify;

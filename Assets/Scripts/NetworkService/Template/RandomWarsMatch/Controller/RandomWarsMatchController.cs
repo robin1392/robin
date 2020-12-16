@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Service.Net;
 using Template.Stage.RandomWarsMatch.Common;
 using Newtonsoft.Json;
 
@@ -63,7 +64,7 @@ namespace Template.Stage.RandomWarsMatch
         }
 
 
-        bool OnJoinMatchController(ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo)
+        bool OnJoinMatchController(ISender sender, ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo)
         {
             UnityUtil.Print(" join recv ", "errocode : " + errorCode, "white");
             UnityUtil.Print("join my info ", playerInfo.PlayerUId + "  " + playerInfo.Name + " , " + playerInfo.IsBottomPlayer, "white");
@@ -82,7 +83,7 @@ namespace Template.Stage.RandomWarsMatch
         }
 
 
-        bool OnNotifyJoinMatchController(ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo otherPlayerInfo)
+        bool OnJoinMatchNotifyController(ISender sender, MsgPlayerInfo otherPlayerInfo)
         {
             UnityUtil.Print("other info ", otherPlayerInfo.PlayerUId + "  " + otherPlayerInfo.Name + " , " + otherPlayerInfo.IsBottomPlayer, "white");
             UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(otherPlayerInfo), "white");
