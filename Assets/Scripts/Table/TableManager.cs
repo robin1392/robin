@@ -13,7 +13,9 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataDiceInfo> DiceInfo { get; private set; }
     public TableData<int, TDataDiceUpgrade> DiceUpgrade { get; private set; }
     public TableData<int, TDataDiceLevelInfo> DiceLevelInfo { get; private set; }
-        
+    public TableData<int, TDataGuardianInfo> GuardianInfo { get; private set; }
+    public TableData<int, TDataVsmode> Vsmode { get; private set; }
+
 
 
     public void Awake()
@@ -39,6 +41,8 @@ public class TableManager : Singleton<TableManager>
         DiceInfo = new TableData<int, TDataDiceInfo>();
         DiceUpgrade = new TableData<int, TDataDiceUpgrade>();
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
+        GuardianInfo = new TableData<int, TDataGuardianInfo>();
+        Vsmode = new TableData<int, TDataVsmode>();
     }
 
 
@@ -52,7 +56,8 @@ public class TableManager : Singleton<TableManager>
         DiceInfo.Init(new TableLoaderLocalCSV<int, TDataDiceInfo>(), path + "/DiceInfo.csv");
         DiceUpgrade.Init(new TableLoaderLocalCSV<int, TDataDiceUpgrade>(), path + "/DiceUpgrade.csv");
         DiceLevelInfo.Init(new TableLoaderLocalCSV<int, TDataDiceLevelInfo>(), path + "/DiceLevelInfo.csv");
-
+        GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path + "/GuardianInfo.csv");
+        Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path + "/Vsmode.csv");
         return true;
     }
 }
