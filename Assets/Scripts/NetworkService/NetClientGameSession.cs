@@ -35,6 +35,11 @@ public class NetClientGameSession : GameSessionClient
 
     }
 
+    public bool IsConnected()
+    {
+        return Player.ClientSession != null;
+    }
+
 
     protected override void OnConnectClient(ClientSession clientSession)
     {

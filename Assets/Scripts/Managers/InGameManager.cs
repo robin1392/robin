@@ -107,10 +107,10 @@ namespace ED
         {
             get
             {
-                if (NetworkManager.Get() == null)
+                if (NetworkService.Get() == null)
                     return false;
                 
-                if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
+                if (NetworkService.Get() != null && NetworkService.Get().GameSession.IsConnected())
                     return true;
 
                 return false;
