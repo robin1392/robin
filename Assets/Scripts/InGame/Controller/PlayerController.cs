@@ -1229,7 +1229,7 @@ namespace ED
                         };
                     }
                     
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
+                    NetSendPlayer(RandomWarsProtocol.GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
                     
                     dicHitDamage.Clear();
                 }
@@ -1251,7 +1251,7 @@ namespace ED
                 if( InGameManager.IsNetwork == true && (isMine || isPlayingAI))
                 {
                     //int convDamage = ConvertNetMsg.MsgFloatToInt( damage );
-                    //NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ , myUID, convDamage);
+                    //NetSendPlayer(RandomWarsProtocol.GameProtocol.HIT_DAMAGE_REQ , myUID, convDamage);
                     //queueHitDamage.Enqueue(convDamage);
                     if (dicHitDamage.ContainsKey(baseStatId) == false)
                     {
@@ -1296,7 +1296,7 @@ namespace ED
             if(InGameManager.IsNetwork)
             {
                 //targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_HITMINIONANDMAGIC , baseStatId, damage, delay);
-                NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , baseStatId , damage, delay);
+                NetSendPlayer(RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY , NetworkManager.Get().OtherUID , baseStatId , damage, delay);
             }#1#
         }*/
 
@@ -1309,7 +1309,7 @@ namespace ED
             {
                 if (InGameManager.IsNetwork && (isMine || isPlayingAI))
                 {
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY, uid, minionId , damage, 0);
+                    NetSendPlayer(RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY, uid, minionId , damage, 0);
                 }
                 HitDamageMinionAndMagic(minionId, damage);
             }
@@ -1317,7 +1317,7 @@ namespace ED
             // {
             //     if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             //     {
-            //         NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY , myUID , minionId , damage , 0);
+            //         NetSendPlayer(RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY , myUID , minionId , damage , 0);
             //     }
             //     HitDamageMinionAndMagic(minionId, damage);
             // }    
@@ -1339,7 +1339,7 @@ namespace ED
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 //targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, baseStatId, damage);
-                NetSendPlayer(GameProtocol.HIT_DAMAGE_MINION_RELAY, uid, baseStatId , damage, delay);
+                NetSendPlayer(RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY, uid, baseStatId , damage, delay);
             }
 
             if (targetPlayer.myUID == uid)
@@ -2112,7 +2112,7 @@ namespace ED
             }
         }
         
-        protected Dictionary<GameProtocol, List<object>> _syncDictionary = new Dictionary<GameProtocol, List<object>>();
+        protected Dictionary<RandomWarsProtocol.GameProtocol, List<object>> _syncDictionary = new Dictionary<RandomWarsProtocol.GameProtocol, List<object>>();
 
         protected int packetCount;
         public IEnumerator SyncMinionStatus()
@@ -2130,7 +2130,7 @@ namespace ED
                     //if (listMinion.Count > 0 || _syncDictionary.Keys.Count > 0)
                     {
                         byte minionCount = (byte) listMinion.Count;
-                        MsgMinionStatus relay = new MsgMinionStatus();
+                        RandomWarsProtocol.MsgMinionStatus relay = new RandomWarsProtocol.MsgMinionStatus();
 
                         List<int> listInstallation = new List<int>();
                         for (int i = 0; i < listMagic.Count; i++)
@@ -2141,13 +2141,13 @@ namespace ED
                             }
                         }
 
-                        MsgMinionInfo[] msgMinionInfos = new MsgMinionInfo[listMinion.Count + listInstallation.Count];
+                        RandomWarsProtocol.MsgMinionInfo[] msgMinionInfos = new RandomWarsProtocol.MsgMinionInfo[listMinion.Count + listInstallation.Count];
                         int loop = 0;
                         if (listMinion.Count > 0)
                         {
                             for (int i = 0; i < listMinion.Count; i++)
                             {
-                                msgMinionInfos[i] = new MsgMinionInfo();
+                                msgMinionInfos[i] = new RandomWarsProtocol.MsgMinionInfo();
                                 msgMinionInfos[i].Id = ConvertNetMsg.MsgIntToUshort(listMinion[i].id);
                                 for (int j = 0; j < arrDiceDeck.Length; j++)
                                 {
@@ -2170,7 +2170,7 @@ namespace ED
                             for (int i = 0; i < listInstallation.Count; i++)
                             {
                                 int num = listInstallation[i];
-                                msgMinionInfos[loop] = new MsgMinionInfo();
+                                msgMinionInfos[loop] = new RandomWarsProtocol.MsgMinionInfo();
                                 msgMinionInfos[loop].Id = ConvertNetMsg.MsgIntToUshort(listMagic[num].id);
                                 for (int j = 0; j < arrDiceDeck.Length; j++)
                                 {
@@ -2198,79 +2198,79 @@ namespace ED
                             {
                                 switch (sync.Key)
                                 {
-                                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY:
                                         relay.arrHitDamageMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgHitDamageMinionRelay)element);
                                         break;
-                                    case GameProtocol.DESTROY_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.DESTROY_MINION_RELAY:
                                         relay.arrDestroyMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgDestroyMinionRelay)element);
                                         break;
-                                    case GameProtocol.HEAL_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.HEAL_MINION_RELAY:
                                         relay.arrHealMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgHealMinionRelay)element);
                                         break;
-                                    case GameProtocol.PUSH_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.PUSH_MINION_RELAY:
                                         relay.arrPushMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgPushMinionRelay)element);
                                         break;
-                                    case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
                                         relay.arrMinionAnimationTriggerRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMinionAnimationTriggerRelay)element);
                                         break;
-                                    case GameProtocol.FIRE_BALL_BOMB_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.FIRE_BALL_BOMB_RELAY:
                                         relay.arrFireballBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireballBombRelay)element);
                                         break;
-                                    case GameProtocol.MINE_BOMB_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.MINE_BOMB_RELAY:
                                         relay.arrMineBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMineBombRelay)element);
                                         break;
-                                    case GameProtocol.DESTROY_MAGIC_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.DESTROY_MAGIC_RELAY:
                                         relay.arrDestroyMagicRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgDestroyMagicRelay)element);
                                         break;
-                                    case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
                                         relay.arrMagicTargetIdRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMagicTargetIdRelay)element);
                                         break;
-                                    case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
                                         relay.arrMagicTargetRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMagicTargetRelay)element);
                                         break;
-                                    case GameProtocol.STURN_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.STURN_MINION_RELAY:
                                         relay.arrSturnMinionRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSturnMinionRelay)element);
                                         break;
-                                    case GameProtocol.ROCKET_BOMB_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.ROCKET_BOMB_RELAY:
                                         relay.arrRocketBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgRocketBombRelay)element);
                                         break;
-                                    case GameProtocol.ICE_BOMB_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.ICE_BOMB_RELAY:
                                         relay.arrIceBombRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgIceBombRelay)element);
                                         break;
-                                    case GameProtocol.FIRE_CANNON_BALL_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.FIRE_CANNON_BALL_RELAY:
                                         relay.arrFireCannonBallRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireCannonBallRelay)element);
                                         break;
-                                    case GameProtocol.FIRE_MAN_FIRE_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.FIRE_MAN_FIRE_RELAY:
                                         relay.arrFireManFireRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireManFireRelay)element);
                                         break;
-                                    case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
                                         relay.arrActivatePoolObjectRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgActivatePoolObjectRelay)element);
                                         break;
-                                    case GameProtocol.MINION_CLOACKING_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.MINION_CLOACKING_RELAY:
                                         relay.arrMinionCloackingRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMinionCloackingRelay)element);
                                         break;
-                                    case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.MINION_FLAG_OF_WAR_RELAY:
                                         relay.arrMinionFlagOfWarRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMinionFlagOfWarRelay)element);
                                         break;
-                                    case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.SEND_MESSAGE_VOID_RELAY:
                                         relay.arrSendMessageVoidRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSendMessageVoidRelay)element);
                                         break;
-                                    case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
                                         relay.arrSendMessageParam1Relay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSendMessageParam1Relay)element);
                                         break;
-                                    case GameProtocol.SET_MINION_TARGET_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.SET_MINION_TARGET_RELAY:
                                         relay.arrMinionTargetRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgSetMinionTargetRelay)element);
                                         break;
-                                    case GameProtocol.SCARECROW_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.SCARECROW_RELAY:
                                         relay.arrScarercrowRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgScarecrowRelay)element);
                                         break;
-                                    case GameProtocol.LAYZER_TARGET_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.LAYZER_TARGET_RELAY:
                                         relay.arrLayzerTargetRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgLayzerTargetRelay)element);
                                         break;
-                                    case GameProtocol.FIRE_BULLET_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.FIRE_BULLET_RELAY:
                                         relay.arrFireBulletRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgFireBulletRelay)element);
                                         break;
-                                    case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.MINION_INVINCIBILITY_RELAY:
                                         relay.arrMinionInvincibilityRelay = Array.ConvertAll(sync.Value.ToArray(), element => (MsgMinionInvincibilityRelay)element);
                                         break;
                                 }
@@ -2280,35 +2280,35 @@ namespace ED
                                 str += string.Format("\n{0} -> List count : {1}", sync.Key, sync.Value.Count);
                                 switch (sync.Key)
                                 {
-                                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgHitDamageMinionRelay msg = (MsgHitDamageMinionRelay) value;
                                             str += string.Format("\n      ID:{0}, DMG:{1}", msg.Id, msg.Damage);
                                         }
                                         break;
-                                    case GameProtocol.HEAL_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.HEAL_MINION_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgHealMinionRelay msg = (MsgHealMinionRelay) value;
                                             str += string.Format("\n      ID:{0}, HEAL:{1}", msg.Id, msg.Heal);
                                         }
                                         break;
-                                    case GameProtocol.DESTROY_MINION_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.DESTROY_MINION_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgDestroyMinionRelay msg = (MsgDestroyMinionRelay) value;
                                             str += string.Format("\n      ID:{0}", msg.Id);
                                         }
                                         break;
-                                    case GameProtocol.DESTROY_MAGIC_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.DESTROY_MAGIC_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgDestroyMagicRelay msg = (MsgDestroyMagicRelay) value;
                                             str += string.Format("\n      ID:{0}", msg.BaseStatId);
                                         }
                                         break;
-                                    case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                                    case RandomWarsProtocol.GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
                                         foreach (var value in sync.Value)
                                         {
                                             MsgActivatePoolObjectRelay msg = (MsgActivatePoolObjectRelay) value;
@@ -2325,7 +2325,7 @@ namespace ED
                         #endif
                         #endregion
                         
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, _myUID, msgMinionInfos, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
+                        NetSendPlayer(RandomWarsProtocol.GameProtocol.MINION_STATUS_RELAY, _myUID, msgMinionInfos, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
                         _syncDictionary.Clear();
                         packetCount++;
                     }
@@ -2500,7 +2500,7 @@ namespace ED
                     str += string.Format("\n{0} -> List count : {1}", msg.Key, msg.Value.Count);
                     switch (msg.Key)
                     {
-                        case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY:
                             foreach (var value in msg.Value)
                             {
                                 MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
@@ -2508,7 +2508,7 @@ namespace ED
                             }
 
                             break;
-                        case GameProtocol.HEAL_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.HEAL_MINION_RELAY:
                             foreach (var value in msg.Value)
                             {
                                 MsgHealMinionRelay m = (MsgHealMinionRelay) value;
@@ -2516,7 +2516,7 @@ namespace ED
                             }
 
                             break;
-                        case GameProtocol.DESTROY_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.DESTROY_MINION_RELAY:
                             foreach (var value in msg.Value)
                             {
                                 MsgDestroyMinionRelay m = (MsgDestroyMinionRelay) value;
@@ -2524,7 +2524,7 @@ namespace ED
                             }
 
                             break;
-                        case GameProtocol.DESTROY_MAGIC_RELAY:
+                        case RandomWarsProtocol.GameProtocol.DESTROY_MAGIC_RELAY:
                             foreach (var value in msg.Value)
                             {
                                 MsgDestroyMagicRelay m = (MsgDestroyMagicRelay) value;
@@ -2532,7 +2532,7 @@ namespace ED
                             }
 
                             break;
-                        case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                        case RandomWarsProtocol.GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
                             foreach (var value in msg.Value)
                             {
                                 MsgActivatePoolObjectRelay m = (MsgActivatePoolObjectRelay) value;
@@ -2565,35 +2565,35 @@ namespace ED
             }
         }
 
-        protected Dictionary<GameProtocol, List<object>> MsgMinionStatusToDictionary(MsgMinionStatus msg)
+        protected Dictionary<RandomWarsProtocol.GameProtocol, List<object>> MsgMinionStatusToDictionary(MsgMinionStatus msg)
         {
-            Dictionary<GameProtocol, List<object>> dic = new Dictionary<GameProtocol, List<object>>();
+            Dictionary<RandomWarsProtocol.GameProtocol, List<object>> dic = new Dictionary<RandomWarsProtocol.GameProtocol, List<object>>();
 
-            if (msg.arrHitDamageMinionRelay != null) dic.Add(GameProtocol.HIT_DAMAGE_MINION_RELAY, new List<object>(msg.arrHitDamageMinionRelay));
-            if (msg.arrFireballBombRelay != null) dic.Add(GameProtocol.FIRE_BALL_BOMB_RELAY, new List<object>(msg.arrFireballBombRelay));
-            if (msg.arrHealMinionRelay != null) dic.Add(GameProtocol.HEAL_MINION_RELAY, new List<object>(msg.arrHealMinionRelay));
-            if (msg.arrMineBombRelay != null) dic.Add(GameProtocol.MINE_BOMB_RELAY, new List<object>(msg.arrMineBombRelay));
-            if (msg.arrSturnMinionRelay != null) dic.Add(GameProtocol.STURN_MINION_RELAY, new List<object>(msg.arrSturnMinionRelay));
-            if (msg.arrRocketBombRelay != null) dic.Add(GameProtocol.ROCKET_BOMB_RELAY, new List<object>(msg.arrRocketBombRelay));
-            if (msg.arrIceBombRelay != null) dic.Add(GameProtocol.ICE_BOMB_RELAY, new List<object>(msg.arrIceBombRelay));
-            if (msg.arrFireManFireRelay != null) dic.Add(GameProtocol.FIRE_MAN_FIRE_RELAY, new List<object>(msg.arrFireManFireRelay));
-            if (msg.arrMinionCloackingRelay != null) dic.Add(GameProtocol.MINION_CLOACKING_RELAY, new List<object>(msg.arrMinionCloackingRelay));
-            if (msg.arrMinionFlagOfWarRelay != null) dic.Add(GameProtocol.MINION_FLAG_OF_WAR_RELAY, new List<object>(msg.arrMinionFlagOfWarRelay));
-            if (msg.arrScarercrowRelay != null) dic.Add(GameProtocol.SCARECROW_RELAY, new List<object>(msg.arrScarercrowRelay));
-            if (msg.arrLayzerTargetRelay != null) dic.Add(GameProtocol.LAYZER_TARGET_RELAY, new List<object>(msg.arrLayzerTargetRelay));
-            if (msg.arrMinionInvincibilityRelay != null) dic.Add(GameProtocol.MINION_INVINCIBILITY_RELAY, new List<object>(msg.arrMinionInvincibilityRelay));
-            if (msg.arrFireBulletRelay != null) dic.Add(GameProtocol.FIRE_BULLET_RELAY, new List<object>(msg.arrFireBulletRelay));
-            if (msg.arrFireCannonBallRelay != null) dic.Add(GameProtocol.FIRE_CANNON_BALL_RELAY, new List<object>(msg.arrFireCannonBallRelay));
-            if (msg.arrMinionAnimationTriggerRelay != null) dic.Add(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, new List<object>(msg.arrMinionAnimationTriggerRelay));
-            if (msg.arrMagicTargetIdRelay != null) dic.Add(GameProtocol.SET_MAGIC_TARGET_ID_RELAY, new List<object>(msg.arrMagicTargetIdRelay));
-            if (msg.arrMagicTargetRelay != null) dic.Add(GameProtocol.SET_MAGIC_TARGET_POS_RELAY, new List<object>(msg.arrMagicTargetRelay));
-            if (msg.arrActivatePoolObjectRelay != null) dic.Add(GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, new List<object>(msg.arrActivatePoolObjectRelay));
-            if (msg.arrSendMessageVoidRelay != null) dic.Add(GameProtocol.SEND_MESSAGE_VOID_RELAY, new List<object>(msg.arrSendMessageVoidRelay));
-            if (msg.arrSendMessageParam1Relay != null) dic.Add(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, new List<object>(msg.arrSendMessageParam1Relay));
-            if (msg.arrMinionTargetRelay != null) dic.Add(GameProtocol.SET_MINION_TARGET_RELAY, new List<object>(msg.arrMinionTargetRelay));
-            if (msg.arrPushMinionRelay != null) dic.Add(GameProtocol.PUSH_MINION_RELAY, new List<object>(msg.arrPushMinionRelay));
-            if (msg.arrDestroyMinionRelay != null) dic.Add(GameProtocol.DESTROY_MINION_RELAY, new List<object>(msg.arrDestroyMinionRelay));
-            if (msg.arrDestroyMagicRelay != null) dic.Add(GameProtocol.DESTROY_MAGIC_RELAY, new List<object>(msg.arrDestroyMagicRelay));
+            if (msg.arrHitDamageMinionRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY, new List<object>(msg.arrHitDamageMinionRelay));
+            if (msg.arrFireballBombRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.FIRE_BALL_BOMB_RELAY, new List<object>(msg.arrFireballBombRelay));
+            if (msg.arrHealMinionRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.HEAL_MINION_RELAY, new List<object>(msg.arrHealMinionRelay));
+            if (msg.arrMineBombRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.MINE_BOMB_RELAY, new List<object>(msg.arrMineBombRelay));
+            if (msg.arrSturnMinionRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.STURN_MINION_RELAY, new List<object>(msg.arrSturnMinionRelay));
+            if (msg.arrRocketBombRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.ROCKET_BOMB_RELAY, new List<object>(msg.arrRocketBombRelay));
+            if (msg.arrIceBombRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.ICE_BOMB_RELAY, new List<object>(msg.arrIceBombRelay));
+            if (msg.arrFireManFireRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.FIRE_MAN_FIRE_RELAY, new List<object>(msg.arrFireManFireRelay));
+            if (msg.arrMinionCloackingRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.MINION_CLOACKING_RELAY, new List<object>(msg.arrMinionCloackingRelay));
+            if (msg.arrMinionFlagOfWarRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.MINION_FLAG_OF_WAR_RELAY, new List<object>(msg.arrMinionFlagOfWarRelay));
+            if (msg.arrScarercrowRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.SCARECROW_RELAY, new List<object>(msg.arrScarercrowRelay));
+            if (msg.arrLayzerTargetRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.LAYZER_TARGET_RELAY, new List<object>(msg.arrLayzerTargetRelay));
+            if (msg.arrMinionInvincibilityRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.MINION_INVINCIBILITY_RELAY, new List<object>(msg.arrMinionInvincibilityRelay));
+            if (msg.arrFireBulletRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.FIRE_BULLET_RELAY, new List<object>(msg.arrFireBulletRelay));
+            if (msg.arrFireCannonBallRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.FIRE_CANNON_BALL_RELAY, new List<object>(msg.arrFireCannonBallRelay));
+            if (msg.arrMinionAnimationTriggerRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, new List<object>(msg.arrMinionAnimationTriggerRelay));
+            if (msg.arrMagicTargetIdRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_ID_RELAY, new List<object>(msg.arrMagicTargetIdRelay));
+            if (msg.arrMagicTargetRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_POS_RELAY, new List<object>(msg.arrMagicTargetRelay));
+            if (msg.arrActivatePoolObjectRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.ACTIVATE_POOL_OBJECT_RELAY, new List<object>(msg.arrActivatePoolObjectRelay));
+            if (msg.arrSendMessageVoidRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.SEND_MESSAGE_VOID_RELAY, new List<object>(msg.arrSendMessageVoidRelay));
+            if (msg.arrSendMessageParam1Relay != null) dic.Add(RandomWarsProtocol.GameProtocol.SEND_MESSAGE_PARAM1_RELAY, new List<object>(msg.arrSendMessageParam1Relay));
+            if (msg.arrMinionTargetRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.SET_MINION_TARGET_RELAY, new List<object>(msg.arrMinionTargetRelay));
+            if (msg.arrPushMinionRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.PUSH_MINION_RELAY, new List<object>(msg.arrPushMinionRelay));
+            if (msg.arrDestroyMinionRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.DESTROY_MINION_RELAY, new List<object>(msg.arrDestroyMinionRelay));
+            if (msg.arrDestroyMagicRelay != null) dic.Add(RandomWarsProtocol.GameProtocol.DESTROY_MAGIC_RELAY, new List<object>(msg.arrDestroyMagicRelay));
 
             return dic;
         }
@@ -2617,7 +2617,7 @@ namespace ED
 
         #region net packet player
 
-        public void NetSendPlayer(GameProtocol protocol, params object[] param)
+        public void NetSendPlayer(RandomWarsProtocol.GameProtocol protocol, params object[] param)
         {
             if (InGameManager.Get().isGamePlaying == false)
                 return;
@@ -2625,9 +2625,9 @@ namespace ED
             if (NetworkManager.Get().isReconnect == true)
                 return;
 
-            if (protocol > GameProtocol.BEGIN_RELAY)
+            if (protocol > RandomWarsProtocol.GameProtocol.BEGIN_RELAY)
             {
-                if (protocol == GameProtocol.MINION_STATUS_RELAY)
+                if (protocol == RandomWarsProtocol.GameProtocol.MINION_STATUS_RELAY)
                 {
                     if (InGameManager.IsNetwork == true)
                     {
@@ -2643,7 +2643,7 @@ namespace ED
 
                     switch (protocol)
                     {
-                        case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY:
                         {
                             var msg = _syncDictionary[protocol].Find(m =>
                                 (((MsgHitDamageMinionRelay) m).PlayerUId == (int) param[0] &&
@@ -2661,76 +2661,76 @@ namespace ED
                             }
                         }
                             break;
-                        case GameProtocol.DESTROY_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.DESTROY_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMinionRelayMsg((int)param[0]));
                             break;
-                        case GameProtocol.DESTROY_MAGIC_RELAY:
+                        case RandomWarsProtocol.GameProtocol.DESTROY_MAGIC_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetDestroyMagicRelayMsg((int)param[0]));
                             break;
-                        case GameProtocol.FIRE_BALL_BOMB_RELAY:
+                        case RandomWarsProtocol.GameProtocol.FIRE_BALL_BOMB_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireballBombRelayMsg((int)param[0]));
                             break;
-                        case GameProtocol.HEAL_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.HEAL_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetHealMinionRelayMsg((int)param[0], (float)param[1]));
                             break;
-                        case GameProtocol.MINE_BOMB_RELAY:
+                        case RandomWarsProtocol.GameProtocol.MINE_BOMB_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMineBombRelayMsg((int)param[0]));
                             break;
-                        case GameProtocol.STURN_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.STURN_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetSturnMinionRelayMsg((int)param[0], (int)param[1]));
                             break;
-                        case GameProtocol.ROCKET_BOMB_RELAY:
+                        case RandomWarsProtocol.GameProtocol.ROCKET_BOMB_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetRocketBombRelayMsg((int)param[0]));
                             break;
-                        case GameProtocol.ICE_BOMB_RELAY:
+                        case RandomWarsProtocol.GameProtocol.ICE_BOMB_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetIceBombRelayMsg((int)param[0]));
                             break;
-                        case GameProtocol.FIRE_MAN_FIRE_RELAY:
+                        case RandomWarsProtocol.GameProtocol.FIRE_MAN_FIRE_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireManFireRelayMsg((int)param[0]));
                             break;
-                        case GameProtocol.MINION_CLOACKING_RELAY:
+                        case RandomWarsProtocol.GameProtocol.MINION_CLOACKING_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionCloackingRelayMsg((int)param[0], (bool)param[1]));
                             break;
-                        case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
+                        case RandomWarsProtocol.GameProtocol.MINION_FLAG_OF_WAR_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionFlagOfWarRelayMsg((int)param[0], (int)param[1], (bool)param[2]));
                             break;
-                        case GameProtocol.SCARECROW_RELAY:
+                        case RandomWarsProtocol.GameProtocol.SCARECROW_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetScarecrowRelayMsg((int)param[0], (int)param[1]));
                             break;
-                        case GameProtocol.LAYZER_TARGET_RELAY:
+                        case RandomWarsProtocol.GameProtocol.LAYZER_TARGET_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetLayzerTargetRelayMsg((int)param[0], (int[])param[1]));
                             break;
-                        case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                        case RandomWarsProtocol.GameProtocol.MINION_INVINCIBILITY_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionInvincibilityRelayMsg((int)param[0], (int)param[1]));
                             break;
-                        case GameProtocol.FIRE_BULLET_RELAY:
+                        case RandomWarsProtocol.GameProtocol.FIRE_BULLET_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireBulletRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4]));
                             break;
-                        case GameProtocol.FIRE_CANNON_BALL_RELAY:
+                        case RandomWarsProtocol.GameProtocol.FIRE_CANNON_BALL_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireCannonBallRelayMsg((MsgVector3)param[0], (MsgVector3)param[1], (int)param[2], (int)param[3], (int)param[4]));
                             break;
-                        case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+                        case RandomWarsProtocol.GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionAnimationTriggerRelayMsg((int)param[0],(int)param[1], (int)param[2]));
                             break;
-                        case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+                        case RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMagicTargetIDRelayMsg((int)param[0],(int)param[1]));
                             break;
-                        case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+                        case RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMagicTargetPosRelayMsg((int)param[0],(int)param[1], (int)param[2]));
                             break;
-                        case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                        case RandomWarsProtocol.GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetActivatePoolObjectRelayMsg((int)param[0], (Vector3)param[1], (Quaternion)param[2], (Vector3)param[3]));
                             break;
-                        case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+                        case RandomWarsProtocol.GameProtocol.SEND_MESSAGE_VOID_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetSendMessageVoidRelayMsg((int)param[0],(int)param[1]));
                             break;
-                        case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+                        case RandomWarsProtocol.GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetSendMessageParam1RelayMsg((int)param[0],(int)param[1], (int)param[2]));
                             break;
-                        case GameProtocol.SET_MINION_TARGET_RELAY:
+                        case RandomWarsProtocol.GameProtocol.SET_MINION_TARGET_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionTargetRelayMsg((int)param[0],(int)param[1]));
                             break;
-                        case GameProtocol.PUSH_MINION_RELAY:
+                        case RandomWarsProtocol.GameProtocol.PUSH_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetPushMinionRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4]));
                             break;
                     }
@@ -2764,7 +2764,7 @@ namespace ED
             }
         }
         
-        public void NetRecvPlayer(GameProtocol protocol, params object[] param)
+        public void NetRecvPlayer(RandomWarsProtocol.GameProtocol protocol, params object[] param)
         {
             //Debug.Log("RECV : " + protocol.ToString());
             
@@ -2774,20 +2774,20 @@ namespace ED
             
             switch (protocol)
             {
-                case GameProtocol.HIT_DAMAGE_ACK:
+                case RandomWarsProtocol.GameProtocol.HIT_DAMAGE_ACK:
                 {
                     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
                     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
                     HitDamageAck(damageack.PlayerUId, damageack.DamageResult);
                     break;
                 }
-                case GameProtocol.HIT_DAMAGE_NOTIFY:
+                case RandomWarsProtocol.GameProtocol.HIT_DAMAGE_NOTIFY:
                 {
                     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
                     HitDamageAck(damagenoti.PlayerUId, damagenoti.DamageResult);
                     break;
                 }
-                case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                case RandomWarsProtocol.GameProtocol.HIT_DAMAGE_MINION_RELAY:
                 {
                     MsgHitDamageMinionRelay hitminion = (MsgHitDamageMinionRelay) param[0];
                     //Debug.LogFormat("HIT_DAMAGE_MINION_RELAY = UID:{0}, ID:{1}, DMG:{2}", hitminion.PlayerUId, hitminion.Id, hitminion.Damage);
@@ -2805,7 +2805,7 @@ namespace ED
                     break;
                 }
                 
-                case GameProtocol.DESTROY_MINION_RELAY:
+                case RandomWarsProtocol.GameProtocol.DESTROY_MINION_RELAY:
                 {
                     MsgDestroyMinionRelay destrelay = (MsgDestroyMinionRelay) param[0];
                     
@@ -2822,7 +2822,7 @@ namespace ED
                     break;
                 }
                 
-                case GameProtocol.DESTROY_MAGIC_RELAY:
+                case RandomWarsProtocol.GameProtocol.DESTROY_MAGIC_RELAY:
                 {
                     MsgDestroyMagicRelay desmagic = (MsgDestroyMagicRelay) param[0];
                     
@@ -2842,7 +2842,7 @@ namespace ED
                 
                 
                 
-                case GameProtocol.FIRE_BALL_BOMB_RELAY:
+                case RandomWarsProtocol.GameProtocol.FIRE_BALL_BOMB_RELAY:
                 {
                     MsgFireballBombRelay fbrelay = (MsgFireballBombRelay) param[0];
                     
@@ -2856,7 +2856,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.HEAL_MINION_RELAY:
+                case RandomWarsProtocol.GameProtocol.HEAL_MINION_RELAY:
                 {
                     MsgHealMinionRelay healrelay = (MsgHealMinionRelay) param[0];
 
@@ -2871,7 +2871,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.MINE_BOMB_RELAY:
+                case RandomWarsProtocol.GameProtocol.MINE_BOMB_RELAY:
                 {
                     MsgMineBombRelay mbrelay = (MsgMineBombRelay) param[0];
                     
@@ -2885,7 +2885,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.STURN_MINION_RELAY:
+                case RandomWarsProtocol.GameProtocol.STURN_MINION_RELAY:
                 {
                     MsgSturnMinionRelay sturelay = (MsgSturnMinionRelay) param[0];
                     
@@ -2901,7 +2901,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.ROCKET_BOMB_RELAY:
+                case RandomWarsProtocol.GameProtocol.ROCKET_BOMB_RELAY:
                 {
                     MsgRocketBombRelay rockrelay = (MsgRocketBombRelay) param[0];
                     
@@ -2915,7 +2915,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.ICE_BOMB_RELAY:
+                case RandomWarsProtocol.GameProtocol.ICE_BOMB_RELAY:
                 {
                     MsgIceBombRelay icerelay = (MsgIceBombRelay) param[0];
                     
@@ -2929,7 +2929,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.FIRE_MAN_FIRE_RELAY:
+                case RandomWarsProtocol.GameProtocol.FIRE_MAN_FIRE_RELAY:
                 {
                     MsgFireManFireRelay firerelay = (MsgFireManFireRelay) param[0];
                     
@@ -2943,7 +2943,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.MINION_CLOACKING_RELAY:
+                case RandomWarsProtocol.GameProtocol.MINION_CLOACKING_RELAY:
                 {
                     MsgMinionCloackingRelay cloackrelay = (MsgMinionCloackingRelay) param[0];
                     
@@ -2957,7 +2957,7 @@ namespace ED
 
                     break;
                 }
-                case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
+                case RandomWarsProtocol.GameProtocol.MINION_FLAG_OF_WAR_RELAY:
                 {
                     MsgMinionFlagOfWarRelay flagrelay = (MsgMinionFlagOfWarRelay) param[0];
                     
@@ -2973,7 +2973,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.SCARECROW_RELAY:
+                case RandomWarsProtocol.GameProtocol.SCARECROW_RELAY:
                 {
                     MsgScarecrowRelay scarelay = (MsgScarecrowRelay) param[0];
                     
@@ -2988,7 +2988,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.LAYZER_TARGET_RELAY:
+                case RandomWarsProtocol.GameProtocol.LAYZER_TARGET_RELAY:
                 {
                     MsgLayzerTargetRelay lazerrelay = (MsgLayzerTargetRelay) param[0];
                     
@@ -3002,7 +3002,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.MINION_INVINCIBILITY_RELAY:
+                case RandomWarsProtocol.GameProtocol.MINION_INVINCIBILITY_RELAY:
                 {
                     MsgMinionInvincibilityRelay inrelay = (MsgMinionInvincibilityRelay) param[0];
                     
@@ -3020,7 +3020,7 @@ namespace ED
                 }
 
 
-                case GameProtocol.FIRE_BULLET_RELAY:
+                case RandomWarsProtocol.GameProtocol.FIRE_BULLET_RELAY:
                 {
                     MsgFireBulletRelay arrrelay = (MsgFireBulletRelay) param[0];
                     
@@ -3029,7 +3029,7 @@ namespace ED
                     float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
                     E_BulletType bulletType = (E_BulletType) arrrelay.Type;
                     
-                    //NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , myUID, id, targetId , chDamage ,chSpeed , (int)bulletType);
+                    //NetSendPlayer(RandomWarsProtocol.GameProtocol.FIRE_BULLET_RELAY , myUID, id, targetId , chDamage ,chSpeed , (int)bulletType);
                     
                     // if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
                     //     InGameManager.Get().playerController.FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
@@ -3042,7 +3042,7 @@ namespace ED
                     break;
                 }
                 
-                case GameProtocol.FIRE_ARROW_RELAY:
+                case RandomWarsProtocol.GameProtocol.FIRE_ARROW_RELAY:
                 {
                     MsgFireArrowRelay arrrelay = (MsgFireArrowRelay) param[0];
                     
@@ -3061,7 +3061,7 @@ namespace ED
                     FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
                     break;
                 }
-                case GameProtocol.FIRE_SPEAR_RELAY:
+                case RandomWarsProtocol.GameProtocol.FIRE_SPEAR_RELAY:
                 {
                     MsgFireSpearRelay spearrelay = (MsgFireSpearRelay) param[0];
 
@@ -3079,7 +3079,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.NECROMANCER_BULLET_RELAY:
+                case RandomWarsProtocol.GameProtocol.NECROMANCER_BULLET_RELAY:
                 {
                     MsgNecromancerBulletRelay necrorelay = (MsgNecromancerBulletRelay) param[0];
 
@@ -3095,7 +3095,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.FIRE_CANNON_BALL_RELAY:
+                case RandomWarsProtocol.GameProtocol.FIRE_CANNON_BALL_RELAY:
                 {
                     MsgFireCannonBallRelay fcannonrelay = (MsgFireCannonBallRelay) param[0];
 
@@ -3118,7 +3118,7 @@ namespace ED
                 
                 
                 
-                case GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
+                case RandomWarsProtocol.GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY:
                 {
                     MsgSetMinionAnimationTriggerRelay anirelay = (MsgSetMinionAnimationTriggerRelay) param[0];
                     
@@ -3137,7 +3137,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
+                case RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
                 {
                     MsgSetMagicTargetIdRelay smtidrelay = (MsgSetMagicTargetIdRelay) param[0];
                     
@@ -3151,7 +3151,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
+                case RandomWarsProtocol.GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
                 {
                     MsgSetMagicTargetRelay smtrelay = (MsgSetMagicTargetRelay) param[0];
                     
@@ -3168,7 +3168,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                case RandomWarsProtocol.GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
                 {
                     MsgActivatePoolObjectRelay actrelay = (MsgActivatePoolObjectRelay) param[0];
                     
@@ -3185,7 +3185,7 @@ namespace ED
 
                     break;
                 }
-                case GameProtocol.SEND_MESSAGE_VOID_RELAY:
+                case RandomWarsProtocol.GameProtocol.SEND_MESSAGE_VOID_RELAY:
                 {
                     MsgSendMessageVoidRelay voidmsg = (MsgSendMessageVoidRelay) param[0];
                     
@@ -3201,7 +3201,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
+                case RandomWarsProtocol.GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
                 {
                     MsgSendMessageParam1Relay paramrelay = (MsgSendMessageParam1Relay) param[0];
                     
@@ -3217,7 +3217,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.SET_MINION_TARGET_RELAY:
+                case RandomWarsProtocol.GameProtocol.SET_MINION_TARGET_RELAY:
                 {
                     MsgSetMinionTargetRelay targetrelay = (MsgSetMinionTargetRelay) param[0];
                     
@@ -3231,7 +3231,7 @@ namespace ED
                     
                     break;
                 }
-                case GameProtocol.PUSH_MINION_RELAY:
+                case RandomWarsProtocol.GameProtocol.PUSH_MINION_RELAY:
                 {
                     MsgPushMinionRelay pushrelay = (MsgPushMinionRelay) param[0];
 
@@ -3250,7 +3250,7 @@ namespace ED
                 }
                 
                 
-                case GameProtocol.MINION_STATUS_RELAY:
+                case RandomWarsProtocol.GameProtocol.MINION_STATUS_RELAY:
                 {
                     MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
                     

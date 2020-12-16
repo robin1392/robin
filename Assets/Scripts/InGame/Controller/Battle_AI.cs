@@ -81,9 +81,8 @@ namespace ED
 
             NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray = deck;
             NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
-            
-            SetDeck(deck);
 
+            SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
             SetColor(E_MaterialType.TOP);
         }
 

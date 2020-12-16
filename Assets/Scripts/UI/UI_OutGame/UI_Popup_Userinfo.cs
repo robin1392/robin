@@ -39,17 +39,19 @@ public class UI_Popup_Userinfo : UI_Popup
 
     public void Click_EditNickname()
     {
-        NetworkManager.Get().EditUserNameReq(UserInfoManager.Get().GetUserInfo().userID, input_Nickname.text, EditNicknameCallback);
+        NetworkService.Get().GameSession.Send(Template.Player.RandomWarsPlayer.Common.ERandomWarsPlayerProtocol.EDIT_NAME_REQ,
+            UserInfoManager.Get().GetUserInfo().userID, input_Nickname.text);
+        //NetworkManager.Get().EditUserNameReq(UserInfoManager.Get().GetUserInfo().userID, input_Nickname.text, EditNicknameCallback);
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public void EditNicknameCallback(MsgEditUserNameAck msg)
+    public void EditNicknameCallback(string editName)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
-        UserInfoManager.Get().GetUserInfo().SetNickName(msg.UserName);
-        oldNickname = msg.UserName;
+        UserInfoManager.Get().GetUserInfo().SetNickName(editName);
+        oldNickname = editName;
         UI_Main.Get().RefreshUserInfoUI();
         SetEditButton(false);
     }

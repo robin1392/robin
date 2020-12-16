@@ -248,7 +248,7 @@ namespace ED
                 playerController.isBottomPlayer = true;
                 
                 // Set MsgUserinfo
-                var msgUserInfo = new MsgPlayerInfo();
+                var msgUserInfo = new Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo();
                 msgUserInfo.PlayerUId = 1;
                 msgUserInfo.IsBottomPlayer = true;
                 msgUserInfo.IsMaster = true;
@@ -271,19 +271,20 @@ namespace ED
                 msgUserInfo.TowerHp = (30000 + bonusHP) * 100;
                 msgUserInfo.SpGrade = 0;
                 msgUserInfo.GetDiceCount = 0;
+
                 msgUserInfo.DiceIdArray = UserInfoManager.Get().GetUserInfo().GetActiveDeck;
                 msgUserInfo.DiceLevelArray = new short[5]
                 {
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[0]][0]), 
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[1]][0]), 
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[2]][0]), 
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[3]][0]), 
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[0]][0]),
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[1]][0]),
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[2]][0]),
+                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[3]][0]),
                     ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[4]][0])
-                }; 
+                };
                 NetworkManager.Get().GetNetInfo().SetPlayerInfo(msgUserInfo);
                 
                 // Set AI
-                msgUserInfo = new MsgPlayerInfo();
+                msgUserInfo = new Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo();
                 msgUserInfo.PlayerUId = 2;
                 msgUserInfo.IsBottomPlayer = false;
                 msgUserInfo.IsMaster = false;
@@ -1272,26 +1273,26 @@ namespace ED
             wave = gameData.Wave;
 
             // 정보 셋팅
-            NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
-            playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
-            if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true;
-            playerController.RefreshHealthBar();
-            playerController.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.PlayerInfo.IsBottomPlayer);
-            playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
-            playerController.isMine = true;
-            playerController.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
-            getDiceCount = gameData.PlayerInfo.GetDiceCount;
-            playerController.SetSp(gameData.PlayerInfo.CurrentSp);
+            //NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
+            //playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
+            //if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true;
+            //playerController.RefreshHealthBar();
+            //playerController.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.PlayerInfo.IsBottomPlayer);
+            //playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
+            //playerController.isMine = true;
+            //playerController.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
+            //getDiceCount = gameData.PlayerInfo.GetDiceCount;
+            //playerController.SetSp(gameData.PlayerInfo.CurrentSp);
 
-            NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
-            playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.OtherPlayerInfo.TowerHp);
-            if (playerController.targetPlayer.currentHealth <= 20000) playerController.targetPlayer.isHalfHealth = true; 
-            playerController.targetPlayer.RefreshHealthBar();
-            playerController.targetPlayer.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.OtherPlayerInfo.IsBottomPlayer);
-            playerController.targetPlayer.transform.position = FieldManager.Get().GetPlayerPos(gameData.OtherPlayerInfo.IsBottomPlayer);
-            playerController.targetPlayer.isMine = false;
-            playerController.targetPlayer.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
-            playerController.targetPlayer.SetSp(gameData.OtherPlayerInfo.CurrentSp);
+            //NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
+            //playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.OtherPlayerInfo.TowerHp);
+            //if (playerController.targetPlayer.currentHealth <= 20000) playerController.targetPlayer.isHalfHealth = true; 
+            //playerController.targetPlayer.RefreshHealthBar();
+            //playerController.targetPlayer.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.OtherPlayerInfo.IsBottomPlayer);
+            //playerController.targetPlayer.transform.position = FieldManager.Get().GetPlayerPos(gameData.OtherPlayerInfo.IsBottomPlayer);
+            //playerController.targetPlayer.isMine = false;
+            //playerController.targetPlayer.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
+            //playerController.targetPlayer.SetSp(gameData.OtherPlayerInfo.CurrentSp);
             
             CameraController.Get().Start();
 

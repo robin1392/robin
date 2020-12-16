@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using RandomWarsProtocol;
+using Template.Account.RandomWarsAccount.Common;
 
 public class GameStateManager : Singleton<GameStateManager>
 {
@@ -254,12 +254,14 @@ public class GameStateManager : Singleton<GameStateManager>
             // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
             if (NetworkManager.Get().UserId.Length > 0)
             {
-                NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+                //NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
+                NetworkService.Get().GameSession.Send(ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, NetworkManager.Get().UserId, EPlatformType.GUEST);
             }
             else
             {
                 string userid = UserInfoManager.Get().GetUserInfo().userID;
-                NetworkManager.Get().AuthUserReq(userid);
+                //NetworkManager.Get().AuthUserReq(userid);
+                NetworkService.Get().GameSession.Send(ERandomWarsAccountProtocol.LOGIN_ACCOUNT_REQ, userid, EPlatformType.GUEST);
             }
         }
 

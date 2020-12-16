@@ -194,8 +194,8 @@ namespace ED
 
         public void Click_Dice_Use(int diceId)
         {
-            if (WebPacket.Get() != null && WebPacket.Get().isPacketSend == true)
-                return;
+            //if (WebPacket.Get() != null && WebPacket.Get().isPacketSend == true)
+            //    return;
             
             _isSelectMode = true;
             _selectedDiceId = diceId;
@@ -256,7 +256,7 @@ namespace ED
                 if (!isChanged) intDeck[deckSlotNum] = _selectedDiceId;
                 
                 //
-                if (WebPacket.Get() != null)
+                if (NetworkService.Get().GameSession != null)
                 {
                     //WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
                     NetworkManager.Get().UpdateDeckReq(UserInfoManager.Get().GetUserInfo().userID,(sbyte)active, intDeck);

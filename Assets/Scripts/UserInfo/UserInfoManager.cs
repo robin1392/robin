@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine;
-using RandomWarsProtocol;
+using Template.Account.RandomWarsAccount.Common;
 
 public class UserInfo
 {
@@ -296,19 +296,20 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo;
     }
 
-    public void SetUserInfo(MsgUserInfo info)
+    public void SetUserInfo(MsgPlayer info)
     {
-        SetUserKey(info.UserId);
+        SetUserKey(info.PlayerGuid);
         
         _userInfo.SetNickName(info.Name);
-        _userInfo.diamond = info.Goods.Diamond;
-        _userInfo.gold = info.Goods.Gold;
-        _userInfo.key = info.Goods.Key;
+        _userInfo.diamond = info.Diamond;
+        _userInfo.gold = info.Gold;
+        _userInfo.key = info.Key;
         _userInfo.trophy = info.Trophy;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
     }
-    
+
+
     public void SetUserKey(string userid)
     {
         _userInfo.SetUserKey(userid);
@@ -344,35 +345,35 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo.activateDeckIndex;
     }
 
-    public void SetDeck(MsgUserDeck[] userDeck)
+    public void SetDeck(MsgDeck[] userDeck)
     {
         for (int i = 0; i < userDeck.Length; i++)
         {
             // string strDeck = string.Format("{0}/{1}/{2}/{3}/{4}", userDeck[i].deckInfo[0], userDeck[i].deckInfo[1],
             //     userDeck[i].deckInfo[2], userDeck[i].deckInfo[3], userDeck[i].deckInfo[4]);
             //Debug.LogFormat("SetDeck[{0}] : {1}", i, strDeck);
-            _userInfo.SetDeck(i, userDeck[i].DeckInfo);
+            _userInfo.SetDeck(i, userDeck[i].DiceIds);
         }
     }
 
-    public void SetDice(MsgUserDice[] userDice)
+    public void SetDice(MsgDice[] userDice)
     {
         _userInfo.dicGettedDice.Clear();
 
         for (int i = 0; i < userDice.Length; i++)
         {
             //Debug.LogFormat("SetDice: ID:{0}, Level:{1}, Count:{2}", userDice[i].diceId, userDice[i].level, userDice[i].count);
-            _userInfo.dicGettedDice.Add(userDice[i].DiceId, new int[2] { userDice[i].Level, userDice[i].Count });
+            _userInfo.dicGettedDice.Add(userDice[i].Id, new int[2] { userDice[i].Level, userDice[i].Count });
         }
     }
 
-    public void SetBox(MsgUserBox[] msgUserBox)
+    public void SetBox(MsgBox[] msgUserBox)
     {
         _userInfo.dicBox.Clear();
 
         for (int i = 0; i < msgUserBox.Length; i++)
         {
-            _userInfo.dicBox.Add(msgUserBox[i].BoxId, msgUserBox[i].Count);
+            _userInfo.dicBox.Add(msgUserBox[i].Id, msgUserBox[i].Count);
         }
     }
     #endregion

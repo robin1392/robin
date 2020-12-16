@@ -156,28 +156,25 @@ namespace ED
 
         public void Click_Upgrade()
         {
-            NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
-            
+            //NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
+            NetworkService.Get().GameSession.Send(Template.Item.RandomWarsDice.Common.ERandomWarsDiceProtocol.LEVELUP_DICE_REQ,
+                UserInfoManager.Get().GetUserInfo().userID, data.id);
+
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
 
-        public void DiceUpgradeCallback(MsgLevelUpDiceAck msg)
+        public void DiceUpgradeCallback(int diceId, short level, short count, int gold)
         {
-            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-
-            if (msg.ErrorCode == 0)
+            var info = UserInfoManager.Get().GetUserInfo();
+            if (info.dicGettedDice.ContainsKey(data.id))
             {
-                var info = UserInfoManager.Get().GetUserInfo();
-                if (info.dicGettedDice.ContainsKey(data.id))
-                {
-                    info.gold -= needGold;
-                    diceLevel++;
-                    info.dicGettedDice[data.id][0]++;
-                    info.dicGettedDice[data.id][1] -= needDiceCount;
-                    
-                    obj_Result.SetActive(true);
-                    StartCoroutine(SetDiceLevelUpResultCoroutine());
-                }
+                info.gold -= needGold;
+                diceLevel++;
+                info.dicGettedDice[data.id][0]++;
+                info.dicGettedDice[data.id][1] -= needDiceCount;
+
+                obj_Result.SetActive(true);
+                StartCoroutine(SetDiceLevelUpResultCoroutine());
             }
         }
 

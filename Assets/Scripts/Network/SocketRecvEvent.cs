@@ -139,29 +139,29 @@ public class SocketRecvEvent
     /// </summary>
     /// <param name="peer"></param>
     /// <param name="msg"></param>
-    public void OnJoinGameAck(Peer peer, MsgJoinGameAck msg)
-    {
-        // something to do...
+    //public void OnJoinGameAck(Peer peer, MsgJoinGameAck msg)
+    //{
+    //    // something to do...
 
-        //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
-        //SendSocket.ReadyGameReq(peer);
-        UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
-        UnityUtil.Print("join my info ", msg.PlayerInfo.PlayerUId + "  " + msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
-        UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.PlayerInfo), "white");
+    //    //NetworkManager.Get().SendSocket.ReadyGameReq(peer);
+    //    //SendSocket.ReadyGameReq(peer);
+    //    UnityUtil.Print(" join recv ", "errocode : " + msg.ErrorCode, "white");
+    //    UnityUtil.Print("join my info ", msg.PlayerInfo.PlayerUId + "  " + msg.PlayerInfo.Name + " , " + msg.PlayerInfo.IsBottomPlayer, "white");
+    //    UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(msg.PlayerInfo), "white");
 
 
-        if (msg.ErrorCode != (int)GameErrorCode.SUCCESS)
-        {
+    //    if (msg.ErrorCode != (int)GameErrorCode.SUCCESS)
+    //    {
 
-            return;
-        }
+    //        return;
+    //    }
 
-        //
-        NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
-        NetworkManager.Get().IsMaster = msg.PlayerInfo.IsMaster;
-        GameStateManager.Get().CheckSendInGame();
+    //    //
+    //    NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
+    //    NetworkManager.Get().IsMaster = msg.PlayerInfo.IsMaster;
+    //    GameStateManager.Get().CheckSendInGame();
 
-    }
+    //}
     
     public void OnJoinCoopGameAck(Peer peer, MsgJoinCoopGameAck msg)
     {
@@ -175,9 +175,9 @@ public class SocketRecvEvent
 
 
         //
-        NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
-        NetworkManager.Get().IsMaster = msg.PlayerInfo.IsMaster;
-        GameStateManager.Get().CheckSendInGame();
+        //NetworkManager.Get().GetNetInfo().SetPlayerInfo(msg.PlayerInfo);
+        //NetworkManager.Get().IsMaster = msg.PlayerInfo.IsMaster;
+        //GameStateManager.Get().CheckSendInGame();
     }
 
 
@@ -318,8 +318,8 @@ public class SocketRecvEvent
 
 
         // menu
-        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
-        GameStateManager.Get().CheckSendInGame();
+        //NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
+        //GameStateManager.Get().CheckSendInGame();
     }
 
     public void OnJoinCoopGameNotify(Peer peer, MsgJoinCoopGameNotify msg)
@@ -331,9 +331,9 @@ public class SocketRecvEvent
 
 
         // menu
-        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.CoopPlayerInfo);
-        NetworkManager.Get().GetNetInfo().SetCoopInfo(msg.OtherPlayerInfo[0]);
-        GameStateManager.Get().CheckSendInGame();
+        //NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.CoopPlayerInfo);
+        //NetworkManager.Get().GetNetInfo().SetCoopInfo(msg.OtherPlayerInfo[0]);
+        //GameStateManager.Get().CheckSendInGame();
     }
 
     public void OnDeactiveWaitingObjectNotify(Peer peer, MsgDeactiveWaitingObjectNotify msg)

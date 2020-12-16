@@ -32,10 +32,6 @@ public class NetworkManager : Singleton<NetworkManager>
     private HttpClient _httpClient;
 
 
-    // web
-    public WebNetworkCommon webNetCommon { get; private set; }
-    public WebPacket webPacket { get; private set; }
-
     // socket
     private SocketManager _clientSocket = null;
     // sender 
@@ -214,15 +210,15 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
         _httpSender = new HttpSender(_httpClient);
 
-        _httpReceiver.AuthUserAck = OnAuthUserAck;
-        _httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
-        _httpReceiver.StartMatchAck = OnStartMatchAck;
-        _httpReceiver.StatusMatchAck = OnStatusMatchAck;
-        _httpReceiver.StopMatchAck = OnStopMatchAck;
-        _httpReceiver.OpenBoxAck = OnOpenBoxAck;
-        _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
-        _httpReceiver.EditUserNameAck = OnEditUserNameAck;
-        _httpReceiver.GetRankAck = OnGetRankAck;
+        //_httpReceiver.AuthUserAck = OnAuthUserAck;
+        //_httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
+        //_httpReceiver.StartMatchAck = OnStartMatchAck;
+        //_httpReceiver.StatusMatchAck = OnStatusMatchAck;
+        //_httpReceiver.StopMatchAck = OnStopMatchAck;
+        //_httpReceiver.OpenBoxAck = OnOpenBoxAck;
+        //_httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
+        //_httpReceiver.EditUserNameAck = OnEditUserNameAck;
+        //_httpReceiver.GetRankAck = OnGetRankAck;
 
 
 
@@ -231,9 +227,6 @@ public class NetworkManager : Singleton<NetworkManager>
         //
         _netInfo = new NetInfo();
         _recvJoinPlayerInfoCheck = false;
-
-        webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
-        webPacket = this.gameObject.AddComponent<WebPacket>();
 
         _clientSocket = new SocketManager();
         _packetSend = new SocketSender();
@@ -256,9 +249,6 @@ public class NetworkManager : Singleton<NetworkManager>
             DisconnectSocket(true);
         }
 
-        GameObject.Destroy(webPacket);
-        GameObject.Destroy(webNetCommon);
-        
         //_battleInfo = null;
 
         _packetSend = null;
@@ -408,7 +398,7 @@ public class NetworkManager : Singleton<NetworkManager>
         // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
         _packetRecv = new SocketReceiver();
 
-        _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
+       // _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
         _packetRecv.JoinCoopGameAck = _socketRecv.OnJoinCoopGameAck;
         _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
         _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
@@ -522,8 +512,8 @@ public class NetworkManager : Singleton<NetworkManager>
         
         print("my info : " + msg.PlayerBase.PlayerUId +  "  " + msg.PlayerBase.IsBottomPlayer + "    " + msg.PlayerBase.Name );
         print("other info : " + msg.OtherPlayerBase.PlayerUId +  "  " + msg.OtherPlayerBase.IsBottomPlayer + "    " + msg.OtherPlayerBase.Name );
-        _netInfo.SetPlayerBase(msg.PlayerBase);
-        _netInfo.SetOtherBase(msg.OtherPlayerBase);
+        //_netInfo.SetPlayerBase(msg.PlayerBase);
+        //_netInfo.SetOtherBase(msg.OtherPlayerBase);
         
         //
         IsMaster = _netInfo.playerInfo.IsBottomPlayer;
@@ -536,62 +526,62 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #region http
 
-    public void AuthUserReq(string userId)
-    {
-        MsgUserAuthReq msg = new MsgUserAuthReq();
-        msg.UserId = userId;
-        _httpSender.AuthUserReq(msg);
-        UnityUtil.Print("SEND AUTH => userid", userId, "green");
-    }
+    //public void AuthUserReq(string userId)
+    //{
+    //    MsgUserAuthReq msg = new MsgUserAuthReq();
+    //    msg.UserId = userId;
+    //    _httpSender.AuthUserReq(msg);
+    //    UnityUtil.Print("SEND AUTH => userid", userId, "green");
+    //}
 
 
-    void OnAuthUserAck(MsgUserAuthAck msg)
-    {
-        if (msg.ErrorCode == GameErrorCode.ERROR_USER_NOT_FOUND)
-        {
-            ObscuredPrefs.SetString("UserKey", string.Empty);
-            ObscuredPrefs.Save();
-            UI_Start.Get().SetTextStatus(string.Empty);
-            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
-            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
-            {
-                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
-                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-                AuthUserReq(string.Empty);
-            });
-            return;
-        }
+    //void OnAuthUserAck(MsgUserAuthAck msg)
+    //{
+    //    if (msg.ErrorCode == GameErrorCode.ERROR_USER_NOT_FOUND)
+    //    {
+    //        ObscuredPrefs.SetString("UserKey", string.Empty);
+    //        ObscuredPrefs.Save();
+    //        UI_Start.Get().SetTextStatus(string.Empty);
+    //        UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
+    //        UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
+    //        {
+    //            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+    //            UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+    //            AuthUserReq(string.Empty);
+    //        });
+    //        return;
+    //    }
         
-        UserInfoManager.Get().SetUserInfo(msg.UserInfo);
-        UserInfoManager.Get().SetDeck(msg.UserDeck);
-        UserInfoManager.Get().SetDice(msg.UserDice);
-        UserInfoManager.Get().SetBox(msg.UserBox);
+    //    UserInfoManager.Get().SetUserInfo(msg.UserInfo);
+    //    UserInfoManager.Get().SetDeck(msg.UserDeck);
+    //    UserInfoManager.Get().SetDice(msg.UserDice);
+    //    UserInfoManager.Get().SetBox(msg.UserBox);
 
-        GameStateManager.Get().UserAuthOK();
-        UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
-    }
-
-
-    public void EditUserNameReq(string userId, string userName, Action<MsgEditUserNameAck> callback)
-    {
-        MsgEditUserNameReq msg = new MsgEditUserNameReq();
-        msg.UserId = userId;
-        msg.UserName = userName;
-        _editUserNameCallback = callback;
-        _httpSender.EditUserNameReq(msg);
-        UnityUtil.Print("SEND EDIT USER NAME => name", userName, "green");
-    }
+    //    GameStateManager.Get().UserAuthOK();
+    //    UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
+    //}
 
 
-    void OnEditUserNameAck(MsgEditUserNameAck msg)
-    {
-        if (_editUserNameCallback != null)
-        {
-            _editUserNameCallback(msg);
-        }
+    //public void EditUserNameReq(string userId, string userName, Action<MsgEditUserNameAck> callback)
+    //{
+    //    MsgEditUserNameReq msg = new MsgEditUserNameReq();
+    //    msg.UserId = userId;
+    //    msg.UserName = userName;
+    //    _editUserNameCallback = callback;
+    //    _httpSender.EditUserNameReq(msg);
+    //    UnityUtil.Print("SEND EDIT USER NAME => name", userName, "green");
+    //}
+
+
+    //void OnEditUserNameAck(MsgEditUserNameAck msg)
+    //{
+    //    if (_editUserNameCallback != null)
+    //    {
+    //        _editUserNameCallback(msg);
+    //    }
         
-        UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
-    }
+    //    UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
+    //}
 
 
     IEnumerator WaitForMatch()
@@ -791,9 +781,9 @@ public class NetInfo
 {
 
     //
-    public MsgPlayerInfo playerInfo;
-    public MsgPlayerInfo otherInfo;
-    public MsgPlayerInfo coopInfo;
+    public Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo playerInfo;
+    public Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo otherInfo;
+    public Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo coopInfo;
     public bool myInfoGet = false;
     public bool otherInfoGet = false;
     public bool coopInfoGet = false;
@@ -810,7 +800,7 @@ public class NetInfo
         coopInfoGet = false;
     }
 
-    public void SetPlayerInfo(MsgPlayerInfo info)
+    public void SetPlayerInfo(Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo info)
     {
         playerInfo = info;
         /*for(int i = 0 ; i < playerInfo.DiceIdArray.Length ; i++ )
@@ -818,7 +808,7 @@ public class NetInfo
         myInfoGet = true;
     }
 
-    public void SetOtherInfo(MsgPlayerInfo info)
+    public void SetOtherInfo(Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo info)
     {
         otherInfo = info;
         /*for(int i = 0 ; i < otherInfo.DiceIdArray.Length ; i++ )
@@ -826,15 +816,15 @@ public class NetInfo
         otherInfoGet = true;
     }
 
-    public void SetCoopInfo(MsgPlayerInfo info)
+    public void SetCoopInfo(Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo info)
     {
         coopInfo = info;
         coopInfoGet = true;
     }
 
-    public void SetPlayerBase(MsgPlayerBase baseinfo)
+    public void SetPlayerBase(Template.Stage.RandomWarsMatch.Common.MsgPlayerBase baseinfo)
     {
-        MsgPlayerInfo pinfo = new MsgPlayerInfo();
+        Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo pinfo = new Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo();
 
         pinfo.PlayerUId = baseinfo.PlayerUId;
         pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;
@@ -843,9 +833,9 @@ public class NetInfo
         playerInfo = pinfo;
     }
 
-    public void SetOtherBase(MsgPlayerBase baseinfo)
+    public void SetOtherBase(Template.Stage.RandomWarsMatch.Common.MsgPlayerBase baseinfo)
     {
-        MsgPlayerInfo pinfo = new MsgPlayerInfo();
+        Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo pinfo = new Template.Stage.RandomWarsMatch.Common.MsgPlayerInfo();
 
         pinfo.PlayerUId = baseinfo.PlayerUId;
         pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;

@@ -183,11 +183,12 @@ namespace ED
             
             if (NetworkManager.Get().UseLocalServer == true)
             {
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
+                NetworkService.Get().ConnectGameServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
                 return;
             }
 
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            //NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            NetworkService.Get().GameSession.Send(Template.Stage.RandomWarsMatch.Common.ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, UserInfoManager.Get().GetUserInfo().userID);
         }
 
         private void ConnectCoop()
