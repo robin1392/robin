@@ -52,8 +52,6 @@ namespace ED
             animator = ani_Baby;
             ts_HitPos = ts_HitPosBaby;
             ts_HPBarParent.localPosition = ts_BabyHPBarPoint.localPosition;
-            agent.baseOffset = 0;
-            agent.areaMask = 1 << NavMesh.GetAreaFromName("Walkable");
             originRange = range;
             range = 0.7f;
             StartCoroutine(PolymorphCoroutine());
@@ -124,8 +122,6 @@ namespace ED
             animator = ani_Dragon;
             ts_HitPos = ts_HitPosDragon;
             ts_HPBarParent.localPosition = ts_DragonHPBarPoint.localPosition;
-            agent.baseOffset = -2f;
-            agent.areaMask = 1 << NavMesh.GetAreaFromName("Fly");
             range = originRange;
             
             ps_Smoke.Play();
