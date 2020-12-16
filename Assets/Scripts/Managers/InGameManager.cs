@@ -37,7 +37,7 @@ namespace ED
 
         //public Data_AllDice data_AllDice;
         // new all dice info
-        public DiceInfo data_DiceInfo;
+        public Table.TableData<int, Table.Data.TDataDiceInfo> data_DiceInfo;
 
 
         public GameObject pref_Player;
@@ -152,7 +152,7 @@ namespace ED
                 DataPatchManager.Get().JsonDownLoad();
 
             // 전체 주사위 정보
-            data_DiceInfo = JsonDataManager.Get().dataDiceInfo;
+            data_DiceInfo = TableManager.Get().DiceInfo;
 
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
             PoolManager.Get().MakePool();
@@ -255,17 +255,27 @@ namespace ED
                 msgUserInfo.Name = UserInfoManager.Get().GetUserInfo().userNickName;
                 msgUserInfo.CurrentSp = 200;
                 int bonusHP = 0;
-            
-                foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
+
+
+                Table.Data.TDataDiceInfo[] dataDiceInfoArray;
+                if (TableManager.Get().DiceInfo.GetData( x => x.enableDice, out dataDiceInfoArray ) == false)
                 {
-                    if (info.Value.enableDice)
+                    return;
+                }
+
+                foreach (var info in dataDiceInfoArray)
+                {
+                    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.id))
                     {
-                        if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.Value.id))
+                        int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
+
+                        Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                        if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level && x.diceGrade == info.grade, out dataDiceUpgrade) == false)
                         {
-                            int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0];
-                            bonusHP += JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level]
-                                .levelUpNeedInfo[info.Value.grade].addTowerHp;
+                            return;
                         }
+
+                        bonusHP += dataDiceUpgrade.getTowerHp;
                     }
                 }
                 msgUserInfo.TowerHp = (30000 + bonusHP) * 100;

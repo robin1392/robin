@@ -2,13 +2,12 @@
 #define ENABLE_LOG
 #endif
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using ED;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Debug = ED.Debug;
@@ -96,64 +95,73 @@ public class UI_BoxOpenPopup : UI_Popup
         this.boxID = id;
         this.costType = costType;
         this.cost = cost;
-        
-        var data = JsonDataManager.Get().dataBoxInfo.GetData(id);
-        var classRewardData = new List<RewardData>(data.classRewards[UserInfoManager.Get().GetUserInfo().nClass]);
-        var classRateData = new List<RewardRate>(data.rewardRate);
-        var classKindData = new List<RewardKindNum>(data.rewardKindNum);
+
+        Table.Data.TDataBoxList dataBoxList;
+        if (TableManager.Get().BoxList.GetData(id, out dataBoxList) == false)
+        {
+            return;
+        }
+
+
+        int totalGold = 0;
+        int totalDiamond = 0;
+        int totalDiceCount = 0;
+        foreach (var productId in dataBoxList.productId)
+        {
+            Table.Data.TDataBoxProductInfo dataBoxProductInfo;
+            if (TableManager.Get().BoxProductInfo.GetData(productId, out dataBoxProductInfo) == false)
+            {
+                return;
+            }
+
+            totalGold += dataBoxProductInfo.gold;
+            totalDiamond += dataBoxProductInfo.dia;
+
+            // TODO : [개선] 우선 최소값만 합산함.
+            if (dataBoxProductInfo.rewardCardGradeType1 != 0 && dataBoxProductInfo.rewardIsProbability1 == true)
+            {
+                totalDiceCount += dataBoxProductInfo.rewardCardValue1[0];
+            }
+            if (dataBoxProductInfo.rewardCardGradeType2 != 0 && dataBoxProductInfo.rewardIsProbability2 == true)
+            {
+                totalDiceCount += dataBoxProductInfo.rewardCardValue2[0];
+            }
+            if (dataBoxProductInfo.rewardCardGradeType3 != 0 && dataBoxProductInfo.rewardIsProbability3 == true)
+            {
+                totalDiceCount += dataBoxProductInfo.rewardCardValue3[0];
+            }
+            if (dataBoxProductInfo.rewardCardGradeType4 != 0 && dataBoxProductInfo.rewardIsProbability4 == true)
+            {
+                totalDiceCount += dataBoxProductInfo.rewardCardValue4[0];
+            }
+            if (dataBoxProductInfo.rewardCardGradeType5 != 0 && dataBoxProductInfo.rewardIsProbability5 == true)
+            {
+                totalDiceCount += dataBoxProductInfo.rewardCardValue5[0];
+            }
+        }
+
 
         text_BoxName.text = LocalizationManager.GetLangDesc(40000 + id);
-        
+
         // Gold
-        var goldData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.GOLD);
-        var goldRate = classRateData.Find(d => d.rewardType == REWARD_TYPE.GOLD);
-        obj_Gold.SetActive(goldData != null && goldRate != null && goldRate.rate == 100);
+        obj_Gold.SetActive(totalGold > 0);
         if (obj_Gold.activeSelf)
         {
-            text_Gold.text = goldData.value.ToString();
+            text_Gold.text = totalGold.ToString();
         }
-        
-        int totalDiceCount = 0;
-        // Normal Dice
-        var normalDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_NORMAL);
-        if (normalDiceData != null) totalDiceCount += normalDiceData.value;
-        
-        // Magic Dice
-        var magicDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_MAGIC);
-        if (magicDiceData != null) totalDiceCount += magicDiceData.value;
 
-        // Epic Dice
-        var epicDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_EPIC);
-        if (epicDiceData != null) totalDiceCount += epicDiceData.value;
 
-        // Legend Dice
-        var legendDiceData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DICE_LEGEND);
-        if (legendDiceData != null) totalDiceCount += legendDiceData.value;
-        
         // Total Dice
         obj_Dice.SetActive(totalDiceCount > 0);
         if (totalDiceCount > 0) text_Dice.text = $"x{totalDiceCount}";
-        
+
         // Diamond
-        var diamondData = classRewardData.Find(d => d.rewardType == REWARD_TYPE.DIAMOND);
-        var diamondRate = classRateData.Find(d => d.rewardType == REWARD_TYPE.DIAMOND);
-        obj_Diamond.SetActive(diamondData != null && diamondRate != null && diamondRate.rate == 100);
+        obj_Diamond.SetActive(totalDiamond > 0);
         if (obj_Diamond.activeSelf)
         {
-            text_Diamond.text = diamondData.value.ToString();
+            text_Diamond.text = totalDiamond.ToString();
         }
-        
-        // Include Magic Dice
-        obj_MagicDice.SetActive(magicDiceData.value > 0);
-        if (magicDiceData.value > 0) text_MagicDice.text = $"x{magicDiceData.value}";
-        
-        // Include Epic Dice
-        obj_EpicDice.SetActive(epicDiceData.value > 0);
-        if (epicDiceData.value > 0) text_EpicDice.text = $"x{epicDiceData.value}";
-        
-        // Include Legend Dice
-        obj_LegendDice.SetActive(legendDiceData.value > 0);
-        if (legendDiceData.value > 0) text_LegendDice.text = $"x{legendDiceData.value}";
+
 
         image_CostIcon.sprite = arrSprite_CostType[(int)costType];
         text_Cost.text = cost.ToString();
@@ -172,6 +180,7 @@ public class UI_BoxOpenPopup : UI_Popup
         ani_Box.gameObject.SetActive(true);
         obj_Result.SetActive(false);
     }
+
 
     public void Click_Open()
     {
@@ -246,9 +255,14 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_NORMAL).value;
+                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.NORMAL, out dataDiceLevelInfo) == false)
+                        {
+                            return;
+                        }
+
                         count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
                     }
                     else
                     {
@@ -261,9 +275,14 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_MAGIC).value;
+                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.MAGIC, out dataDiceLevelInfo) == false)
+                        {
+                            return;
+                        }
+
                         count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
                     }
                     else
                     {
@@ -276,9 +295,14 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_EPIC).value;
+                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.EPIC, out dataDiceLevelInfo) == false)
+                        {
+                            return;
+                        }
+
                         count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
                     }
                     else
                     {
@@ -291,9 +315,14 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        level = JsonDataManager.Get().dataGlobalDataInfo.GetData(GLOBAL_DATA_KEY.DICE_START_LEVEL_LEGEND).value;
+                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.LEGEND, out dataDiceLevelInfo) == false)
+                        {
+                            return;
+                        }
+
                         count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { level, count });
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
                     }
                     else
                     {
@@ -360,7 +389,8 @@ public class UI_BoxOpenPopup : UI_Popup
         ani_Item.gameObject.SetActive(true);
 
         MsgReward reward = msg.BoxReward[openCount];
-        
+
+
         // 보상내용 세팅
         switch (reward.RewardType)
         {
@@ -392,8 +422,15 @@ public class UI_BoxOpenPopup : UI_Popup
                 }
 
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[0];
+
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                    FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
+                    FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
@@ -404,9 +441,13 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
-                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade]
-                    .needDiceCount;
+                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+                {
+                    return;
+                }
+
+                int needDiceCount = dataDiceUpgrade.needCard;
                 crt_TextCount = StartCoroutine(TextCountCoroutine(
                     UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value, needDiceCount, 1.2f));
@@ -422,8 +463,15 @@ public class UI_BoxOpenPopup : UI_Popup
                 }
 
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[1];
+
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                    FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
+                    FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
@@ -434,9 +482,13 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
-                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade]
-                    .needDiceCount;
+                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+                {
+                    return;
+                }
+
+                int needDiceCount = dataDiceUpgrade.needCard;
                 crt_TextCount = StartCoroutine(TextCountCoroutine(
                     UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value, needDiceCount, 1.2f));
@@ -452,8 +504,14 @@ public class UI_BoxOpenPopup : UI_Popup
                 }
 
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[2];
+
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+                {
+                    return;
+                }
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                    FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 0.6f));
+                    FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
@@ -464,9 +522,13 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
-                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade]
-                    .needDiceCount;
+                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+                {
+                    return;
+                }
+
+                int needDiceCount = dataDiceUpgrade.needCard;
                 crt_TextCount = StartCoroutine(TextCountCoroutine(
                     UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value, needDiceCount, 1.2f));
@@ -476,9 +538,14 @@ public class UI_BoxOpenPopup : UI_Popup
             {
                 obj_Guage.SetActive(true);
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3];
-                crt_IconChange =
-                    StartCoroutine(IconChangeCoroutine(
-                        FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].iconName), 3f));
+
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(
+                        FileHelper.GetIcon(dataDiceInfo.iconName), 3f));
                 image_ItemIcon.SetNativeSize();
                 ani_Item.SetTrigger("GetLegend");
                 text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
@@ -489,8 +556,13 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                int grade = JsonDataManager.Get().dataDiceInfo.dicData[reward.Id].grade;
-                int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[grade].needDiceCount;
+                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+                {
+                    return;
+                }
+
+                int needDiceCount = dataDiceUpgrade.needCard;
                 crt_TextCount = StartCoroutine(TextCountCoroutine(
                     UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
                     reward.Value, needDiceCount, 3.7f));
@@ -595,10 +667,15 @@ public class UI_BoxOpenPopup : UI_Popup
                 case REWARD_TYPE.DICE_EPIC:
                 case REWARD_TYPE.DICE_LEGEND:
                 {
+                    Table.Data.TDataDiceInfo dataDiceInfo;
+                    if (TableManager.Get().DiceInfo.GetData(msgReward.Id, out dataDiceInfo) == false)
+                    {
+                            break;
+                    }
+
                     var dice = Instantiate(pref_ResultDice, rts_ResultDiceParent);
-                    var data = JsonDataManager.Get().dataDiceInfo.dicData[msgReward.Id];
-                    dice.GetComponent<Image>().sprite = FileHelper.GetIcon(data.iconName);
-                    dice.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
+                    dice.GetComponent<Image>().sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
+                    dice.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + dataDiceInfo.id);
                     dice.transform.GetChild(1).GetComponent<Text>().text = $"x{msgReward.Value}";
                     dice.transform.localScale = Vector3.zero;
                     dice.transform.DOScale(Vector3.one, 0.2f).SetDelay(0.05f * loopCount++).SetEase(Ease.OutBack);

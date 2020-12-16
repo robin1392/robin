@@ -42,11 +42,15 @@ namespace ED
             for (var i = 0; i < arrAni_Model.Length; i++)
             {
                 if (arrAni_Model[i] != null) Destroy(arrAni_Model[i].gameObject);
-                
+
                 //var num = int.Parse(splitDeck[i]);
-                var data = JsonDataManager.Get().dataDiceInfo.GetData(deck[i]);
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
+                {
+                    return;
+                }
                 
-                var obj = FileHelper.LoadPrefab(data.modelName, data.loadType == 0 ? Global.E_LOADTYPE.LOAD_MAIN_MINION : Global.E_LOADTYPE.LOAD_MAIN_MAGIC);
+                var obj = FileHelper.LoadPrefab(dataDiceInfo.modelName, dataDiceInfo.loadType == 0 ? Global.E_LOADTYPE.LOAD_MAIN_MINION : Global.E_LOADTYPE.LOAD_MAIN_MAGIC);
 
                 if (obj != null)
                 {
@@ -62,12 +66,12 @@ namespace ED
                     {
                         for (int j = 0; j < 4; j++)
                         {
-                            dicAura[i][j].SetActive(j == data.grade);
+                            dicAura[i][j].SetActive(j == dataDiceInfo.grade);
                         }
                     }
                 }
 
-                if (data.moveType == 1)
+                if (dataDiceInfo.moveType == 1)
                 {
                     arrAni_Model[i].transform.localPosition += Vector3.up;
                 }

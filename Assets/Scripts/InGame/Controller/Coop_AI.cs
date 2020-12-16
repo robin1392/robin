@@ -192,7 +192,13 @@ namespace ED
             for (int i = 0; i < minionCount; i++)
             {
                 var pos = FieldManager.Get().GetTopListPos(i);
-                var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
+
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(1000, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+                var obj = FileHelper.LoadPrefab(dataDiceInfo.prefabName,
                     Global.E_LOADTYPE.LOAD_MINION);
                 var m = CreateMinion(obj, pos);
 
@@ -221,8 +227,14 @@ namespace ED
         {
             if (boss != null && boss.DataId > 0)
             {
+                Table.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                if (TableManager.Get().CoopModeBossInfo.GetData(boss.DataId, out dataCoopModeBossInfo) == false)
+                {
+                    return;
+                }
+
                 var obj = FileHelper.LoadPrefab(
-                    $"{JsonDataManager.Get().dataBossInfo.dicData[boss.DataId].unitPrefabName}_Egg",
+                    $"{dataCoopModeBossInfo.prefabName}_Egg",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
                 if (obj != null)
@@ -257,8 +269,14 @@ namespace ED
         {
             if (msgBoss != null)
             {
+                Table.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                if (TableManager.Get().CoopModeBossInfo.GetData(msgBoss.DataId, out dataCoopModeBossInfo) == false)
+                {
+                    return;
+                }
+
                 var obj = FileHelper.LoadPrefab(
-                    $"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}",
+                    $"{dataCoopModeBossInfo.prefabName}",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
                 var m = CreateMinion(obj, transform.position, false);
