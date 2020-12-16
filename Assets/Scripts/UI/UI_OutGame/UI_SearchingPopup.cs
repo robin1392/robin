@@ -5,6 +5,7 @@ using ED;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using Debug = ED.Debug;
 
 public class UI_SearchingPopup : UI_Popup
 {
@@ -47,16 +48,22 @@ public class UI_SearchingPopup : UI_Popup
     {
         if (NetworkManager.Get() != null)
         {
-            if (NetworkManager.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_START)
+            switch (NetworkManager.Get().NetMatchStep)
             {
-                btn_Cancel.interactable = false;
-                // 매칭 요청중이면 중단을 요청한다.
-                NetworkManager.Get().StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
-            }
-            else if (NetworkManager.Get().NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
-            {
-                // 이미 상대 찾아서 커넥트 중이면 취소 못한다..
-                return;
+                case Global.E_MATCHSTEP.MATCH_NONE:
+                    ClickSearchingCancelResult();
+                    break;
+                case Global.E_MATCHSTEP.MATCH_START:
+                    btn_Cancel.interactable = false;
+                    // 매칭 요청중이면 중단을 요청한다.
+                    NetworkManager.Get().StopMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
+                    break;
+                case Global.E_MATCHSTEP.MATCH_CONNECT:
+                    btn_Cancel.interactable = false;
+                    return;
+                case Global.E_MATCHSTEP.MATCH_CANCEL:
+                    btn_Cancel.interactable = false;
+                    break;
             }
         }
     }
