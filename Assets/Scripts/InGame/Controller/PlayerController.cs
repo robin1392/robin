@@ -307,7 +307,7 @@ namespace ED
                 {
                     int fieldIndex = infos[i].SlotIndex;
                     var data = arrDice[fieldIndex].diceData;
-                    var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
+                    var upgradeLevel = infos[i].DiceInGameUp;
                     var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
 
                     for (int j = 0; j < infos[i].Id.Length; j++)
