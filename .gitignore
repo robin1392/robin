@@ -58,6 +58,9 @@ sysinfo.txt
 # LastScene
 *.lastScene
 
+# idea
+/.idea/
+
 # Crashlytics generated file
 crashlytics-build.properties
 

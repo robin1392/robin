@@ -578,7 +578,7 @@ namespace ED
                     }
                 }
                 m.power = data.power + (data.powerUpgrade * arrDiceLevel[deckNum]) + (data.powerInGameUp * upgradeLevel);
-                if (wave > 10)
+                if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE &&  wave > 10)
                 {
                     m.power *= Mathf.Pow(2f, wave - 10);
                 }
@@ -594,7 +594,7 @@ namespace ED
                 m.effectCooltime = data.effectCooltime;
                 
                 m.attackSpeed = data.attackSpeed;
-                if (wave > 10)
+                if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE && wave > 10)
                 {
                     m.attackSpeed *= Mathf.Pow(0.9f, wave - 10);
                     if (m.attackSpeed < data.attackSpeed * 0.5f) m.attackSpeed = data.attackSpeed * 0.5f;
