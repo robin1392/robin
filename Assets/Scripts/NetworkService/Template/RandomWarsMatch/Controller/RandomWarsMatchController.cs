@@ -80,5 +80,18 @@ namespace Template.Stage.RandomWarsMatch
             GameStateManager.Get().CheckSendInGame();
             return true;
         }
+
+
+        bool OnNotifyJoinMatchController(ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo otherPlayerInfo)
+        {
+            UnityUtil.Print("other info ", otherPlayerInfo.PlayerUId + "  " + otherPlayerInfo.Name + " , " + otherPlayerInfo.IsBottomPlayer, "white");
+            UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(otherPlayerInfo), "white");
+
+
+            // menu
+            NetworkManager.Get().GetNetInfo().SetOtherInfo(otherPlayerInfo);
+            GameStateManager.Get().CheckSendInGame();
+            return true;
+        }
     }
 }

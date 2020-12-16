@@ -318,8 +318,8 @@ public class SocketRecvEvent
 
 
         // menu
-        //NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
-        //GameStateManager.Get().CheckSendInGame();
+        NetworkManager.Get().GetNetInfo().SetOtherInfo(msg.OtherPlayerInfo);
+        GameStateManager.Get().CheckSendInGame();
     }
 
     public void OnJoinCoopGameNotify(Peer peer, MsgJoinCoopGameNotify msg)
