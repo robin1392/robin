@@ -122,28 +122,9 @@ public class NetworkService : Singleton<NetworkService>
     }
 
 
-    public void CreateGameSession(string serverAddr, int port, string playerSessionId)
-    {
-        //_playerSessionId = playerSessionId;
-        //_serverAddr = serverAddr;
-        //_port = port;
-
-        //NetClientGameSession gameSession = new NetClientGameSession();
-        //gameSession.Init(new GameSessionConfig
-        //{
-        //    Id = gameSessionId,
-        //    MessageBufferSize = 10240,
-        //    MessageQueueCapacity = 100,
-        //});
-
-        //_netGameClient.SetGameSession(gameSession);
-        //_gamePlayer = gameSession.Player;
-    }
-
-
     public bool IsConnected()
     {
-        return true;
+        return GameSession != null && GameSession.IsConnected();
     }
 
 
