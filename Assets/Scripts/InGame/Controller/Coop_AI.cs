@@ -184,12 +184,33 @@ namespace ED
         
         #region Spawn
 
-        public void Spawn()
+        public override void Spawn(MsgSpawnMinion[] infos)
         {
             packetCount = 0;
 
-            int minionCount = Mathf.Clamp(Mathf.FloorToInt(InGameManager.Get().wave * 1.5f), 1, 15);
-            for (int i = 0; i < minionCount; i++)
+            //int minionCount = Mathf.Clamp(Mathf.FloorToInt(InGameManager.Get().wave * 1.5f), 1, 15);
+            //for (int i = 0; i < minionCount; i++)
+            //{
+            //    var pos = FieldManager.Get().GetTopListPos(i);
+            //    var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
+            //        Global.E_LOADTYPE.LOAD_MINION);
+            //    var m = CreateMinion(obj, pos);
+
+            //    //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+            //    //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+
+            //    m.targetMoveType = DICE_MOVE_TYPE.ALL;
+            //    m.ChangeLayer(false);
+            //    m.power = Mathf.Clamp(100f + 2f * InGameManager.Get().wave, 0, 300f);
+            //    m.maxHealth = Mathf.Clamp(300f + 5f * InGameManager.Get().wave, 0, 2000f);
+            //    m.attackSpeed = 1f;
+            //    m.moveSpeed = 1f;
+            //    m.eyeLevel = 1;
+            //    m.upgradeLevel = 0;
+            //    m.Initialize(MinionDestroyCallback);
+            //}
+
+            for(int i = 0; i < infos.Length; i++)
             {
                 var pos = FieldManager.Get().GetTopListPos(i);
 
@@ -200,19 +221,17 @@ namespace ED
                 }
                 var obj = FileHelper.LoadPrefab(dataDiceInfo.prefabName,
                     Global.E_LOADTYPE.LOAD_MINION);
+
                 var m = CreateMinion(obj, pos);
 
-                //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
-
-                m.targetMoveType = DICE_MOVE_TYPE.ALL;
+                m.targetMoveType = (DICE_MOVE_TYPE)dataDiceInfo.targetMoveType;
                 m.ChangeLayer(false);
-                m.power = Mathf.Clamp(100f + 2f * InGameManager.Get().wave, 0, 300f);
-                m.maxHealth = Mathf.Clamp(300f + 5f * InGameManager.Get().wave, 0, 2000f);
-                m.attackSpeed = 1f;
-                m.moveSpeed = 1f;
+                m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel + dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
+                m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
+                m.attackSpeed = dataDiceInfo.attackSpeed;
+                m.moveSpeed = dataDiceInfo.moveSpeed;
                 m.eyeLevel = 1;
-                m.upgradeLevel = 0;
+                m.ingameUpgradeLevel = infos[i].DiceInGameUp;
                 m.Initialize(MinionDestroyCallback);
             }
 
@@ -292,7 +311,7 @@ namespace ED
                 //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
                 m.isMine = NetworkManager.Get().IsMaster;
                 m.eyeLevel = 1;
-                m.upgradeLevel = 0;
+                m.ingameUpgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
                 
                 m.currentHealth = currentHealth;
@@ -383,48 +402,53 @@ namespace ED
 
             foreach (var msg in dic)
             {
-                #if ENABLE_LOG
+#if ENABLE_LOG
                 str += string.Format("\n{0} -> List count : {1}", msg.Key, msg.Value.Count);
-                switch (msg.Key)
+                switch(msg.Key)
                 {
-                    case GameProtocol.HIT_DAMAGE_MINION_RELAY:
-                        foreach (var value in msg.Value)
-                        {
-                            MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
-                            str += string.Format("\n      ID:{1}, DMG:{2}", m.Id, m.Damage);
-                        }
-                        break;
-                    case GameProtocol.HEAL_MINION_RELAY:
-                        foreach (var value in msg.Value)
-                        {
-                            MsgHealMinionRelay m = (MsgHealMinionRelay) value;
-                            str += string.Format("\n      ID:{1}, HEAL:{2}", m.Id, m.Heal);
-                        }
-                        break;
-                    case GameProtocol.DESTROY_MINION_RELAY:
-                        foreach (var value in msg.Value)
-                        {
-                            MsgDestroyMinionRelay m = (MsgDestroyMinionRelay) value;
-                            str += string.Format("\n      ID:{1}", m.Id);
-                        }
-                        break;
-                    case GameProtocol.DESTROY_MAGIC_RELAY:
-                        foreach (var value in msg.Value)
-                        {
-                            MsgDestroyMagicRelay m = (MsgDestroyMagicRelay) value;
-                            str += string.Format("\n      ID:{1}", m.BaseStatId);
-                        }
-                        break;
-                    case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
-                        foreach (var value in msg.Value)
-                        {
-                            MsgActivatePoolObjectRelay m = (MsgActivatePoolObjectRelay) value;
-                            str += string.Format("\n      POOL: {0}", ((E_PoolName)m.PoolName).ToString());
-                        }
-                        break;
+                case GameProtocol.HIT_DAMAGE_MINION_RELAY:
+                    foreach(var value in msg.Value)
+                    {
+                        MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay)value;
+                        str += string.Format("\n      ID:{0}, DMG:{1}", m.Id, m.Damage);
+                    }
+
+                    break;
+                case GameProtocol.HEAL_MINION_RELAY:
+                    foreach(var value in msg.Value)
+                    {
+                        MsgHealMinionRelay m = (MsgHealMinionRelay)value;
+                        str += string.Format("\n      ID:{0}, HEAL:{1}", m.Id, m.Heal);
+                    }
+
+                    break;
+                case GameProtocol.DESTROY_MINION_RELAY:
+                    foreach(var value in msg.Value)
+                    {
+                        MsgDestroyMinionRelay m = (MsgDestroyMinionRelay)value;
+                        str += string.Format("\n      ID:{0}", m.Id);
+                    }
+
+                    break;
+                case GameProtocol.DESTROY_MAGIC_RELAY:
+                    foreach(var value in msg.Value)
+                    {
+                        MsgDestroyMagicRelay m = (MsgDestroyMagicRelay)value;
+                        str += string.Format("\n      ID:{0}", m.BaseStatId);
+                    }
+
+                    break;
+                case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
+                    foreach(var value in msg.Value)
+                    {
+                        MsgActivatePoolObjectRelay m = (MsgActivatePoolObjectRelay)value;
+                        str += string.Format("\n      POOL: {0}", ((E_PoolName)m.PoolName).ToString());
+                    }
+
+                    break;
                 }
-                #endif
-                
+#endif
+
                 if (msg.Value.Count > 0)
                 {
                     foreach (var obj in msg.Value)

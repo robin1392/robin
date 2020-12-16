@@ -52,7 +52,7 @@ namespace ED
         private float _originalAttackSpeed;
 
         [HideInInspector] public int eyeLevel;
-        [HideInInspector] public int upgradeLevel;
+        [HideInInspector] public int ingameUpgradeLevel;
 
         private Vector3 _dodgeVelocity;
         protected static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
@@ -64,7 +64,6 @@ namespace ED
         private Coroutine _crtPush;
         public BehaviourTreeOwner behaviourTreeOwner { get; protected set; }
         protected PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
-        public NavMeshAgent agent;
         protected Collider _collider;
         public bool isPolymorph;
         protected int _flagOfWarCount;
@@ -84,7 +83,6 @@ namespace ED
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
             behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
-            agent = GetComponent<NavMeshAgent>();
             _collider = GetComponentInChildren<Collider>();
             _seeker = GetComponent<Seeker>();
             _aiPath = GetComponent<AIPath>();

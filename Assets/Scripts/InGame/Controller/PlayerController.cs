@@ -293,7 +293,7 @@ namespace ED
         
         #region spawn
 
-        public void Spawn(MsgSpawnMinion[] infos)
+        public virtual void Spawn(MsgSpawnMinion[] infos)
         {
             spawnCountInWave = 0;
             packetCount = 0;
@@ -307,7 +307,7 @@ namespace ED
                 {
                     int fieldIndex = infos[i].SlotIndex;
                     var data = arrDice[fieldIndex].diceData;
-                    var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
+                    var upgradeLevel = infos[i].DiceInGameUp;
                     var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
 
                     for (int j = 0; j < infos[i].Id.Length; j++)
@@ -394,7 +394,7 @@ namespace ED
                 m.moveSpeed = 0.8f;
                 m.range = 0.7f;
                 m.eyeLevel = 1;
-                m.upgradeLevel = 0;
+                m.ingameUpgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
                 
                 ps_ShieldOff.Play();
@@ -603,7 +603,7 @@ namespace ED
                 m.range = data.range;
                 m.searchRange = data.searchRange;
                 m.eyeLevel = eyeLevel;
-                m.upgradeLevel = upgradeLevel;
+                m.ingameUpgradeLevel = upgradeLevel;
                 
                 if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
                 {
@@ -1075,7 +1075,7 @@ namespace ED
             m.moveSpeed = 0.8f;
             m.range = 0.7f;
             m.eyeLevel = 1;
-            m.upgradeLevel = 0;
+            m.ingameUpgradeLevel = 0;
             m.Initialize(MinionDestroyCallback);
             
             PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
@@ -2163,7 +2163,7 @@ namespace ED
                                 msgMinionInfos[i].Id = ConvertNetMsg.MsgIntToUshort(listMinion[i].id);
                                 for (int j = 0; j < arrDiceDeck.Length; j++)
                                 {
-                                    if (arrDiceDeck[j].id == listMinion[i].diceId)
+                                    if (arrDiceDeck[j] != null && arrDiceDeck[j].id == listMinion[i].diceId)
                                     {
                                         msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
                                     }
@@ -2435,7 +2435,7 @@ namespace ED
                         minion.range = data.range;
                         minion.searchRange = data.searchRange;
                         minion.eyeLevel = msgMinionInfos[i].DiceEyeLevel;
-                        minion.upgradeLevel = ingameUpgradeLevel;
+                        minion.ingameUpgradeLevel = ingameUpgradeLevel;
 
                         if ((DICE_CAST_TYPE) data.castType == DICE_CAST_TYPE.HERO)
                         {
