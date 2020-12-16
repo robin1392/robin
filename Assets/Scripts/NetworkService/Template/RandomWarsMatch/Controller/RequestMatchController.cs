@@ -62,37 +62,5 @@ namespace Template.Stage.RandomWarsMatch
                 , errorCode.ToString()), "green");
             return true;
         }
-
-
-        bool OnJoinMatchController(ISender sender, ERandomWarsMatchErrorCode errorCode, MsgPlayerInfo playerInfo)
-        {
-            UnityUtil.Print(" join recv ", "errocode : " + errorCode, "white");
-            UnityUtil.Print("join my info ", playerInfo.PlayerUId + "  " + playerInfo.Name + " , " + playerInfo.IsBottomPlayer, "white");
-            UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(playerInfo), "white");
-
-            if (errorCode != ERandomWarsMatchErrorCode.SUCCESS)
-            {
-                return false;
-            }
-
-
-            NetworkManager.Get().GetNetInfo().SetPlayerInfo(playerInfo);
-            NetworkManager.Get().IsMaster = playerInfo.IsMaster;
-            GameStateManager.Get().CheckSendInGame();
-            return true;
-        }
-
-
-        bool OnJoinMatchNotifyController(ISender sender, MsgPlayerInfo otherPlayerInfo)
-        {
-            UnityUtil.Print("other info ", otherPlayerInfo.PlayerUId + "  " + otherPlayerInfo.Name + " , " + otherPlayerInfo.IsBottomPlayer, "white");
-            UnityUtil.Print(" join recv ", JsonConvert.SerializeObject(otherPlayerInfo), "white");
-
-
-            // menu
-            NetworkManager.Get().GetNetInfo().SetOtherInfo(otherPlayerInfo);
-            GameStateManager.Get().CheckSendInGame();
-            return true;
-        }
     }
 }

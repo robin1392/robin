@@ -68,6 +68,9 @@ namespace Template.Stage.RandomWarsMatch.Common
                 {(int)ERandomWarsMatchProtocol.JOIN_MATCH_REQ, ReceiveJoinMatchReq},
                 {(int)ERandomWarsMatchProtocol.JOIN_MATCH_ACK, ReceiveJoinMatchAck},
                 {(int)ERandomWarsMatchProtocol.JOIN_MATCH_NOTIFY, ReceiveJoinMatchNotify},
+                {(int)ERandomWarsMatchProtocol.READY_MATCH_REQ, ReceiveReadyMatchReq},
+                {(int)ERandomWarsMatchProtocol.READY_MATCH_ACK, ReceiveReadyMatchAck},
+                {(int)ERandomWarsMatchProtocol.READY_MATCH_NOTIFY, ReceiveReadyMatchNotify},
 
                 {(int)ERandomWarsMatchProtocol.REQUEST_MATCH_REQ, ReceiveRequestMatchReq},
                 {(int)ERandomWarsMatchProtocol.REQUEST_MATCH_ACK, ReceiveRequestMatchAck},
@@ -84,6 +87,7 @@ namespace Template.Stage.RandomWarsMatch.Common
         // Socket Controller 구현부
         // -------------------------------------------------------------------
 
+        // join match ------------------------------------------------------
         public bool SendJoinMatchReq(ISender sender, int deckIndex)
         {
             using (var ms = new MemoryStream())
@@ -136,13 +140,24 @@ namespace Template.Stage.RandomWarsMatch.Common
         }
 
 
+        public bool SendJoinMatchNotify(ISender sender, MsgPlayerInfo playerInfo)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                playerInfo.Write(bw);
+                sender.SendMessage((int)ERandomWarsMatchProtocol.JOIN_MATCH_NOTIFY, ms.ToArray());
+            }
+
+            return true;
+        }
+
         public bool SendJoinMatchNotify(ISender[] senders, MsgPlayerInfo playerInfo)
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 playerInfo.Write(bw);
-
                 foreach (var sender in senders)
                 {
                     sender.SendMessage((int)ERandomWarsMatchProtocol.JOIN_MATCH_NOTIFY, ms.ToArray());
@@ -165,6 +180,99 @@ namespace Template.Stage.RandomWarsMatch.Common
             }
         }
 
+
+        // ready match ------------------------------------------------------
+        public bool SendReadyMatchReq(ISender sender)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                return sender.SendMessage((int)ERandomWarsMatchProtocol.READY_MATCH_REQ, ms.ToArray());
+            }
+        }
+
+
+        public delegate ERandomWarsMatchErrorCode ReadyMatchReqDelegate(ISender sender);
+        public ReadyMatchReqDelegate ReadyMatchReqCallback;
+        public bool ReceiveReadyMatchReq(ISender sender, byte[] msg, int length)
+        {
+            using (var ms = new MemoryStream(msg))
+            {
+                BinaryReader br = new BinaryReader(ms);
+                var res = ReadyMatchReqCallback(sender);
+
+                return SendReadyMatchAck(sender, res);
+            }
+        }
+
+
+        public bool SendReadyMatchAck(ISender sender, ERandomWarsMatchErrorCode errorCode)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((int)errorCode);
+                return sender.SendMessage((int)ERandomWarsMatchProtocol.READY_MATCH_ACK, ms.ToArray());
+            }
+        }
+
+
+        public delegate bool ReadyMatchAckDelegate(ISender sender, ERandomWarsMatchErrorCode errorCode);
+        public ReadyMatchAckDelegate ReadyMatchAckCallback;
+        public bool ReceiveReadyMatchAck(ISender sender, byte[] msg, int length)
+        {
+            using (var ms = new MemoryStream(msg))
+            {
+                BinaryReader br = new BinaryReader(ms);
+                return ReadyMatchAckCallback(sender,
+                    (ERandomWarsMatchErrorCode)br.ReadInt32());
+            }
+        }
+
+
+        public bool SendReadyMatchNotify(ISender sender, ushort playerUId, int currentSp)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(currentSp);
+                sender.SendMessage((int)ERandomWarsMatchProtocol.READY_MATCH_NOTIFY, ms.ToArray());
+            }
+
+            return true;
+        }
+
+
+        public bool SendReadyMatchNotify(ISender[] senders, ushort playerUId, int currentSp)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(playerUId);
+                bw.Write(currentSp);
+                foreach (var sender in senders)
+                {
+                    sender.SendMessage((int)ERandomWarsMatchProtocol.READY_MATCH_NOTIFY, ms.ToArray());
+                }
+            }
+
+            return true;
+        }
+
+
+        public delegate bool ReadyMatchNotifyDelegate(ISender sender, ushort playerUId, int currentSp);
+        public ReadyMatchNotifyDelegate ReadyMatchNotifyCallback;
+        public bool ReceiveReadyMatchNotify(ISender sender, byte[] msg, int length)
+        {
+            using (var ms = new MemoryStream(msg))
+            {
+                BinaryReader br = new BinaryReader(ms);
+                return ReadyMatchNotifyCallback(sender,
+                    br.ReadUInt16(),
+                    br.ReadInt32());
+            }
+        }
         #endregion
 
 

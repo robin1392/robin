@@ -17,6 +17,8 @@ namespace Template.Stage.RandomWarsMatch
             ReceiveCancelMatchAckCallback = OnCancelMatchController;
             JoinMatchAckCallback = OnJoinMatchController;
             JoinMatchNotifyCallback = OnJoinMatchNotifyController;
+            ReadyMatchAckCallback = OnReadyMatchController;
+            ReadyMatchNotifyCallback = OnReadyMatchNotifyController;
         }
     }
 }

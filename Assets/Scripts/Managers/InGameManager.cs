@@ -359,7 +359,8 @@ namespace ED
             if (IsNetwork == true)
             {
                 WorldUIManager.Get().SetWave(wave);
-                SendInGameManager(GameProtocol.READY_GAME_REQ);
+                //SendInGameManager(GameProtocol.READY_GAME_REQ);
+                NetworkService.Get().GameSession.Send(Template.Stage.RandomWarsMatch.Common.ERandomWarsMatchProtocol.READY_MATCH_REQ);
             }
             else
             {
