@@ -35,7 +35,7 @@ namespace ED
         public Text text_DiceLevel;
 
         //private Data_Dice _data;
-        private DiceInfoData _data;
+        private Table.Data.TDataDiceInfo _data;
         
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
@@ -58,11 +58,17 @@ namespace ED
             }
         }
 
-        public void Initialize(DiceInfoData pData, int level, int count)
+        public void Initialize(Table.Data.TDataDiceInfo pData, int level, int count)
         {
             _data = pData;
-            
-            int needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level + 1].levelUpNeedInfo[pData.grade].needDiceCount;
+
+            Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+            if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == pData.grade, out dataDiceUpgrade) == false)
+            {
+                return;
+            }
+
+            int needDiceCount = dataDiceUpgrade.needCard;
             if (needDiceCount == 0) needDiceCount = 1;
             
             image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
@@ -98,10 +104,15 @@ namespace ED
 
                 int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][1];
                 int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][0];
-                int needCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1]
-                    .levelUpNeedInfo[_data.grade].needDiceCount;
-                int needGold = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1]
-                    .levelUpNeedInfo[_data.grade].needGold;
+
+                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == _data.grade, out dataDiceUpgrade) == false)
+                {
+                    return;
+                }
+
+                int needCount = dataDiceUpgrade.needCard;
+                int needGold = dataDiceUpgrade.needGold;
                 bool isEnableLevelUp = diceCount >= needCount;
 
                 if (isEnableLevelUp)

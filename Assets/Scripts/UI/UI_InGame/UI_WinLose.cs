@@ -28,7 +28,13 @@ public class UI_WinLose : MonoBehaviour
         
         for (int i = 0; i < arrImage_Deck.Length; i++)
         {
-            var iconName = JsonDataManager.Get().dataDiceInfo.dicData[deck[i]].iconName;
+            Table.Data.TDataDiceInfo dataDiceInfo;
+            if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
+            {
+                return;
+            }
+
+            var iconName = dataDiceInfo.iconName;
             arrImage_Deck[i].sprite = FileHelper.GetIcon(iconName);
             arrImage_Deck[i].SetNativeSize();
             arrImage_Deck[i].transform.localScale = Vector3.zero;

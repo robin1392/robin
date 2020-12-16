@@ -82,7 +82,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     /// <param name="deckDice"></param>
     /// <param name="arrUpgradeLv"></param>
     //public void SetArrayDeck(Data_Dice[] deckDice, int[] arrUpgradeLv)
-    public void SetArrayDeck(DiceInfoData[] deckDice, int[] arrUpgradeLv)
+    public void SetArrayDeck(Table.Data.TDataDiceInfo[] deckDice, int[] arrUpgradeLv)
     {
         for (var i = 0; i < arrUpgradeButtons.Length; i++)
         {

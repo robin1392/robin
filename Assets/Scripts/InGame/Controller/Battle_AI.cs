@@ -28,7 +28,7 @@ namespace ED
             _arrDice = new Dice[15];
             
             //_arrDeck = new Data_Dice[5];
-            _arrDiceDeck = new DiceInfoData[5];
+            _arrDiceDeck = new Table.Data.TDataDiceInfo[5];
             
             _arrUpgradeLevel = new int[5];
             for (var i = 0; i < arrDice.Length; i++)
@@ -55,7 +55,7 @@ namespace ED
                 for (var i = 0; i < _arrDiceDeck.Length; i++)
                 {
                     var rndDiceNum = 0;
-                    List<int> keyList = InGameManager.Get().data_DiceInfo.dicData.Keys.ToList();
+                    List<int> keyList = InGameManager.Get().data_DiceInfo.Keys;
                     do
                     {
                         var rndNum = keyList[Random.Range(0, keyList.Count)];
@@ -66,9 +66,9 @@ namespace ED
                         //rndDiceNum = keyList[rndNum];
                         //var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
                         
-                        if (InGameManager.Get().data_DiceInfo.dicData[rndNum].enableDice == false) continue;
+                        if (InGameManager.Get().data_DiceInfo.KeyValues[rndNum].enableDice == false) continue;
                         
-                        rndDiceNum = InGameManager.Get().data_DiceInfo.dicData[rndNum].id;
+                        rndDiceNum = InGameManager.Get().data_DiceInfo.KeyValues[rndNum].id;
 
                     } while (listDeck.Contains(rndDiceNum) || rndDiceNum == 0);
 

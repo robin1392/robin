@@ -67,8 +67,8 @@ namespace ED
         #region data variable
 
         // new dice info
-        protected DiceInfoData[] _arrDiceDeck;
-        public DiceInfoData[] arrDiceDeck
+        protected Table.Data.TDataDiceInfo[] _arrDiceDeck;
+        public Table.Data.TDataDiceInfo[] arrDiceDeck
         {
             get => _arrDiceDeck;
             protected set => _arrDiceDeck = value;
@@ -205,7 +205,7 @@ namespace ED
         public void InitializePlayer()
         {
             _arrDice = new Dice[15];
-            if (arrDiceDeck == null) _arrDiceDeck = new DiceInfoData[5];
+            if (arrDiceDeck == null) _arrDiceDeck = new Table.Data.TDataDiceInfo[5];
             _arrUpgradeLevel = new int[5];
         }
 
@@ -293,7 +293,7 @@ namespace ED
         
         #region spawn
 
-        public void Spawn(MsgSpawnMinion[] infos)
+        public virtual void Spawn(MsgSpawnMinion[] infos)
         {
             spawnCountInWave = 0;
             packetCount = 0;
@@ -307,7 +307,7 @@ namespace ED
                 {
                     int fieldIndex = infos[i].SlotIndex;
                     var data = arrDice[fieldIndex].diceData;
-                    var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
+                    var upgradeLevel = infos[i].DiceInGameUp;
                     var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
 
                     for (int j = 0; j < infos[i].Id.Length; j++)
@@ -394,7 +394,7 @@ namespace ED
                 m.moveSpeed = 0.8f;
                 m.range = 0.7f;
                 m.eyeLevel = 1;
-                m.upgradeLevel = 0;
+                m.ingameUpgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
                 
                 ps_ShieldOff.Play();
@@ -489,7 +489,7 @@ namespace ED
         }
         
         //public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        public void CreateMinion(DiceInfoData data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        public void CreateMinion(Table.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             var minion = listMinion.Find(m => m.id == id);
             if (minion != null) return;
@@ -498,7 +498,7 @@ namespace ED
         }
 
         //private IEnumerator CreateMinionCoroutine(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CreateMinionCoroutine(DiceInfoData data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CreateMinionCoroutine(Table.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             if (delay > 0)
             {
@@ -603,7 +603,7 @@ namespace ED
                 m.range = data.range;
                 m.searchRange = data.searchRange;
                 m.eyeLevel = eyeLevel;
-                m.upgradeLevel = upgradeLevel;
+                m.ingameUpgradeLevel = upgradeLevel;
                 
                 if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
                 {
@@ -678,7 +678,7 @@ namespace ED
         }
         
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private void CastMagic(DiceInfoData data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private void CastMagic(Table.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             var magic = listMagic.Find(m => m.id == id);
             if (magic != null) return;
@@ -687,7 +687,7 @@ namespace ED
         }
 
         //private IEnumerator CastMagicCoroutine(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CastMagicCoroutine(DiceInfoData data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CastMagicCoroutine(Table.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             yield return new WaitForSeconds(delay);
 
@@ -777,13 +777,15 @@ namespace ED
         public void SetDeck(int[] deck)
         {
             if(arrDiceDeck == null)
-                _arrDiceDeck = new DiceInfoData[5];
+                _arrDiceDeck = new Table.Data.TDataDiceInfo[5];
             
             for (int i = 0; i < deck.Length; i++)
             {
                 int num = deck[i];
-                
-                arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
+                if (InGameManager.Get().data_DiceInfo.GetData(num, out arrDiceDeck[i]) == false)
+                {
+                    return;
+                }
                 
                 if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
                 
@@ -818,9 +820,9 @@ namespace ED
             arrDice[slotNum].Set(GetArrayDeckDice(diceId));
         }
 
-        public DiceInfoData GetArrayDeckDice(int diceId)
+        public Table.Data.TDataDiceInfo GetArrayDeckDice(int diceId)
         {
-            DiceInfoData dice = null;
+            Table.Data.TDataDiceInfo dice = null;
             for (int i = 0; i < arrDiceDeck.Length; i++)
             {
                 if (arrDiceDeck[i].id == diceId)
@@ -836,8 +838,12 @@ namespace ED
         public void LevelUpDice(int resetFieldNum, int levelupFieldNum, int levelupDiceId, int level)
         {
             arrDice[resetFieldNum].Reset();
-            
-            DiceInfoData data = InGameManager.Get().data_DiceInfo.GetData(levelupDiceId);
+
+            Table.Data.TDataDiceInfo data;
+            if (InGameManager.Get().data_DiceInfo.GetData(levelupDiceId, out data) == false)
+            {
+                return;
+            }
 
 
             if (InGameManager.IsNetwork == true)
@@ -876,7 +882,7 @@ namespace ED
             }
         }
         
-        private int GetDiceUpgradeLevel(DiceInfoData data)
+        private int GetDiceUpgradeLevel(Table.Data.TDataDiceInfo data)
         {
             var num = 0;
             for (var i = 0; i < arrDiceDeck.Length; i++)
@@ -1069,7 +1075,7 @@ namespace ED
             m.moveSpeed = 0.8f;
             m.range = 0.7f;
             m.eyeLevel = 1;
-            m.upgradeLevel = 0;
+            m.ingameUpgradeLevel = 0;
             m.Initialize(MinionDestroyCallback);
             
             PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
@@ -2072,10 +2078,16 @@ namespace ED
                 int servLevel = arrDiceData[i].Level - 1;
                 if (servLevel < 0)
                     servLevel = 0;
-                
+
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (InGameManager.Get().data_DiceInfo.GetData(arrDiceData[i].DiceId, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+
                 arrDice[arrDiceData[i].SlotNum] = new Dice
                 {
-                    diceData = InGameManager.Get().data_DiceInfo.GetData(arrDiceData[i].DiceId),
+                    diceData = dataDiceInfo,
                     eyeLevel = servLevel,
                     diceFieldNum = arrDiceData[i].SlotNum
                 };
@@ -2151,7 +2163,7 @@ namespace ED
                                 msgMinionInfos[i].Id = ConvertNetMsg.MsgIntToUshort(listMinion[i].id);
                                 for (int j = 0; j < arrDiceDeck.Length; j++)
                                 {
-                                    if (arrDiceDeck[j].id == listMinion[i].diceId)
+                                    if (arrDiceDeck[j] != null && arrDiceDeck[j].id == listMinion[i].diceId)
                                     {
                                         msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
                                     }
@@ -2423,7 +2435,7 @@ namespace ED
                         minion.range = data.range;
                         minion.searchRange = data.searchRange;
                         minion.eyeLevel = msgMinionInfos[i].DiceEyeLevel;
-                        minion.upgradeLevel = ingameUpgradeLevel;
+                        minion.ingameUpgradeLevel = ingameUpgradeLevel;
 
                         if ((DICE_CAST_TYPE) data.castType == DICE_CAST_TYPE.HERO)
                         {

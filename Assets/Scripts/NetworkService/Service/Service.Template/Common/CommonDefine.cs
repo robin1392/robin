@@ -1,6 +1,6 @@
 namespace Service.Template.Common
 {
-    public enum ITEM_GRADE : byte
+    public enum DICE_GRADE : byte
     {
         NORMAL = 0,
         MAGIC = 1,

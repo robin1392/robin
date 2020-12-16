@@ -52,7 +52,7 @@ namespace ED
         public ParticleSystem ps_ResultIconBackground;
 
         //private Data_Dice data;
-        private DiceInfoData data;
+        private Table.Data.TDataDiceInfo data;
 
         [Space]
         public Transform infosTranform;
@@ -79,13 +79,19 @@ namespace ED
         }
 
         //public void Initialize(Data_Dice pData)
-        public void Initialize(DiceInfoData pData)
+        public void Initialize(Table.Data.TDataDiceInfo pData)
         {
             data = pData;
             diceLevel = 0;
             int diceCount = 0;
 
-            image_Character.sprite = FileHelper.GetIllust(JsonDataManager.Get().dataDiceInfo.dicData[pData.id].illustName);
+            Table.Data.TDataDiceInfo dataDiceInfo;
+            if (TableManager.Get().DiceInfo.GetData(pData.id, out dataDiceInfo) == false)
+            {
+                return;
+            }
+
+            image_Character.sprite = FileHelper.GetIllust(dataDiceInfo.illustName);
             ps_LegendCharacterEffect.gameObject.SetActive(pData.grade == (int)DICE_GRADE.LEGEND);
             ps_NormalCharacterEffect.gameObject.SetActive(!ps_LegendCharacterEffect.gameObject.activeSelf);
 
@@ -104,18 +110,25 @@ namespace ED
                 diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
             }
+            
+            
+            Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+            if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == pData.grade, out dataDiceUpgrade) == false)
+            {
+                return;
+            }
 
-            needGold = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1].levelUpNeedInfo[pData.grade].needGold;
-            needDiceCount = JsonDataManager.Get().dataDiceLevelUpInfo.dicData[diceLevel + 1].levelUpNeedInfo[pData.grade].needDiceCount;
+            needGold = dataDiceUpgrade.needGold;
+            needDiceCount = dataDiceUpgrade.needCard;
             ui_getted_dice.Initialize(data, diceLevel, diceCount);
             
             text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
-            text_UpgradeGold.text = needGold.ToString();
+            text_UpgradeGold.text = dataDiceUpgrade.needGold.ToString();
 
             btn_Use.interactable = diceLevel > 0;
             btn_Upgrade.interactable = (diceLevel > 0) &&
-                                        (UserInfoManager.Get().GetUserInfo().gold >= needGold) &&
+                                        (UserInfoManager.Get().GetUserInfo().gold >= dataDiceUpgrade.needGold) &&
                                        (diceCount >= needDiceCount);
             var images = btn_Upgrade.GetComponentsInChildren<Image>();
             for (int i = 1; i < images.Length; ++i)

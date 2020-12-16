@@ -49,18 +49,6 @@ namespace RandomWarsProtocol
     }
 
 
-    public enum GLOBAL_DATA_KEY
-    {
-        NONE,
-        START_COOLTIME,
-        WAVE_TIME,
-        DICE_START_LEVEL_NORMAL,
-        DICE_START_LEVEL_MAGIC,
-        DICE_START_LEVEL_EPIC,
-        DICE_START_LEVEL_LEGEND,
-    }
-
-
     public enum BOSS_TYPE : byte
     {
         NONE,
