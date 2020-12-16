@@ -2151,7 +2151,7 @@ namespace ED
                                 msgMinionInfos[i].Id = ConvertNetMsg.MsgIntToUshort(listMinion[i].id);
                                 for (int j = 0; j < arrDiceDeck.Length; j++)
                                 {
-                                    if (arrDiceDeck[j].id == listMinion[i].diceId)
+                                    if (arrDiceDeck[j] != null && arrDiceDeck[j].id == listMinion[i].diceId)
                                     {
                                         msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
                                     }
