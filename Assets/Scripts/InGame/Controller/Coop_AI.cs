@@ -184,29 +184,47 @@ namespace ED
         
         #region Spawn
 
-        public void Spawn()
+        public override void Spawn(MsgSpawnMinion[] infos)
         {
             packetCount = 0;
 
-            int minionCount = Mathf.Clamp(Mathf.FloorToInt(InGameManager.Get().wave * 1.5f), 1, 15);
-            for (int i = 0; i < minionCount; i++)
+            //int minionCount = Mathf.Clamp(Mathf.FloorToInt(InGameManager.Get().wave * 1.5f), 1, 15);
+            //for (int i = 0; i < minionCount; i++)
+            //{
+            //    var pos = FieldManager.Get().GetTopListPos(i);
+            //    var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
+            //        Global.E_LOADTYPE.LOAD_MINION);
+            //    var m = CreateMinion(obj, pos);
+
+            //    //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+            //    //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+
+            //    m.targetMoveType = DICE_MOVE_TYPE.ALL;
+            //    m.ChangeLayer(false);
+            //    m.power = Mathf.Clamp(100f + 2f * InGameManager.Get().wave, 0, 300f);
+            //    m.maxHealth = Mathf.Clamp(300f + 5f * InGameManager.Get().wave, 0, 2000f);
+            //    m.attackSpeed = 1f;
+            //    m.moveSpeed = 1f;
+            //    m.eyeLevel = 1;
+            //    m.upgradeLevel = 0;
+            //    m.Initialize(MinionDestroyCallback);
+            //}
+
+            for(int i = 0; i < infos.Length; i++)
             {
-                var pos = FieldManager.Get().GetTopListPos(i);
-                var obj = FileHelper.LoadPrefab(JsonDataManager.Get().dataDiceInfo.dicData[1000].prefabName,
-                    Global.E_LOADTYPE.LOAD_MINION);
+                var pos = FieldManager.Get().GetTopListPos(infos[i].SlotIndex);
+                var data = JsonDataManager.Get().dataDiceInfo.dicData[infos[i].DiceId];
+                var obj = FileHelper.LoadPrefab(data.prefabName, Global.E_LOADTYPE.LOAD_MINION);
                 var m = CreateMinion(obj, pos);
 
-                //m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                //m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
-
-                m.targetMoveType = DICE_MOVE_TYPE.ALL;
+                m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
                 m.ChangeLayer(false);
-                m.power = Mathf.Clamp(100f + 2f * InGameManager.Get().wave, 0, 300f);
-                m.maxHealth = Mathf.Clamp(300f + 5f * InGameManager.Get().wave, 0, 2000f);
-                m.attackSpeed = 1f;
-                m.moveSpeed = 1f;
+                m.power = data.power + data.powerUpgrade * infos[i].DiceLevel + data.powerInGameUp * infos[i].DiceInGameUp;
+                m.maxHealth = data.maxHealth + data.maxHpUpgrade * infos[i].DiceLevel + data.maxHpInGameUp * infos[i].DiceInGameUp;
+                m.attackSpeed = data.attackSpeed;
+                m.moveSpeed = data.moveSpeed;
                 m.eyeLevel = 1;
-                m.upgradeLevel = 0;
+                m.ingameUpgradeLevel = infos[i].DiceInGameUp;
                 m.Initialize(MinionDestroyCallback);
             }
 
@@ -274,7 +292,7 @@ namespace ED
                 //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
                 m.isMine = NetworkManager.Get().IsMaster;
                 m.eyeLevel = 1;
-                m.upgradeLevel = 0;
+                m.ingameUpgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
                 
                 m.currentHealth = currentHealth;

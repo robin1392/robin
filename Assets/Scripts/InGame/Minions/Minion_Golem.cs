@@ -61,7 +61,7 @@ namespace ED
                 m.moveSpeed = moveSpeed;
                 m.range = range;
                 m.eyeLevel = eyeLevel;
-                m.upgradeLevel = upgradeLevel;
+                m.ingameUpgradeLevel = ingameUpgradeLevel;
                 m.Initialize(destroyCallback);
             }
 

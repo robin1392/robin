@@ -52,7 +52,7 @@ namespace ED
         private float _originalAttackSpeed;
 
         [HideInInspector] public int eyeLevel;
-        [HideInInspector] public int upgradeLevel;
+        [HideInInspector] public int ingameUpgradeLevel;
 
         private Vector3 _dodgeVelocity;
         protected static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");

@@ -130,7 +130,7 @@ namespace ED
             
             ps_Smoke.Play();
             power = effect;
-            maxHealth = effectDuration + (effectCooltime * upgradeLevel);
+            maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
             currentHealth = maxHealth;
             RefreshHealthBar();
         }
