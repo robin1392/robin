@@ -1912,10 +1912,13 @@ namespace ED
                     break;
                 }
 
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+                if(b != null)
+                {
+                    b.transform.rotation = Quaternion.identity;
+                    b.controller = this;
+                    b.moveSpeed = moveSpeed;
+                    b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+                }
             }
         }
         
