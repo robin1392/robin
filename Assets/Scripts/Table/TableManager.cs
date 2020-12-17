@@ -57,7 +57,7 @@ public class TableManager : Singleton<TableManager>
         DiceUpgrade.Init(new TableLoaderLocalCSV<int, TDataDiceUpgrade>(), path + "/DiceUpgrade.csv");
         DiceLevelInfo.Init(new TableLoaderLocalCSV<int, TDataDiceLevelInfo>(), path + "/DiceLevelInfo.csv");
         GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path + "/GuardianInfo.csv");
-        Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path + "/Vsmode.csv");
+        //Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path + "/Vsmode.csv");
         return true;
     }
 }
