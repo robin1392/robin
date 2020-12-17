@@ -270,7 +270,7 @@ namespace ED
                 }
 
                 // 알이 있으면 보스 소환
-                if (msgBoss != null && InGameManager.Get().wave > 1 && currentHealth > 0)
+                if (msgBoss != null && InGameManager.Get().wave > 1 && currentHealth > 0) 
                 {
                     SpawnBossFromEgg();
                 }
