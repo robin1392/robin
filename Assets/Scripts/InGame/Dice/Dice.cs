@@ -17,7 +17,7 @@ namespace ED
         public int eyeLevel;
 
 
-        public DiceInfoData diceData;
+        public Table.Data.TDataDiceInfo diceData;
 
         public Sprite GetIcon()
         {
@@ -40,7 +40,7 @@ namespace ED
         }*/
 
         // new dice
-        public void Set(DiceInfoData pData, int pLevel = 0)
+        public void Set(Table.Data.TDataDiceInfo pData, int pLevel = 0)
         {
             this.diceData = pData;
             this.eyeLevel = pLevel;
@@ -60,7 +60,7 @@ namespace ED
             return false;
         }*/
         
-        public bool LevelUp(DiceInfoData[] deck)
+        public bool LevelUp(Table.Data.TDataDiceInfo[] deck)
         {
             if (eyeLevel < 5)
             {

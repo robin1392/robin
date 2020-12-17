@@ -91,15 +91,20 @@ namespace ED
             for (var i = 0; i < arrImageDeck.Length; i++)
             {
                 //var num = int.Parse(splitDeck[i]);
-                var data = JsonDataManager.Get().dataDiceInfo.GetData(deck[i]);
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
+                {
+                    return;
+                }
+
                 arrImageDeck[i].sprite =
-                    FileHelper.GetIcon(data.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+                    FileHelper.GetIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeck[i].SetNativeSize();
-                arrImageDeckEye[i].color = FileHelper.GetColor(data.color);
+                arrImageDeckEye[i].color = FileHelper.GetColor(dataDiceInfo.color);
                 arrImageDeck_Main[i].sprite =
-                    FileHelper.GetIcon(data.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+                    FileHelper.GetIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeck_Main[i].SetNativeSize();
-                arrImageDeckEye_Main[i].color = FileHelper.GetColor(data.color);
+                arrImageDeckEye_Main[i].color = FileHelper.GetColor(dataDiceInfo.color);
             }
             
             ui_MainStage.Set();
@@ -128,38 +133,48 @@ namespace ED
             int gettedSlotCount = 0;
             int ungettedSlotCount = 0;
             int bonusHP = 0;
-            
-            foreach (KeyValuePair<int,DiceInfoData> info in JsonDataManager.Get().dataDiceInfo.dicData)
+
+
+            Table.Data.TDataDiceInfo[] dataDiceInfoArray;
+            if (TableManager.Get().DiceInfo.GetData( x => x.enableDice, out dataDiceInfoArray) == false)
             {
-                if (info.Value.enableDice)
+                return;
+            }
+
+            foreach (var info in dataDiceInfoArray)
+            {
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.id))
                 {
-                    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.Value.id))
+                    var obj = Instantiate(prefGettedDice, tsGettedDiceParent);
+                    var ugd = obj.GetComponent<UI_Getted_Dice>();
+                    listGettedDice.Add(ugd);
+                    ugd.slotNum = gettedSlotCount++;
+                    ugd.Initialize(info, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
+
+                    // obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
+                    // ugd = obj.GetComponent<UI_Getted_Dice>();
+                    // listUngettedDice.Add(ugd);
+                    // ugd.slotNum = ungettedSlotCount++;
+                    // ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
+                    // ugd.SetGrayscale();
+                    int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
+
+                    Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                    if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level && x.diceGrade == info.grade, out dataDiceUpgrade) == false)
                     {
-                        var obj = Instantiate(prefGettedDice, tsGettedDiceParent);
-                        var ugd = obj.GetComponent<UI_Getted_Dice>();
-                        listGettedDice.Add(ugd);
-                        ugd.slotNum = gettedSlotCount++;
-                        ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
-                        
-                        // obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
-                        // ugd = obj.GetComponent<UI_Getted_Dice>();
-                        // listUngettedDice.Add(ugd);
-                        // ugd.slotNum = ungettedSlotCount++;
-                        // ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
-                        // ugd.SetGrayscale();
-                        int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0];
-                        bonusHP += JsonDataManager.Get().dataDiceLevelUpInfo.dicData[level]
-                            .levelUpNeedInfo[info.Value.grade].addTowerHp;
+                        return;
                     }
-                    else
-                    {
-                        var obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
-                        var ugd = obj.GetComponent<UI_Getted_Dice>();
-                        listUngettedDice.Add(ugd);
-                        ugd.slotNum = ungettedSlotCount++;
-                        ugd.Initialize(info.Value, 0, 0);
-                        ugd.SetGrayscale();
-                    }
+
+                    bonusHP += dataDiceUpgrade.getTowerHp;
+                }
+                else
+                {
+                    var obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
+                    var ugd = obj.GetComponent<UI_Getted_Dice>();
+                    listUngettedDice.Add(ugd);
+                    ugd.slotNum = ungettedSlotCount++;
+                    ugd.Initialize(info, 0, 0);
+                    ugd.SetGrayscale();
                 }
             }
             
@@ -205,8 +220,15 @@ namespace ED
             text_Getted.gameObject.SetActive(false);
             obj_Ciritical.SetActive(false);
             objSelectBlind.SetActive(true);
-            
-            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetIcon(JsonDataManager.Get().dataDiceInfo.GetData(diceId).iconName);
+
+
+            Table.Data.TDataDiceInfo dataDiceInfo;
+            if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
+            {
+                return;
+            }
+
+            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
             
             rts_Content.DOAnchorPosY(0, 0.1f);
             
@@ -218,7 +240,14 @@ namespace ED
             DeactivateSelectedObjectChild();
             ui_Popup_Dice_Info.gameObject.SetActive(true);
             //ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
-            ui_Popup_Dice_Info.Initialize(JsonDataManager.Get().dataDiceInfo.GetData(diceId));
+
+            Table.Data.TDataDiceInfo dataDiceInfo;
+            if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
+            {
+                return;
+            }
+
+            ui_Popup_Dice_Info.Initialize(dataDiceInfo);
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }

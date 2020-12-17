@@ -25,35 +25,27 @@ public class JsonDataManager : MonoBehaviour
     
     
     // json data
-	public DiceInfo dataDiceInfo = null;
+	//public DiceInfo dataDiceInfo = null;
 	public LangKO dataLangKO = null;
 	public LangEN dataLangEN = null;
-    public BoxInfo dataBoxInfo = null;
-    public DiceLevelUpInfo dataDiceLevelUpInfo = null;
-    public GlobalDataInfo dataGlobalDataInfo = null;
-    public BossInfo dataBossInfo = null;
 
 
     //
     public void LoadJsonData(string filePath , Action<string> callBack = null)
     {
-		dataDiceInfo = new DiceInfo(filePath , callBack);
+		//dataDiceInfo = new DiceInfo(filePath , callBack);
 		dataLangKO = new LangKO(filePath , callBack);
 		dataLangEN = new LangEN(filePath , callBack);
-        dataBoxInfo = new BoxInfo(filePath, callBack);
-        dataDiceLevelUpInfo = new DiceLevelUpInfo(filePath, callBack);
-        dataGlobalDataInfo = new GlobalDataInfo(filePath, callBack);
-        dataBossInfo = new BossInfo(filePath, callBack);
     }
 
     //
     public void DestroyJsonData()
     {
-	    if (dataDiceInfo != null)
-	    {
-		    dataDiceInfo.DestroyData();
-		    dataDiceInfo = null;
-	    }
+	    //if (dataDiceInfo != null)
+	    //{
+		   // dataDiceInfo.DestroyData();
+		   // dataDiceInfo = null;
+	    //}
 
 	    if (dataLangKO != null)
 	    {
@@ -66,18 +58,6 @@ public class JsonDataManager : MonoBehaviour
 		    dataLangEN.DestroyData();
 		    dataLangEN = null;
 	    }
-
-        if (dataBoxInfo != null)
-        {
-            dataBoxInfo.DestroyData();
-            dataBoxInfo = null;
-        }
-
-        if (dataBossInfo != null)
-        {
-            dataBossInfo.DestroyData();
-            dataBossInfo = null;
-        }
     }
 
 }

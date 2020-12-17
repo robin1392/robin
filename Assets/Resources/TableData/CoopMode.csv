@@ -1,0 +1,29 @@
+id,name,value,~설명1,~설명2(데이터단위)
+int,string,int,string,string
+1,coopmodePlayCntMax,5,플레이 최대 횟수,
+2,coopmodeADCnt,1,광고 시 회복 횟수,
+3,serachuserTropy,5,유저 매칭 조건 트로피 확장,
+4,serachuserTropyMaxCnt,50,유저 매칭 조건 트로피 범위 최대치,
+5,MaxWave,25,최대 진행 웨이브,
+6,coopTowerHp,30000,아군 타워 HP,
+7,1stBossID,40001,등장 보스 1,알로 등장
+8,2ndBossID,40002,등장 보스 2,
+9,3rdBossID,40003,등장 보스 3,
+10,4thBossID,40004,등장 보스 4,
+11,5thBossID,40005,등장 보스 5,
+12,callGuardianTowerHp_1st,20000,수호자 등장 타워 HP 1,
+13,callGuardianTowerHp_2nd,10000,수호자 등장 타워 HP 2,
+14,get1stBoss_Wave,1,보스 등장 웨이브1,
+15,get2ndBoss_Wave,5,보스 등장 웨이브2,
+16,get3rdBoss_Wave,10,보스 등장 웨이브3,
+17,get4thBoss_Wave,15,보스 등장 웨이브4,
+18,get5thBoss_Wave,20,보스 등장 웨이브5,
+19,eggtobossCoolTime,4,알에서 보스로 부화까지 걸리는 웨이브,웨이브 단위
+20,basicrewardWave,1,기본 보상 상자 지급 웨이브,웨이브 단위
+21,basicrewardID,0,기본 보상 상자 id,
+22,basicrewardValue,1,기본 보상 상자 개수,
+23,bossRewardID01,0,1번째 보스 클리어 시 지급 보상,
+24,bossRewardID02,0,2번째 보스 클리어 시 지급 보상,
+25,bossRewardID03,0,3번째 보스 클리어 시 지급 보상,
+26,bossRewardID04,0,4번째 보스 클리어 시 지급 보상,
+27,bossRewardID05,0,5번째 보스 클리어 시 지급 보상,

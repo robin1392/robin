@@ -311,7 +311,12 @@ public class DataPatchManager : MonoBehaviour
             Debug.Log(loadClassName);
             loadCount++;
         });
-        
+
+
+        // TODO : [개선] 신규 테이블 매니져 초기화
+        TableManager.Get().Load(Application.dataPath + "/Resources/TableData");
+
+
         isDataLoadComplete = true;
     }
 
