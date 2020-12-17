@@ -9,12 +9,14 @@ public class Boss2 : Minion
 {
     private float _skillCastedTime;
     private bool _isSkillCasting;
+    private float _localAttackSpeed = 1f;
 
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);
         _skillCastedTime = -effectCooltime;
         attackSpeed = 1f;
+        effectCooltime = 1f;
         Skill();
     }
 
@@ -50,9 +52,9 @@ public class Boss2 : Minion
             yield return new WaitForSeconds(effectCooltime);
 
             loopCount++;
-            attackSpeed -= originAttackSpeed * 0.05f * loopCount;
-            attackSpeed = Mathf.Clamp(attackSpeed, 0.25f, 4f);
-            animator.speed = Mathf.Clamp(animationSpeed + 0.05f * loopCount, 0.25f, 4f);
+            _localAttackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
+            attackSpeed = 1f / _localAttackSpeed;
+            animator.SetFloat("AttackSpeed", _localAttackSpeed);
         }
     }
 }

@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
-  _minion: {fileID: 0}
+  _minion: {fileID: 5765759184766306119}
 --- !u!1 &7214476587837081310
 GameObject:
   m_ObjectHideFlags: 0
