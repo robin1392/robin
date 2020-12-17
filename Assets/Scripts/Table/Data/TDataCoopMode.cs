@@ -6,6 +6,38 @@ using System.Threading.Tasks;
 
 namespace Table.Data
 {
+    public enum ECoopModeKey
+    {
+        coopmodePlayCntMax,
+        coopmodeADCnt,
+        serachuserTropy,
+        serachuserTropyMaxCnt,
+        MaxWave,
+        coopTowerHp,
+        bossID1st,
+        bossID2nd,
+        bossID3rd,
+        bossID4th,
+        bossID5th,
+        callGuardianTowerHp_1st,
+        callGuardianTowerHp_2nd,
+        get1stBoss_Wave,
+        get2ndBoss_Wave,
+        get3rdBoss_Wave,
+        get4thBoss_Wave,
+        get5thBoss_Wave,
+        eggtobossCoolTime,
+        basicrewardWave,
+        basicrewardID,
+        basicrewardValue,
+        bossRewardID01,
+        bossRewardID02,
+        bossRewardID03,
+        bossRewardID04,
+        bossRewardID05,
+    }
+
+
     public class TDataCoopMode : ITableData<int>
     {
         public int id { get; set; }
