@@ -406,7 +406,7 @@ public class UI_BoxOpenPopup : UI_Popup
             case REWARD_TYPE.DIAMOND:
                 image_ItemIcon.sprite = sprite_Diamond;
                 image_ItemIcon.SetNativeSize();
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Gold, 0.6f));
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Diamond, 0.6f));
                 ani_Item.SetTrigger("Get");
                 text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DIAMOND);
                 text_ItemCount.text = $"x{reward.Value}";
