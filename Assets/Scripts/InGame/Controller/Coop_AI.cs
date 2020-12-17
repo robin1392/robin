@@ -212,17 +212,24 @@ namespace ED
 
             for(int i = 0; i < infos.Length; i++)
             {
-                var pos = FieldManager.Get().GetTopListPos(infos[i].SlotIndex);
-                var data = JsonDataManager.Get().dataDiceInfo.dicData[infos[i].DiceId];
-                var obj = FileHelper.LoadPrefab(data.prefabName, Global.E_LOADTYPE.LOAD_MINION);
+                var pos = FieldManager.Get().GetTopListPos(i);
+
+                Table.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(1000, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+                var obj = FileHelper.LoadPrefab(dataDiceInfo.prefabName,
+                    Global.E_LOADTYPE.LOAD_MINION);
+
                 var m = CreateMinion(obj, pos);
 
-                m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
+                m.targetMoveType = (DICE_MOVE_TYPE)dataDiceInfo.targetMoveType;
                 m.ChangeLayer(false);
-                m.power = data.power + data.powerUpgrade * infos[i].DiceLevel + data.powerInGameUp * infos[i].DiceInGameUp;
-                m.maxHealth = data.maxHealth + data.maxHpUpgrade * infos[i].DiceLevel + data.maxHpInGameUp * infos[i].DiceInGameUp;
-                m.attackSpeed = data.attackSpeed;
-                m.moveSpeed = data.moveSpeed;
+                m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel + dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
+                m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
+                m.attackSpeed = dataDiceInfo.attackSpeed;
+                m.moveSpeed = dataDiceInfo.moveSpeed;
                 m.eyeLevel = 1;
                 m.ingameUpgradeLevel = infos[i].DiceInGameUp;
                 m.Initialize(MinionDestroyCallback);
@@ -239,8 +246,14 @@ namespace ED
         {
             if (boss != null && boss.DataId > 0)
             {
+                Table.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                if (TableManager.Get().CoopModeBossInfo.GetData(boss.DataId, out dataCoopModeBossInfo) == false)
+                {
+                    return;
+                }
+
                 var obj = FileHelper.LoadPrefab(
-                    $"{JsonDataManager.Get().dataBossInfo.dicData[boss.DataId].unitPrefabName}_Egg",
+                    $"{dataCoopModeBossInfo.prefabName}_Egg",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
                 if (obj != null)
@@ -275,8 +288,14 @@ namespace ED
         {
             if (msgBoss != null)
             {
+                Table.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                if (TableManager.Get().CoopModeBossInfo.GetData(msgBoss.DataId, out dataCoopModeBossInfo) == false)
+                {
+                    return;
+                }
+
                 var obj = FileHelper.LoadPrefab(
-                    $"{JsonDataManager.Get().dataBossInfo.dicData[msgBoss.DataId].unitPrefabName}",
+                    $"{dataCoopModeBossInfo.prefabName}",
                     Global.E_LOADTYPE.LOAD_COOP_BOSS);
 
                 var m = CreateMinion(obj, transform.position, false);

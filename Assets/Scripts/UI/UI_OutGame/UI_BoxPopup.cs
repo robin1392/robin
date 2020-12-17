@@ -49,14 +49,13 @@ public class UI_BoxPopup : UI_Popup
             var box = obj.GetComponent<UI_Box_Slot>();
             var id = boxData.Key;
             var subCount = boxData.Value;
-            var data = JsonDataManager.Get().dataBoxInfo.GetData(id);
-            var needKey = -1;
-            if (data != null)
+
+            Table.Data.TDataBoxList dataBoxList;
+            if (TableManager.Get().BoxList.GetData(id, out dataBoxList) == false)
             {
-                needKey = data.needKey;
+                return;
             }
-            
-            box.Initialize(id, subCount, needKey);
+            box.Initialize(id, subCount, dataBoxList.openKeyValue);
         }
     }
 
