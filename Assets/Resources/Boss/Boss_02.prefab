@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 6591323758251579995}
   - component: {fileID: 3609641239938217770}
   m_Layer: 0
-  m_Name: Coop_Boss_2
+  m_Name: Boss_02
   m_TagString: Minion_Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123,7 +123,7 @@ MonoBehaviour:
   _lockBoundGraphPrefabOverrides: 1
   _preInitializeSubGraphs: 0
   _updateMode: 0
-  _graph: {fileID: 11400000, guid: 3cd6a46cc66e04610abebdfb8774a6fa, type: 2}
+  _graph: {fileID: 11400000, guid: 0c13211a3a04cf74aa5ce9fa7e42431b, type: 2}
   _blackboard: {fileID: 17148726258424996}
 --- !u!114 &17148726258424996
 MonoBehaviour:
