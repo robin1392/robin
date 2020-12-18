@@ -39,10 +39,21 @@ public class Boss3 : Minion
 
     IEnumerator SkillCoroutine(int targetId)
     {
+        BaseStat targetBS = null;
+        if (targetId % 10000 == 0)
+        {
+            targetBS = controller.targetPlayer;
+        }
+        else
+        {
+            targetBS = InGameManager.Get().GetBottomMinion(targetId);
+        }
+
+        if (targetBS == null) yield break;
+        
         isAttacking = true;
         SetControllEnable(false);
         
-        var targetBS = InGameManager.Get().GetBaseStatFromId(targetId);
         var targetPos = targetBS.transform.position;
         targetPos.y = 0;
         transform.LookAt(targetPos);
@@ -53,7 +64,9 @@ public class Boss3 : Minion
         animator.SetTrigger("Attack");
         if (isMine || controller.isPlayingAI)
         {
-            var hits = Physics.RaycastAll(ts_ShootingPos.position, ts_ShootingPos.forward, 10f, targetLayer);
+            var col = ts_ShootingPos.GetComponent<BoxCollider>();
+            var hits = Physics.BoxCastAll(transform.position + col.center, col.size, ts_ShootingPos.forward);
+            //var hits = Physics.RaycastAll(ts_ShootingPos.position, ts_ShootingPos.forward, 10f, targetLayer);
             for (int i = 0; i < hits.Length; i++)
             {
                 var m = hits[i].collider.GetComponent<BaseStat>();
@@ -63,6 +76,9 @@ public class Boss3 : Minion
                 }
             }
         }
+        
+        yield return new WaitForSeconds(1f);
+        
         isAttacking = false;
         SetControllEnable(true);
     }
