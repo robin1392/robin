@@ -52,9 +52,9 @@ public class Boss4 : Minion
 
         if (InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
         {
-            controller.NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, target.id, ConvertNetMsg.MsgFloatToInt(power), ConvertNetMsg.MsgFloatToInt(5f), (int)E_BulletType.VALLISTA_SPEAR);
+            controller.NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, target.id, ConvertNetMsg.MsgFloatToInt(power), ConvertNetMsg.MsgFloatToInt(12f), (int)E_BulletType.VALLISTA_SPEAR);
         }
-        controller.FireBullet(E_BulletType.VALLISTA_SPEAR, id, target.id, power, 5f);
+        controller.FireBullet(E_BulletType.VALLISTA_SPEAR, id, target.id, power, 12f);
         //NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, targetId , chDamage ,chSpeed , (int)bulletType);
     }
 }
