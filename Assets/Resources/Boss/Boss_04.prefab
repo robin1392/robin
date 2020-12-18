@@ -111,8 +111,8 @@ MonoBehaviour:
   effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 0
-  range: 10
-  searchRange: 10
+  range: 30
+  searchRange: 30
   isBottomPlayer: 0
   ts_ShootingPos: {fileID: 8671224899847891593}
   ts_HitPos: {fileID: 8488758196635011245}

@@ -309,6 +309,7 @@ namespace ED
                 m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillInterval);
                 m.effectCooltime = 5f;//ConvertNetMsg.MsgShortToFloat(msgBoss.SkillCoolTime);
                 //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
+                //m.attackSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.at)
                 m.isMine = NetworkManager.Get().IsMaster;
                 m.eyeLevel = 1;
                 m.ingameUpgradeLevel = 0;

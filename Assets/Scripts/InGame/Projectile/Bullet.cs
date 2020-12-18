@@ -126,7 +126,7 @@ namespace ED
 
             _callback?.Invoke();
 
-            if( (InGameManager.IsNetwork && _isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+            if( (InGameManager.IsNetwork && (_isMine || controller.isPlayingAI)) || InGameManager.IsNetwork == false)
                 controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);
 
             /*

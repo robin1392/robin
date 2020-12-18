@@ -17,6 +17,10 @@ public class Boss4 : Minion
     {
         base.Initialize(destroy);
         target = controller.targetPlayer;
+        transform.position = transform.position.z > 0
+            ? transform.position + Vector3.back
+            : transform.position + Vector3.forward;
+        attackSpeed = 2f;
         PoolManager.instance.AddPool(pref_Spear, 2);
     }
 
@@ -48,9 +52,9 @@ public class Boss4 : Minion
 
         if (InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
         {
-            controller.NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, target.id, power, 3f, (int)E_BulletType.VALLISTA_SPEAR);
+            controller.NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, target.id, ConvertNetMsg.MsgFloatToInt(power), ConvertNetMsg.MsgFloatToInt(5f), (int)E_BulletType.VALLISTA_SPEAR);
         }
-        controller.FireBullet(E_BulletType.VALLISTA_SPEAR, id, target.id, power, 3f);
+        controller.FireBullet(E_BulletType.VALLISTA_SPEAR, id, target.id, power, 5f);
         //NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, targetId , chDamage ,chSpeed , (int)bulletType);
     }
 }
