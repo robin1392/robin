@@ -14,10 +14,6 @@ public class Boss3 : Minion
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);
-        _skillCastedTime = -effectCooltime;
-        attackSpeed = 1f;
-        effectCooltime = 1f;
-        Skill();
     }
 
     public override void Attack()
@@ -26,35 +22,48 @@ public class Boss3 : Minion
         
         if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
         {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
+            Skill(target.id);
+            //controller.MinionAniTrigger(id, "Attack", target.id);
+            controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.Skill, target.id);
         }
         else if(InGameManager.IsNetwork == false)
         {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
+            Skill(target.id);
         }
     }
 
-    public void Skill()
+    public void Skill(int targetId)
     {
-        StartCoroutine(SkillCoroutine());
+        StartCoroutine(SkillCoroutine(targetId));
     }
 
-    IEnumerator SkillCoroutine()
+    IEnumerator SkillCoroutine(int targetId)
     {
-        float originAttackSpeed = attackSpeed;
-        float animationSpeed = 1f;
-        int loopCount = 1;
+        isAttacking = true;
+        SetControllEnable(false);
         
-        while (true)
+        var targetBS = InGameManager.Get().GetBaseStatFromId(targetId);
+        var targetPos = targetBS.transform.position;
+        targetPos.y = 0;
+        transform.LookAt(targetPos);
+        animator.SetTrigger("AttackReady");
+        
+        yield return new WaitForSeconds(3f);
+        
+        animator.SetTrigger("Attack");
+        if (isMine || controller.isPlayingAI)
         {
-            yield return new WaitForSeconds(effectCooltime);
-
-            loopCount++;
-            _localAttackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
-            attackSpeed = 1f / _localAttackSpeed;
-            animator.SetFloat("AttackSpeed", _localAttackSpeed);
+            var hits = Physics.RaycastAll(ts_ShootingPos.position, ts_ShootingPos.forward, 10f, targetLayer);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                var m = hits[i].collider.GetComponent<BaseStat>();
+                if (m != null)
+                {
+                    controller.AttackEnemyMinionOrMagic(m.UID, m.id, power, 0);
+                }
+            }
         }
+        isAttacking = false;
+        SetControllEnable(true);
     }
 }
