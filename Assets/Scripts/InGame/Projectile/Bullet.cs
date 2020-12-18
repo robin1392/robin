@@ -44,7 +44,7 @@ namespace ED
         public virtual void Initialize(int pTargetId, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
             obj_Bullet.SetActive(true);
-            obj_EndEffect.SetActive(false);
+            if (obj_EndEffect != null) obj_EndEffect.SetActive(false);
             
             _isTarget = true;
             _damage = pDamage;

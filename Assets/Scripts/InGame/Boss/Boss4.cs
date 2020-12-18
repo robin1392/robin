@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class Boss4 : Minion
 {
+    public GameObject pref_Spear;
+    
     private float _skillCastedTime;
     private bool _isSkillCasting;
     private float _localAttackSpeed = 1f;
@@ -14,10 +16,8 @@ public class Boss4 : Minion
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);
-        _skillCastedTime = -effectCooltime;
-        attackSpeed = 1f;
-        effectCooltime = 1f;
-        Skill();
+        target = controller.targetPlayer;
+        PoolManager.instance.AddPool(pref_Spear, 2);
     }
 
     public override void Attack()
@@ -28,6 +28,7 @@ public class Boss4 : Minion
         {
             base.Attack();
             controller.MinionAniTrigger(id, "Attack", target.id);
+            StartCoroutine(SkillCoroutine());
         }
         else if(InGameManager.IsNetwork == false)
         {
@@ -43,18 +44,13 @@ public class Boss4 : Minion
 
     IEnumerator SkillCoroutine()
     {
-        float originAttackSpeed = attackSpeed;
-        float animationSpeed = 1f;
-        int loopCount = 1;
-        
-        while (true)
-        {
-            yield return new WaitForSeconds(effectCooltime);
+        yield return new WaitForSeconds(1f);
 
-            loopCount++;
-            _localAttackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
-            attackSpeed = 1f / _localAttackSpeed;
-            animator.SetFloat("AttackSpeed", _localAttackSpeed);
+        if (InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
+        {
+            controller.NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, target.id, power, 3f, (int)E_BulletType.VALLISTA_SPEAR);
         }
+        controller.FireBullet(E_BulletType.VALLISTA_SPEAR, id, target.id, power, 3f);
+        //NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, targetId , chDamage ,chSpeed , (int)bulletType);
     }
 }
