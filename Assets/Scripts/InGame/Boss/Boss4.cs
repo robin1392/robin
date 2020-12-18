@@ -20,7 +20,7 @@ public class Boss4 : Minion
         transform.position = transform.position.z > 0
             ? transform.position + Vector3.back
             : transform.position + Vector3.forward;
-        attackSpeed = 2f;
+        attackSpeed = 3f;
         PoolManager.instance.AddPool(pref_Spear, 2);
     }
 
@@ -48,7 +48,7 @@ public class Boss4 : Minion
 
     IEnumerator SkillCoroutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         if (InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
         {

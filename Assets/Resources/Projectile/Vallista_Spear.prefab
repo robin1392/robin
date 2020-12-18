@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolName: 
-  lifeTime: 1
+  lifeTime: 0
 --- !u!114 &3318709779728876397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
   obj_EndEffect: {fileID: 0}
   endEffectDuration: 1
   controller: {fileID: 0}
-  moveSpeed: 5
+  moveSpeed: 14
   moveTime: 0
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
