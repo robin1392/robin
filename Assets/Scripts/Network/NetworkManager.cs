@@ -302,7 +302,7 @@ public class NetworkManager : Singleton<NetworkManager>
         SetOtherDisconnect(false);    // disconnect
         SetResume(false);        // resume
         SetReconnect(false);        // reconnect
-        playType = type;
+        //playType = type;
         _recvJoinPlayerInfoCheck = true;
         _netInfo.Clear();
 
