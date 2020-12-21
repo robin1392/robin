@@ -270,7 +270,7 @@ namespace ED
                 }
 
                 // 알이 있으면 보스 소환
-                if (msgBoss != null && InGameManager.Get().wave > 1 && currentHealth > 0)
+                if (msgBoss != null && InGameManager.Get().wave > 1 && currentHealth > 0) 
                 {
                     SpawnBossFromEgg();
                 }
@@ -309,6 +309,7 @@ namespace ED
                 m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillInterval);
                 m.effectCooltime = 5f;//ConvertNetMsg.MsgShortToFloat(msgBoss.SkillCoolTime);
                 //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
+                //m.attackSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.at)
                 m.isMine = NetworkManager.Get().IsMaster;
                 m.eyeLevel = 1;
                 m.ingameUpgradeLevel = 0;

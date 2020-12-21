@@ -376,27 +376,37 @@ namespace ED
                 animator.SetBool(Break, true);
 
                 PushEnemyMinions(10f);
-                
+
+                Table.Data.TDataGuardianInfo dataGuardianInfo;
+                if (TableManager.Get().GuardianInfo.GetData(boss.DataId, out dataGuardianInfo) == false)
+                {
+                    return;
+                }
+
                 Vector3 pos = transform.position;
-                var obj = FileHelper.LoadPrefab("Guardian", Global.E_LOADTYPE.LOAD_GUARDIAN);
-                var m = CreateMinion(obj, pos);
-                
-                m.id = boss.Id;
-                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
-                m.effect = ConvertNetMsg.MsgShortToFloat(boss.SkillAtk);
-                m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.SkillInterval);
-                m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.SkillCoolTime);
-                
-                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomPlayer);
-                m.attackSpeed = 0.8f;
-                m.moveSpeed = 0.8f;
-                m.range = 0.7f;
-                m.eyeLevel = 1;
-                m.ingameUpgradeLevel = 0;
-                m.Initialize(MinionDestroyCallback);
-                
+                //var obj = FileHelper.LoadPrefab("Guardian", Global.E_LOADTYPE.LOAD_GUARDIAN);
+                var obj = FileHelper.LoadPrefab(dataGuardianInfo.prefabName, Global.E_LOADTYPE.LOAD_GUARDIAN);
+                if (obj != null)
+                {
+                    var m = CreateMinion(obj, pos);
+
+                    m.id = boss.Id;
+                    m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                    m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+                    m.effect = ConvertNetMsg.MsgShortToFloat(boss.SkillAtk);
+                    m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.SkillInterval);
+                    m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.SkillCoolTime);
+
+                    m.targetMoveType = DICE_MOVE_TYPE.GROUND;
+                    m.ChangeLayer(isBottomPlayer);
+                    m.attackSpeed = 0.8f;
+                    m.moveSpeed = 0.8f;
+                    m.range = 0.7f;
+                    m.eyeLevel = 1;
+                    m.ingameUpgradeLevel = 0;
+                    m.Initialize(MinionDestroyCallback);
+                }
+
                 ps_ShieldOff.Play();
 
                 PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
@@ -578,7 +588,7 @@ namespace ED
                     }
                 }
                 m.power = data.power + (data.powerUpgrade * arrDiceLevel[deckNum]) + (data.powerInGameUp * upgradeLevel);
-                if (wave > 10)
+                if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE &&  wave > 10)
                 {
                     m.power *= Mathf.Pow(2f, wave - 10);
                 }
@@ -594,7 +604,7 @@ namespace ED
                 m.effectCooltime = data.effectCooltime;
                 
                 m.attackSpeed = data.attackSpeed;
-                if (wave > 10)
+                if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE && wave > 10)
                 {
                     m.attackSpeed *= Mathf.Pow(0.9f, wave - 10);
                     if (m.attackSpeed < data.attackSpeed * 0.5f) m.attackSpeed = data.attackSpeed * 0.5f;
@@ -1916,12 +1926,18 @@ namespace ED
                 case E_BulletType.BABYDRAGON:
                     b = PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
                     break;
+                case E_BulletType.VALLISTA_SPEAR:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Vallista_Spear", startPos);
+                    break;
                 }
 
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+                if(b != null)
+                {
+                    b.transform.rotation = Quaternion.identity;
+                    b.controller = this;
+                    b.moveSpeed = moveSpeed;
+                    b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
+                }
             }
         }
         

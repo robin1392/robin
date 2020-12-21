@@ -1,0 +1,365 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a686a47eee2fa44cb0a34b5d86e4d5e, type: 3}
+  m_Name: Boss3
+  m_EditorClassIdentifier: 
+  _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"_condition":{"conditions":[{"valueA":{"_name":"currentHealth","_targetVariableID":"f1de3138-0dd3-4cd0-a313-21959cd2e2fc"},"checkType":1,"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckFloat"},{"valueA":{"_name":"isPushing","_targetVariableID":"ef9f12b2-c3a7-4db8-8bee-63b5fb5f8853"},"valueB":{},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"}],"$type":"NodeCanvas.Framework.ConditionList"},"_position":{"x":743.4485,"y":-22.45138},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"0"},{"_position":{"x":763.6647,"y":129.3351},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"1"},{"_action":{"method":{"_baseInfo":"Boss3|SetTarget|ED.BaseStat","_paramsInfo":""},"parameters":[],"returnValue":{"_type":"ED.BaseStat","_name":"target","_targetVariableID":"52998ee4-f310-41d4-a773-d91d5b6b9560"},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":639.9417,"y":231.7318},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"2"},{"_condition":{"valueA":{"_name":"target","_targetVariableID":"52998ee4-f310-41d4-a773-d91d5b6b9560"},"valueB":{},"_invert":true,"$type":"NodeCanvas.Tasks.Conditions.CheckVariable`1[[ED.BaseStat,
+    Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"_position":{"x":834.5751,"y":232.3351},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"3"},{"_position":{"x":848.7774,"y":333.0435},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"4"},{"_action":{"method":{"_baseInfo":"Boss3|SetVelocityTarget|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":718.3391,"y":431.7328},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"5"},{"_condition":{"method":{"_baseInfo":"ED.Minion|IsTargetInnerRange|System.Boolean","_paramsInfo":""},"parameters":[],"checkValue":{"_type":"System.Boolean","_value":{"$content":true,"$type":"System.Boolean"}},"$type":"NodeCanvas.Tasks.Conditions.CheckFunction_Multiplatform"},"_position":{"x":903.6634,"y":430.3371},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"6"},{"_position":{"x":959.3255,"y":532.3414},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"7"},{"_condition":{"method":{"_baseInfo":"Boss3|IsTargetAlive|System.Boolean","_paramsInfo":""},"parameters":[],"checkValue":{"_type":"System.Boolean","_value":{"$content":true,"$type":"System.Boolean"}},"$type":"NodeCanvas.Tasks.Conditions.CheckFunction_Multiplatform"},"_position":{"x":800.3239,"y":632.3417},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"8"},{"_action":{"method":{"_baseInfo":"Boss3|Attack|System.Void","_paramsInfo":""},"parameters":[],"returnValue":{},"$type":"NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"},"_position":{"x":839.3713,"y":741.963},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"9"},{"_action":{"waitTime":{"_name":"attackSpeed","_targetVariableID":"c722c132-6c9c-4bbb-851d-52b20c8a3daf"},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":1038.643,"y":631.6251},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"10"}],"connections":[{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"1"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"2"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"3"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"3"},"_targetNode":{"$ref":"4"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"4"},"_targetNode":{"$ref":"5"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"4"},"_targetNode":{"$ref":"6"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"7"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"8"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"10"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"8"},"_targetNode":{"$ref":"9"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"}],"canvasGroups":[],"localBlackboard":{"_variables":{"target":{"_propertyPath":"Boss3.target","_name":"target","_id":"52998ee4-f310-41d4-a773-d91d5b6b9560","$type":"NodeCanvas.Framework.Variable`1[[ED.BaseStat,
+    Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"currentHealth":{"_propertyPath":"Boss3.currentHealth","_name":"currentHealth","_id":"f1de3138-0dd3-4cd0-a313-21959cd2e2fc","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"attackSpeed":{"_propertyPath":"Boss3.attackSpeed","_name":"attackSpeed","_id":"c722c132-6c9c-4bbb-851d-52b20c8a3daf","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"isPushing":{"_propertyPath":"Boss3.isPushing","_name":"isPushing","_id":"ef9f12b2-c3a7-4db8-8bee-63b5fb5f8853","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"range":{"_propertyPath":"Boss3.range","_name":"range","_id":"deab01b0-9ef5-464b-86e4-55d544a0b0c1","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}},"derivedData":{"repeat":true,"$type":"NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"}}'
+  _objectReferences: []
+  _graphSource:
+    _version: 3.08
+    _category: 
+    _comments: 
+    _translation: {x: -584, y: 88}
+    _zoomFactor: 1
+  _haltSerialization: 0
+#---GRAPH_START---
+#The pretty formatted json serialization bellow is only a reference to help in version control diff. Other than that it is not used at all.
+#{
+#    "type": "NodeCanvas.BehaviourTrees.BehaviourTree",
+#    "nodes": [
+#        {
+#            "_condition": {
+#                "conditions": [
+#                    {
+#                        "valueA": {
+#                            "_name": "currentHealth",
+#                            "_targetVariableID": "f1de3138-0dd3-4cd0-a313-21959cd2e2fc"
+#                        },
+#                        "checkType": 1,
+#                        "valueB": {
+#
+#                        },
+#                        "$type": "NodeCanvas.Tasks.Conditions.CheckFloat"
+#                    },
+#                    {
+#                        "valueA": {
+#                            "_name": "isPushing",
+#                            "_targetVariableID": "ef9f12b2-c3a7-4db8-8bee-63b5fb5f8853"
+#                        },
+#                        "valueB": {
+#
+#                        },
+#                        "$type": "NodeCanvas.Tasks.Conditions.CheckBoolean"
+#                    }
+#                ],
+#                "$type": "NodeCanvas.Framework.ConditionList"
+#            },
+#            "_position": {
+#                "x": 743.4485,
+#                "y": -22.45138
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
+#            "$id": "0"
+#        },
+#        {
+#            "_position": {
+#                "x": 763.6647,
+#                "y": 129.3351
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "1"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "Boss3|SetTarget|ED.BaseStat",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#                    "_type": "ED.BaseStat",
+#                    "_name": "target",
+#                    "_targetVariableID": "52998ee4-f310-41d4-a773-d91d5b6b9560"
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 639.9417,
+#                "y": 231.7318
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "2"
+#        },
+#        {
+#            "_condition": {
+#                "valueA": {
+#                    "_name": "target",
+#                    "_targetVariableID": "52998ee4-f310-41d4-a773-d91d5b6b9560"
+#                },
+#                "valueB": {
+#
+#                },
+#                "_invert": true,
+#                "$type": "NodeCanvas.Tasks.Conditions.CheckVariable`1[[ED.BaseStat, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+#            },
+#            "_position": {
+#                "x": 834.5751,
+#                "y": 232.3351
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
+#            "$id": "3"
+#        },
+#        {
+#            "_position": {
+#                "x": 848.7774,
+#                "y": 333.0435
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "4"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "Boss3|SetVelocityTarget|System.Void",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 718.3391,
+#                "y": 431.7328
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "5"
+#        },
+#        {
+#            "_condition": {
+#                "method": {
+#                    "_baseInfo": "ED.Minion|IsTargetInnerRange|System.Boolean",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "checkValue": {
+#                    "_type": "System.Boolean",
+#                    "_value": {
+#                        "$content": true,
+#                        "$type": "System.Boolean"
+#                    }
+#                },
+#                "$type": "NodeCanvas.Tasks.Conditions.CheckFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 903.6634,
+#                "y": 430.3371
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
+#            "$id": "6"
+#        },
+#        {
+#            "_position": {
+#                "x": 959.3255,
+#                "y": 532.3414
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "7"
+#        },
+#        {
+#            "_condition": {
+#                "method": {
+#                    "_baseInfo": "Boss3|IsTargetAlive|System.Boolean",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "checkValue": {
+#                    "_type": "System.Boolean",
+#                    "_value": {
+#                        "$content": true,
+#                        "$type": "System.Boolean"
+#                    }
+#                },
+#                "$type": "NodeCanvas.Tasks.Conditions.CheckFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 800.3239,
+#                "y": 632.3417
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ConditionalEvaluator",
+#            "$id": "8"
+#        },
+#        {
+#            "_action": {
+#                "method": {
+#                    "_baseInfo": "Boss3|Attack|System.Void",
+#                    "_paramsInfo": ""
+#                },
+#                "parameters": [],
+#                "returnValue": {
+#
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.ExecuteFunction_Multiplatform"
+#            },
+#            "_position": {
+#                "x": 839.3713,
+#                "y": 741.963
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "9"
+#        },
+#        {
+#            "_action": {
+#                "waitTime": {
+#                    "_name": "attackSpeed",
+#                    "_targetVariableID": "c722c132-6c9c-4bbb-851d-52b20c8a3daf"
+#                },
+#                "$type": "NodeCanvas.Tasks.Actions.Wait"
+#            },
+#            "_position": {
+#                "x": 1038.643,
+#                "y": 631.6251
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "10"
+#        }
+#    ],
+#    "connections": [
+#        {
+#            "_sourceNode": {
+#                "$ref": "0"
+#            },
+#            "_targetNode": {
+#                "$ref": "1"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "1"
+#            },
+#            "_targetNode": {
+#                "$ref": "2"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "1"
+#            },
+#            "_targetNode": {
+#                "$ref": "3"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "3"
+#            },
+#            "_targetNode": {
+#                "$ref": "4"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "4"
+#            },
+#            "_targetNode": {
+#                "$ref": "5"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "4"
+#            },
+#            "_targetNode": {
+#                "$ref": "6"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "6"
+#            },
+#            "_targetNode": {
+#                "$ref": "7"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "7"
+#            },
+#            "_targetNode": {
+#                "$ref": "8"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "7"
+#            },
+#            "_targetNode": {
+#                "$ref": "10"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "8"
+#            },
+#            "_targetNode": {
+#                "$ref": "9"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        }
+#    ],
+#    "canvasGroups": [],
+#    "localBlackboard": {
+#        "_variables": {
+#            "target": {
+#                "_propertyPath": "Boss3.target",
+#                "_name": "target",
+#                "_id": "52998ee4-f310-41d4-a773-d91d5b6b9560",
+#                "$type": "NodeCanvas.Framework.Variable`1[[ED.BaseStat, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+#            },
+#            "currentHealth": {
+#                "_propertyPath": "Boss3.currentHealth",
+#                "_name": "currentHealth",
+#                "_id": "f1de3138-0dd3-4cd0-a313-21959cd2e2fc",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            },
+#            "attackSpeed": {
+#                "_propertyPath": "Boss3.attackSpeed",
+#                "_name": "attackSpeed",
+#                "_id": "c722c132-6c9c-4bbb-851d-52b20c8a3daf",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            },
+#            "isPushing": {
+#                "_propertyPath": "Boss3.isPushing",
+#                "_name": "isPushing",
+#                "_id": "ef9f12b2-c3a7-4db8-8bee-63b5fb5f8853",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            },
+#            "range": {
+#                "_propertyPath": "Boss3.range",
+#                "_name": "range",
+#                "_id": "deab01b0-9ef5-464b-86e4-55d544a0b0c1",
+#                "$type": "NodeCanvas.Framework.Variable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"
+#            }
+#        }
+#    },
+#    "derivedData": {
+#        "repeat": true,
+#        "$type": "NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"
+#    }
+#}
+#---GRAPH_END---
