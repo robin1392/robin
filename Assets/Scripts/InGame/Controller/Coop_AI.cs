@@ -304,12 +304,12 @@ namespace ED
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(false);
                 m.maxHealth = ConvertNetMsg.MsgIntToFloat(msgBoss.Hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(msgBoss.Atk);
-                m.effect = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillAtk);
-                m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.SkillInterval);
-                m.effectCooltime = 5f;//ConvertNetMsg.MsgShortToFloat(msgBoss.SkillCoolTime);
-                //m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
-                //m.attackSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.at)
+                m.power = ConvertNetMsg.MsgShortToFloat(msgBoss.Power);
+                m.effect = ConvertNetMsg.MsgShortToFloat(msgBoss.Effect);
+                m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.Duration);
+                m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.EffectCoolTime);
+                m.moveSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.MoveSpeed);
+                m.attackSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.AttackSpeed);
                 m.isMine = NetworkManager.Get().IsMaster;
                 m.eyeLevel = 1;
                 m.ingameUpgradeLevel = 0;

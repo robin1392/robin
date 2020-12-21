@@ -392,15 +392,15 @@ namespace ED
 
                     m.id = boss.Id;
                     m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                    m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
-                    m.effect = ConvertNetMsg.MsgShortToFloat(boss.SkillAtk);
-                    m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.SkillInterval);
-                    m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.SkillCoolTime);
+                    m.power = ConvertNetMsg.MsgShortToFloat(boss.Power);
+                    m.effect = ConvertNetMsg.MsgShortToFloat(boss.Effect);
+                    m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.Duration);
+                    m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.EffectCoolTime);
 
                     m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                     m.ChangeLayer(isBottomPlayer);
-                    m.attackSpeed = 0.8f;
-                    m.moveSpeed = 0.8f;
+                    m.attackSpeed = ConvertNetMsg.MsgShortToFloat(boss.AttackSpeed);
+                    m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
                     m.range = 0.7f;
                     m.eyeLevel = 1;
                     m.ingameUpgradeLevel = 0;
