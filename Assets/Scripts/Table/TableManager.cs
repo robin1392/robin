@@ -15,7 +15,9 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataDiceLevelInfo> DiceLevelInfo { get; private set; }
     public TableData<int, TDataGuardianInfo> GuardianInfo { get; private set; }
     public TableData<int, TDataVsmode> Vsmode { get; private set; }
-
+    public TableData<string, TDataLangEN> LangEN { get; private set; }
+    public TableData<string, TDataLangKO> LangKO { get; private set; }
+    public TableData<int, TDataErrorMessageKO> ErrorMessageKO { get; private set; }
 
 
     public void Awake()
@@ -43,6 +45,9 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
         GuardianInfo = new TableData<int, TDataGuardianInfo>();
         Vsmode = new TableData<int, TDataVsmode>();
+        LangEN = new TableData<string, TDataLangEN>();
+        LangKO = new TableData<string, TDataLangKO>();
+        ErrorMessageKO = new TableData<int, TDataErrorMessageKO>();
     }
 
 
@@ -58,6 +63,10 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo.Init(new TableLoaderLocalCSV<int, TDataDiceLevelInfo>(), path + "/DiceLevelInfo.csv");
         GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path + "/GuardianInfo.csv");
         Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path + "/Vsmode.csv");
+        LangEN.Init(new TableLoaderLocalCSV<string, TDataLangEN>(), path + "/LangEN.csv");
+        LangKO.Init(new TableLoaderLocalCSV<string, TDataLangKO>(), path + "/LangKO.csv");
+        ErrorMessageKO.Init(new TableLoaderLocalCSV<int, TDataErrorMessageKO>(), path + "/ErrorMessageKO.csv");
+
         return true;
     }
 }

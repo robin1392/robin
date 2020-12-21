@@ -1,0 +1,21 @@
+stingKey,id,textDesc,~원본메세지
+string,int,string,
+ERROR_GAMELIFT_ACCEPT_PLAYER_SESSION,10001,게임 리프트 플레이어 세션 ID를 확인 할 수 없습니다.,// 게임 리프트 플레이어 세션 ID를 확인 할 수 없습니다.
+ERROR_GAMELIFT_REMOVE_PLAYER_SESSION,10002,게임 리프트 플레이어 세션 ID를 제거 할 수 없습니다.,// 게임 리프트 플레이어 세션 ID를 제거 할 수 없습니다.
+ERROR_GAMELIFT_MATCH_PLACING,10003,확인 필요,
+ERROR_DATABASE_UNEXPECTED,10011,DB 에러가 발생 했습니다. 잠시 후에 재시도 해주세요.,// 데이터베이스의 예상치 못한 에러
+ERROR_USER_NOT_FOUND,10001,유저를 찾을 수 없습니다. 게임을 재시작 해주세요.,// 유저를 찾을 수 없음.
+ERROR_USER_NAME_DUPLICATED,10001,중복 된 닉네임입니다. 다른 닉네임을 입력해주세요.,// 유저명 중복
+ERROR_BOX_NOT_FOUND,10101,상자 정보를 찾을 수 없습니다.,// box를 찾을 수 없습니다.
+ERROR_BOX_COUNT_LACK,10102,상자 수량에 에러가 발생 했습니다.,// box 수량이 부족하다.
+ERROR_DICE_LEVELUP_DATA_NOT_FOUND,10201,주사위 레벨업 데이터 오류 입니다.,// 주사위 레벨업 골드 부족
+ERROR_DICE_LEVELUP_LACK_GOLD,10202,주사위 레벨업에 필요한 골드가 부족합니다.,// 주사위 레벨업 골드 부족
+ERROR_DICE_LEVELUP_LACK_DICE,10203,레벨업에 필요한 주사위가 부족합니다.,// 주사위 레벨업 필요 주사위 부족
+ERROR_GAME_ROOM_NOT_FOUND,20101,게임방을 찾을 수 없습니다.,// 게임방을 찾을 수 없습니다.
+ERROR_GAME_ROOM_PLAYER_JOIN,20102,게임방 참여에 실패했습니다.,// 게임방 참여에 실패했습니다.
+ERROR_GAME_ROOM_PLAYER_LEAVE,20103,게임방 퇴장에 실패했습니다.,// 게임방 퇴장에 실패했습니다.
+ERROR_GAME_PLAYER_NOT_FOUND,20104,유저를 찾을 수 없습니다. ,// 플레이어를 찾을 수 없습니다.
+ERROR_GAME_PLAYER_INVALID_STATE,20105,유저 상태가 비정상 입니다.,// 플레이어를 상태가 유효하지 않습니다.
+ERROR_GET_DICE_FAILED,20106,주사위 정보를 확인 중 실패했습니다.,// 주사위 생성에 실패했습니다.
+ERROR_LEVELUP_DICE_FAILED,20107,주사위 강화에 실패했습니다.,// 주사위 강화에 실패했습니다.
+ERROR_INGAME_UP_DICE_FAILED,20108,주사위 파워업에 실패했습니다.,// 주사위 강화에 실패했습니다.

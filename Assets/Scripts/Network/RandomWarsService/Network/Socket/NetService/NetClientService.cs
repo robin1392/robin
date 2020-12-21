@@ -404,6 +404,8 @@ namespace RandomWarsService.Network.Socket.NetService
                         {
                             _netEventQueue.Enqueue(clientSession);
                         }
+
+                        _logger.Debug(string.Format("[NetClient] ProcessInternalPacket. socketHandle: {0}, netState: {1},  sessionState: {2}", clientSession.Socket.Handle, clientSession.NetState, clientSession.DisconnectState));
                     }
                     break;
                 case EInternalProtocol.DISCONNECT_SESSION_NOTIFY:
