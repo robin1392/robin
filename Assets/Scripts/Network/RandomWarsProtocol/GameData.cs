@@ -306,14 +306,12 @@ namespace RandomWarsProtocol
         public ushort Id;
         public int DataId;
         public int Hp;
-        public short SkillCoolTime;
-        public short SkillInterval;
-        public short Atk;
-        public short SkillAtk;
-        public BOSS_TYPE BossType;
-        public BOSS_TARGET_TYPE TargetType;
-        public BOSS_ATK_SPEED AtkSpeed;
-        public BOSS_MOVE_SPEED MoveSpeed;
+        public short Power;
+        public short Effect;
+        public short EffectCoolTime;
+        public short Duration;
+        public short MoveSpeed;
+        public short AttackSpeed;
 
 
 
@@ -322,14 +320,12 @@ namespace RandomWarsProtocol
             bw.Write(Id);
             bw.Write(DataId);
             bw.Write(Hp);
-            bw.Write(SkillCoolTime);
-            bw.Write(SkillInterval);
-            bw.Write(Atk);
-            bw.Write(SkillAtk);
-            bw.Write((byte)BossType);
-            bw.Write((byte)TargetType);
-            bw.Write((byte)AtkSpeed);
-            bw.Write((byte)MoveSpeed);
+            bw.Write(Power);
+            bw.Write(Effect);
+            bw.Write(EffectCoolTime);
+            bw.Write(Duration);
+            bw.Write(MoveSpeed);
+            bw.Write(AttackSpeed);
         }
 
         public static MsgMonster Read(BinaryReader br)
@@ -338,14 +334,12 @@ namespace RandomWarsProtocol
             data.Id = br.ReadUInt16();
             data.DataId = br.ReadInt32();
             data.Hp = br.ReadInt32();
-            data.SkillCoolTime = br.ReadInt16();
-            data.SkillInterval = br.ReadInt16();
-            data.Atk = br.ReadInt16();
-            data.SkillAtk = br.ReadInt16();
-            data.BossType = (BOSS_TYPE)br.ReadByte();
-            data.TargetType = (BOSS_TARGET_TYPE)br.ReadByte();
-            data.AtkSpeed = (BOSS_ATK_SPEED)br.ReadByte();
-            data.MoveSpeed = (BOSS_MOVE_SPEED)br.ReadByte();
+            data.Power = br.ReadInt16();
+            data.Effect = br.ReadInt16();
+            data.EffectCoolTime = br.ReadInt16();
+            data.Duration = br.ReadInt16();
+            data.MoveSpeed = br.ReadInt16();
+            data.AttackSpeed = br.ReadInt16();
             return data;
         }
     }
