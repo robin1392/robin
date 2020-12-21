@@ -376,27 +376,37 @@ namespace ED
                 animator.SetBool(Break, true);
 
                 PushEnemyMinions(10f);
-                
+
+                Table.Data.TDataGuardianInfo dataGuardianInfo;
+                if (TableManager.Get().GuardianInfo.GetData(boss.DataId, out dataGuardianInfo) == false)
+                {
+                    return;
+                }
+
                 Vector3 pos = transform.position;
-                var obj = FileHelper.LoadPrefab("Guardian", Global.E_LOADTYPE.LOAD_GUARDIAN);
-                var m = CreateMinion(obj, pos);
-                
-                m.id = boss.Id;
-                m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
-                m.effect = ConvertNetMsg.MsgShortToFloat(boss.SkillAtk);
-                m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.SkillInterval);
-                m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.SkillCoolTime);
-                
-                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomPlayer);
-                m.attackSpeed = 0.8f;
-                m.moveSpeed = 0.8f;
-                m.range = 0.7f;
-                m.eyeLevel = 1;
-                m.ingameUpgradeLevel = 0;
-                m.Initialize(MinionDestroyCallback);
-                
+                //var obj = FileHelper.LoadPrefab("Guardian", Global.E_LOADTYPE.LOAD_GUARDIAN);
+                var obj = FileHelper.LoadPrefab(dataGuardianInfo.prefabName, Global.E_LOADTYPE.LOAD_GUARDIAN);
+                if (obj != null)
+                {
+                    var m = CreateMinion(obj, pos);
+
+                    m.id = boss.Id;
+                    m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                    m.power = ConvertNetMsg.MsgShortToFloat(boss.Atk);
+                    m.effect = ConvertNetMsg.MsgShortToFloat(boss.SkillAtk);
+                    m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.SkillInterval);
+                    m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.SkillCoolTime);
+
+                    m.targetMoveType = DICE_MOVE_TYPE.GROUND;
+                    m.ChangeLayer(isBottomPlayer);
+                    m.attackSpeed = 0.8f;
+                    m.moveSpeed = 0.8f;
+                    m.range = 0.7f;
+                    m.eyeLevel = 1;
+                    m.ingameUpgradeLevel = 0;
+                    m.Initialize(MinionDestroyCallback);
+                }
+
                 ps_ShieldOff.Play();
 
                 PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);

@@ -12,6 +12,7 @@ namespace ED
     {
         public delegate void Fire();
 
+        public event Fire event_Attack;
         public event Fire event_FireArrow;
         public event Fire event_FireSpear;
         public event Fire event_FireLight;
@@ -35,6 +36,7 @@ namespace ED
                 {
                     m.DamageToTarget(m.target, delay);
                     
+                    event_Attack?.Invoke();
                     SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
                     //PlayerController.Get().SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_ArrowHit", m.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);
                     //PlayerController.Get().ActionActivePoolObject("Effect_ArrowHit", m.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);
