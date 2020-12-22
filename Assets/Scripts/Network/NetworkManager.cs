@@ -243,7 +243,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _socketSend = new SocketSendEvent(_packetSend);
 
         SetReconnect(false);
-        
+
         // recv 셋팅
         CombineRecvDelegate();
     }
@@ -258,7 +258,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
         GameObject.Destroy(webPacket);
         GameObject.Destroy(webNetCommon);
-        
+
         //_battleInfo = null;
 
         _packetSend = null;
@@ -479,7 +479,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _packetRecv.DisconnectGameNotify = _socketRecv.OnDisconnectGameNotify;
         _packetRecv.ReconnectGameNotify = _socketRecv.OnReconnectGameNotify;
         _packetRecv.ReconnectGameAck = _socketRecv.OnReconnectGameAck;
-        
+
         _packetRecv.StartSyncGameAck = _socketRecv.OnStartSyncGameAck;
         _packetRecv.StartSyncGameNotify = _socketRecv.OnStartSyncGameNotify;
         _packetRecv.EndSyncGameAck = _socketRecv.OnEndSyncGameAck;
@@ -487,8 +487,8 @@ public class NetworkManager : Singleton<NetworkManager>
 
         _packetRecv.ReadySyncGameAck = _socketRecv.OnReadySyncGameAck;
         _packetRecv.ReadySyncGameNotify = _socketRecv.OnReadySyncGameNotify;
-        
-        
+
+
         // not use...
         _packetRecv.PauseGameNotify = _socketRecv.OnPauseGameNotify;
         _packetRecv.ResumeGameNotify = _socketRecv.OnResumeGameNotify;
@@ -497,8 +497,8 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     #endregion
-    
-    
+
+
     #region reconnect to do
     public bool CheckReconnection()
     {
@@ -512,22 +512,22 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             //DeleteBattleInfo();
             DisconnectSocket(false);
-            
+
             SetReconnect(false);
-            
+
             //
             GameStateManager.Get().MoveMainScene();
             return;
         }
-        
-        print("my info : " + msg.PlayerBase.PlayerUId +  "  " + msg.PlayerBase.IsBottomPlayer + "    " + msg.PlayerBase.Name );
-        print("other info : " + msg.OtherPlayerBase.PlayerUId +  "  " + msg.OtherPlayerBase.IsBottomPlayer + "    " + msg.OtherPlayerBase.Name );
+
+        print("my info : " + msg.PlayerBase.PlayerUId + "  " + msg.PlayerBase.IsBottomPlayer + "    " + msg.PlayerBase.Name);
+        print("other info : " + msg.OtherPlayerBase.PlayerUId + "  " + msg.OtherPlayerBase.IsBottomPlayer + "    " + msg.OtherPlayerBase.Name);
         _netInfo.SetPlayerBase(msg.PlayerBase);
         _netInfo.SetOtherBase(msg.OtherPlayerBase);
-        
+
         //
         IsMaster = _netInfo.playerInfo.IsBottomPlayer;
-        
+
         //
         GameStateManager.Get().MoveInGameBattle();
     }
@@ -561,7 +561,7 @@ public class NetworkManager : Singleton<NetworkManager>
             });
             return;
         }
-        
+
         UserInfoManager.Get().SetUserInfo(msg.UserInfo);
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);
@@ -589,7 +589,7 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _editUserNameCallback(msg);
         }
-        
+
         UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
     }
 
@@ -600,10 +600,10 @@ public class NetworkManager : Singleton<NetworkManager>
         StatusMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
     }
 
-    
+
     public void StartMatchReq(string userId, int gameMode)
     {
-        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START 
+        if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START
             || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
         {
             // 매칭 중이면 요청할 수 없다.
@@ -657,7 +657,10 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (string.IsNullOrEmpty(msg.PlayerSessionId))
         {
-            StartCoroutine(WaitForMatch());
+            if (NetMatchStep != Global.E_MATCHSTEP.MATCH_CANCEL)
+            {
+                StartCoroutine(WaitForMatch());
+            }
         }
         else
         {
@@ -691,6 +694,10 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
             searchingPopup.ClickSearchingCancelResult();
+        }
+        else
+        {
+            NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
         }
 
         UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
@@ -840,7 +847,7 @@ public class NetInfo
         pinfo.PlayerUId = baseinfo.PlayerUId;
         pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;
         pinfo.Name = baseinfo.Name;
-        
+
         playerInfo = pinfo;
     }
 
@@ -851,7 +858,7 @@ public class NetInfo
         pinfo.PlayerUId = baseinfo.PlayerUId;
         pinfo.IsBottomPlayer = baseinfo.IsBottomPlayer;
         pinfo.Name = baseinfo.Name;
-        
+
         otherInfo = pinfo;
     }
 
@@ -975,7 +982,7 @@ public class ConvertNetMsg
 
         return rtn;
     }
-    
+
     public static int MsgByteToInt(byte value)
     {
         return Convert.ToInt32(value);
@@ -1035,7 +1042,7 @@ public class ConvertNetMsg
     {
         return Convert.ToInt32(value) * 0.1f;
     }
-    
+
     public static int MsgFloatToInt(float value)
     {
         return Convert.ToInt32(value * 100);
@@ -1316,7 +1323,7 @@ public class ConvertNetMsg
 
         msg.Id = MsgIntToUshort(id);
         msg.TargetId = MsgIntToUshort(targetID);
-        
+
         return msg;
     }
 
@@ -1327,7 +1334,7 @@ public class ConvertNetMsg
         msg.Id = MsgIntToUshort(id);
         msg.X = MsgIntToShort(x);
         msg.Z = MsgIntToShort(z);
-        
+
         return msg;
     }
 
@@ -1339,7 +1346,7 @@ public class ConvertNetMsg
         msg.HitPos = Vector3ToMsg(pos);
         msg.Rotation = QuaternionToMsg(rot);
         msg.LocalScale = Vector3ToMsg(scale);
-        
+
         return msg;
     }
 
@@ -1349,7 +1356,7 @@ public class ConvertNetMsg
 
         msg.Id = MsgIntToUshort(id);
         msg.Message = MsgIntToByte(message);
-        
+
         return msg;
     }
 
@@ -1360,7 +1367,7 @@ public class ConvertNetMsg
         msg.Id = MsgIntToUshort(id);
         msg.Message = MsgIntToByte(message);
         msg.TargetId = MsgIntToUshort(targetID);
-        
+
         return msg;
     }
 
@@ -1370,7 +1377,7 @@ public class ConvertNetMsg
 
         msg.Id = MsgIntToUshort(id);
         msg.TargetId = MsgIntToUshort(targetID);
-        
+
         return msg;
     }
 
@@ -1381,7 +1388,7 @@ public class ConvertNetMsg
         msg.Id = MsgIntToUshort(id);
         msg.Dir = new MsgVector3 { X = MsgIntToShort(x), Y = MsgIntToShort(y), Z = MsgIntToShort(z) };
         msg.PushPower = MsgIntToShort(power);
-        
+
         return msg;
     }
 
