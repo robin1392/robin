@@ -103,6 +103,7 @@ public enum E_ActionSendMessage
     StopAiming,
     JumpTarget,
     Skill,
+    FireBullet,
 }
 
 public enum E_PoolName

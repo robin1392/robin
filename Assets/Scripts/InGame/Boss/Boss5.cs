@@ -22,13 +22,13 @@ public class Boss5 : Minion
         
         PoolManager.Get().AddPool(obj_Attack, 2);
         PoolManager.Get().AddPool(obj_AttackHit, 2);
-        _animationEvent = GetComponentInChildren<MinionAnimationEvent>(); 
-        _animationEvent.event_Attack += Callback_Attack;
+        _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
     }
 
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);
+        _animationEvent.event_Attack += Callback_Attack;
     }
 
     public override void Attack()
@@ -58,6 +58,11 @@ public class Boss5 : Minion
     {
         if (target != null)
         {
+            if (isMine || controller.isPlayingAI)
+            {
+                controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.FireBullet, target.id);
+            }
+            
             var attack = PoolManager.Get().ActivateObject(obj_Attack.name, ts_ShootingPos.position);
             if (attack != null)
             {
@@ -67,6 +72,27 @@ public class Boss5 : Minion
                 {
                     attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
                     if (isMine || controller.isPlayingAI) DamageToTarget(target, 0);
+                    PoolManager.Get().ActivateObject(obj_AttackHit.name, ts_hit.position);
+                });
+            }
+        }
+    }
+
+    // call relay
+    public void FireBullet(int targetID)
+    {
+        target = InGameManager.Get().GetBaseStatFromId(targetID);
+
+        if (target != null)
+        {
+            var attack = PoolManager.Get().ActivateObject(obj_Attack.name, ts_ShootingPos.position);
+            if (attack != null)
+            {
+                var ts_hit = target.ts_HitPos;
+                if (ts_hit == null) ts_hit = target.transform;
+                attack.DOMove(ts_hit.position, 0.5f).OnComplete(() =>
+                {
+                    attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
                     PoolManager.Get().ActivateObject(obj_AttackHit.name, ts_hit.position);
                 });
             }
