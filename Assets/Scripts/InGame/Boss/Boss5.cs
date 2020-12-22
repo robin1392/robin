@@ -130,6 +130,8 @@ public class Boss5 : Minion
 
     IEnumerator DropBulletCoroutine()
     {
+        yield return new WaitForSeconds(1f);
+        
         for (int i = 0; i < 20; i++)
         {
             float x = Random.Range(-3.5f, 3.5f);
@@ -142,6 +144,15 @@ public class Boss5 : Minion
                 {
                     PoolManager.Get().ActivateObject(obj_SkillHit.name, bullet.position);
                     bullet.GetComponent<PoolObjectAutoDeactivate>().Deactive();
+
+                    if (isMine || controller.isPlayingAI)
+                    {
+                        var minions = InGameManager.Get().GetBottomMinions();
+                        for (int j = 0; j < minions.Length; j++)
+                        {
+                            DamageToTarget(minions[j], 0, 0.1f);
+                        }
+                    }
                 });
             }
 
