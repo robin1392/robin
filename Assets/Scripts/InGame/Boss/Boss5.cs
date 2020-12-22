@@ -134,7 +134,7 @@ public class Boss5 : Minion
         {
             float x = Random.Range(-3.5f, 3.5f);
             float z = Random.Range(-5.5f, 5.5f);
-            Vector3 startPos = new Vector3(x, 5f, z);
+            Vector3 startPos = new Vector3(x, 20f, z);
             var bullet = PoolManager.Get().ActivateObject(obj_Skill.name, startPos);
             if (bullet != null)
             {
