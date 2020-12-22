@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ED;
 
-public class Guardian_01 : Minion
+public class Guardian_02 : Minion
 {
     public override void Initialize(DestroyCallback destroy)
     {
@@ -38,15 +38,7 @@ public class Guardian_01 : Minion
 
             yield return new WaitForSeconds(1.716f);
 
-            var cols = Physics.OverlapSphere(transform.position, 2f, targetLayer);
-            for (int i = 0; i < cols.Length; i++)
-            {
-                var bs = cols[i].GetComponentInParent<BaseStat>();
-                if (bs != null)
-                {
-                    DamageToTarget(bs);
-                }
-            }
+            Invincibility(2f);
         }
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
-  _minion: {fileID: 8402987704024065571}
+  _minion: {fileID: 5575892540808368740}
 --- !u!1 &5081294253336761964
 GameObject:
   m_ObjectHideFlags: 0
@@ -23,7 +23,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5081294253336761971}
-  - component: {fileID: 8402987704024065571}
+  - component: {fileID: 5575892540808368740}
   - component: {fileID: 5271869617561665627}
   - component: {fileID: 17148726258424996}
   - component: {fileID: 6486029529450410244}
@@ -55,7 +55,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8402987704024065571
+--- !u!114 &5575892540808368740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5081294253336761964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cafac9e1246c34bdc863b91e11115a92, type: 3}
+  m_Script: {fileID: 11500000, guid: 17a31bb40c415b440a674b7f51e94936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
   _lockBoundGraphPrefabOverrides: 1
   _preInitializeSubGraphs: 0
   _updateMode: 0
-  _graph: {fileID: 11400000, guid: c663654bfafef4b4fa92b4623c31fed1, type: 2}
+  _graph: {fileID: 11400000, guid: 7ecbd6742c58b244389b606e907d898e, type: 2}
   _blackboard: {fileID: 17148726258424996}
 --- !u!114 &17148726258424996
 MonoBehaviour:
@@ -338,6 +338,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: guardian_viking
       objectReference: {fileID: 0}
+    - target: {fileID: 619846701858099031, guid: e4925e0872f002747ac858d1a8d9afb2,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: cb9670203073f87438ceb4f5e3e72f3e,
+        type: 2}
     - target: {fileID: 1085537075267004606, guid: e4925e0872f002747ac858d1a8d9afb2,
         type: 3}
       propertyPath: m_LocalPosition.x

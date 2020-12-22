@@ -13,7 +13,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
-  _minion: {fileID: 8402987704024065571}
+  _minion: {fileID: 3290784792385729883}
+--- !u!1 &4545012730196492731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6723924779684884332}
+  m_Layer: 0
+  m_Name: Shoot position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6723924779684884332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4545012730196492731}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2563952118672890612}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5081294253336761964
 GameObject:
   m_ObjectHideFlags: 0
@@ -23,7 +53,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5081294253336761971}
-  - component: {fileID: 8402987704024065571}
+  - component: {fileID: 3290784792385729883}
   - component: {fileID: 5271869617561665627}
   - component: {fileID: 17148726258424996}
   - component: {fileID: 6486029529450410244}
@@ -55,7 +85,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8402987704024065571
+--- !u!114 &3290784792385729883
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5081294253336761964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cafac9e1246c34bdc863b91e11115a92, type: 3}
+  m_Script: {fileID: 11500000, guid: e4ba39e1c4df4694db6651d097eb85e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
@@ -97,7 +127,7 @@ MonoBehaviour:
   range: 0
   searchRange: 2
   isBottomPlayer: 0
-  ts_ShootingPos: {fileID: 8488758196635011245}
+  ts_ShootingPos: {fileID: 6723924779684884332}
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
@@ -553,6 +583,12 @@ Transform:
 --- !u!95 &3525330406578966774 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 7574516021774471471, guid: 87ba626cb25d1a8439130194d4556f8f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481360887211524569}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2563952118672890612 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8819903758419958573, guid: 87ba626cb25d1a8439130194d4556f8f,
     type: 3}
   m_PrefabInstance: {fileID: 6481360887211524569}
   m_PrefabAsset: {fileID: 0}
