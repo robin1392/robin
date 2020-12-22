@@ -6,11 +6,11 @@ int,string,int,string,string
 4,serachuserTropyMaxCnt,50,유저 매칭 조건 트로피 범위 최대치,
 5,MaxWave,25,최대 진행 웨이브,
 6,coopTowerHp,30000,아군 타워 HP,
-7,1stBossID,40001,등장 보스 1,알로 등장
-8,2ndBossID,40002,등장 보스 2,
-9,3rdBossID,40003,등장 보스 3,
-10,4thBossID,40004,등장 보스 4,
-11,5thBossID,40005,등장 보스 5,
+7,1stBossID,40005,등장 보스 1,알로 등장
+8,2ndBossID,40001,등장 보스 2,
+9,3rdBossID,40002,등장 보스 3,
+10,4thBossID,40003,등장 보스 4,
+11,5thBossID,40004,등장 보스 5,
 12,callGuardianTowerHp_1st,20000,수호자 등장 타워 HP 1,
 13,callGuardianTowerHp_2nd,10000,수호자 등장 타워 HP 2,
 14,get1stBoss_Wave,1,보스 등장 웨이브1,

@@ -44,9 +44,9 @@ namespace Table
         }
 
 
-        public bool Init(ITableLoader<K, V> loader, string path)
+        public bool Init(ITableLoader<K, V> loader, string sourcePath, string fileName, string targetPath = "")
         {
-            return loader.Run(path, ref _rows);
+            return loader.Run(sourcePath, fileName, targetPath, ref _rows);
         }
 
 

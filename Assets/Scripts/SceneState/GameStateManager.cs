@@ -226,6 +226,10 @@ public class GameStateManager : Singleton<GameStateManager>
         // game data patch download
         DataPatchManager.Get().JsonDownLoad();
 
+        // TODO : [개선] 신규 테이블 매니져 초기화
+        TableManager.Get().Init(Application.dataPath + "/Resources/");
+
+
         // 상태 데이터 로딩중
         yield return new WaitForSeconds(0.1f);
         
