@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3825825051869845937}
   - component: {fileID: 3183305385002054515}
   - component: {fileID: 5310631942686055563}
+  - component: {fileID: -8717040310151937873}
   m_Layer: 0
   m_Name: particle_boss_5_attack
   m_TagString: Untagged
@@ -4751,6 +4752,20 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-8717040310151937873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638999433272946417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8392b961c9f7d4742ad6368d481d198a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolName: 
+  lifeTime: 0
 --- !u!1 &3056497421155723409
 GameObject:
   m_ObjectHideFlags: 0

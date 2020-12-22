@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: a38bacb15ba614a11b4caf5c9ff390b2, type: 3}
-    totalSpriteSurfaceArea: 2076941
+    totalSpriteSurfaceArea: 2079195
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -59,6 +59,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 472d68e2b710b4655bc5a2463f4f924f, type: 3}
   - {fileID: 21300000, guid: 63cfaca3a1ab74a84ab8eb72f7848801, type: 3}
   - {fileID: 21300000, guid: 721025c34d280499ab6ff2717cf71989, type: 3}
+  - {fileID: 21300000, guid: 33d313f37442305498013d6c2fac66c1, type: 3}
   - {fileID: 21300000, guid: 7cf0c43465b8540da9e16fd71248fd75, type: 3}
   - {fileID: 21300000, guid: 14ad1344feb53499a95125809bfdbdb7, type: 3}
   - {fileID: 21300000, guid: a2d38c845448045cab30286c5324de9e, type: 3}
@@ -102,6 +103,7 @@ SpriteAtlas:
   - dice_sniper
   - dice_necromancer
   - dice_knight
+  - dice_star
   - dice_magician
   - dice_pip
   - dice_invincibility

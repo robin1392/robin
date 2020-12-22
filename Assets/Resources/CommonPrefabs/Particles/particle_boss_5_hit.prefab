@@ -4840,7 +4840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolName: 
-  lifeTime: 1
+  lifeTime: 1.5
 --- !u!1 &5767319056451629102
 GameObject:
   m_ObjectHideFlags: 0
