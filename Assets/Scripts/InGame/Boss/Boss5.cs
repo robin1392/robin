@@ -58,7 +58,7 @@ public class Boss5 : Minion
     {
         if (target != null)
         {
-            var attack = PoolManager.Get().ActivateObject(obj_Attack.name);
+            var attack = PoolManager.Get().ActivateObject(obj_Attack.name, ts_ShootingPos.position);
             if (attack != null)
             {
                 var ts_hit = target.ts_HitPos;
