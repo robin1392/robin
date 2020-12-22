@@ -22,12 +22,13 @@ public class Boss5 : Minion
         
         PoolManager.Get().AddPool(obj_Attack, 2);
         PoolManager.Get().AddPool(obj_AttackHit, 2);
-        _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
+        if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
     }
 
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);
+        if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
         _animationEvent.event_Attack += Callback_Attack;
     }
 
