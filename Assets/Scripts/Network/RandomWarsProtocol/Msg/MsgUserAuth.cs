@@ -60,6 +60,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgStartMatchReq
     {
         public string UserId;
+        public int GameMode;
     }
 
 

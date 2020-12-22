@@ -187,7 +187,7 @@ namespace ED
                 return;
             }
 
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, (int)Global.PLAY_TYPE.BATTLE);
         }
 
         private void ConnectCoop()
@@ -203,7 +203,7 @@ namespace ED
                 return;
             }
 
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID);
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, (int)Global.PLAY_TYPE.COOP);
         }
         
         public void Click_DisconnectButton()

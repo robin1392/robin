@@ -601,7 +601,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     
-    public void StartMatchReq(string userId)
+    public void StartMatchReq(string userId, int gameMode)
     {
         if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START 
             || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
@@ -614,6 +614,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
         MsgStartMatchReq msg = new MsgStartMatchReq();
         msg.UserId = userId;
+        msg.GameMode = gameMode;
         _httpSender.StartMatchReq(msg);
         UnityUtil.Print("SEND MATCH START => userid", userId, "green");
     }
