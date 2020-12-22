@@ -67,7 +67,7 @@ public class Boss5 : Minion
                 {
                     attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
                     if (isMine || controller.isPlayingAI) DamageToTarget(target, 0);
-                    PoolManager.Get().ActivateObject(obj_AttackHit.name);
+                    PoolManager.Get().ActivateObject(obj_AttackHit.name, ts_hit.position);
                 });
             }
         }
