@@ -63,7 +63,7 @@ public class Boss5 : Minion
             {
                 var ts_hit = target.ts_HitPos;
                 if (ts_hit == null) ts_hit = target.transform;
-                attack.DOMove(ts_hit.position, 0.3f).OnComplete(() =>
+                attack.DOMove(ts_hit.position, 0.5f).OnComplete(() =>
                 {
                     attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
                     if (isMine || controller.isPlayingAI) DamageToTarget(target, 0);
