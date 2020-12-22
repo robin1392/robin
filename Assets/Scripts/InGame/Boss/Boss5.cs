@@ -14,6 +14,7 @@ public class Boss5 : Minion
     private float _skillCastedTime;
     private bool _isSkillCasting;
     private float _localAttackSpeed = 1f;
+    private MinionAnimationEvent _animationEvent;
 
     protected override void Start()
     {
@@ -21,7 +22,8 @@ public class Boss5 : Minion
         
         PoolManager.Get().AddPool(obj_Attack, 2);
         PoolManager.Get().AddPool(obj_AttackHit, 2);
-        GetComponentInChildren<MinionAnimationEvent>().event_Attack += Callback_Attack;
+        _animationEvent = GetComponentInChildren<MinionAnimationEvent>(); 
+        _animationEvent.event_Attack += Callback_Attack;
     }
 
     public override void Initialize(DestroyCallback destroy)
@@ -49,7 +51,7 @@ public class Boss5 : Minion
     {
         base.Death();
 
-        GetComponentInChildren<MinionAnimationEvent>().event_Attack -= Callback_Attack;
+        _animationEvent.event_Attack -= Callback_Attack;
     }
 
     public void Callback_Attack()
