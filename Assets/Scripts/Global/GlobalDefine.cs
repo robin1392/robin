@@ -104,6 +104,7 @@ public enum E_ActionSendMessage
     JumpTarget,
     Skill,
     FireBullet,
+    DropBullet,
 }
 
 public enum E_PoolName

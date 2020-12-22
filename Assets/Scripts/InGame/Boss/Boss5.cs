@@ -8,26 +8,30 @@ using UnityEngine;
 
 public class Boss5 : Minion
 {
-    [Header("Effect")] public GameObject obj_Attack;
+    [Header("Effect")]
+    public GameObject obj_Attack;
     public GameObject obj_AttackHit;
+    public GameObject obj_Skill;
+    public GameObject obj_SkillHit;
     
     private float _skillCastedTime;
-    private bool _isSkillCasting;
-    private float _localAttackSpeed = 1f;
     private MinionAnimationEvent _animationEvent;
 
     protected override void Start()
     {
         base.Start();
         
-        PoolManager.Get().AddPool(obj_Attack, 2);
-        PoolManager.Get().AddPool(obj_AttackHit, 2);
+        PoolManager.Get().AddPool(obj_Attack, 3);
+        PoolManager.Get().AddPool(obj_AttackHit, 3);
+        PoolManager.Get().AddPool(obj_Skill, 20);
+        PoolManager.Get().AddPool(obj_SkillHit, 20);
         if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
     }
 
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);
+        _skillCastedTime = -effectCooltime;
         if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
         _animationEvent.event_Attack += Callback_Attack;
     }
@@ -102,23 +106,48 @@ public class Boss5 : Minion
 
     public void Skill()
     {
-        StartCoroutine(SkillCoroutine());
+        if (_spawnedTime >= _skillCastedTime + effectCooltime)
+        {
+            _skillCastedTime = _spawnedTime;
+            
+            SetControllEnable(false);
+            animator.SetTrigger(_animatorHashSkill);
+            controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, id, E_ActionSendMessage.DropBullet);
+            DropBullet();
+        }
     }
 
-    IEnumerator SkillCoroutine()
-    {
-        float originAttackSpeed = attackSpeed;
-        float animationSpeed = 1f;
-        int loopCount = 1;
-        
-        while (true)
-        {
-            yield return new WaitForSeconds(effectCooltime);
+    // IEnumerator SkillCoroutine()
+    // {
+    //     
+    // }
 
-            loopCount++;
-            _localAttackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
-            attackSpeed = 1f / _localAttackSpeed;
-            animator.SetFloat("AttackSpeed", _localAttackSpeed);
+    public void DropBullet()
+    {
+        animator.SetTrigger(_animatorHashSkill);
+        StartCoroutine(DropBulletCoroutine());
+    }
+
+    IEnumerator DropBulletCoroutine()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            float x = Random.Range(-3.5f, 3.5f);
+            float z = Random.Range(-5.5f, 5.5f);
+            Vector3 startPos = new Vector3(x, 5f, z);
+            var bullet = PoolManager.Get().ActivateObject(obj_Skill.name, startPos);
+            if (bullet != null)
+            {
+                bullet.DOMoveY(0, 0.5f).OnComplete(() =>
+                {
+                    PoolManager.Get().ActivateObject(obj_SkillHit.name, bullet.position);
+                    bullet.GetComponent<PoolObjectAutoDeactivate>().Deactive();
+                });
+            }
+
+            yield return new WaitForSeconds(0.1f);
         }
+        
+        SetControllEnable(true);
     }
 }

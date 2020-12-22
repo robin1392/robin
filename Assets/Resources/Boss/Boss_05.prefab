@@ -144,6 +144,10 @@ MonoBehaviour:
     type: 3}
   obj_AttackHit: {fileID: 2511713277936034632, guid: 36957eb648b901f498b3eb16ec6bede6,
     type: 3}
+  obj_Skill: {fileID: 7204132685108760249, guid: de09a040b24ac4e4ab6c466c2e32f0ee,
+    type: 3}
+  obj_SkillHit: {fileID: 8535714404754721701, guid: 96b4a140ae6bc384ca243f89e4d15963,
+    type: 3}
 --- !u!114 &5271869617561665627
 MonoBehaviour:
   m_ObjectHideFlags: 0
