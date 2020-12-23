@@ -5,6 +5,15 @@ using ED;
 
 public class Guardian_03 : Minion
 {
+    public GameObject pref_Bullet;
+
+    protected override void Start()
+    {
+        base.Start();
+        
+        PoolManager.instance.AddPool(pref_Bullet, 5);
+    }
+    
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);

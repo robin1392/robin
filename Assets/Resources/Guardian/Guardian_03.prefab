@@ -140,6 +140,8 @@ MonoBehaviour:
   eyeLevel: 0
   ingameUpgradeLevel: 0
   isPolymorph: 0
+  pref_Bullet: {fileID: 4058551278812737087, guid: 0ee7dba62ff7ebf4d9c5191ea9719ce5,
+    type: 3}
 --- !u!114 &5271869617561665627
 MonoBehaviour:
   m_ObjectHideFlags: 0

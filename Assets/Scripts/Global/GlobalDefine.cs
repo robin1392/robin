@@ -83,6 +83,7 @@ public enum E_BulletType
     ARBITER,
     BABYDRAGON,
     VALLISTA_SPEAR,
+    GUARDIAN3_BULLET,
 }
 
 public enum E_AniTrigger

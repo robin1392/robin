@@ -13,6 +13,13 @@ public class Boss4 : Minion
     private bool _isSkillCasting;
     private float _localAttackSpeed = 1f;
 
+    protected override void Start()
+    {
+        base.Start();
+        
+        PoolManager.instance.AddPool(pref_Spear, 2);
+    }
+
     public override void Initialize(DestroyCallback destroy)
     {
         base.Initialize(destroy);
@@ -21,7 +28,6 @@ public class Boss4 : Minion
             ? transform.position + Vector3.back
             : transform.position + Vector3.forward;
         attackSpeed = 3f;
-        PoolManager.instance.AddPool(pref_Spear, 2);
     }
 
     public override void Attack()
