@@ -650,6 +650,26 @@ namespace RandomWarsProtocol
         }
 
 
+        public void EndCoopGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, MsgReward[] normalReward)
+        {
+            using (var ms = new MemoryStream())
+            {
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((int)code);
+                bw.Write((byte)gameResult);
+
+                int length = (normalReward == null) ? 0 : normalReward.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    normalReward[i].Write(bw);
+                }
+
+                peer.SendPacket((int)GameProtocol.END_COOP_GAME_NOTIFY, ms.ToArray());
+            }
+        }
+
+
         public void DisconnectGameNotify(Peer peer, int playerUId) 
         {
             
