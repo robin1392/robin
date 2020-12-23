@@ -396,6 +396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   BucketUrl: https://randomdice-wars-bucket.s3.ap-northeast-2.amazonaws.com
+  Enviroment: DEV
 --- !u!1 &536019587
 GameObject:
   m_ObjectHideFlags: 0
@@ -942,7 +943,7 @@ MonoBehaviour:
   UseLocalServer: 0
   LocalServerAddr: 3.35.52.205
   LocalServerPort: 40002
-  UserId: a7f7fdcc-a6ae-49be-a01c-17f39c336d38
+  UserId: 
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0
