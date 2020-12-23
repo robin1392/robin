@@ -56,6 +56,15 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
+    public class MsgEndCoopGameNotify
+    {
+        public int ErrorCode;
+        public GAME_RESULT GameResult;
+        public MsgReward[] NormalReward;
+    }
+
+
+    [Serializable]
     public class MsgDisconnectGameNotify 
     {
         public ushort PlayerUId;

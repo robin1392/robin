@@ -153,6 +153,17 @@ namespace RandomWarsProtocol.Msg
     public class MsgGetRankAck
     {
         public GameErrorCode ErrorCode;
-        public MsgUserRank[] RankInfo;
+        // 시즌 식별 번호
+        public int SeasonIndex;
+        // 시즌 상태(진행중, 정산중, 종료 등등)
+        public byte SeasonState;
+        // 시즌 남은 시간(초단위)
+        public int SeasonRemainTime;
+        // 현재 나의 순위
+        public int myRanking;
+        // 시즌 획득 트로피
+        public int myTrophy;
+        // Top 랭킹 순위
+        public MsgRankInfo[] TopRankInfo;
     }
 }

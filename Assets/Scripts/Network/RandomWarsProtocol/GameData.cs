@@ -180,28 +180,6 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
-    public class MsgUserRank
-    {
-        public string UserName;
-        public int Trophy;
-
-        public void Write(BinaryWriter bw)
-        {
-            bw.Write(UserName);
-            bw.Write(Trophy);
-        }
-
-        public static MsgUserRank Read(BinaryReader br)
-        {
-            MsgUserRank data = new MsgUserRank();
-            data.UserName = br.ReadString();
-            data.Trophy = br.ReadInt32();
-            return data;
-        }
-    }
-
-
-    [Serializable]
     public class MsgPlayerBase
     {
         public ushort PlayerUId;
@@ -312,7 +290,6 @@ namespace RandomWarsProtocol
         public short Duration;
         public short MoveSpeed;
         public short AttackSpeed;
-
 
 
         public void Write(BinaryWriter bw)
@@ -1849,5 +1826,16 @@ namespace RandomWarsProtocol
 
             return data;
         }
+    }
+
+
+    [Serializable]
+    public class MsgRankInfo
+    {
+        public int Ranking;
+        public string Name;
+        public short Class;
+        public int Trophy;
+        public int[] DeckInfo;
     }
 }
