@@ -149,6 +149,10 @@ namespace RandomWarsProtocol
         public delegate void EndGameNotifyDelegate(Peer peer, MsgEndGameNotify msg);
         public EndGameNotifyDelegate EndGameNotify;
 
+        public delegate void EndCoopGameNotifyDelegate(Peer peer, MsgEndCoopGameNotify msg);
+        public EndCoopGameNotifyDelegate EndCoopGameNotify;
+
+
         public delegate void DisconnectGameNotifyDelegate(Peer peer, MsgDisconnectGameNotify msg);
         public DisconnectGameNotifyDelegate DisconnectGameNotify;
 
@@ -563,6 +567,31 @@ namespace RandomWarsProtocol
                         }
                     }
                     break;
+                case GameProtocol.END_COOP_GAME_NOTIFY:
+                    {
+                        if (EndCoopGameNotify == null)
+                            return false;
+
+
+                        using (var ms = new MemoryStream(buffer))
+                        {
+                            BinaryReader br = new BinaryReader(ms);
+                            MsgEndCoopGameNotify msg = new MsgEndCoopGameNotify();
+                            msg.ErrorCode = br.ReadInt32();
+                            msg.GameResult = (GAME_RESULT)br.ReadByte();
+
+                            int length = br.ReadInt32();
+                            msg.NormalReward = new MsgReward[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.NormalReward[i] = MsgReward.Read(br);
+                            }
+
+                            EndCoopGameNotify(peer, msg);
+                        }
+                    }
+                    break;
+
                 case GameProtocol.DISCONNECT_GAME_NOTIFY:
                     {
                         if (DisconnectGameNotify == null)

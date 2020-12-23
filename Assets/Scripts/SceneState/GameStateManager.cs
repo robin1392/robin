@@ -227,7 +227,7 @@ public class GameStateManager : Singleton<GameStateManager>
         DataPatchManager.Get().JsonDownLoad();
 
         // TODO : [개선] 신규 테이블 매니져 초기화
-        TableManager.Get().Init(Application.dataPath + "/Resources/");
+        TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
 
 
         // 상태 데이터 로딩중

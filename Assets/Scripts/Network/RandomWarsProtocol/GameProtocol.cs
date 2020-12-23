@@ -106,6 +106,7 @@ namespace RandomWarsProtocol
         ADD_SP_NOTIFY,
         SPAWN_NOTIFY,
         END_GAME_NOTIFY,
+        END_COOP_GAME_NOTIFY,
         DISCONNECT_GAME_NOTIFY,
         PAUSE_GAME_NOTIFY,
         RESUME_GAME_NOTIFY,
