@@ -87,12 +87,13 @@ public class TableManager : Singleton<TableManager>
                 Directory.CreateDirectory(localPath);
             }
 
-            using (BinaryWriter writer = new BinaryWriter(File.Open(localPath + "AppSettings.dat", FileMode.Create, FileAccess.ReadWrite)))
+            if (LoadFromBucket(BucketUrl + "/table/" + Enviroment, localPath + "table") == true)
             {
-                writer.Write(remoteTDataVersion);
+                using (BinaryWriter writer = new BinaryWriter(File.Open(localPath + "AppSettings.dat", FileMode.Create, FileAccess.ReadWrite)))
+                {
+                    writer.Write(remoteTDataVersion);
+                }
             }
-
-            LoadFromBucket(BucketUrl + "/table/" + Enviroment, localPath + "table");
         }
         else
         {

@@ -41,7 +41,7 @@ public class UI_Box_Slot : MonoBehaviour
         if (needKey >= 0)
         {
             isEnable = needKeyCount <= UserInfoManager.Get().GetUserInfo().key;
-            text_Name.text = LocalizationManager.GetLangDesc(40000 + id);
+            text_Name.text = LocalizationManager.GetLangDesc(40000 + id / 1000);
             text_Cost.text = needKeyCount.ToString();
             text_Count.text = $"x{count}";
 
@@ -49,7 +49,7 @@ public class UI_Box_Slot : MonoBehaviour
             text_Name.color = isEnable ? Color.white : Color.gray;
             text_Count.color = isEnable ? Color.white : Color.gray;
             image_CostIcon.color = isEnable ? Color.white : Color.gray;
-            image_Icon.sprite = arrSprite_BoxIcon[id - 1];
+            image_Icon.sprite = arrSprite_BoxIcon[id/1000 - 1];
         }
         else
         {
