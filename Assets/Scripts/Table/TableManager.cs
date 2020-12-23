@@ -79,7 +79,7 @@ public class TableManager : Singleton<TableManager>
             }
         }
 
-        // ╪╜╧Ж ╣╔юлем©м ╥ндц ╣╔юлемюг ╧Жа╞ю╩ ╨Я╠Ёгя╢ы.
+        // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫м©О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫я╢О©╫.
         if (remoteTDataVersion != localTDataVersion)
         {
             if (Directory.Exists(localPath) == false)
