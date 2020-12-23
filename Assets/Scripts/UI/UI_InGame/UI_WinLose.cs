@@ -38,7 +38,31 @@ public class UI_WinLose : MonoBehaviour
             arrImage_Deck[i].sprite = FileHelper.GetIcon(iconName);
             arrImage_Deck[i].SetNativeSize();
             arrImage_Deck[i].transform.localScale = Vector3.zero;
-            arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f);
+            arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f).SetUpdate(true);
+        }
+
+        text_Nickname.text = nickname;
+        text_Trophy.text = trophy.ToString();
+    }
+
+    public void Initialize(int[] deck, string nickname, int trophy)
+    {
+        obj_Win.SetActive(false);
+        obj_Lose.SetActive(false);
+        
+        for (int i = 0; i < arrImage_Deck.Length; i++)
+        {
+            Table.Data.TDataDiceInfo dataDiceInfo;
+            if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
+            {
+                return;
+            }
+
+            var iconName = dataDiceInfo.iconName;
+            arrImage_Deck[i].sprite = FileHelper.GetIcon(iconName);
+            arrImage_Deck[i].SetNativeSize();
+            arrImage_Deck[i].transform.localScale = Vector3.zero;
+            arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f).SetUpdate(true);
         }
 
         text_Nickname.text = nickname;

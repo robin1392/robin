@@ -27,7 +27,6 @@ namespace ED
             currentHealth = maxHealth;
             _arrDice = new Dice[15];
             
-            //_arrDeck = new Data_Dice[5];
             _arrDiceDeck = new Table.Data.TDataDiceInfo[5];
             
             _arrUpgradeLevel = new int[5];
@@ -35,14 +34,6 @@ namespace ED
             {
                 arrDice[i] = new Dice {diceFieldNum = i};
             }
-
-            //image_HealthBar = isBottomPlayer ? InGameManager.Get().image_BottomHealthBar : InGameManager.Get().image_TopHealthBar;
-            //text_Health = isBottomPlayer ? InGameManager.Get().text_BottomHealth : InGameManager.Get().text_TopHealth;
-            
-            // image_HealthBar = WorldUIManager.Get().GetHealthBar(isBottomPlayer);
-            // text_Health = WorldUIManager.Get().GetHealthText(isBottomPlayer);
-            //
-            // text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
 
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
 
@@ -52,30 +43,34 @@ namespace ED
             if (deck == null || deck.Length == 0)
             {
                 var listDeck = new List<int>();
-                for (var i = 0; i < _arrDiceDeck.Length; i++)
+                if (TutorialManager.isTutorial)
                 {
-                    var rndDiceNum = 0;
-                    List<int> keyList = InGameManager.Get().data_DiceInfo.Keys;
-                    do
+                    listDeck.Add(1001);
+                    listDeck.Add(1002);
+                    listDeck.Add(1003);
+                    listDeck.Add(1004);
+                    listDeck.Add(1005);
+                }
+                else
+                {
+                    for (var i = 0; i < _arrDiceDeck.Length; i++)
                     {
-                        var rndNum = keyList[Random.Range(0, keyList.Count)];
-                        
+                        var rndDiceNum = 0;
+                        List<int> keyList = InGameManager.Get().data_DiceInfo.Keys;
+                        do
+                        {
+                            var rndNum = keyList[Random.Range(0, keyList.Count)];
 
-                        //var rndNum = Random.Range(0, keyList.Count - 10);
-                        //var rndNum = DataPatchManager.Get().
-                        //rndDiceNum = keyList[rndNum];
-                        //var rndNum = Random.Range(0, InGameManager.Get().data_AllDice.listDice.Count);
-                        
-                        if (InGameManager.Get().data_DiceInfo.KeyValues[rndNum].enableDice == false) continue;
-                        
-                        rndDiceNum = InGameManager.Get().data_DiceInfo.KeyValues[rndNum].id;
+                            if (InGameManager.Get().data_DiceInfo.KeyValues[rndNum].enableDice == false) continue;
 
-                    } while (listDeck.Contains(rndDiceNum) || rndDiceNum == 0);
+                            rndDiceNum = InGameManager.Get().data_DiceInfo.KeyValues[rndNum].id;
 
-                    listDeck.Add(rndDiceNum);
+                        } while (listDeck.Contains(rndDiceNum) || rndDiceNum == 0);
+
+                        listDeck.Add(rndDiceNum);
+                    }
                 }
 
-                //deck = $"{listDeck[0]}/{listDeck[1]}/{listDeck[2]}/{listDeck[3]}/{listDeck[4]}";
                 deck = listDeck.ToArray();
             }
 
