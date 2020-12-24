@@ -156,6 +156,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgOpenBoxAck> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     private Action<MsgEditUserNameAck> _editUserNameCallback;
+    private Action<MsgSeasonInfoAck> _seasonInfoCallback;
     private Action<MsgGetRankAck> _getRankCallback;
     #endregion
 
@@ -222,6 +223,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.OpenBoxAck = OnOpenBoxAck;
         _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
         _httpReceiver.EditUserNameAck = OnEditUserNameAck;
+        _httpReceiver.SeasonInfoAck = OnSeasonInfoAck;
         _httpReceiver.GetRankAck = OnGetRankAck;
 
 
@@ -766,6 +768,23 @@ public class NetworkManager : Singleton<NetworkManager>
             _diceLevelUpCallback(msg);
         }
         UnityUtil.Print("RECV LEVELUP DICE => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+    }
+
+    public void GetSeasonInfoReq(string userId, Action<MsgSeasonInfoAck> callback)
+    {
+        MsgGetRankReq msg = new MsgGetRankReq();
+        msg.UserId = userId;
+        _seasonInfoCallback = callback;
+        _httpSender.GetRankReq(msg);
+        UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");
+    }
+
+    void OnSeasonInfoAck(MsgSeasonInfoAck msg)
+    {
+        if (_seasonInfoCallback != null)
+        {
+            _seasonInfoCallback(msg);
+        }
     }
 
 

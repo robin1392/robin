@@ -143,14 +143,14 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
-    public class MsgGetRankReq
+    public class MsgSeasonInfoReq
     {
         public string UserId;
     }
 
 
     [Serializable]
-    public class MsgGetRankAck
+    public class MsgSeasonInfoAck
     {
         public GameErrorCode ErrorCode;
         // 시즌 식별 번호
@@ -165,5 +165,23 @@ namespace RandomWarsProtocol.Msg
         public int myTrophy;
         // Top 랭킹 순위
         public MsgRankInfo[] TopRankInfo;
+    }
+
+
+
+    [Serializable]
+    public class MsgGetRankReq
+    {
+        public string UserId;
+        public int PageNo;
+    }
+
+
+    [Serializable]
+    public class MsgGetRankAck
+    {
+        public GameErrorCode ErrorCode;
+        public int PageNo;
+        public MsgRankInfo[] RankInfo;
     }
 }

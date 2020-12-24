@@ -50,6 +50,12 @@ namespace RandomWarsProtocol
         public delegate void LevelUpDiceAckDelegate(MsgLevelUpDiceAck msg);
         public LevelUpDiceAckDelegate LevelUpDiceAck;
 
+        public delegate Task<string> SeasonInfoReqDelegate(MsgSeasonInfoReq msg);
+        public SeasonInfoReqDelegate SeasonInfoReq;
+        public delegate void SeasonInfoAckDelegate(MsgSeasonInfoAck msg);
+        public SeasonInfoAckDelegate SeasonInfoAck;
+
+
         public delegate Task<string> GetRankReqDelegate(MsgGetRankReq msg);
         public GetRankReqDelegate GetRankReq;
         public delegate void GetRankAckDelegate(MsgGetRankAck msg);
