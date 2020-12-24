@@ -4,9 +4,15 @@ using ED;
 using RandomWarsProtocol.Msg;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = ED.Debug;
 
 public class UI_Popup_Rank : UI_Popup
 {
+    public Text text_Season;
+    public Text text_SeasonRemainTime;
+    public Text text_MyRanking;
+    public Text text_MyTrophy;
+    
     public UI_Rank_Slot[] arrSlot;
 
     public void Initialize()
@@ -26,17 +32,25 @@ public class UI_Popup_Rank : UI_Popup
         StopAllCoroutines();
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-        //for (int i = 0; i < arrSlot.Length; i++)
-        //{
-        //    if (msg.RankInfo.Length > i)
-        //    {
-        //        arrSlot[i].Initialize(i + 1, msg.RankInfo[i].Trophy, msg.RankInfo[i].UserName);
-        //    }
-        //    else
-        //    {
-        //        arrSlot[i].Initialize(i + 1, -1, string.Empty);
-        //    }
-        //}
+        text_Season.text = msg.SeasonIndex.ToString();
+        text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
+        text_MyRanking.text = msg.myRanking.ToString();
+        text_MyTrophy.text = msg.myTrophy.ToString();
+        
+        Debug.Log("RankInfo length: " + msg.TopRankInfo.Length);
+        foreach (var info in msg.TopRankInfo)
+        {
+            Debug.Log($"Rank:{info.Ranking}, Class:{info.Class}, Name:{info.Name}, Trophy:{info.Trophy}, Deck:{info.DeckInfo}");
+        }
+
+        for (int i = 0; i < arrSlot.Length; i++)
+        {
+            arrSlot[i].Initialize(
+                msg.TopRankInfo[i].Ranking,
+                msg.TopRankInfo[i].Trophy,
+                msg.TopRankInfo[i].Name
+                );
+        }
     }
 
     IEnumerator WaitCoroutine()

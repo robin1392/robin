@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 1834069030973264317}
   - component: {fileID: 6029637293341501038}
   m_Layer: 5
-  m_Name: Text_MyRank (1)
+  m_Name: Text_MyRankReward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -722,7 +722,7 @@ GameObject:
   - component: {fileID: 3640773085297008437}
   - component: {fileID: 549436857620419799}
   m_Layer: 5
-  m_Name: Text_Sesson (1)
+  m_Name: Text_SessonRemainTime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5404,6 +5404,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rts_Frame: {fileID: 8562510444582267472}
   image_BG: {fileID: 4673866751220763741}
+  text_Season: {fileID: 8002105664528977940}
+  text_SeasonRemainTime: {fileID: 3640773085297008437}
+  text_MyRanking: {fileID: 7362973731211935010}
+  text_MyTrophy: {fileID: 7095316649691043441}
   arrSlot:
   - {fileID: 3497063205369631100}
   - {fileID: 2567888103431512579}
