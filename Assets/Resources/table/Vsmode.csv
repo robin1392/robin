@@ -3,24 +3,26 @@ int,string,int,string,string
 1,StartCoolTime,10,시작 쿨타임,시간 초
 2,WaveTime,20,Wave 시간,시간 초
 3,GetStartSP,200,시작SP,
-4,GetStartDiceCost,10,시작 주사위 코스트,
-5,DiceCostUp,10,주사위 가격 증가량,
-6,TowerHp,30000,타워 HP,
-7,GetDefenderTowerHp,20000,수호자 출현 타워 HP,
-8,DicePowerUpCost01,100,주사위 인게임 업글 비용 Lv.1,
-9,DicePowerUpCost02,200,주사위 인게임 업글 비용 Lv.2,
-10,DicePowerUpCost03,400,주사위 인게임 업글 비용 Lv.3,
-11,DicePowerUpCost04,700,주사위 인게임 업글 비용 Lv.4,
-12,DicePowerUpCost05,1000,주사위 인게임 업글 비용 Lv.5,
-13,StartSuddenDeathWave,10,서든데스 모드 발동 WAVE,
-14,SuddenDeathAtkUp,200,서든데스 모드 공격 증가,% 배율
-15,SuddenDeathDefUp,200,서든데스 모드 방어 증가,% 배율
-16,GetSPPlusLevelupCost01,100,획득 SP 증가 레벨 업 비용 Lv.1,
-17,GetSPPlusLevelupCost02,200,획득 SP 증가 레벨 업 비용 Lv.2,
-18,GetSPPlusLevelupCost03,300,획득 SP 증가 레벨 업 비용 Lv.3,
-19,GetSPPlusLevelupCost04,400,획득 SP 증가 레벨 업 비용 Lv.4,
-20,GetSPPlusLevelupCost05,500,획득 SP 증가 레벨 업 비용 Lv.5,
-21,NormalWinReward_Gold,20,일반 승리 보상 골드,
-22,NormalWinReward_Key,0,일반 승리 보상 열쇠,열쇠 아이템 id 참조
-23,PerfectReward_Gold,50,퍼팩트 승리 보상 골드,
-24,PerfectWinReward_Key,0,퍼팩트 승리 보상 열쇠,열쇠 아이템 id 참조
+4,AddSP,40,추가SP,
+5,GetStartDiceCost,10,시작 주사위 코스트,
+6,DiceCostUp,10,주사위 가격 증가량,
+7,TowerHp,30000,타워 HP,
+8,GetDefenderTowerHp,20000,수호자 출현 타워 HP,
+9,DicePowerUpCost01,100,주사위 인게임 업글 비용 Lv.1,
+10,DicePowerUpCost02,200,주사위 인게임 업글 비용 Lv.2,
+11,DicePowerUpCost03,400,주사위 인게임 업글 비용 Lv.3,
+12,DicePowerUpCost04,700,주사위 인게임 업글 비용 Lv.4,
+13,DicePowerUpCost05,1000,주사위 인게임 업글 비용 Lv.5,
+14,StartSuddenDeathWave,10,서든데스 모드 발동 WAVE,
+15,SuddenDeathAtkUp,200,서든데스 모드 공격 증가,% 배율
+16,SuddenDeathDefUp,200,서든데스 모드 방어 증가,% 배율
+17,GetSPPlusLevelupCost01,100,획득 SP 증가 레벨 업 비용 Lv.1,
+18,GetSPPlusLevelupCost02,200,획득 SP 증가 레벨 업 비용 Lv.2,
+19,GetSPPlusLevelupCost03,300,획득 SP 증가 레벨 업 비용 Lv.3,
+20,GetSPPlusLevelupCost04,400,획득 SP 증가 레벨 업 비용 Lv.4,
+21,GetSPPlusLevelupCost05,500,획득 SP 증가 레벨 업 비용 Lv.5,
+22,NormalWinReward_Gold,20,일반 승리 보상 골드,
+23,NormalWinReward_Key,0,일반 승리 보상 열쇠,열쇠 아이템 id 참조
+24,PerfectReward_Gold,50,퍼팩트 승리 보상 골드,
+25,PerfectWinReward_Key,0,퍼팩트 승리 보상 열쇠,열쇠 아이템 id 참조
+26,EndWave,20,최종 진행 가능한 웨이브 (초과 시 판정),
