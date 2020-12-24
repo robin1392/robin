@@ -80,4 +80,13 @@ namespace RandomWarsProtocol
         NORMAL,
         FAST,
     }
+    
+    public enum SEASON_STATE : byte
+    {
+        NONE,
+        PRE,            // 프리시즌
+        GOING,          // 진행중
+        ACCOUNT,        // 정산중
+        END,                // 종료
+    }
 }

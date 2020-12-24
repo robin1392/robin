@@ -90,7 +90,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 67fb708cf931641d7a9bcad0d3377ba1, type: 3}
     - {fileID: 2800000, guid: f776fbed5d50044059f0f654e393e71f, type: 3}
     - {fileID: 2800000, guid: 656b9b326f584444dbc455fbba2ebfdd, type: 3}
-    totalSpriteSurfaceArea: 5560621
+    totalSpriteSurfaceArea: 5511117
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -124,7 +124,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c7097de20cf2d4c6091300f52e74b87d, type: 3}
   - {fileID: 21300000, guid: ee684243e25334567abf04248ad8d7c3, type: 3}
   - {fileID: 21300000, guid: 43558553866654b26a6fb34d6247808a, type: 3}
-  - {fileID: 21300000, guid: ce6e2d6329ff14c669e74f9391a714a9, type: 3}
   - {fileID: 21300000, guid: 91883aa35e5e748edb8cff599842e7d3, type: 3}
   - {fileID: 21300000, guid: 0f3f2db36ed2345c5852fc1b7db60525, type: 3}
   - {fileID: 21300000, guid: 4f3751d3772584a04ae20ccadeebb905, type: 3}
@@ -153,7 +152,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 2ea53a27546e2470782a4b4de7453522, type: 3}
   - {fileID: 21300000, guid: bb4ebc2716d7f4ccfbf9282a89985203, type: 3}
   - {fileID: 21300000, guid: 23dfe847b9ece47238d1813c90016d36, type: 3}
-  - {fileID: 21300000, guid: 1d06e3972de724dd2af5e5d5d8b413f8, type: 3}
   - {fileID: 21300000, guid: 3457f2a728812409eb64f1ce8cedf32f, type: 3}
   - {fileID: 21300000, guid: 8bf0a5a7022b346a4b270a48d95dfdb1, type: 3}
   - {fileID: 21300000, guid: 9b6f29e7c7f9f464a9c9de144765d69f, type: 3}
@@ -252,7 +250,6 @@ SpriteAtlas:
   - info_attackspeed_up
   - popup_box
   - popup_empty
-  - botton_rank
   - lobby_dice_deck
   - shop_diamond4
   - info_skeleton
@@ -281,7 +278,6 @@ SpriteAtlas:
   - shop_BG_nomal
   - box_coop_1
   - lobby_crew
-  - botton_seasonpass
   - info_heal
   - lobby_botton1
   - lobby_bot2
