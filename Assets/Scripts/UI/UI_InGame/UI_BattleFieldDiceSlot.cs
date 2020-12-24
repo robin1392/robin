@@ -195,7 +195,7 @@ namespace ED
                     for (var i = 0; i < arrImage.Length; ++i)
                     {
                         //arrImage[i].DOColor(i == 0 ? Color.white : dice.data.color, 0.3f);
-                        arrImage[i].DOColor(i == 0 ? Color.white : FileHelper.GetColor(dice.diceData.color), 0.3f);
+                        arrImage[i].DOColor(i == 0 ? Color.white : FileHelper.GetColor(dice.diceData.color), 0.3f).SetUpdate(true);
                     }
                 }
             }
@@ -208,7 +208,7 @@ namespace ED
                 var arrImage = image_Icon.GetComponentsInChildren<Image>();
                 foreach (var item in arrImage)
                 {
-                    item.DOColor(Color.white / 2.5f, 0.3f);
+                    item.DOColor(Color.white / 2.5f, 0.3f).SetUpdate(true);
                 }
             }
         }

@@ -100,7 +100,7 @@ namespace ED
             ShowMainUI(false);
             CameraGyroController.Get().FocusIn();
 
-            if (isAIMode)
+            if (isAIMode || TutorialManager.isTutorial)
             {
                 btn_PlayBattle.interactable = false;
                 btn_PlayCoop.interactable = false;

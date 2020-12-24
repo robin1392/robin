@@ -6,14 +6,16 @@ using UnityEngine.UI;
 
 public class UI_Rank_Slot : MonoBehaviour
 {
-    public Text text_Rank;
+    public Image image_Rank;
+    public Text text_Class;
     public Text text_Trophy;
     public Text text_Name;
+    public UI_WinLose winlose;
+
+    public Sprite[] arrSprite_Rank;
 
     public void Initialize(int rank, int trophy, string name)
     {
-        text_Rank.text = rank.ToString();
-
         if (trophy >= 0)
         {
             text_Trophy.text = trophy.ToString();

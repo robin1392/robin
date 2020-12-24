@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
@@ -17,6 +18,11 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     //[Header("DEV UI")] 
 
     public GameObject obj_Indicator;
+
+    [Header("Start popup")] 
+    public GameObject obj_Start;
+    public UI_WinLose winlose_My;
+    public UI_WinLose winlose_Other;
     #endregion
 
 
@@ -43,7 +49,35 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void InitUIElement()
     {
+        // start popup
+        if (TutorialManager.isTutorial)
+        {
+            winlose_My.Initialize(UserInfoManager.Get().GetActiveDeck(),
+                UserInfoManager.Get().GetUserInfo().userNickName, UserInfoManager.Get().GetUserInfo().trophy);
+            winlose_Other.Initialize(UserInfoManager.Get().GetActiveDeck(), "AI",
+                UserInfoManager.Get().GetUserInfo().trophy);
+        }
+        else
+        {
+            winlose_My.Initialize(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray,
+                NetworkManager.Get().GetNetInfo().playerInfo.Name, NetworkManager.Get().GetNetInfo().playerInfo.Trophy);
+            winlose_Other.Initialize(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray,
+                NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
+        }
+
+        obj_Start.SetActive(true);
         
+        Invoke("DisableStartPopup", 2f);
+    }
+
+    private void DisableStartPopup()
+    {
+        ((RectTransform) winlose_Other.transform).DOAnchorPosY(2000f, 0.5f);
+        ((RectTransform) winlose_My.transform).DOAnchorPosY(-2000f, 0.5f);
+        obj_Start.transform.GetChild(1).DOScale(Vector3.zero, 0.5f).OnComplete(() =>
+        {
+            obj_Start.SetActive(false);
+        });
     }
 
     public void DestroyElement()

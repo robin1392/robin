@@ -83,6 +83,7 @@ public enum E_BulletType
     ARBITER,
     BABYDRAGON,
     VALLISTA_SPEAR,
+    GUARDIAN3_BULLET,
 }
 
 public enum E_AniTrigger
@@ -103,6 +104,8 @@ public enum E_ActionSendMessage
     StopAiming,
     JumpTarget,
     Skill,
+    FireBullet,
+    DropBullet,
 }
 
 public enum E_PoolName

@@ -1929,6 +1929,9 @@ namespace ED
                 case E_BulletType.VALLISTA_SPEAR:
                     b = PoolManager.instance.ActivateObject<Bullet>("Vallista_Spear", startPos);
                     break;
+                case E_BulletType.GUARDIAN3_BULLET:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Guardian3_Bullet", startPos);
+                    break;
                 }
 
                 if(b != null)
