@@ -17,10 +17,10 @@ public class UI_Popup_Rank : UI_Popup
 
     public void Initialize()
     {
-        for (int i = 0; i < arrSlot.Length; ++i)
-        {
-            arrSlot[i].Initialize(i + 1, -1, string.Empty);
-        }
+        // for (int i = 0; i < arrSlot.Length; ++i)
+        // {
+        //     arrSlot[i].Initialize(i + 1, -1, string.Empty);
+        // }
         
         NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, GetRankCallback);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
@@ -32,24 +32,27 @@ public class UI_Popup_Rank : UI_Popup
         StopAllCoroutines();
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-        text_Season.text = msg.SeasonIndex.ToString();
-        text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
-        text_MyRanking.text = msg.myRanking.ToString();
-        text_MyTrophy.text = msg.myTrophy.ToString();
-        
-        Debug.Log("RankInfo length: " + msg.TopRankInfo.Length);
-        foreach (var info in msg.TopRankInfo)
+        if (msg.SeasonState == 0)
         {
-            Debug.Log($"Rank:{info.Ranking}, Class:{info.Class}, Name:{info.Name}, Trophy:{info.Trophy}, Deck:{info.DeckInfo}");
+            
         }
-
-        for (int i = 0; i < arrSlot.Length; i++)
+        else
         {
-            arrSlot[i].Initialize(
-                msg.TopRankInfo[i].Ranking,
-                msg.TopRankInfo[i].Trophy,
-                msg.TopRankInfo[i].Name
+            text_Season.text = msg.SeasonIndex.ToString();
+            text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
+            text_MyRanking.text = msg.myRanking.ToString();
+            text_MyTrophy.text = msg.myTrophy.ToString();
+        
+            for (int i = 0; i < arrSlot.Length; i++)
+            {
+                arrSlot[i].Initialize(
+                    msg.TopRankInfo[i].Ranking,
+                    msg.TopRankInfo[i].Trophy,
+                    msg.TopRankInfo[i].Name,
+                    msg.TopRankInfo[i].Class,
+                    msg.TopRankInfo[i].DeckInfo
                 );
+            }
         }
     }
 
