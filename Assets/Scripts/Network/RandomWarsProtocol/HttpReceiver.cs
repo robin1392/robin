@@ -230,6 +230,15 @@ namespace RandomWarsProtocol
                         LevelUpDiceAck(msg);
                     }
                     break;
+                case GameProtocol.SEASON_INFO_ACK:
+                    {
+                        if (SeasonInfoAck == null)
+                            return false;
+
+                        MsgSeasonInfoAck msg = JsonConvert.DeserializeObject<MsgSeasonInfoAck>(json);
+                        SeasonInfoAck(msg);
+                    }
+                    break;
                 case GameProtocol.GET_RANK_ACK:
                     {
                         if (GetRankAck == null)

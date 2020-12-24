@@ -772,11 +772,11 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void GetSeasonInfoReq(string userId, Action<MsgSeasonInfoAck> callback)
     {
-        MsgGetRankReq msg = new MsgGetRankReq();
+        MsgSeasonInfoReq msg = new MsgSeasonInfoReq();
         msg.UserId = userId;
         _seasonInfoCallback = callback;
-        _httpSender.GetRankReq(msg);
-        UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");
+        _httpSender.SeasonInfoReq(msg);
+        UnityUtil.Print("SEND SEASON INFO => index", string.Format("userId:{0}", userId), "green");
     }
 
     void OnSeasonInfoAck(MsgSeasonInfoAck msg)
@@ -788,10 +788,11 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void GetRankReq(string userId, Action<MsgGetRankAck> callback)
+    public void GetRankReq(string userId, int pageNo, Action<MsgGetRankAck> callback)
     {
         MsgGetRankReq msg = new MsgGetRankReq();
         msg.UserId = userId;
+        msg.PageNo = pageNo;
         _getRankCallback = callback;
         _httpSender.GetRankReq(msg);
         UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");

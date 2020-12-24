@@ -33,6 +33,9 @@ namespace RandomWarsProtocol
         LEVELUP_DICE_REQ,
         LEVELUP_DICE_ACK,
 
+        SEASON_INFO_REQ,
+        SEASON_INFO_ACK,
+
         GET_RANK_REQ,
         GET_RANK_ACK,
 
