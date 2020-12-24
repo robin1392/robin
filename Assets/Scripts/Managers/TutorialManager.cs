@@ -10,7 +10,6 @@ using DG.Tweening;
 public class TutorialManager : MonoBehaviour
 {
     public static bool isTutorial;
-    public Button btn_NextStep;
     public Image image_NextStep;
     [Space] 
     public Transform ts_BattleButton;
@@ -114,10 +113,10 @@ public class TutorialManager : MonoBehaviour
         switch (stepCount)
         {
             case 0:
-                btn_NextStep.interactable = true;
+                transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = true;
                 break;
             case 1:
-                btn_NextStep.interactable = false;
+                transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_BattleButton.parent;
                 ts_BattleButton.parent = transform.GetChild(stepCount + 1);
                 ts_BattleButton.GetComponent<Button>().onClick.AddListener(Click_NextStep);
@@ -154,10 +153,12 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 4: // 주사위 소환 버튼
                 Time.timeScale = 0f;
-                btn_NextStep.interactable = false;
+                transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_GetDiceButton.parent;
                 ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
+                break;
+            case 5:
                 break;
             default:
                 Time.timeScale = 1f;
