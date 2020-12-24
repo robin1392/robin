@@ -22,12 +22,12 @@ public class UI_Popup_Rank : UI_Popup
 
     public void Initialize()
     {
-        NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, GetRankCallback);
+        NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         StartCoroutine(WaitCoroutine());
     }
 
-    public void GetRankCallback(MsgGetRankAck msg)
+    public void GetSeasonInfoCallback(MsgSeasonInfoAck msg)
     {
         StopAllCoroutines();
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
