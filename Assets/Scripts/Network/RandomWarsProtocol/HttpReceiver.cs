@@ -55,11 +55,30 @@ namespace RandomWarsProtocol
         public delegate void SeasonInfoAckDelegate(MsgSeasonInfoAck msg);
         public SeasonInfoAckDelegate SeasonInfoAck;
 
-
         public delegate Task<string> GetRankReqDelegate(MsgGetRankReq msg);
         public GetRankReqDelegate GetRankReq;
         public delegate void GetRankAckDelegate(MsgGetRankAck msg);
         public GetRankAckDelegate GetRankAck;
+
+        public delegate Task<string> SeasonPassInfoReqDelegate(MsgSeasonPassInfoReq msg);
+        public SeasonPassInfoReqDelegate SeasonPassInfoReq;
+        public delegate void SeasonPassInfoAckDelegate(MsgSeasonPassInfoAck msg);
+        public SeasonPassInfoAckDelegate SeasonPassInfoAck;
+
+        public delegate Task<string> GetSeasonPassRewardReqDelegate(MsgGetSeasonPassRewardReq msg);
+        public GetSeasonPassRewardReqDelegate GetSeasonPassRewardReq;
+        public delegate void GetSeasonPassRewardAckDelegate(MsgGetSeasonPassRewardAck msg);
+        public GetSeasonPassRewardAckDelegate GetSeasonPassRewardAck;
+
+        public delegate Task<string> ClassRewardInfoReqDelegate(MsgClassRewardInfoReq msg);
+        public ClassRewardInfoReqDelegate ClassRewardInfoReq;
+        public delegate void ClassRewardInfoAckDelegate(MsgClassRewardInfoAck msg);
+        public ClassRewardInfoAckDelegate ClassRewardInfoAck;
+
+        public delegate Task<string> GetClassRewardReqDelegate(MsgGetClassRewardReq msg);
+        public GetClassRewardReqDelegate GetClassRewardReq;
+        public delegate void GetClassRewardAckDelegate(MsgGetClassRewardAck msg);
+        public GetClassRewardAckDelegate GetClassRewardAck;
 
 
         public async Task<string> ProcessAsync(int protocolId, string json)
@@ -139,6 +158,15 @@ namespace RandomWarsProtocol
                         ackJson = await LevelUpDiceReq(msg);
                     }
                     break;
+                case GameProtocol.SEASON_INFO_REQ:
+                    {
+                        if (SeasonInfoReq == null)
+                            return ackJson;
+
+                        MsgSeasonInfoReq msg = JsonConvert.DeserializeObject<MsgSeasonInfoReq>(json);
+                        ackJson = await SeasonInfoReq(msg);
+                    }
+                    break;
                 case GameProtocol.GET_RANK_REQ:
                     {
                         if (GetRankReq == null)
@@ -146,6 +174,42 @@ namespace RandomWarsProtocol
 
                         MsgGetRankReq msg = JsonConvert.DeserializeObject<MsgGetRankReq>(json);
                         ackJson = await GetRankReq(msg);
+                    }
+                    break;
+                case GameProtocol.SEASON_PASS_INFO_REQ:
+                    {
+                        if (SeasonPassInfoReq == null)
+                            return ackJson;
+
+                        MsgSeasonPassInfoReq msg = JsonConvert.DeserializeObject<MsgSeasonPassInfoReq>(json);
+                        ackJson = await SeasonPassInfoReq(msg);
+                    }
+                    break;
+                case GameProtocol.GET_SEASON_PASS_REWARD_REQ:
+                    {
+                        if (GetSeasonPassRewardReq == null)
+                            return ackJson;
+
+                        MsgGetSeasonPassRewardReq msg = JsonConvert.DeserializeObject<MsgGetSeasonPassRewardReq>(json);
+                        ackJson = await GetSeasonPassRewardReq(msg);
+                    }
+                    break;
+                case GameProtocol.CLASS_REWARD_INFO_REQ:
+                    {
+                        if (ClassRewardInfoReq == null)
+                            return ackJson;
+
+                        MsgClassRewardInfoReq msg = JsonConvert.DeserializeObject<MsgClassRewardInfoReq>(json);
+                        ackJson = await ClassRewardInfoReq(msg);
+                    }
+                    break;
+                case GameProtocol.GET_CLASS_REWARD_REQ:
+                    {
+                        if (GetClassRewardReq == null)
+                            return ackJson;
+
+                        MsgGetClassRewardReq msg = JsonConvert.DeserializeObject<MsgGetClassRewardReq>(json);
+                        ackJson = await GetClassRewardReq(msg);
                     }
                     break;
             }
@@ -246,6 +310,42 @@ namespace RandomWarsProtocol
 
                         MsgGetRankAck msg = JsonConvert.DeserializeObject<MsgGetRankAck>(json);
                         GetRankAck(msg);
+                    }
+                    break;
+                case GameProtocol.SEASON_PASS_INFO_ACK:
+                    {
+                        if (SeasonPassInfoAck == null)
+                            return false;
+
+                        MsgSeasonPassInfoAck msg = JsonConvert.DeserializeObject<MsgSeasonPassInfoAck>(json);
+                        SeasonPassInfoAck(msg);
+                    }
+                    break;
+                case GameProtocol.GET_SEASON_PASS_REWARD_ACK:
+                    {
+                        if (GetSeasonPassRewardAck == null)
+                            return false;
+
+                        MsgGetSeasonPassRewardAck msg = JsonConvert.DeserializeObject<MsgGetSeasonPassRewardAck>(json);
+                        GetSeasonPassRewardAck(msg);
+                    }
+                    break;
+                case GameProtocol.CLASS_REWARD_INFO_ACK:
+                    {
+                        if (ClassRewardInfoAck == null)
+                            return false;
+
+                        MsgClassRewardInfoAck msg = JsonConvert.DeserializeObject<MsgClassRewardInfoAck>(json);
+                        ClassRewardInfoAck(msg);
+                    }
+                    break;
+                case GameProtocol.GET_CLASS_REWARD_ACK:
+                    {
+                        if (GetClassRewardAck == null)
+                            return false;
+
+                        MsgGetClassRewardAck msg = JsonConvert.DeserializeObject<MsgGetClassRewardAck>(json);
+                        GetClassRewardAck(msg);
                     }
                     break;
             }

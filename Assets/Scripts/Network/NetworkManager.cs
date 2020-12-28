@@ -225,8 +225,10 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.EditUserNameAck = OnEditUserNameAck;
         _httpReceiver.SeasonInfoAck = OnSeasonInfoAck;
         _httpReceiver.GetRankAck = OnGetRankAck;
-
-
+        _httpReceiver.SeasonPassInfoAck = OnSeasonPassInfoAck;
+        _httpReceiver.GetSeasonPassRewardAck = OnGetSeasonPassRewardAck;
+        _httpReceiver.ClassRewardInfoAck = OnClassRewardInfoAck;
+        _httpReceiver.GetClassRewardAck = OnGetClassRewardAck;
 
 
 
@@ -806,6 +808,95 @@ public class NetworkManager : Singleton<NetworkManager>
         }
     }
 
+    /// <summary>
+    /// 시즌 패스 정보 요청
+    /// </summary>
+    /// <param name="userId"></param>
+    public void SeasonPassInfoReq(string userId)
+    {
+        MsgSeasonPassInfoReq msg = new MsgSeasonPassInfoReq();
+        msg.UserId = userId;
+        _httpSender.SeasonPassInfoReq(msg);
+        UnityUtil.Print("SEND SEASON PASS INFO => userId", string.Format("userId:{0}", userId), "green");
+    }
+
+    /// <summary>
+    /// 시즌 패스 정보 응답
+    /// </summary>
+    /// <param name="msg"></param>
+    void OnSeasonPassInfoAck(MsgSeasonPassInfoAck msg)
+    {
+        UnityUtil.Print("RECV SEASON PASS INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
+
+
+    /// <summary>
+    /// 시즌 패스 보상 획득 요청
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="rewardId"></param>
+    public void GetSeasonPassRewardReq(string userId, int rewardId)
+    {
+        MsgGetSeasonPassRewardReq msg = new MsgGetSeasonPassRewardReq();
+        msg.UserId = userId;
+        msg.RewardId = rewardId;
+        _httpSender.GetSeasonPassRewardReq(msg);
+        UnityUtil.Print("SEND GET SEASON PASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
+    }
+
+
+    /// <summary>
+    /// 시즌 패스 보상 획득 응답
+    /// </summary>
+    /// <param name="msg"></param>
+    void OnGetSeasonPassRewardAck(MsgGetSeasonPassRewardAck msg)
+    {
+        UnityUtil.Print("RECV GET SEASON PASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
+
+    /// <summary>
+    /// 트로피 보상 정보 요청
+    /// </summary>
+    /// <param name="userId"></param>
+    public void ClassRewardInfoReq(string userId)
+    {
+        MsgClassRewardInfoReq msg = new MsgClassRewardInfoReq();
+        msg.UserId = userId;
+        _httpSender.ClassRewardInfoReq(msg);
+        UnityUtil.Print("SEND CLASS REWARD INFO => userId", string.Format("userId:{0}", userId), "green");
+    }
+
+    /// <summary>
+    /// 트로피 보상 정보 응답
+    /// </summary>
+    /// <param name="msg"></param>
+    void OnClassRewardInfoAck(MsgClassRewardInfoAck msg)
+    {
+        UnityUtil.Print("RECV CLASS REWARD INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
+
+    /// <summary>
+    /// 트로피 보상 획득 요청
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="rewardId"></param>
+    public void GetClassRewardReq(string userId, int rewardId)
+    {
+        MsgGetClassRewardReq msg = new MsgGetClassRewardReq();
+        msg.UserId = userId;
+        msg.RewardId = rewardId;
+        _httpSender.GetClassRewardReq(msg);
+        UnityUtil.Print("SEND GET CLASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
+    }
+
+    /// <summary>
+    /// 트로피 보상 획득 응답
+    /// </summary>
+    /// <param name="msg"></param>
+    void OnGetClassRewardAck(MsgGetClassRewardAck msg)
+    {
+        UnityUtil.Print("RECV GET CLASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
     #endregion
 }
 
