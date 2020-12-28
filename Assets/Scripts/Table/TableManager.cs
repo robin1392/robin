@@ -22,6 +22,8 @@ public class TableManager : Singleton<TableManager>
     public TableData<string, TDataLangEN> LangEN { get; private set; }
     public TableData<string, TDataLangKO> LangKO { get; private set; }
     public TableData<int, TDataErrorMessageKO> ErrorMessageKO { get; private set; }
+    public TableData<int, TDataRankingReward> RankingReward { get; private set; }
+
 
 
     public void Awake()
@@ -52,6 +54,7 @@ public class TableManager : Singleton<TableManager>
         LangEN = new TableData<string, TDataLangEN>();
         LangKO = new TableData<string, TDataLangKO>();
         ErrorMessageKO = new TableData<int, TDataErrorMessageKO>();
+        RankingReward = new TableData<int, TDataRankingReward>();
     }
 
 
@@ -114,6 +117,8 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo.Init(new TableLoaderRemoteCSV<int, TDataDiceLevelInfo>(), bucketPath, "DiceLevelInfo.csv", localPath);
         GuardianInfo.Init(new TableLoaderRemoteCSV<int, TDataGuardianInfo>(), bucketPath, "GuardianInfo.csv", localPath);
         Vsmode.Init(new TableLoaderRemoteCSV<int, TDataVsmode>(), bucketPath, "Vsmode.csv", localPath);
+        RankingReward.Init(new TableLoaderRemoteCSV<int, TDataRankingReward>(), bucketPath, "RankingReward.csv", localPath);
+
         return true;
     }
 
@@ -130,6 +135,8 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo.Init(new TableLoaderLocalCSV<int, TDataDiceLevelInfo>(), path, "DiceLevelInfo.csv");
         GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path, "GuardianInfo.csv");
         Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path, "Vsmode.csv");
+        RankingReward.Init(new TableLoaderLocalCSV<int, TDataRankingReward>(), path, "RankingReward.csv");
+
         return true;
     }
 }
