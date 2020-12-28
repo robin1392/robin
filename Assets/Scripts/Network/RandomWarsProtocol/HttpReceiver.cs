@@ -50,6 +50,12 @@ namespace RandomWarsProtocol
         public delegate void LevelUpDiceAckDelegate(MsgLevelUpDiceAck msg);
         public LevelUpDiceAckDelegate LevelUpDiceAck;
 
+        public delegate Task<string> SeasonInfoReqDelegate(MsgSeasonInfoReq msg);
+        public SeasonInfoReqDelegate SeasonInfoReq;
+        public delegate void SeasonInfoAckDelegate(MsgSeasonInfoAck msg);
+        public SeasonInfoAckDelegate SeasonInfoAck;
+
+
         public delegate Task<string> GetRankReqDelegate(MsgGetRankReq msg);
         public GetRankReqDelegate GetRankReq;
         public delegate void GetRankAckDelegate(MsgGetRankAck msg);
@@ -222,6 +228,15 @@ namespace RandomWarsProtocol
 
                         MsgLevelUpDiceAck msg = JsonConvert.DeserializeObject<MsgLevelUpDiceAck>(json);
                         LevelUpDiceAck(msg);
+                    }
+                    break;
+                case GameProtocol.SEASON_INFO_ACK:
+                    {
+                        if (SeasonInfoAck == null)
+                            return false;
+
+                        MsgSeasonInfoAck msg = JsonConvert.DeserializeObject<MsgSeasonInfoAck>(json);
+                        SeasonInfoAck(msg);
                     }
                     break;
                 case GameProtocol.GET_RANK_ACK:
