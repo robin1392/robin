@@ -131,5 +131,54 @@ namespace RandomWarsProtocol
         {
             return JsonConvert.SerializeObject(msg);
         }
+
+        public void SeasonPassInfoReq(MsgSeasonPassInfoReq msg)
+        {
+            _httpService.Send((int)GameProtocol.SEASON_PASS_INFO_REQ, "seasonpassinfo", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string SeasonPassInfoAck(MsgSeasonPassInfoAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
+        public void GetSeasonPassRewardReq(MsgGetSeasonPassRewardReq msg)
+        {
+            _httpService.Send((int)GameProtocol.GET_SEASON_PASS_REWARD_REQ, "getseasonpassreward", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string GetSeasonPassRewardAck(MsgGetSeasonPassRewardAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
+        public void ClassRewardInfoReq(MsgClassRewardInfoReq msg)
+        {
+            _httpService.Send((int)GameProtocol.CLASS_REWARD_INFO_REQ, "classrewardinfo", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string ClassRewardInfoAck(MsgClassRewardInfoAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
+        public void GetClassRewardReq(MsgGetClassRewardReq msg)
+        {
+            _httpService.Send((int)GameProtocol.GET_CLASS_REWARD_REQ, "getclassreward", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string GetClassRewardAck(MsgGetClassRewardAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
     }
 }
