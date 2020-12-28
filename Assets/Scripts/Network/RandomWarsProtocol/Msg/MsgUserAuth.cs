@@ -184,4 +184,84 @@ namespace RandomWarsProtocol.Msg
         public int PageNo;
         public MsgRankInfo[] RankInfo;
     }
+
+    [Serializable]
+    public class MsgSeasonPassInfoReq
+    {
+        public string UserId;
+    }
+
+
+    [Serializable]
+    public class MsgSeasonPassInfoAck
+    {
+        public GameErrorCode ErrorCode;
+        // 시즌 패스 아이디
+        public int SeasonPassId;
+        // 시즌 패스 구매 여부
+        public bool IsPurchased;
+        // 시즌 트로피
+        public int SeasonTrophy;
+        // 획득 보상 아이디 배열. (획득한 보상 테이블 아이디 배열)
+        public int[] GetRewardIds;
+    }
+
+
+    [Serializable]
+    public class MsgGetSeasonPassRewardReq
+    {
+        public string UserId;
+        // 요청 보상 아이디
+        public int RewardId;
+    }
+
+
+    [Serializable]
+    public class MsgGetSeasonPassRewardAck
+    {
+        public GameErrorCode ErrorCode;
+        // 보상 획득 아이디 배열
+        public int[] GetRewardIds;
+        // 보상 정보
+        public MsgReward[] RewardInfo;
+    }
+
+    [Serializable]
+    public class MsgClassRewardInfoReq
+    {
+        public string UserId;
+    }
+
+
+    [Serializable]
+    public class MsgClassRewardInfoAck
+    {
+        public GameErrorCode ErrorCode;
+        // 누적 트로피
+        public int TotalTrophy;
+        // 획득 일반 보상 아이디
+        public int GetNormalRewardId;
+        // 획득 VIP 보상 아이디
+        public int GetVipRewardId;
+    }
+
+
+    [Serializable]
+    public class MsgGetClassRewardReq
+    {
+        public string UserId;
+        // 요청 보상 아이디
+        public int RewardId;
+    }
+
+
+    [Serializable]
+    public class MsgGetClassRewardAck
+    {
+        public GameErrorCode ErrorCode;
+        // 요청 보상 아이디
+        public int RewardId;
+        // 보상 정보
+        public MsgReward[] RewardInfo;
+    }
 }

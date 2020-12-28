@@ -39,6 +39,19 @@ namespace RandomWarsProtocol
         GET_RANK_REQ,
         GET_RANK_ACK,
 
+        SEASON_PASS_INFO_REQ,
+        SEASON_PASS_INFO_ACK,
+
+        GET_SEASON_PASS_REWARD_REQ,
+        GET_SEASON_PASS_REWARD_ACK,
+
+        CLASS_REWARD_INFO_REQ,
+        CLASS_REWARD_INFO_ACK,
+
+        GET_CLASS_REWARD_REQ,
+        GET_CLASS_REWARD_ACK,
+
+
         END_HTTP,
         
         // ----------------------------------------------------------------------------------------------------
