@@ -11,9 +11,11 @@ using Debug = ED.Debug;
 
 public class UI_Popup_Rank : UI_Popup
 {
+    public RectTransform rts_Content;
+    
     [Header("Prefab")] 
     public GameObject pref_RankSlot;
-    
+
     [Space]
     public Text text_MyRankMessage;
     public Text text_RankMessage;
@@ -22,11 +24,15 @@ public class UI_Popup_Rank : UI_Popup
     public Text text_SeasonRemainTime;
     public Text text_MyRanking;
     public Text text_MyTrophy;
-    
-    public List<UI_Rank_Slot> listSlot;
+
+    private bool isRankCalling;
+    private int pageNum = 2;
+    private List<UI_Rank_Slot> listSlot = new List<UI_Rank_Slot>();
 
     public void Initialize()
     {
+        isRankCalling = true;
+        pageNum = 2;
         NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         StartCoroutine(WaitCoroutine());
@@ -34,15 +40,19 @@ public class UI_Popup_Rank : UI_Popup
 
     public void GetSeasonInfoCallback(MsgSeasonInfoAck msg)
     {
+        Invoke("RankCallingFalse", 1f);
         StopAllCoroutines();
+        
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
         Debug.Log($"MsgSeasonInfoAck state {(SEASON_STATE)msg.SeasonState}");
         switch ((SEASON_STATE)msg.SeasonState)
         {
             case SEASON_STATE.NONE:
+                text_RankMessage.gameObject.SetActive(true);
                 break;
             case SEASON_STATE.PRE:
+                text_RankMessage.gameObject.SetActive(true);
                 break;
             case SEASON_STATE.GOING:
                 text_RankMessage.gameObject.SetActive(false);
@@ -54,30 +64,39 @@ public class UI_Popup_Rank : UI_Popup
                 text_MyTrophy.text = msg.myTrophy.ToString();
             
                 Debug.Log($"RankInfoCount: {msg.TopRankInfo.Length}");
-                for (int i = 0; i < listSlot.Count && i < msg.TopRankInfo.Length; i++)
-                {
-                    listSlot[i].Initialize(
-                        msg.TopRankInfo[i].Ranking,
-                        msg.TopRankInfo[i].Trophy,
-                        msg.TopRankInfo[i].Name,
-                        msg.TopRankInfo[i].Class,
-                        msg.TopRankInfo[i].DeckInfo
-                    );
-                }
-                
-                NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, 1, GetRankCallback);
+                AddSlots(msg.TopRankInfo);
+                // for (int i = 0; i < listSlot.Count && i < msg.TopRankInfo.Length; i++)
+                // {
+                //     listSlot[i].Initialize(
+                //         msg.TopRankInfo[i].Ranking,
+                //         msg.TopRankInfo[i].Trophy,
+                //         msg.TopRankInfo[i].Name,
+                //         msg.TopRankInfo[i].Class,
+                //         msg.TopRankInfo[i].DeckInfo
+                //     );
+                // }
                 break;
             case SEASON_STATE.ACCOUNT:
+                text_RankMessage.gameObject.SetActive(true);
                 break;
             case SEASON_STATE.END:
+                text_RankMessage.gameObject.SetActive(true);
                 break;
         }
     }
 
     public void GetRankCallback(MsgGetRankAck msg)
     {
+        Invoke("RankCallingFalse", 1f);
+        
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        Debug.Log($"MsgGetRankAck count: {msg.RankInfo.Length}");
+        Debug.Log($"MsgGetRankAck errorCode:{msg.ErrorCode} count:{msg.RankInfo.Length}");
+        AddSlots(msg.RankInfo);
+    }
+
+    private void RankCallingFalse()
+    {
+        isRankCalling = false;
     }
 
     IEnumerator TimerCoroutine(int seconds)
@@ -97,5 +116,48 @@ public class UI_Popup_Rank : UI_Popup
         yield return new WaitForSeconds(10f);
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+    }
+
+    private void AddSlots(MsgRankInfo[] array)
+    {
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i] != null)
+            {
+                var slot = Instantiate(pref_RankSlot, Vector3.zero, Quaternion.identity, rts_Content)
+                    .GetComponent<UI_Rank_Slot>();
+                slot.Initialize(
+                    array[i].Ranking,
+                    array[i].Trophy,
+                    array[i].Name,
+                    array[i].Class,
+                    array[i].DeckInfo
+                );
+
+                listSlot.Add(slot);
+            }
+        }
+    }
+
+    public override void Close()
+    {
+        base.Close();
+
+        while (listSlot.Count > 0)
+        {
+            var slot = listSlot[listSlot.Count - 1];
+            listSlot.Remove(slot);
+            Destroy(slot.gameObject);
+        }
+    }
+
+    public void ScrollChange(Vector2 v)
+    {
+        if (isRankCalling == false && v.y < 0)
+        {
+            isRankCalling = true;
+                
+            NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, pageNum++, GetRankCallback);
+        }
     }
 }
