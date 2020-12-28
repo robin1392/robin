@@ -16,6 +16,7 @@ public class TutorialManager : MonoBehaviour
     public Transform ts_GetDiceButton;
     
     private static int stepCount = 0;
+    private static int nextStepCount = 1;
     private Transform ts_OldParent;
 
     public static int getDiceCount
@@ -40,13 +41,12 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator TutorialCoroutine()
     {
-        int count = 1;
         while (true)
         {
             Step();
         
-            yield return new WaitWhile(() => stepCount < count);
-            count++;
+            yield return new WaitWhile(() => stepCount < nextStepCount);
+            nextStepCount++;
         }
         // Step();
         //

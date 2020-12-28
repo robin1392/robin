@@ -1123,9 +1123,11 @@ PrefabInstance:
     - target: {fileID: 7190422941171267214, guid: ff9dad47555dcca4e885df88394d1804,
         type: 3}
       propertyPath: m_Text
-      value: "\uC0C1\uB300\uD3B8\uC774 SP\uB97C \uC0AC\uC6A9\uD574\uC11C \uC8FC\uC0AC\uC704\uC758
-        \uBBF8\uB2C8\uC5B8\uB4E4\uC744 \uBD88\uB7EC\uB0C8\uAD70\uC694.\n\uB2F9\uD560
-        \uC218 \uC5C6\uC73C\uB2C8 \uC6B0\uB9AC\uB3C4 \uC8FC\uC0AC\uC704\uB97C \uC0AC\uC6A9\uD574\uBD05\uC2DC\uB2E4."
+      value: "\uAC8C\uC784 \uC2DC\uC791 \uC2DC SP\uAC00 \uC790\uB3D9\uC73C\uB85C
+        \uC0DD\uC131 \uB429\uB2C8\uB2E4. \uC77C\uC815 \uC2DC\uAC04\uB9C8\uB2E4 \uC790\uB3D9\uC73C\uB85C
+        \uC0DD\uC131\uB418\uC9C0\uB9CC \uB354 \uB9CE\uC740 SP\uB97C \uD68D\uB4DD\uD558\uACE0
+        \uC2F6\uB2E4\uBA74 \uC67C\uCABD\uC758 \uC5C5\uADF8\uB808\uC774\uB4DC\uB97C
+        \uC2DC\uB3C4\uD574\uBCF4\uC138\uC694."
       objectReference: {fileID: 0}
     - target: {fileID: 7190422942326782934, guid: ff9dad47555dcca4e885df88394d1804,
         type: 3}
@@ -1378,7 +1380,7 @@ PrefabInstance:
     - target: {fileID: 2323069168995905819, guid: ff9dad47555dcca4e885df88394d1804,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_FloatArgument
-      value: 11
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7190422941015124932, guid: ff9dad47555dcca4e885df88394d1804,
         type: 3}

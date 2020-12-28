@@ -16,6 +16,9 @@ public class UI_Popup_Rank : UI_Popup
     [Header("Prefab")] 
     public GameObject pref_RankSlot;
 
+    [Space] 
+    public UI_RankingReward reward;
+
     [Space]
     public Text text_MyRankMessage;
     public Text text_RankMessage;
@@ -61,6 +64,7 @@ public class UI_Popup_Rank : UI_Popup
                 //text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
                 StartCoroutine(TimerCoroutine(msg.SeasonRemainTime));
                 text_MyRanking.text = msg.myRanking.ToString();
+                reward.Initialize(msg.myRanking);
                 text_MyTrophy.text = msg.myTrophy.ToString();
             
                 Debug.Log($"RankInfoCount: {msg.TopRankInfo.Length}");
@@ -156,7 +160,8 @@ public class UI_Popup_Rank : UI_Popup
         if (isRankCalling == false && v.y < 0)
         {
             isRankCalling = true;
-                
+            
+            UI_Main.Get().obj_IndicatorPopup.SetActive(true);
             NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, pageNum++, GetRankCallback);
         }
     }
