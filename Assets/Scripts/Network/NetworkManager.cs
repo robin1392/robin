@@ -785,6 +785,7 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _seasonInfoCallback(msg);
         }
+        UnityUtil.Print("RECV SEASON INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
 
