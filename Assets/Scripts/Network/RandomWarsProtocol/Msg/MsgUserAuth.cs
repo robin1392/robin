@@ -202,10 +202,8 @@ namespace RandomWarsProtocol.Msg
         public bool IsPurchased;
         // 시즌 트로피
         public int SeasonTrophy;
-        // 획득 일반 보상 아이디 배열. (획득한 보상 테이블 아이디 배열)
-        public int[] GetNormalRewardId;
-        // 획득 Vip 보상 아이디 배열
-        public int[] GetVipRewardId;
+        // 획득 보상 아이디 배열. (획득한 보상 테이블 아이디 배열)
+        public int[] GetRewardIds;
     }
 
 
@@ -222,8 +220,8 @@ namespace RandomWarsProtocol.Msg
     public class MsgGetSeasonPassRewardAck
     {
         public GameErrorCode ErrorCode;
-        // 요청 보상 아이디
-        public int RewardId;
+        // 보상 획득 아이디 배열
+        public int[] GetRewardIds;
         // 보상 정보
         public MsgReward[] RewardInfo;
     }
