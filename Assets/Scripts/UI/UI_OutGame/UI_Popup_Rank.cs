@@ -5,11 +5,16 @@ using ED;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Debug = ED.Debug;
 
 public class UI_Popup_Rank : UI_Popup
 {
+    [Header("Prefab")] 
+    public GameObject pref_RankSlot;
+    
+    [Space]
     public Text text_MyRankMessage;
     public Text text_RankMessage;
     
@@ -18,7 +23,7 @@ public class UI_Popup_Rank : UI_Popup
     public Text text_MyRanking;
     public Text text_MyTrophy;
     
-    public UI_Rank_Slot[] arrSlot;
+    public List<UI_Rank_Slot> listSlot;
 
     public void Initialize()
     {
@@ -32,6 +37,7 @@ public class UI_Popup_Rank : UI_Popup
         StopAllCoroutines();
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
+        Debug.Log($"MsgSeasonInfoAck state {(SEASON_STATE)msg.SeasonState}");
         switch ((SEASON_STATE)msg.SeasonState)
         {
             case SEASON_STATE.NONE:
@@ -47,9 +53,10 @@ public class UI_Popup_Rank : UI_Popup
                 text_MyRanking.text = msg.myRanking.ToString();
                 text_MyTrophy.text = msg.myTrophy.ToString();
             
-                for (int i = 0; i < arrSlot.Length && i < msg.TopRankInfo.Length; i++)
+                Debug.Log($"RankInfoCount: {msg.TopRankInfo.Length}");
+                for (int i = 0; i < listSlot.Count && i < msg.TopRankInfo.Length; i++)
                 {
-                    arrSlot[i].Initialize(
+                    listSlot[i].Initialize(
                         msg.TopRankInfo[i].Ranking,
                         msg.TopRankInfo[i].Trophy,
                         msg.TopRankInfo[i].Name,
@@ -57,12 +64,20 @@ public class UI_Popup_Rank : UI_Popup
                         msg.TopRankInfo[i].DeckInfo
                     );
                 }
+                
+                NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, 1, GetRankCallback);
                 break;
             case SEASON_STATE.ACCOUNT:
                 break;
             case SEASON_STATE.END:
                 break;
         }
+    }
+
+    public void GetRankCallback(MsgGetRankAck msg)
+    {
+        UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+        Debug.Log($"MsgGetRankAck count: {msg.RankInfo.Length}");
     }
 
     IEnumerator TimerCoroutine(int seconds)

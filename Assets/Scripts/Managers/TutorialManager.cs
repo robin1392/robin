@@ -17,7 +17,12 @@ public class TutorialManager : MonoBehaviour
     
     private static int stepCount = 0;
     private Transform ts_OldParent;
-    private int getDiceCount;
+
+    public static int getDiceCount
+    {
+        get;
+        private set;
+    }
     
     private void Start()
     {
@@ -60,8 +65,9 @@ public class TutorialManager : MonoBehaviour
 
     public void Click_EndCurrentStep()
     {
-        transform.GetChild(stepCount + 1).gameObject.SetActive(false);
         Time.timeScale = 1f;
+        image_NextStep.DOFade(0f, 0f);
+        transform.GetChild(stepCount + 1).gameObject.SetActive(false);
     }
 
     public void Click_NextStepDelay(float delay)
@@ -96,15 +102,17 @@ public class TutorialManager : MonoBehaviour
         getDiceCount++;
         if (getDiceCount >= 5)
         {
+            ts_GetDiceButton.parent = ts_OldParent;
             ts_GetDiceButton.GetComponent<Button>().onClick.RemoveListener(GetDice);
-            Click_NextStep();
+            Click_NextStepDelay(22f);
         }
     }
 
     private void Step()
     {
         Debug.Log("Tutorial step : " + stepCount);
-        
+
+        image_NextStep.DOFade(0.78f, 0).SetUpdate(true);
         for (int i = 1; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(i == stepCount + 1);
@@ -148,7 +156,7 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 3:
-                image_NextStep.DOFade(0.78f, 0f).SetUpdate(true);
+                //image_NextStep.DOFade(0.78f, 0f).SetUpdate(true);
                 Time.timeScale = 0f;
                 break;
             case 4: // 주사위 소환 버튼
@@ -159,10 +167,10 @@ public class TutorialManager : MonoBehaviour
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 5:
+                Time.timeScale = 0f;
                 break;
             default:
                 Time.timeScale = 1f;
-                image_NextStep.DOFade(0f, 0f);
                 break;
         }
     }

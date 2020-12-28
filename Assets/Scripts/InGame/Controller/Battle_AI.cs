@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using NodeCanvas.BehaviourTrees;
 
 namespace ED
 {
@@ -45,11 +46,13 @@ namespace ED
                 var listDeck = new List<int>();
                 if (TutorialManager.isTutorial)
                 {
-                    listDeck.Add(1001);
-                    listDeck.Add(1002);
-                    listDeck.Add(1003);
-                    listDeck.Add(1004);
-                    listDeck.Add(1005);
+                    listDeck.Add(30001);
+                    listDeck.Add(30002);
+                    listDeck.Add(30003);
+                    listDeck.Add(32002);
+                    listDeck.Add(32003);
+
+                    GetComponent<BehaviourTreeOwner>().behaviour.Pause();
                 }
                 else
                 {
@@ -76,10 +79,14 @@ namespace ED
 
             NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray = deck;
             NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
-            
             SetDeck(deck);
 
             SetColor(E_MaterialType.TOP);
+
+            if (TutorialManager.isTutorial)
+            {
+                SetDiceFieldOnTutorial(0);
+            }
         }
 
         public void AI_GetDice()
@@ -156,6 +163,24 @@ namespace ED
                     arr[j] = arr[i];
                     arr[i] = temp;
                 }
+            }
+        }
+
+        public void SetDiceFieldOnTutorial(int phase)
+        {
+            switch (phase)
+            {
+                case 0:
+                    GetDice(0, 10);
+                    GetDice(0, 14);
+                    GetDice(2, 6);
+                    GetDice(2, 7);
+                    GetDice(2, 8);
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
             }
         }
     }

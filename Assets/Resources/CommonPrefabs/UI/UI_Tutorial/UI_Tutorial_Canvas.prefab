@@ -156,7 +156,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e7b9fc2bda8c34d91b0a095eee7b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  btn_NextStep: {fileID: 859152471832485260}
   image_NextStep: {fileID: 1947262303547116676}
   ts_BattleButton: {fileID: 0}
   ts_GetDiceButton: {fileID: 0}
@@ -1267,6 +1266,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Click_NextStep
+      objectReference: {fileID: 0}
+    - target: {fileID: 2323069168995905819, guid: ff9dad47555dcca4e885df88394d1804,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7190422941015124932, guid: ff9dad47555dcca4e885df88394d1804,
         type: 3}

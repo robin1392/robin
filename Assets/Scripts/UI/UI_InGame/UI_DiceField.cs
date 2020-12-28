@@ -44,7 +44,36 @@ namespace ED
                 else
                 {
                     InGameManager.Get().GetDice();
-                    InGameManager.Get().playerController.GetDice();
+                    if (TutorialManager.isTutorial)
+                    {
+                        Debug.Log($"GetDiceCount: {TutorialManager.getDiceCount}");
+                        switch (TutorialManager.getDiceCount)
+                        {
+                            case 0:
+                                InGameManager.Get().playerController.GetDice(0, 10);
+                                break;
+                            case 1:
+                                InGameManager.Get().playerController.GetDice(2, 6);
+                                break;
+                            case 2:
+                                InGameManager.Get().playerController.GetDice(2, 7);
+                                break;
+                            case 3:
+                                InGameManager.Get().playerController.GetDice(2, 8);
+                                break;
+                            case 4:
+                                InGameManager.Get().playerController.GetDice(0, 14);
+                                break;
+                            default:
+                                InGameManager.Get().playerController.GetDice();
+                                break;
+                        }
+                        InGameManager.Get().playerController.uiDiceField.RefreshField();
+                    }
+                    else
+                    {
+                        InGameManager.Get().playerController.GetDice();
+                    }
                     RefreshField();
                 }
             }
