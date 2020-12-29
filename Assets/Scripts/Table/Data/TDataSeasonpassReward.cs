@@ -9,8 +9,6 @@ namespace RandomWarsResource.Data
 		public int trophyPoint { get; set; }
 		public int rewardType { get; set; }
 		public bool effectOn { get; set; }
-		public int rewardGold { get; set; }
-		public int rewardDia { get; set; }
 		public int rewardItem { get; set; }
 		public int rewardItemValue { get; set; }
 
@@ -28,10 +26,8 @@ namespace RandomWarsResource.Data
 			trophyPoint = int.Parse(cols[2]);
 			rewardType = int.Parse(cols[3]);
 			effectOn = bool.Parse(cols[4]);
-			rewardGold = int.Parse(cols[5]);
-			rewardDia = int.Parse(cols[6]);
-			rewardItem = int.Parse(cols[7]);
-			rewardItemValue = int.Parse(cols[8]);
+			rewardItem = int.Parse(cols[5]);
+			rewardItemValue = int.Parse(cols[6]);
 		}
 	}
 }
