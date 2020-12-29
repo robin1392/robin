@@ -32,6 +32,7 @@ namespace RandomWarsProtocol
     }
 
 
+
     [Serializable]
     public class MsgUserInfo
     {
@@ -47,6 +48,16 @@ namespace RandomWarsProtocol
         public short Class;
         // 연승 횟수 (최대 15회)
         public byte WinStreak;
+        // 시즌 패스 아이디
+        public int SeasonPassId;
+        // 시즌 패스 구매 여부
+        public bool BuySeasonPass;
+        // 시즌 트로피
+        public int SeasonTrophy;
+        // 시즌 패스 보상 획득 아이디 배열
+        public int[] SeasonPassRewardIds;
+        // 트로피 보상 획득 아이디 배열
+        public int[] TrophyRewardIds;
 
 
         public void Write(BinaryWriter bw)
@@ -1838,4 +1849,18 @@ namespace RandomWarsProtocol
         public int Trophy;
         public int[] DeckInfo;
     }
+
+
+    [Serializable]
+    public class MsgPlayerMatchResult
+    {
+        public string PlayerGuid;
+        public int Trophy;
+        public int SeasonTrophy;
+        public int Gold;
+        public int Diamond;
+        public int Key;
+        public byte WinStreak;
+    }
+
 }
