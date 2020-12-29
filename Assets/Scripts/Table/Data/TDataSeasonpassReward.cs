@@ -1,6 +1,6 @@
 using System;
 
-namespace Table.Data
+namespace RandomWarsResource.Data
 {
 	public class TDataSeasonpassReward : ITableData<int>
 	{
@@ -24,7 +24,7 @@ namespace Table.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1];
+			name = cols[1].Replace("{$}", ",");
 			trophyPoint = int.Parse(cols[2]);
 			rewardType = int.Parse(cols[3]);
 			effectOn = bool.Parse(cols[4]);

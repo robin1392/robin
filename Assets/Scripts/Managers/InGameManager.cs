@@ -37,7 +37,7 @@ namespace ED
 
         //public Data_AllDice data_AllDice;
         // new all dice info
-        public Table.TableData<int, Table.Data.TDataDiceInfo> data_DiceInfo;
+        public RandomWarsResource.TableData<int, RandomWarsResource.Data.TDataDiceInfo> data_DiceInfo;
 
 
         public GameObject pref_Player;
@@ -257,7 +257,7 @@ namespace ED
                 int bonusHP = 0;
 
 
-                Table.Data.TDataDiceInfo[] dataDiceInfoArray;
+                RandomWarsResource.Data.TDataDiceInfo[] dataDiceInfoArray;
                 if (TableManager.Get().DiceInfo.GetData( x => x.enableDice, out dataDiceInfoArray ) == false)
                 {
                     return;
@@ -269,7 +269,7 @@ namespace ED
                     {
                         int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
 
-                        Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                        RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                         if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level && x.diceGrade == info.grade, out dataDiceUpgrade) == false)
                         {
                             return;

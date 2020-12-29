@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
-namespace Table.Data
+namespace RandomWarsResource.Data
 {
-    public class TDataCoopModeBossInfo : ITableData<int>
-    {
-        public int id { get; set; }
-        public string name { get; set; }
+	public class TDataCoopModeBossInfo : ITableData<int>
+	{
+		public int id { get; set; }
+		public string name { get; set; }
 		public string bossName_kr { get; set; }
 		public string bossName_en { get; set; }
 		public string bossEmblem { get; set; }
@@ -45,30 +41,30 @@ namespace Table.Data
 
 
 		public int PK()
-        {
-            return id;
-        }
+		{
+			return id;
+		}
 
 
-        public void Serialize(string[] cols)
-        {
+		public void Serialize(string[] cols)
+		{
 			id = int.Parse(cols[0]);
-			name = cols[1];
-			bossName_kr = cols[2];
-			bossName_en = cols[3];
-			bossEmblem = cols[4];
+			name = cols[1].Replace("{$}", ",");
+			bossName_kr = cols[2].Replace("{$}", ",");
+			bossName_en = cols[3].Replace("{$}", ",");
+			bossEmblem = cols[4].Replace("{$}", ",");
 			grade = int.Parse(cols[5]);
 			castType = int.Parse(cols[6]);
 			moveType = int.Parse(cols[7]);
 			targetMoveType = int.Parse(cols[8]);
 			loadType = int.Parse(cols[9]);
 			enableDice = bool.Parse(cols[10]);
-			prefabName = cols[11];
-			modelName = cols[12];
+			prefabName = cols[11].Replace("{$}", ",");
+			modelName = cols[12].Replace("{$}", ",");
 			spawnMultiply = int.Parse(cols[13]);
-			iconName = cols[14];
-			illustName = cols[15];
-			cardName = cols[16];
+			iconName = cols[14].Replace("{$}", ",");
+			illustName = cols[15].Replace("{$}", ",");
+			cardName = cols[16].Replace("{$}", ",");
 			color = Array.ConvertAll(cols[17].Split('|'), s => int.Parse(s));
 			power = float.Parse(cols[18]);
 			powerUpgrade = float.Parse(cols[19]);
@@ -87,5 +83,5 @@ namespace Table.Data
 			searchRange = float.Parse(cols[32]);
 			skillindex = int.Parse(cols[33]);
 		}
-    }
+	}
 }

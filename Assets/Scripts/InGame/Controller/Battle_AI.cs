@@ -27,7 +27,7 @@ namespace ED
             currentHealth = maxHealth;
             _arrDice = new Dice[15];
             
-            _arrDiceDeck = new Table.Data.TDataDiceInfo[5];
+            _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
             
             _arrUpgradeLevel = new int[5];
             for (var i = 0; i < arrDice.Length; i++)

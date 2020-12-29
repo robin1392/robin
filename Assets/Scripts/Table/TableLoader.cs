@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 
 
-namespace Table
+namespace RandomWarsResource
 {
     public interface ITableLoader<K, V>
     {
@@ -23,6 +23,16 @@ namespace Table
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
+                    int replaceIndex = line.IndexOf("\"");
+                    while (replaceIndex != -1)
+                    {
+                        var originText = line.Substring(replaceIndex, line.IndexOf("\"", replaceIndex + 1) - replaceIndex + ("\"").Length);
+                        var replaceText = originText.Replace(",", "{$}");
+                        replaceText = replaceText.Replace("\"", "");
+                        line = line.Replace(originText, replaceText);
+                        replaceIndex = line.IndexOf("\"");
+                    };
+
                     List<string> cols = new List<string>(line.Split(','));
                     if (row == 0)
                     {
@@ -102,6 +112,17 @@ namespace Table
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
+                int replaceIndex = line.IndexOf("\"");
+                while (replaceIndex != -1)
+                {
+                    var originText = line.Substring(replaceIndex, line.IndexOf("\"", replaceIndex + 1) - replaceIndex + ("\"").Length);
+                    var replaceText = originText.Replace(",", "{$}");
+                    replaceText = replaceText.Replace("\"", "");
+                    line = line.Replace(originText, replaceText);
+                    replaceIndex = line.IndexOf("\"");
+                };
+
+
                 List<string> cols = new List<string>(line.Split(','));
                 if (row == 0)
                 {
@@ -141,4 +162,5 @@ namespace Table
             return true;
         }
     }
+
 }

@@ -96,7 +96,7 @@ public class UI_BoxOpenPopup : UI_Popup
         this.costType = costType;
         this.cost = cost;
 
-        Table.Data.TDataBoxList dataBoxList;
+        RandomWarsResource.Data.TDataBoxList dataBoxList;
         if (TableManager.Get().BoxList.GetData(id, out dataBoxList) == false)
         {
             return;
@@ -108,16 +108,16 @@ public class UI_BoxOpenPopup : UI_Popup
         int totalDiceCount = 0;
         foreach (var productId in dataBoxList.productId)
         {
-            Table.Data.TDataBoxProductInfo dataBoxProductInfo;
+            RandomWarsResource.Data.TDataBoxProductInfo dataBoxProductInfo;
             if (TableManager.Get().BoxProductInfo.GetData(productId, out dataBoxProductInfo) == false)
             {
                 return;
             }
 
-            totalGold += dataBoxProductInfo.gold;
-            totalDiamond += dataBoxProductInfo.dia;
 
             // TODO : [개선] 우선 최소값만 합산함.
+            totalGold += dataBoxProductInfo.goldRange[0];
+            totalDiamond += dataBoxProductInfo.diaRange[0] == -1 ? 0 : dataBoxProductInfo.diaRange[0];
             if (dataBoxProductInfo.rewardCardGradeType1 != 0 && dataBoxProductInfo.rewardIsProbability1 == true)
             {
                 totalDiceCount += dataBoxProductInfo.rewardCardValue1[0];
@@ -255,7 +255,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
                         if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.NORMAL, out dataDiceLevelInfo) == false)
                         {
                             return;
@@ -275,7 +275,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
                         if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.MAGIC, out dataDiceLevelInfo) == false)
                         {
                             return;
@@ -295,7 +295,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
                         if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.EPIC, out dataDiceLevelInfo) == false)
                         {
                             return;
@@ -315,7 +315,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     if (level == 0)
                     {
-                        Table.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
                         if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.LEGEND, out dataDiceLevelInfo) == false)
                         {
                             return;
@@ -423,7 +423,7 @@ public class UI_BoxOpenPopup : UI_Popup
 
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[0];
 
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
                 {
                     return;
@@ -441,7 +441,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
                 {
                     return;
@@ -464,7 +464,7 @@ public class UI_BoxOpenPopup : UI_Popup
 
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[1];
 
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
                 {
                     return;
@@ -482,7 +482,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
                 {
                     return;
@@ -505,7 +505,7 @@ public class UI_BoxOpenPopup : UI_Popup
 
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[2];
 
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
                 {
                     return;
@@ -522,7 +522,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
                 {
                     return;
@@ -539,7 +539,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 obj_Guage.SetActive(true);
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3];
 
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
                 {
                     return;
@@ -556,7 +556,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
                 }
 
-                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
                 {
                     return;
@@ -667,7 +667,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 case REWARD_TYPE.DICE_EPIC:
                 case REWARD_TYPE.DICE_LEGEND:
                 {
-                    Table.Data.TDataDiceInfo dataDiceInfo;
+                    RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                     if (TableManager.Get().DiceInfo.GetData(msgReward.Id, out dataDiceInfo) == false)
                     {
                             break;

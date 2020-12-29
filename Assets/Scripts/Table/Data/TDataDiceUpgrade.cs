@@ -1,32 +1,33 @@
+using System;
 
-namespace Table.Data
+namespace RandomWarsResource.Data
 {
-    public class TDataDiceUpgrade : ITableData<int>
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-        public int diceGrade { get; set; }
-        public int diceLv { get; set; }
-        public int needCard { get; set; }
-        public int needGold { get; set; }
-        public int getTowerHp { get; set; }
+	public class TDataDiceUpgrade : ITableData<int>
+	{
+		public int id { get; set; }
+		public string name { get; set; }
+		public int diceGrade { get; set; }
+		public int diceLv { get; set; }
+		public int needCard { get; set; }
+		public int needGold { get; set; }
+		public int getTowerHp { get; set; }
 
 
-        public int PK()
-        {
-            return id;
-        }
+		public int PK()
+		{
+			return id;
+		}
 
 
-        public void Serialize(string[] cols)
-        {
-            id = int.Parse(cols[0]);
-            name = cols[1];
-            diceGrade = int.Parse(cols[2]);
-            diceLv = int.Parse(cols[3]);
-            needCard = int.Parse(cols[4]);
-            needGold = int.Parse(cols[5]);
-            getTowerHp = int.Parse(cols[6]);
-        }
-    }
+		public void Serialize(string[] cols)
+		{
+			id = int.Parse(cols[0]);
+			name = cols[1].Replace("{$}", ",");
+			diceGrade = int.Parse(cols[2]);
+			diceLv = int.Parse(cols[3]);
+			needCard = int.Parse(cols[4]);
+			needGold = int.Parse(cols[5]);
+			getTowerHp = int.Parse(cols[6]);
+		}
+	}
 }

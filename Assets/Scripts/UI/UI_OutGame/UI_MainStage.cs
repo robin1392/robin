@@ -44,7 +44,7 @@ namespace ED
                 if (arrAni_Model[i] != null) Destroy(arrAni_Model[i].gameObject);
 
                 //var num = int.Parse(splitDeck[i]);
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
                 {
                     return;

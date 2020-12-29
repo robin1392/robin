@@ -214,7 +214,7 @@ namespace ED
             {
                 var pos = FieldManager.Get().GetTopListPos(i);
 
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(1000, out dataDiceInfo) == false)
                 {
                     return;
@@ -246,7 +246,7 @@ namespace ED
         {
             if (boss != null && boss.DataId > 0)
             {
-                Table.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                RandomWarsResource.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
                 if (TableManager.Get().CoopModeBossInfo.GetData(boss.DataId, out dataCoopModeBossInfo) == false)
                 {
                     return;
@@ -288,7 +288,7 @@ namespace ED
         {
             if (msgBoss != null)
             {
-                Table.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                RandomWarsResource.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
                 if (TableManager.Get().CoopModeBossInfo.GetData(msgBoss.DataId, out dataCoopModeBossInfo) == false)
                 {
                     return;

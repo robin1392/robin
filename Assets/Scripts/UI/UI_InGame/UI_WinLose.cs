@@ -28,7 +28,7 @@ public class UI_WinLose : MonoBehaviour
         
         for (int i = 0; i < arrImage_Deck.Length; i++)
         {
-            Table.Data.TDataDiceInfo dataDiceInfo;
+            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
             if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
             {
                 return;
@@ -52,7 +52,7 @@ public class UI_WinLose : MonoBehaviour
         
         for (int i = 0; i < arrImage_Deck.Length; i++)
         {
-            Table.Data.TDataDiceInfo dataDiceInfo;
+            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
             if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
             {
                 return;
