@@ -52,7 +52,7 @@ namespace ED
         public ParticleSystem ps_ResultIconBackground;
 
         //private Data_Dice data;
-        private Table.Data.TDataDiceInfo data;
+        private RandomWarsResource.Data.TDataDiceInfo data;
 
         [Space]
         public Transform infosTranform;
@@ -79,13 +79,13 @@ namespace ED
         }
 
         //public void Initialize(Data_Dice pData)
-        public void Initialize(Table.Data.TDataDiceInfo pData)
+        public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData)
         {
             data = pData;
             diceLevel = 0;
             int diceCount = 0;
 
-            Table.Data.TDataDiceInfo dataDiceInfo;
+            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
             if (TableManager.Get().DiceInfo.GetData(pData.id, out dataDiceInfo) == false)
             {
                 return;
@@ -110,9 +110,9 @@ namespace ED
                 diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
             }
-            
-            
-            Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+
+
+            RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
             if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == pData.grade, out dataDiceUpgrade) == false)
             {
                 return;

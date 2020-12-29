@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
-using Table;
-using Table.Data;
+using RandomWarsResource;
+using RandomWarsResource.Data;
 using System.Net;
 using System.IO;
 public class TableManager : Singleton<TableManager>

@@ -67,8 +67,8 @@ namespace ED
         #region data variable
 
         // new dice info
-        protected Table.Data.TDataDiceInfo[] _arrDiceDeck;
-        public Table.Data.TDataDiceInfo[] arrDiceDeck
+        protected RandomWarsResource.Data.TDataDiceInfo[] _arrDiceDeck;
+        public RandomWarsResource.Data.TDataDiceInfo[] arrDiceDeck
         {
             get => _arrDiceDeck;
             protected set => _arrDiceDeck = value;
@@ -205,7 +205,7 @@ namespace ED
         public void InitializePlayer()
         {
             _arrDice = new Dice[15];
-            if (arrDiceDeck == null) _arrDiceDeck = new Table.Data.TDataDiceInfo[5];
+            if (arrDiceDeck == null) _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
             _arrUpgradeLevel = new int[5];
         }
 
@@ -377,7 +377,7 @@ namespace ED
 
                 PushEnemyMinions(10f);
 
-                Table.Data.TDataGuardianInfo dataGuardianInfo;
+                RandomWarsResource.Data.TDataGuardianInfo dataGuardianInfo;
                 if (TableManager.Get().GuardianInfo.GetData(boss.DataId, out dataGuardianInfo) == false)
                 {
                     return;
@@ -499,7 +499,7 @@ namespace ED
         }
         
         //public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        public void CreateMinion(Table.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        public void CreateMinion(RandomWarsResource.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             var minion = listMinion.Find(m => m.id == id);
             if (minion != null) return;
@@ -508,7 +508,7 @@ namespace ED
         }
 
         //private IEnumerator CreateMinionCoroutine(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CreateMinionCoroutine(Table.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CreateMinionCoroutine(RandomWarsResource.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             if (delay > 0)
             {
@@ -688,7 +688,7 @@ namespace ED
         }
         
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private void CastMagic(Table.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private void CastMagic(RandomWarsResource.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             var magic = listMagic.Find(m => m.id == id);
             if (magic != null) return;
@@ -697,7 +697,7 @@ namespace ED
         }
 
         //private IEnumerator CastMagicCoroutine(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CastMagicCoroutine(Table.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CastMagicCoroutine(RandomWarsResource.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             yield return new WaitForSeconds(delay);
 
@@ -787,7 +787,7 @@ namespace ED
         public void SetDeck(int[] deck)
         {
             if(arrDiceDeck == null)
-                _arrDiceDeck = new Table.Data.TDataDiceInfo[5];
+                _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
             
             for (int i = 0; i < deck.Length; i++)
             {
@@ -830,9 +830,9 @@ namespace ED
             arrDice[slotNum].Set(GetArrayDeckDice(diceId));
         }
 
-        public Table.Data.TDataDiceInfo GetArrayDeckDice(int diceId)
+        public RandomWarsResource.Data.TDataDiceInfo GetArrayDeckDice(int diceId)
         {
-            Table.Data.TDataDiceInfo dice = null;
+            RandomWarsResource.Data.TDataDiceInfo dice = null;
             for (int i = 0; i < arrDiceDeck.Length; i++)
             {
                 if (arrDiceDeck[i].id == diceId)
@@ -849,7 +849,7 @@ namespace ED
         {
             arrDice[resetFieldNum].Reset();
 
-            Table.Data.TDataDiceInfo data;
+            RandomWarsResource.Data.TDataDiceInfo data;
             if (InGameManager.Get().data_DiceInfo.GetData(levelupDiceId, out data) == false)
             {
                 return;
@@ -892,7 +892,7 @@ namespace ED
             }
         }
         
-        private int GetDiceUpgradeLevel(Table.Data.TDataDiceInfo data)
+        private int GetDiceUpgradeLevel(RandomWarsResource.Data.TDataDiceInfo data)
         {
             var num = 0;
             for (var i = 0; i < arrDiceDeck.Length; i++)
@@ -2073,7 +2073,7 @@ namespace ED
                 if (servLevel < 0)
                     servLevel = 0;
 
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (InGameManager.Get().data_DiceInfo.GetData(arrDiceData[i].DiceId, out dataDiceInfo) == false)
                 {
                     return;

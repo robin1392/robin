@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
-namespace Table.Data
+namespace RandomWarsResource.Data
 {
-    public class TDataErrorMessageKO : ITableData<int>
-    {
-        public string stringKey { get; set; }
-        public int id { get; set; }
-        public string textDesc { get; set; }
+	public class TDataErrorMessageKO : ITableData<int>
+	{
+		public string stingKey { get; set; }
+		public int id { get; set; }
+		public string textDesc { get; set; }
 
 
-        public int PK()
-        {
-            return id;
-        }
+		public int PK()
+		{
+			return id;
+		}
 
 
-        public void Serialize(string[] cols)
-        {
-            stringKey = cols[0];
-            id = int.Parse(cols[1]);
-            textDesc = cols[2];
-        }
-    }
+		public void Serialize(string[] cols)
+		{
+			stingKey = cols[0].Replace("{$}", ",");
+			id = int.Parse(cols[1]);
+			textDesc = cols[2].Replace("{$}", ",");
+		}
+	}
 }

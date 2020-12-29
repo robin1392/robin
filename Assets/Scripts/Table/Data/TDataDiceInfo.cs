@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 
-
-namespace Table.Data
+namespace RandomWarsResource.Data
 {
 	public class TDataDiceInfo : ITableData<int>
 	{
@@ -48,19 +46,19 @@ namespace Table.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1];
+			name = cols[1].Replace("{$}", ",");
 			grade = int.Parse(cols[2]);
 			castType = int.Parse(cols[3]);
 			moveType = int.Parse(cols[4]);
 			targetMoveType = int.Parse(cols[5]);
 			loadType = int.Parse(cols[6]);
 			enableDice = bool.Parse(cols[7]);
-			prefabName = cols[8];
-			modelName = cols[9];
+			prefabName = cols[8].Replace("{$}", ",");
+			modelName = cols[9].Replace("{$}", ",");
 			spawnMultiply = int.Parse(cols[10]);
-			iconName = cols[11];
-			illustName = cols[12];
-			cardName = cols[13];
+			iconName = cols[11].Replace("{$}", ",");
+			illustName = cols[12].Replace("{$}", ",");
+			cardName = cols[13].Replace("{$}", ",");
 			color = Array.ConvertAll(cols[14].Split('|'), s => int.Parse(s));
 			power = float.Parse(cols[15]);
 			powerUpgrade = float.Parse(cols[16]);

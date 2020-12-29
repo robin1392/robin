@@ -91,7 +91,7 @@ namespace ED
             for (var i = 0; i < arrImageDeck.Length; i++)
             {
                 //var num = int.Parse(splitDeck[i]);
-                Table.Data.TDataDiceInfo dataDiceInfo;
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
                 {
                     return;
@@ -135,7 +135,7 @@ namespace ED
             int bonusHP = 0;
 
 
-            Table.Data.TDataDiceInfo[] dataDiceInfoArray;
+            RandomWarsResource.Data.TDataDiceInfo[] dataDiceInfoArray;
             if (TableManager.Get().DiceInfo.GetData( x => x.enableDice, out dataDiceInfoArray) == false)
             {
                 return;
@@ -159,7 +159,7 @@ namespace ED
                     // ugd.SetGrayscale();
                     int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
 
-                    Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                    RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                     if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level && x.diceGrade == info.grade, out dataDiceUpgrade) == false)
                     {
                         return;
@@ -222,7 +222,7 @@ namespace ED
             objSelectBlind.SetActive(true);
 
 
-            Table.Data.TDataDiceInfo dataDiceInfo;
+            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
             if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
             {
                 return;
@@ -241,7 +241,7 @@ namespace ED
             ui_Popup_Dice_Info.gameObject.SetActive(true);
             //ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
 
-            Table.Data.TDataDiceInfo dataDiceInfo;
+            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
             if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
             {
                 return;

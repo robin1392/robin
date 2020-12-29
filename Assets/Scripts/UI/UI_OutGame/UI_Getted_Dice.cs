@@ -35,7 +35,7 @@ namespace ED
         public Text text_DiceLevel;
 
         //private Data_Dice _data;
-        private Table.Data.TDataDiceInfo _data;
+        private RandomWarsResource.Data.TDataDiceInfo _data;
         
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
@@ -58,11 +58,11 @@ namespace ED
             }
         }
 
-        public void Initialize(Table.Data.TDataDiceInfo pData, int level, int count)
+        public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData, int level, int count)
         {
             _data = pData;
 
-            Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+            RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
             if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == pData.grade, out dataDiceUpgrade) == false)
             {
                 return;
@@ -105,7 +105,7 @@ namespace ED
                 int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][1];
                 int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][0];
 
-                Table.Data.TDataDiceUpgrade dataDiceUpgrade;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == _data.grade, out dataDiceUpgrade) == false)
                 {
                     return;

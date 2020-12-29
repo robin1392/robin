@@ -2,11 +2,11 @@ using System;
 
 namespace RandomWarsResource.Data
 {
-	public class TDataDiceLevelInfo : ITableData<int>
+	public class TDataRankInfo : ITableData<int>
 	{
 		public int id { get; set; }
 		public string name { get; set; }
-		public int baseLevel { get; set; }
+		public int[] rankingPointMinMax { get; set; }
 
 
 		public int PK()
@@ -19,7 +19,7 @@ namespace RandomWarsResource.Data
 		{
 			id = int.Parse(cols[0]);
 			name = cols[1].Replace("{$}", ",");
-			baseLevel = int.Parse(cols[2]);
+			rankingPointMinMax = Array.ConvertAll(cols[2].Split('|'), s => int.Parse(s));
 		}
 	}
 }

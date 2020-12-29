@@ -1,6 +1,6 @@
 using System;
 
-namespace Table.Data
+namespace RandomWarsResource.Data
 {
 	public class TDataClassReward : ITableData<int>
 	{
@@ -23,7 +23,7 @@ namespace Table.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1];
+			name = cols[1].Replace("{$}", ",");
 			rankPoint = int.Parse(cols[2]);
 			rewardType = int.Parse(cols[3]);
 			rewardGold = int.Parse(cols[4]);

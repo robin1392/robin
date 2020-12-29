@@ -16,7 +16,7 @@ namespace ED
         private static readonly int Off1 = Animator.StringToHash("Off");
         private static readonly int On = Animator.StringToHash("On");
 
-        public void Initialize(Table.Data.TDataDiceInfo pData)
+        public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData)
         {
             isAnimationRunning = false;
             image_Card.sprite = FileHelper.GetCardIcon( pData.cardName );

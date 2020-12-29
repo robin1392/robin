@@ -2,7 +2,7 @@ using System;
 
 namespace RandomWarsResource.Data
 {
-	public class TDataRankingReward : ITableData<int>
+	public class TDataRakingReward : ITableData<int>
 	{
 		public int id { get; set; }
 		public string name { get; set; }
@@ -32,7 +32,7 @@ namespace RandomWarsResource.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1].Replace("{$}", ",");
+			name = cols[1];
 			rankRewardType = int.Parse(cols[2]);
 			rankMin = int.Parse(cols[3]);
 			rankMax = int.Parse(cols[4]);

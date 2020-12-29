@@ -17,11 +17,11 @@ namespace ED
 
         private int level;
         //private Data_Dice data;
-        private Table.Data.TDataDiceInfo pData;
+        private RandomWarsResource.Data.TDataDiceInfo pData;
         private readonly int[] arrPrice = { 100, 200, 400, 700, 1100 };
     
         //public void Initialize(Data_Dice dataDice, int level)
-        public void Initialize(Table.Data.TDataDiceInfo dataDice, int level)
+        public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level)
         {
             this.pData = dataDice;
             this.level = level;
