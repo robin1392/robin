@@ -13661,6 +13661,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db1c9db6c706f4de7a993ec4962a3bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pref_RewardSlot: {fileID: 6896604197634586171, guid: b9914ccebd583f5498125e478cf1d379,
+    type: 3}
 --- !u!1 &6180031957565354952
 GameObject:
   m_ObjectHideFlags: 0
