@@ -23,7 +23,10 @@ public class TableManager : Singleton<TableManager>
     public TableData<string, TDataLangKO> LangKO { get; private set; }
     public TableData<int, TDataErrorMessageKO> ErrorMessageKO { get; private set; }
     public TableData<int, TDataRankingReward> RankingReward { get; private set; }
-
+    public TableData<int, TDataSeasonpassInfo> SeasonpassInfo { get; private set; }
+    public TableData<int, TDataSeasonpassReward> SeasonpassReward { get; private set; }
+    public TableData<int, TDataClassReward> ClassReward { get; private set; }
+    public TableData<int, TDataItemList> ItemList { get; private set; }
 
 
     public void Awake()
@@ -55,6 +58,10 @@ public class TableManager : Singleton<TableManager>
         LangKO = new TableData<string, TDataLangKO>();
         ErrorMessageKO = new TableData<int, TDataErrorMessageKO>();
         RankingReward = new TableData<int, TDataRankingReward>();
+        SeasonpassInfo = new TableData<int, TDataSeasonpassInfo>();
+        SeasonpassReward = new TableData<int, TDataSeasonpassReward>();
+        ClassReward = new TableData<int, TDataClassReward>();
+        ItemList = new TableData<int, TDataItemList>();
     }
 
 
@@ -118,6 +125,10 @@ public class TableManager : Singleton<TableManager>
         GuardianInfo.Init(new TableLoaderRemoteCSV<int, TDataGuardianInfo>(), bucketPath, "GuardianInfo.csv", localPath);
         Vsmode.Init(new TableLoaderRemoteCSV<int, TDataVsmode>(), bucketPath, "Vsmode.csv", localPath);
         RankingReward.Init(new TableLoaderRemoteCSV<int, TDataRankingReward>(), bucketPath, "RankingReward.csv", localPath);
+        SeasonpassInfo.Init(new TableLoaderRemoteCSV<int, TDataSeasonpassInfo>(), bucketPath, "SeasonpassInfo.csv", localPath);
+        SeasonpassReward.Init(new TableLoaderRemoteCSV<int, TDataSeasonpassReward>(), bucketPath, "SeasonpassReward.csv", localPath);
+        ClassReward.Init(new TableLoaderRemoteCSV<int, TDataClassReward>(), bucketPath, "ClassReward.csv", localPath);
+        ItemList.Init(new TableLoaderRemoteCSV<int, TDataItemList>(), bucketPath, "ItemList.csv", localPath);
 
         return true;
     }
@@ -136,6 +147,10 @@ public class TableManager : Singleton<TableManager>
         GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path, "GuardianInfo.csv");
         Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path, "Vsmode.csv");
         RankingReward.Init(new TableLoaderLocalCSV<int, TDataRankingReward>(), path, "RankingReward.csv");
+        SeasonpassInfo.Init(new TableLoaderLocalCSV<int, TDataSeasonpassInfo>(), path, "SeasonpassInfo.csv");
+        SeasonpassReward.Init(new TableLoaderLocalCSV<int, TDataSeasonpassReward>(), path, "SeasonpassReward.csv");
+        ClassReward.Init(new TableLoaderLocalCSV<int, TDataClassReward>(), path, "ClassReward.csv");
+        ItemList.Init(new TableLoaderLocalCSV<int, TDataItemList>(), path, "ItemList.csv");
 
         return true;
     }

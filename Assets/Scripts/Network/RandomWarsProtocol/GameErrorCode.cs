@@ -7,12 +7,15 @@ namespace RandomWarsProtocol
     public enum GameErrorCode : int
     {
         SUCCESS = 0,
+        ERROR_TABLE_NOT_FOUND,
 
-        ERROR_GAMELIFT_ACCEPT_PLAYER_SESSION                         = 10001,            // 게임 리프트 플레이어 세션 ID를 확인 할 수 없습니다.
-        ERROR_GAMELIFT_REMOVE_PLAYER_SESSION                        = 10002,        // 게임 리프트 플레이어 세션 ID를 제거 할 수 없습니다.
-        ERROR_GAMELIFT_MATCH_PLACING                                    = 10003,
+        ERROR_GAMELIFT_ACCEPT_PLAYER_SESSION = 1001,            // 게임 리프트 플레이어 세션 ID를 확인 할 수 없습니다.
+        ERROR_GAMELIFT_REMOVE_PLAYER_SESSION = 1002,        // 게임 리프트 플레이어 세션 ID를 제거 할 수 없습니다.
+        ERROR_GAMELIFT_MATCH_PLACING = 1003,
+        ERROR_GAMELIFT_MATCH_TICKET = 1004,
+        ERROR_GAMELIFT_MATCH_STATE_INVALID = 1005,
 
-        ERROR_DATABASE_UNEXPECTED                          = 10011,             // 데이터베이스의 예상치 못한 에러
+        ERROR_DATABASE_UNEXPECTED = 2011,             // 데이터베이스의 예상치 못한 에러
 
 
 
@@ -35,9 +38,10 @@ namespace RandomWarsProtocol
         ERROR_GET_DICE_FAILED                           = 20106,            // 주사위 생성에 실패했습니다.
         ERROR_LEVELUP_DICE_FAILED                   = 20107,            // 주사위 강화에 실패했습니다.
         ERROR_INGAME_UP_DICE_FAILED                   = 20108,            // 주사위 강화에 실패했습니다.
+        ERROR_HIT_DAMAGE_FAILED = 20109,            // 데미지 적용에 실패했습니다.
 
-
-
-
+        ERROR_SEASON_PASS_TROPHY_LACK   = 20201,          // 시즌 트로피가 부족합니다.
+        ERROR_SEASON_PASS_NEED              = 20202,          // 시즌 패스를 구입해야 합니다.
+        ERROR_SEASON_PASS_INVALID_REWARD_ID = 20203,          // 시즌 패스 보상이 유효하지 않습니다.
     }
 }
