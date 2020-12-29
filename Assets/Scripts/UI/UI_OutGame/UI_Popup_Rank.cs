@@ -28,17 +28,21 @@ public class UI_Popup_Rank : UI_Popup
     public Text text_MyRanking;
     public Text text_MyTrophy;
 
+    private bool isInitialized;
     private bool isRankCalling;
     private int pageNum = 2;
     private List<UI_Rank_Slot> listSlot = new List<UI_Rank_Slot>();
 
     public void Initialize()
     {
-        isRankCalling = true;
-        pageNum = 2;
-        NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
-        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-        StartCoroutine(WaitCoroutine());
+        if (isInitialized == false)
+        {
+            isRankCalling = true;
+            pageNum = 2;
+            NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
+            StartCoroutine(WaitCoroutine());
+            UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+        }
     }
 
     public void GetSeasonInfoCallback(MsgSeasonInfoAck msg)
@@ -58,6 +62,7 @@ public class UI_Popup_Rank : UI_Popup
                 text_RankMessage.gameObject.SetActive(true);
                 break;
             case SEASON_STATE.GOING:
+                isInitialized = true;
                 text_RankMessage.gameObject.SetActive(false);
                 
                 text_Season.text = $"SEASON {msg.SeasonIndex}";
@@ -147,17 +152,17 @@ public class UI_Popup_Rank : UI_Popup
     {
         base.Close();
 
-        while (listSlot.Count > 0)
-        {
-            var slot = listSlot[listSlot.Count - 1];
-            listSlot.Remove(slot);
-            Destroy(slot.gameObject);
-        }
+        // while (listSlot.Count > 0)
+        // {
+        //     var slot = listSlot[listSlot.Count - 1];
+        //     listSlot.Remove(slot);
+        //     Destroy(slot.gameObject);
+        // }
     }
 
     public void ScrollChange(Vector2 v)
     {
-        if (isRankCalling == false && v.y < 0)
+        if (isRankCalling == false && v.y < 0 && pageNum < 11)
         {
             isRankCalling = true;
             
