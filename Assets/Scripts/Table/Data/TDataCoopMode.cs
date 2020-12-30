@@ -1,60 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace RandomWarsResource.Data
 {
-    public enum ECoopModeKey
-    {
-        coopmodePlayCntMax = 1,
-        coopmodeADCnt,
-        serachuserTropy,
-        serachuserTropyMaxCnt,
-        MaxWave,
-        coopTowerHp,
-        bossID1st,
-        bossID2nd,
-        bossID3rd,
-        bossID4th,
-        bossID5th,
-        callGuardianTowerHp_1st,
-        callGuardianTowerHp_2nd,
-        get1stBoss_Wave,
-        get2ndBoss_Wave,
-        get3rdBoss_Wave,
-        get4thBoss_Wave,
-        get5thBoss_Wave,
-        eggtobossCoolTime,
-        basicrewardWave,
-        basicrewardID,
-        basicrewardValue,
-        bossRewardID01,
-        bossRewardID02,
-        bossRewardID03,
-        bossRewardID04,
-        bossRewardID05,
-    }
+	public enum ECoopModeKey : int
+	{
+		None = -1,
 
-    public class TDataCoopMode : ITableData<int>
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-        public int value { get; set; }
+		coopmodePlayCntMax = 1,
+		coopmodeADCnt = 2,
+		serachuserTropy = 3,
+		serachuserTropyMaxCnt = 4,
+		maxWave = 5,
+		coopTowerHp = 6,
+		bossID_1st = 7,
+		bossID_2nd = 8,
+		bossID_3rd = 9,
+		bossID_4th = 10,
+		bossID_5th = 11,
+		callGuardianTowerHp_1st = 12,
+		callGuardianTowerHp_2nd = 13,
+		get1stBoss_Wave = 14,
+		get2ndBoss_Wave = 15,
+		get3rdBoss_Wave = 16,
+		get4thBoss_Wave = 17,
+		get5thBoss_Wave = 18,
+		eggtobossCoolTime = 19,
+		basicrewardWave = 20,
+		basicrewardID = 21,
+		basicrewardValue = 22,
+		bossRewardID01 = 23,
+		bossRewardID02 = 24,
+		bossRewardID03 = 25,
+		bossRewardID04 = 26,
+		bossRewardID05 = 27,
+	}
 
-
-        public int PK()
-        {
-            return id;
-        }
+	public class TDataCoopMode : ITableData<int>
+	{
+		public int id { get; set; }
+		public string name { get; set; }
+		public int value { get; set; }
 
 
-        public void Serialize(string[] cols)
-        {
-            id = int.Parse(cols[0]);
-            name = cols[1];
-            value = int.Parse(cols[2]);
-        }
-    }
+		public int PK()
+		{
+			return id;
+		}
+
+
+		public void Serialize(string[] cols)
+		{
+			id = int.Parse(cols[0]);
+			name = cols[1].Replace("{#$}", ",");
+			value = int.Parse(cols[2]);
+		}
+	}
 }

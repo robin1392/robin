@@ -2,6 +2,37 @@ using System;
 
 namespace RandomWarsResource.Data
 {
+	public enum ECoopModeMinionKey : int
+	{
+		None = -1,
+
+		wave01 = 1,
+		wave02 = 2,
+		wave03 = 3,
+		wave04 = 4,
+		wave05 = 5,
+		wave06 = 6,
+		wave07 = 7,
+		wave08 = 8,
+		wave09 = 9,
+		wave10 = 10,
+		wave11 = 11,
+		wave12 = 12,
+		wave13 = 13,
+		wave14 = 14,
+		wave15 = 15,
+		wave16 = 16,
+		wave17 = 17,
+		wave18 = 18,
+		wave19 = 19,
+		wave20 = 20,
+		wave21 = 21,
+		wave22 = 22,
+		wave23 = 23,
+		wave24 = 24,
+		wave25 = 25,
+	}
+
 	public class TDataCoopModeMinion : ITableData<int>
 	{
 		public int id { get; set; }
@@ -62,7 +93,7 @@ namespace RandomWarsResource.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1].Replace("{$}", ",");
+			name = cols[1].Replace("{#$}", ",");
 			minionId01 = int.Parse(cols[2]);
 			classLv01 = int.Parse(cols[3]);
 			diceLv01 = int.Parse(cols[4]);

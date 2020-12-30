@@ -2,6 +2,14 @@ using System;
 
 namespace RandomWarsResource.Data
 {
+	public enum ESeasonpassInfoKey : int
+	{
+		None = -1,
+
+		seasonperiod01 = 1,
+		seasonperiod02 = 2,
+	}
+
 	public class TDataSeasonpassInfo : ITableData<int>
 	{
 		public int id { get; set; }
@@ -20,7 +28,7 @@ namespace RandomWarsResource.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1].Replace("{$}", ",");
+			name = cols[1].Replace("{#$}", ",");
 			seasonPassState = bool.Parse(cols[2]);
 			seasonPassStartDate = DateTime.Parse(cols[3]);
 			seasonPassEndDate = DateTime.Parse(cols[4]);

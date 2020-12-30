@@ -2,6 +2,16 @@ using System;
 
 namespace RandomWarsResource.Data
 {
+	public enum EDiceLevelInfoKey : int
+	{
+		None = -1,
+
+		NORMAL = 0,
+		MAGIC = 1,
+		EPIC  = 2,
+		LEGEND = 3,
+	}
+
 	public class TDataDiceLevelInfo : ITableData<int>
 	{
 		public int id { get; set; }
@@ -18,7 +28,7 @@ namespace RandomWarsResource.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1].Replace("{$}", ",");
+			name = cols[1].Replace("{#$}", ",");
 			baseLevel = int.Parse(cols[2]);
 		}
 	}

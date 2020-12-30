@@ -96,8 +96,8 @@ public class UI_BoxOpenPopup : UI_Popup
         this.costType = costType;
         this.cost = cost;
 
-        RandomWarsResource.Data.TDataBoxList dataBoxList;
-        if (TableManager.Get().BoxList.GetData(id, out dataBoxList) == false)
+        RandomWarsResource.Data.TDataItemList dataBoxList;
+        if (TableManager.Get().ItemList.GetData(id, out dataBoxList) == false)
         {
             return;
         }

@@ -2,6 +2,34 @@ using System;
 
 namespace RandomWarsResource.Data
 {
+	public enum ERankingRewardKey : int
+	{
+		None = -1,
+
+		rankingreward01 = 1,
+		rankingreward02 = 2,
+		rankingreward03 = 3,
+		rankingreward04 = 4,
+		rankingreward05 = 5,
+		rankingreward06 = 6,
+		rankingreward07 = 7,
+		rankingreward08 = 8,
+		rankingreward09 = 9,
+		rankingreward10 = 10,
+		rankingreward11 = 11,
+		rankingreward12 = 12,
+		rankingreward13 = 13,
+		rankingreward14 = 14,
+		rankingreward15 = 15,
+		rankingreward16 = 16,
+		rankingreward17 = 17,
+		rankingreward18 = 18,
+		rankingreward19 = 19,
+		rankingreward20 = 20,
+		rankingreward21 = 21,
+		rankingreward22 = 22,
+	}
+
 	public class TDataRankingReward : ITableData<int>
 	{
 		public int id { get; set; }
@@ -32,7 +60,7 @@ namespace RandomWarsResource.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1].Replace("{$}", ",");
+			name = cols[1].Replace("{#$}", ",");
 			rankRewardType = int.Parse(cols[2]);
 			rankMin = int.Parse(cols[3]);
 			rankMax = int.Parse(cols[4]);

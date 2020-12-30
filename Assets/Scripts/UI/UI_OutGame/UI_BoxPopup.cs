@@ -50,8 +50,8 @@ public class UI_BoxPopup : UI_Popup
             var id = boxData.Key;
             var subCount = boxData.Value;
 
-            RandomWarsResource.Data.TDataBoxList dataBoxList;
-            if (TableManager.Get().BoxList.GetData(id, out dataBoxList) == false)
+            RandomWarsResource.Data.TDataItemList dataBoxList;
+            if (TableManager.Get().ItemList.GetData(id, out dataBoxList) == false)
             {
                 return;
             }
