@@ -375,7 +375,7 @@ namespace ED
                 isHalfHealth = true;
                 animator.SetBool(Break, true);
 
-                PushEnemyMinions(10f);
+                PushEnemyMinions(5f);
 
                 RandomWarsResource.Data.TDataGuardianInfo dataGuardianInfo;
                 if (TableManager.Get().GuardianInfo.GetData(boss.DataId, out dataGuardianInfo) == false)
@@ -3542,5 +3542,13 @@ namespace ED
         #endregion
         */
         #endregion
+        
+        public void TutorialAddSP()
+        {
+            if (TutorialManager.isTutorial)
+            {
+                sp = 3000;
+            }
+        }
     }
 }

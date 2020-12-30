@@ -805,11 +805,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Tutorial_Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1947262303292508555, guid: 05d848b2db66e104ebd9aeb539efa37a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Tutorial
+      objectReference: {fileID: 0}
     - target: {fileID: 1947262303292508558, guid: 05d848b2db66e104ebd9aeb539efa37a,
         type: 3}
       propertyPath: ts_GetDiceButton
       value: 
       objectReference: {fileID: 2799760152392200773}
+    - target: {fileID: 1947262303292508558, guid: 05d848b2db66e104ebd9aeb539efa37a,
+        type: 3}
+      propertyPath: ts_DiceField
+      value: 
+      objectReference: {fileID: 2799760152392200774}
     - target: {fileID: 1947262303292508559, guid: 05d848b2db66e104ebd9aeb539efa37a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2947,6 +2957,12 @@ MonoBehaviour:
 --- !u!224 &2799760152392200773 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2799760152477126976, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
+    type: 3}
+  m_PrefabInstance: {fileID: 2799760152392200770}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &2799760152392200774 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2799760151011365832, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
     type: 3}
   m_PrefabInstance: {fileID: 2799760152392200770}
   m_PrefabAsset: {fileID: 0}
