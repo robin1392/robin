@@ -31,18 +31,27 @@ public class UI_Box_Slot : MonoBehaviour
     private int boxID;
     private int needKey;
 
-    public void Initialize(int id, int count, int needKeyCount)
+    public void Initialize(int id, int count)
     {
+        RandomWarsResource.Data.TDataItemList tDataItemList;
+        if (TableManager.Get().ItemList.GetData(id, out tDataItemList) == false)
+        {
+            return;
+        }
+
+
         boxID = id;
-        needKey = needKeyCount;
+        needKey = tDataItemList.openKeyValue;
         //Debug.LogFormat("ID:{0}, COUNT:{1}, KEY:{2}", id, count, needKeyCount);
         bool isEnable = false;
 
+
+
         if (needKey >= 0)
         {
-            isEnable = needKeyCount <= UserInfoManager.Get().GetUserInfo().key;
-            text_Name.text = LocalizationManager.GetLangDesc(40000 + id / 1000);
-            text_Cost.text = needKeyCount.ToString();
+            isEnable = needKey <= UserInfoManager.Get().GetUserInfo().key;
+            text_Name.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
+            text_Cost.text = needKey.ToString();
             text_Count.text = $"x{count}";
 
             text_Cost.color = isEnable ? Color.white : ParadoxNotion.ColorUtils.HexToColor("DF362D");

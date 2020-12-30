@@ -37,23 +37,25 @@ public class LocalizationManager
         
         if (code == Global.COUNTRYCODE.KO)
         {
-            if (JsonDataManager.Get().dataLangKO.IsContainKey(textid) == false)
+            RandomWarsResource.Data.TDataLangKO tDataLangKO;
+            if (TableManager.Get().LangKO.GetData(textid, out tDataLangKO) == false)
             {
-                descString = "KO " +textid.ToString();
+                descString = "KO " + textid.ToString();
                 return descString;
             }
 
-            descString = JsonDataManager.Get().dataLangKO.GetData(textid).textDesc;
+            descString = tDataLangKO.textDesc;
         }
         else
         {
-            if (JsonDataManager.Get().dataLangEN.IsContainKey(textid) == false)
+            RandomWarsResource.Data.TDataLangKO tDataLangKO;
+            if (TableManager.Get().LangKO.GetData(textid, out tDataLangKO) == false)
             {
-                descString = "EN " + textid.ToString();
+                descString = "KO " + textid.ToString();
                 return descString;
             }
-            
-            descString = JsonDataManager.Get().dataLangEN.GetData(textid).textDesc;
+
+            descString = tDataLangKO.textDesc;
         }
         
         return descString;

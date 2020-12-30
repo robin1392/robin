@@ -176,7 +176,7 @@ public class UI_BoxOpenPopup : UI_Popup
         image_Blind.DOFade(0, 0);
         image_Pattern.DOFade(0, 0);
         ani_Item.gameObject.SetActive(false);
-        ani_Box.runtimeAnimatorController = arrAniController_Box[id - 1];
+        ani_Box.runtimeAnimatorController = arrAniController_Box[id - (int)RandomWarsResource.Data.EItemListKey.normalbox];
         ani_Box.gameObject.SetActive(true);
         obj_Result.SetActive(false);
     }
@@ -217,120 +217,135 @@ public class UI_BoxOpenPopup : UI_Popup
         
         for (int i = 0; i < msg.BoxReward.Length; i++)
         {
-            Debug.Log($"Reward   ID:{msg.BoxReward[i].Id} , Type:{msg.BoxReward[i].RewardType.ToString()}, Count:{msg.BoxReward[i].Value}");
+            Debug.Log($"Reward   ID:{msg.BoxReward[i].ItemId} , Count:{msg.BoxReward[i].Value}");
 
             var level = 0;
             var count = 0;
-            if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(msg.BoxReward[i].Id))
+            if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(msg.BoxReward[i].ItemId))
             {
-                level = UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][0];
-                count = UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1];
+                level = UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].ItemId][0];
+                count = UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].ItemId][1];
             }
 
-            switch (msg.BoxReward[i].RewardType)
+            RandomWarsResource.Data.TDataItemList tDataItemList;
+            if (TableManager.Get().ItemList.GetData(msg.BoxReward[i].ItemId, out tDataItemList) == false)
             {
-                case REWARD_TYPE.TROPHY:
+                Debug.LogErrorFormat($"Failed to get table data. ID:{msg.BoxReward[i].ItemId}");
+                return;
+            }
+
+
+            switch ((ITEM_TYPE)tDataItemList.itemType)
+            {
+                case ITEM_TYPE.TROPHY:
                     UserInfoManager.Get().GetUserInfo().trophy += msg.BoxReward[i].Value;
                     break;
-                case REWARD_TYPE.GOLD:
+                case ITEM_TYPE.GOLD:
                     UserInfoManager.Get().GetUserInfo().gold += msg.BoxReward[i].Value;
                     break;
-                case REWARD_TYPE.DIAMOND:
+                case ITEM_TYPE.DIAMOND:
                     UserInfoManager.Get().GetUserInfo().diamond += msg.BoxReward[i].Value;
                     break;
-                case REWARD_TYPE.KEY:
+                case ITEM_TYPE.KEY:
                     UserInfoManager.Get().GetUserInfo().key += msg.BoxReward[i].Value;
                     break;
-                case REWARD_TYPE.BOX:
-                    if (UserInfoManager.Get().GetUserInfo().dicBox.ContainsKey(msg.BoxReward[i].Id))
+                case ITEM_TYPE.BOX:
+                    if (UserInfoManager.Get().GetUserInfo().dicBox.ContainsKey(msg.BoxReward[i].ItemId))
                     {
-                        UserInfoManager.Get().GetUserInfo().dicBox[msg.BoxReward[i].Id] += msg.BoxReward[i].Value;
+                        UserInfoManager.Get().GetUserInfo().dicBox[msg.BoxReward[i].ItemId] += msg.BoxReward[i].Value;
                     }
                     else
                     {
-                        UserInfoManager.Get().GetUserInfo().dicBox.Add(msg.BoxReward[i].Id, msg.BoxReward[i].Value);
+                        UserInfoManager.Get().GetUserInfo().dicBox.Add(msg.BoxReward[i].ItemId, msg.BoxReward[i].Value);
                     }
                     break;
-                case REWARD_TYPE.DICE_NORMAL:
+                case ITEM_TYPE.DICE:
                 {
                     if (level == 0)
                     {
+                        RandomWarsResource.Data.TDataDiceInfo tDataDiceInfo;
+                        if (TableManager.Get().DiceInfo.GetData(tDataItemList.id, out tDataDiceInfo) == false)
+                        {
+                            Debug.LogErrorFormat($"Failed to get table data from DiceInfo. ID:{tDataItemList.id}");
+                            return;
+                        }
+
                         RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
-                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.NORMAL, out dataDiceLevelInfo) == false)
+                        if (TableManager.Get().DiceLevelInfo.GetData(tDataDiceInfo.grade, out dataDiceLevelInfo) == false)
                         {
                             return;
                         }
 
                         count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].ItemId, new int[] { dataDiceLevelInfo.baseLevel, count });
                     }
                     else
                     {
                         count += msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].ItemId][1] = count;
                     }
                 }
-                    break;
-                case REWARD_TYPE.DICE_MAGIC:
-                {
-                    if (level == 0)
-                    {
-                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
-                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.MAGIC, out dataDiceLevelInfo) == false)
-                        {
-                            return;
-                        }
+                break;
+                //case REWARD_TYPE.DICE_MAGIC:
+                //{
+                //    if (level == 0)
+                //    {
+                //        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                //        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.MAGIC, out dataDiceLevelInfo) == false)
+                //        {
+                //            return;
+                //        }
 
-                        count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
-                    }
-                    else
-                    {
-                        count += msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
-                    }
-                }
-                    break;
-                case REWARD_TYPE.DICE_EPIC:
-                {
-                    if (level == 0)
-                    {
-                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
-                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.EPIC, out dataDiceLevelInfo) == false)
-                        {
-                            return;
-                        }
+                //        count = msg.BoxReward[i].Value;
+                //        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
+                //    }
+                //    else
+                //    {
+                //        count += msg.BoxReward[i].Value;
+                //        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                //    }
+                //}
+                //    break;
+                //case REWARD_TYPE.DICE_EPIC:
+                //{
+                //    if (level == 0)
+                //    {
+                //        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                //        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.EPIC, out dataDiceLevelInfo) == false)
+                //        {
+                //            return;
+                //        }
 
-                        count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
-                    }
-                    else
-                    {
-                        count += msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
-                    }
-                }
-                    break;
-                case REWARD_TYPE.DICE_LEGEND:
-                {
-                    if (level == 0)
-                    {
-                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
-                        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.LEGEND, out dataDiceLevelInfo) == false)
-                        {
-                            return;
-                        }
+                //        count = msg.BoxReward[i].Value;
+                //        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
+                //    }
+                //    else
+                //    {
+                //        count += msg.BoxReward[i].Value;
+                //        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                //    }
+                //}
+                //    break;
+                //case REWARD_TYPE.DICE_LEGEND:
+                //{
+                //    if (level == 0)
+                //    {
+                //        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                //        if (TableManager.Get().DiceLevelInfo.GetData((int)DICE_GRADE.LEGEND, out dataDiceLevelInfo) == false)
+                //        {
+                //            return;
+                //        }
 
-                        count = msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
-                    }
-                    else
-                    {
-                        count += msg.BoxReward[i].Value;
-                        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
-                    }
-                }
-                    break;
+                //        count = msg.BoxReward[i].Value;
+                //        UserInfoManager.Get().GetUserInfo().dicGettedDice.Add(msg.BoxReward[i].Id, new int[] { dataDiceLevelInfo.baseLevel, count });
+                //    }
+                //    else
+                //    {
+                //        count += msg.BoxReward[i].Value;
+                //        UserInfoManager.Get().GetUserInfo().dicGettedDice[msg.BoxReward[i].Id][1] = count;
+                //    }
+                //}
+                //    break;
             }
         }
         
@@ -390,11 +405,18 @@ public class UI_BoxOpenPopup : UI_Popup
 
         MsgReward reward = msg.BoxReward[openCount];
 
+        RandomWarsResource.Data.TDataItemList tDataItemList;
+        if (TableManager.Get().ItemList.GetData(reward.ItemId, out tDataItemList) == false)
+        {
+            Debug.LogErrorFormat($"Failed to get table data from ItemList. ID:{reward.ItemId}");
+            return;
+        }
+
 
         // 보상내용 세팅
-        switch (reward.RewardType)
+        switch ((ITEM_TYPE)tDataItemList.itemType)
         {
-            case REWARD_TYPE.GOLD:
+            case ITEM_TYPE.GOLD:
                 image_ItemIcon.sprite = sprite_Gold;
                 image_ItemIcon.SetNativeSize();
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Gold, 0.6f));
@@ -403,7 +425,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
                 break;
-            case REWARD_TYPE.DIAMOND:
+            case ITEM_TYPE.DIAMOND:
                 image_ItemIcon.sprite = sprite_Diamond;
                 image_ItemIcon.SetNativeSize();
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Diamond, 0.6f));
@@ -412,7 +434,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
                 break;
-            case REWARD_TYPE.DICE_NORMAL:
+            case ITEM_TYPE.DICE:
             {
                 obj_Guage.SetActive(true);
                 for (int i = 0; i < arrPs_ItemNormal.Length; i++)
@@ -424,7 +446,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[0];
 
                 RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+                if (TableManager.Get().DiceInfo.GetData(reward.ItemId, out dataDiceInfo) == false)
                 {
                     return;
                 }
@@ -433,12 +455,12 @@ public class UI_BoxOpenPopup : UI_Popup
                     FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
-                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
+                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.ItemId);
                 text_ItemCount.text = $"x{reward.Value}";
                 int level = 0;
-                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.ItemId))
                 {
-                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][0];
                 }
 
                 RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
@@ -449,125 +471,125 @@ public class UI_BoxOpenPopup : UI_Popup
 
                 int needDiceCount = dataDiceUpgrade.needCard;
                 crt_TextCount = StartCoroutine(TextCountCoroutine(
-                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][1],
                     reward.Value, needDiceCount, 1.2f));
             }
                 break;
-            case REWARD_TYPE.DICE_MAGIC:
-            {
-                obj_Guage.SetActive(true);
-                for (int i = 0; i < arrPs_ItemNormal.Length; i++)
-                {
-                    var module = arrPs_ItemNormal[i].main;
-                    module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[1]);
-                }
+            //case REWARD_TYPE.DICE_MAGIC:
+            //{
+            //    obj_Guage.SetActive(true);
+            //    for (int i = 0; i < arrPs_ItemNormal.Length; i++)
+            //    {
+            //        var module = arrPs_ItemNormal[i].main;
+            //        module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[1]);
+            //    }
 
-                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[1];
+            //    image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[1];
 
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
-                {
-                    return;
-                }
+            //    RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+            //    if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+            //    {
+            //        return;
+            //    }
 
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                    FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
-                ani_Item.SetTrigger("Get");
-                image_ItemIcon.SetNativeSize();
-                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
-                text_ItemCount.text = $"x{reward.Value}";
-                int level = 0;
-                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
-                {
-                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
-                }
+            //    crt_IconChange = StartCoroutine(IconChangeCoroutine(
+            //        FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
+            //    ani_Item.SetTrigger("Get");
+            //    image_ItemIcon.SetNativeSize();
+            //    text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
+            //    text_ItemCount.text = $"x{reward.Value}";
+            //    int level = 0;
+            //    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+            //    {
+            //        level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+            //    }
 
-                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
-                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
-                {
-                    return;
-                }
+            //    RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+            //    if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+            //    {
+            //        return;
+            //    }
 
-                int needDiceCount = dataDiceUpgrade.needCard;
-                crt_TextCount = StartCoroutine(TextCountCoroutine(
-                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
-                    reward.Value, needDiceCount, 1.2f));
-            }
-                break;
-            case REWARD_TYPE.DICE_EPIC:
-            {
-                obj_Guage.SetActive(true);
-                for (int i = 0; i < arrPs_ItemNormal.Length; i++)
-                {
-                    var module = arrPs_ItemNormal[i].main;
-                    module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[2]);
-                }
+            //    int needDiceCount = dataDiceUpgrade.needCard;
+            //    crt_TextCount = StartCoroutine(TextCountCoroutine(
+            //        UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+            //        reward.Value, needDiceCount, 1.2f));
+            //}
+            //    break;
+            //case REWARD_TYPE.DICE_EPIC:
+            //{
+            //    obj_Guage.SetActive(true);
+            //    for (int i = 0; i < arrPs_ItemNormal.Length; i++)
+            //    {
+            //        var module = arrPs_ItemNormal[i].main;
+            //        module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[2]);
+            //    }
 
-                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[2];
+            //    image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[2];
 
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
-                {
-                    return;
-                }
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                    FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
-                ani_Item.SetTrigger("Get");
-                image_ItemIcon.SetNativeSize();
-                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
-                text_ItemCount.text = $"x{reward.Value}";
-                int level = 0;
-                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
-                {
-                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
-                }
+            //    RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+            //    if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+            //    {
+            //        return;
+            //    }
+            //    crt_IconChange = StartCoroutine(IconChangeCoroutine(
+            //        FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
+            //    ani_Item.SetTrigger("Get");
+            //    image_ItemIcon.SetNativeSize();
+            //    text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
+            //    text_ItemCount.text = $"x{reward.Value}";
+            //    int level = 0;
+            //    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+            //    {
+            //        level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+            //    }
 
-                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
-                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
-                {
-                    return;
-                }
+            //    RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+            //    if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+            //    {
+            //        return;
+            //    }
 
-                int needDiceCount = dataDiceUpgrade.needCard;
-                crt_TextCount = StartCoroutine(TextCountCoroutine(
-                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
-                    reward.Value, needDiceCount, 1.2f));
-            }
-                break;
-            case REWARD_TYPE.DICE_LEGEND:
-            {
-                obj_Guage.SetActive(true);
-                image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3];
+            //    int needDiceCount = dataDiceUpgrade.needCard;
+            //    crt_TextCount = StartCoroutine(TextCountCoroutine(
+            //        UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+            //        reward.Value, needDiceCount, 1.2f));
+            //}
+            //    break;
+            //case REWARD_TYPE.DICE_LEGEND:
+            //{
+            //    obj_Guage.SetActive(true);
+            //    image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[3];
 
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
-                {
-                    return;
-                }
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                        FileHelper.GetIcon(dataDiceInfo.iconName), 3f));
-                image_ItemIcon.SetNativeSize();
-                ani_Item.SetTrigger("GetLegend");
-                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
-                text_ItemCount.text = $"x{reward.Value}";
-                int level = 0;
-                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
-                {
-                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
-                }
+            //    RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+            //    if (TableManager.Get().DiceInfo.GetData(reward.Id, out dataDiceInfo) == false)
+            //    {
+            //        return;
+            //    }
+            //    crt_IconChange = StartCoroutine(IconChangeCoroutine(
+            //            FileHelper.GetIcon(dataDiceInfo.iconName), 3f));
+            //    image_ItemIcon.SetNativeSize();
+            //    ani_Item.SetTrigger("GetLegend");
+            //    text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.Id);
+            //    text_ItemCount.text = $"x{reward.Value}";
+            //    int level = 0;
+            //    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.Id))
+            //    {
+            //        level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][0];
+            //    }
 
-                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
-                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
-                {
-                    return;
-                }
+            //    RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+            //    if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+            //    {
+            //        return;
+            //    }
 
-                int needDiceCount = dataDiceUpgrade.needCard;
-                crt_TextCount = StartCoroutine(TextCountCoroutine(
-                    UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
-                    reward.Value, needDiceCount, 3.7f));
-            }
-                break;
+            //    int needDiceCount = dataDiceUpgrade.needCard;
+            //    crt_TextCount = StartCoroutine(TextCountCoroutine(
+            //        UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.Id][1],
+            //        reward.Value, needDiceCount, 3.7f));
+            //}
+            //    break;
         }
         
         // 애니메이션
@@ -645,10 +667,10 @@ public class UI_BoxOpenPopup : UI_Popup
         
         List<MsgReward> list = new List<MsgReward>(msg.BoxReward);
         
-        var gold = list.Find(m => m.RewardType == REWARD_TYPE.GOLD);
+        var gold = list.Find(m => m.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
         text_ResultGold.text = $"{gold?.Value ?? 0}";
         
-        var diamond = list.Find(m => m.RewardType == REWARD_TYPE.DIAMOND);
+        var diamond = list.Find(m => m.ItemId == (int)RandomWarsResource.Data.EItemListKey.dia);
         text_ResultDiamond.text = $"{diamond?.Value ?? 0}";
 
         int childCount = rts_ResultDiceParent.childCount;
@@ -660,17 +682,15 @@ public class UI_BoxOpenPopup : UI_Popup
         int loopCount = 0;
         foreach (var msgReward in list)
         {
-            switch (msgReward.RewardType)
+            RandomWarsResource.Data.TDataItemList tDataItemList;
+            if (TableManager.Get().ItemList.GetData(msgReward.ItemId, out tDataItemList) == true)
             {
-                case REWARD_TYPE.DICE_NORMAL:
-                case REWARD_TYPE.DICE_MAGIC:
-                case REWARD_TYPE.DICE_EPIC:
-                case REWARD_TYPE.DICE_LEGEND:
+                if (tDataItemList.itemType == (int)ITEM_TYPE.DICE)
                 {
                     RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                    if (TableManager.Get().DiceInfo.GetData(msgReward.Id, out dataDiceInfo) == false)
+                    if (TableManager.Get().DiceInfo.GetData(msgReward.ItemId, out dataDiceInfo) == false)
                     {
-                            break;
+                        break;
                     }
 
                     var dice = Instantiate(pref_ResultDice, rts_ResultDiceParent);
@@ -680,8 +700,31 @@ public class UI_BoxOpenPopup : UI_Popup
                     dice.transform.localScale = Vector3.zero;
                     dice.transform.DOScale(Vector3.one, 0.2f).SetDelay(0.05f * loopCount++).SetEase(Ease.OutBack);
                 }
-                    break;
             }
+
+
+            //switch (tDataDiceInfo.grade)
+            //{
+            //    case REWARD_TYPE.DICE_NORMAL:
+            //    case REWARD_TYPE.DICE_MAGIC:
+            //    case REWARD_TYPE.DICE_EPIC:
+            //    case REWARD_TYPE.DICE_LEGEND:
+            //    {
+            //        RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+            //        if (TableManager.Get().DiceInfo.GetData(msgReward.Id, out dataDiceInfo) == false)
+            //        {
+            //                break;
+            //        }
+
+            //        var dice = Instantiate(pref_ResultDice, rts_ResultDiceParent);
+            //        dice.GetComponent<Image>().sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
+            //        dice.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + dataDiceInfo.id);
+            //        dice.transform.GetChild(1).GetComponent<Text>().text = $"x{msgReward.Value}";
+            //        dice.transform.localScale = Vector3.zero;
+            //        dice.transform.DOScale(Vector3.one, 0.2f).SetDelay(0.05f * loopCount++).SetEase(Ease.OutBack);
+            //    }
+            //        break;
+            //}
         }
 
         openCount++;
