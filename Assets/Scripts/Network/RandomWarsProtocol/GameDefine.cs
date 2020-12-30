@@ -26,18 +26,17 @@ namespace RandomWarsProtocol
         LEGEND = 3,
     }
 
-    public enum REWARD_TYPE : byte
+    public enum ITEM_TYPE
     {
         NONE = 0,
-        TROPHY,
-        GOLD,
-        DIAMOND,
-        KEY,
-        BOX,
-        DICE_NORMAL,
-        DICE_MAGIC,
-        DICE_EPIC,
-        DICE_LEGEND,
+        GOLD = 1,           // 1: 골드
+        DIAMOND = 2,        // 2: 다이아
+        TROPHY = 3,           // 3: 트로피
+        KEY = 4,            // 4: 열쇠
+        PASS = 5,           // 5: 패스
+        DICE = 6,            //  주사위
+        GUADIAN = 7,     // 수호자
+        BOX = 8,            // 박스
     }
 
 
@@ -46,6 +45,18 @@ namespace RandomWarsProtocol
         NONE,
         NORMAL_BOX,
         COOP_BOX,
+    }
+
+
+    public enum GLOBAL_DATA_KEY
+    {
+        NONE,
+        START_COOLTIME,
+        WAVE_TIME,
+        DICE_START_LEVEL_NORMAL,
+        DICE_START_LEVEL_MAGIC,
+        DICE_START_LEVEL_EPIC,
+        DICE_START_LEVEL_LEGEND,
     }
 
 
@@ -80,7 +91,7 @@ namespace RandomWarsProtocol
         NORMAL,
         FAST,
     }
-    
+
     public enum SEASON_STATE : byte
     {
         NONE,

@@ -25,17 +25,10 @@ public class JsonDataManager : MonoBehaviour
     
     
     // json data
-	//public DiceInfo dataDiceInfo = null;
-	public LangKO dataLangKO = null;
-	public LangEN dataLangEN = null;
-
 
     //
     public void LoadJsonData(string filePath , Action<string> callBack = null)
     {
-		//dataDiceInfo = new DiceInfo(filePath , callBack);
-		dataLangKO = new LangKO(filePath , callBack);
-		dataLangEN = new LangEN(filePath , callBack);
     }
 
     //
@@ -47,17 +40,6 @@ public class JsonDataManager : MonoBehaviour
 		   // dataDiceInfo = null;
 	    //}
 
-	    if (dataLangKO != null)
-	    {
-		    dataLangKO.DestroyData();
-		    dataLangKO = null;
-	    }
-
-	    if (dataLangEN != null)
-	    {
-		    dataLangEN.DestroyData();
-		    dataLangEN = null;
-	    }
     }
 
 }

@@ -44,11 +44,11 @@ public class UI_InGamePopup_Result : MonoBehaviour
         if (normalReward != null)
         {
             list = new List<MsgReward>(normalReward);
-            var nt = list.Find(msg => msg.RewardType == REWARD_TYPE.TROPHY);
+            var nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.thropy);
             if (nt != null) normalTrophy = nt.Value;
-            nt = list.Find(msg => msg.RewardType == REWARD_TYPE.GOLD);
+            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
             if (nt != null) normalGold = nt.Value;
-            nt = list.Find(msg => msg.RewardType == REWARD_TYPE.KEY);
+            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.key);
             if (nt != null) normalKey = nt.Value;
             arrValue[0].Initialize(normalTrophy, normalGold, normalKey);
         }
@@ -59,11 +59,11 @@ public class UI_InGamePopup_Result : MonoBehaviour
         if (streakReward != null)
         {
             list = new List<MsgReward>(streakReward);
-            var nt = list.Find(msg => msg.RewardType == REWARD_TYPE.TROPHY);
+            var nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.thropy);
             if (nt != null) streakTrophy = nt.Value;
-            nt = list.Find(msg => msg.RewardType == REWARD_TYPE.GOLD);
+            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
             if (nt != null) streakGold = nt.Value;
-            nt = list.Find(msg => msg.RewardType == REWARD_TYPE.KEY);
+            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.key);
             if (nt != null) streakKey = nt.Value;
             arrValue[1].Initialize(streakTrophy, streakGold, streakKey);
             text_WinningStreak.text = winningStreak.ToString();
@@ -76,11 +76,11 @@ public class UI_InGamePopup_Result : MonoBehaviour
         if (perfectReward != null)
         {
             list = new List<MsgReward>(perfectReward);
-            var nt = list.Find(msg => msg.RewardType == REWARD_TYPE.TROPHY);
+            var nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.thropy);
             if (nt != null) perfectTrophy = nt.Value;
-            nt = list.Find(msg => msg.RewardType == REWARD_TYPE.GOLD);
+            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
             if (nt != null) perfectGold = nt.Value;
-            nt = list.Find(msg => msg.RewardType == REWARD_TYPE.KEY);
+            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.key);
             if (nt != null) perfectKey = nt.Value;
             arrValue[2].Initialize(perfectTrophy, perfectGold, perfectKey);
         }
