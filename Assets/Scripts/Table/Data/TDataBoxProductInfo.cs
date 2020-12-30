@@ -41,8 +41,10 @@ namespace RandomWarsResource.Data
 		public string name { get; set; }
 		public int BoxListId { get; set; }
 		public int[] userRankGradeRange { get; set; }
-		public int[] goldRange { get; set; }
-		public int[] diaRange { get; set; }
+		public int itemId01 { get; set; }
+		public int[] itemValue01 { get; set; }
+		public int itemId02 { get; set; }
+		public int[] itemValue02 { get; set; }
 		public int rewardCardGradeType1 { get; set; }
 		public int rewardCardGradeCnt1 { get; set; }
 		public int[] rewardCardValue1 { get; set; }
@@ -83,34 +85,36 @@ namespace RandomWarsResource.Data
 			name = cols[1].Replace("{#$}", ",");
 			BoxListId = int.Parse(cols[2]);
 			userRankGradeRange = Array.ConvertAll(cols[3].Split('|'), s => int.Parse(s));
-			goldRange = Array.ConvertAll(cols[4].Split('|'), s => int.Parse(s));
-			diaRange = Array.ConvertAll(cols[5].Split('|'), s => int.Parse(s));
-			rewardCardGradeType1 = int.Parse(cols[6]);
-			rewardCardGradeCnt1 = int.Parse(cols[7]);
-			rewardCardValue1 = Array.ConvertAll(cols[8].Split('|'), s => int.Parse(s));
-			rewardIsProbability1 = bool.Parse(cols[9]);
-			rewardProbability1 = int.Parse(cols[10]);
-			rewardCardGradeType2 = int.Parse(cols[11]);
-			rewardCardGradeCnt2 = int.Parse(cols[12]);
-			rewardCardValue2 = Array.ConvertAll(cols[13].Split('|'), s => int.Parse(s));
-			rewardIsProbability2 = bool.Parse(cols[14]);
-			rewardProbability2 = int.Parse(cols[15]);
-			rewardCardGradeType3 = int.Parse(cols[16]);
-			rewardCardGradeCnt3 = int.Parse(cols[17]);
-			rewardCardValue3 = Array.ConvertAll(cols[18].Split('|'), s => int.Parse(s));
-			rewardIsProbability3 = bool.Parse(cols[19]);
-			rewardProbability3 = int.Parse(cols[20]);
-			rewardCardGradeType4 = int.Parse(cols[21]);
-			rewardCardGradeCnt4 = int.Parse(cols[22]);
-			rewardCardValue4 = Array.ConvertAll(cols[23].Split('|'), s => int.Parse(s));
-			rewardIsProbability4 = bool.Parse(cols[24]);
-			rewardProbability4 = int.Parse(cols[25]);
-			rewardCardGradeType5 = int.Parse(cols[26]);
-			rewardCardGradeCnt5 = int.Parse(cols[27]);
-			rewardCardValue5 = Array.ConvertAll(cols[28].Split('|'), s => int.Parse(s));
-			rewardIsProbability5 = bool.Parse(cols[29]);
-			rewardProbability5 = int.Parse(cols[30]);
-			isUse = bool.Parse(cols[31]);
+			itemId01 = int.Parse(cols[4]);
+			itemValue01 = Array.ConvertAll(cols[5].Split('|'), s => int.Parse(s));
+			itemId02 = int.Parse(cols[6]);
+			itemValue02 = Array.ConvertAll(cols[7].Split('|'), s => int.Parse(s));
+			rewardCardGradeType1 = int.Parse(cols[8]);
+			rewardCardGradeCnt1 = int.Parse(cols[9]);
+			rewardCardValue1 = Array.ConvertAll(cols[10].Split('|'), s => int.Parse(s));
+			rewardIsProbability1 = bool.Parse(cols[11]);
+			rewardProbability1 = int.Parse(cols[12]);
+			rewardCardGradeType2 = int.Parse(cols[13]);
+			rewardCardGradeCnt2 = int.Parse(cols[14]);
+			rewardCardValue2 = Array.ConvertAll(cols[15].Split('|'), s => int.Parse(s));
+			rewardIsProbability2 = bool.Parse(cols[16]);
+			rewardProbability2 = int.Parse(cols[17]);
+			rewardCardGradeType3 = int.Parse(cols[18]);
+			rewardCardGradeCnt3 = int.Parse(cols[19]);
+			rewardCardValue3 = Array.ConvertAll(cols[20].Split('|'), s => int.Parse(s));
+			rewardIsProbability3 = bool.Parse(cols[21]);
+			rewardProbability3 = int.Parse(cols[22]);
+			rewardCardGradeType4 = int.Parse(cols[23]);
+			rewardCardGradeCnt4 = int.Parse(cols[24]);
+			rewardCardValue4 = Array.ConvertAll(cols[25].Split('|'), s => int.Parse(s));
+			rewardIsProbability4 = bool.Parse(cols[26]);
+			rewardProbability4 = int.Parse(cols[27]);
+			rewardCardGradeType5 = int.Parse(cols[28]);
+			rewardCardGradeCnt5 = int.Parse(cols[29]);
+			rewardCardValue5 = Array.ConvertAll(cols[30].Split('|'), s => int.Parse(s));
+			rewardIsProbability5 = bool.Parse(cols[31]);
+			rewardProbability5 = int.Parse(cols[32]);
+			isUse = bool.Parse(cols[33]);
 		}
 	}
 }

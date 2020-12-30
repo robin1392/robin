@@ -116,8 +116,8 @@ public class UI_BoxOpenPopup : UI_Popup
 
 
             // TODO : [개선] 우선 최소값만 합산함.
-            totalGold += dataBoxProductInfo.goldRange[0];
-            totalDiamond += dataBoxProductInfo.diaRange[0] == -1 ? 0 : dataBoxProductInfo.diaRange[0];
+            totalGold += dataBoxProductInfo.itemValue01[0];
+            totalDiamond += dataBoxProductInfo.itemValue02[0] == -1 ? 0 : dataBoxProductInfo.itemValue02[0];
             if (dataBoxProductInfo.rewardCardGradeType1 != 0 && dataBoxProductInfo.rewardIsProbability1 == true)
             {
                 totalDiceCount += dataBoxProductInfo.rewardCardValue1[0];
@@ -141,7 +141,7 @@ public class UI_BoxOpenPopup : UI_Popup
         }
 
 
-        text_BoxName.text = LocalizationManager.GetLangDesc(40000 + id);
+        text_BoxName.text = LocalizationManager.GetLangDesc(dataBoxList.itemName_langId);
 
         // Gold
         obj_Gold.SetActive(totalGold > 0);
@@ -176,7 +176,7 @@ public class UI_BoxOpenPopup : UI_Popup
         image_Blind.DOFade(0, 0);
         image_Pattern.DOFade(0, 0);
         ani_Item.gameObject.SetActive(false);
-        ani_Box.runtimeAnimatorController = arrAniController_Box[id - (int)RandomWarsResource.Data.EItemListKey.normalbox];
+        ani_Box.runtimeAnimatorController = arrAniController_Box[id - (int)RandomWarsResource.Data.EItemListKey.boss01box];
         ani_Box.gameObject.SetActive(true);
         obj_Result.SetActive(false);
     }
