@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>767049103433-d7sqke3672to54aoipqj3fdudqkeo4c9.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.767049103433-d7sqke3672to54aoipqj3fdudqkeo4c9</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>767049103433-b2hb3c4a1fthleu8pofdabo1d58n4760.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD8Am3ya-by3_dTsIYNpGspLg4-pQIMqZA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>767049103433</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.percent.ios.randomdicewars</string>
+	<key>PROJECT_ID</key>
+	<string>randomdice-wars-6148e</string>
+	<key>STORAGE_BUCKET</key>
+	<string>randomdice-wars-6148e.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:767049103433:ios:cd0ed0d342ebd77e73a798</string>
+</dict>
+</plist>

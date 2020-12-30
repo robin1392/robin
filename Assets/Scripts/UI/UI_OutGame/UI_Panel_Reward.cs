@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Table.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,4 +24,3 @@ public class UI_Panel_Reward : MonoBehaviour
         // }
     }
 }
-/Users/111percent/Documents/RandomWars/Builds/iOS/RandomWars/Unity-iPhone.xcodeproj Building for iOS, but the embedded framework 'Helpshift.framework' was built for iOS + iOS Simulator.
