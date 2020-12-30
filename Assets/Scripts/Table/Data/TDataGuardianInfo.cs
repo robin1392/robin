@@ -2,6 +2,15 @@ using System;
 
 namespace RandomWarsResource.Data
 {
+	public enum EGuardianInfoKey : int
+	{
+		None = -1,
+
+		Guardian_01 = 20001,
+		Guardian_02 = 20002,
+		Guardian_03 = 20003,
+	}
+
 	public class TDataGuardianInfo : ITableData<int>
 	{
 		public int id { get; set; }
@@ -49,22 +58,22 @@ namespace RandomWarsResource.Data
 		public void Serialize(string[] cols)
 		{
 			id = int.Parse(cols[0]);
-			name = cols[1].Replace("{$}", ",");
-			guardianName_kr = cols[2].Replace("{$}", ",");
-			guardianName_en = cols[3].Replace("{$}", ",");
-			guardianEmblem = cols[4].Replace("{$}", ",");
+			name = cols[1].Replace("{#$}", ",");
+			guardianName_kr = cols[2].Replace("{#$}", ",");
+			guardianName_en = cols[3].Replace("{#$}", ",");
+			guardianEmblem = cols[4].Replace("{#$}", ",");
 			grade = int.Parse(cols[5]);
 			castType = int.Parse(cols[6]);
 			moveType = int.Parse(cols[7]);
 			targetMoveType = int.Parse(cols[8]);
 			loadType = int.Parse(cols[9]);
 			enableDice = bool.Parse(cols[10]);
-			prefabName = cols[11].Replace("{$}", ",");
-			modelName = cols[12].Replace("{$}", ",");
+			prefabName = cols[11].Replace("{#$}", ",");
+			modelName = cols[12].Replace("{#$}", ",");
 			spawnMultiply = int.Parse(cols[13]);
-			iconName = cols[14].Replace("{$}", ",");
-			illustName = cols[15].Replace("{$}", ",");
-			cardName = cols[16].Replace("{$}", ",");
+			iconName = cols[14].Replace("{#$}", ",");
+			illustName = cols[15].Replace("{#$}", ",");
+			cardName = cols[16].Replace("{#$}", ",");
 			color = Array.ConvertAll(cols[17].Split('|'), s => int.Parse(s));
 			power = float.Parse(cols[18]);
 			powerUpgrade = float.Parse(cols[19]);
