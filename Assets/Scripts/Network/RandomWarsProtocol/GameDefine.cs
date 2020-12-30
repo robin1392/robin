@@ -34,9 +34,9 @@ namespace RandomWarsProtocol
         TROPHY = 3,           // 3: 트로피
         KEY = 4,            // 4: 열쇠
         PASS = 5,           // 5: 패스
-        DICE = 6,            //  주사위
-        GUADIAN = 7,     // 수호자
-        BOX = 8,            // 박스
+        BOX = 6,            // 박스
+        DICE = 7,            //  주사위
+        GUADIAN = 8,     // 수호자
     }
 
 
