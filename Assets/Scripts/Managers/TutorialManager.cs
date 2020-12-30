@@ -18,6 +18,7 @@ public class TutorialManager : MonoBehaviour
     public Transform ts_BattleButton;
     public Transform ts_GetDiceButton;
     public Transform ts_DiceField;
+    public Transform ts_UpgradeButton;
 
     private static int stepCount = 0;
     private static int nextStepCount = 1;
@@ -227,7 +228,26 @@ public class TutorialManager : MonoBehaviour
                 ts_DiceField.parent = transform.GetChild(stepCount + 1);
                 break;
             case 10:
+                Time.timeScale = 1f;
+                image_NextStep.DOFade(0, 0).SetUpdate(true);
+                image_NextStep.raycastTarget = false;
                 ts_DiceField.parent = ts_OldParent;
+                Click_NextStepDelay(3f);
+                break;
+            case 11:
+                InGameManager.Get().playerController.uiDiceField.BroadcastMessage("AttachIcon");
+                image_NextStep.raycastTarget = true;
+                Time.timeScale = 0f;
+                
+                ts_OldParent = ts_UpgradeButton.parent;
+                ts_UpgradeButton.parent = transform.GetChild(stepCount + 1);
+                ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(Click_NextStep);
+                break;
+            case 12:
+                Time.timeScale = 1f;
+                image_NextStep.DOFade(0, 0).SetUpdate(true);
+                image_NextStep.raycastTarget = false;
+                ts_UpgradeButton.parent = ts_OldParent;
                 break;
             default:
                 Time.timeScale = 1f;
