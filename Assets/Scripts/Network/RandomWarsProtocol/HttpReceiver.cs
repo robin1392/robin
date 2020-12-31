@@ -80,6 +80,15 @@ namespace RandomWarsProtocol
         public delegate void GetClassRewardAckDelegate(MsgGetClassRewardAck msg);
         public GetClassRewardAckDelegate GetClassRewardAck;
 
+        public delegate Task<string> QuestInfoReqDelegate(MsgQuestInfoReq msg);
+        public QuestInfoReqDelegate QuestInfoReq;
+        public delegate void QuestInfoAckDelegate(MsgQuestInfoAck msg);
+        public QuestInfoAckDelegate QuestInfoAck;
+
+        public delegate Task<string> QuestRewardReqDelegate(MsgQuestRewardReq msg);
+        public QuestRewardReqDelegate QuestRewardReq;
+        public delegate void QuestRewardAckDelegate(MsgQuestRewardAck msg);
+        public QuestRewardAckDelegate QuestRewardAck;
 
         public async Task<string> ProcessAsync(int protocolId, string json)
         {
@@ -210,6 +219,24 @@ namespace RandomWarsProtocol
 
                         MsgGetClassRewardReq msg = JsonConvert.DeserializeObject<MsgGetClassRewardReq>(json);
                         ackJson = await GetClassRewardReq(msg);
+                    }
+                    break;
+                case GameProtocol.QUEST_INFO_REQ:
+                    {
+                        if (QuestInfoReq == null)
+                            return ackJson;
+
+                        MsgQuestInfoReq msg = JsonConvert.DeserializeObject<MsgQuestInfoReq>(json);
+                        ackJson = await QuestInfoReq(msg);
+                    }
+                    break;
+                case GameProtocol.QUEST_REWARD_REQ:
+                    {
+                        if (QuestRewardReq == null)
+                            return ackJson;
+
+                        MsgQuestRewardReq msg = JsonConvert.DeserializeObject<MsgQuestRewardReq>(json);
+                        ackJson = await QuestRewardReq(msg);
                     }
                     break;
             }
@@ -346,6 +373,24 @@ namespace RandomWarsProtocol
 
                         MsgGetClassRewardAck msg = JsonConvert.DeserializeObject<MsgGetClassRewardAck>(json);
                         GetClassRewardAck(msg);
+                    }
+                    break;
+                case GameProtocol.QUEST_INFO_ACK:
+                    {
+                        if (QuestInfoAck == null)
+                            return false;
+
+                        MsgQuestInfoAck msg = JsonConvert.DeserializeObject<MsgQuestInfoAck>(json);
+                        QuestInfoAck(msg);
+                    }
+                    break;
+                case GameProtocol.QUEST_REWARD_ACK:
+                    {
+                        if (QuestRewardAck == null)
+                            return false;
+
+                        MsgQuestRewardAck msg = JsonConvert.DeserializeObject<MsgQuestRewardAck>(json);
+                        QuestRewardAck(msg);
                     }
                     break;
             }

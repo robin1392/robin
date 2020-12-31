@@ -18,6 +18,7 @@ namespace RandomWarsProtocol.Msg
         public MsgUserDeck[] UserDeck;
         public MsgUserDice[] UserDice;
         public MsgUserBox[] UserBox;
+        public MsgQuestInfo QuestInfo;
     }
 
 
@@ -191,7 +192,6 @@ namespace RandomWarsProtocol.Msg
         public string UserId;
     }
 
-
     [Serializable]
     public class MsgSeasonPassInfoAck
     {
@@ -260,6 +260,37 @@ namespace RandomWarsProtocol.Msg
         // 보상 획득 아이디 배열
         public int[] GetRewardIds;
         // 보상 정보
+        public MsgReward[] RewardInfo;
+    }
+
+
+    [Serializable]
+    public class MsgQuestInfoReq
+    {
+        public string UserId;
+    }
+
+
+    [Serializable]
+    public class MsgQuestInfoAck
+    {
+        public GameErrorCode ErrorCode;
+        public MsgQuestInfo QuestInfo;
+    }
+
+
+    [Serializable]
+    public class MsgQuestRewardReq
+    {
+        public string UserId;
+        public int QuestId;
+    }
+
+
+    [Serializable]
+    public class MsgQuestRewardAck
+    {
+        public GameErrorCode ErrorCode;
         public MsgReward[] RewardInfo;
     }
 }

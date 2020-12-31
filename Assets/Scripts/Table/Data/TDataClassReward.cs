@@ -6,15 +6,15 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		normalreward1 = 1,
-		normalreward2 = 2,
-		normalreward3 = 3,
-		normalreward4 = 4,
-		normalreward5 = 5,
-		normalreward6 = 6,
-		normalreward7 = 7,
-		normalreward8 = 8,
-		normalreward9 = 9,
+		normalreward01 = 1,
+		normalreward02 = 2,
+		normalreward03 = 3,
+		normalreward04 = 4,
+		normalreward05 = 5,
+		normalreward06 = 6,
+		normalreward07 = 7,
+		normalreward08 = 8,
+		normalreward09 = 9,
 		normalreward10 = 10,
 		normalreward11 = 11,
 		normalreward12 = 12,
@@ -76,15 +76,15 @@ namespace RandomWarsResource.Data
 		normalreward68 = 68,
 		normalreward69 = 69,
 		normalreward70 = 70,
-		royalreward1 = 1001,
-		royalreward2 = 1002,
-		royalreward3 = 1003,
-		royalreward4 = 1004,
-		royalreward5 = 1005,
-		royalreward6 = 1006,
-		royalreward7 = 1007,
-		royalreward8 = 1008,
-		royalreward9 = 1009,
+		royalreward01 = 1001,
+		royalreward02 = 1002,
+		royalreward03 = 1003,
+		royalreward04 = 1004,
+		royalreward05 = 1005,
+		royalreward06 = 1006,
+		royalreward07 = 1007,
+		royalreward08 = 1008,
+		royalreward09 = 1009,
 		royalreward10 = 1010,
 		royalreward11 = 1011,
 		royalreward12 = 1012,
@@ -154,10 +154,8 @@ namespace RandomWarsResource.Data
 		public string name { get; set; }
 		public int rankPoint { get; set; }
 		public int rewardType { get; set; }
-		public int rewardGold { get; set; }
-		public int rewardDia { get; set; }
-		public int rewardItem { get; set; }
-		public int rewardItemValue { get; set; }
+		public int ItemId { get; set; }
+		public int ItemValue { get; set; }
 
 
 		public int PK()
@@ -172,10 +170,8 @@ namespace RandomWarsResource.Data
 			name = cols[1].Replace("{#$}", ",");
 			rankPoint = int.Parse(cols[2]);
 			rewardType = int.Parse(cols[3]);
-			rewardGold = int.Parse(cols[4]);
-			rewardDia = int.Parse(cols[5]);
-			rewardItem = int.Parse(cols[6]);
-			rewardItemValue = int.Parse(cols[7]);
+			ItemId = int.Parse(cols[4]);
+			ItemValue = int.Parse(cols[5]);
 		}
 	}
 }

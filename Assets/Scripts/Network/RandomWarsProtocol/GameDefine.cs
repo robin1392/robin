@@ -34,9 +34,9 @@ namespace RandomWarsProtocol
         TROPHY = 3,           // 3: 트로피
         KEY = 4,            // 4: 열쇠
         PASS = 5,           // 5: 패스
-        DICE = 6,            //  주사위
-        GUADIAN = 7,     // 수호자
-        BOX = 8,            // 박스
+        BOX = 6,            // 박스
+        DICE = 7,            //  주사위
+        GUADIAN = 8,     // 수호자
     }
 
 
@@ -99,5 +99,35 @@ namespace RandomWarsProtocol
         GOING,          // 진행중
         ACCOUNT,        // 정산중
         END,                // 종료
+    }
+
+
+    public enum BOX_OPEN_TYPE : int
+    {
+        NONE = -1,
+        NEED_KEY = 1,           // 열쇠 필요
+        DIRECTLY = 2,            // 즉시 열림
+    }
+
+
+    public enum QUEST_GROUP : int
+    {
+        NONE = -1,
+        MATCH,
+        SHOP,
+        ITEM,
+        MONSTER,
+
+        VIP = 99,
+    }
+
+
+    public enum QUEST_STATUS : int
+    {
+        NONE = -1,
+        LOCK,           // 잠김
+        OPEN,          // 열림(진행중)
+        COMPLETE,    // 완료(보상 획득전)
+        CLOSE,         // 닫힘(보상 획득 완료) 
     }
 }

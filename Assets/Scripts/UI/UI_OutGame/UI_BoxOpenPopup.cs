@@ -118,23 +118,23 @@ public class UI_BoxOpenPopup : UI_Popup
             // TODO : [개선] 우선 최소값만 합산함.
             totalGold += dataBoxProductInfo.itemValue01[0];
             totalDiamond += dataBoxProductInfo.itemValue02[0] == -1 ? 0 : dataBoxProductInfo.itemValue02[0];
-            if (dataBoxProductInfo.rewardCardGradeType1 != 0 && dataBoxProductInfo.rewardIsProbability1 == true)
+            if (dataBoxProductInfo.rewardCardGradeType1 != 0)
             {
                 totalDiceCount += dataBoxProductInfo.rewardCardValue1[0];
             }
-            if (dataBoxProductInfo.rewardCardGradeType2 != 0 && dataBoxProductInfo.rewardIsProbability2 == true)
+            if (dataBoxProductInfo.rewardCardGradeType2 != 0)
             {
                 totalDiceCount += dataBoxProductInfo.rewardCardValue2[0];
             }
-            if (dataBoxProductInfo.rewardCardGradeType3 != 0 && dataBoxProductInfo.rewardIsProbability3 == true)
+            if (dataBoxProductInfo.rewardCardGradeType3 != 0)
             {
                 totalDiceCount += dataBoxProductInfo.rewardCardValue3[0];
             }
-            if (dataBoxProductInfo.rewardCardGradeType4 != 0 && dataBoxProductInfo.rewardIsProbability4 == true)
+            if (dataBoxProductInfo.rewardCardGradeType4 != 0)
             {
                 totalDiceCount += dataBoxProductInfo.rewardCardValue4[0];
             }
-            if (dataBoxProductInfo.rewardCardGradeType5 != 0 && dataBoxProductInfo.rewardIsProbability5 == true)
+            if (dataBoxProductInfo.rewardCardGradeType5 != 0)
             {
                 totalDiceCount += dataBoxProductInfo.rewardCardValue5[0];
             }
@@ -421,7 +421,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 image_ItemIcon.SetNativeSize();
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Gold, 0.6f));
                 ani_Item.SetTrigger("Get");
-                text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.GOLD);
+                text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
                 break;
@@ -430,7 +430,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 image_ItemIcon.SetNativeSize();
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Diamond, 0.6f));
                 ani_Item.SetTrigger("Get");
-                text_ItemName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DIAMOND);
+                text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
                 break;
@@ -455,7 +455,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     FileHelper.GetDiceIcon(dataDiceInfo.iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
-                text_ItemName.text = LocalizationManager.GetLangDesc((int) LANG_ENUM.DICE_NAME + reward.ItemId);
+                text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
                 int level = 0;
                 if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.ItemId))
