@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 330240256904111337}
   - component: {fileID: 3916042670526131778}
   - component: {fileID: 2323069168995905819}
+  - component: {fileID: 6562089048576274465}
   m_Layer: 5
   m_Name: Scene_01
   m_TagString: Untagged
@@ -320,3 +321,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6562089048576274465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7190422942326782935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3973c1601697943538c3062def3b71be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

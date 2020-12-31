@@ -20,7 +20,7 @@ public class TutorialManager : MonoBehaviour
     public Transform ts_DiceField;
     public Transform ts_UpgradeButton;
 
-    private static int stepCount = 0;
+    public static int stepCount = 0;
     private static int nextStepCount = 1;
     private Transform ts_OldParent;
 
@@ -143,7 +143,7 @@ public class TutorialManager : MonoBehaviour
 
     public static void MergeComplete()
     {
-        stepCount++;
+        if (stepCount < 11) stepCount++;
     }
 
     private void Step()
@@ -159,7 +159,7 @@ public class TutorialManager : MonoBehaviour
         switch (stepCount)
         {
             case 0:
-                transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = true;
+                //transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = true;
                 break;
             case 1:
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
@@ -241,16 +241,24 @@ public class TutorialManager : MonoBehaviour
                 
                 ts_OldParent = ts_UpgradeButton.parent;
                 ts_UpgradeButton.parent = transform.GetChild(stepCount + 1);
-                ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(Click_NextStep);
+                ts_UpgradeButton.GetComponent<Button>().onClick.AddListener(Click_NextStep);
                 break;
             case 12:
                 Time.timeScale = 1f;
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
                 image_NextStep.raycastTarget = false;
+                ts_UpgradeButton.GetComponent<Button>().onClick.RemoveListener(Click_NextStep);
                 ts_UpgradeButton.parent = ts_OldParent;
                 break;
-            default:
+            case 13:
                 Time.timeScale = 1f;
+                image_NextStep.raycastTarget = true;
+                break;
+            default:
+                image_NextStep.DOFade(0, 0).SetUpdate(true);
+                image_NextStep.raycastTarget = false;
+                Time.timeScale = 1f;
+                ObscuredPrefs.SetBool("Tutorial", true);
                 break;
         }
     }

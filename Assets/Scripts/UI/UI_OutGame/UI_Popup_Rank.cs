@@ -32,6 +32,25 @@ public class UI_Popup_Rank : UI_Popup
     private bool isRankCalling;
     private int pageNum = 2;
     private List<UI_Rank_Slot> listSlot = new List<UI_Rank_Slot>();
+    private System.DateTime time;
+    private float refreshTime = 1f;
+
+    private void Update()
+    {
+        if (isInitialized)
+        {
+            refreshTime -= Time.deltaTime;
+
+            if (time != null && refreshTime <= 0)
+            {
+                refreshTime = 1f;
+
+                var span = time.Subtract(DateTime.Now);
+                text_SeasonRemainTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D2}", span.Days, span.Hours,
+                    span.Minutes, span.Seconds);
+            }
+        }
+    }
 
     public void Initialize()
     {
@@ -40,8 +59,8 @@ public class UI_Popup_Rank : UI_Popup
             isRankCalling = true;
             pageNum = 2;
             NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
-            StartCoroutine(WaitCoroutine());
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+            StartCoroutine(WaitCoroutine());
         }
     }
 
@@ -67,7 +86,8 @@ public class UI_Popup_Rank : UI_Popup
                 
                 text_Season.text = $"SEASON {msg.SeasonIndex}";
                 //text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
-                StartCoroutine(TimerCoroutine(msg.SeasonRemainTime));
+                //StartCoroutine(TimerCoroutine(msg.SeasonRemainTime));
+                time = DateTime.Now.AddSeconds(msg.SeasonRemainTime);
                 text_MyRanking.text = msg.myRanking.ToString();
                 reward.Initialize(msg.myRanking);
                 text_MyTrophy.text = msg.myTrophy.ToString();
@@ -99,8 +119,12 @@ public class UI_Popup_Rank : UI_Popup
         Invoke("RankCallingFalse", 1f);
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        Debug.Log($"MsgGetRankAck errorCode:{msg.ErrorCode} count:{msg.RankInfo.Length}");
-        AddSlots(msg.RankInfo);
+        if (msg != null && msg.ErrorCode == GameErrorCode.SUCCESS && msg.RankInfo != null)
+        {
+            Debug.Log($"Msg error code: {msg.ErrorCode}");
+            Debug.Log($"MsgGetRankAck errorCode:{msg.ErrorCode} count:{msg.RankInfo.Length}");
+            AddSlots(msg.RankInfo);
+        }
     }
 
     private void RankCallingFalse()
