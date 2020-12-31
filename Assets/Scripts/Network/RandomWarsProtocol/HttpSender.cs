@@ -180,5 +180,27 @@ namespace RandomWarsProtocol
         }
 
 
+        public void QuestInfoReq(MsgQuestInfoReq msg)
+        {
+            _httpService.Send((int)GameProtocol.QUEST_INFO_REQ, "questinfo", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string QuestInfoAck(MsgQuestInfoAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
+        public void QuestRewardReq(MsgQuestRewardReq msg)
+        {
+            _httpService.Send((int)GameProtocol.QUEST_REWARD_REQ, "questreward", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string QuestRewardAck(MsgQuestRewardAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
     }
 }

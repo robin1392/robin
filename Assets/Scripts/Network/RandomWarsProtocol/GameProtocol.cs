@@ -51,6 +51,12 @@ namespace RandomWarsProtocol
         GET_CLASS_REWARD_REQ,
         GET_CLASS_REWARD_ACK,
 
+        QUEST_INFO_REQ,
+        QUEST_INFO_ACK,
+
+        QUEST_REWARD_REQ,
+        QUEST_REWARD_ACK,
+
 
         END_HTTP,
         

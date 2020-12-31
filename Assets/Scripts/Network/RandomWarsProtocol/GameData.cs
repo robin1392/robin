@@ -1860,4 +1860,22 @@ namespace RandomWarsProtocol
         public byte WinStreak;
     }
 
+
+    [Serializable]
+    public class MsgQuestData
+    {
+        public int QuestId;
+        public int Value;
+        public byte Status;
+    }
+
+
+    [Serializable]
+    public class MsgQuestInfo
+    {
+        // 초기화 남은 시간(초단위)
+        public int RemainResetTime;
+        // 퀘스트 데이터
+        public MsgQuestData[] QuestData;
+    }
 }

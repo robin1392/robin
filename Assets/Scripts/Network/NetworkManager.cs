@@ -229,6 +229,8 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.GetSeasonPassRewardAck = OnGetSeasonPassRewardAck;
         _httpReceiver.ClassRewardInfoAck = OnClassRewardInfoAck;
         _httpReceiver.GetClassRewardAck = OnGetClassRewardAck;
+        _httpReceiver.QuestInfoAck = OnQuestInfoAck;
+        _httpReceiver.QuestRewardAck = OnQuestRewardAck;
 
 
 
@@ -898,6 +900,34 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         UnityUtil.Print("RECV GET CLASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
+
+    public void QuestInfoReq(string userId)
+    {
+        MsgQuestInfoReq msg = new MsgQuestInfoReq();
+        msg.UserId = userId;
+        _httpSender.QuestInfoReq(msg);
+        UnityUtil.Print("SEND QUEST INFO => userId", string.Format("userId:{0}", userId), "green");
+    }
+
+    void OnQuestInfoAck(MsgQuestInfoAck msg)
+    {
+        UnityUtil.Print("RECV QUEST INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
+
+    public void QuestRewardReq(string userId, int questId)
+    {
+        MsgQuestRewardReq msg = new MsgQuestRewardReq();
+        msg.UserId = userId;
+        msg.QuestId = questId;
+        _httpSender.QuestRewardReq(msg);
+        UnityUtil.Print("SEND QUEST REWARD => userId", string.Format("userId:{0}", userId), "green");
+    }
+
+    void OnQuestRewardAck(MsgQuestRewardAck msg)
+    {
+        UnityUtil.Print("RECV QUEST REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
+
     #endregion
 }
 
