@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class UI_Panel_Reward : MonoBehaviour
 {
+    [Header("Prefab")]
     public GameObject pref_RewardSlot;
+    public GameObject pref_TrophyRewardSlot;
 
     [Space]
     public GameObject obj_SeasonPass;
@@ -20,7 +22,11 @@ public class UI_Panel_Reward : MonoBehaviour
 
     private void Start()
     {
+        obj_SeasonPass.SetActive(true);
+        obj_Trophy.SetActive(false);
+        
         InitializeSeasonPass();
+        InitializeTrophy();
     }
 
     public void InitializeSeasonPass()
@@ -40,6 +46,15 @@ public class UI_Panel_Reward : MonoBehaviour
     
     public void InitializeTrophy()
     {
-        
+        int totalSlotCount = TableManager.Get().ClassReward.Keys.Count / 2;
+        int myTrophy = UserInfoManager.Get().GetUserInfo().trophy;
+        int vip = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
+        int normal = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
+        for (int i = 0; i < totalSlotCount + 1; i++)
+        {
+            var obj = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
+            var slot = obj.GetComponent<UI_TrophyRewardSlot>();
+            slot.Initialize(i, myTrophy, vip, normal);
+        }
     }
 }
