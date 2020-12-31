@@ -1848,6 +1848,12 @@ namespace RandomWarsProtocol
     }
 
 
+    public class MsgQuestCompleteParam
+    {
+        public QUEST_COMPLETE_TYPE QuestCompleteType { get; set; }
+        public int Value { get; set; }
+    }
+
     [Serializable]
     public class MsgPlayerMatchResult
     {
@@ -1858,6 +1864,7 @@ namespace RandomWarsProtocol
         public int Diamond;
         public int Key;
         public byte WinStreak;
+        public List<MsgQuestCompleteParam> QuestCompleteParams;
     }
 
 
@@ -1866,7 +1873,23 @@ namespace RandomWarsProtocol
     {
         public int QuestId;
         public int Value;
-        public byte Status;
+        public int Status;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(QuestId);
+            bw.Write(Value);
+            bw.Write(Status);
+        }
+
+        public static MsgQuestData Read(BinaryReader br)
+        {
+            MsgQuestData data = new MsgQuestData();
+            data.QuestId = br.ReadInt32();
+            data.Value = br.ReadInt32();
+            data.Status = br.ReadInt32();
+            return data;
+        }
     }
 
 
