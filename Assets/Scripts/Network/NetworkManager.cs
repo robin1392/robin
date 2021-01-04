@@ -158,6 +158,8 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgEditUserNameAck> _editUserNameCallback;
     private Action<MsgSeasonInfoAck> _seasonInfoCallback;
     private Action<MsgGetRankAck> _getRankCallback;
+    private Action<MsgGetSeasonPassRewardAck> _getSeasonPassRewardCallback;
+    private Action<MsgGetClassRewardAck> _getClassRewardCallback;
     #endregion
 
     #region unity base
@@ -789,7 +791,6 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _seasonInfoCallback(msg);
         }
-        UnityUtil.Print("RECV SEASON INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
 
@@ -838,13 +839,14 @@ public class NetworkManager : Singleton<NetworkManager>
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="rewardId"></param>
-    public void GetSeasonPassRewardReq(string userId, int rewardId)
+    public void GetSeasonPassRewardReq(string userId, int rewardId, Action<MsgGetSeasonPassRewardAck> callback = null)
     {
         MsgGetSeasonPassRewardReq msg = new MsgGetSeasonPassRewardReq();
         msg.UserId = userId;
         msg.RewardId = rewardId;
         _httpSender.GetSeasonPassRewardReq(msg);
         UnityUtil.Print("SEND GET SEASON PASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
+        _getSeasonPassRewardCallback = callback;
     }
 
 
@@ -854,6 +856,10 @@ public class NetworkManager : Singleton<NetworkManager>
     /// <param name="msg"></param>
     void OnGetSeasonPassRewardAck(MsgGetSeasonPassRewardAck msg)
     {
+        if (_getSeasonPassRewardCallback != null)
+        {
+            _getSeasonPassRewardCallback(msg);
+        }
         UnityUtil.Print("RECV GET SEASON PASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
@@ -883,13 +889,14 @@ public class NetworkManager : Singleton<NetworkManager>
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="rewardId"></param>
-    public void GetClassRewardReq(string userId, int rewardId)
+    public void GetClassRewardReq(string userId, int rewardId, Action<MsgGetClassRewardAck> callback = null)
     {
         MsgGetClassRewardReq msg = new MsgGetClassRewardReq();
         msg.UserId = userId;
         msg.RewardId = rewardId;
         _httpSender.GetClassRewardReq(msg);
         UnityUtil.Print("SEND GET CLASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
+        _getClassRewardCallback = callback;
     }
 
     /// <summary>
@@ -898,6 +905,10 @@ public class NetworkManager : Singleton<NetworkManager>
     /// <param name="msg"></param>
     void OnGetClassRewardAck(MsgGetClassRewardAck msg)
     {
+        if (_getClassRewardCallback != null)
+        {
+            _getClassRewardCallback(msg);
+        }
         UnityUtil.Print("RECV GET CLASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 

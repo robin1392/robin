@@ -98,11 +98,11 @@ namespace ED
                 }
 
                 arrImageDeck[i].sprite =
-                    FileHelper.GetIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+                    FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeck[i].SetNativeSize();
                 arrImageDeckEye[i].color = FileHelper.GetColor(dataDiceInfo.color);
                 arrImageDeck_Main[i].sprite =
-                    FileHelper.GetIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+                    FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
                 arrImageDeck_Main[i].SetNativeSize();
                 arrImageDeckEye_Main[i].color = FileHelper.GetColor(dataDiceInfo.color);
             }
@@ -228,7 +228,7 @@ namespace ED
                 return;
             }
 
-            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
+            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
             
             rts_Content.DOAnchorPosY(0, 0.1f);
             

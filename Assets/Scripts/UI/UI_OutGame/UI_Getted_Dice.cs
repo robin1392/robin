@@ -71,7 +71,7 @@ namespace ED
             int needDiceCount = dataDiceUpgrade.needCard;
             if (needDiceCount == 0) needDiceCount = 1;
             
-            image_Icon.sprite = FileHelper.GetIcon( pData.iconName );
+            image_Icon.sprite = FileHelper.GetDiceIcon( pData.iconName );
             image_Eye.color = FileHelper.GetColor(pData.color);
 
             text_DiceLevel.text = $"{Global.g_level} {level}";

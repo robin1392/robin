@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using NodeCanvas.BehaviourTrees;
 
 namespace ED
 {
@@ -45,11 +46,13 @@ namespace ED
                 var listDeck = new List<int>();
                 if (TutorialManager.isTutorial)
                 {
-                    listDeck.Add(1001);
-                    listDeck.Add(1002);
-                    listDeck.Add(1003);
-                    listDeck.Add(1004);
-                    listDeck.Add(1005);
+                    listDeck.Add(30001);    // 궁수
+                    listDeck.Add(30002);    // 해골
+                    listDeck.Add(30003);    // 전사
+                    listDeck.Add(32002);    // 방패병
+                    listDeck.Add(32003);    // 화염술사
+
+                    GetComponent<BehaviourTreeOwner>().behaviour.Pause();
                 }
                 else
                 {
@@ -76,10 +79,14 @@ namespace ED
 
             NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray = deck;
             NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
-            
             SetDeck(deck);
 
             SetColor(E_MaterialType.TOP);
+
+            if (TutorialManager.isTutorial)
+            {
+                SetDiceFieldOnTutorial(0);
+            }
         }
 
         public void AI_GetDice()
@@ -156,6 +163,28 @@ namespace ED
                     arr[j] = arr[i];
                     arr[i] = temp;
                 }
+            }
+        }
+
+        public void SetDiceFieldOnTutorial(int phase)
+        {
+            switch (phase)
+            {
+                case 0:
+                    // 궁수, 해골, 전사, 방패, 화염
+                    GetDice(3, 1);
+                    GetDice(1, 2);
+                    GetDice(3, 3);
+                    GetDice(2, 5);
+                    GetDice(4, 7);
+                    GetDice(2, 9);
+                    GetDice(0, 11);
+                    GetDice(0, 13);
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
             }
         }
     }

@@ -35,7 +35,7 @@ public class UI_WinLose : MonoBehaviour
             }
 
             var iconName = dataDiceInfo.iconName;
-            arrImage_Deck[i].sprite = FileHelper.GetIcon(iconName);
+            arrImage_Deck[i].sprite = FileHelper.GetDiceIcon(iconName);
             arrImage_Deck[i].SetNativeSize();
             arrImage_Deck[i].transform.localScale = Vector3.zero;
             arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f).SetUpdate(true);
@@ -59,7 +59,7 @@ public class UI_WinLose : MonoBehaviour
             }
 
             var iconName = dataDiceInfo.iconName;
-            arrImage_Deck[i].sprite = FileHelper.GetIcon(iconName);
+            arrImage_Deck[i].sprite = FileHelper.GetDiceIcon(iconName);
             arrImage_Deck[i].SetNativeSize();
             arrImage_Deck[i].transform.localScale = Vector3.zero;
             arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f).SetUpdate(true);

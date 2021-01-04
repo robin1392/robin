@@ -30,6 +30,11 @@ public class UserInfo
     public int gold;
     public int key;
     public int winStreak;
+    public int seasonPassId;
+    public bool buySeasonPass;
+    public int seasonTrophy;
+    public List<int> seasonPassRewardIds;
+    public List<int> trophyRewardIds;
     
     private string _ticketId;
     public string ticketId
@@ -299,7 +304,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
     public void SetUserInfo(MsgUserInfo info)
     {
         SetUserKey(info.UserId);
-        
+
         _userInfo.SetNickName(info.Name);
         _userInfo.diamond = info.Goods.Diamond;
         _userInfo.gold = info.Goods.Gold;
@@ -307,6 +312,13 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.trophy = info.Trophy;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
+        _userInfo.seasonPassId = info.SeasonPassId;
+        _userInfo.buySeasonPass = info.BuySeasonPass;
+        _userInfo.seasonTrophy = info.SeasonTrophy;
+        if (info.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(info.SeasonPassRewardIds);
+        else _userInfo.seasonPassRewardIds = new List<int>();
+        if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
+        else _userInfo.trophyRewardIds = new List<int>();
     }
     
     public void SetUserKey(string userid)

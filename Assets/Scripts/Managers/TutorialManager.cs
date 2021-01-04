@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,8 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine.SceneManagement;
 using Debug = ED.Debug;
 using DG.Tweening;
+using ED;
+using RandomWarsProtocol;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -14,10 +17,18 @@ public class TutorialManager : MonoBehaviour
     [Space] 
     public Transform ts_BattleButton;
     public Transform ts_GetDiceButton;
-    
-    private static int stepCount = 0;
+    public Transform ts_DiceField;
+    public Transform ts_UpgradeButton;
+
+    public static int stepCount = 0;
+    private static int nextStepCount = 1;
     private Transform ts_OldParent;
-    private int getDiceCount;
+
+    public static int getDiceCount
+    {
+        get;
+        private set;
+    }
     
     private void Start()
     {
@@ -35,13 +46,12 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator TutorialCoroutine()
     {
-        int count = 1;
         while (true)
         {
             Step();
         
-            yield return new WaitWhile(() => stepCount < count);
-            count++;
+            yield return new WaitWhile(() => stepCount < nextStepCount);
+            nextStepCount++;
         }
         // Step();
         //
@@ -52,16 +62,39 @@ public class TutorialManager : MonoBehaviour
         // Step();
     }
     
-    public static void Click_NextStep()
+    public void Click_NextStep()
     {
         Time.timeScale = 1f;
+        Click_NextStepCallback();
         stepCount++;
+    }
+
+    private void Click_NextStepCallback()
+    {
+        switch (stepCount)
+        {
+            case 6:
+                InGameManager.Get().playerController.currentHealth = InGameManager.Get().playerController.maxHealth * 0.666f;
+                InGameManager.Get().playerController.RefreshHealthBar();
+
+                MsgMonster msg = new MsgMonster();
+                msg.Hp = Int32.MaxValue;
+                msg.Id = 1;
+                msg.Power = 30000;
+                msg.AttackSpeed = 100;
+                msg.DataId = 20001;
+                msg.MoveSpeed = 100;
+                msg.Effect = 30000;
+                InGameManager.Get().playerController.SpawnMonster(msg);
+                break;
+        }
     }
 
     public void Click_EndCurrentStep()
     {
-        transform.GetChild(stepCount + 1).gameObject.SetActive(false);
         Time.timeScale = 1f;
+        image_NextStep.DOFade(0f, 0f);
+        transform.GetChild(stepCount + 1).gameObject.SetActive(false);
     }
 
     public void Click_NextStepDelay(float delay)
@@ -94,17 +127,30 @@ public class TutorialManager : MonoBehaviour
     private void GetDice()
     {
         getDiceCount++;
-        if (getDiceCount >= 5)
+        if (stepCount == 4 && getDiceCount >= 5)
         {
+            ts_GetDiceButton.parent = ts_OldParent;
+            ts_GetDiceButton.GetComponent<Button>().onClick.RemoveListener(GetDice);
+            Click_NextStepDelay(18f);
+        }
+        else if (stepCount == 8 && getDiceCount >= 15)
+        {
+            ts_GetDiceButton.parent = ts_OldParent;
             ts_GetDiceButton.GetComponent<Button>().onClick.RemoveListener(GetDice);
             Click_NextStep();
         }
     }
 
+    public static void MergeComplete()
+    {
+        if (stepCount < 11) stepCount++;
+    }
+
     private void Step()
     {
         Debug.Log("Tutorial step : " + stepCount);
-        
+
+        image_NextStep.DOFade(0.78f, 0).SetUpdate(true);
         for (int i = 1; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(i == stepCount + 1);
@@ -113,7 +159,7 @@ public class TutorialManager : MonoBehaviour
         switch (stepCount)
         {
             case 0:
-                transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = true;
+                //transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = true;
                 break;
             case 1:
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
@@ -148,7 +194,7 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 3:
-                image_NextStep.DOFade(0.78f, 0f).SetUpdate(true);
+                //image_NextStep.DOFade(0.78f, 0f).SetUpdate(true);
                 Time.timeScale = 0f;
                 break;
             case 4: // 주사위 소환 버튼
@@ -159,10 +205,60 @@ public class TutorialManager : MonoBehaviour
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 5:
+                Time.timeScale = 0f;
+                break;
+            case 6:
+                Time.timeScale = 0f;
+                break;
+            case 7:
+                Time.timeScale = 0f;
+                InGameManager.Get().playerController.TutorialAddSP();
+                break;
+            case 8:    // 두번째 주사위 소환
+                Time.timeScale = 0f;
+                transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
+                ts_OldParent = ts_GetDiceButton.parent;
+                ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
+                ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
+                break;
+            case 9:
+                Time.timeScale = 0f;
+                transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
+                ts_OldParent = ts_DiceField.parent;
+                ts_DiceField.parent = transform.GetChild(stepCount + 1);
+                break;
+            case 10:
+                Time.timeScale = 1f;
+                image_NextStep.DOFade(0, 0).SetUpdate(true);
+                image_NextStep.raycastTarget = false;
+                ts_DiceField.parent = ts_OldParent;
+                Click_NextStepDelay(3f);
+                break;
+            case 11:
+                InGameManager.Get().playerController.uiDiceField.BroadcastMessage("AttachIcon");
+                image_NextStep.raycastTarget = true;
+                Time.timeScale = 0f;
+                
+                ts_OldParent = ts_UpgradeButton.parent;
+                ts_UpgradeButton.parent = transform.GetChild(stepCount + 1);
+                ts_UpgradeButton.GetComponent<Button>().onClick.AddListener(Click_NextStep);
+                break;
+            case 12:
+                Time.timeScale = 1f;
+                image_NextStep.DOFade(0, 0).SetUpdate(true);
+                image_NextStep.raycastTarget = false;
+                ts_UpgradeButton.GetComponent<Button>().onClick.RemoveListener(Click_NextStep);
+                ts_UpgradeButton.parent = ts_OldParent;
+                break;
+            case 13:
+                Time.timeScale = 1f;
+                image_NextStep.raycastTarget = true;
                 break;
             default:
+                image_NextStep.DOFade(0, 0).SetUpdate(true);
+                image_NextStep.raycastTarget = false;
                 Time.timeScale = 1f;
-                image_NextStep.DOFade(0f, 0f);
+                ObscuredPrefs.SetBool("Tutorial", true);
                 break;
         }
     }

@@ -452,7 +452,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 }
 
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                    FileHelper.GetIcon(dataDiceInfo.iconName), 0.6f));
+                    FileHelper.GetDiceIcon(dataDiceInfo.iconName), 0.6f));
                 ani_Item.SetTrigger("Get");
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
@@ -694,7 +694,7 @@ public class UI_BoxOpenPopup : UI_Popup
                     }
 
                     var dice = Instantiate(pref_ResultDice, rts_ResultDiceParent);
-                    dice.GetComponent<Image>().sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
+                    dice.GetComponent<Image>().sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
                     dice.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + dataDiceInfo.id);
                     dice.transform.GetChild(1).GetComponent<Text>().text = $"x{msgReward.Value}";
                     dice.transform.localScale = Vector3.zero;

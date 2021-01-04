@@ -23,6 +23,11 @@ public class UI_InGamePopup_Result : MonoBehaviour
     
     public void Initialize(bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
     {
+        if (TutorialManager.isTutorial)
+        {
+            TutorialManager.stepCount++;
+        }
+        
 // #if UNITY_EDITOR
 //         isWin = true;
 //         
