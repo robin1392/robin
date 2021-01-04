@@ -22,7 +22,7 @@ namespace ED
         public Sprite GetIcon()
         {
             //return data == null ? null : data.icon;
-            return diceData == null ? null : FileHelper.GetIcon(diceData.iconName);
+            return diceData == null ? null : FileHelper.GetDiceIcon(diceData.iconName);
         }
 
         public void Reset()

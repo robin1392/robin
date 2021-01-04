@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = ED.Debug;
 
 public class UI_Rank_Slot : MonoBehaviour
 {
     public Image image_Rank;
+    public Text text_Rank;
     public Text text_Class;
     public Text text_Trophy;
     public Text text_Name;
@@ -16,10 +18,12 @@ public class UI_Rank_Slot : MonoBehaviour
 
     public void Initialize(int rank, int trophy, string name, int nClass, int[] deck)
     {
-        image_Rank.sprite = arrSprite_Rank[rank - 1];
+        Debug.Log($"Rank slot initialize: rank[{rank}], trophy[{trophy}], name[{name}], class[{nClass}]");
+        image_Rank.sprite = arrSprite_Rank[Mathf.Clamp(rank - 1, 0, 3)];
         
         if (trophy >= 0)
         {
+            text_Rank.text = rank > 3 ? rank.ToString() : string.Empty;
             text_Trophy.text = trophy.ToString();
             text_Name.text = name;
             text_Class.text = $"CLASS {nClass.ToString()}";

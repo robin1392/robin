@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using NodeCanvas.Tasks.Actions;
 
 namespace ED
 {
@@ -165,6 +166,11 @@ namespace ED
                     }
                     else
                     {
+                        if (TutorialManager.isTutorial)
+                        {
+                            TutorialManager.MergeComplete();
+                        }
+                        
                         if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
                         {
                             InGameManager.Get().playerController.LevelUpDice(dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.eyeLevel);
@@ -179,7 +185,14 @@ namespace ED
 
         private void DetachIcon()
         {
-            image_Icon.transform.SetParent(ts_Canvas);
+            if (TutorialManager.isTutorial)
+            {
+                image_Icon.transform.SetParent(GameObject.FindWithTag("Tutorial").transform);
+            }
+            else
+            {
+                image_Icon.transform.SetParent(ts_Canvas);
+            }
         }
 
         public void AttachIcon()

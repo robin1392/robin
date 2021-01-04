@@ -375,7 +375,7 @@ namespace ED
                 isHalfHealth = true;
                 animator.SetBool(Break, true);
 
-                PushEnemyMinions(10f);
+                PushEnemyMinions(5f);
 
                 RandomWarsResource.Data.TDataGuardianInfo dataGuardianInfo;
                 if (TableManager.Get().GuardianInfo.GetData(boss.DataId, out dataGuardianInfo) == false)
@@ -995,43 +995,18 @@ namespace ED
                     uiDiceField.arrSlot[emptySlotNum].ani.SetTrigger("BBoing");
                     uiDiceField.SetField(arrDice);
                 }
-
-                //if (PhotonNetwork.IsConnected)
-                    //SendPlayer(RpcTarget.Others , E_PTDefine.PT_GETDICE , randomDeckNum, emptySlotNum);
             }
         }
        
-        // public void SetDeck(string deck)
-        // {
-        //     var splitDeck = deck.Split('/');
-        //
-        //     if(arrDiceDeck == null)
-        //         _arrDiceDeck = new DiceInfoData[5];
-        //
-        //     for (var i = 0; i < splitDeck.Length; i++)
-        //     {
-        //         var num = int.Parse(splitDeck[i]);
-        //         
-        //         arrDiceDeck[i] = InGameManager.Get().data_DiceInfo.GetData(num);
-        //         
-        //         // add pool
-        //         if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
-        //         
-        //         if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
-        //         {
-        //             PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
-        //         }
-        //         else
-        //         {
-        //             PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
-        //         }
-        //         
-        //     }
-        // }
-        
         public void GetDice(int deckNum, int slotNum)
         {
             arrDice[slotNum].Set(arrDiceDeck[deckNum]);
+            
+            if (uiDiceField != null)
+            {
+                uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
+                uiDiceField.SetField(arrDice);
+            }
         }
 
         public int GetDiceFieldEmptySlotCount()
@@ -3567,5 +3542,13 @@ namespace ED
         #endregion
         */
         #endregion
+        
+        public void TutorialAddSP()
+        {
+            if (TutorialManager.isTutorial)
+            {
+                sp = 3000;
+            }
+        }
     }
 }

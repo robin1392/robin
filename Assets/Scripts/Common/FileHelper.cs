@@ -47,7 +47,7 @@ public class FileHelper
 
 
 
-    public static Sprite GetIcon(string name)
+    public static Sprite GetDiceIcon(string name)
     {
         string iconPath = "Image/dice/";
         

@@ -11,6 +11,7 @@ TagManager:
   - Installation
   - Wall
   - UI_AlphaImage
+  - Tutorial
   layers:
   - Default
   - TransparentFX
