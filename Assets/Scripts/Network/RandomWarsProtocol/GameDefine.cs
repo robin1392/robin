@@ -130,4 +130,27 @@ namespace RandomWarsProtocol
         COMPLETE,    // 완료(보상 획득전)
         CLOSE,         // 닫힘(보상 획득 완료) 
     }
+
+
+    public enum QUEST_COMPLETE_TYPE : int
+    {
+        NONE = -1,
+        PLAY_DEATH_MATCH,
+        PLAY_COOP_MATCH,
+        PLAY_ALL_MATCH,
+        WIN_ALL_MATCH,
+        OPEN_BOX,
+        BUY_PRODUCTION,
+        VIEW_AD,
+        USE_GOLD,
+        USE_DIAMOND,
+        UPGRADE_DICE,
+        SPAWN_GUARDIAN,
+        KILL_ALL_BOSS,
+        KILL_BOSS_1,
+        KILL_BOSS_2,
+        KILL_BOSS_3,
+        GET_KEY,
+        GET_BOX,
+    }
 }

@@ -52,6 +52,7 @@ namespace RandomWarsProtocol.Msg
         public MsgReward[] NormalReward;
         public MsgReward[] StreakReward;
         public MsgReward[] PerfectReward;
+        public MsgQuestData[] QuestData;
     }
 
 

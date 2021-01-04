@@ -615,7 +615,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward, MsgQuestData[] questData) 
         {
             using (var ms = new MemoryStream())
             {
@@ -643,6 +643,13 @@ namespace RandomWarsProtocol
                 for (int i = 0; i < length; i++)
                 {
                     perfectReward[i].Write(bw);
+                }
+
+                length = (questData == null) ? 0 : questData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    questData[i].Write(bw);
                 }
 
                 peer.SendPacket((int)GameProtocol.END_GAME_NOTIFY, ms.ToArray());
