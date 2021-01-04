@@ -146,7 +146,7 @@ namespace RandomWarsProtocol
 
         public void GetSeasonPassRewardReq(MsgGetSeasonPassRewardReq msg)
         {
-            _httpService.Send((int)GameProtocol.GET_SEASON_PASS_REWARD_REQ, "getseasonpassreward", JsonConvert.SerializeObject(msg));
+            _httpService.Send((int)GameProtocol.GET_SEASON_PASS_REWARD_REQ, "seasonpassreward", JsonConvert.SerializeObject(msg));
         }
 
 
