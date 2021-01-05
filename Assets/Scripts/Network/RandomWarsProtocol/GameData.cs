@@ -1900,9 +1900,19 @@ namespace RandomWarsProtocol
         public int RemainResetTime;
         // 퀘스트 데이터
         public MsgQuestData[] QuestData;
-        // 일일 보상 획득 상태
-        public bool GetDayRewardState;
+        // 일일 보상 정보
+        public MsgQuestDayReward DayRewardInfo;
+    }
+
+
+    [Serializable]
+    public class MsgQuestDayReward
+    {
+        // 보상 아이디
+        public int DayRewardId;
+        // 보상 획득 여부
+        public bool[] DayRewardState;
         // 일일 보상 획득까지 남은 시간(초단위)
-        public int RemainDayRewardTime;
+        public int DayRewardRemainTime;
     }
 }
