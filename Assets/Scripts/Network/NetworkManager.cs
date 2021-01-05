@@ -233,6 +233,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.GetClassRewardAck = OnGetClassRewardAck;
         _httpReceiver.QuestInfoAck = OnQuestInfoAck;
         _httpReceiver.QuestRewardAck = OnQuestRewardAck;
+        _httpReceiver.QuestDayRewardAck = OnQuestDayRewardAck;
 
 
 
@@ -937,6 +938,19 @@ public class NetworkManager : Singleton<NetworkManager>
     void OnQuestRewardAck(MsgQuestRewardAck msg)
     {
         UnityUtil.Print("RECV QUEST REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
+
+    public void QuestDayRewardReq(string userId)
+    {
+        MsgQuestDayRewardReq msg = new MsgQuestDayRewardReq();
+        msg.UserId = userId;
+        _httpSender.QuestDayRewardReq(msg);
+        UnityUtil.Print("SEND QUEST DAY REWARD => userId", string.Format("userId:{0}", userId), "green");
+    }
+
+    void OnQuestDayRewardAck(MsgQuestDayRewardAck msg)
+    {
+        UnityUtil.Print("RECV QUEST DAY REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
     #endregion
