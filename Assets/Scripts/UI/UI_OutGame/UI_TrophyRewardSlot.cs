@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using ED;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
@@ -14,6 +15,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public Image image_Guage;
     public Image image_Guage_BG;
     public Text text_Trophy;
+    public Image image_TrophyBG;
 
     [Space]
     public Button[] arrButton;
@@ -22,19 +24,26 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public GameObject[] arrObj_Lock;
     public GameObject[] arrObj_Check;
 
+    private bool isGetPremium;
     private int row;
     private int getVipRow;
     private int getNormalRow;
     private TDataClassReward dataPremium;
     private TDataClassReward dataNormal;
 
+    [SerializeField]
+    private float minTrophy;
+
+    [SerializeField]
+    private float maxTrophy;
+
     public void Initialize(int row, int myTrophy, int getVipRow, int getNormalRow)
     {
         this.row = row;
         this.getVipRow = getVipRow;
         this.getNormalRow = getNormalRow;
-        float minTrophy = 0;
-        float maxTrophy = 0;
+        minTrophy = 0;
+        maxTrophy = 0;
         
         if (row == 0)
         {
@@ -67,11 +76,18 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             text_Trophy.text = dataPremium.rankPoint.ToString();
             arrText_Value[0].text = $"{dataPremium.ItemId}\nx{dataPremium.ItemValue}";
             arrText_Value[1].text = $"{dataNormal.ItemId}\nx{dataNormal.ItemValue}";
+
+            image_TrophyBG.color = myTrophy >= dataPremium.rankPoint ? Color.white : Color.gray;
+            text_Trophy.color = image_TrophyBG.color;
             
             // set min, max
             if (TableManager.Get().ClassReward.GetData(row - 1, out dataNormal))
             {
                 minTrophy = Mathf.Lerp(dataNormal.rankPoint, dataPremium.rankPoint, 0.5f);
+            }
+            else if (row == 1)
+            {
+                minTrophy = dataPremium.rankPoint / 2;
             }
             
             if (TableManager.Get().ClassReward.GetData(row + 1, out dataNormal) == false)
@@ -92,7 +108,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             SetButton();
         }
 
-        image_Guage.fillAmount = (myTrophy - minTrophy) / (float)maxTrophy;
+        image_Guage.fillAmount = (myTrophy - minTrophy) / (float)(maxTrophy - minTrophy);
     }
 
     public void SetButton()
@@ -115,26 +131,38 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             arrObj_Lock[1].SetActive(false);
             arrObj_Check[0].SetActive(getPass);
             arrObj_Check[1].SetActive(getNormal);
-            arrButton[0].interactable = !getPass;
-            arrButton[1].interactable = !getNormal;
+            arrButton[0].interactable = row + 1000 - 1 == getVipRow;
+            arrButton[1].interactable = row - 1 == getNormalRow;
         }
     }
     
     public void Click_PremiumGet()
     {
+        isGetPremium = true;
         NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row + 1000, GetCallback);
+        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
     public void Click_NormalGet()
     {
+        isGetPremium = false;
         NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, GetCallback);
+        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
     
     public void GetCallback(MsgGetClassRewardAck msg)
     {
+        UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
-            
+            if (isGetPremium)
+            {
+                getVipRow++;
+            }
+            else
+            {
+                getNormalRow++;
+            }
         }
         
         SetButton();
