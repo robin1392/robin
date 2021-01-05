@@ -50,6 +50,8 @@ namespace RandomWarsResource.Data
 		public int questGroup { get; set; }
 		public int questType { get; set; }
 		public int questEndValue { get; set; }
+		public int ItemId { get; set; }
+		public int ItemValue { get; set; }
 		public string questStringKey { get; set; }
 		public bool isUse { get; set; }
 
@@ -67,8 +69,10 @@ namespace RandomWarsResource.Data
 			questGroup = int.Parse(cols[2]);
 			questType = int.Parse(cols[3]);
 			questEndValue = int.Parse(cols[4]);
-			questStringKey = cols[5].Replace("{#$}", ",");
-			isUse = bool.Parse(cols[6]);
+			ItemId = int.Parse(cols[5]);
+			ItemValue = int.Parse(cols[6]);
+			questStringKey = cols[7].Replace("{#$}", ",");
+			isUse = bool.Parse(cols[8]);
 		}
 	}
 }
