@@ -26,6 +26,10 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataSeasonpassReward> SeasonpassReward { get; private set; }
     public TableData<int, TDataClassReward> ClassReward { get; private set; }
     public TableData<int, TDataItemList> ItemList { get; private set; }
+    public TableData<int, TDataQuestInfo> QuestInfo { get; private set; }
+    public TableData<int, TDataQuestData> QuestData { get; private set; }
+    public TableData<int, TDataQuestDayReward> QuestDayReward { get; private set; }
+
 
 
     public void Awake()
@@ -60,6 +64,9 @@ public class TableManager : Singleton<TableManager>
         SeasonpassReward = new TableData<int, TDataSeasonpassReward>();
         ClassReward = new TableData<int, TDataClassReward>();
         ItemList = new TableData<int, TDataItemList>();
+        QuestInfo = new TableData<int, TDataQuestInfo>();
+        QuestData = new TableData<int, TDataQuestData>();
+        QuestDayReward = new TableData<int, TDataQuestDayReward>();
     }
 
 
@@ -130,7 +137,9 @@ public class TableManager : Singleton<TableManager>
         SeasonpassReward.Init(new TableLoaderRemoteCSV<int, TDataSeasonpassReward>(), bucketPath, "SeasonpassReward.csv", localPath);
         ClassReward.Init(new TableLoaderRemoteCSV<int, TDataClassReward>(), bucketPath, "ClassReward.csv", localPath);
         ItemList.Init(new TableLoaderRemoteCSV<int, TDataItemList>(), bucketPath, "ItemList.csv", localPath);
-
+        QuestInfo.Init(new TableLoaderRemoteCSV<int, TDataQuestInfo>(), bucketPath, "QuestInfo.csv", localPath);
+        QuestData.Init(new TableLoaderRemoteCSV<int, TDataQuestData>(), bucketPath, "QuestData.csv", localPath);
+        QuestDayReward.Init(new TableLoaderRemoteCSV<int, TDataQuestDayReward>(), bucketPath, "QuestDayReward.csv", localPath);
         return true;
     }
 
@@ -153,6 +162,9 @@ public class TableManager : Singleton<TableManager>
         SeasonpassReward.Init(new TableLoaderLocalCSV<int, TDataSeasonpassReward>(), path, "SeasonpassReward.csv");
         ClassReward.Init(new TableLoaderLocalCSV<int, TDataClassReward>(), path, "ClassReward.csv");
         ItemList.Init(new TableLoaderLocalCSV<int, TDataItemList>(), path, "ItemList.csv");
+        QuestInfo.Init(new TableLoaderLocalCSV<int, TDataQuestInfo>(), path, "QuestInfo.csv");
+        QuestData.Init(new TableLoaderLocalCSV<int, TDataQuestData>(), path, "QuestData.csv");
+        QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
 
         return true;
     }
