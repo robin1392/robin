@@ -57,6 +57,9 @@ namespace RandomWarsProtocol
         QUEST_REWARD_REQ,
         QUEST_REWARD_ACK,
 
+        QUEST_DAY_REWARD_REQ,
+        QUEST_DAY_REWARD_ACK,
+
 
         END_HTTP,
         

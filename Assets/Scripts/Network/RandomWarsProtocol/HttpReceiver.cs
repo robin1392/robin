@@ -90,6 +90,12 @@ namespace RandomWarsProtocol
         public delegate void QuestRewardAckDelegate(MsgQuestRewardAck msg);
         public QuestRewardAckDelegate QuestRewardAck;
 
+        public delegate Task<string> QuestDayRewardReqDelegate(MsgQuestDayRewardReq msg);
+        public QuestDayRewardReqDelegate QuestDayRewardReq;
+        public delegate void QuestDayRewardAckDelegate(MsgQuestDayRewardAck msg);
+        public QuestDayRewardAckDelegate QuestDayRewardAck;
+
+
         public async Task<string> ProcessAsync(int protocolId, string json)
         {
             string ackJson = string.Empty;
@@ -237,6 +243,15 @@ namespace RandomWarsProtocol
 
                         MsgQuestRewardReq msg = JsonConvert.DeserializeObject<MsgQuestRewardReq>(json);
                         ackJson = await QuestRewardReq(msg);
+                    }
+                    break;
+                case GameProtocol.QUEST_DAY_REWARD_REQ:
+                    {
+                        if (QuestDayRewardReq == null)
+                            return ackJson;
+
+                        MsgQuestDayRewardReq msg = JsonConvert.DeserializeObject<MsgQuestDayRewardReq>(json);
+                        ackJson = await QuestDayRewardReq(msg);
                     }
                     break;
             }
@@ -391,6 +406,15 @@ namespace RandomWarsProtocol
 
                         MsgQuestRewardAck msg = JsonConvert.DeserializeObject<MsgQuestRewardAck>(json);
                         QuestRewardAck(msg);
+                    }
+                    break;
+                case GameProtocol.QUEST_DAY_REWARD_ACK:
+                    {
+                        if (QuestDayRewardAck == null)
+                            return false;
+
+                        MsgQuestDayRewardAck msg = JsonConvert.DeserializeObject<MsgQuestDayRewardAck>(json);
+                        QuestDayRewardAck(msg);
                     }
                     break;
             }

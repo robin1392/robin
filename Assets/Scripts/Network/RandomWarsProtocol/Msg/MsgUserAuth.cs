@@ -123,6 +123,7 @@ namespace RandomWarsProtocol.Msg
         public MsgReward[] BoxReward;
         public MsgUserBox BoxInfo;
         public MsgUserGoods UserGoods;
+        public MsgQuestData[] QuestData;
     }
 
 
@@ -140,6 +141,7 @@ namespace RandomWarsProtocol.Msg
         public GameErrorCode ErrorCode;
         public MsgUserDice UserDice;
         public MsgUserGoods UserGoods;
+        public MsgQuestData[] QuestData;
     }
 
 
@@ -292,5 +294,22 @@ namespace RandomWarsProtocol.Msg
     {
         public GameErrorCode ErrorCode;
         public MsgReward[] RewardInfo;
+    }
+
+    [Serializable]
+    public class MsgQuestDayRewardReq
+    {
+        public string UserId;
+    }
+
+
+    [Serializable]
+    public class MsgQuestDayRewardAck
+    {
+        public GameErrorCode ErrorCode;
+        // 보상 정보
+        public MsgReward[] RewardInfo;
+        // 다음 일일 보상 획득까지 남은 시간(초단위)
+        public int RemainRewardTime;
     }
 }

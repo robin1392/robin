@@ -146,7 +146,7 @@ namespace RandomWarsProtocol
 
         public void GetSeasonPassRewardReq(MsgGetSeasonPassRewardReq msg)
         {
-            _httpService.Send((int)GameProtocol.GET_SEASON_PASS_REWARD_REQ, "seasonpassreward", JsonConvert.SerializeObject(msg));
+            _httpService.Send((int)GameProtocol.GET_SEASON_PASS_REWARD_REQ, "getseasonpassreward", JsonConvert.SerializeObject(msg));
         }
 
 
@@ -199,6 +199,17 @@ namespace RandomWarsProtocol
 
 
         public string QuestRewardAck(MsgQuestRewardAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+        public void QuestDayRewardReq(MsgQuestDayRewardReq msg)
+        {
+            _httpService.Send((int)GameProtocol.QUEST_DAY_REWARD_REQ, "questdayreward", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string QuestDayRewardAck(MsgQuestDayRewardAck msg)
         {
             return JsonConvert.SerializeObject(msg);
         }

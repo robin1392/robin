@@ -14,7 +14,7 @@ namespace RandomWarsResource.Data
 	{
 		public int id { get; set; }
 		public string name { get; set; }
-		public bool seasonPassState { get; set; }
+		public int nextSeasonId { get; set; }
 		public DateTime seasonPassStartDate { get; set; }
 		public DateTime seasonPassEndDate { get; set; }
 
@@ -29,7 +29,7 @@ namespace RandomWarsResource.Data
 		{
 			id = int.Parse(cols[0]);
 			name = cols[1].Replace("{#$}", ",");
-			seasonPassState = bool.Parse(cols[2]);
+			nextSeasonId = int.Parse(cols[2]);
 			seasonPassStartDate = DateTime.Parse(cols[3]);
 			seasonPassEndDate = DateTime.Parse(cols[4]);
 		}
