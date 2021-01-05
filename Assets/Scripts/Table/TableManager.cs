@@ -101,6 +101,8 @@ public class TableManager : Singleton<TableManager>
                 {
                     writer.Write(remoteTDataVersion);
                 }
+
+                Debug.Log("Download Table Complete !!! ");
             }
         }
         else

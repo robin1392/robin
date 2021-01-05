@@ -45,6 +45,10 @@ namespace RandomWarsProtocol
         ERROR_SEASON_PASS_INVALID_REWARD_ID = 20203,          // 시즌 패스 보상이 유효하지 않습니다.
     
         ERROR_QUEST_DATA_RESET_FAILED            = 20301,            // 퀘스트 데이터 리셋에 실패했습니다.
-    
+        ERROR_QUEST_INVALID_STATUS              = 20302,            // 퀘스트의 상태가 유효하지 않습니다.
+        ERROR_QUEST_FAILED_CREATE_REWARD        = 20303,            // 퀘스트 보상 생성에 실패했습니다.
+
+
+        ERROR_QUEST_DAY_REWARD_INVALID_TIME = 20401,            // 퀘스트의 일일 보상 시간이 유효화지 않습니다.
     }
 }
