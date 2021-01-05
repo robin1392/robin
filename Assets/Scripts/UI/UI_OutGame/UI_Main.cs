@@ -33,6 +33,7 @@ namespace ED
         public GameObject obj_IndicatorPopup;
         public UI_Popup_Userinfo userinfoPopup;
         public UI_Popup_Rank rankPopup;
+        public UI_Popup_Quest questPopup;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;
@@ -372,6 +373,12 @@ namespace ED
         public void Click_Helpshift_Button()
         {
             HelpshiftManager.Get().ShowHelpshift();
+        }
+
+        public void Click_Quest_Button()
+        {
+            questPopup.gameObject.SetActive(true);
+            questPopup.Initialize();
         }
     }
 }

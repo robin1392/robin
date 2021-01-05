@@ -14,6 +14,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public Image image_Guage;
     public Image image_Guage_BG;
     public Text text_Trophy;
+    public Image image_TrophyBG;
 
     [Space]
     public Button[] arrButton;
@@ -67,11 +68,18 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             text_Trophy.text = dataPremium.rankPoint.ToString();
             arrText_Value[0].text = $"{dataPremium.ItemId}\nx{dataPremium.ItemValue}";
             arrText_Value[1].text = $"{dataNormal.ItemId}\nx{dataNormal.ItemValue}";
+
+            image_TrophyBG.color = myTrophy >= dataPremium.rankPoint ? Color.white : Color.gray;
+            text_Trophy.color = image_TrophyBG.color;
             
             // set min, max
             if (TableManager.Get().ClassReward.GetData(row - 1, out dataNormal))
             {
                 minTrophy = Mathf.Lerp(dataNormal.rankPoint, dataPremium.rankPoint, 0.5f);
+            }
+            else if (row == 1)
+            {
+                minTrophy = dataPremium.rankPoint / 2;
             }
             
             if (TableManager.Get().ClassReward.GetData(row + 1, out dataNormal) == false)

@@ -69,6 +69,10 @@ public class UI_RewardSlot : MonoBehaviour
             {
                 minTrophy = Mathf.Lerp(dataNormal.trophyPoint, dataPremium.trophyPoint, 0.5f);
             }
+            else if (row == 1)
+            {
+                minTrophy = dataPremium.trophyPoint / 2;
+            }
             
             if (TableManager.Get().SeasonpassReward.GetData(row + 1, out dataNormal) == false)
             {

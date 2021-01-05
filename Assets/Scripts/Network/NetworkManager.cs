@@ -160,6 +160,8 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgGetRankAck> _getRankCallback;
     private Action<MsgGetSeasonPassRewardAck> _getSeasonPassRewardCallback;
     private Action<MsgGetClassRewardAck> _getClassRewardCallback;
+    private Action<MsgQuestInfoAck> _questInfoCallback;
+    private Action<MsgQuestRewardAck> _questRewardCallback;
     #endregion
 
     #region unity base
@@ -912,30 +914,40 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV GET CLASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
-    public void QuestInfoReq(string userId)
+    public void QuestInfoReq(string userId, Action<MsgQuestInfoAck> callback)
     {
         MsgQuestInfoReq msg = new MsgQuestInfoReq();
         msg.UserId = userId;
         _httpSender.QuestInfoReq(msg);
         UnityUtil.Print("SEND QUEST INFO => userId", string.Format("userId:{0}", userId), "green");
+        _questInfoCallback = callback;
     }
 
     void OnQuestInfoAck(MsgQuestInfoAck msg)
     {
+        if (_questInfoCallback != null)
+        {
+            _questInfoCallback(msg);
+        }
         UnityUtil.Print("RECV QUEST INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
-    public void QuestRewardReq(string userId, int questId)
+    public void QuestRewardReq(string userId, int questId, Action<MsgQuestRewardAck> callback)
     {
         MsgQuestRewardReq msg = new MsgQuestRewardReq();
         msg.UserId = userId;
         msg.QuestId = questId;
         _httpSender.QuestRewardReq(msg);
         UnityUtil.Print("SEND QUEST REWARD => userId", string.Format("userId:{0}", userId), "green");
+        _questRewardCallback = callback;
     }
 
     void OnQuestRewardAck(MsgQuestRewardAck msg)
     {
+        if (_questRewardCallback != null)
+        {
+            _questRewardCallback(msg);
+        }
         UnityUtil.Print("RECV QUEST REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
