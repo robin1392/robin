@@ -284,6 +284,7 @@ MonoBehaviour:
   image_Guage: {fileID: 1179538504312150872}
   image_Guage_BG: {fileID: 5403736763703434438}
   text_Trophy: {fileID: 6232247926018800147}
+  image_TrophyBG: {fileID: 1276954567917896737}
   arrButton:
   - {fileID: 7579927258130093383}
   - {fileID: 4606300609731135814}
