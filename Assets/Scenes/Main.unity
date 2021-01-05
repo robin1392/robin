@@ -3236,6 +3236,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a864e9d828247b0af2b7ca603cf5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &6180031957008467227 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6180031957544482411, guid: 94c073845c7dd474a92cf5a2b07597d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6180031957008467223}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6180031957008467228 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2769207662434425709, guid: 94c073845c7dd474a92cf5a2b07597d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6180031957008467223}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6180031957008467229 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6117371186310529460, guid: 94c073845c7dd474a92cf5a2b07597d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6180031957008467223}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6362351360819374707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7819,6 +7837,26 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6538352038165036884, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+        type: 3}
+      propertyPath: rts_Diamond
+      value: 
+      objectReference: {fileID: 6180031957008467227}
+    - target: {fileID: 6538352038165036884, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+        type: 3}
+      propertyPath: rts_Gold
+      value: 
+      objectReference: {fileID: 6180031957008467228}
+    - target: {fileID: 6538352038165036884, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+        type: 3}
+      propertyPath: rts_Key
+      value: 
+      objectReference: {fileID: 6180031957008467229}
+    - target: {fileID: 6538352038165036884, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 519420031}
     - target: {fileID: 6547846352398101568, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
         type: 3}
       propertyPath: m_AnchorMin.y

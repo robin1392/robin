@@ -120,10 +120,10 @@ public class SingularSDK : MonoBehaviour {
 
         SingularConfig config = BuildSingularConfig();
 
-#if UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR
         StartSingularSession(config);
         SetAllowAutoIAPComplete_(instance.autoIAPComplete);
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID && !UNITY_EDITOR
         initSDK(config);
 #endif
         Initialized = true;
@@ -463,7 +463,7 @@ public class SingularSDK : MonoBehaviour {
 
     private static bool StartSingularSession(SingularConfig config) {
         if (!Application.isEditor) {
-#if UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR
             RegisterDeferredDeepLinkHandler_();
 
             SetWrapperNameAndVersion_(UNITY_WRAPPER_NAME, UNITY_VERSION);
