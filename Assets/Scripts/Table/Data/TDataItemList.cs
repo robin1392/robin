@@ -9,6 +9,8 @@ namespace RandomWarsResource.Data
 		gold = 1,
 		dia = 2,
 		thropy = 3,
+		seasonthropy = 4,
+		rankthropy = 5,
 		key = 11,
 		vippass = 51,
 		seasonpass = 52,
