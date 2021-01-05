@@ -94,7 +94,7 @@ public class UI_RewardSlot : MonoBehaviour
             SetButton();
         }
 
-        image_Guage.fillAmount = (myTrophy - minTrophy) / (float)maxTrophy;
+        image_Guage.fillAmount = (myTrophy - minTrophy) / (float)(maxTrophy - minTrophy);
     }
 
     public void SetButton()

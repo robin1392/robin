@@ -31,13 +31,19 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     private TDataClassReward dataPremium;
     private TDataClassReward dataNormal;
 
+    [SerializeField]
+    private float minTrophy;
+
+    [SerializeField]
+    private float maxTrophy;
+
     public void Initialize(int row, int myTrophy, int getVipRow, int getNormalRow)
     {
         this.row = row;
         this.getVipRow = getVipRow;
         this.getNormalRow = getNormalRow;
-        float minTrophy = 0;
-        float maxTrophy = 0;
+        minTrophy = 0;
+        maxTrophy = 0;
         
         if (row == 0)
         {
@@ -102,7 +108,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             SetButton();
         }
 
-        image_Guage.fillAmount = (myTrophy - minTrophy) / (float)maxTrophy;
+        image_Guage.fillAmount = (myTrophy - minTrophy) / (float)(maxTrophy - minTrophy);
     }
 
     public void SetButton()
@@ -125,8 +131,8 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             arrObj_Lock[1].SetActive(false);
             arrObj_Check[0].SetActive(getPass);
             arrObj_Check[1].SetActive(getNormal);
-            arrButton[0].interactable = !getPass;
-            arrButton[1].interactable = !getNormal;
+            arrButton[0].interactable = row + 1000 - 1 == getVipRow;
+            arrButton[1].interactable = row - 1 == getNormalRow;
         }
     }
     
