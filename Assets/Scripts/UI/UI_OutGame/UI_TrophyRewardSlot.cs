@@ -23,6 +23,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public GameObject[] arrObj_Lock;
     public GameObject[] arrObj_Check;
 
+    private bool isGetPremium;
     private int row;
     private int getVipRow;
     private int getNormalRow;
@@ -130,11 +131,13 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     
     public void Click_PremiumGet()
     {
+        isGetPremium = true;
         NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row + 1000, GetCallback);
     }
 
     public void Click_NormalGet()
     {
+        isGetPremium = false;
         NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, GetCallback);
     }
     
@@ -142,7 +145,14 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     {
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
-            
+            if (isGetPremium)
+            {
+                getVipRow++;
+            }
+            else
+            {
+                getNormalRow++;
+            }
         }
         
         SetButton();
