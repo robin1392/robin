@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using ED;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
@@ -133,16 +134,19 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     {
         isGetPremium = true;
         NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row + 1000, GetCallback);
+        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
     public void Click_NormalGet()
     {
         isGetPremium = false;
         NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, GetCallback);
+        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
     
     public void GetCallback(MsgGetClassRewardAck msg)
     {
+        UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
             if (isGetPremium)
