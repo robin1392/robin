@@ -50,5 +50,7 @@ namespace RandomWarsProtocol
 
 
         ERROR_QUEST_DAY_REWARD_INVALID_TIME = 20401,            // 퀘스트의 일일 보상 시간이 유효화지 않습니다.
+        ERROR_QUEST_DAY_REWARD_INVALID_INDEX = 20402,           // 퀘스트의 일일 보상이 이미 지급되었다.
+
     }
 }
