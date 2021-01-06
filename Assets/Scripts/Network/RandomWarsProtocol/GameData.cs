@@ -48,16 +48,6 @@ namespace RandomWarsProtocol
         public short Class;
         // 연승 횟수 (최대 15회)
         public byte WinStreak;
-        // 시즌 패스 아이디
-        public int SeasonPassId;
-        // 시즌 패스 구매 여부
-        public bool BuySeasonPass;
-        // 시즌 트로피
-        public int SeasonTrophy;
-        // 시즌 패스 보상 획득 아이디 배열
-        public int[] SeasonPassRewardIds;
-        // 트로피 보상 획득 아이디 배열
-        public int[] TrophyRewardIds;
 
 
         public void Write(BinaryWriter bw)
@@ -1914,5 +1904,23 @@ namespace RandomWarsProtocol
         public bool[] DayRewardState;
         // 일일 보상 획득까지 남은 시간(초단위)
         public int DayRewardRemainTime;
+    }
+
+
+    [Serializable]
+    public class MsgSeasonPassInfo
+    {
+        // 시즌 패스 아이디
+        public int SeasonPassId;
+        // 시즌 패스 구매 여부
+        public bool BuySeasonPass;
+        // 시즌 트로피
+        public int SeasonTrophy;
+        // 시즌 초기화 남은 시간(초단위)
+        public int SeasonResetRemainTime;
+        // 시즌 패스 보상 획득 아이디 배열
+        public int[] SeasonPassRewardIds;
+        // 트로피 보상 획득 아이디 배열
+        public int[] TrophyRewardIds;
     }
 }

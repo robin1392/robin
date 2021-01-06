@@ -19,6 +19,7 @@ namespace RandomWarsProtocol.Msg
         public MsgUserDice[] UserDice;
         public MsgUserBox[] UserBox;
         public MsgQuestInfo QuestInfo;
+        public MsgSeasonPassInfo SeasonPassInfo;
     }
 
 
@@ -198,14 +199,8 @@ namespace RandomWarsProtocol.Msg
     public class MsgSeasonPassInfoAck
     {
         public GameErrorCode ErrorCode;
-        // 시즌 패스 아이디
-        public int SeasonPassId;
-        // 시즌 패스 구매 여부
-        public bool BuySeasonPass;
-        // 시즌 트로피
-        public int SeasonTrophy;
-        // 획득 보상 아이디 배열. (획득한 보상 테이블 아이디 배열)
-        public int[] GetRewardIds;
+        // 시즌 패스 정보
+        public MsgSeasonPassInfo SeasonPassInfo;
     }
 
 
