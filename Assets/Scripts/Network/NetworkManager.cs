@@ -926,11 +926,11 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void OnQuestInfoAck(MsgQuestInfoAck msg)
     {
+        UnityUtil.Print("RECV QUEST INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
         if (_questInfoCallback != null)
         {
             _questInfoCallback(msg);
         }
-        UnityUtil.Print("RECV QUEST INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
     public void QuestRewardReq(string userId, int questId, Action<MsgQuestRewardAck> callback)

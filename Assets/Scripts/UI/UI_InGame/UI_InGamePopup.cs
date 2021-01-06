@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -33,7 +34,11 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     {
         base.Awake();
 
-        InitUIElement();
+    }
+
+    public void Start()
+    {
+        Invoke("InitUIElement", 0.1f);
     }
 
     public override void OnDestroy()
