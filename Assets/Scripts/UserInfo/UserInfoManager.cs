@@ -30,6 +30,7 @@ public class UserInfo
     public int gold;
     public int key;
     public int winStreak;
+
     public int seasonPassId;
     public bool buySeasonPass;
     public int seasonTrophy;
@@ -301,7 +302,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo;
     }
 
-    public void SetUserInfo(MsgUserInfo info)
+    public void SetUserInfo(MsgUserInfo info, MsgSeasonPassInfo seasonPassInfo)
     {
         SetUserKey(info.UserId);
 
@@ -312,12 +313,12 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.trophy = info.Trophy;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
-        _userInfo.seasonPassId = info.SeasonPassId;
-        _userInfo.buySeasonPass = info.BuySeasonPass;
-        _userInfo.seasonTrophy = info.SeasonTrophy;
-        if (info.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(info.SeasonPassRewardIds);
+        _userInfo.seasonPassId = seasonPassInfo.SeasonPassId;
+        _userInfo.buySeasonPass = seasonPassInfo.BuySeasonPass;
+        _userInfo.seasonTrophy = seasonPassInfo.SeasonTrophy;
+        if (seasonPassInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonPassInfo.SeasonPassRewardIds);
         else _userInfo.seasonPassRewardIds = new List<int>();
-        if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
+        if (seasonPassInfo.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(seasonPassInfo.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
     }
     

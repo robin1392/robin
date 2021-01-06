@@ -77,9 +77,9 @@ public class UI_Popup_Rank : UI_Popup
             case SEASON_STATE.NONE:
                 text_RankMessage.gameObject.SetActive(true);
                 break;
-            case SEASON_STATE.PRE:
-                text_RankMessage.gameObject.SetActive(true);
-                break;
+            //case SEASON_STATE.PRE:
+            //    text_RankMessage.gameObject.SetActive(true);
+            //    break;
             case SEASON_STATE.GOING:
                 isInitialized = true;
                 text_RankMessage.gameObject.SetActive(false);
