@@ -64,8 +64,14 @@ public class UI_Popup_Quest : UI_Popup
                 arrText_Reward[2].text = $"{dataDailyReward.rewardItem03}\nx{dataDailyReward.rewardItemValue03}";
             }
             
-            for (int i = 0; i < msg.QuestInfo.QuestData.Length; i++)
+            for (int i = 0; i < msg.QuestInfo.QuestData.Length || i < listSlot.Count; i++)
             {
+                if (i >= msg.QuestInfo.QuestData.Length)
+                {
+                    listSlot[i].gameObject.SetActive(false);
+                    continue;
+                }
+                listSlot[i].gameObject.SetActive(true);
                 listSlot[i].Initialize(msg.QuestInfo.QuestData[i]);
             }
         }
