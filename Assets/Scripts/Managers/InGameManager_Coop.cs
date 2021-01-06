@@ -17,6 +17,23 @@ namespace ED
 
         private bool isMaster;
 
+        protected override void Start()
+        {
+            // 개발 버전이라..중간에서 실행햇을시에..
+            if (DataPatchManager.Get().isDataLoadComplete == false)
+                DataPatchManager.Get().JsonDownLoad();
+
+            // 전체 주사위 정보
+            data_DiceInfo = TableManager.Get().DiceInfo;
+
+            // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
+            PoolManager.Get().MakePool();
+
+            StartManager();
+
+            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_COOP);
+        }
+
         public override void StartManager()
         {
             if (IsNetwork == false) return;

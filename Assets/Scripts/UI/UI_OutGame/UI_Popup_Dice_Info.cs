@@ -149,6 +149,8 @@ namespace ED
 
             SetUnitGrade();
             SetInfoDesc();
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_DICE_INFO_EFX);
         }
 
         public override void Close()
@@ -165,6 +167,7 @@ namespace ED
                 gameObject.SetActive(false);
             });
 
+            SoundManager.instance.Play(clip_Close);
         }
 
         public void Click_Upgrade()

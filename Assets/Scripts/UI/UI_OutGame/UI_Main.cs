@@ -49,7 +49,7 @@ namespace ED
 
         [Header("Panals")] 
         public UI_Panel_Dice panel_Dice;
-        
+
         private readonly int[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
 
         public override void Awake()
@@ -344,11 +344,13 @@ namespace ED
                 {
                     if (currentPageNum < 4) Click_MainButton(currentPageNum + 1);
                     else Click_MainButton(currentPageNum);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_UI_SCREEN_SWIPE);
                 }
                 else if (data.currentInputModule.input.mousePosition.x > _pointerDownPos.x + 100f)
                 {
                     if (currentPageNum > 0) Click_MainButton(currentPageNum - 1);
                     else Click_MainButton(currentPageNum);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_UI_SCREEN_SWIPE);
                 }
                 else
                 {

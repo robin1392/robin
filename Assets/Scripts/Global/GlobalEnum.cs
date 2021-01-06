@@ -142,6 +142,7 @@ public partial class Global
         // BGM
         BGM_LOBBY = 0,
         BGM_INGAME_BATTLE,
+        BGM_INGAME_COOP,
         BGM_INGAME_WIN,
         BGM_INGAME_LOSE,
         
@@ -158,6 +159,24 @@ public partial class Global
         SFX_WIN,
         SFX_LOSE,
         SFX_UI_PERFECT,
+        SFX_UI_SCREEN_SWIPE,
+        SFX_UI_DICE_SELECT,
+        SFX_UI_DICE_INFO_EFX,
+        SFX_UI_DICE_LVUP_EFX,
+        SFX_UI_DICE_POINT_UP,
+        SFX_UI_LVUP_RESULT,
+        SFX_UI_BOX_NORMAL_APPEAR,
+        SFX_UI_BOX_COOP_APPEAR,
+        SFX_UI_BOX_COMMON_FALLDOWN,
+        SFX_UI_BOX_COMMON_OPEN,
+        SFX_UI_BOX_COMMON_OPEN_REPEAT,
+        SFX_UI_BOX_COMMON_ITEM_APPEAR,
+        SFX_UI_BOX_COMMON_GET_GOLD,
+        SFX_UI_BOX_COMMON_GET_DIAMOND,
+        SFX_UI_BOX_COMMON_GET_DICE,
+        SFX_UI_BOX_COMMON_GET_DICE_LEGEND,
+        SFX_UI_BOX_COMMON_RESULT,
+        SFX_UI_BOX_COMMON_RESULT_ITEM,
     }
     
     #endregion

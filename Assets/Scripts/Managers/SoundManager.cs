@@ -114,6 +114,26 @@ public class SoundManager : MonoBehaviour {
         Play(clipName, false);
     }
 
+    public AudioSource Play(AudioClip clip, bool isLoop = false)
+    {
+        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
+        {
+            return null;
+        }
+
+        var audio = GetNonPlayingAudioSource();
+        
+        if (audio != null && clip != null)
+        {
+            audio.clip = clip;
+            audio.volume = SFXVolume;
+            audio.loop = isLoop;
+            audio.Play();
+        }
+
+        return audio;
+    }
+
     // public AudioSource PlayOnlyOnce(Global.E_SOUND clipName, bool isLoop = false)
     // {
     //     if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)

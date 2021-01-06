@@ -12,6 +12,10 @@ namespace ED
         public RectTransform rts_Frame;
         public Image image_BG;
 
+        [Header("Sound")]
+        public AudioClip clip_Open;
+        public AudioClip clip_Close;
+
         protected Button btn_BG_Close;
 
         private void Awake()
@@ -28,6 +32,8 @@ namespace ED
                 if (btn_BG_Close != null) btn_BG_Close.interactable = true;
             });
             image_BG.DOFade(0.95f, 0.2f);
+
+            SoundManager.instance.Play(clip_Open);
         }
 
         public virtual void Close()
@@ -38,6 +44,8 @@ namespace ED
                 gameObject.SetActive(false);
             });
             image_BG.DOFade(0, 0.2f);
+
+            SoundManager.instance.Play(clip_Close);
         }
     }
 }
