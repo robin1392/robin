@@ -149,6 +149,8 @@ namespace ED
 
             SetUnitGrade();
             SetInfoDesc();
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_DICE_INFO_EFX);
         }
 
         public override void Close()
@@ -165,6 +167,7 @@ namespace ED
                 gameObject.SetActive(false);
             });
 
+            SoundManager.instance.Play(clip_Close);
         }
 
         public void Click_Upgrade()
@@ -197,6 +200,8 @@ namespace ED
         private bool isDiceLevelUpCompleted;
         private IEnumerator SetDiceLevelUpResultCoroutine()
         {
+            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_DICE_LVUP_EFX);
+            
             isDiceLevelUpCompleted = false;
             
             image_ResultDiceIcon.transform.localScale = Vector3.zero;
@@ -264,6 +269,7 @@ namespace ED
                 text_ResultDiceLevel.color = UnityUtil.HexToColor("71FA4A");
                 image_ResultDiceIcon.transform.DOScale(1.4f, 0.15f);
                 ps_ResultIconBackground.Play();
+                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_LVUP_RESULT);
             });
             text_ResultDiceLevel.transform.DOScale(1.2f, 0.15f).SetDelay(1.7f).OnComplete(() =>
             {

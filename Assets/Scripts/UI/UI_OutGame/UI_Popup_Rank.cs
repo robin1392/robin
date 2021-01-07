@@ -186,7 +186,7 @@ public class UI_Popup_Rank : UI_Popup
 
     public void ScrollChange(Vector2 v)
     {
-        if (isRankCalling == false && v.y < 0 && pageNum < 11)
+        if (isInitialized && isRankCalling == false && v.y < 0 && pageNum < 11)
         {
             isRankCalling = true;
             

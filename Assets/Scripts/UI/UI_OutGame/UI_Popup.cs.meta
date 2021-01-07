@@ -3,7 +3,11 @@ guid: 974fa3c1bcf794ed89d1c62a5d97a7dd
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - rts_Frame: {instanceID: 0}
+  - image_BG: {instanceID: 0}
+  - clip_Open: {fileID: 8300000, guid: ecd6a3d76385b4e36bac71e4eabdf84c, type: 3}
+  - clip_Close: {fileID: 8300000, guid: 5572bc617d3544fa4833c50279dc7b75, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
