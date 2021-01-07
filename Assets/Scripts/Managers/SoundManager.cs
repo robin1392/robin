@@ -109,8 +109,27 @@ public class SoundManager : MonoBehaviour {
         return audio;
     }
 
-    public void Play(Global.E_SOUND clipName)
+    public AudioSource Play(Global.E_SOUND clipName)
     {
+        return Play(clipName, false);
+    }
+    
+    public void Play(Global.E_SOUND clipName, float delay)
+    {
+        if (delay > 0)
+        {
+            StartCoroutine(PlayCoroutine(clipName, delay));
+        }
+        else
+        {
+            Play(clipName, false);
+        }
+    }
+
+    IEnumerator PlayCoroutine(Global.E_SOUND clipName, float delay = 0f)
+    {
+        yield return new WaitForSeconds(delay);
+        
         Play(clipName, false);
     }
 
