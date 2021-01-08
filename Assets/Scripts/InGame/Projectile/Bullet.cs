@@ -21,6 +21,9 @@ namespace ED
         [HideInInspector]
         public float moveTime;
         public Material[] arrMaterial;
+
+        [Header("Audio")]
+        public AudioSource audio_Explosion;
         
         protected BaseStat _target;
         protected Vector3 _targetPos;
@@ -155,6 +158,7 @@ namespace ED
                 yield return new WaitForSeconds(endEffectDuration);
             }
 
+            if (audio_Explosion != null) audio_Explosion.Play();
             _poad.Deactive();
         }
     }

@@ -11,6 +11,10 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light_Fire;
         public LineRenderer lr;
+
+        [Header("AudioClip")]
+        public AudioClip clip_Shot;
+        
         private static readonly int AttackReady = Animator.StringToHash("AttackReady");
 
         protected override void Start()
@@ -163,6 +167,8 @@ namespace ED
 
         public void FireArrow()
         {
+            SoundManager.instance.Play(clip_Shot);
+            
             if (target != null)
             {
                 if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )

@@ -16,6 +16,10 @@ namespace ED
         public Light light;
         public ParticleSystem ps_Tail;
         public ParticleSystem ps_BombEffect;
+
+        [Header("AudioClip")]
+        public AudioClip clip_Fire;
+        public AudioClip clip_Explosion;
         
         private bool isBombed = false;
 
@@ -35,6 +39,8 @@ namespace ED
 
         protected override IEnumerator Move()
         {
+            SoundManager.instance.Play(clip_Fire);
+            
             light.enabled = true;
             var startPos = transform.position;
             while (target == null) { yield return null; }
@@ -127,7 +133,7 @@ namespace ED
             ps_Tail.Stop();
             ps_BombEffect.Play();
             
-            SoundManager.instance.Play(Global.E_SOUND.SFX_FIREBALL_EXPLOSION);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_COMMON_EXPLOSION);
 
             Destroy(1.1f);
         }

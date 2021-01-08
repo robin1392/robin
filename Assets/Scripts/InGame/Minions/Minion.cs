@@ -78,6 +78,7 @@ namespace ED
         protected BaseStat _attackedTarget;
         protected Seeker _seeker;
         protected AIPath _aiPath;
+        protected MinionAnimationEvent _animationEvent;
 
         protected virtual void Awake()
         {
@@ -86,6 +87,7 @@ namespace ED
             _collider = GetComponentInChildren<Collider>();
             _seeker = GetComponent<Seeker>();
             _aiPath = GetComponent<AIPath>();
+            _animationEvent = animator.GetComponent<MinionAnimationEvent>();
         }
 
 

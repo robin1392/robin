@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 8149992886170705306}
@@ -152,6 +153,7 @@ MonoBehaviour:
   diceFieldNum: 0
   ps: {fileID: 7474766724198679748}
   ps_NotIsMine: {fileID: 6269633718755841126}
+  clip_Summon: {fileID: 8300000, guid: d20f126ff82a34d7e80b2b7b9fd00e5b, type: 3}
 --- !u!114 &4959641879111532696
 MonoBehaviour:
   m_ObjectHideFlags: 0

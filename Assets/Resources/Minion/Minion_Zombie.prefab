@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: 6486029529450410244}
   - component: {fileID: 4658676096167050152}
   - component: {fileID: 2583571212696764795}
-  - component: {fileID: -7956154699669209687}
   - component: {fileID: -6836292013747038862}
   - component: {fileID: -3493701411502816537}
   m_Layer: 0
@@ -127,12 +126,13 @@ MonoBehaviour:
   isPushing: 0
   isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
-  upgradeLevel: 0
-  agent: {fileID: 0}
+  ingameUpgradeLevel: 0
   isPolymorph: 0
   ps_PoisonCloud: {fileID: 0}
   animator_Alive: {fileID: 4103123151041051536}
   animator_Dead: {fileID: 8147316409286131061}
+  clip_Blade: {fileID: 8300000, guid: a168d9652d29946a4b2348e66520e0d7, type: 3}
+  clip_Poison: {fileID: 8300000, guid: c5e16dfd1316b4ff48475488d8b0265f, type: 3}
   _reviveCount: 1
 --- !u!114 &5271869617561665627
 MonoBehaviour:
@@ -225,28 +225,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolName: 
   lifeTime: 0
---- !u!195 &-7956154699669209687
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.25
-  m_Speed: 1
-  m_Acceleration: 20
-  avoidancePriority: 50
-  m_AngularSpeed: 720
-  m_StoppingDistance: 0.7
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 0.75
-  m_BaseOffset: 0
-  m_WalkableMask: 7
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &-6836292013747038862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,6 +391,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2273993824194380758, guid: 40f9956fb52ec4f839aedfa299c1a091,
+        type: 3}
+      propertyPath: _minion
+      value: 
+      objectReference: {fileID: 3766415997882333757}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40f9956fb52ec4f839aedfa299c1a091, type: 3}
 --- !u!4 &4574392479197355132 stripped

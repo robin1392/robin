@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 6486029529450410244}
   - component: {fileID: 4658676096167050152}
   - component: {fileID: 2583571212696764795}
-  - component: {fileID: -7956154699669209687}
   - component: {fileID: 8577928039910037043}
   - component: {fileID: -6576364168962938178}
   m_Layer: 0
@@ -95,11 +94,12 @@ MonoBehaviour:
   isPushing: 0
   isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
-  upgradeLevel: 0
-  agent: {fileID: -7956154699669209687}
+  ingameUpgradeLevel: 0
   isPolymorph: 0
   pref_MiniGolem: {fileID: 5081294253336761964, guid: dca45631bd4c14b9191f44e7b9426b91,
     type: 3}
+  clip_Attack: {fileID: 8300000, guid: ec5a1b92f985d48fd8ef7da70f3e637d, type: 3}
+  clip_Exposion: {fileID: 8300000, guid: 56def68020507495c972099294521a32, type: 3}
 --- !u!114 &5271869617561665627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,28 +191,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolName: 
   lifeTime: 0
---- !u!195 &-7956154699669209687
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 1
-  m_Acceleration: 20
-  avoidancePriority: 50
-  m_AngularSpeed: 720
-  m_StoppingDistance: 0.7
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 0
-  m_WalkableMask: 7
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &8577928039910037043
 MonoBehaviour:
   m_ObjectHideFlags: 0

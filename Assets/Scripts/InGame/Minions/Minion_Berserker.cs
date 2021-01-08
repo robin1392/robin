@@ -10,10 +10,20 @@ namespace ED
 {
     public class Minion_Berserker : Minion
     {
+        public ParticleSystem ps_Wind;
+
+        [Header("AudioClip")]
+        public AudioClip clip_Whirl;
+        
         private float _skillCastedTime;
         private bool _isSkillCasting;
 
-        public ParticleSystem ps_Wind;
+        protected override void Start()
+        {
+            base.Start();
+
+            _animationEvent.event_Skill += SkillEvent;
+        }
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -47,6 +57,11 @@ namespace ED
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine());
             }
+        }
+
+        public void SkillEvent()
+        {
+            SoundManager.instance.Play(clip_Whirl);
         }
 
         IEnumerator SkillCoroutine()

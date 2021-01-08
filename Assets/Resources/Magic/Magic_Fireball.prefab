@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 3769771245035174349}
@@ -118,6 +119,8 @@ MonoBehaviour:
   light: {fileID: 8081847643383214301}
   ps_Tail: {fileID: 8081847643390879907}
   ps_BombEffect: {fileID: 6995006711023538138}
+  clip_Fire: {fileID: 8300000, guid: 93ecf5ef7e7a04eb0ae3b1d73777ee98, type: 3}
+  clip_Explosion: {fileID: 8300000, guid: af1d417c26d8e4c908cf28fb9e2ee6ef, type: 3}
 --- !u!114 &7685983556338847813
 MonoBehaviour:
   m_ObjectHideFlags: 0
