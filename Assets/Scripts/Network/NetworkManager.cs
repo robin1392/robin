@@ -579,7 +579,7 @@ public class NetworkManager : Singleton<NetworkManager>
         UserInfoManager.Get().SetBox(msg.UserBox);
 
         GameStateManager.Get().UserAuthOK();
-        UnityUtil.Print("RECV AUTH => userid", msg.UserInfo.UserId, "green");
+        UnityUtil.Print("RECV AUTH => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
 

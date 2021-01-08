@@ -318,7 +318,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.seasonTrophy = seasonPassInfo.SeasonTrophy;
         if (seasonPassInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonPassInfo.SeasonPassRewardIds);
         else _userInfo.seasonPassRewardIds = new List<int>();
-        if (seasonPassInfo.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(seasonPassInfo.TrophyRewardIds);
+        if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
     }
     
