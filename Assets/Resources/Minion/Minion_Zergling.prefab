@@ -75,7 +75,6 @@ GameObject:
   - component: {fileID: 1553790460917157832}
   - component: {fileID: 1959790092759300019}
   - component: {fileID: -4487077608605219763}
-  - component: {fileID: -6534828109938554290}
   - component: {fileID: 9074641217271723217}
   - component: {fileID: 7754558877291580786}
   - component: {fileID: 2702104167329898379}
@@ -156,8 +155,7 @@ MonoBehaviour:
   isPushing: 0
   isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
-  upgradeLevel: 0
-  agent: {fileID: 0}
+  ingameUpgradeLevel: 0
   isPolymorph: 0
 --- !u!114 &4086450853476115766
 MonoBehaviour:
@@ -234,28 +232,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolName: 
   lifeTime: 0
---- !u!195 &-6534828109938554290
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.25
-  m_Speed: 1
-  m_Acceleration: 20
-  avoidancePriority: 50
-  m_AngularSpeed: 720
-  m_StoppingDistance: 0.7
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 0
-  m_WalkableMask: 7
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &9074641217271723217
 MonoBehaviour:
   m_ObjectHideFlags: 0

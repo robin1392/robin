@@ -9,6 +9,9 @@ namespace ED
     {
         [Header("Prefab")] public GameObject pref_Heal;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Heal;
+
         protected override void Awake()
         {
             base.Awake();
@@ -20,6 +23,19 @@ namespace ED
         {
             base.Initialize(destroy);
             attackSpeed = effectCooltime;
+            _animationEvent.event_Attack += AttackEvent;
+        }
+
+        public override void Death()
+        {
+            base.Death();
+
+            _animationEvent.event_Attack -= AttackEvent;
+        }
+
+        public void AttackEvent()
+        {
+            SoundManager.instance.Play(clip_Heal);
         }
 
         public override void Attack()

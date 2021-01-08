@@ -22,6 +22,9 @@ namespace ED
 
         public Transform[] arrTs_Parts;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Fire;
+
         protected override void Start()
         {
             base.Start();
@@ -174,6 +177,8 @@ namespace ED
                 light_Fire.enabled = true;
                 Invoke("FireLightOff", 0.15f);
             }
+            
+            SoundManager.instance.Play(clip_Fire);
         }
         
         private void FireLightOff()

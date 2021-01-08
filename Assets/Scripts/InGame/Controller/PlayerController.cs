@@ -126,6 +126,10 @@ namespace ED
         public int robotPieceCount;
         public int robotEyeTotalLevel;
 
+        [Header("AudioClip")]
+        public AudioClip clip_TowerFalldown;
+        public AudioClip clip_TowerExplosion;
+
         #endregion
         
         #region minion & magic
@@ -1134,6 +1138,7 @@ namespace ED
                 image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
                 ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
                 animator.SetTrigger("Death");
+                SoundManager.instance.Play(clip_TowerExplosion);
                 ps_Destroy.gameObject.SetActive(true);
                 
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
@@ -1888,6 +1893,7 @@ namespace ED
                     break;
                 case E_BulletType.SPEAR:
                     b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
                     break;
                 case E_BulletType.NECROMANCER:
                     b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
@@ -1984,6 +1990,8 @@ namespace ED
             {
                 case E_CannonType.DEFAULT:
                     b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
                     break;
                 case E_CannonType.BOMBER:
                     b = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);

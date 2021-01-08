@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 0}
@@ -102,6 +103,7 @@ MonoBehaviour:
   - {fileID: 6789153237820843019}
   - {fileID: 4596631854425928125}
   - {fileID: 2818471866354082363}
+  clip_Fire: {fileID: 8300000, guid: 717672faccaf04d3e95614f0926f2f76, type: 3}
 --- !u!114 &4959641879111532696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
+  _minion: {fileID: 0}
 --- !u!1 &2365875537131961771
 GameObject:
   m_ObjectHideFlags: 0

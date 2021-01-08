@@ -6,6 +6,9 @@ namespace ED
 {
     public class Minion_Shielder : Minion
     {
+        [Header("AudioClip")]
+        public AudioClip clip_ShieldMode;
+        
         private float skillCastedTime;
         private bool isHalfDamage;
         private static readonly int aniHashAttack = Animator.StringToHash("Skill");
@@ -42,6 +45,7 @@ namespace ED
                 skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine());
 
+                SoundManager.instance.Play(clip_ShieldMode);
                 animator.SetTrigger(aniHashAttack);
             }
         }

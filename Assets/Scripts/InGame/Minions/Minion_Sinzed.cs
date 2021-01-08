@@ -11,6 +11,9 @@ namespace ED
 {
     public class Minion_Sinzed : Minion
     {
+        [Header("AudioClip")]
+        public AudioClip clip_Explosion;
+        
         private void OnEnable()
         {
             animator.gameObject.SetActive(true);
@@ -69,6 +72,8 @@ namespace ED
 
         IEnumerator DeathCoroutine()
         {
+            SoundManager.instance.Play(clip_Explosion);
+            
             var t = 0f;
             var tick = 0f;
             while (t < 5f)

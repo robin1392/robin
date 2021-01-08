@@ -12,6 +12,9 @@ namespace ED
     {
         [Header("Effect")]
         public GameObject pref_EffectDash;
+
+        [Header("AudioClip")]
+        public AudioClip clip_Dash;
         
         private float _skillCastedTime;
 
@@ -21,7 +24,14 @@ namespace ED
             
             PoolManager.instance.AddPool(pref_EffectDash, 1);
         }
-        
+
+        protected override void Start()
+        {
+            base.Start();
+
+            _animationEvent.event_Skill += SkillEvent;
+        }
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -55,6 +65,11 @@ namespace ED
             {
                 Dash();
             }
+        }
+
+        public void SkillEvent()
+        {
+            SoundManager.instance.Play(clip_Dash);
         }
 
         protected void Dash()

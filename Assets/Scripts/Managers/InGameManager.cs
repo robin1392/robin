@@ -705,6 +705,8 @@ namespace ED
             playerController.GetDice(diceId, slotNum, level);
             NetSetSp(curSp);
             
+            
+            
             UI_InGame.Get().ControlGetDiceButton(true);
         }
 
@@ -947,6 +949,8 @@ namespace ED
             {
                 playerController.SP_Upgrade();
             }
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
         }
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)

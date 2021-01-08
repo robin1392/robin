@@ -10,11 +10,22 @@ namespace ED
         public Animator animator_Alive;
         public Animator animator_Dead;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Blade;
+        public AudioClip clip_Poison;
+        
         [SerializeField]
         private int _reviveCount = 1;
 
         private MeshRenderer[] arrMeshRenderer2;
         private SkinnedMeshRenderer[] arrSkinnedMeshRenderer2;
+
+        protected override void Start()
+        {
+            base.Start();
+
+            _animationEvent.event_Attack += AttackEvent;
+        }
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -43,6 +54,11 @@ namespace ED
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
             }
+        }
+
+        public void AttackEvent()
+        {
+            SoundManager.instance.Play(clip_Blade);
         }
 
         public override void Death()
@@ -155,6 +171,7 @@ namespace ED
 
         IEnumerator PoisonCoroutine(float duration)
         {
+            SoundManager.instance.Play(clip_Poison);
             PoolManager.instance.ActivateObject("Effect_Poison", transform.position);
             float t = 0;
             float tick = 0.1f;
