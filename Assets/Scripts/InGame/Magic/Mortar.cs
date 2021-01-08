@@ -18,6 +18,10 @@ namespace ED
         public Light light_Fire;
         public float shootTime = 0;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Missile;
+        public AudioClip clip_Shot;
+
         private Transform longTarget;
         private static readonly int animatorHashShoot = Animator.StringToHash("Shoot");
 

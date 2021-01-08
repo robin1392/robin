@@ -63,6 +63,8 @@ namespace ED
                 InGameManager.Get().playerController.AddSp(-arrPrice[level - 1]);
                 Refresh();
             }
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
         }
 
         public int GetDeckDiceId()

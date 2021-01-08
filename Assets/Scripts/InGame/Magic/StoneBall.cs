@@ -15,8 +15,10 @@ namespace  ED
         public GameObject pref_StoneHitEffect;
         
         [Space]
-        public ParticleSystem ps_Bomb;
         public Transform ts_Model;
+
+        [Header("AudioClip")]
+        public AudioClip clip_Rolling;
 
         protected override void Awake()
         {
@@ -43,6 +45,7 @@ namespace  ED
         
         private IEnumerator AttackCoroutine()
         {
+            SoundManager.instance.Play(clip_Rolling);
             float angle = 0f;
             Vector3 forward = transform.forward;
             while (true)
@@ -74,6 +77,7 @@ namespace  ED
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 StopAllCoroutines();
                 ts_Model.gameObject.SetActive(false);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
                 Destroy(2f);
             }
         }

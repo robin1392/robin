@@ -16,6 +16,10 @@ namespace ED
         public float pushPower = 2f;
         public float lifeTime = 20f;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Set;
+        public AudioClip clip_Explosion;
+
         private bool isTriggerOn;
         private float _originRange;
         private static readonly int Set = Animator.StringToHash("Set");
@@ -92,6 +96,7 @@ namespace ED
                 image_HealthBar.transform.parent.gameObject.SetActive(true);
             }
 
+            SoundManager.instance.Play(clip_Set);
             animator.SetTrigger(Set);
         }
 
@@ -154,6 +159,7 @@ namespace ED
 
             animator.gameObject.SetActive(false);
             ps_Bomb.Play();
+            SoundManager.instance.Play(clip_Explosion);
 
             base.Destroy(2f);
         }

@@ -9,8 +9,13 @@ namespace ED
 {
     public class UI_Popup : MonoBehaviour
     {
+        public bool isAutoOpen = true;
         public RectTransform rts_Frame;
         public Image image_BG;
+
+        [Header("Sound")]
+        public AudioClip clip_Open;
+        public AudioClip clip_Close;
 
         protected Button btn_BG_Close;
 
@@ -21,13 +26,24 @@ namespace ED
 
         protected virtual void OnEnable()
         {
-            if (btn_BG_Close != null) btn_BG_Close.interactable = false;
             rts_Frame.localScale = Vector3.zero;
+            
+            if (isAutoOpen)
+            {
+                Open();
+            }
+        }
+
+        protected void Open()
+        {
+            if (btn_BG_Close != null) btn_BG_Close.interactable = false;
             rts_Frame.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
             {
                 if (btn_BG_Close != null) btn_BG_Close.interactable = true;
             });
             image_BG.DOFade(0.95f, 0.2f);
+
+            SoundManager.instance.Play(clip_Open);
         }
 
         public virtual void Close()
@@ -38,6 +54,8 @@ namespace ED
                 gameObject.SetActive(false);
             });
             image_BG.DOFade(0, 0.2f);
+
+            SoundManager.instance.Play(clip_Close);
         }
     }
 }

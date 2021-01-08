@@ -14,6 +14,9 @@ namespace ED
         public ParticleSystem ps;
         public ParticleSystem ps_NotIsMine;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Summon;
+
         private bool _isTriggerOn;
         private List<int> _listAttackSpeedUp = new List<int>();
         
@@ -39,6 +42,7 @@ namespace ED
         
         protected override IEnumerator Move()
         {
+            SoundManager.instance.Play(clip_Summon);
             var startPos = transform.position;
             var endPos = targetPos;
             var distance = Vector3.Distance(startPos, endPos);

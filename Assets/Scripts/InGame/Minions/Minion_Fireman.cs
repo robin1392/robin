@@ -11,6 +11,9 @@ namespace ED
 
         public bool isFire;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Flame;
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
@@ -73,6 +76,8 @@ namespace ED
 
         IEnumerator FireCoroutine()
         {
+            SoundManager.instance.Play(clip_Flame);
+            
             SetControllEnable(false);
             isFire = true;
             ps_Fire.Play();

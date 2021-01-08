@@ -10,9 +10,15 @@ namespace ED
     {
         public GameObject pref_MiniGolem;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Attack;
+        public AudioClip clip_Exposion;
+
         public override void Attack()
         {
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+
+            SoundManager.instance.Play(clip_Attack);
             
             if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
@@ -47,6 +53,8 @@ namespace ED
 
         public override void Death()
         {
+            SoundManager.instance.Play(clip_Exposion);
+            
             for (int i = 0; i < 2; i++)
             {
                 // Spawn

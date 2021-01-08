@@ -14,8 +14,18 @@ namespace ED
         //private Collider _col;
         public ParticleSystem ps_Rush;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Rush;
+        
         [SerializeField]
         private Collider dashTarget;
+
+        protected override void Start()
+        {
+            base.Start();
+
+            _animationEvent.event_Skill += SkillEvent;
+        }
 
         public override void Initialize(DestroyCallback destroy)
         {
@@ -52,6 +62,11 @@ namespace ED
                 //Dash();
                 StartCoroutine(DashCoroutine());
             }
+        }
+
+        public void SkillEvent()
+        {
+            SoundManager.instance.Play(clip_Rush);
         }
 
         private void Dash()

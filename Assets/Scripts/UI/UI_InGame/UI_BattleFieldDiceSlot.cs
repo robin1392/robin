@@ -179,6 +179,7 @@ namespace ED
                     }
                     
                     ani.SetTrigger(BBoing);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);
                 }
             }
         }

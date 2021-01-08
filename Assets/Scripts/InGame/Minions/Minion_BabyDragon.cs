@@ -23,6 +23,9 @@ namespace ED
         [Header("Prefab")] 
         public GameObject pref_Fireball;
 
+        [Header("AudioClip")]
+        public AudioClip clip_BabyAttack;
+
         private float originRange;
         private readonly string strTagGround = "Minion_Ground";
         private readonly string strTagFlying = "Minion_Flying";
@@ -39,6 +42,8 @@ namespace ED
             base.Start();
 
             var ae = ani_Dragon.GetComponent<MinionAnimationEvent>();
+
+            ae.event_Attack += AttackEvent;
             ae.event_FireSpear += FireSpear;
         }
 
@@ -74,6 +79,11 @@ namespace ED
                 base.Attack();
                 animator.SetTrigger(_animatorHashAttack);
             }
+        }
+
+        public void AttackEvent()
+        {
+            SoundManager.instance.Play(clip_BabyAttack);
         }
 
         public void FireSpear()

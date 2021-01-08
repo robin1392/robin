@@ -124,10 +124,13 @@ MonoBehaviour:
   pref_Guardian: {fileID: 5081294253336761964, guid: 9d0b9ace6ba4c4164b1ff7d70e014e02,
     type: 3}
   spawnCount: 1
+  spawnCountInWave: 0
   subSpawnCount: 1000
   _sp: 200
   robotPieceCount: 0
   robotEyeTotalLevel: 0
+  clip_TowerFalldown: {fileID: 8300000, guid: 5b28a4c4a99394596a6ee7736021ccb7, type: 3}
+  clip_TowerExplosion: {fileID: 8300000, guid: eb47b1f09e5a14f60a242ca24f9d586a, type: 3}
   _listMagic: []
   isHalfHealth: 0
   isMinionAgentMove: 1

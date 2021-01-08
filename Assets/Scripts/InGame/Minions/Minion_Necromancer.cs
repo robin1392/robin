@@ -20,6 +20,10 @@ namespace ED
         //public Data_Dice spawnDiceData;
         public ParticleSystem[] arrPs_Spawn;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Summon;
+        public AudioClip clip_Attack;
+
         private readonly float _skillCooltime = 10f;
         private float _skillCastedTime;
         private bool _isSkillCasting;
@@ -37,13 +41,14 @@ namespace ED
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
             ae.event_FireArrow += FireArrow;
+            ae.event_Skill += Skill;
         }
 
         protected override void Update()
         {
             base.Update();
             
-            if (isPlayable && isMine && _spawnedTime >= _skillCastedTime + _skillCooltime)
+            if (isPlayable && (isMine || controller.isPlayingAI) && _spawnedTime >= _skillCastedTime + _skillCooltime)
             {
                 _skillCastedTime = _spawnedTime;
                 Summon();
@@ -89,33 +94,17 @@ namespace ED
                 return;
             }
             
-            
             if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
             {
                 controller.ActionFireBullet(E_BulletType.NECROMANCER , id, target.id, power, bulletMoveSpeed);
             }
-            
-            /*
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
-            {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.NECROMANCER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.ActionNecroBullet(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(E_BulletType.NECROMANCER ,ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
-            {
-                controller.FireBullet(E_BulletType.NECROMANCER, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }*/
-            
-            
-            
+
+            SoundManager.instance.Play(clip_Attack);
         }
         
         public void Skill()
         {
-
+            SoundManager.instance.Play(clip_Summon);
         }
 
         public void Summon()

@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMine: 0
+  diceId: 0
   id: 0
   controller: {fileID: 0}
   rb: {fileID: 6474548453207052780}
@@ -91,6 +92,7 @@ MonoBehaviour:
     type: 3}
   ps_Bomb: {fileID: 0}
   ts_Model: {fileID: 4518647159089944879}
+  clip_Rolling: {fileID: 8300000, guid: acfe789d1bffc4c549ddf0cb9a039142, type: 3}
 --- !u!54 &6474548453207052780
 Rigidbody:
   m_ObjectHideFlags: 0

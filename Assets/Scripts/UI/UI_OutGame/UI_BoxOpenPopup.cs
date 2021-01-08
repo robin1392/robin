@@ -89,9 +89,11 @@ public class UI_BoxOpenPopup : UI_Popup
     private int cost;
     private int openCount;
     private MsgOpenBoxAck msg;
+    private AudioSource _currentAudio;
     
     public void Initialize(int id, COST_TYPE costType, int cost)
     {
+        Debug.Log($"BOX ID:{id}");
         this.boxID = id;
         this.costType = costType;
         this.cost = cost;
@@ -176,7 +178,22 @@ public class UI_BoxOpenPopup : UI_Popup
         image_Blind.DOFade(0, 0);
         image_Pattern.DOFade(0, 0);
         ani_Item.gameObject.SetActive(false);
-        ani_Box.runtimeAnimatorController = arrAniController_Box[id - (int)RandomWarsResource.Data.EItemListKey.boss01box];
+        switch ((RandomWarsResource.Data.EItemListKey)id)
+        {
+            case RandomWarsResource.Data.EItemListKey.boss01box:
+            case RandomWarsResource.Data.EItemListKey.boss02box:
+            case RandomWarsResource.Data.EItemListKey.boss03box:
+            case RandomWarsResource.Data.EItemListKey.boss04box:
+            case RandomWarsResource.Data.EItemListKey.boss05box:
+                ani_Box.runtimeAnimatorController = arrAniController_Box[1];
+                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COOP_APPEAR);
+                break;
+            default:
+                ani_Box.runtimeAnimatorController = arrAniController_Box[0];
+                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_NORMAL_APPEAR);
+                break;
+        }
+        //ani_Box.runtimeAnimatorController = arrAniController_Box[id - (int)RandomWarsResource.Data.EItemListKey.boss01box];
         ani_Box.gameObject.SetActive(true);
         obj_Result.SetActive(false);
     }
@@ -194,6 +211,7 @@ public class UI_BoxOpenPopup : UI_Popup
     {
         this.msg = msg;
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+        SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_FALLDOWN);
         
         // 재화 감소
         switch (costType)
@@ -369,6 +387,12 @@ public class UI_BoxOpenPopup : UI_Popup
 
     public void Click_NextButton()
     {
+        if (_currentAudio != null)
+        {
+            SoundManager.instance.Stop(_currentAudio);
+            _currentAudio = null;
+        }
+        
         if (msg != null && openCount < msg.BoxReward.Length)
         {
             ani_Box.SetTrigger("Open");
@@ -379,10 +403,12 @@ public class UI_BoxOpenPopup : UI_Popup
                 obj_BoxOpenParticle.SetActive(true);
 
                 Invoke("ItemAnimation", 0.6666f);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN);
             }
             else
             {
                 ItemAnimation();
+                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN_REPEAT);
             }
         }
         else if (openCount == msg.BoxReward.Length)
@@ -424,6 +450,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_GOLD, 0.5f);
                 break;
             case ITEM_TYPE.DIAMOND:
                 image_ItemIcon.sprite = sprite_Diamond;
@@ -433,6 +460,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DIAMOND, 0.5f);
                 break;
             case ITEM_TYPE.DICE:
             {
@@ -450,10 +478,21 @@ public class UI_BoxOpenPopup : UI_Popup
                 {
                     return;
                 }
-
+                
                 crt_IconChange = StartCoroutine(IconChangeCoroutine(
                     FileHelper.GetDiceIcon(dataDiceInfo.iconName), 0.6f));
-                ani_Item.SetTrigger("Get");
+
+                if ((DICE_GRADE) dataDiceInfo.grade == DICE_GRADE.LEGEND)
+                {
+                    _currentAudio = SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE_LEGEND);
+                    ani_Item.SetTrigger("GetLegend");
+                }
+                else
+                {
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE, 0.5f);
+                    ani_Item.SetTrigger("Get");
+                }
+
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
@@ -473,6 +512,7 @@ public class UI_BoxOpenPopup : UI_Popup
                 crt_TextCount = StartCoroutine(TextCountCoroutine(
                     UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][1],
                     reward.Value, needDiceCount, 1.2f));
+                
             }
                 break;
             //case REWARD_TYPE.DICE_MAGIC:
@@ -600,6 +640,8 @@ public class UI_BoxOpenPopup : UI_Popup
         rts.localScale = Vector3.zero;
         rts.DOScale(1.4f, 0.5f);
 
+        SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_ITEM_APPEAR);
+
         openCount++;
     }
 
@@ -662,6 +704,7 @@ public class UI_BoxOpenPopup : UI_Popup
 
     IEnumerator ShowResultCoroutine()
     {
+        SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT);
         obj_Result.SetActive(true);
         ani_Box.gameObject.SetActive(false);
         
@@ -698,7 +741,12 @@ public class UI_BoxOpenPopup : UI_Popup
                     dice.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + dataDiceInfo.id);
                     dice.transform.GetChild(1).GetComponent<Text>().text = $"x{msgReward.Value}";
                     dice.transform.localScale = Vector3.zero;
-                    dice.transform.DOScale(Vector3.one, 0.2f).SetDelay(0.05f * loopCount++).SetEase(Ease.OutBack);
+                    dice.transform.DOScale(Vector3.one, 0.2f).SetDelay(0.05f * loopCount++).SetEase(Ease.OutBack)
+                        .OnComplete(() =>
+                        {
+                            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT_ITEM);
+                        });
+                    
                 }
             }
 

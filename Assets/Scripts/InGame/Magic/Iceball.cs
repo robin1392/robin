@@ -10,6 +10,10 @@ namespace ED
         public ParticleSystem ps_Tail;
         public ParticleSystem ps_BombEffect;
 
+        [Header("AudioClip")]
+        public AudioClip clip_Shoot;
+        public AudioClip clip_Explosion;
+        
         private float sturnTime => effect + effectDuration * eyeLevel;
         private bool isBombed = false;
 
@@ -31,6 +35,7 @@ namespace ED
 
         protected override IEnumerator Move()
         {
+            SoundManager.instance.Play(clip_Shoot);
             var startPos = transform.position;
             while (target == null)
             {
@@ -141,6 +146,7 @@ namespace ED
 
         public void Bomb()
         {
+            SoundManager.instance.Play(clip_Explosion);
             rb.velocity = Vector3.zero;
             ps_Tail.Stop();
             ps_BombEffect.Play();

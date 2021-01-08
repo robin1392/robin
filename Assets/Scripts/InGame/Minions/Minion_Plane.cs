@@ -11,7 +11,7 @@ namespace ED
     public class Minion_Plane : Minion
     {
         public float bulletMoveSpeed = 6f;
-        
+
         protected override void Start()
         {
             base.Start();
