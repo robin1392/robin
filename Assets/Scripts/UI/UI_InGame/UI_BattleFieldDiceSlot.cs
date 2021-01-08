@@ -61,7 +61,6 @@ namespace ED
         public void SetDice(Dice pDice)
         {
             this.dice = pDice;
-            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
         }
 
         private void Clear()

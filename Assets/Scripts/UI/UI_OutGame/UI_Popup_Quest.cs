@@ -37,7 +37,11 @@ public class UI_Popup_Quest : UI_Popup
                 remainTimeCooltime = 1f;
 
                 var span = dateTime.Subtract(DateTime.Now);
-                text_RemainTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
+                if (span.TotalSeconds > 0)
+                {
+                    text_RemainTime.text =
+                        string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
+                }
             }
         }
     }
@@ -56,7 +60,7 @@ public class UI_Popup_Quest : UI_Popup
         {
             dateTime = DateTime.Now.AddSeconds(msg.QuestInfo.RemainResetTime);
 
-            var dataDailyReward = new TDataQuestDayReward(); 
+            var dataDailyReward = new TDataQuestDayReward();
             if (TableManager.Get().QuestDayReward.GetData(msg.QuestInfo.DayRewardInfo.DayRewardId, out dataDailyReward))
             {
                 arrText_Reward[0].text = $"{dataDailyReward.rewardItem01}\nx{dataDailyReward.rewardItemValue01}";
@@ -75,5 +79,7 @@ public class UI_Popup_Quest : UI_Popup
                 listSlot[i].Initialize(msg.QuestInfo.QuestData[i]);
             }
         }
+        
+        Open();
     }
 }

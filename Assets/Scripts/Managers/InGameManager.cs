@@ -705,7 +705,7 @@ namespace ED
             playerController.GetDice(diceId, slotNum, level);
             NetSetSp(curSp);
             
-            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
             
             UI_InGame.Get().ControlGetDiceButton(true);
         }

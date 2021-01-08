@@ -9,6 +9,7 @@ namespace ED
 {
     public class UI_Popup : MonoBehaviour
     {
+        public bool isAutoOpen = true;
         public RectTransform rts_Frame;
         public Image image_BG;
 
@@ -25,8 +26,17 @@ namespace ED
 
         protected virtual void OnEnable()
         {
-            if (btn_BG_Close != null) btn_BG_Close.interactable = false;
             rts_Frame.localScale = Vector3.zero;
+            
+            if (isAutoOpen)
+            {
+                Open();
+            }
+        }
+
+        protected void Open()
+        {
+            if (btn_BG_Close != null) btn_BG_Close.interactable = false;
             rts_Frame.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
             {
                 if (btn_BG_Close != null) btn_BG_Close.interactable = true;

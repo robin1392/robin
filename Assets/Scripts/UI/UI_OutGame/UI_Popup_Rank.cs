@@ -112,6 +112,8 @@ public class UI_Popup_Rank : UI_Popup
                 text_RankMessage.gameObject.SetActive(true);
                 break;
         }
+
+        Open();
     }
 
     public void GetRankCallback(MsgGetRankAck msg)
