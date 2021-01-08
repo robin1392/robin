@@ -48,6 +48,8 @@ namespace RandomWarsProtocol
         public short Class;
         // 연승 횟수 (최대 15회)
         public byte WinStreak;
+        // 트로피 보상 획득 아이디 배열
+        public int[] TrophyRewardIds;
 
 
         public void Write(BinaryWriter bw)
@@ -58,6 +60,11 @@ namespace RandomWarsProtocol
             Goods.Write(bw);
             bw.Write(Class);
             bw.Write(WinStreak);
+
+            bw.Write(TrophyRewardIds.Length);
+            byte[] bytes = new byte[TrophyRewardIds.Length * sizeof(int)];
+            Buffer.BlockCopy(TrophyRewardIds, 0, bytes, 0, bytes.Length);
+            bw.Write(bytes);
         }
 
         public static MsgUserInfo Read(BinaryReader br)
@@ -69,6 +76,14 @@ namespace RandomWarsProtocol
             data.Goods = MsgUserGoods.Read(br);
             data.Class = br.ReadInt16();
             data.WinStreak = br.ReadByte();
+
+            int length = br.ReadInt32();
+            byte[] bytes = br.ReadBytes(length * sizeof(int));
+            data.TrophyRewardIds = new int[length];
+            for (var index = 0; index < length; index++)
+            {
+                data.TrophyRewardIds[index] = BitConverter.ToInt32(bytes, index * sizeof(int));
+            }
             return data;
         }
     }
@@ -1837,27 +1852,6 @@ namespace RandomWarsProtocol
         public int[] DeckInfo;
     }
 
-
-    public class MsgQuestCompleteParam
-    {
-        public QUEST_COMPLETE_TYPE QuestCompleteType { get; set; }
-        public int Value { get; set; }
-    }
-
-    [Serializable]
-    public class MsgPlayerMatchResult
-    {
-        public string PlayerGuid;
-        public int Trophy;
-        public int SeasonTrophy;
-        public int Gold;
-        public int Diamond;
-        public int Key;
-        public byte WinStreak;
-        public List<MsgQuestCompleteParam> QuestCompleteParams;
-    }
-
-
     [Serializable]
     public class MsgQuestData
     {
@@ -1914,13 +1908,12 @@ namespace RandomWarsProtocol
         public int SeasonPassId;
         // 시즌 패스 구매 여부
         public bool BuySeasonPass;
+
         // 시즌 트로피
         public int SeasonTrophy;
         // 시즌 초기화 남은 시간(초단위)
         public int SeasonResetRemainTime;
         // 시즌 패스 보상 획득 아이디 배열
         public int[] SeasonPassRewardIds;
-        // 트로피 보상 획득 아이디 배열
-        public int[] TrophyRewardIds;
     }
 }
