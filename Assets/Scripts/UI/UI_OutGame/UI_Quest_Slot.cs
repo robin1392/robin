@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using RandomWarsProtocol;
@@ -13,6 +14,7 @@ public class UI_Quest_Slot : MonoBehaviour
     public Text text_Slider;
 
     [Space]
+    public Button btn_Reward;
     public Image image_Reward;
     public Text text_Reward;
 
@@ -29,6 +31,24 @@ public class UI_Quest_Slot : MonoBehaviour
             slider.value = msg.Value / (float)data.questEndValue;
             text_Slider.text = $"{msg.Value}/{data.questEndValue}";
 
+            switch ((QUEST_STATUS)msg.Status)
+            {
+                case QUEST_STATUS.NONE:
+                    btn_Reward.interactable = false;
+                    break;
+                case QUEST_STATUS.LOCK:
+                    btn_Reward.interactable = false;
+                    break;
+                case QUEST_STATUS.OPEN:
+                    btn_Reward.interactable = false;
+                    break;
+                case QUEST_STATUS.COMPLETE:
+                    btn_Reward.interactable = true;
+                    break;
+                case QUEST_STATUS.CLOSE:
+                    btn_Reward.interactable = false;
+                    break;
+            }
             text_Reward.text = $"{data.ItemId}\nx{data.ItemValue}";
         }
         else
@@ -37,5 +57,10 @@ public class UI_Quest_Slot : MonoBehaviour
             slider.value = 0;
             text_Slider.text = string.Empty;
         }
+    }
+
+    public void Click_RewardButton()
+    {
+        
     }
 }

@@ -60,7 +60,7 @@ public class UI_Popup_Rank : UI_Popup
             pageNum = 2;
             NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-            StartCoroutine(WaitCoroutine());
+            //StartCoroutine(WaitCoroutine());
         }
     }
 

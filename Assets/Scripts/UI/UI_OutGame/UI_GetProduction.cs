@@ -5,9 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using RandomWarsProtocol;
 using DG.Tweening;
+using ED;
 using Random = UnityEngine.Random;
 
-public class UI_GetProduction : MonoBehaviour
+public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
 {
     public Camera cam;
     [Header("Sprite")]
@@ -46,11 +47,13 @@ public class UI_GetProduction : MonoBehaviour
                     list_Image[i].sprite = sprite_Gold;
                     list_Image[i].SetNativeSize();
                     endPos = cam.ScreenToViewportPoint(rts_Gold.position);
+                    StartCoroutine(EndMove(ITEM_TYPE.GOLD));
                     break;
                 case ITEM_TYPE.DIAMOND:
                     list_Image[i].sprite = sprite_Diamond;
                     list_Image[i].SetNativeSize();
                     endPos = rts_Diamond.position;
+                    StartCoroutine(EndMove(ITEM_TYPE.DIAMOND));
                     break;
                 case ITEM_TYPE.TROPHY:
                     list_Image[i].sprite = sprite_Trophy;
@@ -80,11 +83,11 @@ public class UI_GetProduction : MonoBehaviour
 
     public void Move(int num, Vector2 startPos, Vector2 endPos, float delay)
     {
-        list_Image[num].rectTransform.anchoredPosition = startPos;
-        list_Image[num].rectTransform.DOAnchorPos(startPos, 0f).SetDelay(delay).OnComplete(() =>
+        list_Image[num].rectTransform.position = startPos;
+        list_Image[num].rectTransform.DOMove(startPos, 0f).SetDelay(delay).OnComplete(() =>
         {
             list_Image[num].gameObject.SetActive(true);
-            list_Image[num].rectTransform.DOAnchorPos(startPos + Random.insideUnitCircle * 250, 0.5f).OnComplete(() =>
+            list_Image[num].rectTransform.DOMove(startPos + Random.insideUnitCircle * 250, 0.5f).OnComplete(() =>
             {
                 list_Image[num].transform.DOMove(endPos, 0.5f).SetDelay(0.15f).OnComplete(() =>
                 {
@@ -92,5 +95,44 @@ public class UI_GetProduction : MonoBehaviour
                 });
             });
         });
+        
+    }
+
+    private IEnumerator EndMove(ITEM_TYPE type)
+    {
+        yield return new WaitForSeconds(1f);
+
+        switch (type)
+        {
+            case ITEM_TYPE.GOLD:
+            {
+                int oldGold = System.Int32.Parse(UI_Main.Get().text_Gold.text);
+                int newGold = UserInfoManager.Get().GetUserInfo().gold;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    UI_Main.Get().text_Gold.text = Mathf.RoundToInt(Mathf.Lerp(oldGold, newGold, i / 5f)).ToString();
+                    yield return new WaitForSeconds(0.15f);
+                }
+
+                UI_Main.Get().text_Gold.text = newGold.ToString();
+            }
+                break;
+            case ITEM_TYPE.DIAMOND:
+            {
+                int oldDia = System.Int32.Parse(UI_Main.Get().text_Diamond.text);
+                int newDia = UserInfoManager.Get().GetUserInfo().diamond;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    UI_Main.Get().text_Gold.text = Mathf.RoundToInt(Mathf.Lerp(oldDia, newDia, i / 5f)).ToString();
+                    yield return new WaitForSeconds(0.15f);
+                }
+
+                UI_Main.Get().text_Gold.text = newDia.ToString();
+            }
+                break;
+        }
+        
     }
 }
