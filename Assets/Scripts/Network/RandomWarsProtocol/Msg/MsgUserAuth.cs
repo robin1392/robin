@@ -124,6 +124,7 @@ namespace RandomWarsProtocol.Msg
         public MsgReward[] BoxReward;
         public MsgUserBox BoxInfo;
         public MsgUserGoods UserGoods;
+        // 퀘스트 데이터
         public MsgQuestData[] QuestData;
     }
 
@@ -142,6 +143,7 @@ namespace RandomWarsProtocol.Msg
         public GameErrorCode ErrorCode;
         public MsgUserDice UserDice;
         public MsgUserGoods UserGoods;
+        // 퀘스트 데이터
         public MsgQuestData[] QuestData;
     }
 
@@ -221,6 +223,8 @@ namespace RandomWarsProtocol.Msg
         public int[] GetRewardIds;
         // 보상 정보
         public MsgReward[] RewardInfo;
+        // 퀘스트 데이터
+        public MsgQuestData[] QuestData;
     }
 
     [Serializable]
@@ -258,6 +262,8 @@ namespace RandomWarsProtocol.Msg
         public int[] GetRewardIds;
         // 보상 정보
         public MsgReward[] RewardInfo;
+        // 퀘스트 데이터
+        public MsgQuestData[] QuestData;
     }
 
 
@@ -289,6 +295,8 @@ namespace RandomWarsProtocol.Msg
     {
         public GameErrorCode ErrorCode;
         public MsgReward[] RewardInfo;
+        // 퀘스트 데이터
+        public MsgQuestData[] QuestData;
     }
 
     [Serializable]
@@ -310,5 +318,7 @@ namespace RandomWarsProtocol.Msg
         public MsgReward[] RewardInfo;
         // 일일 보상 정보
         public MsgQuestDayReward DayRewardInfo;
+        // 퀘스트 데이터
+        public MsgQuestData[] QuestData;
     }
 }
