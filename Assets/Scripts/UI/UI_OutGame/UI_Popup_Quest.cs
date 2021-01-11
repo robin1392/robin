@@ -159,7 +159,8 @@ public class UI_Popup_Quest : UI_Popup
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
             arrIsDailyRewardGet = msg.DayRewardInfo.DayRewardState;
-            
+            List<MsgReward> list = new List<MsgReward>();
+
             foreach (var reward in msg.RewardInfo)
             {
                 var data = new TDataItemList();
@@ -175,10 +176,22 @@ public class UI_Popup_Quest : UI_Popup
                             UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
                             UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, mousePos, Mathf.Clamp(reward.Value, 5, 20));
                             break;
-                        default:            // 주사위
+                        default: // 주사위
+                        {
+                            MsgReward rw = new MsgReward();
+                            rw.ItemId = reward.ItemId;
+                            rw.Value = reward.Value;
+                            list.Add(rw);
+                        }
                             break;
                     }
                 }
+            }
+
+            if (list.Count > 0)
+            {
+                UI_Main.Get().gerResult.gameObject.SetActive(true);
+                UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
 
             InfoCallback();
