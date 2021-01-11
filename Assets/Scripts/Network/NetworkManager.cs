@@ -573,7 +573,7 @@ public class NetworkManager : Singleton<NetworkManager>
             return;
         }
 
-        UserInfoManager.Get().SetUserInfo(msg.UserInfo, msg.SeasonPassInfo);
+        UserInfoManager.Get().SetUserInfo(msg.UserInfo, msg.UserInfo.SeasonInfo);
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);
         UserInfoManager.Get().SetBox(msg.UserBox);

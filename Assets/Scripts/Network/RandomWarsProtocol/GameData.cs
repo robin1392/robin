@@ -51,6 +51,8 @@ namespace RandomWarsProtocol
         // 트로피 보상 획득 아이디 배열
         public int[] TrophyRewardIds;
 
+        public MsgSeasonPassInfo SeasonInfo;
+
 
         public void Write(BinaryWriter bw)
         {
@@ -1908,7 +1910,6 @@ namespace RandomWarsProtocol
         public int SeasonPassId;
         // 시즌 패스 구매 여부
         public bool BuySeasonPass;
-
         // 시즌 트로피
         public int SeasonTrophy;
         // 시즌 초기화 남은 시간(초단위)

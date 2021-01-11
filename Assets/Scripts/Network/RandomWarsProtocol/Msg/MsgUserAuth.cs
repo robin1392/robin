@@ -19,7 +19,6 @@ namespace RandomWarsProtocol.Msg
         public MsgUserDice[] UserDice;
         public MsgUserBox[] UserBox;
         public MsgQuestInfo QuestInfo;
-        public MsgSeasonPassInfo SeasonPassInfo;
     }
 
 
