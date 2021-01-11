@@ -162,6 +162,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgGetClassRewardAck> _getClassRewardCallback;
     private Action<MsgQuestInfoAck> _questInfoCallback;
     private Action<MsgQuestRewardAck> _questRewardCallback;
+    private Action<MsgQuestDayRewardAck> _questDayRewardCallback;
     #endregion
 
     #region unity base
@@ -952,16 +953,23 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV QUEST REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
-    public void QuestDayRewardReq(string userId)
+    public void QuestDayRewardReq(string userId, int rewardID, int index, Action<MsgQuestDayRewardAck> callback = null)
     {
         MsgQuestDayRewardReq msg = new MsgQuestDayRewardReq();
         msg.UserId = userId;
+        msg.RewardId = rewardID;
+        msg.Index = ConvertNetMsg.MsgIntToByte(index);
         _httpSender.QuestDayRewardReq(msg);
-        UnityUtil.Print("SEND QUEST DAY REWARD => userId", string.Format("userId:{0}", userId), "green");
+        UnityUtil.Print("SEND QUEST DAY REWARD => userId", string.Format("userId:{0}, rewardID:{1}", userId, rewardID), "green");
+        _questDayRewardCallback = callback;
     }
 
     void OnQuestDayRewardAck(MsgQuestDayRewardAck msg)
     {
+        if (_questDayRewardCallback != null)
+        {
+            _questDayRewardCallback(msg);
+        }
         UnityUtil.Print("RECV QUEST DAY REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
