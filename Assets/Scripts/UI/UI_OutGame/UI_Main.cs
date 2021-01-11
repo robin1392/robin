@@ -34,6 +34,7 @@ namespace ED
         public UI_Popup_Userinfo userinfoPopup;
         public UI_Popup_Rank rankPopup;
         public UI_Popup_Quest questPopup;
+        public UI_Get_Result gerResult;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;

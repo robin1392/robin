@@ -106,10 +106,12 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
                 int oldGold = System.Int32.Parse(UI_Main.Get().text_Gold.text);
                 int newGold = UserInfoManager.Get().GetUserInfo().gold;
 
-                for (int i = 0; i < 5; i++)
+                float t = 0;
+                while (t < 0.6f)
                 {
-                    UI_Main.Get().text_Gold.text = Mathf.RoundToInt(Mathf.Lerp(oldGold, newGold, i / 5f)).ToString();
-                    yield return new WaitForSeconds(0.15f);
+                    UI_Main.Get().text_Gold.text = Mathf.RoundToInt(Mathf.Lerp(oldGold, newGold, t / 0.6f)).ToString();
+                    t += Time.deltaTime;
+                    yield return null;
                 }
 
                 UI_Main.Get().text_Gold.text = newGold.ToString();
@@ -120,10 +122,12 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
                 int oldDia = System.Int32.Parse(UI_Main.Get().text_Diamond.text);
                 int newDia = UserInfoManager.Get().GetUserInfo().diamond;
 
-                for (int i = 0; i < 5; i++)
+                float t = 0;
+                while (t < 0.6f)
                 {
-                    UI_Main.Get().text_Diamond.text = Mathf.RoundToInt(Mathf.Lerp(oldDia, newDia, i / 5f)).ToString();
-                    yield return new WaitForSeconds(0.15f);
+                    UI_Main.Get().text_Diamond.text = Mathf.RoundToInt(Mathf.Lerp(oldDia, newDia, t / 0.6f)).ToString();
+                    t += Time.deltaTime;
+                    yield return null;
                 }
 
                 UI_Main.Get().text_Diamond.text = newDia.ToString();
