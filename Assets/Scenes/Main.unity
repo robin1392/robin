@@ -2072,6 +2072,11 @@ PrefabInstance:
       propertyPath: rts_Diamond
       value: 
       objectReference: {fileID: 6180031957008467227}
+    - target: {fileID: 6538352038165036884, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+        type: 3}
+      propertyPath: ts_StartTarget
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6672817530122051251, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
         type: 3}
       propertyPath: m_AnchorMax.x

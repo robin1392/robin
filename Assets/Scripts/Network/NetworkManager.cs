@@ -953,11 +953,12 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV QUEST REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
-    public void QuestDayRewardReq(string userId, int rewardID, Action<MsgQuestDayRewardAck> callback = null)
+    public void QuestDayRewardReq(string userId, int rewardID, int index, Action<MsgQuestDayRewardAck> callback = null)
     {
         MsgQuestDayRewardReq msg = new MsgQuestDayRewardReq();
         msg.UserId = userId;
         msg.RewardId = rewardID;
+        msg.Index = ConvertNetMsg.MsgIntToByte(index);
         _httpSender.QuestDayRewardReq(msg);
         UnityUtil.Print("SEND QUEST DAY REWARD => userId", string.Format("userId:{0}, rewardID:{1}", userId, rewardID), "green");
         _questDayRewardCallback = callback;

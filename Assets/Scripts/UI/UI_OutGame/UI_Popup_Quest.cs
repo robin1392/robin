@@ -147,7 +147,7 @@ public class UI_Popup_Quest : UI_Popup
 
     public void Click_DailyRewardButton(int num)
     {
-        NetworkManager.Get().QuestDayRewardReq(UserInfoManager.Get().GetUserInfo().userID, num, GetDailyRewardCallback);
+        NetworkManager.Get().QuestDayRewardReq(UserInfoManager.Get().GetUserInfo().userID, dailyRewardID, num, GetDailyRewardCallback);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         mousePos = arrBtn_Reward[num].transform.position;
     }
@@ -169,11 +169,11 @@ public class UI_Popup_Quest : UI_Popup
                     {
                         case 1:             // 골드
                             UserInfoManager.Get().GetUserInfo().gold += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, mousePos, 20);
+                            UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, mousePos, Mathf.Clamp(reward.Value, 5, 20));
                             break;
                         case 2:             // 다이아
                             UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, mousePos, 20);
+                            UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, mousePos, Mathf.Clamp(reward.Value, 5, 20));
                             break;
                         default:            // 주사위
                             break;
