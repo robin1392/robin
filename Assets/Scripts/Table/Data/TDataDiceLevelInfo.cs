@@ -17,6 +17,8 @@ namespace RandomWarsResource.Data
 		public int id { get; set; }
 		public string name { get; set; }
 		public int baseLevel { get; set; }
+		public string fontColor { get; set; }
+		public string diceGradeImage { get; set; }
 
 
 		public int PK()
@@ -30,6 +32,8 @@ namespace RandomWarsResource.Data
 			id = int.Parse(cols[0]);
 			name = cols[1].Replace("{#$}", ",");
 			baseLevel = int.Parse(cols[2]);
+			fontColor = cols[3].Replace("{#$}", ",");
+			diceGradeImage = cols[4].Replace("{#$}", ",");
 		}
 	}
 }
