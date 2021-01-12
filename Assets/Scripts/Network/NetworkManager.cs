@@ -229,6 +229,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
         _httpReceiver.EditUserNameAck = OnEditUserNameAck;
         _httpReceiver.SeasonInfoAck = OnSeasonInfoAck;
+        _httpReceiver.SeasonResetAck = OnSeasonResetAck;
         _httpReceiver.GetRankAck = OnGetRankAck;
         _httpReceiver.SeasonPassInfoAck = OnSeasonPassInfoAck;
         _httpReceiver.GetSeasonPassRewardAck = OnGetSeasonPassRewardAck;
@@ -795,6 +796,20 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _seasonInfoCallback(msg);
         }
+    }
+
+
+    public void GetSeasonResetReq(string userId)
+    {
+        MsgSeasonResetReq msg = new MsgSeasonResetReq();
+        msg.UserId = userId;
+        _httpSender.SeasonResetReq(msg);
+        UnityUtil.Print("SEND SEASON RESET => index", string.Format("userId:{0}", userId), "green");
+    }
+
+
+    void OnSeasonResetAck(MsgSeasonResetAck msg)
+    {
     }
 
 

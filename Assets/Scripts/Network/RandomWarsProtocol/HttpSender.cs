@@ -121,6 +121,18 @@ namespace RandomWarsProtocol
             return JsonConvert.SerializeObject(msg);
         }
 
+        public void SeasonResetReq(MsgSeasonResetReq msg)
+        {
+            _httpService.Send((int)GameProtocol.SEASON_RESET_REQ, "seasonreset", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string SeasonResetAck(MsgSeasonResetAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
         public void GetRankReq(MsgGetRankReq msg)
         {
             _httpService.Send((int)GameProtocol.GET_RANK_REQ, "rankget", JsonConvert.SerializeObject(msg));

@@ -55,6 +55,11 @@ namespace RandomWarsProtocol
         public delegate void SeasonInfoAckDelegate(MsgSeasonInfoAck msg);
         public SeasonInfoAckDelegate SeasonInfoAck;
 
+        public delegate Task<string> SeasonResetReqDelegate(MsgSeasonResetReq msg);
+        public SeasonResetReqDelegate SeasonResetReq;
+        public delegate void SeasonResetAckDelegate(MsgSeasonResetAck msg);
+        public SeasonResetAckDelegate SeasonResetAck;
+
         public delegate Task<string> GetRankReqDelegate(MsgGetRankReq msg);
         public GetRankReqDelegate GetRankReq;
         public delegate void GetRankAckDelegate(MsgGetRankAck msg);

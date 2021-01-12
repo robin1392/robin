@@ -170,6 +170,36 @@ namespace RandomWarsProtocol.Msg
         public int myTrophy;
         // Top 랭킹 순위
         public MsgRankInfo[] TopRankInfo;
+        // 시즌 초기화 필요
+        public bool NeedSeasonReset;
+    }
+
+
+    [Serializable]
+    public class MsgSeasonResetReq
+    {
+        public string UserId;
+    }
+
+
+    [Serializable]
+    public class MsgSeasonResetAck
+    {
+        public GameErrorCode ErrorCode;
+        // 시즌 아이디
+        public int SeasonId;
+        // 시즌 상태(진행중, 정산중, 종료 등등)
+        public byte SeasonState;
+        // 시즌 남은 시간(초단위)
+        public int SeasonRemainTime;
+        // 현재 나의 순위
+        public int myRanking;
+        // 시즌 획득 트로피
+        public int myTrophy;
+        // Top 랭킹 순위
+        public MsgRankInfo[] TopRankInfo;
+        // 시즌 보상
+        public MsgReward[] SeasonReward;
     }
 
 
