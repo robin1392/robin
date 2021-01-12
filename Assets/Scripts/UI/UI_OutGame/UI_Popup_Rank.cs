@@ -54,7 +54,11 @@ public class UI_Popup_Rank : UI_Popup
 
     public void Initialize()
     {
-        if (isInitialized == false)
+        if (isInitialized)
+        {
+            Open();
+        }
+        else
         {
             isRankCalling = true;
             pageNum = 2;

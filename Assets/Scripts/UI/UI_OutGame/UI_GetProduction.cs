@@ -29,70 +29,83 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
     [SerializeField]
     private float power = 3f;
     private Ease ease = Ease.OutQuad;
+    private Queue<Image> queue = new Queue<Image>();
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        foreach (var image in list_Image)
+        {
+            queue.Enqueue(image);
+        }
+    }
 
     public void Initialize(ITEM_TYPE type, Vector2 startPos, int count)
     {
         Vector2 endPos = Vector2.zero;
-        for (int i = 0; i < list_Image.Count; i++)
+        for (int i = 0; i < count; i++)
         {
-            switch (type)
+            if (queue.Count > 0)
             {
-                case ITEM_TYPE.NONE:
-                    break;
-                case ITEM_TYPE.GOLD:
-                    list_Image[i].sprite = sprite_Gold;
-                    list_Image[i].SetNativeSize();
-                    endPos = rts_Gold.position;
-                    StartCoroutine(EndMove(ITEM_TYPE.GOLD));
-                    break;
-                case ITEM_TYPE.DIAMOND:
-                    list_Image[i].sprite = sprite_Diamond;
-                    list_Image[i].SetNativeSize();
-                    endPos = rts_Diamond.position;
-                    StartCoroutine(EndMove(ITEM_TYPE.DIAMOND));
-                    break;
-                case ITEM_TYPE.TROPHY:
-                    list_Image[i].sprite = sprite_Trophy;
-                    list_Image[i].SetNativeSize();
-                    break;
-                case ITEM_TYPE.KEY:
-                    list_Image[i].sprite = sprite_Key;
-                    list_Image[i].SetNativeSize();
-                    endPos = rts_Key.position;
-                    StartCoroutine(EndMove(ITEM_TYPE.KEY));
-                    break;
-                case ITEM_TYPE.PASS:
-                    break;
-                case ITEM_TYPE.BOX:
-                    break;
-                case ITEM_TYPE.DICE:
-                    break;
-                case ITEM_TYPE.GUADIAN:
-                    break;
-            }
-            
-            if (i < count)
-            {
-                Move(i, startPos, endPos, i * 0.02f);
+                var image = queue.Dequeue();
+
+                switch (type)
+                {
+                    case ITEM_TYPE.NONE:
+                        break;
+                    case ITEM_TYPE.GOLD:
+                        image.sprite = sprite_Gold;
+                        image.SetNativeSize();
+                        endPos = rts_Gold.position;
+                        StartCoroutine(EndMove(ITEM_TYPE.GOLD));
+                        break;
+                    case ITEM_TYPE.DIAMOND:
+                        image.sprite = sprite_Diamond;
+                        image.SetNativeSize();
+                        endPos = rts_Diamond.position;
+                        StartCoroutine(EndMove(ITEM_TYPE.DIAMOND));
+                        break;
+                    case ITEM_TYPE.TROPHY:
+                        image.sprite = sprite_Trophy;
+                        image.SetNativeSize();
+                        break;
+                    case ITEM_TYPE.KEY:
+                        image.sprite = sprite_Key;
+                        image.SetNativeSize();
+                        endPos = rts_Key.position;
+                        StartCoroutine(EndMove(ITEM_TYPE.KEY));
+                        break;
+                    case ITEM_TYPE.PASS:
+                        break;
+                    case ITEM_TYPE.BOX:
+                        break;
+                    case ITEM_TYPE.DICE:
+                        break;
+                    case ITEM_TYPE.GUADIAN:
+                        break;
+                }
+
+                Move(image, startPos, endPos, i * 0.02f);
             }
         }
     }
 
-    public void Move(int num, Vector2 startPos, Vector2 endPos, float delay)
+    public void Move(Image image, Vector2 startPos, Vector2 endPos, float delay)
     {
-        list_Image[num].transform.position = startPos;
-        list_Image[num].transform.DOMove(startPos, 0f).SetDelay(delay).OnComplete(() =>
+        image.transform.position = startPos;
+        image.transform.DOMove(startPos, 0f).SetDelay(delay).OnComplete(() =>
         {
-            list_Image[num].gameObject.SetActive(true);
-            list_Image[num].transform.DOMove(startPos + Random.insideUnitCircle * power, 0.5f).SetEase(ease).OnComplete(() =>
+            image.gameObject.SetActive(true);
+            image.transform.DOMove(startPos + Random.insideUnitCircle * power, 0.5f).SetEase(ease).OnComplete(() =>
             {
-                list_Image[num].transform.DOMove(endPos, 0.4f).SetEase(ease).SetDelay(0.15f).OnComplete(() =>
+                image.transform.DOMove(endPos, 0.4f).SetEase(ease).SetDelay(0.15f).OnComplete(() =>
                 {
-                    list_Image[num].gameObject.SetActive(false);
+                    image.gameObject.SetActive(false);
+                    queue.Enqueue(image);
                 });
             });
         });
-        
     }
 
     private IEnumerator EndMove(ITEM_TYPE type)
