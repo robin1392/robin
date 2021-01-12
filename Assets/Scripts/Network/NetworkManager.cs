@@ -799,7 +799,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void GetSeasonResetReq(string userId)
+    public void SeasonResetReq(string userId)
     {
         MsgSeasonResetReq msg = new MsgSeasonResetReq();
         msg.UserId = userId;
