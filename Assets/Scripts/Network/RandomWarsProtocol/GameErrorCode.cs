@@ -43,7 +43,9 @@ namespace RandomWarsProtocol
         ERROR_SEASON_PASS_TROPHY_LACK   = 20201,          // 시즌 트로피가 부족합니다.
         ERROR_SEASON_PASS_NEED              = 20202,          // 시즌 패스를 구입해야 합니다.
         ERROR_SEASON_PASS_INVALID_REWARD_ID = 20203,          // 시즌 패스 보상이 유효하지 않습니다.
-    
+        ERROR_SEASON_NOT_FOUND                  = 20204,        // 시즌 정보가 존재하지 않습니다.
+        ERROR_SEASON_INVALID_SEASON_ID          = 20205,            // 시즌 아이디가 유효하지 않습니다.
+
         ERROR_QUEST_DATA_RESET_FAILED            = 20301,            // 퀘스트 데이터 리셋에 실패했습니다.
         ERROR_QUEST_INVALID_STATUS              = 20302,            // 퀘스트의 상태가 유효하지 않습니다.
         ERROR_QUEST_FAILED_CREATE_REWARD        = 20303,            // 퀘스트 보상 생성에 실패했습니다.

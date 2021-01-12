@@ -36,6 +36,9 @@ namespace RandomWarsProtocol
         SEASON_INFO_REQ,
         SEASON_INFO_ACK,
 
+        SEASON_RESET_REQ,
+        SEASON_RESET_ACK,
+
         GET_RANK_REQ,
         GET_RANK_ACK,
 
