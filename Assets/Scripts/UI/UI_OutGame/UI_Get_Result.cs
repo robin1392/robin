@@ -47,6 +47,7 @@ public class UI_Get_Result : MonoBehaviour
     
     public void Initialize(MsgReward[] msg, bool isBoxOpen, bool isShowEndResult)
     {
+        gameObject.SetActive(true);
         this.msg = msg;
         this.isBoxOpen = isBoxOpen;
         this.isShowEndResult = isShowEndResult;

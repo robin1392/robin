@@ -86,11 +86,11 @@ public class UI_Quest_Slot : MonoBehaviour
                     {
                         case 1:             // 골드
                             UserInfoManager.Get().GetUserInfo().gold += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, mousePos, 20);
+                            UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, mousePos, Mathf.Clamp(reward.Value, 5, 20));
                             break;
                         case 2:             // 다이아
                             UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, mousePos, 20);
+                            UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, mousePos, Mathf.Clamp(reward.Value, 5, 20));
                             break;
                         default: // 주사위
                         {
@@ -106,11 +106,13 @@ public class UI_Quest_Slot : MonoBehaviour
 
             if (list.Count > 0)
             {
-                UI_Main.Get().gerResult.gameObject.SetActive(true);
                 UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
 
             btn_Reward.interactable = false;
+            
+            UI_Popup_Quest.QuestUpdate(msg.QuestData);
+            UI_Main.Get().questPopup.InfoCallback();
         }
     }
 }

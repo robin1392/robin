@@ -75,6 +75,12 @@ public class UI_Popup_Rank : UI_Popup
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
+        if (msg.NeedSeasonReset)
+        {
+            UI_Main.Get().seasonEndPopup.Initialize();
+            Close();
+        }
+
         Debug.Log($"MsgSeasonInfoAck state {(SEASON_STATE)msg.SeasonState}");
         switch ((SEASON_STATE)msg.SeasonState)
         {
