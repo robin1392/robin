@@ -6,11 +6,11 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		Boss_01 = 40001,
-		Boss_02 = 40002,
-		Boss_03 = 40003,
-		Boss_04 = 40004,
-		Boss_05 = 40005,
+		Boss_01 = 6001,
+		Boss_02 = 6002,
+		Boss_03 = 6003,
+		Boss_04 = 6004,
+		Boss_05 = 6005,
 	}
 
 	public class TDataCoopModeBossInfo : ITableData<int>
@@ -48,7 +48,8 @@ namespace RandomWarsResource.Data
 		public float moveSpeed { get; set; }
 		public float range { get; set; }
 		public float searchRange { get; set; }
-		public int skillindex { get; set; }
+		public int skillIndex { get; set; }
+		public bool attackType { get; set; }
 
 
 		public int PK()
@@ -92,7 +93,8 @@ namespace RandomWarsResource.Data
 			moveSpeed = float.Parse(cols[30]);
 			range = float.Parse(cols[31]);
 			searchRange = float.Parse(cols[32]);
-			skillindex = int.Parse(cols[33]);
+			skillIndex = int.Parse(cols[33]);
+			attackType = bool.Parse(cols[34]);
 		}
 	}
 }

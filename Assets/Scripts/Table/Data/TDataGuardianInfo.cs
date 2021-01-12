@@ -6,9 +6,9 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		Guardian_01 = 20001,
-		Guardian_02 = 20002,
-		Guardian_03 = 20003,
+		Guardian_01 = 5001,
+		Guardian_02 = 5002,
+		Guardian_03 = 5003,
 	}
 
 	public class TDataGuardianInfo : ITableData<int>
@@ -46,7 +46,8 @@ namespace RandomWarsResource.Data
 		public float moveSpeed { get; set; }
 		public float range { get; set; }
 		public float searchRange { get; set; }
-		public int skillindex { get; set; }
+		public int skillIndex { get; set; }
+		public string attackType { get; set; }
 
 
 		public int PK()
@@ -90,7 +91,8 @@ namespace RandomWarsResource.Data
 			moveSpeed = float.Parse(cols[30]);
 			range = float.Parse(cols[31]);
 			searchRange = float.Parse(cols[32]);
-			skillindex = int.Parse(cols[33]);
+			skillIndex = int.Parse(cols[33]);
+			attackType = cols[34].Replace("{#$}", ",");
 		}
 	}
 }
