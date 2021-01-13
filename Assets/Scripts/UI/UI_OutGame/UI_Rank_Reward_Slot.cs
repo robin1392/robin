@@ -46,9 +46,19 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
 
     public void Initialize(MsgReward[] rewards)
     {
-        for (int i = 0; i < arrText_RewardSlot.Length; i++)
+        if (rewards != null)
         {
-            arrText_RewardSlot[i].text = $"{rewards[i].ItemId}\nx{rewards[i].Value}";
+            for (int i = 0; i < arrText_RewardSlot.Length; i++)
+            {
+                if (i < rewards.Length)
+                {
+                    arrText_RewardSlot[i].text = $"{rewards[i].ItemId}\nx{rewards[i].Value}";
+                }
+                else
+                {
+                    arrText_RewardSlot[i].text = string.Empty;
+                }
+            }
         }
     }
 }

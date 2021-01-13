@@ -326,7 +326,8 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
         if (seasonPassInfo.NeedSeasonReset)
         {
-            UI_Main.Get().seasonEndPopup.Initialize();
+            //UI_Main.Get().seasonEndPopup.Initialize();
+            UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
         }
     }
     
