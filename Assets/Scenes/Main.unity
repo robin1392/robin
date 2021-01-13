@@ -1394,6 +1394,11 @@ PrefabInstance:
       propertyPath: seasonStartPopup
       value: 
       objectReference: {fileID: 6362351360819374714}
+    - target: {fileID: 6180031956623453752, guid: 94c073845c7dd474a92cf5a2b07597d3,
+        type: 3}
+      propertyPath: commonMessageBoxPopup
+      value: 
+      objectReference: {fileID: 6362351360819374716}
     - target: {fileID: 6180031956623453753, guid: 94c073845c7dd474a92cf5a2b07597d3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4177,6 +4182,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70dd676c0d87341db85aeff79dca914f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6362351360819374716 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5951886173511416622, guid: 6a998d57e18f84fe49e21ebba33e7eaa,
+    type: 3}
+  m_PrefabInstance: {fileID: 6362351360819374707}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846f4eceb8fea4e7081bebf82d9fbc8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6362351360819374718 stripped
