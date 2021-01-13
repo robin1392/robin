@@ -11405,6 +11405,9 @@ MonoBehaviour:
   rankPopup: {fileID: 0}
   questPopup: {fileID: 0}
   gerResult: {fileID: 0}
+  seasonEndPopup: {fileID: 0}
+  seasonStartPopup: {fileID: 0}
+  commonMessageBoxPopup: {fileID: 0}
   inputfield_Nicnname: {fileID: 6180031956554800236}
   text_Nickname: {fileID: 6180031955885183827}
   text_Class: {fileID: 6180031957443971796}
@@ -14268,8 +14271,11 @@ MonoBehaviour:
   obj_Trophy: {fileID: 8798978946242395441}
   ts_SeasonPassContent: {fileID: 5139927421116198348}
   ts_TrophyContent: {fileID: 2611290971937708191}
+  text_SeasonID: {fileID: 4080964709320692557}
+  text_SeasonName: {fileID: 4517009352601906885}
   text_SeasonRemainDate: {fileID: 7367123610503949749}
   text_SeasonRemainTime: {fileID: 1416487781260751810}
+  seasonID: 1
 --- !u!1 &6180031957565354952
 GameObject:
   m_ObjectHideFlags: 0
