@@ -81,8 +81,9 @@ public class UI_Popup_Rank : UI_Popup
             Close();
         }
 
-        Debug.Log($"MsgSeasonInfoAck {msg.SeasonIndex} state {(SEASON_STATE)msg.SeasonState}\n" +
+        Debug.Log($"MsgSeasonInfoAck {msg.SeasonIndex} state {(SEASON_STATE)msg.SeasonState}, remainTime {msg.SeasonRemainTime}, needReset {msg.NeedSeasonReset}\n" +
                   $"MyRank:{msg.myRanking}, MyTrophy:{msg.myTrophy}, Time:{msg.SeasonRemainTime}");
+
         switch ((SEASON_STATE)msg.SeasonState)
         {
             case SEASON_STATE.NONE:

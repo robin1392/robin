@@ -180,24 +180,34 @@ public class UI_Get_Result : MonoBehaviour
                 SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN_REPEAT);
             }
         }
-        else if (openCount == msg.Length && isShowEndResult)
+        else if (openCount == msg.Length)
         {
+            if (ani_Item.GetCurrentAnimatorStateInfo(0).IsName("UI_getdice")
+                || ani_Item.GetCurrentAnimatorStateInfo(0).IsName("UI_getdice_legend"))
+            {
+                ItemAnimation();
+                return;
+            }
+
             btn_Blind.interactable = false;
             ani_Item.gameObject.SetActive(false);
-            StartCoroutine(ShowResultCoroutine());
+
+            if (isShowEndResult)
+            {
+                StartCoroutine(ShowResultCoroutine());
+            }
         }
         else
         {
             gameObject.SetActive(false);
             ani_Item.gameObject.SetActive(false);
             image_Blind.gameObject.SetActive(false);
-            UI_Main.Get().boxOpenPopup.Close();
         }
     }
     
     private void ItemAnimation()
     {
-        MsgReward reward = msg[openCount];
+        MsgReward reward = msg[Mathf.Clamp(openCount, 0, msg.Length - 1)];
 
         RandomWarsResource.Data.TDataItemList tDataItemList;
         if (TableManager.Get().ItemList.GetData(reward.ItemId, out tDataItemList) == false)
@@ -425,6 +435,7 @@ public class UI_Get_Result : MonoBehaviour
         SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT);
         obj_Result.SetActive(true);
         ani_Box.gameObject.SetActive(false);
+        UI_Main.Get().boxOpenPopup.Close();
         
         List<MsgReward> list = new List<MsgReward>(msg);
         

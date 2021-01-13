@@ -111,8 +111,6 @@ public class UI_Quest_Slot : MonoBehaviour
                 UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
 
-            this.msg.Status = (int)QUEST_STATUS.COMPLETE;
-            
             UI_Popup_Quest.QuestUpdate(msg.QuestData);
             UI_Main.Get().questPopup.InfoCallback();
         }
