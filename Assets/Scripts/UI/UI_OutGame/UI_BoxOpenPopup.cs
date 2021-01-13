@@ -241,8 +241,8 @@ public class UI_BoxOpenPopup : UI_Popup
         ///
         /// 
 
-        UI_Main.Get().gerResult.gameObject.SetActive(true);
         UI_Main.Get().gerResult.Initialize(msg.BoxReward, true, true);
+
         return;
         
         // for (int i = 0; i < msg.BoxReward.Length; i++)

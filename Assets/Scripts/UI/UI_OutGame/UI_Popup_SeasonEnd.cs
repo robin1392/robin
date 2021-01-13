@@ -12,6 +12,8 @@ public class UI_Popup_SeasonEnd : UI_Popup
     [Header("UI")]
     public Text text_MyRank;
     public Text text_MyTrophy;
+
+    private MsgSeasonResetAck msg;
     
     public void Initialize()
     {
@@ -22,11 +24,22 @@ public class UI_Popup_SeasonEnd : UI_Popup
 
     public void ResetCallback(MsgSeasonResetAck msg)
     {
+        this.msg = msg;
+        
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
         text_MyRank.text = msg.myRanking.ToString();
         text_MyTrophy.text = msg.myTrophy.ToString();
         
+        rewardSlot.Initialize(msg.SeasonReward);
+        
         Open();
+    }
+
+    public override void Close()
+    {
+        UI_Main.Get().seasonStartPopup.Initialize(msg);
+        
+        base.Close();
     }
 }

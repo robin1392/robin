@@ -20,11 +20,13 @@ public class UI_Quest_Slot : MonoBehaviour
     public Image image_Reward;
     public Text text_Reward;
 
+    private MsgQuestData msg;
     private TDataQuestData data;
     private Vector2 mousePos;
 
     public void Initialize(MsgQuestData msg)
     {
+        this.msg = msg;
         data = new TDataQuestData();
         var langData = new TDataLangKO();
         if (TableManager.Get().QuestData.GetData(msg.QuestId, out data))
@@ -109,7 +111,7 @@ public class UI_Quest_Slot : MonoBehaviour
                 UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
 
-            btn_Reward.interactable = false;
+            this.msg.Status = (int)QUEST_STATUS.COMPLETE;
             
             UI_Popup_Quest.QuestUpdate(msg.QuestData);
             UI_Main.Get().questPopup.InfoCallback();
