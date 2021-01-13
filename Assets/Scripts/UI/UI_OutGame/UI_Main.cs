@@ -75,13 +75,18 @@ namespace ED
             
             if (UserInfoManager.Get().GetUserInfo().needSeasonReset)
             {
-                ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
+                ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", seasonEndPopup.Initialize);
             }
         }
 
         private void Update()
         {
             btn_AD.interactable = MopubCommunicator.Instance != null && MopubCommunicator.Instance.hasVideo();
+
+            if (UI_Popup.stack.Count > 0)
+            {
+                Debug.Log($"Popup {UI_Popup.stack.Count} Peek {UI_Popup.stack.Peek().name}");
+            }
         }
 
         public void RefreshUserInfoUI()

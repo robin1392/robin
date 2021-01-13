@@ -24,10 +24,10 @@ public class UI_CommonMessageBox : UI_Popup
     
     public override void Close()
     {
+        base.Close();
+        
         callback?.Invoke();
 
         callback = null;
-        
-        base.Close();
     }
 }

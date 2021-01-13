@@ -57,7 +57,7 @@ public class UI_Panel_Reward : MonoBehaviour
                 text_SeasonRemainDate.text = string.Empty;
                 text_SeasonRemainTime.text = string.Empty;
 
-                if (isSeasonPassInitialized == true)
+                if (isSeasonPassInitialized == true && UI_Popup.stack.Count == 0)
                 {
                     isSeasonPassInitialized = false;
                     UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);

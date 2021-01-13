@@ -38,8 +38,8 @@ public class UI_Popup_SeasonEnd : UI_Popup
 
     public override void Close()
     {
-        UI_Main.Get().seasonStartPopup.Initialize(msg);
-        
         base.Close();
+        
+        UI_Main.Get().seasonStartPopup.Initialize(msg);
     }
 }

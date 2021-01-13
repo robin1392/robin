@@ -161,11 +161,16 @@ namespace ED
             if (ps_NormalCharacterEffect.gameObject.activeSelf) ps_NormalCharacterEffect.Stop();
             image_Character.rectTransform.DOAnchorPosY(image_Character.rectTransform.anchoredPosition.y - 1000f, 0.2f).SetEase(Ease.InBack);
             image_Character.DOFade(0, 0.2f);
-            image_BG.DOFade(0, 0.2f).SetDelay(0.1f);
             rts_Frame.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).SetDelay(0.1f).OnComplete(()=>
             {
                 gameObject.SetActive(false);
             });
+            image_BG.DOFade(0, 0.2f).SetDelay(0.1f);
+            
+            if (stack.Contains(this) && stack.Peek() == this)
+            {
+                stack.Pop();
+            }
 
             SoundManager.instance.Play(clip_Close);
         }

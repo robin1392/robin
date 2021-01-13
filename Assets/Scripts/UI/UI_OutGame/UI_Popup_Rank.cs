@@ -55,6 +55,7 @@ public class UI_Popup_Rank : UI_Popup
                 else
                 {
                     text_SeasonRemainTime.text = string.Empty;
+                    Close();
                 }
             }
         }
@@ -95,6 +96,8 @@ public class UI_Popup_Rank : UI_Popup
         Debug.Log($"MsgSeasonInfoAck {msg.SeasonIndex} state {(SEASON_STATE)msg.SeasonState}, remainTime {msg.SeasonRemainTime}, needReset {msg.NeedSeasonReset}\n" +
                   $"MyRank:{msg.myRanking}, MyTrophy:{msg.myTrophy}, Time:{msg.SeasonRemainTime}");
 
+        ResetSlots();
+            
         switch ((SEASON_STATE)msg.SeasonState)
         {
             case SEASON_STATE.NONE:
@@ -194,6 +197,16 @@ public class UI_Popup_Rank : UI_Popup
 
                 listSlot.Add(slot);
             }
+        }
+    }
+
+    private void ResetSlots()
+    {
+        for (int i = listSlot.Count - 1; i >= 0; i--)
+        {
+            var d = listSlot[i];
+            listSlot.Remove(d);
+            DestroyImmediate(d.gameObject);
         }
     }
 

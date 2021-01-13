@@ -19,7 +19,7 @@ public class UI_PopupOption : UI_Popup
     
     public override void Close()
     {
-        
+        base.Close();
     }
     
     #endregion

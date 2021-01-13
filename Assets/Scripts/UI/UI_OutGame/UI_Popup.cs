@@ -18,7 +18,7 @@ namespace ED
         public AudioClip clip_Close;
 
         protected Button btn_BG_Close;
-        protected Stack<UI_Popup> stack = new Stack<UI_Popup>();
+        public static Stack<UI_Popup> stack = new Stack<UI_Popup>();
 
         private void Awake()
         {

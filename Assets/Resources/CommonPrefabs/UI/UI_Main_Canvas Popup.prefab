@@ -8225,7 +8225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70dd676c0d87341db85aeff79dca914f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAutoOpen: 1
+  isAutoOpen: 0
   rts_Frame: {fileID: 5058398408903214153}
   image_BG: {fileID: 412853302521388436}
   clip_Open: {fileID: 8300000, guid: ecd6a3d76385b4e36bac71e4eabdf84c, type: 3}
@@ -10385,6 +10385,7 @@ MonoBehaviour:
   text_SeasonRemainTime: {fileID: 3640773085297008437}
   text_MyRanking: {fileID: 7362973731211935010}
   text_MyTrophy: {fileID: 7095316649691043441}
+  isInitialized: 0
 --- !u!1 &3949681604674715712
 GameObject:
   m_ObjectHideFlags: 0
