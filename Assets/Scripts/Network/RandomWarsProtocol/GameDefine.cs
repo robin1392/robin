@@ -96,7 +96,6 @@ namespace RandomWarsProtocol
     {
         NONE,
         GOING,          // 진행중
-        ACCOUNT,        // 정산중
         END,                // 종료
     }
 
