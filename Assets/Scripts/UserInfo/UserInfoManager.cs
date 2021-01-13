@@ -324,11 +324,11 @@ public class UserInfoManager : Singleton<UserInfoManager>
         else _userInfo.trophyRewardIds = new List<int>();
         _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
 
-        if (seasonPassInfo.NeedSeasonReset)
-        {
-            //UI_Main.Get().seasonEndPopup.Initialize();
-            UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
-        }
+        // if (seasonPassInfo.NeedSeasonReset)
+        // {
+        //     //UI_Main.Get().seasonEndPopup.Initialize();
+        //     UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
+        // }
     }
     
     public void SetUserKey(string userid)
