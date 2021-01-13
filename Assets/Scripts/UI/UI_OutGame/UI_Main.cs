@@ -72,6 +72,11 @@ namespace ED
             SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_LOBBY);
 
             FirebaseManager.Get().LogEvent("Login");
+            
+            if (UserInfoManager.Get().GetUserInfo().needSeasonReset)
+            {
+                ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
+            }
         }
 
         private void Update()

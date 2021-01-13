@@ -28,12 +28,12 @@ public class UI_Popup_Rank : UI_Popup
     public Text text_MyRanking;
     public Text text_MyTrophy;
 
-    private bool isInitialized;
+    public bool isInitialized;
     private bool isRankCalling;
     private int pageNum = 2;
     private List<UI_Rank_Slot> listSlot = new List<UI_Rank_Slot>();
-    private System.DateTime time;
-    private float refreshTime = 1f;
+    //private System.DateTime time;
+    private float refreshTime = 0.1f;
 
     private void Update()
     {
@@ -41,13 +41,21 @@ public class UI_Popup_Rank : UI_Popup
         {
             refreshTime -= Time.deltaTime;
 
-            if (time != null && refreshTime <= 0)
+            if (refreshTime <= 0)
             {
-                refreshTime = 1f;
+                refreshTime = 0.1f;
 
-                var span = time.Subtract(DateTime.Now);
-                text_SeasonRemainTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D2}", span.Days, span.Hours,
-                    span.Minutes, span.Seconds);
+                var span = UserInfoManager.Get().GetUserInfo().seasonEndTime.Subtract(DateTime.Now);
+
+                if (span.TotalSeconds >= 0)
+                {
+                    text_SeasonRemainTime.text = string.Format("{0}Days {1:D2}:{2:D2}:{3:D2}", span.Days, span.Hours,
+                        span.Minutes, span.Seconds);
+                }
+                else
+                {
+                    text_SeasonRemainTime.text = string.Empty;
+                }
             }
         }
     }
@@ -102,7 +110,7 @@ public class UI_Popup_Rank : UI_Popup
                 text_Season.text = $"SEASON {msg.SeasonIndex}";
                 //text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
                 //StartCoroutine(TimerCoroutine(msg.SeasonRemainTime));
-                time = DateTime.Now.AddSeconds(msg.SeasonRemainTime);
+                //time = DateTime.Now.AddSeconds(msg.SeasonRemainTime);
                 text_MyRanking.text = msg.myRanking.ToString();
                 reward.Initialize(msg.myRanking);
                 text_MyTrophy.text = msg.myTrophy.ToString();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using ED;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,11 +21,12 @@ public class UI_Panel_Reward : MonoBehaviour
     public Transform ts_TrophyContent;
 
     [Header("Season Info")]
+    public Text text_SeasonID;
+    public Text text_SeasonName;
     public Text text_SeasonRemainDate;
     public Text text_SeasonRemainTime;
 
-    public int seasonID = 1;
-    private int tab;
+    private bool isSeasonPassInitialized;
     private float refreshTime;
 
     private void Start()
@@ -41,25 +43,33 @@ public class UI_Panel_Reward : MonoBehaviour
         refreshTime -= Time.deltaTime;
         if (refreshTime <= 0)
         {
-            refreshTime = 1f;
+            refreshTime = 0.1f;
 
             var span = UserInfoManager.Get().GetUserInfo().seasonEndTime.Subtract(DateTime.Now);
 
-            if (span.TotalSeconds > 0)
+            if (span.TotalSeconds >= 0)
             {
-                text_SeasonRemainDate.text = $"{span.Days} Days";
+                text_SeasonRemainDate.text = $"{span.Days}Days";
                 text_SeasonRemainTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
             }
             else
             {
                 text_SeasonRemainDate.text = string.Empty;
                 text_SeasonRemainTime.text = string.Empty;
+
+                if (isSeasonPassInitialized == true)
+                {
+                    isSeasonPassInitialized = false;
+                    UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
+                }
             }
         }
     }
 
     public void InitializeSeasonPass()
     {
+        text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
+        
         int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count / 2;
         int seasonPassTrophy = UserInfoManager.Get().GetUserInfo().seasonTrophy;
         var firstData = new TDataSeasonpassReward();
@@ -71,6 +81,8 @@ public class UI_Panel_Reward : MonoBehaviour
             var slot = obj.GetComponent<UI_RewardSlot>();
             slot.Initialize(i, seasonPassTrophy);
         }
+
+        isSeasonPassInitialized = true;
     }
     
     public void InitializeTrophy()

@@ -18,6 +18,7 @@ namespace ED
         public AudioClip clip_Close;
 
         protected Button btn_BG_Close;
+        protected Stack<UI_Popup> stack = new Stack<UI_Popup>();
 
         private void Awake()
         {
@@ -43,6 +44,7 @@ namespace ED
             });
             image_BG.DOFade(0.95f, 0.2f);
 
+            stack.Push(this);
             SoundManager.instance.Play(clip_Open);
         }
 
@@ -55,6 +57,10 @@ namespace ED
             });
             image_BG.DOFade(0, 0.2f);
 
+            if (stack.Contains(this) && stack.Peek() == this)
+            {
+                stack.Pop();
+            }
             SoundManager.instance.Play(clip_Close);
         }
     }

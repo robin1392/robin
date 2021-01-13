@@ -34,6 +34,7 @@ public class UserInfo
 
     public int seasonPassId;
     public bool buySeasonPass;
+    public bool needSeasonReset;
     public int seasonTrophy;
     public List<int> seasonPassRewardIds;
     public List<int> trophyRewardIds;
@@ -323,6 +324,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
         _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
+        _userInfo.needSeasonReset = seasonPassInfo.NeedSeasonReset;
 
         // if (seasonPassInfo.NeedSeasonReset)
         // {
