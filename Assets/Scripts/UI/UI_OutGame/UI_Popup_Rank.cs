@@ -77,7 +77,10 @@ public class UI_Popup_Rank : UI_Popup
 
         if (msg.NeedSeasonReset)
         {
-            UI_Main.Get().seasonEndPopup.Initialize();
+            //UI_Main.Get().seasonEndPopup.Initialize();
+            
+            UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
+            
             Close();
         }
 

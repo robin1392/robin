@@ -36,7 +36,7 @@ public class Guardian_01 : Minion
             
             controller.MinionAniTrigger(id, "Skill", target.id);
 
-            yield return new WaitForSeconds(1.716f);
+            yield return new WaitForSeconds(0.716f);
 
             var cols = Physics.OverlapSphere(transform.position, 2f, targetLayer);
             for (int i = 0; i < cols.Length; i++)

@@ -23,6 +23,7 @@ public class UI_Panel_Reward : MonoBehaviour
     public Text text_SeasonRemainDate;
     public Text text_SeasonRemainTime;
 
+    public int seasonID = 1;
     private int tab;
     private float refreshTime;
 
@@ -62,7 +63,7 @@ public class UI_Panel_Reward : MonoBehaviour
         int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count / 2;
         int seasonPassTrophy = UserInfoManager.Get().GetUserInfo().seasonTrophy;
         var firstData = new TDataSeasonpassReward();
-        TableManager.Get().SeasonpassReward.GetData(1, out firstData);
+        TableManager.Get().SeasonpassReward.GetData(1/*UserInfoManager.Get().GetUserInfo().seasonPassId*/, out firstData);
         int height = firstData.trophyPoint;
         for (int i = 0; i < totalSlotCount + 1; i++)
         {
