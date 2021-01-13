@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: a38bacb15ba614a11b4caf5c9ff390b2, type: 3}
-    totalSpriteSurfaceArea: 2079195
+    totalSpriteSurfaceArea: 2053595
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -68,7 +68,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 983fb25575ead4e5d9b619c35348fce8, type: 3}
   - {fileID: 21300000, guid: 389097a5b4b7d4e6486a838d4f2bbe7d, type: 3}
   - {fileID: 21300000, guid: 89234546d7ee34ab880c5a1d12acd4cc, type: 3}
-  - {fileID: 21300000, guid: 75c972569836246178d1ad0b0dbbbd73, type: 3}
   - {fileID: 21300000, guid: 6e272cb6e305c4582b9a84d4e59fc968, type: 3}
   - {fileID: 21300000, guid: ed7433d74af2e443db3d4744e7cd1680, type: 3}
   - {fileID: 21300000, guid: 31b15af7b3aa245388c0ce05cfdceb25, type: 3}
@@ -93,48 +92,47 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e88832afb8fc14caf85b1c88dfb5124c, type: 3}
   - {fileID: 21300000, guid: 3fa8c3efd02f64c438d9b5613022b7fe, type: 3}
   m_PackedSpriteNamesToIndex:
-  - dice_arbiter
-  - dice_layzer
-  - dice_berserker
-  - dice_iceball
-  - dice_stoneball
-  - dice_razyoftower
-  - dice_sinzed
-  - dice_sniper
-  - dice_necromancer
-  - dice_knight
+  - icon_dice_4009
+  - icon_dice_3009
+  - icon_dice_3005
+  - icon_dice_2007
+  - icon_dice_2006
+  - icon_dice_4002
+  - icon_dice_2001
+  - icon_dice_3011
+  - icon_dice_3001
+  - icon_dice_1002
   - dice_star
-  - dice_magician
+  - icon_dice_4006
   - dice_pip
-  - dice_invincibility
-  - dice_turret
-  - dice_robot
-  - dice_babydragon
+  - icon_dice_4001
+  - icon_dice_2008
+  - icon_dice_4005
+  - icon_dice_4000
   - dice_empty
-  - dice_fighterplane
-  - dice_supply
-  - dice_ninja
-  - dice_rush
-  - dice_rocket
-  - dice_zombie
-  - dice_flagofwar
-  - dice_bomber
-  - dice_healer
-  - dice_golem
-  - dice_mortar
-  - dice_fireball
-  - dice_zergling
-  - dice_posu
-  - dice_fireman
-  - dice_race
-  - dice_plane
-  - dice_shielder
-  - dice_saint
-  - dice_lightningrod
-  - dice_support
-  - dice_mine
-  - dice_ranger
-  - dice_raider
-  - dice_goliath
+  - icon_dice_3007
+  - icon_dice_2000
+  - icon_dice_3003
+  - icon_dice_3010
+  - icon_dice_3008
+  - icon_dice_2009
+  - icon_dice_4008
+  - icon_dice_1003
+  - icon_dice_4003
+  - icon_dice_3000
+  - icon_dice_1004
+  - icon_dice_1001
+  - icon_dice_2004
+  - icon_dice_2003
+  - icon_dice_2005
+  - icon_dice_1006
+  - icon_dice_2002
+  - icon_dice_4007
+  - icon_dice_4010
+  - icon_dice_3004
+  - icon_dice_1005
+  - icon_dice_1000
+  - icon_dice_3002
+  - icon_dice_3006
   m_Tag: atlas_dice
   m_IsVariant: 0
