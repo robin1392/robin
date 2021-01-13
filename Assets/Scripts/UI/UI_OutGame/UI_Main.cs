@@ -37,6 +37,7 @@ namespace ED
         public UI_Get_Result gerResult;
         public UI_Popup_SeasonEnd seasonEndPopup;
         public UI_Popup_SeasonStart seasonStartPopup;
+        public UI_CommonMessageBox commonMessageBoxPopup;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;
@@ -384,6 +385,11 @@ namespace ED
         {
             questPopup.gameObject.SetActive(true);
             questPopup.Initialize();
+        }
+
+        public void ShowMessageBox(string title, string message, System.Action callback = null)
+        {
+            commonMessageBoxPopup.Initialize(title, message, callback);
         }
     }
 }
