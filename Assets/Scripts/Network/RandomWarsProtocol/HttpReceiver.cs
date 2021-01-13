@@ -187,6 +187,15 @@ namespace RandomWarsProtocol
                         ackJson = await SeasonInfoReq(msg);
                     }
                     break;
+                case GameProtocol.SEASON_RESET_REQ:
+                    {
+                        if (SeasonResetReq == null)
+                            return ackJson;
+
+                        MsgSeasonResetReq msg = JsonConvert.DeserializeObject<MsgSeasonResetReq>(json);
+                        ackJson = await SeasonResetReq(msg);
+                    }
+                    break;
                 case GameProtocol.GET_RANK_REQ:
                     {
                         if (GetRankReq == null)
@@ -348,6 +357,15 @@ namespace RandomWarsProtocol
 
                         MsgSeasonInfoAck msg = JsonConvert.DeserializeObject<MsgSeasonInfoAck>(json);
                         SeasonInfoAck(msg);
+                    }
+                    break;
+                case GameProtocol.SEASON_RESET_ACK:
+                    {
+                        if (SeasonResetAck == null)
+                            return false;
+
+                        MsgSeasonResetAck msg = JsonConvert.DeserializeObject<MsgSeasonResetAck>(json);
+                        SeasonResetAck(msg);
                     }
                     break;
                 case GameProtocol.GET_RANK_ACK:
