@@ -54,6 +54,7 @@ public class UI_Get_Result : MonoBehaviour
         this.isBoxOpen = isBoxOpen;
         this.isShowEndResult = isShowEndResult;
         this.openCount = 0;
+        obj_Result.SetActive(false);
         
         for (int i = 0; i < msg.Length; i++)
         {
@@ -165,12 +166,12 @@ public class UI_Get_Result : MonoBehaviour
         
         if (msg != null && openCount < msg.Length)
         {
-            if (openCount == 0)
+            if (openCount == 0 && isBoxOpen)
             {
                 //btn_Blind.interactable = false;
                 obj_BoxOpenParticle.SetActive(true);
 
-                Invoke("ItemAnimation", 0.6666f);
+                Invoke("ItemAnimation", 1f);
                 SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN);
             }
             else
@@ -189,12 +190,18 @@ public class UI_Get_Result : MonoBehaviour
                 return;
             }
 
-            btn_Blind.interactable = false;
             ani_Item.gameObject.SetActive(false);
 
             if (isShowEndResult)
             {
+                btn_Blind.interactable = false;
                 StartCoroutine(ShowResultCoroutine());
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                ani_Item.gameObject.SetActive(false);
+                image_Blind.gameObject.SetActive(false);
             }
         }
         else

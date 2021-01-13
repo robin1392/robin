@@ -46,8 +46,8 @@ public class UI_Panel_Reward : MonoBehaviour
 
             if (span.TotalSeconds > 0)
             {
-                text_SeasonRemainDate.text = $"{span.Days}DAY";
-                text_SeasonRemainTime.text = $"{span.Hours}:{span.Minutes}:{span.Seconds}";
+                text_SeasonRemainDate.text = $"{span.Days} Days";
+                text_SeasonRemainTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
             }
             else
             {

@@ -243,6 +243,8 @@ public class UI_BoxOpenPopup : UI_Popup
 
         UI_Main.Get().gerResult.Initialize(msg.BoxReward, true, true);
 
+        UI_Popup_Quest.QuestUpdate(msg.QuestData);
+        
         return;
         
         // for (int i = 0; i < msg.BoxReward.Length; i++)
