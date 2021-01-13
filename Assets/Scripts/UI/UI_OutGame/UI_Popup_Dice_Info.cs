@@ -190,10 +190,13 @@ namespace ED
                     diceLevel++;
                     info.dicGettedDice[data.id][0]++;
                     info.dicGettedDice[data.id][1] -= needDiceCount;
-                    
+
                     obj_Result.SetActive(true);
                     StartCoroutine(SetDiceLevelUpResultCoroutine());
                 }
+                
+                // Quest
+                UI_Popup_Quest.QuestUpdate(msg.QuestData);
             }
         }
 

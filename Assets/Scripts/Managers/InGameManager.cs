@@ -1526,6 +1526,9 @@ namespace ED
                 {
                     MsgEndGameNotify endNoti = (MsgEndGameNotify) param[0];
                     
+                    // Quest update
+                    UI_Popup_Quest.QuestUpdate(endNoti.QuestData);
+                    
                     EndGame((GAME_RESULT.VICTORY == endNoti.GameResult || GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.GameResult), Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward);
                     
                     break;

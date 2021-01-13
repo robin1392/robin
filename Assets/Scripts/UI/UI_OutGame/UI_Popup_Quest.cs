@@ -68,6 +68,22 @@ public class UI_Popup_Quest : UI_Popup
         }
     }
 
+    public static void QuestUpdate(MsgQuestData[] datas)
+    {
+        if (datas != null)
+        {
+            for (int i = 0; i < datas.Length; ++i)
+            {
+                var q = list.Find(m => m.QuestId == datas[i].QuestId);
+                if (q != null)
+                {
+                    q.Value = datas[i].Value;
+                    q.Status = datas[i].Status;
+                }
+            }
+        }
+    }
+
     public void InfoCallback(MsgQuestInfoAck msg)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
@@ -190,7 +206,6 @@ public class UI_Popup_Quest : UI_Popup
 
             if (list.Count > 0)
             {
-                UI_Main.Get().gerResult.gameObject.SetActive(true);
                 UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
 

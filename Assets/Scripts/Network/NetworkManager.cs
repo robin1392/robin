@@ -163,6 +163,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgQuestInfoAck> _questInfoCallback;
     private Action<MsgQuestRewardAck> _questRewardCallback;
     private Action<MsgQuestDayRewardAck> _questDayRewardCallback;
+    private Action<MsgSeasonResetAck> _seasonResetCallback;
     #endregion
 
     #region unity base
@@ -799,17 +800,23 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void SeasonResetReq(string userId)
+    public void SeasonResetReq(string userId, Action<MsgSeasonResetAck> callback = null)
     {
         MsgSeasonResetReq msg = new MsgSeasonResetReq();
         msg.UserId = userId;
         _httpSender.SeasonResetReq(msg);
+        _seasonResetCallback = callback;
         UnityUtil.Print("SEND SEASON RESET => index", string.Format("userId:{0}", userId), "green");
     }
 
 
     void OnSeasonResetAck(MsgSeasonResetAck msg)
     {
+        if (_seasonResetCallback != null)
+        {
+            _seasonResetCallback(msg);
+        }
+        UnityUtil.Print("RECV SEASON RESET => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
 
 

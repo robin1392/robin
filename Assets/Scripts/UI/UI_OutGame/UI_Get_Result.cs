@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ED;
 using DG.Tweening;
+using ParadoxNotion;
 using Debug = UnityEngine.Debug;
 
 public class UI_Get_Result : MonoBehaviour
@@ -44,12 +45,16 @@ public class UI_Get_Result : MonoBehaviour
     
     private bool isBoxOpen;
     private bool isShowEndResult;
+    private float iconChangeDelay;
     
     public void Initialize(MsgReward[] msg, bool isBoxOpen, bool isShowEndResult)
     {
+        gameObject.SetActive(true);
         this.msg = msg;
         this.isBoxOpen = isBoxOpen;
         this.isShowEndResult = isShowEndResult;
+        this.openCount = 0;
+        obj_Result.SetActive(false);
         
         for (int i = 0; i < msg.Length; i++)
         {
@@ -69,7 +74,6 @@ public class UI_Get_Result : MonoBehaviour
                 Debug.LogErrorFormat($"Failed to get table data. ID:{msg[i].ItemId}");
                 return;
             }
-
 
             switch ((ITEM_TYPE)tDataItemList.itemType)
             {
@@ -162,27 +166,43 @@ public class UI_Get_Result : MonoBehaviour
         
         if (msg != null && openCount < msg.Length)
         {
-            ani_Box.SetTrigger("Open");
-
-            btn_Blind.interactable = false;
-            if (openCount == 0)
+            if (openCount == 0 && isBoxOpen)
             {
+                //btn_Blind.interactable = false;
                 obj_BoxOpenParticle.SetActive(true);
 
-                Invoke("ItemAnimation", 0.6666f);
+                Invoke("ItemAnimation", 1f);
                 SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN);
             }
             else
             {
+                //btn_Blind.interactable = false;
                 ItemAnimation();
                 SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN_REPEAT);
             }
         }
-        else if (openCount == msg.Length && isShowEndResult)
+        else if (openCount == msg.Length)
         {
-            btn_Blind.interactable = false;
+            if (ani_Item.GetCurrentAnimatorStateInfo(0).IsName("UI_getdice")
+                || ani_Item.GetCurrentAnimatorStateInfo(0).IsName("UI_getdice_legend"))
+            {
+                ItemAnimation();
+                return;
+            }
+
             ani_Item.gameObject.SetActive(false);
-            StartCoroutine(ShowResultCoroutine());
+
+            if (isShowEndResult)
+            {
+                btn_Blind.interactable = false;
+                StartCoroutine(ShowResultCoroutine());
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                ani_Item.gameObject.SetActive(false);
+                image_Blind.gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -194,11 +214,7 @@ public class UI_Get_Result : MonoBehaviour
     
     private void ItemAnimation()
     {
-        if (crt_IconChange != null) StopCoroutine(crt_IconChange);
-        if (crt_TextCount != null) StopCoroutine(crt_TextCount);
-        ani_Item.gameObject.SetActive(true);
-
-        MsgReward reward = msg[openCount];
+        MsgReward reward = msg[Mathf.Clamp(openCount, 0, msg.Length - 1)];
 
         RandomWarsResource.Data.TDataItemList tDataItemList;
         if (TableManager.Get().ItemList.GetData(reward.ItemId, out tDataItemList) == false)
@@ -206,15 +222,71 @@ public class UI_Get_Result : MonoBehaviour
             Debug.LogErrorFormat($"Failed to get table data from ItemList. ID:{reward.ItemId}");
             return;
         }
+        
+        if (crt_TextCount != null) StopCoroutine(crt_TextCount);
+        
+        if (ani_Item.GetCurrentAnimatorStateInfo(0).IsName("UI_getdice")
+        || ani_Item.GetCurrentAnimatorStateInfo(0).IsName("UI_getdice_legend"))
+        {
+            ani_Item.SetTrigger("End");
+            iconChangeDelay = 0;
 
+            if ((ITEM_TYPE) tDataItemList.itemType == ITEM_TYPE.DICE)
+            {
+                // dice
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(reward.ItemId, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+                int level = 0;
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(reward.ItemId))
+                {
+                    level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][0];
+                }
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
+                {
+                    return;
+                }
 
+                int needDiceCount = dataDiceUpgrade.needCard;
+                int current = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][1] + reward.Value;
+                
+                text_ItemGuageCount.text = $"{current}/{needDiceCount}";
+                image_ItemGuage.fillAmount = current / (float) needDiceCount;
+
+                image_ItemGuage.color = current >= needDiceCount ? Color.green : UnityUtil.HexToColor("6AD3E5");
+                if (image_UpgradeIcon.gameObject.activeSelf == false && current >= needDiceCount)
+                {
+                    image_UpgradeIcon.gameObject.SetActive(true);
+                    image_UpgradeIcon.rectTransform.localScale = Vector3.zero;
+                    image_UpgradeIcon.rectTransform.DOScale(1f, 0.25f);
+                }
+            }
+            
+            // 애니메이션
+            RectTransform _rts = (RectTransform) ani_Item.transform;
+            _rts.DOKill();
+            _rts.DOAnchorPosY(350f, 0f);
+            _rts.DOScale(1.4f, 0f);
+
+            return;
+        }
+        
+        ani_Box.SetTrigger("Open");
+
+        if (crt_IconChange != null) StopCoroutine(crt_IconChange);
+        ani_Item.gameObject.SetActive(true);
+        
         // 보상내용 세팅
         switch ((ITEM_TYPE)tDataItemList.itemType)
         {
             case ITEM_TYPE.GOLD:
                 image_ItemIcon.sprite = sprite_Gold;
                 image_ItemIcon.SetNativeSize();
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Gold, 0.6f));
+                iconChangeDelay = 0.6f;
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Gold));
                 ani_Item.SetTrigger("Get");
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
@@ -224,7 +296,8 @@ public class UI_Get_Result : MonoBehaviour
             case ITEM_TYPE.DIAMOND:
                 image_ItemIcon.sprite = sprite_Diamond;
                 image_ItemIcon.SetNativeSize();
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Diamond, 0.6f));
+                iconChangeDelay = 0.6f;
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(sprite_Diamond));
                 ani_Item.SetTrigger("Get");
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
@@ -248,19 +321,22 @@ public class UI_Get_Result : MonoBehaviour
                     return;
                 }
                 
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(
-                    FileHelper.GetDiceIcon(dataDiceInfo.iconName), 0.6f));
 
                 if ((DICE_GRADE) dataDiceInfo.grade == DICE_GRADE.LEGEND)
                 {
                     _currentAudio = SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE_LEGEND);
                     ani_Item.SetTrigger("GetLegend");
+                    iconChangeDelay = 1.6f;
                 }
                 else
                 {
                     SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE, 0.5f);
                     ani_Item.SetTrigger("Get");
+                    iconChangeDelay = 0.6f;
+                    
                 }
+                
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetDiceIcon(dataDiceInfo.iconName)));
 
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
@@ -300,9 +376,13 @@ public class UI_Get_Result : MonoBehaviour
     }
 
     private Coroutine crt_IconChange;
-    IEnumerator IconChangeCoroutine(Sprite icon, float delay)
+    IEnumerator IconChangeCoroutine(Sprite icon)
     {
-        yield return new WaitForSeconds(delay);
+        while (iconChangeDelay > 0)
+        {
+            iconChangeDelay -= Time.deltaTime;
+            yield return null;
+        }
 
         btn_Blind.interactable = true;
         image_ItemIcon.sprite = icon;
@@ -362,6 +442,7 @@ public class UI_Get_Result : MonoBehaviour
         SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT);
         obj_Result.SetActive(true);
         ani_Box.gameObject.SetActive(false);
+        UI_Main.Get().boxOpenPopup.Close();
         
         List<MsgReward> list = new List<MsgReward>(msg);
         
