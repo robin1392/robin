@@ -7397,7 +7397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4219965948217670414
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11381,35 +11381,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a864e9d828247b0af2b7ca603cf5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: dicAudioClips
-      Entry: 7
-      Data: 0|Unity.Cloud.Collaborate.Common.SerializableDictionary`2[[System.String,
-        mscorlib],[UnityEngine.AudioClip, UnityEngine.AudioModule]], Unity.CollabProxy.Editor
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
   instanceID: 0
   rts_MainPages: {fileID: 6180031957041860477}
   rts_MainContents: {fileID: 2497836982382980185}
@@ -11433,6 +11404,7 @@ MonoBehaviour:
   userinfoPopup: {fileID: 0}
   rankPopup: {fileID: 0}
   questPopup: {fileID: 0}
+  gerResult: {fileID: 0}
   inputfield_Nicnname: {fileID: 6180031956554800236}
   text_Nickname: {fileID: 6180031955885183827}
   text_Class: {fileID: 6180031957443971796}
@@ -14296,6 +14268,8 @@ MonoBehaviour:
   obj_Trophy: {fileID: 8798978946242395441}
   ts_SeasonPassContent: {fileID: 5139927421116198348}
   ts_TrophyContent: {fileID: 2611290971937708191}
+  text_SeasonRemainDate: {fileID: 7367123610503949749}
+  text_SeasonRemainTime: {fileID: 1416487781260751810}
 --- !u!1 &6180031957565354952
 GameObject:
   m_ObjectHideFlags: 0

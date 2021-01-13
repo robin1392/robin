@@ -35,6 +35,8 @@ namespace ED
         public UI_Popup_Rank rankPopup;
         public UI_Popup_Quest questPopup;
         public UI_Get_Result gerResult;
+        public UI_Popup_SeasonEnd seasonEndPopup;
+        public UI_Popup_SeasonStart seasonStartPopup;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;

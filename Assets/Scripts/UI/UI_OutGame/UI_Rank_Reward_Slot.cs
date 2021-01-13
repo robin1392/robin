@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +41,14 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
             arrText_RewardSlot[2].text = $"{data.rankRewardItem03}\nx{data.rankRewardIValue03}";
             arrText_RewardSlot[3].text = $"{data.rankRewardItem04}\nx{data.rankRewardIValue04}";
             arrText_RewardSlot[4].text = $"{data.rankRewardItem05}\nx{data.rankRewardIValue05}";
+        }
+    }
+
+    public void Initialize(MsgReward[] rewards)
+    {
+        for (int i = 0; i < arrText_RewardSlot.Length; i++)
+        {
+            arrText_RewardSlot[i].text = $"{rewards[i].ItemId}\nx{rewards[i].Value}";
         }
     }
 }

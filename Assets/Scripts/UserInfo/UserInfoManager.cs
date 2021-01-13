@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
+using ED;
 using UnityEngine;
 using RandomWarsProtocol;
 
@@ -36,6 +37,7 @@ public class UserInfo
     public int seasonTrophy;
     public List<int> seasonPassRewardIds;
     public List<int> trophyRewardIds;
+    public DateTime seasonEndTime;
     
     private string _ticketId;
     public string ticketId
@@ -320,6 +322,12 @@ public class UserInfoManager : Singleton<UserInfoManager>
         else _userInfo.seasonPassRewardIds = new List<int>();
         if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
+        _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
+
+        if (seasonPassInfo.NeedSeasonReset)
+        {
+            UI_Main.Get().seasonEndPopup.Initialize();
+        }
     }
     
     public void SetUserKey(string userid)

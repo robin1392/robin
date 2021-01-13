@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using RandomWarsResource.Data;
 using UnityEngine;
@@ -18,7 +19,12 @@ public class UI_Panel_Reward : MonoBehaviour
     public Transform ts_SeasonPassContent;
     public Transform ts_TrophyContent;
 
+    [Header("Season Info")]
+    public Text text_SeasonRemainDate;
+    public Text text_SeasonRemainTime;
+
     private int tab;
+    private float refreshTime;
 
     private void Start()
     {
@@ -27,6 +33,28 @@ public class UI_Panel_Reward : MonoBehaviour
         
         InitializeSeasonPass();
         InitializeTrophy();
+    }
+
+    private void Update()
+    {
+        refreshTime -= Time.deltaTime;
+        if (refreshTime <= 0)
+        {
+            refreshTime = 1f;
+
+            var span = UserInfoManager.Get().GetUserInfo().seasonEndTime.Subtract(DateTime.Now);
+
+            if (span.TotalSeconds > 0)
+            {
+                text_SeasonRemainDate.text = $"{span.Days} Days";
+                text_SeasonRemainTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
+            }
+            else
+            {
+                text_SeasonRemainDate.text = string.Empty;
+                text_SeasonRemainTime.text = string.Empty;
+            }
+        }
     }
 
     public void InitializeSeasonPass()
