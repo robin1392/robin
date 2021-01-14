@@ -657,7 +657,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndCoopGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, MsgReward[] normalReward)
+        public void EndCoopGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, MsgReward[] normalReward, MsgQuestData[] questData)
         {
             using (var ms = new MemoryStream())
             {
@@ -670,6 +670,13 @@ namespace RandomWarsProtocol
                 for (int i = 0; i < length; i++)
                 {
                     normalReward[i].Write(bw);
+                }
+
+                length = (questData == null) ? 0 : questData.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    questData[i].Write(bw);
                 }
 
                 peer.SendPacket((int)GameProtocol.END_COOP_GAME_NOTIFY, ms.ToArray());
