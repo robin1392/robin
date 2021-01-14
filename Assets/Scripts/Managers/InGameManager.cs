@@ -1533,6 +1533,16 @@ namespace ED
                     
                     break;
                 }
+                case GameProtocol.END_COOP_GAME_NOTIFY:
+                {
+                    MsgEndCoopGameNotify endNoti = (MsgEndCoopGameNotify) param[0];
+                    
+                    // Quest update
+                    UI_Popup_Quest.QuestUpdate(endNoti.QuestData);
+                    
+                    EndGame((GAME_RESULT.VICTORY == endNoti.GameResult || GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.GameResult), 0, endNoti.NormalReward, null, null);
+                }
+                    break;
                 
                 
                 
