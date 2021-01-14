@@ -42,6 +42,8 @@ namespace RandomWarsProtocol
         public string Name;
         // 트로피 수
         public int Trophy;
+        // 랭킹포인트
+        public int RankingPoint;
         // 유저 재화
         public MsgUserGoods Goods;
         // 유저 클래스
