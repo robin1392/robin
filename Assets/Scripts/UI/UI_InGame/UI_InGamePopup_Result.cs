@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using ED;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using RandomWarsProtocol;
+using RandomWarsResource.Data;
 
 public class UI_InGamePopup_Result : MonoBehaviour
 {
@@ -42,62 +44,117 @@ public class UI_InGamePopup_Result : MonoBehaviour
         winlose_Other.Initialize(!isWin, InGameManager.Get().playerController.targetPlayer.currentHealth > 20000, winningStreak, NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
         btn_ShowValues.interactable = false;
 
-        List<MsgReward> list = null;
-        int normalTrophy = 0;
         int normalGold = 0;
+        int normalTrophy = 0;
+        int normalSeasonTrophy = 0;
+        int normalRankTrophy = 0;
         int normalKey = 0;
         if (normalReward != null)
         {
-            list = new List<MsgReward>(normalReward);
-            var nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.thropy);
-            if (nt != null) normalTrophy = nt.Value;
-            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
-            if (nt != null) normalGold = nt.Value;
-            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.key);
-            if (nt != null) normalKey = nt.Value;
+            foreach (var reward in normalReward)
+            {
+                switch ((EItemListKey)reward.ItemId)
+                {
+                    case EItemListKey.gold:
+                        normalGold = reward.Value;
+                        break;
+                    case EItemListKey.thropy:
+                        normalTrophy = reward.Value;
+                        break;
+                    case EItemListKey.seasonthropy:
+                        normalSeasonTrophy = reward.Value;
+                        break;
+                    case EItemListKey.rankthropy:
+                        normalRankTrophy = reward.Value;
+                        break;
+                    case EItemListKey.key:
+                        normalKey = reward.Value;
+                        break;
+                }
+            }
+            
             arrValue[0].Initialize(normalTrophy, normalGold, normalKey);
         }
 
-        int streakTrophy = 0;
         int streakGold = 0;
+        int streakTrophy = 0;
+        int streakSeasonTrophy = 0;
+        int streakRankTrophy = 0;
         int streakKey = 0;
         if (streakReward != null)
         {
-            list = new List<MsgReward>(streakReward);
-            var nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.thropy);
-            if (nt != null) streakTrophy = nt.Value;
-            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
-            if (nt != null) streakGold = nt.Value;
-            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.key);
-            if (nt != null) streakKey = nt.Value;
+            foreach (var reward in streakReward)
+            {
+                switch ((EItemListKey)reward.ItemId)
+                {
+                    case EItemListKey.gold:
+                        streakGold = reward.Value;
+                        break;
+                    case EItemListKey.thropy:
+                        streakTrophy = reward.Value;
+                        break;
+                    case EItemListKey.seasonthropy:
+                        streakSeasonTrophy = reward.Value;
+                        break;
+                    case EItemListKey.rankthropy:
+                        streakRankTrophy = reward.Value;
+                        break;
+                    case EItemListKey.key:
+                        streakKey = reward.Value;
+                        break;
+                }
+            }
+            
             arrValue[1].Initialize(streakTrophy, streakGold, streakKey);
             text_WinningStreak.text = winningStreak.ToString();
             text_WinningStreak.color = winningStreak > 0 ? text_WinningStreak.color : Color.gray;
         }
 
-        int perfectTrophy = 0;
         int perfectGold = 0;
+        int perfectTrophy = 0;
+        int perfectSeasonTrophy = 0;
+        int perfectRankTrophy = 0;
         int perfectKey = 0;
         if (perfectReward != null)
         {
-            list = new List<MsgReward>(perfectReward);
-            var nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.thropy);
-            if (nt != null) perfectTrophy = nt.Value;
-            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
-            if (nt != null) perfectGold = nt.Value;
-            nt = list.Find(msg => msg.ItemId == (int)RandomWarsResource.Data.EItemListKey.key);
-            if (nt != null) perfectKey = nt.Value;
+            foreach (var reward in perfectReward)
+            {
+                switch ((EItemListKey)reward.ItemId)
+                {
+                    case EItemListKey.gold:
+                        perfectGold = reward.Value;
+                        break;
+                    case EItemListKey.thropy:
+                        perfectTrophy = reward.Value;
+                        break;
+                    case EItemListKey.seasonthropy:
+                        perfectSeasonTrophy = reward.Value;
+                        break;
+                    case EItemListKey.rankthropy:
+                        perfectRankTrophy = reward.Value;
+                        break;
+                    case EItemListKey.key:
+                        perfectKey = reward.Value;
+                        break;
+                }
+            }
+            
             arrValue[2].Initialize(perfectTrophy, perfectGold, perfectKey);
         }
 
         int totalTrophy = normalTrophy + streakTrophy + perfectTrophy;
         int totalGold = normalGold + streakGold + perfectGold;
         int totalKey = normalKey + streakKey + perfectKey;
+        int totalSeasonTrophy = normalSeasonTrophy + streakSeasonTrophy + perfectSeasonTrophy;
+        int totalRankTrophy = normalRankTrophy + streakRankTrophy + perfectRankTrophy;
         arrValue[3].Initialize(totalTrophy, totalGold, totalKey);
 
-        UserInfoManager.Get().GetUserInfo().trophy += totalTrophy;
-        UserInfoManager.Get().GetUserInfo().gold += totalGold;
-        UserInfoManager.Get().GetUserInfo().key += totalKey;
+        var userInfo = UserInfoManager.Get().GetUserInfo();
+        userInfo.trophy += totalTrophy;
+        userInfo.seasonTrophy += totalSeasonTrophy;
+        userInfo.rankPoint += totalRankTrophy;
+        userInfo.gold += totalGold;
+        userInfo.key += totalKey;
 
         Invoke("EnableShowValuesButton", 2f);
 //#endif
