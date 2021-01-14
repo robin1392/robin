@@ -422,6 +422,14 @@ public class SocketRecvEvent
     }
 
 
+    public void OnEndCoopGameNotify(Peer peer, MsgEndCoopGameNotify msg)
+    {
+        UnityUtil.Print("end coop game Notify", JsonConvert.SerializeObject(msg), "white");
+
+        if (InGameManager.Get() != null)
+            InGameManager.Get().RecvInGameManager(GameProtocol.END_COOP_GAME_NOTIFY, msg);
+    }
+
 
     public void OnCoopSpawnNotify(Peer peer, MsgCoopSpawnNotify msg)
     {
