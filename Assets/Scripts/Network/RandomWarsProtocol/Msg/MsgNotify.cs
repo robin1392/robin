@@ -62,6 +62,7 @@ namespace RandomWarsProtocol.Msg
         public int ErrorCode;
         public GAME_RESULT GameResult;
         public MsgReward[] NormalReward;
+        public MsgQuestData[] QuestData;
     }
 
 

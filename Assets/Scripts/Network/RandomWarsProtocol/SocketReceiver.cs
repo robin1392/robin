@@ -594,6 +594,13 @@ namespace RandomWarsProtocol
                                 msg.NormalReward[i] = MsgReward.Read(br);
                             }
 
+                            length = br.ReadInt32();
+                            msg.QuestData = new MsgQuestData[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.QuestData[i] = MsgQuestData.Read(br);
+                            }
+
                             EndCoopGameNotify(peer, msg);
                         }
                     }
