@@ -50,7 +50,9 @@ namespace RandomWarsProtocol
         public byte WinStreak;
         // 트로피 보상 획득 아이디 배열
         public int[] TrophyRewardIds;
-
+        // Vip패스 구입 여부`
+        public bool IsBuyVipPass;
+        // 시즌 정보
         public MsgSeasonPassInfo SeasonInfo;
 
 
