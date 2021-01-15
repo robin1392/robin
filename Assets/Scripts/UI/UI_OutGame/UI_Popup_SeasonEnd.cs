@@ -31,7 +31,7 @@ public class UI_Popup_SeasonEnd : UI_Popup
         text_MyRank.text = msg.myRanking.ToString();
         text_MyTrophy.text = msg.myTrophy.ToString();
         
-        rewardSlot.Initialize(msg.SeasonReward);
+        //rewardSlot.Initialize(msg.SeasonReward);
         
         Open();
     }

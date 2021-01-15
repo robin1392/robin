@@ -37,6 +37,7 @@ namespace ED
 
         //private Data_Dice _data;
         private RandomWarsResource.Data.TDataDiceInfo _data;
+        private RandomWarsResource.Data.TDataGuardianInfo _dataGuardian;
         
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
@@ -45,13 +46,17 @@ namespace ED
         public Image[] arrImage_GradeBG;
         public Sprite[] arrSprite_GradeBG;
         public Material mtl_Grayscale;
-
+        
         private bool isUngetted;
+        private VerticalLayoutGroup verticalLayoutGroup;
+        private ContentSizeFitter contentSizeFitter;
 
         private void Awake()
         {
-            _panelDice = FindObjectOfType<UI_Panel_Dice>();
             _grandParent = transform.parent.parent;
+            _panelDice = FindObjectOfType<UI_Panel_Dice>();
+            verticalLayoutGroup = GetComponentInParent<VerticalLayoutGroup>();
+            contentSizeFitter = _grandParent.GetComponent<ContentSizeFitter>();
         }
 
         public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData, int level, int count)
@@ -91,6 +96,25 @@ namespace ED
                 arrImage_GradeBG[i].sprite = arrSprite_GradeBG[isUpgradeEnable ? 4 : pData.grade];
             }
         }
+        
+        public void Initialize(RandomWarsResource.Data.TDataGuardianInfo pData, int level, int count)
+        {
+            _dataGuardian = pData;
+            
+            image_Icon.sprite = FileHelper.GetDiceIcon( pData.iconName );
+            image_Eye.color = FileHelper.GetColor(pData.color);
+
+            text_DiceLevel.text = $"{Global.g_class} {level}";
+            slider_DiceGuage.gameObject.SetActive(false);
+            button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
+            button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
+            button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
+
+            for (int i = 0; i < arrImage_GradeBG.Length; ++i)
+            {
+                arrImage_GradeBG[i].sprite = arrSprite_GradeBG[0];
+            }
+        }
 
         public void Click_Dice()
         {
@@ -103,6 +127,8 @@ namespace ED
             else
             {
                 obj_Selected.SetActive(true);
+                verticalLayoutGroup.enabled = false;
+                contentSizeFitter.enabled = false;
                 ts_Move.SetParent(_grandParent);
 
                 int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][1];
@@ -143,6 +169,8 @@ namespace ED
         public void DeactivateSelectedObject()
         {
             obj_Selected.SetActive(false);
+            verticalLayoutGroup.enabled = true;
+            contentSizeFitter.enabled = true;
             ts_Move.SetParent(transform);
         }
 
@@ -158,7 +186,11 @@ namespace ED
             
             text_DiceLevel.transform.parent.gameObject.SetActive(false);
             image_DiceGuageBG.gameObject.SetActive(false);
-            text_DiceCount.text = $"{Global.g_grade[_data.grade]}";
+            
+            if (_data != null)
+                text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp(_data.grade, 0, Global.g_grade.Length)]}";
+            else
+                text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp(_dataGuardian.grade, 0, Global.g_grade.Length)]}";
         }
     }
 }

@@ -32,6 +32,8 @@ namespace ED
         public Text text_Name;
         public Text text_Discription;
         public Text text_Grade;
+        public Image image_GradeBG;
+        public Text text_TowerHP;
 
         [Header("Button")]
         public Button btn_Upgrade;
@@ -111,8 +113,12 @@ namespace ED
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
             }
 
-
+            RandomWarsResource.Data.TDataDiceUpgrade dataDiceCurrentUpgrade;
             RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+            if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel && x.diceGrade == pData.grade, out dataDiceCurrentUpgrade) == false)
+            {
+                return;
+            }
             if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == pData.grade, out dataDiceUpgrade) == false)
             {
                 return;
@@ -146,6 +152,8 @@ namespace ED
                 images[i].color = btn_Use.interactable ? Color.white : Color.gray;
             }
             text_Use.color = btn_Use.interactable ? Color.white : Color.gray;
+
+            text_TowerHP.text = dataDiceCurrentUpgrade.getTowerHp.ToString();
 
             SetUnitGrade();
             SetInfoDesc();
@@ -360,11 +368,12 @@ namespace ED
             }
             
             text_Grade.text = LocalizationManager.GetLangDesc( gradeindex);
-            
-            if(data.grade == (int)DICE_GRADE.NORMAL)
-                text_Grade.color = UnityUtil.HexToColor("FFFFFF");
-            else
-                text_Grade.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);
+            //
+            // if(data.grade == (int)DICE_GRADE.NORMAL)
+            //     text_Grade.color = UnityUtil.HexToColor("FFFFFF");
+            // else
+            //     text_Grade.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);
+            image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);
         }
         
         public void SetInfoDesc()

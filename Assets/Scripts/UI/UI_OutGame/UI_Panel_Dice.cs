@@ -20,8 +20,9 @@ namespace ED
         public UI_MainStage ui_MainStage;
         public UI_Popup_Dice_Info ui_Popup_Dice_Info;
         public RectTransform tsGettedDiceParent;
+        public RectTransform tsGettedGuardianParent;
         public RectTransform tsUngettedDiceParent;
-        public RectTransform tsUngettedDiceLine;
+        public RectTransform tsUngettedGuardianParent;
         public List<UI_Getted_Dice> listGettedDice = new List<UI_Getted_Dice>();
         public List<UI_Getted_Dice> listUngettedDice = new List<UI_Getted_Dice>();
         public GameObject objSelectBlind;
@@ -29,8 +30,6 @@ namespace ED
         public ScrollRect scrollView;
         public RectTransform rts_Content;
         public Text text_BonusHP;
-        public Text text_Getted;
-        public Text text_Ungetted;
         public GameObject obj_Ciritical;
 
         public List<UI_DeckInfo> listDeckInfo = new List<UI_DeckInfo>();
@@ -66,36 +65,6 @@ namespace ED
             //scrollView.OnDrag(data => { GetComponentInParent<UI_Main>().OnDrag((PointerEventData)data);});
         }
 
-        // private void RefreshDeck()
-        // {
-        //     //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
-        //     int active = UserInfoManager.Get().GetActiveDeckIndex();
-        //     var deck = UserInfoManager.Get().GetSelectDeck(active);
-        //     
-        //     //var splitDeck = deck.Split('/');
-        //
-        //     for (var i = 0; i < arrImageDeck.Length; i++)
-        //     {
-        //         //var num = int.Parse(splitDeck[i]);
-        //         RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-        //         if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
-        //         {
-        //             return;
-        //         }
-        //
-        //         arrImageDeck[i].sprite =
-        //             FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
-        //         arrImageDeck[i].SetNativeSize();
-        //         arrImageDeckEye[i].color = FileHelper.GetColor(dataDiceInfo.color);
-        //         arrImageDeck_Main[i].sprite =
-        //             FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
-        //         arrImageDeck_Main[i].SetNativeSize();
-        //         arrImageDeckEye_Main[i].color = FileHelper.GetColor(dataDiceInfo.color);
-        //     }
-        //     
-        //     ui_MainStage.Set();
-        // }
-
         public void RefreshGettedDice()
         {
             if (listGettedDice.Count > 0)
@@ -122,7 +91,12 @@ namespace ED
 
 
             RandomWarsResource.Data.TDataDiceInfo[] dataDiceInfoArray;
+            RandomWarsResource.Data.TDataGuardianInfo[] dataGuardianInfoArray;
             if (TableManager.Get().DiceInfo.GetData( x => x.enableDice, out dataDiceInfoArray) == false)
+            {
+                return;
+            }
+            if (TableManager.Get().GuardianInfo.GetData( x => x.enableDice == false, out dataGuardianInfoArray) == false)
             {
                 return;
             }
@@ -135,16 +109,9 @@ namespace ED
                     var ugd = obj.GetComponent<UI_Getted_Dice>();
                     listGettedDice.Add(ugd);
                     ugd.slotNum = gettedSlotCount++;
-                    ugd.Initialize(info, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
-
-                    // obj = Instantiate(prefGettedDice, tsUngettedDiceParent);
-                    // ugd = obj.GetComponent<UI_Getted_Dice>();
-                    // listUngettedDice.Add(ugd);
-                    // ugd.slotNum = ungettedSlotCount++;
-                    // ugd.Initialize(info.Value, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][0], UserInfoManager.Get().GetUserInfo().dicGettedDice[info.Value.id][1]);
-                    // ugd.SetGrayscale();
                     int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
-
+                    ugd.Initialize(info, level, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
+                    
                     RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                     if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level && x.diceGrade == info.grade, out dataDiceUpgrade) == false)
                     {
@@ -163,27 +130,49 @@ namespace ED
                     ugd.SetGrayscale();
                 }
             }
+
+            foreach (var info in dataGuardianInfoArray)
+            {
+                if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.id))
+                {
+                    var obj = Instantiate(prefGettedDice, tsGettedGuardianParent);
+                    var ugd = obj.GetComponent<UI_Getted_Dice>();
+                    listGettedDice.Add(ugd);
+                    ugd.slotNum = gettedSlotCount++;
+                    int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
+                    ugd.Initialize(info, level, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
+                }
+                else
+                {
+                    var obj = Instantiate(prefGettedDice, tsUngettedGuardianParent);
+                    var ugd = obj.GetComponent<UI_Getted_Dice>();
+                    listUngettedDice.Add(ugd);
+                    ugd.slotNum = ungettedSlotCount++;
+                    ugd.Initialize(info, 0, 0);
+                    ugd.SetGrayscale();
+                }
+            }
             
             // Grid 즉시 업데이트
-            LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedDiceParent);
-
-            if (ungettedSlotCount > 0)
-            {
-                var pos = tsUngettedDiceParent.anchoredPosition;
-                pos.y = -980 - (tsGettedDiceParent.sizeDelta.y + 300);
-                tsUngettedDiceParent.anchoredPosition = pos;
-                tsUngettedDiceLine.anchoredPosition = new Vector2(0, pos.y + 150);
-                tsUngettedDiceLine.gameObject.SetActive(true);
-            }
-            else
-            {
-                tsUngettedDiceLine.gameObject.SetActive(false);
-            }
-            
-
-            rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 +
-                                                   (ungettedSlotCount > 0 ? 300 : 0));
+            // LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
+            // LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedDiceParent);
+            //
+            // if (ungettedSlotCount > 0)
+            // {
+            //     var pos = tsUngettedDiceParent.anchoredPosition;
+            //     pos.y = -980 - (tsGettedDiceParent.sizeDelta.y + 300);
+            //     tsUngettedDiceParent.anchoredPosition = pos;
+            //     tsUngettedDiceLine.anchoredPosition = new Vector2(0, pos.y + 150);
+            //     tsUngettedDiceLine.gameObject.SetActive(true);
+            // }
+            // else
+            // {
+            //     tsUngettedDiceLine.gameObject.SetActive(false);
+            // }
+            //
+            //
+            // rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 +
+            //                                        (ungettedSlotCount > 0 ? 300 : 0));
 
             text_BonusHP.text = bonusHP.ToString();
         }
@@ -203,7 +192,6 @@ namespace ED
             
             DeactivateSelectedObjectChild();
             tsGettedDiceParent.gameObject.SetActive(false);
-            text_Getted.gameObject.SetActive(false);
             obj_Ciritical.SetActive(false);
             objSelectBlind.SetActive(true);
 
@@ -285,7 +273,6 @@ namespace ED
                 }
         
                 tsGettedDiceParent.gameObject.SetActive(true);
-                text_Getted.gameObject.SetActive(true);
                 obj_Ciritical.SetActive(true);
                 objSelectBlind.SetActive(false);
                 _isSelectMode = false;
@@ -313,7 +300,6 @@ namespace ED
         public void HideSelectPanel()
         {
             tsGettedDiceParent.gameObject.SetActive(true);
-            text_Getted.gameObject.SetActive(true);
             obj_Ciritical.SetActive(true);
             objSelectBlind.SetActive(false);
         }
