@@ -288,13 +288,22 @@ namespace ED
             {
                 fade = 1f;
             }
+            //
+            // var group = rts_MainContents.GetComponent<CanvasGroup>();
+            // group.DOFade(fade, 0.2f);
+            //
+            // group = rts_SafeArea.GetComponent<CanvasGroup>();
+            // group.DOFade(fade, 0.2f);
 
-            var group = rts_MainContents.GetComponent<CanvasGroup>();
-            group.DOFade(fade, 0.2f);
+            var groups = GetComponentsInChildren<CanvasGroup>();
+            foreach (var canvasGroup in groups)
+            {
+                canvasGroup.DOFade(fade, 0.2f);
+            }
             
-            group = rts_SafeArea.GetComponent<CanvasGroup>();
-            group.DOFade(fade, 0.2f);
-            
+            // group = arrRts_MainButtons[0].GetComponentInParent<CanvasGroup>();
+            // group.DOFade(fade, 0.2f);
+
             // var images = rts_MainContents.GetComponentsInChildren<Image>();
             // for (int i = 0; i < images.Length; i++)
             // {
@@ -321,8 +330,6 @@ namespace ED
             //     texts[i].DOFade(fade, 0.2f);
             // }
 
-            group = arrRts_MainButtons[0].GetComponentInParent<CanvasGroup>();
-            group.DOFade(fade, 0.2f);
             // for (int j = 0; j < arrRts_MainButtons.Length; ++j)
             // {
             //     images = arrRts_MainButtons[j].GetComponentsInChildren<Image>();
