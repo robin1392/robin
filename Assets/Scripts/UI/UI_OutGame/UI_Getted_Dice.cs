@@ -42,7 +42,7 @@ namespace ED
         private Transform _grandParent;
 
         [Space]
-        public Image image_GradeBG;
+        public Image[] arrImage_GradeBG;
         public Sprite[] arrSprite_GradeBG;
         public Material mtl_Grayscale;
 
@@ -52,11 +52,6 @@ namespace ED
         {
             _panelDice = FindObjectOfType<UI_Panel_Dice>();
             _grandParent = transform.parent.parent;
-
-            if (image_GradeBG == null)
-            {
-                image_GradeBG = this.transform.Find("Parent/Image").GetComponent<Image>();
-            }
         }
 
         public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData, int level, int count)
@@ -80,15 +75,21 @@ namespace ED
             //image_DiceGuage.fillAmount = count / (float)needDiceCount;
             slider_DiceGuage.value = count / (float)needDiceCount;
             image_DiceGuage.color = arrColor[count >= needDiceCount ? 1 : 0];
-                //count >= needDiceCount ? arrColor[1] : arrColor[0];//UnityUtil.HexToColor("6AD3E5");
-            obj_UpgradeIcon.SetActive(count >= needDiceCount);
+            //count >= needDiceCount ? arrColor[1] : arrColor[0];//UnityUtil.HexToColor("6AD3E5");
+
+            bool isUpgradeEnable = count >= needDiceCount;
+            obj_UpgradeIcon.SetActive(isUpgradeEnable);
+            button_LevelUp.gameObject.SetActive(isUpgradeEnable);
             //obj_UpgradeLight.SetActive(obj_UpgradeIcon.activeSelf);
             
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
             button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
 
-            image_GradeBG.sprite = arrSprite_GradeBG[pData.grade];
+            for (int i = 0; i < arrImage_GradeBG.Length; ++i)
+            {
+                arrImage_GradeBG[i].sprite = arrSprite_GradeBG[isUpgradeEnable ? 4 : pData.grade];
+            }
         }
 
         public void Click_Dice()
