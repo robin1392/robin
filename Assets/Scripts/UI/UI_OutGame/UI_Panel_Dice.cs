@@ -19,10 +19,6 @@ namespace ED
         //public Data_AllDice dataAllDice;
         public UI_MainStage ui_MainStage;
         public UI_Popup_Dice_Info ui_Popup_Dice_Info;
-        public Image[] arrImageDeck;
-        public Image[] arrImageDeckEye;
-        public Image[] arrImageDeck_Main;
-        public Image[] arrImageDeckEye_Main;
         public RectTransform tsGettedDiceParent;
         public RectTransform tsUngettedDiceParent;
         public RectTransform tsUngettedDiceLine;
@@ -37,14 +33,7 @@ namespace ED
         public Text text_Ungetted;
         public GameObject obj_Ciritical;
 
-        public Sprite sprite_Use;
-        public Sprite sprite_UnUse;
-        public Sprite sprite_MainUse;
-        public Sprite sprite_MainUnUse;
-
         public List<UI_DeckInfo> listDeckInfo = new List<UI_DeckInfo>();
-        public Image[] arrImageDeckButton;
-        public Text[] arrTextDeckButton;
         
         [Header("Prefabs")]
         public GameObject prefGettedDice;
@@ -59,8 +48,6 @@ namespace ED
             SetActiveDeck();
             RefreshGettedDice();
 
-            RefreshButton();
-            
             var safeArea = Screen.safeArea;
             var canvas = GetComponentInParent<Canvas>();
             
@@ -198,7 +185,7 @@ namespace ED
             rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 +
                                                    (ungettedSlotCount > 0 ? 300 : 0));
 
-            text_BonusHP.text = $"타워 추가 체력 : {bonusHP}";
+            text_BonusHP.text = bonusHP.ToString();
         }
 
         public void ResetYPos()
@@ -372,28 +359,6 @@ namespace ED
             }
         }
 
-        public void RefreshButton()
-        {
-            int active = UserInfoManager.Get().GetActiveDeckIndex();
-            switch (active)
-            {
-                case 0:
-                    arrImageDeckButton[0].sprite = sprite_Use;
-                    arrImageDeckButton[1].sprite = sprite_UnUse;
-                    arrImageDeckButton[2].sprite = sprite_UnUse;
-                    break;
-                case 1:
-                    arrImageDeckButton[0].sprite = sprite_UnUse;
-                    arrImageDeckButton[1].sprite = sprite_Use;
-                    arrImageDeckButton[2].sprite = sprite_UnUse;
-                    break;
-                case 2:
-                    arrImageDeckButton[0].sprite = sprite_UnUse;
-                    arrImageDeckButton[1].sprite = sprite_UnUse;
-                    arrImageDeckButton[2].sprite = sprite_Use;
-                    break;
-            }
-        }
         #endregion
 
         public void OnClickDeck(int index)

@@ -53,6 +53,7 @@ public partial class Global
     public static readonly string g_inGameWin = "승리";
     public static readonly string g_inGameLose = "패배";
     public static readonly string g_level = "레벨";
+    public static readonly string g_class = "클래스";
     public static readonly string[] g_grade = {"일반", "매직", "에픽", "전설"};
 
     public static string[] g_gradeColor = {"FFFFFF", "5A96E8", "805DE6", "FFA318"};

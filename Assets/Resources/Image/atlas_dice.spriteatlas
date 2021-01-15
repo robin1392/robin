@@ -39,11 +39,11 @@ SpriteAtlas:
       blockOffset: 1
       allowAlphaSplitting: 0
       enableRotation: 0
-      enableTightPacking: 1
+      enableTightPacking: 0
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: a38bacb15ba614a11b4caf5c9ff390b2, type: 3}
-    totalSpriteSurfaceArea: 2053595
+    totalSpriteSurfaceArea: 2212295
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -62,6 +62,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 33d313f37442305498013d6c2fac66c1, type: 3}
   - {fileID: 21300000, guid: 7cf0c43465b8540da9e16fd71248fd75, type: 3}
   - {fileID: 21300000, guid: 14ad1344feb53499a95125809bfdbdb7, type: 3}
+  - {fileID: 21300000, guid: d75e4884f00684e07a3a0c52fe7b7522, type: 3}
   - {fileID: 21300000, guid: a2d38c845448045cab30286c5324de9e, type: 3}
   - {fileID: 21300000, guid: ea7b5605459ac4696ae08627838e0ba8, type: 3}
   - {fileID: 21300000, guid: b738f0459b2924919a058a0e7b310576, type: 3}
@@ -72,6 +73,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ed7433d74af2e443db3d4744e7cd1680, type: 3}
   - {fileID: 21300000, guid: 31b15af7b3aa245388c0ce05cfdceb25, type: 3}
   - {fileID: 21300000, guid: 5b8a2c989958146e88e27745e04bc8ca, type: 3}
+  - {fileID: 21300000, guid: 6cf9aac8a9562463f8339e24bd9000dc, type: 3}
   - {fileID: 21300000, guid: e056f299a1ebb42ec962bce751727cfb, type: 3}
   - {fileID: 21300000, guid: 73198ac96da1c40d788d4c72b9f0f570, type: 3}
   - {fileID: 21300000, guid: d3345b1aeb3524fb082d8f9600492960, type: 3}
@@ -90,6 +92,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 483b4e4f881d249b79ea3ae72b7afe2f, type: 3}
   - {fileID: 21300000, guid: f173d58f79ef9473689e50809f3c4bb7, type: 3}
   - {fileID: 21300000, guid: e88832afb8fc14caf85b1c88dfb5124c, type: 3}
+  - {fileID: 21300000, guid: 877443af660ba4b398f661f0dc0f6e0a, type: 3}
   - {fileID: 21300000, guid: 3fa8c3efd02f64c438d9b5613022b7fe, type: 3}
   m_PackedSpriteNamesToIndex:
   - icon_dice_4009
@@ -105,6 +108,7 @@ SpriteAtlas:
   - dice_star
   - icon_dice_4006
   - dice_pip
+  - icon_dice_5003
   - icon_dice_4001
   - icon_dice_2008
   - icon_dice_4005
@@ -115,6 +119,7 @@ SpriteAtlas:
   - icon_dice_3003
   - icon_dice_3010
   - icon_dice_3008
+  - icon_dice_5002
   - icon_dice_2009
   - icon_dice_4008
   - icon_dice_1003
@@ -133,6 +138,7 @@ SpriteAtlas:
   - icon_dice_1005
   - icon_dice_1000
   - icon_dice_3002
+  - icon_dice_5001
   - icon_dice_3006
   m_Tag: atlas_dice
   m_IsVariant: 0
