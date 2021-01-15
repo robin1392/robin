@@ -44,20 +44,10 @@ public class UI_DeckInfo : MonoBehaviour
     public void RefreshDiceIcon(bool isImmediate = false)
     {
         int active = UserInfoManager.Get().GetActiveDeckIndex();
-        int guardian = UserInfoManager.Get().GetUserInfo().arrGuardian[active];
         var deck = UserInfoManager.Get().GetSelectDeck(active);
          
-        // Guardian
-        RandomWarsResource.Data.TDataGuardianInfo dataGuardianInfo;
-        if (TableManager.Get().GuardianInfo.GetData(guardian, out dataGuardianInfo) == false)
-        {
-            return;
-        }
-        image_GuardianIcon.sprite = FileHelper.GetDiceIcon(dataGuardianInfo.iconName);
-        text_GuardianName.text = dataGuardianInfo.name;
-        
         // Dice
-        for (var i = 0; i < arrImage_Dice.Length; i++)
+        for (var i = 0; i < 5; i++)
         {
             RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
             if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
@@ -76,6 +66,15 @@ public class UI_DeckInfo : MonoBehaviour
                 arrButton_Dice[i].transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
             }
         }
+        
+        // Guardian
+        RandomWarsResource.Data.TDataGuardianInfo dataGuardianInfo;
+        if (TableManager.Get().GuardianInfo.GetData(deck[5], out dataGuardianInfo) == false)
+        {
+            return;
+        }
+        image_GuardianIcon.sprite = FileHelper.GetDiceIcon(dataGuardianInfo.iconName);
+        text_GuardianName.text = dataGuardianInfo.name;
     }
     public void RefreshDeckButton(bool isImmediate = false)
     {

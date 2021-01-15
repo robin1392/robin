@@ -160,6 +160,7 @@ namespace RandomWarsProtocol
         public int ItemId;
         public int Value;
 
+
         public void Write(BinaryWriter bw)
         {
             bw.Write(ItemId);
@@ -174,6 +175,15 @@ namespace RandomWarsProtocol
             return data;
         }
     }
+
+
+    [Serializable]
+    public class MsgRewardMultiple
+    {
+        public int ItemId;
+        public MsgReward[] arrayReward;
+    }
+
 
 
     [Serializable]

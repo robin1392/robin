@@ -34,7 +34,7 @@ public class Guardian_01 : Minion
         {
             yield return new WaitForSeconds(effectCooltime);
             
-            controller.MinionAniTrigger(id, "Skill", target.id);
+            controller.MinionAniTrigger(id, "Skill", 0);
 
             yield return new WaitForSeconds(0.716f);
 
