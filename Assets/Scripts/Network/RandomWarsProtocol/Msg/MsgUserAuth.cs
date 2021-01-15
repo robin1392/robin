@@ -172,6 +172,8 @@ namespace RandomWarsProtocol.Msg
         public MsgRankInfo[] TopRankInfo;
         // 시즌 초기화 필요
         public bool NeedSeasonReset;
+        // 랭킹 리셋 남은 시간(초단위)
+        public int RankingResetRemainTime;
     }
 
 
@@ -199,9 +201,8 @@ namespace RandomWarsProtocol.Msg
         // 시즌 획득 트로피
         public int myTrophy;
         // 시즌 보상
-        public MsgReward[] SeasonReward;
+        public MsgRewardMultiple[] arraySeasonReward;
     }
-
 
 
     [Serializable]
