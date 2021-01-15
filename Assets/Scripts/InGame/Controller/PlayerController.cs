@@ -793,23 +793,23 @@ namespace ED
             if(arrDiceDeck == null)
                 _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
             
-            for (int i = 1; i < deck.Length; i++)
+            for (int i = 0; i < 5; i++)
             {
                 int num = deck[i];
-                if (InGameManager.Get().data_DiceInfo.GetData(num, out arrDiceDeck[i - 1]) == false)
+                if (InGameManager.Get().data_DiceInfo.GetData(num, out arrDiceDeck[i]) == false)
                 {
                     return;
                 }
                 
                 if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
                 
-                if ((Global.E_LOADTYPE)arrDiceDeck[i - 1].loadType == Global.E_LOADTYPE.LOAD_MINION)
+                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
                 {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i - 1].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
                 }
                 else
                 {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i - 1].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
                 }
 
             }

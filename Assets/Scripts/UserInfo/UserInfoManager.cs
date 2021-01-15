@@ -71,14 +71,6 @@ public class UserInfo
         private set => _arrDeck = value;
     }
 
-    private int[] _arrGuardian = new int[3];
-
-    public int[] arrGuardian
-    {
-        get => _arrGuardian;
-        private set => _arrGuardian = value;
-    }
-
     public int[] GetActiveDeck => arrDeck[activateDeckIndex];
 
     /// <summary>
@@ -232,11 +224,12 @@ public class UserInfo
         //}
         
         //ObscuredPrefs.Save();
-        List<int> list = new List<int>(deck);
-
-        arrGuardian[index] = list[0];
-        list.Remove(arrGuardian[index]);
-        arrDeck[index] = list.ToArray();
+        // List<int> list = new List<int>(deck);
+        //
+        // arrGuardian[index] = list[0];
+        // list.Remove(arrGuardian[index]);
+        // arrDeck[index] = list.ToArray();
+        arrDeck[index] = deck;
     }
 
     // public void ResetDeck()
