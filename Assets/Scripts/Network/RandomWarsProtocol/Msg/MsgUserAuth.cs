@@ -192,12 +192,12 @@ namespace RandomWarsProtocol.Msg
         public byte SeasonState;
         // 시즌 남은 시간(초단위)
         public int SeasonRemainTime;
+        // 프리 시즌 여부
+        public bool IsFreeSeason;
         // 현재 나의 순위
         public int myRanking;
         // 시즌 획득 트로피
         public int myTrophy;
-        // Top 랭킹 순위
-        public MsgRankInfo[] TopRankInfo;
         // 시즌 보상
         public MsgReward[] SeasonReward;
     }

@@ -1922,5 +1922,7 @@ namespace RandomWarsProtocol
         public int[] SeasonPassRewardIds;
         // 시즌 초기화 필요여부
         public bool NeedSeasonReset;
+        // 프리 시즌 여부
+        public bool IsFreeSeason;
     }
 }

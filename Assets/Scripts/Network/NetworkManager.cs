@@ -451,6 +451,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
         _packetRecv.HitDamageNotify = _socketRecv.HitDamageNotify;
         _packetRecv.EndGameNotify = _socketRecv.OnEndGameNotify;
+        _packetRecv.EndCoopGameNotify = _socketRecv.OnEndCoopGameNotify;
 
 
         // relay
