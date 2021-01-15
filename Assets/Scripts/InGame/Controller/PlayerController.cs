@@ -803,13 +803,13 @@ namespace ED
                 
                 if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
                 
-                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
+                if ((Global.E_LOADTYPE)arrDiceDeck[i - 1].loadType == Global.E_LOADTYPE.LOAD_MINION)
                 {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i - 1].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
                 }
                 else
                 {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i - 1].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
                 }
 
             }
