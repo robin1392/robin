@@ -117,7 +117,7 @@ public class UI_RewardSlot : MonoBehaviour
             arrObj_Lock[1].SetActive(false);
             arrObj_Check[0].SetActive(getPass);
             arrObj_Check[1].SetActive(getNormal);
-            arrButton[0].interactable = !getPass;
+            arrButton[0].interactable = !getPass && UserInfoManager.Get().GetUserInfo().buySeasonPass;
             arrButton[1].interactable = !getNormal;
         }
     }
@@ -149,6 +149,9 @@ public class UI_RewardSlot : MonoBehaviour
             {
                 UserInfoManager.Get().GetUserInfo().seasonPassRewardIds.Add(row);
             }
+            
+            UI_Main.Get().AddReward(msg.RewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
+            UI_Popup_Quest.QuestUpdate(msg.QuestData);
         }
         
         SetButton();

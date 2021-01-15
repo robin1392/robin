@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using RandomWarsProtocol;
+using RandomWarsResource.Data;
 using UnityEngine.SceneManagement;
 
 namespace ED
@@ -38,6 +40,7 @@ namespace ED
         public UI_Popup_SeasonEnd seasonEndPopup;
         public UI_Popup_SeasonStart seasonStartPopup;
         public UI_CommonMessageBox commonMessageBoxPopup;
+        public UI_Popup menuPopup;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;
@@ -47,6 +50,10 @@ namespace ED
         public Text text_Diamond;
         public Text text_Gold;
         public Text text_Key;
+
+        [Header("Badge")]
+        public GameObject obj_MenuBadge;
+        public GameObject obj_QuestBadge;
 
         [Space]
         public bool isAIMode;
@@ -83,10 +90,17 @@ namespace ED
         {
             btn_AD.interactable = MopubCommunicator.Instance != null && MopubCommunicator.Instance.hasVideo();
 
-            if (UI_Popup.stack.Count > 0)
-            {
-                Debug.Log($"Popup {UI_Popup.stack.Count} Peek {UI_Popup.stack.Peek().name}");
-            }
+            // popup debug
+            // if (UI_Popup.stack.Count > 0)
+            // {
+            //     Debug.Log($"Popup {UI_Popup.stack.Count} Peek {UI_Popup.stack.Peek().name}");
+            // }
+            
+            // 퀘스트 뱃지 체크
+            obj_QuestBadge.SetActive(UI_Popup_Quest.IsCompletedQuest());
+            
+            // 메뉴버튼 뱃지 체크
+            obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf);
         }
 
         public void RefreshUserInfoUI()
@@ -167,13 +181,13 @@ namespace ED
 
         public void Click_RankButton()
         {
-            rankPopup.gameObject.SetActive(true);
+            UI_Popup.AllClose();
             rankPopup.Initialize();
         }
 
         public void Click_MenuButton()
         {
-            userinfoPopup.gameObject.SetActive(true);
+            menuPopup.gameObject.SetActive(true);
         }
 
         public void EditNickname(string str)
@@ -274,50 +288,58 @@ namespace ED
             {
                 fade = 1f;
             }
+
+            var group = rts_MainContents.GetComponent<CanvasGroup>();
+            group.DOFade(fade, 0.2f);
             
-            var images = rts_MainContents.GetComponentsInChildren<Image>();
-            for (int i = 0; i < images.Length; i++)
-            {
-                if (images[i].CompareTag("UI_AlphaImage") == false)
-                    images[i].DOFade(fade, 0.2f);
-            }
-
-            var texts = rts_MainContents.GetComponentsInChildren<Text>();
-            for (int i = 0; i < texts.Length; i++)
-            {
-                texts[i].DOFade(fade, 0.2f);
-            }
-
-            images = rts_SafeArea.GetComponentsInChildren<Image>();
-            for (int i = 0; i < images.Length; i++)
-            {
-                if (images[i].CompareTag("UI_AlphaImage") == false)
-                    images[i].DOFade(fade, 0.2f);
-            }
-
-            texts = rts_SafeArea.GetComponentsInChildren<Text>();
-            for (int i = 0; i < texts.Length; i++)
-            {
-                texts[i].DOFade(fade, 0.2f);
-            }
-
-            for (int j = 0; j < arrRts_MainButtons.Length; ++j)
-            {
-                images = arrRts_MainButtons[j].GetComponentsInChildren<Image>();
-                for (int i = 0; i < images.Length; i++)
-                {
-                    if (images[i].CompareTag("UI_AlphaImage") == false)
-                        images[i].DOFade(fade, 0.2f);
-                }
-
-                texts = arrRts_MainButtons[j].GetComponentsInChildren<Text>();
-                for (int i = 0; i < texts.Length; i++)
-                {
-                    texts[i].DOFade(fade, 0.2f);
-                }
-            }
+            group = rts_SafeArea.GetComponent<CanvasGroup>();
+            group.DOFade(fade, 0.2f);
             
-            
+            // var images = rts_MainContents.GetComponentsInChildren<Image>();
+            // for (int i = 0; i < images.Length; i++)
+            // {
+            //     if (images[i].CompareTag("UI_AlphaImage") == false)
+            //         images[i].DOFade(fade, 0.2f);
+            // }
+            //
+            // var texts = rts_MainContents.GetComponentsInChildren<Text>();
+            // for (int i = 0; i < texts.Length; i++)
+            // {
+            //     texts[i].DOFade(fade, 0.2f);
+            // }
+            //
+            // images = rts_SafeArea.GetComponentsInChildren<Image>();
+            // for (int i = 0; i < images.Length; i++)
+            // {
+            //     if (images[i].CompareTag("UI_AlphaImage") == false)
+            //         images[i].DOFade(fade, 0.2f);
+            // }
+            //
+            // texts = rts_SafeArea.GetComponentsInChildren<Text>();
+            // for (int i = 0; i < texts.Length; i++)
+            // {
+            //     texts[i].DOFade(fade, 0.2f);
+            // }
+
+            group = arrRts_MainButtons[0].GetComponentInParent<CanvasGroup>();
+            group.DOFade(fade, 0.2f);
+            // for (int j = 0; j < arrRts_MainButtons.Length; ++j)
+            // {
+            //     images = arrRts_MainButtons[j].GetComponentsInChildren<Image>();
+            //     for (int i = 0; i < images.Length; i++)
+            //     {
+            //         if (images[i].CompareTag("UI_AlphaImage") == false)
+            //             images[i].DOFade(fade, 0.2f);
+            //     }
+            //
+            //     texts = arrRts_MainButtons[j].GetComponentsInChildren<Text>();
+            //     for (int i = 0; i < texts.Length; i++)
+            //     {
+            //         texts[i].DOFade(fade, 0.2f);
+            //     }
+            // }
+
+
         }
 
         private Vector2 _pointerDownPos;
@@ -393,13 +415,50 @@ namespace ED
 
         public void Click_Quest_Button()
         {
-            questPopup.gameObject.SetActive(true);
+            UI_Popup.AllClose();
             questPopup.Initialize();
         }
 
         public void ShowMessageBox(string title, string message, System.Action callback = null)
         {
             commonMessageBoxPopup.Initialize(title, message, callback);
+        }
+
+        public void AddReward(MsgReward[] rewards, Vector3 startPos)
+        {
+            List<MsgReward> list = new List<MsgReward>();
+            
+            foreach (var reward in rewards)
+            {
+                var data = new TDataItemList();
+                if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
+                {
+                    switch (data.id)
+                    {
+                        case 1:             // 골드
+                            UserInfoManager.Get().GetUserInfo().gold += reward.Value;
+                            UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, startPos, Mathf.Clamp(reward.Value, 5, 20));
+                            break;
+                        case 2:             // 다이아
+                            UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
+                            UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, startPos, Mathf.Clamp(reward.Value, 5, 20));
+                            break;
+                        default: // 주사위
+                        {
+                            MsgReward rw = new MsgReward();
+                            rw.ItemId = reward.ItemId;
+                            rw.Value = reward.Value;
+                            list.Add(rw);
+                        }
+                            break;
+                    }
+                }
+            }
+            
+            if (list.Count > 0)
+            {
+                gerResult.Initialize(list.ToArray(), false, false);
+            }
         }
     }
 }
