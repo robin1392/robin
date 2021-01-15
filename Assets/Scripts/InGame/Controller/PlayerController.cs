@@ -793,10 +793,10 @@ namespace ED
             if(arrDiceDeck == null)
                 _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
             
-            for (int i = 0; i < deck.Length; i++)
+            for (int i = 1; i < deck.Length; i++)
             {
                 int num = deck[i];
-                if (InGameManager.Get().data_DiceInfo.GetData(num, out arrDiceDeck[i]) == false)
+                if (InGameManager.Get().data_DiceInfo.GetData(num, out arrDiceDeck[i - 1]) == false)
                 {
                     return;
                 }
