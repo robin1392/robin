@@ -131,8 +131,8 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             arrObj_Lock[1].SetActive(false);
             arrObj_Check[0].SetActive(getPass);
             arrObj_Check[1].SetActive(getNormal);
-            arrButton[0].interactable = row + 1000 - 1 == getVipRow;
-            arrButton[1].interactable = row - 1 == getNormalRow;
+            arrButton[0].interactable = !getPass && UserInfoManager.Get().GetUserInfo().buyVIP;
+            arrButton[1].interactable = !getNormal;
         }
     }
     
@@ -163,6 +163,9 @@ public class UI_TrophyRewardSlot : MonoBehaviour
             {
                 getNormalRow++;
             }
+            
+            UI_Main.Get().AddReward(msg.RewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
+            UI_Popup_Quest.QuestUpdate(msg.QuestData);
         }
         
         SetButton();

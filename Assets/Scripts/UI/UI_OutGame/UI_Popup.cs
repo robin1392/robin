@@ -9,7 +9,11 @@ namespace ED
 {
     public class UI_Popup : MonoBehaviour
     {
+        [Header("Setting")]
         public bool isAutoOpen = true;
+        public bool isPopAnimation = true;
+        public float alphaBG = 0.95f;
+        [Space]
         public RectTransform rts_Frame;
         public Image image_BG;
 
@@ -37,12 +41,21 @@ namespace ED
 
         protected void Open()
         {
-            if (btn_BG_Close != null) btn_BG_Close.interactable = false;
-            rts_Frame.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
+            if (isPopAnimation)
+            {
+                if (btn_BG_Close != null) btn_BG_Close.interactable = false;
+                rts_Frame.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
+                {
+                    if (btn_BG_Close != null) btn_BG_Close.interactable = true;
+                });
+                image_BG.DOFade(alphaBG, 0.2f);
+            }
+            else
             {
                 if (btn_BG_Close != null) btn_BG_Close.interactable = true;
-            });
-            image_BG.DOFade(0.95f, 0.2f);
+                rts_Frame.DOScale(Vector3.one, 0f);
+                image_BG.DOFade(alphaBG, 0f);
+            }
 
             stack.Push(this);
             SoundManager.instance.Play(clip_Open);
@@ -50,18 +63,36 @@ namespace ED
 
         public virtual void Close()
         {
-            if (btn_BG_Close != null) btn_BG_Close.interactable = false;
-            rts_Frame.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).OnComplete(() =>
+            if (isPopAnimation)
             {
+                if (btn_BG_Close != null) btn_BG_Close.interactable = false;
+                rts_Frame.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).OnComplete(() =>
+                {
+                    gameObject.SetActive(false);
+                });
+                image_BG.DOFade(0, 0.2f);
+            }
+            else
+            {
+                if (btn_BG_Close != null) btn_BG_Close.interactable = false;
+                rts_Frame.DOScale(Vector3.zero, 0f);
+                image_BG.DOFade(0, 0f);
                 gameObject.SetActive(false);
-            });
-            image_BG.DOFade(0, 0.2f);
+            }
 
             if (stack.Contains(this) && stack.Peek() == this)
             {
                 stack.Pop();
             }
             SoundManager.instance.Play(clip_Close);
+        }
+
+        public static void AllClose()
+        {
+            while (stack.Count > 0)
+            {
+                stack.Peek().Close();
+            }
         }
     }
 }

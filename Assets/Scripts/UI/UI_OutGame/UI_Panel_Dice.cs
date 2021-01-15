@@ -42,10 +42,9 @@ namespace ED
         public Sprite sprite_MainUse;
         public Sprite sprite_MainUnUse;
 
+        public List<UI_DeckInfo> listDeckInfo = new List<UI_DeckInfo>();
         public Image[] arrImageDeckButton;
-        public Image[] arrImageDeckButtonMain;
         public Text[] arrTextDeckButton;
-        public Text[] arrTextDeckButtonMain;
         
         [Header("Prefabs")]
         public GameObject prefGettedDice;
@@ -80,35 +79,35 @@ namespace ED
             //scrollView.OnDrag(data => { GetComponentInParent<UI_Main>().OnDrag((PointerEventData)data);});
         }
 
-        private void RefreshDeck()
-        {
-            //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
-            int active = UserInfoManager.Get().GetActiveDeckIndex();
-            var deck = UserInfoManager.Get().GetSelectDeck(active);
-            
-            //var splitDeck = deck.Split('/');
-
-            for (var i = 0; i < arrImageDeck.Length; i++)
-            {
-                //var num = int.Parse(splitDeck[i]);
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
-                {
-                    return;
-                }
-
-                arrImageDeck[i].sprite =
-                    FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
-                arrImageDeck[i].SetNativeSize();
-                arrImageDeckEye[i].color = FileHelper.GetColor(dataDiceInfo.color);
-                arrImageDeck_Main[i].sprite =
-                    FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
-                arrImageDeck_Main[i].SetNativeSize();
-                arrImageDeckEye_Main[i].color = FileHelper.GetColor(dataDiceInfo.color);
-            }
-            
-            ui_MainStage.Set();
-        }
+        // private void RefreshDeck()
+        // {
+        //     //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
+        //     int active = UserInfoManager.Get().GetActiveDeckIndex();
+        //     var deck = UserInfoManager.Get().GetSelectDeck(active);
+        //     
+        //     //var splitDeck = deck.Split('/');
+        //
+        //     for (var i = 0; i < arrImageDeck.Length; i++)
+        //     {
+        //         //var num = int.Parse(splitDeck[i]);
+        //         RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+        //         if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
+        //         {
+        //             return;
+        //         }
+        //
+        //         arrImageDeck[i].sprite =
+        //             FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+        //         arrImageDeck[i].SetNativeSize();
+        //         arrImageDeckEye[i].color = FileHelper.GetColor(dataDiceInfo.color);
+        //         arrImageDeck_Main[i].sprite =
+        //             FileHelper.GetDiceIcon(dataDiceInfo.iconName); //dataAllDice.listDice.Find(data => data.id == num).icon;
+        //         arrImageDeck_Main[i].SetNativeSize();
+        //         arrImageDeckEye_Main[i].color = FileHelper.GetColor(dataDiceInfo.color);
+        //     }
+        //     
+        //     ui_MainStage.Set();
+        // }
 
         public void RefreshGettedDice()
         {
@@ -297,21 +296,31 @@ namespace ED
                     //UserInfoManager.Get().GetUserInfo().SetDeck(active, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
                     UserInfoManager.Get().GetUserInfo().SetDeck(active, intDeck);
                 }
-
+        
                 tsGettedDiceParent.gameObject.SetActive(true);
                 text_Getted.gameObject.SetActive(true);
                 obj_Ciritical.SetActive(true);
                 objSelectBlind.SetActive(false);
                 _isSelectMode = false;
-
-                RefreshDeck();
+                
+                CallBackDeckUpdate();
+            }
+            else
+            {
+                
             }
         }
 
         public void CallBackDeckUpdate()
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-            RefreshDeck();
+            //RefreshDeck();
+            foreach (var deckInfo in listDeckInfo)
+            {
+                deckInfo.RefreshDiceIcon(true);
+            }
+            
+            UI_Main.Get().panel_Dice.ui_MainStage.Set();
         }
 
         public void HideSelectPanel()
@@ -326,54 +335,41 @@ namespace ED
 
         public void SetActiveDeck()
         {
-            int active = UserInfoManager.Get().GetActiveDeckIndex();
-            switch (active)
+            // int active = UserInfoManager.Get().GetActiveDeckIndex();
+            // switch (active)
+            // {
+            //     case 0:
+            //         arrImageDeckButton[0].sprite = sprite_Use;
+            //         arrImageDeckButton[1].sprite = sprite_UnUse;
+            //         arrImageDeckButton[2].sprite = sprite_UnUse;
+            //         arrTextDeckButton[0].color = Color.white;
+            //         arrTextDeckButton[1].color = Color.gray;
+            //         arrTextDeckButton[2].color = Color.gray;
+            //         break;
+            //     case 1:
+            //         arrImageDeckButton[0].sprite = sprite_UnUse;
+            //         arrImageDeckButton[1].sprite = sprite_Use;
+            //         arrImageDeckButton[2].sprite = sprite_UnUse;
+            //         arrTextDeckButton[0].color = Color.gray;
+            //         arrTextDeckButton[1].color = Color.white;
+            //         arrTextDeckButton[2].color = Color.gray;
+            //         break;
+            //     case 2:
+            //         arrImageDeckButton[0].sprite = sprite_UnUse;
+            //         arrImageDeckButton[1].sprite = sprite_UnUse;
+            //         arrImageDeckButton[2].sprite = sprite_Use;
+            //         arrTextDeckButton[0].color = Color.gray;
+            //         arrTextDeckButton[1].color = Color.gray;
+            //         arrTextDeckButton[2].color = Color.white;
+            //         break;
+            // }
+            //
+            // RefreshDeck();
+
+            foreach (var deckInfo in listDeckInfo)
             {
-                case 0:
-                    arrImageDeckButton[0].sprite = sprite_Use;
-                    arrImageDeckButton[1].sprite = sprite_UnUse;
-                    arrImageDeckButton[2].sprite = sprite_UnUse;
-                    arrImageDeckButtonMain[0].sprite = sprite_MainUse;
-                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
-                    arrTextDeckButton[0].color = Color.white;
-                    arrTextDeckButton[1].color = Color.gray;
-                    arrTextDeckButton[2].color = Color.gray;
-                    arrTextDeckButtonMain[0].color = Color.white;
-                    arrTextDeckButtonMain[1].color = Color.gray;
-                    arrTextDeckButtonMain[2].color = Color.gray;
-                    break;
-                case 1:
-                    arrImageDeckButton[0].sprite = sprite_UnUse;
-                    arrImageDeckButton[1].sprite = sprite_Use;
-                    arrImageDeckButton[2].sprite = sprite_UnUse;
-                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[1].sprite = sprite_MainUse;
-                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
-                    arrTextDeckButton[0].color = Color.gray;
-                    arrTextDeckButton[1].color = Color.white;
-                    arrTextDeckButton[2].color = Color.gray;
-                    arrTextDeckButtonMain[0].color = Color.gray;
-                    arrTextDeckButtonMain[1].color = Color.white;
-                    arrTextDeckButtonMain[2].color = Color.gray;
-                    break;
-                case 2:
-                    arrImageDeckButton[0].sprite = sprite_UnUse;
-                    arrImageDeckButton[1].sprite = sprite_UnUse;
-                    arrImageDeckButton[2].sprite = sprite_Use;
-                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[2].sprite = sprite_MainUse;
-                    arrTextDeckButton[0].color = Color.gray;
-                    arrTextDeckButton[1].color = Color.gray;
-                    arrTextDeckButton[2].color = Color.white;
-                    arrTextDeckButtonMain[0].color = Color.gray;
-                    arrTextDeckButtonMain[1].color = Color.gray;
-                    arrTextDeckButtonMain[2].color = Color.white;
-                    break;
+                deckInfo.SetActiveDeck();
             }
-            
-            RefreshDeck();
         }
 
         public void RefreshButton()
@@ -385,25 +381,16 @@ namespace ED
                     arrImageDeckButton[0].sprite = sprite_Use;
                     arrImageDeckButton[1].sprite = sprite_UnUse;
                     arrImageDeckButton[2].sprite = sprite_UnUse;
-                    arrImageDeckButtonMain[0].sprite = sprite_MainUse;
-                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
                     break;
                 case 1:
                     arrImageDeckButton[0].sprite = sprite_UnUse;
                     arrImageDeckButton[1].sprite = sprite_Use;
                     arrImageDeckButton[2].sprite = sprite_UnUse;
-                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[1].sprite = sprite_MainUse;
-                    arrImageDeckButtonMain[2].sprite = sprite_MainUnUse;
                     break;
                 case 2:
                     arrImageDeckButton[0].sprite = sprite_UnUse;
                     arrImageDeckButton[1].sprite = sprite_UnUse;
                     arrImageDeckButton[2].sprite = sprite_Use;
-                    arrImageDeckButtonMain[0].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[1].sprite = sprite_MainUnUse;
-                    arrImageDeckButtonMain[2].sprite = sprite_MainUse;
                     break;
             }
         }
@@ -411,8 +398,8 @@ namespace ED
 
         public void OnClickDeck(int index)
         {
-            UserInfoManager.Get().SetActiveDeckIndex(index);
-            SetActiveDeck();
+            // UserInfoManager.Get().SetActiveDeckIndex(index);
+            // SetActiveDeck();
         }
 
         public void Click_CancelSelectMode()

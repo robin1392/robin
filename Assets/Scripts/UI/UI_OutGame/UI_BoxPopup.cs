@@ -58,16 +58,16 @@ public class UI_BoxPopup : UI_Popup
         text_Empty.gameObject.SetActive(rts_Grid.childCount <= 0);
         
         Vector2 size = rts_Content.sizeDelta;
-        size.y = Mathf.Clamp((rts_Grid.childCount + 2) / 3 * 600, 600, Int32.MaxValue);
+        size.y = Mathf.Clamp((rts_Grid.childCount + 2) / 3 * 480 + 80, 520, Int32.MaxValue);
         rts_Content.sizeDelta = size;
         Vector2 svFrameSize = rts_ScrollViewFrameBG.sizeDelta;
-        svFrameSize.y = Mathf.Clamp(size.y, 600, 1200) + 60;
+        svFrameSize.y = Mathf.Clamp(size.y, 600, 1200);
         rts_ScrollViewFrameBG.sizeDelta = svFrameSize;
         Vector2 svSize = rts_ScrollView.sizeDelta;
-        svSize.y = Mathf.Clamp(size.y, 600, 1200) + 10;
+        svSize.y = Mathf.Clamp(size.y, 560, 1200);
         rts_ScrollView.sizeDelta = svSize;
         Vector2 frameSize = rts_Frame.sizeDelta;
-        frameSize.y = Mathf.Clamp(size.y, 600, 1200) + 300;
+        frameSize.y = Mathf.Clamp(size.y, 600, 1200) + 240;
         rts_Frame.sizeDelta = frameSize;
     }
 }
