@@ -27,10 +27,11 @@ namespace ED
         public int slotNum;
 
         [Header("Dice Info")]
+        public Color[] arrColor;
         public Image image_DiceGuageBG;
         public Image image_DiceGuage;
+        public Slider slider_DiceGuage;
         public GameObject obj_UpgradeIcon;
-        public GameObject obj_UpgradeLight;
         public Text text_DiceCount;
         public Text text_DiceLevel;
 
@@ -74,13 +75,14 @@ namespace ED
             image_Icon.sprite = FileHelper.GetDiceIcon( pData.iconName );
             image_Eye.color = FileHelper.GetColor(pData.color);
 
-            text_DiceLevel.text = $"{Global.g_level} {level}";
+            text_DiceLevel.text = $"{Global.g_class} {level}";
             text_DiceCount.text = $"{count}/{needDiceCount}";
-            image_DiceGuage.fillAmount = count / (float)needDiceCount;
-            image_DiceGuage.color =
-                count >= needDiceCount ? Color.green : UnityUtil.HexToColor("6AD3E5");
+            //image_DiceGuage.fillAmount = count / (float)needDiceCount;
+            slider_DiceGuage.value = count / (float)needDiceCount;
+            image_DiceGuage.color = arrColor[count >= needDiceCount ? 1 : 0];
+                //count >= needDiceCount ? arrColor[1] : arrColor[0];//UnityUtil.HexToColor("6AD3E5");
             obj_UpgradeIcon.SetActive(count >= needDiceCount);
-            obj_UpgradeLight.SetActive(obj_UpgradeIcon.activeSelf);
+            //obj_UpgradeLight.SetActive(obj_UpgradeIcon.activeSelf);
             
             button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
             button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });

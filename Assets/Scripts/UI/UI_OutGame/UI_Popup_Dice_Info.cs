@@ -150,7 +150,7 @@ namespace ED
             SetUnitGrade();
             SetInfoDesc();
 
-            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_DICE_INFO_EFX);
+            SoundManager.instance.Play(clip_Open);
         }
 
         public override void Close()

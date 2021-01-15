@@ -16,11 +16,7 @@ public class UI_Popup_Rank : UI_Popup
     [Header("Prefab")] 
     public GameObject pref_RankSlot;
 
-    [Space] 
-    public UI_RankingReward reward;
-
     [Space]
-    public Text text_MyRankMessage;
     public Text text_RankMessage;
     
     public Text text_Season;
@@ -116,7 +112,6 @@ public class UI_Popup_Rank : UI_Popup
                 //StartCoroutine(TimerCoroutine(msg.SeasonRemainTime));
                 //time = DateTime.Now.AddSeconds(msg.SeasonRemainTime);
                 text_MyRanking.text = msg.myRanking.ToString();
-                reward.Initialize(msg.myRanking);
                 text_MyTrophy.text = msg.myTrophy.ToString();
             
                 Debug.Log($"RankInfoCount: {msg.TopRankInfo.Length}");
