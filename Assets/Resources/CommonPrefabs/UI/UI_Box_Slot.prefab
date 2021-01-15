@@ -443,6 +443,9 @@ MonoBehaviour:
   arrSprite_BoxIcon:
   - {fileID: 21300000, guid: c41770fadb9f3412bae4cfcbf6e8eae0, type: 3}
   - {fileID: 21300000, guid: bb4ebc2716d7f4ccfbf9282a89985203, type: 3}
+  - {fileID: 21300000, guid: bb4ebc2716d7f4ccfbf9282a89985203, type: 3}
+  - {fileID: 21300000, guid: bb4ebc2716d7f4ccfbf9282a89985203, type: 3}
+  - {fileID: 21300000, guid: bb4ebc2716d7f4ccfbf9282a89985203, type: 3}
   mtl_Grayscale: {fileID: 2100000, guid: 220abc303df33e24aa68030ee6cd65b5, type: 2}
 --- !u!1 &3607071550882509222
 GameObject:

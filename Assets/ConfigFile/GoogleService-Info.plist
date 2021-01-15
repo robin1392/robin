@@ -32,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:767049103433:ios:cd0ed0d342ebd77e73a798</string>
+	<key>DATABASE_URL</key>
+	<string>https://randomdice-wars-6148e-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "767049103433",
+    "firebase_url": "https://randomdice-wars-6148e-default-rtdb.firebaseio.com",
     "project_id": "randomdice-wars-6148e",
     "storage_bucket": "randomdice-wars-6148e.appspot.com"
   },
@@ -37,6 +38,13 @@
             {
               "client_id": "767049103433-fugt90jkrupe0q0ei0ehjdgd4o25lnd8.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "767049103433-bpmr3qr1efei1ro47rsu102eslmmmb2f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.percent.randomdicewars"
+              }
             }
           ]
         }

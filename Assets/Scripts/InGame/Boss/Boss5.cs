@@ -15,7 +15,6 @@ public class Boss5 : Minion
     public GameObject obj_SkillHit;
     
     private float _skillCastedTime;
-    private MinionAnimationEvent _animationEvent;
 
     protected override void Start()
     {
