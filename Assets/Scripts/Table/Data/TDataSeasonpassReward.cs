@@ -37,6 +37,8 @@ namespace RandomWarsResource.Data
 		public bool effectOn { get; set; }
 		public int rewardItem { get; set; }
 		public int rewardItemValue { get; set; }
+		public int rewardBuyType { get; set; }
+		public int rewardBuyPrice { get; set; }
 
 
 		public int PK()
@@ -54,6 +56,8 @@ namespace RandomWarsResource.Data
 			effectOn = bool.Parse(cols[4]);
 			rewardItem = int.Parse(cols[5]);
 			rewardItemValue = int.Parse(cols[6]);
+			rewardBuyType = int.Parse(cols[7]);
+			rewardBuyPrice = int.Parse(cols[8]);
 		}
 	}
 }
