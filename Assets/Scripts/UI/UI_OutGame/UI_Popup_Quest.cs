@@ -45,6 +45,7 @@ public class UI_Popup_Quest : UI_Popup
     
     public void Initialize()
     {
+        gameObject.SetActive(true);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
 
         if (list.Count == 0)
@@ -55,6 +56,7 @@ public class UI_Popup_Quest : UI_Popup
         {
             InfoCallback();
             RefreshRemainTime();
+            Open();
         }
     }
 
@@ -83,14 +85,45 @@ public class UI_Popup_Quest : UI_Popup
             }
         }
     }
+    
+    public static void QuestUpdate(MsgQuestInfo questInfo)
+    {
+        if (questInfo != null)
+        {
+            dateTime = DateTime.Now.AddSeconds(questInfo.RemainResetTime);
+
+            dailyRewardID = questInfo.DayRewardInfo.DayRewardId;
+            arrIsDailyRewardGet = questInfo.DayRewardInfo.DayRewardState;
+
+            for (int i = 0; i < questInfo.QuestData.Length; i++)
+            {
+                list.Add(questInfo.QuestData[i]);
+            }
+        }
+    }
+
+    public static bool IsCompletedQuest()
+    {
+        foreach (var questData in list)
+        {
+            if ((QUEST_STATUS) questData.Status == QUEST_STATUS.COMPLETE) return true;
+        }
+
+        for (int i = 0; i < arrIsDailyRewardGet.Length; i++)
+        {
+            if (arrIsDailyRewardGet[i] == false) return true;
+        }
+
+        return false;
+    }
 
     public void InfoCallback(MsgQuestInfoAck msg)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-        var anchPos = rts_Content.anchoredPosition;
-        anchPos.y = 0;
-        rts_Content.anchoredPosition = anchPos;
+        // var anchPos = rts_Content.anchoredPosition;
+        // anchPos.y = 0;
+        // rts_Content.anchoredPosition = anchPos;
         
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
@@ -157,8 +190,6 @@ public class UI_Popup_Quest : UI_Popup
             listSlot[i].gameObject.SetActive(true);
             listSlot[i].Initialize(list[i]);
         }
-        
-        Open();
     }
 
     public void Click_DailyRewardButton(int num)

@@ -581,6 +581,7 @@ public class NetworkManager : Singleton<NetworkManager>
         UserInfoManager.Get().SetDeck(msg.UserDeck);
         UserInfoManager.Get().SetDice(msg.UserDice);
         UserInfoManager.Get().SetBox(msg.UserBox);
+        UI_Popup_Quest.QuestUpdate(msg.QuestInfo);
 
         GameStateManager.Get().UserAuthOK();
         UnityUtil.Print("RECV AUTH => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
