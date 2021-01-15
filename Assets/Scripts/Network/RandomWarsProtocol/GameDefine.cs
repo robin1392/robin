@@ -97,6 +97,7 @@ namespace RandomWarsProtocol
         NONE,
         GOING,          // 진행중
         END,                // 종료
+        BREAK,              // 휴식
     }
 
 

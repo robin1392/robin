@@ -127,9 +127,9 @@ public class UI_Popup_Rank : UI_Popup
                 //     );
                 // }
                 break;
-            //case SEASON_STATE.ACCOUNT:
-            //    text_RankMessage.gameObject.SetActive(true);
-            //    break;
+            case SEASON_STATE.BREAK:
+                text_RankMessage.gameObject.SetActive(true);
+                break;
             case SEASON_STATE.END:
                 text_RankMessage.gameObject.SetActive(true);
                 break;
