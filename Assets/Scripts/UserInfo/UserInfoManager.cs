@@ -33,9 +33,12 @@ public class UserInfo
     public int winStreak;
 
     public int seasonPassId;
+    public bool buyVIP;
     public bool buySeasonPass;
     public bool needSeasonReset;
+    public bool isFreeSeason;
     public int seasonTrophy;
+    public int rankPoint;
     public List<int> seasonPassRewardIds;
     public List<int> trophyRewardIds;
     public DateTime seasonEndTime;
@@ -317,14 +320,17 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
         _userInfo.seasonPassId = seasonPassInfo.SeasonPassId;
+        _userInfo.buyVIP = info.IsBuyVipPass;
         _userInfo.buySeasonPass = seasonPassInfo.BuySeasonPass;
         _userInfo.seasonTrophy = seasonPassInfo.SeasonTrophy;
+        _userInfo.rankPoint = info.RankingPoint;
         if (seasonPassInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonPassInfo.SeasonPassRewardIds);
         else _userInfo.seasonPassRewardIds = new List<int>();
         if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
         _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
         _userInfo.needSeasonReset = seasonPassInfo.NeedSeasonReset;
+        _userInfo.isFreeSeason = seasonPassInfo.IsFreeSeason;
 
         // if (seasonPassInfo.NeedSeasonReset)
         // {
