@@ -14,20 +14,23 @@ namespace RandomWarsResource.Data
 		key = 11,
 		vippass = 51,
 		seasonpass = 52,
-		normalbox = 101,
-		goldbox = 102,
-		diabox = 103,
-		supportbox = 104,
-		boss01box = 105,
-		boss02box = 106,
-		boss03box = 107,
-		boss04box = 108,
-		boss05box = 109,
-		boss01box_reward = 110,
-		boss02box_reward = 111,
-		boss03box_reward = 112,
-		boss04box_reward = 113,
-		boss05box_reward = 114,
+		supportbox = 101,
+		normalbox = 111,
+		bronzebox = 112,
+		silverbox = 113,
+		goldbox = 114,
+		platinumbox = 115,
+		diabox = 116,
+		boss01box = 201,
+		boss02box = 202,
+		boss03box = 203,
+		boss04box = 204,
+		boss05box = 205,
+		boss01box_reward = 206,
+		boss02box_reward = 207,
+		boss03box_reward = 208,
+		boss04box_reward = 209,
+		boss05box_reward = 210,
 		dice_1000 = 1000,
 		dice_1001 = 1001,
 		dice_1002 = 1002,
@@ -68,6 +71,10 @@ namespace RandomWarsResource.Data
 		dice_4008 = 4008,
 		dice_4009 = 4009,
 		dice_4010 = 4010,
+		dice_4501 = 4501,
+		dice_4502 = 4502,
+		dice_4503 = 4503,
+		dice_4504 = 4504,
 		guardian_5001 = 5001,
 		guardian_5002 = 5002,
 		guardian_5003 = 5003,
@@ -83,6 +90,7 @@ namespace RandomWarsResource.Data
 		public int boxOpenType { get; set; }
 		public int openKeyValue { get; set; }
 		public int[] productId { get; set; }
+		public int[] diceGradeRange { get; set; }
 		public bool isUse { get; set; }
 		public int maxValue { get; set; }
 
@@ -103,8 +111,9 @@ namespace RandomWarsResource.Data
 			boxOpenType = int.Parse(cols[5]);
 			openKeyValue = int.Parse(cols[6]);
 			productId = Array.ConvertAll(cols[7].Split('|'), s => int.Parse(s));
-			isUse = bool.Parse(cols[8]);
-			maxValue = int.Parse(cols[9]);
+			diceGradeRange = Array.ConvertAll(cols[8].Split('|'), s => int.Parse(s));
+			isUse = bool.Parse(cols[9]);
+			maxValue = int.Parse(cols[10]);
 		}
 	}
 }

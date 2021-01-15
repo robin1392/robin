@@ -6,16 +6,6 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		seasonperiod01 = 1,
-		seasonperiod02 = 2,
-		seasonperiod03 = 3,
-		seasonperiod04 = 4,
-		seasonperiod05 = 5,
-		seasonperiod06 = 6,
-		seasonperiod07 = 7,
-		seasonperiod08 = 8,
-		seasonperiod09 = 9,
-		seasonperiod10 = 10,
 	}
 
 	public class TDataSeasonpassInfo : ITableData<int>
