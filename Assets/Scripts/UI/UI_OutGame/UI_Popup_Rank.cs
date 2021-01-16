@@ -111,7 +111,7 @@ public class UI_Popup_Rank : UI_Popup
                 //text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
                 //StartCoroutine(TimerCoroutine(msg.SeasonRemainTime));
                 //time = DateTime.Now.AddSeconds(msg.SeasonRemainTime);
-                text_MyRanking.text = msg.myRanking.ToString();
+                text_MyRanking.text = msg.myRanking > 0 ? msg.myRanking.ToString() : string.Empty;
                 text_MyTrophy.text = msg.myTrophy.ToString();
             
                 Debug.Log($"RankInfoCount: {msg.TopRankInfo.Length}");

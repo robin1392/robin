@@ -16,7 +16,7 @@ public class UI_Rank_Slot : MonoBehaviour
 
     public void Initialize(int rank, int trophy, string name, int nClass, int[] deck)
     {
-        Debug.Log($"Rank slot initialize: rank[{rank}], trophy[{trophy}], name[{name}], class[{nClass}], deck[{deck.Length}]");
+        Debug.Log($"Rank slot initialize: rank[{rank}], trophy[{trophy}], name[{name}], class[{nClass}], deck[{string.Join(",", deck)}]");
         //image_Rank.sprite = arrSprite_Rank[Mathf.Clamp(rank - 1, 0, 3)];
         
         if (trophy >= 0)

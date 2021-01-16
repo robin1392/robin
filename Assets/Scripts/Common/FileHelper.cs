@@ -60,6 +60,19 @@ public class FileHelper
         return iconSpr;
     }
 
+    public static Sprite GetIcon(string name)
+    {
+        string iconPath = "Image/icon/";
+        
+        Sprite iconSpr = Resources.Load<Sprite>(iconPath + name);
+        if (iconSpr == null)
+        {
+            Debug.LogWarning("<color=yellow> " + name + "</color>" + "  Icon Not exist ");
+        }
+        
+        return iconSpr;
+    }
+
     public static Sprite GetCardIcon(string name)
     {
         string cardpath = "Image/dice_card/";

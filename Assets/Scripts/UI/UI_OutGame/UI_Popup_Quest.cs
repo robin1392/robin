@@ -50,7 +50,7 @@ public class UI_Popup_Quest : UI_Popup
 
         if (list.Count == 0)
         {
-            NetworkManager.Get().QuestInfoReq(UserInfoManager.Get().GetUserInfo().userID, InfoCallback);
+            //NetworkManager.Get().QuestInfoReq(UserInfoManager.Get().GetUserInfo().userID, InfoCallback);
         }
         else
         {
@@ -135,9 +135,23 @@ public class UI_Popup_Quest : UI_Popup
             var dataDailyReward = new TDataQuestDayReward();
             if (TableManager.Get().QuestDayReward.GetData(msg.QuestInfo.DayRewardInfo.DayRewardId, out dataDailyReward))
             {
-                arrText_Reward[0].text = $"{dataDailyReward.rewardItem01}\nx{dataDailyReward.rewardItemValue01}";
-                arrText_Reward[1].text = $"{dataDailyReward.rewardItem02}\nx{dataDailyReward.rewardItemValue02}";
-                arrText_Reward[2].text = $"{dataDailyReward.rewardItem03}\nx{dataDailyReward.rewardItemValue03}";
+                TDataItemList itemData;
+                if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem01, out itemData))
+                {
+                    arrImage_Reward[0].sprite = FileHelper.GetIcon(itemData.itemIcon);
+                }
+                if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem02, out itemData))
+                {
+                    arrImage_Reward[1].sprite = FileHelper.GetIcon(itemData.itemIcon);
+                }
+                // if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem03, out itemData))
+                // {
+                //     arrImage_Reward[2].sprite = FileHelper.GetIcon(itemData.itemIcon);
+                // }
+                
+                arrText_Reward[0].text = $"x{dataDailyReward.rewardItemValue01}";
+                arrText_Reward[1].text = $"x{dataDailyReward.rewardItemValue02}";
+                arrText_Reward[2].text = $"x{dataDailyReward.rewardItemValue03}";
 
                 arrBtn_Reward[0].interactable = !arrIsDailyRewardGet[0];
                 arrBtn_Reward[1].interactable = !arrIsDailyRewardGet[1];
@@ -171,9 +185,26 @@ public class UI_Popup_Quest : UI_Popup
         var dataDailyReward = new TDataQuestDayReward();
         if (TableManager.Get().QuestDayReward.GetData(dailyRewardID, out dataDailyReward))
         {
-            arrText_Reward[0].text = $"{dataDailyReward.rewardItem01}\nx{dataDailyReward.rewardItemValue01}";
-            arrText_Reward[1].text = $"{dataDailyReward.rewardItem02}\nx{dataDailyReward.rewardItemValue02}";
-            arrText_Reward[2].text = $"{dataDailyReward.rewardItem03}\nx{dataDailyReward.rewardItemValue03}";
+            TDataItemList itemData;
+            if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem01, out itemData))
+            {
+                arrImage_Reward[0].sprite = FileHelper.GetIcon(itemData.itemIcon);
+                arrImage_Reward[0].SetNativeSize();
+            }
+            if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem02, out itemData))
+            {
+                arrImage_Reward[1].sprite = FileHelper.GetIcon(itemData.itemIcon);
+                arrImage_Reward[1].SetNativeSize();
+            }
+            //if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem03, out itemData))
+            {
+                arrImage_Reward[2].sprite = FileHelper.GetIcon("icon_unknown_dice");
+                arrImage_Reward[2].SetNativeSize();
+            }
+
+            arrText_Reward[0].text = $"x{dataDailyReward.rewardItemValue01}";
+            arrText_Reward[1].text = $"x{dataDailyReward.rewardItemValue02}";
+            arrText_Reward[2].text = $"x{dataDailyReward.rewardItemValue03}";
             
             arrBtn_Reward[0].interactable = !arrIsDailyRewardGet[0];
             arrBtn_Reward[1].interactable = !arrIsDailyRewardGet[1];

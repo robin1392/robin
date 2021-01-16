@@ -9,11 +9,8 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
 {
     public Image image_Rank;
     public Text text_Rank;
-    public Image[] arrImage_RewardSlot;
-    public Text[] arrText_RewardSlot;
+    public UI_RewardItem_Slot[] arrRewardItemSlots;
 
-    public Sprite[] arrSprite_Rank;
-    
     public void Initialize(int tableId)
     {
         Debug.Log($"Rank reward slot initialize: rank id[{tableId}]");
@@ -24,40 +21,59 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
         {
             if (data.rankRewardType == 1)
             {
-                image_Rank.sprite = arrSprite_Rank[Mathf.Clamp(data.rankMin - 1, 0, 3)];
-                if (data.rankMin < 4) text_Rank.text = string.Empty;
-                else if (data.rankMin == 4) text_Rank.text = data.rankMin.ToString();
-                else text_Rank.text = $"{data.rankMin}~{data.rankMax}";
+                if (data.rankMin <= 4) text_Rank.text = $"{data.rankMin}위";
+                else text_Rank.text = $"{data.rankMin}~{data.rankMax}위";
             }
             else if (data.rankRewardType == 2)
             {
-                image_Rank.sprite = arrSprite_Rank[3];
-                text_Rank.text = $"상위\n{data.rankMax}%";
+                text_Rank.text = $"상위 {data.rankMax}%";
             }
-            //text_Rank.text = data.rankMin > 3 ? data.rankMin.ToString() : string.Empty;
             
-            arrText_RewardSlot[0].text = $"{data.rankRewardItem01}\nx{data.rankRewardIValue01}";
-            arrText_RewardSlot[1].text = $"{data.rankRewardItem02}\nx{data.rankRewardIValue02}";
-            arrText_RewardSlot[2].text = $"{data.rankRewardItem03}\nx{data.rankRewardIValue03}";
-            arrText_RewardSlot[3].text = $"{data.rankRewardItem04}\nx{data.rankRewardIValue04}";
-            arrText_RewardSlot[4].text = $"{data.rankRewardItem05}\nx{data.rankRewardIValue05}";
+            // arrText_RewardSlot[0].text = $"{data.rankRewardItem01}\nx{data.rankRewardIValue01}";
+            // arrText_RewardSlot[1].text = $"{data.rankRewardItem02}\nx{data.rankRewardIValue02}";
+            // arrText_RewardSlot[2].text = $"{data.rankRewardItem03}\nx{data.rankRewardIValue03}";
+            // arrText_RewardSlot[3].text = $"{data.rankRewardItem04}\nx{data.rankRewardIValue04}";
+            // arrText_RewardSlot[4].text = $"{data.rankRewardItem05}\nx{data.rankRewardIValue05}";
+            arrRewardItemSlots[0].Initialize(data.rankRewardItem01, data.rankRewardIValue01);
+            arrRewardItemSlots[1].Initialize(data.rankRewardItem02, data.rankRewardIValue02);
+            arrRewardItemSlots[2].Initialize(data.rankRewardItem03, data.rankRewardIValue03);
+            arrRewardItemSlots[3].Initialize(data.rankRewardItem04, data.rankRewardIValue04);
+            arrRewardItemSlots[4].Initialize(data.rankRewardItem05, data.rankRewardIValue05);
+            
+            //if (data.rankMin <= UserInfoManager.Get().GetUserInfo().)
         }
     }
 
-    public void Initialize(MsgReward[] rewards)
+    public void Initialize(MsgRewardMultiple[] rewards)
     {
         if (rewards != null)
         {
-            for (int i = 0; i < arrText_RewardSlot.Length; i++)
+            for (int i = 0; i < arrRewardItemSlots.Length; i++)
             {
+                // if (i < rewards.Length)
+                // {
+                //     arrText_RewardSlot[i].text = $"{rewards[i].ItemId}\nx{rewards[i].Value}";
+                // }
+                // else
+                // {
+                //     arrText_RewardSlot[i].text = string.Empty;
+                // }
                 if (i < rewards.Length)
                 {
-                    arrText_RewardSlot[i].text = $"{rewards[i].ItemId}\nx{rewards[i].Value}";
+                    arrRewardItemSlots[i].Initialize(rewards[i].ItemId,
+                        rewards[i].ItemId > 100 && rewards[i].ItemId < 1000 ? 1 : rewards[i].arrayReward[0].Value);
                 }
                 else
                 {
-                    arrText_RewardSlot[i].text = string.Empty;
+                    arrRewardItemSlots[i].Initialize(0, 0);
                 }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < arrRewardItemSlots.Length; i++)
+            {
+                arrRewardItemSlots[i].Initialize(0, 0);
             }
         }
     }

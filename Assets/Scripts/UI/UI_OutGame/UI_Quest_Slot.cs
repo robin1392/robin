@@ -59,7 +59,14 @@ public class UI_Quest_Slot : MonoBehaviour
                     btn_Reward.interactable = false;
                     break;
             }
-            text_Reward.text = $"{data.ItemId}\nx{data.ItemValue}";
+
+            TDataItemList itemData;
+            if (TableManager.Get().ItemList.GetData(item => item.id == data.ItemId, out itemData))
+            {
+                image_Reward.sprite = FileHelper.GetIcon(itemData.itemIcon);
+                image_Reward.SetNativeSize();
+                text_Reward.text = $"x{data.ItemValue}";
+            }
         }
         else
         {

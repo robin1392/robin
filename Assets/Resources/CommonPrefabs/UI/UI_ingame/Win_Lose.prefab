@@ -1003,7 +1003,7 @@ MonoBehaviour:
   - {fileID: 5065829166071866198}
   - {fileID: 7822818419802752897}
   image_Guardian: {fileID: 1835412223153666213}
-  text_GuardianName: {fileID: 0}
+  text_GuardianName: {fileID: 5539256968211373955}
   image_Tier_Icon: {fileID: 3081761896133679092}
   text_Nickname: {fileID: 8276130853138999737}
   text_Trophy: {fileID: 1578973207882805796}
