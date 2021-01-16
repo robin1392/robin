@@ -33,6 +33,11 @@ namespace ED
         public GameObject obj_Ciritical;
 
         public List<UI_DeckInfo> listDeckInfo = new List<UI_DeckInfo>();
+
+        public Text text_GettedDice;
+        public Text text_UngettedDice;
+        public Text text_GettedGuardian;
+        public Text text_UngettedGuardian;
         
         [Header("Prefabs")]
         public GameObject prefGettedDice;
@@ -191,7 +196,6 @@ namespace ED
             _selectedDiceId = diceId;
             
             DeactivateSelectedObjectChild();
-            tsGettedDiceParent.gameObject.SetActive(false);
             obj_Ciritical.SetActive(false);
             objSelectBlind.SetActive(true);
 
@@ -205,6 +209,15 @@ namespace ED
             objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
             
             rts_Content.DOAnchorPosY(0, 0.1f);
+            
+            tsGettedDiceParent.gameObject.SetActive(false);
+            tsGettedGuardianParent.gameObject.SetActive(false);
+            tsUngettedDiceParent.gameObject.SetActive(false);
+            tsUngettedGuardianParent.gameObject.SetActive(false);
+            text_GettedDice.gameObject.SetActive(false);
+            text_UngettedDice.gameObject.SetActive(false);
+            text_GettedGuardian.gameObject.SetActive(false);
+            text_UngettedGuardian.gameObject.SetActive(false);
             
             SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
@@ -272,10 +285,18 @@ namespace ED
                     UserInfoManager.Get().GetUserInfo().SetDeck(active, intDeck);
                 }
         
-                tsGettedDiceParent.gameObject.SetActive(true);
                 obj_Ciritical.SetActive(true);
                 objSelectBlind.SetActive(false);
                 _isSelectMode = false;
+                
+                tsGettedDiceParent.gameObject.SetActive(true);
+                tsGettedGuardianParent.gameObject.SetActive(true);
+                tsUngettedDiceParent.gameObject.SetActive(true);
+                tsUngettedGuardianParent.gameObject.SetActive(true);
+                text_GettedDice.gameObject.SetActive(true);
+                text_UngettedDice.gameObject.SetActive(true);
+                text_GettedGuardian.gameObject.SetActive(true);
+                text_UngettedGuardian.gameObject.SetActive(true);
                 
                 CallBackDeckUpdate();
             }
@@ -300,6 +321,13 @@ namespace ED
         public void HideSelectPanel()
         {
             tsGettedDiceParent.gameObject.SetActive(true);
+            tsGettedGuardianParent.gameObject.SetActive(true);
+            tsUngettedDiceParent.gameObject.SetActive(true);
+            tsUngettedGuardianParent.gameObject.SetActive(true);
+            text_GettedDice.gameObject.SetActive(true);
+            text_UngettedDice.gameObject.SetActive(true);
+            text_GettedGuardian.gameObject.SetActive(true);
+            text_UngettedGuardian.gameObject.SetActive(true);
             obj_Ciritical.SetActive(true);
             objSelectBlind.SetActive(false);
         }
@@ -356,6 +384,15 @@ namespace ED
         public void Click_CancelSelectMode()
         {
             _isSelectMode = false;
+            
+            tsGettedDiceParent.gameObject.SetActive(true);
+            tsGettedGuardianParent.gameObject.SetActive(true);
+            tsUngettedDiceParent.gameObject.SetActive(true);
+            tsUngettedGuardianParent.gameObject.SetActive(true);
+            text_GettedDice.gameObject.SetActive(true);
+            text_UngettedDice.gameObject.SetActive(true);
+            text_GettedGuardian.gameObject.SetActive(true);
+            text_UngettedGuardian.gameObject.SetActive(true);
         }
     }
 }

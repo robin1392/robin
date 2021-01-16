@@ -177,6 +177,7 @@ public class UI_Popup_Rank : UI_Popup
 
     private void AddSlots(MsgRankInfo[] array)
     {
+        text_RankMessage.gameObject.SetActive(array.Length == 0);
         for (int i = 0; i < array.Length; i++)
         {
             if (array[i] != null)

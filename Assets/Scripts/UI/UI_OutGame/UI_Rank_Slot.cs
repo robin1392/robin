@@ -14,19 +14,17 @@ public class UI_Rank_Slot : MonoBehaviour
     public Text text_Name;
     public UI_WinLose winlose;
 
-    public Sprite[] arrSprite_Rank;
-
     public void Initialize(int rank, int trophy, string name, int nClass, int[] deck)
     {
-        Debug.Log($"Rank slot initialize: rank[{rank}], trophy[{trophy}], name[{name}], class[{nClass}]");
-        image_Rank.sprite = arrSprite_Rank[Mathf.Clamp(rank - 1, 0, 3)];
+        Debug.Log($"Rank slot initialize: rank[{rank}], trophy[{trophy}], name[{name}], class[{nClass}], deck[{deck.Length}]");
+        //image_Rank.sprite = arrSprite_Rank[Mathf.Clamp(rank - 1, 0, 3)];
         
         if (trophy >= 0)
         {
-            text_Rank.text = rank > 3 ? rank.ToString() : string.Empty;
+            text_Rank.text = rank.ToString();
             text_Trophy.text = trophy.ToString();
             text_Name.text = name;
-            text_Class.text = $"CLASS {nClass.ToString()}";
+            text_Class.text = $"{Global.g_class} {nClass.ToString()}";
         }
         else
         {

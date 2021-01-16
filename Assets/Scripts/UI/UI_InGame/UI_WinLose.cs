@@ -12,6 +12,8 @@ public class UI_WinLose : MonoBehaviour
     public Image image_DeckBG;
     public Sprite[] arrSprite_DeckBG;
     public Image[] arrImage_Deck;
+    public Image image_Guardian;
+    public Text text_GuardianName;
     public Image image_Tier_Icon;
     public Text text_Nickname;
     public Text text_Trophy;
@@ -26,19 +28,27 @@ public class UI_WinLose : MonoBehaviour
         }
         image_DeckBG.sprite = arrSprite_DeckBG[isWin ? 1 : 0];
         
-        for (int i = 0; i < arrImage_Deck.Length; i++)
+        for (int i = 0; i < deck.Length; i++)
         {
             RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
             if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
             {
-                return;
+                continue;
             }
 
-            var iconName = dataDiceInfo.iconName;
-            arrImage_Deck[i].sprite = FileHelper.GetDiceIcon(iconName);
-            arrImage_Deck[i].SetNativeSize();
-            arrImage_Deck[i].transform.localScale = Vector3.zero;
-            arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f).SetUpdate(true);
+            if (i < 5)
+            {
+                arrImage_Deck[i].sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+                arrImage_Deck[i].SetNativeSize();
+                arrImage_Deck[i].transform.localScale = Vector3.zero;
+                arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f)
+                    .SetUpdate(true);
+            }
+            else
+            {
+                image_Guardian.sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+                text_GuardianName.text = dataDiceInfo.name;
+            }
         }
 
         text_Nickname.text = nickname;
