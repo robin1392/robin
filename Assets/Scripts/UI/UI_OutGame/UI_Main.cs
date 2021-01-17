@@ -166,8 +166,8 @@ namespace ED
             searchPopup.gameObject.SetActive(true);
                 
             ConnectCoop();
-        }
 
+        }
         public void Click_BoxButton()
         {
             boxPopup.gameObject.SetActive(true);

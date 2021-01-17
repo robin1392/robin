@@ -9,9 +9,11 @@ public class UI_Popup_SeasonEnd : UI_Popup
 {
     public UI_Rank_Reward_Slot rewardSlot;
 
-    [Header("UI")]
+    [Header("UI")] 
     public Text text_MyRank;
     public Text text_MyTrophy;
+    public Text text_Unranked;
+    public Button btn_GetReward;
 
     private MsgSeasonResetAck msg;
     
@@ -27,11 +29,24 @@ public class UI_Popup_SeasonEnd : UI_Popup
         this.msg = msg;
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        
-        text_MyRank.text = msg.myRanking.ToString();
-        text_MyTrophy.text = msg.myTrophy.ToString();
-        
-        rewardSlot.Initialize(msg.arraySeasonReward);
+
+        if (msg.myTrophy > 0)
+        {
+            rewardSlot.gameObject.SetActive(true);
+            text_Unranked.gameObject.SetActive(false);
+            
+            text_MyRank.text = msg.myRanking.ToString();
+            text_MyTrophy.text = msg.myTrophy.ToString();
+            
+            rewardSlot.Initialize(msg.arraySeasonReward);
+            btn_GetReward.interactable = true;
+        }
+        else
+        {
+            rewardSlot.gameObject.SetActive(false);
+            text_Unranked.gameObject.SetActive(true);
+            btn_GetReward.interactable = false;
+        }
         
         Open();
     }

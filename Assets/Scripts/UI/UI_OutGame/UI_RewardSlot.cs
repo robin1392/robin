@@ -12,6 +12,7 @@ public class UI_RewardSlot : MonoBehaviour
     public GameObject obj_Trophy;
 
     [Space]
+    public Button btn_Unlock;
     public Image image_Guage;
     public Image image_Guage_BG;
     public Text text_Trophy;
@@ -119,6 +120,8 @@ public class UI_RewardSlot : MonoBehaviour
             arrObj_Check[1].SetActive(getNormal);
             arrButton[0].interactable = !getPass && UserInfoManager.Get().GetUserInfo().buySeasonPass;
             arrButton[1].interactable = !getNormal;
+            
+            btn_Unlock.gameObject.SetActive(false);
         }
     }
 
