@@ -224,6 +224,8 @@ namespace RandomWarsProtocol.Msg
         public int OpenRewardId;
         // 사용 아이템 정보
         public MsgReward UseItemInfo;
+        // 획득 보상 정보
+        public MsgReward RewardInfo;
     }
 
 
