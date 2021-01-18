@@ -233,7 +233,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.SeasonResetAck = OnSeasonResetAck;
         _httpReceiver.GetRankAck = OnGetRankAck;
         _httpReceiver.SeasonPassInfoAck = OnSeasonPassInfoAck;
-        _httpReceiver.SeasonPassOpenAck = OnSeasonPassOpenAck;
+        _httpReceiver.SeasonPassRewardStepAck = OnSeasonPassRewardStepAck;
         _httpReceiver.GetSeasonPassRewardAck = OnGetSeasonPassRewardAck;
         _httpReceiver.ClassRewardInfoAck = OnClassRewardInfoAck;
         _httpReceiver.GetClassRewardAck = OnGetClassRewardAck;
