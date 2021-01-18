@@ -9,13 +9,8 @@ using UnityEngine.UI;
 
 public class UI_TrophyRewardSlot : MonoBehaviour
 {
-    public GameObject obj_Trophy;
-
     [Space]
-    public Image image_Guage;
-    public Image image_Guage_BG;
     public Text text_Trophy;
-    public Image image_TrophyBG;
 
     [Space]
     public Button[] arrButton;
@@ -31,84 +26,34 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     private TDataClassReward dataPremium;
     private TDataClassReward dataNormal;
 
-    [SerializeField]
-    private float minTrophy;
-
-    [SerializeField]
-    private float maxTrophy;
-
     public void Initialize(int row, int myTrophy, int getVipRow, int getNormalRow)
     {
         this.row = row;
         this.getVipRow = getVipRow;
         this.getNormalRow = getNormalRow;
-        minTrophy = 0;
-        maxTrophy = 0;
         
-        if (row == 0)
+        dataPremium = new TDataClassReward();
+        dataNormal = new TDataClassReward();
+        TableManager.Get().ClassReward.GetData(row, out dataNormal);
+        TableManager.Get().ClassReward.GetData(row + 1000, out dataPremium);
+
+        text_Trophy.text = dataPremium.rankPoint.ToString();
+        TDataItemList item;
+        if (TableManager.Get().ItemList.GetData(dataPremium.ItemId, out item))
         {
-            text_Trophy.text = $"0";
-            var v = image_Guage.rectTransform.sizeDelta;
-            v.x *= 0.5f;
-            image_Guage.rectTransform.sizeDelta = v;
-            image_Guage_BG.rectTransform.sizeDelta = v;
-            v = image_Guage.rectTransform.anchoredPosition;
-            v.y = -200;
-            image_Guage.rectTransform.anchoredPosition = v;
-            image_Guage_BG.rectTransform.anchoredPosition = v;
-            
-            arrButton[0].gameObject.SetActive(false);
-            arrButton[1].gameObject.SetActive(false);
-            
-            var dataNormal = new TDataClassReward();
-            if (TableManager.Get().ClassReward.GetData(row + 1, out dataNormal))
-            {
-                maxTrophy = Mathf.Lerp(0f, dataNormal.rankPoint, 0.5f);
-            }
+            arrImage_Icon[0].sprite = FileHelper.GetIcon(item.itemIcon);
+            arrImage_Icon[0].SetNativeSize();
         }
-        else
+        if (TableManager.Get().ItemList.GetData(dataNormal.ItemId, out item))
         {
-            dataPremium = new TDataClassReward();
-            dataNormal = new TDataClassReward();
-            TableManager.Get().ClassReward.GetData(row, out dataNormal);
-            TableManager.Get().ClassReward.GetData(row + 1000, out dataPremium);
-
-            text_Trophy.text = dataPremium.rankPoint.ToString();
-            arrText_Value[0].text = $"{dataPremium.ItemId}\nx{dataPremium.ItemValue}";
-            arrText_Value[1].text = $"{dataNormal.ItemId}\nx{dataNormal.ItemValue}";
-
-            image_TrophyBG.color = myTrophy >= dataPremium.rankPoint ? Color.white : Color.gray;
-            text_Trophy.color = image_TrophyBG.color;
-            
-            // set min, max
-            if (TableManager.Get().ClassReward.GetData(row - 1, out dataNormal))
-            {
-                minTrophy = Mathf.Lerp(dataNormal.rankPoint, dataPremium.rankPoint, 0.5f);
-            }
-            else if (row == 1)
-            {
-                minTrophy = dataPremium.rankPoint / 2;
-            }
-            
-            if (TableManager.Get().ClassReward.GetData(row + 1, out dataNormal) == false)
-            {
-                var v = image_Guage.rectTransform.sizeDelta;
-                v.x *= 0.5f;
-                image_Guage.rectTransform.sizeDelta = v;
-                image_Guage_BG.rectTransform.sizeDelta = v;
-
-                maxTrophy = dataPremium.rankPoint;
-            }
-            else
-            {
-                maxTrophy = Mathf.Lerp(dataPremium.rankPoint, dataNormal.rankPoint, 0.5f);
-            }
-            
-            // set buttons
-            SetButton();
+            arrImage_Icon[1].sprite = FileHelper.GetIcon(item.itemIcon);
+            arrImage_Icon[1].SetNativeSize();
         }
-
-        image_Guage.fillAmount = (myTrophy - minTrophy) / (float)(maxTrophy - minTrophy);
+        arrText_Value[0].text = $"x{dataPremium.ItemValue}";
+        arrText_Value[1].text = $"x{dataNormal.ItemValue}";
+        
+        // set buttons
+        SetButton();
     }
 
     public void SetButton()
@@ -125,7 +70,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
         else
         {
             bool getNormal = getNormalRow >= row;
-            bool getPass = getVipRow >= row + 1000;
+            bool getPass = getVipRow >= row;
                 
             arrObj_Lock[0].SetActive(false);
             arrObj_Lock[1].SetActive(false);
