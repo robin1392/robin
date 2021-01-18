@@ -37,7 +37,7 @@ public class UI_RewardSlot : MonoBehaviour
         TableManager.Get().SeasonpassReward.GetData(row, out dataNormal);
         TableManager.Get().SeasonpassReward.GetData(row + 1000, out dataPremium);
 
-        text_Trophy.text = dataPremium.trophyPoint.ToString();
+        text_Trophy.text = (row - 1).ToString();
         TDataItemList itemData;
         if (TableManager.Get().ItemList.GetData(dataPremium.rewardItem, out itemData))
         {

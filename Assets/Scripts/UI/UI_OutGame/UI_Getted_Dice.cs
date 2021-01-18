@@ -91,10 +91,9 @@ namespace ED
             button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
             button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
 
-            for (int i = 0; i < arrImage_GradeBG.Length; ++i)
-            {
-                arrImage_GradeBG[i].sprite = arrSprite_GradeBG[isUpgradeEnable ? 4 : pData.grade];
-            }
+            
+            arrImage_GradeBG[0].sprite = arrSprite_GradeBG[pData.grade];
+            arrImage_GradeBG[1].sprite = arrSprite_GradeBG[isUpgradeEnable ? 4 : pData.grade];
         }
         
         public void Initialize(RandomWarsResource.Data.TDataGuardianInfo pData, int level, int count)

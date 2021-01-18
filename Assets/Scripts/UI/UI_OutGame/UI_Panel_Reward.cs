@@ -27,6 +27,9 @@ public class UI_Panel_Reward : MonoBehaviour
     [Header("Season Info")]
     public Text text_SeasonID;
     public Text text_SeasonName;
+    public Slider slider_Star;
+    public Text text_StarCount;
+    public Text text_StarLevel;
     public Text text_SeasonRemainTime;
 
     private bool isSeasonPassInitialized;
@@ -72,8 +75,12 @@ public class UI_Panel_Reward : MonoBehaviour
     public void InitializeSeasonPass()
     {
         UI_RewardSlot.isUnlockEnable = false;
-        
+
+        int myStar = UserInfoManager.Get().GetUserInfo().seasonTrophy;
         text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
+        text_StarCount.text = $"{myStar}/10";
+        slider_Star.value = (myStar % 10) / 10f;
+        text_StarLevel.text = $"{(myStar / 10) + 1}";
         
         int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count / 2;
         int seasonPassTrophy = UserInfoManager.Get().GetUserInfo().seasonTrophy;

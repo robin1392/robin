@@ -2279,8 +2279,8 @@ MonoBehaviour:
   text_DiceCount: {fileID: 143046286}
   text_DiceLevel: {fileID: 3561196426392618691}
   arrImage_GradeBG:
-  - {fileID: 7851210546027284494}
   - {fileID: 5173148601974419704}
+  - {fileID: 7851210546027284494}
   arrSprite_GradeBG:
   - {fileID: 21300000, guid: d851871bbdd3d4fac918260cbc3aef9b, type: 3}
   - {fileID: 21300000, guid: 6633818dffe4e41329ac21634b713f5f, type: 3}
