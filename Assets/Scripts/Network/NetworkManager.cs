@@ -861,19 +861,19 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV SEASON PASS INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
-    public void SeasonPassOpenReq(string userId, int rewardId)
+    public void SeasonPassRewardStepReq(string userId, int openRewardId)
     {
-        MsgSeasonPassOpenReq msg = new MsgSeasonPassOpenReq();
+        MsgSeasonPassRewardStepReq msg = new MsgSeasonPassRewardStepReq();
         msg.UserId = userId;
-        msg.RewardId = rewardId;
-        _httpSender.SeasonPassOpenReq(msg);
-        UnityUtil.Print("SEND SEASON PASS OPEN => userId", string.Format("userId:{0}", userId), "green");
+        msg.OpenRewardId = openRewardId;
+        _httpSender.SeasonPassRewardStepReq(msg);
+        UnityUtil.Print("SEND SEASON PASS STEP => userId", string.Format("userId:{0}", userId), "green");
     }
 
 
-    void OnSeasonPassOpenAck(MsgSeasonPassOpenAck msg)
+    void OnSeasonPassRewardStepAck(MsgSeasonPassRewardStepAck msg)
     {
-        UnityUtil.Print("RECV SEASON PASS OPEN => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+        UnityUtil.Print("RECV SEASON PASS STEP => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
 

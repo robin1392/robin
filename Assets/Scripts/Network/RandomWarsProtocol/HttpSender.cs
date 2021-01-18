@@ -156,13 +156,13 @@ namespace RandomWarsProtocol
         }
 
 
-        public void SeasonPassOpenReq(MsgSeasonPassOpenReq msg)
+        public void SeasonPassRewardStepReq(MsgSeasonPassRewardStepReq msg)
         {
-            _httpService.Send((int)GameProtocol.SEASON_PASS_OPEN_REQ, "seasonpassopen", JsonConvert.SerializeObject(msg));
+            _httpService.Send((int)GameProtocol.SEASON_PASS_REWARD_STEP_REQ, "seasonpassrewardstep", JsonConvert.SerializeObject(msg));
         }
 
 
-        public string SeasonPassOpenAck(MsgSeasonPassOpenAck msg)
+        public string SeasonPassRewardStepAck(MsgSeasonPassRewardStepAck msg)
         {
             return JsonConvert.SerializeObject(msg);
         }

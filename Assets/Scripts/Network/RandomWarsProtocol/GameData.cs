@@ -1937,4 +1937,5 @@ namespace RandomWarsProtocol
         // 프리 시즌 여부
         public bool IsFreeSeason;
     }
+
 }
