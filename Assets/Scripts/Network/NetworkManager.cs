@@ -233,6 +233,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.SeasonResetAck = OnSeasonResetAck;
         _httpReceiver.GetRankAck = OnGetRankAck;
         _httpReceiver.SeasonPassInfoAck = OnSeasonPassInfoAck;
+        _httpReceiver.SeasonPassOpenAck = OnSeasonPassOpenAck;
         _httpReceiver.GetSeasonPassRewardAck = OnGetSeasonPassRewardAck;
         _httpReceiver.ClassRewardInfoAck = OnClassRewardInfoAck;
         _httpReceiver.GetClassRewardAck = OnGetClassRewardAck;
@@ -821,7 +822,6 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV SEASON RESET => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
     }
 
-
     public void GetRankReq(string userId, int pageNo, Action<MsgGetRankAck> callback)
     {
         MsgGetRankReq msg = new MsgGetRankReq();
@@ -859,6 +859,21 @@ public class NetworkManager : Singleton<NetworkManager>
     void OnSeasonPassInfoAck(MsgSeasonPassInfoAck msg)
     {
         UnityUtil.Print("RECV SEASON PASS INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+    }
+
+    public void SeasonPassOpenReq(string userId, int rewardId)
+    {
+        MsgSeasonPassOpenReq msg = new MsgSeasonPassOpenReq();
+        msg.UserId = userId;
+        msg.RewardId = rewardId;
+        _httpSender.SeasonPassOpenReq(msg);
+        UnityUtil.Print("SEND SEASON PASS OPEN => userId", string.Format("userId:{0}", userId), "green");
+    }
+
+
+    void OnSeasonPassOpenAck(MsgSeasonPassOpenAck msg)
+    {
+        UnityUtil.Print("RECV SEASON PASS OPEN => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
 
