@@ -62,9 +62,9 @@ public class UI_RewardSlot : MonoBehaviour
             TableManager.Get().SeasonpassReward.GetData(row, out dataNormal);
             TableManager.Get().SeasonpassReward.GetData(row + 1000, out dataPremium);
 
-            text_Trophy.text = dataPremium.trophyPoint.ToString();
-            arrText_Value[0].text = $"{dataPremium.rewardItem}\nx{dataPremium.rewardItemValue}";
-            arrText_Value[1].text = $"{dataNormal.rewardItem}\nx{dataNormal.rewardItemValue}";
+            //text_Trophy.text = dataPremium.trophyPoint.ToString();
+            //arrText_Value[0].text = $"{dataPremium.rewardItem}\nx{dataPremium.rewardItemValue}";
+            //arrText_Value[1].text = $"{dataNormal.rewardItem}\nx{dataNormal.rewardItemValue}";
             
             // set min, max
             if (TableManager.Get().SeasonpassReward.GetData(row - 1, out dataNormal))
