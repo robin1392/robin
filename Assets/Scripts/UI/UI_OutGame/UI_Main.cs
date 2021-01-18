@@ -29,7 +29,7 @@ namespace ED
         public Button btn_AD;
         
         [Header("Popup")]
-        public UI_SearchingPopup searchPopup;
+        public UI_SearchingPopup searchingPopup;
         public UI_BoxPopup boxPopup;
         public UI_BoxOpenPopup boxOpenPopup;
         public GameObject obj_IndicatorPopup;
@@ -133,7 +133,7 @@ namespace ED
             {
                 btn_PlayBattle.interactable = false;
                 btn_PlayCoop.interactable = false;
-                searchPopup.gameObject.SetActive(true);
+                searchingPopup.gameObject.SetActive(true);
                 
                 StartCoroutine(AIMode());
             }
@@ -147,7 +147,7 @@ namespace ED
 
                 btn_PlayBattle.interactable = false;
                 btn_PlayCoop.interactable = false;
-                searchPopup.gameObject.SetActive(true);
+                searchingPopup.gameObject.SetActive(true);
                 
                 ConnectBattle();
             }
@@ -163,7 +163,7 @@ namespace ED
 
             btn_PlayBattle.interactable = false;
             btn_PlayCoop.interactable = false;
-            searchPopup.gameObject.SetActive(true);
+            searchingPopup.gameObject.SetActive(true);
                 
             ConnectCoop();
 

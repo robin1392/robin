@@ -270,6 +270,8 @@ public class UI_Popup_Quest : UI_Popup
             {
                 UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
+            
+            QuestUpdate(msg.QuestData);
 
             InfoCallback();
         }
