@@ -882,11 +882,12 @@ public class NetworkManager : Singleton<NetworkManager>
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="rewardId"></param>
-    public void GetSeasonPassRewardReq(string userId, int rewardId, Action<MsgGetSeasonPassRewardAck> callback = null)
+    public void GetSeasonPassRewardReq(string userId, int rewardTargetType, int rewardId, Action<MsgGetSeasonPassRewardAck> callback = null)
     {
         MsgGetSeasonPassRewardReq msg = new MsgGetSeasonPassRewardReq();
         msg.UserId = userId;
         msg.RewardId = rewardId;
+        msg.RewardTargetType = rewardTargetType;
         _httpSender.GetSeasonPassRewardReq(msg);
         UnityUtil.Print("SEND GET SEASON PASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
         _getSeasonPassRewardCallback = callback;
