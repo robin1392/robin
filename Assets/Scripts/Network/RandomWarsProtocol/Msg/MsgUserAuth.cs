@@ -194,14 +194,38 @@ namespace RandomWarsProtocol.Msg
         public byte SeasonState;
         // 시즌 남은 시간(초단위)
         public int SeasonRemainTime;
+        // 리셋 랭킹 포인트
+        public int ResetRankingPoint;
+        // 리셋 시즌 포인트
+        public int ResetSeasonPoint;
         // 프리 시즌 여부
         public bool IsFreeSeason;
-        // 현재 나의 순위
+        // 최종 순위
         public int myRanking;
-        // 시즌 획득 트로피
-        public int myTrophy;
         // 시즌 보상
         public MsgRewardMultiple[] arraySeasonReward;
+    }
+
+
+    [Serializable]
+    public class MsgSeasonPassOpenReq
+    {
+        public string UserId;
+        // 보상 테이블 아이디
+        public int RewardId;
+    }
+
+
+    [Serializable]
+    public class MsgSeasonPassOpenAck
+    {
+        public GameErrorCode ErrorCode;
+        // 보상 테이블 아이디
+        public int RewardId;
+        // 사용 아이템 정보
+        public MsgReward UseItemInfo;
+        // 획득 아이템 정보
+        public MsgReward RewardItemInfo;
     }
 
 

@@ -72,7 +72,7 @@ public class UI_Popup_Quest : UI_Popup
         {
             list.Clear();
             Close();
-            UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
+            UI_Main.Get().ShowMessageBox("퀘스트 리셋", "퀘스트가 리셋되었습니다.");
         }
     }
 

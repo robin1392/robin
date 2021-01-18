@@ -6,6 +6,7 @@ using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Debug = ED.Debug;
 
 public class UI_Panel_Reward : MonoBehaviour
 {
@@ -76,6 +77,14 @@ public class UI_Panel_Reward : MonoBehaviour
     {
         UI_RewardSlot.isUnlockEnable = false;
 
+        if (ts_SeasonPassContent.childCount > 0)
+        {
+            for (int i = ts_SeasonPassContent.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(ts_SeasonPassContent.GetChild(i).gameObject);
+            }
+        }
+        
         int myStar = UserInfoManager.Get().GetUserInfo().seasonTrophy;
         text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
         text_StarCount.text = $"{myStar}/10";

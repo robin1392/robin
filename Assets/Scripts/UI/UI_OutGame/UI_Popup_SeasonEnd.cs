@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ED;
+using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,24 +31,29 @@ public class UI_Popup_SeasonEnd : UI_Popup
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-        if (msg.myTrophy > 0)
+        if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
-            rewardSlot.gameObject.SetActive(true);
-            text_Unranked.gameObject.SetActive(false);
+            UserInfoManager.Get().GetUserInfo().seasonTrophy = msg.ResetSeasonPoint;
+            UserInfoManager.Get().GetUserInfo().rankPoint = msg.ResetRankingPoint;
             
-            text_MyRank.text = msg.myRanking.ToString();
-            text_MyTrophy.text = msg.myTrophy.ToString();
-            
-            rewardSlot.Initialize(msg.arraySeasonReward);
-            btn_GetReward.interactable = true;
+            if (msg.arraySeasonReward != null && msg.arraySeasonReward.Length > 0)
+            {
+                rewardSlot.gameObject.SetActive(true);
+                text_Unranked.gameObject.SetActive(false);
+
+                text_MyRank.text = msg.myRanking.ToString();
+
+                rewardSlot.Initialize(msg.arraySeasonReward);
+                btn_GetReward.interactable = true;
+            }
+            else
+            {
+                rewardSlot.gameObject.SetActive(false);
+                text_Unranked.gameObject.SetActive(true);
+                btn_GetReward.interactable = false;
+            }
         }
-        else
-        {
-            rewardSlot.gameObject.SetActive(false);
-            text_Unranked.gameObject.SetActive(true);
-            btn_GetReward.interactable = false;
-        }
-        
+
         Open();
     }
 
