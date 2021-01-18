@@ -41,6 +41,7 @@ namespace ED
         public UI_Popup_SeasonStart seasonStartPopup;
         public UI_CommonMessageBox commonMessageBoxPopup;
         public UI_Popup menuPopup;
+        public UI_Popup_SeasonPassUnlock seasonPassUnlockPopup;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;
@@ -433,38 +434,43 @@ namespace ED
 
         public void AddReward(MsgReward[] rewards, Vector3 startPos)
         {
-            List<MsgReward> list = new List<MsgReward>();
-            
-            foreach (var reward in rewards)
+            if (rewards != null)
             {
-                var data = new TDataItemList();
-                if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
+                List<MsgReward> list = new List<MsgReward>();
+
+                foreach (var reward in rewards)
                 {
-                    switch (data.id)
+                    var data = new TDataItemList();
+                    if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
                     {
-                        case 1:             // 골드
-                            UserInfoManager.Get().GetUserInfo().gold += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, startPos, Mathf.Clamp(reward.Value, 5, 20));
-                            break;
-                        case 2:             // 다이아
-                            UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, startPos, Mathf.Clamp(reward.Value, 5, 20));
-                            break;
-                        default: // 주사위
+                        switch (data.id)
                         {
-                            MsgReward rw = new MsgReward();
-                            rw.ItemId = reward.ItemId;
-                            rw.Value = reward.Value;
-                            list.Add(rw);
+                            case 1: // 골드
+                                UserInfoManager.Get().GetUserInfo().gold += reward.Value;
+                                UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, startPos,
+                                    Mathf.Clamp(reward.Value, 5, 20));
+                                break;
+                            case 2: // 다이아
+                                UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
+                                UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, startPos,
+                                    Mathf.Clamp(reward.Value, 5, 20));
+                                break;
+                            default: // 주사위
+                            {
+                                MsgReward rw = new MsgReward();
+                                rw.ItemId = reward.ItemId;
+                                rw.Value = reward.Value;
+                                list.Add(rw);
+                            }
+                                break;
                         }
-                            break;
                     }
                 }
-            }
-            
-            if (list.Count > 0)
-            {
-                gerResult.Initialize(list.ToArray(), false, false);
+
+                if (list.Count > 0)
+                {
+                    gerResult.Initialize(list.ToArray(), false, false);
+                }
             }
         }
     }

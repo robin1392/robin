@@ -164,6 +164,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgQuestRewardAck> _questRewardCallback;
     private Action<MsgQuestDayRewardAck> _questDayRewardCallback;
     private Action<MsgSeasonResetAck> _seasonResetCallback;
+    private Action<MsgSeasonPassRewardStepAck> _seasonPassRewardStep;
     #endregion
 
     #region unity base
@@ -240,7 +241,6 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.QuestInfoAck = OnQuestInfoAck;
         _httpReceiver.QuestRewardAck = OnQuestRewardAck;
         _httpReceiver.QuestDayRewardAck = OnQuestDayRewardAck;
-
 
 
         //
@@ -861,18 +861,23 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV SEASON PASS INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
-    public void SeasonPassRewardStepReq(string userId, int openRewardId)
+    public void SeasonPassRewardStepReq(string userId, int openRewardId, Action<MsgSeasonPassRewardStepAck> callback = null)
     {
         MsgSeasonPassRewardStepReq msg = new MsgSeasonPassRewardStepReq();
         msg.UserId = userId;
         msg.OpenRewardId = openRewardId;
         _httpSender.SeasonPassRewardStepReq(msg);
+        _seasonPassRewardStep = callback;
         UnityUtil.Print("SEND SEASON PASS STEP => userId", string.Format("userId:{0}", userId), "green");
     }
 
 
     void OnSeasonPassRewardStepAck(MsgSeasonPassRewardStepAck msg)
     {
+        if (_seasonPassRewardStep != null)
+        {
+            _seasonPassRewardStep(msg);
+        }
         UnityUtil.Print("RECV SEASON PASS STEP => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 

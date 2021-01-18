@@ -64,6 +64,7 @@ public class UserInfo
     //     private set => _slotDeck = value;
     // }
     private int[][] _arrDeck = new int[3][];
+    public int seasonPassRewardStep;
 
     public int[][] arrDeck
     {
@@ -328,6 +329,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.buySeasonPass = seasonPassInfo.BuySeasonPass;
         _userInfo.seasonTrophy = seasonPassInfo.SeasonTrophy;
         _userInfo.rankPoint = info.RankingPoint;
+        
         if (seasonPassInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonPassInfo.SeasonPassRewardIds);
         else _userInfo.seasonPassRewardIds = new List<int>();
         if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
@@ -335,6 +337,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
         _userInfo.needSeasonReset = seasonPassInfo.NeedSeasonReset;
         _userInfo.isFreeSeason = seasonPassInfo.IsFreeSeason;
+        _userInfo.seasonPassRewardStep = seasonPassInfo.SeasonPassRewardStep;
 
         // if (seasonPassInfo.NeedSeasonReset)
         // {

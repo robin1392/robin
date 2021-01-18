@@ -846,7 +846,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5348889551909580121}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1242156094742234048}
+        m_TargetAssemblyTypeName: UI_RewardSlot, Assembly-CSharp
+        m_MethodName: Click_BuyReward
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &4798915553328239205
 Animator:
   serializedVersion: 3
@@ -998,7 +1010,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1202d11cb3a0f40fbb1953d53149c0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  btn_Unlock: {fileID: 8474059303870525881}
   text_Trophy: {fileID: 4950823299994822359}
   arrButton:
   - {fileID: 952536681447300159}
@@ -1015,6 +1026,8 @@ MonoBehaviour:
   arrObj_Check:
   - {fileID: 8262309888921703179}
   - {fileID: 2626739051443883786}
+  btn_Unlock: {fileID: 8474059303870525881}
+  text_UnlockCost: {fileID: 7860257004018497232}
 --- !u!1 &8211226808824693184
 GameObject:
   m_ObjectHideFlags: 0

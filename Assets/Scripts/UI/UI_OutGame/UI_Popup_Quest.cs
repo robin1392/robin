@@ -183,11 +183,11 @@ public class UI_Popup_Quest : UI_Popup
     public void InfoCallback()
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-
-        var anchPos = rts_Content.anchoredPosition;
-        anchPos.y = 0;
-        rts_Content.anchoredPosition = anchPos;
-        
+        //
+        // var anchPos = rts_Content.anchoredPosition;
+        // anchPos.y = 0;
+        // rts_Content.anchoredPosition = anchPos;
+        //
         var dataDailyReward = new TDataQuestDayReward();
         if (TableManager.Get().QuestDayReward.GetData(dailyRewardID, out dataDailyReward))
         {

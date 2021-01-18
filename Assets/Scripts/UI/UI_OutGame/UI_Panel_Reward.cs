@@ -33,6 +33,9 @@ public class UI_Panel_Reward : MonoBehaviour
     public Text text_StarLevel;
     public Text text_SeasonRemainTime;
 
+    [Header("Trophy Info")]
+    public Text text_MyTrophy;
+
     private bool isSeasonPassInitialized;
     private float refreshTime;
 
@@ -93,6 +96,8 @@ public class UI_Panel_Reward : MonoBehaviour
         
         int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count / 2;
         int seasonPassTrophy = UserInfoManager.Get().GetUserInfo().seasonTrophy;
+        UI_RewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[0];
+        UI_RewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[1];
         var firstData = new TDataSeasonpassReward();
         TableManager.Get().SeasonpassReward.GetData(1/*UserInfoManager.Get().GetUserInfo().seasonPassId*/, out firstData);
         int height = firstData.trophyPoint;
@@ -100,7 +105,7 @@ public class UI_Panel_Reward : MonoBehaviour
         {
             var obj = Instantiate(pref_RewardSlot, Vector3.zero, Quaternion.identity, ts_SeasonPassContent);
             var slot = obj.GetComponent<UI_RewardSlot>();
-            slot.Initialize(i, seasonPassTrophy);
+            slot.Initialize(i);//, seasonPassTrophy, vip, normal);
         }
 
         isSeasonPassInitialized = true;
@@ -110,9 +115,10 @@ public class UI_Panel_Reward : MonoBehaviour
     {
         int totalSlotCount = TableManager.Get().ClassReward.Keys.Count / 2;
         int myTrophy = UserInfoManager.Get().GetUserInfo().trophy;
+        text_MyTrophy.text = myTrophy.ToString();
         int normal = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
         int vip = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
-        for (int i = 0; i < totalSlotCount + 1; i++)
+        for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
             var slot = obj.GetComponent<UI_TrophyRewardSlot>();

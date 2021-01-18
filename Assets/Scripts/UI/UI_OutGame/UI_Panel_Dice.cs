@@ -236,13 +236,22 @@ namespace ED
             ui_Popup_Dice_Info.gameObject.SetActive(true);
             //ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
 
-            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-            if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
+            // 수호자
+            if (diceId > 5000)
             {
-                return;
+                
+            }
+            else        // 주사위
+            {
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+
+                ui_Popup_Dice_Info.Initialize(dataDiceInfo);
             }
 
-            ui_Popup_Dice_Info.Initialize(dataDiceInfo);
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
