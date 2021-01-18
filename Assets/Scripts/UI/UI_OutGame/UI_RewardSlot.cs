@@ -23,8 +23,7 @@ public class UI_RewardSlot : MonoBehaviour
     
     private bool isGetPremium;
     private int row;
-    private TDataSeasonpassReward dataPremium;
-    private TDataSeasonpassReward dataNormal;
+    private TDataSeasonpassReward data;
 
     public void Initialize(int row, int myTrophy)
     {
@@ -32,25 +31,25 @@ public class UI_RewardSlot : MonoBehaviour
         float minTrophy = 0;
         float maxTrophy = 0;
         
-        dataPremium = new TDataSeasonpassReward();
-        dataNormal = new TDataSeasonpassReward();
-        TableManager.Get().SeasonpassReward.GetData(row, out dataNormal);
-        TableManager.Get().SeasonpassReward.GetData(row + 1000, out dataPremium);
+        data = new TDataSeasonpassReward();
+        //dataNormal = new TDataSeasonpassReward();
+        TableManager.Get().SeasonpassReward.GetData(row, out data);
+        //TableManager.Get().SeasonpassReward.GetData(row + 1000, out dataPremium);
 
         text_Trophy.text = (row - 1).ToString();
         TDataItemList itemData;
-        if (TableManager.Get().ItemList.GetData(dataPremium.rewardItem, out itemData))
+        if (TableManager.Get().ItemList.GetData(data.rewardItem02, out itemData))
         {
             arrImage_Icon[0].sprite = FileHelper.GetIcon(itemData.itemIcon);
             arrImage_Icon[0].SetNativeSize();
-            arrText_Value[0].text = $"x{dataPremium.rewardItemValue}";
+            arrText_Value[0].text = $"x{data.rewardItemValue02}";
         }
 
-        if (TableManager.Get().ItemList.GetData(dataNormal.rewardItem, out itemData))
+        if (TableManager.Get().ItemList.GetData(data.rewardItem01, out itemData))
         {
             arrImage_Icon[1].sprite = FileHelper.GetIcon(itemData.itemIcon);
             arrImage_Icon[1].SetNativeSize();
-            arrText_Value[1].text = $"x{dataNormal.rewardItemValue}";
+            arrText_Value[1].text = $"x{data.rewardItemValue01}";
         }
         
         // set buttons
@@ -59,7 +58,7 @@ public class UI_RewardSlot : MonoBehaviour
 
     public void SetButton()
     {
-        if (UserInfoManager.Get().GetUserInfo().seasonTrophy < dataPremium.trophyPoint)    // 트로피 부족
+        if (UserInfoManager.Get().GetUserInfo().seasonTrophy < data.trophyPoint)    // 트로피 부족
         {
             arrObj_Lock[0].SetActive(true);
             arrObj_Lock[1].SetActive(true);
