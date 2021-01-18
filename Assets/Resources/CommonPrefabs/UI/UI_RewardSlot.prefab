@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 3024001774041273567}
   - component: {fileID: 1242156094742234048}
   m_Layer: 5
-  m_Name: UI_RewardListSlot
+  m_Name: UI_RewardSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1075,10 +1075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1202d11cb3a0f40fbb1953d53149c0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj_Trophy: {fileID: 0}
-  btn_Unlock: {fileID: 0}
-  image_Guage: {fileID: 8383389940439634464}
-  image_Guage_BG: {fileID: 3383528550254777790}
+  btn_Unlock: {fileID: 8474059303870525881}
   text_Trophy: {fileID: 4950823299994822359}
   arrButton:
   - {fileID: 952536681447300159}
@@ -1404,29 +1401,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8632931831092695192, guid: 5fa40ba4bbd695c438dacd762c75568f,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fa40ba4bbd695c438dacd762c75568f, type: 3}
---- !u!114 &6621845342053171262 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5912088834546227330, guid: 5fa40ba4bbd695c438dacd762c75568f,
-    type: 3}
-  m_PrefabInstance: {fileID: 715632783145949372}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &35007255786019404 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 689665165450674928, guid: 5fa40ba4bbd695c438dacd762c75568f,
-    type: 3}
-  m_PrefabInstance: {fileID: 715632783145949372}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2626739051443883786 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3286076839113283510, guid: 5fa40ba4bbd695c438dacd762c75568f,
+    type: 3}
+  m_PrefabInstance: {fileID: 715632783145949372}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &35007255786019404 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 689665165450674928, guid: 5fa40ba4bbd695c438dacd762c75568f,
     type: 3}
   m_PrefabInstance: {fileID: 715632783145949372}
   m_PrefabAsset: {fileID: 0}
@@ -1452,6 +1442,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6621845342053171262 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5912088834546227330, guid: 5fa40ba4bbd695c438dacd762c75568f,
+    type: 3}
+  m_PrefabInstance: {fileID: 715632783145949372}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &679734505770016421 stripped
@@ -1542,11 +1544,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8632931831092695192, guid: 5fa40ba4bbd695c438dacd762c75568f,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fa40ba4bbd695c438dacd762c75568f, type: 3}
 --- !u!1 &8262309888921703179 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3286076839113283510, guid: 5fa40ba4bbd695c438dacd762c75568f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6860075593897886909}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6242495650940470861 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 689665165450674928, guid: 5fa40ba4bbd695c438dacd762c75568f,
     type: 3}
   m_PrefabInstance: {fileID: 6860075593897886909}
   m_PrefabAsset: {fileID: 0}
@@ -1586,12 +1599,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &6242495650940470861 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 689665165450674928, guid: 5fa40ba4bbd695c438dacd762c75568f,
-    type: 3}
-  m_PrefabInstance: {fileID: 6860075593897886909}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6895983822189019812 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 36194651358004761, guid: 5fa40ba4bbd695c438dacd762c75568f,

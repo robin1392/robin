@@ -71,6 +71,8 @@ public class UI_Panel_Reward : MonoBehaviour
 
     public void InitializeSeasonPass()
     {
+        UI_RewardSlot.isUnlockEnable = false;
+        
         text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
         
         int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count / 2;
