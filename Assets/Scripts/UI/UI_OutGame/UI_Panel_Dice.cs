@@ -179,6 +179,14 @@ namespace ED
             // rts_Content.sizeDelta = new Vector2(0, tsGettedDiceParent.sizeDelta.y + tsUngettedDiceParent.sizeDelta.y + 1460 + 300 +
             //                                        (ungettedSlotCount > 0 ? 300 : 0));
 
+            bool isUngettedDiceEmpty = tsUngettedDiceParent.childCount == 0;
+            text_UngettedDice.gameObject.SetActive(!isUngettedDiceEmpty);
+            tsUngettedDiceParent.gameObject.SetActive(!isUngettedDiceEmpty);
+            
+            bool isUngettedGuardianEmpty = tsUngettedGuardianParent.childCount == 0;
+            text_UngettedGuardian.gameObject.SetActive(!isUngettedGuardianEmpty);
+            tsUngettedGuardianParent.gameObject.SetActive(!isUngettedGuardianEmpty);
+
             text_BonusHP.text = bonusHP.ToString();
         }
 
@@ -289,14 +297,7 @@ namespace ED
                 objSelectBlind.SetActive(false);
                 _isSelectMode = false;
                 
-                tsGettedDiceParent.gameObject.SetActive(true);
-                tsGettedGuardianParent.gameObject.SetActive(true);
-                tsUngettedDiceParent.gameObject.SetActive(true);
-                tsUngettedGuardianParent.gameObject.SetActive(true);
-                text_GettedDice.gameObject.SetActive(true);
-                text_UngettedDice.gameObject.SetActive(true);
-                text_GettedGuardian.gameObject.SetActive(true);
-                text_UngettedGuardian.gameObject.SetActive(true);
+                Click_CancelSelectMode();
                 
                 CallBackDeckUpdate();
             }
@@ -320,14 +321,8 @@ namespace ED
 
         public void HideSelectPanel()
         {
-            tsGettedDiceParent.gameObject.SetActive(true);
-            tsGettedGuardianParent.gameObject.SetActive(true);
-            tsUngettedDiceParent.gameObject.SetActive(true);
-            tsUngettedGuardianParent.gameObject.SetActive(true);
-            text_GettedDice.gameObject.SetActive(true);
-            text_UngettedDice.gameObject.SetActive(true);
-            text_GettedGuardian.gameObject.SetActive(true);
-            text_UngettedGuardian.gameObject.SetActive(true);
+            Click_CancelSelectMode();
+            
             obj_Ciritical.SetActive(true);
             objSelectBlind.SetActive(false);
         }
@@ -387,12 +382,16 @@ namespace ED
             
             tsGettedDiceParent.gameObject.SetActive(true);
             tsGettedGuardianParent.gameObject.SetActive(true);
-            tsUngettedDiceParent.gameObject.SetActive(true);
-            tsUngettedGuardianParent.gameObject.SetActive(true);
             text_GettedDice.gameObject.SetActive(true);
-            text_UngettedDice.gameObject.SetActive(true);
             text_GettedGuardian.gameObject.SetActive(true);
-            text_UngettedGuardian.gameObject.SetActive(true);
+            
+            bool isUngettedDiceEmpty = tsUngettedDiceParent.childCount == 0;
+            text_UngettedDice.gameObject.SetActive(!isUngettedDiceEmpty);
+            tsUngettedDiceParent.gameObject.SetActive(!isUngettedDiceEmpty);
+            
+            bool isUngettedGuardianEmpty = tsUngettedGuardianParent.childCount == 0;
+            text_UngettedGuardian.gameObject.SetActive(!isUngettedGuardianEmpty);
+            tsUngettedGuardianParent.gameObject.SetActive(!isUngettedGuardianEmpty);
         }
     }
 }

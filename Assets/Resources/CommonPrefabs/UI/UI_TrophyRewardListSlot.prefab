@@ -263,10 +263,10 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1224, y: 400}
+  m_SizeDelta: {x: 1242, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2541469210233281027
 MonoBehaviour:
@@ -300,6 +300,8 @@ MonoBehaviour:
   arrObj_Check:
   - {fileID: 1630522621562395251}
   - {fileID: 4646964944085091954}
+  minTrophy: 0
+  maxTrophy: 0
 --- !u!1 &5523609285020683704
 GameObject:
   m_ObjectHideFlags: 0

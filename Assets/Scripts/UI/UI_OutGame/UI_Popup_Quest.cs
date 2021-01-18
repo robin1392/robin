@@ -50,7 +50,7 @@ public class UI_Popup_Quest : UI_Popup
 
         if (list.Count == 0)
         {
-            //NetworkManager.Get().QuestInfoReq(UserInfoManager.Get().GetUserInfo().userID, InfoCallback);
+            NetworkManager.Get().QuestInfoReq(UserInfoManager.Get().GetUserInfo().userID, InfoCallback);
         }
         else
         {
@@ -67,6 +67,12 @@ public class UI_Popup_Quest : UI_Popup
         {
             text_RemainTime.text =
                 string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
+        }
+        else
+        {
+            list.Clear();
+            Close();
+            UI_Main.Get().ShowMessageBox("퀘스트 리셋", "퀘스트가 리셋되었습니다.");
         }
     }
 
@@ -270,6 +276,8 @@ public class UI_Popup_Quest : UI_Popup
             {
                 UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
+            
+            QuestUpdate(msg.QuestData);
 
             InfoCallback();
         }

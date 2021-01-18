@@ -5,6 +5,8 @@ using ED;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using Debug = ED.Debug;
 
 public class UI_Panel_Reward : MonoBehaviour
 {
@@ -13,6 +15,9 @@ public class UI_Panel_Reward : MonoBehaviour
     public GameObject pref_TrophyRewardSlot;
 
     [Space]
+    public Image image_MenuSelected;
+    public Button btn_SeasonPass;
+    public Button btn_Trophy;
     public GameObject obj_SeasonPass;
     public GameObject obj_Trophy;
     
@@ -23,7 +28,9 @@ public class UI_Panel_Reward : MonoBehaviour
     [Header("Season Info")]
     public Text text_SeasonID;
     public Text text_SeasonName;
-    public Text text_SeasonRemainDate;
+    public Slider slider_Star;
+    public Text text_StarCount;
+    public Text text_StarLevel;
     public Text text_SeasonRemainTime;
 
     private bool isSeasonPassInitialized;
@@ -49,12 +56,12 @@ public class UI_Panel_Reward : MonoBehaviour
 
             if (span.TotalSeconds >= 0)
             {
-                text_SeasonRemainDate.text = $"{span.Days}Days";
-                text_SeasonRemainTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
+                if (span.Days > 0) text_SeasonRemainTime.text = $"{span.Days}일{span.Hours}시간{span.Minutes}분";
+                else if (span.Hours > 0) text_SeasonRemainTime.text = string.Format("{0:D2}시간{1:D2}분", span.Hours, span.Minutes);
+                else text_SeasonRemainTime.text = string.Format("{0:D2}분", span.Minutes);
             }
             else
             {
-                text_SeasonRemainDate.text = string.Empty;
                 text_SeasonRemainTime.text = string.Empty;
 
                 if (isSeasonPassInitialized == true && UI_Popup.stack.Count == 0)
@@ -68,14 +75,28 @@ public class UI_Panel_Reward : MonoBehaviour
 
     public void InitializeSeasonPass()
     {
+        UI_RewardSlot.isUnlockEnable = false;
+
+        if (ts_SeasonPassContent.childCount > 0)
+        {
+            for (int i = ts_SeasonPassContent.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(ts_SeasonPassContent.GetChild(i).gameObject);
+            }
+        }
+        
+        int myStar = UserInfoManager.Get().GetUserInfo().seasonTrophy;
         text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
+        text_StarCount.text = $"{myStar}/10";
+        slider_Star.value = (myStar % 10) / 10f;
+        text_StarLevel.text = $"{(myStar / 10) + 1}";
         
         int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count / 2;
         int seasonPassTrophy = UserInfoManager.Get().GetUserInfo().seasonTrophy;
         var firstData = new TDataSeasonpassReward();
         TableManager.Get().SeasonpassReward.GetData(1/*UserInfoManager.Get().GetUserInfo().seasonPassId*/, out firstData);
         int height = firstData.trophyPoint;
-        for (int i = 0; i < totalSlotCount + 1; i++)
+        for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_RewardSlot, Vector3.zero, Quaternion.identity, ts_SeasonPassContent);
             var slot = obj.GetComponent<UI_RewardSlot>();
@@ -96,6 +117,21 @@ public class UI_Panel_Reward : MonoBehaviour
             var obj = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
             var slot = obj.GetComponent<UI_TrophyRewardSlot>();
             slot.Initialize(i, myTrophy, vip, normal);
+        }
+    }
+
+    public void Click_TopButton(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                image_MenuSelected.rectTransform.DOAnchorPos(
+                    ((RectTransform) btn_SeasonPass.transform).anchoredPosition, 0.2f).SetEase(Ease.OutBack);
+                break;
+            case 1:
+                image_MenuSelected.rectTransform.DOAnchorPos(
+                    ((RectTransform) btn_Trophy.transform).anchoredPosition, 0.2f).SetEase(Ease.OutBack);
+                break;
         }
     }
 }

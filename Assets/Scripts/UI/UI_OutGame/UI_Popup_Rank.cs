@@ -156,18 +156,6 @@ public class UI_Popup_Rank : UI_Popup
         isRankCalling = false;
     }
 
-    IEnumerator TimerCoroutine(int seconds)
-    {
-        while (true)
-        {
-            text_SeasonRemainTime.text = $"{seconds / 60 / 60 / 24}:{seconds / 60 / 60 % 24}:{seconds / 60 % 60}:{seconds % 60}";
-
-            yield return new WaitForSeconds(1f);
-            
-            seconds--;
-        }
-    }
-
     IEnumerator WaitCoroutine()
     {
         yield return new WaitForSeconds(10f);

@@ -86,11 +86,11 @@ namespace ED
                 scrollType = SCROLL.VERTICAL;
                 scrollView.OnBeginDrag(eventData);
 
-                var buttons = GetComponentsInChildren<UnityEngine.UI.Button>();
-                foreach (var btn in buttons)
-                {
-                    btn.enabled = false;
-                }
+                // var buttons = GetComponentsInChildren<UnityEngine.UI.Button>();
+                // foreach (var btn in buttons)
+                // {
+                //     btn.enabled = false;
+                // }
             }
         }
 
@@ -116,11 +116,11 @@ namespace ED
                     break;
                 case SCROLL.VERTICAL:
                     scrollView.OnEndDrag(eventData);
-                    var buttons = GetComponentsInChildren<UnityEngine.UI.Button>();
-                    foreach (var btn in buttons)
-                    {
-                        btn.enabled = true;
-                    }
+                    // var buttons = GetComponentsInChildren<UnityEngine.UI.Button>();
+                    // foreach (var btn in buttons)
+                    // {
+                    //     btn.enabled = true;
+                    // }
                     break;
             }
 
