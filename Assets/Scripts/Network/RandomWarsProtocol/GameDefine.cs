@@ -37,6 +37,7 @@ namespace RandomWarsProtocol
         BOX = 6,            // 박스
         DICE = 7,            //  주사위
         GUADIAN = 8,     // 수호자
+        RANDOM_DICE = 9,        // 랜덤 주사위
     }
 
 
@@ -129,5 +130,14 @@ namespace RandomWarsProtocol
         OPEN,          // 열림(진행중)
         COMPLETE,    // 완료(보상 획득전)
         CLOSE,         // 닫힘(보상 획득 완료) 
+    }
+
+
+    public enum REWARD_TARGET_TYPE : int
+    {
+        NONE = -1,
+
+        ALL = 1,                        // 모든 유저
+        SEASON_PASS_BUY = 2     // 시즌  패스 구입 유저
     }
 }

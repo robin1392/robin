@@ -233,7 +233,7 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpReceiver.SeasonResetAck = OnSeasonResetAck;
         _httpReceiver.GetRankAck = OnGetRankAck;
         _httpReceiver.SeasonPassInfoAck = OnSeasonPassInfoAck;
-        _httpReceiver.SeasonPassOpenAck = OnSeasonPassOpenAck;
+        _httpReceiver.SeasonPassRewardStepAck = OnSeasonPassRewardStepAck;
         _httpReceiver.GetSeasonPassRewardAck = OnGetSeasonPassRewardAck;
         _httpReceiver.ClassRewardInfoAck = OnClassRewardInfoAck;
         _httpReceiver.GetClassRewardAck = OnGetClassRewardAck;
@@ -861,19 +861,19 @@ public class NetworkManager : Singleton<NetworkManager>
         UnityUtil.Print("RECV SEASON PASS INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
-    public void SeasonPassOpenReq(string userId, int rewardId)
+    public void SeasonPassRewardStepReq(string userId, int openRewardId)
     {
-        MsgSeasonPassOpenReq msg = new MsgSeasonPassOpenReq();
+        MsgSeasonPassRewardStepReq msg = new MsgSeasonPassRewardStepReq();
         msg.UserId = userId;
-        msg.RewardId = rewardId;
-        _httpSender.SeasonPassOpenReq(msg);
-        UnityUtil.Print("SEND SEASON PASS OPEN => userId", string.Format("userId:{0}", userId), "green");
+        msg.OpenRewardId = openRewardId;
+        _httpSender.SeasonPassRewardStepReq(msg);
+        UnityUtil.Print("SEND SEASON PASS STEP => userId", string.Format("userId:{0}", userId), "green");
     }
 
 
-    void OnSeasonPassOpenAck(MsgSeasonPassOpenAck msg)
+    void OnSeasonPassRewardStepAck(MsgSeasonPassRewardStepAck msg)
     {
-        UnityUtil.Print("RECV SEASON PASS OPEN => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+        UnityUtil.Print("RECV SEASON PASS STEP => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
 
@@ -882,11 +882,12 @@ public class NetworkManager : Singleton<NetworkManager>
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="rewardId"></param>
-    public void GetSeasonPassRewardReq(string userId, int rewardId, Action<MsgGetSeasonPassRewardAck> callback = null)
+    public void GetSeasonPassRewardReq(string userId, int rewardTargetType, int rewardId, Action<MsgGetSeasonPassRewardAck> callback = null)
     {
         MsgGetSeasonPassRewardReq msg = new MsgGetSeasonPassRewardReq();
         msg.UserId = userId;
         msg.RewardId = rewardId;
+        msg.RewardTargetType = rewardTargetType;
         _httpSender.GetSeasonPassRewardReq(msg);
         UnityUtil.Print("SEND GET SEASON PASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
         _getSeasonPassRewardCallback = callback;

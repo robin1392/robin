@@ -70,10 +70,10 @@ namespace RandomWarsProtocol
         public delegate void SeasonPassInfoAckDelegate(MsgSeasonPassInfoAck msg);
         public SeasonPassInfoAckDelegate SeasonPassInfoAck;
 
-        public delegate Task<string> SeasonPassOpenReqDelegate(MsgSeasonPassOpenReq msg);
-        public SeasonPassOpenReqDelegate SeasonPassOpenReq;
-        public delegate void SeasonPassOpenAckDelegate(MsgSeasonPassOpenAck msg);
-        public SeasonPassOpenAckDelegate SeasonPassOpenAck;
+        public delegate Task<string> SeasonPassRewardStepReqDelegate(MsgSeasonPassRewardStepReq msg);
+        public SeasonPassRewardStepReqDelegate SeasonPassRewardStepReq;
+        public delegate void SeasonPassRewardStepAckDelegate(MsgSeasonPassRewardStepAck msg);
+        public SeasonPassRewardStepAckDelegate SeasonPassRewardStepAck;
 
         public delegate Task<string> GetSeasonPassRewardReqDelegate(MsgGetSeasonPassRewardReq msg);
         public GetSeasonPassRewardReqDelegate GetSeasonPassRewardReq;
@@ -219,13 +219,13 @@ namespace RandomWarsProtocol
                         ackJson = await SeasonPassInfoReq(msg);
                     }
                     break;
-                case GameProtocol.SEASON_PASS_OPEN_REQ:
+                case GameProtocol.SEASON_PASS_REWARD_STEP_REQ:
                     {
-                        if (SeasonPassOpenReq == null)
+                        if (SeasonPassRewardStepReq == null)
                             return ackJson;
 
-                        MsgSeasonPassOpenReq msg = JsonConvert.DeserializeObject<MsgSeasonPassOpenReq>(json);
-                        ackJson = await SeasonPassOpenReq(msg);
+                        MsgSeasonPassRewardStepReq msg = JsonConvert.DeserializeObject<MsgSeasonPassRewardStepReq>(json);
+                        ackJson = await SeasonPassRewardStepReq(msg);
                     }
                     break;
                 case GameProtocol.GET_SEASON_PASS_REWARD_REQ:
@@ -400,13 +400,13 @@ namespace RandomWarsProtocol
                         SeasonPassInfoAck(msg);
                     }
                     break;
-                case GameProtocol.SEASON_PASS_OPEN_ACK:
+                case GameProtocol.SEASON_PASS_REWARD_STEP_ACK:
                     {
-                        if (SeasonPassOpenAck == null)
+                        if (SeasonPassRewardStepAck == null)
                             return false;
 
-                        MsgSeasonPassOpenAck msg = JsonConvert.DeserializeObject<MsgSeasonPassOpenAck>(json);
-                        SeasonPassOpenAck(msg);
+                        MsgSeasonPassRewardStepAck msg = JsonConvert.DeserializeObject<MsgSeasonPassRewardStepAck>(json);
+                        SeasonPassRewardStepAck(msg);
                     }
                     break;
                 case GameProtocol.GET_SEASON_PASS_REWARD_ACK:

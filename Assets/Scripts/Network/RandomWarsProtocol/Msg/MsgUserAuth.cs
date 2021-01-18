@@ -208,24 +208,22 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
-    public class MsgSeasonPassOpenReq
+    public class MsgSeasonPassRewardStepReq
     {
         public string UserId;
-        // 보상 테이블 아이디
-        public int RewardId;
+        // 오픈 테이블 아이디
+        public int OpenRewardId;
     }
 
 
     [Serializable]
-    public class MsgSeasonPassOpenAck
+    public class MsgSeasonPassRewardStepAck
     {
         public GameErrorCode ErrorCode;
-        // 보상 테이블 아이디
-        public int RewardId;
+        // 오픈 테이블 아이디
+        public int OpenRewardId;
         // 사용 아이템 정보
         public MsgReward UseItemInfo;
-        // 획득 아이템 정보
-        public MsgReward RewardItemInfo;
     }
 
 
@@ -266,6 +264,8 @@ namespace RandomWarsProtocol.Msg
         public string UserId;
         // 요청 보상 아이디
         public int RewardId;
+        // 보상 대상 타입(REWARD_TARGET_TYPE 참조)
+        public int RewardTargetType;
     }
 
 
