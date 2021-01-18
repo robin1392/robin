@@ -1930,6 +1930,8 @@ namespace RandomWarsProtocol
         public int SeasonResetRemainTime;
         // 시즌 패스 보상 획득 아이디 배열
         public int[] SeasonPassRewardIds;
+        // 시즌 패스 보상 단계
+        public int SeasonPassRewardStep;
         // 시즌 초기화 필요여부
         public bool NeedSeasonReset;
         // 프리 시즌 여부
