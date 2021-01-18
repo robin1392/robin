@@ -233,13 +233,18 @@ namespace ED
         public void Click_Dice_Info(int diceId)
         {
             DeactivateSelectedObjectChild();
-            ui_Popup_Dice_Info.gameObject.SetActive(true);
             //ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
 
             // 수호자
             if (diceId > 5000)
             {
+                RandomWarsResource.Data.TDataGuardianInfo dataGuardianInfo;
+                if (TableManager.Get().GuardianInfo.GetData(diceId, out dataGuardianInfo) == false)
+                {
+                    return;
+                }
                 
+                //ui_Popup_Dice_Info.Initialize(dataGuardianInfo);
             }
             else        // 주사위
             {

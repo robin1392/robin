@@ -157,6 +157,8 @@ public class UI_RewardSlot : MonoBehaviour
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
+        UI_Popup.AllClose();
+        
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
             UserInfoManager.Get().GetUserInfo().seasonPassRewardStep = msg.OpenRewardId;
@@ -173,6 +175,10 @@ public class UI_RewardSlot : MonoBehaviour
             UI_Main.Get().RefreshUserInfoUI();
 
             transform.parent.BroadcastMessage("SetButton");
+        }
+        else
+        {
+            UI_ErrorMessage.Get().ShowMessage("재화가 부족합니다.");
         }
     }
 }

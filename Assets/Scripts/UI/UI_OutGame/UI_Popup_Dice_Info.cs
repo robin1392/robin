@@ -83,6 +83,7 @@ namespace ED
         //public void Initialize(Data_Dice pData)
         public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData)
         {
+            gameObject.SetActive(true);
             data = pData;
             diceLevel = 0;
             int diceCount = 0;

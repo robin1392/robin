@@ -30,135 +30,161 @@ public class UI_InGamePopup_Result : MonoBehaviour
             TutorialManager.stepCount++;
         }
         
-// #if UNITY_EDITOR
-//         isWin = true;
-//         
-//         winlose_My.Initialize(isWin, true, new int[] { 1000, 1001, 1002, 1003, 1004 }, "ED", 1234);
-//         winlose_Other.Initialize(!isWin, false, new int[] { 2000, 2001, 2002, 2003, 2004 }, "COM", 4321);
-//         btn_ShowValues.interactable = false;
-//         Invoke("EnableShowValuesButton", 2f);
-// #else
         isWin = winLose;
 
         winlose_My.Initialize(isWin, (perfectReward != null && perfectReward.Length > 0), winningStreak, NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().playerInfo.Name, NetworkManager.Get().GetNetInfo().playerInfo.Trophy);
         winlose_Other.Initialize(!isWin, InGameManager.Get().playerController.targetPlayer.currentHealth > 20000, winningStreak, NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
         btn_ShowValues.interactable = false;
 
-        int normalGold = 0;
-        int normalTrophy = 0;
-        int normalSeasonTrophy = 0;
-        int normalRankTrophy = 0;
-        int normalKey = 0;
-        if (normalReward != null)
+        if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
         {
-            foreach (var reward in normalReward)
+            int normalGold = 0;
+            int normalTrophy = 0;
+            int normalSeasonTrophy = 0;
+            int normalRankTrophy = 0;
+            int normalKey = 0;
+            if (normalReward != null)
             {
-                switch ((EItemListKey)reward.ItemId)
+                foreach (var reward in normalReward)
                 {
-                    case EItemListKey.gold:
-                        normalGold = reward.Value;
-                        break;
-                    case EItemListKey.thropy:
-                        normalTrophy = reward.Value;
-                        break;
-                    case EItemListKey.seasonthropy:
-                        normalSeasonTrophy = reward.Value;
-                        break;
-                    case EItemListKey.rankthropy:
-                        normalRankTrophy = reward.Value;
-                        break;
-                    case EItemListKey.key:
-                        normalKey = reward.Value;
-                        break;
+                    switch ((EItemListKey) reward.ItemId)
+                    {
+                        case EItemListKey.gold:
+                            normalGold = reward.Value;
+                            break;
+                        case EItemListKey.thropy:
+                            normalTrophy = reward.Value;
+                            break;
+                        case EItemListKey.seasonthropy:
+                            normalSeasonTrophy = reward.Value;
+                            break;
+                        case EItemListKey.rankthropy:
+                            normalRankTrophy = reward.Value;
+                            break;
+                        case EItemListKey.key:
+                            normalKey = reward.Value;
+                            break;
+                    }
+                }
+
+                arrValue[0].Initialize(normalTrophy, normalSeasonTrophy, normalRankTrophy, normalGold, normalKey);
+            }
+
+            int streakGold = 0;
+            int streakTrophy = 0;
+            int streakSeasonTrophy = 0;
+            int streakRankTrophy = 0;
+            int streakKey = 0;
+            if (streakReward != null)
+            {
+                foreach (var reward in streakReward)
+                {
+                    switch ((EItemListKey) reward.ItemId)
+                    {
+                        case EItemListKey.gold:
+                            streakGold = reward.Value;
+                            break;
+                        case EItemListKey.thropy:
+                            streakTrophy = reward.Value;
+                            break;
+                        case EItemListKey.seasonthropy:
+                            streakSeasonTrophy = reward.Value;
+                            break;
+                        case EItemListKey.rankthropy:
+                            streakRankTrophy = reward.Value;
+                            break;
+                        case EItemListKey.key:
+                            streakKey = reward.Value;
+                            break;
+                    }
+                }
+
+                arrValue[1].Initialize(streakTrophy, streakSeasonTrophy, streakRankTrophy, streakGold, streakKey);
+                text_WinningStreak.text = winningStreak.ToString();
+                text_WinningStreak.color = winningStreak > 0 ? text_WinningStreak.color : Color.gray;
+            }
+
+            int perfectGold = 0;
+            int perfectTrophy = 0;
+            int perfectSeasonTrophy = 0;
+            int perfectRankTrophy = 0;
+            int perfectKey = 0;
+            if (perfectReward != null)
+            {
+                foreach (var reward in perfectReward)
+                {
+                    switch ((EItemListKey) reward.ItemId)
+                    {
+                        case EItemListKey.gold:
+                            perfectGold = reward.Value;
+                            break;
+                        case EItemListKey.thropy:
+                            perfectTrophy = reward.Value;
+                            break;
+                        case EItemListKey.seasonthropy:
+                            perfectSeasonTrophy = reward.Value;
+                            break;
+                        case EItemListKey.rankthropy:
+                            perfectRankTrophy = reward.Value;
+                            break;
+                        case EItemListKey.key:
+                            perfectKey = reward.Value;
+                            break;
+                    }
+                }
+
+                arrValue[2].Initialize(perfectTrophy, perfectSeasonTrophy, perfectRankTrophy, perfectGold, perfectKey);
+            }
+
+            int totalTrophy = normalTrophy + streakTrophy + perfectTrophy;
+            int totalGold = normalGold + streakGold + perfectGold;
+            int totalKey = normalKey + streakKey + perfectKey;
+            int totalSeasonTrophy = normalSeasonTrophy + streakSeasonTrophy + perfectSeasonTrophy;
+            int totalRankTrophy = normalRankTrophy + streakRankTrophy + perfectRankTrophy;
+            arrValue[3].Initialize(totalTrophy, totalSeasonTrophy, totalRankTrophy, totalGold, totalKey);
+
+            var userInfo = UserInfoManager.Get().GetUserInfo();
+            userInfo.trophy += totalTrophy;
+            userInfo.seasonTrophy += totalSeasonTrophy;
+            userInfo.rankPoint += totalRankTrophy;
+            userInfo.gold += totalGold;
+            userInfo.key += totalKey;
+        }
+        else                    // 협동전
+        {
+            arrValue[0].Initialize(normalReward);
+            arrValue[1].Initialize(streakReward);
+            arrValue[2].Initialize(perfectReward);
+
+            var userInfo = UserInfoManager.Get().GetUserInfo();
+            TDataItemList data;
+            for (int i = 0; i < normalReward.Length; i++)
+            {
+                if (TableManager.Get().ItemList.GetData(normalReward[i].ItemId, out data))
+                {
+                    if (userInfo.dicBox.ContainsKey(data.id)) userInfo.dicBox[data.id] += normalReward[i].Value;
+                    else userInfo.dicBox.Add(data.id, normalReward[i].Value);
                 }
             }
-            
-            arrValue[0].Initialize(normalTrophy, normalGold, normalKey);
-        }
-
-        int streakGold = 0;
-        int streakTrophy = 0;
-        int streakSeasonTrophy = 0;
-        int streakRankTrophy = 0;
-        int streakKey = 0;
-        if (streakReward != null)
-        {
-            foreach (var reward in streakReward)
+            for (int i = 0; i < streakReward.Length; i++)
             {
-                switch ((EItemListKey)reward.ItemId)
+                if (TableManager.Get().ItemList.GetData(streakReward[i].ItemId, out data))
                 {
-                    case EItemListKey.gold:
-                        streakGold = reward.Value;
-                        break;
-                    case EItemListKey.thropy:
-                        streakTrophy = reward.Value;
-                        break;
-                    case EItemListKey.seasonthropy:
-                        streakSeasonTrophy = reward.Value;
-                        break;
-                    case EItemListKey.rankthropy:
-                        streakRankTrophy = reward.Value;
-                        break;
-                    case EItemListKey.key:
-                        streakKey = reward.Value;
-                        break;
+                    if (userInfo.dicBox.ContainsKey(data.id)) userInfo.dicBox[data.id] += streakReward[i].Value;
+                    else userInfo.dicBox.Add(data.id, streakReward[i].Value);
                 }
             }
-            
-            arrValue[1].Initialize(streakTrophy, streakGold, streakKey);
-            text_WinningStreak.text = winningStreak.ToString();
-            text_WinningStreak.color = winningStreak > 0 ? text_WinningStreak.color : Color.gray;
-        }
-
-        int perfectGold = 0;
-        int perfectTrophy = 0;
-        int perfectSeasonTrophy = 0;
-        int perfectRankTrophy = 0;
-        int perfectKey = 0;
-        if (perfectReward != null)
-        {
-            foreach (var reward in perfectReward)
+            for (int i = 0; i < perfectReward.Length; i++)
             {
-                switch ((EItemListKey)reward.ItemId)
+                if (TableManager.Get().ItemList.GetData(perfectReward[i].ItemId, out data))
                 {
-                    case EItemListKey.gold:
-                        perfectGold = reward.Value;
-                        break;
-                    case EItemListKey.thropy:
-                        perfectTrophy = reward.Value;
-                        break;
-                    case EItemListKey.seasonthropy:
-                        perfectSeasonTrophy = reward.Value;
-                        break;
-                    case EItemListKey.rankthropy:
-                        perfectRankTrophy = reward.Value;
-                        break;
-                    case EItemListKey.key:
-                        perfectKey = reward.Value;
-                        break;
+                    if (userInfo.dicBox.ContainsKey(data.id)) userInfo.dicBox[data.id] += perfectReward[i].Value;
+                    else userInfo.dicBox.Add(data.id, perfectReward[i].Value);
                 }
             }
-            
-            arrValue[2].Initialize(perfectTrophy, perfectGold, perfectKey);
         }
-
-        int totalTrophy = normalTrophy + streakTrophy + perfectTrophy;
-        int totalGold = normalGold + streakGold + perfectGold;
-        int totalKey = normalKey + streakKey + perfectKey;
-        int totalSeasonTrophy = normalSeasonTrophy + streakSeasonTrophy + perfectSeasonTrophy;
-        int totalRankTrophy = normalRankTrophy + streakRankTrophy + perfectRankTrophy;
-        arrValue[3].Initialize(totalTrophy, totalGold, totalKey);
-
-        var userInfo = UserInfoManager.Get().GetUserInfo();
-        userInfo.trophy += totalTrophy;
-        userInfo.seasonTrophy += totalSeasonTrophy;
-        userInfo.rankPoint += totalRankTrophy;
-        userInfo.gold += totalGold;
-        userInfo.key += totalKey;
 
         Invoke("EnableShowValuesButton", 2f);
-//#endif
-
     }
 
     private void EnableShowValuesButton()
