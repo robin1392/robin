@@ -251,7 +251,7 @@ public class UI_Get_Result : MonoBehaviour
                 }
 
                 int needDiceCount = dataDiceUpgrade.needCard;
-                int current = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][1] + reward.Value;
+                int current = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][1];
                 
                 text_ItemGuageCount.text = $"{current}/{needDiceCount}";
                 image_ItemGuage.fillAmount = current / (float) needDiceCount;

@@ -47,15 +47,24 @@ public class UI_ResultValue : MonoBehaviour
 
     public void Initialize(MsgReward[] rewards)
     {
-        TDataItemList data;
-        string str = string.Empty;
-        for (int i = 0; i < rewards.Length; i++)
+        if (rewards != null)
         {
-            if (TableManager.Get().ItemList.GetData(rewards[i].ItemId, out data))
+            TDataItemList data;
+            string str = string.Empty;
+            for (int i = 0; i < rewards.Length; i++)
             {
-                if (i > 0) str += ", ";
-                str += $"ItemID:{data.id} Value:{rewards[i].Value}";
+                if (TableManager.Get().ItemList.GetData(rewards[i].ItemId, out data))
+                {
+                    if (i > 0) str += ", ";
+                    str += $"ItemID:{data.id} Value:{rewards[i].Value}";
+                }
             }
+
+            text_Gold.text = str;
+        }
+        else
+        {
+            text_Gold.text = string.Empty;
         }
     }
 }
