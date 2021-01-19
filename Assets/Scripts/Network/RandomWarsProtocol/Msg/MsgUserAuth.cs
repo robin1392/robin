@@ -198,6 +198,8 @@ namespace RandomWarsProtocol.Msg
         public int ResetRankingPoint;
         // 리셋 시즌 포인트
         public int ResetSeasonPoint;
+        // 리셋 시즌 패스 보상 단계
+        public int ResetSeasonPassRewardStep;
         // 프리 시즌 여부
         public bool IsFreeSeason;
         // 최종 순위

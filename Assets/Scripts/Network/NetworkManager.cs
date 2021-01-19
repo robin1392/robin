@@ -819,7 +819,7 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _seasonResetCallback(msg);
         }
-        UnityUtil.Print("RECV SEASON RESET => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+        UnityUtil.Print("RECV SEASON RESET => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
     public void GetRankReq(string userId, int pageNo, Action<MsgGetRankAck> callback)
