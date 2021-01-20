@@ -126,11 +126,11 @@ public class UI_Panel_Reward : MonoBehaviour
     
     public void InitializeTrophy()
     {
-        int totalSlotCount = TableManager.Get().ClassReward.Keys.Count / 2;
+        int totalSlotCount = TableManager.Get().ClassReward.Keys.Count;
         int myTrophy = UserInfoManager.Get().GetUserInfo().trophy;
         text_MyTrophy.text = myTrophy.ToString();
-        int normal = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
-        int vip = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
+        int normal = UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
+        int vip = UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
         for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);

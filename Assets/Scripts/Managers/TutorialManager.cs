@@ -82,7 +82,7 @@ public class TutorialManager : MonoBehaviour
                 msg.Id = 1;
                 msg.Power = 30000;
                 msg.AttackSpeed = 100;
-                msg.DataId = 20001;
+                msg.DataId = 5001;
                 msg.MoveSpeed = 100;
                 msg.Effect = 30000;
                 InGameManager.Get().playerController.SpawnMonster(msg);

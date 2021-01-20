@@ -30,8 +30,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     private int row;
     private int getVipRow;
     private int getNormalRow;
-    private TDataClassReward dataPremium;
-    private TDataClassReward dataNormal;
+    private TDataClassReward rewardData;
 
     public void Initialize(int row, int myTrophy, int getVipRow, int getNormalRow)
     {
@@ -39,25 +38,23 @@ public class UI_TrophyRewardSlot : MonoBehaviour
         this.getVipRow = getVipRow;
         this.getNormalRow = getNormalRow;
         
-        dataPremium = new TDataClassReward();
-        dataNormal = new TDataClassReward();
-        TableManager.Get().ClassReward.GetData(row, out dataNormal);
-        TableManager.Get().ClassReward.GetData(row + 1000, out dataPremium);
+        rewardData = new TDataClassReward();
+        TableManager.Get().ClassReward.GetData(row, out rewardData);
 
-        text_Trophy.text = dataPremium.rankPoint.ToString();
+        text_Trophy.text = rewardData.rankPoint.ToString();
         TDataItemList item;
-        if (TableManager.Get().ItemList.GetData(dataPremium.ItemId, out item))
+        if (TableManager.Get().ItemList.GetData(rewardData.rewardItem02, out item))
         {
             arrImage_Icon[0].sprite = FileHelper.GetIcon(item.itemIcon);
             arrImage_Icon[0].SetNativeSize();
         }
-        if (TableManager.Get().ItemList.GetData(dataNormal.ItemId, out item))
+        if (TableManager.Get().ItemList.GetData(rewardData.rewardItem01, out item))
         {
             arrImage_Icon[1].sprite = FileHelper.GetIcon(item.itemIcon);
             arrImage_Icon[1].SetNativeSize();
         }
-        arrText_Value[0].text = $"x{dataPremium.ItemValue}";
-        arrText_Value[1].text = $"x{dataNormal.ItemValue}";
+        arrText_Value[0].text = $"x{rewardData.rewardItemValue02}";
+        arrText_Value[1].text = $"x{rewardData.rewardItemValue01}";
         
         // set buttons
         SetButton();
@@ -65,7 +62,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
 
     public void SetButton()
     {
-        if (UserInfoManager.Get().GetUserInfo().trophy < dataPremium.rankPoint)    // 트로피 부족
+        if (UserInfoManager.Get().GetUserInfo().trophy < rewardData.rankPoint)    // 트로피 부족
         {
             arrObj_Lock[0].SetActive(true);
             arrObj_Lock[1].SetActive(true);
