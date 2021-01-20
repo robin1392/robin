@@ -309,6 +309,8 @@ namespace RandomWarsProtocol.Msg
         public string UserId;
         // 요청 보상 아이디
         public int RewardId;
+        // 보상 대상 타입(REWARD_TARGET_TYPE 참조)
+        public int RewardTargetType;
     }
 
 
