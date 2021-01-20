@@ -1076,24 +1076,15 @@ namespace ED
             if (currentHealth > 0)
             {
                 currentHealth -= damage;
-                // if (isHalfHealth == false && currentHealth <= 20000)
-                // {
-                //     isHalfHealth = true;
-                //     animator.SetBool(Break, true);
-                //
-                //     PushEnemyMinions(10f);
-                //
-                //     Invoke("SummonGuardian", 0.5f);
-                // }
-
+                
                 if (currentHealth <= 0)
                 {
-                    UI_InGamePopup.Get().ViewLowHP(false);
                     currentHealth = 0;
                     
                     Death();
                 }
-                else if( ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
+                else if(InGameManager.Get().isGamePlaying &&
+                    ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
                          && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
                 {
                     UI_InGamePopup.Get().ViewLowHP(true);
