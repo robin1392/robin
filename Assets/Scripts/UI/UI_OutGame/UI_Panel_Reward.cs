@@ -94,21 +94,12 @@ public class UI_Panel_Reward : MonoBehaviour
             }
         }
         
-        int myStar = UserInfoManager.Get().GetUserInfo().seasonTrophy;
-        int starLevel = UserInfoManager.Get().GetUserInfo().seasonPassRewardStep;
-        TDataSeasonpassReward currentRewardInfo;
-        TDataSeasonpassReward NextRewardInfo;
-        TableManager.Get().SeasonpassReward.GetData(starLevel, out currentRewardInfo);
-        TableManager.Get().SeasonpassReward.GetData(starLevel + 1, out NextRewardInfo);
-        int needStar = NextRewardInfo.trophyPoint - currentRewardInfo.trophyPoint;
-        text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
-        text_StarCount.text = $"{myStar}/{needStar}";
-        slider_Star.value = (myStar) / (float)NextRewardInfo.trophyPoint;
-        text_StarLevel.text = $"{starLevel}";
+        RefreshSeasonInfo();
         
         int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count;
         UI_RewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[0];
         UI_RewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[1];
+        
         for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_RewardSlot, Vector3.zero, Quaternion.identity, ts_SeasonPassContent);
@@ -122,6 +113,21 @@ public class UI_Panel_Reward : MonoBehaviour
         empty.transform.GetChild(0).gameObject.SetActive(false);
 
         isSeasonPassInitialized = true;
+    }
+
+    public void RefreshSeasonInfo()
+    {
+        int myStar = UserInfoManager.Get().GetUserInfo().seasonTrophy;
+        int starLevel = UserInfoManager.Get().GetUserInfo().seasonPassRewardStep;
+        TDataSeasonpassReward currentRewardInfo;
+        TDataSeasonpassReward NextRewardInfo;
+        TableManager.Get().SeasonpassReward.GetData(starLevel, out currentRewardInfo);
+        TableManager.Get().SeasonpassReward.GetData(starLevel + 1, out NextRewardInfo);
+        int needStar = NextRewardInfo.trophyPoint - currentRewardInfo.trophyPoint;
+        text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
+        text_StarCount.text = $"{myStar - currentRewardInfo.trophyPoint}/{needStar}";
+        slider_Star.value = (myStar - currentRewardInfo.trophyPoint) / (float)needStar;
+        text_StarLevel.text = $"{starLevel}";
     }
     
     public void InitializeTrophy()

@@ -168,7 +168,6 @@ public class UI_RewardSlot : MonoBehaviour
         
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
-            UserInfoManager.Get().GetUserInfo().seasonPassRewardStep = msg.OpenRewardId;
 
             switch (msg.UseItemInfo.ItemId)
             {
@@ -179,8 +178,13 @@ public class UI_RewardSlot : MonoBehaviour
                     UserInfoManager.Get().GetUserInfo().diamond += msg.UseItemInfo.Value;
                     break;
             }
+
+            UserInfoManager.Get().GetUserInfo().seasonPassRewardStep = msg.OpenRewardId;
+            UserInfoManager.Get().GetUserInfo().seasonTrophy += msg.RewardInfo.Value;
+            
             UI_Main.Get().RefreshUserInfoUI();
             UI_Popup_Quest.QuestUpdate(msg.QuestData);
+            SendMessageUpwards("RefreshSeasonInfo", SendMessageOptions.DontRequireReceiver);
 
             transform.parent.BroadcastMessage("SetButton");
         }
