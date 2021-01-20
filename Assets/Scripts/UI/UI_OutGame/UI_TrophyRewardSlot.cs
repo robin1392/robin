@@ -19,6 +19,13 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public GameObject[] arrObj_Lock;
     public GameObject[] arrObj_Check;
 
+    [Header("Split Line")]
+    public GameObject obj_SplitLineTop;
+    public GameObject obj_SplitLineMiddle;
+    public GameObject obj_SplitLineBottom;
+    public GameObject obj_BottomLeft;
+    public GameObject obj_BottomRight;
+
     private bool isGetPremium;
     private int row;
     private int getVipRow;
@@ -114,5 +121,18 @@ public class UI_TrophyRewardSlot : MonoBehaviour
         }
         
         SetButton();
+    }
+
+    public void SetSplitLine(bool top, bool middle, bool bottom)
+    {
+        obj_SplitLineTop.SetActive(top);
+        obj_SplitLineMiddle.SetActive(middle);
+        obj_SplitLineBottom.SetActive(bottom);
+
+        if (bottom == true)
+        {
+            obj_BottomLeft.SetActive(false);
+            obj_BottomRight.SetActive(false);
+        }
     }
 }
