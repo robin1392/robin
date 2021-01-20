@@ -126,16 +126,16 @@ public class UI_Panel_Reward : MonoBehaviour
     
     public void InitializeTrophy()
     {
-        int totalSlotCount = TableManager.Get().ClassReward.Keys.Count;
         int myTrophy = UserInfoManager.Get().GetUserInfo().trophy;
         text_MyTrophy.text = myTrophy.ToString();
-        int normal = UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
-        int vip = UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
+        int totalSlotCount = TableManager.Get().ClassReward.Keys.Count;
+        UI_TrophyRewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
+        UI_TrophyRewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
         for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
             var slot = obj.GetComponent<UI_TrophyRewardSlot>();
-            slot.Initialize(i, myTrophy, vip, normal);
+            slot.Initialize(i);
             
             if (i == 1) slot.SetSplitLine(true, false, false);
             else if (i == totalSlotCount) slot.SetSplitLine(false, false, true);
