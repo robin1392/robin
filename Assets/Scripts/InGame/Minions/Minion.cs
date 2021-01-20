@@ -597,73 +597,16 @@ namespace ED
             return target != null && target.isAlive;
         }
 
-        public void SetVelocityTarget()
+        public virtual void SetVelocityTarget()
         {
             if (controller.isMinionAgentMove)
             {
-                if (target != null && isAlive)// && agent.enabled && agent.updatePosition)
+                if (target != null && isAlive)
                 {
                     Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                    //agent.SetDestination(targetPos - (targetPos - transform.position).normalized * 0.4f);
                     _seeker.StartPath(transform.position, targetPos);
                 }
             }
-            // else
-            // {
-            //     transform.LookAt(networkPosition);
-            //     transform.position = networkPosition;
-            // }
-//            if (isAttacking == false && _spawnedTime > _pathRefinedTime * _pathRefinedCount && targetIsEnemy)// && dodgeVelocity == Vector3.zero)
-//            {
-//                _pathRefinedCount++;
-//#if UNITY_EDITOR
-//                Debug.DrawLine(transform.position + Vector3.up * 0.25f + (-transform.right * 0.15f),
-//                    (transform.position + Vector3.up * 0.25f + (-transform.right * 0.15f)) + transform.forward * range, Color.red);
-//                Debug.DrawLine(transform.position + Vector3.up * 0.25f + (transform.right * 0.15f),
-//                    (transform.position + Vector3.up * 0.25f + (transform.right * 0.15f)) + transform.forward * range, Color.red);
-//#endif
-
-//                if (transform.position.x > 0)
-//                {
-//                    if (Physics.Raycast(transform.position + Vector3.up * 0.25f + (-transform.right * 0.15f), transform.forward, range, 1 << gameObject.layer))
-//                    {
-//                        _dodgeVelocity = transform.right;
-//                        StartCoroutine(ResetDodgeVelocityCoroutine());
-//                    }
-//                    else if (Physics.Raycast(transform.position + Vector3.up * 0.25f + (transform.right * 0.15f), transform.forward, range, 1 << gameObject.layer))
-//                    {
-//                        _dodgeVelocity = -transform.right;
-//                        StartCoroutine(ResetDodgeVelocityCoroutine());
-//                    }
-//                }
-//                else
-//                {
-//                    if (Physics.Raycast(transform.position + Vector3.up * 0.25f + (transform.right * 0.15f), transform.forward, range, 1 << gameObject.layer))
-//                    {
-//                        _dodgeVelocity = -transform.right;
-//                        StartCoroutine(ResetDodgeVelocityCoroutine());
-//                    }
-//                    else if (Physics.Raycast(transform.position + Vector3.up * 0.25f + (-transform.right * 0.15f), transform.forward, range, 1 << gameObject.layer))
-//                    {
-//                        _dodgeVelocity = transform.right;
-//                        StartCoroutine(ResetDodgeVelocityCoroutine());
-//                    }
-//                }
-//            }
-
-//            if (target == null) return;
-
-//            Vector3 vel;
-//            if (_dodgeVelocity == Vector3.zero)
-//            {
-//                vel = (target.transform.position - transform.position).normalized * moveSpeed;
-//            }
-//            else
-//            {
-//                vel = (transform.forward + _dodgeVelocity).normalized * moveSpeed;
-//            }
-//            vel.y = 0;
-//            rb.velocity = vel;
         }
 
         private IEnumerator ResetDodgeVelocityCoroutine()

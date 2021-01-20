@@ -73,6 +73,18 @@ namespace ED
             }
 
         }
+        
+        public override void SetVelocityTarget()
+        {
+            if (controller.isMinionAgentMove && isFire == false)
+            {
+                if (target != null && isAlive)
+                {
+                    Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
+                    _seeker.StartPath(transform.position, targetPos);
+                }
+            }
+        }
 
         IEnumerator FireCoroutine()
         {
