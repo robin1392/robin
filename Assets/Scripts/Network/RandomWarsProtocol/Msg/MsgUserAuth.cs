@@ -228,6 +228,8 @@ namespace RandomWarsProtocol.Msg
         public MsgReward UseItemInfo;
         // 획득 보상 정보
         public MsgReward RewardInfo;
+        // 퀘스트 데이터
+        public MsgQuestData[] QuestData;
     }
 
 
