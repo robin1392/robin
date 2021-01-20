@@ -2349,7 +2349,7 @@ namespace ED
 
             for (int i = 0; i < msgMinionInfos.Length; i++)
             {
-                if (_listDeadID.Contains(msgMinionInfos[i].Id)) continue;
+                //if (_listDeadID.Contains(msgMinionInfos[i].Id)) continue;
                 
                 var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                 DICE_CAST_TYPE type = (DICE_CAST_TYPE)data.castType;
