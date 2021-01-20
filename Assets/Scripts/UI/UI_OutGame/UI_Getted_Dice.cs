@@ -121,41 +121,58 @@ namespace ED
 
             if (isUngetted)
             {
-                _panelDice.Click_Dice_Info(_data.id);
-            }
-            else
-            {
-                obj_Selected.SetActive(true);
-                verticalLayoutGroup.enabled = false;
-                contentSizeFitter.enabled = false;
-                ts_Move.SetParent(_grandParent);
-
-                int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][1];
-                int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][0];
-
-                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
-                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == _data.grade, out dataDiceUpgrade) == false)
+                if (_dataGuardian != null)
                 {
-                    return;
-                }
-
-                int needCount = dataDiceUpgrade.needCard;
-                int needGold = dataDiceUpgrade.needGold;
-                bool isEnableLevelUp = diceCount >= needCount;
-
-                if (isEnableLevelUp)
-                {
-                    button_Info.gameObject.SetActive(false);
-                    button_LevelUp.gameObject.SetActive(true);
-
-                    text_LevelUpCost.text = needGold.ToString();
-                    text_LevelUpCost.color =
-                        UserInfoManager.Get().GetUserInfo().gold >= needGold ? Color.white : Color.red;
+                    
                 }
                 else
                 {
-                    button_Info.gameObject.SetActive(true);
-                    button_LevelUp.gameObject.SetActive(false);
+                    _panelDice.Click_Dice_Info(_data.id);
+                }
+            }
+            else
+            {
+                if (_dataGuardian != null)
+                {
+                    
+                }
+                else
+                {
+                    obj_Selected.SetActive(true);
+                    verticalLayoutGroup.enabled = false;
+                    contentSizeFitter.enabled = false;
+                    ts_Move.SetParent(_grandParent);
+
+                    int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][1];
+                    int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][0];
+
+                    RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                    if (TableManager.Get().DiceUpgrade
+                            .GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == _data.grade,
+                                out dataDiceUpgrade) ==
+                        false)
+                    {
+                        return;
+                    }
+
+                    int needCount = dataDiceUpgrade.needCard;
+                    int needGold = dataDiceUpgrade.needGold;
+                    bool isEnableLevelUp = diceCount >= needCount;
+
+                    if (isEnableLevelUp)
+                    {
+                        button_Info.gameObject.SetActive(false);
+                        button_LevelUp.gameObject.SetActive(true);
+
+                        text_LevelUpCost.text = needGold.ToString();
+                        text_LevelUpCost.color =
+                            UserInfoManager.Get().GetUserInfo().gold >= needGold ? Color.white : Color.red;
+                    }
+                    else
+                    {
+                        button_Info.gameObject.SetActive(true);
+                        button_LevelUp.gameObject.SetActive(false);
+                    }
                 }
             }
             

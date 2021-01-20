@@ -819,7 +819,7 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _seasonResetCallback(msg);
         }
-        UnityUtil.Print("RECV SEASON RESET => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
+        UnityUtil.Print("RECV SEASON RESET => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
     public void GetRankReq(string userId, int pageNo, Action<MsgGetRankAck> callback)
@@ -938,11 +938,12 @@ public class NetworkManager : Singleton<NetworkManager>
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="rewardId"></param>
-    public void GetClassRewardReq(string userId, int rewardId, Action<MsgGetClassRewardAck> callback = null)
+    public void GetClassRewardReq(string userId, int rewardId, int rewardTargetType, Action<MsgGetClassRewardAck> callback = null)
     {
         MsgGetClassRewardReq msg = new MsgGetClassRewardReq();
         msg.UserId = userId;
         msg.RewardId = rewardId;
+        msg.RewardTargetType = rewardTargetType;
         _httpSender.GetClassRewardReq(msg);
         UnityUtil.Print("SEND GET CLASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
         _getClassRewardCallback = callback;

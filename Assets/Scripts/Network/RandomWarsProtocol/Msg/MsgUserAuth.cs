@@ -198,6 +198,8 @@ namespace RandomWarsProtocol.Msg
         public int ResetRankingPoint;
         // 리셋 시즌 포인트
         public int ResetSeasonPoint;
+        // 리셋 시즌 패스 보상 단계
+        public int ResetSeasonPassRewardStep;
         // 프리 시즌 여부
         public bool IsFreeSeason;
         // 최종 순위
@@ -224,6 +226,8 @@ namespace RandomWarsProtocol.Msg
         public int OpenRewardId;
         // 사용 아이템 정보
         public MsgReward UseItemInfo;
+        // 획득 보상 정보
+        public MsgReward RewardInfo;
     }
 
 
@@ -305,6 +309,8 @@ namespace RandomWarsProtocol.Msg
         public string UserId;
         // 요청 보상 아이디
         public int RewardId;
+        // 보상 대상 타입(REWARD_TARGET_TYPE 참조)
+        public int RewardTargetType;
     }
 
 

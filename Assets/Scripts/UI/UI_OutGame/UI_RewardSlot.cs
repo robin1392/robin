@@ -22,6 +22,13 @@ public class UI_RewardSlot : MonoBehaviour
     public Button btn_Unlock;
     public Text text_UnlockCost;
 
+    [Header("Split Line")]
+    public GameObject obj_SplitLineTop;
+    public GameObject obj_SplitLineMiddle;
+    public GameObject obj_SplitLineBottom;
+    public GameObject obj_BottomLeft;
+    public GameObject obj_BottomRight;
+
     public static bool isUnlockEnable;
     
     private bool isGetPremium;
@@ -157,6 +164,8 @@ public class UI_RewardSlot : MonoBehaviour
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
+        UI_Popup.AllClose();
+        
         if (msg.ErrorCode == GameErrorCode.SUCCESS)
         {
             UserInfoManager.Get().GetUserInfo().seasonPassRewardStep = msg.OpenRewardId;
@@ -173,6 +182,23 @@ public class UI_RewardSlot : MonoBehaviour
             UI_Main.Get().RefreshUserInfoUI();
 
             transform.parent.BroadcastMessage("SetButton");
+        }
+        else
+        {
+            UI_ErrorMessage.Get().ShowMessage("재화가 부족합니다.");
+        }
+    }
+
+    public void SetSplitLine(bool top, bool middle, bool bottom)
+    {
+        obj_SplitLineTop.SetActive(top);
+        obj_SplitLineMiddle.SetActive(middle);
+        obj_SplitLineBottom.SetActive(bottom);
+
+        if (bottom == true)
+        {
+            obj_BottomLeft.SetActive(false);
+            obj_BottomRight.SetActive(false);
         }
     }
 }

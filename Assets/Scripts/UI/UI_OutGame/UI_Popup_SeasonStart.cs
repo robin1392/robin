@@ -23,9 +23,10 @@ public class UI_Popup_SeasonStart : UI_Popup
         UserInfoManager.Get().GetUserInfo().seasonPassId = msg.SeasonId;
         UserInfoManager.Get().GetUserInfo().seasonTrophy = 0;
         UserInfoManager.Get().GetUserInfo().seasonEndTime = DateTime.Now.AddSeconds(msg.SeasonRemainTime);
-        UserInfoManager.Get().GetUserInfo().seasonPassRewardIds.Clear();
-        UserInfoManager.Get().GetUserInfo().buySeasonPass = false;
+        UserInfoManager.Get().GetUserInfo().seasonPassRewardIds = new List<int>(new int[]{ 0, 0});
+        UserInfoManager.Get().GetUserInfo().buySeasonPass = msg.IsFreeSeason && UserInfoManager.Get().GetUserInfo().buySeasonPass;
         UserInfoManager.Get().GetUserInfo().needSeasonReset = false;
+        UserInfoManager.Get().GetUserInfo().seasonPassRewardStep = msg.ResetSeasonPassRewardStep;
         
         // refresh
         FindObjectOfType<UI_Panel_Reward>().InitializeSeasonPass();

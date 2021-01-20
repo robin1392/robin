@@ -233,13 +233,18 @@ namespace ED
         public void Click_Dice_Info(int diceId)
         {
             DeactivateSelectedObjectChild();
-            ui_Popup_Dice_Info.gameObject.SetActive(true);
             //ui_Popup_Dice_Info.Initialize(dataAllDice.listDice.Find(data=>data.id == diceId));
 
             // 수호자
             if (diceId > 5000)
             {
+                RandomWarsResource.Data.TDataGuardianInfo dataGuardianInfo;
+                if (TableManager.Get().GuardianInfo.GetData(diceId, out dataGuardianInfo) == false)
+                {
+                    return;
+                }
                 
+                //ui_Popup_Dice_Info.Initialize(dataGuardianInfo);
             }
             else        // 주사위
             {
@@ -263,14 +268,15 @@ namespace ED
 
         public void Click_Deck(int deckSlotNum)
         {
+            int active = UserInfoManager.Get().GetActiveDeckIndex();
+            var intDeck = UserInfoManager.Get().GetSelectDeck(active);
+            
             if (_isSelectMode)
             {
                 //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
-                int active = UserInfoManager.Get().GetActiveDeckIndex();
                 //var deck = UserInfoManager.Get().GetSelectDeck(active);
                 
                 //var splitDeck = deck.Split('/');
-                var intDeck = UserInfoManager.Get().GetSelectDeck(active);
                 var isChanged = false;
                 
                 //for (var i = 0; i < intDeck.Length; i++) intDeck[i] = int.Parse(splitDeck[i]);
@@ -312,7 +318,7 @@ namespace ED
             }
             else
             {
-                
+                Click_Dice_Info(intDeck[deckSlotNum]);
             }
         }
 

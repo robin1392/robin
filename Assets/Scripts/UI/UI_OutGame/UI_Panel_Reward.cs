@@ -6,7 +6,11 @@ using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 using Debug = ED.Debug;
+using Image = UnityEngine.UI.Image;
+using Slider = UnityEngine.UI.Slider;
 
 public class UI_Panel_Reward : MonoBehaviour
 {
@@ -24,6 +28,8 @@ public class UI_Panel_Reward : MonoBehaviour
     [Space]
     public Transform ts_SeasonPassContent;
     public Transform ts_TrophyContent;
+    public ScrollView scrollView_SeasonPass;
+    public ScrollView scrollView_Trophy;
 
     [Header("Season Info")]
     public Text text_SeasonID;
@@ -89,41 +95,53 @@ public class UI_Panel_Reward : MonoBehaviour
         }
         
         int myStar = UserInfoManager.Get().GetUserInfo().seasonTrophy;
+        int starLevel = UserInfoManager.Get().GetUserInfo().seasonPassRewardStep;
+        TDataSeasonpassReward currentRewardInfo;
+        TDataSeasonpassReward NextRewardInfo;
+        TableManager.Get().SeasonpassReward.GetData(starLevel, out currentRewardInfo);
+        TableManager.Get().SeasonpassReward.GetData(starLevel + 1, out NextRewardInfo);
+        int needStar = NextRewardInfo.trophyPoint - currentRewardInfo.trophyPoint;
         text_SeasonID.text = $"Season {UserInfoManager.Get().GetUserInfo().seasonPassId}";
-        text_StarCount.text = $"{myStar}/10";
-        slider_Star.value = (myStar % 10) / 10f;
-        text_StarLevel.text = $"{(myStar / 10) + 1}";
+        text_StarCount.text = $"{myStar}/{needStar}";
+        slider_Star.value = (myStar) / (float)NextRewardInfo.trophyPoint;
+        text_StarLevel.text = $"{starLevel}";
         
-        int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count / 2;
-        int seasonPassTrophy = UserInfoManager.Get().GetUserInfo().seasonTrophy;
-        UI_RewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[0];
-        UI_RewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[1];
-        var firstData = new TDataSeasonpassReward();
-        TableManager.Get().SeasonpassReward.GetData(1/*UserInfoManager.Get().GetUserInfo().seasonPassId*/, out firstData);
-        int height = firstData.trophyPoint;
+        int totalSlotCount = TableManager.Get().SeasonpassReward.Keys.Count;
+        UI_RewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[0];
+        UI_RewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[1];
         for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_RewardSlot, Vector3.zero, Quaternion.identity, ts_SeasonPassContent);
             var slot = obj.GetComponent<UI_RewardSlot>();
             slot.Initialize(i);//, seasonPassTrophy, vip, normal);
+            
+            if (i == 1) slot.SetSplitLine(true, false, false);
+            else if (i == totalSlotCount) slot.SetSplitLine(false, false, true);
         }
+        var empty = Instantiate(pref_RewardSlot, Vector3.zero, Quaternion.identity, ts_SeasonPassContent);
+        empty.transform.GetChild(0).gameObject.SetActive(false);
 
         isSeasonPassInitialized = true;
     }
     
     public void InitializeTrophy()
     {
-        int totalSlotCount = TableManager.Get().ClassReward.Keys.Count / 2;
         int myTrophy = UserInfoManager.Get().GetUserInfo().trophy;
         text_MyTrophy.text = myTrophy.ToString();
-        int normal = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
-        int vip = UserInfoManager.Get().GetUserInfo().trophyRewardIds.Count <= 1 ? 0 : UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
+        int totalSlotCount = TableManager.Get().ClassReward.Keys.Count;
+        UI_TrophyRewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
+        UI_TrophyRewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
         for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
             var slot = obj.GetComponent<UI_TrophyRewardSlot>();
-            slot.Initialize(i, myTrophy, vip, normal);
+            slot.Initialize(i);
+            
+            if (i == 1) slot.SetSplitLine(true, false, false);
+            else if (i == totalSlotCount) slot.SetSplitLine(false, false, true);
         }
+        var empty = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
+        empty.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     public void Click_TopButton(int index)
