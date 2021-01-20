@@ -18,6 +18,7 @@ namespace ED
         {
             base.Initialize(destroy);
 
+            _aiPath.canMove = true;
             ps_Fire.Stop();
             light.enabled = false;
             isFire = false;
@@ -91,6 +92,7 @@ namespace ED
             SoundManager.instance.Play(clip_Flame);
             
             SetControllEnable(false);
+            _aiPath.canMove = false;
             isFire = true;
             ps_Fire.Play();
             light.enabled = true;
@@ -125,6 +127,7 @@ namespace ED
             ps_Fire.Stop();
             light.enabled = false;
             isFire = false;
+            _aiPath.canMove = true;
             SetControllEnable(true);
         }
 
