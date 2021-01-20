@@ -93,12 +93,12 @@ namespace ED
 
         protected virtual void Update()
         {
-            if (currentHealth <= 0)
-            {
-                Death();
-                return;
-            }
-            
+            // if (currentHealth <= 0 && ((InGameManager.IsNetwork && !isMine) || controller.isPlayingAI))
+            // {
+            //     Death();
+            //     return;
+            // }
+            //
             _spawnedTime += Time.deltaTime;
             
             if (isPlayable && isPushing == false && isAttacking == false)

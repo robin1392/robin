@@ -28,15 +28,15 @@ public class UI_TrophyRewardSlot : MonoBehaviour
 
     private bool isGetPremium;
     private int row;
-    private int getVipRow;
-    private int getNormalRow;
+    public static int getVipRow;
+    public static int getNormalRow;
     private TDataClassReward rewardData;
 
-    public void Initialize(int row, int myTrophy, int getVipRow, int getNormalRow)
+    public void Initialize(int row)//, int myTrophy, int getVipRow, int getNormalRow)
     {
         this.row = row;
-        this.getVipRow = getVipRow;
-        this.getNormalRow = getNormalRow;
+        // this.getVipRow = getVipRow;
+        // this.getNormalRow = getNormalRow;
         
         rewardData = new TDataClassReward();
         TableManager.Get().ClassReward.GetData(row, out rewardData);
