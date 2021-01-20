@@ -268,14 +268,15 @@ namespace ED
 
         public void Click_Deck(int deckSlotNum)
         {
+            int active = UserInfoManager.Get().GetActiveDeckIndex();
+            var intDeck = UserInfoManager.Get().GetSelectDeck(active);
+            
             if (_isSelectMode)
             {
                 //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
-                int active = UserInfoManager.Get().GetActiveDeckIndex();
                 //var deck = UserInfoManager.Get().GetSelectDeck(active);
                 
                 //var splitDeck = deck.Split('/');
-                var intDeck = UserInfoManager.Get().GetSelectDeck(active);
                 var isChanged = false;
                 
                 //for (var i = 0; i < intDeck.Length; i++) intDeck[i] = int.Parse(splitDeck[i]);
@@ -317,7 +318,7 @@ namespace ED
             }
             else
             {
-                
+                Click_Dice_Info(intDeck[deckSlotNum]);
             }
         }
 

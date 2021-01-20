@@ -331,7 +331,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         _userInfo.rankPoint = info.RankingPoint;
         
         if (seasonPassInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonPassInfo.SeasonPassRewardIds);
-        else _userInfo.seasonPassRewardIds = new List<int>();
+        else _userInfo.seasonPassRewardIds = new List<int>(new int[]{0, 0});
         if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
         _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
