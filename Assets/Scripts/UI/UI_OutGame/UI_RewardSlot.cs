@@ -180,6 +180,7 @@ public class UI_RewardSlot : MonoBehaviour
                     break;
             }
             UI_Main.Get().RefreshUserInfoUI();
+            UI_Popup_Quest.QuestUpdate(msg.QuestData);
 
             transform.parent.BroadcastMessage("SetButton");
         }
