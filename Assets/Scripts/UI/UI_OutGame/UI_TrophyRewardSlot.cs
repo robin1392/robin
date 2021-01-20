@@ -88,14 +88,14 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public void Click_PremiumGet()
     {
         isGetPremium = true;
-        NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row + 1000, GetCallback);
+        NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, GetCallback);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
     public void Click_NormalGet()
     {
         isGetPremium = false;
-        NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, GetCallback);
+        NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, (int) REWARD_TARGET_TYPE.ALL, GetCallback);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
     
