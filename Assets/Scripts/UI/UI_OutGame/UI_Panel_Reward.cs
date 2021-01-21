@@ -42,8 +42,14 @@ public class UI_Panel_Reward : MonoBehaviour
     [Header("Trophy Info")]
     public Text text_MyTrophy;
 
+    private List<GameObject> listSeasonPassSlot = new List<GameObject>();
+    private List<GameObject> listTrophySlot = new List<GameObject>();
     private bool isSeasonPassInitialized;
     private float refreshTime;
+    private float seasonPassSlotHeight;
+    private float trophySlotHeight;
+    private float seasonPassViewportHeight;
+    private float trophyViewportHeight;
 
     private void Start()
     {
@@ -52,6 +58,9 @@ public class UI_Panel_Reward : MonoBehaviour
         
         InitializeSeasonPass();
         InitializeTrophy();
+
+        seasonPassViewportHeight = 2208 + ((RectTransform) ts_SeasonPassContent.parent.parent).sizeDelta.y;
+        trophyViewportHeight = 2208 + ((RectTransform) ts_TrophyContent.parent.parent).sizeDelta.y;
     }
 
     private void Update()
@@ -100,18 +109,25 @@ public class UI_Panel_Reward : MonoBehaviour
         UI_RewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[0];
         UI_RewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().seasonPassRewardIds[1];
         
+        listSeasonPassSlot.Clear();
+        
         for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_RewardSlot, Vector3.zero, Quaternion.identity, ts_SeasonPassContent);
             var slot = obj.GetComponent<UI_RewardSlot>();
             slot.Initialize(i);//, seasonPassTrophy, vip, normal);
-            
+
             if (i == 1) slot.SetSplitLine(true, false, false);
             else if (i == totalSlotCount) slot.SetSplitLine(false, false, true);
+
+            var child = obj.transform.GetChild(0).gameObject;
+            listSeasonPassSlot.Add(child);
+            child.SetActive(i <= 5);
         }
         var empty = Instantiate(pref_RewardSlot, Vector3.zero, Quaternion.identity, ts_SeasonPassContent);
         empty.transform.GetChild(0).gameObject.SetActive(false);
 
+        seasonPassSlotHeight = ((RectTransform)listSeasonPassSlot[0].transform.parent).sizeDelta.y;
         isSeasonPassInitialized = true;
     }
 
@@ -145,11 +161,14 @@ public class UI_Panel_Reward : MonoBehaviour
     
     public void InitializeTrophy()
     {
+        listTrophySlot.Clear();
+        
         int myTrophy = UserInfoManager.Get().GetUserInfo().trophy;
         text_MyTrophy.text = myTrophy.ToString();
         int totalSlotCount = TableManager.Get().ClassReward.Keys.Count;
         UI_TrophyRewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
         UI_TrophyRewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
+        
         for (int i = 1; i <= totalSlotCount; i++)
         {
             var obj = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
@@ -158,7 +177,13 @@ public class UI_Panel_Reward : MonoBehaviour
             
             if (i == 1) slot.SetSplitLine(true, false, false);
             else if (i == totalSlotCount) slot.SetSplitLine(false, false, true);
+
+            var child = obj.transform.GetChild(0).gameObject;
+            listTrophySlot.Add(child);
+            child.SetActive(i <= 5);
         }
+        
+        trophySlotHeight = ((RectTransform)listTrophySlot[0].transform.parent).sizeDelta.y;
         var empty = Instantiate(pref_TrophyRewardSlot, Vector3.zero, Quaternion.identity, ts_TrophyContent);
         empty.transform.GetChild(0).gameObject.SetActive(false);
     }
@@ -175,6 +200,28 @@ public class UI_Panel_Reward : MonoBehaviour
                 image_MenuSelected.rectTransform.DOAnchorPos(
                     ((RectTransform) btn_Trophy.transform).anchoredPosition, 0.2f).SetEase(Ease.OutBack);
                 break;
+        }
+    }
+
+    public void SeasonPass_ChangeScrollValue(Vector2 pos)
+    {
+        float y = ((RectTransform) ts_SeasonPassContent).anchoredPosition.y;
+        int min = Mathf.FloorToInt(y / seasonPassSlotHeight);
+        int showCount = Mathf.CeilToInt(seasonPassViewportHeight / seasonPassSlotHeight);
+        for (int i = 0; i < listSeasonPassSlot.Count; i++)
+        {
+            listSeasonPassSlot[i].SetActive(i >= min && i <= min + showCount);
+        }
+    }
+    
+    public void Trophy_ChangeScrollValue(Vector2 pos)
+    {
+        float y = ((RectTransform) ts_TrophyContent).anchoredPosition.y;
+        int min = Mathf.FloorToInt(y / trophySlotHeight);
+        int showCount = Mathf.CeilToInt(trophyViewportHeight / trophySlotHeight);
+        for (int i = 0; i < listTrophySlot.Count; i++)
+        {
+            listTrophySlot[i].SetActive(i >= min && i <= min + showCount);
         }
     }
 }

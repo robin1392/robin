@@ -22,7 +22,11 @@ namespace ED
         private bool isDragging;
 
         public ScrollRect scrollRect;
+        public ScrollRect scrollRectSeasonPass;
+        public ScrollRect scrollRectTrophy;
         public UI_ScrollViewEvent ui_ScrollViewEvent;
+        public UI_ScrollViewEvent ui_ScrollViewEventSeasonPass;
+        public UI_ScrollViewEvent ui_ScrollViewEventTrophy;
         public Button btn_PlayBattle;
         public Button btn_PlayCoop;
         public Button btn_SearchCancel;
@@ -364,6 +368,8 @@ namespace ED
         public void OnBeginDrag(BaseEventData data)
         {
             ui_ScrollViewEvent.scrollType = UI_ScrollViewEvent.SCROLL.HORIZONTAL;
+            ui_ScrollViewEventSeasonPass.scrollType = UI_ScrollViewEvent.SCROLL.HORIZONTAL;
+            ui_ScrollViewEventTrophy.scrollType = UI_ScrollViewEvent.SCROLL.HORIZONTAL;
             isDragging = true;
             _pointerDownPos = data.currentInputModule.input.mousePosition;
             _mainpageAnchoredPos = rts_MainPages.anchoredPosition;
@@ -382,7 +388,11 @@ namespace ED
             if (isDragging && ui_ScrollViewEvent.scrollType == UI_ScrollViewEvent.SCROLL.HORIZONTAL)
             {
                 scrollRect.enabled = true;
+                scrollRectSeasonPass.enabled = true;
+                scrollRectTrophy.enabled = true;
                 ui_ScrollViewEvent.scrollType = UI_ScrollViewEvent.SCROLL.NONE;
+                ui_ScrollViewEventSeasonPass.scrollType = UI_ScrollViewEvent.SCROLL.NONE;
+                ui_ScrollViewEventTrophy.scrollType = UI_ScrollViewEvent.SCROLL.NONE;
 
                 if (data.currentInputModule.input.mousePosition.x < _pointerDownPos.x - 100f)
                 {
