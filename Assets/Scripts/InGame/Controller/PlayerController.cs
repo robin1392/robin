@@ -3542,11 +3542,11 @@ namespace ED
         */
         #endregion
         
-        public void TutorialAddSP()
+        public void TutorialAddSP(int add)
         {
             if (TutorialManager.isTutorial)
             {
-                sp = 3000;
+                sp += add;
             }
         }
     }

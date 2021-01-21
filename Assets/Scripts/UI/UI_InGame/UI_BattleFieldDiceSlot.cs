@@ -199,7 +199,8 @@ namespace ED
         public void AttachIcon()
         {
             image_Icon.transform.SetParent(transform);
-            image_Icon.transform.localPosition = Vector3.zero;
+            //image_Icon.transform.localPosition = Vector3.zero;
+            image_Icon.rectTransform.anchoredPosition = Vector2.zero;
             var arrImage = image_Icon.GetComponentsInChildren<Image>();
 
             if (dice != null && dice.diceData != null)

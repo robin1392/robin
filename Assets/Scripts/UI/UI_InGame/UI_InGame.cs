@@ -16,6 +16,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public UI_UpgradeButton[] arrUpgradeButtons;
     public Text text_SP;
 
+    public Button btn_Exit;
     
     public Text text_GetDiceButton;
     public UI_GetDiceButton btn_GetDice;

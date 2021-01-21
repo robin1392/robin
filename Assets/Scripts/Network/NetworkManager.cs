@@ -143,6 +143,7 @@ public class NetworkManager : Singleton<NetworkManager>
     public string LocalServerAddr;
     public int LocalServerPort;
     public string UserId;
+    public int matchSendCount;
     #endregion
 
 
@@ -614,6 +615,7 @@ public class NetworkManager : Singleton<NetworkManager>
     IEnumerator WaitForMatch()
     {
         yield return new WaitForSeconds(1.0f);
+        matchSendCount++;
         StatusMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
     }
 
@@ -627,6 +629,7 @@ public class NetworkManager : Singleton<NetworkManager>
             return;
         }
 
+        matchSendCount = 0;
         NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
 
         MsgStartMatchReq msg = new MsgStartMatchReq();
@@ -676,7 +679,16 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             if (NetMatchStep != Global.E_MATCHSTEP.MATCH_CANCEL)
             {
-                StartCoroutine(WaitForMatch());
+                if (matchSendCount < 30)
+                {
+                    StartCoroutine(WaitForMatch());
+                }
+                else
+                {
+                    UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
+                    searchingPopup.ClickSearchingCancelResult();
+                    UI_Main.Get().ShowMessageBox("매칭 실패", "매칭에 실패했습니다. 다시 시도해주세요.");
+                }
             }
         }
         else
@@ -707,7 +719,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     void OnStopMatchAck(MsgStopMatchAck msg)
     {
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (msg.ErrorCode == GameErrorCode.SUCCESS || msg.ErrorCode == GameErrorCode.ERROR_GAMELIFT_MATCH_STATE_INVALID)
         {
             UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
             searchingPopup.ClickSearchingCancelResult();

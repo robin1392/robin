@@ -46,11 +46,11 @@ namespace ED
                 var listDeck = new List<int>();
                 if (TutorialManager.isTutorial)
                 {
-                    listDeck.Add(30001);    // 궁수
-                    listDeck.Add(30002);    // 해골
-                    listDeck.Add(30003);    // 전사
-                    listDeck.Add(32002);    // 방패병
-                    listDeck.Add(32003);    // 화염술사
+                    listDeck.Add(1000);    // 궁수
+                    listDeck.Add(1002);    // 해골
+                    listDeck.Add(3011);    // 전사
+                    listDeck.Add(3003);    // 방패병
+                    listDeck.Add(3005);    // 화염술사
 
                     GetComponent<BehaviourTreeOwner>().behaviour.Pause();
                 }

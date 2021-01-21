@@ -46,6 +46,8 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator TutorialCoroutine()
     {
+        yield return new WaitForSeconds(0.1f);
+        
         while (true)
         {
             Step();
@@ -127,7 +129,7 @@ public class TutorialManager : MonoBehaviour
     private void GetDice()
     {
         getDiceCount++;
-        if (stepCount == 4 && getDiceCount >= 5)
+        if (stepCount == 4 && getDiceCount > 5)
         {
             ts_GetDiceButton.parent = ts_OldParent;
             ts_GetDiceButton.GetComponent<Button>().onClick.RemoveListener(GetDice);
@@ -196,6 +198,7 @@ public class TutorialManager : MonoBehaviour
             case 3:
                 //image_NextStep.DOFade(0.78f, 0f).SetUpdate(true);
                 Time.timeScale = 0f;
+                InGameManager.Get().playerController.TutorialAddSP(50);
                 break;
             case 4: // 주사위 소환 버튼
                 Time.timeScale = 0f;
@@ -212,7 +215,7 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 7:
                 Time.timeScale = 0f;
-                InGameManager.Get().playerController.TutorialAddSP();
+                InGameManager.Get().playerController.TutorialAddSP(5000);
                 break;
             case 8:    // 두번째 주사위 소환
                 Time.timeScale = 0f;
@@ -230,7 +233,7 @@ public class TutorialManager : MonoBehaviour
             case 10:
                 Time.timeScale = 1f;
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
-                image_NextStep.raycastTarget = false;
+                image_NextStep.raycastTarget = true;
                 ts_DiceField.parent = ts_OldParent;
                 Click_NextStepDelay(3f);
                 break;
