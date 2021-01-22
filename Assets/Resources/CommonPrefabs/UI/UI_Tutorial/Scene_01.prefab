@@ -158,7 +158,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: f861c4a80377a40809b811e053a0e24b, type: 3}
+    m_Font: {fileID: 12800000, guid: a4807efedd60241c5b572ba25ca0762b, type: 3}
     m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 1
@@ -170,9 +170,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB79C\uB364\uC6CC\uC988\uC758 \uC138\uACC4\uC5D0 \uC624\uC2E0 \uAC78
-    \uD658\uC601\uD569\uB2C8\uB2E4! \uBBF8\uB2C8\uC5B8\uB4E4\uACFC \uD568\uAED8 \uC804\uC7A5\uC73C\uB85C
-    \uB5A0\uB098\uBCFC\uAE4C\uC694?"
+  m_Text: "\uC774\uC81C \uC790\uC720\uB86D\uAC8C \uD50C\uB808\uC774\uD574\uC11C\n\uC0C1\uB300
+    \uD0C0\uC6CC\uB97C \uD30C\uAD34\uD558\uC138\uC694!"
 --- !u!114 &7190422941171267215
 MonoBehaviour:
   m_ObjectHideFlags: 0

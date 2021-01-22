@@ -190,7 +190,7 @@ public class TutorialManager : MonoBehaviour
                 else
                 {
                     Time.timeScale = 0f;
-                    image_NextStep.DOFade(0f, 0f);
+                    image_NextStep.DOFade(0f, 0).SetUpdate(true);
                     transform.GetChild(stepCount + 1).GetChild(0).gameObject.SetActive(true);
                     Debug.Log("Ingame tutorial");
                 }
@@ -255,7 +255,11 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 13:
                 Time.timeScale = 1f;
-                image_NextStep.raycastTarget = true;
+                image_NextStep.raycastTarget = false;
+                image_NextStep.DOFade(0, 0).SetUpdate(true);
+                break;
+            case 14:
+                Time.timeScale = 1f;
                 break;
             default:
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
