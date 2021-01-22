@@ -11,8 +11,17 @@ public class UI_SearchingPopup : UI_Popup
 {
     public Text text_Searching;
     public Button btn_Cancel;
+    public Text text_Time;
+
+    private DateTime dateSearchStart;
 
     #region  unity base
+
+    private void Update()
+    {
+        var span = DateTime.Now.Subtract(dateSearchStart);
+        text_Time.text = $"{span.Minutes:D2}:{span.Seconds:D2}";
+    }
 
     #endregion
     
@@ -20,15 +29,11 @@ public class UI_SearchingPopup : UI_Popup
     protected override void OnEnable()
     {
         btn_Cancel.interactable = true;
-        //if (btn_BG_Close != null) btn_BG_Close.interactable = false;
-        // rts_Frame.localScale = Vector3.zero;
-        // rts_Frame.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
-        // {
-        //     if (btn_BG_Close != null) btn_BG_Close.interactable = true;
-        // });
-
+        dateSearchStart = DateTime.Now;
+        
         text_Searching.rectTransform.DOAnchorPosY(-300f, 0.4f).SetEase(Ease.OutBack).SetDelay(0.2f);
         ((RectTransform) btn_Cancel.transform).DOAnchorPosY(300f, 0.4f).SetEase(Ease.OutBack).SetDelay(0.2f);
+        text_Time.rectTransform.DOAnchorPosY(500f, 0.4f).SetEase(Ease.OutBack).SetDelay(0.2f);
     }
 
     public override void Close()
@@ -37,6 +42,7 @@ public class UI_SearchingPopup : UI_Popup
         
         text_Searching.rectTransform.DOAnchorPosY(300f, 0.4f).SetEase(Ease.OutBack);
         ((RectTransform) btn_Cancel.transform).DOAnchorPosY(-300f, 0.4f).SetEase(Ease.OutBack);
+        text_Time.rectTransform.DOAnchorPosY(-111f, 0.4f).SetEase(Ease.OutBack).SetDelay(0.2f);
     }
     
     #endregion
@@ -72,7 +78,6 @@ public class UI_SearchingPopup : UI_Popup
     public void ClickSearchingCancelResult()
     {
         btn_Cancel.interactable = false;
-
         //
         UI_Main.Get().Click_DisconnectButton();
         Close();
