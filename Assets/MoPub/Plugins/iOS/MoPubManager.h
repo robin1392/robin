@@ -12,8 +12,7 @@
 #elif __has_include(<MoPubSDKFramework/MoPub.h>)
 #import <MoPubSDKFramework/MoPub.h>
 #else
-#import "../../../../../AOG_IOS/Pods/mopub-ios-sdk/MoPubSDK/MoPub.h"
-
+#import "MoPub.h"
 #endif
 
 __deprecated_enum_msg("MoPubBannerType has been deprecated, please use MoPubAdSize instead.")
@@ -44,6 +43,7 @@ typedef enum
     MoPubAdPositionBottomRight
 } MoPubAdPosition;
 
+typedef void (*MoPubBackgroundEventCallback)(const char* eventName, const char* eventArgsJson);
 
 @interface MoPubManager : NSObject <MPAdViewDelegate, MPInterstitialAdControllerDelegate, CLLocationManagerDelegate, MPRewardedVideoDelegate>
 {
@@ -52,11 +52,11 @@ typedef enum
     NSString* _adUnitId;
     BOOL _autorefresh;
 }
-@property (nonatomic, strong) MPAdView *adView;
-@property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic, strong) CLLocation *lastKnownLocation;
+@property (class, nonatomic) MoPubBackgroundEventCallback bgEventCallback;
+@property (nonatomic, strong) MPAdView* adView;
+@property (nonatomic, strong) CLLocationManager* locationManager;
+@property (nonatomic, strong) CLLocation* lastKnownLocation;
 @property (nonatomic) MoPubAdPosition bannerPosition;
-
 
 + (MoPubManager*)sharedManager;
 
@@ -64,7 +64,11 @@ typedef enum
 
 + (UIViewController*)unityViewController;
 
++ (void)sendUnityEvent:(NSString*)eventName withArgs:(NSArray*)args backgroundOK:(BOOL)bg;
+
 + (void)sendUnityEvent:(NSString*)eventName withArgs:(NSArray*)args;
+
+- (void)sendUnityEvent:(NSString*)eventName backgroundOK:(BOOL)bg;
 
 - (void)sendUnityEvent:(NSString*)eventName;
 
@@ -72,7 +76,7 @@ typedef enum
 
 - (void)enableLocationSupport:(BOOL)shouldEnable;
 
-- (void)requestBanner:(float)width height:(float)height atPosition:(MoPubAdPosition)position;
+- (void)requestBanner:(float)width height:(float)height atPosition:(MoPubAdPosition)position keywords:(NSString*)keywords userDataKeywords:(NSString*)userDataKeywords;
 
 __deprecated_msg("createBanner has been deprecated, please use requestBanner instead.");
 - (void)createBanner:(MoPubBannerType)bannerType atPosition:(MoPubAdPosition)position;

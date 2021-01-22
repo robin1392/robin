@@ -9,15 +9,15 @@ public class AdColonyPackageConfig : PackageConfig
 
     public override string Version
     {
-        get { return /*UNITY_PACKAGE_VERSION*/"1.1.13"; }
+        get { return /*UNITY_PACKAGE_VERSION*/"1.2.3"; }
     }
 
     public override Dictionary<Platform, string> NetworkSdkVersions
     {
         get {
             return new Dictionary<Platform, string> {
-                { Platform.ANDROID, /*ANDROID_SDK_VERSION*/"4.2.1" },
-                { Platform.IOS, /*IOS_SDK_VERSION*/"4.2.0" }
+                { Platform.ANDROID, /*ANDROID_SDK_VERSION*/"4.3.1" },
+                { Platform.IOS, /*IOS_SDK_VERSION*/"4.4.1.1" }
             };
         }
     }

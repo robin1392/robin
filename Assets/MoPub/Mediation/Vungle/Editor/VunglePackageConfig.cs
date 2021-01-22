@@ -9,15 +9,15 @@ public class VunglePackageConfig : PackageConfig
 
     public override string Version
     {
-        get { return /*UNITY_PACKAGE_VERSION*/"1.2.4"; }
+        get { return /*UNITY_PACKAGE_VERSION*/"1.3.3"; }
     }
 
     public override Dictionary<Platform, string> NetworkSdkVersions
     {
         get {
             return new Dictionary<Platform, string> {
-                { Platform.ANDROID, /*ANDROID_SDK_VERSION*/"6.7.0" },
-                { Platform.IOS, /*IOS_SDK_VERSION*/"6.7.0" }
+                { Platform.ANDROID, /*ANDROID_SDK_VERSION*/"6.8.1" },
+                { Platform.IOS, /*IOS_SDK_VERSION*/"6.8.1" }
             };
         }
     }
