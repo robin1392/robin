@@ -196,16 +196,15 @@ public class TableManager : Singleton<TableManager>
         QuestInfo.Init(new TableLoaderLocalCSV<int, TDataQuestInfo>(), path, "QuestInfo.csv");
         QuestData.Init(new TableLoaderLocalCSV<int, TDataQuestData>(), path, "QuestData.csv");
         QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
-
-        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
-        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), path, "EventShopList.csv");
-        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), path, "PackageShopList.csv");
-        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), path, "OnedayShopList.csv");
-        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), path, "BoxShopList.csv");
-        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), path, "PremiumShopList.csv");
-        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), path, "EmotionShopList.csv");
-        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), path, "DiaShopList.csv");
-        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), path, "GoldShopList.csv");
+        ShopInfo.Init(new TableLoaderLocalCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
+        EventShopList.Init(new TableLoaderLocalCSV<int, TDataEventShopList>(), path, "EventShopList.csv");
+        PackageShopList.Init(new TableLoaderLocalCSV<int, TDataPackageShopList>(), path, "PackageShopList.csv");
+        OnedayShopList.Init(new TableLoaderLocalCSV<int, TDataOnedayShopList>(), path, "OnedayShopList.csv");
+        BoxShopList.Init(new TableLoaderLocalCSV<int, TDataBoxShopList>(), path, "BoxShopList.csv");
+        PremiumShopList.Init(new TableLoaderLocalCSV<int, TDataPremiumShopList>(), path, "PremiumShopList.csv");
+        EmotionShopList.Init(new TableLoaderLocalCSV<int, TDataEmotionShopList>(), path, "EmotionShopList.csv");
+        DiaShopList.Init(new TableLoaderLocalCSV<int, TDataDiaShopList>(), path, "DiaShopList.csv");
+        GoldShopList.Init(new TableLoaderLocalCSV<int, TDataGoldShopList>(), path, "GoldShopList.csv");
 
         return true;
     }
