@@ -29,6 +29,15 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataQuestInfo> QuestInfo { get; private set; }
     public TableData<int, TDataQuestData> QuestData { get; private set; }
     public TableData<int, TDataQuestDayReward> QuestDayReward { get; private set; }
+    public TableData<int, TDataShopInfo> ShopInfo { get; private set; }
+    public TableData<int, TDataEventShopList> EventShopList { get; private set; }
+    public TableData<int, TDataPackageShopList> PackageShopList { get; private set; }
+    public TableData<int, TDataOnedayShopList> OnedayShopList { get; private set; }
+    public TableData<int, TDataBoxShopList> BoxShopList { get; private set; }
+    public TableData<int, TDataPremiumShopList> PremiumShopList { get; private set; }
+    public TableData<int, TDataEmotionShopList> EmotionShopList { get; private set; }
+    public TableData<int, TDataDiaShopList> DiaShopList { get; private set; }
+    public TableData<int, TDataGoldShopList> GoldShopList { get; private set; }
 
 
 
@@ -67,6 +76,18 @@ public class TableManager : Singleton<TableManager>
         QuestInfo = new TableData<int, TDataQuestInfo>();
         QuestData = new TableData<int, TDataQuestData>();
         QuestDayReward = new TableData<int, TDataQuestDayReward>();
+        ItemList = new TableData<int, TDataItemList>();
+        DiceInfo = new TableData<int, TDataDiceInfo>();
+        DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
+        ShopInfo = new TableData<int, TDataShopInfo>();
+        EventShopList = new TableData<int, TDataEventShopList>();
+        PackageShopList = new TableData<int, TDataPackageShopList>();
+        OnedayShopList = new TableData<int, TDataOnedayShopList>();
+        BoxShopList = new TableData<int, TDataBoxShopList>();
+        PremiumShopList = new TableData<int, TDataPremiumShopList>();
+        EmotionShopList = new TableData<int, TDataEmotionShopList>();
+        DiaShopList = new TableData<int, TDataDiaShopList>();
+        GoldShopList = new TableData<int, TDataGoldShopList>();
     }
 
 
@@ -140,6 +161,16 @@ public class TableManager : Singleton<TableManager>
         QuestInfo.Init(new TableLoaderRemoteCSV<int, TDataQuestInfo>(), bucketPath, "QuestInfo.csv", localPath);
         QuestData.Init(new TableLoaderRemoteCSV<int, TDataQuestData>(), bucketPath, "QuestData.csv", localPath);
         QuestDayReward.Init(new TableLoaderRemoteCSV<int, TDataQuestDayReward>(), bucketPath, "QuestDayReward.csv", localPath);
+        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), bucketPath, "/ShopInfo.csv", localPath);
+        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), bucketPath, "/EventShopList.csv", localPath);
+        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), bucketPath, "/PackageShopList.csv", localPath);
+        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), bucketPath, "/OnedayShopList.csv", localPath);
+        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), bucketPath, "/BoxShopList.csv", localPath);
+        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), bucketPath, "/PremiumShopList.csv", localPath);
+        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), bucketPath, "/EmotionShopList.csv", localPath);
+        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), bucketPath, "/DiaShopList.csv", localPath);
+        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), bucketPath, "/GoldShopList.csv", localPath);
+
         return true;
     }
 
@@ -165,6 +196,16 @@ public class TableManager : Singleton<TableManager>
         QuestInfo.Init(new TableLoaderLocalCSV<int, TDataQuestInfo>(), path, "QuestInfo.csv");
         QuestData.Init(new TableLoaderLocalCSV<int, TDataQuestData>(), path, "QuestData.csv");
         QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
+
+        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), path, "/ShopInfo.csv");
+        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), path, "/EventShopList.csv");
+        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), path, "/PackageShopList.csv");
+        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), path, "/OnedayShopList.csv");
+        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), path, "/BoxShopList.csv");
+        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), path, "/PremiumShopList.csv");
+        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), path, "/EmotionShopList.csv");
+        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), path, "/DiaShopList.csv");
+        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), path, "/GoldShopList.csv");
 
         return true;
     }
