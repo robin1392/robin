@@ -57,6 +57,10 @@ namespace RandomWarsResource.Data
 		boss05box_rewardgoods01 = 2701,
 		boss05box_rewardgoods02 = 2702,
 		boss05box_rewardgoods03 = 2703,
+		normaldicebox01 = 3001,
+		magicdicebox01 = 3002,
+		epicdicebox01 = 3003,
+		legenddicebox01 = 3004,
 	}
 
 	public class TDataBoxProductInfo : ITableData<int>

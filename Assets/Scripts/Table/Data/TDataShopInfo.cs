@@ -24,6 +24,7 @@ namespace RandomWarsResource.Data
 		public string linksheet { get; set; }
 		public int chooseType { get; set; }
 		public int sortIndex { get; set; }
+		public int[] shopGroupId { get; set; }
 		public DateTime startDate { get; set; }
 		public DateTime endDate { get; set; }
 		public bool isReset { get; set; }
@@ -44,10 +45,11 @@ namespace RandomWarsResource.Data
 			linksheet = cols[3].Replace("{#$}", ",");
 			chooseType = int.Parse(cols[4]);
 			sortIndex = int.Parse(cols[5]);
-			startDate = DateTime.Parse(cols[6]);
-			endDate = DateTime.Parse(cols[7]);
-			isReset = bool.Parse(cols[8]);
-			isShow = bool.Parse(cols[9]);
+			shopGroupId = Array.ConvertAll(cols[6].Split('|'), s => int.Parse(s));
+			startDate = (cols[7] == "-1") ? default(DateTime) : DateTime.Parse(cols[7]);
+			endDate = (cols[8] == "-1") ? default(DateTime) : DateTime.Parse(cols[8]);
+			isReset = bool.Parse(cols[9]);
+			isShow = bool.Parse(cols[10]);
 		}
 	}
 }

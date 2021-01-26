@@ -16,6 +16,7 @@ namespace RandomWarsResource.Data
 	{
 		public int id { get; set; }
 		public string name { get; set; }
+		public int goodsGroupId { get; set; }
 		public string packageName { get; set; }
 		public string shopImage { get; set; }
 		public int buyType { get; set; }
@@ -54,32 +55,33 @@ namespace RandomWarsResource.Data
 		{
 			id = int.Parse(cols[0]);
 			name = cols[1].Replace("{#$}", ",");
-			packageName = cols[2].Replace("{#$}", ",");
-			shopImage = cols[3].Replace("{#$}", ",");
-			buyType = int.Parse(cols[4]);
-			buyPrice = int.Parse(cols[5]);
-			priceNotice = int.Parse(cols[6]);
-			appleProductId = cols[7].Replace("{#$}", ",");
-			googleProductId = cols[8].Replace("{#$}", ",");
-			itemId01 = int.Parse(cols[9]);
-			itemValue01 = int.Parse(cols[10]);
-			itemId02 = int.Parse(cols[11]);
-			itemValue02 = int.Parse(cols[12]);
-			itemId03 = int.Parse(cols[13]);
-			itemValue03 = int.Parse(cols[14]);
-			itemId04 = int.Parse(cols[15]);
-			itemValue04 = int.Parse(cols[16]);
-			itemId05 = int.Parse(cols[17]);
-			itemValue05 = int.Parse(cols[18]);
-			itemId06 = int.Parse(cols[19]);
-			itemValue06 = int.Parse(cols[20]);
-			buyLimitCnt = int.Parse(cols[21]);
-			tapInfo = int.Parse(cols[22]);
-			tapValue = int.Parse(cols[23]);
-			isDiscount = bool.Parse(cols[24]);
-			discountValue = int.Parse(cols[25]);
-			guideInfoLink = cols[26].Replace("{#$}", ",");
-			isShow = bool.Parse(cols[27]);
+			goodsGroupId = int.Parse(cols[2]);
+			packageName = cols[3].Replace("{#$}", ",");
+			shopImage = cols[4].Replace("{#$}", ",");
+			buyType = int.Parse(cols[5]);
+			buyPrice = int.Parse(cols[6]);
+			priceNotice = int.Parse(cols[7]);
+			appleProductId = cols[8].Replace("{#$}", ",");
+			googleProductId = cols[9].Replace("{#$}", ",");
+			itemId01 = int.Parse(cols[10]);
+			itemValue01 = int.Parse(cols[11]);
+			itemId02 = int.Parse(cols[12]);
+			itemValue02 = int.Parse(cols[13]);
+			itemId03 = int.Parse(cols[14]);
+			itemValue03 = int.Parse(cols[15]);
+			itemId04 = int.Parse(cols[16]);
+			itemValue04 = int.Parse(cols[17]);
+			itemId05 = int.Parse(cols[18]);
+			itemValue05 = int.Parse(cols[19]);
+			itemId06 = int.Parse(cols[20]);
+			itemValue06 = int.Parse(cols[21]);
+			buyLimitCnt = int.Parse(cols[22]);
+			tapInfo = int.Parse(cols[23]);
+			tapValue = int.Parse(cols[24]);
+			isDiscount = bool.Parse(cols[25]);
+			discountValue = int.Parse(cols[26]);
+			guideInfoLink = cols[27].Replace("{#$}", ",");
+			isShow = bool.Parse(cols[28]);
 		}
 	}
 }

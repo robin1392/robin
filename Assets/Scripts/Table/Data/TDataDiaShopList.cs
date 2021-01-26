@@ -39,7 +39,7 @@ namespace RandomWarsResource.Data
 		public bool isDiscount { get; set; }
 		public int discountValue { get; set; }
 		public int multipleValue { get; set; }
-		public bool isFirstBuy { get; set; }
+		public int buyPreviousItemId { get; set; }
 		public bool isShow { get; set; }
 
 
@@ -68,7 +68,7 @@ namespace RandomWarsResource.Data
 			isDiscount = bool.Parse(cols[14]);
 			discountValue = int.Parse(cols[15]);
 			multipleValue = int.Parse(cols[16]);
-			isFirstBuy = bool.Parse(cols[17]);
+			buyPreviousItemId = int.Parse(cols[17]);
 			isShow = bool.Parse(cols[18]);
 		}
 	}

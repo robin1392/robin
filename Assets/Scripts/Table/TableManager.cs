@@ -161,15 +161,15 @@ public class TableManager : Singleton<TableManager>
         QuestInfo.Init(new TableLoaderRemoteCSV<int, TDataQuestInfo>(), bucketPath, "QuestInfo.csv", localPath);
         QuestData.Init(new TableLoaderRemoteCSV<int, TDataQuestData>(), bucketPath, "QuestData.csv", localPath);
         QuestDayReward.Init(new TableLoaderRemoteCSV<int, TDataQuestDayReward>(), bucketPath, "QuestDayReward.csv", localPath);
-        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), bucketPath, "/ShopInfo.csv", localPath);
-        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), bucketPath, "/EventShopList.csv", localPath);
-        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), bucketPath, "/PackageShopList.csv", localPath);
-        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), bucketPath, "/OnedayShopList.csv", localPath);
-        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), bucketPath, "/BoxShopList.csv", localPath);
-        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), bucketPath, "/PremiumShopList.csv", localPath);
-        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), bucketPath, "/EmotionShopList.csv", localPath);
-        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), bucketPath, "/DiaShopList.csv", localPath);
-        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), bucketPath, "/GoldShopList.csv", localPath);
+        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), bucketPath, "ShopInfo.csv", localPath);
+        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), bucketPath, "EventShopList.csv", localPath);
+        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), bucketPath, "PackageShopList.csv", localPath);
+        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), bucketPath, "OnedayShopList.csv", localPath);
+        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), bucketPath, "BoxShopList.csv", localPath);
+        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), bucketPath, "PremiumShopList.csv", localPath);
+        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), bucketPath, "EmotionShopList.csv", localPath);
+        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), bucketPath, "DiaShopList.csv", localPath);
+        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), bucketPath, "GoldShopList.csv", localPath);
 
         return true;
     }
@@ -197,15 +197,15 @@ public class TableManager : Singleton<TableManager>
         QuestData.Init(new TableLoaderLocalCSV<int, TDataQuestData>(), path, "QuestData.csv");
         QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
 
-        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), path, "/ShopInfo.csv");
-        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), path, "/EventShopList.csv");
-        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), path, "/PackageShopList.csv");
-        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), path, "/OnedayShopList.csv");
-        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), path, "/BoxShopList.csv");
-        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), path, "/PremiumShopList.csv");
-        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), path, "/EmotionShopList.csv");
-        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), path, "/DiaShopList.csv");
-        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), path, "/GoldShopList.csv");
+        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
+        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), path, "EventShopList.csv");
+        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), path, "PackageShopList.csv");
+        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), path, "OnedayShopList.csv");
+        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), path, "BoxShopList.csv");
+        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), path, "PremiumShopList.csv");
+        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), path, "EmotionShopList.csv");
+        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), path, "DiaShopList.csv");
+        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), path, "GoldShopList.csv");
 
         return true;
     }
