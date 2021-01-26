@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using Percent.Platform.InAppPurchase;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine.SceneManagement;
@@ -269,6 +270,8 @@ namespace ED
         {
             currentPageNum = num;
             const float duration = 0.3f;
+            
+            if (currentPageNum == 0) ShopManager.Instance.InitShop();
 
             rts_MainPages.DOAnchorPosX(mainPagePosX[num], duration).SetEase(ease);
 

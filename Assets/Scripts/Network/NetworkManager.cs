@@ -17,6 +17,7 @@ using RandomWarsService.Network.Http;
 using RandomWarsService.Network.Socket.NetSession;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
+using Percent.GameBaseClient;
 using UnityEditor;
 
 public class NetworkManager : Singleton<NetworkManager>
@@ -55,6 +56,16 @@ public class NetworkManager : Singleton<NetworkManager>
     private SocketRecvEvent _socketRecv;
     // 패킷 send 함수 모아놓는곳
     private SocketSendEvent _socketSend;
+    
+    public static GameBaseClientSession session;
+    
+    public Action inappViewLockCallback = null;
+    public Action inappViewUnLockCallback = null;
+    public void SetViewLockEvents(System.Action lockEvent, System.Action unlockEvent)
+    {
+        inappViewLockCallback = lockEvent;
+        inappViewUnLockCallback = unlockEvent;
+    }
 
     #endregion
 
@@ -179,6 +190,9 @@ public class NetworkManager : Singleton<NetworkManager>
         }
 
         base.Awake();
+        
+        session = new GameBaseClientSession();
+        session.Init(new GameBaseClientConfig());
     }
 
     // Start is called before the first frame update
@@ -200,6 +214,11 @@ public class NetworkManager : Singleton<NetworkManager>
         if (_httpClient != null)
         {
             _httpClient.Update();
+        }
+
+        if (session != null)
+        {
+            session.Update();
         }
     }
 
