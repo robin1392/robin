@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using ED;
 using Percent.GameBaseClient;
 using Percent.Platform.InAppPurchase;
 using Template.Shop.GameBaseShop;
 using Template.Shop.GameBaseShop.Common;
 using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Percent.Platform.InAppPurchase
 {
@@ -32,6 +34,7 @@ namespace Percent.Platform.InAppPurchase
         {
             if (listShop == null || listShop.Count == 0)
             {
+                UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 listShop = new List<Shop>();
 
                 NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient,
@@ -57,6 +60,8 @@ namespace Percent.Platform.InAppPurchase
         /// <returns>네트워크 처리가 정상적으로 됐는지 여부</returns>
         private bool SetAllShop(GameBaseShopErrorCode errorCode, ShopInfo[] arrayShopInfo)
         {
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+            
             if (errorCode == GameBaseShopErrorCode.Success)
             {
                 foreach (ShopInfo shopInfo in arrayShopInfo)
@@ -75,7 +80,7 @@ namespace Percent.Platform.InAppPurchase
             }
             else
             {
-                Debug.LogError("에러 발생");
+                Debug.LogError($"에러 발생 : {errorCode}");
                 return false;
             }
         }

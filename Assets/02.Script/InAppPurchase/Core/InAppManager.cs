@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine.Networking;
 using Percent.Boomlagoon.JSON;
 using Percent.Platform.InAppPurchase;
+using RandomWarsResource.Data;
 using Template.Shop.GameBaseShop.Common;
 
 // ReSharper disable All
@@ -156,7 +157,64 @@ namespace Percent.Platform
 #if UNITY_IOS
                 builder.AddProduct(listProductDatas[i].IosStrID, listProductDatas[i].type);
 #elif UNITY_ANDROID
-                builder.AddProduct(listProductDatas[i].AndroidStrID, listProductDatas[i].type);
+                //builder.AddProduct(listProductDatas[i].AndroidStrID, listProductDatas[i].type);
+                
+                ProductType type;
+                // Event
+                var keys = TableManager.Get().EventShopList.Keys;
+                TDataEventShopList dataEvent;
+                foreach (var key in keys)
+                {
+                    if (TableManager.Get().EventShopList.GetData(key, out dataEvent))
+                    {
+                        type = dataEvent.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
+                        builder.AddProduct(dataEvent.googleProductId, type);
+                    }
+                }
+                // Package
+                keys = TableManager.Get().PackageShopList.Keys;
+                TDataPackageShopList dataPackage;
+                foreach (var key in keys)
+                {
+                    if (TableManager.Get().PackageShopList.GetData(key, out dataPackage))
+                    {
+                        type = dataPackage.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
+                        builder.AddProduct(dataPackage.googleProductId, type);
+                    }
+                }
+                // Premium
+                keys = TableManager.Get().PremiumShopList.Keys;
+                TDataPremiumShopList dataPremium;
+                foreach (var key in keys)
+                {
+                    if (TableManager.Get().PremiumShopList.GetData(key, out dataPremium))
+                    {
+                        type = ProductType.NonConsumable;
+                        builder.AddProduct(dataPremium.googleProductId, type);
+                    }
+                }
+                // SeasonPass
+                // keys = TableManager.Get().SeasonpassInfo.Keys;
+                // TDataPackageShopList dataPremium;
+                // foreach (var key in keys)
+                // {
+                //     if (TableManager.Get().PackageShopList.GetData(key, out dataPremium))
+                //     {
+                //         type = dataPremium.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
+                //         builder.AddProduct(dataPremium.googleProductId, type);
+                //     }
+                // }
+                // Diamond
+                keys = TableManager.Get().DiaShopList.Keys;
+                TDataDiaShopList dataDia;
+                foreach (var key in keys)
+                {
+                    if (TableManager.Get().DiaShopList.GetData(key, out dataDia))
+                    {
+                        type = ProductType.Consumable;
+                        builder.AddProduct(dataDia.googleProductId, type);
+                    }
+                }
 #endif
             }
             UnityPurchasing.Initialize(this, builder);

@@ -90,6 +90,12 @@ namespace ED
             {
                 ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", seasonEndPopup.Initialize);
             }
+
+            TDataDiaShopList data;
+            if (TableManager.Get().DiaShopList.GetData(pd => pd.isShow == true, out data))
+            {
+                Debug.Log(data.googleProductId + ", " + data.appleProductId);
+            }
         }
 
         private void Update()
