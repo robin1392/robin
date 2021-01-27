@@ -1,5 +1,0 @@
-framework module Helpshift {
-    umbrella header "Support.h"
-    export *
-}
-

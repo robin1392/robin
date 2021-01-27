@@ -55,7 +55,7 @@ namespace Percent.Platform
                     NetworkManager.session.ShopTemplate.ShopPurchaseTestReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductInfo.shopProductId, null, ShopManager.Instance.ShowPurchaseResult);
 #else
                     //실제 결제
-                    InAppManager.Instance.BuyProductID(productId, NetworkManager.Instance.guid, shopInfo.shopId, shopProductInfo.shopProductId, ShopManager.Instance.ShowBillingBuyResult);
+                    InAppManager.Instance.BuyProductID(productId, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductInfo.shopProductId, ShopManager.Instance.ShowPurchaseResult);
 #endif
                 });
             }
