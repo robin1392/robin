@@ -21,10 +21,10 @@ namespace Template.Shop.GameBaseShop
 
         public bool Init()
         {
-            if (Table.Init("https://randomdice-wars-bucket.s3.ap-northeast-2.amazonaws.com/table/DEV") == false)
-            {
-                return false;
-            }
+            //if (Table.Init("https://randomdice-wars-bucket.s3.ap-northeast-2.amazonaws.com/table/DEV") == false)
+            //{
+            //    return false;
+            //}
 
             return true;
         }

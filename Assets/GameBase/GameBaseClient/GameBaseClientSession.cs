@@ -57,8 +57,8 @@ namespace Percent.GameBaseClient
 
 
 
-            //ShopTemplate.Init();
-            //_messageController.AddControllers(ShopTemplate.MessageControllers);
+            ShopTemplate.Init();
+            _messageController.AddControllers(ShopTemplate.MessageControllers);
         }
 
 
