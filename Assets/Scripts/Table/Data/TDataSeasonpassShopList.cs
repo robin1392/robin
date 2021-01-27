@@ -6,7 +6,7 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		seasonpassgoods_01 = 9001,
+		seasonpassgoods01 = 9001,
 	}
 
 	public class TDataSeasonpassShopList : ITableData<int>
@@ -16,7 +16,7 @@ namespace RandomWarsResource.Data
 		public int itemId { get; set; }
 		public int itemValue { get; set; }
 		public int buyType { get; set; }
-		public int buyPrice { get; set; }
+		public float buyPrice { get; set; }
 		public int priceNptice { get; set; }
 		public string appleProductId { get; set; }
 		public string googleProductId { get; set; }
@@ -42,7 +42,7 @@ namespace RandomWarsResource.Data
 			itemId = int.Parse(cols[2]);
 			itemValue = int.Parse(cols[3]);
 			buyType = int.Parse(cols[4]);
-			buyPrice = int.Parse(cols[5]);
+			buyPrice = float.Parse(cols[5]);
 			priceNptice = int.Parse(cols[6]);
 			appleProductId = cols[7].Replace("{#$}", ",");
 			googleProductId = cols[8].Replace("{#$}", ",");

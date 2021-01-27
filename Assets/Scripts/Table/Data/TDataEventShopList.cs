@@ -6,10 +6,9 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		eventshopgoods_01 = 1001,
-		eventshopgoods_02 = 1002,
-		eventshopgoods_03 = 1003,
-		eventshopgoods_04 = 1004,
+		eventshopgoods01 = 1001,
+		eventshopgoods02 = 1002,
+		eventshopgoods03 = 1003,
 	}
 
 	public class TDataEventShopList : ITableData<int>
@@ -20,7 +19,7 @@ namespace RandomWarsResource.Data
 		public string packageName { get; set; }
 		public string shopImage { get; set; }
 		public int buyType { get; set; }
-		public int buyPrice { get; set; }
+		public float buyPrice { get; set; }
 		public int priceNotice { get; set; }
 		public string appleProductId { get; set; }
 		public string googleProductId { get; set; }
@@ -59,7 +58,7 @@ namespace RandomWarsResource.Data
 			packageName = cols[3].Replace("{#$}", ",");
 			shopImage = cols[4].Replace("{#$}", ",");
 			buyType = int.Parse(cols[5]);
-			buyPrice = int.Parse(cols[6]);
+			buyPrice = float.Parse(cols[6]);
 			priceNotice = int.Parse(cols[7]);
 			appleProductId = cols[8].Replace("{#$}", ",");
 			googleProductId = cols[9].Replace("{#$}", ",");

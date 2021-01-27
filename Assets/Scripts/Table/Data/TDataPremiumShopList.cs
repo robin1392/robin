@@ -6,7 +6,7 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		premiumgoods_01 = 5001,
+		premiumgoods01 = 5001,
 	}
 
 	public class TDataPremiumShopList : ITableData<int>
@@ -16,7 +16,7 @@ namespace RandomWarsResource.Data
 		public string premiumName { get; set; }
 		public string shopImage { get; set; }
 		public int buyType { get; set; }
-		public int buyPrice { get; set; }
+		public float buyPrice { get; set; }
 		public int priceNotice { get; set; }
 		public string appleProductId { get; set; }
 		public string googleProductId { get; set; }
@@ -44,7 +44,7 @@ namespace RandomWarsResource.Data
 			premiumName = cols[2].Replace("{#$}", ",");
 			shopImage = cols[3].Replace("{#$}", ",");
 			buyType = int.Parse(cols[4]);
-			buyPrice = int.Parse(cols[5]);
+			buyPrice = float.Parse(cols[5]);
 			priceNotice = int.Parse(cols[6]);
 			appleProductId = cols[7].Replace("{#$}", ",");
 			googleProductId = cols[8].Replace("{#$}", ",");

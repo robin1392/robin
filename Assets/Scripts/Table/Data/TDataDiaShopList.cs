@@ -6,18 +6,18 @@ namespace RandomWarsResource.Data
 	{
 		None = -1,
 
-		diashopgoods_01 = 7001,
-		diashopgoods_02 = 7002,
-		diashopgoods_03 = 7003,
-		diashopgoods_04 = 7004,
-		diashopgoods_05 = 7005,
-		diashopgoods_06 = 7006,
-		diashopgoods_07 = 7007,
-		diashopgoods_08 = 7008,
-		diashopgoods_09 = 7009,
-		diashopgoods_10 = 7010,
-		diashopgoods_11 = 7011,
-		diashopgoods_12 = 7012,
+		diashopgoods01 = 7001,
+		diashopgoods02 = 7002,
+		diashopgoods03 = 7003,
+		diashopgoods04 = 7004,
+		diashopgoods05 = 7005,
+		diashopgoods06 = 7006,
+		diashopgoods07 = 7007,
+		diashopgoods08 = 7008,
+		diashopgoods09 = 7009,
+		diashopgoods10 = 7010,
+		diashopgoods11 = 7011,
+		diashopgoods12 = 7012,
 	}
 
 	public class TDataDiaShopList : ITableData<int>
@@ -29,7 +29,7 @@ namespace RandomWarsResource.Data
 		public int itemId { get; set; }
 		public int itemValue { get; set; }
 		public int buyType { get; set; }
-		public int buyPrice { get; set; }
+		public float buyPrice { get; set; }
 		public int priceNotice { get; set; }
 		public string appleProductId { get; set; }
 		public string googleProductId { get; set; }
@@ -58,7 +58,7 @@ namespace RandomWarsResource.Data
 			itemId = int.Parse(cols[4]);
 			itemValue = int.Parse(cols[5]);
 			buyType = int.Parse(cols[6]);
-			buyPrice = int.Parse(cols[7]);
+			buyPrice = float.Parse(cols[7]);
 			priceNotice = int.Parse(cols[8]);
 			appleProductId = cols[9].Replace("{#$}", ",");
 			googleProductId = cols[10].Replace("{#$}", ",");
