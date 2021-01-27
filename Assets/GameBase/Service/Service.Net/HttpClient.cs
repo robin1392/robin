@@ -155,7 +155,7 @@ namespace Service.Net
 
             }), request);
 
-            allDone.WaitOne();
+            //allDone.WaitOne();
         }
     }
 }
