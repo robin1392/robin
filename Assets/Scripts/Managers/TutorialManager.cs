@@ -269,4 +269,10 @@ public class TutorialManager : MonoBehaviour
                 break;
         }
     }
+
+    public void Skip()
+    {
+        stepCount = 15;
+        Click_NextStep();
+    }
 }

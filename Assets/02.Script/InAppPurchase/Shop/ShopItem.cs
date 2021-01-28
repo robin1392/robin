@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Percent.Platform.InAppPurchase;
+using RandomWarsResource.Data;
 using Template.Shop.GameBaseShop.Common;
 using TMPro;
 using UnityEditor;
@@ -15,10 +16,14 @@ namespace Percent.Platform
     public class ShopItem : MonoBehaviour
     {
         //상품 정보
-        [SerializeField] private TextMeshProUGUI textPItemId;
-        [SerializeField] private TextMeshProUGUI textPItemBuyCount;
+        [SerializeField] private Text textPItemId;
+        [SerializeField] private Text textPItemBuyCount;
 
         private Button buttonShopItem;
+        private ShopInfo info;
+        private string productId;
+        private string imageName;
+        private BuyType buyType;
 
         private void Awake()
         {
@@ -36,17 +41,121 @@ namespace Percent.Platform
         }
         public virtual void UpdateContent(ShopInfo shopInfo,ShopProductInfo shopProductInfo)
         {
+            info = shopInfo;
+
+            switch (shopInfo.shopId)
+            {
+                case 1:
+                {
+                    TDataEventShopList data;
+                    if (TableManager.Get().EventShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                        imageName = data.shopImage;
+#if UNITY_ANDROID
+                        productId = data.googleProductId;
+#elif UNITY_IOS
+                        productID = data.appleProductId;
+#endif
+                    }
+                }
+                    break;
+                case 2:
+                {
+                    TDataPackageShopList data;
+                    if (TableManager.Get().PackageShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                        imageName = data.shopImage;
+#if UNITY_ANDROID
+                        productId = data.googleProductId;
+#elif UNITY_IOS
+                        productID = data.appleProductId;
+#endif
+                    }
+                }
+                    break;
+                case 3:
+                {
+                    TDataOnedayShopList data;
+                    if (TableManager.Get().OnedayShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                    }
+                }
+                    break;
+                case 4:
+                {
+                    TDataBoxShopList data;
+                    if (TableManager.Get().BoxShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                    }
+                }
+                    break;
+                case 5:
+                {
+                    TDataPremiumShopList data;
+                    if (TableManager.Get().PremiumShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                        imageName = data.shopImage;
+#if UNITY_ANDROID
+                        productId = data.googleProductId;
+#elif UNITY_IOS
+                        productID = data.appleProductId;
+#endif
+                    }
+                }
+                    break;
+                case 6:
+                {
+                    TDataEmotionShopList data;
+                    if (TableManager.Get().EmotionShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                    }
+                }
+                    break;
+                case 7:
+                {
+                    TDataDiaShopList data;
+                    if (TableManager.Get().DiaShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                        imageName = data.goodsImage;
+#if UNITY_ANDROID
+                        productId = data.googleProductId;
+#elif UNITY_IOS
+                        productID = data.appleProductId;
+#endif
+                    }
+                }
+                    break;
+                case 8:
+                {
+                    TDataGoldShopList data;
+                    if (TableManager.Get().GoldShopList.GetData(shopProductInfo.shopProductId, out data))
+                    {
+                        buyType = (BuyType)data.buyType;
+                        imageName = data.goodsImage;
+                    }
+                }
+                    break;
+            }
+            
             buttonShopItem.onClick = new Button.ButtonClickedEvent();
 
             //shopProductInfo.shopProductId 값으로 테이블에 존재하는 상품 데이터 조회
-            string productId = "mhl_package_crystal_150";
+            //string productId = "mhl_package_crystal_150";
             
             textPItemId.text = shopProductInfo.shopProductId.ToString();
-            textPItemBuyCount.text = shopProductInfo.buyCount.ToString();
-            bool isBuyType3 = true;
-            
+            if (buyType == BuyType.cash)
+                textPItemBuyCount.text = InAppManager.Instance.GetIDToProduct(productId)?.metadata.localizedPriceString;
+            else textPItemBuyCount.text = string.Empty;
+
             //아이템의 buyType에 따라서 구매 버튼 눌렀을때 다르게 처리하기
-            if (isBuyType3)
+            if (buyType == BuyType.cash)
             {
                 buttonShopItem.onClick.AddListener(() =>
                 {

@@ -20,7 +20,10 @@ namespace Percent.Platform.InAppPurchase
         
         [SerializeField] private GameObject prefabShop;
         
-        private List<Shop> listShop;
+        [SerializeField]
+        private List<Shop> listShop = new List<Shop>();
+
+        private bool isInitialized;
         
         protected void Start()
         {
@@ -32,10 +35,10 @@ namespace Percent.Platform.InAppPurchase
         /// </summary>
         public void InitShop()
         {
-            if (listShop == null || listShop.Count == 0)
+            if (isInitialized == false)
             {
                 UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-                listShop = new List<Shop>();
+                //listShop = new List<Shop>();
 
                 NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient,
                     UserInfoManager.Get().GetUserInfo().userID, SetAllShop);
@@ -64,23 +67,37 @@ namespace Percent.Platform.InAppPurchase
             
             if (errorCode == GameBaseShopErrorCode.Success)
             {
-                foreach (ShopInfo shopInfo in arrayShopInfo)
+                isInitialized = true;
+                
+                for (int i = 0; i < arrayShopInfo.Length; ++i)
                 {
                     // Shop shop = Instantiate(prefabShop, transformShopParent).GetComponent<Shop>();
                     // listShop.Add(shop);
                     // shop.Initialize(shopInfo);
-                    string str = $"ShopID:{shopInfo.shopId}, e:{shopInfo.eventRemainTime}, r:{shopInfo.resetRemainTime}";
-                    foreach (var productInfo in shopInfo.arrayProductInfo)
+                    string str = $"ShopID:{arrayShopInfo[i].shopId}, e:{arrayShopInfo[i].eventRemainTime}, r:{arrayShopInfo[i].resetRemainTime}";
+                    foreach (var productInfo in arrayShopInfo[i].arrayProductInfo)
                     {
                         str += $"\nProductID:{productInfo.shopProductId}, BuyCount:{productInfo.buyCount}";
                     }
                     Debug.Log(str);
                 }
+
+                int count = 0;
+                for (int i = 0; i < listShop.Count; i++)
+                {
+                    if (i + 1 == arrayShopInfo[count].shopId)
+                    {
+                        listShop[i].Initialize(arrayShopInfo[count]);
+                        count++;
+                    }
+                    else listShop[i].Initialize(null);
+                }
                 return true;
             }
             else
             {
-                Debug.LogError($"에러 발생 : {errorCode}");
+                Debug.Log($"에러 발생 : {errorCode}");
+                UI_ErrorMessage.Get().ShowMessage($"Error : {errorCode}");
                 return false;
             }
         }
@@ -108,7 +125,8 @@ namespace Percent.Platform.InAppPurchase
             }
             else
             {
-                Debug.LogError("에러 발생");
+                Debug.Log($"에러 발생 : {errorCode}");
+                UI_ErrorMessage.Get().ShowMessage($"Error : {errorCode}");
                 return false;
             }
         }
@@ -142,7 +160,8 @@ namespace Percent.Platform.InAppPurchase
             }
             else
             {
-                Debug.LogError("에러 발생");
+                Debug.Log($"에러 발생 : {errorCode}");
+                UI_ErrorMessage.Get().ShowMessage($"Error : {errorCode}");
                 return false;
             }
         }

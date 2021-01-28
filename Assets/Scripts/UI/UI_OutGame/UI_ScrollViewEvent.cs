@@ -29,6 +29,7 @@ namespace ED
         private void Start()
         {
             _main = GetComponentInParent<UI_Main>();
+            if (scrollView == null) scrollView = GetComponent<UnityEngine.UI.ScrollRect>();
             //var trigger = GetComponent<EventTrigger>();
             EventTrigger.Entry entryBegin = new EventTrigger.Entry(),
                 entryDrag = new EventTrigger.Entry(),

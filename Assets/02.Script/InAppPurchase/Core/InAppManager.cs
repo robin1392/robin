@@ -61,7 +61,7 @@ namespace Percent.Platform
         
         [SerializeField] private string consumableParsing;
         [SerializeField] private string nonConsumalbleParsing;
-        
+
         public bool GetPurchaseProgressState()
         {
             return isPurchaseInProgress;
@@ -149,14 +149,14 @@ namespace Percent.Platform
             ConfigurationBuilder builder = ConfigurationBuilder.Instance(module);
 
 
-            int count = listProductDatas.Count;
-            for (int i = 0; i < count; i++)
+            //int count = listProductDatas.Count;
+            //for (int i = 0; i < count; i++)
             {
-                if(isLog)
-                    Debug.Log("Add Product ID : " + listProductDatas[i].AndroidStrID);
-#if UNITY_IOS
-                builder.AddProduct(listProductDatas[i].IosStrID, listProductDatas[i].type);
-#elif UNITY_ANDROID
+                // if(isLog)
+                //     Debug.Log("Add Product ID : " + listProductDatas[i].AndroidStrID);
+//#if UNITY_IOS
+                //builder.AddProduct(listProductDatas[i].IosStrID, listProductDatas[i].type);
+//#elif UNITY_ANDROID
                 //builder.AddProduct(listProductDatas[i].AndroidStrID, listProductDatas[i].type);
                 
                 ProductType type;
@@ -168,7 +168,11 @@ namespace Percent.Platform
                     if (TableManager.Get().EventShopList.GetData(key, out dataEvent))
                     {
                         type = dataEvent.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
+#if UNITY_IOS
+                        builder.AddProduct(dataEvent.appleProductId, type);
+#elif UNITY_ANDROID
                         builder.AddProduct(dataEvent.googleProductId, type);
+#endif
                     }
                 }
                 // Package
@@ -179,7 +183,11 @@ namespace Percent.Platform
                     if (TableManager.Get().PackageShopList.GetData(key, out dataPackage))
                     {
                         type = dataPackage.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
+#if UNITY_IOS
+                        builder.AddProduct(dataPackage.appleProductId, type);
+#elif UNITY_ANDROID
                         builder.AddProduct(dataPackage.googleProductId, type);
+#endif
                     }
                 }
                 // Premium
@@ -190,7 +198,11 @@ namespace Percent.Platform
                     if (TableManager.Get().PremiumShopList.GetData(key, out dataPremium))
                     {
                         type = ProductType.NonConsumable;
+#if UNITY_IOS
+                        builder.AddProduct(dataPremium.appleProductId, type);
+#elif UNITY_ANDROID
                         builder.AddProduct(dataPremium.googleProductId, type);
+#endif
                     }
                 }
                 // SeasonPass
@@ -212,10 +224,14 @@ namespace Percent.Platform
                     if (TableManager.Get().DiaShopList.GetData(key, out dataDia))
                     {
                         type = ProductType.Consumable;
+#if UNITY_IOS
+                        builder.AddProduct(dataDia.appleProductId, type);
+#elif UNITY_ANDROID
                         builder.AddProduct(dataDia.googleProductId, type);
+#endif
                     }
                 }
-#endif
+//#endif
             }
             UnityPurchasing.Initialize(this, builder);
         }
@@ -427,7 +443,7 @@ namespace Percent.Platform
             dictPendingProducts.Remove(args.purchasedProduct.transactionID);
             storeController.ConfirmPendingPurchase(args.purchasedProduct);
             
-            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, playerGuid, 3,2001, args.purchasedProduct.receipt, ShopManager.Instance.ShowPurchaseResult);
+            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, playerGuid, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Instance.ShowPurchaseResult);
         }
 
         private void ResultPurchaseSuccessed(string text, PurchaseEventArgs args)

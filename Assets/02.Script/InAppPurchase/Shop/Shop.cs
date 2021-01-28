@@ -19,6 +19,12 @@ namespace Percent.Platform
 
         public virtual void Initialize(ShopInfo shopInfo)
         {
+            if (shopInfo == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            
             listShopItem = new List<ShopItem>();
 
             for (int i = 0; i < poolSize; i++)
