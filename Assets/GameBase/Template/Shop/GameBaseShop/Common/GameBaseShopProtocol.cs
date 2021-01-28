@@ -161,14 +161,14 @@ namespace Template.Shop.GameBaseShop.Common
 
 
         #region ShopPurchase ---------------------------------------------------------------------
-        public bool ShopPurchaseReq(ISender sender, string playerGuid, int shopId, int productId, string billingInfo, ReceiveShopPurchaseAckDelegate callback)
+        public bool ShopPurchaseReq(ISender sender, string playerGuid, int shopId, int productId, string receiptInfo, ReceiveShopPurchaseAckDelegate callback)
         {
             ReceiveShopPurchaseAckHandler = callback;
             JObject json = new JObject();
             json.Add("playerGuid", playerGuid);
             json.Add("shopId", shopId);
             json.Add("productId", productId);
-            json.Add("billingInfo", billingInfo);
+            json.Add("receiptInfo", receiptInfo);
             return sender.SendHttpPost((int)EGameBaseShopProtocol.ShopPurchaseReq, "shoppurchase", json.ToString());
         }
 
@@ -181,8 +181,8 @@ namespace Template.Shop.GameBaseShop.Common
             string playerGuid = (string)jObject["playerGuid"];
             int shopId = (int)jObject["shopId"];
             int productId = (int)jObject["productId"];
-            string billingInfo = (string)jObject["billingInfo"];
-            var res = ReceiveShopPurchaseReqHandler(playerGuid, shopId, productId, billingInfo);
+            string receiptInfo = (string)jObject["receiptInfo"];
+            var res = ReceiveShopPurchaseReqHandler(playerGuid, shopId, productId, receiptInfo);
             return ShopPurchaseAck(sender, res.errorCode, res.shopId, res.shopProductInfo, res.payItemInfo, res.arrayRewardItemInfo);
         }
 
