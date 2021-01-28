@@ -45,7 +45,7 @@ namespace Percent.Platform
 
             switch (shopInfo.shopId)
             {
-                case 1:
+                case 1:     // 이벤트 상품
                 {
                     TDataEventShopList data;
                     if (TableManager.Get().EventShopList.GetData(shopProductInfo.shopProductId, out data))
@@ -60,7 +60,7 @@ namespace Percent.Platform
                     }
                 }
                     break;
-                case 2:
+                case 2:     // 패키지 상품
                 {
                     TDataPackageShopList data;
                     if (TableManager.Get().PackageShopList.GetData(shopProductInfo.shopProductId, out data))
@@ -75,25 +75,27 @@ namespace Percent.Platform
                     }
                 }
                     break;
-                case 3:
+                case 3:     // 일일 상품
                 {
                     TDataOnedayShopList data;
                     if (TableManager.Get().OnedayShopList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
                     }
                 }
                     break;
-                case 4:
+                case 4:     // 박스
                 {
                     TDataBoxShopList data;
                     if (TableManager.Get().BoxShopList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
                     }
                 }
                     break;
-                case 5:
+                case 5:     // 프리미엄
                 {
                     TDataPremiumShopList data;
                     if (TableManager.Get().PremiumShopList.GetData(shopProductInfo.shopProductId, out data))
@@ -108,16 +110,17 @@ namespace Percent.Platform
                     }
                 }
                     break;
-                case 6:
+                case 6:     // 이모티콘
                 {
                     TDataEmotionShopList data;
                     if (TableManager.Get().EmotionShopList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
                     }
                 }
                     break;
-                case 7:
+                case 7:     // 다이아
                 {
                     TDataDiaShopList data;
                     if (TableManager.Get().DiaShopList.GetData(shopProductInfo.shopProductId, out data))
@@ -132,13 +135,14 @@ namespace Percent.Platform
                     }
                 }
                     break;
-                case 8:
+                case 8:     // 골드
                 {
                     TDataGoldShopList data;
                     if (TableManager.Get().GoldShopList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
                         imageName = data.goodsImage;
+                        textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
                     }
                 }
                     break;
@@ -152,7 +156,7 @@ namespace Percent.Platform
             textPItemId.text = shopProductInfo.shopProductId.ToString();
             if (buyType == BuyType.cash)
                 textPItemBuyCount.text = InAppManager.Instance.GetIDToProduct(productId)?.metadata.localizedPriceString;
-            else textPItemBuyCount.text = string.Empty;
+            //else textPItemBuyCount.text = string.Empty;
 
             //아이템의 buyType에 따라서 구매 버튼 눌렀을때 다르게 처리하기
             if (buyType == BuyType.cash)

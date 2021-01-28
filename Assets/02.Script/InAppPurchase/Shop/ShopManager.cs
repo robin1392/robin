@@ -87,10 +87,11 @@ namespace Percent.Platform.InAppPurchase
                 {
                     if (i + 1 == arrayShopInfo[count].shopId)
                     {
+                        listShop[i].EnableContent();
                         listShop[i].Initialize(arrayShopInfo[count]);
                         count++;
                     }
-                    else listShop[i].Initialize(null);
+                    else listShop[i].DisableContent();
                 }
                 return true;
             }
@@ -150,11 +151,15 @@ namespace Percent.Platform.InAppPurchase
                 if (payItemInfo != null)
                 {
                     //소모한 재화에 대한 연출 처리
-                    //payItemInfo    
+                    //payItemInfo
                 }
             
                 //구매한 상품에 대한 결과 값
                 //arrayRewardItemInfo
+                for (int i = 0; i < arrayRewardItemInfo.Length; i++)
+                {
+                    Debug.Log($"GET == ID:{arrayRewardItemInfo[i].itemId}, Value:{arrayRewardItemInfo[i].value}");
+                }
             
                 return true;
             }

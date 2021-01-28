@@ -17,6 +17,21 @@ namespace Percent.Platform
         [SerializeField] private int poolSize;
         [SerializeField] private Text textLeftTime;
 
+        private void Start()
+        {
+            DisableContent();
+        }
+
+        public void EnableContent()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void DisableContent()
+        {
+            gameObject.SetActive(false);
+        }
+        
         public virtual void Initialize(ShopInfo shopInfo)
         {
             if (shopInfo == null)
@@ -42,7 +57,13 @@ namespace Percent.Platform
         /// </summary>
         public void UpdateContent(ShopInfo shopInfo)
         {
-            textLeftTime.text = shopInfo.resetRemainTime.ToString();
+            //textLeftTime.text = shopInfo.resetRemainTime.ToString();
+            if (shopInfo.resetRemainTime > 0)
+            {
+                StopAllCoroutines();
+                StartCoroutine(TimeleftCoroutine(shopInfo.resetRemainTime));
+            }
+            
             if(poolSize<shopInfo.arrayProductInfo.Length)
                 Debug.LogError("풀 사이즈보다 표시해야하는 상품이 많은 경우 별도로 처리 필요");
             
@@ -59,6 +80,26 @@ namespace Percent.Platform
                 {
                     shopItemBase.DisableContent();
                 }
+            }
+        }
+
+        IEnumerator TimeleftCoroutine(int remainTime)
+        {
+            DateTime resetDate = DateTime.Now.AddSeconds(remainTime);
+            TimeSpan subTime = resetDate.Subtract(DateTime.Now);
+
+            while (subTime.TotalSeconds > 0)
+            {
+                string str = string.Empty;
+                if (subTime.Days > 0) str += $"{subTime.Days:D2}일 ";
+                if (subTime.Hours > 0) str += $"{subTime.Hours:D2}시간 ";
+                if (subTime.Minutes > 0) str += $"{subTime.Minutes:D2}분 ";
+                //str += $"{subTime.Seconds:D2}초";
+                textLeftTime.text = str;
+                
+                yield return new WaitForSeconds(1f);
+                
+                subTime = resetDate.Subtract(DateTime.Now);
             }
         }
         
