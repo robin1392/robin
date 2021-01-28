@@ -4,15 +4,17 @@ namespace Template.Shop.GameBaseShop.Common
     {
         Success = 0,
         Fatal = 40000,
-        ErrorNotFoundShopInfo = 40001,                  
-        ErrorNotFoundEventShopInfo = 40002,          
-        ErrorNotFoundDailyShopInfo = 40003,          
+        ErrorNotFoundShopInfo = 40001,
+        ErrorNotFoundEventShopInfo = 40002,
+        ErrorNotFoundDailyShopInfo = 40003,
         ErrorShopResetTime = 40004,
-        ErrorShopNotFoundProduct = 40005,
-        ErrorShopBuyItemLack = 40006,
-        ErrorShopConfirmBilling = 40007,
-        
-        
+        ErrorShopResetProduct = 40005,
+        ErrorShopNotFoundProduct = 40006,
+        ErrorShopBuyItemLack = 40007,
+        ErrorShopConfirmBilling = 40008,
+        ErrorShopResetNotAllow = 40009,
+
+
         PurchaseSuccessed = 40010, // 구매 성공 
         PurchaseNotFound = 40011,  // 구매항목 찾지 못함
         PurchaseInitError = 40012, // 초기화 실패, 인터넷 또는 스토어 로그인 확인 
