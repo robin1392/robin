@@ -115,7 +115,7 @@ namespace ED
                     listGettedDice.Add(ugd);
                     ugd.slotNum = gettedSlotCount++;
                     int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
-                    ugd.Initialize(info, level, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
+                    ugd.Initialize(new InfoData(info), level, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
                     
                     RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                     if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level && x.diceGrade == info.grade, out dataDiceUpgrade) == false)
@@ -131,7 +131,7 @@ namespace ED
                     var ugd = obj.GetComponent<UI_Getted_Dice>();
                     listUngettedDice.Add(ugd);
                     ugd.slotNum = ungettedSlotCount++;
-                    ugd.Initialize(info, 0, 0);
+                    ugd.Initialize(new InfoData(info), 0, 0);
                     ugd.SetGrayscale();
                 }
             }
@@ -145,7 +145,7 @@ namespace ED
                     listGettedDice.Add(ugd);
                     ugd.slotNum = gettedSlotCount++;
                     int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
-                    ugd.Initialize(info, level, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
+                    ugd.Initialize(new InfoData(info), level, UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][1]);
                 }
                 else
                 {
@@ -153,7 +153,7 @@ namespace ED
                     var ugd = obj.GetComponent<UI_Getted_Dice>();
                     listUngettedDice.Add(ugd);
                     ugd.slotNum = ungettedSlotCount++;
-                    ugd.Initialize(info, 0, 0);
+                    ugd.Initialize(new InfoData(info), 0, 0);
                     ugd.SetGrayscale();
                 }
             }
@@ -199,34 +199,42 @@ namespace ED
         {
             if (WebPacket.Get() != null && WebPacket.Get().isPacketSend == true)
                 return;
-            
+
             _isSelectMode = true;
             _selectedDiceId = diceId;
             
-            DeactivateSelectedObjectChild();
-            obj_Ciritical.SetActive(false);
-            objSelectBlind.SetActive(true);
-
-
-            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-            if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
+            if (diceId < 5000)
             {
-                return;
+                DeactivateSelectedObjectChild();
+                obj_Ciritical.SetActive(false);
+                objSelectBlind.SetActive(true);
+
+
+                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+                if (TableManager.Get().DiceInfo.GetData(diceId, out dataDiceInfo) == false)
+                {
+                    return;
+                }
+
+                objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite =
+                    FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+
+                rts_Content.DOAnchorPosY(0, 0.1f);
+
+                tsGettedDiceParent.gameObject.SetActive(false);
+                tsGettedGuardianParent.gameObject.SetActive(false);
+                tsUngettedDiceParent.gameObject.SetActive(false);
+                tsUngettedGuardianParent.gameObject.SetActive(false);
+                text_GettedDice.gameObject.SetActive(false);
+                text_UngettedDice.gameObject.SetActive(false);
+                text_GettedGuardian.gameObject.SetActive(false);
+                text_UngettedGuardian.gameObject.SetActive(false);
+            }
+            else
+            {
+                Click_Deck(5);
             }
 
-            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
-            
-            rts_Content.DOAnchorPosY(0, 0.1f);
-            
-            tsGettedDiceParent.gameObject.SetActive(false);
-            tsGettedGuardianParent.gameObject.SetActive(false);
-            tsUngettedDiceParent.gameObject.SetActive(false);
-            tsUngettedGuardianParent.gameObject.SetActive(false);
-            text_GettedDice.gameObject.SetActive(false);
-            text_UngettedDice.gameObject.SetActive(false);
-            text_GettedGuardian.gameObject.SetActive(false);
-            text_UngettedGuardian.gameObject.SetActive(false);
-            
             SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
 
@@ -244,7 +252,7 @@ namespace ED
                     return;
                 }
                 
-                //ui_Popup_Dice_Info.Initialize(dataGuardianInfo);
+                ui_Popup_Dice_Info.Initialize(dataGuardianInfo);
             }
             else        // 주사위
             {
@@ -273,13 +281,8 @@ namespace ED
             
             if (_isSelectMode)
             {
-                //var deck = ObscuredPrefs.GetString("Deck", "0/1/2/3/4");
-                //var deck = UserInfoManager.Get().GetSelectDeck(active);
-                
-                //var splitDeck = deck.Split('/');
                 var isChanged = false;
                 
-                //for (var i = 0; i < intDeck.Length; i++) intDeck[i] = int.Parse(splitDeck[i]);
                 for (var i = 0; i < intDeck.Length; i++)
                 {
                     if (i == deckSlotNum) continue;
@@ -294,17 +297,13 @@ namespace ED
                 }
                 if (!isChanged) intDeck[deckSlotNum] = _selectedDiceId;
                 
-                //
                 if (WebPacket.Get() != null)
                 {
-                    //WebPacket.Get().SendDeckUpdateRequest( active ,intDeck , CallBackDeckUpdate );
                     NetworkManager.Get().UpdateDeckReq(UserInfoManager.Get().GetUserInfo().userID,(sbyte)active, intDeck);
                     UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 }
                 else
                 {
-                    //ObscuredPrefs.SetString("Deck", $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
-                    //UserInfoManager.Get().GetUserInfo().SetDeck(active, $"{intDeck[0]}/{intDeck[1]}/{intDeck[2]}/{intDeck[3]}/{intDeck[4]}");
                     UserInfoManager.Get().GetUserInfo().SetDeck(active, intDeck);
                 }
         

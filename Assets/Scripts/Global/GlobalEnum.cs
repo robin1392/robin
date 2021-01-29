@@ -120,14 +120,15 @@ public partial class Global
     // main ui dice info
     public enum E_DICEINFOSLOT
     {
-        Info_Type  = 0,
-        Info_Hp = 1,
-        Info_AtkPower = 2,
-        Info_AtkSpeed = 3,
-        Info_MoveSpeed = 4,
-        Info_SearchRange = 5,
-        Info_etc = 6,
-        Info_Sp = 7,
+        //Info_Type  = 0,
+        Info_Hp = 0,
+        Info_MoveSpeed,
+        Info_AtkPower,
+        Info_AtkSpeed,
+        Info_Skill,
+        Info_Cooltime,
+        Info_Range,
+        Info_Target,
     }
     
     
