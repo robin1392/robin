@@ -82,8 +82,8 @@ namespace ED
             text_DiceLevel.text = $"{Global.g_class} {level}";
             text_DiceCount.text = $"{count}/{needDiceCount}";
             //image_DiceGuage.fillAmount = count / (float)needDiceCount;
-            if (_data.isGuardian) slider_DiceGuage.gameObject.SetActive(false);
-            else slider_DiceGuage.value = count / (float)needDiceCount;
+            slider_DiceGuage.gameObject.SetActive(!_data.isGuardian);
+            slider_DiceGuage.value = count / (float)needDiceCount;
             image_DiceGuage.color = arrColor[count >= needDiceCount ? 1 : 0];
             //count >= needDiceCount ? arrColor[1] : arrColor[0];//UnityUtil.HexToColor("6AD3E5");
 
