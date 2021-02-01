@@ -108,6 +108,11 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
         });
     }
 
+    public void RefreshProduct(ITEM_TYPE type)
+    {
+        StartCoroutine(EndMove(type));
+    }
+
     private IEnumerator EndMove(ITEM_TYPE type)
     {
         yield return new WaitForSeconds(1f);
@@ -147,6 +152,5 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
             }
                 break;
         }
-        
     }
 }

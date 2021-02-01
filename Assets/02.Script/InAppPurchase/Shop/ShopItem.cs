@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ED;
 using Percent.Platform.InAppPurchase;
 using RandomWarsResource.Data;
 using Template.Shop.GameBaseShop.Common;
@@ -9,12 +10,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 
 namespace Percent.Platform
 {
     public class ShopItem : MonoBehaviour
     {
+        public static Vector3 pos;
+        
         //상품 정보
         [SerializeField] private Text textPItemId;
         [SerializeField] private Text textPItemBuyCount;
@@ -83,6 +87,7 @@ namespace Percent.Platform
                         buyType = (BuyType)data.buyType;
                         textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
                     }
+                    buttonShopItem.interactable = shopProductInfo.buyCount == 0;
                 }
                     break;
                 case 4:     // 박스
@@ -170,6 +175,9 @@ namespace Percent.Platform
                     //실제 결제
                     InAppManager.Instance.BuyProductID(productId, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductInfo.shopProductId, ShopManager.Instance.ShowPurchaseResult);
 #endif
+                    
+                    pos = transform.position;
+                    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 });
             }
             else
@@ -179,6 +187,9 @@ namespace Percent.Platform
                     //인앱 재화로 상품 구매하는 경우
                     NetworkManager.session.ShopTemplate.ShopBuyReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID,
                         shopInfo.shopId, shopProductInfo.shopProductId, ShopManager.Instance.ShowBuyResult);
+                    
+                    pos = transform.position;
+                    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 });
             }
         }
