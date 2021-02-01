@@ -64,10 +64,13 @@ namespace ED
         [Space]
         public bool isAIMode;
 
-        [Header("Panals")] 
+        [Header("Panals")]
         public UI_Panel_Dice panel_Dice;
+        public CanvasGroup[] arrPanels;
+        
 
-        private readonly int[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
+        private float[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
+        private float canvasWidth;
 
         public override void Awake()
         {
@@ -96,6 +99,31 @@ namespace ED
             {
                 Debug.Log(data.googleProductId + ", " + data.appleProductId);
             }
+            
+            HideAnotherPanel();
+
+            canvasWidth = ((RectTransform) transform).sizeDelta.x;
+            ((RectTransform) arrPanels[0].transform).offsetMin = new Vector2(-canvasWidth * 2,
+                ((RectTransform) arrPanels[0].transform).offsetMin.y);
+            ((RectTransform) arrPanels[0].transform).offsetMax = new Vector2(-canvasWidth * 2,
+                ((RectTransform) arrPanels[0].transform).offsetMin.y);
+            canvasWidth = ((RectTransform) transform).sizeDelta.x;
+            ((RectTransform) arrPanels[1].transform).offsetMin = new Vector2(-canvasWidth,
+                ((RectTransform) arrPanels[1].transform).offsetMin.y);
+            ((RectTransform) arrPanels[1].transform).offsetMax = new Vector2(-canvasWidth,
+                ((RectTransform) arrPanels[1].transform).offsetMin.y);
+            canvasWidth = ((RectTransform) transform).sizeDelta.x;
+            ((RectTransform) arrPanels[3].transform).offsetMin = new Vector2(canvasWidth,
+                ((RectTransform) arrPanels[3].transform).offsetMin.y);
+            ((RectTransform) arrPanels[3].transform).offsetMax = new Vector2(canvasWidth,
+                ((RectTransform) arrPanels[3].transform).offsetMin.y);
+            canvasWidth = ((RectTransform) transform).sizeDelta.x;
+            ((RectTransform) arrPanels[4].transform).offsetMin = new Vector2(canvasWidth * 2,
+                ((RectTransform) arrPanels[4].transform).offsetMin.y);
+            ((RectTransform) arrPanels[4].transform).offsetMax = new Vector2(canvasWidth * 2,
+                ((RectTransform) arrPanels[4].transform).offsetMin.y);
+            mainPagePosX = new float[] {canvasWidth * 2, canvasWidth, 0, -canvasWidth, -canvasWidth * 2};
+            Click_MainButton(2);
         }
 
         private void Update()
@@ -272,18 +300,39 @@ namespace ED
 
         private readonly Ease ease = Ease.OutQuint;
 
+        private void HideAnotherPanel()
+        {
+            for (int i = 0; i < arrPanels.Length; i++)
+            {
+                arrPanels[i].alpha = i == currentPageNum ? 1f : 0f;
+            }
+        }
+
+        private void ShowAllPanels()
+        {
+            for (int i = 0; i < arrPanels.Length; i++)
+            {
+                arrPanels[i].alpha = 1f;
+            }
+        }
+
         public void Click_MainButton(int num)
         {
+            ShowAllPanels();
             currentPageNum = num;
             const float duration = 0.3f;
             
             if (currentPageNum == 0) ShopManager.Instance.InitShop();
 
-            rts_MainPages.DOAnchorPosX(mainPagePosX[num], duration).SetEase(ease);
+            rts_MainPages.DOAnchorPosX(mainPagePosX[num], duration).SetEase(ease).OnComplete(() =>
+            {
+                HideAnotherPanel();
+            });
 
             for (var i = 0; i < arrRts_MainButtons.Length; i++)
             {
-                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 390f : 213f, 260f), duration).SetEase(ease);
+                //arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 390f : 213f, 260f), duration).SetEase(ease);
+                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? canvasWidth * 0.28f : canvasWidth * 0.18f, 260f), duration).SetEase(ease);
                 //arrRts_MainButtons[i].GetComponent<Image>().DOColor(i == num ? Color.white : Color.gray, duration);
                 arrRts_MainButtons[i]
                     .BroadcastMessage(i == num ? "Up" : "Down", SendMessageOptions.DontRequireReceiver);
@@ -376,6 +425,7 @@ namespace ED
 
         public void OnBeginDrag(BaseEventData data)
         {
+            ShowAllPanels();
             ui_ScrollViewEvent.scrollType = UI_ScrollViewEvent.SCROLL.HORIZONTAL;
             ui_ScrollViewEventSeasonPass.scrollType = UI_ScrollViewEvent.SCROLL.HORIZONTAL;
             ui_ScrollViewEventTrophy.scrollType = UI_ScrollViewEvent.SCROLL.HORIZONTAL;

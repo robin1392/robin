@@ -55,7 +55,8 @@ public class UI_Box_Slot : MonoBehaviour
         text_Name.color = isEnable ? Color.white : Color.gray;
         text_Count.color = isEnable ? Color.white : Color.gray;
         image_CostIcon.color = isEnable ? Color.white : Color.gray;
-        image_Icon.sprite = arrSprite_BoxIcon[id - (int)RandomWarsResource.Data.EItemListKey.boss01box];
+        //image_Icon.sprite = arrSprite_BoxIcon[id - (int)RandomWarsResource.Data.EItemListKey.boss01box];
+        image_Icon.sprite = FileHelper.GetBoxIcon(tDataItemList.itemIcon);
 
 
         //if (needKey >= 0)
