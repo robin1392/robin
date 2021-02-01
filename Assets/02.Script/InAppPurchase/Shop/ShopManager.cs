@@ -142,7 +142,7 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="payItemInfo"></param>
         /// <param name="arrayRewardItemInfo"></param>
         /// <returns></returns>
-        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo)
+        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             
@@ -217,9 +217,9 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="shopProductInfo"></param>
         /// <param name="arrayShopItemInfo"></param>
         /// <returns></returns>
-        public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo)
+        public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
         {
-            return ShowBuyResult(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo);
+            return ShowBuyResult(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
         }
     }
 }

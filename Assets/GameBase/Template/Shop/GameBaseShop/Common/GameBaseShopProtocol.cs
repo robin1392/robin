@@ -3,6 +3,7 @@ using System.Text;
 using Service.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RandomWarsProtocol;
 
 namespace Template.Shop.GameBaseShop.Common
 {
@@ -119,7 +120,7 @@ namespace Template.Shop.GameBaseShop.Common
             return sender.SendHttpPost((int)EGameBaseShopProtocol.ShopBuyReq, "shopbuy", json.ToString());
         }
 
-        public delegate (GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo) ReceiveShopBuyReqDelegate(string playerGuid, int shopId, int shopProductId);
+        public delegate (GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData) ReceiveShopBuyReqDelegate(string playerGuid, int shopId, int productId);
         public ReceiveShopBuyReqDelegate ReceiveShopBuyReqHandler;
         public bool ReceiveShopBuyReq(ISender sender, byte[] msg, int length)
         {
@@ -127,12 +128,12 @@ namespace Template.Shop.GameBaseShop.Common
             JObject jObject = JObject.Parse(json);
             string playerGuid = (string)jObject["playerGuid"];
             int shopId = (int)jObject["shopId"];
-            int shopProductId = (int)jObject["productId"];
-            var res = ReceiveShopBuyReqHandler(playerGuid, shopId, shopProductId);
-            return ShopBuyAck(sender, res.errorCode, res.shopId, res.shopProductInfo, res.payItemInfo, res.arrayRewardItemInfo);
+            int productId = (int)jObject["productId"];
+            var res = ReceiveShopBuyReqHandler(playerGuid, shopId, productId);
+            return ShopBuyAck(sender, res.errorCode, res.shopId, res.shopProductInfo, res.payItemInfo, res.arrayRewardItemInfo, res.arrayQuestData);
         }
 
-        public bool ShopBuyAck(ISender sender, GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo)
+        public bool ShopBuyAck(ISender sender, GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -140,11 +141,12 @@ namespace Template.Shop.GameBaseShop.Common
             json.Add("shopProductInfo", JsonConvert.SerializeObject(shopProductInfo));
             json.Add("payItemInfo", JsonConvert.SerializeObject(payItemInfo));
             json.Add("arrayRewardItemInfo", JsonConvert.SerializeObject(arrayRewardItemInfo));
+            json.Add("arrayQuestData", JsonConvert.SerializeObject(arrayQuestData));
             return sender.SendHttpResult(json.ToString());
         }
 
 
-        public delegate bool ReceiveShopBuyAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo);
+        public delegate bool ReceiveShopBuyAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData);
         public ReceiveShopBuyAckDelegate ReceiveShopBuyAckHandler;
         public bool ReceiveShopBuyAck(ISender sender, byte[] msg, int length)
         {
@@ -155,7 +157,8 @@ namespace Template.Shop.GameBaseShop.Common
             ShopProductInfo shopProductInfo = JsonConvert.DeserializeObject<ShopProductInfo>(jObject["shopProductInfo"].ToString());
             ShopItemInfo payItemInfo = JsonConvert.DeserializeObject<ShopItemInfo>(jObject["payItemInfo"].ToString());
             ShopItemInfo[] arrayRewardItemInfo = JsonConvert.DeserializeObject<ShopItemInfo[]>(jObject["arrayRewardItemInfo"].ToString());
-            return ReceiveShopBuyAckHandler(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo);
+            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
+            return ReceiveShopBuyAckHandler(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
         }
         #endregion        
 
@@ -172,7 +175,7 @@ namespace Template.Shop.GameBaseShop.Common
             return sender.SendHttpPost((int)EGameBaseShopProtocol.ShopPurchaseReq, "shoppurchase", json.ToString());
         }
 
-        public delegate (GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo) ReceiveShopPurchaseReqDelegate(string playerGuid, int shopId, int productId, string billingInfo);
+        public delegate (GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData) ReceiveShopPurchaseReqDelegate(string playerGuid, int shopId, int productId, string purchaseInfo);
         public ReceiveShopPurchaseReqDelegate ReceiveShopPurchaseReqHandler;
         public bool ReceiveShopPurchaseReq(ISender sender, byte[] msg, int length)
         {
@@ -183,10 +186,10 @@ namespace Template.Shop.GameBaseShop.Common
             int productId = (int)jObject["productId"];
             string receiptInfo = (string)jObject["receiptInfo"];
             var res = ReceiveShopPurchaseReqHandler(playerGuid, shopId, productId, receiptInfo);
-            return ShopPurchaseAck(sender, res.errorCode, res.shopId, res.shopProductInfo, res.payItemInfo, res.arrayRewardItemInfo);
+            return ShopPurchaseAck(sender, res.errorCode, res.shopId, res.shopProductInfo, res.payItemInfo, res.arrayRewardItemInfo, res.arrayQuestData);
         }
 
-        public bool ShopPurchaseAck(ISender sender, GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo)
+        public bool ShopPurchaseAck(ISender sender, GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -194,11 +197,12 @@ namespace Template.Shop.GameBaseShop.Common
             json.Add("shopProductInfo", JsonConvert.SerializeObject(shopProductInfo));
             json.Add("payItemInfo", JsonConvert.SerializeObject(payItemInfo));
             json.Add("arrayRewardItemInfo", JsonConvert.SerializeObject(arrayRewardItemInfo));
+            json.Add("arrayQuestData", JsonConvert.SerializeObject(arrayQuestData));
             return sender.SendHttpResult(json.ToString());
         }
 
 
-        public delegate bool ReceiveShopPurchaseAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo);
+        public delegate bool ReceiveShopPurchaseAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData);
         public ReceiveShopPurchaseAckDelegate ReceiveShopPurchaseAckHandler;
         public bool ReceiveShopPurchaseAck(ISender sender, byte[] msg, int length)
         {
@@ -209,7 +213,8 @@ namespace Template.Shop.GameBaseShop.Common
             ShopProductInfo shopProductInfo = JsonConvert.DeserializeObject<ShopProductInfo>(jObject["shopProductInfo"].ToString());
             ShopItemInfo payItemInfo = JsonConvert.DeserializeObject<ShopItemInfo>(jObject["payItemInfo"].ToString());
             ShopItemInfo[] arrayRewardItemInfo = JsonConvert.DeserializeObject<ShopItemInfo[]>(jObject["arrayRewardItemInfo"].ToString());
-            return ReceiveShopPurchaseAckHandler(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo);
+            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
+            return ReceiveShopPurchaseAckHandler(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
         }
         #endregion        
 
@@ -251,7 +256,7 @@ namespace Template.Shop.GameBaseShop.Common
         }
 
 
-        public delegate bool ReceiveShopPurchaseTestAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo);
+        public delegate bool ReceiveShopPurchaseTestAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData);
         public ReceiveShopPurchaseTestAckDelegate ReceiveShopPurchaseTestAckHandler;
         public bool ReceiveShopPurchaseTestAck(ISender sender, byte[] msg, int length)
         {
@@ -262,7 +267,8 @@ namespace Template.Shop.GameBaseShop.Common
             ShopProductInfo shopProductInfo = JsonConvert.DeserializeObject<ShopProductInfo>(jObject["shopProductInfo"].ToString());
             ShopItemInfo payItemInfo = JsonConvert.DeserializeObject<ShopItemInfo>(jObject["payItemInfo"].ToString());
             ShopItemInfo[] arrayRewardItemInfo = JsonConvert.DeserializeObject<ShopItemInfo[]>(jObject["arrayRewardItemInfo"].ToString());
-            return ReceiveShopPurchaseTestAckHandler(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo);
+            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
+            return ReceiveShopPurchaseTestAckHandler(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
         }
         #endregion    
 
