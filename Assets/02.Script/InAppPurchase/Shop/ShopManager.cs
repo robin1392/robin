@@ -51,7 +51,7 @@ namespace Percent.Platform.InAppPurchase
         /// </summary>
         public void RefreshShop()
         {
-            listShop = new List<Shop>();
+            //listShop = new List<Shop>();
             
             NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, RefreshAllShop);    
         }
@@ -150,6 +150,16 @@ namespace Percent.Platform.InAppPurchase
             {
                 //구매한 상품에 대한 정보
                 //shopProductInfo
+                switch (shopId)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 5:
+                    case 6:
+                        RefreshShop();
+                        break;
+                }
             
                 if (payItemInfo != null)
                 {
