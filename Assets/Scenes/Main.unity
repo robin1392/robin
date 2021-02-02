@@ -3721,6 +3721,11 @@ MonoBehaviour:
   btn_PlayCoop: {fileID: 1959449668}
   btn_SearchCancel: {fileID: 94870690}
   btn_AD: {fileID: 6180031957322454519}
+  arrSearchingCanvasGroup:
+  - {fileID: 4041583365924393631}
+  - {fileID: 6965502013037244914}
+  - {fileID: 5001074855173098045}
+  - {fileID: 607162153835697147}
   searchingPopup: {fileID: 1735105245}
   boxPopup: {fileID: 1683126478458088271}
   boxOpenPopup: {fileID: 3869058008035699927}
@@ -54845,7 +54850,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8096099838971447972}
   m_Enabled: 1
-  m_Alpha: 0.99
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

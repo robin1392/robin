@@ -47,6 +47,7 @@ namespace Percent.Platform
         public virtual void UpdateContent(ShopInfo shopInfo,ShopProductInfo shopProductInfo)
         {
             info = shopInfo;
+            int maxBuyCount = 0;
 
             switch (shopInfo.shopId)
             {
@@ -57,6 +58,7 @@ namespace Percent.Platform
                     {
                         buyType = (BuyType)data.buyType;
                         imageName = data.shopImage;
+                        maxBuyCount = data.buyLimitCnt;
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -72,6 +74,7 @@ namespace Percent.Platform
                     {
                         buyType = (BuyType)data.buyType;
                         imageName = data.shopImage;
+                        maxBuyCount = data.buyLimitCnt;
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -160,7 +163,7 @@ namespace Percent.Platform
             //string productId = "mhl_package_crystal_150";
             
             textPItemId.text = shopProductInfo.shopProductId.ToString();
-            textPItemId.text += $"  ({shopProductInfo.buyCount}/)";
+            textPItemId.text += $"  ({shopProductInfo.buyCount}/{maxBuyCount})";
             if (buyType == BuyType.cash)
                 textPItemBuyCount.text = InAppManager.Instance.GetIDToProduct(productId)?.metadata.localizedPriceString;
             //else textPItemBuyCount.text = string.Empty;

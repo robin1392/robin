@@ -32,6 +32,7 @@ namespace ED
         public Button btn_PlayCoop;
         public Button btn_SearchCancel;
         public Button btn_AD;
+        public CanvasGroup[] arrSearchingCanvasGroup;
         
         [Header("Popup")]
         public UI_SearchingPopup searchingPopup;
@@ -332,7 +333,7 @@ namespace ED
             for (var i = 0; i < arrRts_MainButtons.Length; i++)
             {
                 //arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 390f : 213f, 260f), duration).SetEase(ease);
-                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? canvasWidth * 0.28f : canvasWidth * 0.18f, 260f), duration).SetEase(ease);
+                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? canvasWidth * 0.36f : canvasWidth * 0.16f, 260f), duration).SetEase(ease);
                 //arrRts_MainButtons[i].GetComponent<Image>().DOColor(i == num ? Color.white : Color.gray, duration);
                 arrRts_MainButtons[i]
                     .BroadcastMessage(i == num ? "Up" : "Down", SendMessageOptions.DontRequireReceiver);
@@ -358,8 +359,8 @@ namespace ED
             // group = rts_SafeArea.GetComponent<CanvasGroup>();
             // group.DOFade(fade, 0.2f);
 
-            var groups = GetComponentsInChildren<CanvasGroup>();
-            foreach (var canvasGroup in groups)
+            //var groups = GetComponentsInChildren<CanvasGroup>();
+            foreach (var canvasGroup in arrSearchingCanvasGroup)
             {
                 canvasGroup.DOFade(fade, 0.2f);
             }
