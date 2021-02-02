@@ -160,6 +160,7 @@ namespace Percent.Platform
             //string productId = "mhl_package_crystal_150";
             
             textPItemId.text = shopProductInfo.shopProductId.ToString();
+            textPItemId.text += $"  ({shopProductInfo.buyCount}/)";
             if (buyType == BuyType.cash)
                 textPItemBuyCount.text = InAppManager.Instance.GetIDToProduct(productId)?.metadata.localizedPriceString;
             //else textPItemBuyCount.text = string.Empty;
@@ -207,10 +208,12 @@ namespace Percent.Platform
                 {
                     case 1:
                     case 2:
-                    case 3:
                     case 5:
                     case 6:
                         ShopManager.Instance.RefreshShop();
+                        break;
+                    case 3:
+                        buttonShopItem.interactable = false;
                         break;
                 }
             
@@ -251,6 +254,9 @@ namespace Percent.Platform
                     arr[i].Value = arrayRewardItemInfo[i].value;
                 }
                 UI_Main.Get().AddReward(arr, ShopItem.pos);
+                
+                // 퀘스트 업데이트
+                UI_Popup_Quest.QuestUpdate(arrayQuestData);
             
                 return true;
             }
