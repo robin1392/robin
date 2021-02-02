@@ -7,14 +7,95 @@ using DG;
 using DG.Tweening;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
+using RandomWarsResource.Data;
+using UnityEngine.EventSystems;
 
 namespace ED
 {
-
+    [Serializable]
     public class InfoUI
     {
         public Text textType;
         public Text textValue;
+        public Text textPlus;
+    }
+
+    public class InfoData
+    {
+        public bool isGuardian;
+        public int id;
+        public string iconName;
+        public string illustName;
+        public float maxHealth;
+        public float maxHpUpgrade;
+        public float maxHpInGameUp;
+        public float power;
+        public float powerUpgrade;
+        public float powerInGameUp;
+        public float effect;
+        public float effectUpgrade;
+        public float effectInGameUp;
+        public float effectCooltime;
+        public float effectDuration;
+        public float attackSpeed;
+        public float moveSpeed;
+        public float range;
+        public int[] color;
+        public DICE_MOVE_TYPE targetMoveType;
+        public DICE_GRADE grade;
+        public DICE_CAST_TYPE castType;
+
+        public InfoData(RandomWarsResource.Data.TDataDiceInfo pData)
+        {
+            isGuardian = false;
+            id = pData.id;
+            iconName = pData.iconName;
+            illustName = pData.illustName;
+            maxHealth = pData.maxHealth;
+            maxHpUpgrade = pData.maxHpUpgrade;
+            maxHpInGameUp = pData.maxHpInGameUp;
+            power = pData.power;
+            powerUpgrade = pData.powerUpgrade;
+            powerInGameUp = pData.powerInGameUp;
+            effect = pData.effect;
+            effectUpgrade = pData.effectUpgrade;
+            effectInGameUp = pData.effectInGameUp;
+            effectCooltime = pData.effectCooltime;
+            effectDuration = pData.effectDuration;
+            attackSpeed = pData.attackSpeed;
+            moveSpeed = pData.moveSpeed;
+            range = pData.range;
+            color = pData.color;
+            targetMoveType = (DICE_MOVE_TYPE)pData.targetMoveType;
+            grade = (DICE_GRADE)pData.grade;
+            castType = (DICE_CAST_TYPE)pData.castType;
+        }
+        
+        public InfoData(RandomWarsResource.Data.TDataGuardianInfo pData)
+        {
+            isGuardian = true;
+            id = pData.id;
+            iconName = pData.iconName;
+            illustName = pData.illustName;
+            maxHealth = pData.maxHealth;
+            maxHpUpgrade = pData.maxHpUpgrade;
+            maxHpInGameUp = pData.maxHpInGameUp;
+            power = pData.power;
+            powerUpgrade = pData.powerUpgrade;
+            powerInGameUp = pData.powerInGameUp;
+            effect = pData.effect;
+            effectUpgrade = pData.effectUpgrade;
+            effectInGameUp = pData.effectInGameUp;
+            effectCooltime = pData.effectCooltime;
+            effectDuration = pData.effectDuration;
+            attackSpeed = pData.attackSpeed;
+            moveSpeed = pData.moveSpeed;
+            range = pData.range;
+            color = pData.color;
+            targetMoveType = (DICE_MOVE_TYPE)pData.targetMoveType;
+            grade = (DICE_GRADE)pData.grade;
+            castType = (DICE_CAST_TYPE)pData.castType;
+        }
     }
     
     public class UI_Popup_Dice_Info : UI_Popup
@@ -34,6 +115,10 @@ namespace ED
         public Text text_Grade;
         public Image image_GradeBG;
         public Text text_TowerHP;
+        public Text text_Type;
+        public Text text_TypeInfo;
+        public Image image_Type;
+        public Sprite[] arrSprite_Type;
 
         [Header("Button")]
         public Button btn_Upgrade;
@@ -41,6 +126,8 @@ namespace ED
         public Text text_UpgradeGold;
         public Button btn_Use;
         public Text text_Use;
+        public Button btn_ShowUpgrade;
+        public Button btn_ShowLevelUp;
 
         [Header("Dice LevelUp Result")]
         public GameObject obj_Result;
@@ -54,11 +141,13 @@ namespace ED
         public ParticleSystem ps_ResultIconBackground;
 
         //private Data_Dice data;
-        private RandomWarsResource.Data.TDataDiceInfo data;
+        //private RandomWarsResource.Data.TDataDiceInfo data;
+        private InfoData data;
 
         [Space]
         public Transform infosTranform;
         //
+        [SerializeField]
         private List<InfoUI> listInfoUI = new List<InfoUI>();
         private int diceLevel;
         private int needGold;
@@ -81,21 +170,33 @@ namespace ED
         }
 
         //public void Initialize(Data_Dice pData)
-        public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData)
+        public void Initialize(TDataDiceInfo pData)
+        {
+            data = new InfoData(pData);
+            Initialize();
+        }
+        
+        public void Initialize(TDataGuardianInfo pData)
+        {
+            data = new InfoData(pData);
+            Initialize();
+        }
+
+        private void Initialize()
         {
             gameObject.SetActive(true);
-            data = pData;
+            
             diceLevel = 0;
             int diceCount = 0;
 
-            RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-            if (TableManager.Get().DiceInfo.GetData(pData.id, out dataDiceInfo) == false)
-            {
-                return;
-            }
+            // RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+            // if (TableManager.Get().DiceInfo.GetData(data.id, out dataDiceInfo) == false)
+            // {
+            //     return;
+            // }
 
-            image_Character.sprite = FileHelper.GetIllust(dataDiceInfo.illustName);
-            ps_LegendCharacterEffect.gameObject.SetActive(pData.grade == (int)DICE_GRADE.LEGEND);
+            image_Character.sprite = FileHelper.GetIllust(data.illustName);
+            ps_LegendCharacterEffect.gameObject.SetActive(data.grade == DICE_GRADE.LEGEND);
             ps_NormalCharacterEffect.gameObject.SetActive(!ps_LegendCharacterEffect.gameObject.activeSelf);
 
             if (ps_NormalCharacterEffect.gameObject.activeSelf)
@@ -104,7 +205,7 @@ namespace ED
                 for (int i = 0; i < particles.Length; i++)
                 {
                     var module = particles[i].main;
-                    module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[pData.grade]);
+                    module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[Mathf.Clamp((int)data.grade, 0, 3)]);
                 }
             }
                 
@@ -114,28 +215,33 @@ namespace ED
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
             }
 
-            RandomWarsResource.Data.TDataDiceUpgrade dataDiceCurrentUpgrade;
-            RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
-            if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel && x.diceGrade == pData.grade, out dataDiceCurrentUpgrade) == false)
+            int bonusTowerHp = 0;
+            if (data.isGuardian == false)
             {
-                return;
-            }
-            if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == pData.grade, out dataDiceUpgrade) == false)
-            {
-                return;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceCurrentUpgrade;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel && x.diceGrade == (int)data.grade, out dataDiceCurrentUpgrade) == false)
+                {
+                    return;
+                }
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == (int)data.grade, out dataDiceUpgrade) == false)
+                {
+                    return;
+                }
+                needGold = dataDiceUpgrade.needGold;
+                needDiceCount = dataDiceUpgrade.needCard;
+                bonusTowerHp = dataDiceCurrentUpgrade.getTowerHp;
             }
 
-            needGold = dataDiceUpgrade.needGold;
-            needDiceCount = dataDiceUpgrade.needCard;
             ui_getted_dice.Initialize(data, diceLevel, diceCount);
             
             text_Name.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_Discription.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.DICE_DESC + data.id);
-            text_UpgradeGold.text = dataDiceUpgrade.needGold.ToString();
+            text_UpgradeGold.text = needGold.ToString();
 
             btn_Use.interactable = diceLevel > 0;
             btn_Upgrade.interactable = (diceLevel > 0) &&
-                                        (UserInfoManager.Get().GetUserInfo().gold >= dataDiceUpgrade.needGold) &&
+                                        (UserInfoManager.Get().GetUserInfo().gold >= needGold) &&
                                        (diceCount >= needDiceCount);
             var images = btn_Upgrade.GetComponentsInChildren<Image>();
             for (int i = 1; i < images.Length; ++i)
@@ -154,10 +260,15 @@ namespace ED
             }
             text_Use.color = btn_Use.interactable ? Color.white : Color.gray;
 
-            text_TowerHP.text = dataDiceCurrentUpgrade.getTowerHp.ToString();
+            if (data.isGuardian == false ) text_TowerHP.text = bonusTowerHp.ToString();
 
             SetUnitGrade();
             SetInfoDesc();
+            
+            btn_Upgrade.gameObject.SetActive(!data.isGuardian);
+            btn_ShowUpgrade.gameObject.SetActive(!data.isGuardian);
+            btn_ShowLevelUp.gameObject.SetActive(!data.isGuardian);
+            text_TowerHP.transform.parent.gameObject.SetActive(!data.isGuardian);
 
             SoundManager.instance.Play(clip_Open);
         }
@@ -297,7 +408,7 @@ namespace ED
             
             UI_Main.Get().panel_Dice.RefreshGettedDice();
             UI_Main.Get().RefreshUserInfoUI();
-            Initialize(data);
+            Initialize();
 
             yield return new WaitForSeconds(1f);
             isDiceLevelUpCompleted = true;
@@ -339,6 +450,7 @@ namespace ED
                 InfoUI info = new InfoUI();
                 info.textType = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Type").GetComponent<Text>();
                 info.textValue = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Value").GetComponent<Text>();
+                info.textPlus = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Plus").GetComponent<Text>();
                 listInfoUI.Add(info);
             }
         }
@@ -354,65 +466,128 @@ namespace ED
             int gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
             switch (data.grade)
             {
-                case (int)DICE_GRADE.NORMAL:
+                case DICE_GRADE.NORMAL:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
                     break;
-                case (int)DICE_GRADE.MAGIC:
+                case DICE_GRADE.MAGIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_MAGIC;
                     break;
-                case (int)DICE_GRADE.EPIC:
+                case DICE_GRADE.EPIC:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_EPIC;
                     break;
-                case (int)DICE_GRADE.LEGEND:
+                case DICE_GRADE.LEGEND:
                     gradeindex = (int) LANG_ENUM.UI_GRADE_LEGEND;
                     break;
             }
             
-            text_Grade.text = LocalizationManager.GetLangDesc( gradeindex);
+            text_Grade.text = LocalizationManager.GetLangDesc( gradeindex );
             //
             // if(data.grade == (int)DICE_GRADE.NORMAL)
             //     text_Grade.color = UnityUtil.HexToColor("FFFFFF");
             // else
             //     text_Grade.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);
-            image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);
+            image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[Mathf.Clamp((int)data.grade, 0, 3)]);
         }
         
         public void SetInfoDesc()
         {
-            for (int i = 0; i < listInfoUI.Count; i++)
-            {
-                listInfoUI[i].textType.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_DESC + i);
-            }
+            
+            listInfoUI[0].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Hp");
+            listInfoUI[1].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Movespd");
+            listInfoUI[2].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Atk");
+            listInfoUI[3].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Atkspd");
+            listInfoUI[4].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Effect");
+            listInfoUI[5].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Effectcooltime");
+            listInfoUI[6].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Atkrange");
+            listInfoUI[7].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_searchRange");
 
-            int castLangIndex = (int) LANG_ENUM.UI_TYPE_MINION;
+            string castLangIndex = string.Empty;
             switch (data.castType)
             {
-                case (int)DICE_CAST_TYPE.MINION:
-                    castLangIndex = (int) LANG_ENUM.UI_TYPE_MINION;
+                case DICE_CAST_TYPE.MINION:
+                    castLangIndex = "Gameui_Unit";
                     break;
-                case (int)DICE_CAST_TYPE.MAGIC:
-                    castLangIndex = (int) LANG_ENUM.UI_TYPE_MAGIC;
+                case DICE_CAST_TYPE.MAGIC:
+                    castLangIndex = "Gameui_Magic";
                     break;
-                case (int)DICE_CAST_TYPE.INSTALLATION:
-                    castLangIndex = (int) LANG_ENUM.UI_TYPE_INSTALL;
+                case DICE_CAST_TYPE.INSTALLATION:
+                    castLangIndex = "Gameui_Install";
                     break;
-                case (int)DICE_CAST_TYPE.HERO:
-                    castLangIndex = (int) LANG_ENUM.UI_TYPE_HERO;
+                case DICE_CAST_TYPE.HERO:
+                    castLangIndex = "Gameui_Hero";
+                    break;
+                default:
+                    castLangIndex = "Itemname_Guardian_5001";
                     break;
             }
             
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Type].textValue.text = LocalizationManager.GetLangDesc( castLangIndex);
+            text_Type.text = LocalizationManager.GetLangDesc( castLangIndex);
+            if (data.isGuardian)
+            {
+                image_Type.sprite = arrSprite_Type[4];
+            }
+            else
+            {
+                image_Type.sprite = arrSprite_Type[(int) data.castType];
+            }
+            //listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Type].textValue.text = LocalizationManager.GetLangDesc( castLangIndex);
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textValue.text = $"{data.maxHealth + data.maxHpUpgrade * diceLevel}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = $"{(data.power + data.powerUpgrade * diceLevel):f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = $"{data.attackSpeed:f1}";
             listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = $"{data.moveSpeed:f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_SearchRange].textValue.text = $"{data.range:f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_etc].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Sp].textValue.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_NONEVALUE1);
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Skill].textValue.text = $"{(data.effect + data.effectUpgrade * diceLevel):f1}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Cooltime].textValue.text = $"{data.effectCooltime:f1}";
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Range].textValue.text = $"{data.range:f1}";
+            switch ((DICE_MOVE_TYPE)data.targetMoveType)
+            {
+                case DICE_MOVE_TYPE.GROUND:
+                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_targetmovetype0");
+                    break;
+                case DICE_MOVE_TYPE.FLYING:
+                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_targetmovetype1");
+                    break;
+                case DICE_MOVE_TYPE.ALL:
+                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_targetmovetype2");
+                    break;
+            }
 
         }
         #endregion
+
+        public void ClassUpDown(BaseEventData baseEventData)
+        {
+            for (int i = 0; i < listInfoUI.Count; i++)
+            {
+                if (data.maxHpUpgrade > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpUpgrade}";
+                if (data.powerUpgrade > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerUpgrade:f1}"; 
+                if (data.effectUpgrade > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectUpgrade:f1}"; 
+            }
+        }
         
+        public void ClassUpUp(BaseEventData baseEventData)
+        {
+            for (int i = 0; i < listInfoUI.Count; i++)
+            {
+                listInfoUI[i].textPlus.text = String.Empty;
+            }
+        }
         
+        public void PowerUpDown(BaseEventData baseEventData)
+        {
+            for (int i = 0; i < listInfoUI.Count; i++)
+            {
+                if (data.maxHpInGameUp > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpInGameUp}";
+                if (data.powerInGameUp > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerInGameUp:f1}"; 
+                if (data.effectInGameUp > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectInGameUp:f1}"; 
+            }
+        }
+        
+        public void PowerUpUp(BaseEventData baseEventData)
+        {
+            for (int i = 0; i < listInfoUI.Count; i++)
+            {
+                listInfoUI[i].textPlus.text = String.Empty;
+            }
+        }
     }
 }

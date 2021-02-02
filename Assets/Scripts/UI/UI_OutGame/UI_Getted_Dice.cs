@@ -36,8 +36,9 @@ namespace ED
         public Text text_DiceLevel;
 
         //private Data_Dice _data;
-        private RandomWarsResource.Data.TDataDiceInfo _data;
-        private RandomWarsResource.Data.TDataGuardianInfo _dataGuardian;
+        // private RandomWarsResource.Data.TDataDiceInfo _data;
+        // private RandomWarsResource.Data.TDataGuardianInfo _dataGuardian;
+        private InfoData _data;
         
         private UI_Panel_Dice _panelDice;
         private Transform _grandParent;
@@ -59,25 +60,29 @@ namespace ED
             contentSizeFitter = _grandParent.GetComponent<ContentSizeFitter>();
         }
 
-        public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData, int level, int count)
+        public void Initialize(InfoData pData, int level, int count)
         {
             _data = pData;
 
-            RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
-            if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == pData.grade, out dataDiceUpgrade) == false)
+            int needDiceCount = int.MaxValue;
+            if (_data.isGuardian == false)
             {
-                return;
+                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == (int)_data.grade, out dataDiceUpgrade))
+                {
+                    needDiceCount = dataDiceUpgrade.needCard;
+                }
             }
-
-            int needDiceCount = dataDiceUpgrade.needCard;
+            
             if (needDiceCount == 0) needDiceCount = 1;
             
-            image_Icon.sprite = FileHelper.GetDiceIcon( pData.iconName );
-            image_Eye.color = FileHelper.GetColor(pData.color);
+            image_Icon.sprite = FileHelper.GetDiceIcon( _data.iconName );
+            image_Eye.color = FileHelper.GetColor(_data.color);
 
             text_DiceLevel.text = $"{Global.g_class} {level}";
             text_DiceCount.text = $"{count}/{needDiceCount}";
             //image_DiceGuage.fillAmount = count / (float)needDiceCount;
+            slider_DiceGuage.gameObject.SetActive(!_data.isGuardian);
             slider_DiceGuage.value = count / (float)needDiceCount;
             image_DiceGuage.color = arrColor[count >= needDiceCount ? 1 : 0];
             //count >= needDiceCount ? arrColor[1] : arrColor[0];//UnityUtil.HexToColor("6AD3E5");
@@ -87,33 +92,42 @@ namespace ED
             button_LevelUp.gameObject.SetActive(isUpgradeEnable);
             //obj_UpgradeLight.SetActive(obj_UpgradeIcon.activeSelf);
             
-            button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
-            button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
-            button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
+            button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(_data.id); });
+            button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(_data.id); });
+            button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(_data.id); });
 
-            
-            arrImage_GradeBG[0].sprite = arrSprite_GradeBG[pData.grade];
-            arrImage_GradeBG[1].sprite = arrSprite_GradeBG[isUpgradeEnable ? 4 : pData.grade];
-        }
-        
-        public void Initialize(RandomWarsResource.Data.TDataGuardianInfo pData, int level, int count)
-        {
-            _dataGuardian = pData;
-            
-            image_Icon.sprite = FileHelper.GetDiceIcon( pData.iconName );
-            image_Eye.color = FileHelper.GetColor(pData.color);
-
-            text_DiceLevel.text = $"{Global.g_class} {level}";
-            slider_DiceGuage.gameObject.SetActive(false);
-            button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
-            button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
-            button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
-
-            for (int i = 0; i < arrImage_GradeBG.Length; ++i)
+            if (_data.isGuardian)
             {
-                arrImage_GradeBG[i].sprite = arrSprite_GradeBG[0];
+                for (int i = 0; i < arrImage_GradeBG.Length; ++i)
+                {
+                    arrImage_GradeBG[i].sprite = arrSprite_GradeBG[0];
+                }
+            }
+            else
+            {
+                arrImage_GradeBG[0].sprite = arrSprite_GradeBG[(int)_data.grade];
+                arrImage_GradeBG[1].sprite = arrSprite_GradeBG[isUpgradeEnable ? 4 : (int)_data.grade];
             }
         }
+        
+        // public void Initialize(RandomWarsResource.Data.TDataGuardianInfo pData, int level, int count)
+        // {
+        //     _dataGuardian = pData;
+        //     
+        //     image_Icon.sprite = FileHelper.GetDiceIcon( pData.iconName );
+        //     image_Eye.color = FileHelper.GetColor(pData.color);
+        //
+        //     text_DiceLevel.text = $"{Global.g_class} {level}";
+        //     slider_DiceGuage.gameObject.SetActive(false);
+        //     button_Use.onClick.AddListener(() => { _panelDice.Click_Dice_Use(pData.id); });
+        //     button_Info.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
+        //     button_LevelUp.onClick.AddListener(() => { _panelDice.Click_Dice_Info(pData.id); });
+        //
+        //     for (int i = 0; i < arrImage_GradeBG.Length; ++i)
+        //     {
+        //         arrImage_GradeBG[i].sprite = arrSprite_GradeBG[0];
+        //     }
+        // }
 
         public void Click_Dice()
         {
@@ -121,20 +135,13 @@ namespace ED
 
             if (isUngetted)
             {
-                if (_dataGuardian != null)
-                {
-                    
-                }
-                else
-                {
-                    _panelDice.Click_Dice_Info(_data.id);
-                }
+                _panelDice.Click_Dice_Info(_data.id);
             }
             else
             {
-                if (_dataGuardian != null)
+                if (_data.isGuardian)
                 {
-                    
+                    _panelDice.Click_Dice_Info(_data.id);
                 }
                 else
                 {
@@ -148,7 +155,7 @@ namespace ED
 
                     RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
                     if (TableManager.Get().DiceUpgrade
-                            .GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == _data.grade,
+                            .GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == (int)_data.grade,
                                 out dataDiceUpgrade) ==
                         false)
                     {
@@ -199,14 +206,17 @@ namespace ED
             {
                 item.material = mtl_Grayscale;
             }
-            
-            text_DiceLevel.transform.parent.gameObject.SetActive(false);
-            image_DiceGuageBG.gameObject.SetActive(false);
-            
-            if (_data != null)
-                text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp(_data.grade, 0, Global.g_grade.Length)]}";
-            else
-                text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp(_dataGuardian.grade, 0, Global.g_grade.Length)]}";
+
+            if (_data.isGuardian == false)
+            {
+                text_DiceLevel.transform.parent.gameObject.SetActive(false);
+                image_DiceGuageBG.gameObject.SetActive(false);
+                
+                if (_data != null)
+                    text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp((int)_data.grade, 0, Global.g_grade.Length)]}";
+                // else
+                //     text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp(_dataGuardian.grade, 0, Global.g_grade.Length)]}";
+            }
         }
     }
 }

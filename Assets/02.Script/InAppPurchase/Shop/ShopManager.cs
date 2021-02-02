@@ -6,6 +6,7 @@ using System.Threading;
 using ED;
 using Percent.GameBaseClient;
 using Percent.Platform.InAppPurchase;
+using RandomWarsProtocol;
 using Template.Shop.GameBaseShop;
 using Template.Shop.GameBaseShop.Common;
 using Template.Shop.GameBaseShop.Table;
@@ -50,7 +51,7 @@ namespace Percent.Platform.InAppPurchase
         /// </summary>
         public void RefreshShop()
         {
-            listShop = new List<Shop>();
+            //listShop = new List<Shop>();
             
             NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, RefreshAllShop);    
         }
@@ -141,25 +142,62 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="payItemInfo"></param>
         /// <param name="arrayRewardItemInfo"></param>
         /// <returns></returns>
-        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo)
+        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
         {
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+            
             if (errorCode == GameBaseShopErrorCode.Success)
             {
                 //구매한 상품에 대한 정보
                 //shopProductInfo
+                switch (shopId)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 5:
+                    case 6:
+                        RefreshShop();
+                        break;
+                }
             
                 if (payItemInfo != null)
                 {
                     //소모한 재화에 대한 연출 처리
                     //payItemInfo
+                    ITEM_TYPE type;
+                    switch (payItemInfo.itemId)
+                    {
+                        case 1:
+                            type = ITEM_TYPE.GOLD;
+                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.value;
+                            break;
+                        case 2:
+                            type = ITEM_TYPE.DIAMOND;
+                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.value;
+                            break;
+                        case 11:
+                            type = ITEM_TYPE.KEY;
+                            UserInfoManager.Get().GetUserInfo().key += payItemInfo.value;
+                            break;
+                        default:
+                            type = ITEM_TYPE.NONE;
+                            break;
+                    }
+                    UI_GetProduction.Get().RefreshProduct(type);
                 }
             
                 //구매한 상품에 대한 결과 값
                 //arrayRewardItemInfo
+                MsgReward[] arr = new MsgReward[arrayRewardItemInfo.Length];
                 for (int i = 0; i < arrayRewardItemInfo.Length; i++)
                 {
                     Debug.Log($"GET == ID:{arrayRewardItemInfo[i].itemId}, Value:{arrayRewardItemInfo[i].value}");
+                    arr[i] = new MsgReward();
+                    arr[i].ItemId = arrayRewardItemInfo[i].itemId;
+                    arr[i].Value = arrayRewardItemInfo[i].value;
                 }
+                UI_Main.Get().AddReward(arr, ShopItem.pos);
             
                 return true;
             }
@@ -179,9 +217,9 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="shopProductInfo"></param>
         /// <param name="arrayShopItemInfo"></param>
         /// <returns></returns>
-        public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo)
+        public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
         {
-            return ShowBuyResult(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo);
+            return ShowBuyResult(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
         }
     }
 }

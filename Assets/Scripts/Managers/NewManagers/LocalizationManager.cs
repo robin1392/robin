@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -61,6 +62,37 @@ public class LocalizationManager
         return descString;
     }
 
+    public static string GetLangDesc(string textid)
+    {
+        string descString = "";
+
+        Global.COUNTRYCODE code = UnityUtil.GetEnumByStringNonError<Global.COUNTRYCODE>(GetLocalCode());
+
+        if (code == Global.COUNTRYCODE.KO)
+        {
+            RandomWarsResource.Data.TDataLangKO tDataLangKO;
+            if (TableManager.Get().LangKO.GetData(text => String.Compare(text.name, textid, StringComparison.Ordinal) == 0, out tDataLangKO) == false)
+            {
+                descString = "KO " + textid.ToString();
+                return descString;
+            }
+
+            descString = tDataLangKO.textDesc;
+        }
+        else
+        {
+            RandomWarsResource.Data.TDataLangKO tDataLangKO;
+            if (TableManager.Get().LangKO.GetData(text => String.Compare(text.name, textid, StringComparison.Ordinal) == 0, out tDataLangKO) == false)
+            {
+                descString = "KO " + textid.ToString();
+                return descString;
+            }
+
+            descString = tDataLangKO.textDesc;
+        }
+        
+        return descString;
+    }
     
     #endregion
     

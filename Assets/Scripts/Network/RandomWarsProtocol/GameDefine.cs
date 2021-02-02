@@ -18,7 +18,7 @@ namespace RandomWarsProtocol
     }
 
 
-    public enum DICE_GRADE : byte
+    public enum DICE_GRADE
     {
         NORMAL = 0,
         MAGIC = 1,

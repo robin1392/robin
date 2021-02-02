@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ED;
 using Percent.Platform.InAppPurchase;
+using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using Template.Shop.GameBaseShop.Common;
 using TMPro;
@@ -9,12 +11,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 
 namespace Percent.Platform
 {
     public class ShopItem : MonoBehaviour
     {
+        public static Vector3 pos;
+        
         //상품 정보
         [SerializeField] private Text textPItemId;
         [SerializeField] private Text textPItemBuyCount;
@@ -83,6 +88,7 @@ namespace Percent.Platform
                         buyType = (BuyType)data.buyType;
                         textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
                     }
+                    buttonShopItem.interactable = shopProductInfo.buyCount == 0;
                 }
                     break;
                 case 4:     // 박스
@@ -154,6 +160,7 @@ namespace Percent.Platform
             //string productId = "mhl_package_crystal_150";
             
             textPItemId.text = shopProductInfo.shopProductId.ToString();
+            textPItemId.text += $"  ({shopProductInfo.buyCount}/)";
             if (buyType == BuyType.cash)
                 textPItemBuyCount.text = InAppManager.Instance.GetIDToProduct(productId)?.metadata.localizedPriceString;
             //else textPItemBuyCount.text = string.Empty;
@@ -165,11 +172,14 @@ namespace Percent.Platform
                 {
 #if UNITY_EDITOR
                     //개발자 테스트용
-                    NetworkManager.session.ShopTemplate.ShopPurchaseTestReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductInfo.shopProductId, null, ShopManager.Instance.ShowPurchaseResult);
+                    NetworkManager.session.ShopTemplate.ShopPurchaseTestReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductInfo.shopProductId, null, ShowBuyResult);
 #else
                     //실제 결제
-                    InAppManager.Instance.BuyProductID(productId, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductInfo.shopProductId, ShopManager.Instance.ShowPurchaseResult);
+                    InAppManager.Instance.BuyProductID(productId, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductInfo.shopProductId, ShowBuyResult);
 #endif
+                    
+                    pos = transform.position;
+                    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 });
             }
             else
@@ -178,8 +188,83 @@ namespace Percent.Platform
                 {  
                     //인앱 재화로 상품 구매하는 경우
                     NetworkManager.session.ShopTemplate.ShopBuyReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID,
-                        shopInfo.shopId, shopProductInfo.shopProductId, ShopManager.Instance.ShowBuyResult);
+                        shopInfo.shopId, shopProductInfo.shopProductId, ShowBuyResult);
+                    
+                    pos = transform.position;
+                    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 });
+            }
+        }
+        
+        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
+        {
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+            
+            if (errorCode == GameBaseShopErrorCode.Success)
+            {
+                //구매한 상품에 대한 정보
+                //shopProductInfo
+                switch (shopId)
+                {
+                    case 1:
+                    case 2:
+                    case 5:
+                    case 6:
+                        ShopManager.Instance.RefreshShop();
+                        break;
+                    case 3:
+                        buttonShopItem.interactable = false;
+                        break;
+                }
+            
+                if (payItemInfo != null)
+                {
+                    //소모한 재화에 대한 연출 처리
+                    //payItemInfo
+                    ITEM_TYPE type;
+                    switch (payItemInfo.itemId)
+                    {
+                        case 1:
+                            type = ITEM_TYPE.GOLD;
+                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.value;
+                            break;
+                        case 2:
+                            type = ITEM_TYPE.DIAMOND;
+                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.value;
+                            break;
+                        case 11:
+                            type = ITEM_TYPE.KEY;
+                            UserInfoManager.Get().GetUserInfo().key += payItemInfo.value;
+                            break;
+                        default:
+                            type = ITEM_TYPE.NONE;
+                            break;
+                    }
+                    UI_GetProduction.Get().RefreshProduct(type);
+                }
+            
+                //구매한 상품에 대한 결과 값
+                //arrayRewardItemInfo
+                MsgReward[] arr = new MsgReward[arrayRewardItemInfo.Length];
+                for (int i = 0; i < arrayRewardItemInfo.Length; i++)
+                {
+                    Debug.Log($"GET == ID:{arrayRewardItemInfo[i].itemId}, Value:{arrayRewardItemInfo[i].value}");
+                    arr[i] = new MsgReward();
+                    arr[i].ItemId = arrayRewardItemInfo[i].itemId;
+                    arr[i].Value = arrayRewardItemInfo[i].value;
+                }
+                UI_Main.Get().AddReward(arr, ShopItem.pos);
+                
+                // 퀘스트 업데이트
+                UI_Popup_Quest.QuestUpdate(arrayQuestData);
+            
+                return true;
+            }
+            else
+            {
+                Debug.Log($"에러 발생 : {errorCode}");
+                UI_ErrorMessage.Get().ShowMessage($"Error : {errorCode}");
+                return false;
             }
         }
 
