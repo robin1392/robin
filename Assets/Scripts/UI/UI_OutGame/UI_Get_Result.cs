@@ -336,7 +336,7 @@ public class UI_Get_Result : MonoBehaviour
                     
                 }
                 
-                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetDiceIcon(dataDiceInfo.iconName)));
+                crt_IconChange = StartCoroutine(IconChangeCoroutine(FileHelper.GetIcon(dataDiceInfo.iconName)));
 
                 image_ItemIcon.SetNativeSize();
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
@@ -473,7 +473,7 @@ public class UI_Get_Result : MonoBehaviour
                     }
 
                     var dice = Instantiate(pref_ResultDice, rts_ResultDiceParent);
-                    dice.GetComponent<Image>().sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+                    dice.GetComponent<Image>().sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
                     dice.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + dataDiceInfo.id);
                     dice.transform.GetChild(1).GetComponent<Text>().text = $"x{msgReward.Value}";
                     dice.transform.localScale = Vector3.zero;

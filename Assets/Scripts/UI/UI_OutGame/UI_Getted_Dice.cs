@@ -76,7 +76,7 @@ namespace ED
             
             if (needDiceCount == 0) needDiceCount = 1;
             
-            image_Icon.sprite = FileHelper.GetDiceIcon( _data.iconName );
+            image_Icon.sprite = FileHelper.GetIcon( _data.iconName );
             image_Eye.color = FileHelper.GetColor(_data.color);
 
             text_DiceLevel.text = $"{Global.g_class} {level}";

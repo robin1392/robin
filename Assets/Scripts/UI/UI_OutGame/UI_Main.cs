@@ -48,6 +48,7 @@ namespace ED
         public UI_CommonMessageBox commonMessageBoxPopup;
         public UI_Popup menuPopup;
         public UI_Popup_SeasonPassUnlock seasonPassUnlockPopup;
+        public UI_PopupShopBuy shopBuyPopup;
         
         [Header("User Info")] 
         public InputField inputfield_Nicnname;

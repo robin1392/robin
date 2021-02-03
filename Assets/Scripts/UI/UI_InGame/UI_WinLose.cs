@@ -38,7 +38,7 @@ public class UI_WinLose : MonoBehaviour
                     continue;
                 }
                 
-                arrImage_Deck[i].sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+                arrImage_Deck[i].sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
                 arrImage_Deck[i].SetNativeSize();
                 arrImage_Deck[i].transform.localScale = Vector3.zero;
                 arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f)
@@ -52,7 +52,7 @@ public class UI_WinLose : MonoBehaviour
                     continue;
                 }
 
-                image_Guardian.sprite = FileHelper.GetDiceIcon(dataGuardianInfo.iconName);
+                image_Guardian.sprite = FileHelper.GetIcon(dataGuardianInfo.iconName);
                 text_GuardianName.text = dataGuardianInfo.name;
             }
         }
@@ -76,7 +76,7 @@ public class UI_WinLose : MonoBehaviour
                     continue;
                 }
                 
-                arrImage_Deck[i].sprite = FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+                arrImage_Deck[i].sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
                 arrImage_Deck[i].SetNativeSize();
                 arrImage_Deck[i].transform.localScale = Vector3.zero;
                 arrImage_Deck[i].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutQuint).SetDelay(i * 0.1f)
@@ -90,7 +90,7 @@ public class UI_WinLose : MonoBehaviour
                     continue;
                 }
 
-                image_Guardian.sprite = FileHelper.GetDiceIcon(dataGuardianInfo.iconName);
+                image_Guardian.sprite = FileHelper.GetIcon(dataGuardianInfo.iconName);
                 text_GuardianName.text = dataGuardianInfo.name;
             }
         }

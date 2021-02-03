@@ -25,7 +25,7 @@ namespace ED
         {
             this.pData = dataDice;
             this.level = level;
-            image_Icon.sprite = FileHelper.GetDiceIcon(dataDice.iconName);
+            image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
             image_Icon.SetNativeSize();
             Refresh();
 

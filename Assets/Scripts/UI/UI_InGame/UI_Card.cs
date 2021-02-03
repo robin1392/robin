@@ -19,7 +19,7 @@ namespace ED
         public void Initialize(RandomWarsResource.Data.TDataDiceInfo pData)
         {
             isAnimationRunning = false;
-            image_Card.sprite = FileHelper.GetCardIcon( pData.cardName );
+            image_Card.sprite = FileHelper.GetIcon( pData.cardName );
             text_Name.text = pData.name;
             text_Type.text = ((DICE_CAST_TYPE)pData.castType).ToString();
             ani.SetTrigger(On);

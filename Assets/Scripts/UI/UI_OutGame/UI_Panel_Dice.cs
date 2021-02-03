@@ -217,7 +217,7 @@ namespace ED
                 }
 
                 objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite =
-                    FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+                    FileHelper.GetIcon(dataDiceInfo.iconName);
 
                 rts_Content.DOAnchorPosY(0, 0.1f);
 

@@ -56,7 +56,7 @@ public class UI_DeckInfo : MonoBehaviour
             }
 
             arrImage_Dice[i].sprite =
-                FileHelper.GetDiceIcon(dataDiceInfo.iconName);
+                FileHelper.GetIcon(dataDiceInfo.iconName);
             arrImage_Dice[i].SetNativeSize();
             arrImage_DiceEyes[i].color = FileHelper.GetColor(dataDiceInfo.color);
 
@@ -73,7 +73,7 @@ public class UI_DeckInfo : MonoBehaviour
         {
             return;
         }
-        image_GuardianIcon.sprite = FileHelper.GetDiceIcon(dataGuardianInfo.iconName);
+        image_GuardianIcon.sprite = FileHelper.GetIcon(dataGuardianInfo.iconName);
         text_GuardianName.text = dataGuardianInfo.name;
     }
     public void RefreshDeckButton(bool isImmediate = false)

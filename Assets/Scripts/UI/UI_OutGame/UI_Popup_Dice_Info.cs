@@ -195,7 +195,7 @@ namespace ED
             //     return;
             // }
 
-            image_Character.sprite = FileHelper.GetIllust(data.illustName);
+            image_Character.sprite = FileHelper.GetIcon(data.illustName);
             ps_LegendCharacterEffect.gameObject.SetActive(data.grade == DICE_GRADE.LEGEND);
             ps_NormalCharacterEffect.gameObject.SetActive(!ps_LegendCharacterEffect.gameObject.activeSelf);
 
@@ -338,7 +338,7 @@ namespace ED
             //rts_ResultStatParent.localScale = Vector3.zero;
             
             // Data set
-            image_ResultDiceIcon.sprite = FileHelper.GetDiceIcon(data.iconName);
+            image_ResultDiceIcon.sprite = FileHelper.GetIcon(data.iconName);
             text_ResultDiceName.text = LocalizationManager.GetLangDesc((int)LANG_ENUM.DICE_NAME + data.id);
             text_ResultDiceLevel.text = $"LEVEL {diceLevel - 1}";
             text_ResultDiceLevel.color = Color.white;

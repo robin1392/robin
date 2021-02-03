@@ -41,6 +41,9 @@ namespace ED
 
         protected void Open()
         {
+            btn_BG_Close.interactable = false;
+            StartCoroutine(BGButtonEnable());
+            
             if (isPopAnimation)
             {
                 if (btn_BG_Close != null) btn_BG_Close.interactable = false;
@@ -59,6 +62,12 @@ namespace ED
 
             stack.Push(this);
             SoundManager.instance.Play(clip_Open);
+        }
+
+        IEnumerator BGButtonEnable()
+        {
+            yield return new WaitForSeconds(1f);
+            btn_BG_Close.interactable = true;
         }
 
         public virtual void Close()
