@@ -110,7 +110,7 @@ public class UI_BoxOpenPopup : UI_Popup
         int totalDiceCount = 0;
         foreach (var productId in dataBoxList.productId)
         {
-            RandomWarsResource.Data.TDataBoxProductInfo dataBoxProductInfo;
+            RandomWarsResource.Data.TDataBoxOpenInfo dataBoxProductInfo;
             if (TableManager.Get().BoxProductInfo.GetData(productId, out dataBoxProductInfo) == false)
             {
                 return;

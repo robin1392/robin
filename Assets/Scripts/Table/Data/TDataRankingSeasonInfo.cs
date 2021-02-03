@@ -33,8 +33,8 @@ namespace RandomWarsResource.Data
 			name = cols[1].Replace("{#$}", ",");
 			ispreSeason = bool.Parse(cols[2]);
 			nextSeasonId = int.Parse(cols[3]);
-			rankingSeasonStartDate = (cols[4]== " -1") ? default(DateTime) : DateTime.Parse(cols[4]);
-			rankingSeasonEndDate = (cols[5]== " -1") ? default(DateTime) : DateTime.Parse(cols[5]);
+			rankingSeasonStartDate = (cols[4]== "-1") ? default(DateTime) : DateTime.Parse(cols[4]);
+			rankingSeasonEndDate = (cols[5]== "-1") ? default(DateTime) : DateTime.Parse(cols[5]);
 		}
 	}
 }
