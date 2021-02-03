@@ -46,8 +46,8 @@ namespace RandomWarsResource.Data
 			chooseType = int.Parse(cols[4]);
 			sortIndex = int.Parse(cols[5]);
 			shopGroupId = Array.ConvertAll(cols[6].Split('|'), s => int.Parse(s));
-			startDate = (cols[7] == "-1") ? default(DateTime) : DateTime.Parse(cols[7]);
-			endDate = (cols[8] == "-1") ? default(DateTime) : DateTime.Parse(cols[8]);
+			startDate = (cols[7]== " -1") ? default(DateTime) : DateTime.Parse(cols[7]);
+			endDate = (cols[8]== " -1") ? default(DateTime) : DateTime.Parse(cols[8]);
 			isReset = bool.Parse(cols[9]);
 			isShow = bool.Parse(cols[10]);
 		}

@@ -82,6 +82,16 @@ namespace RandomWarsResource.Data
 		guardian_5001 = 5001,
 		guardian_5002 = 5002,
 		guardian_5003 = 5003,
+		emotion_01 = 7001,
+		emotion_02 = 7002,
+		emotion_03 = 7003,
+		emotion_04 = 7004,
+		emotion_05 = 7005,
+		emotion_06 = 7006,
+		emotion_07 = 7007,
+		emotion_08 = 7008,
+		emotion_09 = 7009,
+		emotion_10 = 7010,
 	}
 
 	public class TDataItemList : ITableData<int>
