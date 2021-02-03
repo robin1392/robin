@@ -15,6 +15,7 @@ namespace ED
     public class UI_Main : SingletonDestroy<UI_Main>
     {
         [Header("Main UI")] 
+        public Camera camera_Stage;
         public RectTransform rts_MainPages;
         public RectTransform rts_MainContents;
         public RectTransform rts_SafeArea;
@@ -308,6 +309,8 @@ namespace ED
             {
                 arrPanels[i].alpha = i == currentPageNum ? 1f : 0f;
             }
+
+            camera_Stage.enabled = currentPageNum == 2;
         }
 
         private void ShowAllPanels()
@@ -316,6 +319,8 @@ namespace ED
             {
                 arrPanels[i].alpha = 1f;
             }
+
+            camera_Stage.enabled = true;
         }
 
         public void Click_MainButton(int num)

@@ -4106,6 +4106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  camera_Stage: {fileID: 1226850299}
   rts_MainPages: {fileID: 101157482}
   rts_MainContents: {fileID: 7772682795380098104}
   rts_SafeArea: {fileID: 1833803374}
