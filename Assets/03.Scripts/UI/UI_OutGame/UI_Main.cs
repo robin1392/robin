@@ -152,7 +152,7 @@ namespace ED
             inputfield_Nicnname.text = nickname;
             text_Nickname.text = nickname;
             text_Trophy.text = UserInfoManager.Get().GetUserInfo().trophy.ToString();
-            text_Class.text = $"클래스 {UserInfoManager.Get().GetUserInfo().nClass}";
+            text_Class.text = $"{Global.g_class} {UserInfoManager.Get().GetUserInfo().nClass}";
             text_Diamond.text = UserInfoManager.Get().GetUserInfo().diamond.ToString();
             text_Gold.text = UserInfoManager.Get().GetUserInfo().gold.ToString();
             text_Key.text = UserInfoManager.Get().GetUserInfo().key.ToString();

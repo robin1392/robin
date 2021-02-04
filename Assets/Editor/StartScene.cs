@@ -27,7 +27,7 @@ public class StartScene : EditorWindow
             {
                 EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
             }
-            EditorSceneManager.OpenScene("Assets/Scenes/StartScene.unity");
+            EditorSceneManager.OpenScene("Assets/01.Scenes/StartScene.unity");
             EditorApplication.isPlaying = true;
             break;
         }
