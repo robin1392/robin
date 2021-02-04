@@ -42,6 +42,9 @@ public class UI_TrophyRewardSlot : MonoBehaviour
         TableManager.Get().ClassReward.GetData(row, out rewardData);
 
         text_Trophy.text = rewardData.rankPoint.ToString();
+        text_Trophy.color = rewardData.rankPoint <= UserInfoManager.Get().GetUserInfo().trophy
+            ? Color.white
+            : Color.gray;
         TDataItemList item;
         if (TableManager.Get().ItemList.GetData(rewardData.rewardItem02, out item))
         {

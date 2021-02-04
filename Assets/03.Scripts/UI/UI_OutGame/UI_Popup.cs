@@ -103,5 +103,13 @@ namespace ED
                 stack.Peek().Close();
             }
         }
+
+        public static void ClosePop()
+        {
+            if (stack.Count > 0)
+            {
+                stack.Peek().Close();
+            }
+        }
     }
 }

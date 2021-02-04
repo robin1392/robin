@@ -11,23 +11,55 @@ public class UI_CommonMessageBox : UI_Popup
     public Text text_Title;
     public Text text_Message;
 
-    private Action callback;
+    [Header("Button")] 
+    public Button btn_OK;
+    public Text text_Button;
+    
+    private Action closeCallback;
+    private Action buttonCallback;
 
-    public void Initialize(string title, string message, Action callback = null)
+    public void Initialize(string title, string message, Action closeCallback = null)
     {
         text_Title.text = title;
         text_Message.text = message;
-        this.callback = callback;
+        this.closeCallback = closeCallback;
+        
+        btn_OK.gameObject.SetActive(false);
 
         gameObject.SetActive(true);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(text_Message.rectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_Frame);
+    }
+
+    public void Initialize(string title, string message, string buttonText, Action closeCallback = null, Action buttonCallback = null)
+    {
+        text_Title.text = title;
+        text_Message.text = message;
+        this.closeCallback = closeCallback;
+        this.buttonCallback = buttonCallback;
+
+        btn_OK.gameObject.SetActive(true);
+        text_Button.text = buttonText;
+        
+        gameObject.SetActive(true);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(text_Message.rectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_Frame);
+    }
+
+    public void Click_OK()
+    {
+        Close();
+        
+        buttonCallback?.Invoke();
+        buttonCallback = null;
     }
     
     public override void Close()
     {
         base.Close();
         
-        callback?.Invoke();
+        closeCallback?.Invoke();
 
-        callback = null;
+        closeCallback = null;
     }
 }
