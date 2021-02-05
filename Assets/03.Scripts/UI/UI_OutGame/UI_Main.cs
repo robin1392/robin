@@ -133,6 +133,21 @@ namespace ED
         {
             btn_AD.interactable = MopubCommunicator.Instance != null && MopubCommunicator.Instance.hasVideo();
 
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (UI_Popup.stack.Count > 0)
+                {
+                    UI_Popup.ClosePop();
+                }
+                else
+                {
+                    commonMessageBoxPopup.Initialize("게임 종료", "게임을 종료 하시겠습니까?", "종료", null, () =>
+                    {
+                        Application.Quit();
+                    });
+                }
+            }
+            
             // popup debug
             // if (UI_Popup.stack.Count > 0)
             // {
