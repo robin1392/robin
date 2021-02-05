@@ -74,7 +74,7 @@ namespace Percent.Platform
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
-                        productID = data.appleProductId;
+                        productId = data.appleProductId;
 #endif
                     }
                 }
@@ -90,7 +90,7 @@ namespace Percent.Platform
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
-                        productID = data.appleProductId;
+                        productId = data.appleProductId;
 #endif
                     }
                 }
@@ -192,7 +192,7 @@ namespace Percent.Platform
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
-                        productID = data.appleProductId;
+                        productId = data.appleProductId;
 #endif
                     }
                 }
@@ -217,7 +217,7 @@ namespace Percent.Platform
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
-                        productID = data.appleProductId;
+                        productId = data.appleProductId;
 #endif
                         switch (buyType)
                         {

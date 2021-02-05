@@ -17,6 +17,7 @@ namespace Percent.Platform.InAppPurchase
 {
     public class ShopManager : ManagerSingleton<ShopManager>
     {
+        [SerializeField] private RectTransform rts_ScrollView;
         [SerializeField] private Transform transformShopParent;
         
         [SerializeField] private GameObject prefabShop;
@@ -28,7 +29,17 @@ namespace Percent.Platform.InAppPurchase
         
         protected void Start()
         {
-            //InitShop();
+            var safeArea = Screen.safeArea;
+            var canvas = GetComponentInParent<Canvas>();
+            
+            var anchorMin = safeArea.position;
+            var anchorMax = safeArea.position + safeArea.size;
+            anchorMin.x /= canvas.pixelRect.width;
+            anchorMin.y /= canvas.pixelRect.height;
+            anchorMax.x /= canvas.pixelRect.width;
+            anchorMax.y /= canvas.pixelRect.height;
+ 
+            rts_ScrollView.anchorMax = anchorMax;
         }
 
         /// <summary>

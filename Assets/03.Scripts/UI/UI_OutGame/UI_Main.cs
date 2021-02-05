@@ -52,7 +52,6 @@ namespace ED
         public UI_PopupShopBuy shopBuyPopup;
         
         [Header("User Info")] 
-        public InputField inputfield_Nicnname;
         public Text text_Nickname;
         public Text text_Class;
         public Text text_Trophy;
@@ -164,7 +163,6 @@ namespace ED
         public void RefreshUserInfoUI()
         {
             string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
-            inputfield_Nicnname.text = nickname;
             text_Nickname.text = nickname;
             text_Trophy.text = UserInfoManager.Get().GetUserInfo().trophy.ToString();
             text_Class.text = $"{Global.g_class} {UserInfoManager.Get().GetUserInfo().nClass}";
