@@ -212,10 +212,10 @@ namespace ED
 
             for(int i = 0; i < infos.Length; i++)
             {
-                var pos = FieldManager.Get().GetTopListPos(i);
+                var pos = FieldManager.Get().GetTopListPos(infos[i].SlotIndex);
 
                 RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(1000, out dataDiceInfo) == false)
+                if (TableManager.Get().DiceInfo.GetData(infos[i].DiceId, out dataDiceInfo) == false)
                 {
                     return;
                 }
