@@ -212,27 +212,56 @@ namespace ED
 
             for(int i = 0; i < infos.Length; i++)
             {
-                var pos = FieldManager.Get().GetTopListPos(i);
+                var pos = FieldManager.Get().GetTopListPos(infos[i].SlotIndex);
 
                 RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(1000, out dataDiceInfo) == false)
+                if (TableManager.Get().DiceInfo.GetData(infos[i].DiceId, out dataDiceInfo) == false)
                 {
                     return;
                 }
-                var obj = FileHelper.LoadPrefab(dataDiceInfo.prefabName,
-                    Global.E_LOADTYPE.LOAD_MINION);
+                
+                switch(dataDiceInfo.castType)
+                {
+                    case (int) DICE_CAST_TYPE.MINION:
+                    case (int) DICE_CAST_TYPE.HERO:
+                    {
+                        var obj = FileHelper.LoadPrefab(dataDiceInfo.prefabName,
+                            Global.E_LOADTYPE.LOAD_MINION);
 
-                var m = CreateMinion(obj, pos);
+                        var m = CreateMinion(obj, pos);
 
-                m.targetMoveType = (DICE_MOVE_TYPE)dataDiceInfo.targetMoveType;
-                m.ChangeLayer(false);
-                m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel + dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
-                m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
-                m.attackSpeed = dataDiceInfo.attackSpeed;
-                m.moveSpeed = dataDiceInfo.moveSpeed;
-                m.eyeLevel = 1;
-                m.ingameUpgradeLevel = infos[i].DiceInGameUp;
-                m.Initialize(MinionDestroyCallback);
+                        m.targetMoveType = (DICE_MOVE_TYPE)dataDiceInfo.targetMoveType;
+                        m.ChangeLayer(false);
+                        m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel + dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
+                        m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
+                        m.attackSpeed = dataDiceInfo.attackSpeed;
+                        m.moveSpeed = dataDiceInfo.moveSpeed;
+                        m.eyeLevel = 1;
+                        m.ingameUpgradeLevel = infos[i].DiceInGameUp;
+                        m.Initialize(MinionDestroyCallback);
+                    }
+                        break;
+                    case (int)DICE_CAST_TYPE.MAGIC:
+                    case (int)DICE_CAST_TYPE.INSTALLATION:
+                    {
+                        // CastMagic(dataDiceInfo, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay,
+                        //     fieldIndex);
+                        var obj = FileHelper.LoadPrefab(dataDiceInfo.prefabName,
+                            Global.E_LOADTYPE.LOAD_MAGIC);
+
+                        var m = CastMagic(obj, pos);
+                        m.targetMoveType = (DICE_MOVE_TYPE)dataDiceInfo.targetMoveType;
+                        //m.ChangeLayer(false);
+                        m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel + dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
+                        m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
+                        m.attackSpeed = dataDiceInfo.attackSpeed;
+                        m.moveSpeed = dataDiceInfo.moveSpeed;
+                        m.eyeLevel = 1;
+                        //m.ingameUpgradeLevel = infos[i].DiceInGameUp;
+                        m.Initialize(false);
+                    }
+                        break;
+                }
             }
 
             if (InGameManager.Get().wave > 0 && InGameManager.Get().wave % 5 == 4)

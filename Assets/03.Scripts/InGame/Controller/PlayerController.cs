@@ -13,12 +13,14 @@ using UnityEngine.AI;
 
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
+using Template.Shop.GameBaseShop.Table;
 
 //
 using UnityEngine.Serialization;
 
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
+using TDataDiceInfo = RandomWarsResource.Data.TDataDiceInfo;
 
 
 #region photon
@@ -2159,8 +2161,12 @@ namespace ED
                                     if (arrDiceDeck[j] != null && arrDiceDeck[j].id == listMinion[i].diceId)
                                     {
                                         msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
+                                        break;
                                     }
                                 }
+                                if (msgMinionInfos[i].DiceIdIndex == 0) // 덱에 없는 유닛일 경우(네크로맨서가 소환한 해골 등) 주사위 ID를 전송
+                                    msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(listMinion[i].diceId);
+                                
                                 msgMinionInfos[i].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMinion[i].eyeLevel);
                                 msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                                 msgMinionInfos[i].Pos =
@@ -2396,6 +2402,17 @@ namespace ED
                         GameObject prefab = FileHelper.LoadPrefab(
                             arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
                             Global.E_LOADTYPE.LOAD_MINION);
+
+                        if (prefab == null)
+                        {
+                            TDataDiceInfo diceData;
+                            if (TableManager.Get().DiceInfo.GetData(msgMinionInfos[i].DiceIdIndex, out diceData))
+                            {
+                                prefab = FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION);
+                            }
+                        }
+                        if (prefab == null) continue;
+                        
                         //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
                         var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];

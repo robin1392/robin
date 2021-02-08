@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Shop_Menutext
+  localizationKey: Menutext_Shop
 --- !u!1 &123198422224602017
 GameObject:
   m_ObjectHideFlags: 0

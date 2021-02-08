@@ -65,24 +65,24 @@ public class UI_TrophyRewardSlot : MonoBehaviour
 
     public void SetButton()
     {
+        bool getNormal = getNormalRow >= row;
+        bool getPass = getVipRow >= row;
+        
         if (UserInfoManager.Get().GetUserInfo().trophy < rewardData.rankPoint)    // 트로피 부족
         {
-            arrObj_Lock[0].SetActive(true);
-            arrObj_Lock[1].SetActive(true);
-            arrObj_Check[0].SetActive(false);
-            arrObj_Check[1].SetActive(false);
+            arrObj_Check[0].SetActive(getNormal);
+            arrObj_Check[1].SetActive(getPass);
+            arrObj_Lock[0].SetActive(!arrObj_Check[0].activeSelf);
+            arrObj_Lock[1].SetActive(!arrObj_Check[1].activeSelf);
             arrButton[0].interactable = false;
             arrButton[1].interactable = false;
         }
         else
         {
-            bool getNormal = getNormalRow >= row;
-            bool getPass = getVipRow >= row;
-                
-            arrObj_Lock[0].SetActive(false);
-            arrObj_Lock[1].SetActive(false);
             arrObj_Check[0].SetActive(getPass);
             arrObj_Check[1].SetActive(getNormal);
+            arrObj_Lock[0].SetActive(false);
+            arrObj_Lock[1].SetActive(false);
             arrButton[0].interactable = !getPass && UserInfoManager.Get().GetUserInfo().buyVIP;
             arrButton[1].interactable = !getNormal;
         }
@@ -90,9 +90,17 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     
     public void Click_PremiumGet()
     {
-        isGetPremium = true;
-        NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, GetCallback);
-        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+        if (getVipRow < row)
+        {
+            isGetPremium = true;
+            NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row,
+                (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, GetCallback);
+            UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+        }
+        else
+        {
+            
+        }
     }
 
     public void Click_NormalGet()

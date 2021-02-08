@@ -85,7 +85,7 @@ public class UI_Panel_Reward : MonoBehaviour
                 if (isSeasonPassInitialized == true && UI_Popup.stack.Count == 0)
                 {
                     isSeasonPassInitialized = false;
-                    UI_Main.Get().ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
+                    UI_Main.Get().ShowMessageBox(LocalizationManager.GetLangDesc("Seasonpass_Endseason"), "시즌이 종료되었습니다.", UI_Main.Get().seasonEndPopup.Initialize);
                 }
             }
         }
@@ -172,6 +172,7 @@ public class UI_Panel_Reward : MonoBehaviour
         int totalSlotCount = TableManager.Get().ClassReward.Keys.Count;
         UI_TrophyRewardSlot.getNormalRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[0];
         UI_TrophyRewardSlot.getVipRow = UserInfoManager.Get().GetUserInfo().trophyRewardIds[1];
+        Debug.Log($"GetTrophyReward : vip{UI_TrophyRewardSlot.getVipRow} : normal{UI_TrophyRewardSlot.getNormalRow}");
         
         for (int i = 1; i <= totalSlotCount; i++)
         {
