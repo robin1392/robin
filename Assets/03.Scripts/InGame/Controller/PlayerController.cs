@@ -2402,7 +2402,7 @@ namespace ED
                         int diceIdIndex = 0;
                         for (int j = 0; j < arrDiceDeck.Length; j++)
                         {
-                            if (arrDiceDeck[i].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
+                            if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
                             {
                                 diceIdIndex = j;
                                 break;
