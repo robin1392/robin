@@ -10,6 +10,8 @@ public class UI_Localization : MonoBehaviour
     public string localizationKey;
     private Text text;
 
+    private static readonly string newline = "\\n";
+
     private void Awake()
     {
         text = GetComponent<Text>();
@@ -19,7 +21,25 @@ public class UI_Localization : MonoBehaviour
     {
         if (string.IsNullOrEmpty(localizationKey) == false)
         {
-            text.text = LocalizationManager.GetLangDesc(localizationKey);
+            string str = LocalizationManager.GetLangDesc(localizationKey);
+            string final = string.Empty;
+
+            if (str.Contains(newline))
+            {
+                var arr = str.Split(new string[] {newline}, StringSplitOptions.None);
+                for (int i = 0; i < arr.Length; ++i)
+                {
+                    final += $"{arr[i]}";
+                    if (i == arr.Length - 1) break;
+                    final += "\n";
+                }
+
+                text.text = final;
+            }
+            else
+            {
+                text.text = str;
+            }
         }
     }
 }

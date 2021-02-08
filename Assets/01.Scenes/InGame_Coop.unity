@@ -609,6 +609,7 @@ MonoBehaviour:
   LocalServerAddr: 13.209.43.23
   LocalServerPort: 40002
   UserId: 916a72ab-e53a-4b35-9ee5-9e8683d46baa
+  matchSendCount: 0
 --- !u!4 &1610058098
 Transform:
   m_ObjectHideFlags: 0

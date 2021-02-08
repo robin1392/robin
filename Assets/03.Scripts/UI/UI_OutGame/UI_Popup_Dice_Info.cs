@@ -15,6 +15,7 @@ namespace ED
     [Serializable]
     public class InfoUI
     {
+        public Image imageBG;
         public Text textType;
         public Text textValue;
         public Text textPlus;
@@ -119,6 +120,7 @@ namespace ED
         public Text text_TypeInfo;
         public Image image_Type;
         public Sprite[] arrSprite_Type;
+        public Sprite[] arrSprite_InfoBG;
 
         [Header("Button")]
         public Button btn_Upgrade;
@@ -447,10 +449,16 @@ namespace ED
 
             for (int i = 0; i < INFOCOUNT; i++)
             {
-                InfoUI info = new InfoUI();
-                info.textType = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Type").GetComponent<Text>();
-                info.textValue = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Value").GetComponent<Text>();
-                info.textPlus = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Plus").GetComponent<Text>();
+                InfoUI info = new InfoUI
+                {
+                    imageBG = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString()).GetComponent<Image>(),
+                    textType = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Type")
+                        .GetComponent<Text>(),
+                    textValue = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Value")
+                        .GetComponent<Text>(),
+                    textPlus = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Plus")
+                        .GetComponent<Text>()
+                };
                 listInfoUI.Add(info);
             }
         }
@@ -558,9 +566,21 @@ namespace ED
         {
             for (int i = 0; i < listInfoUI.Count; i++)
             {
-                if (data.maxHpUpgrade > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpUpgrade}";
-                if (data.powerUpgrade > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerUpgrade:f1}"; 
-                if (data.effectUpgrade > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectUpgrade:f1}"; 
+                if (data.maxHpUpgrade > 0)
+                {
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].imageBG.sprite = arrSprite_InfoBG[1];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpUpgrade}";
+                }
+                if (data.powerUpgrade > 0)
+                {
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].imageBG.sprite = arrSprite_InfoBG[1];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerUpgrade:f1}";
+                }
+                if (data.effectUpgrade > 0)
+                {
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].imageBG.sprite = arrSprite_InfoBG[1];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectUpgrade:f1}";
+                }
             }
         }
         
@@ -568,6 +588,7 @@ namespace ED
         {
             for (int i = 0; i < listInfoUI.Count; i++)
             {
+                listInfoUI[i].imageBG.sprite = arrSprite_InfoBG[0];
                 listInfoUI[i].textPlus.text = String.Empty;
             }
         }
@@ -576,9 +597,21 @@ namespace ED
         {
             for (int i = 0; i < listInfoUI.Count; i++)
             {
-                if (data.maxHpInGameUp > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpInGameUp}";
-                if (data.powerInGameUp > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerInGameUp:f1}"; 
-                if (data.effectInGameUp > 0) listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectInGameUp:f1}"; 
+                if (data.maxHpInGameUp > 0)
+                {
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].imageBG.sprite = arrSprite_InfoBG[2];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpInGameUp}";
+                }
+                if (data.powerInGameUp > 0)
+                {
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].imageBG.sprite = arrSprite_InfoBG[2];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerInGameUp:f1}";
+                }
+                if (data.effectInGameUp > 0)
+                {
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].imageBG.sprite = arrSprite_InfoBG[2];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectInGameUp:f1}";
+                } 
             }
         }
         
@@ -586,6 +619,7 @@ namespace ED
         {
             for (int i = 0; i < listInfoUI.Count; i++)
             {
+                listInfoUI[i].imageBG.sprite = arrSprite_InfoBG[0];
                 listInfoUI[i].textPlus.text = String.Empty;
             }
         }
