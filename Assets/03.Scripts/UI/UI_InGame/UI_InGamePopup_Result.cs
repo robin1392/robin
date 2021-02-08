@@ -158,7 +158,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
 
             var userInfo = UserInfoManager.Get().GetUserInfo();
             TDataItemList data;
-            for (int i = 0; i < normalReward.Length; i++)
+            for (int i = 0; normalReward != null && i < normalReward.Length; i++)
             {
                 if (TableManager.Get().ItemList.GetData(normalReward[i].ItemId, out data))
                 {
@@ -166,7 +166,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
                     else userInfo.dicBox.Add(data.id, normalReward[i].Value);
                 }
             }
-            for (int i = 0; i < streakReward.Length; i++)
+            for (int i = 0; streakReward != null && i < streakReward.Length; i++)
             {
                 if (TableManager.Get().ItemList.GetData(streakReward[i].ItemId, out data))
                 {
@@ -174,7 +174,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
                     else userInfo.dicBox.Add(data.id, streakReward[i].Value);
                 }
             }
-            for (int i = 0; i < perfectReward.Length; i++)
+            for (int i = 0; perfectReward != null && i < perfectReward.Length; i++)
             {
                 if (TableManager.Get().ItemList.GetData(perfectReward[i].ItemId, out data))
                 {
