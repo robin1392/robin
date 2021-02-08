@@ -116,7 +116,7 @@ namespace RandomWarsProtocol
         {
             MsgUserDeck data = new MsgUserDeck();
             data.Index = br.ReadSByte();
-            
+
             int length = br.ReadInt32();
             byte[] bytes = br.ReadBytes(length * sizeof(int));
             data.DeckInfo = new int[length];
@@ -615,7 +615,7 @@ namespace RandomWarsProtocol
     {
         public ushort Id;
         public ushort CustomValue;
-        public byte DiceIdIndex;
+        public ushort DiceId;
         public byte DiceEyeLevel;
         public int Hp;
         public MsgVector2 Pos;
@@ -624,7 +624,7 @@ namespace RandomWarsProtocol
         {
             bw.Write(Id);
             bw.Write(CustomValue);
-            bw.Write(DiceIdIndex);
+            bw.Write(DiceId);
             bw.Write(DiceEyeLevel);
             bw.Write(Hp);
             Pos.Write(bw);
@@ -635,7 +635,7 @@ namespace RandomWarsProtocol
             MsgMinionInfo data = new MsgMinionInfo();
             data.Id = br.ReadUInt16();
             data.CustomValue = br.ReadUInt16();
-            data.DiceIdIndex = br.ReadByte();
+            data.DiceId = br.ReadUInt16();
             data.DiceEyeLevel = br.ReadByte();
             data.Hp = br.ReadInt32();
             data.Pos = MsgVector2.Read(br);
@@ -1822,7 +1822,7 @@ namespace RandomWarsProtocol
         public short DiceLevel;
         public short DiceInGameUp;
         public ushort[] Id;
-        
+
 
         public void Write(BinaryWriter bw)
         {
