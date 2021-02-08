@@ -2156,17 +2156,7 @@ namespace ED
                             {
                                 msgMinionInfos[i] = new MsgMinionInfo();
                                 msgMinionInfos[i].Id = ConvertNetMsg.MsgIntToUshort(listMinion[i].id);
-                                for (int j = 0; j < arrDiceDeck.Length; j++)
-                                {
-                                    if (arrDiceDeck[j] != null && arrDiceDeck[j].id == listMinion[i].diceId)
-                                    {
-                                        msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
-                                        break;
-                                    }
-                                }
-                                if (msgMinionInfos[i].DiceIdIndex == 0) // 덱에 없는 유닛일 경우(네크로맨서가 소환한 해골 등) 주사위 ID를 전송
-                                    msgMinionInfos[i].DiceIdIndex = ConvertNetMsg.MsgIntToByte(listMinion[i].diceId);
-                                
+                                msgMinionInfos[i].DiceId = ConvertNetMsg.MsgIntToUshort(listMinion[i].diceId);
                                 msgMinionInfos[i].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMinion[i].eyeLevel);
                                 msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                                 msgMinionInfos[i].Pos =
@@ -2183,13 +2173,7 @@ namespace ED
                                 int num = listInstallation[i];
                                 msgMinionInfos[loop] = new MsgMinionInfo();
                                 msgMinionInfos[loop].Id = ConvertNetMsg.MsgIntToUshort(listMagic[num].id);
-                                for (int j = 0; j < arrDiceDeck.Length; j++)
-                                {
-                                    if (arrDiceDeck[j].id == listMagic[num].diceId)
-                                    {
-                                        msgMinionInfos[loop].DiceIdIndex = ConvertNetMsg.MsgIntToByte(j);
-                                    }
-                                }
+                                msgMinionInfos[loop].DiceId = ConvertNetMsg.MsgIntToUshort(listMagic[i].diceId);
                                 msgMinionInfos[loop].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMagic[num].eyeLevel);
                                 msgMinionInfos[loop].Hp = ConvertNetMsg.MsgFloatToInt(listMagic[num].currentHealth);
                                 float x = Mathf.Clamp(listMagic[num].transform.position.x, -12.7f, 12.7f);
@@ -2357,7 +2341,12 @@ namespace ED
             {
                 //if (_listDeadID.Contains(msgMinionInfos[i].Id)) continue;
                 
-                var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                TDataDiceInfo data;
+                if (TableManager.Get().DiceInfo.GetData(d => d.id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out data) == false)
+                {
+                    continue;
+                }
+                
                 DICE_CAST_TYPE type = (DICE_CAST_TYPE)data.castType;
                 BaseStat bs = null; //listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
                 if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
@@ -2399,24 +2388,30 @@ namespace ED
                         // 수호자일 경우 생성하지 않고 넘어가자
                         if (msgMinionInfos[i].Id < 10000) continue;
                         
-                        GameObject prefab = FileHelper.LoadPrefab(
-                            arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
-                            Global.E_LOADTYPE.LOAD_MINION);
-
-                        if (prefab == null)
+                        TDataDiceInfo diceData;
+                        if (TableManager.Get().DiceInfo.GetData(ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out diceData) == false)
                         {
-                            TDataDiceInfo diceData;
-                            if (TableManager.Get().DiceInfo.GetData(msgMinionInfos[i].DiceIdIndex, out diceData))
+                            continue;
+                        }
+                        
+                        GameObject prefab = FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION);
+
+                        if (prefab == null) continue;
+                            
+                        //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                        int diceIdIndex = 0;
+                        for (int j = 0; j < arrDiceDeck.Length; j++)
+                        {
+                            if (arrDiceDeck[i].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
                             {
-                                prefab = FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION);
+                                diceIdIndex = j;
+                                break;
                             }
                         }
-                        if (prefab == null) continue;
-                        
-                        //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                            
                         var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
-                        var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
-                        var ingameUpgradeLevel = arrUpgradeLevel[msgMinionInfos[i].DiceIdIndex];
+                        var diceLevel = arrDiceLevel[diceIdIndex];
+                        var ingameUpgradeLevel = arrUpgradeLevel[diceIdIndex];
 
                         minion.id = msgMinionInfos[i].Id;
                         minion.diceId = data.id;
@@ -2461,13 +2456,31 @@ namespace ED
                     }
                     else if (type == DICE_CAST_TYPE.MAGIC || type == DICE_CAST_TYPE.INSTALLATION) // 설치형 오브젝트일 경우
                     {
-                        GameObject prefab = FileHelper.LoadPrefab(
-                            arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
-                        Debug.Log($"CastMagic: prefName:{arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName}, objIsNull:{prefab == null}");
+                        TDataDiceInfo diceData;
+                        if (TableManager.Get().DiceInfo.GetData(ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out diceData) == false)
+                        {
+                            continue;
+                        }
+                        
+                        GameObject prefab = FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
+                        if (prefab == null) continue;
+                        // GameObject prefab = FileHelper.LoadPrefab(
+                        //     arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
+                        
+                        //Debug.Log($"CastMagic: prefName:{arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName}, objIsNull:{prefab == null}");
                         //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
+                        int diceIdIndex = 0;
+                        for (int j = 0; j < arrDiceDeck.Length; j++)
+                        {
+                            if (arrDiceDeck[i].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
+                            {
+                                diceIdIndex = j;
+                                break;
+                            }
+                        }
                         var magic = CastMagic(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
-                        var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
-                        var ingameUpgradeLevel = arrUpgradeLevel[msgMinionInfos[i].DiceIdIndex];
+                        var diceLevel = arrDiceLevel[diceIdIndex];
+                        var ingameUpgradeLevel = arrUpgradeLevel[diceIdIndex];
 
                         magic.id = msgMinionInfos[i].Id;
                         magic.diceId = data.id;
