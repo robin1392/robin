@@ -126,6 +126,7 @@ namespace ED
                 
                 var m = controller.CreateMinion(pref_Skeleton, arrSpawnPos[i].position);
 
+                m.diceId += controller.UID;
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
                 m.power = effect + (effectUpByInGameUp * ingameUpgradeLevel);

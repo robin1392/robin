@@ -13,12 +13,14 @@ using UnityEngine.AI;
 
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
+using Template.Shop.GameBaseShop.Table;
 
 //
 using UnityEngine.Serialization;
 
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
+using TDataDiceInfo = RandomWarsResource.Data.TDataDiceInfo;
 
 
 #region photon
@@ -2393,9 +2395,17 @@ namespace ED
                         // 수호자일 경우 생성하지 않고 넘어가자
                         if (msgMinionInfos[i].Id < 10000) continue;
                         
-                        GameObject prefab = FileHelper.LoadPrefab(
-                            arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
-                            Global.E_LOADTYPE.LOAD_MINION);
+                        // GameObject prefab = FileHelper.LoadPrefab(
+                        //     arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName,
+                        //     Global.E_LOADTYPE.LOAD_MINION);
+                        int syncDiceId = msgMinionInfos[i].Id - UID;
+                        TDataDiceInfo diceData;
+                        if (TableManager.Get().DiceInfo.GetData(syncDiceId, out diceData) == false)
+                        {
+                            continue;
+                        }
+                        GameObject prefab = FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION);
+                        
                         //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
                         var diceLevel = arrDiceLevel[msgMinionInfos[i].DiceIdIndex];
