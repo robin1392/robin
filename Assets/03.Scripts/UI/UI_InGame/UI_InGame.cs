@@ -36,6 +36,10 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     [Header("DEV UI")] 
     public GameObject viewTargetDiceField;
     public Text textUnitCount;
+
+    [Header("Enemy Upgrade")] 
+    public Image[] arrImage_EnemyUpgradeIcon;
+    public Text[] arrText_EnemyUpgrade;
     
     
     #endregion
@@ -91,6 +95,28 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
     }
 
+    public void SetEnemyArrayDeck()
+    {
+        RandomWarsResource.Data.TDataDiceInfo[] deckDice = InGameManager.Get().playerController.targetPlayer.arrDiceDeck;
+        int[] arrUpgradeLv = InGameManager.Get().playerController.targetPlayer.arrUpgradeLevel;
+        
+        for (int i = 0; i < deckDice.Length; i++)
+        {
+            arrImage_EnemyUpgradeIcon[i].sprite = FileHelper.GetIcon(deckDice[i].iconName);
+        }
+    }
+
+    public void SetEnemyUpgrade()
+    {
+        int[] arrUpgradeLv = InGameManager.Get().playerController.targetPlayer.arrUpgradeLevel;
+
+        for (int i = 0; i < arrUpgradeLv.Length; i++)
+        {
+            arrText_EnemyUpgrade[i].text = $"Lv.{(arrUpgradeLv[i] < 5 ? (arrUpgradeLv[i] + 1).ToString() : "MAX")}";
+            arrText_EnemyUpgrade[i].color = arrUpgradeLv[i] < 5 ? Color.white : Color.red;
+        }
+    }
+
     public void SetDeckRefresh(int diceId , int upgradeLv)
     {
         for (var i = 0; i < arrUpgradeButtons.Length; i++)
@@ -128,12 +154,6 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public void ViewTargetDice(bool view)
     {
         obj_ViewTargetDiceField.SetActive(view);
-    }
-
-    public void SetNickname(string enemyNickname)
-    {   
-        text_MyNickname.text = ObscuredPrefs.GetString("Nickname");
-        text_EnemyNickname.text = enemyNickname;
     }
 
     public void SetNickName(string myName, string enemyName)

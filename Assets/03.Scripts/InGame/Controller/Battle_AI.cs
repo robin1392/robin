@@ -28,9 +28,6 @@ namespace ED
             currentHealth = maxHealth;
             _arrDice = new Dice[15];
             
-            _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
-            
-            _arrUpgradeLevel = new int[5];
             for (var i = 0; i < arrDice.Length; i++)
             {
                 arrDice[i] = new Dice {diceFieldNum = i};
@@ -40,6 +37,23 @@ namespace ED
 
             targetPlayer = InGameManager.Get().playerController;
             InGameManager.Get().playerController.targetPlayer = this;
+
+            //AI_SetRandomDeck();
+            
+            NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
+
+            SetColor(E_MaterialType.TOP);
+
+            if (TutorialManager.isTutorial)
+            {
+                SetDiceFieldOnTutorial(0);
+            }
+        }
+
+        public void AI_SetRandomDeck()
+        {
+            _arrUpgradeLevel = new int[5];
+            _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
 
             if (deck == null || deck.Length == 0)
             {
@@ -78,15 +92,7 @@ namespace ED
             }
 
             NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray = deck;
-            NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
             SetDeck(deck);
-
-            SetColor(E_MaterialType.TOP);
-
-            if (TutorialManager.isTutorial)
-            {
-                SetDiceFieldOnTutorial(0);
-            }
         }
 
         public void AI_GetDice()
@@ -150,6 +156,8 @@ namespace ED
                     AddSp(-_arrPrice[arrUpgradeLevel[arr[i]] - 1]);
                 }
             }
+            
+            UI_InGame.Get().SetEnemyUpgrade();
         }
 
         private static void ShuffleIntArray(ref int[] arr, int shuffleCount = 1)

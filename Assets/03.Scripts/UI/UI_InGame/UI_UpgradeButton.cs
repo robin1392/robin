@@ -45,7 +45,7 @@ namespace ED
 
             var color = btn.interactable ? Color.white : Color.gray;
             text_Price.color = color;
-            text_Level.color = Color.black;
+            text_Level.color = color;
             image_SP.color = color;
         }
 
@@ -80,6 +80,7 @@ namespace ED
         {
             text_Price.text = level < 5 ? arrPrice[level].ToString() : string.Empty;
             text_Level.text = $"Lv.{(level < 5 ? (level + 1).ToString() : "MAX")}";
+            text_Level.color = level < 5 ? Color.white : Color.red;
             image_SP.transform.parent.gameObject.SetActive(level < 5);
         }
 
