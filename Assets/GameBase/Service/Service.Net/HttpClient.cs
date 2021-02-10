@@ -26,6 +26,18 @@ namespace Service.Net
         }
 
 
+        public void SetAccessToken(string accessToken)
+        {
+
+        }
+
+
+        public string GetAccessToken()
+        {
+            return string.Empty;
+        }
+
+
         public bool SendMessage(int protocolId, byte[] buffer)
         {
             return true;
@@ -52,6 +64,7 @@ namespace Service.Net
 
     public class HttpClient : ISender
     {
+        private string _accessToken;
         private string _baseUrl;
         private GameSessionClient _gameSession;
         private static Queue<HttpResponse> _responseQueue;
@@ -73,6 +86,18 @@ namespace Service.Net
             _responseQueue.Clear();
             _responseQueue = null;
             allDone = null;
+        }
+
+
+        public void SetAccessToken(string accessToken)
+        {
+            _accessToken = accessToken;
+        }
+
+
+        public string GetAccessToken()
+        {
+            return _accessToken;
         }
 
 
@@ -104,7 +129,7 @@ namespace Service.Net
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = "application/json";
             request.Method = "POST";
-            
+
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
@@ -137,10 +162,10 @@ namespace Service.Net
                 tempJson = tempJson.Replace("\\", "");
 
 
-                byte[] ackBytes = Encoding.UTF8.GetBytes(tempJson); 
+                byte[] ackBytes = Encoding.UTF8.GetBytes(tempJson);
                 _gameSession.PushExternalMessage(
                     this,
-                    protocolId + 1, 
+                    protocolId + 1,
                     ackBytes,
                     ackBytes.Length);
 

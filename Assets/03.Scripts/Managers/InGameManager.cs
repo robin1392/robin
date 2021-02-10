@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
+using Service.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;

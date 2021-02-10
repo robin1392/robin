@@ -10,6 +10,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using Template.Character.RandomwarsDice.Common;
 using Image = UnityEngine.UI.Image;
 
 namespace ED
@@ -197,8 +198,8 @@ namespace ED
 
         public void Click_Dice_Use(int diceId)
         {
-            if (WebPacket.Get() != null && WebPacket.Get().isPacketSend == true)
-                return;
+            //if (WebPacket.Get() != null && WebPacket.Get().isPacketSend == true)
+            //    return;
 
             _isSelectMode = true;
             _selectedDiceId = diceId;
@@ -296,24 +297,27 @@ namespace ED
                     }
                 }
                 if (!isChanged) intDeck[deckSlotNum] = _selectedDiceId;
-                
-                if (WebPacket.Get() != null)
-                {
-                    NetworkManager.Get().UpdateDeckReq(UserInfoManager.Get().GetUserInfo().userID,(sbyte)active, intDeck);
-                    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-                }
-                else
-                {
-                    UserInfoManager.Get().GetUserInfo().SetDeck(active, intDeck);
-                }
-        
+
+                //if (WebPacket.Get() != null)
+                //{
+                //    NetworkManager.Get().UpdateDeckReq(UserInfoManager.Get().GetUserInfo().userID,(sbyte)active, intDeck);
+                //    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+                //}
+                //else
+                //{
+                //    UserInfoManager.Get().GetUserInfo().SetDeck(active, intDeck);
+                //}
+                NetworkManager.session.DiceTemplate.DiceChangeDeckReq(NetworkManager.session.HttpClient, active, intDeck, OnReceiveDiceChangeDeckAck);
+                UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+
+
                 obj_Ciritical.SetActive(true);
                 objSelectBlind.SetActive(false);
                 _isSelectMode = false;
                 
                 Click_CancelSelectMode();
                 
-                CallBackDeckUpdate();
+                //CallBackDeckUpdate();
             }
             else
             {
@@ -321,7 +325,7 @@ namespace ED
             }
         }
 
-        public void CallBackDeckUpdate()
+        public bool OnReceiveDiceChangeDeckAck(ERandomwarsDiceErrorCode errorCode, int index, int[] arrayDiceId)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             //RefreshDeck();
@@ -331,6 +335,7 @@ namespace ED
             }
             
             UI_Main.Get().panel_Dice.ui_MainStage.Set();
+            return true;
         }
 
         public void HideSelectPanel()

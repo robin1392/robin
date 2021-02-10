@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using RandomWarsService.Network.Socket.NetService;
+using Service.Core;
 
 namespace RandomWarsProtocol
 {

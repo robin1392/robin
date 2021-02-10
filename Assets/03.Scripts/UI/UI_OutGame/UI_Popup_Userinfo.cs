@@ -100,8 +100,9 @@ public class UI_Popup_Userinfo : UI_Popup
 
     public void Click_EditNickname()
     {
-        NetworkManager.Get().EditUserNameReq(UserInfoManager.Get().GetUserInfo().userID, input_Nickname.text, EditNicknameCallback);
-        
+        //NetworkManager.Get().EditUserNameReq(UserInfoManager.Get().GetUserInfo().userID, input_Nickname.text, EditNicknameCallback);
+
+
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 

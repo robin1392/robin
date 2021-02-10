@@ -154,35 +154,35 @@ namespace RandomWarsProtocol
     }
 
 
-    [Serializable]
-    public class MsgReward
-    {
-        public int ItemId;
-        public int Value;
+    //[Serializable]
+    //public class MsgReward
+    //{
+    //    public int ItemId;
+    //    public int Value;
 
 
-        public void Write(BinaryWriter bw)
-        {
-            bw.Write(ItemId);
-            bw.Write(Value);
-        }
+    //    public void Write(BinaryWriter bw)
+    //    {
+    //        bw.Write(ItemId);
+    //        bw.Write(Value);
+    //    }
 
-        public static MsgReward Read(BinaryReader br)
-        {
-            MsgReward data = new MsgReward();
-            data.ItemId = br.ReadInt32();
-            data.Value = br.ReadInt32();
-            return data;
-        }
-    }
+    //    public static MsgReward Read(BinaryReader br)
+    //    {
+    //        MsgReward data = new MsgReward();
+    //        data.ItemId = br.ReadInt32();
+    //        data.Value = br.ReadInt32();
+    //        return data;
+    //    }
+    //}
 
 
-    [Serializable]
-    public class MsgRewardMultiple
-    {
-        public int ItemId;
-        public MsgReward[] arrayReward;
-    }
+    //[Serializable]
+    //public class MsgRewardMultiple
+    //{
+    //    public int ItemId;
+    //    public MsgReward[] arrayReward;
+    //}
 
 
 
@@ -1868,41 +1868,41 @@ namespace RandomWarsProtocol
         public int[] DeckInfo;
     }
 
-    [Serializable]
-    public class MsgQuestData
-    {
-        public int QuestId;
-        public int Value;
-        public int Status;
+    //[Serializable]
+    //public class MsgQuestData
+    //{
+    //    public int QuestId;
+    //    public int Value;
+    //    public int Status;
 
-        public void Write(BinaryWriter bw)
-        {
-            bw.Write(QuestId);
-            bw.Write(Value);
-            bw.Write(Status);
-        }
+    //    public void Write(BinaryWriter bw)
+    //    {
+    //        bw.Write(QuestId);
+    //        bw.Write(Value);
+    //        bw.Write(Status);
+    //    }
 
-        public static MsgQuestData Read(BinaryReader br)
-        {
-            MsgQuestData data = new MsgQuestData();
-            data.QuestId = br.ReadInt32();
-            data.Value = br.ReadInt32();
-            data.Status = br.ReadInt32();
-            return data;
-        }
-    }
+    //    public static MsgQuestData Read(BinaryReader br)
+    //    {
+    //        MsgQuestData data = new MsgQuestData();
+    //        data.QuestId = br.ReadInt32();
+    //        data.Value = br.ReadInt32();
+    //        data.Status = br.ReadInt32();
+    //        return data;
+    //    }
+    //}
 
 
-    [Serializable]
-    public class MsgQuestInfo
-    {
-        // 초기화 남은 시간(초단위)
-        public int RemainResetTime;
-        // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
-        // 일일 보상 정보
-        public MsgQuestDayReward DayRewardInfo;
-    }
+    //[Serializable]
+    //public class MsgQuestInfo
+    //{
+    //    // 초기화 남은 시간(초단위)
+    //    public int RemainResetTime;
+    //    // 퀘스트 데이터
+    //    public MsgQuestData[] QuestData;
+    //    // 일일 보상 정보
+    //    public MsgQuestDayReward DayRewardInfo;
+    //}
 
 
     [Serializable]

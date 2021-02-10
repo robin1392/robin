@@ -4,6 +4,8 @@ namespace Service.Net
 {
     public interface ISender : IDisposable
     {
+        void SetAccessToken(string accessToken);
+        string GetAccessToken();
         bool SendMessage(int protocolId, byte[] buffer);
         bool SendHttpPost(int protocolId, string method, string json);
         bool SendHttpResult(string json);
@@ -24,10 +26,22 @@ namespace Service.Net
         }
 
 
+        public void SetAccessToken(string accessToken)
+        {
+
+        }
+
+
+        public string GetAccessToken()
+        {
+            return string.Empty;
+        }
+
+
         public bool IsConnected()
         {
-            return ClientSession != null 
-            && ClientSession.Socket != null 
+            return ClientSession != null
+            && ClientSession.Socket != null
             && ClientSession.Socket.Connected;
         }
 
@@ -38,7 +52,7 @@ namespace Service.Net
             {
                 return false;
             }
-            
+
             return this.ClientSession.SessionId == other.ClientSession.SessionId;
         }
 
@@ -67,7 +81,7 @@ namespace Service.Net
 
         public bool SendMessage(int protocolId, byte[] buffer)
         {
-            if (ClientSession == null 
+            if (ClientSession == null
             || ClientSession.NetState != ENetState.Connected)
             {
                 return false;
@@ -82,7 +96,7 @@ namespace Service.Net
         {
             return false;
         }
-        
+
         public bool SendHttpResult(string json)
         {
             return false;
@@ -96,7 +110,7 @@ namespace Service.Net
 
         public virtual void Disconnect(ESessionState sessionState)
         {
-            if (ClientSession == null 
+            if (ClientSession == null
             || ClientSession.SessionState != ESessionState.None)
             {
                 return;
@@ -109,7 +123,7 @@ namespace Service.Net
             // {
             //     ClientSession.GameSession.PushInternalMessage(ClientSession, EInternalProtocol. DISCONNECT_CLIENT, null, 0);
             // }
-            
+
         }
     }
 }

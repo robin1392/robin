@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
+using Service.Core;
+using Template.Season.RandomwarsSeason.Common;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -68,20 +70,21 @@ public class UI_Popup_Rank : UI_Popup
         {
             isRankCalling = true;
             pageNum = 2;
-            NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
+            //NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
+            NetworkManager.session.SeasonTemplate.SeasonInfoReq(NetworkManager.session.HttpClient, OnReceiveSeasonInfoAck);
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
             //StartCoroutine(WaitCoroutine());
         }
     }
 
-    public void GetSeasonInfoCallback(MsgSeasonInfoAck msg)
+    public bool OnReceiveSeasonInfoAck(ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo)
     {
         Invoke("RankCallingFalse", 1f);
         StopAllCoroutines();
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-        if (msg.NeedSeasonReset)
+        if (seasonInfo.NeedSeasonReset)
         {
             //UI_Main.Get().seasonEndPopup.Initialize();
             
@@ -90,12 +93,12 @@ public class UI_Popup_Rank : UI_Popup
             Close();
         }
 
-        Debug.Log($"MsgSeasonInfoAck {msg.SeasonIndex} state {(SEASON_STATE)msg.SeasonState}, remainTime {msg.SeasonRemainTime}, needReset {msg.NeedSeasonReset}\n" +
-                  $"MyRank:{msg.myRanking}, MyTrophy:{msg.myTrophy}, Time:{msg.SeasonRemainTime}");
+        Debug.Log($"MsgSeasonInfoAck {seasonInfo.SeasonId} state {(SEASON_STATE)seasonInfo.SeasonState}, remainTime {seasonInfo.SeasonResetRemainTime}, needReset {seasonInfo.NeedSeasonReset}\n" +
+                  $"MyRank:{seasonInfo.Rank}, MyTrophy:{seasonInfo.SeasonTrophy}, Time:{seasonInfo.SeasonResetRemainTime}");
 
         ResetSlots();
             
-        switch ((SEASON_STATE)msg.SeasonState)
+        switch ((SEASON_STATE)seasonInfo.SeasonState)
         {
             case SEASON_STATE.NONE:
                 text_RankMessage.gameObject.SetActive(true);
@@ -107,15 +110,15 @@ public class UI_Popup_Rank : UI_Popup
                 isInitialized = true;
                 text_RankMessage.gameObject.SetActive(false);
                 
-                text_Season.text = $"SEASON {msg.SeasonIndex}";
+                text_Season.text = $"SEASON {seasonInfo.SeasonId}";
                 //text_SeasonRemainTime.text = msg.SeasonRemainTime.ToString();
                 //StartCoroutine(TimerCoroutine(msg.SeasonRemainTime));
                 //time = DateTime.Now.AddSeconds(msg.SeasonRemainTime);
-                text_MyRanking.text = msg.myRanking > 0 ? msg.myRanking.ToString() : string.Empty;
-                text_MyTrophy.text = msg.myTrophy.ToString();
+                text_MyRanking.text = seasonInfo.Rank > 0 ? seasonInfo.Rank.ToString() : string.Empty;
+                text_MyTrophy.text = seasonInfo.SeasonTrophy.ToString();
             
-                Debug.Log($"RankInfoCount: {msg.TopRankInfo.Length}");
-                AddSlots(msg.TopRankInfo);
+                Debug.Log($"RankInfoCount: {arrayRankInfo.Length}");
+                AddSlots(arrayRankInfo);
                 // for (int i = 0; i < listSlot.Count && i < msg.TopRankInfo.Length; i++)
                 // {
                 //     listSlot[i].Initialize(
@@ -136,19 +139,23 @@ public class UI_Popup_Rank : UI_Popup
         }
 
         Open();
+
+        return true;
     }
 
-    public void GetRankCallback(MsgGetRankAck msg)
+    public bool OnReceiveSeasonRankAck(ERandomwarsSeasonErrorCode errorCode, int pageNo, MsgRankInfo[] arrayRankInfo)
     {
         Invoke("RankCallingFalse", 1f);
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        if (msg != null && msg.ErrorCode == GameErrorCode.SUCCESS && msg.RankInfo != null)
+        if (errorCode == ERandomwarsSeasonErrorCode.Success && arrayRankInfo != null)
         {
-            Debug.Log($"Msg error code: {msg.ErrorCode}");
-            Debug.Log($"MsgGetRankAck errorCode:{msg.ErrorCode} count:{msg.RankInfo.Length}");
-            AddSlots(msg.RankInfo);
+            Debug.Log($"Msg error code: {errorCode}");
+            Debug.Log($"MsgGetRankAck errorCode:{errorCode} count:{arrayRankInfo.Length}");
+            AddSlots(arrayRankInfo);
         }
+
+        return true;
     }
 
     private void RankCallingFalse()
@@ -214,7 +221,8 @@ public class UI_Popup_Rank : UI_Popup
             isRankCalling = true;
             
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-            NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, pageNum++, GetRankCallback);
+            //NetworkManager.Get().GetRankReq(UserInfoManager.Get().GetUserInfo().userID, pageNum++, GetRankCallback);
+            NetworkManager.session.SeasonTemplate.SeasonRankReq(NetworkManager.session.HttpClient, pageNum++, OnReceiveSeasonRankAck);
         }
     }
 }

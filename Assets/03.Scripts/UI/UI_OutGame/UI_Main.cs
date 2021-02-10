@@ -7,7 +7,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 using Percent.Platform.InAppPurchase;
-using RandomWarsProtocol;
+
+using Service.Core;
+//using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine.SceneManagement;
 

@@ -5,8 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG;
 using DG.Tweening;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
+using Service.Core;
+using Template.Quest.RandomwarsQuest.Common;
+using Template.Character.RandomwarsDice.Common;
 using RandomWarsResource.Data;
 using UnityEngine.EventSystems;
 
@@ -299,16 +302,19 @@ namespace ED
 
         public void Click_Upgrade()
         {
-            NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
-            
+            //NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
+            NetworkManager.session.DiceTemplate.DiceUpgradeReq(NetworkManager.session.HttpClient, data.id, OnReceiveDiceUpgradeAck);
+
+
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
 
-        public void DiceUpgradeCallback(MsgLevelUpDiceAck msg)
+
+        public bool OnReceiveDiceUpgradeAck(ERandomwarsDiceErrorCode errorCode, MsgDiceInfo diceInfo, MsgQuestData[] arrayQuestData, int updateGold)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-            if (msg.ErrorCode == 0)
+            if (errorCode == ERandomwarsDiceErrorCode.Success)
             {
                 var info = UserInfoManager.Get().GetUserInfo();
                 if (info.dicGettedDice.ContainsKey(data.id))
@@ -321,11 +327,14 @@ namespace ED
                     obj_Result.SetActive(true);
                     StartCoroutine(SetDiceLevelUpResultCoroutine());
                 }
-                
+
                 // Quest
-                UI_Popup_Quest.QuestUpdate(msg.QuestData);
+                UI_Popup_Quest.QuestUpdate(arrayQuestData);
             }
+
+            return true;
         }
+
 
         private bool isDiceLevelUpCompleted;
         private IEnumerator SetDiceLevelUpResultCoroutine()

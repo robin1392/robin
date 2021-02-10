@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
+using Service.Core;
+using Template.Quest.RandomwarsQuest.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -78,21 +80,24 @@ public class UI_Quest_Slot : MonoBehaviour
 
     public void Click_RewardButton()
     {
-        NetworkManager.Get().QuestRewardReq(UserInfoManager.Get().GetUserInfo().userID, data.id, QuestRewardCallback);
+        //NetworkManager.Get().QuestRewardReq(UserInfoManager.Get().GetUserInfo().userID, data.id, QuestRewardCallback);
+        NetworkManager.session.QuestTemplate.QuestRewardReq(NetworkManager.session.HttpClient, data.id, OnReceiveQuestRewardAck);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         mousePos = btn_Reward.transform.position;
     }
 
-    public void QuestRewardCallback(MsgQuestRewardAck msg)
+    public bool OnReceiveQuestRewardAck(ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsQuestErrorCode.Success)
         {
-            UI_Main.Get().AddReward(msg.RewardInfo, btn_Reward.transform.position);
+            UI_Main.Get().AddReward(arrayRewardInfo, btn_Reward.transform.position);
 
-            UI_Popup_Quest.QuestUpdate(msg.QuestData);
+            UI_Popup_Quest.QuestUpdate(arrayQuestData);
             UI_Main.Get().questPopup.InfoCallback();
         }
+
+        return true;
     }
 }

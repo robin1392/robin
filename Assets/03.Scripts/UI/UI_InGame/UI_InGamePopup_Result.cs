@@ -5,8 +5,9 @@ using ED;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using RandomWarsProtocol;
+//using RandomWarsProtocol;
 using RandomWarsResource.Data;
+using Service.Core;
 
 public class UI_InGamePopup_Result : MonoBehaviour
 {

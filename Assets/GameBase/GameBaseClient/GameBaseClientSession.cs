@@ -1,7 +1,13 @@
 using System;
 using Service.Net;
 using Template.Shop.GameBaseShop;
-using Template.Shop.GameBaseShop.Common;
+using Template.Account.GameBaseAccount.Common;
+using Template.User.RandomwarsUser.Common;
+using Template.Quest.RandomwarsQuest.Common;
+using Template.Character.RandomwarsDice.Common;
+using Template.Item.RandomwarsBox.Common;
+using Template.Season.RandomwarsSeason.Common;
+
 
 namespace Percent.GameBaseClient
 {
@@ -18,14 +24,24 @@ namespace Percent.GameBaseClient
         // ------------------------------------------------------------
         // 템플릿
         public GameBaseShopTemplate ShopTemplate { get; set; }
-
+        public GameBaseAccountProtocol AccountTemplate { get; set; }
+        public RandomwarsUserProtocol UserTemplate { get; set; }
+        public RandomwarsQuestProtocol QuestTemplate { get; set; }
+        public RandomwarsDiceProtocol DiceTemplate { get; set; }
+        public RandomwarsBoxProtocol BoxTemplate { get; set; }
+        public RandomwarsSeasonProtocol SeasonTemplate { get; set; }
 
 
         public GameBaseClientSession()
         {
             Player = new GameBasePlayer();
-
             ShopTemplate = new GameBaseShopTemplate();
+            AccountTemplate = new GameBaseAccountProtocol();
+            UserTemplate = new RandomwarsUserProtocol();
+            QuestTemplate = new RandomwarsQuestProtocol();
+            DiceTemplate = new RandomwarsDiceProtocol();
+            BoxTemplate = new RandomwarsBoxProtocol();
+            SeasonTemplate = new RandomwarsSeasonProtocol();
         }
 
 
@@ -52,13 +68,19 @@ namespace Percent.GameBaseClient
 
             // HTTP 클라이언트 생성
             HttpClient = new HttpClient(
-                "https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", 
+                "https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/dev", 
                 this);
 
 
-
             ShopTemplate.Init();
+
             _messageController.AddControllers(ShopTemplate.MessageControllers);
+            _messageController.AddControllers(AccountTemplate.MessageControllers);
+            _messageController.AddControllers(UserTemplate.MessageControllers);
+            _messageController.AddControllers(QuestTemplate.MessageControllers);
+            _messageController.AddControllers(DiceTemplate.MessageControllers);
+            _messageController.AddControllers(BoxTemplate.MessageControllers);
+            _messageController.AddControllers(SeasonTemplate.MessageControllers);
         }
 
 

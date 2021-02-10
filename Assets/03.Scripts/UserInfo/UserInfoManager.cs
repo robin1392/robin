@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
 using ED;
 using UnityEngine;
-using RandomWarsProtocol;
+using Service.Core;
+using Template.User.RandomwarsUser.Common;
 
 public class UserInfo
 {
@@ -313,31 +314,31 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo;
     }
 
-    public void SetUserInfo(MsgUserInfo info, MsgSeasonPassInfo seasonPassInfo)
+    public void SetUserInfo(MsgUserInfo info, MsgSeasonInfo seasonInfo)
     {
         SetUserKey(info.UserId);
 
-        _userInfo.SetNickName(info.Name);
-        _userInfo.diamond = info.Goods.Diamond;
-        _userInfo.gold = info.Goods.Gold;
-        _userInfo.key = info.Goods.Key;
+        _userInfo.SetNickName(info.UserName);
+        _userInfo.diamond = info.Diamond;
+        _userInfo.gold = info.Gold;
+        _userInfo.key = info.Key;
         _userInfo.trophy = info.Trophy;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
-        _userInfo.seasonPassId = seasonPassInfo.SeasonPassId;
+        _userInfo.seasonPassId = seasonInfo.SeasonId;
         _userInfo.buyVIP = info.IsBuyVipPass;
-        _userInfo.buySeasonPass = seasonPassInfo.BuySeasonPass;
-        _userInfo.seasonTrophy = seasonPassInfo.SeasonTrophy;
-        _userInfo.rankPoint = info.RankingPoint;
+        _userInfo.buySeasonPass = seasonInfo.BuySeasonPass;
+        _userInfo.seasonTrophy = seasonInfo.SeasonTrophy;
+        _userInfo.rankPoint = seasonInfo.RankPoint;
         
-        if (seasonPassInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonPassInfo.SeasonPassRewardIds);
+        if (seasonInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonInfo.SeasonPassRewardIds);
         else _userInfo.seasonPassRewardIds = new List<int>(new int[]{0, 0});
         if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
-        _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
-        _userInfo.needSeasonReset = seasonPassInfo.NeedSeasonReset;
-        _userInfo.isFreeSeason = seasonPassInfo.IsFreeSeason;
-        _userInfo.seasonPassRewardStep = seasonPassInfo.SeasonPassRewardStep;
+        _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonInfo.SeasonResetRemainTime);
+        _userInfo.needSeasonReset = seasonInfo.NeedSeasonReset;
+        _userInfo.isFreeSeason = seasonInfo.IsFreeSeason;
+        _userInfo.seasonPassRewardStep = seasonInfo.SeasonPassRewardStep;
 
         // if (seasonPassInfo.NeedSeasonReset)
         // {

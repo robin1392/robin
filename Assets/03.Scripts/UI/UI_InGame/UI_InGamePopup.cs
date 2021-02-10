@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ED;
 using RandomWarsProtocol;
+using Service.Core;
 
 public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 {

@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
+using Service.Core;
+using Template.User.RandomwarsUser.Common;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -93,8 +95,11 @@ public class UI_TrophyRewardSlot : MonoBehaviour
         if (getVipRow < row)
         {
             isGetPremium = true;
-            NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row,
-                (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, GetCallback);
+            //NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row,
+            //    (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, GetCallback);
+            NetworkManager.session.UserTemplate.UserTrophyRewardReq(NetworkManager.session.HttpClient,
+                row, (int)REWARD_TARGET_TYPE.SEASON_PASS_BUY, OnReceiveUserTrophyRewardAck);
+
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
         else
@@ -106,14 +111,16 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public void Click_NormalGet()
     {
         isGetPremium = false;
-        NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, (int) REWARD_TARGET_TYPE.ALL, GetCallback);
+        //NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, (int) REWARD_TARGET_TYPE.ALL, GetCallback);
+        NetworkManager.session.UserTemplate.UserTrophyRewardReq(NetworkManager.session.HttpClient,
+            row, (int)REWARD_TARGET_TYPE.ALL, OnReceiveUserTrophyRewardAck);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
     
-    public void GetCallback(MsgGetClassRewardAck msg)
+    public bool OnReceiveUserTrophyRewardAck(ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsUserErrorCode.Success)
         {
             if (isGetPremium)
             {
@@ -124,11 +131,13 @@ public class UI_TrophyRewardSlot : MonoBehaviour
                 getNormalRow++;
             }
             
-            UI_Main.Get().AddReward(msg.RewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
-            UI_Popup_Quest.QuestUpdate(msg.QuestData);
+            UI_Main.Get().AddReward(arrayRewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
+            UI_Popup_Quest.QuestUpdate(arrayQuestData);
         }
         
         SetButton();
+
+        return true;
     }
 
     public void SetSplitLine(bool top, bool middle, bool bottom)

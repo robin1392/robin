@@ -6,6 +6,7 @@ using System.IO;
 using RandomWarsService.Network.Socket.NetService;
 using RandomWarsService.Network.Socket.NetPacket;
 using RandomWarsProtocol.Msg;
+using Service.Core;
 
 
 namespace RandomWarsProtocol

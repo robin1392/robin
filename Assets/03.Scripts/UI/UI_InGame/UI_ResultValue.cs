@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using RandomWarsProtocol;
+using Service.Core;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Service.Core;
 
 namespace RandomWarsProtocol.Msg
 {
