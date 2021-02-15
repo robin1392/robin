@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
@@ -40,6 +41,10 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     [Header("Enemy Upgrade")] 
     public Image[] arrImage_EnemyUpgradeIcon;
     public Text[] arrText_EnemyUpgrade;
+
+    [Header("SP upgrade message")] 
+    public CanvasGroup cg_SpUpgradeMessage;
+    public Text text_SpUpgradeMessage;
     
     
     #endregion
@@ -195,6 +200,19 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
             text_SP_Upgrade_Price.text = string.Empty;
         }
     }
+
+    public void ShowSpUpgradeMessage()
+    {
+        text_SpUpgradeMessage.text = $"Bonus {5 * InGameManager.Get().playerController.spUpgradeLevel} SP by wave";
+        LayoutRebuilder.ForceRebuildLayoutImmediate(text_SpUpgradeMessage.rectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)cg_SpUpgradeMessage.transform);
+        cg_SpUpgradeMessage.DOKill();
+        cg_SpUpgradeMessage.DOFade(1f, 0.3f).OnComplete(() =>
+        {
+            cg_SpUpgradeMessage.DOFade(0f, 0.25f).SetDelay(1f);
+        });
+    }
+    
     #endregion
     
     

@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using DG.Tweening.Core;
+using ED;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,9 +16,11 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     #region world ui element
 
     [Header("Stage UI")] 
+    public Image imageSpawnTimeGray;
     public Image imageSpawnTime;
+    public Image imageTimerIcon;
     public Text textSpawnTime;
-    public TextMeshProUGUI tmpWave;
+    public Text textWave;
     public Text textAddSP;
 
     [Header("Canvas")] public Canvas canvas_UnitHPBar;
@@ -33,6 +38,11 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         base.Awake();
 
         InitializeManager();
+    }
+
+    public void Start()
+    {
+        textAddSP.DOFade(0f, 0f);
     }
 
     public override void OnDestroy()
@@ -66,31 +76,113 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
 
     public void SetWave(int wave)
     {
-        tmpWave.text = wave.ToString(); //$"{wave}";
+        textWave.text = $"WAVE {wave}";
+    }
+
+    public void RotateTimerIcon()
+    {
+        imageTimerIcon.rectTransform.DOLocalRotate(new Vector3(0, 0, 359f), 1f, RotateMode.LocalAxisAdd).OnComplete(() =>
+        {
+            imageTimerIcon.rectTransform.localRotation = Quaternion.identity;
+        });
     }
 
     public void SetTextSpawnTime(float time)
     {
-        textSpawnTime.text = $"{Mathf.CeilToInt(time):F0}";
+        string str = $"{Mathf.CeilToInt(time):F0}";
+        if (String.CompareOrdinal(textSpawnTime.text, str) != 0)
+        {
+            textSpawnTime.text = str;
+            textSpawnTime.transform.DOPunchScale(Vector3.one * 0.1f, 0.2f);
+        }
     }
 
+    public AnimationCurve curve;
+    private bool isGaugeTweening;
+    
     public void SetSpawnTime(float amount)
     {
-        imageSpawnTime.fillAmount = amount;
+        if (amount < 0.05f) amount = 1f;
+        imageSpawnTimeGray.fillAmount = amount;
+
+        if (!isGaugeTweening)
+        {
+            if (amount < 0.2f) imageSpawnTime.fillAmount = 0f;
+            else if (amount > 0.2f && imageSpawnTime.fillAmount < 0.2f)
+            {
+                isGaugeTweening = true;
+                imageSpawnTime.DOFillAmount(0.21f, 0.3f).SetEase(curve).OnComplete(() =>
+                {
+                    imageSpawnTime.DOFillAmount(0.2f, 0.1f).OnComplete(() =>
+                    {
+                        isGaugeTweening = false;
+                    });
+                });
+            }
+            else if (amount > 0.4f && imageSpawnTime.fillAmount < 0.4f)
+            {
+                isGaugeTweening = true;
+                imageSpawnTime.DOFillAmount(0.41f, 0.3f).SetEase(curve).OnComplete(() =>
+                {
+                    imageSpawnTime.DOFillAmount(0.4f, 0.1f).OnComplete(() =>
+                    {
+                        isGaugeTweening = false;
+                    });
+                });
+            }
+            else if (amount > 0.6f && imageSpawnTime.fillAmount < 0.6f)
+            {
+                isGaugeTweening = true;
+                imageSpawnTime.DOFillAmount(0.61f, 0.3f).SetEase(curve).OnComplete(() =>
+                {
+                    imageSpawnTime.DOFillAmount(0.6f, 0.1f).OnComplete(() =>
+                    {
+                        isGaugeTweening = false;
+                    });
+                });
+            }
+            else if (amount > 0.8f && imageSpawnTime.fillAmount < 0.8f)
+            {
+                isGaugeTweening = true;
+                imageSpawnTime.DOFillAmount(0.81f, 0.3f).SetEase(curve).OnComplete(() =>
+                {
+                    imageSpawnTime.DOFillAmount(0.8f, 0.1f).OnComplete(() =>
+                    {
+                        isGaugeTweening = false;
+                    });
+                });
+            }
+            else if (amount >= 1f && imageSpawnTime.fillAmount < 1f) 
+                imageSpawnTime.DOFillAmount(1f, 0.3f).SetEase(curve);
+        }
     }
 
     public float GetSpawnAmount()
     {
-        return imageSpawnTime.fillAmount;
+        return imageSpawnTimeGray.fillAmount;
     }
 
     public void AddSP(int addSP)
     {
-        textAddSP.text = $"+{addSP}";
+        SetAddSpText(addSP);
+        // textAddSP.transform.DOScale(1.3f, 0.1f).OnComplete(() =>
+        // {
+        //     textAddSP.transform.DOScale(1f, 0.2f);
+        // });
+        Sequence sq = DOTween.Sequence().OnStart(() =>
+        {
+            textAddSP.transform.localScale = Vector3.zero;
+        }).Append(textAddSP.transform.DOScale(1f, 0.3f))
+            .SetEase(Ease.OutBack);
         textAddSP.DOFade(1f, 0.5f).OnComplete(() =>
         {
             textAddSP.DOFade(0f, 0.5f);
         });
+    }
+
+    public void SetAddSpText(int addSp)
+    {
+        textAddSP.text = $"+{addSp}";
     }
 
     #endregion

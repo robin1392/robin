@@ -430,12 +430,15 @@ namespace ED
             sp += add;
         }
 
-        private readonly int[] arrSPUpgradeValue = {10, 15, 20, 25, 30, 35};
+        public readonly int[] arrSPUpgradeValue = {10, 15, 20, 25, 30, 35};
         public void AddSpByWave(int addSp)
         {
             int total = 40 + addSp * arrSPUpgradeValue[spUpgradeLevel];
             sp += total;
-            WorldUIManager.Get().AddSP(total);
+            if (InGameManager.IsNetwork || (InGameManager.IsNetwork == false && isMine))
+            {
+                WorldUIManager.Get().AddSP(total);
+            }
         }
 
         public void SetSp(int sp)
@@ -450,6 +453,7 @@ namespace ED
                 sp -= (spUpgradeLevel + 1) * 100;
                 spUpgradeLevel++;
                 InGameManager.Get().event_SP_Edit.Invoke(sp);
+                UI_InGame.Get().ShowSpUpgradeMessage();
             }
         }
 
@@ -458,8 +462,10 @@ namespace ED
             spUpgradeLevel = upgradeLv;
             SetSp(curSp);
             InGameManager.Get().event_SP_Edit.Invoke(sp);
+            UI_InGame.Get().ShowSpUpgradeMessage();
         }
 
+        // 내가 아닐경우 호출
         public void SP_Upgrade(int upgradeLv)
         {
             spUpgradeLevel = upgradeLv;
