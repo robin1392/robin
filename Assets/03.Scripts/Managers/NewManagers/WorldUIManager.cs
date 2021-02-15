@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -15,6 +16,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     public Image imageSpawnTime;
     public Text textSpawnTime;
     public TextMeshProUGUI tmpWave;
+    public Text textAddSP;
 
     [Header("Canvas")] public Canvas canvas_UnitHPBar;
 
@@ -80,6 +82,15 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     public float GetSpawnAmount()
     {
         return imageSpawnTime.fillAmount;
+    }
+
+    public void AddSP(int addSP)
+    {
+        textAddSP.text = $"+{addSP}";
+        textAddSP.DOFade(1f, 0.5f).OnComplete(() =>
+        {
+            textAddSP.DOFade(0f, 0.5f);
+        });
     }
 
     #endregion

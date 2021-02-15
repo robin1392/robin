@@ -433,7 +433,9 @@ namespace ED
         private readonly int[] arrSPUpgradeValue = {10, 15, 20, 25, 30, 35};
         public void AddSpByWave(int addSp)
         {
-            sp += 40 + addSp * arrSPUpgradeValue[spUpgradeLevel];
+            int total = 40 + addSp * arrSPUpgradeValue[spUpgradeLevel];
+            sp += total;
+            WorldUIManager.Get().AddSP(total);
         }
 
         public void SetSp(int sp)
@@ -1877,7 +1879,7 @@ namespace ED
 
             if(bs != null)
             {
-                Vector3 startPos = listMinion.Find(m => m.id == id).ts_ShootingPos.position;
+                Vector3 startPos = bs.ts_ShootingPos.position;
 
                 switch(bulletType)
                 {

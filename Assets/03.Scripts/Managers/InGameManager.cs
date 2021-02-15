@@ -70,7 +70,7 @@ namespace ED
         public float startSpawnTime = 10f;
         public float spawnTime = 45f;
 
-        protected float st => wave < 1 ? 10f : 20f;
+        protected float st => wave < 1 ? 10f : 5f;
 
         public float time { get; protected set; }
         protected DateTime pauseTime;
@@ -308,6 +308,7 @@ namespace ED
                 // name
                 UI_InGame.Get().SetNickName(UserInfoManager.Get().GetUserInfo().userNickName, "AI");
                 otherTObj.SendMessage("ChangeLayer", false);
+                otherTObj.SendMessage("AI_SetRandomDeck", false);
                 isAIMode = true;
             }
             
@@ -354,6 +355,8 @@ namespace ED
             // Upgrade buttons
             // ui 셋팅
             UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
+            UI_InGame.Get().SetEnemyArrayDeck();
+            UI_InGame.Get().SetEnemyUpgrade();
 
             if (IsNetwork == true)
             {
@@ -670,16 +673,16 @@ namespace ED
         {
             if (isImmediately)
             {
-                WorldUIManager.Get().SetSpawnTime(time / st);
+                WorldUIManager.Get().SetSpawnTime(1f - time % st / st);
             }
             else
             {
-                float ff = Mathf.Lerp(WorldUIManager.Get().GetSpawnAmount(), time / st, Time.deltaTime * 5.0f);
+                float ff = Mathf.Lerp(WorldUIManager.Get().GetSpawnAmount(), 1f - time % st / st, Time.deltaTime * 5.0f);
 
                 if (ff < WorldUIManager.Get().GetSpawnAmount())
                     WorldUIManager.Get().SetSpawnTime(ff);
                 else 
-                    WorldUIManager.Get().SetSpawnTime(time / st);
+                    WorldUIManager.Get().SetSpawnTime(1f - time % st / st);
             }
             
        
@@ -1518,6 +1521,7 @@ namespace ED
                         int ingameup = ConvertNetMsg.MsgShortToInt(notiIngame.InGameUp); 
                         ingameup = ingameup > 0 ? ingameup - 1 : 0; 
                         playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId, ingameup);
+                        UI_InGame.Get().SetEnemyUpgrade();
                     }
 
                     break;
