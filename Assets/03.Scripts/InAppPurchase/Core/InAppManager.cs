@@ -161,11 +161,11 @@ namespace Percent.Platform
                 
                 ProductType type;
                 // Event
-                var keys = TableManager.Get().EventShopList.Keys;
-                TDataEventShopList dataEvent;
+                var keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataEvent;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().EventShopList.GetData(key, out dataEvent))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataEvent))
                     {
                         type = dataEvent.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
 #if UNITY_IOS
@@ -176,11 +176,11 @@ namespace Percent.Platform
                     }
                 }
                 // Package
-                keys = TableManager.Get().PackageShopList.Keys;
-                TDataPackageShopList dataPackage;
+                keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataPackage;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().PackageShopList.GetData(key, out dataPackage))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataPackage))
                     {
                         type = dataPackage.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
 #if UNITY_IOS
@@ -191,11 +191,11 @@ namespace Percent.Platform
                     }
                 }
                 // Premium
-                keys = TableManager.Get().PremiumShopList.Keys;
-                TDataPremiumShopList dataPremium;
+                keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataPremium;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().PremiumShopList.GetData(key, out dataPremium))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataPremium))
                     {
                         type = ProductType.NonConsumable;
 #if UNITY_IOS
@@ -217,11 +217,11 @@ namespace Percent.Platform
                 //     }
                 // }
                 // Diamond
-                keys = TableManager.Get().DiaShopList.Keys;
-                TDataDiaShopList dataDia;
+                keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataDia;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().DiaShopList.GetData(key, out dataDia))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataDia))
                     {
                         type = ProductType.Consumable;
 #if UNITY_IOS
@@ -251,7 +251,7 @@ namespace Percent.Platform
                 if(isLog)
                     Debug.Log("Percent [IAP] Please wait, purchase in progress");
                 if (callback != null) 
-                    callback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null, null);
+                    callback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null);
                 return;
             }
             
@@ -284,7 +284,7 @@ namespace Percent.Platform
                         if(isLog)
                             Debug.Log("Percent [IAP] BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
                         
-                        if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null, null);
+                        if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null);
                         buyCallback = null;
                         ResultPurchaseFailed();
                         if (inappViewUnLockCallback != null) inappViewUnLockCallback();
@@ -296,7 +296,7 @@ namespace Percent.Platform
                     if(isLog)
                         Debug.Log("Percent [IAP] BuyProductID FAIL. Not initialized.");
                     
-                    if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null, null);
+                    if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null);
                     buyCallback = null;
                     ResultPurchaseFailed();
                     if (inappViewUnLockCallback != null) inappViewUnLockCallback();
@@ -308,7 +308,7 @@ namespace Percent.Platform
                 if(isLog)
                     Debug.Log("Percent [IAP] BuyProductID: FAIL. Exception during purchase. " + e);
                 
-                if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null, null);
+                if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseAlreadyBuyProcess, this.shopId, null, null, null);
                 buyCallback = null;
                 ResultPurchaseFailed();
                 if (inappViewUnLockCallback != null) inappViewUnLockCallback();
@@ -328,7 +328,7 @@ namespace Percent.Platform
                     Debug.Log("Percent [IAP] RestorePurchases FAIL. Not initialized.");
                 
                 ResultPurchaseFailed();
-                if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseInitError, shopId, null, null, null, null);
+                if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseInitError, shopId, null, null, null);
                 if (inappViewUnLockCallback != null) inappViewUnLockCallback();
                 return;
             }
@@ -351,7 +351,7 @@ namespace Percent.Platform
                     Debug.Log("Percent [IAP] RestorePurchases FAIL. Not supported on this platform. Current = " + Application.platform);
                 
                 ResultPurchaseFailed();
-                if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseNotSupportOS, shopId, null, null, null, null);
+                if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseNotSupportOS, shopId, null, null, null);
                 if (inappViewUnLockCallback != null) inappViewUnLockCallback();
             }
         }
@@ -430,7 +430,7 @@ namespace Percent.Platform
 
             isPurchaseInProgress = false;
 
-            if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseFailed, shopId, null, null, null, null);
+            if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseFailed, shopId, null, null, null);
             buyCallback = null;
             if (inappViewUnLockCallback != null) inappViewUnLockCallback();
         }
@@ -443,7 +443,7 @@ namespace Percent.Platform
             dictPendingProducts.Remove(args.purchasedProduct.transactionID);
             storeController.ConfirmPendingPurchase(args.purchasedProduct);
             
-            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, playerGuid, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Instance.ShowPurchaseResult);
+            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Instance.ShowPurchaseResult);
         }
 
         private void ResultPurchaseSuccessed(string text, PurchaseEventArgs args)
@@ -458,10 +458,10 @@ namespace Percent.Platform
                 // start auto restore
             }
 
-            if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseSuccessed, shopId, null, null, null, null);
+            if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseSuccessed, shopId, null, null, null);
             buyCallback = null;
 
-            if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseSuccessed, shopId, null, null, null, null);
+            if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseSuccessed, shopId, null, null, null);
 
             if (inappViewUnLockCallback != null) inappViewUnLockCallback();
 
@@ -472,10 +472,10 @@ namespace Percent.Platform
         {
             isPurchaseInProgress = false;
 
-            if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseFailed, shopId, null, null, null, null);
+            if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseFailed, shopId, null, null, null);
             buyCallback = null;
 
-            if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseFailed, shopId, null, null, null, null);
+            if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseFailed, shopId, null, null, null);
             restoreCallback = null;
 
             if (inappViewUnLockCallback != null) inappViewUnLockCallback();

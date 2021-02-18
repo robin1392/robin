@@ -4,6 +4,11 @@ using RandomWarsResource;
 using RandomWarsResource.Data;
 using System.Net;
 using System.IO;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
+
+
+
 public class TableManager : Singleton<TableManager>
 {
     public string BucketUrl;
@@ -31,14 +36,7 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataQuestData> QuestData { get; private set; }
     public TableData<int, TDataQuestDayReward> QuestDayReward { get; private set; }
     public TableData<int, TDataShopInfo> ShopInfo { get; private set; }
-    public TableData<int, TDataEventShopList> EventShopList { get; private set; }
-    public TableData<int, TDataPackageShopList> PackageShopList { get; private set; }
-    public TableData<int, TDataOnedayShopList> OnedayShopList { get; private set; }
-    public TableData<int, TDataBoxShopList> BoxShopList { get; private set; }
-    public TableData<int, TDataPremiumShopList> PremiumShopList { get; private set; }
-    public TableData<int, TDataEmotionShopList> EmotionShopList { get; private set; }
-    public TableData<int, TDataDiaShopList> DiaShopList { get; private set; }
-    public TableData<int, TDataGoldShopList> GoldShopList { get; private set; }
+    public TableData<int, TDataShopProductList> ShopProductList { get; private set; }
 
 
 
@@ -82,14 +80,7 @@ public class TableManager : Singleton<TableManager>
         DiceInfo = new TableData<int, TDataDiceInfo>();
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
         ShopInfo = new TableData<int, TDataShopInfo>();
-        EventShopList = new TableData<int, TDataEventShopList>();
-        PackageShopList = new TableData<int, TDataPackageShopList>();
-        OnedayShopList = new TableData<int, TDataOnedayShopList>();
-        BoxShopList = new TableData<int, TDataBoxShopList>();
-        PremiumShopList = new TableData<int, TDataPremiumShopList>();
-        EmotionShopList = new TableData<int, TDataEmotionShopList>();
-        DiaShopList = new TableData<int, TDataDiaShopList>();
-        GoldShopList = new TableData<int, TDataGoldShopList>();
+        ShopProductList = new TableData<int, TDataShopProductList>();
     }
 
 
@@ -97,84 +88,158 @@ public class TableManager : Singleton<TableManager>
     {
         string remoteTDataVersion = string.Empty;
         string localTDataVersion = string.Empty;
+        string url = BucketUrl + "/Table/" + Enviroment;
 
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BucketUrl + "/AppSettings.dat");
+
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + "/version.json");
         request.ContentType = "application/json";
         request.Method = "GET";
         var response = (HttpWebResponse)request.GetResponse();
         var resStream = response.GetResponseStream();
+        
+        StreamReader streamRead = new StreamReader(resStream);
+        string jsonServer = streamRead.ReadToEnd();
+        jsonServer = jsonServer.Replace("\\", "");
+        var jObjServer = Newtonsoft.Json.Linq.JObject.Parse(jsonServer);
+        remoteTDataVersion = (string)jObjServer["dataVersion"];
 
-        using (BinaryReader reader = new BinaryReader(resStream))
-        {
-            remoteTDataVersion = reader.ReadString();
-        }
 
-        if (File.Exists(localPath + "AppSettings.dat") == true)
+        string targetPath = localPath + "Table/" + Enviroment;
+        if (File.Exists(targetPath + "/version.json") == true)
         {
-            using (BinaryReader reader = new BinaryReader(File.Open(localPath + "AppSettings.dat", FileMode.Open)))
+            using (StreamReader r = new StreamReader(targetPath + "/version.json"))
             {
-                localTDataVersion = reader.ReadString();
+                string jsonClient = r.ReadToEnd();
+                var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonServer);
+                localTDataVersion = (string)jObjClient["dataVersion"];
             }
         }
 
-        // ���� �����Ϳ� ���� �������� ������ ���Ѵ�.
         if (remoteTDataVersion != localTDataVersion)
         {
-            if (Directory.Exists(localPath) == false)
+            // 패치 파일 로컬 저장
+            if (RequestPatchFile(url + "/" + remoteTDataVersion + ".zip", targetPath) == false)
             {
-                Directory.CreateDirectory(localPath);
+                return;
             }
 
-            if (LoadFromBucket(BucketUrl + "/table/" + Enviroment, localPath + "table") == true)
-            {
-                using (BinaryWriter writer = new BinaryWriter(File.Open(localPath + "AppSettings.dat", FileMode.Create, FileAccess.ReadWrite)))
-                {
-                    writer.Write(remoteTDataVersion);
-                }
+            // 서버 버젼 파일 로컬 저장
+            File.WriteAllText(targetPath + "/version.json", jsonServer);
+            Debug.Log("Download Table Complete !!! ");
+        }
 
-                Debug.Log("Download Table Complete !!! ");
-            }
-        }
-        else
-        {
-            LoadFromFile(localPath + "table");
-        }
+        LoadFromFile(targetPath);
     }
 
 
-    bool LoadFromBucket(string bucketPath, string localPath)
+    bool RequestPatchFile(string url, string targetPath)
     {
-        BoxProductInfo.Init(new TableLoaderRemoteCSV<int, TDataBoxOpenInfo>(), bucketPath, "BoxOpenInfo.csv", localPath);
-        CoopMode.Init(new TableLoaderRemoteCSV<int, TDataCoopMode>(), bucketPath, "CoopMode.csv", localPath);
-        CoopModeMinion.Init(new TableLoaderRemoteCSV<int, TDataCoopModeMinion>(), bucketPath, "CoopModeMinion.csv", localPath);
-        CoopModeBossInfo.Init(new TableLoaderRemoteCSV<int, TDataCoopModeBossInfo>(), bucketPath, "CoopModeBossInfo.csv", localPath);
-        DiceInfo.Init(new TableLoaderRemoteCSV<int, TDataDiceInfo>(), bucketPath, "DiceInfo.csv", localPath);
-        DiceUpgrade.Init(new TableLoaderRemoteCSV<int, TDataDiceUpgrade>(), bucketPath, "DiceUpgrade.csv", localPath);
-        DiceLevelInfo.Init(new TableLoaderRemoteCSV<int, TDataDiceLevelInfo>(), bucketPath, "DiceLevelInfo.csv", localPath);
-        GuardianInfo.Init(new TableLoaderRemoteCSV<int, TDataGuardianInfo>(), bucketPath, "GuardianInfo.csv", localPath);
-        Vsmode.Init(new TableLoaderRemoteCSV<int, TDataVsmode>(), bucketPath, "Vsmode.csv", localPath);
-       // LangEN.Init(new TableLoaderRemoteCSV<int, TDataLangEN>(), bucketPath, "LangEN.csv", localPath);
-        LangKO.Init(new TableLoaderRemoteCSV<int, TDataLangKO>(), bucketPath, "LangKO.csv", localPath);
-        RankingReward.Init(new TableLoaderRemoteCSV<int, TDataRankingReward>(), bucketPath, "RankingReward.csv", localPath);
-        RankInfo.Init(new TableLoaderRemoteCSV<int, TDataRankInfo>(), bucketPath, "RankInfo.csv", localPath);
-        SeasonpassInfo.Init(new TableLoaderRemoteCSV<int, TDataSeasonpassInfo>(), bucketPath, "SeasonpassInfo.csv", localPath);
-        SeasonpassReward.Init(new TableLoaderRemoteCSV<int, TDataSeasonpassReward>(), bucketPath, "SeasonpassReward.csv", localPath);
-        ClassReward.Init(new TableLoaderRemoteCSV<int, TDataClassReward>(), bucketPath, "ClassReward.csv", localPath);
-        ItemList.Init(new TableLoaderRemoteCSV<int, TDataItemList>(), bucketPath, "ItemList.csv", localPath);
-        QuestInfo.Init(new TableLoaderRemoteCSV<int, TDataQuestInfo>(), bucketPath, "QuestInfo.csv", localPath);
-        QuestData.Init(new TableLoaderRemoteCSV<int, TDataQuestData>(), bucketPath, "QuestData.csv", localPath);
-        QuestDayReward.Init(new TableLoaderRemoteCSV<int, TDataQuestDayReward>(), bucketPath, "QuestDayReward.csv", localPath);
-        ShopInfo.Init(new TableLoaderRemoteCSV<int, TDataShopInfo>(), bucketPath, "ShopInfo.csv", localPath);
-        EventShopList.Init(new TableLoaderRemoteCSV<int, TDataEventShopList>(), bucketPath, "EventShopList.csv", localPath);
-        PackageShopList.Init(new TableLoaderRemoteCSV<int, TDataPackageShopList>(), bucketPath, "PackageShopList.csv", localPath);
-        OnedayShopList.Init(new TableLoaderRemoteCSV<int, TDataOnedayShopList>(), bucketPath, "OnedayShopList.csv", localPath);
-        BoxShopList.Init(new TableLoaderRemoteCSV<int, TDataBoxShopList>(), bucketPath, "BoxShopList.csv", localPath);
-        PremiumShopList.Init(new TableLoaderRemoteCSV<int, TDataPremiumShopList>(), bucketPath, "PremiumShopList.csv", localPath);
-        EmotionShopList.Init(new TableLoaderRemoteCSV<int, TDataEmotionShopList>(), bucketPath, "EmotionShopList.csv", localPath);
-        DiaShopList.Init(new TableLoaderRemoteCSV<int, TDataDiaShopList>(), bucketPath, "DiaShopList.csv", localPath);
-        GoldShopList.Init(new TableLoaderRemoteCSV<int, TDataGoldShopList>(), bucketPath, "GoldShopList.csv", localPath);
+        try
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            var response = (HttpWebResponse)request.GetResponse();
+            var resStream = response.GetResponseStream();
+
+
+            if (Directory.Exists(targetPath) == false)
+            {
+                Directory.CreateDirectory(targetPath);
+            }
+
+
+            using (var fileStream = new FileStream(targetPath + "/patchFile.zip", FileMode.Create, FileAccess.Write))
+            {
+                resStream.CopyTo(fileStream);
+            }
+
+            LoadZipFile(targetPath + "/patchFile.zip", targetPath);
+            File.Delete(targetPath + "/patchFile.zip");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Download Table Failed!!! error: " + e.Message);
+            return false;
+        }
 
         return true;
+    }
+
+    void LoadZipFile(string FilePath, string targetPath)
+    {
+        if (System.IO.File.Exists(FilePath) == false)
+            return;
+
+        // Read file
+        FileStream fs = null;
+        try
+        {
+            fs = new FileStream(FilePath, FileMode.Open);
+        }
+        catch
+        {
+            Debug.Log("GameData file open exception: " + FilePath);
+        }
+
+        if (fs != null)
+        {
+            try
+            {
+                // Read zip file
+                ZipFile zf = new ZipFile(fs);
+                int numFiles = 0;
+
+                if (zf.TestArchive(true) == false)
+                {
+                    Debug.Log("Zip file failed integrity check!");
+                    zf.IsStreamOwner = false;
+                    zf.Close();
+                    fs.Close();
+                }
+                else
+                {
+                    foreach (ZipEntry zipEntry in zf)
+                    {
+                        // Ignore directories
+                        if (!zipEntry.IsFile)
+                            continue;
+
+                        String entryFileName = zipEntry.Name;
+
+                        // Skip .DS_Store files (these appear on OSX)
+                        if (entryFileName.Contains("DS_Store"))
+                            continue;
+
+                        //Debug.Log("Unpacking zip file entry: " + entryFileName);
+
+                        byte[] buffer = new byte[4096];     // 4K is optimum
+                        Stream zipStream = zf.GetInputStream(zipEntry);
+
+                        // Manipulate the output filename here as desired.
+                        string fullZipToPath = targetPath + "\\" + Path.GetFileName(entryFileName);
+
+                        // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
+                        // of the file, but does not waste memory.
+                        // The "using" will close the stream even if an exception occurs.
+                        using (FileStream streamWriter = File.Create(fullZipToPath))
+                        {
+                            StreamUtils.Copy(zipStream, streamWriter, buffer);
+                        }
+                        numFiles++;
+                    }
+
+                    zf.IsStreamOwner = false;
+                    zf.Close();
+                    fs.Close();
+                }
+            }
+            catch
+            {
+                Debug.Log("Zip file error!");
+            }
+        }
     }
 
 
@@ -201,15 +266,7 @@ public class TableManager : Singleton<TableManager>
         QuestData.Init(new TableLoaderLocalCSV<int, TDataQuestData>(), path, "QuestData.csv");
         QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
         ShopInfo.Init(new TableLoaderLocalCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
-        EventShopList.Init(new TableLoaderLocalCSV<int, TDataEventShopList>(), path, "EventShopList.csv");
-        PackageShopList.Init(new TableLoaderLocalCSV<int, TDataPackageShopList>(), path, "PackageShopList.csv");
-        OnedayShopList.Init(new TableLoaderLocalCSV<int, TDataOnedayShopList>(), path, "OnedayShopList.csv");
-        BoxShopList.Init(new TableLoaderLocalCSV<int, TDataBoxShopList>(), path, "BoxShopList.csv");
-        PremiumShopList.Init(new TableLoaderLocalCSV<int, TDataPremiumShopList>(), path, "PremiumShopList.csv");
-        EmotionShopList.Init(new TableLoaderLocalCSV<int, TDataEmotionShopList>(), path, "EmotionShopList.csv");
-        DiaShopList.Init(new TableLoaderLocalCSV<int, TDataDiaShopList>(), path, "DiaShopList.csv");
-        GoldShopList.Init(new TableLoaderLocalCSV<int, TDataGoldShopList>(), path, "GoldShopList.csv");
-
+        ShopProductList.Init(new TableLoaderLocalCSV<int, TDataShopProductList>(), path, "ShopProductList.csv");
         return true;
     }
 }

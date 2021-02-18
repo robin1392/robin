@@ -109,7 +109,7 @@ namespace Percent.Platform
         /// <param name="shopID">리셋할 상점 ID</param>
         public void ResetShop()
         {
-            NetworkManager.session.ShopTemplate.ShopResetReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopID,1, Reset);
+            NetworkManager.session.ShopTemplate.ShopResetReq(NetworkManager.session.HttpClient, shopID,1, Reset);
         }
 
         

@@ -53,8 +53,7 @@ namespace Percent.Platform.InAppPurchase
                 UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 //listShop = new List<Shop>();
 
-                NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient,
-                    UserInfoManager.Get().GetUserInfo().userID, SetAllShop);
+                NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, SetAllShop);
             }
         }
         
@@ -65,7 +64,7 @@ namespace Percent.Platform.InAppPurchase
         {
             //listShop = new List<Shop>();
             
-            NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, RefreshAllShop);    
+            NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, RefreshAllShop);    
         }
         
         /// <summary>
@@ -87,7 +86,7 @@ namespace Percent.Platform.InAppPurchase
                     // Shop shop = Instantiate(prefabShop, transformShopParent).GetComponent<Shop>();
                     // listShop.Add(shop);
                     // shop.Initialize(shopInfo);
-                    string str = $"ShopID:{arrayShopInfo[i].shopId}, e:{arrayShopInfo[i].eventRemainTime}, r:{arrayShopInfo[i].resetRemainTime}";
+                    string str = $"ShopID:{arrayShopInfo[i].shopId}, r:{arrayShopInfo[i].resetRemainTime}";
                     foreach (var productInfo in arrayShopInfo[i].arrayProductInfo)
                     {
                         str += $"\nProductID:{productInfo.shopProductId}, BuyCount:{productInfo.buyCount}";

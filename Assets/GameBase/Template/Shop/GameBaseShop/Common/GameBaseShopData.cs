@@ -8,10 +8,10 @@ namespace Template.Shop.GameBaseShop.Common
     {
         // ShopInfo 테이블 아이디
         public int shopId;
-        // 이벤트 남은 시간(초단위)
-        public int eventRemainTime;
         // 갱신 남은 시간(초단위)
         public int resetRemainTime;
+        // 갱신 횟수
+        public int resetCount;
         // 상품 목록
         public ShopProductInfo[] arrayProductInfo;
         // 초기화 정보

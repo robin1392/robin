@@ -66,8 +66,8 @@ namespace Percent.Platform
             {
                 case 1:     // 이벤트 상품
                 {
-                    TDataEventShopList data;
-                    if (TableManager.Get().EventShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
                         imageName = data.shopImage;
@@ -82,8 +82,8 @@ namespace Percent.Platform
                     break;
                 case 2:     // 패키지 상품
                 {
-                    TDataPackageShopList data;
-                    if (TableManager.Get().PackageShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
                         imageName = data.shopImage;
@@ -98,8 +98,8 @@ namespace Percent.Platform
                     break;
                 case 3:     // 일일 상품
                 {
-                    TDataOnedayShopList data;
-                    if (TableManager.Get().OnedayShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
                         switch (buyType)
@@ -127,10 +127,10 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
                     }
 
-                    if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                    if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                     {
                         imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
                     }
@@ -140,8 +140,8 @@ namespace Percent.Platform
                     break;
                 case 4:     // 박스
                 {
-                    TDataBoxShopList data;
-                    if (TableManager.Get().BoxShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
                         switch (buyType)
@@ -173,9 +173,9 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
 
-                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                         {
                             imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
                         }
@@ -185,8 +185,8 @@ namespace Percent.Platform
                     break;
                 case 5:     // 프리미엄
                 {
-                    TDataPremiumShopList data;
-                    if (TableManager.Get().PremiumShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
                         imageName = data.shopImage;
@@ -200,8 +200,8 @@ namespace Percent.Platform
                     break;
                 case 6:     // 이모티콘
                 {
-                    TDataEmotionShopList data;
-                    if (TableManager.Get().EmotionShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
                         textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
@@ -210,11 +210,11 @@ namespace Percent.Platform
                     break;
                 case 7:     // 다이아
                 {
-                    TDataDiaShopList data;
-                    if (TableManager.Get().DiaShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
-                        imageName = data.goodsImage;
+                        imageName = data.shopImage;
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -249,11 +249,11 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
 
-                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                         {
-                            imageIcon.sprite = FileHelper.GetIcon(data.goodsImage);
+                            imageIcon.sprite = FileHelper.GetIcon(data.shopImage);
                         }
                         
                         textDouble.gameObject.SetActive(data.multipleValue > 0);
@@ -262,11 +262,11 @@ namespace Percent.Platform
                     break;
                 case 8:     // 골드
                 {
-                    TDataGoldShopList data;
-                    if (TableManager.Get().GoldShopList.GetData(shopProductInfo.shopProductId, out data))
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
-                        imageName = data.goodsImage;
+                        imageName = data.shopImage;
                         switch (buyType)
                         {
                             case BuyType.gold:
@@ -296,11 +296,11 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
 
-                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                         {
-                            imageIcon.sprite = FileHelper.GetIcon(data.goodsImage);
+                            imageIcon.sprite = FileHelper.GetIcon(data.shopImage);
                         }
                         textPItemBuyCount.text = $"{data.buyPrice}";
                         textDouble.gameObject.SetActive(data.multipleValue > 0);
@@ -426,7 +426,7 @@ namespace Percent.Platform
                 //{
 #if UNITY_EDITOR
                     //개발자 테스트용
-                NetworkManager.session.ShopTemplate.ShopPurchaseTestReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductId, null, ShowBuyResult);
+                //NetworkManager.session.ShopTemplate.ShopPurchaseTestReq(NetworkManager.session.HttpClient, shopInfo.shopId, shopProductId, null, ShowBuyResult);
 #else
                     //실제 결제
                 InAppManager.Instance.BuyProductID(productId, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductId, ShowBuyResult);
@@ -440,7 +440,7 @@ namespace Percent.Platform
                 //buttonShopItem.onClick.AddListener(() =>
                 //{  
                     //인앱 재화로 상품 구매하는 경우
-                NetworkManager.session.ShopTemplate.ShopBuyReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID,
+                NetworkManager.session.ShopTemplate.ShopBuyReq(NetworkManager.session.HttpClient,
                     shopInfo.shopId, shopProductId, ShowBuyResult);
                 
                 pos = transform.position;
