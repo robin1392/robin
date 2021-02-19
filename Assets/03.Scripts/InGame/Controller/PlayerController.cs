@@ -398,8 +398,8 @@ namespace ED
 
                     m.id = boss.Id;
                     m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                    m.power = ConvertNetMsg.MsgShortToFloat(boss.Power);
-                    m.effect = ConvertNetMsg.MsgShortToFloat(boss.Effect);
+                    m.power = ConvertNetMsg.MsgIntToFloat(boss.Power);
+                    m.effect = ConvertNetMsg.MsgIntToFloat(boss.Effect);
                     m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.Duration);
                     m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.EffectCoolTime);
 
