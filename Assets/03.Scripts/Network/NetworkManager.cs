@@ -633,7 +633,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void EndTutorialReq(string userId, string userName, Action<MsgEndTutorialAck> callback)
+    public void EndTutorialReq(string userId, Action<MsgEndTutorialAck> callback)
     {
         MsgEndTutorialReq msg = new MsgEndTutorialReq();
         msg.UserId = userId;
