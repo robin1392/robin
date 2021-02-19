@@ -138,9 +138,8 @@ public class TableManager : Singleton<TableManager>
         else
         {
             LoadFromFile(localPath + "table");
+            Debug.Log("Load Table Data. version : " + localTDataVersion);
         }
-
-        Debug.Log("Load Table Data. version : " + localTDataVersion);
     }
 
 
