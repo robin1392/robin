@@ -10,6 +10,8 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light_Fire;
 
+        public GameObject pref_Bullet;
+
         [Header("AudioClip")]
         public AudioClip clip_Fire;
 
@@ -20,6 +22,7 @@ namespace ED
             var ae = animator.GetComponent<MinionAnimationEvent>();
             ae.event_FireArrow += FireArrow;
             ae.event_FireLight += FireLightOn;
+            PoolManager.instance.AddPool(pref_Bullet, 1);
         }
 
         public override void Initialize(DestroyCallback destroy)
@@ -66,12 +69,12 @@ namespace ED
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(_arrow ,id, target.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.POSU_BULLET, id, target.id, power, bulletMoveSpeed);
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false)
             {
-                controller.FireBullet(_arrow, id, target.id, power, bulletMoveSpeed);
+                controller.FireBullet(E_BulletType.POSU_BULLET, id, target.id, power, bulletMoveSpeed);
             }
         }
 

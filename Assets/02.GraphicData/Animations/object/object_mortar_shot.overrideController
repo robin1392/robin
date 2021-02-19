@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: object_mortar_shot
+  m_Controller: {fileID: 9100000, guid: a254980f9c0074cf188cb0ca4346ab0d, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -138855772534874968, guid: 7640a37317f984489828ea02e98844b4,
+      type: 3}
+    m_OverrideClip: {fileID: -138855772534874968, guid: 8fbafabcae4ea489aadd7cc5bc8ac0b8,
+      type: 3}
+  - m_OriginalClip: {fileID: 27606744127360771, guid: 2b5280065723e44e4919e4bb3d50874c,
+      type: 3}
+    m_OverrideClip: {fileID: 27606744127360771, guid: 9783b44d7b5fe4ae7a59623e5242f4ff,
+      type: 3}

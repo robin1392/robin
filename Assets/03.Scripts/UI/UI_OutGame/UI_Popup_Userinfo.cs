@@ -49,6 +49,13 @@ public class UI_Popup_Userinfo : UI_Popup
         float x = 0f;
         float subX = 0f;
         text_CurrentTrophy.text = trophy.ToString();
+        text_MaxTrophy.text = UserInfoManager.Get().GetUserInfo().highTrophy.ToString();
+        int winCount = UserInfoManager.Get().GetUserInfo().winCount;
+        text_Win.text = winCount.ToString();
+        int loseCount = UserInfoManager.Get().GetUserInfo().defeatCount;
+        text_Lose.text = loseCount.ToString();
+        if (winCount + loseCount > 0) text_WinLose.text = $"{(winCount / (winCount + loseCount)):F1}%";
+        else text_WinLose.text = "0.0%";
         foreach (var kvp in TableManager.Get().RankInfo.KeyValues)
         {
             if (trophy > kvp.Value.rankingPointMinMax[1])

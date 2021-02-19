@@ -38,7 +38,7 @@ public class UI_Popup_Quest : UI_Popup
             {
                 remainTimeCooltime = 1f;
 
-                RefreshRemainTime();
+                //RefreshRemainTime();
             }
         }
     }
@@ -55,7 +55,7 @@ public class UI_Popup_Quest : UI_Popup
         else
         {
             InfoCallback();
-            RefreshRemainTime();
+            //RefreshRemainTime();
             Open();
         }
     }

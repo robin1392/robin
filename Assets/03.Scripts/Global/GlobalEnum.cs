@@ -14,6 +14,7 @@ namespace ED
         MAGIC = 1,
         INSTALLATION = 2,
         HERO = 3,
+        GUARDIAN = 4,
     }
     
     public enum DICE_MOVE_TYPE

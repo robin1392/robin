@@ -13,6 +13,7 @@ using UnityEngine.AI;
 
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
+using RandomWarsResource.Data;
 using Template.Shop.GameBaseShop.Table;
 
 //
@@ -397,6 +398,7 @@ namespace ED
                     var m = CreateMinion(obj, pos);
 
                     m.id = boss.Id;
+                    m.diceId = boss.DataId;
                     m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                     m.power = ConvertNetMsg.MsgIntToFloat(boss.Power);
                     m.effect = ConvertNetMsg.MsgIntToFloat(boss.Effect);
@@ -1914,6 +1916,12 @@ namespace ED
                 case E_BulletType.GUARDIAN3_BULLET:
                     b = PoolManager.instance.ActivateObject<Bullet>("Guardian3_Bullet", startPos);
                     break;
+                case E_BulletType.POSU_BULLET:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Posu_Bullet", startPos);
+                    break;
+                case E_BulletType.TURRET_BULLET:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Turret_Bullet", startPos);
+                    break;
                 }
 
                 if(b != null)
@@ -2348,16 +2356,29 @@ namespace ED
             for (int i = 0; i < msgMinionInfos.Length; i++)
             {
                 //if (_listDeadID.Contains(msgMinionInfos[i].Id)) continue;
-                
-                TDataDiceInfo data;
+
+                int id = 0;
+                TDataDiceInfo data = null;
+                TDataGuardianInfo gData = null;
+                DICE_CAST_TYPE type = DICE_CAST_TYPE.MINION;
                 if (TableManager.Get().DiceInfo.GetData(d => d.id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out data) == false)
                 {
-                    continue;
+                    if (TableManager.Get().GuardianInfo.GetData(g => g.id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out gData) == false)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        type = (DICE_CAST_TYPE) gData.castType;
+                    }
                 }
-                
-                DICE_CAST_TYPE type = (DICE_CAST_TYPE)data.castType;
+                else
+                {
+                    type = (DICE_CAST_TYPE) data.castType;
+                }
+
                 BaseStat bs = null; //listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
-                if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
+                if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO || type == DICE_CAST_TYPE.GUARDIAN)
                 {
                     bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
                 }
@@ -2368,7 +2389,7 @@ namespace ED
 
                 if (bs != null)
                 {
-                    if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
+                    if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO || type == DICE_CAST_TYPE.GUARDIAN)
                     {
                         ((Minion) bs).SetNetworkValue(
                             ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
@@ -2385,6 +2406,50 @@ namespace ED
                 }
                 else // 유닛이 없을 경우 생성하기 (ex. 재접속)
                 {
+                    if (data == null)
+                    {
+                        if (gData != null)
+                        {
+                            data = new TDataDiceInfo();
+                            data.color = gData.color;
+                            data.effect = gData.effect;
+                            data.effectUpgrade = gData.effectUpgrade;
+                            data.effectInGameUp = gData.effectInGameUp;
+                            data.grade = gData.grade;
+                            data.id = gData.id;
+                            data.name = gData.name;
+                            data.power = gData.power;
+                            data.powerUpgrade = gData.powerUpgrade;
+                            data.powerInGameUp = gData.powerInGameUp;
+                            data.maxHealth = gData.maxHealth;
+                            data.maxHpUpgrade = gData.maxHpUpgrade;
+                            data.maxHpInGameUp = gData.maxHpInGameUp;
+                            data.range = gData.range;
+                            data.attackSpeed = gData.attackSpeed;
+                            data.attackType = gData.attackType;
+                            data.cardName = gData.cardName;
+                            data.castType = gData.castType;
+                            data.effectCooltime = gData.effectCooltime;
+                            data.effectDuration = gData.effectDuration;
+                            data.enableDice = gData.enableDice;
+                            data.iconName = gData.iconName;
+                            data.illustName = gData.illustName;
+                            data.loadType = gData.loadType;
+                            data.modelName = gData.modelName;
+                            data.moveSpeed = gData.moveSpeed;
+                            data.moveType = gData.moveType;
+                            data.prefabName = gData.prefabName;
+                            data.searchRange = gData.searchRange;
+                            data.skillIndex = gData.skillIndex;
+                            data.spawnMultiply = gData.spawnMultiply;
+                            data.targetMoveType = gData.targetMoveType;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    
                     int wave = InGameManager.Get().wave;
                     var myInfo = isMine
                         ? NetworkManager.Get().GetNetInfo().playerInfo
@@ -2480,7 +2545,7 @@ namespace ED
                         int diceIdIndex = 0;
                         for (int j = 0; j < arrDiceDeck.Length; j++)
                         {
-                            if (arrDiceDeck[i].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
+                            if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
                             {
                                 diceIdIndex = j;
                                 break;

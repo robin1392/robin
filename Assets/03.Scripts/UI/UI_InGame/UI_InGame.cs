@@ -203,7 +203,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     public void ShowSpUpgradeMessage()
     {
-        text_SpUpgradeMessage.text = $"Bonus {5 * InGameManager.Get().playerController.spUpgradeLevel} SP by wave";
+        //text_SpUpgradeMessage.text = $"Bonus {5 * InGameManager.Get().playerController.spUpgradeLevel} SP by wave";
+        text_SpUpgradeMessage.text = $"Bonus SP by wave";
         LayoutRebuilder.ForceRebuildLayoutImmediate(text_SpUpgradeMessage.rectTransform);
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)cg_SpUpgradeMessage.transform);
         cg_SpUpgradeMessage.DOKill();

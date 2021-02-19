@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,7 +26,30 @@ public class UI_DiceLevelUpResultSlot : MonoBehaviour
         this.add = add;
 
         image_Icon.sprite = arrSprite_StatTypeIcon[(int) type];
-        text_Type.text = LocalizationManager.GetLangDesc( (int)LANG_ENUM.UI_DESC + (int)type);
+        switch (type)
+        {
+            case Global.E_DICEINFOSLOT.Info_Hp:
+                text_Type.text = LocalizationManager.GetLangDesc("Minioninfo_Hp");
+                break;
+            case Global.E_DICEINFOSLOT.Info_MoveSpeed:
+                text_Type.text = LocalizationManager.GetLangDesc("Minioninfo_Movespd");
+                break;
+            case Global.E_DICEINFOSLOT.Info_AtkPower:
+                text_Type.text = LocalizationManager.GetLangDesc("Minioninfo_Atk");
+                break;
+            case Global.E_DICEINFOSLOT.Info_AtkSpeed:
+                text_Type.text = LocalizationManager.GetLangDesc("Minioninfo_Atkspd");
+                break;
+            case Global.E_DICEINFOSLOT.Info_Skill:
+                text_Type.text = LocalizationManager.GetLangDesc("Minioninfo_Effect");
+                break;
+            case Global.E_DICEINFOSLOT.Info_Cooltime:
+                text_Type.text = LocalizationManager.GetLangDesc("Minioninfo_Effectcooltime");
+                break;
+            case Global.E_DICEINFOSLOT.Info_Range:
+                text_Type.text = LocalizationManager.GetLangDesc("Minioninfo_Atkrange");
+                break;
+        }
         text_Value.text = $"{current - add:F1}";
         text_AddValue.text = $"+{add:F1}";
 

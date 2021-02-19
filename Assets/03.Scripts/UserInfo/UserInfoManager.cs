@@ -25,7 +25,11 @@ public class UserInfo
         private set => _userNickName = value;
     }
 
+    public bool isEndTutorial;
     public int trophy;
+    public int highTrophy;
+    public int winCount;
+    public int defeatCount;
     public int nClass;
     public int diamond;
     public int gold;
@@ -318,10 +322,14 @@ public class UserInfoManager : Singleton<UserInfoManager>
         SetUserKey(info.UserId);
 
         _userInfo.SetNickName(info.Name);
+        _userInfo.isEndTutorial = info.EndTutorial;
         _userInfo.diamond = info.Goods.Diamond;
         _userInfo.gold = info.Goods.Gold;
         _userInfo.key = info.Goods.Key;
         _userInfo.trophy = info.Trophy;
+        _userInfo.highTrophy = info.HighTrophy;
+        _userInfo.winCount = info.WinCount;
+        _userInfo.defeatCount = info.DefeatCount;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
         _userInfo.seasonPassId = seasonPassInfo.SeasonPassId;

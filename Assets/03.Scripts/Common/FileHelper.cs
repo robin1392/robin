@@ -35,7 +35,7 @@ public class FileHelper
                 break;
         }
 
-        GameObject loadObj = Resources.Load(rscPath + fileName) as GameObject;
+        GameObject loadObj = Resources.Load<GameObject>(rscPath + fileName);
 //        loadObj = GameObject.Instantiate(loadObj);
 //        loadObj.name = fileName;
 //        if(parent != null)

@@ -102,7 +102,7 @@ MonoBehaviour:
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
   isPlayable: 1
-  castType: 0
+  castType: 4
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0

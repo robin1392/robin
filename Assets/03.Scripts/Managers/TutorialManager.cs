@@ -266,6 +266,7 @@ public class TutorialManager : MonoBehaviour
                 image_NextStep.raycastTarget = false;
                 Time.timeScale = 1f;
                 ObscuredPrefs.SetBool("Tutorial", true);
+                NetworkManager.Get().Send(GameProtocol.END_TUTORIAL_REQ);
                 break;
         }
     }

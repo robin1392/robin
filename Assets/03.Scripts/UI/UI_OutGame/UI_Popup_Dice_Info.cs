@@ -367,27 +367,31 @@ namespace ED
             text_ResultDiceLevel.rectTransform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.4f);
             //rts_ResultStatParent.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.8f);
 
-            for (int i = 0; i < 2; i++)
+            var arrAdd = new float[3] { data.maxHpUpgrade, data.powerUpgrade, data.effectUpgrade};
+            for (int i = 0; i < 3; i++)
             {
+                float current = 0f;
+                
+                if (arrAdd[i] == 0) continue;
+                
                 var obj = Instantiate(pref_ResultStatSlot, rts_ResultStatParent);
                 var ui = obj.GetComponent<UI_DiceLevelUpResultSlot>();
-                float current = 0f;
-                float add = 0f;
 
                 switch (i)
                 {
                     case 0:
                         current = data.maxHealth + data.maxHpUpgrade * diceLevel;
-                        add = data.maxHpUpgrade;
+                        ui.Initialize(Global.E_DICEINFOSLOT.Info_Hp, current, arrAdd[i], 1.2f + 0.1f * i);
                         break;
                     case 1:
                         current = data.power + data.powerUpgrade * diceLevel;
-                        add = data.powerUpgrade;
+                        ui.Initialize(Global.E_DICEINFOSLOT.Info_AtkPower, current, arrAdd[i], 1.2f + 0.1f * i);
+                        break;
+                    case 2:
+                        current = data.effect + data.effectUpgrade + diceLevel;
+                        ui.Initialize(Global.E_DICEINFOSLOT.Info_Skill, current, arrAdd[i], 1.2f + 0.1f * i);
                         break;
                 }
-                
-                ui.Initialize(i == 0 ? Global.E_DICEINFOSLOT.Info_Hp : Global.E_DICEINFOSLOT.Info_AtkPower,
-                    current, add, 1.2f + 0.1f * i);
                 
                 obj.transform.localScale = Vector3.zero;
                 obj.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.5f + 0.1f * i);
@@ -395,7 +399,7 @@ namespace ED
             
             image_ResultDiceIcon.transform.DOScale(1.6f, 0.15f).SetDelay(1.7f).OnComplete(() =>
             {
-                text_ResultDiceLevel.text = $"LEVEL {diceLevel}";
+                text_ResultDiceLevel.text = $"CLASS {diceLevel}";
                 text_ResultDiceLevel.color = UnityUtil.HexToColor("71FA4A");
                 image_ResultDiceIcon.transform.DOScale(1.4f, 0.15f);
                 ps_ResultIconBackground.Play();

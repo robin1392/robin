@@ -41,7 +41,7 @@ namespace ED
                 {
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
                     // 이건 자신이 데미지 입는것이기 때문에...
-                    controller.HitMyMinionDamage( controller.myUID , id , float.MaxValue );
+                    controller.HitMyMinionDamage( controller.myUID , id , currentHealth );
                 }
             }
             

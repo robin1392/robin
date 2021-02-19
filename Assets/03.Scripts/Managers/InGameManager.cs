@@ -98,6 +98,7 @@ namespace ED
         [SerializeField] protected List<BaseStat> listTopPlayer = new List<BaseStat>();
 
         private readonly string recvMessage = "RecvBattleManager";
+        private UI_CoopSpawnTurn _coopSpawnTurn;
 
         #endregion
 
@@ -299,6 +300,7 @@ namespace ED
                 msgUserInfo.IsMaster = false;
                 msgUserInfo.CurrentSp = 200;
                 msgUserInfo.TowerHp = (30000 + Random.Range(0, 500)) * 100;
+                msgUserInfo.Name = "AI";
                 NetworkManager.Get().GetNetInfo().SetOtherInfo(msgUserInfo);
 
                 GameObject otherTObj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
@@ -1424,6 +1426,7 @@ namespace ED
                 {
                     if (NetworkManager.Get().UserUID == Convert.ToUInt16(param[0])) // param 0 = useruid
                     {
+                        WorldUIManager.Get().AddSP((int) param[1] - playerController.sp);
                         NetSetSp((int) param[1]); // param1 wave
                     }
 
@@ -1480,6 +1483,9 @@ namespace ED
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
                     NetSpawnNotify(msg.Wave, msg.SpawnInfo);
+                    
+                    if (_coopSpawnTurn == null) _coopSpawnTurn = FindObjectOfType<UI_CoopSpawnTurn>(); 
+                    _coopSpawnTurn.Reverse();
 
                     break;
                 }

@@ -20,50 +20,10 @@ namespace ED
 
         public DICE_CAST_TYPE castType;
         public SPAWN_TYPE spawnType;
-        //public DICE_MOVE_TYPE targetMoveType;
-        //public bool isMine;
-        //public int id;
-        //public PlayerController controller;
-        //public Rigidbody rb;
         public DestroyCallback destroyCallback;
         public delegate void DestroyCallback(Magic magic);
 
-        // protected int targetLayer
-        // {
-        //     get
-        //     {
-        //         switch (targetMoveType)
-        //         {
-        //             case DICE_MOVE_TYPE.GROUND:
-        //                 return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
-        //             case DICE_MOVE_TYPE.FLYING:
-        //                 return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
-        //             case DICE_MOVE_TYPE.ALL:
-        //                 return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer") 
-        //                        | 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
-        //             default:
-        //                 return 0;
-        //         }
-        //     }
-        // }
         public Vector3 targetPos;
-        // public float power;
-        // public float powerUpByUpgrade;
-        // public float powerUpByInGameUp;
-        // public float maxHealth;
-        // public float currentHealth;
-        // public float maxHealthUpByUpgrade;
-        // public float maxHealthUpByInGameUp;
-        // public float effect;
-        // public float effectUpByUpgrade;
-        // public float effectUpByInGameUp;
-        // public float effectDuration;
-        // public float effectCooltime;
-        // public float attackSpeed;
-        // public float moveSpeed = 2f;
-        // public float range;
-        // public float searchRange;
-        // protected bool isBottomPlayer;
         
         public int eyeLevel;
         public int upgradeLevel;

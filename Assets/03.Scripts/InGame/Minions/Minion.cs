@@ -486,6 +486,7 @@ namespace ED
             //rb.isKinematic = false;
         }
 
+        // 무
         public void Invincibility(float time)
         {
             if (_invincibilityCoroutine != null) StopCoroutine(_invincibilityCoroutine);

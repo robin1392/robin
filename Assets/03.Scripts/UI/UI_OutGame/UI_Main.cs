@@ -59,6 +59,7 @@ namespace ED
         public Text text_Diamond;
         public Text text_Gold;
         public Text text_Key;
+        public CanvasGroup cg_Money;
 
         [Header("Badge")]
         public GameObject obj_MenuBadge;
@@ -339,6 +340,15 @@ namespace ED
 
         public void Click_MainButton(int num)
         {
+            // cg_Money.gameObject.SetActive(true);
+            // cg_Money.DOFade(num == 3 ? 0f : 1f, 0f).OnComplete(() =>
+            // {
+            //     cg_Money.gameObject.SetActive(num != 3);
+            // });
+
+            var rt = (RectTransform) cg_Money.transform;
+            rt.DOAnchorPosY(num == 3 ? 500 : -79, 0.1f).SetEase(num == 3 ? Ease.InBack : Ease.OutBack);
+            
             ShowAllPanels();
             currentPageNum = num;
             const float duration = 0.3f;

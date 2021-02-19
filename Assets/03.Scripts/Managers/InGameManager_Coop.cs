@@ -76,6 +76,8 @@ namespace ED
             
             playerController.targetPlayer.ChangeLayer(true);
             
+            FindObjectOfType<UI_CoopSpawnTurn>().Set(NetworkManager.Get().GetNetInfo().playerInfo.IsMaster);
+            
             // AI
             coopTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
             coopTObj.transform.position = AIPos;
