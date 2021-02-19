@@ -53,6 +53,18 @@ namespace RandomWarsProtocol
         }
 
 
+        public void EndTutorialReq(MsgEndTutorialReq msg)
+        {
+            _httpService.Send((int)GameProtocol.UPDATE_DECK_REQ, "deckupdate", JsonConvert.SerializeObject(msg));
+        }
+
+
+        public string EndTutorialAck(MsgEndTutorialAck msg)
+        {
+            return JsonConvert.SerializeObject(msg);
+        }
+
+
         public void StartMatchReq(MsgStartMatchReq msg)
         {
             _httpService.Send((int)GameProtocol.START_MATCH_REQ, "matchrequest", JsonConvert.SerializeObject(msg));

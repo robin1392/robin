@@ -25,6 +25,11 @@ namespace RandomWarsProtocol
         public delegate void UpdateDeckAckDelegate(MsgUpdateDeckAck msg);
         public UpdateDeckAckDelegate UpdateDeckAck;
 
+        public delegate Task<string> EndTutorialReqDelegate(MsgEndTutorialReq msg);
+        public EndTutorialReqDelegate EndTutorialReq;
+        public delegate void EndTutorialAckDelegate(MsgEndTutorialAck msg);
+        public EndTutorialAckDelegate EndTutorialAck;
+
         public delegate Task<string> StartMatchReqDelegate(MsgStartMatchReq msg);
         public StartMatchReqDelegate StartMatchReq;
         public delegate void StartMatchAckDelegate(MsgStartMatchAck msg);
@@ -136,6 +141,15 @@ namespace RandomWarsProtocol
 
                         MsgUpdateDeckReq msg = JsonConvert.DeserializeObject<MsgUpdateDeckReq>(json);
                         ackJson = await UpdateDeckReq(msg);
+                    }
+                    break;
+                case GameProtocol.END_TUTORIAL_REQ:
+                    {
+                        if (EndTutorialReq == null)
+                            return ackJson;
+
+                        MsgEndTutorialReq msg = JsonConvert.DeserializeObject<MsgEndTutorialReq>(json);
+                        ackJson = await EndTutorialReq(msg);
                     }
                     break;
                 case GameProtocol.START_MATCH_REQ:
@@ -317,6 +331,15 @@ namespace RandomWarsProtocol
 
                         MsgUpdateDeckAck msg = JsonConvert.DeserializeObject<MsgUpdateDeckAck>(json);
                         UpdateDeckAck(msg);
+                    }
+                    break;
+                case GameProtocol.END_TUTORIAL_ACK:
+                    {
+                        if (EndTutorialAck == null)
+                            return false;
+
+                        MsgEndTutorialAck msg = JsonConvert.DeserializeObject<MsgEndTutorialAck>(json);
+                        EndTutorialAck(msg);
                     }
                     break;
                 case GameProtocol.START_MATCH_ACK:

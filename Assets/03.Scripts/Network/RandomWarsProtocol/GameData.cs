@@ -56,6 +56,10 @@ namespace RandomWarsProtocol
         public bool IsBuyVipPass;
         // 시즌 정보
         public MsgSeasonPassInfo SeasonInfo;
+        public int WinCount;
+        public int DefeatCount;
+        public int HighTrophy;
+        public bool EndTutorial;
 
 
         public void Write(BinaryWriter bw)
