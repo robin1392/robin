@@ -47,7 +47,7 @@ namespace RandomWarsResource.Data
 		public float range { get; set; }
 		public float searchRange { get; set; }
 		public int skillIndex { get; set; }
-		public string attackType { get; set; }
+		public bool attackType { get; set; }
 
 
 		public int PK()
@@ -92,7 +92,7 @@ namespace RandomWarsResource.Data
 			range = float.Parse(cols[31]);
 			searchRange = float.Parse(cols[32]);
 			skillIndex = int.Parse(cols[33]);
-			attackType = cols[34].Replace("{#$}", ",");
+			attackType = bool.Parse(cols[34]);
 		}
 	}
 }
