@@ -637,6 +637,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         MsgEndTutorialReq msg = new MsgEndTutorialReq();
         msg.UserId = userId;
+        _endTutorialCallback = callback;
         _httpSender.EndTutorialReq(msg);
         UnityUtil.Print("SEND END TUTORIAL => userId", userId, "green");
     }

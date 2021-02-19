@@ -78,6 +78,7 @@ namespace RandomWarsService.Network.Http
 
                 string ackJson = streamRead.ReadToEnd();
                 ackJson = ackJson.Replace("\\u0022", "\"");
+                ackJson = ackJson.Replace("\\", "");
                 ackJson = ackJson.Replace("\\n", "");
                 ackJson = ackJson.Replace("\"{", "{");
                 ackJson = ackJson.Replace("}\"", "}");
