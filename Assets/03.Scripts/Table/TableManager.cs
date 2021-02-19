@@ -132,13 +132,15 @@ public class TableManager : Singleton<TableManager>
                     writer.Write(remoteTDataVersion);
                 }
 
-                Debug.Log("Download Table Complete !!! ");
+                Debug.Log("Download Table Complete !!! version : " + remoteTDataVersion);
             }
         }
         else
         {
             LoadFromFile(localPath + "table");
         }
+
+        Debug.Log("Load Table Data. version : " + localTDataVersion);
     }
 
 
