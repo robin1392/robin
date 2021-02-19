@@ -165,6 +165,7 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgOpenBoxAck> _boxOpenCallback;
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     private Action<MsgEditUserNameAck> _editUserNameCallback;
+    private Action<MsgEndTutorialAck> _endTutorialCallback;
     private Action<MsgSeasonInfoAck> _seasonInfoCallback;
     private Action<MsgGetRankAck> _getRankCallback;
     private Action<MsgGetSeasonPassRewardAck> _getSeasonPassRewardCallback;
@@ -546,6 +547,28 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
     #region http
+
+
+    public void EndTutorialReq(string userId, Action<MsgEndTutorialAck> callback)
+    {
+        MsgEndTutorialReq msg = new MsgEndTutorialReq();
+        msg.UserId = userId;
+        _endTutorialCallback = callback;
+        _httpSender.EndTutorialReq(msg);
+        UnityUtil.Print("SEND END TUTORIAL => userId", userId, "green");
+    }
+
+
+    void OnEndTutorialAck(MsgEndTutorialAck msg)
+    {
+        if (_endTutorialCallback != null)
+        {
+            _endTutorialCallback(msg);
+        }
+
+        UnityUtil.Print("RECV END TUTORIAL => endTutorial", msg.EndTutorial.ToString(), "green");
+    }
+
 
 
     IEnumerator WaitForMatch()

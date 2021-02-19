@@ -458,7 +458,10 @@ namespace ED
             wave = 0;
             // 개발용으로 쓰일때만..
             if (IsNetwork == false)
+            {
                 WorldUIManager.Get().SetWave(wave);
+                WorldUIManager.Get().RotateTimerIcon();
+            }
 
             time = startSpawnTime;
             int[] arrAddTime = {20, 15, 10, 5, -1};
@@ -493,6 +496,8 @@ namespace ED
                     {
                         playerController.Spawn(null);
                         playerController.targetPlayer.Spawn(null);
+                        UI_InGameMessageManager.Get().ShowMessage("Wave start!", 1f);
+                        WorldUIManager.Get().RotateTimerIcon();
 
                         wave++;
                     }
@@ -599,6 +604,7 @@ namespace ED
         {
             this.wave = wave;
             WorldUIManager.Get().SetWave(wave);
+            WorldUIManager.Get().RotateTimerIcon();
             // 시간 리셋
             time = spawnTime;
 
@@ -680,7 +686,7 @@ namespace ED
             {
                 float ff = Mathf.Lerp(WorldUIManager.Get().GetSpawnAmount(), 1f - time % st / st, Time.deltaTime * 5.0f);
 
-                if (ff < WorldUIManager.Get().GetSpawnAmount())
+                if (ff > WorldUIManager.Get().GetSpawnAmount())
                     WorldUIManager.Get().SetSpawnTime(ff);
                 else 
                     WorldUIManager.Get().SetSpawnTime(1f - time % st / st);
@@ -948,7 +954,9 @@ namespace ED
         public void Click_SP_Upgrade_Button()
         {
             if(IsNetwork)
+            {
                 SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
+            }
             else
             {
                 playerController.SP_Upgrade();

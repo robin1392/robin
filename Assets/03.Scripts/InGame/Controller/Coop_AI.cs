@@ -333,8 +333,8 @@ namespace ED
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(false);
                 m.maxHealth = ConvertNetMsg.MsgIntToFloat(msgBoss.Hp);
-                m.power = ConvertNetMsg.MsgShortToFloat(msgBoss.Power);
-                m.effect = ConvertNetMsg.MsgShortToFloat(msgBoss.Effect);
+                m.power = ConvertNetMsg.MsgIntToFloat(msgBoss.Power);
+                m.effect = ConvertNetMsg.MsgIntToFloat(msgBoss.Effect);
                 m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.Duration);
                 m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.EffectCoolTime);
                 m.moveSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.MoveSpeed);

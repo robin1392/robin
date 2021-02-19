@@ -59,6 +59,20 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
+    public class MsgEndTutorialReq
+    {
+        public string UserId;
+    }
+
+
+    [Serializable]
+    public class MsgEndTutorialAck
+    {
+        public GameErrorCode ErrorCode;
+        public bool EndTutorial;
+    }
+
+    [Serializable]
     public class MsgStartMatchReq
     {
         public string UserId;

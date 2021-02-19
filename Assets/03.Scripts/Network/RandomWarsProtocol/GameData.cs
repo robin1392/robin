@@ -56,6 +56,10 @@ namespace RandomWarsProtocol
         public bool IsBuyVipPass;
         // 시즌 정보
         public MsgSeasonPassInfo SeasonInfo;
+        public int WinCount;
+        public int DefeatCount;
+        public int HighTrophy;
+        public bool EndTutorial;
 
 
         public void Write(BinaryWriter bw)
@@ -313,8 +317,8 @@ namespace RandomWarsProtocol
         public ushort Id;
         public int DataId;
         public int Hp;
-        public short Power;
-        public short Effect;
+        public int Power;
+        public int Effect;
         public short EffectCoolTime;
         public short Duration;
         public short MoveSpeed;
@@ -340,8 +344,8 @@ namespace RandomWarsProtocol
             data.Id = br.ReadUInt16();
             data.DataId = br.ReadInt32();
             data.Hp = br.ReadInt32();
-            data.Power = br.ReadInt16();
-            data.Effect = br.ReadInt16();
+            data.Power = br.ReadInt32();
+            data.Effect = br.ReadInt32();
             data.EffectCoolTime = br.ReadInt16();
             data.Duration = br.ReadInt16();
             data.MoveSpeed = br.ReadInt16();
