@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a686a47eee2fa44cb0a34b5d86e4d5e, type: 3}
+  m_Name: Melee
+  m_EditorClassIdentifier: 
+  _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"_position":{"x":343.0,"y":329.0},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"0"},{"_action":{"target":{"_name":"target","_targetVariableID":"f422150d-84f4-4cab-b887-e810c6d776fc"},"$type":"FindNearestEnemy"},"_position":{"x":76.0,"y":488.0},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"1"},{"_position":{"x":568.0,"y":461.0},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"2"},{"_action":{"target":{"_name":"target","_targetVariableID":"f422150d-84f4-4cab-b887-e810c6d776fc"},"$type":"MoveToTargetUntilInAttackRange"},"_position":{"x":334.0,"y":665.0},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"3"},{"_action":{"target":{"_name":"target","_targetVariableID":"f422150d-84f4-4cab-b887-e810c6d776fc"},"$type":"Attack"},"_position":{"x":687.0,"y":666.0},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"4"}],"connections":[{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"1"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"2"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"2"},"_targetNode":{"$ref":"3"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"2"},"_targetNode":{"$ref":"4"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"}],"canvasGroups":[],"localBlackboard":{"_variables":{"target":{"_name":"target","_id":"f422150d-84f4-4cab-b887-e810c6d776fc","$type":"NodeCanvas.Framework.Variable`1[[MirageTest.Scripts.Actor,
+    Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}}},"derivedData":{"repeat":true,"$type":"NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"}}'
+  _objectReferences: []
+  _graphSource:
+    _version: 3.08
+    _category: 
+    _comments: 
+    _translation: {x: 0, y: 0}
+    _zoomFactor: 1
+  _haltSerialization: 0
+#---GRAPH_START---
+#The pretty formatted json serialization bellow is only a reference to help in version control diff. Other than that it is not used at all.
+#{
+#    "type": "NodeCanvas.BehaviourTrees.BehaviourTree",
+#    "nodes": [
+#        {
+#            "_position": {
+#                "x": 343.0,
+#                "y": 329.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "0"
+#        },
+#        {
+#            "_action": {
+#                "target": {
+#                    "_name": "target",
+#                    "_targetVariableID": "f422150d-84f4-4cab-b887-e810c6d776fc"
+#                },
+#                "$type": "FindNearestEnemy"
+#            },
+#            "_position": {
+#                "x": 76.0,
+#                "y": 488.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "1"
+#        },
+#        {
+#            "_position": {
+#                "x": 568.0,
+#                "y": 461.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.Sequencer",
+#            "$id": "2"
+#        },
+#        {
+#            "_action": {
+#                "target": {
+#                    "_name": "target",
+#                    "_targetVariableID": "f422150d-84f4-4cab-b887-e810c6d776fc"
+#                },
+#                "$type": "MoveToTargetUntilInAttackRange"
+#            },
+#            "_position": {
+#                "x": 334.0,
+#                "y": 665.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "3"
+#        },
+#        {
+#            "_action": {
+#                "target": {
+#                    "_name": "target",
+#                    "_targetVariableID": "f422150d-84f4-4cab-b887-e810c6d776fc"
+#                },
+#                "$type": "Attack"
+#            },
+#            "_position": {
+#                "x": 687.0,
+#                "y": 666.0
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.ActionNode",
+#            "$id": "4"
+#        }
+#    ],
+#    "connections": [
+#        {
+#            "_sourceNode": {
+#                "$ref": "0"
+#            },
+#            "_targetNode": {
+#                "$ref": "1"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "0"
+#            },
+#            "_targetNode": {
+#                "$ref": "2"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "2"
+#            },
+#            "_targetNode": {
+#                "$ref": "3"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        },
+#        {
+#            "_sourceNode": {
+#                "$ref": "2"
+#            },
+#            "_targetNode": {
+#                "$ref": "4"
+#            },
+#            "$type": "NodeCanvas.BehaviourTrees.BTConnection"
+#        }
+#    ],
+#    "canvasGroups": [],
+#    "localBlackboard": {
+#        "_variables": {
+#            "target": {
+#                "_name": "target",
+#                "_id": "f422150d-84f4-4cab-b887-e810c6d776fc",
+#                "$type": "NodeCanvas.Framework.Variable`1[[MirageTest.Scripts.Actor, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+#            }
+#        }
+#    },
+#    "derivedData": {
+#        "repeat": true,
+#        "$type": "NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"
+#    }
+#}
+#---GRAPH_END---
