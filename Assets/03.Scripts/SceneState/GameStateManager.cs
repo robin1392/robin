@@ -301,6 +301,8 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <returns></returns>
     public bool OnReceiveAccountLoginAck(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo)
     {
+        Debug.Log($"OnReceiveAccountLoginAck. errorCode: {errorCode}, {Newtonsoft.Json.JsonConvert.SerializeObject(accountInfo)}");
+
         if (errorCode != EGameBaseAccountErrorCode.Success)
         {
             Debug.LogError("Error OnReceiveAccountLoginAck. errorCode: " + errorCode);
@@ -310,9 +312,10 @@ public class GameStateManager : Singleton<GameStateManager>
         // 계정 로그인 성공시 발급받은 토큰을 저장한다.
         NetworkManager.session.HttpClient.SetAccessToken(accountInfo.AccessToken);
 
+        UserInfoManager.Get().SetUserKey(accountInfo.PlatformId);
 
-        // TODD : [임시] 곧바로 유저 정보 요청. 차후에 로그인 flow에 따라 위치를 변경해야함.
-        NetworkManager.session.UserTemplate.UserInfoReq(NetworkManager.session.HttpClient, OnReceiveUserInfoAck);
+       // TODD : [임시] 곧바로 유저 정보 요청. 차후에 로그인 flow에 따라 위치를 변경해야함.
+       NetworkManager.session.UserTemplate.UserInfoReq(NetworkManager.session.HttpClient, OnReceiveUserInfoAck);
         return true;
     }
 
@@ -330,6 +333,8 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <returns></returns>
     public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, MsgUserDeck[] arrayUserDeck, MsgUserDice[] arrayUserDice, MsgUserBox[] arrayUserBox, MsgQuestInfo questInfo, MsgSeasonInfo seasonInfo)
     {
+        Debug.Log($"OnReceiveUserInfoAck. errorCode: {errorCode}, {Newtonsoft.Json.JsonConvert.SerializeObject(userInfo)}");
+
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {
             ObscuredPrefs.SetString("UserKey", string.Empty);

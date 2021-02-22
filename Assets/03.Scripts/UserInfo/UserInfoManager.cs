@@ -316,7 +316,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
     public void SetUserInfo(MsgUserInfo info, MsgSeasonInfo seasonInfo)
     {
-        SetUserKey(info.UserId);
+        //SetUserKey(info.UserId);
 
         _userInfo.SetNickName(info.UserName);
         _userInfo.diamond = info.Diamond;
