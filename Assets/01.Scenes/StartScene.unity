@@ -1089,9 +1089,9 @@ MonoBehaviour:
   event_OtherPause:
     m_PersistentCalls:
       m_Calls: []
-  UseLocalServer: 0
-  LocalServerAddr: 3.35.52.205
-  LocalServerPort: 40002
+  UseLocalServer: 1
+  LocalServerAddr: 127.0.0.1
+  LocalServerPort: 40003
   UserId: 
   matchSendCount: 0
 --- !u!4 &1270925139
