@@ -51,6 +51,7 @@ namespace ED
         public UI_Popup menuPopup;
         public UI_Popup_SeasonPassUnlock seasonPassUnlockPopup;
         public UI_PopupShopBuy shopBuyPopup;
+        public UI_SettingPopup settingPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -525,6 +526,12 @@ namespace ED
         {
             UI_Popup.AllClose();
             questPopup.Initialize();
+        }
+
+        public void Click_Setting_Button()
+        {
+            UI_Popup.AllClose();
+            settingPopup.gameObject.SetActive(true);
         }
 
         public void ShowMessageBox(string title, string message, System.Action callback = null)

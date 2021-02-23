@@ -83,7 +83,7 @@ MonoBehaviour:
   range: 0
   searchRange: 2
   isBottomPlayer: 0
-  ts_ShootingPos: {fileID: 0}
+  ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}

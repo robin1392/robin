@@ -144,7 +144,7 @@ MonoBehaviour:
   range: 0.45
   searchRange: 2
   isBottomPlayer: 0
-  ts_ShootingPos: {fileID: 0}
+  ts_ShootingPos: {fileID: 1552512765847086028}
   ts_HitPos: {fileID: 1552512765847086028}
   image_HealthBar: {fileID: 887776035416822996}
   text_Health: {fileID: 0}
