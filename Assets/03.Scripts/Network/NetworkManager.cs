@@ -154,6 +154,19 @@ public class NetworkManager : Singleton<NetworkManager>
     public string LocalServerAddr;
     public int LocalServerPort;
     public string UserId;
+
+    public string UserIdFromUserInfo
+    {
+        get
+        {
+            if (UserId.Length > 0)
+            {
+                return UserId;
+            }
+            
+            return UserInfoManager.Get().GetUserInfo().userID;
+        }
+    }
     public int matchSendCount;
     #endregion
 

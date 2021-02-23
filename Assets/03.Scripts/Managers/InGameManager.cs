@@ -97,6 +97,10 @@ namespace ED
         [SerializeField] protected List<BaseStat> listBottomPlayer = new List<BaseStat>();
         [SerializeField] protected List<BaseStat> listTopPlayer = new List<BaseStat>();
 
+        public IEnumerable<BaseStat> ListBottomPlayer => listBottomPlayer;
+        public IEnumerable<BaseStat> ListTopPlayer => listTopPlayer;
+        
+
         private readonly string recvMessage = "RecvBattleManager";
         private UI_CoopSpawnTurn _coopSpawnTurn;
 
