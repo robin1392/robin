@@ -5,10 +5,15 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using ED;
 using UnityEngine;
 using RandomWarsProtocol;
+using Debug = UnityEngine.Debug;
 
 public class UserInfo
 {
-
+    private const string UserIdKey = "UserKey";
+    private const string UserNickNameKey = "UserNickNameKey";
+    private Action<string> _onSetUserId;
+    private Action<string> _onSetUserNickName;
+    
     #region user info variable
     
     private string _userID;
@@ -113,7 +118,8 @@ public class UserInfo
 
         //FixDeckOld();
         
-        _userID = ObscuredPrefs.GetString("UserKey", "" );
+        _userID = ObscuredPrefs.GetString(UserIdKey, "" );
+        _userNickName = ObscuredPrefs.GetString(UserNickNameKey, "" );
         
         // if (_slotDeck[0].Length < 20 || _slotDeck[1].Length < 20 || _slotDeck[2].Length < 20)
         // {
@@ -130,7 +136,7 @@ public class UserInfo
 
         if (_userID == "")
         {
-            ObscuredPrefs.SetString("UserKey", "");
+            ObscuredPrefs.SetString(UserIdKey, "");
             ObscuredPrefs.Save();    
         }
         
@@ -171,13 +177,19 @@ public class UserInfo
     {
         _userID = id;
         
-        ObscuredPrefs.SetString("UserKey", _userID);
+        ObscuredPrefs.SetString(UserIdKey, _userID);
         ObscuredPrefs.Save();    
+        
+        _onSetUserId?.Invoke(id);
     }
     
     public void SetNickName(string nickname)
     {
         _userNickName = nickname;
+        ObscuredPrefs.SetString(UserNickNameKey, _userNickName);
+        ObscuredPrefs.Save();
+        
+        _onSetUserNickName?.Invoke(nickname);
     }
 
     public void SetTicketId(string ticket)
@@ -251,8 +263,17 @@ public class UserInfo
     //     
     // }
     #endregion
-    
 
+
+    public void RegisterOnSetUserId(Action<string> onSetUserId)
+    {
+        _onSetUserId = onSetUserId;
+    }
+
+    public void RegisterOnSetUserNickName(Action<string> onSetNickName)
+    {
+        _onSetUserNickName = onSetNickName;
+    }
 }
 
 
@@ -319,8 +340,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
     public void SetUserInfo(MsgUserInfo info, MsgSeasonPassInfo seasonPassInfo)
     {
-        SetUserKey(info.UserId);
-
+        _userInfo.SetUserKey(info.UserId);
         _userInfo.SetNickName(info.Name);
         _userInfo.isEndTutorial = info.EndTutorial;
         _userInfo.diamond = info.Goods.Diamond;
@@ -354,11 +374,6 @@ public class UserInfoManager : Singleton<UserInfoManager>
         // }
     }
     
-    public void SetUserKey(string userid)
-    {
-        _userInfo.SetUserKey(userid);
-    }
-
     public void SetUserNickName(string nickname)
     {
         _userInfo.SetNickName(nickname);
