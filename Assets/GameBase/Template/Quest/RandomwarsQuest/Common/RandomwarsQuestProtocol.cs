@@ -9,7 +9,7 @@ namespace Template.Quest.RandomwarsQuest.Common
 {
     public enum ERandomwarsQuestProtocol
     {
-        Begin = 30000,
+        Begin = 70000,
 
         QuestInfoReq,
         QuestInfoAck,

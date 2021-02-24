@@ -90,7 +90,6 @@ public class UI_BoxOpenPopup : UI_Popup
     private COST_TYPE costType;
     private int cost;
     private int openCount;
-    UserBox boxInfo;
     //private MsgOpenBoxAck msg;
     private AudioSource _currentAudio;
     
@@ -212,9 +211,8 @@ public class UI_BoxOpenPopup : UI_Popup
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public bool OnReceiveBoxOpenAck(ERandomwarsBoxErrorCode errorCode, UserBox boxInfo, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData, int updateKey)
+    public bool OnReceiveBoxOpenAck(ERandomwarsBoxErrorCode errorCode, ItemBaseInfo[] arrayDeleteItemInfo,  ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
     {
-        this.boxInfo = boxInfo;
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_FALLDOWN);
         
