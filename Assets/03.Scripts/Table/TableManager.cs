@@ -18,7 +18,7 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataDiceLevelInfo> DiceLevelInfo { get; private set; }
     public TableData<int, TDataGuardianInfo> GuardianInfo { get; private set; }
     public TableData<int, TDataVsmode> Vsmode { get; private set; }
-    //public TableData<int, TDataLangEN> LangEN { get; private set; }
+    public TableData<int, TDataLangEN> LangEN { get; private set; }
     public TableData<int, TDataLangKO> LangKO { get; private set; }
     public TableData<int, TDataErrorMessageKO> ErrorMessageKO { get; private set; }
     public TableData<int, TDataRankingReward> RankingReward { get; private set; }
@@ -66,7 +66,7 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
         GuardianInfo = new TableData<int, TDataGuardianInfo>();
         Vsmode = new TableData<int, TDataVsmode>();
-        //LangEN = new TableData<int, TDataLangEN>();
+        LangEN = new TableData<int, TDataLangEN>();
         LangKO = new TableData<int, TDataLangKO>();
         ErrorMessageKO = new TableData<int, TDataErrorMessageKO>();
         RankingReward = new TableData<int, TDataRankingReward>();
@@ -104,10 +104,10 @@ public class TableManager : Singleton<TableManager>
         var response = (HttpWebResponse)request.GetResponse();
         var resStream = response.GetResponseStream();
 
-        using (BinaryReader reader = new BinaryReader(resStream))
-        {
-            remoteTDataVersion = reader.ReadString();
-        }
+        //using (BinaryReader reader = new BinaryReader(resStream))
+        //{
+        //    remoteTDataVersion = reader.ReadString();
+        //}
 
         if (File.Exists(localPath + "AppSettings.dat") == true)
         {
@@ -154,7 +154,7 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo.Init(new TableLoaderRemoteCSV<int, TDataDiceLevelInfo>(), bucketPath, "DiceLevelInfo.csv", localPath);
         GuardianInfo.Init(new TableLoaderRemoteCSV<int, TDataGuardianInfo>(), bucketPath, "GuardianInfo.csv", localPath);
         Vsmode.Init(new TableLoaderRemoteCSV<int, TDataVsmode>(), bucketPath, "Vsmode.csv", localPath);
-       // LangEN.Init(new TableLoaderRemoteCSV<int, TDataLangEN>(), bucketPath, "LangEN.csv", localPath);
+        LangEN.Init(new TableLoaderRemoteCSV<int, TDataLangEN>(), bucketPath, "LangEN.csv", localPath);
         LangKO.Init(new TableLoaderRemoteCSV<int, TDataLangKO>(), bucketPath, "LangKO.csv", localPath);
         RankingReward.Init(new TableLoaderRemoteCSV<int, TDataRankingReward>(), bucketPath, "RankingReward.csv", localPath);
         RankInfo.Init(new TableLoaderRemoteCSV<int, TDataRankInfo>(), bucketPath, "RankInfo.csv", localPath);
@@ -190,7 +190,7 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo.Init(new TableLoaderLocalCSV<int, TDataDiceLevelInfo>(), path, "DiceLevelInfo.csv");
         GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path, "GuardianInfo.csv");
         Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path, "Vsmode.csv");
-        //LangEN.Init(new TableLoaderLocalCSV<int, TDataLangEN>(), path, "LangEN.csv");
+        LangEN.Init(new TableLoaderLocalCSV<int, TDataLangEN>(), path, "LangEN.csv");
         LangKO.Init(new TableLoaderLocalCSV<int, TDataLangKO>(), path, "LangKO.csv");
         RankingReward.Init(new TableLoaderLocalCSV<int, TDataRankingReward>(), path, "RankingReward.csv");
         RankInfo.Init(new TableLoaderLocalCSV<int, TDataRankInfo>(), path, "RankInfo.csv");
