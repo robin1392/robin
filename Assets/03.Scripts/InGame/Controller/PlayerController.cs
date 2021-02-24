@@ -955,6 +955,7 @@ namespace ED
         public void OtherPlayerPause(bool isPuase)
         {
             targetPlayer.SetPlayingAI(isPuase);
+            coopPlayer?.SetPlayingAI(isPuase);
         }
 
         public void SetPlayingAI(bool isPlayingAI)
