@@ -9,7 +9,7 @@ namespace Template.Quest.RandomwarsQuest.Common
 {
     public enum ERandomwarsQuestProtocol
     {
-        Begin = 20000,
+        Begin = 30000,
 
         QuestInfoReq,
         QuestInfoAck,
@@ -49,7 +49,7 @@ namespace Template.Quest.RandomwarsQuest.Common
             return sender.SendHttpPost((int)ERandomwarsQuestProtocol.QuestInfoReq, "questinfo", json.ToString());
         }
 
-        public delegate (ERandomwarsQuestErrorCode errorCode, MsgQuestInfo questInfo) ReceiveQuestInfoReqDelegate(string accessToken);
+        public delegate (ERandomwarsQuestErrorCode errorCode, QuestInfo questInfo) ReceiveQuestInfoReqDelegate(string accessToken);
         public ReceiveQuestInfoReqDelegate ReceiveQuestInfoReqHandler;
         public bool ReceiveQuestInfoReq(ISender sender, byte[] msg, int length)
         {
@@ -60,7 +60,7 @@ namespace Template.Quest.RandomwarsQuest.Common
             return QuestInfoAck(sender, res.errorCode, res.questInfo);
         }
 
-        public bool QuestInfoAck(ISender sender, ERandomwarsQuestErrorCode errorCode, MsgQuestInfo questInfo)
+        public bool QuestInfoAck(ISender sender, ERandomwarsQuestErrorCode errorCode, QuestInfo questInfo)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -69,14 +69,14 @@ namespace Template.Quest.RandomwarsQuest.Common
         }
 
 
-        public delegate bool ReceiveQuestInfoAckDelegate(ERandomwarsQuestErrorCode errorCode, MsgQuestInfo questInfo);
+        public delegate bool ReceiveQuestInfoAckDelegate(ERandomwarsQuestErrorCode errorCode, QuestInfo questInfo);
         public ReceiveQuestInfoAckDelegate ReceiveQuestInfoAckHandler;
         public bool ReceiveQuestInfoAck(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             ERandomwarsQuestErrorCode errorCode = (ERandomwarsQuestErrorCode)(int)jObject["errorCode"];
-            MsgQuestInfo questInfo = JsonConvert.DeserializeObject<MsgQuestInfo>(jObject["questInfo"].ToString());
+            QuestInfo questInfo = JsonConvert.DeserializeObject<QuestInfo>(jObject["questInfo"].ToString());
             return ReceiveQuestInfoAckHandler(errorCode, questInfo);
         }
         #endregion    
@@ -91,7 +91,7 @@ namespace Template.Quest.RandomwarsQuest.Common
             return sender.SendHttpPost((int)ERandomwarsQuestProtocol.QuestRewardReq, "questreward", json.ToString());
         }
 
-        public delegate (ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo) ReceiveQuestRewardReqDelegate(string accessToken, int questId);
+        public delegate (ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo) ReceiveQuestRewardReqDelegate(string accessToken, int questId);
         public ReceiveQuestRewardReqDelegate ReceiveQuestRewardReqHandler;
         public bool ReceiveQuestRewardReq(ISender sender, byte[] msg, int length)
         {
@@ -103,7 +103,7 @@ namespace Template.Quest.RandomwarsQuest.Common
             return QuestRewardAck(sender, res.errorCode, res.arrayQuestData, res.arrayRewardInfo);
         }
 
-        public bool QuestRewardAck(ISender sender, ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo)
+        public bool QuestRewardAck(ISender sender, ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -113,15 +113,15 @@ namespace Template.Quest.RandomwarsQuest.Common
         }
 
 
-        public delegate bool ReceiveQuestRewardAckDelegate(ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo);
+        public delegate bool ReceiveQuestRewardAckDelegate(ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo);
         public ReceiveQuestRewardAckDelegate ReceiveQuestRewardAckHandler;
         public bool ReceiveQuestRewardAck(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             ERandomwarsQuestErrorCode errorCode = (ERandomwarsQuestErrorCode)(int)jObject["errorCode"];
-            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
-            MsgReward[] arrayRewardInfo = JsonConvert.DeserializeObject<MsgReward[]>(jObject["arrayRewardInfo"].ToString());
+            QuestData[] arrayQuestData = JsonConvert.DeserializeObject<QuestData[]>(jObject["arrayQuestData"].ToString());
+            ItemBaseInfo[] arrayRewardInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayRewardInfo"].ToString());
             return ReceiveQuestRewardAckHandler(errorCode, arrayQuestData, arrayRewardInfo);
         }
         #endregion      
@@ -137,7 +137,7 @@ namespace Template.Quest.RandomwarsQuest.Common
             return sender.SendHttpPost((int)ERandomwarsQuestProtocol.QuestDailyRewardReq, "questdailyreward", json.ToString());
         }
 
-        public delegate (ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo, MsgQuestDayReward dailyRewardInfo) ReceiveQuestDailyRewardReqDelegate(string accessToken, int rewardId, int index);
+        public delegate (ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo, QuestDayReward dailyRewardInfo) ReceiveQuestDailyRewardReqDelegate(string accessToken, int rewardId, int index);
         public ReceiveQuestDailyRewardReqDelegate ReceiveQuestDailyRewardReqHandler;
         public bool ReceiveQuestDailyRewardReq(ISender sender, byte[] msg, int length)
         {
@@ -150,7 +150,7 @@ namespace Template.Quest.RandomwarsQuest.Common
             return QuestDailyRewardAck(sender, res.errorCode, res.arrayQuestData, res.arrayRewardInfo, res.dailyRewardInfo);
         }
 
-        public bool QuestDailyRewardAck(ISender sender, ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo, MsgQuestDayReward dailyRewardInfo)
+        public bool QuestDailyRewardAck(ISender sender, ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo, QuestDayReward dailyRewardInfo)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -161,16 +161,16 @@ namespace Template.Quest.RandomwarsQuest.Common
         }
 
 
-        public delegate bool ReceiveQuestDailyRewardAckDelegate(ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo, MsgQuestDayReward dailyRewardInfo);
+        public delegate bool ReceiveQuestDailyRewardAckDelegate(ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo, QuestDayReward dailyRewardInfo);
         public ReceiveQuestDailyRewardAckDelegate ReceiveQuestDailyRewardAckHandler;
         public bool ReceiveQuestDailyRewardAck(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             ERandomwarsQuestErrorCode errorCode = (ERandomwarsQuestErrorCode)(int)jObject["errorCode"];
-            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
-            MsgReward[] arrayRewardInfo = JsonConvert.DeserializeObject<MsgReward[]>(jObject["arrayRewardInfo"].ToString());
-            MsgQuestDayReward dailyRewardInfo = JsonConvert.DeserializeObject<MsgQuestDayReward>(jObject["dailyRewardInfo"].ToString());
+            QuestData[] arrayQuestData = JsonConvert.DeserializeObject<QuestData[]>(jObject["arrayQuestData"].ToString());
+            ItemBaseInfo[] arrayRewardInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayRewardInfo"].ToString());
+            QuestDayReward dailyRewardInfo = JsonConvert.DeserializeObject<QuestDayReward>(jObject["dailyRewardInfo"].ToString());
             return ReceiveQuestDailyRewardAckHandler(errorCode, arrayQuestData, arrayRewardInfo, dailyRewardInfo);
         }
         #endregion  

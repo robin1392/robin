@@ -616,7 +616,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward, MsgQuestData[] questData) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, QuestData[] questData) 
         {
             using (var ms = new MemoryStream())
             {
@@ -658,7 +658,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndCoopGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, MsgReward[] normalReward, MsgQuestData[] questData)
+        public void EndCoopGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, ItemBaseInfo[] normalReward, QuestData[] questData)
         {
             using (var ms = new MemoryStream())
             {

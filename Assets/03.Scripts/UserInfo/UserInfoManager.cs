@@ -26,7 +26,11 @@ public class UserInfo
         private set => _userNickName = value;
     }
 
+    public bool isEndTutorial;
     public int trophy;
+    public int highTrophy;
+    public int winCount;
+    public int defeatCount;
     public int nClass;
     public int diamond;
     public int gold;
@@ -314,15 +318,19 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo;
     }
 
-    public void SetUserInfo(MsgUserInfo info, MsgSeasonInfo seasonInfo)
+    public void SetUserInfo(MsgUserInfo info, UserSeasonInfo seasonInfo)
     {
         //SetUserKey(info.UserId);
 
         _userInfo.SetNickName(info.UserName);
+        _userInfo.isEndTutorial = info.EndTutorial;
         _userInfo.diamond = info.Diamond;
         _userInfo.gold = info.Gold;
         _userInfo.key = info.Key;
         _userInfo.trophy = info.Trophy;
+        _userInfo.highTrophy = info.HighTrophy;
+        _userInfo.winCount = info.WinCount;
+        _userInfo.defeatCount = info.DefeatCount;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
         _userInfo.seasonPassId = seasonInfo.SeasonId;
@@ -382,7 +390,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo.activateDeckIndex;
     }
 
-    public void SetDeck(MsgUserDeck[] userDeck)
+    public void SetDeck(UserDeck[] userDeck)
     {
         for (int i = 0; i < userDeck.Length; i++)
         {
@@ -393,7 +401,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         }
     }
 
-    public void SetDice(MsgUserDice[] userDice)
+    public void SetDice(UserDice[] userDice)
     {
         _userInfo.dicGettedDice.Clear();
 
@@ -404,7 +412,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         }
     }
 
-    public void SetBox(MsgUserBox[] msgUserBox)
+    public void SetBox(UserBox[] msgUserBox)
     {
         _userInfo.dicBox.Clear();
 

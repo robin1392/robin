@@ -9,7 +9,7 @@ namespace Template.Character.RandomwarsDice.Common
 {
     public enum ERandomwarsDiceProtocol
     {
-        Begin = 20000,
+        Begin = 30000,
 
         DiceInfoReq,
         DiceInfoAck,
@@ -92,7 +92,7 @@ namespace Template.Character.RandomwarsDice.Common
             return sender.SendHttpPost((int)ERandomwarsDiceProtocol.DiceUpgradeReq, "diceupgrade", json.ToString());
         }
 
-        public delegate (ERandomwarsDiceErrorCode errorCode, MsgDiceInfo diceInfo, MsgQuestData[] arrayQuestData, int updateGold) ReceiveDiceUpgradeReqDelegate(string accessToken, int diceId);
+        public delegate (ERandomwarsDiceErrorCode errorCode, MsgDiceInfo diceInfo, QuestData[] arrayQuestData, int updateGold) ReceiveDiceUpgradeReqDelegate(string accessToken, int diceId);
         public ReceiveDiceUpgradeReqDelegate ReceiveDiceUpgradeReqHandler;
         public bool ReceiveDiceUpgradeReq(ISender sender, byte[] msg, int length)
         {
@@ -104,7 +104,7 @@ namespace Template.Character.RandomwarsDice.Common
             return DiceUpgradeAck(sender, res.errorCode, res.diceInfo, res.arrayQuestData, res.updateGold);     
         }        
 
-        public bool DiceUpgradeAck(ISender sender, ERandomwarsDiceErrorCode errorCode, MsgDiceInfo diceInfo, MsgQuestData[] arrayQuestData, int updateGold)
+        public bool DiceUpgradeAck(ISender sender, ERandomwarsDiceErrorCode errorCode, MsgDiceInfo diceInfo, QuestData[] arrayQuestData, int updateGold)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -115,7 +115,7 @@ namespace Template.Character.RandomwarsDice.Common
         }        
 
 
-        public delegate bool ReceiveDiceUpgradeAckDelegate(ERandomwarsDiceErrorCode errorCode, MsgDiceInfo diceInfo, MsgQuestData[] arrayQuestData, int updateGold);
+        public delegate bool ReceiveDiceUpgradeAckDelegate(ERandomwarsDiceErrorCode errorCode, MsgDiceInfo diceInfo, QuestData[] arrayQuestData, int updateGold);
         public ReceiveDiceUpgradeAckDelegate ReceiveDiceUpgradeAckHandler;
         public bool ReceiveDiceUpgradeAck(ISender sender, byte[] msg, int length)
         {
@@ -123,7 +123,7 @@ namespace Template.Character.RandomwarsDice.Common
             JObject jObject = JObject.Parse(json);
             ERandomwarsDiceErrorCode errorCode = (ERandomwarsDiceErrorCode)(int)jObject["errorCode"];
             MsgDiceInfo diceInfo = JsonConvert.DeserializeObject<MsgDiceInfo>(jObject["diceInfo"].ToString());
-            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
+            QuestData[] arrayQuestData = JsonConvert.DeserializeObject<QuestData[]>(jObject["arrayQuestData"].ToString());
             int updateGold = (int)jObject["updateGold"];
             return ReceiveDiceUpgradeAckHandler(errorCode, diceInfo, arrayQuestData, updateGold);
         }

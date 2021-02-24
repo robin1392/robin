@@ -544,31 +544,31 @@ namespace RandomWarsProtocol
                             msg.WinningStreak = br.ReadByte();
 
                             int length = br.ReadInt32();
-                            msg.NormalReward = new MsgReward[length];
+                            msg.NormalReward = new ItemBaseInfo[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.NormalReward[i] = MsgReward.Read(br);
+                                msg.NormalReward[i] = ItemBaseInfo.Read(br);
                             }
 
                             length = br.ReadInt32();
-                            msg.StreakReward = new MsgReward[length];
+                            msg.StreakReward = new ItemBaseInfo[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.StreakReward[i] = MsgReward.Read(br);
+                                msg.StreakReward[i] = ItemBaseInfo.Read(br);
                             }
 
                             length = br.ReadInt32();
-                            msg.PerfectReward = new MsgReward[length];
+                            msg.PerfectReward = new ItemBaseInfo[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.PerfectReward[i] = MsgReward.Read(br);
+                                msg.PerfectReward[i] = ItemBaseInfo.Read(br);
                             }
 
                             length = br.ReadInt32();
-                            msg.QuestData = new MsgQuestData[length];
+                            msg.QuestData = new QuestData[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.QuestData[i] = MsgQuestData.Read(br);
+                                msg.QuestData[i] = QuestData.Read(br);
                             }
 
                             EndGameNotify(peer, msg);
@@ -589,17 +589,17 @@ namespace RandomWarsProtocol
                             msg.GameResult = (GAME_RESULT)br.ReadByte();
 
                             int length = br.ReadInt32();
-                            msg.NormalReward = new MsgReward[length];
+                            msg.NormalReward = new ItemBaseInfo[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.NormalReward[i] = MsgReward.Read(br);
+                                msg.NormalReward[i] = ItemBaseInfo.Read(br);
                             }
 
                             length = br.ReadInt32();
-                            msg.QuestData = new MsgQuestData[length];
+                            msg.QuestData = new QuestData[length];
                             for (int i = 0; i < length; i++)
                             {
-                                msg.QuestData[i] = MsgQuestData.Read(br);
+                                msg.QuestData[i] = QuestData.Read(br);
                             }
 
                             EndCoopGameNotify(peer, msg);

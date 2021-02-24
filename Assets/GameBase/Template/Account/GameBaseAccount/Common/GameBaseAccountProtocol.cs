@@ -13,6 +13,7 @@ namespace Template.Account.GameBaseAccount.Common
 
         AccountLoginReq,
         AccountLoginAck,
+
         End,
     }
 

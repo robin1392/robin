@@ -77,7 +77,7 @@ public class UI_Popup_Rank : UI_Popup
         }
     }
 
-    public bool OnReceiveSeasonInfoAck(ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo)
+    public bool OnReceiveSeasonInfoAck(ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo)
     {
         Invoke("RankCallingFalse", 1f);
         StopAllCoroutines();
@@ -93,7 +93,7 @@ public class UI_Popup_Rank : UI_Popup
             Close();
         }
 
-        Debug.Log($"MsgSeasonInfoAck {seasonInfo.SeasonId} state {(SEASON_STATE)seasonInfo.SeasonState}, remainTime {seasonInfo.SeasonResetRemainTime}, needReset {seasonInfo.NeedSeasonReset}\n" +
+        Debug.Log($"UserSeasonInfoAck {seasonInfo.SeasonId} state {(SEASON_STATE)seasonInfo.SeasonState}, remainTime {seasonInfo.SeasonResetRemainTime}, needReset {seasonInfo.NeedSeasonReset}\n" +
                   $"MyRank:{seasonInfo.Rank}, MyTrophy:{seasonInfo.SeasonTrophy}, Time:{seasonInfo.SeasonResetRemainTime}");
 
         ResetSlots();

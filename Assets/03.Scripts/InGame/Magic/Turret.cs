@@ -20,7 +20,8 @@ namespace ED
         public float bulletMoveSpeed = 6f;
         public float shootTime = 0;
 
-        public Transform[] arrTs_Parts;
+        //public Transform[] arrTs_Parts;
+        public GameObject pref_Bullet;
 
         [Header("AudioClip")]
         public AudioClip clip_Fire;
@@ -32,6 +33,7 @@ namespace ED
             var ae = animator.GetComponent<MinionAnimationEvent>();
             ae.event_FireArrow += FireArrow;
             ae.event_FireLight += FireLightOn;
+            PoolManager.instance.AddPool(pref_Bullet, 1);
         }
 
         public override void Initialize(bool pIsBottomPlayer)
@@ -53,10 +55,10 @@ namespace ED
 
         private void SetParts()
         {
-            for (int i = 0; i < arrTs_Parts.Length; i++)
-            {
-                arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
-            }
+            // for (int i = 0; i < arrTs_Parts.Length; i++)
+            // {
+            //     arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
+            // }
 
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
             ts_Head.rotation = isBottomPlayer ? Quaternion.identity : Quaternion.Euler(0, 180f, 0);
@@ -85,7 +87,7 @@ namespace ED
         {
             if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
-                controller.ActionFireBullet(E_BulletType.ARROW , id, flyingTarget.id, power, bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.TURRET_BULLET , id, flyingTarget.id, power, bulletMoveSpeed);
             }
             
             /*//if (PhotonNetwork.IsConnected && isMine)
@@ -144,6 +146,7 @@ namespace ED
         private IEnumerator LookAtTargetCoroutine()
         {
             float t = 0;
+            animator.SetBool("Walk", true);
             while (t < 0.5f)
             {
                 ts_Head.rotation = Quaternion.RotateTowards(ts_Head.rotation,
@@ -152,6 +155,7 @@ namespace ED
                 t += Time.deltaTime;
                 yield return null;
             }
+            animator.SetBool("Walk", false);
             animator.SetTrigger("Attack");
         }
 

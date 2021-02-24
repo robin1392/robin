@@ -90,7 +90,7 @@ public class UI_BoxOpenPopup : UI_Popup
     private COST_TYPE costType;
     private int cost;
     private int openCount;
-    MsgUserBox boxInfo;
+    UserBox boxInfo;
     //private MsgOpenBoxAck msg;
     private AudioSource _currentAudio;
     
@@ -212,7 +212,7 @@ public class UI_BoxOpenPopup : UI_Popup
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public bool OnReceiveBoxOpenAck(ERandomwarsBoxErrorCode errorCode, MsgUserBox boxInfo, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData, int updateKey)
+    public bool OnReceiveBoxOpenAck(ERandomwarsBoxErrorCode errorCode, UserBox boxInfo, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData, int updateKey)
     {
         this.boxInfo = boxInfo;
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
@@ -389,7 +389,7 @@ public class UI_BoxOpenPopup : UI_Popup
     //     if (crt_TextCount != null) StopCoroutine(crt_TextCount);
     //     ani_Item.gameObject.SetActive(true);
     //
-    //     MsgReward reward = msg.BoxReward[openCount];
+    //     ItemBaseInfo reward = msg.BoxReward[openCount];
     //
     //     RandomWarsResource.Data.TDataItemList tDataItemList;
     //     if (TableManager.Get().ItemList.GetData(reward.ItemId, out tDataItemList) == false)
@@ -553,7 +553,7 @@ public class UI_BoxOpenPopup : UI_Popup
     //     obj_Result.SetActive(true);
     //     ani_Box.gameObject.SetActive(false);
     //     
-    //     List<MsgReward> list = new List<MsgReward>(msg.BoxReward);
+    //     List<ItemBaseInfo> list = new List<ItemBaseInfo>(msg.BoxReward);
     //     
     //     var gold = list.Find(m => m.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
     //     text_ResultGold.text = $"{gold?.Value ?? 0}";

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using ED;
 
 public class UI_WinLose : MonoBehaviour
 {
     public GameObject obj_Win;
     public GameObject obj_Lose;
-    public GameObject obj_Perfect;
     public Image image_DeckBG;
-    public Sprite[] arrSprite_DeckBG;
     public Image[] arrImage_Deck;
     public Image image_Guardian;
     public Text text_GuardianName;
@@ -20,13 +19,16 @@ public class UI_WinLose : MonoBehaviour
 
     public void Initialize(bool isWin, bool isPerfect, int winningStreak, int[] deck, string nickname, int trophy)
     {
-        obj_Win.SetActive(isWin);
-        obj_Lose.SetActive(!isWin);
+        if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+        {
+            obj_Win.SetActive(isWin);
+            obj_Lose.SetActive(!isWin);
+        }
+        
         if (isWin && isPerfect)
         {
-            Invoke("ActivatePerfect", 2f);
+            //Invoke("ActivatePerfect", 2f);
         }
-        image_DeckBG.sprite = arrSprite_DeckBG[isWin ? 1 : 0];
         
         for (int i = 0; i < deck.Length; i++)
         {
@@ -99,10 +101,10 @@ public class UI_WinLose : MonoBehaviour
         text_Trophy.text = trophy.ToString();
     }
 
-    private void ActivatePerfect()
-    {
-        obj_Perfect.SetActive(true);
-
-        SoundManager.instance.Play(Global.E_SOUND.SFX_UI_PERFECT);
-    }
+    // private void ActivatePerfect()
+    // {
+    //     obj_Perfect.SetActive(true);
+    //
+    //     SoundManager.instance.Play(Global.E_SOUND.SFX_UI_PERFECT);
+    // }
 }

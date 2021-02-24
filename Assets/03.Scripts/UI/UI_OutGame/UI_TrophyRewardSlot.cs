@@ -117,7 +117,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
     
-    public bool OnReceiveUserTrophyRewardAck(ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData)
+    public bool OnReceiveUserTrophyRewardAck(ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         if (errorCode == ERandomwarsUserErrorCode.Success)

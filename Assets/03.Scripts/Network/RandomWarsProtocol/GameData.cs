@@ -100,7 +100,7 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
-    public class MsgUserDeck
+    public class UserDeck
     {
         // 덱 인덱스
         public sbyte Index;
@@ -116,9 +116,9 @@ namespace RandomWarsProtocol
             bw.Write(bytes);
         }
 
-        public static MsgUserDeck Read(BinaryReader br)
+        public static UserDeck Read(BinaryReader br)
         {
-            MsgUserDeck data = new MsgUserDeck();
+            UserDeck data = new UserDeck();
             data.Index = br.ReadSByte();
 
             int length = br.ReadInt32();
@@ -134,7 +134,7 @@ namespace RandomWarsProtocol
 
 
     [Serializable]
-    public class MsgUserDice
+    public class UserDice
     {
         public int DiceId;
         public short Level;
@@ -147,9 +147,9 @@ namespace RandomWarsProtocol
             bw.Write(Count);
         }
 
-        public static MsgUserDice Read(BinaryReader br)
+        public static UserDice Read(BinaryReader br)
         {
-            MsgUserDice data = new MsgUserDice();
+            UserDice data = new UserDice();
             data.DiceId = br.ReadInt32();
             data.Level = br.ReadInt16();
             data.Count = br.ReadInt16();
@@ -159,7 +159,7 @@ namespace RandomWarsProtocol
 
 
     //[Serializable]
-    //public class MsgReward
+    //public class ItemBaseInfo
     //{
     //    public int ItemId;
     //    public int Value;
@@ -171,9 +171,9 @@ namespace RandomWarsProtocol
     //        bw.Write(Value);
     //    }
 
-    //    public static MsgReward Read(BinaryReader br)
+    //    public static ItemBaseInfo Read(BinaryReader br)
     //    {
-    //        MsgReward data = new MsgReward();
+    //        ItemBaseInfo data = new ItemBaseInfo();
     //        data.ItemId = br.ReadInt32();
     //        data.Value = br.ReadInt32();
     //        return data;
@@ -182,16 +182,16 @@ namespace RandomWarsProtocol
 
 
     //[Serializable]
-    //public class MsgRewardMultiple
+    //public class ItemBaseInfoMultiple
     //{
     //    public int ItemId;
-    //    public MsgReward[] arrayReward;
+    //    public ItemBaseInfo[] arrayReward;
     //}
 
 
 
     [Serializable]
-    public class MsgUserBox
+    public class UserBox
     {
         public int BoxId;
         public int Count;
@@ -202,9 +202,9 @@ namespace RandomWarsProtocol
             bw.Write(Count);
         }
 
-        public static MsgUserBox Read(BinaryReader br)
+        public static UserBox Read(BinaryReader br)
         {
-            MsgUserBox data = new MsgUserBox();
+            UserBox data = new UserBox();
             data.BoxId = br.ReadInt32();
             data.Count = br.ReadInt32();
             return data;
@@ -1873,7 +1873,7 @@ namespace RandomWarsProtocol
     }
 
     //[Serializable]
-    //public class MsgQuestData
+    //public class QuestData
     //{
     //    public int QuestId;
     //    public int Value;
@@ -1886,9 +1886,9 @@ namespace RandomWarsProtocol
     //        bw.Write(Status);
     //    }
 
-    //    public static MsgQuestData Read(BinaryReader br)
+    //    public static QuestData Read(BinaryReader br)
     //    {
-    //        MsgQuestData data = new MsgQuestData();
+    //        QuestData data = new QuestData();
     //        data.QuestId = br.ReadInt32();
     //        data.Value = br.ReadInt32();
     //        data.Status = br.ReadInt32();
@@ -1898,19 +1898,19 @@ namespace RandomWarsProtocol
 
 
     //[Serializable]
-    //public class MsgQuestInfo
+    //public class QuestInfo
     //{
     //    // 초기화 남은 시간(초단위)
     //    public int RemainResetTime;
     //    // 퀘스트 데이터
-    //    public MsgQuestData[] QuestData;
+    //    public QuestData[] QuestData;
     //    // 일일 보상 정보
-    //    public MsgQuestDayReward DayRewardInfo;
+    //    public QuestDayReward DayRewardInfo;
     //}
 
 
     [Serializable]
-    public class MsgQuestDayReward
+    public class QuestDayReward
     {
         // 보상 아이디
         public int DayRewardId;

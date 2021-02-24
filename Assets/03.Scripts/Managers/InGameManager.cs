@@ -99,6 +99,7 @@ namespace ED
         [SerializeField] protected List<BaseStat> listTopPlayer = new List<BaseStat>();
 
         private readonly string recvMessage = "RecvBattleManager";
+        private UI_CoopSpawnTurn _coopSpawnTurn;
 
         #endregion
 
@@ -300,6 +301,7 @@ namespace ED
                 msgUserInfo.IsMaster = false;
                 msgUserInfo.CurrentSp = 200;
                 msgUserInfo.TowerHp = (30000 + Random.Range(0, 500)) * 100;
+                msgUserInfo.Name = "AI";
                 NetworkManager.Get().GetNetInfo().SetOtherInfo(msgUserInfo);
 
                 GameObject otherTObj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
@@ -874,7 +876,7 @@ namespace ED
         }
 
 
-        public void EndGame(bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
+        public void EndGame(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
         {
             // 게임이 끝낫으니까 그냥..
             if (NetworkManager.Get().isResume == true)
@@ -923,7 +925,7 @@ namespace ED
             StartCoroutine(EndGameCoroutine(winLose, winningStreak, normalReward, streakReward, perfectReward));
         }
 
-        IEnumerator EndGameCoroutine(bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
+        IEnumerator EndGameCoroutine(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
         {
             yield return new WaitForSeconds(4f);
 
@@ -1425,6 +1427,7 @@ namespace ED
                 {
                     if (NetworkManager.Get().UserUID == Convert.ToUInt16(param[0])) // param 0 = useruid
                     {
+                        WorldUIManager.Get().AddSP((int) param[1] - playerController.sp);
                         NetSetSp((int) param[1]); // param1 wave
                     }
 
@@ -1481,6 +1484,9 @@ namespace ED
 
                     MsgCoopSpawnNotify msg = (MsgCoopSpawnNotify) param[0];
                     NetSpawnNotify(msg.Wave, msg.SpawnInfo);
+                    
+                    if (_coopSpawnTurn == null) _coopSpawnTurn = FindObjectOfType<UI_CoopSpawnTurn>(); 
+                    _coopSpawnTurn.Reverse();
 
                     break;
                 }

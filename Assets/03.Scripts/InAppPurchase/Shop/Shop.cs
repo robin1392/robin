@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Percent.Platform.InAppPurchase;
+using Service.Core;
 using Template.Shop.GameBaseShop.Common;
 using UnityEngine;
 using UnityEngine.UI;
@@ -113,7 +114,7 @@ namespace Percent.Platform
         }
 
         
-        public bool Reset(GameBaseShopErrorCode errorCode, ShopInfo shopInfo, ShopItemInfo payItemInfo)
+        public bool Reset(GameBaseShopErrorCode errorCode, ShopInfo shopInfo, ItemBaseInfo payItemInfo)
         {
             if (errorCode == GameBaseShopErrorCode.Success)
             {

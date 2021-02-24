@@ -1,5 +1,6 @@
 using System;
 using Service.Net;
+using Service.Core;
 using Template.Shop.GameBaseShop;
 using Template.Account.GameBaseAccount.Common;
 using Template.User.RandomwarsUser.Common;
@@ -47,12 +48,13 @@ namespace Percent.GameBaseClient
 
         public void Init(GameBaseClientConfig config)
         {
+            Logger.Init(config.Logger);
+
             base.Init(new GameSessionConfig 
             {
                 MessageBufferSize = config.BufferSize,
                 MessageQueueCapacity = config.MessageQueueCapacity,
             });
-
 
             // 소켓 클라이언트 생성
             SocketClient = new NetServiceClient();

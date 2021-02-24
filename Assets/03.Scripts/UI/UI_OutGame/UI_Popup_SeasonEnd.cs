@@ -17,7 +17,7 @@ public class UI_Popup_SeasonEnd : UI_Popup
     public Text text_MyTrophy;
     public Text text_Unranked;
     public Button btn_GetReward;
-    MsgSeasonInfo seasonInfo;
+    UserSeasonInfo seasonInfo;
 
     public void Initialize()
     {
@@ -28,7 +28,7 @@ public class UI_Popup_SeasonEnd : UI_Popup
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public bool OnReceiveSeasonResetAck(ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRewardMultiple[] arrayRewardInfo)
+    public bool OnReceiveSeasonResetAck(ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, ItemBaseInfo[] arrayRewardInfo)
     {
         this.seasonInfo = seasonInfo;
         

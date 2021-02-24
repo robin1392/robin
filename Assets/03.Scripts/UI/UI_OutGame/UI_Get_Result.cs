@@ -41,14 +41,14 @@ public class UI_Get_Result : MonoBehaviour
     public Sprite sprite_Diamond;
 
     private int openCount;
-    private MsgReward[] msg;
+    private ItemBaseInfo[] msg;
     private AudioSource _currentAudio;
     
     private bool isBoxOpen;
     private bool isShowEndResult;
     private float iconChangeDelay;
     
-    public void Initialize(MsgReward[] msg, bool isBoxOpen, bool isShowEndResult)
+    public void Initialize(ItemBaseInfo[] msg, bool isBoxOpen, bool isShowEndResult)
     {
         gameObject.SetActive(true);
         this.msg = msg;
@@ -215,7 +215,7 @@ public class UI_Get_Result : MonoBehaviour
     
     private void ItemAnimation()
     {
-        MsgReward reward = msg[Mathf.Clamp(openCount, 0, msg.Length - 1)];
+        ItemBaseInfo reward = msg[Mathf.Clamp(openCount, 0, msg.Length - 1)];
 
         RandomWarsResource.Data.TDataItemList tDataItemList;
         if (TableManager.Get().ItemList.GetData(reward.ItemId, out tDataItemList) == false)
@@ -445,7 +445,7 @@ public class UI_Get_Result : MonoBehaviour
         ani_Box.gameObject.SetActive(false);
         UI_Main.Get().boxOpenPopup.Close();
         
-        List<MsgReward> list = new List<MsgReward>(msg);
+        List<ItemBaseInfo> list = new List<ItemBaseInfo>(msg);
         
         var gold = list.Find(m => m.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
         text_ResultGold.text = $"{gold?.Value ?? 0}";

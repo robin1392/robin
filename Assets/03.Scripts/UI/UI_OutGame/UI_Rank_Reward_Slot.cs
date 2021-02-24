@@ -45,7 +45,7 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
         }
     }
 
-    public void Initialize(MsgRewardMultiple[] rewards)
+    public void Initialize(ItemBaseInfo[] rewards)
     {
         if (rewards != null)
         {
@@ -62,7 +62,7 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
                 if (i < rewards.Length)
                 {
                     arrRewardItemSlots[i].Initialize(rewards[i].ItemId,
-                        rewards[i].ItemId > 100 && rewards[i].ItemId < 1000 ? 1 : rewards[i].arrayReward[0].Value);
+                        rewards[i].ItemId > 100 && rewards[i].ItemId < 1000 ? 1 : rewards[i].Value);
                 }
                 else
                 {

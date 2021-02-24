@@ -12,6 +12,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using ED;
 using UnityEngine;
 using UnityEngine.Events;
+using Service.Core;
 using RandomWarsService.Network.Socket.NetPacket;
 using RandomWarsService.Network.Http;
 using RandomWarsService.Network.Socket.NetSession;
@@ -19,6 +20,34 @@ using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using Percent.GameBaseClient;
 using UnityEditor;
+
+public class NetLogger2 : ILog
+{
+    public void Info(string text)
+    {
+        UnityEngine.Debug.Log(text);
+    }
+
+    public void Fatal(string text)
+    {
+        UnityEngine.Debug.LogError(text);
+    }
+
+    public void Error(string text)
+    {
+        UnityEngine.Debug.LogError(text);
+    }
+
+    public void Warn(string text)
+    {
+        UnityEngine.Debug.Log(text);
+    }
+
+    public void Debug(string text)
+    {
+        UnityEngine.Debug.Log(text);
+    }
+}
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -166,13 +195,13 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     private Action<MsgEditUserNameAck> _editUserNameCallback;
     private Action<MsgEndTutorialAck> _endTutorialCallback;
-    private Action<MsgSeasonInfoAck> _seasonInfoCallback;
+    private Action<UserSeasonInfoAck> _seasonInfoCallback;
     private Action<MsgGetRankAck> _getRankCallback;
     private Action<MsgGetSeasonPassRewardAck> _getSeasonPassRewardCallback;
     private Action<MsgGetClassRewardAck> _getClassRewardCallback;
-    private Action<MsgQuestInfoAck> _questInfoCallback;
+    private Action<QuestInfoAck> _questInfoCallback;
     private Action<MsgQuestRewardAck> _questRewardCallback;
-    private Action<MsgQuestDayRewardAck> _questDayRewardCallback;
+    private Action<QuestDayRewardAck> _questDayRewardCallback;
     private Action<MsgSeasonResetAck> _seasonResetCallback;
     private Action<MsgSeasonPassRewardStepAck> _seasonPassRewardStep;
     #endregion
@@ -190,7 +219,10 @@ public class NetworkManager : Singleton<NetworkManager>
         base.Awake();
         
         session = new GameBaseClientSession();
-        session.Init(new GameBaseClientConfig());
+        session.Init(new GameBaseClientConfig
+        {
+            Logger = new NetLogger2(),
+        });
     }
 
     // Start is called before the first frame update

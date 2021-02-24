@@ -50,10 +50,10 @@ namespace RandomWarsProtocol.Msg
         public int ErrorCode;
         public GAME_RESULT GameResult;
         public byte WinningStreak;
-        public MsgReward[] NormalReward;
-        public MsgReward[] StreakReward;
-        public MsgReward[] PerfectReward;
-        public MsgQuestData[] QuestData;
+        public ItemBaseInfo[] NormalReward;
+        public ItemBaseInfo[] StreakReward;
+        public ItemBaseInfo[] PerfectReward;
+        public QuestData[] QuestData;
     }
 
 
@@ -62,8 +62,8 @@ namespace RandomWarsProtocol.Msg
     {
         public int ErrorCode;
         public GAME_RESULT GameResult;
-        public MsgReward[] NormalReward;
-        public MsgQuestData[] QuestData;
+        public ItemBaseInfo[] NormalReward;
+        public QuestData[] QuestData;
     }
 
 

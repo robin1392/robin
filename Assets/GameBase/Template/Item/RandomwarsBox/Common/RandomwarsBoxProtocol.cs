@@ -9,7 +9,7 @@ namespace Template.Item.RandomwarsBox.Common
 {
     public enum ERandomwarsBoxProtocol
     {
-        Begin = 20000,
+        Begin = 40000,
 
         BoxOpenReq,
         BoxOpenAck,
@@ -40,7 +40,7 @@ namespace Template.Item.RandomwarsBox.Common
             return sender.SendHttpPost((int)ERandomwarsBoxProtocol.BoxOpenReq, "boxopen", json.ToString());
         }
 
-        public delegate (ERandomwarsBoxErrorCode errorCode, MsgUserBox boxInfo, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData, int updateKey) ReceiveBoxOpenReqDelegate(string accessToken, int boxId);
+        public delegate (ERandomwarsBoxErrorCode errorCode, UserBox boxInfo, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData, int updateKey) ReceiveBoxOpenReqDelegate(string accessToken, int boxId);
         public ReceiveBoxOpenReqDelegate ReceiveBoxOpenReqHandler;
         public bool ReceiveBoxOpenReq(ISender sender, byte[] msg, int length)
         {
@@ -52,7 +52,7 @@ namespace Template.Item.RandomwarsBox.Common
             return BoxOpenAck(sender, res.errorCode, res.boxInfo, res.arrayRewardInfo, res.arrayQuestData, res.updateKey);
         }
 
-        public bool BoxOpenAck(ISender sender, ERandomwarsBoxErrorCode errorCode, MsgUserBox boxInfo, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData, int updateKey)
+        public bool BoxOpenAck(ISender sender, ERandomwarsBoxErrorCode errorCode, UserBox boxInfo, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData, int updateKey)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -64,16 +64,16 @@ namespace Template.Item.RandomwarsBox.Common
         }
 
 
-        public delegate bool ReceiveBoxOpenAckDelegate(ERandomwarsBoxErrorCode errorCode, MsgUserBox boxInfo, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData, int updateKey);
+        public delegate bool ReceiveBoxOpenAckDelegate(ERandomwarsBoxErrorCode errorCode, UserBox boxInfo, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData, int updateKey);
         public ReceiveBoxOpenAckDelegate ReceiveBoxOpenAckHandler;
         public bool ReceiveBoxOpenAck(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             ERandomwarsBoxErrorCode errorCode = (ERandomwarsBoxErrorCode)(int)jObject["errorCode"];
-            MsgUserBox boxInfo = JsonConvert.DeserializeObject<MsgUserBox>(jObject["boxInfo"].ToString());
-            MsgReward[] arrayRewardInfo = JsonConvert.DeserializeObject<MsgReward[]>(jObject["arrayRewardInfo"].ToString());
-            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
+            UserBox boxInfo = JsonConvert.DeserializeObject<UserBox>(jObject["boxInfo"].ToString());
+            ItemBaseInfo[] arrayRewardInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayRewardInfo"].ToString());
+            QuestData[] arrayQuestData = JsonConvert.DeserializeObject<QuestData[]>(jObject["arrayQuestData"].ToString());
             int updateKey = (int)jObject["updateKey"];
             return ReceiveBoxOpenAckHandler(errorCode, boxInfo, arrayRewardInfo, arrayQuestData, updateKey);
         }

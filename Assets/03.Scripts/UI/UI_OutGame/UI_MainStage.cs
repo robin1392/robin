@@ -14,7 +14,7 @@ namespace ED
 
         private Dictionary<int, GameObject[]> dicAura = new Dictionary<int, GameObject[]>();
 
-    private void Start()
+        private void Start()
         {
             if (arrAni_Model == null) arrAni_Model = new Animator[arrTs_SpawnPos.Length];
             //StartCoroutine(Idle2Coroutine());
@@ -41,7 +41,15 @@ namespace ED
 
             for (var i = 0; i < arrAni_Model.Length; i++)
             {
-                if (arrAni_Model[i] != null) Destroy(arrAni_Model[i].gameObject);
+                if (arrAni_Model[i] != null)
+                {
+                    if (arrAni_Model[i].transform.parent == arrTs_SpawnPos[i])
+                        Destroy(arrAni_Model[i].gameObject);
+                    else
+                    {
+                        Destroy(arrAni_Model[i].transform.parent.gameObject);
+                    }
+                }
 
                 //var num = int.Parse(splitDeck[i]);
                 RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
@@ -55,11 +63,11 @@ namespace ED
                 if (obj != null)
                 {
                     var insObj = Instantiate(obj);
-                    arrAni_Model[i] = insObj.GetComponent<Animator>();
-                    arrAni_Model[i].transform.parent = arrTs_SpawnPos[i];
-                    arrAni_Model[i].transform.localScale = Vector3.one;
-                    arrAni_Model[i].transform.localPosition = Vector3.zero;
-                    arrAni_Model[i].transform.localRotation = Quaternion.identity;
+                    arrAni_Model[i] = insObj.GetComponentInChildren<Animator>();
+                    insObj.transform.parent = arrTs_SpawnPos[i];
+                    insObj.transform.localScale = Vector3.one;
+                    insObj.transform.localPosition = Vector3.zero;
+                    insObj.transform.localRotation = Quaternion.identity;
                     arrAni_Model[i].SetTrigger(Set1);
 
                     if (dicAura.Count > 0)
@@ -73,7 +81,7 @@ namespace ED
 
                 if (dataDiceInfo.moveType == 1)
                 {
-                    arrAni_Model[i].transform.localPosition += Vector3.up;
+                    arrAni_Model[i].transform.localPosition += Vector3.up * 0.4f;
                 }
 
                 var particles = arrAni_Model[i].GetComponentsInChildren<ParticleSystem>();

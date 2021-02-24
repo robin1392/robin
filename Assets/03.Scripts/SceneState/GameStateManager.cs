@@ -331,10 +331,8 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <param name="questInfo"></param>
     /// <param name="seasonInfo"></param>
     /// <returns></returns>
-    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, MsgUserDeck[] arrayUserDeck, MsgUserDice[] arrayUserDice, MsgUserBox[] arrayUserBox, MsgQuestInfo questInfo, MsgSeasonInfo seasonInfo)
+    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo)
     {
-        Debug.Log($"OnReceiveUserInfoAck. errorCode: {errorCode}, {Newtonsoft.Json.JsonConvert.SerializeObject(userInfo)}");
-
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {
             ObscuredPrefs.SetString("UserKey", string.Empty);

@@ -135,7 +135,7 @@ public class UI_RewardSlot : MonoBehaviour
         }
     }
 
-    public bool OnReceiveSeasonPassRewardAck(ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData)
+    public bool OnReceiveSeasonPassRewardAck(ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         if (errorCode == ERandomwarsSeasonErrorCode.Success)
@@ -169,7 +169,7 @@ public class UI_RewardSlot : MonoBehaviour
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public bool OnReceiveSeasonPassStepAck(ERandomwarsSeasonErrorCode errorCode, int rewardId, MsgReward useItemInfo, MsgReward rewardInfo, MsgQuestData[] arrayQuestData)
+    public bool OnReceiveSeasonPassStepAck(ERandomwarsSeasonErrorCode errorCode, int rewardId, ItemBaseInfo useItemInfo, ItemBaseInfo rewardInfo, QuestData[] arrayQuestData)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 

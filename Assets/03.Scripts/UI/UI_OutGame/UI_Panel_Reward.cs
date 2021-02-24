@@ -193,17 +193,19 @@ public class UI_Panel_Reward : MonoBehaviour
         empty.transform.GetChild(0).gameObject.SetActive(false);
     }
 
+    [SerializeField]
+    private AnimationCurve curve;
     public void Click_TopButton(int index)
     {
         switch (index)
         {
             case 0:
                 image_MenuSelected.rectTransform.DOAnchorPos(
-                    ((RectTransform) btn_SeasonPass.transform).anchoredPosition, 0.2f).SetEase(Ease.OutBack);
+                    ((RectTransform) btn_SeasonPass.transform).anchoredPosition, 0.2f).SetEase(curve);
                 break;
             case 1:
                 image_MenuSelected.rectTransform.DOAnchorPos(
-                    ((RectTransform) btn_Trophy.transform).anchoredPosition, 0.2f).SetEase(Ease.OutBack);
+                    ((RectTransform) btn_Trophy.transform).anchoredPosition, 0.2f).SetEase(curve);
                 break;
         }
     }

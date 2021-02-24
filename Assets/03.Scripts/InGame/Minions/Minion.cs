@@ -486,6 +486,7 @@ namespace ED
             //rb.isKinematic = false;
         }
 
+        // 무
         public void Invincibility(float time)
         {
             if (_invincibilityCoroutine != null) StopCoroutine(_invincibilityCoroutine);
@@ -558,8 +559,23 @@ namespace ED
             pos = target.transform.position;
             pos.y = 0;
             transform.LookAt(pos);
+
+            float t = 0;
+            while (t < attackSpeed)
+            {
+                t += Time.deltaTime;
+                yield return null;
+
+                if (target == null || target.isAlive == false)
+                {
+                    animator.SetTrigger(_animatorHashIdle);
+                    isAttacking = false;
+                    SetControllEnable(true);
+                    yield break;
+                }
+            }
             
-            yield return new WaitForSeconds(attackSpeed);
+            //yield return new WaitForSeconds(attackSpeed);
             // while (true)
             // {
             //     yield return null;

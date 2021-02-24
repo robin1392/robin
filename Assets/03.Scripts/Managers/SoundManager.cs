@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CodeStage.AntiCheat.ObscuredTypes;
+using Random = UnityEngine.Random;
 
 public class SoundManager : MonoBehaviour {
 
@@ -25,8 +27,17 @@ public class SoundManager : MonoBehaviour {
     #endregion
 
     #region VARIABLE
-    [Range(0, 1f)]
-    public float BGMVolume = 1f;
+
+    [Range(0, 1f)] private float _BGMVolume = 1f;
+    public float BGMVolume
+    {
+        get => _BGMVolume;
+        set
+        {
+            _BGMVolume = Single.MaxValue;
+            if (bgm != null) bgm.volume = value;
+        }
+    }
     [Range(0, 1f)]
     public float SFXVolume = 1f;
     public bool SFXMute = false;
@@ -65,6 +76,9 @@ public class SoundManager : MonoBehaviour {
             audios[i].playOnAwake = false;
         }
 
+        _BGMVolume = ObscuredPrefs.GetFloat("BGM_Volume", 1f);
+        SFXVolume = ObscuredPrefs.GetFloat("SFX_Volume", 1f);
+
         // for(var i = 0; i < randomClips.Length; ++i)
         // {
         //     dic_randomClips.Add(randomClips[i].name, randomClips[i].clips);
@@ -83,7 +97,7 @@ public class SoundManager : MonoBehaviour {
     /// <returns></returns>
     public AudioSource Play(Global.E_SOUND clipName, bool isLoop = false, float pitch = 1f, float volume = -1f)
     {
-        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
+        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute || SFXVolume == 0)
         {
             return null;
         }
@@ -135,7 +149,7 @@ public class SoundManager : MonoBehaviour {
 
     public AudioSource Play(AudioClip clip, bool isLoop = false)
     {
-        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
+        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute || SFXVolume == 0)
         {
             return null;
         }
@@ -182,7 +196,7 @@ public class SoundManager : MonoBehaviour {
 
     public AudioSource PlayRandom(Global.E_SOUND randomClipName, bool isLoop = false)
     {
-        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute)
+        if(!ObscuredPrefs.GetBool("SFX", true) || SFXMute || SFXVolume == 0)
         {
             return null;
         }

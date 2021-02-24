@@ -1,4 +1,5 @@
 using System;
+using Service.Core;
 
 namespace Template.Shop.GameBaseShop.Common
 {
@@ -27,17 +28,6 @@ namespace Template.Shop.GameBaseShop.Common
         public int shopProductId;
         // 구매 횟수
         public byte buyCount;
-    }
-
-
-    // 상점 취급 아이템 정보(재화, 아이템 등등)
-    [Serializable]
-    public class ShopItemInfo
-    {
-        // ItemList에 정의된 각종 재화, 아이템 아이디
-        public int itemId;
-        // 재화, 아이템 변동값
-        public int value;
     }
 
 

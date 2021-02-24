@@ -53,6 +53,7 @@ namespace ED
         public UI_Popup menuPopup;
         public UI_Popup_SeasonPassUnlock seasonPassUnlockPopup;
         public UI_PopupShopBuy shopBuyPopup;
+        public UI_SettingPopup settingPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -61,6 +62,7 @@ namespace ED
         public Text text_Diamond;
         public Text text_Gold;
         public Text text_Key;
+        public CanvasGroup cg_Money;
 
         [Header("Badge")]
         public GameObject obj_MenuBadge;
@@ -341,6 +343,15 @@ namespace ED
 
         public void Click_MainButton(int num)
         {
+            // cg_Money.gameObject.SetActive(true);
+            // cg_Money.DOFade(num == 3 ? 0f : 1f, 0f).OnComplete(() =>
+            // {
+            //     cg_Money.gameObject.SetActive(num != 3);
+            // });
+
+            var rt = (RectTransform) cg_Money.transform;
+            rt.DOAnchorPosY(num == 3 ? 500 : -79, 0.1f).SetEase(num == 3 ? Ease.InBack : Ease.OutBack);
+            
             ShowAllPanels();
             currentPageNum = num;
             const float duration = 0.3f;
@@ -519,16 +530,22 @@ namespace ED
             questPopup.Initialize();
         }
 
+        public void Click_Setting_Button()
+        {
+            UI_Popup.AllClose();
+            settingPopup.gameObject.SetActive(true);
+        }
+
         public void ShowMessageBox(string title, string message, System.Action callback = null)
         {
             commonMessageBoxPopup.Initialize(title, message, callback);
         }
 
-        public void AddReward(MsgReward[] rewards, Vector3 startPos)
+        public void AddReward(ItemBaseInfo[] rewards, Vector3 startPos)
         {
             if (rewards != null)
             {
-                List<MsgReward> list = new List<MsgReward>();
+                List<ItemBaseInfo> list = new List<ItemBaseInfo>();
 
                 foreach (var reward in rewards)
                 {
@@ -549,7 +566,7 @@ namespace ED
                                 break;
                             default: // 주사위
                             {
-                                MsgReward rw = new MsgReward();
+                                ItemBaseInfo rw = new ItemBaseInfo();
                                 rw.ItemId = reward.ItemId;
                                 rw.Value = reward.Value;
                                 list.Add(rw);

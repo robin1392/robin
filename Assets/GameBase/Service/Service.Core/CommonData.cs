@@ -6,7 +6,7 @@ using System.IO;
 namespace Service.Core
 {
     [Serializable]
-    public class MsgReward
+    public class ItemBaseInfo
     {
         public int ItemId;
         public int Value;
@@ -18,9 +18,9 @@ namespace Service.Core
             bw.Write(Value);
         }
 
-        public static MsgReward Read(BinaryReader br)
+        public static ItemBaseInfo Read(BinaryReader br)
         {
-            MsgReward data = new MsgReward();
+            ItemBaseInfo data = new ItemBaseInfo();
             data.ItemId = br.ReadInt32();
             data.Value = br.ReadInt32();
             return data;
@@ -29,39 +29,7 @@ namespace Service.Core
 
 
     [Serializable]
-    public class MsgRewardMultiple
-    {
-        public int ItemId;
-        public MsgReward[] arrayReward;
-    }
-
-
-    [Serializable]
-    public class MsgQuestData
-    {
-        public int QuestId;
-        public int Value;
-        public int Status;
-
-        public void Write(BinaryWriter bw)
-        {
-            bw.Write(QuestId);
-            bw.Write(Value);
-            bw.Write(Status);
-        }
-
-        public static MsgQuestData Read(BinaryReader br)
-        {
-            MsgQuestData data = new MsgQuestData();
-            data.QuestId = br.ReadInt32();
-            data.Value = br.ReadInt32();
-            data.Status = br.ReadInt32();
-            return data;
-        }
-    }
-
-    [Serializable]
-    public class MsgUserBox
+    public class UserBox
     {
         public int BoxId;
         public int Count;
@@ -72,9 +40,9 @@ namespace Service.Core
             bw.Write(Count);
         }
 
-        public static MsgUserBox Read(BinaryReader br)
+        public static UserBox Read(BinaryReader br)
         {
-            MsgUserBox data = new MsgUserBox();
+            UserBox data = new UserBox();
             data.BoxId = br.ReadInt32();
             data.Count = br.ReadInt32();
             return data;
@@ -82,7 +50,7 @@ namespace Service.Core
     }
 
     [Serializable]
-    public class MsgUserDeck
+    public class UserDeck
     {
         // 덱 인덱스
         public sbyte Index;
@@ -98,9 +66,9 @@ namespace Service.Core
             bw.Write(bytes);
         }
 
-        public static MsgUserDeck Read(BinaryReader br)
+        public static UserDeck Read(BinaryReader br)
         {
-            MsgUserDeck data = new MsgUserDeck();
+            UserDeck data = new UserDeck();
             data.Index = br.ReadSByte();
 
             int length = br.ReadInt32();
@@ -115,7 +83,7 @@ namespace Service.Core
     }
 
     [Serializable]
-    public class MsgUserDice
+    public class UserDice
     {
         public int DiceId;
         public short Level;
@@ -128,9 +96,9 @@ namespace Service.Core
             bw.Write(Count);
         }
 
-        public static MsgUserDice Read(BinaryReader br)
+        public static UserDice Read(BinaryReader br)
         {
-            MsgUserDice data = new MsgUserDice();
+            UserDice data = new UserDice();
             data.DiceId = br.ReadInt32();
             data.Level = br.ReadInt16();
             data.Count = br.ReadInt16();
@@ -140,19 +108,44 @@ namespace Service.Core
 
 
     [Serializable]
-    public class MsgQuestInfo
+    public class QuestInfo
     {
         // 초기화 남은 시간(초단위)
         public int RemainResetTime;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
         // 일일 보상 정보
-        public MsgQuestDayReward DayRewardInfo;
+        public QuestDayReward DayRewardInfo;
     }
 
 
     [Serializable]
-    public class MsgQuestDayReward
+    public class QuestData
+    {
+        public int QuestId;
+        public int Value;
+        public int Status;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(QuestId);
+            bw.Write(Value);
+            bw.Write(Status);
+        }
+
+        public static QuestData Read(BinaryReader br)
+        {
+            QuestData data = new QuestData();
+            data.QuestId = br.ReadInt32();
+            data.Value = br.ReadInt32();
+            data.Status = br.ReadInt32();
+            return data;
+        }
+    }
+
+
+    [Serializable]
+    public class QuestDayReward
     {
         // 보상 아이디
         public int DayRewardId;
@@ -164,7 +157,7 @@ namespace Service.Core
 
 
     [Serializable]
-    public class MsgSeasonInfo
+    public class UserSeasonInfo
     {
         // 시즌 아이디
         public int SeasonId;

@@ -28,7 +28,7 @@ public class UI_Popup_Quest : UI_Popup
     private static bool[] arrIsDailyRewardGet = new bool[3];
     private static int dailyRewardID;
     private static DateTime dateTime;
-    private static List<MsgQuestData> list = new List<MsgQuestData>();
+    private static List<QuestData> list = new List<QuestData>();
     private Vector2 mousePos;
 
     private void Update()
@@ -40,7 +40,7 @@ public class UI_Popup_Quest : UI_Popup
             {
                 remainTimeCooltime = 1f;
 
-                RefreshRemainTime();
+                //RefreshRemainTime();
             }
         }
     }
@@ -58,7 +58,7 @@ public class UI_Popup_Quest : UI_Popup
         else
         {
             InfoCallback();
-            RefreshRemainTime();
+            //RefreshRemainTime();
             Open();
         }
     }
@@ -79,7 +79,7 @@ public class UI_Popup_Quest : UI_Popup
         }
     }
 
-    public static void QuestUpdate(MsgQuestData[] datas)
+    public static void QuestUpdate(QuestData[] datas)
     {
         if (datas != null)
         {
@@ -95,7 +95,7 @@ public class UI_Popup_Quest : UI_Popup
         }
     }
     
-    public static void QuestUpdate(MsgQuestInfo questInfo)
+    public static void QuestUpdate(QuestInfo questInfo)
     {
         if (questInfo != null)
         {
@@ -126,7 +126,7 @@ public class UI_Popup_Quest : UI_Popup
         return false;
     }
 
-    public bool OnReceiveQuestInfoAck(ERandomwarsQuestErrorCode errorCode, MsgQuestInfo questInfo)
+    public bool OnReceiveQuestInfoAck(ERandomwarsQuestErrorCode errorCode, QuestInfo questInfo)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
@@ -243,14 +243,14 @@ public class UI_Popup_Quest : UI_Popup
         mousePos = arrBtn_Reward[num].transform.position;
     }
 
-    bool OnReceiveQuestDailyRewardAck(ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo, MsgQuestDayReward dailyRewardInfo)
+    bool OnReceiveQuestDailyRewardAck(ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo, QuestDayReward dailyRewardInfo)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
         if (errorCode == ERandomwarsQuestErrorCode.Success)
         {
             arrIsDailyRewardGet = dailyRewardInfo.DayRewardState;
-            List<MsgReward> list = new List<MsgReward>();
+            List<ItemBaseInfo> list = new List<ItemBaseInfo>();
 
             foreach (var reward in arrayRewardInfo)
             {
@@ -269,7 +269,7 @@ public class UI_Popup_Quest : UI_Popup
                             break;
                         default: // 주사위
                         {
-                            MsgReward rw = new MsgReward();
+                            ItemBaseInfo rw = new ItemBaseInfo();
                             rw.ItemId = reward.ItemId;
                             rw.Value = reward.Value;
                             list.Add(rw);

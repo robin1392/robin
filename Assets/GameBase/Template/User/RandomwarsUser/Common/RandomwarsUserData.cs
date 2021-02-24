@@ -17,5 +17,9 @@ namespace Template.User.RandomwarsUser.Common
         public int Trophy;
         public int[] TrophyRewardIds;
         public bool IsBuyVipPass;
+        public int WinCount;
+        public int DefeatCount;
+        public int HighTrophy;
+        public bool EndTutorial;
     }
 }

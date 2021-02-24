@@ -24,11 +24,11 @@ public class UI_Quest_Slot : MonoBehaviour
     public Image image_Reward;
     public Text text_Reward;
 
-    private MsgQuestData msg;
+    private QuestData msg;
     private TDataQuestData data;
     private Vector2 mousePos;
 
-    public void Initialize(MsgQuestData msg)
+    public void Initialize(QuestData msg)
     {
         this.msg = msg;
         data = new TDataQuestData();
@@ -86,7 +86,7 @@ public class UI_Quest_Slot : MonoBehaviour
         mousePos = btn_Reward.transform.position;
     }
 
-    public bool OnReceiveQuestRewardAck(ERandomwarsQuestErrorCode errorCode, MsgQuestData[] arrayQuestData, MsgReward[] arrayRewardInfo)
+    public bool OnReceiveQuestRewardAck(ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         

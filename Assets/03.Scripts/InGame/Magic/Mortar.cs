@@ -17,6 +17,8 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light_Fire;
         public float shootTime = 0;
+        public Transform ts_Head;
+        public Animator[] arrAnimator;
 
         [Header("AudioClip")]
         public AudioClip clip_Missile;
@@ -25,7 +27,7 @@ namespace ED
         private Transform longTarget;
         private static readonly int animatorHashShoot = Animator.StringToHash("Shoot");
 
-        public Transform[] arrTs_Parts;
+        //public Transform[] arrTs_Parts;
 
         protected override void Awake()
         {
@@ -58,12 +60,13 @@ namespace ED
 
         private void SetParts()
         {
-            for (int i = 0; i < arrTs_Parts.Length; i++)
-            {
-                arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
-            }
+            // for (int i = 0; i < arrTs_Parts.Length; i++)
+            // {
+            //     arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
+            // }
 
-            animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
+            //animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
+            for (int i = 0; i < arrAnimator.Length; ++i) arrAnimator[i].transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
 
         public override void Destroy(float delay = 0)
@@ -131,7 +134,8 @@ namespace ED
             if (longTarget != null)
             {
                 StartCoroutine(LookAtTargetCoroutine());
-                animator.SetTrigger(animatorHashShoot);
+                //animator.SetTrigger(animatorHashShoot);
+                for (int i = 0; i < arrAnimator.Length; ++i) arrAnimator[i].SetTrigger(animatorHashShoot);
             }
         }
         
@@ -142,7 +146,7 @@ namespace ED
             while (t < 0.5f && longTarget != null)
             {
                 t += Time.deltaTime;
-                transform.rotation = Quaternion.Lerp(q,
+                ts_Head.rotation = Quaternion.Lerp(q,
                     Quaternion.LookRotation((longTarget.position - transform.position).normalized),
                     t / 0.5f);
                 yield return null;
@@ -151,7 +155,7 @@ namespace ED
 
         public void Shoot()
         {
-            ps_Fire.Play();
+            if (ps_Fire != null) ps_Fire.Play();
             light_Fire.enabled = true;
             Invoke("FireLightOff", 0.15f);
             

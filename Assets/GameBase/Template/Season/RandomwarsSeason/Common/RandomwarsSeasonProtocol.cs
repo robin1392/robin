@@ -9,7 +9,7 @@ namespace Template.Season.RandomwarsSeason.Common
 {
     public enum ERandomwarsSeasonProtocol
     {
-        Begin = 20000,
+        Begin = 60000,
 
         SeasonInfoReq,
         SeasonInfoAck,
@@ -60,7 +60,7 @@ namespace Template.Season.RandomwarsSeason.Common
         }
 
 
-        public delegate (ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo) ReceiveSeasonInfoReqDelegate(string accessToken);
+        public delegate (ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo) ReceiveSeasonInfoReqDelegate(string accessToken);
         public ReceiveSeasonInfoReqDelegate ReceiveSeasonInfoReqHandler;
         public bool ReceiveSeasonInfoReq(ISender sender, byte[] msg, int length)
         {
@@ -71,7 +71,7 @@ namespace Template.Season.RandomwarsSeason.Common
             return SeasonInfoAck(sender, res.errorCode, res.seasonInfo, res.arrayRankInfo);     
         }        
 
-        public bool SeasonInfoAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo)
+        public bool SeasonInfoAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -81,14 +81,14 @@ namespace Template.Season.RandomwarsSeason.Common
         }        
 
 
-        public delegate bool ReceiveSeasonInfoAckDelegate(ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo);
+        public delegate bool ReceiveSeasonInfoAckDelegate(ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, MsgRankInfo[] arrayRankInfo);
         public ReceiveSeasonInfoAckDelegate ReceiveSeasonInfoAckHandler;
         public bool ReceiveSeasonInfoAck(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             ERandomwarsSeasonErrorCode errorCode = (ERandomwarsSeasonErrorCode)(int)jObject["errorCode"];
-            MsgSeasonInfo seasonInfo = JsonConvert.DeserializeObject<MsgSeasonInfo>(jObject["seasonInfo"].ToString());
+            UserSeasonInfo seasonInfo = JsonConvert.DeserializeObject<UserSeasonInfo>(jObject["seasonInfo"].ToString());
             MsgRankInfo[] arrayRankInfo = JsonConvert.DeserializeObject<MsgRankInfo[]>(jObject["arrayRankInfo"].ToString());
             return ReceiveSeasonInfoAckHandler(errorCode, seasonInfo, arrayRankInfo);
         }
@@ -105,7 +105,7 @@ namespace Template.Season.RandomwarsSeason.Common
         }
 
 
-        public delegate (ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRewardMultiple[] arrayRewardInfo) ReceiveSeasonResetReqDelegate(string accessToken);
+        public delegate (ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, ItemBaseInfo[] arrayRewardInfo) ReceiveSeasonResetReqDelegate(string accessToken);
         public ReceiveSeasonResetReqDelegate ReceiveSeasonResetReqHandler;
         public bool ReceiveSeasonResetReq(ISender sender, byte[] msg, int length)
         {
@@ -116,7 +116,7 @@ namespace Template.Season.RandomwarsSeason.Common
             return SeasonResetAck(sender, res.errorCode, res.seasonInfo, res.arrayRewardInfo);     
         }        
 
-        public bool SeasonResetAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRewardMultiple[] arrayRewardInfo)
+        public bool SeasonResetAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, ItemBaseInfo[] arrayRewardInfo)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -126,15 +126,15 @@ namespace Template.Season.RandomwarsSeason.Common
         }        
 
 
-        public delegate bool ReceiveSeasonResetAckDelegate(ERandomwarsSeasonErrorCode errorCode, MsgSeasonInfo seasonInfo, MsgRewardMultiple[] arrayRewardInfo);
+        public delegate bool ReceiveSeasonResetAckDelegate(ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, ItemBaseInfo[] arrayRewardInfo);
         public ReceiveSeasonResetAckDelegate ReceiveSeasonResetAckHandler;
         public bool ReceiveSeasonResetAck(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             ERandomwarsSeasonErrorCode errorCode = (ERandomwarsSeasonErrorCode)(int)jObject["errorCode"];
-            MsgSeasonInfo seasonInfo = JsonConvert.DeserializeObject<MsgSeasonInfo>(jObject["seasonInfo"].ToString());
-            MsgRewardMultiple[] arrayRewardInfo = JsonConvert.DeserializeObject<MsgRewardMultiple[]>(jObject["arrayRewardInfo"].ToString());
+            UserSeasonInfo seasonInfo = JsonConvert.DeserializeObject<UserSeasonInfo>(jObject["seasonInfo"].ToString());
+            ItemBaseInfo[] arrayRewardInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayRewardInfo"].ToString());
             return ReceiveSeasonResetAckHandler(errorCode, seasonInfo, arrayRewardInfo);
         }
         #endregion       
@@ -199,7 +199,7 @@ namespace Template.Season.RandomwarsSeason.Common
         }
 
 
-        public delegate (ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData) ReceiveSeasonPassRewardReqDelegate(string accessToken, int rewardId, int targetType);
+        public delegate (ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData) ReceiveSeasonPassRewardReqDelegate(string accessToken, int rewardId, int targetType);
         public ReceiveSeasonPassRewardReqDelegate ReceiveSeasonPassRewardReqHandler;
         public bool ReceiveSeasonPassRewardReq(ISender sender, byte[] msg, int length)
         {
@@ -212,7 +212,7 @@ namespace Template.Season.RandomwarsSeason.Common
             return SeasonPassRewardAck(sender, res.errorCode, res.arrayRewardId, res.arrayRewardInfo, res.arrayQuestData);     
         }        
 
-        public bool SeasonPassRewardAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData)
+        public bool SeasonPassRewardAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -223,7 +223,7 @@ namespace Template.Season.RandomwarsSeason.Common
         }        
 
 
-        public delegate bool ReceiveSeasonPassRewardAckDelegate(ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, MsgReward[] arrayRewardInfo, MsgQuestData[] arrayQuestData);
+        public delegate bool ReceiveSeasonPassRewardAckDelegate(ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData);
         public ReceiveSeasonPassRewardAckDelegate ReceiveSeasonPassRewardAckHandler;
         public bool ReceiveSeasonPassRewardAck(ISender sender, byte[] msg, int length)
         {
@@ -231,8 +231,8 @@ namespace Template.Season.RandomwarsSeason.Common
             JObject jObject = JObject.Parse(json);
             ERandomwarsSeasonErrorCode errorCode = (ERandomwarsSeasonErrorCode)(int)jObject["errorCode"];
             int[] arrayRewardId = JsonConvert.DeserializeObject<int[]>(jObject["arrayRewardId"].ToString());
-            MsgReward[] arrayRewardInfo = JsonConvert.DeserializeObject<MsgReward[]>(jObject["arrayRewardInfo"].ToString());
-            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
+            ItemBaseInfo[] arrayRewardInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayRewardInfo"].ToString());
+            QuestData[] arrayQuestData = JsonConvert.DeserializeObject<QuestData[]>(jObject["arrayQuestData"].ToString());
             return ReceiveSeasonPassRewardAckHandler(errorCode, arrayRewardId, arrayRewardInfo, arrayQuestData);
         }
         #endregion                      
@@ -249,7 +249,7 @@ namespace Template.Season.RandomwarsSeason.Common
         }
 
 
-        public delegate (ERandomwarsSeasonErrorCode errorCode, int rewardId, MsgReward useItemInfo, MsgReward rewardInfo, MsgQuestData[] arrayQuestData) ReceiveSeasonPassStepReqDelegate(string accessToken, int rewardId);
+        public delegate (ERandomwarsSeasonErrorCode errorCode, int rewardId, ItemBaseInfo useItemInfo, ItemBaseInfo rewardInfo, QuestData[] arrayQuestData) ReceiveSeasonPassStepReqDelegate(string accessToken, int rewardId);
         public ReceiveSeasonPassStepReqDelegate ReceiveSeasonPassStepReqHandler;
         public bool ReceiveSeasonPassStepReq(ISender sender, byte[] msg, int length)
         {
@@ -261,7 +261,7 @@ namespace Template.Season.RandomwarsSeason.Common
             return SeasonPassStepAck(sender, res.errorCode, res.rewardId, res.useItemInfo, res.rewardInfo, res.arrayQuestData);     
         }        
 
-        public bool SeasonPassStepAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, int rewardId, MsgReward useItemInfo, MsgReward rewardInfo, MsgQuestData[] arrayQuestData)
+        public bool SeasonPassStepAck(ISender sender, ERandomwarsSeasonErrorCode errorCode, int rewardId, ItemBaseInfo useItemInfo, ItemBaseInfo rewardInfo, QuestData[] arrayQuestData)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -273,7 +273,7 @@ namespace Template.Season.RandomwarsSeason.Common
         }        
 
 
-        public delegate bool ReceiveSeasonPassStepAckDelegate(ERandomwarsSeasonErrorCode errorCode, int rewardId, MsgReward useItemInfo, MsgReward rewardInfo, MsgQuestData[] arrayQuestData);
+        public delegate bool ReceiveSeasonPassStepAckDelegate(ERandomwarsSeasonErrorCode errorCode, int rewardId, ItemBaseInfo useItemInfo, ItemBaseInfo rewardInfo, QuestData[] arrayQuestData);
         public ReceiveSeasonPassStepAckDelegate ReceiveSeasonPassStepAckHandler;
         public bool ReceiveSeasonPassStepAck(ISender sender, byte[] msg, int length)
         {
@@ -281,9 +281,9 @@ namespace Template.Season.RandomwarsSeason.Common
             JObject jObject = JObject.Parse(json);
             ERandomwarsSeasonErrorCode errorCode = (ERandomwarsSeasonErrorCode)(int)jObject["errorCode"];
             int rewardId = (int)jObject["rewardId"]; 
-            MsgReward useItemInfo = JsonConvert.DeserializeObject<MsgReward>(jObject["useItemInfo"].ToString());
-            MsgReward rewardInfo = JsonConvert.DeserializeObject<MsgReward>(jObject["rewardInfo"].ToString());
-            MsgQuestData[] arrayQuestData = JsonConvert.DeserializeObject<MsgQuestData[]>(jObject["arrayQuestData"].ToString());
+            ItemBaseInfo useItemInfo = JsonConvert.DeserializeObject<ItemBaseInfo>(jObject["useItemInfo"].ToString());
+            ItemBaseInfo rewardInfo = JsonConvert.DeserializeObject<ItemBaseInfo>(jObject["rewardInfo"].ToString());
+            QuestData[] arrayQuestData = JsonConvert.DeserializeObject<QuestData[]>(jObject["arrayQuestData"].ToString());
             return ReceiveSeasonPassStepAckHandler(errorCode, rewardId, useItemInfo, rewardInfo, arrayQuestData);
         }
         #endregion                              

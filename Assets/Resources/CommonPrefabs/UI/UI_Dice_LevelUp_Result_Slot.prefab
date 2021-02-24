@@ -57,13 +57,13 @@ MonoBehaviour:
   text_Value: {fileID: 5810444181274097974}
   text_AddValue: {fileID: 2199413037142217112}
   arrSprite_StatTypeIcon:
-  - {fileID: 0}
-  - {fileID: 21300000, guid: 41585f52e892540168a198e1aa513fd6, type: 3}
-  - {fileID: 21300000, guid: 8c2b0781fe5cf46718b28f14db0b3980, type: 3}
-  - {fileID: 21300000, guid: 471532bc704b0404da368caa02249f6e, type: 3}
-  - {fileID: 21300000, guid: 67fb708cf931641d7a9bcad0d3377ba1, type: 3}
-  - {fileID: 21300000, guid: 959bcbf36c32e4c7a884e768dc3194b4, type: 3}
-  - {fileID: 21300000, guid: 869297ac4e5884a708650fd6fa899171, type: 3}
+  - {fileID: 21300000, guid: 62adc251cad0c40b48551da10b4a0338, type: 3}
+  - {fileID: 21300000, guid: f86f85600144a4dbdb18ba77fc26e832, type: 3}
+  - {fileID: 21300000, guid: eac12de97ee2d4a4ba3d147c33ee2769, type: 3}
+  - {fileID: 21300000, guid: f78933cf236ed41a3afc34346389235c, type: 3}
+  - {fileID: 21300000, guid: 3507b5851fe8a4f8285e41c826b1a3bb, type: 3}
+  - {fileID: 21300000, guid: 12f44eff4a2f94f14997877cf5e1f799, type: 3}
+  - {fileID: 21300000, guid: 2c4224b118abd4f7c960f97a8b5f88ca, type: 3}
   - {fileID: 21300000, guid: 5a910acd898ed41f49664c4dde23fa63, type: 3}
 --- !u!1 &2141372193801374933
 GameObject:

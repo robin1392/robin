@@ -10,7 +10,7 @@ namespace Service.Net
 {
     public class NetServiceBase
     {
-        protected ILogger _logger;
+        protected ILog _logger;
 
         protected NetServiceConfig _config;
         

@@ -46,7 +46,7 @@ public class UI_ResultValue : MonoBehaviour
         text_Trophy.text = $"트로피:{trophy}, 시즌포인트:{seasonTrophy}, 랭킹포인트:{rankTrophy}, 골드:{gold}, 키:{key}";
     }
 
-    public void Initialize(MsgReward[] rewards)
+    public void Initialize(ItemBaseInfo[] rewards)
     {
         if (rewards != null)
         {

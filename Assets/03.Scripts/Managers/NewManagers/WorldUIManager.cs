@@ -102,7 +102,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     
     public void SetSpawnTime(float amount)
     {
-        if (amount < 0.05f) amount = 1f;
+        if (amount < 0.05f && InGameManager.Get().time > 2f) amount = 1f;
         imageSpawnTimeGray.fillAmount = amount;
 
         if (!isGaugeTweening)
@@ -111,7 +111,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
             else if (amount > 0.2f && imageSpawnTime.fillAmount < 0.2f)
             {
                 isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.21f, 0.3f).SetEase(curve).OnComplete(() =>
+                imageSpawnTime.DOFillAmount(0.21f, 0.2f).SetEase(curve).OnComplete(() =>
                 {
                     imageSpawnTime.DOFillAmount(0.2f, 0.1f).OnComplete(() =>
                     {
@@ -122,7 +122,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
             else if (amount > 0.4f && imageSpawnTime.fillAmount < 0.4f)
             {
                 isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.41f, 0.3f).SetEase(curve).OnComplete(() =>
+                imageSpawnTime.DOFillAmount(0.41f, 0.2f).SetEase(curve).OnComplete(() =>
                 {
                     imageSpawnTime.DOFillAmount(0.4f, 0.1f).OnComplete(() =>
                     {
@@ -133,7 +133,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
             else if (amount > 0.6f && imageSpawnTime.fillAmount < 0.6f)
             {
                 isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.61f, 0.3f).SetEase(curve).OnComplete(() =>
+                imageSpawnTime.DOFillAmount(0.61f, 0.2f).SetEase(curve).OnComplete(() =>
                 {
                     imageSpawnTime.DOFillAmount(0.6f, 0.1f).OnComplete(() =>
                     {
@@ -144,7 +144,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
             else if (amount > 0.8f && imageSpawnTime.fillAmount < 0.8f)
             {
                 isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.81f, 0.3f).SetEase(curve).OnComplete(() =>
+                imageSpawnTime.DOFillAmount(0.81f, 0.2f).SetEase(curve).OnComplete(() =>
                 {
                     imageSpawnTime.DOFillAmount(0.8f, 0.1f).OnComplete(() =>
                     {
@@ -153,7 +153,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
                 });
             }
             else if (amount >= 1f && imageSpawnTime.fillAmount < 1f) 
-                imageSpawnTime.DOFillAmount(1f, 0.3f).SetEase(curve);
+                imageSpawnTime.DOFillAmount(1f, 0.2f).SetEase(curve);
         }
     }
 

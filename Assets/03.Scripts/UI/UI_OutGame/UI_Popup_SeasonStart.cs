@@ -13,7 +13,7 @@ public class UI_Popup_SeasonStart : UI_Popup
     [Header("UI")]
     public Text text_Discription;
 
-    public void Initialize(MsgSeasonInfo msg)
+    public void Initialize(UserSeasonInfo msg)
     {
         gameObject.SetActive(true);
         

@@ -25,6 +25,7 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     public GameObject obj_Start;
     public UI_WinLose winlose_My;
     public UI_WinLose winlose_Other;
+    public RectTransform rts_Fight;
     #endregion
 
 
@@ -34,12 +35,11 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     public override void Awake()
     {
         base.Awake();
-
     }
 
     public void Start()
     {
-        Invoke("InitUIElement", 0.1f);
+        Invoke("InitUIElement", 0.05f);
     }
 
     public override void OnDestroy()
@@ -82,7 +82,14 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         ((RectTransform) winlose_My.transform).DOAnchorPosY(-2000f, 0.5f);
         obj_Start.transform.GetChild(1).DOScale(Vector3.zero, 0.5f).OnComplete(() =>
         {
-            obj_Start.SetActive(false);
+            rts_Fight.localScale = Vector3.zero;
+            rts_Fight.DOScale(1f, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
+            {
+                rts_Fight.DOScale(0, 0.2f).SetEase(Ease.OutBack).SetDelay(0.4f).OnComplete(() =>
+                {
+                    obj_Start.SetActive(false);
+                });
+            });
         });
     }
 
@@ -99,7 +106,7 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         popup_Waiting.SetActive(view);
     }
 
-    public void SetPopupResult(bool view, bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
+    public void SetPopupResult(bool view, bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
     {
         popup_Result.gameObject.SetActive(view);
         if (view) popup_Result.Initialize(winLose, winningStreak, normalReward, streakReward, perfectReward);
