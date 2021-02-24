@@ -155,7 +155,7 @@ public class NetworkManager : Singleton<NetworkManager>
     public int LocalServerPort;
     public string UserId;
 
-    public string UserIdFromUserInfo
+    public string UserIdFromInspector
     {
         get
         {
@@ -163,8 +163,9 @@ public class NetworkManager : Singleton<NetworkManager>
             {
                 return UserId;
             }
-            
-            return UserInfoManager.Get().GetUserInfo().userID;
+
+            var fallback = UserInfoManager.Get().GetUserInfo().userID; 
+            return fallback;
         }
     }
     public int matchSendCount;
