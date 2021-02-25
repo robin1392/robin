@@ -14,8 +14,8 @@ namespace Template.User.RandomwarsUser.Common
         UserInfoReq,
         UserInfoAck,
 
-        UserTrophyRewardReq,
-        UserTrophyRewardAck,
+        UserRewardReq,
+        UserRewardAck,
 
         End,
     }
@@ -29,8 +29,8 @@ namespace Template.User.RandomwarsUser.Common
             {
                 {(int)ERandomwarsProtocol.UserInfoReq, ReceiveUserInfoReq},
                 {(int)ERandomwarsProtocol.UserInfoAck, ReceiveUserInfoAck},
-                {(int)ERandomwarsProtocol.UserTrophyRewardReq, ReceiveUserTrophyRewardReq},
-                {(int)ERandomwarsProtocol.UserTrophyRewardAck, ReceiveUserTrophyRewardAck},
+                {(int)ERandomwarsProtocol.UserRewardReq, ReceiveUserRewardReq},
+                {(int)ERandomwarsProtocol.UserRewardAck, ReceiveUserRewardAck},
            };
         }
 
@@ -87,32 +87,32 @@ namespace Template.User.RandomwarsUser.Common
         #endregion    
 
 
-        #region UserTrophyReward ---------------------------------------------------------------------
-        public bool UserTrophyRewardReq(ISender sender, int rewardId, int targetType, ReceiveUserTrophyRewardAckDelegate callback)
+        #region UserReward ---------------------------------------------------------------------
+        public bool UserRewardReq(ISender sender, int rewardId, int targetType, ReceiveUserRewardAckDelegate callback)
         {
-            ReceiveUserTrophyRewardAckHandler = callback;
+            ReceiveUserRewardAckHandler = callback;
             JObject json = new JObject();
             json.Add("accessToken", sender.GetAccessToken());
             json.Add("rewardId", rewardId);
             json.Add("targetType", targetType);
-            return sender.SendHttpPost((int)ERandomwarsProtocol.UserTrophyRewardReq, "usertrophyreward", json.ToString());
+            return sender.SendHttpPost((int)ERandomwarsProtocol.UserRewardReq, "userreward", json.ToString());
         }
 
 
-        public delegate (ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData) ReceiveUserTrophyRewardReqDelegate(string accessToken, int rewardId, int targetType);
-        public ReceiveUserTrophyRewardReqDelegate ReceiveUserTrophyRewardReqHandler;
-        public bool ReceiveUserTrophyRewardReq(ISender sender, byte[] msg, int length)
+        public delegate (ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData) ReceiveUserRewardReqDelegate(string accessToken, int rewardId, int targetType);
+        public ReceiveUserRewardReqDelegate ReceiveUserRewardReqHandler;
+        public bool ReceiveUserRewardReq(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
             string accessToken = (string)jObject["accessToken"];
             int rewardId = (int)jObject["rewardId"];
             int targetType = (int)jObject["targetType"];
-            var res = ReceiveUserTrophyRewardReqHandler(accessToken, rewardId, targetType);
-            return UserTrophyRewardAck(sender, res.errorCode, res.arrayRewardId, res.arrayRewardInfo, res.arrayQuestData);
+            var res = ReceiveUserRewardReqHandler(accessToken, rewardId, targetType);
+            return UserRewardAck(sender, res.errorCode, res.arrayRewardId, res.arrayRewardInfo, res.arrayQuestData);
         }
 
-        public bool UserTrophyRewardAck(ISender sender, ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
+        public bool UserRewardAck(ISender sender, ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -123,9 +123,9 @@ namespace Template.User.RandomwarsUser.Common
         }
 
 
-        public delegate bool ReceiveUserTrophyRewardAckDelegate(ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData);
-        public ReceiveUserTrophyRewardAckDelegate ReceiveUserTrophyRewardAckHandler;
-        public bool ReceiveUserTrophyRewardAck(ISender sender, byte[] msg, int length)
+        public delegate bool ReceiveUserRewardAckDelegate(ERandomwarsUserErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData);
+        public ReceiveUserRewardAckDelegate ReceiveUserRewardAckHandler;
+        public bool ReceiveUserRewardAck(ISender sender, byte[] msg, int length)
         {
             string json = Encoding.Default.GetString(msg, 0, length);
             JObject jObject = JObject.Parse(json);
@@ -133,7 +133,7 @@ namespace Template.User.RandomwarsUser.Common
             int[] arrayRewardId = JsonConvert.DeserializeObject<int[]>(jObject["arrayRewardId"].ToString());
             ItemBaseInfo[] arrayRewardInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayRewardInfo"].ToString());
             QuestData[] arrayQuestData = JsonConvert.DeserializeObject<QuestData[]>(jObject["arrayQuestData"].ToString());
-            return ReceiveUserTrophyRewardAckHandler(errorCode, arrayRewardId, arrayRewardInfo, arrayQuestData);
+            return ReceiveUserRewardAckHandler(errorCode, arrayRewardId, arrayRewardInfo, arrayQuestData);
         }
         #endregion                      
 
