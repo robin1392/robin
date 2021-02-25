@@ -118,7 +118,7 @@ public class TableManager : Singleton<TableManager>
         }
 
         // ���� �����Ϳ� ���� �������� ������ ���Ѵ�.
-        if (remoteTDataVersion != localTDataVersion)
+        if (remoteTDataVersion == string.Empty)
         {
             if (Directory.Exists(localPath) == false)
             {
