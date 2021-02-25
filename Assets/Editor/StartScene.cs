@@ -16,6 +16,7 @@ public class StartScene : EditorWindow
 
     private static void OnPlayModeChanged(PlayModeStateChange state)
     {
+        return;
         switch(state)
         {
         case PlayModeStateChange.EnteredEditMode:
