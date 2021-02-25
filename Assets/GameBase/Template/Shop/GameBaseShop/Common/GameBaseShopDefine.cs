@@ -23,4 +23,14 @@ namespace Template.Shop.GameBaseShop.Common
         PurchaseFailed = 40015, // 결제 로직 중 실패
         PurchaseAlreadyBuyProcess = 40016 // 다른 결제 처리가 이미 진행중에 있음 
     }
+
+    public enum EBuyType
+    {
+        None = 0,
+        Gold,
+        Diamond,
+        RealMoney,
+        Free,
+        AdFree
+    }
 }
