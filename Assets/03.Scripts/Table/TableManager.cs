@@ -218,7 +218,7 @@ public class TableManager : Singleton<TableManager>
                         Stream zipStream = zf.GetInputStream(zipEntry);
 
                         // Manipulate the output filename here as desired.
-                        string fullZipToPath = targetPath + "\\" + Path.GetFileName(entryFileName);
+                        string fullZipToPath = targetPath + "/" + Path.GetFileName(entryFileName);
 
                         // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
                         // of the file, but does not waste memory.
