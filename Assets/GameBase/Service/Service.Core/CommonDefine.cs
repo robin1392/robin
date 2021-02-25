@@ -8,7 +8,15 @@ namespace Service.Core
     }
 
 
-    
+    public enum EBuyType
+    {
+        None = 0,
+        Gold,
+        Diamond,
+        RealMoney,
+        Free,
+        AdFree
+    }
 
     public enum ITEM_GRADE : byte
     {

@@ -23,7 +23,7 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataDiceLevelInfo> DiceLevelInfo { get; private set; }
     public TableData<int, TDataGuardianInfo> GuardianInfo { get; private set; }
     public TableData<int, TDataVsmode> Vsmode { get; private set; }
-    //public TableData<int, TDataLangEN> LangEN { get; private set; }
+    public TableData<int, TDataLangEN> LangEN { get; private set; }
     public TableData<int, TDataLangKO> LangKO { get; private set; }
     public TableData<int, TDataErrorMessageKO> ErrorMessageKO { get; private set; }
     public TableData<int, TDataRankingReward> RankingReward { get; private set; }
@@ -64,7 +64,7 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
         GuardianInfo = new TableData<int, TDataGuardianInfo>();
         Vsmode = new TableData<int, TDataVsmode>();
-        //LangEN = new TableData<int, TDataLangEN>();
+        LangEN = new TableData<int, TDataLangEN>();
         LangKO = new TableData<int, TDataLangKO>();
         ErrorMessageKO = new TableData<int, TDataErrorMessageKO>();
         RankingReward = new TableData<int, TDataRankingReward>();
@@ -110,7 +110,7 @@ public class TableManager : Singleton<TableManager>
             using (StreamReader r = new StreamReader(targetPath + "/version.json"))
             {
                 string jsonClient = r.ReadToEnd();
-                var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonServer);
+                var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonClient);
                 localTDataVersion = (string)jObjClient["dataVersion"];
             }
         }
@@ -254,7 +254,7 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo.Init(new TableLoaderLocalCSV<int, TDataDiceLevelInfo>(), path, "DiceLevelInfo.csv");
         GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path, "GuardianInfo.csv");
         Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path, "Vsmode.csv");
-        //LangEN.Init(new TableLoaderLocalCSV<int, TDataLangEN>(), path, "LangEN.csv");
+        LangEN.Init(new TableLoaderLocalCSV<int, TDataLangEN>(), path, "LangEN.csv");
         LangKO.Init(new TableLoaderLocalCSV<int, TDataLangKO>(), path, "LangKO.csv");
         RankingReward.Init(new TableLoaderLocalCSV<int, TDataRankingReward>(), path, "RankingReward.csv");
         RankInfo.Init(new TableLoaderLocalCSV<int, TDataRankInfo>(), path, "RankInfo.csv");

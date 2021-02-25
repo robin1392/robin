@@ -34,6 +34,7 @@ namespace RandomWarsResource.Data
 		public int itemId06 { get; set; }
 		public int itemValue06 { get; set; }
 		public int showProbability06 { get; set; }
+		public int productType { get; set; }
 		public int buyLimitCnt { get; set; }
 		public int tapInfo { get; set; }
 		public int tapValue { get; set; }
@@ -85,17 +86,18 @@ namespace RandomWarsResource.Data
 			itemId06 = int.Parse(cols[27]);
 			itemValue06 = int.Parse(cols[28]);
 			showProbability06 = int.Parse(cols[29]);
-			buyLimitCnt = int.Parse(cols[30]);
-			tapInfo = int.Parse(cols[31]);
-			tapValue = int.Parse(cols[32]);
-			isDiscount = bool.Parse(cols[33]);
-			discountValue = int.Parse(cols[34]);
-			sortIndex = int.Parse(cols[35]);
-			guideInfoLink = cols[36].Replace("{#$}", ",");
-			isUnique = bool.Parse(cols[37]);
-			multipleValue = int.Parse(cols[38]);
-			buyPreviousItemId = int.Parse(cols[39]);
-			isShow = bool.Parse(cols[40]);
+			productType = int.Parse(cols[30]);
+			buyLimitCnt = int.Parse(cols[31]);
+			tapInfo = int.Parse(cols[32]);
+			tapValue = int.Parse(cols[33]);
+			isDiscount = bool.Parse(cols[34]);
+			discountValue = int.Parse(cols[35]);
+			sortIndex = int.Parse(cols[36]);
+			guideInfoLink = cols[37].Replace("{#$}", ",");
+			isUnique = bool.Parse(cols[38]);
+			multipleValue = int.Parse(cols[39]);
+			buyPreviousItemId = int.Parse(cols[40]);
+			isShow = bool.Parse(cols[41]);
 		}
 	}
 }

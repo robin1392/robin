@@ -15,8 +15,10 @@ namespace Template.Shop.GameBaseShop.Common
         public int resetCount;
         // 상품 목록
         public ShopProductInfo[] arrayProductInfo;
-        // 초기화 정보
-        public ShopResetInfo resetInfo;
+        // 재화 갱신 횟수
+        public byte pointResetCount;
+        // 광고 갱신 횟수
+        public byte adResetCount;
     }
 
 

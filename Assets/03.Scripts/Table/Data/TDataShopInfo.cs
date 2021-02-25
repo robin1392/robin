@@ -16,6 +16,11 @@ namespace RandomWarsResource.Data
 		public DateTime endDate { get; set; }
 		public bool isReset { get; set; }
 		public bool isShow { get; set; }
+		public int resetTime { get; set; }
+		public int[] resetBuyType { get; set; }
+		public int[] resetBuyValue { get; set; }
+		public int resetAdType { get; set; }
+		public int resetAdValue { get; set; }
 
 
 		public int PK()
@@ -33,11 +38,16 @@ namespace RandomWarsResource.Data
 			maxCount = int.Parse(cols[4]);
 			chooseType = int.Parse(cols[5]);
 			sortIndex = int.Parse(cols[6]);
-			shopGroupId = Array.ConvertAll(cols[7].Split('|'), s => int.Parse(s));
+			shopGroupId = (cols[7] == "-1") ? null : Array.ConvertAll(cols[7].Split('|'), s => int.Parse(s));
 			startDate = (cols[8] == "-1") ? default(DateTime) : DateTime.Parse(cols[8]);
 			endDate = (cols[9] == "-1") ? default(DateTime) : DateTime.Parse(cols[9]);
 			isReset = bool.Parse(cols[10]);
 			isShow = bool.Parse(cols[11]);
+			resetTime = int.Parse(cols[12]);
+			resetBuyType = (cols[13] == "-1") ? null : Array.ConvertAll(cols[13].Split('|'), s => int.Parse(s));
+			resetBuyValue = (cols[14] == "-1") ? null : Array.ConvertAll(cols[14].Split('|'), s => int.Parse(s));
+			resetAdType = int.Parse(cols[15]);
+			resetAdValue = int.Parse(cols[16]);
 		}
 	}
 }

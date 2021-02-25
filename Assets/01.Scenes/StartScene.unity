@@ -395,8 +395,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
-  BucketUrl: https://randomdice-wars-bucket.s3.ap-northeast-2.amazonaws.com
-  Enviroment: DEV
+  BucketUrl: https://randomdicewars-bucket.s3.ap-northeast-2.amazonaws.com
+  Enviroment: Dev
 --- !u!1 &536019587
 GameObject:
   m_ObjectHideFlags: 0
@@ -942,7 +942,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f417b7b2a45b54022a6912ad46f283a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BGMVolume: 1
   SFXVolume: 1
   SFXMute: 0
   audioSourceCount: 10

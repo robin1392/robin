@@ -351,7 +351,7 @@ namespace Percent.Platform
                     case 2:
                     case 5:
                     case 6:
-                        ShopManager.Instance.RefreshShop();
+                        ShopManager.Get().RefreshShop();
                         break;
                     case 3:
                         buttonShopItem.interactable = false;

@@ -443,7 +443,7 @@ namespace Percent.Platform
             dictPendingProducts.Remove(args.purchasedProduct.transactionID);
             storeController.ConfirmPendingPurchase(args.purchasedProduct);
             
-            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Instance.ShowPurchaseResult);
+            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Get().ShowPurchaseResult);
         }
 
         private void ResultPurchaseSuccessed(string text, PurchaseEventArgs args)

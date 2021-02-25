@@ -246,7 +246,7 @@ namespace ED
 
             btn_Use.interactable = diceLevel > 0;
             btn_Upgrade.interactable = (diceLevel > 0) &&
-                                        (UserInfoManager.Get().GetUserInfo().gold >= needGold) &&
+                                        //(UserInfoManager.Get().GetUserInfo().gold >= needGold) &&
                                        (diceCount >= needDiceCount);
             var images = btn_Upgrade.GetComponentsInChildren<Image>();
             for (int i = 1; i < images.Length; ++i)
@@ -302,11 +302,17 @@ namespace ED
 
         public void Click_Upgrade()
         {
-            //NetworkManager.Get().LevelUpDiceReq(UserInfoManager.Get().GetUserInfo().userID, data.id, DiceUpgradeCallback);
-            NetworkManager.session.DiceTemplate.DiceUpgradeReq(NetworkManager.session.HttpClient, data.id, OnReceiveDiceUpgradeAck);
+            if (UserInfoManager.Get().GetUserInfo().gold >= needGold)
+            {
+                NetworkManager.session.DiceTemplate.DiceUpgradeReq(NetworkManager.session.HttpClient, data.id,
+                    OnReceiveDiceUpgradeAck);
 
-
-            UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+                UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+            }
+            else
+            {
+                FindObjectOfType<UI_Popup_MoveShop>().Initialize(UI_BoxOpenPopup.COST_TYPE.GOLD);
+            }
         }
 
 

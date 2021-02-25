@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using DG.Tweening;
 using ED;
 using Percent.GameBaseClient;
 using Percent.Platform.InAppPurchase;
@@ -16,7 +17,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Percent.Platform.InAppPurchase
 {
-    public class ShopManager : ManagerSingleton<ShopManager>
+    public class ShopManager : SingletonDestroy<ShopManager>
     {
         [SerializeField] private RectTransform rts_ScrollView;
         [SerializeField] private Transform transformShopParent;
@@ -27,6 +28,8 @@ namespace Percent.Platform.InAppPurchase
         private List<Shop> listShop = new List<Shop>();
 
         private bool isInitialized;
+        private bool isShowDiamondShop;
+        private bool isShowGoldShop;
         
         protected void Start()
         {
@@ -54,6 +57,11 @@ namespace Percent.Platform.InAppPurchase
                 //listShop = new List<Shop>();
 
                 NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, SetAllShop);
+            }
+            else
+            {
+                if (isShowGoldShop) ScrollToGoldShop();
+                else if (isShowDiamondShop) ScrollToDiamondShop();
             }
         }
         
@@ -105,6 +113,10 @@ namespace Percent.Platform.InAppPurchase
                     }
                     else listShop[i].DisableContent();
                 }
+                
+                if (isShowGoldShop) ScrollToGoldShop();
+                else if (isShowDiamondShop) ScrollToDiamondShop();
+                
                 return true;
             }
             else
@@ -231,6 +243,30 @@ namespace Percent.Platform.InAppPurchase
         public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
         {
             return ShowBuyResult(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
+        }
+
+        public void ShowGoldShop()
+        {
+            isShowGoldShop = true;
+            UI_Main.Get().Click_MainButton(0);
+        }
+
+        private void ScrollToGoldShop()
+        {
+            ((RectTransform) transformShopParent).DOAnchorPosY(5800, 0.5f).SetDelay(0.1f);
+            isShowGoldShop = false;
+        }
+
+        public void ShowDiamondShop()
+        {
+            isShowDiamondShop = true;
+            UI_Main.Get().Click_MainButton(0);
+        }
+
+        private void ScrollToDiamondShop()
+        {
+            ((RectTransform) transformShopParent).DOAnchorPosY(5100, 0.5f).SetDelay(0.1f);
+            isShowDiamondShop = false;
         }
     }
 }

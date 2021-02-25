@@ -117,8 +117,14 @@ public class UI_SettingPopup : UI_Popup
                 UI_Main.Get().Click_Helpshift_Button();
                 break;
             case SETTING_SUBMENU.YOUTUBE:
+                Application.OpenURL("https://www.youtube.com/channel/UCSKvHQ-fuH-LLFzeCH7zt6A");
                 break;
             case SETTING_SUBMENU.APPSTORE:
+#if UNITY_ANDROID
+                Application.OpenURL("https://play.google.com/store/apps/dev?id=7769366979601471884");
+#elif UNITY_IOS
+		        Application.OpenURL("https://itunes.apple.com/developer/id1060433596");
+#endif
                 break;
             case SETTING_SUBMENU.CREDIT:
                 break;
