@@ -1,10 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ED;
 using Percent.Platform.InAppPurchase;
 using Template.Shop.GameBaseShop.Common;
+using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
+using TDataShopInfo = RandomWarsResource.Data.TDataShopInfo;
 
 namespace Percent.Platform
 {
@@ -16,6 +20,8 @@ namespace Percent.Platform
         private List<ShopItem> listShopItem;
         [SerializeField] private int poolSize;
         [SerializeField] private Text textLeftTime;
+
+        private ShopInfo info;
 
         private void Start()
         {
@@ -39,7 +45,8 @@ namespace Percent.Platform
                 gameObject.SetActive(false);
                 return;
             }
-            
+
+            this.info = shopInfo;
             listShopItem = new List<ShopItem>();
 
             for (int i = 0; i < poolSize; i++)
@@ -102,25 +109,47 @@ namespace Percent.Platform
                 subTime = resetDate.Subtract(DateTime.Now);
             }
         }
+
+        public void Click_ResetShopButton()
+        {
+            TDataShopInfo data;
+            if (TableManager.Get().ShopInfo.GetData(sinfo => sinfo.id == shopID, out data))
+            {
+                if (data.isReset)
+                {
+                    int maxADCount = data.resetAdValue;
+                    int remainADCount = maxADCount - info.adResetCount;
+                    int maxPointCount = data.resetBuyValue.Length;
+                    int remainPointCount = maxPointCount - info.pointResetCount;
+                    int cost = data.resetBuyValue[info.pointResetCount];
+                    
+                    UI_Main.Get().dailyShopResetPopup.Initialize(maxADCount, remainADCount, maxPointCount, remainPointCount, cost, ResetShop);
+                }
+            }
+        }
         
         /// <summary>
         /// 개별 상점 리셋
         /// </summary>
         /// <param name="shopID">리셋할 상점 ID</param>
-        public void ResetShop()
+        public void ResetShop(RandomWarsResource.Data.EBuyTypeKey type)
         {
-            NetworkManager.session.ShopTemplate.ShopResetReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopID,1, Reset);
+            NetworkManager.session.ShopTemplate.ShopResetReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopID, (int)type, Reset);
+            UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
 
         
         public bool Reset(GameBaseShopErrorCode errorCode, ShopInfo shopInfo, ShopItemInfo payItemInfo)
         {
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+            
             if (errorCode == GameBaseShopErrorCode.Success)
             {
                 if (payItemInfo != null)
                 {
                     //리셋을 위해서 사용한 재화 연출 처리
-                    //payItemInfo    
+                    //payItemInfo   
+                    UI_Main.Get().RefreshUserInfoUI();
                 }
 
                 UpdateContent(shopInfo);

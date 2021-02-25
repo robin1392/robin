@@ -48,10 +48,11 @@ namespace ED
         public UI_Popup_SeasonEnd seasonEndPopup;
         public UI_Popup_SeasonStart seasonStartPopup;
         public UI_CommonMessageBox commonMessageBoxPopup;
-        public UI_Popup menuPopup;
+        public GameObject menuPopup;
         public UI_Popup_SeasonPassUnlock seasonPassUnlockPopup;
         public UI_PopupShopBuy shopBuyPopup;
         public UI_SettingPopup settingPopup;
+        public UI_Popup_DailyShopReset dailyShopResetPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -73,7 +74,6 @@ namespace ED
         public UI_Panel_Dice panel_Dice;
         public CanvasGroup[] arrPanels;
         
-
         private float[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
         private float canvasWidth;
 
@@ -246,7 +246,7 @@ namespace ED
 
         public void Click_MenuButton()
         {
-            menuPopup.gameObject.SetActive(true);
+            menuPopup.SetActive(true);
         }
 
         public void EditNickname(string str)
@@ -354,7 +354,7 @@ namespace ED
             currentPageNum = num;
             const float duration = 0.3f;
             
-            if (currentPageNum == 0) ShopManager.Instance.InitShop();
+            if (currentPageNum == 0) ShopManager.Get().InitShop();
 
             rts_MainPages.DOAnchorPosX(mainPagePosX[num], duration).SetEase(ease).OnComplete(() =>
             {

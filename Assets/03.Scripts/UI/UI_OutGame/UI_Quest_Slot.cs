@@ -30,11 +30,12 @@ public class UI_Quest_Slot : MonoBehaviour
     {
         this.msg = msg;
         data = new TDataQuestData();
-        var langData = new TDataLangKO();
+        //var langData = new TDataLangKO();
         if (TableManager.Get().QuestData.GetData(msg.QuestId, out data))
         {
-            TableManager.Get().LangKO.GetData(x => x.name == data.questStringKey, out langData);
-            text_Title.text = langData.textDesc;
+            //TableManager.Get().LangKO.GetData(x => x.name == data.questStringKey, out langData);
+            //text_Title.text = langData.textDesc;
+            text_Title.text = LocalizationManager.GetLangDesc(data.questStringKey);
             slider.value = msg.Value / (float)data.questEndValue;
             text_Slider.text = $"{msg.Value}/{data.questEndValue}";
             image_Slider.color = arrColor_Slider[0];

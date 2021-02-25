@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: f49375dc539db4c0caa5e494fcfbc9fe, type: 3}
     - {fileID: 21300000, guid: 84c07fd673c5448bf8e1db3282b4dce5, type: 3}
-    totalSpriteSurfaceArea: 4483926
+    totalSpriteSurfaceArea: 4500310
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -72,6 +72,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4a5851b1a386d4e1a8d1cc2acaba8c3e, type: 3}
   - {fileID: 21300000, guid: 2c4224b118abd4f7c960f97a8b5f88ca, type: 3}
   - {fileID: 21300000, guid: e1599fb10327e4e35af3f210c5885de3, type: 3}
+  - {fileID: 21300000, guid: e8f4f8c13a06f460483b405b34e79709, type: 3}
   - {fileID: 21300000, guid: 56e2c8f1ee82f40d0a3e1a7e8145d50f, type: 3}
   - {fileID: 21300000, guid: 9b44d502f21894a918897a93f80b5655, type: 3}
   - {fileID: 21300000, guid: 5d4c2b0290d954376a537c6ccce55ed3, type: 3}
@@ -228,6 +229,7 @@ SpriteAtlas:
   - icon_stat_0-4
   - icon_stat_7
   - ui_button_lv_class
+  - icon_restore
   - ui_button_card_unique
   - icon_stat_0-5
   - icon_class_11
