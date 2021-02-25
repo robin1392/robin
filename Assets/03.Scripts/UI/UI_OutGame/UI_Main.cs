@@ -55,6 +55,7 @@ namespace ED
         public UI_PopupShopBuy shopBuyPopup;
         public UI_SettingPopup settingPopup;
         public UI_Popup_DailyShopReset dailyShopResetPopup;
+        public UI_Popup_MoveShop moveShopPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -101,11 +102,11 @@ namespace ED
                 ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", seasonEndPopup.Initialize);
             }
 
-            TDataShopProductList data;
-            if (TableManager.Get().ShopProductList.GetData(pd => pd.isShow == true, out data))
-            {
-                Debug.Log(data.googleProductId + ", " + data.appleProductId);
-            }
+            // TDataShopProductList data;
+            // if (TableManager.Get().ShopProductList.GetData(pd => pd.isShow == true, out data))
+            // {
+            //     Debug.Log(data.googleProductId + ", " + data.appleProductId);
+            // }
             
             HideAnotherPanel();
 

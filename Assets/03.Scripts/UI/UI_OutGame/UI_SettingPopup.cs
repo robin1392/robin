@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Debug = ED.Debug;
 using CodeStage.AntiCheat.ObscuredTypes;
+using DG.Tweening;
 
 public class UI_SettingPopup : UI_Popup
 {
@@ -62,9 +63,16 @@ public class UI_SettingPopup : UI_Popup
         bool isZero = slider_BGM.value == 0;
         ObscuredPrefs.SetFloat("BGM_Volume", slider_BGM.value);
         SoundManager.instance.BGMVolume = slider_BGM.value;
-        text_BGM_Volume.text = isZero ? $"OFF" : $"{slider_BGM.value * 10:F0}";
-        text_BGM_Volume.color = isZero ? Color.red : Color.white;
-        image_BGM_Icon.color = isZero ? Color.red : Color.white;
+        string str = isZero ? $"OFF" : $"{slider_BGM.value * 10:F0}";
+        if (String.CompareOrdinal(text_BGM_Volume.text, str) != 0)
+        {
+            text_BGM_Volume.transform.localScale = Vector3.one;
+            text_BGM_Volume.transform.DOKill();
+            text_BGM_Volume.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+            text_BGM_Volume.text = str;
+            text_BGM_Volume.color = isZero ? Color.red : Color.white;
+            image_BGM_Icon.color = isZero ? Color.red : Color.white;
+        }
     }
 
     public void SFX_SliderValueChanged(float value)
@@ -74,9 +82,16 @@ public class UI_SettingPopup : UI_Popup
         bool isZero = slider_SFX.value == 0;
         ObscuredPrefs.SetFloat("SFX_Volume", slider_SFX.value);
         SoundManager.instance.SFXVolume = slider_SFX.value;
-        text_SFX_Volume.text = isZero ? $"OFF" : $"{slider_SFX.value * 10:F0}";
-        text_SFX_Volume.color = isZero ? Color.red : Color.white;
-        image_SFX_Icon.color = isZero ? Color.red : Color.white;
+        string str = isZero ? "OFF" : $"{slider_SFX.value * 10:F0}";
+        if (string.CompareOrdinal(text_SFX_Volume.text, str) != 0)
+        {
+            text_SFX_Volume.transform.localScale = Vector3.one;
+            text_SFX_Volume.transform.DOKill();
+            text_SFX_Volume.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+            text_SFX_Volume.text = str;
+            text_SFX_Volume.color = isZero ? Color.red : Color.white;
+            image_SFX_Icon.color = isZero ? Color.red : Color.white;
+        }
     }
 
     public void Click_BGM()

@@ -33,9 +33,11 @@ public class UI_Popup_MoveShop : UI_Popup
             case UI_BoxOpenPopup.COST_TYPE.KEY:
                 break;
             case UI_BoxOpenPopup.COST_TYPE.GOLD:
+                AllClose();
                 ShopManager.Get().ShowGoldShop();
                 break;
             case UI_BoxOpenPopup.COST_TYPE.DIAMOND:
+                AllClose();
                 ShopManager.Get().ShowDiamondShop();
                 break;
         }

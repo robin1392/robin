@@ -46,8 +46,17 @@ public class UI_Popup_DailyShopReset : UI_Popup
 #endif
                 break;
             case 1:
-                PointReset();
-                Close();
+            {
+                if (UserInfoManager.Get().GetUserInfo().gold >= cost)
+                {
+                    PointReset();
+                    Close();
+                }
+                else
+                {
+                    UI_Main.Get().moveShopPopup.Initialize(UI_BoxOpenPopup.COST_TYPE.GOLD);
+                }
+            }
                 break;
         }
     }

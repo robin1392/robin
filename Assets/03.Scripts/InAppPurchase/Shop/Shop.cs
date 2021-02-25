@@ -47,7 +47,6 @@ namespace Percent.Platform
                 return;
             }
 
-            this.info = shopInfo;
             listShopItem = new List<ShopItem>();
 
             for (int i = 0; i < poolSize; i++)
@@ -65,6 +64,7 @@ namespace Percent.Platform
         /// </summary>
         public void UpdateContent(ShopInfo shopInfo)
         {
+            this.info = shopInfo;
             //textLeftTime.text = shopInfo.resetRemainTime.ToString();
             if (shopInfo.resetRemainTime > 0)
             {
@@ -150,6 +150,20 @@ namespace Percent.Platform
                 {
                     //리셋을 위해서 사용한 재화 연출 처리
                     //payItemInfo   
+                    switch ((ITEM_TYPE)payItemInfo.ItemId)
+                    {
+                        case ITEM_TYPE.GOLD:
+                        {
+                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.Value;
+                        }
+                            break;
+                        case ITEM_TYPE.DIAMOND:
+                        {
+                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.Value;
+                        }
+                            break;
+                    }
+
                     UI_Main.Get().RefreshUserInfoUI();
                 }
 

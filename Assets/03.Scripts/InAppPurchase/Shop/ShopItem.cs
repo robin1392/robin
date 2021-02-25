@@ -468,7 +468,7 @@ namespace Percent.Platform
 
             foreach (var text in texts)
             {
-                color = text.color;
+                color.a = text.color.a;
                 color.r *= factor;
                 color.g *= factor;
                 color.b *= factor;
@@ -477,7 +477,7 @@ namespace Percent.Platform
 
             foreach (var image in images)
             {
-                color = image.color;
+                color.a = image.color.a;
                 color.r *= factor;
                 color.g *= factor;
                 color.b *= factor;
