@@ -143,8 +143,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d851871bbdd3d4fac918260cbc3aef9b, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 8e5b2af52b44443e7ac5376497581f0e, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -297,8 +297,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 84c07fd673c5448bf8e1db3282b4dce5, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -385,6 +385,7 @@ MonoBehaviour:
   textPItemBuyCount: {fileID: 8098925241283175227}
   imageIcon: {fileID: 6602290398034280046}
   imagePriceIcon: {fileID: 7847796500305068722}
+  textDouble: {fileID: 0}
 --- !u!1 &8098925240463617372
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +535,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 23.9, y: 57.181824}
+  m_AnchoredPosition: {x: 23.9, y: 66}
   m_SizeDelta: {x: 0, y: 45.015137}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8098925241283175226
@@ -567,11 +568,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: a4807efedd60241c5b572ba25ca0762b, type: 3}
-    m_FontSize: 50
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 60
+    m_MaxSize: 80
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1

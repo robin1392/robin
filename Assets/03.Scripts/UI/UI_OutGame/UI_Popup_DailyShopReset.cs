@@ -28,8 +28,8 @@ public class UI_Popup_DailyShopReset : UI_Popup
         text_PointCount.text = $"{remainPoint}/{maxPoint}";
         text_PointPrice.text = cost.ToString();
 
-        btn_AD.interactable = remainAD >= maxAD;
-        btn_Point.interactable = remainPoint >= maxPoint;
+        btn_AD.interactable = remainAD > 0;
+        btn_Point.interactable = remainPoint > 0;
         
         gameObject.SetActive(true);
     }
