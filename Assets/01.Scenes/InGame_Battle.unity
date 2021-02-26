@@ -2709,7 +2709,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 157.02274
+      value: 156.3479
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
@@ -3113,6 +3113,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8948819810862951786, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -18.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 8948819810862951786, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.24
+      objectReference: {fileID: 0}
     - target: {fileID: 8948819810862951787, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
         type: 3}
       propertyPath: arrRot.Array.data[2].y
@@ -3137,6 +3147,11 @@ PrefabInstance:
         type: 3}
       propertyPath: orthographic
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8948819810862951789, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
+        type: 3}
+      propertyPath: orthographic size
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8948819811013419658, guid: 5d26ba9c6e87e4f369c2f78182ee3832,
         type: 3}

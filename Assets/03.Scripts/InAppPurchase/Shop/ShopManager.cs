@@ -176,7 +176,7 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="payItemInfo"></param>
         /// <param name="arrayRewardItemInfo"></param>
         /// <returns></returns>
-        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
+        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             
@@ -253,7 +253,7 @@ namespace Percent.Platform.InAppPurchase
         /// <returns></returns>
         public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
         {
-            return ShowBuyResult(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
+            return ShowBuyResult(errorCode, shopId, shopProductInfo, changeProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
         }
 
         public void ShowGoldShop()

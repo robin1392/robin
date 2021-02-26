@@ -77,6 +77,30 @@ namespace Percent.Platform
                         tapInfo = data.tapInfo;
                         imageName = data.shopImage;
                         maxBuyCount = data.buyLimitCnt;
+                        switch (buyType)
+                        {
+                            case BuyType.gold:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_gold");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.dia:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_dia");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.cash:
+                                imagePriceIcon.enabled = false;
+                                break;
+                            case BuyType.free:
+                                imagePriceIcon.enabled = false;
+                                textPItemBuyCount.text = LocalizationManager.GetLangDesc("Shop_Buyfree");
+                                var pos = textPItemBuyCount.rectTransform.anchoredPosition;
+                                pos.x = 0;
+                                textPItemBuyCount.rectTransform.anchoredPosition = pos;
+                                break;
+                            case BuyType.ad:
+                                imagePriceIcon.enabled = false;
+                                break;
+                        }
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -93,6 +117,30 @@ namespace Percent.Platform
                         tapInfo = data.tapInfo;
                         imageName = data.shopImage;
                         maxBuyCount = data.buyLimitCnt;
+                        switch (buyType)
+                        {
+                            case BuyType.gold:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_gold");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.dia:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_dia");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.cash:
+                                imagePriceIcon.enabled = false;
+                                break;
+                            case BuyType.free:
+                                imagePriceIcon.enabled = false;
+                                textPItemBuyCount.text = LocalizationManager.GetLangDesc("Shop_Buyfree");
+                                var pos = textPItemBuyCount.rectTransform.anchoredPosition;
+                                pos.x = 0;
+                                textPItemBuyCount.rectTransform.anchoredPosition = pos;
+                                break;
+                            case BuyType.ad:
+                                imagePriceIcon.enabled = false;
+                                break;
+                        }
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -196,6 +244,30 @@ namespace Percent.Platform
                         buyType = (BuyType)data.buyType;
                         tapInfo = data.tapInfo;
                         imageName = data.shopImage;
+                        switch (buyType)
+                        {
+                            case BuyType.gold:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_gold");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.dia:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_dia");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.cash:
+                                imagePriceIcon.enabled = false;
+                                break;
+                            case BuyType.free:
+                                imagePriceIcon.enabled = false;
+                                textPItemBuyCount.text = LocalizationManager.GetLangDesc("Shop_Buyfree");
+                                var pos = textPItemBuyCount.rectTransform.anchoredPosition;
+                                pos.x = 0;
+                                textPItemBuyCount.rectTransform.anchoredPosition = pos;
+                                break;
+                            case BuyType.ad:
+                                imagePriceIcon.enabled = false;
+                                break;
+                        }
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -320,23 +392,32 @@ namespace Percent.Platform
                     case ETapInfoKey.tap_hot:
                         textBadge.text = "HOT";
                         textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
                         break;
                     case ETapInfoKey.tap_best:
                         textBadge.text = "BEST";
                         textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
                         break;
                     case ETapInfoKey.tap_new:
                         textBadge.text = "NEW";
                         textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
                         break;
                     case ETapInfoKey.tap_oneplusone:
                         textBadge.text = "1+1";
                         textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
                         textFirstBuy.transform.parent.gameObject.SetActive(true);
                         break;
                     case ETapInfoKey.tap_value:
                         textValue.text = $"{data.tapValue}";
+                        textBadge.transform.parent.gameObject.SetActive(false);
                         textValue.transform.parent.gameObject.SetActive(true);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
                         break;
                 }
             }
@@ -375,6 +456,11 @@ namespace Percent.Platform
             
             if (errorCode == GameBaseShopErrorCode.Success)
             {
+                if (changeProductInfo != null)
+                {
+                    UpdateContent(shopInfo, changeProductInfo);
+                }
+                
                 //구매한 상품에 대한 정보
                 //shopProductInfo
                 switch (shopId)

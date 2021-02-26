@@ -25,7 +25,8 @@ namespace ED
             camera = GetComponent<Camera>();
 
             var split = (Screen.height / (float)Screen.width - 1.777f);
-            var height = Mathf.Lerp(-17.09f, -15.77f, split / 0.388f);
+            //var height = Mathf.Lerp(-17.09f, -15.77f, split / 0.388f);
+            var height = Mathf.Lerp(transform.localPosition.y, transform.localPosition.y + 1.32f, split / 0.388f);
 
 
             if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())

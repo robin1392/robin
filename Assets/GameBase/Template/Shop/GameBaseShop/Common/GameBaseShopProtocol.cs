@@ -4,6 +4,7 @@ using Service.Core;
 using Service.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace Template.Shop.GameBaseShop.Common
 {
@@ -252,7 +253,7 @@ namespace Template.Shop.GameBaseShop.Common
         }
 
 
-        public delegate bool ReceiveShopPurchaseTestAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData);
+        public delegate bool ReceiveShopPurchaseTestAckDelegate(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData);
         public ReceiveShopPurchaseTestAckDelegate ReceiveShopPurchaseTestAckHandler;
         public bool ReceiveShopPurchaseTestAck(ISender sender, byte[] msg, int length)
         {
@@ -261,9 +262,10 @@ namespace Template.Shop.GameBaseShop.Common
             GameBaseShopErrorCode errorCode = (GameBaseShopErrorCode)(int)jObject["errorCode"];
             int shopId = (int)jObject["shopId"];
             ShopProductInfo shopProductInfo = JsonConvert.DeserializeObject<ShopProductInfo>(jObject["shopProductInfo"].ToString());
+            ShopProductInfo changeProductInfo = JsonConvert.DeserializeObject<ShopProductInfo>(jObject["changeProductInfo"].ToString());
             ItemBaseInfo payItemInfo = JsonConvert.DeserializeObject<ItemBaseInfo>(jObject["payItemInfo"].ToString());
             ItemBaseInfo[] arrayRewardItemInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayRewardItemInfo"].ToString());
-            return ReceiveShopPurchaseTestAckHandler(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, null);
+            return ReceiveShopPurchaseTestAckHandler(errorCode, shopId, shopProductInfo, changeProductInfo, payItemInfo, arrayRewardItemInfo, null);
         }
         #endregion    
 
