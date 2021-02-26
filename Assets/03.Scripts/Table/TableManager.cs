@@ -104,10 +104,11 @@ public class TableManager : Singleton<TableManager>
         remoteTDataVersion = (string)jObjServer["dataVersion"];
 
 
-        string targetPath = localPath + "Table/" + Enviroment;
-        if (File.Exists(targetPath + "/version.json") == true)
+        string targetPath = Path.Combine(localPath, "Table", Enviroment);
+        string versionFile = Path.Combine(targetPath, "version.json");
+        if (File.Exists(versionFile) == true)
         {
-            using (StreamReader r = new StreamReader(targetPath + "/version.json"))
+            using (StreamReader r = new StreamReader(versionFile))
             {
                 string jsonClient = r.ReadToEnd();
                 var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonClient);
@@ -118,13 +119,14 @@ public class TableManager : Singleton<TableManager>
         if (remoteTDataVersion != localTDataVersion)
         {
             // 패치 파일 로컬 저장
-            if (RequestPatchFile(url + "/" + remoteTDataVersion + ".zip", targetPath) == false)
+            var reqUrl = Path.Combine(url, remoteTDataVersion + ".zip");
+            if (RequestPatchFile(reqUrl, targetPath) == false)
             {
                 return;
             }
 
             // 서버 버젼 파일 로컬 저장
-            File.WriteAllText(targetPath + "/version.json", jsonServer);
+            File.WriteAllText(versionFile, jsonServer);
             Debug.Log("Download Table Complete !!! ");
         }
 
@@ -149,14 +151,14 @@ public class TableManager : Singleton<TableManager>
                 Directory.CreateDirectory(targetPath);
             }
 
-
-            using (var fileStream = new FileStream(targetPath + "/patchFile.zip", FileMode.Create, FileAccess.Write))
+            var filePath = Path.Combine(targetPath, "patchFile.zip");
+            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
                 resStream.CopyTo(fileStream);
             }
 
-            LoadZipFile(targetPath + "/patchFile.zip", targetPath);
-            File.Delete(targetPath + "/patchFile.zip");
+            LoadZipFile(filePath, targetPath);
+            File.Delete(filePath);
         }
         catch (Exception e)
         {
@@ -218,7 +220,8 @@ public class TableManager : Singleton<TableManager>
                         Stream zipStream = zf.GetInputStream(zipEntry);
 
                         // Manipulate the output filename here as desired.
-                        string fullZipToPath = targetPath + "/" + Path.GetFileName(entryFileName);
+                        string fullZipToPath = Path.Combine(targetPath, Path.GetFileName(entryFileName));
+                        //string fullZipToPath = targetPath + "/" + Path.GetFileName(entryFileName);
 
                         // Unzip file in buffered chunks. This is just as fast as unpacking to a buffer the full size
                         // of the file, but does not waste memory.

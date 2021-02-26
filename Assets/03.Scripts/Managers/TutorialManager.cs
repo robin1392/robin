@@ -8,6 +8,7 @@ using Debug = ED.Debug;
 using DG.Tweening;
 using ED;
 using RandomWarsProtocol;
+using Template.User.RandomwarsUser.Common;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -264,7 +265,8 @@ public class TutorialManager : MonoBehaviour
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
                 image_NextStep.raycastTarget = false;
                 Time.timeScale = 1f;
-                NetworkManager.Get().EndTutorialReq(UserInfoManager.Get().GetUserInfo().userID);
+                NetworkManager.session.UserTemplate.UserTutorialEndReq(NetworkManager.session.HttpClient, OnEndTutorial);
+                //NetworkManager.Get().EndTutorialReq(UserInfoManager.Get().GetUserInfo().userID);
                 break;
         }
     }
@@ -274,5 +276,10 @@ public class TutorialManager : MonoBehaviour
         StopAllCoroutines();
         stepCount = 15;
         Step();
+    }
+
+    bool OnEndTutorial(ERandomwarsUserErrorCode errorCode, bool endTutorial)
+    {
+        return true;
     }
 }

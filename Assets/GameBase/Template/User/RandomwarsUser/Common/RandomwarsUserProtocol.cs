@@ -17,6 +17,10 @@ namespace Template.User.RandomwarsUser.Common
         UserRewardReq,
         UserRewardAck,
 
+        UserTutorialEndReq,
+        UserTutorialEndAck,
+
+
         End,
     }
 
@@ -31,7 +35,8 @@ namespace Template.User.RandomwarsUser.Common
                 {(int)ERandomwarsProtocol.UserInfoAck, ReceiveUserInfoAck},
                 {(int)ERandomwarsProtocol.UserRewardReq, ReceiveUserRewardReq},
                 {(int)ERandomwarsProtocol.UserRewardAck, ReceiveUserRewardAck},
-           };
+                {(int)ERandomwarsProtocol.UserTutorialEndReq, ReceiveUserTutorialEndReq},
+                {(int)ERandomwarsProtocol.UserTutorialEndAck, ReceiveUserTutorialEndAck},           };
         }
 
 
@@ -137,5 +142,46 @@ namespace Template.User.RandomwarsUser.Common
         }
         #endregion                      
 
+        #region UserTutorialEnd ---------------------------------------------------------------------
+        public bool UserTutorialEndReq(ISender sender, ReceiveUserTutorialEndAckDelegate callback)
+        {
+            ReceiveUserTutorialEndAckHandler = callback;
+            JObject json = new JObject();
+            json.Add("accessToken", sender.GetAccessToken());
+            return sender.SendHttpPost((int)ERandomwarsProtocol.UserTutorialEndReq, "usertutorialend", json.ToString());
+        }
+
+
+        public delegate (ERandomwarsUserErrorCode errorCode, bool endTutorial) ReceiveUserTutorialEndReqDelegate(string accessToken);
+        public ReceiveUserTutorialEndReqDelegate ReceiveUserTutorialEndReqHandler;
+        public bool ReceiveUserTutorialEndReq(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            string accessToken = (string)jObject["accessToken"];
+            var res = ReceiveUserTutorialEndReqHandler(accessToken);
+            return UserTutorialEndAck(sender, res.errorCode, res.endTutorial);
+        }
+
+        public bool UserTutorialEndAck(ISender sender, ERandomwarsUserErrorCode errorCode, bool endTutorial)
+        {
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            json.Add("endTutorial", (bool)endTutorial);
+            return sender.SendHttpResult(json.ToString());
+        }
+
+
+        public delegate bool ReceiveUserTutorialEndAckDelegate(ERandomwarsUserErrorCode errorCode, bool endTutorial);
+        public ReceiveUserTutorialEndAckDelegate ReceiveUserTutorialEndAckHandler;
+        public bool ReceiveUserTutorialEndAck(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            ERandomwarsUserErrorCode errorCode = (ERandomwarsUserErrorCode)(int)jObject["errorCode"];
+            bool endTutorial = (bool)jObject["endTutorial"];
+            return ReceiveUserTutorialEndAckHandler(errorCode, endTutorial);
+        }
+        #endregion    
     }
 }
