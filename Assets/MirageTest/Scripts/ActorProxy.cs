@@ -12,9 +12,10 @@ namespace MirageTest.Scripts
         public ActorAI actorAi;
         public Renderer renderer;
 
-        [SyncVar] public int owner;
+        [SyncVar] public string owner;
         [SyncVar(hook = nameof(SetTeam))] public int team;
-        
+        [SyncVar] public byte spawnSlot; //0 ~ 14 주사위 필드 슬롯, 15 바텀 , 16 탑, 17 보스 
+
         private void Awake()
         {
             if (NetIdentity == null)
@@ -28,9 +29,10 @@ namespace MirageTest.Scripts
 
         public void SetTeam(int oldValue, int newValue)
         {
-            SetTeamInternal(newValue);
+            actor.Team = newValue;
+            renderer.material.color = newValue == 1? Color.blue : Color.red;
         }
-
+        
         private void StartServer()
         {
         }
@@ -55,12 +57,6 @@ namespace MirageTest.Scripts
             {
                 ServerObjectManager.Destroy(gameObject);
             }
-        }
-
-        public void SetTeamInternal(int team)
-        {
-            actor.Team = team;
-            renderer.material.color =  team == 1? Color.blue : Color.red;
         }
     }
 }

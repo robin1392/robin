@@ -33,7 +33,7 @@ namespace _Scripts.RCore.Networking
                 return;
             }
 
-            string address = "127.0.0.1";//"192.168.0.7",
+            string address = "192.168.10.57";//"127.0.0.1";//"192.168.0.7",
             ushort port = GetComponent<KcpTransport>().Port;
             Connect(address, port).Forget();
         }

@@ -235,7 +235,7 @@ namespace ED
                         m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel + dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
                         m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
                         m.attackSpeed = dataDiceInfo.attackSpeed;
-                        m.moveSpeed = dataDiceInfo.moveSpeed;
+                        m.moveSpeed = dataDiceInfo.moveSpeed; 
                         m.eyeLevel = 1;
                         m.ingameUpgradeLevel = infos[i].DiceInGameUp;
                         m.Initialize(MinionDestroyCallback);
