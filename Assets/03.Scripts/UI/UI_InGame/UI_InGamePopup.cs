@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ED;
 using RandomWarsProtocol;
+using Service.Core;
 
 public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 {
@@ -105,7 +106,7 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         popup_Waiting.SetActive(view);
     }
 
-    public void SetPopupResult(bool view, bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
+    public void SetPopupResult(bool view, bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
     {
         popup_Result.gameObject.SetActive(view);
         if (view) popup_Result.Initialize(winLose, winningStreak, normalReward, streakReward, perfectReward);

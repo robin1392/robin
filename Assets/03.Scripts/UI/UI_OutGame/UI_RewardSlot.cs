@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+using Service.Core;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
+using Template.Season.RandomwarsSeason.Common;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -103,8 +105,10 @@ public class UI_RewardSlot : MonoBehaviour
         if (getVipRow + 1 == row)
         {
             isGetPremium = true;
-            NetworkManager.Get().GetSeasonPassRewardReq(UserInfoManager.Get().GetUserInfo().userID,
-                (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, row, GetCallback);
+            //NetworkManager.Get().GetSeasonPassRewardReq(UserInfoManager.Get().GetUserInfo().userID,
+            //    (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, row, GetCallback);
+            NetworkManager.session.SeasonTemplate.SeasonPassRewardReq(NetworkManager.session.HttpClient, 
+                row, (int)REWARD_TARGET_TYPE.SEASON_PASS_BUY, OnReceiveSeasonPassRewardAck);
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
         else
@@ -118,8 +122,11 @@ public class UI_RewardSlot : MonoBehaviour
         if (getNormalRow + 1 == row)
         {
             isGetPremium = false;
-            NetworkManager.Get().GetSeasonPassRewardReq(UserInfoManager.Get().GetUserInfo().userID,
-                (int) REWARD_TARGET_TYPE.ALL, row, GetCallback);
+            //NetworkManager.Get().GetSeasonPassRewardReq(UserInfoManager.Get().GetUserInfo().userID,
+            //    (int) REWARD_TARGET_TYPE.ALL, row, GetCallback);
+            NetworkManager.session.SeasonTemplate.SeasonPassRewardReq(NetworkManager.session.HttpClient,
+                row, (int)REWARD_TARGET_TYPE.ALL, OnReceiveSeasonPassRewardAck);
+
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
         else
@@ -128,10 +135,10 @@ public class UI_RewardSlot : MonoBehaviour
         }
     }
 
-    public void GetCallback(MsgGetSeasonPassRewardAck msg)
+    public bool OnReceiveSeasonPassRewardAck(ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsSeasonErrorCode.Success)
         {
             if (isGetPremium)
             {
@@ -142,11 +149,12 @@ public class UI_RewardSlot : MonoBehaviour
                 getNormalRow++;
             }
             
-            UI_Main.Get().AddReward(msg.RewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
-            UI_Popup_Quest.QuestUpdate(msg.QuestData);
+            UI_Main.Get().AddReward(arrayRewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
+            UI_Popup_Quest.QuestUpdate(arrayQuestData);
         }
         
         SetButton();
+        return true;
     }
 
     public void Click_BuyReward()
@@ -156,34 +164,34 @@ public class UI_RewardSlot : MonoBehaviour
 
     public void SendBuyReward()
     {
-        NetworkManager.Get().SeasonPassRewardStepReq(UserInfoManager.Get().GetUserInfo().userID, row, BuyRewardCallback);
+        //NetworkManager.Get().SeasonPassRewardStepReq(UserInfoManager.Get().GetUserInfo().userID, row, BuyRewardCallback);
+        NetworkManager.session.SeasonTemplate.SeasonPassStepReq(NetworkManager.session.HttpClient, row, OnReceiveSeasonPassStepAck);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public void BuyRewardCallback(MsgSeasonPassRewardStepAck msg)
+    public bool OnReceiveSeasonPassStepAck(ERandomwarsSeasonErrorCode errorCode, int rewardId, ItemBaseInfo useItemInfo, ItemBaseInfo rewardInfo, QuestData[] arrayQuestData)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
         UI_Popup.AllClose();
         
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsSeasonErrorCode.Success)
         {
-
-            switch (msg.UseItemInfo.ItemId)
+            switch (useItemInfo.ItemId)
             {
                 case 1:
-                    UserInfoManager.Get().GetUserInfo().gold += msg.UseItemInfo.Value;
+                    UserInfoManager.Get().GetUserInfo().gold += useItemInfo.Value;
                     break;
                 case 2:
-                    UserInfoManager.Get().GetUserInfo().diamond += msg.UseItemInfo.Value;
+                    UserInfoManager.Get().GetUserInfo().diamond += useItemInfo.Value;
                     break;
             }
 
-            UserInfoManager.Get().GetUserInfo().seasonPassRewardStep = msg.OpenRewardId;
-            UserInfoManager.Get().GetUserInfo().seasonTrophy += msg.RewardInfo.Value;
+            UserInfoManager.Get().GetUserInfo().seasonPassRewardStep = rewardId;
+            UserInfoManager.Get().GetUserInfo().seasonTrophy += rewardInfo.Value;
             
             UI_Main.Get().RefreshUserInfoUI();
-            UI_Popup_Quest.QuestUpdate(msg.QuestData);
+            UI_Popup_Quest.QuestUpdate(arrayQuestData);
             SendMessageUpwards("RefreshSeasonInfo", SendMessageOptions.DontRequireReceiver);
 
             transform.parent.BroadcastMessage("SetButton");
@@ -192,6 +200,8 @@ public class UI_RewardSlot : MonoBehaviour
         {
             UI_ErrorMessage.Get().ShowMessage("재화가 부족합니다.");
         }
+
+        return true;
     }
 
     public void SetSplitLine(bool top, bool middle, bool bottom)

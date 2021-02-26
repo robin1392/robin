@@ -18,8 +18,7 @@ namespace GameBaseClient
             session.Init(new GameBaseClientConfig());
             
             // api 요청
-            string playerGuid = "testguid1234354";
-            session.ShopTemplate.ShopInfoReq(session.HttpClient, playerGuid, OnShopInfoAck);
+            session.ShopTemplate.ShopInfoReq(session.HttpClient, OnShopInfoAck);
 
 
             while(true)

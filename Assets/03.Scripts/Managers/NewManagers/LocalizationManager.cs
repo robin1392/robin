@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CodeStage.AntiCheat.ObscuredTypes;
 
 
 public class LocalizationManager
@@ -9,14 +10,13 @@ public class LocalizationManager
 
     public static string GetLocalCode()
     {
-        string countryCode = "";
-        
-        countryCode = Application.systemLanguage.ToString().Substring(0, 2).ToUpper();
-        
-        if (countryCode.Length == 0)
-            countryCode = "KO";
-        
-        if (countryCode != "KO") return "EN";
+        string countryCode = ObscuredPrefs.GetString("CountryCode");
+
+        if (string.IsNullOrEmpty(countryCode))
+        {
+            countryCode = Application.systemLanguage.ToString().Substring(0, 2).ToUpper();
+            ObscuredPrefs.SetString("CountryCode", countryCode);
+        }
 
         return countryCode;
     }
@@ -28,70 +28,68 @@ public class LocalizationManager
 
     public static string GetLangDesc(int textid)
     {
-        string descString = "";
-
         Global.COUNTRYCODE code = UnityUtil.GetEnumByStringNonError<Global.COUNTRYCODE>(GetLocalCode());
 
-        /*descString = code == Global.COUNTRYCODE.KO ?
-            JsonDataManager.Get().dataLangKO.GetData(textid).textDesc :
-            JsonDataManager.Get().dataLangEN.GetData(textid).textDesc;*/
-        
-        if (code == Global.COUNTRYCODE.KO)
+        switch (code)
         {
-            RandomWarsResource.Data.TDataLangKO tDataLangKO;
-            if (TableManager.Get().LangKO.GetData(textid, out tDataLangKO) == false)
+            case Global.COUNTRYCODE.KO:
             {
-                descString = "KO " + textid.ToString();
-                return descString;
+                RandomWarsResource.Data.TDataLangKO tDataLangKO;
+                if (TableManager.Get().LangKO.GetData(textid, out tDataLangKO))
+                {
+                    return tDataLangKO.textDesc;
+                }
+                else
+                {
+                    return $"KO {textid}";
+                }
             }
-
-            descString = tDataLangKO.textDesc;
-        }
-        else
-        {
-            RandomWarsResource.Data.TDataLangKO tDataLangKO;
-            if (TableManager.Get().LangKO.GetData(textid, out tDataLangKO) == false)
+            default:
             {
-                descString = "KO " + textid.ToString();
-                return descString;
+                RandomWarsResource.Data.TDataLangEN tDataLangEN;
+                if (TableManager.Get().LangEN.GetData(textid, out tDataLangEN))
+                {
+                    return tDataLangEN.textDesc;
+                }
+                else
+                {
+                    return $"EN {textid}";
+                }
             }
-
-            descString = tDataLangKO.textDesc;
         }
-        
-        return descString;
     }
 
     public static string GetLangDesc(string textid)
     {
-        string descString = "";
-
         Global.COUNTRYCODE code = UnityUtil.GetEnumByStringNonError<Global.COUNTRYCODE>(GetLocalCode());
 
-        if (code == Global.COUNTRYCODE.KO)
+        switch (code)
         {
-            RandomWarsResource.Data.TDataLangKO tDataLangKO;
-            if (TableManager.Get().LangKO.GetData(text => String.Compare(text.name, textid, StringComparison.Ordinal) == 0, out tDataLangKO) == false)
+            case Global.COUNTRYCODE.KO:
             {
-                descString = "KO " + textid.ToString();
-                return descString;
+                RandomWarsResource.Data.TDataLangKO tDataLangKO;
+                if (TableManager.Get().LangKO.GetData(text => String.Compare(text.name, textid, StringComparison.Ordinal) == 0, out tDataLangKO))
+                {
+                    return tDataLangKO.textDesc;
+                }
+                else
+                {
+                    return $"KO {textid}";
+                }
             }
-
-            descString = tDataLangKO.textDesc;
-        }
-        else
-        {
-            RandomWarsResource.Data.TDataLangKO tDataLangKO;
-            if (TableManager.Get().LangKO.GetData(text => String.Compare(text.name, textid, StringComparison.Ordinal) == 0, out tDataLangKO) == false)
+            default:
             {
-                descString = "KO " + textid.ToString();
-                return descString;
+                RandomWarsResource.Data.TDataLangEN tDataLangEN;
+                if (TableManager.Get().LangEN.GetData(text => String.Compare(text.name, textid, StringComparison.Ordinal) == 0, out tDataLangEN))
+                {
+                    return tDataLangEN.textDesc;
+                }
+                else
+                {
+                    return $"EN {textid}";
+                }
             }
-
-            descString = tDataLangKO.textDesc;
         }
-        
-        return descString;
     }
     
     #endregion

@@ -161,11 +161,11 @@ namespace Percent.Platform
                 
                 ProductType type;
                 // Event
-                var keys = TableManager.Get().EventShopList.Keys;
-                TDataEventShopList dataEvent;
+                var keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataEvent;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().EventShopList.GetData(key, out dataEvent))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataEvent))
                     {
                         type = dataEvent.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
 #if UNITY_IOS
@@ -176,11 +176,11 @@ namespace Percent.Platform
                     }
                 }
                 // Package
-                keys = TableManager.Get().PackageShopList.Keys;
-                TDataPackageShopList dataPackage;
+                keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataPackage;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().PackageShopList.GetData(key, out dataPackage))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataPackage))
                     {
                         type = dataPackage.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
 #if UNITY_IOS
@@ -191,11 +191,11 @@ namespace Percent.Platform
                     }
                 }
                 // Premium
-                keys = TableManager.Get().PremiumShopList.Keys;
-                TDataPremiumShopList dataPremium;
+                keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataPremium;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().PremiumShopList.GetData(key, out dataPremium))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataPremium))
                     {
                         type = ProductType.NonConsumable;
 #if UNITY_IOS
@@ -217,11 +217,11 @@ namespace Percent.Platform
                 //     }
                 // }
                 // Diamond
-                keys = TableManager.Get().DiaShopList.Keys;
-                TDataDiaShopList dataDia;
+                keys = TableManager.Get().ShopProductList.Keys;
+                TDataShopProductList dataDia;
                 foreach (var key in keys)
                 {
-                    if (TableManager.Get().DiaShopList.GetData(key, out dataDia))
+                    if (TableManager.Get().ShopProductList.GetData(key, out dataDia))
                     {
                         type = ProductType.Consumable;
 #if UNITY_IOS
@@ -443,7 +443,7 @@ namespace Percent.Platform
             dictPendingProducts.Remove(args.purchasedProduct.transactionID);
             storeController.ConfirmPendingPurchase(args.purchasedProduct);
             
-            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, playerGuid, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Instance.ShowPurchaseResult);
+            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Get().ShowPurchaseResult);
         }
 
         private void ResultPurchaseSuccessed(string text, PurchaseEventArgs args)

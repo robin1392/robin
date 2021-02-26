@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
 using ED;
 using UnityEngine;
-using RandomWarsProtocol;
+using Service.Core;
+using Template.User.RandomwarsUser.Common;
+//using RandomWarsProtocol;
 using Debug = UnityEngine.Debug;
 
 public class UserInfo
@@ -13,10 +15,17 @@ public class UserInfo
     private const string UserNickNameKey = "UserNickNameKey";
     private Action<string> _onSetUserId;
     private Action<string> _onSetUserNickName;
-    
+
     #region user info variable
-    
-    private string _userID;
+
+    private string _platformID = string.Empty;
+    public string platformID
+    {
+        get => _platformID;
+        private set => _platformID = value;
+    }
+
+    private string _userID = string.Empty;
     public string userID
     {
         get => _userID;
@@ -118,7 +127,7 @@ public class UserInfo
 
         //FixDeckOld();
         
-        _userID = ObscuredPrefs.GetString(UserIdKey, "" );
+        _platformID = ObscuredPrefs.GetString(UserIdKey, "" );
         _userNickName = ObscuredPrefs.GetString(UserNickNameKey, "" );
         
         // if (_slotDeck[0].Length < 20 || _slotDeck[1].Length < 20 || _slotDeck[2].Length < 20)
@@ -173,16 +182,22 @@ public class UserInfo
     
     #region set
 
-    public void SetUserKey(string id)
+    public void SetPlatformID(string id)
     {
-        _userID = id;
+        _platformID = id;
         
-        ObscuredPrefs.SetString(UserIdKey, _userID);
+        ObscuredPrefs.SetString(UserIdKey, _platformID);
         ObscuredPrefs.Save();    
         
         _onSetUserId?.Invoke(id);
     }
-    
+
+    public void SetUserId(string id)
+    {
+        _userID = id;
+    }
+
+
     public void SetNickName(string nickname)
     {
         _userNickName = nickname;
@@ -338,34 +353,35 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo;
     }
 
-    public void SetUserInfo(MsgUserInfo info, MsgSeasonPassInfo seasonPassInfo)
+    public void SetUserInfo(MsgUserInfo info, UserSeasonInfo seasonInfo)
     {
-        _userInfo.SetUserKey(info.UserId);
-        _userInfo.SetNickName(info.Name);
+        _userInfo.SetUserId(info.UserId);
+        _userInfo.SetNickName(info.UserName);
+
         _userInfo.isEndTutorial = info.EndTutorial;
-        _userInfo.diamond = info.Goods.Diamond;
-        _userInfo.gold = info.Goods.Gold;
-        _userInfo.key = info.Goods.Key;
+        _userInfo.diamond = info.Diamond;
+        _userInfo.gold = info.Gold;
+        _userInfo.key = info.Key;
         _userInfo.trophy = info.Trophy;
         _userInfo.highTrophy = info.HighTrophy;
         _userInfo.winCount = info.WinCount;
         _userInfo.defeatCount = info.DefeatCount;
         _userInfo.nClass = Convert.ToInt32(info.Class);
         _userInfo.winStreak = Convert.ToInt32(info.WinStreak);
-        _userInfo.seasonPassId = seasonPassInfo.SeasonPassId;
+        _userInfo.seasonPassId = seasonInfo.SeasonId;
         _userInfo.buyVIP = info.IsBuyVipPass;
-        _userInfo.buySeasonPass = seasonPassInfo.BuySeasonPass;
-        _userInfo.seasonTrophy = seasonPassInfo.SeasonTrophy;
-        _userInfo.rankPoint = info.RankingPoint;
+        _userInfo.buySeasonPass = seasonInfo.BuySeasonPass;
+        _userInfo.seasonTrophy = seasonInfo.SeasonTrophy;
+        _userInfo.rankPoint = seasonInfo.RankPoint;
         
-        if (seasonPassInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonPassInfo.SeasonPassRewardIds);
+        if (seasonInfo.SeasonPassRewardIds != null) _userInfo.seasonPassRewardIds = new List<int>(seasonInfo.SeasonPassRewardIds);
         else _userInfo.seasonPassRewardIds = new List<int>(new int[]{0, 0});
         if (info.TrophyRewardIds != null) _userInfo.trophyRewardIds = new List<int>(info.TrophyRewardIds);
         else _userInfo.trophyRewardIds = new List<int>();
-        _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonPassInfo.SeasonResetRemainTime);
-        _userInfo.needSeasonReset = seasonPassInfo.NeedSeasonReset;
-        _userInfo.isFreeSeason = seasonPassInfo.IsFreeSeason;
-        _userInfo.seasonPassRewardStep = seasonPassInfo.SeasonPassRewardStep;
+        _userInfo.seasonEndTime = DateTime.Now.AddSeconds(seasonInfo.SeasonResetRemainTime);
+        _userInfo.needSeasonReset = seasonInfo.NeedSeasonReset;
+        _userInfo.isFreeSeason = seasonInfo.IsFreeSeason;
+        _userInfo.seasonPassRewardStep = seasonInfo.SeasonPassRewardStep;
 
         // if (seasonPassInfo.NeedSeasonReset)
         // {
@@ -404,7 +420,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         return _userInfo.activateDeckIndex;
     }
 
-    public void SetDeck(MsgUserDeck[] userDeck)
+    public void SetDeck(UserDeck[] userDeck)
     {
         for (int i = 0; i < userDeck.Length; i++)
         {
@@ -415,7 +431,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         }
     }
 
-    public void SetDice(MsgUserDice[] userDice)
+    public void SetDice(UserDice[] userDice)
     {
         _userInfo.dicGettedDice.Clear();
 
@@ -426,7 +442,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
         }
     }
 
-    public void SetBox(MsgUserBox[] msgUserBox)
+    public void SetBox(UserBox[] msgUserBox)
     {
         _userInfo.dicBox.Clear();
 

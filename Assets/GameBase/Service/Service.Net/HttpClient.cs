@@ -4,6 +4,7 @@ using System.Net;
 using System.IO;
 using System.Text;
 using System.Threading;
+using Service.Core;
 
 
 namespace Service.Net
@@ -23,6 +24,18 @@ namespace Service.Net
 
         public void Dispose()
         {
+        }
+
+
+        public void SetAccessToken(string accessToken)
+        {
+
+        }
+
+
+        public string GetAccessToken()
+        {
+            return string.Empty;
         }
 
 
@@ -52,6 +65,7 @@ namespace Service.Net
 
     public class HttpClient : ISender
     {
+        private string _accessToken;
         private string _baseUrl;
         private GameSessionClient _gameSession;
         private static Queue<HttpResponse> _responseQueue;
@@ -73,6 +87,18 @@ namespace Service.Net
             _responseQueue.Clear();
             _responseQueue = null;
             allDone = null;
+        }
+
+
+        public void SetAccessToken(string accessToken)
+        {
+            _accessToken = accessToken;
+        }
+
+
+        public string GetAccessToken()
+        {
+            return _accessToken;
         }
 
 
@@ -104,12 +130,15 @@ namespace Service.Net
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = "application/json";
             request.Method = "POST";
-            
+
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(json);
             }
+
+
+            Logger.Debug($"[HTTP REQ - {url}] : {json}");
 
 
             request.BeginGetResponse(new AsyncCallback((asynchronousResult) =>
@@ -119,31 +148,31 @@ namespace Service.Net
                 Stream streamResponse = response.GetResponseStream();
                 StreamReader streamRead = new StreamReader(streamResponse);
 
-                string ackJson = streamRead.ReadToEnd();
-                string tempJson = ackJson;
-                tempJson = tempJson.Replace("\\u0022", "\"");
-                tempJson = tempJson.Replace("\\n", "");
-                tempJson = tempJson.Replace("\\r", "");
-                tempJson = tempJson.Replace("\\\"{", "{");
-                tempJson = tempJson.Replace("}\\\"", "}");
-                tempJson = tempJson.Replace("\"{", "{");
-                tempJson = tempJson.Replace("}\"", "}");
-                tempJson = tempJson.Replace("\\\"[", "[");
-                tempJson = tempJson.Replace("]\\\"", "]");
-                tempJson = tempJson.Replace("\"[", "[");
-                tempJson = tempJson.Replace("]\"", "]");
-                tempJson = tempJson.Replace("\\\\\\\"", "\"");
-                tempJson = tempJson.Replace("\\\"", "\"");
-                tempJson = tempJson.Replace("\\", "");
+                string resJson = streamRead.ReadToEnd();
+                resJson = resJson.Replace("\\u0022", "\"");
+                resJson = resJson.Replace("\\n", "");
+                resJson = resJson.Replace("\\r", "");
+                resJson = resJson.Replace("\\\"{", "{");
+                resJson = resJson.Replace("}\\\"", "}");
+                resJson = resJson.Replace("\"{", "{");
+                resJson = resJson.Replace("}\"", "}");
+                resJson = resJson.Replace("\\\"[", "[");
+                resJson = resJson.Replace("]\\\"", "]");
+                resJson = resJson.Replace("\"[", "[");
+                resJson = resJson.Replace("]\"", "]");
+                resJson = resJson.Replace("\\\\\\\"", "\"");
+                resJson = resJson.Replace("\\\"", "\"");
+                resJson = resJson.Replace("\\", "");
 
 
-                byte[] ackBytes = Encoding.UTF8.GetBytes(tempJson); 
+                byte[] ackBytes = Encoding.UTF8.GetBytes(resJson);
                 _gameSession.PushExternalMessage(
                     this,
-                    protocolId + 1, 
+                    protocolId + 1,
                     ackBytes,
                     ackBytes.Length);
 
+                Logger.Debug($"[HTTP ACK - {url}] : {resJson}");
 
                 // Close the stream object
                 streamResponse.Close();

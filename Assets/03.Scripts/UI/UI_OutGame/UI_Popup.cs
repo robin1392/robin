@@ -7,6 +7,10 @@ using DG.Tweening;
 
 namespace ED
 {
+    interface IPopup
+    {
+        void Close();
+    }
     public class UI_Popup : MonoBehaviour
     {
         [Header("Setting")]

@@ -4,8 +4,10 @@
 
 using DG.Tweening;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
+using Service.Core;
+using Template.Item.RandomwarsBox.Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -88,7 +90,7 @@ public class UI_BoxOpenPopup : UI_Popup
     private COST_TYPE costType;
     private int cost;
     private int openCount;
-    private MsgOpenBoxAck msg;
+    //private MsgOpenBoxAck msg;
     private AudioSource _currentAudio;
     
     public void Initialize(int id, COST_TYPE costType, int cost)
@@ -202,15 +204,15 @@ public class UI_BoxOpenPopup : UI_Popup
 
     public void Click_Open()
     {
-        NetworkManager.Get().OpenBoxReq(UserInfoManager.Get().GetUserInfo().userID, boxID, Callback_BoxOpen);
+        //NetworkManager.Get().OpenBoxReq(UserInfoManager.Get().GetUserInfo().userID, boxID, Callback_BoxOpen);
+        NetworkManager.session.BoxTemplate.BoxOpenReq(NetworkManager.session.HttpClient, boxID, OnReceiveBoxOpenAck);
         //SetShowItems();
-        
+
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public void Callback_BoxOpen(MsgOpenBoxAck msg)
+    public bool OnReceiveBoxOpenAck(ERandomwarsBoxErrorCode errorCode, ItemBaseInfo[] arrayDeleteItemInfo,  ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
     {
-        this.msg = msg;
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_FALLDOWN);
         
@@ -241,11 +243,11 @@ public class UI_BoxOpenPopup : UI_Popup
         ///
         /// 
 
-        UI_Main.Get().gerResult.Initialize(msg.BoxReward, true, true);
+        UI_Main.Get().gerResult.Initialize(arrayRewardInfo, true, true);
 
-        UI_Popup_Quest.QuestUpdate(msg.QuestData);
+        UI_Popup_Quest.QuestUpdate(arrayQuestData);
         
-        return;
+        return true;
         
         // for (int i = 0; i < msg.BoxReward.Length; i++)
         // {
@@ -385,7 +387,7 @@ public class UI_BoxOpenPopup : UI_Popup
     //     if (crt_TextCount != null) StopCoroutine(crt_TextCount);
     //     ani_Item.gameObject.SetActive(true);
     //
-    //     MsgReward reward = msg.BoxReward[openCount];
+    //     ItemBaseInfo reward = msg.BoxReward[openCount];
     //
     //     RandomWarsResource.Data.TDataItemList tDataItemList;
     //     if (TableManager.Get().ItemList.GetData(reward.ItemId, out tDataItemList) == false)
@@ -549,7 +551,7 @@ public class UI_BoxOpenPopup : UI_Popup
     //     obj_Result.SetActive(true);
     //     ani_Box.gameObject.SetActive(false);
     //     
-    //     List<MsgReward> list = new List<MsgReward>(msg.BoxReward);
+    //     List<ItemBaseInfo> list = new List<ItemBaseInfo>(msg.BoxReward);
     //     
     //     var gold = list.Find(m => m.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
     //     text_ResultGold.text = $"{gold?.Value ?? 0}";

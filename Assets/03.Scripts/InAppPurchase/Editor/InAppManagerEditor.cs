@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Percent.Platform;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode;
 using UnityEngine;
 
 [CustomEditor(typeof(InAppManager))]
@@ -31,14 +30,14 @@ public class InAppManagerEditor : Editor
   
             // PBXProject class represents a project build settings file,
             // here is how to read that in.
-            PBXProject proj = new PBXProject ();
-            proj.ReadFromFile (projPath);
+            //PBXProject proj = new PBXProject ();
+            //proj.ReadFromFile (projPath);
   
-            // Copy plist from the project folder to the build folder
-            proj.AddFileToBuild (proj.GetUnityMainTargetGuid(), proj.AddFile("GoogleService-Info.plist", "GoogleService-Info.plist"));
+            //// Copy plist from the project folder to the build folder
+            //proj.AddFileToBuild (proj.GetUnityMainTargetGuid(), proj.AddFile("GoogleService-Info.plist", "GoogleService-Info.plist"));
   
-            // Write PBXProject object back to the file
-            proj.WriteToFile (projPath);
+            //// Write PBXProject object back to the file
+            //proj.WriteToFile (projPath);
         }
     }
 }

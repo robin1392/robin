@@ -7,7 +7,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 using Percent.Platform.InAppPurchase;
-using RandomWarsProtocol;
+
+using Service.Core;
+//using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine.SceneManagement;
 
@@ -48,10 +50,12 @@ namespace ED
         public UI_Popup_SeasonEnd seasonEndPopup;
         public UI_Popup_SeasonStart seasonStartPopup;
         public UI_CommonMessageBox commonMessageBoxPopup;
-        public UI_Popup menuPopup;
+        public GameObject menuPopup;
         public UI_Popup_SeasonPassUnlock seasonPassUnlockPopup;
         public UI_PopupShopBuy shopBuyPopup;
         public UI_SettingPopup settingPopup;
+        public UI_Popup_DailyShopReset dailyShopResetPopup;
+        public UI_Popup_MoveShop moveShopPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -73,7 +77,6 @@ namespace ED
         public UI_Panel_Dice panel_Dice;
         public CanvasGroup[] arrPanels;
         
-
         private float[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
         private float canvasWidth;
 
@@ -99,11 +102,11 @@ namespace ED
                 ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", seasonEndPopup.Initialize);
             }
 
-            TDataDiaShopList data;
-            if (TableManager.Get().DiaShopList.GetData(pd => pd.isShow == true, out data))
-            {
-                Debug.Log(data.googleProductId + ", " + data.appleProductId);
-            }
+            // TDataShopProductList data;
+            // if (TableManager.Get().ShopProductList.GetData(pd => pd.isShow == true, out data))
+            // {
+            //     Debug.Log(data.googleProductId + ", " + data.appleProductId);
+            // }
             
             HideAnotherPanel();
 
@@ -246,7 +249,7 @@ namespace ED
 
         public void Click_MenuButton()
         {
-            menuPopup.gameObject.SetActive(true);
+            menuPopup.SetActive(true);
         }
 
         public void EditNickname(string str)
@@ -271,7 +274,7 @@ namespace ED
             
             if (NetworkManager.Get().UseLocalServer == true)
             {
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
+                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
                 return;
             }
 
@@ -287,7 +290,7 @@ namespace ED
             
             if (NetworkManager.Get().UseLocalServer == true)
             {
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.COOP, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, NetworkManager.Get().UserId);
+                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.COOP, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
                 return;
             }
 
@@ -354,7 +357,7 @@ namespace ED
             currentPageNum = num;
             const float duration = 0.3f;
             
-            if (currentPageNum == 0) ShopManager.Instance.InitShop();
+            if (currentPageNum == 0) ShopManager.Get().InitShop();
 
             rts_MainPages.DOAnchorPosX(mainPagePosX[num], duration).SetEase(ease).OnComplete(() =>
             {
@@ -539,11 +542,11 @@ namespace ED
             commonMessageBoxPopup.Initialize(title, message, callback);
         }
 
-        public void AddReward(MsgReward[] rewards, Vector3 startPos)
+        public void AddReward(ItemBaseInfo[] rewards, Vector3 startPos)
         {
             if (rewards != null)
             {
-                List<MsgReward> list = new List<MsgReward>();
+                List<ItemBaseInfo> list = new List<ItemBaseInfo>();
 
                 foreach (var reward in rewards)
                 {
@@ -564,7 +567,7 @@ namespace ED
                                 break;
                             default: // 주사위
                             {
-                                MsgReward rw = new MsgReward();
+                                ItemBaseInfo rw = new ItemBaseInfo();
                                 rw.ItemId = reward.ItemId;
                                 rw.Value = reward.Value;
                                 list.Add(rw);

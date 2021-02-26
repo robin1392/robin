@@ -12,6 +12,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using ED;
 using UnityEngine;
 using UnityEngine.Events;
+using Service.Core;
 using RandomWarsService.Network.Socket.NetPacket;
 using RandomWarsService.Network.Http;
 using RandomWarsService.Network.Socket.NetSession;
@@ -19,6 +20,34 @@ using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using Percent.GameBaseClient;
 using UnityEditor;
+
+public class NetLogger2 : ILog
+{
+    public void Info(string text)
+    {
+        UnityEngine.Debug.Log(text);
+    }
+
+    public void Fatal(string text)
+    {
+        UnityEngine.Debug.LogError(text);
+    }
+
+    public void Error(string text)
+    {
+        UnityEngine.Debug.LogError(text);
+    }
+
+    public void Warn(string text)
+    {
+        UnityEngine.Debug.Log(text);
+    }
+
+    public void Debug(string text)
+    {
+        UnityEngine.Debug.Log(text);
+    }
+}
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -33,9 +62,6 @@ public class NetworkManager : Singleton<NetworkManager>
     private HttpClient _httpClient;
 
 
-    // web
-    public WebNetworkCommon webNetCommon { get; private set; }
-    public WebPacket webPacket { get; private set; }
 
     // socket
     private SocketManager _clientSocket = null;
@@ -169,13 +195,13 @@ public class NetworkManager : Singleton<NetworkManager>
     private Action<MsgLevelUpDiceAck> _diceLevelUpCallback;
     private Action<MsgEditUserNameAck> _editUserNameCallback;
     private Action<MsgEndTutorialAck> _endTutorialCallback;
-    private Action<MsgSeasonInfoAck> _seasonInfoCallback;
+    private Action<UserSeasonInfoAck> _seasonInfoCallback;
     private Action<MsgGetRankAck> _getRankCallback;
     private Action<MsgGetSeasonPassRewardAck> _getSeasonPassRewardCallback;
     private Action<MsgGetClassRewardAck> _getClassRewardCallback;
-    private Action<MsgQuestInfoAck> _questInfoCallback;
+    private Action<QuestInfoAck> _questInfoCallback;
     private Action<MsgQuestRewardAck> _questRewardCallback;
-    private Action<MsgQuestDayRewardAck> _questDayRewardCallback;
+    private Action<QuestDayRewardAck> _questDayRewardCallback;
     private Action<MsgSeasonResetAck> _seasonResetCallback;
     private Action<MsgSeasonPassRewardStepAck> _seasonPassRewardStep;
     #endregion
@@ -193,7 +219,10 @@ public class NetworkManager : Singleton<NetworkManager>
         base.Awake();
         
         session = new GameBaseClientSession();
-        session.Init(new GameBaseClientConfig());
+        session.Init(new GameBaseClientConfig
+        {
+            Logger = new NetLogger2(),
+        });
     }
 
     // Start is called before the first frame update
@@ -243,34 +272,14 @@ public class NetworkManager : Singleton<NetworkManager>
         _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
         _httpSender = new HttpSender(_httpClient);
 
-        _httpReceiver.AuthUserAck = OnAuthUserAck;
-        _httpReceiver.UpdateDeckAck = OnUpdateDeckAck;
         _httpReceiver.StartMatchAck = OnStartMatchAck;
         _httpReceiver.StatusMatchAck = OnStatusMatchAck;
         _httpReceiver.StopMatchAck = OnStopMatchAck;
-        _httpReceiver.OpenBoxAck = OnOpenBoxAck;
-        _httpReceiver.LevelUpDiceAck = OnLevelUpDiceAck;
-        _httpReceiver.EditUserNameAck = OnEditUserNameAck;
-        _httpReceiver.EndTutorialAck = OnEndTutorialAck;
-        _httpReceiver.SeasonInfoAck = OnSeasonInfoAck;
-        _httpReceiver.SeasonResetAck = OnSeasonResetAck;
-        _httpReceiver.GetRankAck = OnGetRankAck;
-        _httpReceiver.SeasonPassInfoAck = OnSeasonPassInfoAck;
-        _httpReceiver.SeasonPassRewardStepAck = OnSeasonPassRewardStepAck;
-        _httpReceiver.GetSeasonPassRewardAck = OnGetSeasonPassRewardAck;
-        _httpReceiver.ClassRewardInfoAck = OnClassRewardInfoAck;
-        _httpReceiver.GetClassRewardAck = OnGetClassRewardAck;
-        _httpReceiver.QuestInfoAck = OnQuestInfoAck;
-        _httpReceiver.QuestRewardAck = OnQuestRewardAck;
-        _httpReceiver.QuestDayRewardAck = OnQuestDayRewardAck;
 
 
         //
         _netInfo = new NetInfo();
         _recvJoinPlayerInfoCheck = false;
-
-        webNetCommon = this.gameObject.AddComponent<WebNetworkCommon>();
-        webPacket = this.gameObject.AddComponent<WebPacket>();
 
         _clientSocket = new SocketManager();
         _packetSend = new SocketSender();
@@ -292,9 +301,6 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             DisconnectSocket(true);
         }
-
-        GameObject.Destroy(webPacket);
-        GameObject.Destroy(webNetCommon);
 
         //_battleInfo = null;
 
@@ -574,86 +580,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #region http
 
-    public void AuthUserReq(string userId)
-    {
-        MsgUserAuthReq msg = new MsgUserAuthReq();
-        msg.UserId = userId;
-        _httpSender.AuthUserReq(msg);
-        UnityUtil.Print("SEND AUTH => userid", userId, "green");
-    }
-
-
-    void OnAuthUserAck(MsgUserAuthAck msg)
-    {
-        if (msg.ErrorCode == GameErrorCode.ERROR_USER_NOT_FOUND)
-        {
-            ObscuredPrefs.SetString("UserKey", string.Empty);
-            ObscuredPrefs.Save();
-            UI_Start.Get().SetTextStatus(string.Empty);
-            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
-            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
-            {
-                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
-                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-                AuthUserReq(string.Empty);
-            });
-            return;
-        }
-
-        UserInfoManager.Get().SetUserInfo(msg.UserInfo, msg.UserInfo.SeasonInfo);
-        UserInfoManager.Get().SetDeck(msg.UserDeck);
-        UserInfoManager.Get().SetDice(msg.UserDice);
-        UserInfoManager.Get().SetBox(msg.UserBox);
-        UI_Popup_Quest.QuestUpdate(msg.QuestInfo);
-
-        GameStateManager.Get().UserAuthOK();
-        UnityUtil.Print("RECV AUTH => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-
-    public void EditUserNameReq(string userId, string userName, Action<MsgEditUserNameAck> callback)
-    {
-        MsgEditUserNameReq msg = new MsgEditUserNameReq();
-        msg.UserId = userId;
-        msg.UserName = userName;
-        _editUserNameCallback = callback;
-        _httpSender.EditUserNameReq(msg);
-        UnityUtil.Print("SEND EDIT USER NAME => name", userName, "green");
-    }
-
-
-    void OnEditUserNameAck(MsgEditUserNameAck msg)
-    {
-        if (_editUserNameCallback != null)
-        {
-            _editUserNameCallback(msg);
-        }
-
-        UnityUtil.Print("RECV EDIT USER NAME => name", msg.UserName, "green");
-    }
-
-
-    public void EndTutorialReq(string userId, Action<MsgEndTutorialAck> callback)
-    {
-        MsgEndTutorialReq msg = new MsgEndTutorialReq();
-        msg.UserId = userId;
-        _endTutorialCallback = callback;
-        _httpSender.EndTutorialReq(msg);
-        UnityUtil.Print("SEND END TUTORIAL => userId", userId, "green");
-    }
-
-
-    void OnEndTutorialAck(MsgEndTutorialAck msg)
-    {
-        if (_endTutorialCallback != null)
-        {
-            _endTutorialCallback(msg);
-        }
-
-        UnityUtil.Print("RECV END TUTORIAL => endTutorial", msg.EndTutorial.ToString(), "green");
-    }
-
-
 
     IEnumerator WaitForMatch()
     {
@@ -774,304 +700,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
         UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
         UnityUtil.Print("RECV MATCH STOP => ErrorCode", msg.ErrorCode.ToString(), "green");
-    }
-
-
-    public void UpdateDeckReq(string userId, sbyte deckIndex, int[] deckIds)
-    {
-        MsgUpdateDeckReq msg = new MsgUpdateDeckReq();
-        msg.UserId = userId;
-        msg.DeckIndex = deckIndex;
-        msg.DiceIds = deckIds;
-        _httpSender.UpdateDeckReq(msg);
-        UnityUtil.Print("SEND DECK UPDATE => index", string.Format("index:{0}, deck:[{1}]", deckIndex, string.Join(",", deckIds)), "green");
-    }
-
-
-    void OnUpdateDeckAck(MsgUpdateDeckAck msg)
-    {
-        UserInfoManager.Get().GetUserInfo().SetDeck(msg.DeckIndex, msg.DiceIds);
-
-        ED.UI_Panel_Dice panelDice = FindObjectOfType<ED.UI_Panel_Dice>();
-        panelDice.CallBackDeckUpdate();
-        UnityUtil.Print("RECV DECK UPDATE => userid", string.Format("index:{0}, deck:[{1}]", msg.DeckIndex, string.Join(",", msg.DiceIds)), "green");
-    }
-
-
-
-    public void OpenBoxReq(string userId, int boxId, Action<MsgOpenBoxAck> callback)
-    {
-        MsgOpenBoxReq msg = new MsgOpenBoxReq();
-        msg.UserId = userId;
-        msg.BoxId = boxId;
-        _boxOpenCallback = callback;
-        _httpSender.OpenBoxReq(msg);
-        UnityUtil.Print("SEND OPEN BOX => index", string.Format("boxId:{0}", boxId), "green");
-    }
-
-    void OnOpenBoxAck(MsgOpenBoxAck msg)
-    {
-        if (_boxOpenCallback != null)
-        {
-            _boxOpenCallback(msg);
-        }
-        UnityUtil.Print("RECV OPEN BOX => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
-    }
-
-
-
-
-    public void LevelUpDiceReq(string userId, int diceId, Action<MsgLevelUpDiceAck> callback)
-    {
-        MsgLevelUpDiceReq msg = new MsgLevelUpDiceReq();
-        msg.UserId = userId;
-        msg.DiceId = diceId;
-        _diceLevelUpCallback = callback;
-        _httpSender.LevelUpDiceReq(msg);
-        UnityUtil.Print("SEND LEVELUP DICE => index", string.Format("diceId:{0}", diceId), "green");
-    }
-
-    void OnLevelUpDiceAck(MsgLevelUpDiceAck msg)
-    {
-        if (_diceLevelUpCallback != null)
-        {
-            _diceLevelUpCallback(msg);
-        }
-        UnityUtil.Print("RECV LEVELUP DICE => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
-    }
-
-    public void GetSeasonInfoReq(string userId, Action<MsgSeasonInfoAck> callback)
-    {
-        MsgSeasonInfoReq msg = new MsgSeasonInfoReq();
-        msg.UserId = userId;
-        _seasonInfoCallback = callback;
-        _httpSender.SeasonInfoReq(msg);
-        UnityUtil.Print("SEND SEASON INFO => index", string.Format("userId:{0}", userId), "green");
-    }
-
-    void OnSeasonInfoAck(MsgSeasonInfoAck msg)
-    {
-        if (_seasonInfoCallback != null)
-        {
-            _seasonInfoCallback(msg);
-        }
-    }
-
-
-    public void SeasonResetReq(string userId, Action<MsgSeasonResetAck> callback = null)
-    {
-        MsgSeasonResetReq msg = new MsgSeasonResetReq();
-        msg.UserId = userId;
-        _httpSender.SeasonResetReq(msg);
-        _seasonResetCallback = callback;
-        UnityUtil.Print("SEND SEASON RESET => index", string.Format("userId:{0}", userId), "green");
-    }
-
-
-    void OnSeasonResetAck(MsgSeasonResetAck msg)
-    {
-        if (_seasonResetCallback != null)
-        {
-            _seasonResetCallback(msg);
-        }
-        UnityUtil.Print("RECV SEASON RESET => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-    public void GetRankReq(string userId, int pageNo, Action<MsgGetRankAck> callback)
-    {
-        MsgGetRankReq msg = new MsgGetRankReq();
-        msg.UserId = userId;
-        msg.PageNo = pageNo;
-        _getRankCallback = callback;
-        _httpSender.GetRankReq(msg);
-        UnityUtil.Print("SEND GET RANK => index", string.Format("userId:{0}", userId), "green");
-    }
-
-    void OnGetRankAck(MsgGetRankAck msg)
-    {
-        if (_getRankCallback != null)
-        {
-            _getRankCallback(msg);
-        }
-    }
-
-    /// <summary>
-    /// 시즌 패스 정보 요청
-    /// </summary>
-    /// <param name="userId"></param>
-    public void SeasonPassInfoReq(string userId)
-    {
-        MsgSeasonPassInfoReq msg = new MsgSeasonPassInfoReq();
-        msg.UserId = userId;
-        _httpSender.SeasonPassInfoReq(msg);
-        UnityUtil.Print("SEND SEASON PASS INFO => userId", string.Format("userId:{0}", userId), "green");
-    }
-
-    /// <summary>
-    /// 시즌 패스 정보 응답
-    /// </summary>
-    /// <param name="msg"></param>
-    void OnSeasonPassInfoAck(MsgSeasonPassInfoAck msg)
-    {
-        UnityUtil.Print("RECV SEASON PASS INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-    public void SeasonPassRewardStepReq(string userId, int openRewardId, Action<MsgSeasonPassRewardStepAck> callback = null)
-    {
-        MsgSeasonPassRewardStepReq msg = new MsgSeasonPassRewardStepReq();
-        msg.UserId = userId;
-        msg.OpenRewardId = openRewardId;
-        _httpSender.SeasonPassRewardStepReq(msg);
-        _seasonPassRewardStep = callback;
-        UnityUtil.Print("SEND SEASON PASS STEP => userId", string.Format("userId:{0}", userId), "green");
-    }
-
-
-    void OnSeasonPassRewardStepAck(MsgSeasonPassRewardStepAck msg)
-    {
-        if (_seasonPassRewardStep != null)
-        {
-            _seasonPassRewardStep(msg);
-        }
-        UnityUtil.Print("RECV SEASON PASS STEP => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-
-    /// <summary>
-    /// 시즌 패스 보상 획득 요청
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="rewardId"></param>
-    public void GetSeasonPassRewardReq(string userId, int rewardTargetType, int rewardId, Action<MsgGetSeasonPassRewardAck> callback = null)
-    {
-        MsgGetSeasonPassRewardReq msg = new MsgGetSeasonPassRewardReq();
-        msg.UserId = userId;
-        msg.RewardId = rewardId;
-        msg.RewardTargetType = rewardTargetType;
-        _httpSender.GetSeasonPassRewardReq(msg);
-        UnityUtil.Print("SEND GET SEASON PASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
-        _getSeasonPassRewardCallback = callback;
-    }
-
-
-    /// <summary>
-    /// 시즌 패스 보상 획득 응답
-    /// </summary>
-    /// <param name="msg"></param>
-    void OnGetSeasonPassRewardAck(MsgGetSeasonPassRewardAck msg)
-    {
-        if (_getSeasonPassRewardCallback != null)
-        {
-            _getSeasonPassRewardCallback(msg);
-        }
-        UnityUtil.Print("RECV GET SEASON PASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-    /// <summary>
-    /// 트로피 보상 정보 요청
-    /// </summary>
-    /// <param name="userId"></param>
-    public void ClassRewardInfoReq(string userId)
-    {
-        MsgClassRewardInfoReq msg = new MsgClassRewardInfoReq();
-        msg.UserId = userId;
-        _httpSender.ClassRewardInfoReq(msg);
-        UnityUtil.Print("SEND CLASS REWARD INFO => userId", string.Format("userId:{0}", userId), "green");
-    }
-
-    /// <summary>
-    /// 트로피 보상 정보 응답
-    /// </summary>
-    /// <param name="msg"></param>
-    void OnClassRewardInfoAck(MsgClassRewardInfoAck msg)
-    {
-        UnityUtil.Print("RECV CLASS REWARD INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-    /// <summary>
-    /// 트로피 보상 획득 요청
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="rewardId"></param>
-    public void GetClassRewardReq(string userId, int rewardId, int rewardTargetType, Action<MsgGetClassRewardAck> callback = null)
-    {
-        MsgGetClassRewardReq msg = new MsgGetClassRewardReq();
-        msg.UserId = userId;
-        msg.RewardId = rewardId;
-        msg.RewardTargetType = rewardTargetType;
-        _httpSender.GetClassRewardReq(msg);
-        UnityUtil.Print("SEND GET CLASS REWARD => userId", string.Format("userId:{0}, rewardId: {1}", userId, rewardId), "green");
-        _getClassRewardCallback = callback;
-    }
-
-    /// <summary>
-    /// 트로피 보상 획득 응답
-    /// </summary>
-    /// <param name="msg"></param>
-    void OnGetClassRewardAck(MsgGetClassRewardAck msg)
-    {
-        if (_getClassRewardCallback != null)
-        {
-            _getClassRewardCallback(msg);
-        }
-        UnityUtil.Print("RECV GET CLASS REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-    public void QuestInfoReq(string userId, Action<MsgQuestInfoAck> callback)
-    {
-        MsgQuestInfoReq msg = new MsgQuestInfoReq();
-        msg.UserId = userId;
-        _httpSender.QuestInfoReq(msg);
-        UnityUtil.Print("SEND QUEST INFO => userId", string.Format("userId:{0}", userId), "green");
-        _questInfoCallback = callback;
-    }
-
-    void OnQuestInfoAck(MsgQuestInfoAck msg)
-    {
-        UnityUtil.Print("RECV QUEST INFO => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-        if (_questInfoCallback != null)
-        {
-            _questInfoCallback(msg);
-        }
-    }
-
-    public void QuestRewardReq(string userId, int questId, Action<MsgQuestRewardAck> callback)
-    {
-        MsgQuestRewardReq msg = new MsgQuestRewardReq();
-        msg.UserId = userId;
-        msg.QuestId = questId;
-        _httpSender.QuestRewardReq(msg);
-        UnityUtil.Print("SEND QUEST REWARD => userId", string.Format("userId:{0}", userId), "green");
-        _questRewardCallback = callback;
-    }
-
-    void OnQuestRewardAck(MsgQuestRewardAck msg)
-    {
-        if (_questRewardCallback != null)
-        {
-            _questRewardCallback(msg);
-        }
-        UnityUtil.Print("RECV QUEST REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
-    }
-
-    public void QuestDayRewardReq(string userId, int rewardID, int index, Action<MsgQuestDayRewardAck> callback = null)
-    {
-        MsgQuestDayRewardReq msg = new MsgQuestDayRewardReq();
-        msg.UserId = userId;
-        msg.RewardId = rewardID;
-        msg.Index = ConvertNetMsg.MsgIntToByte(index);
-        _httpSender.QuestDayRewardReq(msg);
-        UnityUtil.Print("SEND QUEST DAY REWARD => userId", string.Format("userId:{0}, rewardID:{1}", userId, rewardID), "green");
-        _questDayRewardCallback = callback;
-    }
-
-    void OnQuestDayRewardAck(MsgQuestDayRewardAck msg)
-    {
-        if (_questDayRewardCallback != null)
-        {
-            _questDayRewardCallback(msg);
-        }
-        UnityUtil.Print("RECV QUEST DAY REWARD => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
     }
 
     #endregion

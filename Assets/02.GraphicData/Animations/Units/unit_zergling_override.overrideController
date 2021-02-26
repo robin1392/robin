@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: unit_zergling_override
+  m_Controller: {fileID: 9100000, guid: 4dbe1d52b07d944cb9ca7e55b25259b6, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 76ed97e4279e24afa9457e55b898f4af, type: 2}
+    m_OverrideClip: {fileID: -97786222290485853, guid: e20a49cb0379b498eab98e97f4c387ff,
+      type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 6eda95db5ae13496b8b762c27338a929, type: 2}
+    m_OverrideClip: {fileID: -97786222290485853, guid: e20a49cb0379b498eab98e97f4c387ff,
+      type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 63794d15cace0490390f2037ed0856d5, type: 2}
+    m_OverrideClip: {fileID: 1035215628291786547, guid: 09c509c576b4d448bb21cd9fdefaf994,
+      type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 3ca1938fccf9f4bf2b0ed10cb54cc60f, type: 2}
+    m_OverrideClip: {fileID: -2670014643166256992, guid: 51a87dfacb98d45f98ca5130da5d1a83,
+      type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: ec08416d89cd9466f93c505fba38b061, type: 2}
+    m_OverrideClip: {fileID: -3214002803053111809, guid: 2689b225e43e74c3cacd7bba169cb6e1,
+      type: 3}

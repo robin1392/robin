@@ -5,8 +5,9 @@ using ED;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using RandomWarsProtocol;
+//using RandomWarsProtocol;
 using RandomWarsResource.Data;
+using Service.Core;
 using Button = UnityEngine.UI.Button;
 
 public class UI_InGamePopup_Result : MonoBehaviour
@@ -57,7 +58,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
 
     private int[,] rewards = new int[3,5];
     
-    public void Initialize(bool winLose, int winningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward)
+    public void Initialize(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
     {
         if (TutorialManager.isTutorial)
         {

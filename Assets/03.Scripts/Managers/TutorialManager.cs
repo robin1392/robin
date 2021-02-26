@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using CodeStage.AntiCheat.ObscuredTypes;
 using UnityEngine.SceneManagement;
 using Debug = ED.Debug;
 using DG.Tweening;
 using ED;
 using RandomWarsProtocol;
+using Template.User.RandomwarsUser.Common;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -32,7 +32,7 @@ public class TutorialManager : MonoBehaviour
     
     private void Start()
     {
-        if (ObscuredPrefs.GetBool("Tutorial", false) == true)
+        if (UserInfoManager.Get().GetUserInfo().isEndTutorial)
         {
             isTutorial = false;
             gameObject.SetActive(false);
@@ -265,15 +265,22 @@ public class TutorialManager : MonoBehaviour
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
                 image_NextStep.raycastTarget = false;
                 Time.timeScale = 1f;
-                ObscuredPrefs.SetBool("Tutorial", true);
-                NetworkManager.Get().Send(GameProtocol.END_TUTORIAL_REQ);
+                NetworkManager.session.UserTemplate.UserTutorialEndReq(NetworkManager.session.HttpClient, OnEndTutorial);
+                isTutorial = false;
+                //NetworkManager.Get().EndTutorialReq(UserInfoManager.Get().GetUserInfo().userID);
                 break;
         }
     }
 
     public void Skip()
     {
+        StopAllCoroutines();
         stepCount = 15;
-        Click_NextStep();
+        Step();
+    }
+
+    bool OnEndTutorial(ERandomwarsUserErrorCode errorCode, bool endTutorial)
+    {
+        return true;
     }
 }

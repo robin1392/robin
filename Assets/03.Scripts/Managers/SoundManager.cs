@@ -34,7 +34,7 @@ public class SoundManager : MonoBehaviour {
         get => _BGMVolume;
         set
         {
-            _BGMVolume = Single.MaxValue;
+            _BGMVolume = value;
             if (bgm != null) bgm.volume = value;
         }
     }

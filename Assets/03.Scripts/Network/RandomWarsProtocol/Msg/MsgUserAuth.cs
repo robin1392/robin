@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Service.Core;
 
 namespace RandomWarsProtocol.Msg
 {
@@ -15,10 +16,10 @@ namespace RandomWarsProtocol.Msg
     {
         public GameErrorCode ErrorCode;
         public MsgUserInfo UserInfo;
-        public MsgUserDeck[] UserDeck;
-        public MsgUserDice[] UserDice;
-        public MsgUserBox[] UserBox;
-        public MsgQuestInfo QuestInfo;
+        public UserDeck[] UserDeck;
+        public UserDice[] UserDice;
+        public UserBox[] UserBox;
+        public QuestInfo QuestInfo;
     }
 
 
@@ -134,11 +135,11 @@ namespace RandomWarsProtocol.Msg
     public class MsgOpenBoxAck
     {
         public GameErrorCode ErrorCode;
-        public MsgReward[] BoxReward;
-        public MsgUserBox BoxInfo;
+        public ItemBaseInfo[] BoxReward;
+        public UserBox BoxInfo;
         public MsgUserGoods UserGoods;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
     }
 
 
@@ -154,22 +155,22 @@ namespace RandomWarsProtocol.Msg
     public class MsgLevelUpDiceAck
     {
         public GameErrorCode ErrorCode;
-        public MsgUserDice UserDice;
+        public UserDice UserDice;
         public MsgUserGoods UserGoods;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
     }
 
 
     [Serializable]
-    public class MsgSeasonInfoReq
+    public class UserSeasonInfoReq
     {
         public string UserId;
     }
 
 
     [Serializable]
-    public class MsgSeasonInfoAck
+    public class UserSeasonInfoAck
     {
         public GameErrorCode ErrorCode;
         // 시즌 식별 번호
@@ -219,7 +220,7 @@ namespace RandomWarsProtocol.Msg
         // 최종 순위
         public int myRanking;
         // 시즌 보상
-        public MsgRewardMultiple[] arraySeasonReward;
+        public ItemBaseInfo[] arraySeasonReward;
     }
 
 
@@ -239,11 +240,11 @@ namespace RandomWarsProtocol.Msg
         // 오픈 테이블 아이디
         public int OpenRewardId;
         // 사용 아이템 정보
-        public MsgReward UseItemInfo;
+        public ItemBaseInfo UseItemInfo;
         // 획득 보상 정보
-        public MsgReward RewardInfo;
+        public ItemBaseInfo RewardInfo;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
     }
 
 
@@ -296,9 +297,9 @@ namespace RandomWarsProtocol.Msg
         // 보상 획득 아이디 배열
         public int[] GetRewardIds;
         // 보상 정보
-        public MsgReward[] RewardInfo;
+        public ItemBaseInfo[] RewardInfo;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
     }
 
     [Serializable]
@@ -337,24 +338,24 @@ namespace RandomWarsProtocol.Msg
         // 보상 획득 아이디 배열
         public int[] GetRewardIds;
         // 보상 정보
-        public MsgReward[] RewardInfo;
+        public ItemBaseInfo[] RewardInfo;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
     }
 
 
     [Serializable]
-    public class MsgQuestInfoReq
+    public class QuestInfoReq
     {
         public string UserId;
     }
 
 
     [Serializable]
-    public class MsgQuestInfoAck
+    public class QuestInfoAck
     {
         public GameErrorCode ErrorCode;
-        public MsgQuestInfo QuestInfo;
+        public QuestInfo QuestInfo;
     }
 
 
@@ -370,13 +371,13 @@ namespace RandomWarsProtocol.Msg
     public class MsgQuestRewardAck
     {
         public GameErrorCode ErrorCode;
-        public MsgReward[] RewardInfo;
+        public ItemBaseInfo[] RewardInfo;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
     }
 
     [Serializable]
-    public class MsgQuestDayRewardReq
+    public class QuestDayRewardReq
     {
         public string UserId;
         // 보상 아이디
@@ -387,14 +388,14 @@ namespace RandomWarsProtocol.Msg
 
 
     [Serializable]
-    public class MsgQuestDayRewardAck
+    public class QuestDayRewardAck
     {
         public GameErrorCode ErrorCode;
         // 획득한 보상 정보
-        public MsgReward[] RewardInfo;
+        public ItemBaseInfo[] RewardInfo;
         // 일일 보상 정보
-        public MsgQuestDayReward DayRewardInfo;
+        public QuestDayReward DayRewardInfo;
         // 퀘스트 데이터
-        public MsgQuestData[] QuestData;
+        public QuestData[] QuestData;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using RandomWarsService.Network.Socket.NetService;
+using Service.Core;
 
 namespace RandomWarsProtocol
 {
@@ -91,12 +92,20 @@ namespace RandomWarsProtocol
         }
 
 
-        public void LeaveGameAck(Peer peer, GameErrorCode code) 
+        public void LeaveGameAck(Peer peer, GameErrorCode code, ItemBaseInfo[] giveUpReward) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)code);
+
+                int length = (giveUpReward == null) ? 0 : giveUpReward.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    giveUpReward[i].Write(bw);
+                }
+
                 peer.SendPacket((int)GameProtocol.LEAVE_GAME_ACK, ms.ToArray());
             }
         }
@@ -615,7 +624,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, MsgReward[] normalReward, MsgReward[] streakReward, MsgReward[] perfectReward, MsgQuestData[] questData) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, QuestData[] questData) 
         {
             using (var ms = new MemoryStream())
             {
@@ -657,7 +666,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndCoopGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, MsgReward[] normalReward, MsgQuestData[] questData)
+        public void EndCoopGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, ItemBaseInfo[] normalReward, QuestData[] questData)
         {
             using (var ms = new MemoryStream())
             {
