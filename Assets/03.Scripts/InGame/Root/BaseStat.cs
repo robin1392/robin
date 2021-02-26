@@ -19,12 +19,8 @@ namespace ED
         [Header("Base Stat")]
         public DICE_MOVE_TYPE targetMoveType;
         public float power;
-        public float powerUpByUpgrade;
-        public float powerUpByInGameUp;
         public float maxHealth;
         public float currentHealth;
-        public float maxHealthUpByUpgrade;
-        public float maxHealthUpByInGameUp;
         public float effect;
         public float effectUpByUpgrade;
         public float effectUpByInGameUp;
