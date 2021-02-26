@@ -136,7 +136,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b21048165dc834540809202b6c28d4a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  actorPrefab: {fileID: 0}
-  materials: []
+  gameStatePrefab: {fileID: 5948696751545699130, guid: 96959fafd3b5d4a40a4a981101919585,
+    type: 3}
+  playerStatePrefab: {fileID: 3607057536086332031, guid: 13bb752557e22490e816dc90bc0f20a2,
+    type: 3}
+  actorProxyPrefab: {fileID: -9073835943446716441, guid: f631769355c16485a9c68f830ed15524,
+    type: 3}

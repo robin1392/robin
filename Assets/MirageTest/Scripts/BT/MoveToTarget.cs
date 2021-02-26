@@ -26,11 +26,11 @@ public class MoveToTarget : ActionTask<ActorPathfinding>
 
     protected override void OnUpdate()
     {
-        if (target.value.IsAlive == false)
-        {
-            EndAction(false);
-            return;
-        }
+        // if (target.value.IsAlive == false)
+        // {
+        //     EndAction(false);
+        //     return;
+        // }
 
         if (agent.aIPath.reachedDestination)
         {

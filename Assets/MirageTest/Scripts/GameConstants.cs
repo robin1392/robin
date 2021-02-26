@@ -3,12 +3,10 @@ namespace MirageTest.Scripts
     public static class GameConstants
     {
         public const int ServerTag = 0;
-    }
-    
-    public static class SpawnSlot
-    {
-        public const byte BottomPlayer = 15;
-        public const byte TopPlayer = 16;
-        public const byte Boss = 17;
+        public const int Player1Tag = 1;
+        public const int Player2Tag = 2;
+
+        public const byte BottomCamp = 1;
+        public const byte TopCamp = 2;
     }
 }

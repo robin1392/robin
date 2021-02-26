@@ -12,13 +12,13 @@ namespace MirageTest.Scripts.Entities
     {
         [SyncVar] public string userId;
         [SyncVar] public string nickName;
+        [SyncVar] public byte tag;
+        [SyncVar] public byte camp;
         [SyncVar] public int spGrade;
         [SyncVar] public int sp;
-        
+
         public readonly Deck Deck = new Deck();
         public readonly Field Field = new Field();
-
-        public DeckDice a;
 
         private Dictionary<int, DeckDice> _deckDiceMap = new Dictionary<int, DeckDice>();
         
@@ -26,7 +26,7 @@ namespace MirageTest.Scripts.Entities
 
         private bool _initalized;
         
-        public void Init(string userId, string nickName, int sp, DeckDice[] deck)
+        public void Init(string userId, string nickName, int sp, DeckDice[] deck, byte tag)
         {
             if (_initalized)
             {
@@ -36,7 +36,8 @@ namespace MirageTest.Scripts.Entities
             this.userId = userId;
             this.nickName = nickName;
             this.sp = sp;
-            
+            this.tag = tag;
+
             foreach (var deckDice in deck)
             {
                 Deck.Add(deckDice);
@@ -64,38 +65,6 @@ namespace MirageTest.Scripts.Entities
                 {
                     Debug.Log(d.diceId);
                 }
-            }
-        }
-
-        [Server]
-        public void SpawnMinions(ActorProxy actorPrefab, int team, byte spawnSlot)
-        {
-            var diceInfos = TableManager.Get().DiceInfo;
-
-            for (var fieldIndex = 0; fieldIndex < Field.Count; ++fieldIndex)
-            {
-                var fieldSlot = Field[fieldIndex];
-                if (fieldSlot.IsEmpty)
-                {
-                    continue;
-                }
-                
-                if (diceInfos.GetData(fieldSlot.diceId, out var diceInfo) == false)
-                {
-                    ED.Debug.LogError($"다이스정보 {fieldSlot.diceId}가 없습니다. UserId : {userId} 필드 슬롯 : {fieldIndex}");
-                    continue;
-                }
-
-                var actor = Instantiate(actorPrefab);
-                actor.owner = userId;
-                actor.team = team;
-                actor.spawnSlot = spawnSlot;
-
-                var diceId = diceInfo.id;
-                var outGameLevel = _deckDiceMap[diceInfo.id].outGameLevel;
-                
-                
-                ServerObjectManager.Spawn(actor.NetIdentity);
             }
         }
 

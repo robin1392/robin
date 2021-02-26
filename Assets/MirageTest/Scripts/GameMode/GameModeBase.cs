@@ -14,6 +14,7 @@ namespace MirageTest.Scripts.GameMode
         protected PlayerState[] PlayerStates;
         protected ActorProxy ActorProxyPrefab;
         protected ServerObjectManager ServerObjectManager;
+        protected bool IsGameEnd;
         
         public PlayerState PlayerState1 => PlayerStates[0];
         public PlayerState PlayerState2 => PlayerStates[1];
@@ -27,16 +28,15 @@ namespace MirageTest.Scripts.GameMode
             ServerObjectManager = serverObjectManager;
         }
         
-        protected bool IsGameEnd; 
         public async UniTask UpdateLogic()
         {
+            OnBeforeGameStart();
+            
             await UniTask.WhenAll(UpdateWave(), UpdateSp());
         }
         
         private async UniTask UpdateWave()
         {
-            OnBeforeGameStart();
-            
             await UniTask.Delay(TimeSpan.FromSeconds(1));
             
             var waveInterval = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.WaveTime].value;

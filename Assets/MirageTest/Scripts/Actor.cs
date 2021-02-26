@@ -9,11 +9,11 @@ namespace MirageTest.Scripts
         public Animator animator;
         public Stat Stat;
         public int Team;
-        public bool IsAlive => Stat.HP > 0;
+        // public bool IsAlive => Stat.HP > 0;
 
         private void Awake()
         {
-            Stat = new Stat() {HP = 10, Attack = 1};
+            // Stat = new Stat() {HP = 10, Attack = 1};
             animator = GetComponentInChildren<Animator>();
         }
 
@@ -49,16 +49,5 @@ namespace MirageTest.Scripts
             
             return nearestEnemy;
         }
-
-        public void Damage(int i)
-        {
-            Stat.HP -= 1;
-        }
     }
-
-    public struct Stat
-    {
-        public int HP;
-        public int Attack;
-    }   
 }

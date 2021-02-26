@@ -24,7 +24,7 @@ public class Attack : ActionTask<Actor>
     {
         if (elapsedTime > 1)
         {
-            target.value.Damage(1);
+            // target.value.Damage(1);
             EndAction(true);
         }
     }

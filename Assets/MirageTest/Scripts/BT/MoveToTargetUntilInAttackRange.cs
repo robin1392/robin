@@ -21,8 +21,8 @@ public class MoveToTargetUntilInAttackRange : ActionTask<ActorProxy>
             return;
         }
         
-        agent.actorPathfinding.aIPath.canMove = true;
-        agent.actorPathfinding.aIDestinationSetter.target = target.value.transform;
+        // agent.actorPathfinding.aIPath.canMove = true;
+        // agent.actorPathfinding.aIDestinationSetter.target = target.value.transform;
 
         Update();
     }
@@ -34,24 +34,24 @@ public class MoveToTargetUntilInAttackRange : ActionTask<ActorProxy>
 
     void Update()
     {
-        if (target.value.IsAlive == false)
-        {
-            Stop();
-            EndAction(false);
-            return;
-        }
-        
-        if (agent.actor.GetDistanceSqrMagnitudeWith(target.value) < 1)
-        {
-            Stop();
-            EndAction(true);
-        }
+        // if (target.value.IsAlive == false)
+        // {
+        //     Stop();
+        //     EndAction(false);
+        //     return;
+        // }
+        //
+        // if (agent.actor.GetDistanceSqrMagnitudeWith(target.value) < 1)
+        // {
+        //     Stop();
+        //     EndAction(true);
+        // }
     }
 
     void Stop()
     {
-        agent.actorPathfinding.aIPath.canMove = false;
-        agent.actorPathfinding.aIDestinationSetter.target = null;
+        // agent.actorPathfinding.aIPath.canMove = false;
+        // agent.actorPathfinding.aIDestinationSetter.target = null;
     }
 
     protected override void OnStop()

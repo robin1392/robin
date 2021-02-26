@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Mirage;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.GameMode;
 using RandomWarsResource.Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MirageTest.Scripts
 {
@@ -20,10 +22,10 @@ namespace MirageTest.Scripts
         public ActorProxy actorProxyPrefab;
 
         private bool _isGameStart;
-
-        private PLAY_TYPE _modeType;
         private GameModeBase _gameMode;
-    
+        
+        public PLAY_TYPE modeType;
+
         bool NoPlayers => 
             _serverObjectManager
                 .SpawnedObjects
@@ -58,7 +60,7 @@ namespace MirageTest.Scripts
             var gameState = SpawnGameState();
             var playerStates = SpawnPlayerStates();
 
-            switch (_modeType)
+            switch (modeType)
             {
                 case PLAY_TYPE.BATTLE:
                     _gameMode = new BattleMode(gameState, playerStates, actorProxyPrefab, _serverObjectManager);  //TODO: 추후에 풀링에 문제가 없으면 프리팹이 아닌 풀러를 넘긴다.
@@ -113,26 +115,26 @@ namespace MirageTest.Scripts
                     new DeckDice(){ diceId = 1003, inGameLevel = 1, outGameLevel = 1 },
                     new DeckDice(){ diceId = 1004, inGameLevel = 1, outGameLevel = 1 },
                     new DeckDice(){ diceId = 1005, inGameLevel = 1, outGameLevel = 1 },
-                });
+                }, GameConstants.Player1Tag);
         
             playerStates[1] = SpawnPlayerState(
                 "2", "2", getStartSp, 
                 new DeckDice[]
                 {
-                    new DeckDice(){ diceId = 1006, inGameLevel = 1, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1007, inGameLevel = 1, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1008, inGameLevel = 1, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1009, inGameLevel = 1, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1010, inGameLevel = 1, outGameLevel = 1 },
-                });
+                    new DeckDice(){ diceId = 2001, inGameLevel = 1, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2002, inGameLevel = 1, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2003, inGameLevel = 1, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2004, inGameLevel = 1, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2005, inGameLevel = 1, outGameLevel = 1 },
+                }, GameConstants.Player2Tag);
             return playerStates;
         }
 
-        PlayerState SpawnPlayerState(string userId, string nickName, int sp, DeckDice[] deck)
+        PlayerState SpawnPlayerState(string userId, string nickName, int sp, DeckDice[] deck, byte tag)
         {
             //원래 코드에서는 덱인덱스를 가지고 디비에서 긁어오는 중. 매칭서버에서 긁어서 넣어두는 방향을 제안
             var playerState = Instantiate(playerStatePrefab);
-            playerState.Init(userId, nickName, sp, deck);
+            playerState.Init(userId, nickName, sp, deck, tag);
             _serverObjectManager.Spawn(playerState.NetIdentity);
             return playerState;
         }
