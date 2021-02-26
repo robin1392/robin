@@ -28,9 +28,9 @@ public class ShopItemBig : ShopItem
         {
             textPItemId.text = LocalizationManager.GetLangDesc(Int32.Parse(data.packageName));
             
-            if (data.itemValue01 > 0)
+            if (data.itemValue01 > 0 && arrText_SubitemsCount[0] != null)
             {
-                if (arrText_SubitemsCount[0] != null) arrText_SubitemsCount[0].text = $"x{data.itemValue01}";
+                arrText_SubitemsCount[0].text = $"x{data.itemValue01}";
                 TDataItemList item;
                 if (TableManager.Get().ItemList.GetData(data.itemId01, out item))
                 {
@@ -47,12 +47,12 @@ public class ShopItemBig : ShopItem
             }
             else
             {
-                arrText_SubitemsCount[0].transform.parent.gameObject.SetActive(false);
+                arrImage_SubitemsIcon[0].transform.parent.gameObject.SetActive(false);
             }
             
-            if (data.itemValue02 > 0)
+            if (data.itemValue02 > 0 && arrText_SubitemsCount[1] != null)
             {
-                if (arrText_SubitemsCount[1] != null) arrText_SubitemsCount[1].text = $"x{data.itemValue02}";
+                arrText_SubitemsCount[1].text = $"x{data.itemValue02}";
                 TDataItemList item;
                 if (TableManager.Get().ItemList.GetData(data.itemId02, out item))
                 {
@@ -69,12 +69,12 @@ public class ShopItemBig : ShopItem
             }
             else
             {
-                arrText_SubitemsCount[1].transform.parent.gameObject.SetActive(false);
+                arrImage_SubitemsIcon[1].transform.parent.gameObject.SetActive(false);
             }
             
-            if (data.itemValue03 > 0)
+            if (data.itemValue03 > 0 && arrText_SubitemsCount[2] != null)
             {
-                if (arrText_SubitemsCount[2] != null) arrText_SubitemsCount[2].text = $"x{data.itemValue03}";
+                arrText_SubitemsCount[2].text = $"x{data.itemValue03}";
                 TDataItemList item;
                 if (TableManager.Get().ItemList.GetData(data.itemId03, out item))
                 {
@@ -91,12 +91,12 @@ public class ShopItemBig : ShopItem
             }
             else
             {
-                arrText_SubitemsCount[2].transform.parent.gameObject.SetActive(false);
+                arrImage_SubitemsIcon[2].transform.parent.gameObject.SetActive(false);
             }
             
-            if (data.itemValue04 > 0)
+            if (data.itemValue04 > 0 && arrText_SubitemsCount[3] != null)
             {
-                if (arrText_SubitemsCount[3] != null) arrText_SubitemsCount[3].text = $"x{data.itemValue04}";
+                arrText_SubitemsCount[3].text = $"x{data.itemValue04}";
                 TDataItemList item;
                 if (TableManager.Get().ItemList.GetData(data.itemId04, out item))
                 {
@@ -113,12 +113,12 @@ public class ShopItemBig : ShopItem
             }
             else
             {
-                arrText_SubitemsCount[3].transform.parent.gameObject.SetActive(false);
+                arrImage_SubitemsIcon[3].transform.parent.gameObject.SetActive(false);
             }
             
-            if (data.itemValue05 > 0)
+            if (data.itemValue05 > 0 && arrText_SubitemsCount[4] != null)
             {
-                if (arrText_SubitemsCount[4] != null) arrText_SubitemsCount[4].text = $"x{data.itemValue05}";
+                arrText_SubitemsCount[4].text = $"x{data.itemValue05}";
                 TDataItemList item;
                 if (TableManager.Get().ItemList.GetData(data.itemId05, out item))
                 {
@@ -135,12 +135,12 @@ public class ShopItemBig : ShopItem
             }
             else
             {
-                arrText_SubitemsCount[4].transform.parent.gameObject.SetActive(false);
+                arrImage_SubitemsIcon[4].transform.parent.gameObject.SetActive(false);
             }
             
-            if (data.itemValue06 > 0)
+            if (data.itemValue06 > 0 && arrText_SubitemsCount[5] != null)
             {
-                if (arrText_SubitemsCount[5] != null) arrText_SubitemsCount[5].text = $"x{data.itemValue06}";
+                arrText_SubitemsCount[5].text = $"x{data.itemValue06}";
                 TDataItemList item;
                 if (TableManager.Get().ItemList.GetData(data.itemId06, out item))
                 {
@@ -157,7 +157,7 @@ public class ShopItemBig : ShopItem
             }
             else
             {
-                arrText_SubitemsCount[5].transform.parent.gameObject.SetActive(false);
+                arrImage_SubitemsIcon[5].transform.parent.gameObject.SetActive(false);
             }
         }
     }
