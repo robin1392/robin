@@ -54,6 +54,11 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void InitUIElement()
     {
+        if (NetworkManager.Get() == null)
+        {
+            return;
+        }
+
         // start popup
         if (TutorialManager.isTutorial)
         {
