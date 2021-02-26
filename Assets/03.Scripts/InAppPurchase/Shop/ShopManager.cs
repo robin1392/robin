@@ -13,6 +13,7 @@ using Template.Shop.GameBaseShop;
 using Template.Shop.GameBaseShop.Common;
 using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
 namespace Percent.Platform.InAppPurchase
@@ -27,6 +28,9 @@ namespace Percent.Platform.InAppPurchase
         [SerializeField]
         private List<Shop> listShop = new List<Shop>();
 
+        public RectTransform rts_TargetDiashop;
+        public RectTransform rts_TargetGoldshop;
+        
         private bool isInitialized;
         private bool isShowDiamondShop;
         private bool isShowGoldShop;
@@ -253,8 +257,17 @@ namespace Percent.Platform.InAppPurchase
 
         private void ScrollToGoldShop()
         {
-            ((RectTransform) transformShopParent).DOAnchorPosY(5800, 0.5f).SetDelay(0.1f);
+            //((RectTransform) transformShopParent).DOAnchorPosY(5800, 0.4f).SetDelay(0.1f);
             isShowGoldShop = false;
+            
+            RectTransform target = rts_TargetGoldshop;
+
+            Vector2 point = (Vector2)rts_ScrollView.InverseTransformPoint(transformShopParent.position)
+                            - (Vector2)rts_ScrollView.InverseTransformPoint(target.position)
+                            - new Vector2(0f, target.sizeDelta.y / 2f);
+
+            point.x = 0f;
+            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f).SetDelay(0.1f);
         }
 
         public void ShowDiamondShop()
@@ -265,8 +278,18 @@ namespace Percent.Platform.InAppPurchase
 
         private void ScrollToDiamondShop()
         {
-            ((RectTransform) transformShopParent).DOAnchorPosY(5100, 0.5f).SetDelay(0.1f);
+            //((RectTransform) transformShopParent).DOAnchorPosY(5100, 0.4f).SetDelay(0.1f);
             isShowDiamondShop = false;
+            
+            RectTransform target = rts_TargetDiashop;
+
+            Vector2 point = (Vector2)rts_ScrollView.InverseTransformPoint(transformShopParent.position)
+                            - (Vector2)rts_ScrollView.InverseTransformPoint(target.position)
+                            - new Vector2(0f, target.sizeDelta.y / 2f);
+
+            point.x = 0f;
+            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f).SetDelay(0.1f);
+            //rts_ScrollView.GetComponent<ScrollView>().scrollOffset
         }
     }
 }

@@ -178,6 +178,7 @@ namespace Percent.Platform
                         if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                         {
                             imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
+                            imageIcon.SetNativeSize();
                         }
                         textPItemBuyCount.text = $"{data.buyPrice}";
                     }
