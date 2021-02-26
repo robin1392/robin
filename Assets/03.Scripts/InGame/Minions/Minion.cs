@@ -41,8 +41,6 @@ namespace ED
         public bool isAttackSpeedFactorWithAnimation = true;
         protected float _spawnedTime;
         public float spawnedTime => _spawnedTime;
-        private float _pathRefinedTime = 3f;
-        private int _pathRefinedCount = 1;
         //private bool _isNexusAttacked;
         protected bool isInvincibility;
         protected bool _isCloacking;
@@ -178,7 +176,6 @@ namespace ED
             isPolymorph = false;
             animator.gameObject.SetActive(true);
             _spawnedTime = 0;
-            _pathRefinedCount = 1;
             target = null;
             _attackedTarget = null;
             _originalAttackSpeed = attackSpeed;
@@ -224,8 +221,7 @@ namespace ED
             
             destroyCallback = null;
             destroyCallback += destroy;
-            _pathRefinedTime = Random.Range(2.5f, 3.5f);
-            
+
             cloackingCount = 0;
             Cloacking(false);
             _dicEffectPool.Clear();
