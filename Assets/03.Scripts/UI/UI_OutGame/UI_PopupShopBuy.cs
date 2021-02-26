@@ -26,10 +26,10 @@ public class UI_PopupShopBuy : UI_Popup
     public Text text_DiceCount;
     public GameObject obj_UpgradeIcon;
 
-    public void Initialize(Sprite icon, string count, BuyType priceType, string price, TDataItemList item, bool isDouble, UnityAction callback)
+    public void Initialize(Sprite icon, string count, BuyType priceType, string price, TDataItemList item, int tab, UnityAction callback)
     {
         gameObject.SetActive(true);
-        obj_Double.SetActive(isDouble);
+        //obj_Double.SetActive(isDouble);
         
         image_Icon.sprite = icon;
         text_Count.text = count;

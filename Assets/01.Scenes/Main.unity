@@ -394,7 +394,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 570, y: -40}
-  m_SizeDelta: {x: 1000, y: 88.36364}
+  m_SizeDelta: {x: 1000, y: 88.15209}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2695825
 MonoBehaviour:
@@ -4162,7 +4162,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 37.5, y: 21}
-  m_SizeDelta: {x: 142.36363, y: 88.22235}
+  m_SizeDelta: {x: 139.92395, y: 88.22235}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &226883299
 MonoBehaviour:
@@ -17623,6 +17623,7 @@ GameObject:
   - component: {fileID: 1068245108}
   - component: {fileID: 1068245107}
   - component: {fileID: 9066897838633265091}
+  - component: {fileID: 1068245110}
   m_Layer: 5
   m_Name: Button_Cancel
   m_TagString: Untagged
@@ -17753,8 +17754,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+      - m_Target: {fileID: 1068245110}
+        m_TargetAssemblyTypeName: AudioPlay, Assembly-CSharp
         m_MethodName: Play
         m_Mode: 1
         m_Arguments:
@@ -17803,6 +17804,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068245105}
   m_CullTransparentMesh: 0
+--- !u!114 &1068245110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068245105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a236d7d718aa74e1fb2a5e2f570b0515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: fde2f913ede4a4287a63a8e06f44c78c, type: 3}
 --- !u!1 &1071820047
 GameObject:
   m_ObjectHideFlags: 0
@@ -19244,7 +19258,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 600, y: -380.19348}
-  m_SizeDelta: {x: 1140, y: 168.36365}
+  m_SizeDelta: {x: 1140, y: 168.1521}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1143659188
 MonoBehaviour:
@@ -19562,7 +19576,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 621, y: 0}
   m_SizeDelta: {x: 1142.4, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1148780946
@@ -22076,8 +22090,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 21.50001}
-  m_SizeDelta: {x: 90.12192, y: 90.12192}
+  m_AnchoredPosition: {x: 0, y: 28.6}
+  m_SizeDelta: {x: 122.351166, y: 97.880936}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1254590656
 MonoBehaviour:
@@ -22099,7 +22113,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d79256d5530d44bbfae368c0cbc05784, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f18e06b0e9151417ca216eb1bbdb0f56, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -24276,8 +24290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shopID: 2
   transformShopItemGrid: {fileID: 403097706}
-  prefabShopItem: {fileID: 8098925240086417979, guid: a0adbb14d833f44b0a667f804475c5ae,
-    type: 3}
+  prefabShopItem: {fileID: 0}
   poolSize: 1
   textLeftTime: {fileID: 1394583233}
 --- !u!1 &1381246100
@@ -64907,7 +64920,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 621, y: 0}
   m_SizeDelta: {x: 1142.4, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &6022035561711356034
@@ -68623,7 +68636,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 621, y: 0}
   m_SizeDelta: {x: 1142.4, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &6758493013263199435
@@ -71695,7 +71708,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 621, y: 0}
   m_SizeDelta: {x: 1142.4, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &7500852836778557357
