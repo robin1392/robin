@@ -127,7 +127,7 @@ public class TableManager : Singleton<TableManager>
 
             // 서버 버젼 파일 로컬 저장
             File.WriteAllText(versionFile, jsonServer);
-            Debug.Log("Download Table Complete !!! ");
+            Debug.Log("Download Table Complete !!! version : " + remoteTDataVersion);
         }
 
         LoadFromFile(targetPath);
