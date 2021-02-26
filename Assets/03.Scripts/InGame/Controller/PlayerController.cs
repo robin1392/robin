@@ -952,9 +952,9 @@ namespace ED
             }
         }
 
-        public void OtherPlayerPause(bool isPuase)
+        public void OtherPlayerPause(bool isPause)
         {
-            targetPlayer.SetPlayingAI(isPuase);
+            targetPlayer.SetPlayingAI(isPause);
         }
 
         public void SetPlayingAI(bool isPlayingAI)

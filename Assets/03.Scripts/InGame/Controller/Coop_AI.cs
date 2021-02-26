@@ -26,9 +26,9 @@ namespace ED
             _myUID = NetworkManager.Get().CoopUID;
             id = myUID * 10000;
 
+            NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPauseAI);
             if (isMine)
             {
-                NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
                 StartCoroutine(HitDamageQueueCoroutine());
             }
 
@@ -48,7 +48,12 @@ namespace ED
 
             StartSyncMinion();
         }
-        
+
+        private void OtherPlayerPauseAI(bool isPause)
+        {
+            SetPlayingAI(isPause);
+        }
+
         protected override void SetColor(E_MaterialType type) { }
 
         private void DestroyEgg()
