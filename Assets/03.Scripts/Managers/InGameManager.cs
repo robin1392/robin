@@ -18,7 +18,9 @@ using TMPro;
 
 using CodeStage.AntiCheat.ObscuredTypes;
 using Pathfinding;
+using RandomWarsResource.Data;
 using UnityEngine.U2D;
+using ITEM_TYPE = RandomWarsProtocol.ITEM_TYPE;
 using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
@@ -1376,8 +1378,30 @@ namespace ED
                 #region case ack
 
                 case GameProtocol.LEAVE_GAME_ACK:
+                {
+                    MsgLeaveGameAck leaveGameAck = (MsgLeaveGameAck) param[0];
+                    if (leaveGameAck.ErrorCode == (int)GameErrorCode.SUCCESS)
+                    {
+                        for (int i = 0; i < leaveGameAck.giveUpReward.Length; ++i)
+                        {
+                            switch ((EItemListKey)leaveGameAck.giveUpReward[i].ItemId)
+                            {
+                                case EItemListKey.thropy:
+                                    UserInfoManager.Get().GetUserInfo().trophy += leaveGameAck.giveUpReward[i].Value;
+                                    break;
+                                case EItemListKey.seasonthropy:
+                                    UserInfoManager.Get().GetUserInfo().seasonTrophy += leaveGameAck.giveUpReward[i].Value;
+                                    break;
+                                case EItemListKey.rankthropy:
+                                    UserInfoManager.Get().GetUserInfo().rankPoint += leaveGameAck.giveUpReward[i].Value;
+                                    break;
+                            }
+                        }
+                    }
+
                     CallBackLeaveRoom();
                     break;
+                }
                 case GameProtocol.GET_DICE_ACK:
                 {
                     MsgGetDiceAck diceack = (MsgGetDiceAck) param[0];

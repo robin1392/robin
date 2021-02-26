@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ED;
 using Percent.Platform.InAppPurchase;
+using RandomWarsResource.Data;
 using Service.Core;
 using Template.Shop.GameBaseShop.Common;
 using Template.Shop.GameBaseShop.Table;
@@ -49,12 +50,16 @@ namespace Percent.Platform
 
             listShopItem = new List<ShopItem>();
 
-            for (int i = 0; i < poolSize; i++)
+            if (prefabShopItem != null)
             {
-                ShopItem shopItemBase = Instantiate(prefabShopItem, transformShopItemGrid).GetComponent<ShopItem>();
-                shopItemBase.Initialize();
-                listShopItem.Add(shopItemBase);
+                for (int i = 0; i < poolSize; i++)
+                {
+                    ShopItem shopItemBase = Instantiate(prefabShopItem, transformShopItemGrid).GetComponent<ShopItem>();
+                    shopItemBase.Initialize(0);
+                    listShopItem.Add(shopItemBase);
+                }
             }
+
             shopID = shopInfo.shopId;
             UpdateContent(shopInfo);
         }
@@ -64,6 +69,28 @@ namespace Percent.Platform
         /// </summary>
         public void UpdateContent(ShopInfo shopInfo)
         {
+            if (prefabShopItem == null)
+            {
+                int childCount = transformShopItemGrid.childCount;
+                for (int i = childCount - 1; i >= 0; i--)
+                {
+                    DestroyImmediate(transformShopItemGrid.GetChild(i).gameObject);
+                }
+
+                for (int i = 0; i < shopInfo.arrayProductInfo.Length; i++)
+                {
+                    TDataShopProductList data;
+                    if (TableManager.Get().ShopProductList
+                        .GetData(shopInfo.arrayProductInfo[i].shopProductId, out data))
+                    {
+                        var shopItemBase = Instantiate(FileHelper.LoadShopUIPrefab(data.shopImage), transformShopItemGrid).GetComponent<ShopItemBig>();
+                        shopItemBase.Initialize(shopInfo.arrayProductInfo[i].shopProductId);
+                        listShopItem.Add(shopItemBase);
+                        shopItemBase.UpdateContent(shopInfo, shopInfo.arrayProductInfo[i]);
+                    }
+                }
+            }
+            
             this.info = shopInfo;
             //textLeftTime.text = shopInfo.resetRemainTime.ToString();
             if (shopInfo.resetRemainTime > 0)
@@ -75,18 +102,21 @@ namespace Percent.Platform
             if(poolSize<shopInfo.arrayProductInfo.Length)
                 Debug.LogError("풀 사이즈보다 표시해야하는 상품이 많은 경우 별도로 처리 필요");
             
-            for (int i = 0; i < poolSize; i++)
+            if (prefabShopItem != null)
             {
-                ShopItem shopItemBase = listShopItem[i];
-                if (i < shopInfo.arrayProductInfo.Length)
+                for (int i = 0; i < poolSize; i++)
                 {
-                    shopItemBase.UpdateContent(shopInfo, shopInfo.arrayProductInfo[i]);
-                    listShopItem.Add(shopItemBase);    
-                    shopItemBase.EnableContent();
-                }
-                else
-                {
-                    shopItemBase.DisableContent();
+                    ShopItem shopItemBase = listShopItem[i];
+                    if (i < shopInfo.arrayProductInfo.Length)
+                    {
+                        shopItemBase.UpdateContent(shopInfo, shopInfo.arrayProductInfo[i]);
+                        listShopItem.Add(shopItemBase);    
+                        shopItemBase.EnableContent();
+                    }
+                    else
+                    {
+                        shopItemBase.DisableContent();
+                    }
                 }
             }
         }

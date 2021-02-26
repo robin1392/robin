@@ -72,6 +72,19 @@ public class FileHelper
         
         return iconSpr;
     }
+    
+    public static GameObject LoadShopUIPrefab(string name)
+    {
+        string prefabPath = "CommonPrefabs/UI/UI_Shop/";
+        
+        GameObject obj = Resources.Load<GameObject>(prefabPath + name);
+        if (obj == null)
+        {
+            Debug.LogWarning("<color=yellow> " + name + "</color>" + "  Icon Not exist ");
+        }
+        
+        return obj;
+    }
 
     // public static Sprite GetBoxIcon(string name)
     // {

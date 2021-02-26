@@ -13,6 +13,7 @@ using Template.Shop.GameBaseShop;
 using Template.Shop.GameBaseShop.Common;
 using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
@@ -64,8 +65,8 @@ namespace Percent.Platform.InAppPurchase
             }
             else
             {
-                if (isShowGoldShop) ScrollToGoldShop();
-                else if (isShowDiamondShop) ScrollToDiamondShop();
+                if (isShowGoldShop) Invoke("ScrollToGoldShop", 0.1f);
+                else if (isShowDiamondShop) Invoke("ScrollToDiamondShop", 0.1f);
             }
         }
         
@@ -106,20 +107,26 @@ namespace Percent.Platform.InAppPurchase
                     Debug.Log(str);
                 }
 
-                int count = 0;
-                for (int i = 0; i < listShop.Count; i++)
+                // int count = 0;
+                // for (int i = 0; i < listShop.Count; i++)
+                // {
+                //     if (i + 1 == arrayShopInfo[count].shopId)
+                //     {
+                //         listShop[i].EnableContent();
+                //         listShop[i].Initialize(arrayShopInfo[count]);
+                //         count++;
+                //     }
+                //     else listShop[i].DisableContent();
+                // }
+                for (int i = 0; i < arrayShopInfo.Length; i++)
                 {
-                    if (i + 1 == arrayShopInfo[count].shopId)
-                    {
-                        listShop[i].EnableContent();
-                        listShop[i].Initialize(arrayShopInfo[count]);
-                        count++;
-                    }
-                    else listShop[i].DisableContent();
+                    var shop = listShop.Find(s => s.shopID == arrayShopInfo[i].shopId);
+                    shop.EnableContent();
+                    shop.Initialize(arrayShopInfo[i]);
                 }
                 
-                if (isShowGoldShop) ScrollToGoldShop();
-                else if (isShowDiamondShop) ScrollToDiamondShop();
+                if (isShowGoldShop) Invoke("ScrollToGoldShop", 0.1f);
+                else if (isShowDiamondShop) Invoke("ScrollToDiamondShop", 0.1f);
                 
                 return true;
             }
@@ -267,7 +274,10 @@ namespace Percent.Platform.InAppPurchase
                             - new Vector2(0f, target.sizeDelta.y / 2f);
 
             point.x = 0f;
-            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f).SetDelay(0.1f);
+            point.y = Mathf.Clamp(point.y, 0, ((RectTransform) transformShopParent).sizeDelta.y
+                                              - (GetComponentInParent<CanvasScaler>().referenceResolution.y
+                                                 - (Mathf.Abs(rts_ScrollView.offsetMax.y) + Mathf.Abs(rts_ScrollView.offsetMin.y))));
+            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f);
         }
 
         public void ShowDiamondShop()
@@ -288,7 +298,10 @@ namespace Percent.Platform.InAppPurchase
                             - new Vector2(0f, target.sizeDelta.y / 2f);
 
             point.x = 0f;
-            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f).SetDelay(0.1f);
+            point.y = Mathf.Clamp(point.y, 0, ((RectTransform) transformShopParent).sizeDelta.y
+                                              - (GetComponentInParent<CanvasScaler>().referenceResolution.y
+                                                 - (Mathf.Abs(rts_ScrollView.offsetMax.y) + Mathf.Abs(rts_ScrollView.offsetMin.y))));
+            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f);
             //rts_ScrollView.GetComponent<ScrollView>().scrollOffset
         }
     }

@@ -22,19 +22,19 @@ namespace Percent.Platform
         public static Vector3 pos;
         
         //상품 정보
-        [SerializeField] private Text textPItemId;
-        [SerializeField] private Text textPItemBuyCount;
-        [SerializeField] private Image imageIcon;
-        [SerializeField] private Image imagePriceIcon;
-        [SerializeField] private Text textDouble;
+        [SerializeField] protected Text textPItemId;
+        [SerializeField] protected Text textPItemBuyCount;
+        [SerializeField] protected Image imageIcon;
+        [SerializeField] protected Image imagePriceIcon;
+        [SerializeField] protected Text textDouble;
 
-        private Button buttonShopItem;
-        private ShopInfo shopInfo;
-        private string productId;
-        private string imageName;
-        private BuyType buyType;
-        private int shopId;
-        private int shopProductId;
+        protected Button buttonShopItem;
+        protected ShopInfo shopInfo;
+        protected string productId;
+        protected string imageName;
+        protected BuyType buyType;
+        protected int shopId;
+        public int shopProductId;
 
         private void Awake()
         {
@@ -411,9 +411,10 @@ namespace Percent.Platform
             }
         }
 
-        public virtual void Initialize()
+        public virtual void Initialize(int productID)
         {
             //Instantiate해줄것, 기타 설정해주기
+            shopProductId = productID;
         }
 
         public void Buy()
@@ -460,7 +461,7 @@ namespace Percent.Platform
             
         }
 
-        private void SetColor()
+        protected void SetColor()
         {
             Color color = Color.white;
             float factor = buttonShopItem.interactable ? 1f : 0.5f;
