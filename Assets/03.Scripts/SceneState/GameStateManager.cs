@@ -260,18 +260,7 @@ public class GameStateManager : Singleton<GameStateManager>
         }
         else
         {
-            // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
-            if (NetworkManager.Get().UserId.Length > 0)
-            {
-                //NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
-                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, NetworkManager.Get().UserId, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
-            }
-            else
-            {
-                //string userid = UserInfoManager.Get().GetUserInfo().userID;
-                //NetworkManager.Get().AuthUserReq(userid);
-                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
-            }
+            NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
         }
 
 #else
@@ -279,7 +268,7 @@ public class GameStateManager : Singleton<GameStateManager>
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
         ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
 #endif
-        
+
     }
 
     public void UserAuthOK()

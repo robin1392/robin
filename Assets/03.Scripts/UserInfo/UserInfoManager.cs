@@ -18,14 +18,14 @@ public class UserInfo
 
     #region user info variable
 
-    private string _platformID;
+    private string _platformID = string.Empty;
     public string platformID
     {
         get => _platformID;
         private set => _platformID = value;
     }
 
-    private string _userID;
+    private string _userID = string.Empty;
     public string userID
     {
         get => _userID;
@@ -127,7 +127,7 @@ public class UserInfo
 
         //FixDeckOld();
         
-        _userID = ObscuredPrefs.GetString(UserIdKey, "" );
+        _platformID = ObscuredPrefs.GetString(UserIdKey, "" );
         _userNickName = ObscuredPrefs.GetString(UserNickNameKey, "" );
         
         // if (_slotDeck[0].Length < 20 || _slotDeck[1].Length < 20 || _slotDeck[2].Length < 20)
