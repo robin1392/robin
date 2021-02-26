@@ -15,9 +15,16 @@ public class UserInfo
     private const string UserNickNameKey = "UserNickNameKey";
     private Action<string> _onSetUserId;
     private Action<string> _onSetUserNickName;
-    
+
     #region user info variable
-    
+
+    private string _platformID;
+    public string platformID
+    {
+        get => _platformID;
+        private set => _platformID = value;
+    }
+
     private string _userID;
     public string userID
     {
@@ -175,16 +182,22 @@ public class UserInfo
     
     #region set
 
-    public void SetUserKey(string id)
+    public void SetPlatformID(string id)
     {
-        _userID = id;
+        _platformID = id;
         
-        ObscuredPrefs.SetString(UserIdKey, _userID);
+        ObscuredPrefs.SetString(UserIdKey, _platformID);
         ObscuredPrefs.Save();    
         
         _onSetUserId?.Invoke(id);
     }
-    
+
+    public void SetUserId(string id)
+    {
+        _userID = id;
+    }
+
+
     public void SetNickName(string nickname)
     {
         _userNickName = nickname;
@@ -342,7 +355,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
 
     public void SetUserInfo(MsgUserInfo info, UserSeasonInfo seasonInfo)
     {
-        //SetUserKey(info.UserId);
+        _userInfo.SetUserId(info.UserId);
         _userInfo.SetNickName(info.UserName);
 
         _userInfo.isEndTutorial = info.EndTutorial;

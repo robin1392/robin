@@ -312,10 +312,10 @@ public class GameStateManager : Singleton<GameStateManager>
         // 계정 로그인 성공시 발급받은 토큰을 저장한다.
         NetworkManager.session.HttpClient.SetAccessToken(accountInfo.AccessToken);
 
-        UserInfoManager.Get().GetUserInfo().SetUserKey(accountInfo.PlatformId);
+        UserInfoManager.Get().GetUserInfo().SetPlatformID(accountInfo.PlatformId);
 
        // TODD : [임시] 곧바로 유저 정보 요청. 차후에 로그인 flow에 따라 위치를 변경해야함.
-       NetworkManager.session.UserTemplate.UserInfoReq(NetworkManager.session.HttpClient, OnReceiveUserInfoAck);
+        NetworkManager.session.UserTemplate.UserInfoReq(NetworkManager.session.HttpClient, OnReceiveUserInfoAck);
         return true;
     }
 
