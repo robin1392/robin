@@ -1053,7 +1053,13 @@ namespace ED
 
         public void OnApplicationPause(bool pauseStatus)
         {
-            NetworkManager.Get().PrintNetworkStatus();
+            var networkManager = NetworkManager.Get();
+            if (networkManager == null)
+            {
+                return;
+            }
+            
+            networkManager.PrintNetworkStatus();
 
             if (pauseStatus)
             {
