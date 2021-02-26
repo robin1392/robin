@@ -8,7 +8,6 @@ using RandomWarsService.Network.Socket.NetPacket;
 using RandomWarsProtocol.Msg;
 using Service.Core;
 
-
 namespace RandomWarsProtocol
 {
     class CustomizedBinder : SerializationBinder
@@ -266,7 +265,7 @@ namespace RandomWarsProtocol
                         if (JoinGameReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -366,7 +365,7 @@ namespace RandomWarsProtocol
                         if (LeaveGameReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -380,12 +379,19 @@ namespace RandomWarsProtocol
                         if (LeaveGameAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
                             MsgLeaveGameAck msg = new MsgLeaveGameAck();
                             msg.ErrorCode = br.ReadInt32();
+                            int length = br.ReadInt32();
+                            msg.giveUpReward = new ItemBaseInfo[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                msg.giveUpReward[i] = ItemBaseInfo.Read(br);
+                            }
+
                             LeaveGameAck(peer, msg);
                         }
                     }
@@ -395,7 +401,7 @@ namespace RandomWarsProtocol
                         if (LeaveGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -410,7 +416,7 @@ namespace RandomWarsProtocol
                         if (ReadyGameReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -424,7 +430,7 @@ namespace RandomWarsProtocol
                         if (ReadyGameAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -439,7 +445,7 @@ namespace RandomWarsProtocol
                         if (DeactiveWaitingObjectNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -455,7 +461,7 @@ namespace RandomWarsProtocol
                         if (AddSpNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -471,7 +477,7 @@ namespace RandomWarsProtocol
                         if (SpawnNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -534,7 +540,7 @@ namespace RandomWarsProtocol
                         if (EndGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -612,7 +618,7 @@ namespace RandomWarsProtocol
                         if (DisconnectGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -627,7 +633,7 @@ namespace RandomWarsProtocol
                         if (PauseGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -642,7 +648,7 @@ namespace RandomWarsProtocol
                         if (ResumeGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -670,7 +676,7 @@ namespace RandomWarsProtocol
                         if (ReconnectGameAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -701,7 +707,7 @@ namespace RandomWarsProtocol
                         if (ReadySyncGameReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -715,7 +721,7 @@ namespace RandomWarsProtocol
                         if (ReadySyncGameAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -730,7 +736,7 @@ namespace RandomWarsProtocol
                         if (ReadySyncGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -745,7 +751,7 @@ namespace RandomWarsProtocol
                         if (StartSyncGameReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -759,7 +765,7 @@ namespace RandomWarsProtocol
                         if (StartSyncGameAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -810,7 +816,7 @@ namespace RandomWarsProtocol
                         if (StartSyncGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -824,7 +830,7 @@ namespace RandomWarsProtocol
                         if (EndSyncGameReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -838,7 +844,7 @@ namespace RandomWarsProtocol
                         if (EndSyncGameAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -856,7 +862,7 @@ namespace RandomWarsProtocol
                         if (EndSyncGameNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -873,7 +879,7 @@ namespace RandomWarsProtocol
                         if (GetDiceReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -887,7 +893,7 @@ namespace RandomWarsProtocol
                         if (GetDiceAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -906,7 +912,7 @@ namespace RandomWarsProtocol
                         if (GetDiceNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -924,7 +930,7 @@ namespace RandomWarsProtocol
                         if (MergeDiceReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -940,7 +946,7 @@ namespace RandomWarsProtocol
                         if (MergeDiceAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -959,7 +965,7 @@ namespace RandomWarsProtocol
                         if (MergeDiceNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -978,7 +984,7 @@ namespace RandomWarsProtocol
                         if (InGameUpDiceReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -993,7 +999,7 @@ namespace RandomWarsProtocol
                         if (InGameUpDiceAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1011,7 +1017,7 @@ namespace RandomWarsProtocol
                         if (InGameUpDiceNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1028,7 +1034,7 @@ namespace RandomWarsProtocol
                         if (UpgradeSpReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1042,7 +1048,7 @@ namespace RandomWarsProtocol
                         if (UpgradeSpAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1059,7 +1065,7 @@ namespace RandomWarsProtocol
                         if (UpgradeSpNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1075,7 +1081,7 @@ namespace RandomWarsProtocol
                         if (HitDamageReq == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1097,7 +1103,7 @@ namespace RandomWarsProtocol
                         if (HitDamageAck == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1120,7 +1126,7 @@ namespace RandomWarsProtocol
                         if (HitDamageNotify == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1145,7 +1151,7 @@ namespace RandomWarsProtocol
                         if (HitDamageMinionRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1161,7 +1167,7 @@ namespace RandomWarsProtocol
                         if (DestroyMinionRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1176,7 +1182,7 @@ namespace RandomWarsProtocol
                         if (HealMinionRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1192,7 +1198,7 @@ namespace RandomWarsProtocol
                         if (PushMinionRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1209,7 +1215,7 @@ namespace RandomWarsProtocol
                         if (SetMinionAnimationTriggerRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1226,7 +1232,7 @@ namespace RandomWarsProtocol
                         if (FireArrowRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1244,7 +1250,7 @@ namespace RandomWarsProtocol
                         if (FireballBombRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1259,7 +1265,7 @@ namespace RandomWarsProtocol
                         if (MineBombRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1274,7 +1280,7 @@ namespace RandomWarsProtocol
                         if (SetMagicTargetIdRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1290,7 +1296,7 @@ namespace RandomWarsProtocol
                         if (SetMagicTargetRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1307,7 +1313,7 @@ namespace RandomWarsProtocol
                         if (SturnMinionRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1323,7 +1329,7 @@ namespace RandomWarsProtocol
                         if (RocketBombRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1338,7 +1344,7 @@ namespace RandomWarsProtocol
                         if (IceBombRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1353,7 +1359,7 @@ namespace RandomWarsProtocol
                         if (DestroyMagicRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1368,7 +1374,7 @@ namespace RandomWarsProtocol
                         if (FireCannonBallRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1387,7 +1393,7 @@ namespace RandomWarsProtocol
                         if (FireSpearRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1405,7 +1411,7 @@ namespace RandomWarsProtocol
                         if (FireManFireRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1420,7 +1426,7 @@ namespace RandomWarsProtocol
                         if (ActivatePoolObjectRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1438,7 +1444,7 @@ namespace RandomWarsProtocol
                         if (MinionCloackingRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1454,7 +1460,7 @@ namespace RandomWarsProtocol
                         if (MinionFlagOfWarRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1471,7 +1477,7 @@ namespace RandomWarsProtocol
                         if (SendMessageVoidRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1487,7 +1493,7 @@ namespace RandomWarsProtocol
                         if (SendMessageParam1Relay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1504,7 +1510,7 @@ namespace RandomWarsProtocol
                         if (NecromancerBulletRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1522,7 +1528,7 @@ namespace RandomWarsProtocol
                         if (SetMinionTargetRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1538,7 +1544,7 @@ namespace RandomWarsProtocol
                         if (MinionStatusRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1552,7 +1558,7 @@ namespace RandomWarsProtocol
                         if (ScarecrowRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1568,7 +1574,7 @@ namespace RandomWarsProtocol
                         if (LayzerTargetRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1591,7 +1597,7 @@ namespace RandomWarsProtocol
                         if (FireBulletRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);
@@ -1610,7 +1616,7 @@ namespace RandomWarsProtocol
                         if (MinionInvincibilityRelay == null)
                             return false;
 
-                        
+
                         using (var ms = new MemoryStream(buffer))
                         {
                             BinaryReader br = new BinaryReader(ms);

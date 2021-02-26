@@ -92,12 +92,20 @@ namespace RandomWarsProtocol
         }
 
 
-        public void LeaveGameAck(Peer peer, GameErrorCode code) 
+        public void LeaveGameAck(Peer peer, GameErrorCode code, ItemBaseInfo[] giveUpReward) 
         {
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
                 bw.Write((int)code);
+
+                int length = (giveUpReward == null) ? 0 : giveUpReward.Length;
+                bw.Write(length);
+                for (int i = 0; i < length; i++)
+                {
+                    giveUpReward[i].Write(bw);
+                }
+
                 peer.SendPacket((int)GameProtocol.LEAVE_GAME_ACK, ms.ToArray());
             }
         }
