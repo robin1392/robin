@@ -97,7 +97,11 @@ MonoBehaviour:
   UnSpawned:
     m_PersistentCalls:
       m_Calls: []
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: -6285551073327302030, guid: b3fcd3244a9d8489eaa1365f9f676d6e, type: 3}
+  - {fileID: 1543683427229637218, guid: 96959fafd3b5d4a40a4a981101919585, type: 3}
+  - {fileID: 5852545224420049431, guid: 876b771d2cd9448cdabec49b98843c0e, type: 3}
+  - {fileID: 1543683427229637218, guid: 13bb752557e22490e816dc90bc0f20a2, type: 3}
 --- !u!114 &4651702573362233939
 MonoBehaviour:
   m_ObjectHideFlags: 0
