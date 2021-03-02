@@ -90,45 +90,44 @@ public class TableManager : Singleton<TableManager>
         string localTDataVersion = string.Empty;
         string url = BucketUrl + "/Table/" + Enviroment;
 
-
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + "/version.json");
-        request.ContentType = "application/json";
-        request.Method = "GET";
-        var response = (HttpWebResponse)request.GetResponse();
-        var resStream = response.GetResponseStream();
-        
-        StreamReader streamRead = new StreamReader(resStream);
-        string jsonServer = streamRead.ReadToEnd();
-        jsonServer = jsonServer.Replace("\\", "");
-        var jObjServer = Newtonsoft.Json.Linq.JObject.Parse(jsonServer);
-        remoteTDataVersion = (string)jObjServer["dataVersion"];
+        // HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + "/version.json");
+        // request.ContentType = "application/json";
+        // request.Method = "GET";
+        // var response = (HttpWebResponse)request.GetResponse();
+        // var resStream = response.GetResponseStream();
+        //
+        // StreamReader streamRead = new StreamReader(resStream);
+        // string jsonServer = streamRead.ReadToEnd();
+        // jsonServer = jsonServer.Replace("\\", "");
+        // var jObjServer = Newtonsoft.Json.Linq.JObject.Parse(jsonServer);
+        // remoteTDataVersion = (string)jObjServer["dataVersion"];
 
 
         string targetPath = Path.Combine(localPath, "Table", Enviroment);
-        string versionFile = Path.Combine(targetPath, "version.json");
-        if (File.Exists(versionFile) == true)
-        {
-            using (StreamReader r = new StreamReader(versionFile))
-            {
-                string jsonClient = r.ReadToEnd();
-                var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonClient);
-                localTDataVersion = (string)jObjClient["dataVersion"];
-            }
-        }
-
-        if (remoteTDataVersion != localTDataVersion)
-        {
-            // 패치 파일 로컬 저장
-            var reqUrl = Path.Combine(url, remoteTDataVersion + ".zip");
-            if (RequestPatchFile(reqUrl, targetPath) == false)
-            {
-                return;
-            }
-
-            // 서버 버젼 파일 로컬 저장
-            File.WriteAllText(versionFile, jsonServer);
-            Debug.Log("Download Table Complete !!! version : " + remoteTDataVersion);
-        }
+        // string versionFile = Path.Combine(targetPath, "version.json");
+        // if (File.Exists(versionFile) == true)
+        // {
+        //     using (StreamReader r = new StreamReader(versionFile))
+        //     {
+        //         string jsonClient = r.ReadToEnd();
+        //         var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonClient);
+        //         localTDataVersion = (string)jObjClient["dataVersion"];
+        //     }
+        // }
+        //
+        // if (remoteTDataVersion != localTDataVersion)
+        // {
+        //     // 패치 파일 로컬 저장
+        //     var reqUrl = Path.Combine(url, remoteTDataVersion + ".zip");
+        //     if (RequestPatchFile(reqUrl, targetPath) == false)
+        //     {
+        //         return;
+        //     }
+        //
+        //     // 서버 버젼 파일 로컬 저장
+        //     File.WriteAllText(versionFile, jsonServer);
+        //     Debug.Log("Download Table Complete !!! version : " + remoteTDataVersion);
+        // }
 
         LoadFromFile(targetPath);
     }

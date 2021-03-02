@@ -14,6 +14,7 @@ namespace MirageTest.Scripts.Entities
         public void SetWaveInterval(int oldValue, int newValue)
         {
             _waveRemainTime = newValue;
+            WorldUIManager.Get().SetSpawnTime( _waveRemainTime / waveInterval);
         }
 
         private void Update()

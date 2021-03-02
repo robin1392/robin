@@ -10,13 +10,16 @@ using UnityEngine.Serialization;
 
 namespace MirageTest.Scripts
 {
-    [RequireComponent(typeof(NetworkServer))]
-    public class GameLogic : MonoBehaviour
+    [RequireComponent(typeof(RWNetworkServer))]
+    public class ServerGameLogic : MonoBehaviour
     {
-        private NetworkServer _server;
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameLogic));
+        
+        private RWNetworkServer _networkServer;
         private ServerObjectManager _serverObjectManager;
         private readonly int _gamePlayerCount = 2;
 
+        //TODO: State를 Server가 가지고 있는 것이 좋을 듯 하다. 
         public GameState gameStatePrefab;
         public PlayerState playerStatePrefab;
         public ActorProxy actorProxyPrefab;
@@ -36,26 +39,26 @@ namespace MirageTest.Scripts
             Application.targetFrameRate = 20;
             QualitySettings.vSyncCount = 0;
 
-            _server = GetComponent<NetworkServer>();
+            _networkServer = GetComponent<RWNetworkServer>();
             _serverObjectManager = GetComponent<ServerObjectManager>();
         }
 
         private async void Start()
         {
-            while (!_server.Active)
+            while (!_networkServer.Active)
             {
                 await UniTask.Yield();
             } 
        
             TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             
-            // await WaitForPlayers().Timeout(TimeSpan.FromSeconds(30));
-            //
-            // if (NoPlayers)
-            // {
-            //     EndGameSession();
-            //     return;
-            // }
+            await WaitForPlayers().TimeoutWithoutException(TimeSpan.FromSeconds(3));
+            
+            if (NoPlayers)
+            {
+                EndGameSession();
+                return;
+            }
 
             var gameState = SpawnGameState();
             var playerStates = SpawnPlayerStates();
@@ -75,7 +78,8 @@ namespace MirageTest.Scripts
 
         private void EndGameSession()
         {
-            //프로세스 종료시킨다.
+            //프로세스 종료시킨다. 플렉스매칭에도 타임아웃이 있다. 이게 필요할까?
+            logger.LogError($"플레이어 입장 타임아웃");
         }
 
 
@@ -103,11 +107,22 @@ namespace MirageTest.Scripts
 
         private PlayerState[] SpawnPlayerStates()
         {
+            var authData = _serverObjectManager
+                .SpawnedObjects
+                .Select(kvp => kvp.Value.GetComponent<PlayerProxy>())
+                .Where(p => p != null)
+                .Select(p => p.ConnectionToClient.AuthenticationData as AuthDataForConnection).ToList();
+
+            if (authData.Count < 2)
+            {
+                authData.Add(new AuthDataForConnection(){ PlayerId = "auto_setted", PlayerNickName = "auto_setted"});
+            }
+            
             var getStartSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.GetStartSP].value;
             
             var playerStates = new PlayerState[2];
             playerStates[0] = SpawnPlayerState(
-                "1", "1", getStartSp,
+                authData[0].PlayerId, authData[0].PlayerNickName, getStartSp,
                 new DeckDice[]
                 {
                     new DeckDice(){ diceId = 1001, inGameLevel = 1, outGameLevel = 1 },
@@ -118,7 +133,7 @@ namespace MirageTest.Scripts
                 }, GameConstants.Player1Tag);
         
             playerStates[1] = SpawnPlayerState(
-                "2", "2", getStartSp, 
+                authData[1].PlayerId, authData[1].PlayerNickName, getStartSp, 
                 new DeckDice[]
                 {
                     new DeckDice(){ diceId = 2001, inGameLevel = 1, outGameLevel = 1 },
@@ -137,6 +152,11 @@ namespace MirageTest.Scripts
             playerState.Init(userId, nickName, sp, deck, tag);
             _serverObjectManager.Spawn(playerState.NetIdentity);
             return playerState;
+        }
+        
+        public PlayerState GetPlayerState(string userId)
+        {
+            return _gameMode.GetPlayerState(userId);
         }
 
         // private async UniTask UpdateSpawn()

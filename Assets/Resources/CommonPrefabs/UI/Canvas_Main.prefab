@@ -933,7 +933,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -86, y: 905.85}
+  m_AnchoredPosition: {x: -86, y: 905.8496}
   m_SizeDelta: {x: 126, y: 136}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &301228247032939061
@@ -1214,7 +1214,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -233.0199, y: -64.200195}
+  m_AnchoredPosition: {x: -233.01953, y: -64.200195}
   m_SizeDelta: {x: 417.60632, y: 107.45863}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2155859201427983721
@@ -1780,9 +1780,9 @@ RectTransform:
   m_Father: {fileID: 2270801189565116493}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -35.9301}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 157.68683, y: 0}
   m_SizeDelta: {x: 0, y: 55.8602}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6851533828094432317
@@ -2664,7 +2664,7 @@ MonoBehaviour:
   text_GetDiceButton: {fileID: 2799760150954390164}
   btn_GetDice: {fileID: 2799760152477126981}
   obj_ViewTargetDiceField: {fileID: 697933514972372889}
-  button_SP_Upgrade: {fileID: 2037759839458915803}
+  button_SP_Upgrade: {fileID: 1115411520}
   text_SP_Upgrade: {fileID: 8869831156245529957}
   text_SP_Upgrade_Price: {fileID: 3388622459063259960}
   text_MyNickname: {fileID: 4204854424594012258}
@@ -3003,7 +3003,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -80.900024, y: -188.1001}
+  m_AnchoredPosition: {x: -80.90039, y: -188.10059}
   m_SizeDelta: {x: 117.79605, y: 95.68411}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2799760152710573701
@@ -9868,7 +9868,7 @@ PrefabInstance:
     - target: {fileID: 6219972482154376621, guid: 6a12669d7f1e347339b7c1e3e37ac9c2,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 258.40002
+      value: 258.4004
       objectReference: {fileID: 0}
     - target: {fileID: 6219972482154376621, guid: 6a12669d7f1e347339b7c1e3e37ac9c2,
         type: 3}

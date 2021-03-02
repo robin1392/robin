@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Mirage;
@@ -18,7 +19,7 @@ namespace MirageTest.Scripts.GameMode
         
         public PlayerState PlayerState1 => PlayerStates[0];
         public PlayerState PlayerState2 => PlayerStates[1];
-        
+
         public GameModeBase(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab, ServerObjectManager serverObjectManager)
         {
             GameState = gameState;
@@ -71,6 +72,11 @@ namespace MirageTest.Scripts.GameMode
                     playerState.sp += (addSp + (GameState.wave * upgradeSp));    
                 }
             }
+        }
+        
+        public PlayerState GetPlayerState(string userId)
+        {
+            return PlayerStates.First(ps => ps.userId == userId);
         }
     }
 }

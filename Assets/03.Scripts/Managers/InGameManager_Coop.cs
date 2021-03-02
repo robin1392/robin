@@ -131,10 +131,6 @@ namespace ED
 
             }
             
-            // Upgrade buttons
-            // ui 셋팅
-            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
-
             if (IsNetwork == true)
             {
                 WorldUIManager.Get().SetWave(wave);

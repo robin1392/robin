@@ -31,66 +31,26 @@ using TDataDiceInfo = RandomWarsResource.Data.TDataDiceInfo;
 namespace ED
 {
     public class PlayerController : BaseStat
-    {
-
-        #region singleton
-        
-        private static PlayerController _instance = null;
-        public int instanceID;
-
-        public static PlayerController Get()
-        {
-            return _instance;
-        }
-        
-        protected void Init()
-        {
-            if (_instance == null)
-            {
-                instanceID = GetInstanceID();
-                _instance = this as PlayerController;
-            }
-
-            if (instanceID == 0)
-                instanceID = GetInstanceID();
-        }
-        
-        #endregion
-        
-        
-        
-        #region player variable.
-        
+    {   
         public PlayerController targetPlayer;
         public PlayerController coopPlayer;
-        #endregion
-        
-        
         
         #region data variable
-
-        // new dice info
-        protected RandomWarsResource.Data.TDataDiceInfo[] _arrDiceDeck;
-        public RandomWarsResource.Data.TDataDiceInfo[] arrDiceDeck
-        {
-            get => _arrDiceDeck;
-            protected set => _arrDiceDeck = value;
-        }
         
+        // //
+        // protected Dice[] _arrDice;
+        // public Dice[] arrDice
+        // { 
+        //     get => _arrDice;
+        //     protected set => _arrDice = value;
+        // }
         //
-        protected Dice[] _arrDice;
-        public Dice[] arrDice
-        { 
-            get => _arrDice;
-            protected set => _arrDice = value;
-        }
-        
-        protected int[] _arrUpgradeLevel;
-        public int[] arrUpgradeLevel 
-        { 
-            get => _arrUpgradeLevel;
-            protected set => _arrUpgradeLevel = value;
-        }
+        // protected int[] _arrUpgradeLevel;
+        // public int[] arrUpgradeLevel 
+        // { 
+        //     get => _arrUpgradeLevel;
+        //     protected set => _arrUpgradeLevel = value;
+        // }
 
         private Dictionary<int, float> _dicMaxDamage = new Dictionary<int, float>();
         private Dictionary<int, int> _dicMaxEye = new Dictionary<int, int>();
@@ -175,23 +135,11 @@ namespace ED
         #region unity base
         protected void Awake()
         {
-            InitializePlayer();
+            // InitializePlayer();
         }
 
         protected override void Start()
-        {   
-            //
-            if (_instance == null && isMine)
-            {
-                _instance = this;
-            }
-            instanceID = GetInstanceID();
-            
-            if (InGameManager.Get().playType != Global.PLAY_TYPE.COOP)
-            {
-                base.Start();
-            }
-            
+        {
             StartPlayerControll();
         }
 
@@ -202,30 +150,17 @@ namespace ED
 
         public void OnDestroy()
         {
-            DestroyPlayer();
+            // DestroyPlayer();
         }
 
         #endregion
         
         #region init & destroy
 
-        public void InitializePlayer()
-        {
-            _arrDice = new Dice[15];
-            if (arrDiceDeck == null) _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
-            _arrUpgradeLevel = new int[5];
-        }
-
-        public void DestroyPlayer()
-        {
-            if(NetworkManager.Get() != null && isMine) NetworkManager.Get().event_OtherPause.RemoveListener(OtherPlayerPause);
-            _arrDice = null;
-            _arrDiceDeck = null;
-            _arrUpgradeLevel = null;
-        }
-
         protected virtual void StartPlayerControll()
         {
+            return;
+            
             _myUID = isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID;
             id = myUID * 10000;
             
@@ -243,12 +178,12 @@ namespace ED
             currentHealth = maxHealth;
             RefreshHealthBar();
 
-            for (var i = 0; i < arrDice.Length; i++)
-            {
-                arrDice[i] = new Dice {diceFieldNum = i};
-            }
-            uiDiceField = FindObjectOfType<UI_DiceField>();
-            uiDiceField.SetField(arrDice);
+            // for (var i = 0; i < arrDice.Length; i++)
+            // {
+            //     arrDice[i] = new Dice {diceFieldNum = i};
+            // }
+            // uiDiceField = FindObjectOfType<UI_DiceField>();
+            // uiDiceField.SetField(arrDice);
 
             
             InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
@@ -259,11 +194,12 @@ namespace ED
             //StartCoroutine(SyncMinionStatus());
             StartSyncMinion();
 
-            for(int i = 0; i < arrDiceDeck.Length; i++)
-            {
-                _dicMaxDamage.Add(arrDiceDeck[i].id, 0f);
-                _dicMaxEye.Add(arrDiceDeck[i].id, 0);
-            }
+            //Mirage => PlayerState로 이동
+            // for(int i = 0; i < arrDiceDeck.Length; i++)
+            // {
+            //     _dicMaxDamage.Add(arrDiceDeck[i].id, 0f);
+            //     _dicMaxEye.Add(arrDiceDeck[i].id, 0);
+            // }
         }
         
         protected override void SetColor(E_MaterialType type)
@@ -313,65 +249,66 @@ namespace ED
                 for (int i = 0; i < infos.Length; i++)
                 {
                     int fieldIndex = infos[i].SlotIndex;
-                    var data = arrDice[fieldIndex].diceData;
+                    // var data = arrDice[fieldIndex].diceData;
                     var upgradeLevel = infos[i].DiceInGameUp;
                     var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
 
-                    for (int j = 0; j < infos[i].Id.Length; j++)
-                    {
-                        var objID = infos[i].Id[j] + myUID * 10000;
-                    
-                        if (listMinion.Find(minion => minion.id == objID) != null ||
-                            listMagic.Find(magic => magic.id == objID) != null)
-                            continue;
-                    
-                        switch(data.castType)
-                        {
-                            case (int)DICE_CAST_TYPE.MINION:
-                                CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
-                                break;
-                            case (int)DICE_CAST_TYPE.HERO:
-                                CreateMinion(data, ts.position, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
-                                break;
-                            case (int)DICE_CAST_TYPE.MAGIC:
-                            case (int)DICE_CAST_TYPE.INSTALLATION:
-                                CastMagic(data, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
-                                break;
-                        }
-                    }
+                    // for (int j = 0; j < infos[i].Id.Length; j++)
+                    // {
+                    //     var objID = infos[i].Id[j] + myUID * 10000;
+                    //
+                    //     if (listMinion.Find(minion => minion.id == objID) != null ||
+                    //         listMagic.Find(magic => magic.id == objID) != null)
+                    //         continue;
+                    //
+                    //     switch(data.castType)
+                    //     {
+                    //         case (int)DICE_CAST_TYPE.MINION:
+                    //             CreateMinion(data, ts.position, objID, 1arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                    //             break;
+                    //         case (int)DICE_CAST_TYPE.HERO:
+                    //             CreateMinion(data, ts.position, objID, 1arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                    //             break;
+                    //         case (int)DICE_CAST_TYPE.MAGIC:
+                    //         case (int)DICE_CAST_TYPE.INSTALLATION:
+                    //             CastMagic(data, objID, arrDice[fieldIndex].eyeLevel + 1, upgradeLevel, magicCastDelay, fieldIndex);
+                    //             break;
+                    //     }
+                    // }
                 }
             }
             else
             {
-                for (var i = 0; i < arrDice.Length; i++)
-                {
-                    if (arrDice[i].id >= 0 && arrDice[i].diceData != null )
-                    {
-                        int spawnID = id + spawnCount++;
-                        Transform ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(i): FieldManager.Get().GetTopListTs(i);
-                        var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
-                        var multiply = arrDice[i].diceData.spawnMultiply;
-                
-                        switch(arrDice[i].diceData.castType)
-                        {
-                        case (int)DICE_CAST_TYPE.MINION:
-                            for (var j = 0; j < (arrDice[i].eyeLevel + 1) * multiply; j++)
-                            {
-                                CreateMinion(arrDice[i].diceData, ts.position, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
-                            }
-                            break;
-                        case (int)DICE_CAST_TYPE.HERO:
-                            CreateMinion(arrDice[i].diceData, ts.position, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
-                            break;
-                        case (int)DICE_CAST_TYPE.MAGIC:
-                        case (int)DICE_CAST_TYPE.INSTALLATION:
-                            CastMagic(arrDice[i].diceData, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
-                            break;
-                
-                        }
-                        magicCastDelay += 0.066666f;
-                    }
-                }
+                // for (var i = 0; i < arrDice.Length; i++)
+                // {
+                //     if (arrDice[i].id >= 0 && arrDice[i].diceData != null )
+                //     {
+                //         int spawnID = id + spawnCount++;
+                //         Transform ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(i): FieldManager.Get().GetTopListTs(i);
+                //         //Mirage => ActorProxy 생성 시 동기화
+                //         var upgradeLevel = GetDiceUpgradeLevel(arrDice[i].diceData);
+                //         var multiply = arrDice[i].diceData.spawnMultiply;
+                //
+                //         switch(arrDice[i].diceData.castType)
+                //         {
+                //         case (int)DICE_CAST_TYPE.MINION:
+                //             for (var j = 0; j < (arrDice[i].eyeLevel + 1) * multiply; j++)
+                //             {
+                //                 CreateMinion(arrDice[i].diceData, ts.position, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
+                //             }
+                //             break;
+                //         case (int)DICE_CAST_TYPE.HERO:
+                //             CreateMinion(arrDice[i].diceData, ts.position, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
+                //             break;
+                //         case (int)DICE_CAST_TYPE.MAGIC:
+                //         case (int)DICE_CAST_TYPE.INSTALLATION:
+                //             CastMagic(arrDice[i].diceData, spawnID, arrDice[i].eyeLevel + 1, upgradeLevel, magicCastDelay, i);
+                //             break;
+                //
+                //         }
+                //         magicCastDelay += 0.066666f;
+                //     }
+                // }
             }
         }
         
@@ -594,49 +531,51 @@ namespace ED
                     ? NetworkManager.Get().GetNetInfo().playerInfo
                     : NetworkManager.Get().GetNetInfo().otherInfo;
                 var arrDiceLevel = myInfo.DiceLevelArray;
-                int deckNum = -1;
-                for (int i = 0; i < arrDiceDeck.Length; i++)
-                {
-                    if (arrDiceDeck[i] == data)
-                    {
-                        deckNum = i;
-                        break;
-                    }
-                }
-                m.power = data.power + (data.powerUpgrade * arrDiceLevel[deckNum]) + (data.powerInGameUp * upgradeLevel);
-                if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE &&  wave > 10)
-                {
-                    m.power *= Mathf.Pow(2f, wave - 10);
-                }
-                m.powerUpByUpgrade = data.powerUpgrade;
-                m.powerUpByInGameUp = data.powerInGameUp;
-                m.maxHealth = data.maxHealth + (data.maxHpUpgrade * arrDiceLevel[deckNum]) + (data.maxHpInGameUp * upgradeLevel);
-                m.maxHealthUpByUpgrade = data.maxHpUpgrade;
-                m.maxHealthUpByInGameUp = data.maxHpInGameUp;
-                m.effect = data.effect + (data.effectUpgrade * arrDiceLevel[deckNum]) + (data.effectInGameUp * upgradeLevel);
-                m.effectUpByUpgrade = data.effectUpgrade;
-                m.effectUpByInGameUp = data.effectInGameUp;
-                m.effectDuration = data.effectDuration;
-                m.effectCooltime = data.effectCooltime;
                 
-                m.attackSpeed = data.attackSpeed;
-                if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE && wave > 10)
-                {
-                    m.attackSpeed *= Mathf.Pow(0.9f, wave - 10);
-                    if (m.attackSpeed < data.attackSpeed * 0.5f) m.attackSpeed = data.attackSpeed * 0.5f;
-                }
-                m.moveSpeed = data.moveSpeed;
-                m.range = data.range;
-                m.searchRange = data.searchRange;
-                m.eyeLevel = eyeLevel;
-                m.ingameUpgradeLevel = upgradeLevel;
                 
-                if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
-                {
-                    m.power *= arrDice[diceNum].eyeLevel + 1;
-                    m.maxHealth *= arrDice[diceNum].eyeLevel + 1;
-                    m.effect *= arrDice[diceNum].eyeLevel + 1;
-                }
+                // int deckNum = -1;
+                // for (int i = 0; i < arrDiceDeck.Length; i++)
+                // {
+                //     if (arrDiceDeck[i] == data)
+                //     {
+                //         deckNum = i;
+                //         break;
+                //     }
+                // }
+                
+                //Mirage => ActorProxy 생성 시 서버에서 정해짐
+                // m.power = data.power + (data.powerUpgrade * arrDiceLevel[deckNum]) + (data.powerInGameUp * upgradeLevel);
+                // if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE &&  wave > 10)
+                // {
+                //     m.power *= Mathf.Pow(2f, wave - 10);
+                // }
+                //
+                // m.maxHealth = data.maxHealth + (data.maxHpUpgrade * arrDiceLevel[deckNum]) + (data.maxHpInGameUp * upgradeLevel);
+                //
+                // m.effect = data.effect + (data.effectUpgrade * arrDiceLevel[deckNum]) + (data.effectInGameUp * upgradeLevel);
+                // m.effectUpByUpgrade = data.effectUpgrade;
+                // m.effectUpByInGameUp = data.effectInGameUp;
+                // m.effectDuration = data.effectDuration;
+                // m.effectCooltime = data.effectCooltime;
+                //
+                // m.attackSpeed = data.attackSpeed;
+                // if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE && wave > 10)
+                // {
+                //     m.attackSpeed *= Mathf.Pow(0.9f, wave - 10);
+                //     if (m.attackSpeed < data.attackSpeed * 0.5f) m.attackSpeed = data.attackSpeed * 0.5f;
+                // }
+                // m.moveSpeed = data.moveSpeed;
+                // m.range = data.range;
+                // m.searchRange = data.searchRange;
+                // m.eyeLevel = eyeLevel;
+                // m.ingameUpgradeLevel = upgradeLevel;
+                //
+                // if ((DICE_CAST_TYPE)data.castType == DICE_CAST_TYPE.HERO)
+                // {
+                //     m.power *= arrDice[diceNum].eyeLevel + 1;
+                //     m.maxHealth *= arrDice[diceNum].eyeLevel + 1;
+                //     m.effect *= arrDice[diceNum].eyeLevel + 1;
+                // }
 
                 m.Initialize(MinionDestroyCallback);
                 
@@ -706,6 +645,7 @@ namespace ED
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         private void CastMagic(RandomWarsResource.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
+            //delay = 0.05f;
             var magic = listMagic.Find(m => m.id == id);
             if (magic != null) return;
             
@@ -769,11 +709,8 @@ namespace ED
                     {
                         m.power *= Mathf.Pow(2f, wave - 10);
                     }
-                    m.powerUpByUpgrade = data.powerUpgrade;
-                    m.powerUpByInGameUp = data.powerInGameUp;
+                    
                     m.maxHealth = (data.maxHealth + (data.maxHpInGameUp * upgradeLevel)) * Mathf.Pow(2f, eyeLevel - 1);
-                    m.maxHealthUpByUpgrade = data.maxHpUpgrade;
-                    m.maxHealthUpByInGameUp = data.maxHpInGameUp;
                     m.effect = (data.effect + (data.effectInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
                     m.effectUpByUpgrade = data.effectUpgrade;
                     m.effectUpByInGameUp = data.effectInGameUp;
@@ -802,123 +739,127 @@ namespace ED
         #region net dice system
         public void SetDeck(int[] deck)
         {
-            if(arrDiceDeck == null)
-                _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
-            
-            for (int i = 0; i < 5; i++)
-            {
-                int num = deck[i];
-                if (InGameManager.Get().data_DiceInfo.GetData(num, out arrDiceDeck[i]) == false)
-                {
-                    return;
-                }
-                
-                if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
-                
-                if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
-                }
-                else
-                {
-                    PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
-                }
-
-            }
+            //KZSee: 미니언 게임오브젝트 풀링 웜업을 해야한다. 
+            // if(arrDiceDeck == null)
+            //     _arrDiceDeck = new RandomWarsResource.Data.TDataDiceInfo[5];
+            //
+            // for (int i = 0; i < 5; i++)
+            // {
+            //     int num = deck[i];
+            //     if (InGameManager.Get().data_DiceInfo.GetData(num, out arrDiceDeck[i]) == false)
+            //     {
+            //         return;
+            //     }
+            //     
+            //     if (PoolManager.Get() == null) Debug.Log("PoolManager Instnace is null");
+            //     
+            //     if ((Global.E_LOADTYPE)arrDiceDeck[i].loadType == Global.E_LOADTYPE.LOAD_MINION)
+            //     {
+            //         PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MINION ), 50);  
+            //     }
+            //     else
+            //     {
+            //         PoolManager.instance.AddPool(FileHelper.LoadPrefab(arrDiceDeck[i].prefabName , Global.E_LOADTYPE.LOAD_MAGIC ), 50);
+            //     }
+            //
+            // }
         }
 
         public void GetDice(int diceId , int slotNum , int level = 0)
         {
-            arrDice[slotNum].Set(GetArrayDeckDice(diceId));
-            
-            if (uiDiceField != null)
-            {
-                uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
-                uiDiceField.SetField(arrDice);
-            }
-            
+            // arrDice[slotNum].Set(GetArrayDeckDice(diceId));
             //
-            uiDiceField.RefreshField();
+            // if (uiDiceField != null)
+            // {
+            //     uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
+            //     uiDiceField.SetField(arrDice);
+            // }
+            //
+            // //
+            // uiDiceField.RefreshField();
         }
 
         public void OtherGetDice(int diceId, int slotNum)
         {
-            arrDice[slotNum].Set(GetArrayDeckDice(diceId));
+            // arrDice[slotNum].Set(GetArrayDeckDice(diceId));
         }
 
-        public RandomWarsResource.Data.TDataDiceInfo GetArrayDeckDice(int diceId)
-        {
-            RandomWarsResource.Data.TDataDiceInfo dice = null;
-            for (int i = 0; i < arrDiceDeck.Length; i++)
-            {
-                if (arrDiceDeck[i].id == diceId)
-                {
-                    dice = arrDiceDeck[i];
-                    break;
-                }
-            }
-            return dice;
-        }
+        // public RandomWarsResource.Data.TDataDiceInfo GetArrayDeckDice(int diceId)
+        // {
+        //     RandomWarsResource.Data.TDataDiceInfo dice = null;
+        //     for (int i = 0; i < arrDiceDeck.Length; i++)
+        //     {
+        //         if (arrDiceDeck[i].id == diceId)
+        //         {
+        //             dice = arrDiceDeck[i];
+        //             break;
+        //         }
+        //     }
+        //     return dice;
+        // }
         
         
         public void LevelUpDice(int resetFieldNum, int levelupFieldNum, int levelupDiceId, int level)
         {
-            arrDice[resetFieldNum].Reset();
-
-            RandomWarsResource.Data.TDataDiceInfo data;
-            if (InGameManager.Get().data_DiceInfo.GetData(levelupDiceId, out data) == false)
-            {
-                return;
-            }
-
-
-            if (InGameManager.IsNetwork == true)
-            {
-                // 서버에서 오는 레벨이 1부터 시작하기때문에 (클라는 0 부터 시작)1을 빼줘야된다
-                int serverLevel = level - 1;
-                if (serverLevel < 0)
-                    serverLevel = 0;
-                arrDice[levelupFieldNum].Set(data, serverLevel);    
-            }
-            else
-                arrDice[levelupFieldNum].Set(data, level);
-            
-
-            if (InGameManager.IsNetwork && isMine)
-            {
-                if (uiDiceField != null)
-                {
-                    uiDiceField.SetField(arrDice);
-                    
-                }
-                
-                uiDiceField.RefreshField();
-            }
+            //Mirage => PlayerProxy MergeDice로 이동
+            // // arrDice[resetFieldNum].Reset();
+            //
+            // RandomWarsResource.Data.TDataDiceInfo data;
+            // if (InGameManager.Get().data_DiceInfo.GetData(levelupDiceId, out data) == false)
+            // {
+            //     return;
+            // }
+            //
+            //
+            // if (InGameManager.IsNetwork == true)
+            // {
+            //     // 서버에서 오는 레벨이 1부터 시작하기때문에 (클라는 0 부터 시작)1을 빼줘야된다
+            //     int serverLevel = level - 1;
+            //     if (serverLevel < 0)
+            //         serverLevel = 0;
+            //     arrDice[levelupFieldNum].Set(data, serverLevel);    
+            // }
+            // else
+            //     arrDice[levelupFieldNum].Set(data, level);
+            //
+            //
+            // if (InGameManager.IsNetwork && isMine)
+            // {
+            //     if (uiDiceField != null)
+            //     {
+            //         uiDiceField.SetField(arrDice);
+            //         
+            //     }
+            //     
+            //     uiDiceField.RefreshField();
+            // }
         }
         
-        public void InGameDiceUpgrade(int diceId , int upgradeLv)
-        {
-            for (int i = 0; i < arrDiceDeck.Length; i++)
-            {
-                if (arrDiceDeck[i].id == diceId)
-                {
-                    arrUpgradeLevel[i] = upgradeLv;
-                    break;
-                }
-            }
-        }
+        //Mirage => PlayerState로 이동
+        // public void InGameDiceUpgrade(int diceId , int upgradeLv)
+        // {
+        //     for (int i = 0; i < arrDiceDeck.Length; i++)
+        //     {
+        //         if (arrDiceDeck[i].id == diceId)
+        //         {
+        //             arrUpgradeLevel[i] = upgradeLv;
+        //             break;
+        //         }
+        //     }
+        // }
         
         private int GetDiceUpgradeLevel(RandomWarsResource.Data.TDataDiceInfo data)
         {
-            var num = 0;
-            for (var i = 0; i < arrDiceDeck.Length; i++)
-            {
-                if (arrDiceDeck[i] != data) continue;
-                num = i;
-                break;
-            }
-
-            return arrUpgradeLevel[num];
+            // var num = 0;
+            // for (var i = 0; i < arrDiceDeck.Length; i++)
+            // {
+            //     if (arrDiceDeck[i] != data) continue;
+            //     num = i;
+            //     break;
+            // }
+            //
+            // return arrUpgradeLevel[num];
+            return 0;
         }
         
         #endregion
@@ -988,51 +929,54 @@ namespace ED
         
         public void GetDice()
         {
-            var emptyCount = GetDiceFieldEmptySlotCount();
-
-            if (emptyCount == 0)
-            {
-                Debug.Log("DiceField is Full !!");
-                return;
-            }
-            else
-            {
-                var emptySlotNum = 0;
-                do
-                {
-                    emptySlotNum = Random.Range(0, arrDice.Length);
-                } while (arrDice[emptySlotNum].id >= 0);
-
-                int randomDeckNum = Random.Range(0, arrDiceDeck.Length);
-                arrDice[emptySlotNum].Set(arrDiceDeck[randomDeckNum]);
-                
-                if (uiDiceField != null)
-                {
-                    uiDiceField.arrSlot[emptySlotNum].ani.SetTrigger("BBoing");
-                    uiDiceField.SetField(arrDice);
-                }
-            }
+            //Mirage => PlayerProxy GetDice
+            // var emptyCount = GetDiceFieldEmptySlotCount();
+            //
+            // if (emptyCount == 0)
+            // {
+            //     Debug.Log("DiceField is Full !!");
+            //     return;
+            // }
+            // else
+            // {
+            //     var emptySlotNum = 0;
+            //     do
+            //     {
+            //         emptySlotNum = Random.Range(0, arrDice.Length);
+            //     } while (arrDice[emptySlotNum].id >= 0);
+            //
+            //     int randomDeckNum = Random.Range(0, arrDiceDeck.Length);
+            //     arrDice[emptySlotNum].Set(arrDiceDeck[randomDeckNum]);
+            //     
+            //     if (uiDiceField != null)
+            //     {
+            //         uiDiceField.arrSlot[emptySlotNum].ani.SetTrigger("BBoing");
+            //         uiDiceField.SetField(arrDice);
+            //     }
+            // }
         }
        
         public void GetDice(int deckNum, int slotNum)
         {
-            arrDice[slotNum].Set(arrDiceDeck[deckNum]);
-            
-            if (uiDiceField != null)
-            {
-                uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
-                uiDiceField.SetField(arrDice);
-            }
+            // arrDice[slotNum].Set(arrDiceDeck[deckNum]);
+            //
+            // if (uiDiceField != null)
+            // {
+            //     uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
+            //     uiDiceField.SetField(arrDice);
+            // }
         }
-
+        
+        //KZSee: 노드캔버스 노드에서 사용중이다. 확인 할 것.
         public int GetDiceFieldEmptySlotCount()
         {
-            return arrDice.Count(dice => dice.id < 0);
+            return 0;//arrDice.Count(dice => dice.id < 0);
         }
-
+        
         public int DiceUpgrade(int deckNum)
         {
-            return ++arrUpgradeLevel[deckNum];
+            return 0;
+            // return ++arrUpgradeLevel[deckNum];
         }
 
         #endregion
@@ -1154,18 +1098,19 @@ namespace ED
 
         public void SendEventLog_BatCheck()
         {
-            var param = new Firebase.Analytics.Parameter[25];
-            for(int i = 0; i < arrDiceDeck.Length; i++)
-            {
-                int diceID = arrDiceDeck[i].id;
-                param[i * 5] = new Firebase.Analytics.Parameter($"dice{i + 1}_id", diceID);
-                param[i * 5 + 1] = new Firebase.Analytics.Parameter($"dice{i + 1}_level", UserInfoManager.Get().GetUserInfo().dicGettedDice[diceID][0]);
-                param[i * 5 + 2] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_eye", _dicMaxEye[diceID]);
-                param[i * 5 + 3] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_upgrade", arrUpgradeLevel[i]);
-                param[i * 5 + 4] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_damage", _dicMaxDamage[diceID]);
-            }
-
-            FirebaseManager.Get().LogEvent("bat_check", param);
+            //KZSee: 게임 종료 시에 덱 정보를 아날라틱스로 보낸다
+            // var param = new Firebase.Analytics.Parameter[25];
+            // for(int i = 0; i < arrDiceDeck.Length; i++)
+            // {
+            //     int diceID = arrDiceDeck[i].id;
+            //     param[i * 5] = new Firebase.Analytics.Parameter($"dice{i + 1}_id", diceID);
+            //     param[i * 5 + 1] = new Firebase.Analytics.Parameter($"dice{i + 1}_level", UserInfoManager.Get().GetUserInfo().dicGettedDice[diceID][0]);
+            //     param[i * 5 + 2] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_eye", _dicMaxEye[diceID]);
+            //     param[i * 5 + 3] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_upgrade", arrUpgradeLevel[i]);
+            //     param[i * 5 + 4] = new Firebase.Analytics.Parameter($"dice{i + 1}_max_damage", _dicMaxDamage[diceID]);
+            // }
+            //
+            // FirebaseManager.Get().LogEvent("bat_check", param);
         }
 
         public void SetMaxDamageWithDiceID(int diceID, float damage)
@@ -2074,45 +2019,45 @@ namespace ED
 
         public void SetDiceField(MsgGameDice[] arrDiceData)
         {
-            if (arrDice != null)
-            {
-                for(int i = 0 ; i < arrDice.Length ; i++)
-                    arrDice[i].Reset();
-            }
-            else
-            {
-                arrDice = new Dice[arrDiceData.Length];    
-            }
-            
-            for (int i = 0; i < arrDiceData.Length; i++)
-            {
-                int servLevel = arrDiceData[i].Level - 1;
-                if (servLevel < 0)
-                    servLevel = 0;
-
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (InGameManager.Get().data_DiceInfo.GetData(arrDiceData[i].DiceId, out dataDiceInfo) == false)
-                {
-                    return;
-                }
-
-                arrDice[arrDiceData[i].SlotNum] = new Dice
-                {
-                    diceData = dataDiceInfo,
-                    eyeLevel = servLevel,
-                    diceFieldNum = arrDiceData[i].SlotNum
-                };
-                
-                if (uiDiceField != null)
-                {
-                    uiDiceField.arrSlot[arrDiceData[i].SlotNum].ani.SetTrigger("BBoing");
-                    uiDiceField.SetField(arrDice);
-                }
-            }
-            
+            // if (arrDice != null)
+            // {
+            //     for(int i = 0 ; i < arrDice.Length ; i++)
+            //         arrDice[i].Reset();
+            // }
+            // else
+            // {
+            //     arrDice = new Dice[arrDiceData.Length];    
+            // }
             //
-            if(isMine)
-                uiDiceField.RefreshField();    
+            // for (int i = 0; i < arrDiceData.Length; i++)
+            // {
+            //     int servLevel = arrDiceData[i].Level - 1;
+            //     if (servLevel < 0)
+            //         servLevel = 0;
+            //
+            //     RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+            //     if (InGameManager.Get().data_DiceInfo.GetData(arrDiceData[i].DiceId, out dataDiceInfo) == false)
+            //     {
+            //         return;
+            //     }
+            //
+            //     arrDice[arrDiceData[i].SlotNum] = new Dice
+            //     {
+            //         diceData = dataDiceInfo,
+            //         eyeLevel = servLevel,
+            //         diceFieldNum = arrDiceData[i].SlotNum
+            //     };
+            //     
+            //     if (uiDiceField != null)
+            //     {
+            //         uiDiceField.arrSlot[arrDiceData[i].SlotNum].ani.SetTrigger("BBoing");
+            //         uiDiceField.SetField(arrDice);
+            //     }
+            // }
+            //
+            // //
+            // if(isMine)
+            //     uiDiceField.RefreshField();    
         }
         
         #endregion
@@ -2473,19 +2418,20 @@ namespace ED
                             
                         //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         int diceIdIndex = 0;
-                        for (int j = 0; j < arrDiceDeck.Length; j++)
-                        {
-                            if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
-                            {
-                                diceIdIndex = j;
-                                break;
-                            }
-                        }
+                        // for (int j = 0; j < arrDiceDeck.Length; j++)
+                        // {
+                        //     if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
+                        //     {
+                        //         diceIdIndex = j;
+                        //         break;
+                        //     }
+                        // }
                             
                         var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
                         var diceLevel = arrDiceLevel[diceIdIndex];
-                        var ingameUpgradeLevel = arrUpgradeLevel[diceIdIndex];
-
+                        // var ingameUpgradeLevel = arrUpgradeLevel[diceIdIndex];
+                        var ingameUpgradeLevel = 1;
+                        
                         minion.id = msgMinionInfos[i].Id;
                         minion.diceId = data.id;
                         minion.controller = this;
@@ -2543,17 +2489,17 @@ namespace ED
                         //Debug.Log($"CastMagic: prefName:{arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName}, objIsNull:{prefab == null}");
                         //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
                         int diceIdIndex = 0;
-                        for (int j = 0; j < arrDiceDeck.Length; j++)
-                        {
-                            if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
-                            {
-                                diceIdIndex = j;
-                                break;
-                            }
-                        }
+                        // for (int j = 0; j < arrDiceDeck.Length; j++)
+                        // {
+                        //     if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
+                        //     {
+                        //         diceIdIndex = j;
+                        //         break;
+                        //     }
+                        // }
                         var magic = CastMagic(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
                         var diceLevel = arrDiceLevel[diceIdIndex];
-                        var ingameUpgradeLevel = arrUpgradeLevel[diceIdIndex];
+                        var ingameUpgradeLevel = 1;//arrUpgradeLevel[diceIdIndex];
 
                         magic.id = msgMinionInfos[i].Id;
                         magic.diceId = data.id;

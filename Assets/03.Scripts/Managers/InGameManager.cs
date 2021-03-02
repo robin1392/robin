@@ -17,6 +17,7 @@ using TMPro;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
+using MirageTest.Scripts;
 using Pathfinding;
 using RandomWarsResource.Data;
 using UnityEngine.U2D;
@@ -361,11 +362,10 @@ namespace ED
 
             }
 
-            // Upgrade buttons
-            // ui 셋팅
-            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
-            UI_InGame.Get().SetEnemyArrayDeck();
-            UI_InGame.Get().SetEnemyUpgrade();
+            //Mirage => PlayerState 클라이언트 동기화 로직으로 이동
+            // UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
+            // UI_InGame.Get().SetEnemyArrayDeck();
+            // UI_InGame.Get().SetEnemyUpgrade();
 
             if (IsNetwork == true)
             {
@@ -812,9 +812,6 @@ namespace ED
 
         protected void SetSPUpgradeButton(int sp)
         {
-            //button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
-            //text_SP_Upgrade.text = $"SP Lv.{playerController.spUpgradeLevel + 1}";
-            //text_SP_Upgrade_Price.text = $"{(playerController.spUpgradeLevel + 1) * 500}";
             UI_InGame.Get().SetSPUpgrade(playerController.spUpgradeLevel, sp);
         }
 
@@ -961,14 +958,16 @@ namespace ED
 
         public void Click_SP_Upgrade_Button()
         {
-            if(IsNetwork)
-            {
-                SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
-            }
-            else
-            {
-                playerController.SP_Upgrade();
-            }
+            // if(IsNetwork)
+            // {
+            //     SendInGameManager(GameProtocol.UPGRADE_SP_REQ);
+            // }
+            // else
+            // {
+            //     playerController.SP_Upgrade();
+            // }
+            
+            RWNetworkClient.instance.GetLocalPlayerProxy().UpgradeSp();
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
         }
@@ -979,7 +978,8 @@ namespace ED
             if (serverUpgradeLv < 0)
                 serverUpgradeLv = 0;
             
-            playerController.InGameDiceUpgrade(diceId, serverUpgradeLv);
+            //Mirage => playerProxy로 이동
+            // playerController.InGameDiceUpgrade(diceId, serverUpgradeLv);
             UI_InGame.Get().SetDeckRefresh(diceId, serverUpgradeLv);
             NetSetSp(curSp);
         }
@@ -1323,8 +1323,8 @@ namespace ED
             }
             
             // Upgrade buttons
-            // ui 셋팅
-            UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
+            //Mirage : PlayerState로 이동
+            // UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
 
             if (IsNetwork == true)
             {
@@ -1561,17 +1561,18 @@ namespace ED
                 }
                 case GameProtocol.INGAME_UP_DICE_NOTIFY:
                 {
-                    // 상대방이...주사위 업그레이 햇다..고 노티가 날라옴
-                    MsgInGameUpDiceNotify notiIngame = (MsgInGameUpDiceNotify) param[0];
-
-                    // 상대방이 햇다는것을..알필요가 잇나..잇겟지...
-                    if (NetworkManager.Get().OtherUID == notiIngame.PlayerUId)
-                    {
-                        int ingameup = ConvertNetMsg.MsgShortToInt(notiIngame.InGameUp); 
-                        ingameup = ingameup > 0 ? ingameup - 1 : 0; 
-                        playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId, ingameup);
-                        UI_InGame.Get().SetEnemyUpgrade();
-                    }
+                    //Mirage => PlayerState로 이동
+                    // // 상대방이...주사위 업그레이 햇다..고 노티가 날라옴
+                    // MsgInGameUpDiceNotify notiIngame = (MsgInGameUpDiceNotify) param[0];
+                    //
+                    // // 상대방이 햇다는것을..알필요가 잇나..잇겟지...
+                    // if (NetworkManager.Get().OtherUID == notiIngame.PlayerUId)
+                    // {
+                    //     int ingameup = ConvertNetMsg.MsgShortToInt(notiIngame.InGameUp); 
+                    //     ingameup = ingameup > 0 ? ingameup - 1 : 0; 
+                    //     playerController.targetPlayer.InGameDiceUpgrade(notiIngame.DiceId, ingameup);
+                    //     UI_InGame.Get().SetEnemyUpgrade();
+                    // }
 
                     break;
                 }
@@ -1767,49 +1768,52 @@ namespace ED
 
         public void ShowAIField(bool isShow)
         {
-            if (isShow)
-            {
-                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-                playerController.uiDiceField.RefreshField(0.5f);
-                
-                UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
-                int count = UI_InGame.Get().arrUpgradeButtons.Length;
-                for (int i = 0; i < count; i++)
-                {
-                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
-                }
-                StartCoroutine(nameof(ShowAiFieldCoroutine));
-            }
-            else
-            {
-                StopCoroutine(nameof(ShowAiFieldCoroutine));
-                playerController.uiDiceField.SetField(playerController.arrDice);
-                playerController.uiDiceField.RefreshField();
-                
-                UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, playerController.arrUpgradeLevel);
-                int count = UI_InGame.Get().arrUpgradeButtons.Length;
-                for (int i = 0; i < count; i++)
-                {
-                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(1f);
-                }
-            }
+            //KZSee: 에이아이모드에서 사용중 확인 필요
+            // if (isShow)
+            // {
+            //     playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
+            //     playerController.uiDiceField.RefreshField(0.5f);
+            //     
+            //     UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
+            //     int count = UI_InGame.Get().arrUpgradeButtons.Length;
+            //     for (int i = 0; i < count; i++)
+            //     {
+            //         UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
+            //     }
+            //     StartCoroutine(nameof(ShowAiFieldCoroutine));
+            // }
+            // else
+            // {
+            //     StopCoroutine(nameof(ShowAiFieldCoroutine));
+            //     playerController.uiDiceField.SetField(playerController.arrDice);
+            //     playerController.uiDiceField.RefreshField();
+            //     
+            //     UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, playerController.arrUpgradeLevel);
+            //     int count = UI_InGame.Get().arrUpgradeButtons.Length;
+            //     for (int i = 0; i < count; i++)
+            //     {
+            //         UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(1f);
+            //     }
+            // }
         }
 
         private IEnumerator ShowAiFieldCoroutine()
         {
-            while (true)
-            {
-                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-                playerController.uiDiceField.RefreshField(0.5f);
-                
-                UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
-                int count = UI_InGame.Get().arrUpgradeButtons.Length;
-                for (int i = 0; i < count; i++)
-                {
-                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
-                }
-                yield return null;
-            }
+            //KZSee: 에이아이모드에서 사용중 확인 필요
+            // while (true)
+            // {
+            //     playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
+            //     playerController.uiDiceField.RefreshField(0.5f);
+            //     
+            //     UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
+            //     int count = UI_InGame.Get().arrUpgradeButtons.Length;
+            //     for (int i = 0; i < count; i++)
+            //     {
+            //         UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
+            //     }
+            //     yield return null;
+            // }
+            yield return null;
         }
         
         public BaseStat GetBaseStatFromId(int baseStatId)

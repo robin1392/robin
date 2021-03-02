@@ -8,11 +8,6 @@ namespace MirageTest.Scripts
 {
     public class ActorProxy : NetworkBehaviour
     {
-        // public Actor actor;
-        // public ActorPathfinding actorPathfinding;
-        // public ActorAI actorAi;
-        // public Renderer renderer;
-
         [SyncVar] public byte ownerTag;
         [SyncVar(hook = nameof(SetTeam))] public byte team;
         [SyncVar] public byte spawnSlot; //0 ~ 14 필드 슬롯 
@@ -24,8 +19,11 @@ namespace MirageTest.Scripts
         [SyncVar] public float power;
         [SyncVar] public float range;
         [SyncVar] public float effect;
+        [SyncVar] public float attackSpeed;
+        [SyncVar] public byte diceScale;
+        [SyncVar] public byte ingameUpgradeLevel;
 
-        public ReferenceHolder referenceHolder;
+        public BaseStat baseStat;
 
         private void Awake()
         {
@@ -49,10 +47,19 @@ namespace MirageTest.Scripts
 
         private void StartClient()
         {
+            var client = Client as RWNetworkClient;
+            if (client.enableActor)
+            {
+                SpawnActor();
+            }
+        }
+
+        void SpawnActor()
+        {
             if (actorType == ActorType.Tower)
             {
-                var towerPrefab = Resources.Load<ReferenceHolder>("Mirage/Tower");
-                referenceHolder = Instantiate(towerPrefab, transform);
+                var towerPrefab = Resources.Load<PlayerController>("Tower/Player");
+                baseStat = Instantiate(towerPrefab, transform);
             }
             
             // actorPathfinding.EnableAIPathfinding(false);
@@ -64,6 +71,7 @@ namespace MirageTest.Scripts
             RefreshHpUI();
         }
         
+        
         public void SetHp(float oldValue, float newValue)
         {
             RefreshHpUI();
@@ -71,13 +79,13 @@ namespace MirageTest.Scripts
 
         void RefreshHpUI()
         {
-            if (referenceHolder == null)
+            if (baseStat == null)
             {
                 return;
             }
             
-            referenceHolder.image_HealthBar.fillAmount = hp / maxHp;
-            referenceHolder.text_Health.text = $"{Mathf.CeilToInt(hp)}";
+            baseStat.image_HealthBar.fillAmount = hp / maxHp;
+            baseStat.text_Health.text = $"{Mathf.CeilToInt(hp)}";
         }
 
         private void Update()

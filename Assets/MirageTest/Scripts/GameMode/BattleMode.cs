@@ -9,6 +9,8 @@ namespace MirageTest.Scripts.GameMode
 {
     public class BattleMode : GameModeBase
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(BattleMode));
+        
         public BattleMode(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab, ServerObjectManager serverObjectManager) : base(gameState, playerStates, actorProxyPrefab, serverObjectManager)
         {
         }
@@ -56,40 +58,65 @@ namespace MirageTest.Scripts.GameMode
 
         protected override void OnWave(int wave)
         {
-            return;
             for (var index = 0; index < PlayerStates.Length; ++index)
             {
                 var playerState = PlayerStates[index];
-                // SpawnMinions(playerState, team : index);
+                SpawnMinions(playerState, playerState.camp, playerState.tag);
             }
         }
-
-       
 
         void SpawnMinions(PlayerState playerState, byte team, byte ownerTag)
         {
             var diceInfos = TableManager.Get().DiceInfo;
             for (byte fieldIndex = 0; fieldIndex < playerState.Field.Count; ++fieldIndex)
             {
-                var fieldSlot = playerState.Field[fieldIndex];
-                if (fieldSlot.IsEmpty)
+                var fieldDice = playerState.Field[fieldIndex];
+                if (fieldDice.IsEmpty)
                 {
                     continue;
                 }
 
-                var diceId = fieldSlot.diceId;
+                var diceId = fieldDice.diceId;
                 if (diceInfos.GetData(diceId, out var diceInfo) == false)
                 {
-                    ED.Debug.LogError($"다이스정보 {fieldSlot.diceId}가 없습니다. UserId : {playerState.userId} 필드 슬롯 : {fieldIndex}");
+                    ED.Debug.LogError($"다이스정보 {fieldDice.diceId}가 없습니다. UserId : {playerState.userId} 필드 슬롯 : {fieldIndex}");
                     continue;
                 }
                 
                 var spawnCount = diceInfo.spawnMultiply;
                 if (diceInfo.castType == (int)DICE_CAST_TYPE.MINION)
                 {
-                    spawnCount *= fieldSlot.diceScale;
+                    spawnCount *= fieldDice.diceScale;
                 }
+                
+                var deckDice = playerState.GetDeckDice(diceId);
 
+                var power = diceInfo.power 
+                            + (diceInfo.powerUpgrade * deckDice.outGameLevel) 
+                            + (diceInfo.powerInGameUp * deckDice.inGameLevel);
+
+                //KZSee: 서든데스 로직으로 묶어내기
+                if (GameState.wave > 10)
+                {
+                    power *= Mathf.Pow(2f, GameState.wave - 10);
+                }
+                
+                var maxHealth =  diceInfo.maxHealth + (diceInfo.maxHpUpgrade * deckDice.outGameLevel) + (diceInfo.maxHpInGameUp * deckDice.inGameLevel);
+                var effect = diceInfo.effect + (diceInfo.effectUpgrade * deckDice.outGameLevel) + (diceInfo.effectInGameUp * deckDice.inGameLevel);
+                var attackSpeed = diceInfo.attackSpeed;
+                if (GameState.wave > 10)
+                {
+                    attackSpeed *= Mathf.Pow(0.9f, GameState.wave - 10);
+                    attackSpeed = Mathf.Max(diceInfo.attackSpeed * 0.5f, attackSpeed);
+                }
+                
+                if ((DICE_CAST_TYPE)diceInfo.castType == DICE_CAST_TYPE.HERO)
+                {
+                    power *= fieldDice.diceScale + 1;
+                    maxHealth *= fieldDice.diceScale + 1;
+                    effect *= fieldDice.diceScale + 1;
+                }
+                
                 for (int i = 0; i < spawnCount; ++i)
                 {
                     var actor = Object.Instantiate(ActorProxyPrefab);
@@ -97,13 +124,17 @@ namespace MirageTest.Scripts.GameMode
                     actor.team = team;
                     actor.ownerTag = ownerTag;
                     actor.spawnSlot = fieldIndex;
-
-                    var deckDice = playerState.GetDeckDice(diceId);
+                    actor.power = power;
+                    actor.maxHp = maxHealth;
+                    actor.hp = maxHealth;
+                    actor.effect = effect;
+                    actor.attackSpeed = attackSpeed;
+                    actor.diceScale = fieldDice.diceScale;
+                    actor.ingameUpgradeLevel = deckDice.inGameLevel;
                     
                     ServerObjectManager.Spawn(actor.NetIdentity);
                 }
             }
         }
-        
     }
 }

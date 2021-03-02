@@ -15,16 +15,16 @@ namespace ED
 
         private void Start()
         {
-            InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
+            // InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
         }
 
         /// <summary>
         /// 버튼 활성화 여부를 판단 후 SetImageAndText 호출 할 것
         /// </summary>
         /// <param name="sp"></param>
-        protected virtual void EditSpCallback(int sp)
+        public void EditSpCallback(bool enable)
         {
-            button.interactable = sp >= InGameManager.Get().GetDiceCost();
+            button.interactable = enable;
             SetImageAndText();
         }
 
@@ -45,12 +45,6 @@ namespace ED
 
         public void SetInteracterButton(bool interactive)
         {
-            if (interactive == true)
-            {
-                if (InGameManager.Get().playerController.sp < InGameManager.Get().GetDiceCost())
-                    return;
-            }
-            
             button.interactable = interactive;
             SetImageAndText();
         }

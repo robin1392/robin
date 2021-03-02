@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,10 +30,10 @@ namespace ED
             image_Icon.SetNativeSize();
             Refresh();
 
-            InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
+            // InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
         }
 
-        private void EditSpCallback(int sp)
+        public void EditSpCallback(int sp)
         {
             if (this.level < 5)
             {
@@ -55,14 +56,13 @@ namespace ED
             if (InGameManager.Get().playerController.sp < arrPrice[level])
                 return;
             
-            if( InGameManager.IsNetwork == true )
-                InGameManager.Get().SendInGameUpgrade(pData.id , num);
-            else
-            {
-                level = InGameManager.Get().playerController.DiceUpgrade(num);
-                InGameManager.Get().playerController.AddSp(-arrPrice[level - 1]);
-                Refresh();
-            }
+            //InGameManager.Get().SendInGameUpgrade(pData.id , num);
+            var localPlayerState = RWNetworkClient.instance.GetLocalPlayerState();
+            if (localPlayerState.sp < arrPrice[level])
+                return;
+            
+            var localPlayerProxy = RWNetworkClient.instance.GetLocalPlayerProxy();
+            localPlayerProxy.UpgradeIngameLevel(pData.id);
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
         }

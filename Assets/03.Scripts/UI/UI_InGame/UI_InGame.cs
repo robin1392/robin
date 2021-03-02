@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CodeStage.AntiCheat.ObscuredTypes;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
-
+using MirageTest.Scripts;
+using RandomWarsResource.Data;
 
 
 public class UI_InGame : SingletonDestroy<UI_InGame>
@@ -26,7 +28,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     public GameObject obj_ViewTargetDiceField;
     
-    public Button button_SP_Upgrade;
+    public UI_SPUpgradeButton button_SP_Upgrade;
     public Text text_SP_Upgrade;
     public Text text_SP_Upgrade_Price;
 
@@ -92,29 +94,24 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     /// <param name="deckDice"></param>
     /// <param name="arrUpgradeLv"></param>
     //public void SetArrayDeck(Data_Dice[] deckDice, int[] arrUpgradeLv)
-    public void SetArrayDeck(RandomWarsResource.Data.TDataDiceInfo[] deckDice, int[] arrUpgradeLv)
+    public void SetArrayDeck((TDataDiceInfo, byte)[] deckDice)
     {
         for (var i = 0; i < arrUpgradeButtons.Length; i++)
         {
-            arrUpgradeButtons[i].Initialize( deckDice[i], arrUpgradeLv[i]);
+            arrUpgradeButtons[i].Initialize( deckDice[i].Item1, deckDice[i].Item2);
         }
     }
 
-    public void SetEnemyArrayDeck()
+    public void SetEnemyArrayDeck(TDataDiceInfo[] deckDice)
     {
-        RandomWarsResource.Data.TDataDiceInfo[] deckDice = InGameManager.Get().playerController.targetPlayer.arrDiceDeck;
-        int[] arrUpgradeLv = InGameManager.Get().playerController.targetPlayer.arrUpgradeLevel;
-        
         for (int i = 0; i < deckDice.Length; i++)
         {
             arrImage_EnemyUpgradeIcon[i].sprite = FileHelper.GetIcon(deckDice[i].iconName);
         }
     }
 
-    public void SetEnemyUpgrade()
+    public void SetEnemyUpgrade(byte[] arrUpgradeLv)
     {
-        int[] arrUpgradeLv = InGameManager.Get().playerController.targetPlayer.arrUpgradeLevel;
-
         for (int i = 0; i < arrUpgradeLv.Length; i++)
         {
             arrText_EnemyUpgrade[i].text = $"Lv.{(arrUpgradeLv[i] < 5 ? (arrUpgradeLv[i] + 1).ToString() : "MAX")}";
@@ -186,13 +183,13 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     #region system
 
-    public void SetSPUpgrade(int upgradeLv , int sp)
+    public void SetSPUpgrade(int nextSpUpgradeLevel , int nextPrice)
     {
         //button_SP_Upgrade.interactable = (upgradeLv + 1) * 500 <= sp;
-        if (upgradeLv < 5)
+        if (nextSpUpgradeLevel <= 5)
         {
-            text_SP_Upgrade.text = $"Lv.{upgradeLv + 1}";
-            text_SP_Upgrade_Price.text = $"{(upgradeLv + 1) * 100}";
+            text_SP_Upgrade.text = $"Lv.{nextSpUpgradeLevel}";
+            text_SP_Upgrade_Price.text = $"{nextPrice}";
         }
         else
         {

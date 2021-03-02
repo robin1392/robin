@@ -39,7 +39,7 @@ public class UserInfo
         private set => _userNickName = value;
     }
 
-    public bool isEndTutorial;
+    public bool isEndTutorial = true;
     public int trophy;
     public int highTrophy;
     public int winCount;

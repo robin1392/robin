@@ -12,7 +12,7 @@ public class PlayerRegisterer : MonoBehaviour
     public ServerObjectManager serverObjectManager;
 
     // Start is called before the first frame update
-    public virtual void Start()
+    public void Awake()
     {
         if (playerPrefab == null)
         {
