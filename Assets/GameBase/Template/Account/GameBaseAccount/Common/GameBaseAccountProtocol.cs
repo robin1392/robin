@@ -14,6 +14,9 @@ namespace Template.Account.GameBaseAccount.Common
         AccountLoginReq,
         AccountLoginAck,
 
+        AccountPlatfomrLinkReq,
+        AccountPlatfomrLinkAck,
+
         End,
     }
 
@@ -26,11 +29,13 @@ namespace Template.Account.GameBaseAccount.Common
             {
                 {(int)EGameBaseAccountProtocol.AccountLoginReq, ReceiveAccountLoginReq},
                 {(int)EGameBaseAccountProtocol.AccountLoginAck, ReceiveAccountLoginAck},
-            };         
+                {(int)EGameBaseAccountProtocol.AccountPlatfomrLinkReq, ReceiveAccountPlatformLinkReq},
+                {(int)EGameBaseAccountProtocol.AccountPlatfomrLinkAck, ReceiveAccountPlatformLinkAck},
+            };
         }
 
 
-        #region Login ---------------------------------------------------------------------
+        #region AccountLogin ---------------------------------------------------------------------
         public bool AccountLoginReq(ISender sender, string platformId, int platformType, string guid, string adid, string appid, string version, ReceiveAccountLoginAckDelegate callback)
         {
             ReceiveAccountLoginAckHandler = callback;
@@ -57,8 +62,8 @@ namespace Template.Account.GameBaseAccount.Common
             string appid = (string)jObject["appid"];
             string version = (string)jObject["version"];
             var res = ReceiveAccountLoginReqHandler(platformId, platformType, guid, adid, appid, version);
-            return AccountLoginAck(sender, res.errorCode, res.accountInfo);     
-        }        
+            return AccountLoginAck(sender, res.errorCode, res.accountInfo);
+        }
 
         public bool AccountLoginAck(ISender sender, EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo)
         {
@@ -66,7 +71,7 @@ namespace Template.Account.GameBaseAccount.Common
             json.Add("errorCode", (int)errorCode);
             json.Add("accountInfo", JsonConvert.SerializeObject(accountInfo));
             return sender.SendHttpResult(json.ToString());
-        }        
+        }
 
 
         public delegate bool ReceiveAccountLoginAckDelegate(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo);
@@ -80,5 +85,51 @@ namespace Template.Account.GameBaseAccount.Common
             return ReceiveAccountLoginAckHandler(errorCode, accountInfo);
         }
         #endregion
+
+
+        #region AccountPlatformLink ---------------------------------------------------------------------
+        public bool AccountPlatformLinkReq(ISender sender, string platformId, int platformType, ReceiveAccountPlatformLinkAckDelegate callback)
+        {
+            ReceiveAccountPlatformLinkAckHandler = callback;
+            JObject json = new JObject();
+            json.Add("accessToken", sender.GetAccessToken());
+            json.Add("platformId", platformId);
+            json.Add("platformType", platformType);
+            return sender.SendHttpPost((int)EGameBaseAccountProtocol.AccountPlatfomrLinkReq, "accountplatformlink", json.ToString());
+        }
+
+        public delegate (EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo) ReceiveAccountPlatformLinkReqDelegate(string accessToken, string platformId, int platformType);
+        public ReceiveAccountPlatformLinkReqDelegate ReceiveAccountPlatformLinkReqHandler;
+        public bool ReceiveAccountPlatformLinkReq(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            string accessToken = (string)jObject["accessToken"];
+            string platformId = (string)jObject["platformId"];
+            int platformType = (int)jObject["platformType"];
+            var res = ReceiveAccountPlatformLinkReqHandler(accessToken, platformId, platformType);
+            return AccountPlatformLinkAck(sender, res.errorCode, res.accountInfo);
+        }
+
+        public bool AccountPlatformLinkAck(ISender sender, EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo)
+        {
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            json.Add("accountInfo", JsonConvert.SerializeObject(accountInfo));
+            return sender.SendHttpResult(json.ToString());
+        }
+
+
+        public delegate bool ReceiveAccountPlatformLinkAckDelegate(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo);
+        public ReceiveAccountPlatformLinkAckDelegate ReceiveAccountPlatformLinkAckHandler;
+        public bool ReceiveAccountPlatformLinkAck(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            EGameBaseAccountErrorCode errorCode = (EGameBaseAccountErrorCode)(int)jObject["errorCode"];
+            AccountInfo accountInfo = JsonConvert.DeserializeObject<AccountInfo>(jObject["accountInfo"].ToString());
+            return ReceiveAccountPlatformLinkAckHandler(errorCode, accountInfo);
+        }
+        #endregion        
     }
 }
