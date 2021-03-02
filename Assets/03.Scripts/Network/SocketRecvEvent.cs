@@ -193,7 +193,7 @@ public class SocketRecvEvent
 
 
         if (InGameManager.Get() != null)
-            InGameManager.Get().RecvInGameManager(GameProtocol.LEAVE_GAME_ACK);
+            InGameManager.Get().RecvInGameManager(GameProtocol.LEAVE_GAME_ACK, msg);
     }
 
     #endregion

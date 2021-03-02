@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
+using Service.Core;
+using Template.Quest.RandomwarsQuest.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,19 +24,20 @@ public class UI_Quest_Slot : MonoBehaviour
     public Image image_Reward;
     public Text text_Reward;
 
-    private MsgQuestData msg;
+    private QuestData msg;
     private TDataQuestData data;
     private Vector2 mousePos;
 
-    public void Initialize(MsgQuestData msg)
+    public void Initialize(QuestData msg)
     {
         this.msg = msg;
         data = new TDataQuestData();
-        var langData = new TDataLangKO();
+        //var langData = new TDataLangKO();
         if (TableManager.Get().QuestData.GetData(msg.QuestId, out data))
         {
-            TableManager.Get().LangKO.GetData(x => x.name == data.questStringKey, out langData);
-            text_Title.text = langData.textDesc;
+            //TableManager.Get().LangKO.GetData(x => x.name == data.questStringKey, out langData);
+            //text_Title.text = langData.textDesc;
+            text_Title.text = LocalizationManager.GetLangDesc(data.questStringKey);
             slider.value = msg.Value / (float)data.questEndValue;
             text_Slider.text = $"{msg.Value}/{data.questEndValue}";
             image_Slider.color = arrColor_Slider[0];
@@ -78,21 +81,24 @@ public class UI_Quest_Slot : MonoBehaviour
 
     public void Click_RewardButton()
     {
-        NetworkManager.Get().QuestRewardReq(UserInfoManager.Get().GetUserInfo().userID, data.id, QuestRewardCallback);
+        //NetworkManager.Get().QuestRewardReq(UserInfoManager.Get().GetUserInfo().userID, data.id, QuestRewardCallback);
+        NetworkManager.session.QuestTemplate.QuestRewardReq(NetworkManager.session.HttpClient, data.id, OnReceiveQuestRewardAck);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         mousePos = btn_Reward.transform.position;
     }
 
-    public void QuestRewardCallback(MsgQuestRewardAck msg)
+    public bool OnReceiveQuestRewardAck(ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsQuestErrorCode.Success)
         {
-            UI_Main.Get().AddReward(msg.RewardInfo, btn_Reward.transform.position);
+            UI_Main.Get().AddReward(arrayRewardInfo, btn_Reward.transform.position);
 
-            UI_Popup_Quest.QuestUpdate(msg.QuestData);
+            UI_Popup_Quest.QuestUpdate(arrayQuestData);
             UI_Main.Get().questPopup.InfoCallback();
         }
+
+        return true;
     }
 }

@@ -608,8 +608,11 @@ namespace ED
                 {
                     m.power *= Mathf.Pow(2f, wave - 10);
                 }
-                
+                m.powerUpByUpgrade = data.powerUpgrade;
+                m.powerUpByInGameUp = data.powerInGameUp;
                 m.maxHealth = data.maxHealth + (data.maxHpUpgrade * arrDiceLevel[deckNum]) + (data.maxHpInGameUp * upgradeLevel);
+                m.maxHealthUpByUpgrade = data.maxHpUpgrade;
+                m.maxHealthUpByInGameUp = data.maxHpInGameUp;
                 m.effect = data.effect + (data.effectUpgrade * arrDiceLevel[deckNum]) + (data.effectInGameUp * upgradeLevel);
                 m.effectUpByUpgrade = data.effectUpgrade;
                 m.effectUpByInGameUp = data.effectInGameUp;
@@ -766,7 +769,11 @@ namespace ED
                     {
                         m.power *= Mathf.Pow(2f, wave - 10);
                     }
+                    m.powerUpByUpgrade = data.powerUpgrade;
+                    m.powerUpByInGameUp = data.powerInGameUp;
                     m.maxHealth = (data.maxHealth + (data.maxHpInGameUp * upgradeLevel)) * Mathf.Pow(2f, eyeLevel - 1);
+                    m.maxHealthUpByUpgrade = data.maxHpUpgrade;
+                    m.maxHealthUpByInGameUp = data.maxHpInGameUp;
                     m.effect = (data.effect + (data.effectInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
                     m.effectUpByUpgrade = data.effectUpgrade;
                     m.effectUpByInGameUp = data.effectInGameUp;
@@ -945,10 +952,9 @@ namespace ED
             }
         }
 
-        public void OtherPlayerPause(bool isPuase)
+        public void OtherPlayerPause(bool isPause)
         {
-            targetPlayer.SetPlayingAI(isPuase);
-            coopPlayer?.SetPlayingAI(isPuase);
+            targetPlayer.SetPlayingAI(isPause);
         }
 
         public void SetPlayingAI(bool isPlayingAI)

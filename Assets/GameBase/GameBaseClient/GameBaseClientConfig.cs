@@ -1,7 +1,10 @@
+using Service.Core;
+
 namespace Percent.GameBaseClient
 {
     public class GameBaseClientConfig
     {
+        public ILog Logger { get; set; }
         public int MaxConnectionNum { get; set; }
         public int BufferSize { get; set; }
         public int KeepAliveTime { get; set; }

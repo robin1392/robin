@@ -16,6 +16,7 @@ public class UI_ErrorMessage : SingletonDestroy<UI_ErrorMessage>
             Text text = Instantiate(pref_Message, Vector3.zero, Quaternion.identity, rts_Stack).GetComponent<Text>();
             text.text = message;
 
+            text.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
             text.DOFade(1f, 0.5f);
             text.DOFade(0f, 0.5f).SetDelay(1f).OnComplete(() => { Destroy(text.gameObject); });
         }

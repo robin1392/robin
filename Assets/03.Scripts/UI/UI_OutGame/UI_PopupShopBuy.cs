@@ -26,10 +26,10 @@ public class UI_PopupShopBuy : UI_Popup
     public Text text_DiceCount;
     public GameObject obj_UpgradeIcon;
 
-    public void Initialize(Sprite icon, string count, BuyType priceType, string price, TDataItemList item, bool isDouble, UnityAction callback)
+    public void Initialize(Sprite icon, string count, BuyType priceType, string price, TDataItemList item, int tab, UnityAction callback)
     {
         gameObject.SetActive(true);
-        obj_Double.SetActive(isDouble);
+        //obj_Double.SetActive(isDouble);
         
         image_Icon.sprite = icon;
         text_Count.text = count;
@@ -43,7 +43,7 @@ public class UI_PopupShopBuy : UI_Popup
                 pos.x = 37.5f;
                 text_Price.rectTransform.anchoredPosition = pos;
                 text_Price.text = price;
-                btn_Buy.interactable = UserInfoManager.Get().GetUserInfo().gold >= Int32.Parse(price);
+                //btn_Buy.interactable = UserInfoManager.Get().GetUserInfo().gold >= Int32.Parse(price);
                 break;
             case BuyType.dia:
                 image_PriceIcon.enabled = true;
@@ -52,7 +52,7 @@ public class UI_PopupShopBuy : UI_Popup
                 pos.x = 37.5f;
                 text_Price.rectTransform.anchoredPosition = pos;
                 text_Price.text = price;
-                btn_Buy.interactable = UserInfoManager.Get().GetUserInfo().diamond >= Int32.Parse(price);
+                //btn_Buy.interactable = UserInfoManager.Get().GetUserInfo().diamond >= Int32.Parse(price);
                 break;
             case BuyType.cash:
                 image_PriceIcon.enabled = false;
@@ -113,6 +113,22 @@ public class UI_PopupShopBuy : UI_Popup
         btn_Buy.onClick.RemoveAllListeners();
         btn_Buy.onClick.AddListener(() =>
         {
+            if (priceType == BuyType.gold)
+            {
+                if (UserInfoManager.Get().GetUserInfo().gold < Int32.Parse(price))
+                {
+                    UI_Main.Get().moveShopPopup.Initialize(UI_BoxOpenPopup.COST_TYPE.GOLD);
+                    return;
+                }
+            }
+            else if (priceType == BuyType.dia)
+            {
+                if (UserInfoManager.Get().GetUserInfo().diamond < Int32.Parse(price))
+                {
+                    UI_Main.Get().moveShopPopup.Initialize(UI_BoxOpenPopup.COST_TYPE.DIAMOND);
+                    return;
+                }
+            }
             callback?.Invoke();
             Close();
         });

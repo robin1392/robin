@@ -25,7 +25,7 @@ namespace Service.Net
 
     public class GameSessionConfig
     {
-        public ILogger Logger { get; set;}
+        public ILog Logger { get; set;}
         public string Id { get; set;}
         public int MessageQueueCapacity { get; set;}
         public int MessageBufferSize { get; set;}
@@ -36,7 +36,7 @@ namespace Service.Net
     {
         public string GameSessionId { get; private set; }
         protected MessageController _messageController;
-        protected ILogger _logger;
+        protected ILog _logger;
 
 
 

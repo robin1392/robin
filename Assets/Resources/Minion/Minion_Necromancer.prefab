@@ -192,7 +192,7 @@ MonoBehaviour:
   isPolymorph: 0
   pref_Bullet: {fileID: 665045047327999094, guid: bff63328ee9f54870bf0da1b7c6fd977,
     type: 3}
-  pref_Skeleton: {fileID: 5081294253336761964, guid: 08a354f4eada14c7bbe7445c492be60c,
+  pref_Skeleton: {fileID: 5081294253336761964, guid: 5eb90dc1ca4b4455d80bc7a90460e7f7,
     type: 3}
   bulletMoveSpeed: 6
   arrSpawnPos:

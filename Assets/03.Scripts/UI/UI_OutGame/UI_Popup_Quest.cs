@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
+using Service.Core;
+using Template.Quest.RandomwarsQuest.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +28,7 @@ public class UI_Popup_Quest : UI_Popup
     private static bool[] arrIsDailyRewardGet = new bool[3];
     private static int dailyRewardID;
     private static DateTime dateTime;
-    private static List<MsgQuestData> list = new List<MsgQuestData>();
+    private static List<QuestData> list = new List<QuestData>();
     private Vector2 mousePos;
 
     private void Update()
@@ -50,7 +52,8 @@ public class UI_Popup_Quest : UI_Popup
 
         if (list.Count == 0)
         {
-            NetworkManager.Get().QuestInfoReq(UserInfoManager.Get().GetUserInfo().userID, InfoCallback);
+            //NetworkManager.Get().QuestInfoReq(UserInfoManager.Get().GetUserInfo().userID, InfoCallback);
+            NetworkManager.session.QuestTemplate.QuestInfoReq(NetworkManager.session.HttpClient, OnReceiveQuestInfoAck);
         }
         else
         {
@@ -76,7 +79,7 @@ public class UI_Popup_Quest : UI_Popup
         }
     }
 
-    public static void QuestUpdate(MsgQuestData[] datas)
+    public static void QuestUpdate(QuestData[] datas)
     {
         if (datas != null)
         {
@@ -92,7 +95,7 @@ public class UI_Popup_Quest : UI_Popup
         }
     }
     
-    public static void QuestUpdate(MsgQuestInfo questInfo)
+    public static void QuestUpdate(QuestInfo questInfo)
     {
         if (questInfo != null)
         {
@@ -123,7 +126,7 @@ public class UI_Popup_Quest : UI_Popup
         return false;
     }
 
-    public void InfoCallback(MsgQuestInfoAck msg)
+    public bool OnReceiveQuestInfoAck(ERandomwarsQuestErrorCode errorCode, QuestInfo questInfo)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
@@ -131,15 +134,15 @@ public class UI_Popup_Quest : UI_Popup
         // anchPos.y = 0;
         // rts_Content.anchoredPosition = anchPos;
         
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsQuestErrorCode.Success)
         {
-            dateTime = DateTime.Now.AddSeconds(msg.QuestInfo.RemainResetTime);
+            dateTime = DateTime.Now.AddSeconds(questInfo.RemainResetTime);
 
-            dailyRewardID = msg.QuestInfo.DayRewardInfo.DayRewardId;
-            arrIsDailyRewardGet = msg.QuestInfo.DayRewardInfo.DayRewardState;
+            dailyRewardID = questInfo.DayRewardInfo.DayRewardId;
+            arrIsDailyRewardGet = questInfo.DayRewardInfo.DayRewardState;
 
             var dataDailyReward = new TDataQuestDayReward();
-            if (TableManager.Get().QuestDayReward.GetData(msg.QuestInfo.DayRewardInfo.DayRewardId, out dataDailyReward))
+            if (TableManager.Get().QuestDayReward.GetData(questInfo.DayRewardInfo.DayRewardId, out dataDailyReward))
             {
                 TDataItemList itemData;
                 if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem01, out itemData))
@@ -164,20 +167,22 @@ public class UI_Popup_Quest : UI_Popup
                 arrBtn_Reward[2].interactable = !arrIsDailyRewardGet[2];
             }
             
-            for (int i = 0; i < msg.QuestInfo.QuestData.Length || i < listSlot.Count; i++)
+            for (int i = 0; i < questInfo.QuestData.Length || i < listSlot.Count; i++)
             {
-                if (i >= msg.QuestInfo.QuestData.Length)
+                if (i >= questInfo.QuestData.Length)
                 {
                     listSlot[i].gameObject.SetActive(false);
                     continue;
                 }
                 listSlot[i].gameObject.SetActive(true);
-                list.Add(msg.QuestInfo.QuestData[i]);
-                listSlot[i].Initialize(msg.QuestInfo.QuestData[i]);
+                list.Add(questInfo.QuestData[i]);
+                listSlot[i].Initialize(questInfo.QuestData[i]);
             }
         }
         
         Open();
+
+        return true;
     }
     
     public void InfoCallback()
@@ -231,21 +236,23 @@ public class UI_Popup_Quest : UI_Popup
 
     public void Click_DailyRewardButton(int num)
     {
-        NetworkManager.Get().QuestDayRewardReq(UserInfoManager.Get().GetUserInfo().userID, dailyRewardID, num, GetDailyRewardCallback);
+        //NetworkManager.Get().QuestDayRewardReq(UserInfoManager.Get().GetUserInfo().userID, dailyRewardID, num, GetDailyRewardCallback);
+        NetworkManager.session.QuestTemplate.QuestDailyRewardReq(NetworkManager.session.HttpClient, dailyRewardID, num, OnReceiveQuestDailyRewardAck);
+
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         mousePos = arrBtn_Reward[num].transform.position;
     }
 
-    public void GetDailyRewardCallback(MsgQuestDayRewardAck msg)
+    bool OnReceiveQuestDailyRewardAck(ERandomwarsQuestErrorCode errorCode, QuestData[] arrayQuestData, ItemBaseInfo[] arrayRewardInfo, QuestDayReward dailyRewardInfo)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsQuestErrorCode.Success)
         {
-            arrIsDailyRewardGet = msg.DayRewardInfo.DayRewardState;
-            List<MsgReward> list = new List<MsgReward>();
+            arrIsDailyRewardGet = dailyRewardInfo.DayRewardState;
+            List<ItemBaseInfo> list = new List<ItemBaseInfo>();
 
-            foreach (var reward in msg.RewardInfo)
+            foreach (var reward in arrayRewardInfo)
             {
                 var data = new TDataItemList();
                 if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
@@ -262,7 +269,7 @@ public class UI_Popup_Quest : UI_Popup
                             break;
                         default: // 주사위
                         {
-                            MsgReward rw = new MsgReward();
+                            ItemBaseInfo rw = new ItemBaseInfo();
                             rw.ItemId = reward.ItemId;
                             rw.Value = reward.Value;
                             list.Add(rw);
@@ -277,9 +284,11 @@ public class UI_Popup_Quest : UI_Popup
                 UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
             }
             
-            QuestUpdate(msg.QuestData);
+            QuestUpdate(arrayQuestData);
 
             InfoCallback();
         }
+
+        return true;
     }
 }

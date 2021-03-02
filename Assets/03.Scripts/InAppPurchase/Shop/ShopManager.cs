@@ -3,19 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using DG.Tweening;
 using ED;
 using Percent.GameBaseClient;
 using Percent.Platform.InAppPurchase;
-using RandomWarsProtocol;
+//using RandomWarsProtocol;
+using Service.Core;
 using Template.Shop.GameBaseShop;
 using Template.Shop.GameBaseShop.Common;
 using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
 namespace Percent.Platform.InAppPurchase
 {
-    public class ShopManager : ManagerSingleton<ShopManager>
+    public class ShopManager : SingletonDestroy<ShopManager>
     {
         [SerializeField] private RectTransform rts_ScrollView;
         [SerializeField] private Transform transformShopParent;
@@ -25,7 +29,12 @@ namespace Percent.Platform.InAppPurchase
         [SerializeField]
         private List<Shop> listShop = new List<Shop>();
 
+        public RectTransform rts_TargetDiashop;
+        public RectTransform rts_TargetGoldshop;
+        
         private bool isInitialized;
+        private bool isShowDiamondShop;
+        private bool isShowGoldShop;
         
         protected void Start()
         {
@@ -52,8 +61,12 @@ namespace Percent.Platform.InAppPurchase
                 UI_Main.Get().obj_IndicatorPopup.SetActive(true);
                 //listShop = new List<Shop>();
 
-                NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient,
-                    UserInfoManager.Get().GetUserInfo().userID, SetAllShop);
+                NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, SetAllShop);
+            }
+            else
+            {
+                if (isShowGoldShop) Invoke("ScrollToGoldShop", 0.1f);
+                else if (isShowDiamondShop) Invoke("ScrollToDiamondShop", 0.1f);
             }
         }
         
@@ -64,7 +77,7 @@ namespace Percent.Platform.InAppPurchase
         {
             //listShop = new List<Shop>();
             
-            NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, RefreshAllShop);    
+            NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, RefreshAllShop);    
         }
         
         /// <summary>
@@ -86,7 +99,7 @@ namespace Percent.Platform.InAppPurchase
                     // Shop shop = Instantiate(prefabShop, transformShopParent).GetComponent<Shop>();
                     // listShop.Add(shop);
                     // shop.Initialize(shopInfo);
-                    string str = $"ShopID:{arrayShopInfo[i].shopId}, e:{arrayShopInfo[i].eventRemainTime}, r:{arrayShopInfo[i].resetRemainTime}";
+                    string str = $"ShopID:{arrayShopInfo[i].shopId}, r:{arrayShopInfo[i].resetRemainTime}";
                     foreach (var productInfo in arrayShopInfo[i].arrayProductInfo)
                     {
                         str += $"\nProductID:{productInfo.shopProductId}, BuyCount:{productInfo.buyCount}";
@@ -94,17 +107,27 @@ namespace Percent.Platform.InAppPurchase
                     Debug.Log(str);
                 }
 
-                int count = 0;
-                for (int i = 0; i < listShop.Count; i++)
+                // int count = 0;
+                // for (int i = 0; i < listShop.Count; i++)
+                // {
+                //     if (i + 1 == arrayShopInfo[count].shopId)
+                //     {
+                //         listShop[i].EnableContent();
+                //         listShop[i].Initialize(arrayShopInfo[count]);
+                //         count++;
+                //     }
+                //     else listShop[i].DisableContent();
+                // }
+                for (int i = 0; i < arrayShopInfo.Length; i++)
                 {
-                    if (i + 1 == arrayShopInfo[count].shopId)
-                    {
-                        listShop[i].EnableContent();
-                        listShop[i].Initialize(arrayShopInfo[count]);
-                        count++;
-                    }
-                    else listShop[i].DisableContent();
+                    var shop = listShop.Find(s => s.shopID == arrayShopInfo[i].shopId);
+                    shop.EnableContent();
+                    shop.Initialize(arrayShopInfo[i]);
                 }
+                
+                if (isShowGoldShop) Invoke("ScrollToGoldShop", 0.1f);
+                else if (isShowDiamondShop) Invoke("ScrollToDiamondShop", 0.1f);
+                
                 return true;
             }
             else
@@ -153,7 +176,7 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="payItemInfo"></param>
         /// <param name="arrayRewardItemInfo"></param>
         /// <returns></returns>
-        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
+        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             
@@ -177,19 +200,19 @@ namespace Percent.Platform.InAppPurchase
                     //소모한 재화에 대한 연출 처리
                     //payItemInfo
                     ITEM_TYPE type;
-                    switch (payItemInfo.itemId)
+                    switch (payItemInfo.ItemId)
                     {
                         case 1:
                             type = ITEM_TYPE.GOLD;
-                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.value;
+                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.Value;
                             break;
                         case 2:
                             type = ITEM_TYPE.DIAMOND;
-                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.value;
+                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.Value;
                             break;
                         case 11:
                             type = ITEM_TYPE.KEY;
-                            UserInfoManager.Get().GetUserInfo().key += payItemInfo.value;
+                            UserInfoManager.Get().GetUserInfo().key += payItemInfo.Value;
                             break;
                         default:
                             type = ITEM_TYPE.NONE;
@@ -200,13 +223,13 @@ namespace Percent.Platform.InAppPurchase
             
                 //구매한 상품에 대한 결과 값
                 //arrayRewardItemInfo
-                MsgReward[] arr = new MsgReward[arrayRewardItemInfo.Length];
+                ItemBaseInfo[] arr = new ItemBaseInfo[arrayRewardItemInfo.Length];
                 for (int i = 0; i < arrayRewardItemInfo.Length; i++)
                 {
-                    Debug.Log($"GET == ID:{arrayRewardItemInfo[i].itemId}, Value:{arrayRewardItemInfo[i].value}");
-                    arr[i] = new MsgReward();
-                    arr[i].ItemId = arrayRewardItemInfo[i].itemId;
-                    arr[i].Value = arrayRewardItemInfo[i].value;
+                    Debug.Log($"GET == ID:{arrayRewardItemInfo[i].ItemId}, Value:{arrayRewardItemInfo[i].Value}");
+                    arr[i] = new ItemBaseInfo();
+                    arr[i].ItemId = arrayRewardItemInfo[i].ItemId;
+                    arr[i].Value = arrayRewardItemInfo[i].Value;
                 }
                 UI_Main.Get().AddReward(arr, ShopItem.pos);
             
@@ -226,11 +249,60 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="errorCode"></param>
         /// <param name="shopId"></param>
         /// <param name="shopProductInfo"></param>
-        /// <param name="arrayShopItemInfo"></param>
+        /// <param name="arrayItemBaseInfo"></param>
         /// <returns></returns>
-        public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
+        public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
         {
-            return ShowBuyResult(errorCode, shopId, shopProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
+            return ShowBuyResult(errorCode, shopId, shopProductInfo, changeProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
+        }
+
+        public void ShowGoldShop()
+        {
+            isShowGoldShop = true;
+            UI_Main.Get().Click_MainButton(0);
+        }
+
+        private void ScrollToGoldShop()
+        {
+            //((RectTransform) transformShopParent).DOAnchorPosY(5800, 0.4f).SetDelay(0.1f);
+            isShowGoldShop = false;
+            
+            RectTransform target = rts_TargetGoldshop;
+
+            Vector2 point = (Vector2)rts_ScrollView.InverseTransformPoint(transformShopParent.position)
+                            - (Vector2)rts_ScrollView.InverseTransformPoint(target.position)
+                            - new Vector2(0f, target.sizeDelta.y / 2f);
+
+            point.x = 0f;
+            point.y = Mathf.Clamp(point.y, 0, ((RectTransform) transformShopParent).sizeDelta.y
+                                              - (GetComponentInParent<CanvasScaler>().referenceResolution.y
+                                                 - (Mathf.Abs(rts_ScrollView.offsetMax.y) + Mathf.Abs(rts_ScrollView.offsetMin.y))));
+            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f);
+        }
+
+        public void ShowDiamondShop()
+        {
+            isShowDiamondShop = true;
+            UI_Main.Get().Click_MainButton(0);
+        }
+
+        private void ScrollToDiamondShop()
+        {
+            //((RectTransform) transformShopParent).DOAnchorPosY(5100, 0.4f).SetDelay(0.1f);
+            isShowDiamondShop = false;
+            
+            RectTransform target = rts_TargetDiashop;
+
+            Vector2 point = (Vector2)rts_ScrollView.InverseTransformPoint(transformShopParent.position)
+                            - (Vector2)rts_ScrollView.InverseTransformPoint(target.position)
+                            - new Vector2(0f, target.sizeDelta.y / 2f);
+
+            point.x = 0f;
+            point.y = Mathf.Clamp(point.y, 0, ((RectTransform) transformShopParent).sizeDelta.y
+                                              - (GetComponentInParent<CanvasScaler>().referenceResolution.y
+                                                 - (Mathf.Abs(rts_ScrollView.offsetMax.y) + Mathf.Abs(rts_ScrollView.offsetMin.y))));
+            ((RectTransform) transformShopParent).DOAnchorPosY(point.y, 0.4f);
+            //rts_ScrollView.GetComponent<ScrollView>().scrollOffset
         }
     }
 }

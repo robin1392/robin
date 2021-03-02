@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
+//using RandomWarsProtocol;
+//using RandomWarsProtocol.Msg;
+using Service.Core;
+using Template.Season.RandomwarsSeason.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,35 +17,36 @@ public class UI_Popup_SeasonEnd : UI_Popup
     public Text text_MyTrophy;
     public Text text_Unranked;
     public Button btn_GetReward;
+    UserSeasonInfo seasonInfo;
 
-    private MsgSeasonResetAck msg;
-    
     public void Initialize()
     {
         gameObject.SetActive(true);
-        NetworkManager.Get().SeasonResetReq(UserInfoManager.Get().GetUserInfo().userID, ResetCallback);
+        //NetworkManager.Get().SeasonResetReq(UserInfoManager.Get().GetUserInfo().userID, ResetCallback);
+        NetworkManager.session.SeasonTemplate.SeasonResetReq(NetworkManager.session.HttpClient, OnReceiveSeasonResetAck);
+
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public void ResetCallback(MsgSeasonResetAck msg)
+    public bool OnReceiveSeasonResetAck(ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, ItemBaseInfo[] arrayRewardInfo)
     {
-        this.msg = msg;
+        this.seasonInfo = seasonInfo;
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-        if (msg.ErrorCode == GameErrorCode.SUCCESS)
+        if (errorCode == ERandomwarsSeasonErrorCode.Success)
         {
-            UserInfoManager.Get().GetUserInfo().seasonTrophy = msg.ResetSeasonPoint;
-            UserInfoManager.Get().GetUserInfo().rankPoint = msg.ResetRankingPoint;
+            UserInfoManager.Get().GetUserInfo().seasonTrophy = seasonInfo.SeasonTrophy;
+            UserInfoManager.Get().GetUserInfo().rankPoint = seasonInfo.RankPoint;
             
-            if (msg.arraySeasonReward != null && msg.arraySeasonReward.Length > 0)
+            if (arrayRewardInfo != null && arrayRewardInfo.Length > 0)
             {
                 rewardSlot.gameObject.SetActive(true);
                 text_Unranked.gameObject.SetActive(false);
 
-                text_MyRank.text = msg.myRanking.ToString();
+                text_MyRank.text = seasonInfo.Rank.ToString();
 
-                rewardSlot.Initialize(msg.arraySeasonReward);
+                rewardSlot.Initialize(arrayRewardInfo);
                 btn_GetReward.interactable = true;
             }
             else
@@ -55,12 +58,14 @@ public class UI_Popup_SeasonEnd : UI_Popup
         }
 
         Open();
+
+        return true;
     }
 
     public override void Close()
     {
         base.Close();
         
-        UI_Main.Get().seasonStartPopup.Initialize(msg);
+        UI_Main.Get().seasonStartPopup.Initialize(seasonInfo);
     }
 }

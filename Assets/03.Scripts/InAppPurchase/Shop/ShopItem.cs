@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using ED;
 using Percent.Platform.InAppPurchase;
-using RandomWarsProtocol;
+//using RandomWarsProtocol;
+using Service.Core;
 using RandomWarsResource.Data;
 using Template.Shop.GameBaseShop.Common;
 using TMPro;
@@ -21,19 +22,22 @@ namespace Percent.Platform
         public static Vector3 pos;
         
         //상품 정보
-        [SerializeField] private Text textPItemId;
-        [SerializeField] private Text textPItemBuyCount;
-        [SerializeField] private Image imageIcon;
-        [SerializeField] private Image imagePriceIcon;
-        [SerializeField] private Text textDouble;
+        [SerializeField] protected Text textPItemId;
+        [SerializeField] protected Text textPItemBuyCount;
+        [SerializeField] protected Image imageIcon;
+        [SerializeField] protected Image imagePriceIcon;
 
-        private Button buttonShopItem;
-        private ShopInfo shopInfo;
-        private string productId;
-        private string imageName;
-        private BuyType buyType;
-        private int shopId;
-        private int shopProductId;
+        [Header("Tab")] public Text textBadge;
+        public Text textValue;
+        public Text textFirstBuy;
+
+        protected Button buttonShopItem;
+        protected ShopInfo shopInfo;
+        protected string productId;
+        protected string imageName;
+        protected BuyType buyType;
+        protected int shopId;
+        public int shopProductId;
 
         private void Awake()
         {
@@ -55,22 +59,48 @@ namespace Percent.Platform
         {
             this.shopInfo = shopInfo;
             int maxBuyCount = 0;
+            int tapInfo = 0;
             
             textPItemId.text = shopProductInfo.shopProductId.ToString();
             textPItemId.text += $"  ({shopProductInfo.buyCount}/{maxBuyCount})";
             int getCount = 0;
+            TDataShopProductList data = null;
             TDataItemList item = null;
 
             switch (shopInfo.shopId)
             {
                 case 1:     // 이벤트 상품
                 {
-                    TDataEventShopList data;
-                    if (TableManager.Get().EventShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        tapInfo = data.tapInfo;
                         imageName = data.shopImage;
                         maxBuyCount = data.buyLimitCnt;
+                        switch (buyType)
+                        {
+                            case BuyType.gold:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_gold");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.dia:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_dia");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.cash:
+                                imagePriceIcon.enabled = false;
+                                break;
+                            case BuyType.free:
+                                imagePriceIcon.enabled = false;
+                                textPItemBuyCount.text = LocalizationManager.GetLangDesc("Shop_Buyfree");
+                                var pos = textPItemBuyCount.rectTransform.anchoredPosition;
+                                pos.x = 0;
+                                textPItemBuyCount.rectTransform.anchoredPosition = pos;
+                                break;
+                            case BuyType.ad:
+                                imagePriceIcon.enabled = false;
+                                break;
+                        }
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -81,12 +111,36 @@ namespace Percent.Platform
                     break;
                 case 2:     // 패키지 상품
                 {
-                    TDataPackageShopList data;
-                    if (TableManager.Get().PackageShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        tapInfo = data.tapInfo;
                         imageName = data.shopImage;
                         maxBuyCount = data.buyLimitCnt;
+                        switch (buyType)
+                        {
+                            case BuyType.gold:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_gold");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.dia:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_dia");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.cash:
+                                imagePriceIcon.enabled = false;
+                                break;
+                            case BuyType.free:
+                                imagePriceIcon.enabled = false;
+                                textPItemBuyCount.text = LocalizationManager.GetLangDesc("Shop_Buyfree");
+                                var pos = textPItemBuyCount.rectTransform.anchoredPosition;
+                                pos.x = 0;
+                                textPItemBuyCount.rectTransform.anchoredPosition = pos;
+                                break;
+                            case BuyType.ad:
+                                imagePriceIcon.enabled = false;
+                                break;
+                        }
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -97,10 +151,10 @@ namespace Percent.Platform
                     break;
                 case 3:     // 일일 상품
                 {
-                    TDataOnedayShopList data;
-                    if (TableManager.Get().OnedayShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        tapInfo = data.tapInfo;
                         switch (buyType)
                         {
                             case BuyType.gold:
@@ -126,10 +180,10 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
                     }
 
-                    if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                    if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                     {
                         imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
                     }
@@ -139,10 +193,10 @@ namespace Percent.Platform
                     break;
                 case 4:     // 박스
                 {
-                    TDataBoxShopList data;
-                    if (TableManager.Get().BoxShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        tapInfo = data.tapInfo;
                         switch (buyType)
                         {
                             case BuyType.gold:
@@ -172,11 +226,12 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
 
-                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                         {
                             imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
+                            imageIcon.SetNativeSize();
                         }
                         textPItemBuyCount.text = $"{data.buyPrice}";
                     }
@@ -184,11 +239,35 @@ namespace Percent.Platform
                     break;
                 case 5:     // 프리미엄
                 {
-                    TDataPremiumShopList data;
-                    if (TableManager.Get().PremiumShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        tapInfo = data.tapInfo;
                         imageName = data.shopImage;
+                        switch (buyType)
+                        {
+                            case BuyType.gold:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_gold");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.dia:
+                                imagePriceIcon.sprite = FileHelper.GetIcon("icon_dia");
+                                textPItemBuyCount.text = data.buyPrice.ToString();
+                                break;
+                            case BuyType.cash:
+                                imagePriceIcon.enabled = false;
+                                break;
+                            case BuyType.free:
+                                imagePriceIcon.enabled = false;
+                                textPItemBuyCount.text = LocalizationManager.GetLangDesc("Shop_Buyfree");
+                                var pos = textPItemBuyCount.rectTransform.anchoredPosition;
+                                pos.x = 0;
+                                textPItemBuyCount.rectTransform.anchoredPosition = pos;
+                                break;
+                            case BuyType.ad:
+                                imagePriceIcon.enabled = false;
+                                break;
+                        }
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -199,21 +278,21 @@ namespace Percent.Platform
                     break;
                 case 6:     // 이모티콘
                 {
-                    TDataEmotionShopList data;
-                    if (TableManager.Get().EmotionShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
+                        tapInfo = data.tapInfo;
                         textPItemBuyCount.text = $"{data.buyType}:{data.buyPrice}";
                     }
                 }
                     break;
                 case 7:     // 다이아
                 {
-                    TDataDiaShopList data;
-                    if (TableManager.Get().DiaShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
-                        imageName = data.goodsImage;
+                        tapInfo = data.tapInfo;
+                        imageName = data.shopImage;
 #if UNITY_ANDROID
                         productId = data.googleProductId;
 #elif UNITY_IOS
@@ -248,24 +327,22 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
 
-                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                         {
-                            imageIcon.sprite = FileHelper.GetIcon(data.goodsImage);
+                            imageIcon.sprite = FileHelper.GetIcon(data.shopImage);
                         }
-                        
-                        textDouble.gameObject.SetActive(data.multipleValue > 0);
                     }
                 }
                     break;
                 case 8:     // 골드
                 {
-                    TDataGoldShopList data;
-                    if (TableManager.Get().GoldShopList.GetData(shopProductInfo.shopProductId, out data))
+                    if (TableManager.Get().ShopProductList.GetData(shopProductInfo.shopProductId, out data))
                     {
                         buyType = (BuyType)data.buyType;
-                        imageName = data.goodsImage;
+                        tapInfo = data.tapInfo;
+                        imageName = data.shopImage;
                         switch (buyType)
                         {
                             case BuyType.gold:
@@ -295,19 +372,56 @@ namespace Percent.Platform
                                 break;
                         }
 
-                        textPItemId.text = $"x{data.itemValue}";
+                        textPItemId.text = $"x{data.itemValue01}";
 
-                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId, out item))
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
                         {
-                            imageIcon.sprite = FileHelper.GetIcon(data.goodsImage);
+                            imageIcon.sprite = FileHelper.GetIcon(data.shopImage);
                         }
                         textPItemBuyCount.text = $"{data.buyPrice}";
-                        textDouble.gameObject.SetActive(data.multipleValue > 0);
                     }
                 }
                     break;
             }
             
+            // Tap
+            if (data != null)
+            {
+                switch ((ETapInfoKey)data.tapInfo)
+                {
+                    case ETapInfoKey.tap_hot:
+                        textBadge.text = "HOT";
+                        textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
+                        break;
+                    case ETapInfoKey.tap_best:
+                        textBadge.text = "BEST";
+                        textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
+                        break;
+                    case ETapInfoKey.tap_new:
+                        textBadge.text = "NEW";
+                        textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
+                        break;
+                    case ETapInfoKey.tap_oneplusone:
+                        textBadge.text = "1+1";
+                        textBadge.transform.parent.gameObject.SetActive(true);
+                        textValue.transform.parent.gameObject.SetActive(false);
+                        textFirstBuy.transform.parent.gameObject.SetActive(true);
+                        break;
+                    case ETapInfoKey.tap_value:
+                        textValue.text = $"{data.tapValue}";
+                        textBadge.transform.parent.gameObject.SetActive(false);
+                        textValue.transform.parent.gameObject.SetActive(true);
+                        textFirstBuy.transform.parent.gameObject.SetActive(false);
+                        break;
+                }
+            }
+
             buttonShopItem.onClick = new Button.ButtonClickedEvent();
 
             //shopProductInfo.shopProductId 값으로 테이블에 존재하는 상품 데이터 조회
@@ -325,7 +439,7 @@ namespace Percent.Platform
                 if (buyType == BuyType.dia || buyType == BuyType.gold)
                 {
                     UI_Main.Get().shopBuyPopup.Initialize(imageIcon.sprite, textPItemId.text, buyType,
-                        textPItemBuyCount.text, item, textDouble.gameObject.activeSelf, Buy);
+                        textPItemBuyCount.text, item, tapInfo, Buy);
                 }
                 else
                 {
@@ -336,12 +450,17 @@ namespace Percent.Platform
             SetColor();
         }
 
-        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopItemInfo payItemInfo, ShopItemInfo[] arrayRewardItemInfo, MsgQuestData[] arrayQuestData)
+        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             
             if (errorCode == GameBaseShopErrorCode.Success)
             {
+                if (changeProductInfo != null)
+                {
+                    UpdateContent(shopInfo, changeProductInfo);
+                }
+                
                 //구매한 상품에 대한 정보
                 //shopProductInfo
                 switch (shopId)
@@ -350,7 +469,7 @@ namespace Percent.Platform
                     case 2:
                     case 5:
                     case 6:
-                        ShopManager.Instance.RefreshShop();
+                        ShopManager.Get().RefreshShop();
                         break;
                     case 3:
                         buttonShopItem.interactable = false;
@@ -363,19 +482,19 @@ namespace Percent.Platform
                     //소모한 재화에 대한 연출 처리
                     //payItemInfo
                     ITEM_TYPE type;
-                    switch (payItemInfo.itemId)
+                    switch (payItemInfo.ItemId)
                     {
                         case 1:
                             type = ITEM_TYPE.GOLD;
-                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.value;
+                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.Value;
                             break;
                         case 2:
                             type = ITEM_TYPE.DIAMOND;
-                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.value;
+                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.Value;
                             break;
                         case 11:
                             type = ITEM_TYPE.KEY;
-                            UserInfoManager.Get().GetUserInfo().key += payItemInfo.value;
+                            UserInfoManager.Get().GetUserInfo().key += payItemInfo.Value;
                             break;
                         default:
                             type = ITEM_TYPE.NONE;
@@ -386,13 +505,13 @@ namespace Percent.Platform
             
                 //구매한 상품에 대한 결과 값
                 //arrayRewardItemInfo
-                MsgReward[] arr = new MsgReward[arrayRewardItemInfo.Length];
+                ItemBaseInfo[] arr = new ItemBaseInfo[arrayRewardItemInfo.Length];
                 for (int i = 0; i < arrayRewardItemInfo.Length; i++)
                 {
-                    Debug.Log($"GET == ID:{arrayRewardItemInfo[i].itemId}, Value:{arrayRewardItemInfo[i].value}");
-                    arr[i] = new MsgReward();
-                    arr[i].ItemId = arrayRewardItemInfo[i].itemId;
-                    arr[i].Value = arrayRewardItemInfo[i].value;
+                    Debug.Log($"GET == ID:{arrayRewardItemInfo[i].ItemId}, Value:{arrayRewardItemInfo[i].Value}");
+                    arr[i] = new ItemBaseInfo();
+                    arr[i].ItemId = arrayRewardItemInfo[i].ItemId;
+                    arr[i].Value = arrayRewardItemInfo[i].Value;
                 }
                 UI_Main.Get().AddReward(arr, ShopItem.pos);
                 
@@ -409,9 +528,10 @@ namespace Percent.Platform
             }
         }
 
-        public virtual void Initialize()
+        public virtual void Initialize(int productID)
         {
             //Instantiate해줄것, 기타 설정해주기
+            shopProductId = productID;
         }
 
         public void Buy()
@@ -425,7 +545,7 @@ namespace Percent.Platform
                 //{
 #if UNITY_EDITOR
                     //개발자 테스트용
-                NetworkManager.session.ShopTemplate.ShopPurchaseTestReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductId, null, ShowBuyResult);
+                //NetworkManager.session.ShopTemplate.ShopPurchaseTestReq(NetworkManager.session.HttpClient, shopInfo.shopId, shopProductId, null, ShowBuyResult);
 #else
                     //실제 결제
                 InAppManager.Instance.BuyProductID(productId, UserInfoManager.Get().GetUserInfo().userID, shopInfo.shopId, shopProductId, ShowBuyResult);
@@ -439,7 +559,7 @@ namespace Percent.Platform
                 //buttonShopItem.onClick.AddListener(() =>
                 //{  
                     //인앱 재화로 상품 구매하는 경우
-                NetworkManager.session.ShopTemplate.ShopBuyReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().userID,
+                NetworkManager.session.ShopTemplate.ShopBuyReq(NetworkManager.session.HttpClient,
                     shopInfo.shopId, shopProductId, ShowBuyResult);
                 
                 pos = transform.position;
@@ -458,7 +578,7 @@ namespace Percent.Platform
             
         }
 
-        private void SetColor()
+        protected void SetColor()
         {
             Color color = Color.white;
             float factor = buttonShopItem.interactable ? 1f : 0.5f;
@@ -467,7 +587,7 @@ namespace Percent.Platform
 
             foreach (var text in texts)
             {
-                color = text.color;
+                color.a = text.color.a;
                 color.r *= factor;
                 color.g *= factor;
                 color.b *= factor;
@@ -476,7 +596,7 @@ namespace Percent.Platform
 
             foreach (var image in images)
             {
-                color = image.color;
+                color.a = image.color.a;
                 color.r *= factor;
                 color.g *= factor;
                 color.b *= factor;

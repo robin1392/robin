@@ -67,7 +67,7 @@ namespace RandomWarsProtocol
 
         public void StartMatchReq(MsgStartMatchReq msg)
         {
-            _httpService.Send((int)GameProtocol.START_MATCH_REQ, "matchrequest", JsonConvert.SerializeObject(msg));
+            _httpService.Send((int)GameProtocol.START_MATCH_REQ, "matchrequest2", JsonConvert.SerializeObject(msg));
         }
 
 
@@ -122,13 +122,13 @@ namespace RandomWarsProtocol
             return JsonConvert.SerializeObject(msg);
         }
 
-        public void SeasonInfoReq(MsgSeasonInfoReq msg)
+        public void SeasonInfoReq(UserSeasonInfoReq msg)
         {
             _httpService.Send((int)GameProtocol.SEASON_INFO_REQ, "seasoninfo", JsonConvert.SerializeObject(msg));
         }
 
 
-        public string SeasonInfoAck(MsgSeasonInfoAck msg)
+        public string SeasonInfoAck(UserSeasonInfoAck msg)
         {
             return JsonConvert.SerializeObject(msg);
         }
@@ -216,13 +216,13 @@ namespace RandomWarsProtocol
         }
 
 
-        public void QuestInfoReq(MsgQuestInfoReq msg)
+        public void QuestInfoReq(QuestInfoReq msg)
         {
             _httpService.Send((int)GameProtocol.QUEST_INFO_REQ, "questinfo", JsonConvert.SerializeObject(msg));
         }
 
 
-        public string QuestInfoAck(MsgQuestInfoAck msg)
+        public string QuestInfoAck(QuestInfoAck msg)
         {
             return JsonConvert.SerializeObject(msg);
         }
@@ -239,13 +239,13 @@ namespace RandomWarsProtocol
             return JsonConvert.SerializeObject(msg);
         }
 
-        public void QuestDayRewardReq(MsgQuestDayRewardReq msg)
+        public void QuestDayRewardReq(QuestDayRewardReq msg)
         {
             _httpService.Send((int)GameProtocol.QUEST_DAY_REWARD_REQ, "questdayreward", JsonConvert.SerializeObject(msg));
         }
 
 
-        public string QuestDayRewardAck(MsgQuestDayRewardAck msg)
+        public string QuestDayRewardAck(QuestDayRewardAck msg)
         {
             return JsonConvert.SerializeObject(msg);
         }

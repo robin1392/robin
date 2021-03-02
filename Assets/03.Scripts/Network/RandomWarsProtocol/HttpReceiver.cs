@@ -55,9 +55,9 @@ namespace RandomWarsProtocol
         public delegate void LevelUpDiceAckDelegate(MsgLevelUpDiceAck msg);
         public LevelUpDiceAckDelegate LevelUpDiceAck;
 
-        public delegate Task<string> SeasonInfoReqDelegate(MsgSeasonInfoReq msg);
+        public delegate Task<string> SeasonInfoReqDelegate(UserSeasonInfoReq msg);
         public SeasonInfoReqDelegate SeasonInfoReq;
-        public delegate void SeasonInfoAckDelegate(MsgSeasonInfoAck msg);
+        public delegate void SeasonInfoAckDelegate(UserSeasonInfoAck msg);
         public SeasonInfoAckDelegate SeasonInfoAck;
 
         public delegate Task<string> SeasonResetReqDelegate(MsgSeasonResetReq msg);
@@ -95,9 +95,9 @@ namespace RandomWarsProtocol
         public delegate void GetClassRewardAckDelegate(MsgGetClassRewardAck msg);
         public GetClassRewardAckDelegate GetClassRewardAck;
 
-        public delegate Task<string> QuestInfoReqDelegate(MsgQuestInfoReq msg);
+        public delegate Task<string> QuestInfoReqDelegate(QuestInfoReq msg);
         public QuestInfoReqDelegate QuestInfoReq;
-        public delegate void QuestInfoAckDelegate(MsgQuestInfoAck msg);
+        public delegate void QuestInfoAckDelegate(QuestInfoAck msg);
         public QuestInfoAckDelegate QuestInfoAck;
 
         public delegate Task<string> QuestRewardReqDelegate(MsgQuestRewardReq msg);
@@ -105,9 +105,9 @@ namespace RandomWarsProtocol
         public delegate void QuestRewardAckDelegate(MsgQuestRewardAck msg);
         public QuestRewardAckDelegate QuestRewardAck;
 
-        public delegate Task<string> QuestDayRewardReqDelegate(MsgQuestDayRewardReq msg);
+        public delegate Task<string> QuestDayRewardReqDelegate(QuestDayRewardReq msg);
         public QuestDayRewardReqDelegate QuestDayRewardReq;
-        public delegate void QuestDayRewardAckDelegate(MsgQuestDayRewardAck msg);
+        public delegate void QuestDayRewardAckDelegate(QuestDayRewardAck msg);
         public QuestDayRewardAckDelegate QuestDayRewardAck;
 
 
@@ -202,7 +202,7 @@ namespace RandomWarsProtocol
                         if (SeasonInfoReq == null)
                             return ackJson;
 
-                        MsgSeasonInfoReq msg = JsonConvert.DeserializeObject<MsgSeasonInfoReq>(json);
+                        UserSeasonInfoReq msg = JsonConvert.DeserializeObject<UserSeasonInfoReq>(json);
                         ackJson = await SeasonInfoReq(msg);
                     }
                     break;
@@ -274,7 +274,7 @@ namespace RandomWarsProtocol
                         if (QuestInfoReq == null)
                             return ackJson;
 
-                        MsgQuestInfoReq msg = JsonConvert.DeserializeObject<MsgQuestInfoReq>(json);
+                        QuestInfoReq msg = JsonConvert.DeserializeObject<QuestInfoReq>(json);
                         ackJson = await QuestInfoReq(msg);
                     }
                     break;
@@ -292,7 +292,7 @@ namespace RandomWarsProtocol
                         if (QuestDayRewardReq == null)
                             return ackJson;
 
-                        MsgQuestDayRewardReq msg = JsonConvert.DeserializeObject<MsgQuestDayRewardReq>(json);
+                        QuestDayRewardReq msg = JsonConvert.DeserializeObject<QuestDayRewardReq>(json);
                         ackJson = await QuestDayRewardReq(msg);
                     }
                     break;
@@ -392,7 +392,7 @@ namespace RandomWarsProtocol
                         if (SeasonInfoAck == null)
                             return false;
 
-                        MsgSeasonInfoAck msg = JsonConvert.DeserializeObject<MsgSeasonInfoAck>(json);
+                        UserSeasonInfoAck msg = JsonConvert.DeserializeObject<UserSeasonInfoAck>(json);
                         SeasonInfoAck(msg);
                     }
                     break;
@@ -464,7 +464,7 @@ namespace RandomWarsProtocol
                         if (QuestInfoAck == null)
                             return false;
 
-                        MsgQuestInfoAck msg = JsonConvert.DeserializeObject<MsgQuestInfoAck>(json);
+                        QuestInfoAck msg = JsonConvert.DeserializeObject<QuestInfoAck>(json);
                         QuestInfoAck(msg);
                     }
                     break;
@@ -482,7 +482,7 @@ namespace RandomWarsProtocol
                         if (QuestDayRewardAck == null)
                             return false;
 
-                        MsgQuestDayRewardAck msg = JsonConvert.DeserializeObject<MsgQuestDayRewardAck>(json);
+                        QuestDayRewardAck msg = JsonConvert.DeserializeObject<QuestDayRewardAck>(json);
                         QuestDayRewardAck(msg);
                     }
                     break;

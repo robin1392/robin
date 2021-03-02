@@ -10,7 +10,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using RandomWarsProtocol;
+//using RandomWarsProtocol;
+using CodeStage.AntiCheat.ObscuredTypes;
+
+using Service.Core;
+using Template.Account.GameBaseAccount.Common;
+using Template.User.RandomwarsUser.Common;
 
 public class GameStateManager : Singleton<GameStateManager>
 {
@@ -255,16 +260,7 @@ public class GameStateManager : Singleton<GameStateManager>
         }
         else
         {
-            // 네트워크 매니져 UserId가 설정되어 있으면 해당 아이디로 유저 인증을 요청함.
-            if (NetworkManager.Get().UserId.Length > 0)
-            {
-                NetworkManager.Get().AuthUserReq(NetworkManager.Get().UserId);
-            }
-            else
-            {
-                string userid = UserInfoManager.Get().GetUserInfo().userID;
-                NetworkManager.Get().AuthUserReq(userid);
-            }
+            NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
         }
 
 #else
@@ -272,7 +268,7 @@ public class GameStateManager : Singleton<GameStateManager>
         // 유저 정보 까지 받고 다 했으면 다음 씬으로 이동
         ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
 #endif
-        
+
     }
 
     public void UserAuthOK()
@@ -284,9 +280,79 @@ public class GameStateManager : Singleton<GameStateManager>
             ChangeScene(Global.E_GAMESTATE.STATE_MAIN);
         }
     }
+
+
+    /// <summary>
+    /// 계정 로그인 응답 처리
+    /// </summary>
+    /// <param name="errorCode"></param>
+    /// <param name="accountInfo"></param>
+    /// <returns></returns>
+    public bool OnReceiveAccountLoginAck(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo)
+    {
+        Debug.Log($"OnReceiveAccountLoginAck. errorCode: {errorCode}, {Newtonsoft.Json.JsonConvert.SerializeObject(accountInfo)}");
+
+        if (errorCode != EGameBaseAccountErrorCode.Success)
+        {
+            Debug.LogError("Error OnReceiveAccountLoginAck. errorCode: " + errorCode);
+            return false;
+        }
+
+        // 계정 로그인 성공시 발급받은 토큰을 저장한다.
+        NetworkManager.session.HttpClient.SetAccessToken(accountInfo.AccessToken);
+
+        UserInfoManager.Get().GetUserInfo().SetPlatformID(accountInfo.PlatformId);
+
+       // TODD : [임시] 곧바로 유저 정보 요청. 차후에 로그인 flow에 따라 위치를 변경해야함.
+        NetworkManager.session.UserTemplate.UserInfoReq(NetworkManager.session.HttpClient, OnReceiveUserInfoAck);
+        return true;
+    }
+
+
+    /// <summary>
+    /// 유저 정보 응답 처리
+    /// </summary>
+    /// <param name="errorCode"></param>
+    /// <param name="userInfo"></param>
+    /// <param name="arrayUserDeck"></param>
+    /// <param name="arrayUserDice"></param>
+    /// <param name="arrayUserBox"></param>
+    /// <param name="questInfo"></param>
+    /// <param name="seasonInfo"></param>
+    /// <returns></returns>
+    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo)
+    {
+        if (errorCode != ERandomwarsUserErrorCode.Success)
+        {
+            ObscuredPrefs.SetString("UserKey", string.Empty);
+            ObscuredPrefs.Save();
+
+            UI_Start.Get().SetTextStatus(string.Empty);
+            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
+            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
+            {
+                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, string.Empty, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+            });
+            return true;
+        }
+
+        UserInfoManager.Get().SetUserInfo(userInfo, seasonInfo);
+        UserInfoManager.Get().SetDeck(arrayUserDeck);
+        UserInfoManager.Get().SetDice(arrayUserDice);
+        UserInfoManager.Get().SetBox(arrayUserBox);
+        UI_Popup_Quest.QuestUpdate(questInfo);
+
+        GameStateManager.Get().UserAuthOK();
+        //UnityUtil.Print("RECV AUTH => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
+
+        return true;
+    }
     #endregion
-    
-    
+
+
     #region server connect ok
     public void CheckSendInGame()
     {

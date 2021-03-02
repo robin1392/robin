@@ -5,7 +5,7 @@ namespace Service.Net
 {
     public class NetServiceConfig
     {
-        public ILogger Logger { get; set; }
+        public ILog Logger { get; set; }
         public int Port { get; set; }
         public int MaxConnectionNum { get; set; }
         public int BufferSize { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Service.Core;
 
 namespace RandomWarsProtocol.Msg
 {
@@ -12,6 +13,7 @@ namespace RandomWarsProtocol.Msg
     public class MsgLeaveGameAck
     {
         public int ErrorCode;
+        public ItemBaseInfo[] giveUpReward;
     }
 
 
