@@ -64,7 +64,7 @@ public class PlayerProxy : NetworkBehaviour
         short MaxInGameUp = 6;
         if (targetFieldDice.diceScale >= MaxInGameUp)
         {
-            logger.LogError($"주사위 눈금이 이미 최대치입니다.: playerId:{playerId}, fieldIndex:{targetDiceFieldIndex}");
+            logger.LogError($"주사위 눈금이 최대치입니다.: playerId:{playerId}, fieldIndex:{targetDiceFieldIndex}");
             return;
         }
 
@@ -162,29 +162,7 @@ public class PlayerProxy : NetworkBehaviour
         var playerId = auth.PlayerId;
         var server = Server as RWNetworkServer;
         var playerState = server.serverGameLogic.GetPlayerState(playerId);
-        var fieldIndex = playerState.SelectEmptySlotRandom();
-        if (fieldIndex < 0)
-        {
-            logger.LogError($"비어있는 슬롯이 없습니다. playerId : {playerId}");
-            return;
-        }
-        
-        // SP를 차감한다.
-        int needSp = playerState.GetDiceCost();
-        if (playerState.sp < needSp)
-        {
-            logger.LogError($"주사위 추가를 위한 SP가 모자랍니다.: playerId:{playerId} sp:{playerState.sp} 필요sp: {needSp}");
-            return;
-        }
-
-        playerState.sp -= needSp;
-        playerState.getDiceCount += 1;
-        var selectedDeckDice = playerState.Deck[Random.Range(0, playerState.Deck.Count)];
-        playerState.Field[fieldIndex] = new FieldDice()
-        {
-            diceId = selectedDeckDice.diceId,
-            diceScale = 0,
-        };
+        playerState.GetDice();
     }
 
     [ServerRpc]

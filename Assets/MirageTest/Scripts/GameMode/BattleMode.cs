@@ -58,6 +58,7 @@ namespace MirageTest.Scripts.GameMode
 
         protected override void OnWave(int wave)
         {
+            return;
             Spawn();
         }
 

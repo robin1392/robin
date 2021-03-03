@@ -93,6 +93,11 @@ namespace MirageTest.Scripts
                 var playerController = Instantiate(towerPrefab, transform);
                 baseStat = playerController; 
                 baseStat.id = NetId;
+                
+                playerController.isMine = IsLocalPlayerActor;
+                var isBottom = team == GameConstants.BottomCamp;
+                playerController.isBottomPlayer = isBottom;
+                playerController.ChangeLayer(isBottom);
             }
             else if (actorType == ActorType.MinionFromDice)
             {
@@ -150,6 +155,8 @@ namespace MirageTest.Scripts
                 var lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
                 if (lr == null)
                 {
+                    var pool = PoolManager.instance.data.listPool.Find(data => data.obj.name == "Effect_SpawnLine");
+                    PoolManager.instance.AddPool(pool.obj, 1);    
                     lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
                 }
                 

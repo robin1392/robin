@@ -190,6 +190,13 @@ namespace MirageTest.Scripts
         {
             _gameMode?.Spawn();
         }
+        
+        [Button]
+        public void GetDiceAll()
+        {
+            _gameMode.PlayerState1.GetDice();
+            _gameMode.PlayerState2.GetDice();
+        }
 
         // private async UniTask UpdateSpawn()
         // {

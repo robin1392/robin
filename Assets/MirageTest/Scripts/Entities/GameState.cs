@@ -1,4 +1,5 @@
 using System;
+using ED;
 using Mirage;
 using UnityEngine;
 
@@ -22,9 +23,17 @@ namespace MirageTest.Scripts.Entities
         public void SetMasterOwnerTag(byte oldValue, byte newValue)
         {
             var client = Client as RWNetworkClient;
+            var isPlayingAI = client.GetLocalPlayerState().ownerTag == newValue;
+                
             foreach (var actorProxy in client.ActorProxies)
             {
-                actorProxy.EnableClientCombatLogic(actorProxy.ownerTag == newValue);
+                actorProxy.EnableClientCombatLogic(isPlayingAI);
+            }
+            
+            foreach (var tower in client.Towers)
+            {
+                var playerController = tower.baseStat as PlayerController;
+                playerController.isPlayingAI = isPlayingAI;
             }
         }
 

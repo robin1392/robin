@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using System.Linq;
 using ED;
+using Sirenix.OdinInspector;
 using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts.Entities
@@ -13,6 +14,8 @@ namespace MirageTest.Scripts.Entities
     [RequireComponent(typeof(NetworkIdentity))]
     public class PlayerState : NetworkBehaviour
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(PlayerState));
+        
         [SyncVar] public string userId;
         [SyncVar] public string nickName;
         //TODO: 꼭 필요한지 고민이 필요함. connectionId는 재접 시 바뀌어서 사용못하고, 유저아이디는 스트링이어서 부담스러움.
@@ -139,8 +142,12 @@ namespace MirageTest.Scripts.Entities
 
         private void OnChangeFieldOnClientOnly(int index, FieldDice oldValue, FieldDice newValue)
         {
-            var uiDiceField = FindObjectOfType<UI_DiceField>(); //싱글턴으로 대체
+            if (!IsLocalPlayerState)
+            {
+                return;
+            }
             
+            var uiDiceField = UI_DiceField.Get(); //싱글턴으로 대체
             if (oldValue.IsEmpty)
             {
                 SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
@@ -177,8 +184,7 @@ namespace MirageTest.Scripts.Entities
                 return (diceInfo, d.inGameLevel);   
             }).ToArray();
             
-            var client = Client as RWNetworkClient;
-            if (client.IsLocalPlayer(userId))
+            if (IsLocalPlayerState)
             {
                 UI_InGame.Get().SetArrayDeck(deckArr);
             }
@@ -251,6 +257,33 @@ namespace MirageTest.Scripts.Entities
             {
                 WorldUIManager.Get().AddSP(sp);
             }
+        }
+        
+        public void GetDice()
+        {
+            var fieldIndex = SelectEmptySlotRandom();
+            if (fieldIndex < 0)
+            {
+                logger.LogError($"비어있는 슬롯이 없습니다. playerId : {userId}");
+                return;
+            }
+        
+            // SP를 차감한다.
+            int needSp = GetDiceCost();
+            if (sp < needSp)
+            {
+                logger.LogError($"주사위 추가를 위한 SP가 모자랍니다.: playerId:{userId} sp:{sp} 필요sp: {needSp}");
+                return;
+            }
+
+            sp -= needSp;
+            getDiceCount += 1;
+            var selectedDeckDice = Deck[Random.Range(0, Deck.Count)];
+            Field[fieldIndex] = new FieldDice()
+            {
+                diceId = selectedDeckDice.diceId,
+                diceScale = 0,
+            };
         }
     }
     
