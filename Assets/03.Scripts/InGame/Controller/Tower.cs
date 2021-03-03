@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using ED;
-
-
+﻿using ED;
 
 public class Tower : BaseStat
 {

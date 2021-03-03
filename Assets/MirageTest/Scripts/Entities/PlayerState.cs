@@ -19,6 +19,7 @@ namespace MirageTest.Scripts.Entities
         [SyncVar] public byte camp;  //상단 캠프, 하단 캠프 두가지로 나뉨. 팀의 개념
         [SyncVar(hook = nameof(SetSpGrade))] public int spGrade;
         [SyncVar(hook = nameof(SetSp))] public int sp;
+        [SyncVar(hook = nameof(SetGetDiceCount))] public int getDiceCount;
 
         public readonly Deck Deck = new Deck();
         public readonly Field Field = new Field();
@@ -58,6 +59,30 @@ namespace MirageTest.Scripts.Entities
             _initalized = true;
         }
         
+        private void Awake()
+        {
+            if (NetIdentity == null)
+            {
+                return;
+            }
+            
+            NetIdentity.OnStartClient.AddListener(StartClient);
+            NetIdentity.OnStopClient.AddListener(StopClient);
+        }
+
+        private void StartClient()
+        {
+            var client = Client as RWNetworkClient;
+            client.AddPlayerState(this);
+            Deck.OnChange += OnChangeDeckOnClientOnly;
+            Field.OnSet += OnChangeFieldOnClientOnly;
+            
+            SetSp(sp, sp);
+            SetSpGrade(spGrade, spGrade);
+            OnChangeDeckOnClientOnly();
+            SetGetDiceCount(getDiceCount, getDiceCount);
+        }
+        
         public DeckDice GetDeckDice(int diceId)
         {
             if (_deckDiceMap.TryGetValue(diceId, out var deckDice))
@@ -88,32 +113,21 @@ namespace MirageTest.Scripts.Entities
             }
         }
         
+        public void SetGetDiceCount(int oldValue, int newValue)
+        {
+            if (IsLocalPlayerState)
+            {
+                UI_InGame.Get().SetDiceButtonText(GetDiceCost());
+            }
+        }
+        
         public void SetSpGrade(int oldValue, int newValue)
         {
             if (IsLocalPlayerState)
             {
-                UI_InGame.Get().SetSPUpgrade(newValue, GetUpradeSpCost());
+                UI_InGame.Get().SetSPUpgrade(newValue + 1, GetUpradeSpCost());
                 UI_InGame.Get().ShowSpUpgradeMessage();
             }
-        }
-
-        private void Awake()
-        {
-            if (NetIdentity == null)
-            {
-                return;
-            }
-            
-            NetIdentity.OnStartClient.AddListener(StartClient);
-            NetIdentity.OnStopClient.AddListener(StopClient);
-        }
-
-        private void StartClient()
-        {
-            var client = Client as RWNetworkClient;
-            client.AddPlayerState(this);
-            Deck.OnChange += OnChangeDeckOnClientOnly;
-            Field.OnSet += OnChangeFieldOnClientOnly;
         }
 
         private void OnChangeFieldOnClientOnly(int index, FieldDice oldValue, FieldDice newValue)
@@ -122,9 +136,7 @@ namespace MirageTest.Scripts.Entities
             
             if (oldValue.IsEmpty)
             {
-                UI_InGame.Get().SetDiceButtonText(GetDiceCost());
                 SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
-                
                 uiDiceField.arrSlot[index].ani.SetTrigger("BBoing");
             }
 
@@ -180,9 +192,8 @@ namespace MirageTest.Scripts.Entities
         {
             var tableManager = TableManager.Get();
             var startCost = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.GetStartDiceCost].value;
-            var diceCount = Field.Count(f => !f.IsEmpty);
             int addDiceCost = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.DiceCostUp].value;
-            return startCost + (diceCount * addDiceCost);
+            return startCost + (getDiceCount * addDiceCost);
         }
         
         public int GetUpradeSpCost()
@@ -224,6 +235,15 @@ namespace MirageTest.Scripts.Entities
             }
             
             return selectedIndexOnField;
+        }
+
+        [ClientRpc]
+        public void AddSpByWave(int sp)
+        {
+            if (IsLocalPlayerState)
+            {
+                WorldUIManager.Get().AddSP(sp);
+            }
         }
     }
     

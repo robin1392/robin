@@ -134,7 +134,7 @@ public class PlayerProxy : NetworkBehaviour
 
         // 필요한 SP를 구한다.
         int needSp = TableManager.Get().Vsmode
-            .KeyValues[(int) EVsmodeKey.DicePowerUpCost01 + (deckDice.inGameLevel - 1)].value;
+            .KeyValues[(int) EVsmodeKey.DicePowerUpCost01 + deckDice.inGameLevel].value;
         // 플레이어 SP를 업데이트 한다.
         if (playerState.sp < needSp)
         {
@@ -178,6 +178,7 @@ public class PlayerProxy : NetworkBehaviour
         }
 
         playerState.sp -= needSp;
+        playerState.getDiceCount += 1;
         var selectedDeckDice = playerState.Deck[Random.Range(0, playerState.Deck.Count)];
         playerState.Field[fieldIndex] = new FieldDice()
         {
@@ -186,6 +187,7 @@ public class PlayerProxy : NetworkBehaviour
         };
     }
 
+    [ServerRpc]
     public void UpgradeSp()
     {
         logger.Log($"[UpgradeSp]");

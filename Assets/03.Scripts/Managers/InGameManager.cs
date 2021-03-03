@@ -967,9 +967,10 @@ namespace ED
             //     playerController.SP_Upgrade();
             // }
             
-            RWNetworkClient.instance.GetLocalPlayerProxy().UpgradeSp();
+            var localPlayerProxy = RWNetworkClient.instance.GetLocalPlayerProxy(); 
+            localPlayerProxy.UpgradeSp();
 
-            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
         }
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)

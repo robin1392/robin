@@ -3,9 +3,9 @@
 #endif
 
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using RandomWarsProtocol;
+using RandomWarsResource.Data;
+using UnityEngine;
 
 namespace ED
 {
@@ -219,7 +219,7 @@ namespace ED
             {
                 var pos = FieldManager.Get().GetTopListPos(infos[i].SlotIndex);
 
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+                TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(infos[i].DiceId, out dataDiceInfo) == false)
                 {
                     return;
@@ -280,7 +280,7 @@ namespace ED
         {
             if (boss != null && boss.DataId > 0)
             {
-                RandomWarsResource.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                TDataCoopModeBossInfo dataCoopModeBossInfo;
                 if (TableManager.Get().CoopModeBossInfo.GetData(boss.DataId, out dataCoopModeBossInfo) == false)
                 {
                     return;
@@ -322,7 +322,7 @@ namespace ED
         {
             if (msgBoss != null)
             {
-                RandomWarsResource.Data.TDataCoopModeBossInfo dataCoopModeBossInfo;
+                TDataCoopModeBossInfo dataCoopModeBossInfo;
                 if (TableManager.Get().CoopModeBossInfo.GetData(msgBoss.DataId, out dataCoopModeBossInfo) == false)
                 {
                     return;

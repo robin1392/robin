@@ -37,6 +37,10 @@ namespace ED
         {
             var localPlayerState = RWNetworkClient.instance.GetLocalPlayerState();
             var diceCost = localPlayerState.GetDiceCost();
+            if (localPlayerState == null)
+            {
+                return;
+            }
             
             if (localPlayerState.sp >= diceCost && localPlayerState.GetEmptySlotCount() > 0)
             {

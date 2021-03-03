@@ -52,10 +52,6 @@ namespace ED
 
         public void Click()
         {
-            // sp 작으면 리턴
-            if (InGameManager.Get().playerController.sp < arrPrice[level])
-                return;
-            
             //InGameManager.Get().SendInGameUpgrade(pData.id , num);
             var localPlayerState = RWNetworkClient.instance.GetLocalPlayerState();
             if (localPlayerState.sp < arrPrice[level])
@@ -64,7 +60,7 @@ namespace ED
             var localPlayerProxy = RWNetworkClient.instance.GetLocalPlayerProxy();
             localPlayerProxy.UpgradeIngameLevel(pData.id);
 
-            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
         }
 
         public int GetDeckDiceId()

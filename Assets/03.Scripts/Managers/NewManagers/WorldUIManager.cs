@@ -7,6 +7,7 @@ using ED;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Debug = UnityEngine.Debug;
 
 public class WorldUIManager : SingletonDestroy<WorldUIManager>
 {
@@ -102,7 +103,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     
     public void SetSpawnTime(float amount)
     {
-        if (amount < 0.05f && InGameManager.Get().time > 2f) amount = 1f;
+        // if (amount < 0.05f && InGameManager.Get().time > 2f) amount = 1f;
         imageSpawnTimeGray.fillAmount = amount;
 
         if (!isGaugeTweening)

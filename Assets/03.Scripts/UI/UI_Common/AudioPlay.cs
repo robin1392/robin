@@ -8,6 +8,6 @@ public class AudioPlay : MonoBehaviour
 
     public void Play()
     {
-        SoundManager.instance.Play(clip);
+        SoundManager.instance?.Play(clip);
     }
 }
