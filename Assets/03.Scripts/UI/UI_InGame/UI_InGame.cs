@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
-
+using RandomWarsResource.Data;
 
 
 public class UI_InGame : SingletonDestroy<UI_InGame>
@@ -186,13 +186,14 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     #region system
 
-    public void SetSPUpgrade(int upgradeLv , int sp)
+    public void SetSPUpgrade(int upgradeLv , int cost)
     {
         //button_SP_Upgrade.interactable = (upgradeLv + 1) * 500 <= sp;
         if (upgradeLv < 5)
         {
+            
             text_SP_Upgrade.text = $"Lv.{upgradeLv + 1}";
-            text_SP_Upgrade_Price.text = $"{(upgradeLv + 1) * 100}";
+            text_SP_Upgrade_Price.text = $"{cost}";
         }
         else
         {

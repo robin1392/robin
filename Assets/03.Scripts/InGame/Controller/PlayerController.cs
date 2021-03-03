@@ -452,11 +452,16 @@ namespace ED
         {
             if (spUpgradeLevel < 5)
             {
-                sp -= (spUpgradeLevel + 1) * 100;
+                sp -= GetSpUpgradeCost();
                 spUpgradeLevel++;
                 InGameManager.Get().event_SP_Edit.Invoke(sp);
                 UI_InGame.Get().ShowSpUpgradeMessage();
             }
+        }
+        
+        public int GetSpUpgradeCost()
+        {
+            return TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetSPPlusLevelupCost01 + spUpgradeLevel].value;
         }
 
         public void SP_Upgrade(int upgradeLv, int curSp)

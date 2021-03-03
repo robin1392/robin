@@ -323,7 +323,6 @@ namespace ED
             event_SP_Edit.AddListener(RefreshSP);
             event_SP_Edit.AddListener(SetSPUpgradeButton);
 
-
             //
             if (NetworkManager.Get().isReconnect)
             {
@@ -362,6 +361,10 @@ namespace ED
             UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
             UI_InGame.Get().SetEnemyArrayDeck();
             UI_InGame.Get().SetEnemyUpgrade();
+            UI_InGame.Get().SetDiceButtonText(GetDiceCost());
+            var upgradeLevel = playerController.spUpgradeLevel;
+            var cost = playerController.GetSpUpgradeCost();
+            UI_InGame.Get().SetSPUpgrade(upgradeLevel, cost);
 
             if (IsNetwork == true)
             {
@@ -753,11 +756,14 @@ namespace ED
             //text_GetDiceButton.text = $"{getDiceCost}";
             UI_InGame.Get().SetDiceButtonText(GetDiceCost());
         }
+        
         public int GetDiceCost()
         {
-            return 10 + getDiceCount * 10;
+            int startDiceCost = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetStartDiceCost].value;
+            int addDiceCost = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.DiceCostUp].value;
+            int needSp = startDiceCost + getDiceCount * addDiceCost;
+            return needSp;
         }
-
 
         public BaseStat GetRandomPlayerUnit(bool isBottomPlayer)
         {
@@ -811,7 +817,10 @@ namespace ED
             //button_SP_Upgrade.interactable = (playerController.spUpgradeLevel + 1) * 500 <= sp;
             //text_SP_Upgrade.text = $"SP Lv.{playerController.spUpgradeLevel + 1}";
             //text_SP_Upgrade_Price.text = $"{(playerController.spUpgradeLevel + 1) * 500}";
-            UI_InGame.Get().SetSPUpgrade(playerController.spUpgradeLevel, sp);
+            
+            var upgradeLevel = playerController.spUpgradeLevel;
+            var cost = playerController.GetSpUpgradeCost();
+            UI_InGame.Get().SetSPUpgrade(upgradeLevel, cost);
         }
 
         #endregion
