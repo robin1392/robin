@@ -20,7 +20,7 @@ public class Boss3 : Minion
     {
         if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
         
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+        if( controller.isPlayingAI )
         {
             Skill(target.id);
             //controller.MinionAniTrigger(id, "Attack", target.id);

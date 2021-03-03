@@ -112,7 +112,7 @@ namespace ED
             
             foreach (var m in arrMeshRenderer)
             {
-                if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+                if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
                     m.material = arrMaterial[isMine ? 0 : 1];
                 else
                     m.material = arrMaterial[isBottomPlayer ? 0 : 1];
@@ -145,7 +145,7 @@ namespace ED
 
             foreach (var m in arrSkinnedMeshRenderer)
             {
-                if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+                if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
                     m.material = arrMaterial[isMine ? 0 : 1];
                 else
                     m.material = arrMaterial[isBottomPlayer ? 0 : 1];

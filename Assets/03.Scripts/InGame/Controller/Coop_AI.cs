@@ -160,7 +160,7 @@ namespace ED
                         loopCount++;
                     }
 
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, myUID, msg);
 
                     dicHitDamage.Clear();
                 }
@@ -500,7 +500,7 @@ namespace ED
             }
             
             #if ENABLE_LOG
-            UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", _myUID, packetCount), str, "green");
+            UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", myUID, packetCount), str, "green");
             #endif
         }
         

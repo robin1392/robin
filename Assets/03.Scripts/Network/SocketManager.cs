@@ -126,7 +126,7 @@ public class SocketManager
         _serverPeer.SetClientSession(session);
 
 
-        switch (NetworkManager.Get().playType)
+        switch (Global.PLAY_TYPE.BATTLE)
         {
             case Global.PLAY_TYPE.BATTLE:
                 NetworkManager.Get().Send(GameProtocol.JOIN_GAME_REQ, (sbyte)UserInfoManager.Get().GetActiveDeckIndex());

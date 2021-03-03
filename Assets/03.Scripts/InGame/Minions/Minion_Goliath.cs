@@ -55,7 +55,7 @@ namespace ED
             {
                 if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
                 {
-                    switch (NetworkManager.Get().playType)
+                    switch (Global.PLAY_TYPE.BATTLE)
                     {
                         case Global.PLAY_TYPE.BATTLE:
                             return controller.targetPlayer;
@@ -103,7 +103,7 @@ namespace ED
             }
             else
             {
-                switch (NetworkManager.Get().playType)
+                switch (Global.PLAY_TYPE.BATTLE)
                 {
                     case Global.PLAY_TYPE.BATTLE:
                         return controller.targetPlayer;

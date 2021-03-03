@@ -99,12 +99,12 @@ namespace ED
                 controller.ActionFireBullet(E_BulletType.NECROMANCER , id, target.id, power, bulletMoveSpeed);
             }
 
-            SoundManager.instance.Play(clip_Attack);
+            SoundManager.instance?.Play(clip_Attack);
         }
         
         public void Skill()
         {
-            SoundManager.instance.Play(clip_Summon);
+            SoundManager.instance?.Play(clip_Summon);
         }
 
         public void Summon()

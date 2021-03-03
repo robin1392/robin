@@ -24,7 +24,7 @@ namespace ED
 
         public void AttackSound()
         {
-            SoundManager.instance.Play(clip_Blade);
+            SoundManager.instance?.Play(clip_Blade);
         }
 
         public override void Attack()

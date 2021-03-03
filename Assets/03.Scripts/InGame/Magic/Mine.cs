@@ -96,7 +96,7 @@ namespace ED
                 image_HealthBar.transform.parent.gameObject.SetActive(true);
             }
 
-            SoundManager.instance.Play(clip_Set);
+            SoundManager.instance?.Play(clip_Set);
             animator.SetTrigger(Set);
         }
 
@@ -159,7 +159,7 @@ namespace ED
 
             animator.gameObject.SetActive(false);
             ps_Bomb.Play();
-            SoundManager.instance.Play(clip_Explosion);
+            SoundManager.instance?.Play(clip_Explosion);
 
             base.Destroy(2f);
         }

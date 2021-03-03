@@ -58,7 +58,7 @@ namespace ED
 
         public void AttackEvent()
         {
-            SoundManager.instance.Play(clip_Blade);
+            SoundManager.instance?.Play(clip_Blade);
         }
 
         public override void Death()
@@ -67,7 +67,7 @@ namespace ED
             {
                 StartCoroutine(ReviveCoroutine());
                 
-                SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
+                SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
             }
             else
             {
@@ -78,7 +78,7 @@ namespace ED
         protected override void SetColor(E_MaterialType type)
         {
             bool mine = isMine;
-            if (NetworkManager.Get().playType == Global.PLAY_TYPE.COOP)
+            if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.COOP)
             {
                 mine = isBottomPlayer;
             }
@@ -171,7 +171,7 @@ namespace ED
 
         IEnumerator PoisonCoroutine(float duration)
         {
-            SoundManager.instance.Play(clip_Poison);
+            SoundManager.instance?.Play(clip_Poison);
             PoolManager.instance.ActivateObject("Effect_Poison", transform.position);
             float t = 0;
             float tick = 0.1f;

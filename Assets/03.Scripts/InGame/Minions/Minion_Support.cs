@@ -78,7 +78,7 @@ namespace ED
             yield return null;
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            SoundManager.instance.Play(clip_Jump);
+            SoundManager.instance?.Play(clip_Jump);
             controller.MinionAniTrigger(id, "Skill" , m.GetComponent<BaseStat>().id);
             
             var ts = transform;
@@ -131,7 +131,7 @@ namespace ED
             var pos = transform.position;
             pos.y = 0.1f;
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
-            SoundManager.instance.Play(clip_Landing);
+            SoundManager.instance?.Play(clip_Landing);
             controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
         }
     }

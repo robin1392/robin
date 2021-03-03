@@ -83,7 +83,7 @@ namespace ED
 
         public void AttackEvent()
         {
-            SoundManager.instance.Play(clip_BabyAttack);
+            SoundManager.instance?.Play(clip_BabyAttack);
         }
 
         public void FireSpear()

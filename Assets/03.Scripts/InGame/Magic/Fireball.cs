@@ -34,12 +34,12 @@ namespace ED
             ps_Tail.Clear();
             ps_BombEffect.Clear();
 
-            SoundManager.instance.Play(Global.E_SOUND.SFX_FIREBALL_FIRE);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_FIREBALL_FIRE);
         }
 
         protected override IEnumerator Move()
         {
-            SoundManager.instance.Play(clip_Fire);
+            SoundManager.instance?.Play(clip_Fire);
             
             light.enabled = true;
             var startPos = transform.position;
@@ -133,7 +133,7 @@ namespace ED
             ps_Tail.Stop();
             ps_BombEffect.Play();
             
-            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_COMMON_EXPLOSION);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_COMMON_EXPLOSION);
 
             Destroy(1.1f);
         }

@@ -72,7 +72,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
         btn_ShowValues.interactable = false;
 
         // 경쟁전일경우
-        if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+        if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
         {
             int normalGold = 0;
             int normalTrophy = 0;
@@ -254,7 +254,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
     {
         Ease ease = Ease.InBack;
 
-        if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+        if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
         {
             ((RectTransform) winlose_Other.transform).DOAnchorPosY(520 + 1200, 0.5f).SetEase(ease);
             ((RectTransform) winlose_My.transform).DOAnchorPosY(-320 + 520, 0.5f).SetEase(ease).SetDelay(0.1f);

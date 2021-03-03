@@ -182,7 +182,7 @@ namespace ED
                 Invoke("FireLightOff", 0.15f);
             }
             
-            SoundManager.instance.Play(clip_Fire);
+            SoundManager.instance?.Play(clip_Fire);
         }
         
         private void FireLightOff()

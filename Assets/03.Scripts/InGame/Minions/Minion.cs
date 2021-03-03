@@ -185,7 +185,7 @@ namespace ED
             //_isNexusAttacked = false;
             currentHealth = maxHealth;
             image_HealthBar.fillAmount = 1f;
-            switch (NetworkManager.Get().playType)
+            switch (Global.PLAY_TYPE.BATTLE)
             {
                 case Global.PLAY_TYPE.BATTLE:
                     image_HealthBar.color = isMine ? Color.green : Color.red;
@@ -294,7 +294,7 @@ namespace ED
             }
             _poolObjectAutoDeactivate.Deactive();
             
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         protected void RefreshHealthBar()
@@ -396,7 +396,7 @@ namespace ED
             if(InGameManager.IsNetwork)
             {
                 //switch (PhotonManager.Instance.playType)
-                switch (NetworkManager.Get().playType)
+                switch (Global.PLAY_TYPE.BATTLE)
                 {
                     case Global.PLAY_TYPE.BATTLE:
                         image_HealthBar.color = isMine ? Color.green : Color.red;

@@ -116,6 +116,7 @@ namespace ED
         {
             get
             {
+                return true;
                 if (NetworkManager.Get() == null)
                     return false;
                 
@@ -618,7 +619,7 @@ namespace ED
 
             Debug.Log("spawn  : " + wave);
             
-            switch (NetworkManager.Get().playType)
+            switch (Global.PLAY_TYPE.BATTLE)
             {
                 case Global.PLAY_TYPE.BATTLE:
                     for (int i = 0; i < spawnInfos.Length; i++)
@@ -896,7 +897,7 @@ namespace ED
 
             isGamePlaying = false;
             StopAllCoroutines();
-            SoundManager.instance.StopBGM();
+            SoundManager.instance?.StopBGM();
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
             UI_InGame.Get().ClearUI();
 

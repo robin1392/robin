@@ -89,7 +89,7 @@ namespace ED
 
         IEnumerator FireCoroutine()
         {
-            SoundManager.instance.Play(clip_Flame);
+            SoundManager.instance?.Play(clip_Flame);
             
             SetControllEnable(false);
             _aiPath.canMove = false;

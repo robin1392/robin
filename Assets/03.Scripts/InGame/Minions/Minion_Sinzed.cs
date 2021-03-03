@@ -23,7 +23,7 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            switch (NetworkManager.Get().playType)
+            switch (Global.PLAY_TYPE.BATTLE)
             {
                 case Global.PLAY_TYPE.BATTLE:
                     target = controller.targetPlayer;
@@ -67,12 +67,12 @@ namespace ED
             
             StartCoroutine(DeathCoroutine());
             
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         IEnumerator DeathCoroutine()
         {
-            SoundManager.instance.Play(clip_Explosion);
+            SoundManager.instance?.Play(clip_Explosion);
             
             var t = 0f;
             var tick = 0f;

@@ -42,7 +42,7 @@ namespace ED
         
         protected override IEnumerator Move()
         {
-            SoundManager.instance.Play(clip_Summon);
+            SoundManager.instance?.Play(clip_Summon);
             var startPos = transform.position;
             var endPos = targetPos;
             var distance = Vector3.Distance(startPos, endPos);

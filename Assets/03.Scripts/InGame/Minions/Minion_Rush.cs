@@ -66,7 +66,7 @@ namespace ED
 
         public void SkillEvent()
         {
-            SoundManager.instance.Play(clip_Rush);
+            SoundManager.instance?.Play(clip_Rush);
         }
 
         private void Dash()

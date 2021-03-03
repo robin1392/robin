@@ -19,7 +19,7 @@ public class UI_Loading : SingletonDestroy<UI_Loading>
 
     void Start()
     {
-        SoundManager.instance.StopBGM();
+        SoundManager.instance?.StopBGM();
     }
 
     #endregion

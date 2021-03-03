@@ -45,7 +45,7 @@ namespace ED
                 skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine());
 
-                SoundManager.instance.Play(clip_ShieldMode);
+                SoundManager.instance?.Play(clip_ShieldMode);
                 animator.SetTrigger(aniHashAttack);
             }
         }
@@ -76,7 +76,7 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            switch (NetworkManager.Get().playType)
+            switch (Global.PLAY_TYPE.BATTLE)
             {
                 case Global.PLAY_TYPE.BATTLE:
                     return controller.targetPlayer;

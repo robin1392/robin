@@ -121,13 +121,13 @@ namespace ED
         private readonly string recvMessage = "RecvPlayer";
         private static readonly int Break = Animator.StringToHash("Break");
         public bool isHalfHealth;
-        public bool isPlayingAI { get; protected set; }
+        public bool isPlayingAI { get; set; }
         public bool isMinionAgentMove = true;
         protected Coroutine crt_SyncMinion;
         //protected Queue<int> queueHitDamage = new Queue<int>();
         protected Dictionary<uint, float> dicHitDamage = new Dictionary<uint, float>();
-        protected uint _myUID;
-        public new uint myUID => _myUID;
+
+        public uint myUID => id;
         protected List<uint> _listDeadID = new List<uint>();
 
         #endregion
@@ -209,9 +209,9 @@ namespace ED
             {
                 if (m.gameObject.CompareTag("Finish")) continue;
 
-                if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+                if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
                     m.material = arrMaterial[isMine ? 0 : 1];
-                else if (NetworkManager.Get().playType == Global.PLAY_TYPE.COOP)
+                else if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.COOP)
                     m.material = arrMaterial[isBottomPlayer ? 0 : 1];
                     
                 switch (type)
@@ -597,7 +597,7 @@ namespace ED
                 }
             }
 
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
         
 
@@ -875,14 +875,14 @@ namespace ED
             objCollider.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
             this.isBottomPlayer = pIsBottomPlayer;
 
-            if (InGameManager.IsNetwork == true && this.isBottomPlayer == false && NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+            if (InGameManager.IsNetwork == true && this.isBottomPlayer == false && Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
             {
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
             
             if(InGameManager.IsNetwork)
             {
-                switch (NetworkManager.Get().playType)
+                switch (Global.PLAY_TYPE.BATTLE)
                 {
                     case Global.PLAY_TYPE.BATTLE:
                         image_HealthBar.color = isMine ? Color.green : Color.red;
@@ -1086,7 +1086,7 @@ namespace ED
                 image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
                 ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
                 animator.SetTrigger("Death");
-                SoundManager.instance.Play(clip_TowerExplosion);
+                SoundManager.instance?.Play(clip_TowerExplosion);
                 ps_Destroy.gameObject.SetActive(true);
                 
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
@@ -1174,7 +1174,7 @@ namespace ED
                         };
                     }
                     
-                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, _myUID, msg);
+                    NetSendPlayer(GameProtocol.HIT_DAMAGE_REQ, myUID, msg);
                     
                     dicHitDamage.Clear();
                 }
@@ -1842,7 +1842,7 @@ namespace ED
                     break;
                 case E_BulletType.SPEAR:
                     b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
-                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
+                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
                     break;
                 case E_BulletType.NECROMANCER:
                     b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
@@ -1945,8 +1945,8 @@ namespace ED
             {
                 case E_CannonType.DEFAULT:
                     b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
-                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
-                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
+                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
+                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
                     break;
                 case E_CannonType.BOMBER:
                     b = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
@@ -2278,11 +2278,11 @@ namespace ED
                         }
                         
                         #if ENABLE_LOG
-                        UnityUtil.Print(string.Format("SEND [{0}][{1}] : ", _myUID, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
+                        UnityUtil.Print(string.Format("SEND [{0}][{1}] : ", myUID, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount)), str, "red");
                         #endif
                         #endregion
                         
-                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, _myUID, msgMinionInfos, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
+                        NetSendPlayer(GameProtocol.MINION_STATUS_RELAY, myUID, msgMinionInfos, relay, InGameManager.Get().wave * 10000 + (isPlayingAI ? targetPlayer.packetCount : packetCount));
                         _syncDictionary.Clear();
                         packetCount++;
                     }
@@ -2614,7 +2614,7 @@ namespace ED
                 
 
 #if ENABLE_LOG
-                UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", _myUID, packetCount), str, "green");
+                UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", myUID, packetCount), str, "green");
 #endif
                 
             }
@@ -2674,12 +2674,6 @@ namespace ED
 
         public void NetSendPlayer(GameProtocol protocol, params object[] param)
         {
-            if (InGameManager.Get().isGamePlaying == false)
-                return;
-            
-            if (NetworkManager.Get().isReconnect == true)
-                return;
-
             if (protocol > GameProtocol.BEGIN_RELAY)
             {
                 if (protocol == GameProtocol.MINION_STATUS_RELAY)

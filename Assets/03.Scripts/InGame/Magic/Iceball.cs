@@ -35,7 +35,7 @@ namespace ED
 
         protected override IEnumerator Move()
         {
-            SoundManager.instance.Play(clip_Shoot);
+            SoundManager.instance?.Play(clip_Shoot);
             var startPos = transform.position;
             while (target == null)
             {
@@ -146,7 +146,7 @@ namespace ED
 
         public void Bomb()
         {
-            SoundManager.instance.Play(clip_Explosion);
+            SoundManager.instance?.Play(clip_Explosion);
             rb.velocity = Vector3.zero;
             ps_Tail.Stop();
             ps_BombEffect.Play();

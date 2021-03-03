@@ -167,7 +167,7 @@ namespace ED
 
         public void FireArrow()
         {
-            SoundManager.instance.Play(clip_Shot);
+            SoundManager.instance?.Play(clip_Shot);
             
             if (target != null)
             {

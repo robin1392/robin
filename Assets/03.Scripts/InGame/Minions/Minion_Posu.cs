@@ -61,7 +61,7 @@ namespace ED
                 return;
             }
 
-            SoundManager.instance.Play(clip_Fire);
+            SoundManager.instance?.Play(clip_Fire);
             
             //if (PhotonNetwork.IsConnected && isMine)
             if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )

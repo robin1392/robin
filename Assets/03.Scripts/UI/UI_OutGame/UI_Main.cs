@@ -270,7 +270,7 @@ namespace ED
         // send battle network
         private void ConnectBattle()
         {
-            NetworkManager.Get().playType = Global.PLAY_TYPE.BATTLE;
+            InGameManager.Get().playType = Global.PLAY_TYPE.BATTLE;
             
             if (NetworkManager.Get().UseLocalServer == true)
             {
@@ -283,8 +283,8 @@ namespace ED
 
         private void ConnectCoop()
         {
-            NetworkManager.Get().playType = Global.PLAY_TYPE.COOP;
-            
+            InGameManager.Get().playType = Global.PLAY_TYPE.COOP;
+
             ShowMainUI(false);
             CameraGyroController.Get().FocusIn();
             

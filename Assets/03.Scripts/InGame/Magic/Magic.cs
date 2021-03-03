@@ -75,7 +75,7 @@ namespace ED
                     _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
                 }
                 
-                switch (NetworkManager.Get().playType)
+                switch (Global.PLAY_TYPE.BATTLE)
                 {
                     case Global.PLAY_TYPE.BATTLE:
                         image_HealthBar.color = isMine ? Color.green : Color.red;

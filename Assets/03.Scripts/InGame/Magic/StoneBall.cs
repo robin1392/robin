@@ -45,7 +45,7 @@ namespace  ED
         
         private IEnumerator AttackCoroutine()
         {
-            SoundManager.instance.Play(clip_Rolling);
+            SoundManager.instance?.Play(clip_Rolling);
             float angle = 0f;
             Vector3 forward = transform.forward;
             while (true)
@@ -77,7 +77,7 @@ namespace  ED
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 StopAllCoroutines();
                 ts_Model.gameObject.SetActive(false);
-                SoundManager.instance.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
+                SoundManager.instance?.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
                 Destroy(2f);
             }
         }

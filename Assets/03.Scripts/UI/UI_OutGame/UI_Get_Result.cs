@@ -161,7 +161,7 @@ public class UI_Get_Result : MonoBehaviour
     {
         if (_currentAudio != null)
         {
-            SoundManager.instance.Stop(_currentAudio);
+            SoundManager.instance?.Stop(_currentAudio);
             _currentAudio = null;
         }
         

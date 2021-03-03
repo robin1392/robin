@@ -61,7 +61,7 @@ namespace ED
 
         public void SkillEvent()
         {
-            SoundManager.instance.Play(clip_Whirl);
+            SoundManager.instance?.Play(clip_Whirl);
         }
 
         IEnumerator SkillCoroutine()

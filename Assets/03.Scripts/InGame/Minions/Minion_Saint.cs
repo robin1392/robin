@@ -116,7 +116,7 @@ namespace ED
             }
             else
             {
-                switch (NetworkManager.Get().playType)
+                switch (Global.PLAY_TYPE.BATTLE)
                 {
                     case Global.PLAY_TYPE.BATTLE:
                         return controller.targetPlayer;

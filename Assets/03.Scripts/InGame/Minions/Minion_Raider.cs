@@ -69,7 +69,7 @@ namespace ED
 
         public void SkillEvent()
         {
-            SoundManager.instance.Play(clip_Dash);
+            SoundManager.instance?.Play(clip_Dash);
         }
 
         protected void Dash()

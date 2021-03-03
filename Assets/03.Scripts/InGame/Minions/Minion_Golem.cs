@@ -18,7 +18,7 @@ namespace ED
         {
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
 
-            SoundManager.instance.Play(clip_Attack);
+            SoundManager.instance?.Play(clip_Attack);
             
             if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
@@ -40,7 +40,7 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            switch (NetworkManager.Get().playType)
+            switch (Global.PLAY_TYPE.BATTLE)
             {
                 case Global.PLAY_TYPE.BATTLE:
                     return controller.targetPlayer;
@@ -53,7 +53,7 @@ namespace ED
 
         public override void Death()
         {
-            SoundManager.instance.Play(clip_Exposion);
+            SoundManager.instance?.Play(clip_Exposion);
             
             for (int i = 0; i < 2; i++)
             {
