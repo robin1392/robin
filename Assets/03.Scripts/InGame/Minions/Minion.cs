@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using NodeCanvas.BehaviourTrees;
 using Pathfinding;
 using UnityEngine;
@@ -77,6 +78,8 @@ namespace ED
         protected Seeker _seeker;
         protected AIPath _aiPath;
         protected MinionAnimationEvent _animationEvent;
+
+        public ActorProxy actorProxy;
 
         protected virtual void Awake()
         {
@@ -303,7 +306,7 @@ namespace ED
         {
             BaseStat defaultTarget = null;
 
-            switch (NetworkManager.Get().playType)
+            switch (Global.PLAY_TYPE.BATTLE)
             {
                 case Global.PLAY_TYPE.BATTLE:
                     defaultTarget = controller.targetPlayer;
@@ -809,9 +812,9 @@ namespace ED
             }
         }
 
-        public virtual void SetAnimationTrigger(string triggerName, int targetID)
+        public virtual void SetAnimationTrigger(string triggerName, uint targetId)
         {
-            var target = InGameManager.Get().GetBaseStatFromId(targetID);
+            var target = InGameManager.Get().GetBaseStatFromId(targetId);
             if (target != null) transform.LookAt(target.transform);
             
             animator.SetTrigger(triggerName);
@@ -850,6 +853,7 @@ namespace ED
         public void SetNetSyncMinionData(NetSyncMinionData data)
         {
             id = data.minionId;
+            //KZSee:
             if (id > controller.subSpawnCount) controller.subSpawnCount = id + 1;
             diceId = data.minionDataId;
             currentHealth = data.minionHp;

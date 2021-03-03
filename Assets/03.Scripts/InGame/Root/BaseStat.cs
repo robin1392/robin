@@ -9,7 +9,7 @@ namespace ED
     {
         public bool isMine;
         public int diceId;
-        public int id;
+        public uint id;
         public PlayerController controller;
         public Rigidbody rb;
         public Animator animator;
@@ -46,7 +46,7 @@ namespace ED
         private static readonly string GROUND_TAG_NAME = "Minion_Ground";
         private static readonly string FLYING_TAG_NAME = "Minion_Flying";
         public bool isFlying => gameObject.CompareTag(FLYING_TAG_NAME);
-        public int UID
+        public uint UID
         {
             get
             {

@@ -32,12 +32,12 @@ public class Boss3 : Minion
         }
     }
 
-    public void Skill(int targetId)
+    public void Skill(uint targetId)
     {
         StartCoroutine(SkillCoroutine(targetId));
     }
 
-    IEnumerator SkillCoroutine(int targetId)
+    IEnumerator SkillCoroutine(uint targetId)
     {
         BaseStat targetBS = null;
         if (targetId % 10000 == 0)

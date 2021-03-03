@@ -81,5 +81,25 @@ namespace MirageTest.Scripts.GameMode
         {
             return PlayerStates.First(ps => ps.userId == userId);
         }
+
+        public void OnClientDisconnected(INetworkConnection arg0)
+        {
+            var auth = arg0.AuthenticationData as AuthDataForConnection;
+            var playerState = GetPlayerState(auth.PlayerId);
+            if (GameState.masterOwnerTag != playerState.ownerTag)
+            {
+                return;
+            }
+
+            var newMaster = PlayerStates.FirstOrDefault(p => p.ownerTag != playerState.ownerTag);
+            if (newMaster == null)
+            {
+                return;
+            }
+
+            GameState.masterOwnerTag = newMaster.ownerTag;
+        }
+
+        public abstract void Spawn();
     }
 }

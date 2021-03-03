@@ -90,7 +90,7 @@ public class Boss1 : Minion
         }
     }
 
-    public void JumpTarget(int id)
+    public void JumpTarget(uint id)
     {
         var m = InGameManager.Get().GetBottomMinion(id);
 

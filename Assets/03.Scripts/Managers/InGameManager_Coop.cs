@@ -31,7 +31,7 @@ namespace ED
 
             StartManager();
 
-            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_COOP);
+            SoundManager.instance?.PlayBGM(Global.E_SOUND.BGM_INGAME_COOP);
         }
 
         public override void StartManager()

@@ -105,7 +105,7 @@ namespace  ED
         private void Polymorph()
         {
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var list = new List<int>();
+            var list = new List<uint>();
 
             foreach (var col in cols)
             {
@@ -126,7 +126,7 @@ namespace  ED
 
                 PoolManager.instance.ActivateObject(pref_SkillEffect.name, ts_SkillParticlePosition.position);
 
-                int targetId = list[Random.Range(0, list.Count)];
+                uint targetId = list[Random.Range(0, list.Count)];
                 
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
                 controller.MinionAniTrigger(id, "Skill", targetId);

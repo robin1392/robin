@@ -72,7 +72,7 @@ public class UI_DiceLevelUpResultSlot : MonoBehaviour
             text_Value.rectTransform.DOScale(1f, 0.05f);
 
             t += 0.05f;
-            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_DICE_POINT_UP);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_DICE_POINT_UP);
             yield return new WaitForSeconds(0.05f);
         }
 

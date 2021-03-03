@@ -5,6 +5,7 @@ using Mirage;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.GameMode;
 using RandomWarsResource.Data;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -41,6 +42,12 @@ namespace MirageTest.Scripts
 
             _networkServer = GetComponent<RWNetworkServer>();
             _serverObjectManager = GetComponent<ServerObjectManager>();
+            _networkServer.Disconnected.AddListener(OnClientDisconnected);
+        }
+
+        private void OnClientDisconnected(INetworkConnection arg0)
+        {
+            _gameMode.OnClientDisconnected(arg0);
         }
 
         private async void Start()
@@ -52,17 +59,22 @@ namespace MirageTest.Scripts
        
             TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             
-            await WaitForPlayers().TimeoutWithoutException(TimeSpan.FromSeconds(3));
+            await WaitForFirstPlayer().TimeoutWithoutException(TimeSpan.FromSeconds(30));
             
+            await WaitForPlayers().TimeoutWithoutException(TimeSpan.FromSeconds(3));
+
             if (NoPlayers)
             {
                 EndGameSession();
                 return;
             }
-
+            
             var gameState = SpawnGameState();
             var playerStates = SpawnPlayerStates();
+            gameState.masterOwnerTag = playerStates[0].ownerTag;
 
+            _isGameStart = true;
+            
             switch (modeType)
             {
                 case PLAY_TYPE.BATTLE:
@@ -81,8 +93,7 @@ namespace MirageTest.Scripts
             //프로세스 종료시킨다. 플렉스매칭에도 타임아웃이 있다. 이게 필요할까?
             logger.LogError($"플레이어 입장 타임아웃");
         }
-
-
+        
         private async UniTask WaitForPlayers()
         {
             while (true)
@@ -91,7 +102,22 @@ namespace MirageTest.Scripts
                     _serverObjectManager.SpawnedObjects.Where(kvp => kvp.Value.GetComponent<PlayerProxy>() != null);
                 if (playerProxies.Count() >= _gamePlayerCount)
                 {
-                    _isGameStart = true;
+                    break;
+                }
+
+                await UniTask.Yield();
+            }
+        }
+        
+        private async UniTask WaitForFirstPlayer()
+        {
+            while (true)
+            {
+                var playerProxies =
+                    _serverObjectManager.SpawnedObjects.Where(kvp => kvp.Value.GetComponent<PlayerProxy>() != null);
+                if (playerProxies.Any())
+                {
+                    break;
                 }
 
                 await UniTask.Yield();
@@ -128,8 +154,8 @@ namespace MirageTest.Scripts
                     new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
                     new DeckDice(){ diceId = 1002, inGameLevel = 0, outGameLevel = 1 },
                     new DeckDice(){ diceId = 1003, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1004, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1005, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 3005, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 3002, inGameLevel = 0, outGameLevel = 1 },
                 }, GameConstants.Player1Tag);
         
             playerStates[1] = SpawnPlayerState(
@@ -157,6 +183,12 @@ namespace MirageTest.Scripts
         public PlayerState GetPlayerState(string userId)
         {
             return _gameMode.GetPlayerState(userId);
+        }
+
+        [Button]
+        public void Spawn()
+        {
+            _gameMode?.Spawn();
         }
 
         // private async UniTask UpdateSpawn()

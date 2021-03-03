@@ -4,6 +4,6 @@ namespace MirageTest.Scripts
     {
         None,
         Tower,
-        DiceMinion,
+        MinionFromDice,
     }
 }

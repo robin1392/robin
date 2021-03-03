@@ -116,9 +116,9 @@ namespace ED
             }
         }
 
-        public void DashMessage(int targetID)
+        public void DashMessage(uint targetId)
         {
-            var bs = InGameManager.Get().GetBaseStatFromId(targetID);
+            var bs = InGameManager.Get().GetBaseStatFromId(targetId);
             if (bs != null)
             {
                 Transform ts = bs.transform;

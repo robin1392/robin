@@ -15,7 +15,8 @@ namespace MirageTest.Scripts.Entities
     {
         [SyncVar] public string userId;
         [SyncVar] public string nickName;
-        [SyncVar] public byte tag;
+        //TODO: 꼭 필요한지 고민이 필요함. connectionId는 재접 시 바뀌어서 사용못하고, 유저아이디는 스트링이어서 부담스러움.
+        [SyncVar] public byte ownerTag;  
         [SyncVar] public byte camp;  //상단 캠프, 하단 캠프 두가지로 나뉨. 팀의 개념
         [SyncVar(hook = nameof(SetSpGrade))] public int spGrade;
         [SyncVar(hook = nameof(SetSp))] public int sp;
@@ -42,7 +43,7 @@ namespace MirageTest.Scripts.Entities
             this.userId = userId;
             this.nickName = nickName;
             this.sp = sp;
-            this.tag = tag;
+            this.ownerTag = tag;
             this.spGrade = 0;
 
             foreach (var deckDice in deck)
@@ -74,6 +75,12 @@ namespace MirageTest.Scripts.Entities
         {
             var client = Client as RWNetworkClient;
             client.AddPlayerState(this);
+            
+            if (client.localPlayerId == userId)
+            {
+                client.localPlayerOwnerTag = ownerTag;
+            }
+
             Deck.OnChange += OnChangeDeckOnClientOnly;
             Field.OnSet += OnChangeFieldOnClientOnly;
             

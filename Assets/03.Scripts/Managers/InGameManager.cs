@@ -181,7 +181,7 @@ namespace ED
             }
             */
             
-            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
+            SoundManager.instance?.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
         }
 
         protected void Update()
@@ -723,7 +723,7 @@ namespace ED
             playerController.GetDice(diceId, slotNum, level);
             NetSetSp(curSp);
             
-            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
             
             UI_InGame.Get().ControlGetDiceButton(true);
         }
@@ -744,7 +744,7 @@ namespace ED
             return listBottomPlayer.ToArray();
         }
 
-        public Minion GetBottomMinion(int id)
+        public Minion GetBottomMinion(uint id)
         {
             return listBottomPlayer.Find(bs => bs.id == id) as Minion;
         }
@@ -936,7 +936,7 @@ namespace ED
 
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
 
-            SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
+            SoundManager.instance?.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }
         
         /*public void EndGame(PhotonMessageInfo info)
@@ -1160,11 +1160,11 @@ namespace ED
             NetSyncData otherData = new NetSyncData();
             // 내 미니언
             myData.towerHp = playerController.currentHealth;
-            myData.userId = NetworkManager.Get().UserUID;
+            myData.userId = (uint)NetworkManager.Get().UserUID;
             
             // 상대방 미니언
             otherData.towerHp = playerController.targetPlayer.currentHealth;
-            otherData.userId = NetworkManager.Get().OtherUID;
+            otherData.userId = (uint)NetworkManager.Get().OtherUID;
             
             // NetSyncData my , other 
             if (playerController.isBottomPlayer)
@@ -1817,49 +1817,52 @@ namespace ED
             yield return null;
         }
         
-        public BaseStat GetBaseStatFromId(int baseStatId)
+        public BaseStat GetBaseStatFromId(uint baseStatId)
         {
-            int uid = 0;
-            if (baseStatId >= 10000) uid = baseStatId / 10000;
-            else if (baseStatId < 1000) return null;
-            else uid = baseStatId / 1000;
-            //int bsID = baseStatId % 10000;
-            //Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");
-
-            PlayerController pc = null;
-            if (NetworkManager.Get().UserUID == uid)
-            {
-                pc = playerController;
-            }
-            else if (NetworkManager.Get().OtherUID == uid)
-            {
-                pc = playerController.targetPlayer;
-            }
-            else if (NetworkManager.Get().CoopUID == uid)
-            {
-                pc = playerController.coopPlayer;
-            }
-
-            if (baseStatId < 0) return null;
-            if (pc.id == baseStatId || (baseStatId >= 10000 && baseStatId % 10000 == 0)) return pc;
-
-            var minion = pc.listMinion.Find(m => m.id == baseStatId);
-            if (minion != null)
-            {
-                return minion;
-            }
-            else
-            {
-                var magic = pc.listMagic.Find(m => m.id == baseStatId);
-                if (magic != null)
-                {
-                    return magic;
-                }
-                else
-                {
-                    return null;
-                }
-            }
+            //KZSee : netid를 사용하면 아래 절차는 필요없게됨.
+            var actorProxy = RWNetworkClient.instance.ActorProxies.Find(a => a.NetId == baseStatId);
+            return actorProxy.baseStat;
+            // int uid = 0;
+            // if (baseStatId >= 10000) uid = baseStatId / 10000;
+            // else if (baseStatId < 1000) return null;
+            // else uid = baseStatId / 1000;
+            // //int bsID = baseStatId % 10000;
+            // //Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");
+            //
+            // PlayerController pc = null;
+            // if (NetworkManager.Get().UserUID == uid)
+            // {
+            //     pc = playerController;
+            // }
+            // else if (NetworkManager.Get().OtherUID == uid)
+            // {
+            //     pc = playerController.targetPlayer;
+            // }
+            // else if (NetworkManager.Get().CoopUID == uid)
+            // {
+            //     pc = playerController.coopPlayer;
+            // }
+            //
+            // if (baseStatId < 0) return null;
+            // if (pc.id == baseStatId || (baseStatId >= 10000 && baseStatId % 10000 == 0)) return pc;
+            //
+            // var minion = pc.listMinion.Find(m => m.id == baseStatId);
+            // if (minion != null)
+            // {
+            //     return minion;
+            // }
+            // else
+            // {
+            //     var magic = pc.listMagic.Find(m => m.id == baseStatId);
+            //     if (magic != null)
+            //     {
+            //         return magic;
+            //     }
+            //     else
+            //     {
+            //         return null;
+            //     }
+            // }
         }
 
         #region not use old code

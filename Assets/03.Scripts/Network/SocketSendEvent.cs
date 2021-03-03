@@ -78,7 +78,7 @@ public class SocketSendEvent
             }
             case GameProtocol.DESTROY_MAGIC_RELAY:
             {
-                //MsgDestroyMagic(IPeer peer, int playerUId, int baseStatId)
+                //MsgDestroyMagic(IPeer peer, int playerUId, uint baseStatId)
                 _sender.MsgDestroyMagic(peer ,Convert.ToUInt16(param[0]) , (ushort)param[1]  );
                 break;
             }
@@ -158,13 +158,13 @@ public class SocketSendEvent
             }
             case GameProtocol.MINION_FLAG_OF_WAR_RELAY:
             {
-                //MinionFogOfWarRelay(IPeer peer, int playerUId, int baseStatId, int effect, bool isFogOfWar)
+                //MinionFogOfWarRelay(IPeer peer, int playerUId, uint baseStatId, int effect, bool isFogOfWar)
                 _sender.MinionFogOfWarRelay(peer , Convert.ToUInt16(param[0]), (ushort)param[1] , (short)param[2] , (bool)param[3]);
                 break;
             }
             case GameProtocol.SCARECROW_RELAY:
             {
-                //ScarecrowRelay(IPeer peer, int playerUId, int baseStatId, int eyeLevel)
+                //ScarecrowRelay(IPeer peer, int playerUId, uint baseStatId, int eyeLevel)
                 _sender.ScarecrowRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (byte)param[2]);
                 break;
             }
@@ -197,7 +197,7 @@ public class SocketSendEvent
             }
             case GameProtocol.FIRE_SPEAR_RELAY:
             {
-                //FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power)
+                //FireSpearRelay(IPeer peer, int playerUId, MsgVector3 shootPos, uint targetId, int power)
                 
                 MsgVector3 chStPos = ConvertNetMsg.Vector3ToMsg((Vector3) param[1]);
                 
@@ -206,7 +206,7 @@ public class SocketSendEvent
             }
             case GameProtocol.NECROMANCER_BULLET_RELAY:
             {
-                //NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, int targetId, int power, int bulletMoveSpeed)
+                //NecromancerBulletRelay(IPeer peer, int playerUId, MsgVector3 shootPos, uint targetId, int power, int bulletMoveSpeed)
                 
                 MsgVector3 chStPos = ConvertNetMsg.Vector3ToMsg((Vector3) param[1]);
                 
@@ -248,13 +248,13 @@ public class SocketSendEvent
             }
             case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
             {
-                //SendMessageParam1Relay(IPeer peer, int playerUId, int id, int targetId, string message)
+                //SendMessageParam1Relay(IPeer peer, int playerUId, int id, uint targetId, string message)
                 _sender.SendMessageParam1Relay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (ushort)param[3] , (byte)param[2]);
                 break;
             }
             case GameProtocol.SET_MINION_TARGET_RELAY:
             {
-                //SetMinionTargetRelay(IPeer peer, int playerUId, int id, int targetId)
+                //SetMinionTargetRelay(IPeer peer, int playerUId, int id, uint targetId)
                 
                 _sender.SetMinionTargetRelay(peer , Convert.ToUInt16(param[0]) , (ushort)param[1] , (ushort)param[2]);
                 break;

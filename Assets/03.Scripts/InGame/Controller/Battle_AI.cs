@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 using NodeCanvas.BehaviourTrees;
+using Random = UnityEngine.Random;
 
 namespace ED
 {
@@ -20,8 +21,10 @@ namespace ED
 
         protected override void Start()
         {
-            _myUID = NetworkManager.Get().OtherUID;
-            id = myUID * 10000;
+            throw new NotImplementedException();
+            
+            // _myUID = NetworkManager.Get().OtherUID;
+            // id = myUID * 10000;
             
             sp = 200;
             maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);

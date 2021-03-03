@@ -18,7 +18,7 @@ namespace ED
         public AudioClip clip_Summon;
 
         private bool _isTriggerOn;
-        private List<int> _listAttackSpeedUp = new List<int>();
+        private List<uint> _listAttackSpeedUp = new List<uint>();
         
         public override void Initialize(bool pIsBottomPlayer)
         {

@@ -173,13 +173,13 @@ public class UI_Get_Result : MonoBehaviour
                 obj_BoxOpenParticle.SetActive(true);
 
                 Invoke("ItemAnimation", 1f);
-                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN);
+                SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN);
             }
             else
             {
                 //btn_Blind.interactable = false;
                 ItemAnimation();
-                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN_REPEAT);
+                SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_OPEN_REPEAT);
             }
         }
         else if (openCount == msg.Length)
@@ -292,7 +292,7 @@ public class UI_Get_Result : MonoBehaviour
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
-                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_GOLD, 0.5f);
+                SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_GOLD, 0.5f);
                 break;
             case ITEM_TYPE.DIAMOND:
                 image_ItemIcon.sprite = sprite_Diamond;
@@ -303,7 +303,7 @@ public class UI_Get_Result : MonoBehaviour
                 text_ItemName.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
                 text_ItemCount.text = $"x{reward.Value}";
                 obj_Guage.SetActive(false);
-                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DIAMOND, 0.5f);
+                SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DIAMOND, 0.5f);
                 break;
             case ITEM_TYPE.DICE:
             {
@@ -325,13 +325,13 @@ public class UI_Get_Result : MonoBehaviour
 
                 if ((DICE_GRADE) dataDiceInfo.grade == DICE_GRADE.LEGEND)
                 {
-                    _currentAudio = SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE_LEGEND);
+                    _currentAudio = SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE_LEGEND);
                     ani_Item.SetTrigger("GetLegend");
                     iconChangeDelay = 1.6f;
                 }
                 else
                 {
-                    SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE, 0.5f);
+                    SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_GET_DICE, 0.5f);
                     ani_Item.SetTrigger("Get");
                     iconChangeDelay = 0.6f;
                     
@@ -371,7 +371,7 @@ public class UI_Get_Result : MonoBehaviour
         rts.localScale = Vector3.zero;
         rts.DOScale(1.4f, 0.5f);
 
-        SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_ITEM_APPEAR);
+        SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_ITEM_APPEAR);
 
         openCount++;
     }
@@ -440,7 +440,7 @@ public class UI_Get_Result : MonoBehaviour
     
     IEnumerator ShowResultCoroutine()
     {
-        SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT);
+        SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT);
         obj_Result.SetActive(true);
         ani_Box.gameObject.SetActive(false);
         UI_Main.Get().boxOpenPopup.Close();
@@ -481,7 +481,7 @@ public class UI_Get_Result : MonoBehaviour
                     dice.transform.DOScale(Vector3.one, 0.2f).SetDelay(0.05f * loopCount++).SetEase(Ease.OutBack)
                         .OnComplete(() =>
                         {
-                            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT_ITEM);
+                            SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_RESULT_ITEM);
                         });
                     
                 }

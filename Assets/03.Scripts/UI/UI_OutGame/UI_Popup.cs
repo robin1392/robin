@@ -65,7 +65,7 @@ namespace ED
             }
 
             stack.Push(this);
-            SoundManager.instance.Play(clip_Open);
+            SoundManager.instance?.Play(clip_Open);
         }
 
         IEnumerator BGButtonEnable()
@@ -97,7 +97,7 @@ namespace ED
             {
                 stack.Pop();
             }
-            SoundManager.instance.Play(clip_Close);
+            SoundManager.instance?.Play(clip_Close);
         }
 
         public static void AllClose()

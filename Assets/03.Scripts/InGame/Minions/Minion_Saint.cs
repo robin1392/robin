@@ -128,9 +128,9 @@ namespace ED
             }
         }
 
-        public override void SetAnimationTrigger(string triggerName, int targetID)
+        public override void SetAnimationTrigger(string triggerName, uint targetId)
         {
-            var target = InGameManager.Get().GetBaseStatFromId(targetID);
+            var target = InGameManager.Get().GetBaseStatFromId(targetId);
             transform.LookAt(target.transform);
             
             animator.SetTrigger(triggerName);

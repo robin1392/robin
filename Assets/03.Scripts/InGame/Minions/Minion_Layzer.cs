@@ -57,7 +57,7 @@ namespace ED
             _attackedTarget = target;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
             _listTarget.Clear();
-            List<int> intList = new List<int>();
+            List<uint> intList = new List<uint>();
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseStat>();
@@ -81,7 +81,7 @@ namespace ED
                     controller.ActionLayzer(id, intList.ToArray());
                 else
                 {
-                    int[] emptyLst = new int[6] { 0, 0, 0, 0, 0, 0 };
+                    uint[] emptyLst = new uint[6] { 0, 0, 0, 0, 0, 0 };
                     controller.ActionLayzer(id, emptyLst);
                 }
             }
@@ -113,7 +113,7 @@ namespace ED
             }
         }
 
-        public void SetTargetList(int[] arr)
+        public void SetTargetList(uint[] arr)
         {
             _listTarget.Clear();
             

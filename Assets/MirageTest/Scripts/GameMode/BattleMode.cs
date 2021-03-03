@@ -30,7 +30,7 @@ namespace MirageTest.Scripts.GameMode
         {
             var tower = UnityEngine.Object.Instantiate(ActorProxyPrefab, position, Quaternion.identity);
             tower.team = playerState.camp;
-            tower.ownerTag = playerState.tag;
+            tower.ownerTag = playerState.ownerTag;
             tower.actorType = ActorType.Tower;
             
             var tableManager = TableManager.Get();
@@ -50,18 +50,23 @@ namespace MirageTest.Scripts.GameMode
                 }
             }
 
-            tower.hp = hp;
-            tower.maxHp = hp;
+            tower.health = hp;
+            tower.maxHealth = hp;
                 
             ServerObjectManager.Spawn(tower.NetIdentity);
         }
 
         protected override void OnWave(int wave)
         {
+            Spawn();
+        }
+
+        public override void Spawn()
+        {
             for (var index = 0; index < PlayerStates.Length; ++index)
             {
                 var playerState = PlayerStates[index];
-                SpawnMinions(playerState, playerState.camp, playerState.tag);
+                SpawnMinions(playerState, playerState.camp, playerState.ownerTag);
             }
         }
 
@@ -86,7 +91,7 @@ namespace MirageTest.Scripts.GameMode
                 var spawnCount = diceInfo.spawnMultiply;
                 if (diceInfo.castType == (int)DICE_CAST_TYPE.MINION)
                 {
-                    spawnCount *= fieldDice.diceScale;
+                    spawnCount *= (fieldDice.diceScale + 1);
                 }
                 
                 var deckDice = playerState.GetDeckDice(diceId);
@@ -120,17 +125,19 @@ namespace MirageTest.Scripts.GameMode
                 for (int i = 0; i < spawnCount; ++i)
                 {
                     var actor = Object.Instantiate(ActorProxyPrefab);
-                    actor.ownerTag = playerState.tag;
+                    actor.ownerTag = playerState.ownerTag;
+                    actor.actorType = ActorType.MinionFromDice;
                     actor.team = team;
                     actor.ownerTag = ownerTag;
                     actor.spawnSlot = fieldIndex;
                     actor.power = power;
-                    actor.maxHp = maxHealth;
-                    actor.hp = maxHealth;
+                    actor.maxHealth = maxHealth;
+                    actor.health = maxHealth;
                     actor.effect = effect;
                     actor.attackSpeed = attackSpeed;
                     actor.diceScale = fieldDice.diceScale;
                     actor.ingameUpgradeLevel = deckDice.inGameLevel;
+                    actor.dataId = diceId;
                     
                     ServerObjectManager.Spawn(actor.NetIdentity);
                 }

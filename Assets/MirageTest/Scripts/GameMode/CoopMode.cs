@@ -50,8 +50,8 @@ namespace MirageTest.Scripts.GameMode
                 }
             }
 
-            tower.hp = hp;
-            tower.maxHp = hp;
+            tower.health = hp;
+            tower.maxHealth = hp;
                 
             ServerObjectManager.Spawn(tower.NetIdentity);
         }
@@ -87,8 +87,8 @@ namespace MirageTest.Scripts.GameMode
                 }
             }
             
-            tower.hp = hp;
-            tower.maxHp = hp;
+            tower.health = hp;
+            tower.maxHealth = hp;
             
             ServerObjectManager.Spawn(tower.NetIdentity);
         }
@@ -98,6 +98,11 @@ namespace MirageTest.Scripts.GameMode
             //웨이브때마다 보스알을 몬스터를 스폰한다.
             //보스알 AI는 4웨이브 후에 변신한다.
             //게임모드에서 스폰한 보스알을 가지고 있다가 변신 시켜야할 듯하다.
+        }
+
+        public override void Spawn()
+        {
+            
         }
     }
 }

@@ -183,7 +183,7 @@ namespace ED
             }
         }
 
-        public void SetTarget(int id)
+        public void SetTarget(uint id)
         {
             target = InGameManager.Get().GetBaseStatFromId(id);
             StartCoroutine(Move());

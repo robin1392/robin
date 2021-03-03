@@ -2,6 +2,7 @@
 #define ENABLE_LOG
 #endif
 
+using System;
 using System.Collections;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
@@ -23,8 +24,9 @@ namespace ED
 
         protected override void StartPlayerControll()
         {
-            _myUID = NetworkManager.Get().CoopUID;
-            id = myUID * 10000;
+            throw new NotImplementedException();
+            // _myUID = NetworkManager.Get().CoopUID;
+            // id = myUID * 10000;
 
             NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPauseAI);
             if (isMine)
@@ -69,7 +71,7 @@ namespace ED
 
         #region HitDamage
 
-        public override void HitDamageMinionAndMagic(int baseStatId, float damage )
+        public override void HitDamageMinionAndMagic(uint baseStatId, float damage )
         {
             if (damage <= 0f) return;
             
@@ -150,7 +152,7 @@ namespace ED
                         {
                             msg[loopCount] = new MsgDamage
                             {
-                                Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
+                                Id = ConvertNetMsg.MsgUIntToUshort(dmg.Key),
                                 Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
                             };
                         }

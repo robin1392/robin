@@ -275,7 +275,7 @@ namespace ED
             btn_ShowLevelUp.gameObject.SetActive(!data.isGuardian);
             text_TowerHP.transform.parent.gameObject.SetActive(!data.isGuardian);
 
-            SoundManager.instance.Play(clip_Open);
+            SoundManager.instance?.Play(clip_Open);
         }
 
         public override void Close()
@@ -297,7 +297,7 @@ namespace ED
                 stack.Pop();
             }
 
-            SoundManager.instance.Play(clip_Close);
+            SoundManager.instance?.Play(clip_Close);
         }
 
         public void Click_Upgrade()
@@ -345,7 +345,7 @@ namespace ED
         private bool isDiceLevelUpCompleted;
         private IEnumerator SetDiceLevelUpResultCoroutine()
         {
-            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_DICE_LVUP_EFX);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_DICE_LVUP_EFX);
             
             isDiceLevelUpCompleted = false;
             
@@ -418,7 +418,7 @@ namespace ED
                 text_ResultDiceLevel.color = UnityUtil.HexToColor("71FA4A");
                 image_ResultDiceIcon.transform.DOScale(1.4f, 0.15f);
                 ps_ResultIconBackground.Play();
-                SoundManager.instance.Play(Global.E_SOUND.SFX_UI_LVUP_RESULT);
+                SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_LVUP_RESULT);
             });
             text_ResultDiceLevel.transform.DOScale(1.2f, 0.15f).SetDelay(1.7f).OnComplete(() =>
             {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace ED
 {
-    public class UI_DiceField : MonoBehaviour
+    public class UI_DiceField : SingletonDestroy<UI_DiceField>
     {
         public UI_BattleFieldDiceSlot[] arrSlot;
 

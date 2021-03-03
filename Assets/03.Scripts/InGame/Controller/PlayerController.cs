@@ -31,10 +31,10 @@ using TDataDiceInfo = RandomWarsResource.Data.TDataDiceInfo;
 namespace ED
 {
     public class PlayerController : BaseStat
-    {   
+    {
         public PlayerController targetPlayer;
         public PlayerController coopPlayer;
-        
+
         #region data variable
         
         // //
@@ -72,7 +72,7 @@ namespace ED
         [SerializeField]
         public int spawnCount = 1;
         public int spawnCountInWave = 0;
-        public int subSpawnCount = 1000;
+        public uint subSpawnCount = 1000;
         
         [SerializeField]
         protected int _sp = 0;
@@ -125,10 +125,10 @@ namespace ED
         public bool isMinionAgentMove = true;
         protected Coroutine crt_SyncMinion;
         //protected Queue<int> queueHitDamage = new Queue<int>();
-        protected Dictionary<int, float> dicHitDamage = new Dictionary<int, float>();
-        protected int _myUID;
-        public new int myUID => _myUID;
-        protected List<int> _listDeadID = new List<int>();
+        protected Dictionary<uint, float> dicHitDamage = new Dictionary<uint, float>();
+        protected uint _myUID;
+        public new uint myUID => _myUID;
+        protected List<uint> _listDeadID = new List<uint>();
 
         #endregion
 
@@ -161,8 +161,8 @@ namespace ED
         {
             return;
             
-            _myUID = isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID;
-            id = myUID * 10000;
+            // _myUID = isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID;
+            // id = myUID * 10000;
             
             if (isMine && NetworkManager.Get().IsConnect())
             {
@@ -437,22 +437,23 @@ namespace ED
 
             if (m != null)
             {
-                if (isSpawnCountUp) m.id = myUID * 10000 + spawnCount++;
-                m.controller = this;
-                //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
-                m.isMine = isMine;
-                
-                if (!listMinion.Contains(m)) 
-                    listMinion.Add(m);
-                
-                PoolManager.instance.ActivateObject("particle_necromancer", spawnPos);
+                //KZSee: 서버에 요청
+                // if (isSpawnCountUp) m.id = myUID * 10000 + spawnCount++;
+                // m.controller = this;
+                // //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
+                // m.isMine = isMine;
+                //
+                // if (!listMinion.Contains(m)) 
+                //     listMinion.Add(m);
+                //
+                // PoolManager.instance.ActivateObject("particle_necromancer", spawnPos);
             }
 
             return m;
         }
         
         //public void CreateMinion(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        public void CreateMinion(RandomWarsResource.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        public void CreateMinion(RandomWarsResource.Data.TDataDiceInfo data, Vector3 spawnPos, uint id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             var minion = listMinion.Find(m => m.id == id);
             if (minion != null) return;
@@ -461,7 +462,7 @@ namespace ED
         }
 
         //private IEnumerator CreateMinionCoroutine(Data_Dice data, Vector3 spawnPos, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CreateMinionCoroutine(RandomWarsResource.Data.TDataDiceInfo data, Vector3 spawnPos, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CreateMinionCoroutine(RandomWarsResource.Data.TDataDiceInfo data, Vector3 spawnPos, uint id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             if (delay > 0)
             {
@@ -629,7 +630,7 @@ namespace ED
 
             if (m != null)
             {
-                if (isSpawnCountUp) m.id = myUID * 10000 + spawnCount++;
+                // if (isSpawnCountUp) m.id = myUID * 10000 + spawnCount++;
                 m.controller = this;
                 m.isMine = isMine;
                 
@@ -643,7 +644,7 @@ namespace ED
         }
         
         //private void CastMagic(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private void CastMagic(RandomWarsResource.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private void CastMagic(RandomWarsResource.Data.TDataDiceInfo data, uint id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             //delay = 0.05f;
             var magic = listMagic.Find(m => m.id == id);
@@ -653,7 +654,7 @@ namespace ED
         }
 
         //private IEnumerator CastMagicCoroutine(Data_Dice data, int eyeLevel, int upgradeLevel, float delay, int diceNum)
-        private IEnumerator CastMagicCoroutine(RandomWarsResource.Data.TDataDiceInfo data, int id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
+        private IEnumerator CastMagicCoroutine(RandomWarsResource.Data.TDataDiceInfo data, uint id, int eyeLevel, int upgradeLevel, float delay, int diceNum)
         {
             yield return new WaitForSeconds(delay);
 
@@ -1168,7 +1169,7 @@ namespace ED
                     {
                         msg[loopCount++] = new MsgDamage
                         {
-                            Id = ConvertNetMsg.MsgIntToUshort(dmg.Key),
+                            Id = ConvertNetMsg.MsgUIntToUshort(dmg.Key),
                             Damage = ConvertNetMsg.MsgFloatToInt(dmg.Value)
                         };
                     }
@@ -1180,7 +1181,7 @@ namespace ED
             }
         }
         
-        public virtual void HitDamageMinionAndMagic(int baseStatId, float damage )
+        public virtual void HitDamageMinionAndMagic(uint baseStatId, float damage )
         {
             if (damage <= 0f)
             {
@@ -1232,7 +1233,7 @@ namespace ED
             }
         }
         
-        /*public void AttackEnemyMinion(int baseStatId, float damage)
+        /*public void AttackEnemyMinion(uint baseStatId, float damage)
         {
             //if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom.PlayerCount > 1)
             HitMinionDamage(true, baseStatId, damage);
@@ -1244,7 +1245,7 @@ namespace ED
             }#1#
         }*/
 
-        public void HitMyMinionDamage(int uid , int minionId , float damage )
+        public void HitMyMinionDamage(uint uid , uint minionId , float damage )
         {
             if(minionId == 0)
                 print("  id ---- 0 :  "+minionId);
@@ -1267,7 +1268,7 @@ namespace ED
             // }    
         }
     
-        public void AttackEnemyMinionOrMagic(int uid, int baseStatId, float damage, float delay)
+        public void AttackEnemyMinionOrMagic(uint uid, uint baseStatId, float damage, float delay)
         {
             //if(baseStatId == 0)
                 //print("  id ---- 0 :  "+baseStatId);
@@ -1275,7 +1276,7 @@ namespace ED
             StartCoroutine(AttackEnemyMinionOrMagicCoroutine(uid, baseStatId, damage, delay));
         }
         
-        IEnumerator AttackEnemyMinionOrMagicCoroutine(int uid, int baseStatId, float damage, float delay)
+        IEnumerator AttackEnemyMinionOrMagicCoroutine(uint uid, uint baseStatId, float damage, float delay)
         {
             if (delay > 0) yield return new WaitForSeconds(delay);
 
@@ -1308,7 +1309,7 @@ namespace ED
         
         
         #region minion target death remove
-        public void ActionSetMagicTarget(int baseStatId , params object[] param)
+        public void ActionSetMagicTarget(uint baseStatId , params object[] param)
         {
             if (param.Length > 1)
             {
@@ -1327,7 +1328,7 @@ namespace ED
                 {
                     NetSendPlayer(GameProtocol.SET_MAGIC_TARGET_ID_RELAY , baseStatId ,(int) param[0]);    
                 }
-                SetMagicTarget(baseStatId, (int) param[0]);
+                SetMagicTarget(baseStatId, (uint) param[0]);
             }
         }
 
@@ -1353,7 +1354,7 @@ namespace ED
             }
             */
         }
-        public void DeathMinion(int baseStatId)
+        public void DeathMinion(uint baseStatId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1393,7 +1394,7 @@ namespace ED
             }*/
         }
         
-        public void DeathMagic(int baseStatId)
+        public void DeathMagic(uint baseStatId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1430,7 +1431,7 @@ namespace ED
         
         
         
-        public void MinionAniTrigger(int baseStatId , string aniName , int targetId )
+        public void MinionAniTrigger(uint baseStatId , string aniName , uint targetId )
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1440,13 +1441,13 @@ namespace ED
             }
             SetMinionAnimationTrigger(baseStatId, aniName , targetId);
         }
-        public void ActionSendMsg(int bastStatId, string msgFunc, int targetId = -1)
+        public void ActionSendMsg(uint bastStatId, string msgFunc, uint targetId = 0)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
                 int funcEnum = (int) UnityUtil.StringToEnum<E_ActionSendMessage>(msgFunc);
                     
-                if (targetId == -1)
+                if (targetId == 0)
                 {
                     NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, bastStatId ,funcEnum );
                 }
@@ -1457,7 +1458,7 @@ namespace ED
             }
             MinionSendMessage(bastStatId, msgFunc, targetId);
         }
-        public void ActionMinionTarget(int baseStatId, int targetId)
+        public void ActionMinionTarget(uint baseStatId, uint targetId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1482,7 +1483,7 @@ namespace ED
         
         
         #region action skill
-        public void HealerMinion(int baseStatId, float heal)
+        public void HealerMinion(uint baseStatId, float heal)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1491,7 +1492,7 @@ namespace ED
             
             HealMinion(baseStatId, heal);
         }
-        public void ActionFireBallBomb(int bastStatId)
+        public void ActionFireBallBomb(uint bastStatId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1500,7 +1501,7 @@ namespace ED
             FireballBomb(bastStatId);
         }
 
-        public void ActionMineBomb(int baseStatId)
+        public void ActionMineBomb(uint baseStatId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1508,7 +1509,7 @@ namespace ED
             }
             MineBomb(baseStatId);
         }
-        public void ActionSturn(bool other , int baseStatId, float duration)
+        public void ActionSturn(bool other , uint baseStatId, float duration)
         {
             int chDur = ConvertNetMsg.MsgFloatToInt(duration );
             if (other == true)
@@ -1524,7 +1525,7 @@ namespace ED
                 SturnMinion(baseStatId , duration);
             }
         }
-        public void ActionRocketBomb(int baseStatId)
+        public void ActionRocketBomb(uint baseStatId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1533,7 +1534,7 @@ namespace ED
             RocketBomb(baseStatId);
         }
 
-        public void ActionIceBallBomb(int baseStatId)
+        public void ActionIceBallBomb(uint baseStatId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1541,7 +1542,7 @@ namespace ED
             }
             IceballBomb(baseStatId);
         }
-        public void ActionFireManFire(int baseStatId)
+        public void ActionFireManFire(uint baseStatId)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1549,7 +1550,7 @@ namespace ED
             }
             FiremanFire(baseStatId);
         }
-        public void ActionCloacking(int bastStatId, bool isCloacking)
+        public void ActionCloacking(uint bastStatId, bool isCloacking)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1558,7 +1559,7 @@ namespace ED
             Cloacking(bastStatId, isCloacking);
         }
 
-        public void ActionFlagOfWar(int bastStatId, bool isIn, float factor)
+        public void ActionFlagOfWar(uint bastStatId, bool isIn, float factor)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1567,7 +1568,7 @@ namespace ED
             }
             FlagOfWar(bastStatId , isIn , factor);
         }
-        public void ActionMinionScareCrow(bool other , int targetId, float eyeLevel)
+        public void ActionMinionScareCrow(bool other , uint targetId, float eyeLevel)
         {
             int chEyeLv = ConvertNetMsg.MsgFloatToInt(eyeLevel );
             if (other == true)
@@ -1583,7 +1584,7 @@ namespace ED
                 ScareCrow(targetId , eyeLevel);
             }
         }
-        public void ActionLayzer(int baseStatId, int[] arrTarget)
+        public void ActionLayzer(uint baseStatId, uint[] arrTarget)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {   
@@ -1593,7 +1594,7 @@ namespace ED
             LayzerMinion(baseStatId, arrTarget);
         }
 
-        public void ActionInvincibility(int baseStatId, float time)
+        public void ActionInvincibility(uint baseStatId, float time)
         {
             int convTime = ConvertNetMsg.MsgFloatToInt(time );
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
@@ -1602,7 +1603,7 @@ namespace ED
             SetMinionInvincibility(baseStatId, time);
         }
 
-        public void ActionPushMinion(int baseStatId, Vector3 dir, float pushPower)
+        public void ActionPushMinion(uint baseStatId, Vector3 dir, float pushPower)
         {
             // 상대방 미니언을 푸쉬한다..
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
@@ -1624,19 +1625,19 @@ namespace ED
         
         #region list remove & destroy
         //
-        private void RemoveMinion(int baseStatId)
+        private void RemoveMinion(uint baseStatId)
         {
             listMinion.Remove(listMinion.Find(minion => minion.id == baseStatId));
         }
-        private void RemoveMagic(int baseStatId)
+        private void RemoveMagic(uint baseStatId)
         {
             _listMagic.Remove(_listMagic.Find(magic => magic.id == baseStatId));
         }
-        private void DestroyMinion(int baseStatId)
+        private void DestroyMinion(uint baseStatId)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Death();
         }
-        private void DestroyMagic(int baseStatId)
+        private void DestroyMagic(uint baseStatId)
         {
             _listMagic.Find(magic => magic.id == baseStatId)?.Destroy();
         }
@@ -1648,31 +1649,31 @@ namespace ED
         
         
         #region list skill to do
-        public void HealMinion(int baseStatId, float heal)
+        public void HealMinion(uint baseStatId, float heal)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Heal(heal);
         }
-        public void FireballBomb(int baseStatId)
+        public void FireballBomb(uint baseStatId)
         {
             ((Fireball)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
-        public void MineBomb(int baseStatId)
+        public void MineBomb(uint baseStatId)
         {
             ((Mine)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
-        public void SturnMinion(int baseStatId, float duration)
+        public void SturnMinion(uint baseStatId, float duration)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Sturn(duration);
         }
-        public void RocketBomb(int baseStatId)
+        public void RocketBomb(uint baseStatId)
         {
             ((Rocket)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
-        public void IceballBomb(int baseStatId)
+        public void IceballBomb(uint baseStatId)
         {
             ((Iceball)_listMagic.Find(magic => magic.id == baseStatId))?.Bomb();
         }
-        public void FiremanFire(int baseStatId)
+        public void FiremanFire(uint baseStatId)
         {
             var m = listMinion.Find(minion => minion.id == baseStatId);
             if (m != null)
@@ -1684,19 +1685,19 @@ namespace ED
                 }
             }
         }
-        public void Cloacking(int baseStatId , bool isCloack)
+        public void Cloacking(uint baseStatId , bool isCloack)
         {
             listMinion.Find(m => m.id == baseStatId)?.Cloacking(isCloack);
         }
-        public void FlagOfWar(int bastStatId , bool isIn , float factor)
+        public void FlagOfWar(uint bastStatId , bool isIn , float factor)
         {
             listMinion.Find(m => m.id == bastStatId )?.SetFlagOfWar(isIn, factor);
         }
-        public void ScareCrow(int targetId , float eyeLevel )
+        public void ScareCrow(uint targetId , float eyeLevel )
         {
             listMinion.Find(m => m.id == targetId)?.Scarecrow(eyeLevel);
         }
-        public void LayzerMinion(int bastStatId , int[] arrTarget)
+        public void LayzerMinion(uint bastStatId , uint[] arrTarget)
         {
             var m_layzer = listMinion.Find(minion => minion.id == bastStatId);
             if (m_layzer != null)
@@ -1719,34 +1720,34 @@ namespace ED
 
         #region list minion target magic
 
-        public void SetMagicTarget(int baseStatId, int targetId)
+        public void SetMagicTarget(uint baseStatId, uint targetId)
         {
             StartCoroutine(SetMagicTargetCoroutine(baseStatId, targetId));
         }
-        private IEnumerator SetMagicTargetCoroutine(int baseStatId, int targetId)
+        private IEnumerator SetMagicTargetCoroutine(uint baseStatId, uint targetId)
         {
             while (_listMagic.Find(magic => magic.id == baseStatId) == null) 
                 yield return null;
             _listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(targetId);
         }
 
-        public void SetMagicTarget(int baseStatId, float x, float z)
+        public void SetMagicTarget(uint baseStatId, float x, float z)
         {
             StartCoroutine(SetMagicTargetCoroutine(baseStatId, x, z));
         }
-        private IEnumerator SetMagicTargetCoroutine(int baseStatId, float x, float z)
+        private IEnumerator SetMagicTargetCoroutine(uint baseStatId, float x, float z)
         {
             while (_listMagic.Find(magic => magic.id == baseStatId) == null)
                 yield return null;
             _listMagic.Find(magic => magic.id == baseStatId)?.SetTarget(x, z);
         }
 
-        public void SetMinionTarget(int bastStatId , int targetId )
+        public void SetMinionTarget(uint bastStatId , uint targetId )
         {
             listMinion.Find(minion => minion.id == bastStatId).target = InGameManager.Get().GetBaseStatFromId(targetId);
         }
 
-        public void SetMinionInvincibility(int bastStatId ,float time)
+        public void SetMinionInvincibility(uint bastStatId ,float time)
         {
             listMinion.Find(m => m.id == bastStatId)?.Invincibility(time);
         }
@@ -1761,7 +1762,7 @@ namespace ED
         
         #region minion etc list do it
         
-        public void SetMinionAnimationTrigger(int baseStatId, string trigger , int targetId )
+        public void SetMinionAnimationTrigger(uint baseStatId, string trigger , uint targetId )
         {
             var m = listMinion.Find(minion => minion.id == baseStatId);
             if (m != null && m.animator != null)
@@ -1771,9 +1772,9 @@ namespace ED
             }
         }
         
-        public void MinionSendMessage(int bastStatId, string msgFunc , int targetId = -1 )
+        public void MinionSendMessage(uint bastStatId, string msgFunc , uint targetId = 0 )
         {
-            if (targetId == -1)
+            if (targetId == 0)
             {
                 listMinion.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, SendMessageOptions.DontRequireReceiver);
                 _listMagic.Find(m => m.id == bastStatId)?.SendMessage(msgFunc, SendMessageOptions.DontRequireReceiver);
@@ -1794,7 +1795,7 @@ namespace ED
             }
         }
         
-        public void PushMinion(int baseStatId, Vector3 dir, float pushPower)
+        public void PushMinion(uint baseStatId, Vector3 dir, float pushPower)
         {
             listMinion.Find(minion => minion.id == baseStatId)?.Push(dir, pushPower);
         }
@@ -1808,7 +1809,7 @@ namespace ED
         
         #region fire bullet
 
-        public void ActionFireBullet(E_BulletType bulletType, int id, int targetId, float damage, float moveSpeed)
+        public void ActionFireBullet(E_BulletType bulletType, uint id, uint targetId, float damage, float moveSpeed)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
             {
@@ -1824,7 +1825,7 @@ namespace ED
             FireBullet(bulletType , id, targetId, damage, moveSpeed);
         }
         
-        public void FireBullet(E_BulletType bulletType, int id, int targetId, float damage, float moveSpeed)
+        public void FireBullet(E_BulletType bulletType, uint id, uint targetId, float damage, float moveSpeed)
         {
             Bullet b = null;
             BaseStat bs = listMinion.Find(m => m.id == id);
@@ -1879,7 +1880,7 @@ namespace ED
             }
         }
         
-        /*public void ActionFireArrow(Vector3 startPos , int targetId , float damage , float moveSpeed)
+        /*public void ActionFireArrow(Vector3 startPos , uint targetId , float damage , float moveSpeed)
         {
             if (InGameManager.IsNetwork && isMine)
             {
@@ -1893,7 +1894,7 @@ namespace ED
             }
             FireArrow(startPos, targetId, damage, moveSpeed);
         }
-        public void ActionNecroBullet(Vector3 shootPos , int targetId , float damage , float moveSpeed)
+        public void ActionNecroBullet(Vector3 shootPos , uint targetId , float damage , float moveSpeed)
         {
             if (InGameManager.IsNetwork && isMine)
             {
@@ -1903,7 +1904,7 @@ namespace ED
             }
             FireNecromancerBullet(shootPos, targetId, damage, moveSpeed);
         }
-        public void ActionFireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void ActionFireSpear(Vector3 startPos, uint targetId, float damage, float moveSpeed)
         {            
             if (InGameManager.IsNetwork && isMine)
             {
@@ -1977,7 +1978,7 @@ namespace ED
         
         #region skill & effect
         
-        public void FireArrow(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void FireArrow(Vector3 startPos, uint targetId, float damage, float moveSpeed)
         {
             var b = PoolManager.instance.ActivateObject<Bullet>("Bullet", startPos);
             if (b != null)
@@ -1988,7 +1989,7 @@ namespace ED
                 b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
             }
         }
-        public void FireSpear(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void FireSpear(Vector3 startPos, uint targetId, float damage, float moveSpeed)
         {
             var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
             if (b != null)
@@ -2000,7 +2001,7 @@ namespace ED
             }
         }
         
-        public void FireNecromancerBullet(Vector3 startPos, int targetId, float damage, float moveSpeed)
+        public void FireNecromancerBullet(Vector3 startPos, uint targetId, float damage, float moveSpeed)
         {
             var b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
             if (b != null)
@@ -2116,7 +2117,7 @@ namespace ED
                             for (int i = 0; i < listMinion.Count; i++)
                             {
                                 msgMinionInfos[i] = new MsgMinionInfo();
-                                msgMinionInfos[i].Id = ConvertNetMsg.MsgIntToUshort(listMinion[i].id);
+                                msgMinionInfos[i].Id = ConvertNetMsg.MsgUIntToUshort(listMinion[i].id);
                                 msgMinionInfos[i].DiceId = ConvertNetMsg.MsgIntToUshort(listMinion[i].diceId);
                                 msgMinionInfos[i].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMinion[i].eyeLevel);
                                 msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
@@ -2133,7 +2134,7 @@ namespace ED
                             {
                                 int num = listInstallation[i];
                                 msgMinionInfos[loop] = new MsgMinionInfo();
-                                msgMinionInfos[loop].Id = ConvertNetMsg.MsgIntToUshort(listMagic[num].id);
+                                msgMinionInfos[loop].Id = ConvertNetMsg.MsgUIntToUshort(listMagic[num].id);
                                 msgMinionInfos[loop].DiceId = ConvertNetMsg.MsgIntToUshort(listMagic[i].diceId);
                                 msgMinionInfos[loop].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMagic[num].eyeLevel);
                                 msgMinionInfos[loop].Hp = ConvertNetMsg.MsgFloatToInt(listMagic[num].currentHealth);
@@ -2758,7 +2759,7 @@ namespace ED
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionInvincibilityRelayMsg((int)param[0], (int)param[1]));
                             break;
                         case GameProtocol.FIRE_BULLET_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireBulletRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4]));
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetFireBulletRelayMsg((uint)param[0], (uint)param[1], (int)param[2], (int)param[3], (int)param[4]));
                             break;
                         case GameProtocol.FIRE_CANNON_BALL_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetFireCannonBallRelayMsg((MsgVector3)param[0], (MsgVector3)param[1], (int)param[2], (int)param[3], (int)param[4]));
@@ -2767,7 +2768,7 @@ namespace ED
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionAnimationTriggerRelayMsg((int)param[0],(int)param[1], (int)param[2]));
                             break;
                         case GameProtocol.SET_MAGIC_TARGET_ID_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMagicTargetIDRelayMsg((int)param[0],(int)param[1]));
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMagicTargetIDRelayMsg((int)param[0],(uint)param[1]));
                             break;
                         case GameProtocol.SET_MAGIC_TARGET_POS_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetMagicTargetPosRelayMsg((int)param[0],(int)param[1], (int)param[2]));
@@ -2779,10 +2780,10 @@ namespace ED
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetSendMessageVoidRelayMsg((int)param[0],(int)param[1]));
                             break;
                         case GameProtocol.SEND_MESSAGE_PARAM1_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetSendMessageParam1RelayMsg((int)param[0],(int)param[1], (int)param[2]));
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetSendMessageParam1RelayMsg((int)param[0],(int)param[1], (uint)param[2]));
                             break;
                         case GameProtocol.SET_MINION_TARGET_RELAY:
-                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionTargetRelayMsg((int)param[0],(int)param[1]));
+                            _syncDictionary[protocol].Add(ConvertNetMsg.GetMinionTargetRelayMsg((int)param[0],(uint)param[1]));
                             break;
                         case GameProtocol.PUSH_MINION_RELAY:
                             _syncDictionary[protocol].Add(ConvertNetMsg.GetPushMinionRelayMsg((int)param[0], (int)param[1], (int)param[2], (int)param[3], (int)param[4]));
@@ -3342,7 +3343,7 @@ namespace ED
         //////////////////////////////////////////////////////////////////////
         // Unit's RPCs
         //////////////////////////////////////////////////////////////////////
-        public void TeleportMinion(int baseStatId, float x, float z)
+        public void TeleportMinion(uint baseStatId, float x, float z)
         {
             Transform ts = listMinion.Find(minion => minion.id == baseStatId).transform;
             PoolManager.instance.ActivateObject("Effect_Ninja", ts.position);

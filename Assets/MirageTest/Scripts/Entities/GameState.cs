@@ -10,11 +10,22 @@ namespace MirageTest.Scripts.Entities
         [SyncVar(hook = nameof(SetWave))] public int wave;
         private float _waveInterval;
         private float _waveRemainTime;
+
+        [SyncVar(hook = nameof(SetMasterOwnerTag))] public byte masterOwnerTag;
         
         public void SetWave(int oldValue, int newValue)
         {
             WorldUIManager.Get().SetWave(newValue);
             WorldUIManager.Get().RotateTimerIcon();
+        }
+        
+        public void SetMasterOwnerTag(byte oldValue, byte newValue)
+        {
+            var client = Client as RWNetworkClient;
+            foreach (var actorProxy in client.ActorProxies)
+            {
+                actorProxy.EnableClientCombatLogic(actorProxy.ownerTag == newValue);
+            }
         }
 
         private void Update()

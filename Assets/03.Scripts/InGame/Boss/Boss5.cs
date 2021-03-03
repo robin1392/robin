@@ -83,9 +83,9 @@ public class Boss5 : Minion
     }
 
     // call relay
-    public void FireBullet(int targetID)
+    public void FireBullet(uint targetId)
     {
-        target = InGameManager.Get().GetBaseStatFromId(targetID);
+        target = InGameManager.Get().GetBaseStatFromId(targetId);
 
         if (target != null)
         {

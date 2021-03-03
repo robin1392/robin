@@ -128,9 +128,9 @@ namespace ED
             }
         }
 
-        public void LookAndAniTrigger(int targetID)
+        public void LookAndAniTrigger(uint targetId)
         {
-            longTarget = InGameManager.Get().GetBaseStatFromId(targetID)?.transform;
+            longTarget = InGameManager.Get().GetBaseStatFromId(targetId)?.transform;
             if (longTarget != null)
             {
                 StartCoroutine(LookAtTargetCoroutine());

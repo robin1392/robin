@@ -236,7 +236,7 @@ namespace ED
                 Click_Deck(5);
             }
 
-            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
 
         public void Click_Dice_Info(int diceId)
@@ -267,7 +267,7 @@ namespace ED
             }
 
 
-            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
 
         public void DeactivateSelectedObjectChild()

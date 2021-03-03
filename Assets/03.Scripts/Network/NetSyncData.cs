@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class NetSyncData
 {
-    public int userId;
+    public uint userId;
     public float towerHp;
     public List<NetSyncMinionData> netSyncMinionData = null;
     
@@ -25,7 +25,7 @@ public class NetSyncData
 
 public class NetSyncMinionData
 {
-    public int minionId;
+    public uint minionId;
     
     public int minionDataId;
     public float minionHp;

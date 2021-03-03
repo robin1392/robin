@@ -841,7 +841,7 @@ public class ConvertNetMsg
         for (int i = 0; i < syncData.netSyncMinionData.Count; i++)
         {
             convData[i] = new MsgSyncMinionData();
-            convData[i].minionId = MsgIntToUshort(syncData.netSyncMinionData[i].minionId);
+            convData[i].minionId = MsgUIntToUshort(syncData.netSyncMinionData[i].minionId);
             convData[i].minionDataId = syncData.netSyncMinionData[i].minionDataId;
             convData[i].minionHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionHp);
             convData[i].minionMaxHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionMaxHp);
@@ -902,15 +902,20 @@ public class ConvertNetMsg
         return rtn;
     }
 
-    public static int[] MsgUshortArrToIntArr(ushort[] value)
+    public static uint[] MsgUshortArrToIntArr(ushort[] value)
     {
-        int[] rtn = new int[value.Length];
+        uint[] rtn = new uint[value.Length];
         for (int i = 0; i < value.Length; i++)
         {
-            rtn[i] = MsgUshortToInt(value[i]);
+            rtn[i] = MsgUshortToUInt(value[i]);
         }
 
         return rtn;
+    }
+
+    private static uint MsgUshortToUInt(ushort value)
+    {
+        return Convert.ToUInt32(value);
     }
 
     public static int MsgByteToInt(byte value)
@@ -1208,12 +1213,12 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgFireBulletRelay GetFireBulletRelayMsg(int id, int targetId, int damage, int speed, int type)
+    public static MsgFireBulletRelay GetFireBulletRelayMsg(uint id, uint targetId, int damage, int speed, int type)
     {
         MsgFireBulletRelay msg = new MsgFireBulletRelay();
 
-        msg.Id = MsgIntToUshort(id);
-        msg.targetId = MsgIntToUshort(targetId);
+        msg.Id = MsgUIntToUshort(id);
+        msg.targetId = MsgUIntToUshort(targetId);
         msg.Damage = damage;
         msg.MoveSpeed = MsgIntToShort(speed);
         msg.Type = MsgIntToByte(type);
@@ -1247,12 +1252,12 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSetMagicTargetIdRelay GetMagicTargetIDRelayMsg(int id, int targetID)
+    public static MsgSetMagicTargetIdRelay GetMagicTargetIDRelayMsg(int id, uint targetId)
     {
         MsgSetMagicTargetIdRelay msg = new MsgSetMagicTargetIdRelay();
 
         msg.Id = MsgIntToUshort(id);
-        msg.TargetId = MsgIntToUshort(targetID);
+        msg.TargetId = MsgUIntToUshort(targetId);
 
         return msg;
     }
@@ -1290,23 +1295,23 @@ public class ConvertNetMsg
         return msg;
     }
 
-    public static MsgSendMessageParam1Relay GetSendMessageParam1RelayMsg(int id, int message, int targetID)
+    public static MsgSendMessageParam1Relay GetSendMessageParam1RelayMsg(int id, int message, uint targetId)
     {
         MsgSendMessageParam1Relay msg = new MsgSendMessageParam1Relay();
 
         msg.Id = MsgIntToUshort(id);
         msg.Message = MsgIntToByte(message);
-        msg.TargetId = MsgIntToUshort(targetID);
+        msg.TargetId = MsgUIntToUshort(targetId);
 
         return msg;
     }
 
-    public static MsgSetMinionTargetRelay GetMinionTargetRelayMsg(int id, int targetID)
+    public static MsgSetMinionTargetRelay GetMinionTargetRelayMsg(int id, uint targetId)
     {
         MsgSetMinionTargetRelay msg = new MsgSetMinionTargetRelay();
 
         msg.Id = MsgIntToUshort(id);
-        msg.TargetId = MsgIntToUshort(targetID);
+        msg.TargetId = MsgUIntToUshort(targetId);
 
         return msg;
     }
@@ -1324,6 +1329,10 @@ public class ConvertNetMsg
 
     #endregion
 
+    public static ushort MsgUIntToUshort(uint value)
+    {
+        return Convert.ToUInt16(value);
+    }
 }
 #endregion
 

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using ED;
 using Mirage;
 using MirageTest.Scripts.Entities;
-using UnityEngine;
 using UnityEngine.Serialization;
+using Debug = UnityEngine.Debug;
 
 namespace MirageTest.Scripts
 {
@@ -15,9 +17,12 @@ namespace MirageTest.Scripts
         public bool enableActor;
 
         public string localPlayerId;
+        public byte localPlayerOwnerTag;
 
         public List<PlayerState> PlayerStates = new List<PlayerState>(); 
         public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
+        public List<ActorProxy> ActorProxies = new List<ActorProxy>();
+        public List<ActorProxy> Towers = new List<ActorProxy>();
 
         private void Awake()
         {
@@ -49,6 +54,33 @@ namespace MirageTest.Scripts
         {
             PlayerProxies.Remove(playerProxy);
         }
+        
+        public void AddActorProxy(ActorProxy actorProxy)
+        {
+            if (actorProxy.actorType == ActorType.Tower)
+            {
+                if (ActorProxies.Any())
+                {
+                    var other = ActorProxies.First().baseStat as PlayerController;
+                    var playerController = actorProxy.baseStat as PlayerController;
+                    other.targetPlayer = playerController;
+                    playerController.targetPlayer = other;
+                }
+                Towers.Add(actorProxy);
+            }
+            
+            ActorProxies.Add(actorProxy);
+        }
+
+        public void RemoveActorProxy(ActorProxy actorProxy)
+        {
+            ActorProxies.Remove(actorProxy);
+            if (actorProxy.actorType == ActorType.Tower)
+            {
+                Towers.Remove(actorProxy);
+            }
+        }
+
 
         public bool IsLocalPlayer(string userId)
         {
@@ -63,6 +95,17 @@ namespace MirageTest.Scripts
         public PlayerState GetLocalPlayerState()
         {
             return PlayerStates.Find(p => p.IsLocalPlayerState);
+        }
+
+        public bool IsLocalPlayerTag(byte ownerTag)
+        {
+            return ownerTag == this.localPlayerOwnerTag;
+        }
+
+        public PlayerController GetTower(byte ownerTag)
+        {
+            var tower = Towers.Find(p => p.ownerTag == ownerTag);
+            return tower.baseStat as PlayerController;
         }
     }
 }
