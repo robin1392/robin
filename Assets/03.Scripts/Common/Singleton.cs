@@ -91,8 +91,7 @@ public class SingletonDestroy<T> : MonoBehaviour where T : SingletonDestroy<T>
     {
         Init();
     }
-
-
+    
     protected virtual void Init()
     {
         if (_instance == null)

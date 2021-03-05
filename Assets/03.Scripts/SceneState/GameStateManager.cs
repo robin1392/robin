@@ -260,7 +260,55 @@ public class GameStateManager : Singleton<GameStateManager>
         }
         else
         {
-            NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+            string id = UserInfoManager.Get().GetUserInfo().platformID;
+            if (string.IsNullOrEmpty(id))
+            {
+                UI_Start.Get().SetTextStatus(string.Empty);
+                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
+                // UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
+                // {
+                //     UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                //     UI_Start.Get().btn_GooglePlay.gameObject.SetActive(false);
+                //     UI_Start.Get().btn_GameCenter.gameObject.SetActive(false);
+                //     UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+                //
+                //     NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, string.Empty, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+                // });
+#if UNITY_EDITOR           
+#elif UNITY_ANDROID
+                UI_Start.Get().btn_GooglePlay.gameObject.SetActive(true);
+                UI_Start.Get().btn_GooglePlay.onClick.AddListener(() =>
+                {
+                    UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GooglePlay.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GameCenter.gameObject.SetActive(false);
+                    UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+
+                    AuthManager.Get().Login();
+                });
+#elif UNITY_IOS
+                UI_Start.Get().btn_GameCenter.gameObject.SetActive(true);
+                UI_Start.Get().btn_GameCenter.onClick.AddListener(() =>
+                {
+                    UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GooglePlay.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GameCenter.gameObject.SetActive(false);
+                    UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+
+                    AuthManager.Get().Login();
+                });
+#endif
+            }
+            else
+            {
+#if UNITY_EDITOR
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+#elif UNITY_ANDROID
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Android, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+#elif UNITY_IOS
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.IOS, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+#endif
+            }
         }
 
 #else
@@ -297,6 +345,8 @@ public class GameStateManager : Singleton<GameStateManager>
             Debug.LogError("Error OnReceiveAccountLoginAck. errorCode: " + errorCode);
             return false;
         }
+        
+        ObscuredPrefs.SetBool("PlatformLogined", true);
 
         // 계정 로그인 성공시 발급받은 토큰을 저장한다.
         NetworkManager.session.HttpClient.SetAccessToken(accountInfo.AccessToken);
@@ -327,15 +377,6 @@ public class GameStateManager : Singleton<GameStateManager>
             ObscuredPrefs.SetString("UserKey", string.Empty);
             ObscuredPrefs.Save();
 
-            UI_Start.Get().SetTextStatus(string.Empty);
-            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
-            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
-            {
-                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
-                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-
-                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, string.Empty, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
-            });
             return true;
         }
 

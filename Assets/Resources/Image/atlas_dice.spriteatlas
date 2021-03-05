@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 6f13e070ecc1f0d4aa7b5034ad098b63, type: 3}
-    totalSpriteSurfaceArea: 12026567
+    totalSpriteSurfaceArea: 12089459
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -58,6 +58,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 16acf0d0734f843d08d41f5779820c54, type: 3}
   - {fileID: 21300000, guid: 52901ad026b5f421cb667cd64306e013, type: 3}
   - {fileID: 21300000, guid: 2efe5d1191c1b41408f85119ac73724e, type: 3}
+  - {fileID: 21300000, guid: ac23ad11f53c94e62a1b7bb8beb574af, type: 3}
   - {fileID: 21300000, guid: 89c33e314125c4995ab88f714208760c, type: 3}
   - {fileID: 21300000, guid: ddcd0c5151979446a80db8c08bd4e260, type: 3}
   - {fileID: 21300000, guid: c36c8681b146b4414ab6b09f3ee3d595, type: 3}
@@ -106,6 +107,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6e272cb6e305c4582b9a84d4e59fc968, type: 3}
   - {fileID: 21300000, guid: d5ed8f2709c09474bb2a962b28baa942, type: 3}
   - {fileID: 21300000, guid: ffebce575637143b09481a4ba5aae40b, type: 3}
+  - {fileID: 21300000, guid: 60719c7725f344b3ea6c5b68cb5b1bb1, type: 3}
   - {fileID: 21300000, guid: 05634187a27d2471ca7171d2521e9285, type: 3}
   - {fileID: 21300000, guid: ed7433d74af2e443db3d4744e7cd1680, type: 3}
   - {fileID: 21300000, guid: 31b15af7b3aa245388c0ce05cfdceb25, type: 3}
@@ -116,6 +118,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 400440a87533e4713a2216c5147e5ff2, type: 3}
   - {fileID: 21300000, guid: 6cf9aac8a9562463f8339e24bd9000dc, type: 3}
   - {fileID: 21300000, guid: 8e2ec0e850f2d4b76936c65e1849f2de, type: 3}
+  - {fileID: 21300000, guid: 6edc34096822b4d04be748e41f53c35c, type: 3}
   - {fileID: 21300000, guid: fbd4e9495fcff4856ab906bc3a0d506d, type: 3}
   - {fileID: 21300000, guid: e056f299a1ebb42ec962bce751727cfb, type: 3}
   - {fileID: 21300000, guid: bb1dae996e8284791bf9ccc3181c347e, type: 3}
@@ -171,6 +174,7 @@ SpriteAtlas:
   - illust_1004
   - illust_2009
   - icon_dice_3005
+  - icon_aos
   - illust_2000
   - illust_2006
   - illust_3008
@@ -219,6 +223,7 @@ SpriteAtlas:
   - icon_dice_2000
   - illust_2001
   - illust_2002
+  - icon_supportbox
   - diashopgoods04
   - icon_dice_3003
   - icon_dice_3010
@@ -229,6 +234,7 @@ SpriteAtlas:
   - goldshopgoods01
   - icon_dice_5002
   - illust_3000
+  - icon_ios
   - illust_5002
   - icon_dice_2009
   - illust_2003

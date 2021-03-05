@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Analytics;
-using Firebase.Crashlytics;
+//using Firebase.Crashlytics;
 
 public class FirebaseManager : Singleton<FirebaseManager>
 {
@@ -33,13 +33,13 @@ public class FirebaseManager : Singleton<FirebaseManager>
     private void SetNickName(string userNickName)
     {
         FirebaseAnalytics.SetUserProperty("Nick", userNickName);
-        Crashlytics.SetCustomKey("Nick", userNickName);
+        //Crashlytics.SetCustomKey("Nick", userNickName);
     }
 
     void SetUserId(string userId)
     {
         FirebaseAnalytics.SetUserId(userId);
-        Crashlytics.SetUserId(userId);
+        //Crashlytics.SetUserId(userId);
     }
 
     public void LogEvent(string message)

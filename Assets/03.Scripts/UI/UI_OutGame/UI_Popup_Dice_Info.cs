@@ -526,7 +526,7 @@ namespace ED
             listInfoUI[4].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Effect");
             listInfoUI[5].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Effectcooltime");
             listInfoUI[6].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Atkrange");
-            listInfoUI[7].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_searchRange");
+            listInfoUI[7].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Searchrange");
 
             string castLangIndex = string.Empty;
             switch (data.castType)
@@ -568,13 +568,13 @@ namespace ED
             switch ((DICE_MOVE_TYPE)data.targetMoveType)
             {
                 case DICE_MOVE_TYPE.GROUND:
-                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_targetmovetype0");
+                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_Targetmovetype0");
                     break;
                 case DICE_MOVE_TYPE.FLYING:
-                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_targetmovetype1");
+                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_Targetmovetype1");
                     break;
                 case DICE_MOVE_TYPE.ALL:
-                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_targetmovetype2");
+                    listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Target].textValue.text = LocalizationManager.GetLangDesc("Minioninfo_Targetmovetype2");
                     break;
             }
 

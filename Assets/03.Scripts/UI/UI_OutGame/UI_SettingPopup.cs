@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Debug = ED.Debug;
 using CodeStage.AntiCheat.ObscuredTypes;
 using DG.Tweening;
+using Template.Account.GameBaseAccount.Common;
 
 public class UI_SettingPopup : UI_Popup
 {
@@ -22,6 +23,13 @@ public class UI_SettingPopup : UI_Popup
     public Image image_SFX_Icon;
     public Text text_SFX_Volume;
     public Slider slider_SFX;
+
+    [Header("Account")] 
+    public Image image_Account_Icon;
+    public Text text_Account;
+
+    [Header("Quality")] 
+    public Toggle[] arrToggle_Quality;
 
     [Serializable]
     public enum SETTING_SUBMENU
@@ -47,6 +55,37 @@ public class UI_SettingPopup : UI_Popup
         
         BGM_SliderValueChanged(ObscuredPrefs.GetFloat("BGM_Volume", 1f));
         SFX_SliderValueChanged(ObscuredPrefs.GetFloat("SFX_Volume", 1f));
+        SetAccountButton();
+
+        switch (ObscuredPrefs.GetInt("Quality", 1))
+        {
+            case 0:
+                arrToggle_Quality[0].isOn = true;
+                arrToggle_Quality[1].isOn = false;
+                break;
+            case 1:
+                arrToggle_Quality[0].isOn = false;
+                arrToggle_Quality[1].isOn = true;
+                break;
+        }
+    }
+
+    private void SetAccountButton()
+    {
+#if UNITY_ANDROID
+        image_Account_Icon.sprite = FileHelper.GetIcon("icon_aos");
+#elif UNITY_IOS
+        image_Account_Icon.sprite = FileHelper.GetIcon("icon_ios");
+#endif
+
+        if (ObscuredPrefs.GetBool("PlatformLogined"))
+        {
+            text_Account.text = LocalizationManager.GetLangDesc("Option_Logout");
+        }
+        else
+        {
+            text_Account.text = LocalizationManager.GetLangDesc("Option_Login");
+        }
     }
 
     public void Click_PlayerID()
@@ -91,6 +130,8 @@ public class UI_SettingPopup : UI_Popup
             text_SFX_Volume.text = str;
             text_SFX_Volume.color = isZero ? Color.red : Color.white;
             image_SFX_Icon.color = isZero ? Color.red : Color.white;
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
         }
     }
 
@@ -125,8 +166,30 @@ public class UI_SettingPopup : UI_Popup
         switch ((SETTING_SUBMENU)num)
         {
             case SETTING_SUBMENU.ACCOUNT:
+            {
+                if (ObscuredPrefs.GetBool("PlatformLogined"))  // 로그아웃
+                {
+                    UI_Main.Get().commonMessageBoxPopup.Initialize(
+                        LocalizationManager.GetLangDesc("Option_Logout"),
+                        LocalizationManager.GetLangDesc("Option_Logout"),
+                        "OK", null, () =>
+                        {
+                            AuthManager.Get().Logout();
+                            GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);  
+                        });
+                }
+                else                // 로그인
+                {
+                    UI_Main.Get().commonMessageBoxPopup.Initialize("Account Link", "link?", "OK", null, () =>
+                    {
+                        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+                        AuthManager.Get().LinkPlatform(false, PlatformLinkCallback);
+                    });
+                }
+            }
                 break;
             case SETTING_SUBMENU.LOCALIZATION:
+                UI_Main.Get().languagePopup.gameObject.SetActive(true);
                 break;
             case SETTING_SUBMENU.SUPPORT:
                 UI_Main.Get().Click_Helpshift_Button();
@@ -143,6 +206,55 @@ public class UI_SettingPopup : UI_Popup
                 break;
             case SETTING_SUBMENU.CREDIT:
                 break;
+        }
+    }
+
+    public bool PlatformLinkCallback(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo, bool needConfirm)
+    {
+        UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+        
+        if (needConfirm)
+        {
+            UI_Main.Get().commonMessageBoxPopup.Initialize("Account Link", "link override?", "Override", null, () =>
+            {
+                UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+                AuthManager.Get().LinkPlatform(true, PlatformLinkCallback);
+            });
+            return false;
+        }
+        else
+        {
+            if (errorCode == EGameBaseAccountErrorCode.Success)
+            {
+                ObscuredPrefs.SetBool("PlatformLogined", true);
+                UserInfoManager.Get().GetUserInfo().SetPlatformID(accountInfo.PlatformId);
+                SetAccountButton();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void Toggle_HighQuality(bool isOn)
+    {
+        if (isOn)
+        {
+            ObscuredPrefs.SetInt("Quality", 1);
+            Application.targetFrameRate = 60;
+            //Screen.SetResolution(Screen.width, Screen.height, true);
+            QualitySettings.SetQualityLevel(5, true);
+        }
+    }
+    
+    public void Toggle_LowQuality(bool isOn)
+    {
+        if (isOn)
+        {
+            ObscuredPrefs.SetInt("Quality", 0);
+            Application.targetFrameRate = 30;
+            //Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
+            QualitySettings.SetQualityLevel(0, true);
         }
     }
 }

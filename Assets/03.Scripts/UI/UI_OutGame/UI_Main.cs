@@ -56,6 +56,7 @@ namespace ED
         public UI_SettingPopup settingPopup;
         public UI_Popup_DailyShopReset dailyShopResetPopup;
         public UI_Popup_MoveShop moveShopPopup;
+        public UI_Language languagePopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -83,8 +84,16 @@ namespace ED
         public override void Awake()
         {
             base.Awake();
-            
-            Application.targetFrameRate = 60;
+
+            switch (ObscuredPrefs.GetInt("Quality", 1))
+            {
+                case 0:
+                    settingPopup.Toggle_LowQuality(true);
+                    break;
+                case 1:
+                    settingPopup.Toggle_HighQuality(true);
+                    break;
+            }
         }
         
         private void Start()

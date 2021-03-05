@@ -6,6 +6,7 @@ using UnityEngine;
 
 using UnityEngine.Purchasing;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine.Networking;
 using Percent.Boomlagoon.JSON;
@@ -52,8 +53,8 @@ namespace Percent.Platform
         System.Action inappViewLockCallback = null;
         System.Action inappViewUnLockCallback = null;
 
-        GameBaseShopProtocol.ReceiveShopPurchaseTestAckDelegate buyCallback = null;
-        GameBaseShopProtocol.ReceiveShopPurchaseTestAckDelegate restoreCallback = null;
+        GameBaseShopProtocol.ReceiveShopPurchaseAckDelegate buyCallback = null;
+        GameBaseShopProtocol.ReceiveShopPurchaseAckDelegate restoreCallback = null;
 
         private Dictionary<string, PurchaseEventArgs> dictPendingProducts = new Dictionary<string, PurchaseEventArgs>();
         
@@ -98,9 +99,6 @@ namespace Percent.Platform
             return null;
         }
 
-
-
-
         public void LongStringParsing()
         {
             listProductDatas.Clear();
@@ -123,9 +121,6 @@ namespace Percent.Platform
             }
         }
         
-        
-
-
         private void Start()
         {
             InitializePurchasing();
@@ -147,19 +142,9 @@ namespace Percent.Platform
             var module = StandardPurchasingModule.Instance();
 
             ConfigurationBuilder builder = ConfigurationBuilder.Instance(module);
-
-
-            //int count = listProductDatas.Count;
-            //for (int i = 0; i < count; i++)
+            
             {
-                // if(isLog)
-                //     Debug.Log("Add Product ID : " + listProductDatas[i].AndroidStrID);
-//#if UNITY_IOS
-                //builder.AddProduct(listProductDatas[i].IosStrID, listProductDatas[i].type);
-//#elif UNITY_ANDROID
-                //builder.AddProduct(listProductDatas[i].AndroidStrID, listProductDatas[i].type);
-                
-                ProductType type;
+                ProductType type = ProductType.Consumable;
                 // Event
                 var keys = TableManager.Get().ShopProductList.Keys;
                 TDataShopProductList dataEvent;
@@ -167,7 +152,6 @@ namespace Percent.Platform
                 {
                     if (TableManager.Get().ShopProductList.GetData(key, out dataEvent))
                     {
-                        type = dataEvent.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
 #if UNITY_IOS
                         builder.AddProduct(dataEvent.appleProductId, type);
 #elif UNITY_ANDROID
@@ -175,63 +159,6 @@ namespace Percent.Platform
 #endif
                     }
                 }
-                // Package
-                keys = TableManager.Get().ShopProductList.Keys;
-                TDataShopProductList dataPackage;
-                foreach (var key in keys)
-                {
-                    if (TableManager.Get().ShopProductList.GetData(key, out dataPackage))
-                    {
-                        type = dataPackage.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
-#if UNITY_IOS
-                        builder.AddProduct(dataPackage.appleProductId, type);
-#elif UNITY_ANDROID
-                        builder.AddProduct(dataPackage.googleProductId, type);
-#endif
-                    }
-                }
-                // Premium
-                keys = TableManager.Get().ShopProductList.Keys;
-                TDataShopProductList dataPremium;
-                foreach (var key in keys)
-                {
-                    if (TableManager.Get().ShopProductList.GetData(key, out dataPremium))
-                    {
-                        type = ProductType.NonConsumable;
-#if UNITY_IOS
-                        builder.AddProduct(dataPremium.appleProductId, type);
-#elif UNITY_ANDROID
-                        builder.AddProduct(dataPremium.googleProductId, type);
-#endif
-                    }
-                }
-                // SeasonPass
-                // keys = TableManager.Get().SeasonpassInfo.Keys;
-                // TDataPackageShopList dataPremium;
-                // foreach (var key in keys)
-                // {
-                //     if (TableManager.Get().PackageShopList.GetData(key, out dataPremium))
-                //     {
-                //         type = dataPremium.buyLimitCnt == 1 ? ProductType.NonConsumable : ProductType.Consumable;
-                //         builder.AddProduct(dataPremium.googleProductId, type);
-                //     }
-                // }
-                // Diamond
-                keys = TableManager.Get().ShopProductList.Keys;
-                TDataShopProductList dataDia;
-                foreach (var key in keys)
-                {
-                    if (TableManager.Get().ShopProductList.GetData(key, out dataDia))
-                    {
-                        type = ProductType.Consumable;
-#if UNITY_IOS
-                        builder.AddProduct(dataDia.appleProductId, type);
-#elif UNITY_ANDROID
-                        builder.AddProduct(dataDia.googleProductId, type);
-#endif
-                    }
-                }
-//#endif
             }
             UnityPurchasing.Initialize(this, builder);
         }
@@ -239,7 +166,7 @@ namespace Percent.Platform
         private string playerGuid;
         private int shopId, shopProductId;
         //인앱구매 시작 
-        public void BuyProductID(string productId, string playerGuid, int shopId, int shopProductId, GameBaseShopProtocol.ReceiveShopPurchaseTestAckDelegate callback)
+        public void BuyProductID(string productId, string playerGuid, int shopId, int shopProductId, GameBaseShopProtocol.ReceiveShopPurchaseAckDelegate callback)
         {
             this.playerGuid = playerGuid;
             this.shopId = shopId;
@@ -316,7 +243,7 @@ namespace Percent.Platform
         }
         
         // 리스토어 (구매 상품 재구매)
-        public void RestorePurchase(GameBaseShopProtocol.ReceiveShopPurchaseTestAckDelegate callback)
+        public void RestorePurchase(GameBaseShopProtocol.ReceiveShopPurchaseAckDelegate callback)
         {
             if (inappViewLockCallback != null) inappViewLockCallback();
 
@@ -376,10 +303,15 @@ namespace Percent.Platform
         {
             if(isLog)
                 Debug.Log("Percent [IAP] ProcessPurchase: " + args.purchasedProduct.definition.id);
+
+            if (isPurchaseInProgress)
+            {
+                isPurchaseInProgress = true;
+                dictPendingProducts.Add(args.purchasedProduct.transactionID, args);
+                PurchaseValidation(args);    
+            }
             
-            isPurchaseInProgress = true;
-            dictPendingProducts.Add(args.purchasedProduct.transactionID, args);
-            PurchaseValidation(args);
+            
             return PurchaseProcessingResult.Pending;
         }
 
@@ -399,7 +331,7 @@ namespace Percent.Platform
             PurchaseValidation(args, actionPending);
         }
 
-        public void PlayStorePointPayment(PurchaseEventArgs args, GameBaseShopProtocol.ReceiveShopPurchaseTestAckDelegate callback)
+        public void PlayStorePointPayment(PurchaseEventArgs args, GameBaseShopProtocol.ReceiveShopPurchaseAckDelegate callback)
         {
             if (inappViewLockCallback != null) inappViewLockCallback();
             this.buyCallback = callback;
@@ -442,12 +374,21 @@ namespace Percent.Platform
             
             dictPendingProducts.Remove(args.purchasedProduct.transactionID);
             storeController.ConfirmPendingPurchase(args.purchasedProduct);
-            
-            NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, shopId, shopProductId, args.purchasedProduct.receipt, ShopManager.Get().ShowPurchaseResult);
+
+            ResultPurchaseSuccessed(args);
         }
 
-        private void ResultPurchaseSuccessed(string text, PurchaseEventArgs args)
+        private void ResultPurchaseSuccessed(PurchaseEventArgs args)
         {
+            
+            string payload;
+#if UNITY_ANDROID
+            payload = GetPayload(args).ToString();
+#elif UNITY_IOS
+            payload = args.purchasedProduct.receipt.ToString();
+#endif
+            
+            
             if(isLog)
                 Debug.Log(string.Format("Percent [IAP] Purchase Successed: Product: {0}", args.purchasedProduct.definition.id));
 
@@ -458,14 +399,44 @@ namespace Percent.Platform
                 // start auto restore
             }
 
-            if (buyCallback != null) buyCallback(GameBaseShopErrorCode.PurchaseSuccessed, shopId, null, null, null, null, null);
+            if (buyCallback != null) NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, shopId,shopProductId, payload, buyCallback);
             buyCallback = null;
 
-            if (restoreCallback != null) restoreCallback(GameBaseShopErrorCode.PurchaseSuccessed, shopId, null, null, null, null, null);
+            if (restoreCallback != null) NetworkManager.session.ShopTemplate.ShopPurchaseReq(NetworkManager.session.HttpClient, shopId,shopProductId, payload, restoreCallback);
 
             if (inappViewUnLockCallback != null) inappViewUnLockCallback();
 
             if (args != null) storeController.ConfirmPendingPurchase(args.purchasedProduct);
+        }
+        
+        private JObject GetPayload(PurchaseEventArgs args)
+        {
+            string token = "";
+            try
+            {
+                JObject purchaseResult = JObject.Parse(args.purchasedProduct.receipt);
+                JObject purchaseResult2 = JObject.Parse(purchaseResult["Payload"].ToString());
+                JObject purchaseResult3 = JObject.Parse(purchaseResult2["json"].ToString());
+                token = (string)purchaseResult3["purchaseToken"];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            JObject payload = new JObject();
+            payload.Add("token",token);
+            payload.Add("packageName", Application.identifier);
+            payload.Add("productId",args.purchasedProduct.definition.id);
+            Debug.Log(payload.ToString());
+            return payload;
+        }
+        
+        private string JsEval(string json)
+        {
+            for(int i = 0; i < json.Length; i++)
+                if(string.Equals("\\", json[i].ToString()))
+                    json = json.Remove(i, 1);
+            return json;
         }
 
         private void ResultPurchaseFailed()
@@ -482,3 +453,4 @@ namespace Percent.Platform
         }
     }
 }
+
