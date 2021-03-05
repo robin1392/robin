@@ -70,7 +70,7 @@ namespace Percent.GameBaseClient
 
             // HTTP 클라이언트 생성
             HttpClient = new HttpClient(
-                "https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/dev", 
+                "https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/test", 
                 this);
 
 
