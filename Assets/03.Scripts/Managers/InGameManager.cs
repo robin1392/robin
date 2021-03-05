@@ -135,7 +135,7 @@ namespace ED
         {
             base.Awake();
 
-            Application.targetFrameRate = 30;
+            // Application.targetFrameRate = 30;
             InitializeManager();
             
 #if UNITY_EDITOR

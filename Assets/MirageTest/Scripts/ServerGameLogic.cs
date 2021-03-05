@@ -37,7 +37,7 @@ namespace MirageTest.Scripts
 
         private void Awake()
         {
-            Application.targetFrameRate = 20;
+            Application.targetFrameRate = 60;
             QualitySettings.vSyncCount = 0;
 
             _networkServer = GetComponent<RWNetworkServer>();
