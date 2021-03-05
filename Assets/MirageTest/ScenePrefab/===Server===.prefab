@@ -21,7 +21,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4832457519157374794
 Transform:
   m_ObjectHideFlags: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
       m_Calls: []
   Port: 7778
   HashCashBits: 18
-  SendWindowSize: 32
+  SendWindowSize: 1024
   ReceiveWindowSize: 8192
   delayMode: 3
 --- !u!114 &4832457519157374793

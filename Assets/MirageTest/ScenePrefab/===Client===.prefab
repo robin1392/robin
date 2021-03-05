@@ -52,7 +52,7 @@ MonoBehaviour:
       m_Calls: []
   Port: 7778
   HashCashBits: 18
-  SendWindowSize: 32
+  SendWindowSize: 1024
   ReceiveWindowSize: 8192
   delayMode: 3
 --- !u!114 &4651702573362233940
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2990a106877f5481f998bb3e4d944fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaitForAutoConnectionMs: 2000
+  WaitForAutoConnectionMs: 100
   AutoConnect: 1
 --- !u!114 &1999751920950500995
 MonoBehaviour:
@@ -119,9 +119,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   enableActor: 1
+  enableUI: 1
   localPlayerId: 
+  localPlayerOwnerTag: 0
   PlayerStates: []
   PlayerProxies: []
+  ActorProxies: []
+  Towers: []
+  GameState: {fileID: 0}
 --- !u!114 &343533738106072716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,5 +139,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c5b6870b673842049531ac3247807f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LocalId: 
-  LocalName: 
+  LocalId: 11
+  LocalName: 11n
