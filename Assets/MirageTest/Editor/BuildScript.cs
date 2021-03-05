@@ -17,7 +17,7 @@ public class BuildScript
         "Resources",
     };
 
-    public const string AssetsFolder = "Assets/";
+    public const string AssetsFolder = "Assets";
 
     [MenuItem("Build/LogPath")]
     public static void LogPath()
@@ -42,17 +42,7 @@ done");
     [MenuItem("Build/IgnoreUnusedAssetForServer")]
     public static void IgnoreUnusedAssetForServer()
     {
-        var fullPath = $"{AssetsFolder}";
-        var subFolders = AssetDatabase.GetSubFolders(fullPath);
-        var resourcesFolder = "Resources";
-        foreach (var sub in subFolders)
-        {
-            if (System.IO.Path.GetFileName(sub) == resourcesFolder)
-            {
-                var replace = sub.Replace(resourcesFolder, $"~{resourcesFolder}");
-                Debug.Log($"{AssetDatabase.MoveAsset(sub, replace)}");
-            }
-        }
+        DisableResourcesFolder(AssetsFolder);
         
         var guids = AssetDatabase.FindAssets("t:spriteAtlas");
         foreach (string guid in guids)
@@ -63,5 +53,28 @@ done");
         }
 
         AssetDatabase.Refresh();
+    }
+
+    static void DisableResourcesFolder(string folder)
+    {
+        var resourcesFolder = "Resources";
+        var subFolders = AssetDatabase.GetSubFolders(folder);
+        foreach (var sub in subFolders)
+        {
+            if (System.IO.Path.GetFileName(sub) == resourcesFolder)
+            {
+                var replace = sub.Replace(resourcesFolder, $"~{resourcesFolder}");
+                Debug.Log($"{AssetDatabase.MoveAsset(sub, replace)}");
+            }
+            else
+            {
+                DisableResourcesFolder(folder);
+            }
+        }
+    }
+    
+    void GetSubFolders(string folder)
+    {
+        
     }
 }
