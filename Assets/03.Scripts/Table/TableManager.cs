@@ -81,11 +81,14 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
         ShopInfo = new TableData<int, TDataShopInfo>();
         ShopProductList = new TableData<int, TDataShopProductList>();
+        
+        TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
     }
 
 
     public void Init(string localPath)
     {
+        Debug.Log($"TableManager Init: {localPath}");
         string remoteTDataVersion = string.Empty;
         string localTDataVersion = string.Empty;
         string url = BucketUrl + "/Table/" + Enviroment;

@@ -69,6 +69,16 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         base.OnDestroy();
     }
 
+    private RWNetworkClient _client;
+    public void InitClient(RWNetworkClient client)
+    {
+        _client = client;
+        foreach (var button in arrUpgradeButtons)
+        {
+            button.InitClient(client);
+        }
+    }
+
     #endregion
     
     #region init destroy

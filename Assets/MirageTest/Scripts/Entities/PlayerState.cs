@@ -15,7 +15,8 @@ namespace MirageTest.Scripts.Entities
     public class PlayerState : NetworkBehaviour
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(PlayerState));
-        
+
+        public bool EnableUI;
         [SyncVar] public string userId;
         [SyncVar] public string nickName;
         //TODO: 꼭 필요한지 고민이 필요함. connectionId는 재접 시 바뀌어서 사용못하고, 유저아이디는 스트링이어서 부담스러움.
@@ -83,6 +84,12 @@ namespace MirageTest.Scripts.Entities
             {
                 client.localPlayerOwnerTag = ownerTag;
             }
+            
+            EnableUI = client.enableUI;
+            if (!EnableUI)
+            {
+                return;
+            }
 
             Deck.OnChange += OnChangeDeckOnClientOnly;
             Field.OnSet += OnChangeFieldOnClientOnly;
@@ -110,6 +117,11 @@ namespace MirageTest.Scripts.Entities
         
         public void SetSp(int oldValue, int newValue)
         {
+            if (!EnableUI)
+            {
+                return;
+            }
+            
             if (IsLocalPlayerState)
             {
                 foreach (var upgradeButton in UI_InGame.Get().arrUpgradeButtons)
@@ -125,6 +137,11 @@ namespace MirageTest.Scripts.Entities
         
         public void SetGetDiceCount(int oldValue, int newValue)
         {
+            if (!EnableUI)
+            {
+                return;
+            }
+            
             if (IsLocalPlayerState)
             {
                 UI_InGame.Get().SetDiceButtonText(GetDiceCost());
@@ -133,6 +150,11 @@ namespace MirageTest.Scripts.Entities
         
         public void SetSpGrade(int oldValue, int newValue)
         {
+            if (!EnableUI)
+            {
+                return;
+            }
+            
             if (IsLocalPlayerState)
             {
                 UI_InGame.Get().SetSPUpgrade(newValue + 1, GetUpradeSpCost());
@@ -142,6 +164,11 @@ namespace MirageTest.Scripts.Entities
 
         private void OnChangeFieldOnClientOnly(int index, FieldDice oldValue, FieldDice newValue)
         {
+            if (!EnableUI)
+            {
+                return;
+            }
+            
             if (!IsLocalPlayerState)
             {
                 return;
@@ -178,6 +205,11 @@ namespace MirageTest.Scripts.Entities
 
         private void OnChangeDeckOnClientOnly()
         {
+            if (!EnableUI)
+            {
+                return;
+            }
+            
             var deckArr = Deck.Select(d =>
             {
                 TableManager.Get().DiceInfo.GetData(d.diceId, out var diceInfo);

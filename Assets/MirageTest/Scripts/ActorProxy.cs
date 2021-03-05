@@ -1,10 +1,11 @@
-using System;
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
+using MirageTest.Scripts.Messages;
+using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
+using Channel = Mirage.Channel;
 
 namespace MirageTest.Scripts
 {
@@ -26,6 +27,7 @@ namespace MirageTest.Scripts
         [SyncVar] public byte ingameUpgradeLevel;
 
         public bool isPlayingAI;
+        public bool isMovable = true;
         
         public bool IsLocalPlayerActor => (Client as RWNetworkClient).IsLocalPlayerTag(ownerTag);
 
@@ -62,6 +64,11 @@ namespace MirageTest.Scripts
         {
             var client = Client as RWNetworkClient;
             client.RemoveActorProxy(this);
+            if (baseStat is Minion minion)
+            {
+                minion.currentHealth = 0;
+                minion._poolObjectAutoDeactivate.Deactive();    
+            }
         }
 
         public void SetTeam(byte oldValue, byte newValue)
@@ -93,11 +100,13 @@ namespace MirageTest.Scripts
                 var playerController = Instantiate(towerPrefab, transform);
                 baseStat = playerController; 
                 baseStat.id = NetId;
-                
+                baseStat.currentHealth = health;
+                baseStat.maxHealth = maxHealth;
                 playerController.isMine = IsLocalPlayerActor;
                 var isBottom = team == GameConstants.BottomCamp;
                 playerController.isBottomPlayer = isBottom;
                 playerController.ChangeLayer(isBottom);
+                isMovable = false;
             }
             else if (actorType == ActorType.MinionFromDice)
             {
@@ -121,7 +130,10 @@ namespace MirageTest.Scripts
 
                 if (m != null)
                 {
-                    m.controller = RWNetworkClient.instance.GetTower(ownerTag);
+                    m.Initialize(null);
+                    baseStat = m;
+                    m.actorProxy = this;
+                    m.controller = (Client as RWNetworkClient).GetTower(ownerTag);
                     m.castType = (DICE_CAST_TYPE)diceInfo.castType;
                     m.id = NetId;
                     m.isMine = IsLocalPlayerActor;
@@ -167,8 +179,11 @@ namespace MirageTest.Scripts
                     lr.endColor = FileHelper.GetColor(diceInfo.color);
                 }
             }
-            
-            
+
+            baseStat.ActorProxy = this;
+
+            var client = Client as RWNetworkClient;
+            EnableClientCombatLogic(client.IsPlayingAI);
 
             // actorPathfinding.EnableAIPathfinding(false);
             // actorAi.graphOwner.StopBehaviour();
@@ -198,20 +213,10 @@ namespace MirageTest.Scripts
             }
 
             baseStat.image_HealthBar.fillAmount = health / maxHealth;
-            baseStat.text_Health.text = $"{Mathf.CeilToInt(health)}";
-        }
-
-        private void Update()
-        {
-            if (ServerObjectManager == null)
+            if (baseStat.text_Health != null)
             {
-                return;
+                baseStat.text_Health.text = $"{Mathf.CeilToInt(health)}";   
             }
-
-            // if (actor.IsAlive == false)
-            // {
-            //     ServerObjectManager.Destroy(gameObject);
-            // }
         }
 
         public void EnableClientCombatLogic(bool b)
@@ -230,8 +235,102 @@ namespace MirageTest.Scripts
             {
                 minion.behaviourTreeOwner.behaviour.Pause();
             }
+            minion.SetControllEnable(b);
 
+            minion.GetComponent<Collider>().enabled = b;
+            minion.rb.detectCollisions = b;
+                
             isPlayingAI = b;
+        }
+
+        public void HitDamage(float mPower)
+        {
+            HitDamageOnServer(power);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void HitDamageOnServer(float mPower)
+        {
+            health -= mPower;
+            if (health < 0)
+            {
+                ServerObjectManager.Destroy(gameObject);
+                return;
+            }
+
+            HitDamageOnClient();
+        }
+
+        [ClientRpc]
+        public void HitDamageOnClient()
+        {
+            if (baseStat == null)
+            {
+                return;
+            }
+            
+            var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseStat.ts_HitPos.position);
+            obj.rotation = Quaternion.identity;
+            obj.localScale = Vector3.one * 0.6f;
+            
+            SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
+        }
+
+        public void PlayAnimation(uint baseStatId, int aniEnum, uint targetId)
+        {
+            Client.SendAsync(new PlayAnimationRelayMessage()
+            {
+                actorNetId = baseStatId,
+                aniId = aniEnum,
+                targetNetId = targetId,
+            }).Forget();
+        }
+
+        private MsgVector2 lastSend;
+        public MsgVector2 lastRecieved;
+        private void Update()
+        {
+            if (IsServer)
+            {
+                return;
+            }
+
+            if (!isMovable)
+            {
+                return;
+            }
+            
+            if (baseStat == null)
+            {
+                return;
+            }
+            
+            if (isPlayingAI)
+            {
+                var position = baseStat.transform.position;
+                var converted = ConvertNetMsg.Vector3ToMsg(new Vector2(position.x, position.z));
+                if (lastSend == null || !Equal(lastSend, converted))
+                {
+                    lastSend = converted;
+                    Client.SendAsync(new PositionRelayMessage()
+                    {
+                        netId = NetId,
+                        positionX = converted.X,
+                        positionY = converted.Y,
+                    }, Channel.Unreliable).Forget();
+                }
+            }
+            else if(lastRecieved != null)
+            {
+                var position = ConvertNetMsg.MsgToVector3(lastRecieved);
+                baseStat.transform.position = Vector3.Lerp(baseStat.transform.position, position, baseStat.moveSpeed * Time.deltaTime);
+            }
+        }
+        
+        bool Equal(MsgVector2 a, MsgVector2 b)
+        {
+            return a.X == b.X &&
+                   a.Y == b.Y;
         }
     }
 }

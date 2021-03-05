@@ -12,9 +12,20 @@ namespace ED
 
         private InGameManager _ingameManager;
 
+        private RWNetworkClient _client;
+
         private void Awake()
         {
             _ingameManager = FindObjectOfType<InGameManager>();
+        }
+
+        public void InitClient(RWNetworkClient client)
+        {
+            _client = client;
+            foreach (var slot in arrSlot)
+            {
+                slot.InitClient(client);
+            }
         }
 
         public void SetField(Dice[] arrDice)
@@ -35,7 +46,7 @@ namespace ED
 
         public void Click_GetDiceButton()
         {
-            var localPlayerState = RWNetworkClient.instance.GetLocalPlayerState();
+            var localPlayerState = _client.GetLocalPlayerState();
             var diceCost = localPlayerState.GetDiceCost();
             if (localPlayerState == null)
             {
@@ -104,7 +115,7 @@ namespace ED
                 else
                 {
                     UI_InGame.Get().ControlGetDiceButton(false);
-                    var playerProxy = RWNetworkClient.instance.GetLocalPlayerProxy();
+                    var playerProxy = _client.GetLocalPlayerProxy();
                     playerProxy.GetDice();
                 }
             }

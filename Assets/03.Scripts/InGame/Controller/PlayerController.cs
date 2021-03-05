@@ -7,7 +7,7 @@ using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -1433,14 +1433,16 @@ namespace ED
         
         public void MinionAniTrigger(uint baseStatId , string aniName , uint targetId )
         {
-            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
+            if (isPlayingAI)
             {
                 int aniEnum = (int)UnityUtil.StringToEnum<E_AniTrigger>(aniName);
                 // 
-                NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , baseStatId , aniEnum , targetId);
+                // NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , baseStatId , aniEnum , targetId);
+                ActorProxy.PlayAnimation(baseStatId, aniEnum, targetId);
             }
             SetMinionAnimationTrigger(baseStatId, aniName , targetId);
         }
+        
         public void ActionSendMsg(uint bastStatId, string msgFunc, uint targetId = 0)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
@@ -1764,7 +1766,7 @@ namespace ED
         
         public void SetMinionAnimationTrigger(uint baseStatId, string trigger , uint targetId )
         {
-            var m = listMinion.Find(minion => minion.id == baseStatId);
+            var m = ActorProxy.ClientObjectManager[baseStatId].GetComponent<ActorProxy>().baseStat as Minion;
             if (m != null && m.animator != null)
             {
                 //m.animator.SetTrigger(trigger);
@@ -2674,6 +2676,9 @@ namespace ED
 
         public void NetSendPlayer(GameProtocol protocol, params object[] param)
         {
+            Debug.LogError($"{protocol} {param[0]}");
+            return;
+                
             if (protocol > GameProtocol.BEGIN_RELAY)
             {
                 if (protocol == GameProtocol.MINION_STATUS_RELAY)

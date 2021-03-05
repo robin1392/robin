@@ -22,6 +22,7 @@ namespace ED
         private readonly int[] arrPrice = { 100, 200, 400, 700, 1100 };
     
         //public void Initialize(Data_Dice dataDice, int level)
+
         public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level)
         {
             this.pData = dataDice;
@@ -53,11 +54,11 @@ namespace ED
         public void Click()
         {
             //InGameManager.Get().SendInGameUpgrade(pData.id , num);
-            var localPlayerState = RWNetworkClient.instance.GetLocalPlayerState();
+            var localPlayerState = _client.GetLocalPlayerState();
             if (localPlayerState.sp < arrPrice[level])
                 return;
             
-            var localPlayerProxy = RWNetworkClient.instance.GetLocalPlayerProxy();
+            var localPlayerProxy = _client.GetLocalPlayerProxy();
             localPlayerProxy.UpgradeIngameLevel(pData.id);
 
             SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
@@ -86,6 +87,12 @@ namespace ED
             image_SP.DOFade(alpha, 0);
             text_Level.DOFade(alpha * 1.5f, 0);
             text_Price.DOFade(alpha * 1.5f, 0);
+        }
+
+        private RWNetworkClient _client;
+        public void InitClient(RWNetworkClient client)
+        {
+            _client = client;
         }
     }
 }

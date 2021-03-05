@@ -1,4 +1,5 @@
 ﻿using System;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ namespace ED
     [System.Serializable]
     public class BaseStat : MonoBehaviour
     {
+        public ActorProxy ActorProxy;
         public bool isMine;
         public int diceId;
         public uint id;

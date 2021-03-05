@@ -14,6 +14,29 @@ namespace MirageTest.Scripts.Entities
 
         [SyncVar(hook = nameof(SetMasterOwnerTag))] public byte masterOwnerTag;
         
+        private void Awake()
+        {
+            if (NetIdentity == null)
+            {
+                return;
+            }
+            
+            NetIdentity.OnStartClient.AddListener(StartClient);
+            NetIdentity.OnStopClient.AddListener(StopClient);
+        }
+
+        private void StopClient()
+        {
+            var client = Client as RWNetworkClient;
+            client.GameState = null;
+        }
+
+        private void StartClient()
+        {
+            var client = Client as RWNetworkClient;
+            client.GameState = this;
+        }
+
         public void SetWave(int oldValue, int newValue)
         {
             WorldUIManager.Get().SetWave(newValue);
@@ -23,11 +46,16 @@ namespace MirageTest.Scripts.Entities
         public void SetMasterOwnerTag(byte oldValue, byte newValue)
         {
             var client = Client as RWNetworkClient;
-            var isPlayingAI = client.GetLocalPlayerState().ownerTag == newValue;
+            var isPlayingAI = client.localPlayerOwnerTag == newValue;
                 
             foreach (var actorProxy in client.ActorProxies)
             {
                 actorProxy.EnableClientCombatLogic(isPlayingAI);
+            }
+
+            if (!client.enableActor)
+            {
+                return;
             }
             
             foreach (var tower in client.Towers)

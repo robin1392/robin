@@ -94,7 +94,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         if (String.CompareOrdinal(textSpawnTime.text, str) != 0)
         {
             textSpawnTime.text = str;
-            textSpawnTime.transform.DOPunchScale(Vector3.one * 0.1f, 0.2f);
+            // textSpawnTime.transform.DOPunchScale(Vector3.one * 0.1f, 0.2f);
         }
     }
 

@@ -957,6 +957,13 @@ namespace ED
 
         #region net etc system
 
+        private RWNetworkClient _client;
+
+        public void InitClient(RWNetworkClient _client)
+        {
+            _client = _client;
+        }
+        
         public void Click_SP_Upgrade_Button()
         {
             // if(IsNetwork)
@@ -968,7 +975,7 @@ namespace ED
             //     playerController.SP_Upgrade();
             // }
             
-            var localPlayerProxy = RWNetworkClient.instance.GetLocalPlayerProxy(); 
+            var localPlayerProxy = _client.GetLocalPlayerProxy(); 
             localPlayerProxy.UpgradeSp();
 
             SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
@@ -1087,7 +1094,7 @@ namespace ED
         // 에디터에서 테스트용도로 사용하기 위해
         public void OnEditorAppPause(PauseState pause)
         {
-            NetworkManager.Get().PrintNetworkStatus();
+            NetworkManager.Get()?.PrintNetworkStatus();
 
             if (pause == PauseState.Paused)
             {
@@ -1821,7 +1828,7 @@ namespace ED
         public BaseStat GetBaseStatFromId(uint baseStatId)
         {
             //KZSee : netid를 사용하면 아래 절차는 필요없게됨.
-            var actorProxy = RWNetworkClient.instance.ActorProxies.Find(a => a.NetId == baseStatId);
+            var actorProxy = _client.ActorProxies.Find(a => a.NetId == baseStatId);
             return actorProxy.baseStat;
             // int uid = 0;
             // if (baseStatId >= 10000) uid = baseStatId / 10000;

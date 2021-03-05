@@ -41,9 +41,14 @@ public class PlayerProxy : NetworkBehaviour
             client.localPlayerId = authData.PlayerId;
         }
     }
-
-    [ServerRpc]
+    
     public void MergeDice(int sourceDiceFieldIndex, int targetDiceFieldIndex)
+    {
+        MergeDiceOnServer(sourceDiceFieldIndex, targetDiceFieldIndex);
+    }
+    
+    [ServerRpc]
+    public void MergeDiceOnServer(int sourceDiceFieldIndex, int targetDiceFieldIndex)
     {
         logger.Log(
             $"[MergeDice] sourceDiceFieldIndex:{sourceDiceFieldIndex} targetDiceFieldIndex{targetDiceFieldIndex}");
@@ -107,9 +112,14 @@ public class PlayerProxy : NetworkBehaviour
         // 선택 주사위는 제거한다.
         playerState.Field[sourceDiceFieldIndex] = FieldDice.Empty;
     }
+    
+    public void UpgradeIngameLevel(int diceId)
+    {
+        UpgradeIngameLevelOnServer(diceId);
+    }
 
     [ServerRpc]
-    public void UpgradeIngameLevel(int diceId)
+    public  void UpgradeIngameLevelOnServer(int diceId)
     {
         logger.Log($"[UpgradeIngameLevel] diceId:{diceId}");
 
@@ -153,9 +163,14 @@ public class PlayerProxy : NetworkBehaviour
             outGameLevel = deckDice.outGameLevel,
         };
     }
+    
+    public void GetDice()
+    {
+        GetDiceOnServer();
+    }
 
     [ServerRpc]
-    public void GetDice()
+    public void GetDiceOnServer()
     {
         logger.Log($"[GetDice]");
         var auth = ConnectionToClient.AuthenticationData as AuthDataForConnection;
@@ -164,9 +179,14 @@ public class PlayerProxy : NetworkBehaviour
         var playerState = server.serverGameLogic.GetPlayerState(playerId);
         playerState.GetDice();
     }
+    
+    public void UpgradeSp()
+    {
+        UpgradeSpOnServer();
+    }
 
     [ServerRpc]
-    public void UpgradeSp()
+    public void UpgradeSpOnServer()
     {
         logger.Log($"[UpgradeSp]");
         var auth = ConnectionToClient.AuthenticationData as AuthDataForConnection;
@@ -174,23 +194,23 @@ public class PlayerProxy : NetworkBehaviour
         var server = Server as RWNetworkServer;
         var playerState = server.serverGameLogic.GetPlayerState(playerId);
         
-            // sp 등급 체크
-            int MaxSpGrade = 6;
-            if (playerState.spGrade >= MaxSpGrade)
-            {
-                logger.LogError($"Sp 등급이 최대치입니다.: playerId:{playerId}");
-                return;
-            }
+        // sp 등급 체크
+        int MaxSpGrade = 6;
+        if (playerState.spGrade >= MaxSpGrade)
+        {
+            logger.LogError($"Sp 등급이 최대치입니다.: playerId:{playerId}");
+            return;
+        }
             
-            // SP를 차감한다.
-            int needSp = playerState.GetUpradeSpCost();
-            if (playerState.sp < needSp)
-            {
-                logger.LogError($"Sp 업그레이드를 위한 SP가 모자랍니다.: playerId:{playerId} sp:{playerState.sp} 필요sp: {needSp}");
-                return;
-            }
+        // SP를 차감한다.
+        int needSp = playerState.GetUpradeSpCost();
+        if (playerState.sp < needSp)
+        {
+            logger.LogError($"Sp 업그레이드를 위한 SP가 모자랍니다.: playerId:{playerId} sp:{playerState.sp} 필요sp: {needSp}");
+            return;
+        }
 
-            playerState.sp -= needSp;
-            playerState.spGrade += 1;
+        playerState.sp -= needSp;
+        playerState.spGrade += 1;
     }
 }

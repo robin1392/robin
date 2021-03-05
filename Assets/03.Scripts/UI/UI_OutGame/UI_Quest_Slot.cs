@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using ED;
+﻿using ED;
 //using RandomWarsProtocol;
 //using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;

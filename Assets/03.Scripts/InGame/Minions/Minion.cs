@@ -62,7 +62,7 @@ namespace ED
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
         public BehaviourTreeOwner behaviourTreeOwner { get; protected set; }
-        protected PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
+        public PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
         protected Collider _collider;
         public bool isPolymorph;
         protected int _flagOfWarCount;
@@ -100,46 +100,47 @@ namespace ED
             //     return;
             // }
             //
-            _spawnedTime += Time.deltaTime;
-            
-            if (isPlayable && isPushing == false && isAttacking == false)
-            {
-                float distance = Vector3.Magnitude(networkPosition - transform.position);
-                //if (PhotonNetwork.IsConnected && !isMine)
-                if(InGameManager.IsNetwork && !isMine)// && agent.enabled)
-                {
-                    //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
-                    if (controller.isMinionAgentMove)
-                    {
-                        //agent.SetDestination(networkPosition);
-                        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") == false
-                        && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") == false
-                        && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") == false)
-                        {
-                            // transform.rotation = Quaternion.RotateTowards(transform.rotation,
-                            //     Quaternion.LookRotation(networkPosition - transform.position), Time.deltaTime * 480f);
-                        }
-
-                        // transform.position =
-                        //     Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
-                        _seeker.StartPath(transform.position, networkPosition);
-                    }
-                    else
-                    {
-                        //transform.LookAt(networkPosition);
-                        transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed * 2f);
-                    }
-                }
-
-                //var velocityMagnitude = rb.velocity.magnitude;
-                if (animator != null)
-                {
-                    //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
-                    if (isMine)
-                        animator.SetFloat(_animatorHashMoveSpeed, _aiPath.velocity.magnitude);//agent.velocity.magnitude);
-                    else
-                        animator.SetFloat(_animatorHashMoveSpeed, distance * 5);
-                }
+            // _spawnedTime += Time.deltaTime;
+            //
+            // if (isPlayable && isPushing == false && isAttacking == false)
+            // {
+            //     float distance = Vector3.Magnitude(networkPosition - transform.position);
+            //     //if (PhotonNetwork.IsConnected && !isMine)
+            //     if(InGameManager.IsNetwork && !isMine)// && agent.enabled)
+            //     {
+            //         //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
+            //         if (controller.isMinionAgentMove)
+            //         {
+            //             //agent.SetDestination(networkPosition);
+            //             if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") == false
+            //             && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") == false
+            //             && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") == false)
+            //             {
+            //                 // transform.rotation = Quaternion.RotateTowards(transform.rotation,
+            //                 //     Quaternion.LookRotation(networkPosition - transform.position), Time.deltaTime * 480f);
+            //             }
+            //
+            //             // transform.position =
+            //             //     Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
+            //             transform.position = Vector3.Lerp(transform.position, networkPosition, 0.5f);//Time.deltaTime * moveSpeed);
+            //             // _seeker.StartPath(transform.position, networkPosition);
+            //         }
+            //         else
+            //         {
+            //             //transform.LookAt(networkPosition);
+            //             transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed * 2f);
+            //         }
+            //     }
+            //
+            //     //var velocityMagnitude = rb.velocity.magnitude;
+            //     if (animator != null)
+            //     {
+            //         //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
+            //         if (isMine)
+            //             animator.SetFloat(_animatorHashMoveSpeed, _aiPath.velocity.magnitude);//agent.velocity.magnitude);
+            //         else
+            //             animator.SetFloat(_animatorHashMoveSpeed, distance * 5);
+            //     }
 
 
                 //if (PhotonNetwork.IsConnected && !isMine) return;
@@ -153,7 +154,7 @@ namespace ED
                 // lTargetDir.y = 0.0f;
                 // //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
                 // transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
-            }
+            // }
         }
         
 
@@ -206,24 +207,27 @@ namespace ED
             }
 
             //if (PhotonNetwork.IsConnected)
-            if(InGameManager.IsNetwork)
+            // if(InGameManager.IsNetwork)
+            // {
+            //     if (isMine || controller.isPlayingAI)
+            //     {
+            //         behaviourTreeOwner.behaviour.Resume();
+            //         //_collider.isTrigger = false;
+            //         //agent.enabled = true;
+            //     }
+            //     else
+            //     {
+            //         behaviourTreeOwner.behaviour.Pause();
+            //         //_collider.isTrigger = true;
+            //         //agent.enabled = false;
+            //     }
+            // }
+
+            if (destroy != null)
             {
-                if (isMine || controller.isPlayingAI)
-                {
-                    behaviourTreeOwner.behaviour.Resume();
-                    //_collider.isTrigger = false;
-                    //agent.enabled = true;
-                }
-                else
-                {
-                    behaviourTreeOwner.behaviour.Pause();
-                    //_collider.isTrigger = true;
-                    //agent.enabled = false;
-                }
+                destroyCallback = null;
+                destroyCallback += destroy;    
             }
-            
-            destroyCallback = null;
-            destroyCallback += destroy;
 
             cloackingCount = 0;
             Cloacking(false);
@@ -461,7 +465,7 @@ namespace ED
         public virtual void Sturn(float duration)
         {
             //StopAllCoroutines();
-
+            
             if (_dicEffectPool.ContainsKey(MAZ.STURN))
             {
                 _dicEffectPool[MAZ.STURN].Deactive();
@@ -717,36 +721,36 @@ namespace ED
             if (animator != null) animator.SetFloat("AttackSpeed", 1f / attackSpeed);
         }
 
-        protected void SetControllEnable(bool isEnable)
+        public void SetControllEnable(bool isEnable)
         {
             isPushing = !isEnable;
             isAttacking = !isEnable;
             _aiPath.isStopped = !isEnable;
             //rb.isKinematic = isEnable;
 
-            if (isMine || controller.isPlayingAI)
-            {
-                // if (isEnable && agent.enabled == false)
-                // {
-                //     agent.enabled = true;
-                //     agent.isStopped = false;
-                //     agent.updatePosition = true;
-                //     agent.updateRotation = true;
-                // }
-                // else if (isEnable == false && agent.enabled == true)
-                // {
-                //     agent.isStopped = true;
-                //     agent.updatePosition = false;
-                //     agent.updateRotation = false;
-                //     agent.enabled = false;
-                // }
-            
-                if (isEnable == false)
-                {
-                    rb.velocity = Vector3.zero;
-                    //agent.velocity = Vector3.zero;
-                }
-            }
+            // if (isMine || controller.isPlayingAI)
+            // {
+            //     // if (isEnable && agent.enabled == false)
+            //     // {
+            //     //     agent.enabled = true;
+            //     //     agent.isStopped = false;
+            //     //     agent.updatePosition = true;
+            //     //     agent.updateRotation = true;
+            //     // }
+            //     // else if (isEnable == false && agent.enabled == true)
+            //     // {
+            //     //     agent.isStopped = true;
+            //     //     agent.updatePosition = false;
+            //     //     agent.updateRotation = false;
+            //     //     agent.enabled = false;
+            //     // }
+            //
+            //     if (isEnable == false)
+            //     {
+            //         rb.velocity = Vector3.zero;
+            //         //agent.velocity = Vector3.zero;
+            //     }
+            // }
         }
 
         public void Scarecrow(float duration)
@@ -814,7 +818,7 @@ namespace ED
 
         public virtual void SetAnimationTrigger(string triggerName, uint targetId)
         {
-            var target = InGameManager.Get().GetBaseStatFromId(targetId);
+            var target = ActorProxy.ClientObjectManager[targetId]?.gameObject;
             if (target != null) transform.LookAt(target.transform);
             
             animator.SetTrigger(triggerName);

@@ -163,7 +163,7 @@ namespace ED
                 }
                 else
                 {
-                    var localPlayerProxy = RWNetworkClient.instance.GetLocalPlayerProxy();
+                    var localPlayerProxy = _client.GetLocalPlayerProxy();
                     localPlayerProxy.MergeDice(dragDice.diceFieldNum, dice.diceFieldNum);
                 }
                     
@@ -214,6 +214,12 @@ namespace ED
                     item.DOColor(Color.white / 2.5f, 0.3f).SetUpdate(true);
                 }
             }
+        }
+
+        private RWNetworkClient _client;
+        public void InitClient(RWNetworkClient client)
+        {
+            _client = client;
         }
     }
 }

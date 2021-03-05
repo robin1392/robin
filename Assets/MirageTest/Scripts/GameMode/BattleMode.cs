@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using MirageTest.Scripts.Entities;
@@ -24,6 +25,27 @@ namespace MirageTest.Scripts.GameMode
             PlayerState2.camp = GameConstants.TopCamp;
             var player2TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: false);
             SpawnTower(PlayerState2, player2TowerPosition);
+
+            for (var i = 0; i < 15; ++i)
+            {
+                PlayerState1.GetDice();
+                PlayerState2.GetDice();
+            }
+            
+            Spawn100().Forget();
+        }
+
+        async UniTask Spawn100()
+        {
+            while (ServerObjectManager.SpawnedObjects.Count < 100)
+            {
+                for (var index = 0; index < PlayerStates.Length; ++index)
+                {
+                    var playerState = PlayerStates[index];
+                    SpawnMinions(playerState, playerState.camp, playerState.ownerTag);
+                }
+                await UniTask.Yield();    
+            }
         }
         
         void SpawnTower(PlayerState playerState, Vector3 position)
@@ -58,8 +80,8 @@ namespace MirageTest.Scripts.GameMode
 
         protected override void OnWave(int wave)
         {
-            return;
-            Spawn();
+            // Spawn();
+            Spawn100().Forget();
         }
 
         public override void Spawn()
@@ -82,7 +104,7 @@ namespace MirageTest.Scripts.GameMode
                     continue;
                 }
 
-                var diceId = fieldDice.diceId;
+                var diceId = 1001;//fieldDice.diceId;
                 if (diceInfos.GetData(diceId, out var diceInfo) == false)
                 {
                     ED.Debug.LogError($"다이스정보 {fieldDice.diceId}가 없습니다. UserId : {playerState.userId} 필드 슬롯 : {fieldIndex}");

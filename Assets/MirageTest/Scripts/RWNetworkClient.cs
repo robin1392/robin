@@ -4,6 +4,8 @@ using System.Linq;
 using ED;
 using Mirage;
 using MirageTest.Scripts.Entities;
+using MirageTest.Scripts.Messages;
+using RandomWarsProtocol;
 using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
@@ -11,10 +13,8 @@ namespace MirageTest.Scripts
 {
     public class RWNetworkClient : NetworkClient
     {
-        private static RWNetworkClient _instance;
-        public static RWNetworkClient instance => _instance;
-
         public bool enableActor;
+        public bool enableUI;
 
         public string localPlayerId;
         public byte localPlayerOwnerTag;
@@ -23,16 +23,61 @@ namespace MirageTest.Scripts
         public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
         public List<ActorProxy> ActorProxies = new List<ActorProxy>();
         public List<ActorProxy> Towers = new List<ActorProxy>();
+        public GameState GameState;
+        public bool IsPlayingAI => localPlayerOwnerTag == GameState.masterOwnerTag;
+
+        private ClientObjectManager _clientObjectManager;
 
         private void Awake()
         {
-            if (_instance != null)
+            if (enableUI)
             {
-                Debug.LogError("씬에 RWNetworkClient는 하나만 존재해야 합니다.");
+                InGameManager.Get().InitClient(this);
+                UI_InGame.Get().InitClient(this);
+                UI_DiceField.Get().InitClient(this);
+            }
+
+            _clientObjectManager = GetComponent<ClientObjectManager>();
+            Connected.AddListener(OnConnectedRW);
+        }
+
+        private void OnConnectedRW(INetworkConnection arg0)
+        {
+            arg0.RegisterHandler<PlayAnimationRelayMessage>(OnPlayAnimationRelay);
+            arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
+        }
+
+        private void OnPositionRelay(PositionRelayMessage msg)
+        {
+            var identity = _clientObjectManager[msg.netId];
+            if (identity == null)
+            {
                 return;
             }
 
-            _instance = this;
+            var actor = identity.GetComponent<ActorProxy>();
+            actor.lastRecieved = new MsgVector2()
+            {
+                X = msg.positionX,
+                Y = msg.positionY,
+            };
+        }
+
+        private void OnPlayAnimationRelay(PlayAnimationRelayMessage msg)
+        {
+            var actor = _clientObjectManager[msg.actorNetId];
+            if (actor == null)
+            {
+                return;
+            }
+            
+            var minion = actor.GetComponent<ActorProxy>().baseStat as Minion;
+            minion?.SetAnimationTrigger(((E_AniTrigger)msg.aniId).ToString(), msg.targetNetId);
+        }
+
+        private void Start()
+        {
+            PoolManager.Get().MakePool();
         }
 
         public void AddPlayerState(PlayerState playerState)
@@ -59,7 +104,7 @@ namespace MirageTest.Scripts
         {
             if (actorProxy.actorType == ActorType.Tower)
             {
-                if (ActorProxies.Any())
+                if (enableActor && ActorProxies.Any())
                 {
                     var other = ActorProxies.First().baseStat as PlayerController;
                     var playerController = actorProxy.baseStat as PlayerController;
@@ -80,8 +125,7 @@ namespace MirageTest.Scripts
                 Towers.Remove(actorProxy);
             }
         }
-
-
+        
         public bool IsLocalPlayer(string userId)
         {
             return userId == this.localPlayerId;

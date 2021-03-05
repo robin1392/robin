@@ -66,13 +66,20 @@ namespace ED
             }
         }
 
+        public void MFire(GameObject target)
+        {
+            if (target != null) transform.LookAt(target.transform);
+            animator.SetTrigger("Attack");
+            Fire();
+        }
+        
+
         public void Fire()
         {
             if (isFire == false)
             {
                 StartCoroutine(FireCoroutine());
             }
-
         }
         
         public override void SetVelocityTarget()
@@ -107,7 +114,7 @@ namespace ED
                     tick += attackSpeed;
                     
                     //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+                    if(controller.isPlayingAI)
                     {
                         var cols = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range,
                             targetLayer);

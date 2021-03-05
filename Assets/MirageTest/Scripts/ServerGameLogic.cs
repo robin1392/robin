@@ -55,10 +55,8 @@ namespace MirageTest.Scripts
             while (!_networkServer.Active)
             {
                 await UniTask.Yield();
-            } 
-       
-            TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
-            
+            }
+
             await WaitForFirstPlayer().TimeoutWithoutException(TimeSpan.FromSeconds(30));
             
             await WaitForPlayers().TimeoutWithoutException(TimeSpan.FromSeconds(3));
@@ -151,22 +149,22 @@ namespace MirageTest.Scripts
                 authData[0].PlayerId, authData[0].PlayerNickName, getStartSp,
                 new DeckDice[]
                 {
+                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
                     new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1002, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1003, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 3005, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 3002, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
                 }, GameConstants.Player1Tag);
         
             playerStates[1] = SpawnPlayerState(
-                authData[1].PlayerId, authData[1].PlayerNickName, getStartSp, 
+                authData[1].PlayerId, authData[1].PlayerNickName, getStartSp,
                 new DeckDice[]
                 {
-                    new DeckDice(){ diceId = 2001, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
                     new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
                     new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2004, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2005, inGameLevel = 0, outGameLevel = 1 },
                 }, GameConstants.Player2Tag);
             return playerStates;
         }
