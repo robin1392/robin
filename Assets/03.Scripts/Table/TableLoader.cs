@@ -19,7 +19,6 @@ namespace RandomWarsResource
         {
             Debug.Log($"file: {fileName}");
             var path = sourcePath + "/" + fileName;
-            Debug.Log();
 
             int row = 0;
             List<int> exceptIndex = new List<int>();
