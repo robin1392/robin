@@ -34,7 +34,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
     private readonly string[] _rewardedAdUnits =
         { "8f000bd5e00246de9c789eed39ff6096", "98c29e015e7346bd9c380b1467b33850" };
-#elif UNITY_ANDROID || UNITY_EDITOR
+#else
     private readonly string[] _bannerAdUnits = { "b195f8dd8ded45fe847ad89ed1d016da" };
     private readonly string[] _interstitialAdUnits = { "24534e1901884e398f1253216226017e" };
     private readonly string[] _rewardedAdUnits =
