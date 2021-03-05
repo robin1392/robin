@@ -42,21 +42,18 @@ done");
     [MenuItem("Build/IgnoreUnusedAssetForServer")]
     public static void IgnoreUnusedAssetForServer()
     {
-        foreach (var path in UnusedAssetForServer)
+        var fullPath = $"{AssetsFolder}";
+        var subFolders = AssetDatabase.GetSubFolders(fullPath);
+        var resourcesFolder = "Resources";
+        foreach (var sub in subFolders)
         {
-            var fullPath = $"{AssetsFolder}/{path}";
-            var subFolders = AssetDatabase.GetSubFolders(fullPath);
-            var resourcesFolder = "Resources";
-            foreach (var sub in subFolders)
+            if (System.IO.Path.GetFileName(sub) == resourcesFolder)
             {
-                if (System.IO.Path.GetFileName(sub) == resourcesFolder)
-                {
-                    var replace = sub.Replace(resourcesFolder, $"~{resourcesFolder}");
-                    Debug.Log($"{AssetDatabase.MoveAsset(sub, replace)}");
-                }
+                var replace = sub.Replace(resourcesFolder, $"~{resourcesFolder}");
+                Debug.Log($"{AssetDatabase.MoveAsset(sub, replace)}");
             }
         }
-
+        
         var guids = AssetDatabase.FindAssets("t:spriteAtlas");
         foreach (string guid in guids)
         {
