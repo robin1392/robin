@@ -68,7 +68,7 @@ done");
             }
             else
             {
-                DisableResourcesFolder(folder);
+                DisableResourcesFolder(sub);
             }
         }
     }
