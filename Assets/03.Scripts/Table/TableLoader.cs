@@ -23,8 +23,9 @@ namespace RandomWarsResource
             int row = 0;
             List<int> exceptIndex = new List<int>();
             var lines = System.IO.File.ReadAllLines(path);
-            foreach (var line in lines)
+            foreach (var l in lines)
             {
+                var line = l; 
                 int replaceIndex = line.IndexOf("\"");
                 while (replaceIndex != -1)
                 {
