@@ -639,6 +639,7 @@ MonoBehaviour:
   LocalServerPort: 0
   UserId: 
   matchSendCount: 0
+  serverAddr: https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/test
 --- !u!4 &1610058098
 Transform:
   m_ObjectHideFlags: 0
@@ -2808,7 +2809,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 158.39761
+      value: 158.82076
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}

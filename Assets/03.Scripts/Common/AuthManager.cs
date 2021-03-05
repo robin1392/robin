@@ -113,6 +113,18 @@ public class AuthManager : Singleton<AuthManager>
           }
           else
           {
+#if UNITY_EDITOR
+               type = EPlatformType.Guest;
+#elif UNITY_ANDROID
+               type = EPlatformType.Android;
+#elif UNITY_IOS
+               type = EPlatformType.IOS;
+#endif
+               
+               if (ObscuredPrefs.GetBool("PlatformLogined", false) == false)
+               {
+                    StartCoroutine(LoginCoroutine(false));
+               }
           }
      }
 
@@ -174,9 +186,10 @@ public class AuthManager : Singleton<AuthManager>
                ((PlayGamesPlatform)Social.Active).SignOut();
 #elif UNITY_IOS
 #endif
-               UserInfoManager.Get().GetUserInfo().SetPlatformID(string.Empty);
-               ObscuredPrefs.SetBool("PlatformLogined", false);
-               Debug.Log("GPGS Logout !");
           }
+          
+          UserInfoManager.Get().GetUserInfo().SetPlatformID(string.Empty);
+          ObscuredPrefs.SetBool("PlatformLogined", false);
+          Debug.Log("GPGS Logout !");
      }
 }

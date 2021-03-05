@@ -345,13 +345,12 @@ public class GameStateManager : Singleton<GameStateManager>
             Debug.LogError("Error OnReceiveAccountLoginAck. errorCode: " + errorCode);
             return false;
         }
-        
-        ObscuredPrefs.SetBool("PlatformLogined", true);
 
         // 계정 로그인 성공시 발급받은 토큰을 저장한다.
         NetworkManager.session.HttpClient.SetAccessToken(accountInfo.AccessToken);
 
         UserInfoManager.Get().GetUserInfo().SetPlatformID(accountInfo.PlatformId);
+        ObscuredPrefs.SetInt("PlatformType", accountInfo.PlatformType);
 
        // TODD : [임시] 곧바로 유저 정보 요청. 차후에 로그인 flow에 따라 위치를 변경해야함.
         NetworkManager.session.UserTemplate.UserInfoReq(NetworkManager.session.HttpClient, OnReceiveUserInfoAck);

@@ -78,7 +78,8 @@ public class UI_SettingPopup : UI_Popup
         image_Account_Icon.sprite = FileHelper.GetIcon("icon_ios");
 #endif
 
-        if (ObscuredPrefs.GetBool("PlatformLogined"))
+        if (ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest) == (int)EPlatformType.Android
+        || ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest) == (int)EPlatformType.IOS)
         {
             text_Account.text = LocalizationManager.GetLangDesc("Option_Logout");
         }
@@ -167,7 +168,8 @@ public class UI_SettingPopup : UI_Popup
         {
             case SETTING_SUBMENU.ACCOUNT:
             {
-                if (ObscuredPrefs.GetBool("PlatformLogined"))  // 로그아웃
+                if (ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest) == (int)EPlatformType.Android
+                    || ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest) == (int)EPlatformType.IOS)  // 로그아웃
                 {
                     UI_Main.Get().commonMessageBoxPopup.Initialize(
                         LocalizationManager.GetLangDesc("Option_Logout"),
@@ -227,6 +229,7 @@ public class UI_SettingPopup : UI_Popup
             if (errorCode == EGameBaseAccountErrorCode.Success)
             {
                 ObscuredPrefs.SetBool("PlatformLogined", true);
+                ObscuredPrefs.SetInt("PlatformType", accountInfo.PlatformType);
                 UserInfoManager.Get().GetUserInfo().SetPlatformID(accountInfo.PlatformId);
                 SetAccountButton();
                 return true;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeStage.AntiCheat.ObscuredTypes;
 using Template.Account.GameBaseAccount.Common;
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,7 +61,8 @@ public class UI_Start : SingletonDestroy<UI_Start>
             btn_GooglePlay.gameObject.SetActive(false);
             btn_GameCenter.gameObject.SetActive(false);
             SetTextStatus(Global.g_startStatusUserData);
-
+            
+            ObscuredPrefs.SetInt("PlatformType", (int)EPlatformType.Guest);
             NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, string.Empty, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, GameStateManager.Get().OnReceiveAccountLoginAck);
         });
     }

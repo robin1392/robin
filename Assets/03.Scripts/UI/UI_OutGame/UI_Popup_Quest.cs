@@ -104,6 +104,7 @@ public class UI_Popup_Quest : UI_Popup
             dailyRewardID = questInfo.DayRewardInfo.DayRewardId;
             arrIsDailyRewardGet = questInfo.DayRewardInfo.DayRewardState;
 
+            list.Clear();
             for (int i = 0; i < questInfo.QuestData.Length; i++)
             {
                 list.Add(questInfo.QuestData[i]);
@@ -167,6 +168,7 @@ public class UI_Popup_Quest : UI_Popup
                 arrBtn_Reward[2].interactable = !arrIsDailyRewardGet[2];
             }
             
+            list.Clear();
             for (int i = 0; i < questInfo.QuestData.Length || i < listSlot.Count; i++)
             {
                 if (i >= questInfo.QuestData.Length)
