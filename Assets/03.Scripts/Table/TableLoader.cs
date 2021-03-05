@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using UnityEngine;
 
 
 namespace RandomWarsResource
@@ -16,6 +17,7 @@ namespace RandomWarsResource
     {
         public bool Run(string sourcePath, string fileName, string targetPath, ref Dictionary<K, V> outValues)
         {
+            Debug.Log($"file: {fileName}");
             using (var reader = new StreamReader(sourcePath + "/" + fileName))
             {
                 int row = 0;
@@ -23,6 +25,7 @@ namespace RandomWarsResource
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
+                    Debug.Log($"line: {0}");
                     int replaceIndex = line.IndexOf("\"");
                     while (replaceIndex != -1)
                     {
