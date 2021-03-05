@@ -181,6 +181,9 @@ public class NetworkManager : Singleton<NetworkManager>
     public int LocalServerPort;
     public string UserId;
     public int matchSendCount;
+
+    [Header("Server Addr")] 
+    public string serverAddr = "https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/test";
     #endregion
 
 
