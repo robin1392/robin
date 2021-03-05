@@ -255,6 +255,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4832457519157374792, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: Port
+      value: 7779
+      objectReference: {fileID: 0}
     - target: {fileID: 4832457519157374793, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: NetworkSceneManager

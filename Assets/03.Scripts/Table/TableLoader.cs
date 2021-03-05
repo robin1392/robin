@@ -17,7 +17,7 @@ namespace RandomWarsResource
     {
         public bool Run(string sourcePath, string fileName, string targetPath, ref Dictionary<K, V> outValues)
         {
-            Debug.Log($"file: {fileName}");
+            // Debug.Log($"file: {fileName}");
             var path = sourcePath + "/" + fileName;
 
             int row = 0;
@@ -26,7 +26,7 @@ namespace RandomWarsResource
             foreach (var l in lines)
             {
                 var line = l; 
-                Debug.Log(line);
+                // Debug.Log(line);
                 int replaceIndex = line.IndexOf("\"");
                 while (replaceIndex != -1)
                 {
