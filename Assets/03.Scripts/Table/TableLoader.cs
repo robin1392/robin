@@ -18,6 +18,9 @@ namespace RandomWarsResource
         public bool Run(string sourcePath, string fileName, string targetPath, ref Dictionary<K, V> outValues)
         {
             Debug.Log($"file: {fileName}");
+            var path = sourcePath + "/" + fileName;
+            Debug.Log(System.IO.File.ReadAllText(path));
+            
             using (var reader = new StreamReader(sourcePath + "/" + fileName))
             {
                 int row = 0;
