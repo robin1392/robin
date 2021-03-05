@@ -37,9 +37,6 @@ namespace MirageTest.Scripts
 
         private void Awake()
         {
-            Application.targetFrameRate = 30;
-            QualitySettings.vSyncCount = 0;
-
             _networkServer = GetComponent<RWNetworkServer>();
             _serverObjectManager = GetComponent<ServerObjectManager>();
             _networkServer.Disconnected.AddListener(OnClientDisconnected);
