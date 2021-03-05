@@ -26,6 +26,7 @@ namespace RandomWarsResource
             foreach (var l in lines)
             {
                 var line = l; 
+                Debug.Log(line);
                 int replaceIndex = line.IndexOf("\"");
                 while (replaceIndex != -1)
                 {
