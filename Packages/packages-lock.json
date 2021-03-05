@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": {
+      "version": "2.0.36",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.google.external-dependency-manager": {
       "version": "1.2.164",
       "depth": 0,
@@ -33,13 +40,6 @@
         "com.google.firebase.app": "7.1.0"
       },
       "url": "https://unityregistry-pa.googleapis.com"
-    },
-    "com.cysharp.unitask": {
-      "version": "2.0.36",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
     },
     "com.miragenet.mirage": {
       "version": "66.2.1",
@@ -165,6 +165,13 @@
       "source": "git",
       "dependencies": {},
       "hash": "efac099e5a7a373b6ea961cc0b8aaebe059ab1c8"
+    },
+    "jillejr.newtonsoft.json-for-unity": {
+      "version": "12.0.302",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
