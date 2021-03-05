@@ -101,5 +101,10 @@ namespace MirageTest.Scripts.GameMode
         }
 
         public abstract void Spawn();
+
+        public void End()
+        {
+            IsGameEnd = true;
+        }
     }
 }

@@ -49,14 +49,21 @@ namespace MirageTest.Scripts
 
         private async void Start()
         {
+            await StartServer();
+        }
+
+        async UniTask StartServer()
+        {
+            logger.LogError($"StartServer");
+            
             while (!_networkServer.Active)
             {
                 await UniTask.Yield();
             }
 
-            await WaitForFirstPlayer().TimeoutWithoutException(TimeSpan.FromSeconds(30));
+            await WaitForFirstPlayer();
             
-            await WaitForPlayers().TimeoutWithoutException(TimeSpan.FromSeconds(3));
+            await WaitForPlayers();
 
             if (NoPlayers)
             {
@@ -85,8 +92,20 @@ namespace MirageTest.Scripts
 
         private void EndGameSession()
         {
-            //프로세스 종료시킨다. 플렉스매칭에도 타임아웃이 있다. 이게 필요할까?
-            logger.LogError($"플레이어 입장 타임아웃");
+            logger.LogError($"EndGameSession");
+            
+            _networkServer.Disconnect();
+            var objs = _serverObjectManager.SpawnedObjects.Values.ToArray();
+            foreach (var obj in objs)
+            {
+                _serverObjectManager.Destroy(obj.gameObject);
+            }
+
+            _gameMode.End();
+            _isGameStart = false;
+            
+
+            StartServer().Forget();
         }
         
         private async UniTask WaitForPlayers()
