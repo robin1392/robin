@@ -72,9 +72,21 @@ done");
             }
         }
     }
-    
-    void GetSubFolders(string folder)
-    {
-        
-    }
 }
+
+[HeadlessCallbacks]
+public static class ServerBuildHeadlessCallbacks
+{
+    public static void HeadlessBuildBefore()
+    {
+        ED.Debug.Log("HeadlessBuildBefore");
+        BuildScript.IgnoreUnusedAssetForServer();
+    }
+
+    public static void HeadlessBuildSuccess()
+    {
+        ED.Debug.Log("HeadlessBuildSuccess");
+    }
+    
+}
+
