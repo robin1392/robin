@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Mirage;
 using Mirage.KCP;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace _Scripts.RCore.Networking
@@ -33,10 +34,24 @@ namespace _Scripts.RCore.Networking
                 return;
             }
 
-            string address = "192.168.10.57";
-            ushort port = GetComponent<KcpTransport>().Port;
-            Connect(address, port).Forget();
+            Connect().Forget();
         }
+        
+        [Button]
+        public async UniTask Connect()
+        {
+            string address = "127.0.0.1";//"ec2-18-183-92-138.ap-northeast-1.compute.amazonaws.com";
+            ushort port = GetComponent<KcpTransport>().Port;
+            await Connect(address, port);
+        }
+
+        [Button]
+        public void Disconnect()
+        {
+            _client.Disconnect();
+        }
+        
+        
 
         public async UniTask Connect(string address, ushort port)
         {

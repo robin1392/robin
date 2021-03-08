@@ -6,6 +6,7 @@ using Mirage;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.Messages;
 using RandomWarsProtocol;
+using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 

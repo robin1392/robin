@@ -37,7 +37,7 @@ namespace ED
                 Minion m = _minion as Minion;
                 if (m != null)
                 {
-                    m.target.ActorProxy.HitDamage(m.power);
+                    m.target?.ActorProxy?.HitDamage(m.power);
                     // event_Attack?.Invoke();
                     // SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
                     //PlayerController.Get().SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_ArrowHit", m.target.ts_HitPos.position, Quaternion.identity, Vector3.one * 0.6f);

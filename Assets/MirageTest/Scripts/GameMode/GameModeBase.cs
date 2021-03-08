@@ -42,13 +42,18 @@ namespace MirageTest.Scripts.GameMode
         private async UniTask UpdateWave()
         {
             var waveInterval = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
-            while (IsGameEnd == false)
+            while (true)
             {
                 GameState.wave++;
                 OnWave(GameState.wave);
 
                 GameState.CountDownOnClient(waveInterval);
                 await UniTask.Delay(TimeSpan.FromSeconds(waveInterval));
+
+                if (IsGameEnd)
+                {
+                    break;
+                }
             }
         }
 
@@ -63,10 +68,15 @@ namespace MirageTest.Scripts.GameMode
             var addSp = vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
             var addSpInterval = waveTime / 5;
 
-            while (IsGameEnd == false)
+            while (true)
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(addSpInterval));
 
+                if (IsGameEnd)
+                {
+                    break;
+                }
+                
                 foreach (var playerState in PlayerStates)
                 {
                     var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);

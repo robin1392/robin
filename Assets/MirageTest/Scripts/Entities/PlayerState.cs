@@ -302,11 +302,11 @@ namespace MirageTest.Scripts.Entities
         
             // SP를 차감한다.
             int needSp = GetDiceCost();
-            if (sp < needSp)
-            {
-                logger.LogError($"주사위 추가를 위한 SP가 모자랍니다.: playerId:{userId} sp:{sp} 필요sp: {needSp}");
-                return;
-            }
+            // if (sp < needSp)
+            // {
+            //     logger.LogError($"주사위 추가를 위한 SP가 모자랍니다.: playerId:{userId} sp:{sp} 필요sp: {needSp}");
+            //     return;
+            // }
 
             sp -= needSp;
             getDiceCount += 1;

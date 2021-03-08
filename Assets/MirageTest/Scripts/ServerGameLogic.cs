@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using Mirage;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.GameMode;
@@ -45,17 +46,35 @@ namespace MirageTest.Scripts
         private void OnClientDisconnected(INetworkConnection arg0)
         {
             _gameMode.OnClientDisconnected(arg0);
+            CheckGameSession().Forget();
         }
+
+        async UniTask CheckGameSession()
+        {
+            await UniTask.Yield();
+            if (NoPlayers)
+            {
+                EndGameSession();
+            }
+        }
+        
 
         private async void Start()
         {
-            await StartServer();
+            await StartServerLogic();
         }
 
-        async UniTask StartServer()
+        async UniTask StartServerAndLogic()
+        {
+            _networkServer.ListenAsync().Forget();
+            
+            await StartServerLogic();
+        }
+            
+        async UniTask StartServerLogic()
         {
             logger.LogError($"StartServer");
-            
+
             while (!_networkServer.Active)
             {
                 await UniTask.Yield();
@@ -104,8 +123,8 @@ namespace MirageTest.Scripts
             _gameMode.End();
             _isGameStart = false;
             
-
-            StartServer().Forget();
+            //TODO: GameLift 연동 시 서버 프로세스를 재사용하지 않고 종료시킨다.
+            StartServerAndLogic().Forget();
         }
         
         private async UniTask WaitForPlayers()

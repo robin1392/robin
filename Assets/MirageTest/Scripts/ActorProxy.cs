@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
@@ -6,6 +7,7 @@ using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
 using Channel = Mirage.Channel;
+using Debug = ED.Debug;
 
 namespace MirageTest.Scripts
 {
@@ -62,12 +64,19 @@ namespace MirageTest.Scripts
 
         private void StopClient()
         {
+            end = Time.time;
             var client = Client as RWNetworkClient;
             client.RemoveActorProxy(this);
             if (baseStat is Minion minion)
             {
                 minion.currentHealth = 0;
                 minion._poolObjectAutoDeactivate.Deactive();    
+            }
+
+            var duration = end - start;
+            if (isPlayingAI)
+            {
+                Debug.Log($"Duration:{duration} Positon:{positionSend / duration} / Ani:{playAnimation} / hitDamage : {hitDamage / duration}");
             }
         }
 
@@ -80,8 +89,11 @@ namespace MirageTest.Scripts
         {
         }
 
+        private float start;
+        private float end;
         private void StartClient()
         {
+            start = Time.time;
             var client = Client as RWNetworkClient;
             if (client.enableActor)
             {
@@ -243,8 +255,10 @@ namespace MirageTest.Scripts
             isPlayingAI = b;
         }
 
+        private int hitDamage;
         public void HitDamage(float mPower)
         {
+            hitDamage++;
             HitDamageOnServer(power);
         }
         
@@ -276,8 +290,10 @@ namespace MirageTest.Scripts
             SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
         }
 
+        private int playAnimation;
         public void PlayAnimation(uint baseStatId, int aniEnum, uint targetId)
         {
+            playAnimation++;
             Client.SendAsync(new PlayAnimationRelayMessage()
             {
                 actorNetId = baseStatId,
@@ -312,6 +328,7 @@ namespace MirageTest.Scripts
                 if (lastSend == null || !Equal(lastSend, converted))
                 {
                     lastSend = converted;
+                    positionSend++;
                     Client.SendAsync(new PositionRelayMessage()
                     {
                         netId = NetId,
@@ -326,7 +343,9 @@ namespace MirageTest.Scripts
                 baseStat.transform.position = Vector3.Lerp(baseStat.transform.position, position, baseStat.moveSpeed * Time.deltaTime);
             }
         }
-        
+
+        private int positionSend;
+
         bool Equal(MsgVector2 a, MsgVector2 b)
         {
             return a.X == b.X &&
