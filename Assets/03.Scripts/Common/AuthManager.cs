@@ -48,12 +48,7 @@ public class AuthManager : Singleton<AuthManager>
 #elif UNITY_IOS
                          type = EPlatformType.IOS;
 #endif
-                         //string adid = PercentManagement.Instance.GetAdvertisingIdentifier();
-
-                         if (ObscuredPrefs.GetBool("PlatformLogined", false) == false)
-                         {
-                              StartCoroutine(LoginCoroutine(true));
-                         }
+                         StartCoroutine(LoginCoroutine(true));
                     }
                     else // 실패하면
                     {
@@ -73,10 +68,7 @@ public class AuthManager : Singleton<AuthManager>
                UI_Start.Get().btn_GooglePlay.gameObject.SetActive(false);
                UI_Start.Get().btn_GameCenter.gameObject.SetActive(false);
                
-               if (ObscuredPrefs.GetBool("PlatformLogined", false) == false)
-               {
-                    StartCoroutine(LoginCoroutine(true));
-               }
+               StartCoroutine(LoginCoroutine(true));
           }
      }
 
@@ -98,12 +90,7 @@ public class AuthManager : Singleton<AuthManager>
 #elif UNITY_IOS
                          type = EPlatformType.IOS;
 #endif
-                         //string adid = PercentManagement.Instance.GetAdvertisingIdentifier();
-
-                         if (ObscuredPrefs.GetBool("PlatformLogined", false) == false)
-                         {
-                              StartCoroutine(LoginCoroutine(false));
-                         }
+                         StartCoroutine(LoginCoroutine(false));
                     }
                     else // 실패하면
                     {
@@ -120,11 +107,7 @@ public class AuthManager : Singleton<AuthManager>
 #elif UNITY_IOS
                type = EPlatformType.IOS;
 #endif
-               
-               if (ObscuredPrefs.GetBool("PlatformLogined", false) == false)
-               {
-                    StartCoroutine(LoginCoroutine(false));
-               }
+               StartCoroutine(LoginCoroutine(false));
           }
      }
 
@@ -189,7 +172,7 @@ public class AuthManager : Singleton<AuthManager>
           }
           
           UserInfoManager.Get().GetUserInfo().SetPlatformID(string.Empty);
-          ObscuredPrefs.SetBool("PlatformLogined", false);
+          ObscuredPrefs.SetInt("PlatformType", (int)EPlatformType.None);
           Debug.Log("GPGS Logout !");
      }
 }
