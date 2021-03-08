@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.U2D;
 using UnityEngine;
@@ -12,9 +14,9 @@ public class BuildScript
     public const string Name = "game";
     public static string BuildPath => $"{BuildRoot}/{string.Format(BinaryParentFormat, 0)}/{Name}";
 
-    public static string[] UnusedAssetForServer = new string[]
+    public static HashSet<string> ExceptPath = new HashSet<string>
     {
-        "Resources",
+        "Assets/HeadlessBuilder/Resources",
     };
 
     public const string AssetsFolder = "Assets";
@@ -61,6 +63,11 @@ done");
         var subFolders = AssetDatabase.GetSubFolders(folder);
         foreach (var sub in subFolders)
         {
+            if (IsExceptPath(sub))
+            {
+                continue;
+            }
+            
             if (System.IO.Path.GetFileName(sub) == resourcesFolder)
             {
                 var replace = sub.Replace(resourcesFolder, $"~{resourcesFolder}");
@@ -71,6 +78,19 @@ done");
                 DisableResourcesFolder(sub);
             }
         }
+    }
+
+    static bool IsExceptPath(string path)
+    {
+        foreach (var except in ExceptPath)
+        {
+            if (path.Contains(except))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
