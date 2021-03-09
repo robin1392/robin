@@ -351,8 +351,6 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <returns></returns>
     public bool OnReceiveAccountLoginAck(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo)
     {
-        Debug.Log($"OnReceiveAccountLoginAck. errorCode: {errorCode}, {Newtonsoft.Json.JsonConvert.SerializeObject(accountInfo)}");
-
         if (errorCode != EGameBaseAccountErrorCode.Success)
         {
             Debug.LogError("Error OnReceiveAccountLoginAck. errorCode: " + errorCode);
@@ -382,7 +380,7 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <param name="questInfo"></param>
     /// <param name="seasonInfo"></param>
     /// <returns></returns>
-    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo)
+    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayItemBase, QuestInfo questInfo, UserSeasonInfo seasonInfo)
     {
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {
@@ -395,7 +393,7 @@ public class GameStateManager : Singleton<GameStateManager>
         UserInfoManager.Get().SetUserInfo(userInfo, seasonInfo);
         UserInfoManager.Get().SetDeck(arrayUserDeck);
         UserInfoManager.Get().SetDice(arrayUserDice);
-        UserInfoManager.Get().SetBox(arrayUserBox);
+        UserInfoManager.Get().SetItem(arrayItemBase);
         UI_Popup_Quest.QuestUpdate(questInfo);
 
         GameStateManager.Get().UserAuthOK();

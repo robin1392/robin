@@ -39,6 +39,7 @@ namespace Service.Core
         DICE = 7,            //  주사위
         GUADIAN = 8,     // 수호자
         RANDOM_DICE = 9,        // 랜덤 주사위
+        EMOTION = 10,
     }
 
     public enum DICE_GRADE

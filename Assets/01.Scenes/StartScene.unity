@@ -2854,7 +2854,7 @@ MonoBehaviour:
   LocalServerPort: 40002
   UserId: 
   matchSendCount: 0
-  serverAddr: https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/test
+  serverAddr: http://randomwars-env.eba-3bim2dgt.ap-northeast-2.elasticbeanstalk.com/api
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0

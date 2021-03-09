@@ -49,7 +49,7 @@ namespace Template.User.RandomwarsUser.Common
             return sender.SendHttpPost((int)ERandomwarsProtocol.UserInfoReq, "userinfo", json.ToString());
         }
 
-        public delegate (ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo) ReceiveUserInfoReqDelegate(string accessToken);
+        public delegate (ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo) ReceiveUserInfoReqDelegate(string accessToken);
         public ReceiveUserInfoReqDelegate ReceiveUserInfoReqHandler;
         public bool ReceiveUserInfoReq(ISender sender, byte[] msg, int length)
         {
@@ -57,24 +57,24 @@ namespace Template.User.RandomwarsUser.Common
             JObject jObject = JObject.Parse(json);
             string accessToken = (string)jObject["accessToken"];
             var res = ReceiveUserInfoReqHandler(accessToken);
-            return UserInfoAck(sender, res.errorCode, res.userInfo, res.arrayUserDeck, res.arrayUserDice, res.arrayUserBox, res.questInfo, res.seasonInfo);
+            return UserInfoAck(sender, res.errorCode, res.userInfo, res.arrayUserDeck, res.arrayUserDice, res.arrayBaseItem, res.questInfo, res.seasonInfo);
         }
 
-        public bool UserInfoAck(ISender sender, ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo)
+        public bool UserInfoAck(ISender sender, ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
             json.Add("userInfo", JsonConvert.SerializeObject(userInfo));
             json.Add("arrayUserDeck", JsonConvert.SerializeObject(arrayUserDeck));
             json.Add("arrayUserDice", JsonConvert.SerializeObject(arrayUserDice));
-            json.Add("arrayUserBox", JsonConvert.SerializeObject(arrayUserBox));
+            json.Add("arrayBaseItem", JsonConvert.SerializeObject(arrayBaseItem));
             json.Add("questInfo", JsonConvert.SerializeObject(questInfo));
             json.Add("seasonInfo", JsonConvert.SerializeObject(seasonInfo));
             return sender.SendHttpResult(json.ToString());
         }
 
 
-        public delegate bool ReceiveUserInfoAckDelegate(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo);
+        public delegate bool ReceiveUserInfoAckDelegate(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo);
         public ReceiveUserInfoAckDelegate ReceiveUserInfoAckHandler;
         public bool ReceiveUserInfoAck(ISender sender, byte[] msg, int length)
         {
@@ -84,10 +84,10 @@ namespace Template.User.RandomwarsUser.Common
             MsgUserInfo userInfo = JsonConvert.DeserializeObject<MsgUserInfo>(jObject["userInfo"].ToString());
             UserDeck[] arrayUserDeck = JsonConvert.DeserializeObject<UserDeck[]>(jObject["arrayUserDeck"].ToString());
             UserDice[] arrayUserDice = JsonConvert.DeserializeObject<UserDice[]>(jObject["arrayUserDice"].ToString());
-            UserBox[] arrayUserBox = JsonConvert.DeserializeObject<UserBox[]>(jObject["arrayUserBox"].ToString());
+            ItemBaseInfo[] arrayBaseItem = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayBaseItem"].ToString());
             QuestInfo questInfo = JsonConvert.DeserializeObject<QuestInfo>(jObject["questInfo"].ToString());
             UserSeasonInfo seasonInfo = JsonConvert.DeserializeObject<UserSeasonInfo>(jObject["seasonInfo"].ToString());
-            return ReceiveUserInfoAckHandler(errorCode, userInfo, arrayUserDeck, arrayUserDice, arrayUserBox, questInfo, seasonInfo);
+            return ReceiveUserInfoAckHandler(errorCode, userInfo, arrayUserDeck, arrayUserDice, arrayBaseItem, questInfo, seasonInfo);
         }
         #endregion    
 
