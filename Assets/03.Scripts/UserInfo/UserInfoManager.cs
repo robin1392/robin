@@ -6,7 +6,7 @@ using ED;
 using UnityEngine;
 using Service.Core;
 using Template.User.RandomwarsUser.Common;
-//using RandomWarsProtocol;
+using RandomWarsResource.Data;
 using Debug = UnityEngine.Debug;
 
 public class UserInfo
@@ -449,6 +449,39 @@ public class UserInfoManager : Singleton<UserInfoManager>
         for (int i = 0; i < msgUserBox.Length; i++)
         {
             _userInfo.dicBox.Add(msgUserBox[i].BoxId, msgUserBox[i].Count);
+        }
+    }
+
+    public void SetItem(ItemBaseInfo[] arrayItemBase)
+    {
+        _userInfo.dicBox.Clear();
+
+        for (int i = 0; i < arrayItemBase.Length; i++)
+        {
+            TDataItemList tDataItemList;
+            if (TableManager.Get().ItemList.GetData(arrayItemBase[i].ItemId, out tDataItemList) == false)
+            {
+                Debug.LogError($"not found item. itemId: {arrayItemBase[i].ItemId}");
+            }
+
+            switch((ITEM_TYPE)tDataItemList.itemType)
+            {
+                case ITEM_TYPE.BOX:
+                    {
+                        _userInfo.dicBox.Add(arrayItemBase[i].ItemId, arrayItemBase[i].Value);
+                    }
+                    break;
+                case ITEM_TYPE.EMOTION:
+                    {
+                        // TODO : 이모티콘 아이템 추가 처리
+                    }
+                    break;
+                case ITEM_TYPE.PASS:
+                    {
+                        // TODO : 패스 아이템 추가 처리
+                    }
+                    break;
+            }
         }
     }
     #endregion

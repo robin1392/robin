@@ -7,7 +7,7 @@ using ED;
 //using RandomWarsProtocol;
 //using RandomWarsProtocol.Msg;
 using Service.Core;
-using Template.Item.RandomwarsBox.Common;
+using Template.Item.RandomwarsItem.Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -205,13 +205,13 @@ public class UI_BoxOpenPopup : UI_Popup
     public void Click_Open()
     {
         //NetworkManager.Get().OpenBoxReq(UserInfoManager.Get().GetUserInfo().userID, boxID, Callback_BoxOpen);
-        NetworkManager.session.BoxTemplate.BoxOpenReq(NetworkManager.session.HttpClient, boxID, OnReceiveBoxOpenAck);
+        NetworkManager.session.ItemTemplate.BoxOpenReq(NetworkManager.session.HttpClient, boxID, OnReceiveBoxOpenAck);
         //SetShowItems();
 
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public bool OnReceiveBoxOpenAck(ERandomwarsBoxErrorCode errorCode, ItemBaseInfo[] arrayDeleteItemInfo,  ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
+    public bool OnReceiveBoxOpenAck(ERandomwarsItemErrorCode errorCode, ItemBaseInfo[] arrayDeleteItemInfo,  ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BOX_COMMON_FALLDOWN);
