@@ -205,6 +205,19 @@ public class GameStateManager : Singleton<GameStateManager>
         UI_Start.Get().SetTextStatus(Global.g_startStatusConnect);
         
         yield return new WaitForSeconds(0.3f);
+
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            UI_Start.Get().commonMessageBox.Initialize(LocalizationManager.GetLangDesc("Option_Internet"),
+                LocalizationManager.GetLangDesc("Option_Internetconfirm"),
+                LocalizationManager.GetLangDesc("Option_Quit"), null,
+                () =>
+                {
+                    Application.Quit();
+                }, false);
+
+            yield break;
+        }
         
         // 서버 접속이 끝난후 버전 체크를 한다
         GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_VERSION);
