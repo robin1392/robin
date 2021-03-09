@@ -40,7 +40,8 @@ namespace _Scripts.RCore.Networking
         [Button]
         public async UniTask Connect()
         {
-            string address = "127.0.0.1";//"ec2-18-183-92-138.ap-northeast-1.compute.amazonaws.com";
+            //"127.0.0.1";
+            string address = "ec2-18-183-92-138.ap-northeast-1.compute.amazonaws.com";
             ushort port = GetComponent<KcpTransport>().Port;
             await Connect(address, port);
         }
