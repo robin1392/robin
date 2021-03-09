@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using ED;
@@ -8,6 +9,7 @@ using RandomWarsResource.Data;
 using UnityEngine;
 using Channel = Mirage.Channel;
 using Debug = ED.Debug;
+using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts
 {
@@ -36,6 +38,7 @@ namespace MirageTest.Scripts
         public BaseStat baseStat;
 
         private TDataDiceInfo _diceInfo;
+        private bool stopped;
 
         public TDataDiceInfo diceInfo
         {
@@ -76,8 +79,10 @@ namespace MirageTest.Scripts
             var duration = end - start;
             if (isPlayingAI)
             {
-                Debug.Log($"Duration:{duration} Positon:{positionSend / duration} / Ani:{playAnimation} / hitDamage : {hitDamage / duration}");
+                // Debug.Log($"Duration:{duration} Positon:{positionSend / duration} / Ani:{playAnimation} / hitDamage : {hitDamage / duration}");
             }
+
+            stopped = true;
         }
 
         public void SetTeam(byte oldValue, byte newValue)
@@ -98,6 +103,10 @@ namespace MirageTest.Scripts
             if (client.enableActor)
             {
                 SpawnActor();
+            }
+            else if(client.IsPlayingAI)
+            {
+                StartFakeSend().Forget();
             }
             
             client.AddActorProxy(this);
@@ -207,6 +216,66 @@ namespace MirageTest.Scripts
             SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
 
+        async UniTask StartFakeSend()
+        {
+            await UniTask.WhenAll(StartFakeRelayPosition(), StartFakeRelayAni(), StartFakeHitDamage());
+        }
+        
+        async UniTask StartFakeRelayPosition()
+        {
+            var interval = 1 / Random.Range(5.0f, 12.0f);
+            while (true)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(interval));
+                if (Client == null || Client.IsConnected == false || stopped)
+                {
+                    break;
+                }
+                
+                Client.SendAsync(new PositionRelayMessage()
+                {
+                    netId = NetId,
+                    positionX = 0,
+                    positionY = 0,
+                }, Channel.Unreliable).Forget();
+            }
+        }
+        
+        async UniTask StartFakeRelayAni()
+        {
+            var interval = 1;
+            while (true)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(interval));
+                if (Client == null || Client.IsConnected == false || stopped)
+                {
+                    break;    
+                }
+                
+                Client.SendAsync(new PlayAnimationRelayMessage()
+                {
+                    actorNetId = NetId,
+                    aniId = 0,
+                    targetNetId = NetId
+                }, Channel.Unreliable).Forget();
+            }
+        }
+        
+        async UniTask StartFakeHitDamage()
+        {
+            var interval = 1/ Random.Range(0.2f, 0.8f);
+            while (true)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(interval));
+                if (Client == null || Client.IsConnected == false || stopped)
+                {
+                    break;    
+                }
+                
+                HitDamage(24);
+            }
+        }
+
         bool IsBottomCamp()
         {
             return team == GameConstants.BottomCamp;
@@ -255,7 +324,7 @@ namespace MirageTest.Scripts
             isPlayingAI = b;
         }
 
-        private int hitDamage;
+        public int hitDamage;
         public void HitDamage(float mPower)
         {
             hitDamage++;
