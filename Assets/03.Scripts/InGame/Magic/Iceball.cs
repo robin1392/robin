@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -61,8 +62,10 @@ namespace ED
                 {
                     endPos = target.ts_HitPos.position;
                 }
+                
                 //rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
-                rb.position += (endPos - transform.position).normalized * (moveSpeed * Time.deltaTime);
+                throw new NotImplementedException("매직 이동 함수를 만들고 같이 사용할 것.");
+                // rb.position += (endPos - transform.position).normalized * (moveSpeed * Time.deltaTime);
 
                 if (Vector3.Distance(transform.position, endPos) < 0.4f)
                 {
@@ -115,8 +118,7 @@ namespace ED
                 other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
                 isBombed = true;
-                rb.velocity = Vector3.zero;
-
+                
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
                 if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
@@ -147,7 +149,6 @@ namespace ED
         public void Bomb()
         {
             SoundManager.instance?.Play(clip_Explosion);
-            rb.velocity = Vector3.zero;
             ps_Tail.Stop();
             ps_BombEffect.Play();
 

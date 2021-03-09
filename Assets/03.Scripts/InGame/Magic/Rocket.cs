@@ -42,11 +42,11 @@ namespace ED
                 if (target != null && target.isAlive)
                 {
                     endPos = target.transform.position;
-                    rb.position = Vector3.Lerp(startPos, target.transform.position, t / moveTime);
+                    transform.position = Vector3.Lerp(startPos, target.transform.position, t / moveTime);
                 }
                 else
                 {
-                    rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
+                    transform.position = Vector3.Lerp(startPos, endPos, t / moveTime);
                 }
 
                 t += Time.deltaTime;
@@ -89,7 +89,6 @@ namespace ED
             if (target != null && other.gameObject == target.gameObject || other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
                 StopAllCoroutines();
-                rb.velocity = Vector3.zero;
                 isBombed = true;
 
                 //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
@@ -120,7 +119,6 @@ namespace ED
 
         public void Bomb()
         {
-            rb.velocity = Vector3.zero;
             ps_Tail.Stop();
             ps_BombEffect.Play();
 

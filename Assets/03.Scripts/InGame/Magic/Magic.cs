@@ -38,10 +38,6 @@ namespace ED
 
         protected virtual void Awake()
         {
-            if (rb  == null)
-            {
-                rb = GetComponent<Rigidbody>();
-            }
             if (poolDeactive == null)
             {
                 poolDeactive = GetComponent<PoolObjectAutoDeactivate>();

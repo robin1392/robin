@@ -2123,9 +2123,9 @@ namespace ED
                                 msgMinionInfos[i].DiceId = ConvertNetMsg.MsgIntToUshort(listMinion[i].diceId);
                                 msgMinionInfos[i].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMinion[i].eyeLevel);
                                 msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
-                                msgMinionInfos[i].Pos =
-                                    ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x,
-                                        listMinion[i].rb.position.z));
+                                // msgMinionInfos[i].Pos =
+                                //     ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x,
+                                //         listMinion[i].rb.position.z));
                                 loop++;
                             }
                         }

@@ -439,10 +439,9 @@ namespace ED
         {
             //StopAllCoroutines();
             SetControllEnable(false);
-            rb.isKinematic = false;
             animator.SetTrigger(_animatorHashIdle);
-            rb.velocity = Vector3.zero;
-            rb.AddForce(dir.normalized * pushPower, ForceMode.Impulse);
+            throw new NotImplementedException("리지드바디를 사용하지 않고 Push구현");
+            // rb.AddForce(dir.normalized * pushPower, ForceMode.Impulse);
             if(_crtPush != null) StopCoroutine(_crtPush);
             _crtPush = StartCoroutine(PushCoroutine());
         }
@@ -451,14 +450,15 @@ namespace ED
         {
             yield return new WaitForSeconds(0.5f);
 
-            var vel = rb.velocity.magnitude;
-            while (vel > 0.1f)
-            {
-                yield return new WaitForSeconds(0.1f);
-                vel = rb.velocity.magnitude;
-            }
-            rb.velocity = Vector3.zero;
-            rb.isKinematic = true;
+            //KZSee : 마찰때문에 줄어드는 속도를 강제로 유지시키는 코드인듯 하다. 에드님께 물어볼 것.
+            // var vel = rb.velocity.magnitude;
+            // while (vel > 0.1f)
+            // {
+            //     yield return new WaitForSeconds(0.1f);
+            //     vel = rb.velocity.magnitude;
+            // }
+            // rb.velocity = Vector3.zero;
+            // rb.isKinematic = true;
             SetControllEnable(true);
         }
 

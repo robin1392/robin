@@ -79,9 +79,10 @@ namespace ED
             var distance = Vector3.Distance(startPos, endPos);
             var max = distance / moveSpeed;
 
-            rb.velocity = (endPos - startPos).normalized * moveSpeed;
+            throw new NotImplementedException("매직 이동함수를 만들고 같이 사용할 것");
+            // rb.velocity = (endPos - startPos).normalized * moveSpeed;
             yield return new WaitForSeconds(max);
-            rb.velocity = Vector3.zero;
+            // rb.velocity = Vector3.zero;
             transform.position = endPos;
 
             EndMove();

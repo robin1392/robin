@@ -152,7 +152,6 @@ namespace ED
                 yield return null;
                 //yield return new WaitForSeconds(moveTime);
             }
-            rb.velocity = Vector3.zero;
 
             isPushing = false;
             //dashTarget.GetComponent<Minion>()?.Sturn(1f);

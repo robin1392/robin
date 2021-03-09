@@ -13,7 +13,6 @@ namespace ED
         public int diceId;
         public uint id;
         public PlayerController controller;
-        public Rigidbody rb;
         public Animator animator;
         public Material[] arrMaterial;
         public BaseStat target;
