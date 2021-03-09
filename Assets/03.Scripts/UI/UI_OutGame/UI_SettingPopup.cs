@@ -228,7 +228,6 @@ public class UI_SettingPopup : UI_Popup
         {
             if (errorCode == EGameBaseAccountErrorCode.Success)
             {
-                ObscuredPrefs.SetBool("PlatformLogined", true);
                 ObscuredPrefs.SetInt("PlatformType", accountInfo.PlatformType);
                 UserInfoManager.Get().GetUserInfo().SetPlatformID(accountInfo.PlatformId);
                 SetAccountButton();
