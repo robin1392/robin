@@ -45,7 +45,7 @@ namespace MirageTest.Scripts
 
         private void OnClientDisconnected(INetworkConnection arg0)
         {
-            _gameMode.OnClientDisconnected(arg0);
+            _gameMode?.OnClientDisconnected(arg0);
             CheckGameSession().Forget();
         }
 
@@ -120,7 +120,7 @@ namespace MirageTest.Scripts
                 _serverObjectManager.Destroy(obj.gameObject);
             }
 
-            _gameMode.End();
+            _gameMode?.End();
             _isGameStart = false;
             
             //TODO: GameLift 연동 시 서버 프로세스를 재사용하지 않고 종료시킨다.
