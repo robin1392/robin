@@ -67,7 +67,6 @@ namespace MirageTest.Scripts
 
         private void StopClient()
         {
-            end = Time.time;
             var client = Client as RWNetworkClient;
             client.RemoveActorProxy(this);
             if (baseStat is Minion minion)
@@ -75,13 +74,8 @@ namespace MirageTest.Scripts
                 minion.currentHealth = 0;
                 minion._poolObjectAutoDeactivate.Deactive();    
             }
-
-            var duration = end - start;
-            if (isPlayingAI)
-            {
-                // Debug.Log($"Duration:{duration} Positon:{positionSend / duration} / Ani:{playAnimation} / hitDamage : {hitDamage / duration}");
-            }
-
+            
+            baseStat = null;
             stopped = true;
         }
 
@@ -93,22 +87,15 @@ namespace MirageTest.Scripts
         private void StartServer()
         {
         }
-
-        private float start;
-        private float end;
+        
         private void StartClient()
         {
-            start = Time.time;
             var client = Client as RWNetworkClient;
             if (client.enableActor)
             {
                 SpawnActor();
             }
-            else if(client.IsPlayingAI)
-            {
-                StartFakeSend().Forget();
-            }
-            
+
             client.AddActorProxy(this);
         }
 
@@ -119,7 +106,7 @@ namespace MirageTest.Scripts
                 var towerPrefab = Resources.Load<PlayerController>("Tower/Player");
                 
                 var playerController = Instantiate(towerPrefab, transform);
-                baseStat = playerController; 
+                baseStat = playerController;
                 baseStat.id = NetId;
                 baseStat.currentHealth = health;
                 baseStat.maxHealth = maxHealth;
@@ -127,6 +114,7 @@ namespace MirageTest.Scripts
                 var isBottom = team == GameConstants.BottomCamp;
                 playerController.isBottomPlayer = isBottom;
                 playerController.ChangeLayer(isBottom);
+                // SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
                 isMovable = false;
             }
             else if (actorType == ActorType.MinionFromDice)
@@ -139,7 +127,7 @@ namespace MirageTest.Scripts
                 spawnPosition.x += Random.Range(-0.2f, 0.2f);
                 spawnPosition.z += Random.Range(-0.2f, 0.2f);
 
-                var m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, spawnPosition, transform);
+                var m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
                 if (m == null)
                 {
                     //PoolManager.instance.AddPool(data.prefab, 1);
@@ -205,75 +193,8 @@ namespace MirageTest.Scripts
 
             var client = Client as RWNetworkClient;
             EnableClientCombatLogic(client.IsPlayingAI);
-
-            // actorPathfinding.EnableAIPathfinding(false);
-            // actorAi.graphOwner.StopBehaviour();
-            // actorAi.graphOwner.enabled = false;
-            // GetComponentInChildren<Collider>().enabled = false;
-            // gameObject.SetActive(false);
-
             RefreshHpUI();
             SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_GENERATE);
-        }
-
-        async UniTask StartFakeSend()
-        {
-            await UniTask.WhenAll(StartFakeRelayPosition(), StartFakeRelayAni(), StartFakeHitDamage());
-        }
-        
-        async UniTask StartFakeRelayPosition()
-        {
-            var interval = 1 / Random.Range(5.0f, 12.0f);
-            while (true)
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(interval));
-                if (Client == null || Client.IsConnected == false || stopped)
-                {
-                    break;
-                }
-                
-                Client.SendAsync(new PositionRelayMessage()
-                {
-                    netId = NetId,
-                    positionX = 0,
-                    positionY = 0,
-                }, Channel.Unreliable).Forget();
-            }
-        }
-        
-        async UniTask StartFakeRelayAni()
-        {
-            var interval = 1;
-            while (true)
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(interval));
-                if (Client == null || Client.IsConnected == false || stopped)
-                {
-                    break;    
-                }
-                
-                Client.SendAsync(new PlayAnimationRelayMessage()
-                {
-                    actorNetId = NetId,
-                    aniId = 0,
-                    targetNetId = NetId
-                }, Channel.Unreliable).Forget();
-            }
-        }
-        
-        async UniTask StartFakeHitDamage()
-        {
-            var interval = 1/ Random.Range(0.2f, 0.8f);
-            while (true)
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(interval));
-                if (Client == null || Client.IsConnected == false || stopped)
-                {
-                    break;    
-                }
-                
-                HitDamage(24);
-            }
         }
 
         bool IsBottomCamp()
@@ -319,15 +240,12 @@ namespace MirageTest.Scripts
             minion.SetControllEnable(b);
 
             minion.GetComponent<Collider>().enabled = b;
-            minion.rb.detectCollisions = b;
-                
+
             isPlayingAI = b;
         }
-
-        public int hitDamage;
+        
         public void HitDamage(float mPower)
         {
-            hitDamage++;
             HitDamageOnServer(power);
         }
         
@@ -358,11 +276,9 @@ namespace MirageTest.Scripts
             
             SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
         }
-
-        private int playAnimation;
+        
         public void PlayAnimation(uint baseStatId, int aniEnum, uint targetId)
         {
-            playAnimation++;
             Client.SendAsync(new PlayAnimationRelayMessage()
             {
                 actorNetId = baseStatId,
@@ -397,7 +313,6 @@ namespace MirageTest.Scripts
                 if (lastSend == null || !Equal(lastSend, converted))
                 {
                     lastSend = converted;
-                    positionSend++;
                     Client.SendAsync(new PositionRelayMessage()
                     {
                         netId = NetId,
@@ -408,13 +323,12 @@ namespace MirageTest.Scripts
             }
             else if(lastRecieved != null)
             {
+                //첫번째 동기화는 바로 설정하도록 한다.
                 var position = ConvertNetMsg.MsgToVector3(lastRecieved);
                 baseStat.transform.position = Vector3.Lerp(baseStat.transform.position, position, baseStat.moveSpeed * Time.deltaTime);
             }
         }
-
-        private int positionSend;
-
+        
         bool Equal(MsgVector2 a, MsgVector2 b)
         {
             return a.X == b.X &&
