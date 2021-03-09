@@ -5,6 +5,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using Template.Account.GameBaseAccount.Common;
 using UnityEngine;
 using UnityEngine.UI;
+using ED;
 
 
 public class UI_Start : SingletonDestroy<UI_Start>
@@ -26,28 +27,29 @@ public class UI_Start : SingletonDestroy<UI_Start>
         InitUIElement();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (UI_Popup.stack.Count > 0)
+            {
+                UI_Popup.ClosePop();
+            }
+            else
+            {
+                commonMessageBox.Initialize(LocalizationManager.GetLangDesc("Option_Gamequit"),
+                    LocalizationManager.GetLangDesc("Option_Gamequitquestion"), 
+                    LocalizationManager.GetLangDesc("Option_Quit"), null, () =>
+                    {
+                        Application.Quit();
+                    });
+            }
+        }
     }
-
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-    }
-
     #endregion
     
     
     #region ui component
-
     public void InitUIElement()
     {
         textGameStatus = this.transform.Find("PanelTitle/Text_Status").GetComponent<Text>();

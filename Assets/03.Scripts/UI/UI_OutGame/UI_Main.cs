@@ -108,7 +108,9 @@ namespace ED
             
             if (UserInfoManager.Get().GetUserInfo().needSeasonReset)
             {
-                ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", seasonEndPopup.Initialize);
+                ShowMessageBox(LocalizationManager.GetLangDesc("Seasonpass_Endseason"), 
+                    LocalizationManager.GetLangDesc("Seasonpass_Endseason"), 
+                    seasonEndPopup.Initialize);
             }
 
             // TDataShopProductList data;
@@ -155,7 +157,9 @@ namespace ED
                 }
                 else
                 {
-                    commonMessageBoxPopup.Initialize("게임 종료", "게임을 종료 하시겠습니까?", "종료", null, () =>
+                    commonMessageBoxPopup.Initialize(LocalizationManager.GetLangDesc("Option_Gamequit"),
+                        LocalizationManager.GetLangDesc("Option_Gamequitquestion"), 
+                        LocalizationManager.GetLangDesc("Option_Quit"), null, () =>
                     {
                         Application.Quit();
                     });

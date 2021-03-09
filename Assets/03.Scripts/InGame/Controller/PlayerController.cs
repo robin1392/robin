@@ -1927,6 +1927,9 @@ namespace ED
                 case E_BulletType.TURRET_BULLET:
                     b = PoolManager.instance.ActivateObject<Bullet>("Turret_Bullet", startPos);
                     break;
+                case E_BulletType.RACE_BULLET:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Race_Bullet", startPos);
+                    break;
                 }
 
                 if(b != null)
