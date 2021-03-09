@@ -130,7 +130,6 @@ namespace MirageTest.Scripts
                 var m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
                 if (m == null)
                 {
-                    //PoolManager.instance.AddPool(data.prefab, 1);
                     PoolManager.instance.AddPool(
                         FileHelper.LoadPrefab(diceInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION, transform), 1);
                     //Debug.LogFormat("{0} Pool Added 1", data.prefabName);

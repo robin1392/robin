@@ -104,7 +104,7 @@ namespace MirageTest.Scripts.GameMode
                     continue;
                 }
 
-                var diceId = 1001;//fieldDice.diceId;
+                var diceId = fieldDice.diceId;
                 if (diceInfos.GetData(diceId, out var diceInfo) == false)
                 {
                     ED.Debug.LogError($"다이스정보 {fieldDice.diceId}가 없습니다. UserId : {playerState.userId} 필드 슬롯 : {fieldIndex}");
