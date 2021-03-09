@@ -8,6 +8,7 @@ using Template.Quest.RandomwarsQuest.Common;
 using Template.Character.RandomwarsDice.Common;
 using Template.Item.RandomwarsBox.Common;
 using Template.Season.RandomwarsSeason.Common;
+using Template.MailBox.GameBaseMailBox.Common;
 
 
 namespace Percent.GameBaseClient
@@ -31,6 +32,7 @@ namespace Percent.GameBaseClient
         public RandomwarsDiceProtocol DiceTemplate { get; set; }
         public RandomwarsBoxProtocol BoxTemplate { get; set; }
         public RandomwarsSeasonProtocol SeasonTemplate { get; set; }
+        public GameBaseMailBoxProtocol MailBoxTemplate { get; set; }
 
 
         public GameBaseClientSession()
@@ -43,6 +45,7 @@ namespace Percent.GameBaseClient
             DiceTemplate = new RandomwarsDiceProtocol();
             BoxTemplate = new RandomwarsBoxProtocol();
             SeasonTemplate = new RandomwarsSeasonProtocol();
+            MailBoxTemplate = new GameBaseMailBoxProtocol();
         }
 
 
@@ -84,6 +87,7 @@ namespace Percent.GameBaseClient
             _messageController.AddControllers(DiceTemplate.MessageControllers);
             _messageController.AddControllers(BoxTemplate.MessageControllers);
             _messageController.AddControllers(SeasonTemplate.MessageControllers);
+            _messageController.AddControllers(MailBoxTemplate.MessageControllers);
         }
 
 
