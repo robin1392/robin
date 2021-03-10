@@ -20,12 +20,6 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
         MailReceiveAllReq,
         MailReceiveAllAck,
-
-        MailSendReq,
-        MailSendAck,
-
-        SystemMailSendReq,
-        SystemMailSendAck,
     }
 
     public class GameBaseMailBoxProtocol : MessageControllerBase
@@ -38,10 +32,8 @@ namespace Template.MailBox.GameBaseMailBox.Common
                 { (int)EGameBaseMailBoxProtocol.MailInfoAck, ReceiveMailBoxInfoAck },
                 { (int)EGameBaseMailBoxProtocol.MailReceiveReq, ReceiveMailReceiveReq },
                 { (int)EGameBaseMailBoxProtocol.MailReceiveAck, ReceiveMailReceiveAck },
-                { (int)EGameBaseMailBoxProtocol.MailSendReq, ReceiveMailSendReq },
-                { (int)EGameBaseMailBoxProtocol.MailSendAck, ReceiveMailSendAck },
-                { (int)EGameBaseMailBoxProtocol.SystemMailSendReq, ReceiveSystemMailSendReq },
-                { (int)EGameBaseMailBoxProtocol.SystemMailSendAck, ReceiveSystemMailSendAck }
+                { (int)EGameBaseMailBoxProtocol.MailReceiveAllReq, ReceiveMailReceiveAllReq },
+                { (int)EGameBaseMailBoxProtocol.MailReceiveAllAck, ReceiveMailReceiveAllAck },
             };
         }
 
@@ -174,106 +166,6 @@ namespace Template.MailBox.GameBaseMailBox.Common
             ItemBaseInfo[] arrayMailItemInfo = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayMailItemInfo"].ToString());
             MailInfo[] arrayMailInfo = JsonConvert.DeserializeObject<MailInfo[]>(jObject["arrayMailInfo"].ToString());
             return ReceiveMailReceiveAllAckHandler(errorCode, arrayMailItemInfo, arrayMailInfo);
-        }
-        #endregion
-
-        #region MailSend ---------------------------------------------------------------------
-        public bool MailSendReq(ISender sender, string userId, string mailFrom, Dictionary<string, string> mailTitles, Dictionary<string, string> mailContents, List<Dictionary<string, int>> mailItems, ReceiveMailSendAckDelegate callback)
-        {
-            ReceiveMailSendAckHandler = callback;
-            JObject json = new JObject();
-            json.Add("userId", userId);
-            json.Add("mailFrom", mailFrom);
-            json.Add("mailTitles", JsonConvert.SerializeObject(mailTitles));
-            json.Add("mailContents", JsonConvert.SerializeObject(mailContents));
-            json.Add("mailItems", JsonConvert.SerializeObject(mailItems));
-            return sender.SendHttpPost((int)EGameBaseMailBoxProtocol.MailSendReq, "mailsend", json.ToString());
-        }
-
-        public delegate (GameBaseMailBoxErrorCode erorCode, MailInfo mailInfo) ReceiveMailSendReqDelegate(string userId, string mailFrom, Dictionary<string, string> mailTitles, Dictionary<string, string> mailContents, List<Dictionary<string, int>> mailItems);
-        public ReceiveMailSendReqDelegate ReceiveMailSendReqHandler;
-        public bool ReceiveMailSendReq(ISender sender, byte[] msg, int length)
-        {
-            string json = Encoding.Default.GetString(msg, 0, length);
-            JObject jObject = JObject.Parse(json);
-            string userId = (string)jObject["userId"];
-            string mailFrom = (string)jObject["mailFrom"];
-            Dictionary<string, string> mailTitles = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["mailTitles"].ToString());
-            Dictionary<string, string> mailContents = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["mailContents"].ToString());
-            List<Dictionary<string, int>> mailItems = JsonConvert.DeserializeObject<List<Dictionary<string, int>>>(jObject["mailItems"].ToString());
-            var res = ReceiveMailSendReqHandler(userId, mailFrom, mailTitles, mailContents, mailItems);
-            return MailSendAck(sender, res.erorCode, res.mailInfo);
-        }
-
-        public bool MailSendAck(ISender sender, GameBaseMailBoxErrorCode errorCode, MailInfo mailInfo)
-        {
-            JObject json = new JObject();
-            json.Add("errorCode", (int)errorCode);
-            json.Add("mailInfo", JsonConvert.SerializeObject(mailInfo));
-            return sender.SendHttpResult(json.ToString());
-        }
-
-        public delegate bool ReceiveMailSendAckDelegate(GameBaseMailBoxErrorCode errorCode, MailInfo mailInfo);
-        public ReceiveMailSendAckDelegate ReceiveMailSendAckHandler;
-        public bool ReceiveMailSendAck(ISender sender, byte[] msg, int length)
-        {
-            string json = Encoding.Default.GetString(msg, 0, length);
-            JObject jObject = JObject.Parse(json);
-            GameBaseMailBoxErrorCode errorCode = (GameBaseMailBoxErrorCode)(int)jObject["errorCode"];
-            MailInfo mailInfo = JsonConvert.DeserializeObject<MailInfo>(jObject["mailinfo"].ToString());
-            return ReceiveMailSendAckHandler(errorCode, mailInfo);
-        }
-        #endregion
-
-        #region SystemMailSend ---------------------------------------------------------------------
-        public bool SystemMailSendReq(ISender sender, string mailFrom, Dictionary<string, string> mailTitles, Dictionary<string, string> mailContents, List<Dictionary<string, int>> mailItems, string sendTime, string endTime, int storeDay, ReceiveSystemMailSendAckDelegate callback)
-        {
-            ReceiveSystemMailSendAckHandler = callback;
-            JObject json = new JObject();
-            json.Add("mailFrom", mailFrom);
-            json.Add("mailTitles", JsonConvert.SerializeObject(mailTitles));
-            json.Add("mailContents", JsonConvert.SerializeObject(mailContents));
-            json.Add("mailItems", JsonConvert.SerializeObject(mailItems));
-            json.Add("sendTime", sendTime);
-            json.Add("endTime", endTime);
-            json.Add("storeDay", storeDay);
-            return sender.SendHttpPost((int)EGameBaseMailBoxProtocol.SystemMailSendReq, "systemmailsend", json.ToString());
-        }
-
-        public delegate (GameBaseMailBoxErrorCode errorCode, bool result) ReceiveSystemMailSendReqDelegate(string mailFrom, Dictionary<string, string> mailTitles, Dictionary<string, string> mailContents, List<Dictionary<string, int>> mailItems, string sendTime, string endTime, int storeDay);
-        public ReceiveSystemMailSendReqDelegate ReceiveSystemMailSendReqHandler;
-        public bool ReceiveSystemMailSendReq(ISender sender, byte[] msg, int length)
-        {
-            string json = Encoding.Default.GetString(msg, 0, length);
-            JObject jObject = JObject.Parse(json);
-            string mailFrom = (string)jObject["mailFrom"];
-            Dictionary<string, string> mailTitles = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["mailTitles"].ToString());
-            Dictionary<string, string> mailContents = JsonConvert.DeserializeObject<Dictionary<string, string>>(jObject["mailContents"].ToString());
-            List<Dictionary<string, int>> mailItems = JsonConvert.DeserializeObject<List<Dictionary<string, int>>>(jObject["mailItems"].ToString());
-            string sendTime = (string)jObject["sendTime"];
-            string endTime = (string)jObject["endTime"];
-            int storeDay = (int)jObject["storeDay"];
-            var res = ReceiveSystemMailSendReqHandler(mailFrom, mailTitles, mailContents, mailItems, sendTime, endTime, storeDay);
-            return SystemMailSendAck(sender, res.errorCode, res.result);
-        }
-
-        public bool SystemMailSendAck(ISender sender, GameBaseMailBoxErrorCode errorCode, bool result)
-        {
-            JObject json = new JObject();
-            json.Add("errorCode", (int)errorCode);
-            json.Add("result", result);
-            return sender.SendHttpResult(json.ToString());
-        }
-
-        public delegate bool ReceiveSystemMailSendAckDelegate(GameBaseMailBoxErrorCode errorCode, bool result);
-        public ReceiveSystemMailSendAckDelegate ReceiveSystemMailSendAckHandler;
-        public bool ReceiveSystemMailSendAck(ISender sender, byte[] msg, int length)
-        {
-            string json = Encoding.Default.GetString(msg, 0, length);
-            JObject jObject = JObject.Parse(json);
-            GameBaseMailBoxErrorCode errorCode = (GameBaseMailBoxErrorCode)(int)jObject["errorCode"];
-            bool result = (bool)jObject["result"];
-            return ReceiveSystemMailSendAckHandler(errorCode, result);
         }
         #endregion
     }
