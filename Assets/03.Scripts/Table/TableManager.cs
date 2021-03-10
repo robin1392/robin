@@ -37,6 +37,7 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataQuestDayReward> QuestDayReward { get; private set; }
     public TableData<int, TDataShopInfo> ShopInfo { get; private set; }
     public TableData<int, TDataShopProductList> ShopProductList { get; private set; }
+    public TableData<int, TDataMailInfo> MailInfo { get; private set; }
 
 
 
@@ -81,6 +82,7 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
         ShopInfo = new TableData<int, TDataShopInfo>();
         ShopProductList = new TableData<int, TDataShopProductList>();
+        MailInfo = new TableData<int, TDataMailInfo>();
     }
 
 
@@ -270,6 +272,7 @@ public class TableManager : Singleton<TableManager>
         QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
         ShopInfo.Init(new TableLoaderLocalCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
         ShopProductList.Init(new TableLoaderLocalCSV<int, TDataShopProductList>(), path, "ShopProductList.csv");
+        MailInfo.Init(new TableLoaderLocalCSV<int, TDataMailInfo>(), path, "MailInfo.csv");
         return true;
     }
 }
