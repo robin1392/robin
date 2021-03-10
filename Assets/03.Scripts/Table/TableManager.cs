@@ -27,7 +27,7 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataLangKO> LangKO { get; private set; }
     public TableData<int, TDataErrorMessageKO> ErrorMessageKO { get; private set; }
     public TableData<int, TDataRankingReward> RankingReward { get; private set; }
-    public TableData<int, TDataRankInfo> RankInfo { get; private set; }
+    public TableData<int, TDataClassInfo> ClassInfo { get; private set; }
     public TableData<int, TDataSeasonpassInfo> SeasonpassInfo { get; private set; }
     public TableData<int, TDataSeasonpassReward> SeasonpassReward { get; private set; }
     public TableData<int, TDataClassReward> ClassReward { get; private set; }
@@ -69,7 +69,7 @@ public class TableManager : Singleton<TableManager>
         LangKO = new TableData<int, TDataLangKO>();
         ErrorMessageKO = new TableData<int, TDataErrorMessageKO>();
         RankingReward = new TableData<int, TDataRankingReward>();
-        RankInfo = new TableData<int, TDataRankInfo>();
+        ClassInfo = new TableData<int, TDataClassInfo>();
         SeasonpassInfo = new TableData<int, TDataSeasonpassInfo>();
         SeasonpassReward = new TableData<int, TDataSeasonpassReward>();
         ClassReward = new TableData<int, TDataClassReward>();
@@ -262,7 +262,7 @@ public class TableManager : Singleton<TableManager>
         LangEN.Init(new TableLoaderLocalCSV<int, TDataLangEN>(), path, "LangEN.csv");
         LangKO.Init(new TableLoaderLocalCSV<int, TDataLangKO>(), path, "LangKO.csv");
         RankingReward.Init(new TableLoaderLocalCSV<int, TDataRankingReward>(), path, "RankingReward.csv");
-        RankInfo.Init(new TableLoaderLocalCSV<int, TDataRankInfo>(), path, "RankInfo.csv");
+        ClassInfo.Init(new TableLoaderLocalCSV<int, TDataClassInfo>(), path, "ClassInfo.csv");
         SeasonpassInfo.Init(new TableLoaderLocalCSV<int, TDataSeasonpassInfo>(), path, "SeasonpassInfo.csv");
         SeasonpassReward.Init(new TableLoaderLocalCSV<int, TDataSeasonpassReward>(), path, "SeasonpassReward.csv");
         ClassReward.Init(new TableLoaderLocalCSV<int, TDataClassReward>(), path, "ClassReward.csv");

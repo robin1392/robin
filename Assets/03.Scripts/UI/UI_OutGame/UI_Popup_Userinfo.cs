@@ -56,15 +56,15 @@ public class UI_Popup_Userinfo : UI_Popup
         text_Lose.text = loseCount.ToString();
         if (winCount + loseCount > 0) text_WinLose.text = $"{(winCount / (winCount + loseCount)):F1}%";
         else text_WinLose.text = "0.0%";
-        foreach (var kvp in TableManager.Get().RankInfo.KeyValues)
+        foreach (var kvp in TableManager.Get().ClassInfo.KeyValues)
         {
-            if (trophy > kvp.Value.rankingPointMinMax[1])
+            if (trophy > kvp.Value.trophyPointMinMax[1])
             {
                 x += 300f;
             }
             else
             {
-                subX = 300f * ((trophy - kvp.Value.rankingPointMinMax[0]) / (float) (kvp.Value.rankingPointMinMax[1] - kvp.Value.rankingPointMinMax[0]));
+                subX = 300f * ((trophy - kvp.Value.trophyPointMinMax[0]) / (float) (kvp.Value.trophyPointMinMax[1] - kvp.Value.trophyPointMinMax[0]));
                 break;
             }
         }
