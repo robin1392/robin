@@ -380,7 +380,7 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <param name="questInfo"></param>
     /// <param name="seasonInfo"></param>
     /// <returns></returns>
-    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayItemBase, QuestInfo questInfo, UserSeasonInfo seasonInfo)
+    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayItemBase, QuestInfo questInfo, UserSeasonInfo seasonInfo, MailInfo[] arrayMailInfo)
     {
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {

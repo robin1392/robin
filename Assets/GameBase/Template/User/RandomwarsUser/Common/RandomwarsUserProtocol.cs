@@ -49,7 +49,7 @@ namespace Template.User.RandomwarsUser.Common
             return sender.SendHttpPost((int)ERandomwarsProtocol.UserInfoReq, "userinfo", json.ToString());
         }
 
-        public delegate (ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo) ReceiveUserInfoReqDelegate(string accessToken);
+        public delegate (ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo, MailInfo[] arrayMailInfo) ReceiveUserInfoReqDelegate(string accessToken);
         public ReceiveUserInfoReqDelegate ReceiveUserInfoReqHandler;
         public bool ReceiveUserInfoReq(ISender sender, byte[] msg, int length)
         {
@@ -57,10 +57,10 @@ namespace Template.User.RandomwarsUser.Common
             JObject jObject = JObject.Parse(json);
             string accessToken = (string)jObject["accessToken"];
             var res = ReceiveUserInfoReqHandler(accessToken);
-            return UserInfoAck(sender, res.errorCode, res.userInfo, res.arrayUserDeck, res.arrayUserDice, res.arrayBaseItem, res.questInfo, res.seasonInfo);
+            return UserInfoAck(sender, res.errorCode, res.userInfo, res.arrayUserDeck, res.arrayUserDice, res.arrayBaseItem, res.questInfo, res.seasonInfo, res.arrayMailInfo);
         }
 
-        public bool UserInfoAck(ISender sender, ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo)
+        public bool UserInfoAck(ISender sender, ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo, MailInfo[] arrayMailInfo)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
@@ -70,11 +70,12 @@ namespace Template.User.RandomwarsUser.Common
             json.Add("arrayBaseItem", JsonConvert.SerializeObject(arrayBaseItem));
             json.Add("questInfo", JsonConvert.SerializeObject(questInfo));
             json.Add("seasonInfo", JsonConvert.SerializeObject(seasonInfo));
+            json.Add("arrayMailInfo", JsonConvert.SerializeObject(arrayMailInfo));
             return sender.SendHttpResult(json.ToString());
         }
 
 
-        public delegate bool ReceiveUserInfoAckDelegate(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo);
+        public delegate bool ReceiveUserInfoAckDelegate(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayBaseItem, QuestInfo questInfo, UserSeasonInfo seasonInfo, MailInfo[] arrayMailInfo);
         public ReceiveUserInfoAckDelegate ReceiveUserInfoAckHandler;
         public bool ReceiveUserInfoAck(ISender sender, byte[] msg, int length)
         {
@@ -87,7 +88,9 @@ namespace Template.User.RandomwarsUser.Common
             ItemBaseInfo[] arrayBaseItem = JsonConvert.DeserializeObject<ItemBaseInfo[]>(jObject["arrayBaseItem"].ToString());
             QuestInfo questInfo = JsonConvert.DeserializeObject<QuestInfo>(jObject["questInfo"].ToString());
             UserSeasonInfo seasonInfo = JsonConvert.DeserializeObject<UserSeasonInfo>(jObject["seasonInfo"].ToString());
-            return ReceiveUserInfoAckHandler(errorCode, userInfo, arrayUserDeck, arrayUserDice, arrayBaseItem, questInfo, seasonInfo);
+            MailInfo[] arrayMailInfo = JsonConvert.DeserializeObject<MailInfo[]>(jObject["arrayMailInfo"].ToString());
+
+            return ReceiveUserInfoAckHandler(errorCode, userInfo, arrayUserDeck, arrayUserDice, arrayBaseItem, questInfo, seasonInfo, arrayMailInfo);
         }
         #endregion    
 
