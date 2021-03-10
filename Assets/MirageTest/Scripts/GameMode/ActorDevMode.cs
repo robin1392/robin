@@ -9,11 +9,11 @@ using Debug = ED.Debug;
 
 namespace MirageTest.Scripts.GameMode
 {
-    public class BattleMode : GameModeBase
+    public class ActorDevMode : GameModeBase
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(BattleMode));
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ActorDevMode));
         
-        public BattleMode(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab, ServerObjectManager serverObjectManager) : base(gameState, playerStates, actorProxyPrefab, serverObjectManager)
+        public ActorDevMode(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab, ServerObjectManager serverObjectManager) : base(gameState, playerStates, actorProxyPrefab, serverObjectManager)
         {
         }
 
@@ -60,32 +60,38 @@ namespace MirageTest.Scripts.GameMode
 
         protected override void OnWave(int wave)
         {
-            var actorProxies = new List<ActorProxy>();
-            foreach (var playerState in PlayerStates)
-            {
-                actorProxies.AddRange(CreateMinionsByPlayerField(playerState));
-            }
+        }
 
-            if (wave > 10)
-            {
-                foreach (var actorProxy in actorProxies)
-                {
-                    ApplyDeathMatchEffect(actorProxy, wave);
-                }        
-            }
+        public void SpawnMyMinion(int diceId, byte ingameLevel, short outGameLevel, byte diceScale)
+        {
+            SpawnAtCenterField(PlayerState1, diceId, ingameLevel, outGameLevel, diceScale);
+        }
+        
+        public void SpawnEnemyMinion(int diceId, byte ingameLevel, short outGameLevel, byte diceScale)
+        {
+            SpawnAtCenterField(PlayerState2, diceId, ingameLevel, outGameLevel, diceScale);
+        }
 
+        void SpawnAtCenterField(PlayerState playerState, int diceId, byte ingameLevel, short outGameLevel, byte diceScale)
+        {
+            playerState.Deck[0] = new DeckDice()
+            {
+                diceId = diceId,
+                inGameLevel = ingameLevel,
+                outGameLevel = outGameLevel,
+            };
+
+            playerState.Field[7] = new FieldDice()
+            {
+                diceId = diceId,
+                diceScale = diceScale,
+            };
+
+            var actorProxies = CreateMinionsByPlayerField(playerState);
             foreach (var actorProxy in actorProxies)
             {
                 ServerObjectManager.Spawn(actorProxy.NetIdentity);
             }
-        }
-
-        void ApplyDeathMatchEffect(ActorProxy actorProxy, int wave)
-        {
-            actorProxy.power *= Mathf.Pow(2f, GameState.wave - 10);
-             
-            actorProxy.attackSpeed *= Mathf.Pow(0.9f, GameState.wave - 10);
-            actorProxy.attackSpeed = Mathf.Max(actorProxy.attackSpeed * 0.5f, actorProxy.attackSpeed);
         }
     }
 }

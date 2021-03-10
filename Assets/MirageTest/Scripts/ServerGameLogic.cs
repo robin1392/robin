@@ -27,11 +27,11 @@ namespace MirageTest.Scripts
         public ActorProxy actorProxyPrefab;
 
         private bool _isGameStart;
-        private GameModeBase _gameMode;
+        public GameModeBase _gameMode;
         
         public PLAY_TYPE modeType;
 
-        bool NoPlayers => 
+        bool NoPlayers =>
             _serverObjectManager
                 .SpawnedObjects
                 .Any(kvp => kvp.Value.GetComponent<PlayerProxy>() != null) == false;
@@ -58,7 +58,6 @@ namespace MirageTest.Scripts
             }
         }
         
-
         private async void Start()
         {
             await StartServerLogic();
@@ -103,6 +102,9 @@ namespace MirageTest.Scripts
                     break;
                 case PLAY_TYPE.CO_OP:
                     _gameMode = new CoopMode(gameState, playerStates, actorProxyPrefab, _serverObjectManager);
+                    break;
+                case PLAY_TYPE.ActorDev:
+                    _gameMode = new ActorDevMode(gameState, playerStates, actorProxyPrefab, _serverObjectManager);
                     break;
             }
 
@@ -217,45 +219,5 @@ namespace MirageTest.Scripts
         {
             return _gameMode.GetPlayerState(userId);
         }
-
-        [Button]
-        public void Spawn()
-        {
-            _gameMode?.Spawn();
-        }
-        
-        [Button]
-        public void GetDiceAll()
-        {
-            _gameMode.PlayerState1.GetDice();
-            _gameMode.PlayerState2.GetDice();
-        }
-
-        // private async UniTask UpdateSpawn()
-        // {
-        //     SpawnActorsForPlayer();
-        //
-        //     await UniTask.Delay(TimeSpan.FromSeconds(1000));
-        // }
-        //
-        // private void SpawnActorsForPlayer()
-        // {
-        //     for (int i = 0; i < 12; ++i)
-        //     {
-        //         SpawnActor(new Vector3(i % 4, 0, ((i / 4) + 1)), 1, 1);
-        //         SpawnActor(new Vector3(i % 4, 0, -((i / 4) + 1)), 2, 2);
-        //     }
-        // }
-        //
-        //
-        // void SpawnActor(Vector3 position, int owner, int team)
-        // {
-        //     var actor = Instantiate(actorProxyPrefab, position, Quaternion.identity);
-        //     var actorProxy = actor.GetComponent<ActorProxy>();
-        //     actorProxy.owner = owner;
-        //     actorProxy.team = team;
-        //     actorProxy.SetTeamInternal(team);
-        //     _serverObjectManager.Spawn(actor);
-        // }
     }
 }

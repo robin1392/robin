@@ -15,6 +15,7 @@ namespace _Scripts.RCore.Networking
         private NetworkClient _client;
         public int WaitForAutoConnectionMs = 2000;
         public bool AutoConnect = true;
+        public string Address = "localhost";
 
         private void Awake()
         {
@@ -41,7 +42,7 @@ namespace _Scripts.RCore.Networking
         public async UniTask Connect()
         {
             //"127.0.0.1";
-            string address = "ec2-18-183-92-138.ap-northeast-1.compute.amazonaws.com";
+            string address = Address;//"ec2-18-183-92-138.ap-northeast-1.compute.amazonaws.com";
             ushort port = GetComponent<KcpTransport>().Port;
             await Connect(address, port);
         }

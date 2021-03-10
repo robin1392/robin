@@ -6,6 +6,7 @@ public enum PLAY_TYPE
 {
     BATTLE,
     CO_OP,
+    ActorDev,
 }
 
 /// <summary>

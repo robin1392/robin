@@ -24,7 +24,6 @@ namespace MirageTest.Scripts
         [SyncVar(hook = nameof(SetHp))] public float health;
         [SyncVar] public float maxHealth;
         [SyncVar] public float power;
-        [SyncVar] public float range;
         [SyncVar] public float effect;
         [SyncVar] public float attackSpeed;
         [SyncVar] public byte diceScale;
@@ -51,6 +50,12 @@ namespace MirageTest.Scripts
 
                 return _diceInfo;
             }
+        }
+
+        public void SetDiceInfo(TDataDiceInfo info)
+        {
+            _diceInfo = info;
+            dataId = info.id;
         }
 
         private void Awake()

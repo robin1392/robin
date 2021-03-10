@@ -1,16 +1,21 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using ED;
 using Mirage;
 using MirageTest.Scripts.Entities;
+using RandomWarsResource;
 using RandomWarsResource.Data;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MirageTest.Scripts.GameMode
 {
     public abstract class GameModeBase
     {
+        protected TableData<int, TDataDiceInfo> DiceInfos;
         protected GameState GameState;
         protected PlayerState[] PlayerStates;
         protected ActorProxy ActorProxyPrefab;
@@ -20,6 +25,7 @@ namespace MirageTest.Scripts.GameMode
         public PlayerState PlayerState1 => PlayerStates[0];
         public PlayerState PlayerState2 => PlayerStates[1];
 
+
         public GameModeBase(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab,
             ServerObjectManager serverObjectManager)
         {
@@ -28,6 +34,7 @@ namespace MirageTest.Scripts.GameMode
             PlayerStates = playerStates;
             ActorProxyPrefab = actorProxyPrefab;
             ServerObjectManager = serverObjectManager;
+            DiceInfos = TableManager.Get().DiceInfo;
         }
 
         public async UniTask UpdateLogic()
@@ -35,7 +42,7 @@ namespace MirageTest.Scripts.GameMode
             OnBeforeGameStart();
 
             await UniTask.Delay(TimeSpan.FromSeconds(1));
-            
+
             await UniTask.WhenAll(UpdateWave(), UpdateSp());
         }
 
@@ -76,7 +83,7 @@ namespace MirageTest.Scripts.GameMode
                 {
                     break;
                 }
-                
+
                 foreach (var playerState in PlayerStates)
                 {
                     var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
@@ -92,6 +99,7 @@ namespace MirageTest.Scripts.GameMode
             return PlayerStates.First(ps => ps.userId == userId);
         }
 
+        [ClientRpc]
         public void OnClientDisconnected(INetworkConnection arg0)
         {
             var auth = arg0.AuthenticationData as AuthDataForConnection;
@@ -109,8 +117,73 @@ namespace MirageTest.Scripts.GameMode
 
             GameState.masterOwnerTag = newMaster.ownerTag;
         }
+        
+        protected IEnumerable<ActorProxy> CreateMinionsByPlayerField(PlayerState playerState)
+        {
+            var actorProxies = new List<ActorProxy>();
+            for (byte fieldIndex = 0; fieldIndex < playerState.Field.Count; ++fieldIndex)
+            {
+                var fieldDice = playerState.Field[fieldIndex];
+                if (fieldDice.IsEmpty)
+                {
+                    continue;
+                }
 
-        public abstract void Spawn();
+                if (DiceInfos.GetData(fieldDice.diceId, out var diceInfo) == false)
+                {
+                    ED.Debug.LogError(
+                        $"다이스정보 {fieldDice.diceId}가 없습니다. UserId : {playerState.userId} 필드 슬롯 : {fieldIndex}");
+                    return Enumerable.Empty<ActorProxy>();
+                }
+
+                var diceScale = fieldDice.diceScale;
+                var spawnCount = diceInfo.spawnMultiply;
+                if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION)
+                {
+                    spawnCount *= (diceScale + 1);
+                }
+
+                var deckDice = playerState.GetDeckDice(fieldDice.diceId);
+
+                var power = diceInfo.power
+                            + (diceInfo.powerUpgrade * deckDice.outGameLevel)
+                            + (diceInfo.powerInGameUp * deckDice.inGameLevel);
+
+                var maxHealth = diceInfo.maxHealth + (diceInfo.maxHpUpgrade * deckDice.outGameLevel) +
+                                (diceInfo.maxHpInGameUp * deckDice.inGameLevel);
+                var effect = diceInfo.effect + (diceInfo.effectUpgrade * deckDice.outGameLevel) +
+                             (diceInfo.effectInGameUp * deckDice.inGameLevel);
+                var attackSpeed = diceInfo.attackSpeed;
+
+                if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
+                {
+                    power *= diceScale + 1;
+                    maxHealth *= diceScale + 1;
+                    effect *= diceScale + 1;
+                }
+
+                for (int i = 0; i < spawnCount; ++i)
+                {
+                    var actorProxy = Object.Instantiate(ActorProxyPrefab);
+                    actorProxy.SetDiceInfo(diceInfo);
+                    actorProxy.ownerTag = playerState.ownerTag;
+                    actorProxy.actorType = ActorType.MinionFromDice;
+                    actorProxy.team = playerState.camp;
+                    actorProxy.ownerTag = playerState.ownerTag;
+                    actorProxy.spawnSlot = fieldIndex;
+                    actorProxy.power = power;
+                    actorProxy.maxHealth = maxHealth;
+                    actorProxy.health = maxHealth;
+                    actorProxy.effect = effect;
+                    actorProxy.attackSpeed = attackSpeed;
+                    actorProxy.diceScale = diceScale;
+                    actorProxy.ingameUpgradeLevel = deckDice.inGameLevel;
+                    actorProxies.Add(actorProxy);
+                }
+            }
+
+            return actorProxies;
+        }
 
         public void End()
         {
