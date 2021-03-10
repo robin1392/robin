@@ -18,6 +18,21 @@ public class PlayerProxy : NetworkBehaviour
         NetIdentity.OnStartClient.AddListener(OnStartClient);
         NetIdentity.OnStopClient.AddListener(OnStopClient);
         NetIdentity.OnStartLocalPlayer.AddListener(OnStartLocalPlayer);
+        
+        NetIdentity.OnStartServer.AddListener(OnStartServer);
+        NetIdentity.OnStopServer.AddListener(OnStopServer);
+    }
+
+    private void OnStopServer()
+    {
+        var server = Server as RWNetworkServer;
+        server.RemovePlayerProxy(this);
+    }
+
+    private void OnStartServer()
+    {
+        var server = Server as RWNetworkServer;
+        server.AddPlayerProxy(this);
     }
 
     private void OnStartClient()

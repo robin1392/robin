@@ -58,27 +58,9 @@ namespace ED
             ts_HitPos = ts_HitPosBaby;
             ts_HPBarParent.localPosition = ts_BabyHPBarPoint.localPosition;
             originRange = range;
-            range = 0.7f;
+            //KZSee:
+            //range = 0.7f;
             StartCoroutine(PolymorphCoroutine());
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
         }
 
         public void AttackEvent()
@@ -98,25 +80,11 @@ namespace ED
                 return;
             }
 
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+            if (ActorProxy.isPlayingAI)
             {
-                controller.ActionFireBullet(E_BulletType.BABYDRAGON , id, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                ActorProxy.FireBulletWithRelay(E_BulletType.BABYDRAGON, target, power,
+                    ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
             }
-
-            /*//if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
-            {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.BABYDRAGON, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-                controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
-            {
-                controller?.FireBullet(E_BulletType.BABYDRAGON, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-            }
-            */
-            
         }
 
         IEnumerator PolymorphCoroutine()
@@ -132,12 +100,13 @@ namespace ED
             animator = ani_Dragon;
             ts_HitPos = ts_HitPosDragon;
             ts_HPBarParent.localPosition = ts_DragonHPBarPoint.localPosition;
-            range = originRange;
+            // range = originRange;
             
             ps_Smoke.Play();
             power = effect;
-            maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
-            currentHealth = maxHealth;
+            //KZSee:
+            // maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
+            // currentHealth = maxHealth;
             RefreshHealthBar();
         }
     }

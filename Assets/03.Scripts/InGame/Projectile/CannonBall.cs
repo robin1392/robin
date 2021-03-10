@@ -90,23 +90,10 @@ namespace ED
                 var bs = col.GetComponentInParent<BaseStat>();
                 if (bs != null)
                 {
-                    if(( InGameManager.IsNetwork && _isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-                        controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, _damage, 0f);
+                    //KZSee:
+                    // if(( InGameManager.IsNetwork && _isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+                    //     controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, _damage, 0f);
                 }
-                
-                /*
-                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
-                if(InGameManager.IsNetwork && _isMine)
-                {
-                    controller.HitMinionDamage( true , GetComponentInParent<BaseStat>().id , _damage, 0f);
-                    //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false )
-                {
-                    controller.HitMinionDamage( true , GetComponentInParent<BaseStat>().id , _damage, 0f);
-                    //controller.targetPlayer.HitDamageMinionAndMagic(col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                }*/
             }
 
             obj_Model.SetActive(false);

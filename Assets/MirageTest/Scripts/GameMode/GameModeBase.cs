@@ -168,12 +168,12 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.SetDiceInfo(diceInfo);
                     actorProxy.ownerTag = playerState.ownerTag;
                     actorProxy.actorType = ActorType.MinionFromDice;
-                    actorProxy.team = playerState.camp;
+                    actorProxy.team = playerState.team;
                     actorProxy.ownerTag = playerState.ownerTag;
                     actorProxy.spawnSlot = fieldIndex;
                     actorProxy.power = power;
                     actorProxy.maxHealth = maxHealth;
-                    actorProxy.health = maxHealth;
+                    actorProxy.currentHealth = maxHealth;
                     actorProxy.effect = effect;
                     actorProxy.attackSpeed = attackSpeed;
                     actorProxy.diceScale = diceScale;

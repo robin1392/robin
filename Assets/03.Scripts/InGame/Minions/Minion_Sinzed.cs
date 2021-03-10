@@ -23,16 +23,10 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            switch (Global.PLAY_TYPE.BATTLE)
+            target = ActorProxy.GetEnemyTower();
+            if (target == null)
             {
-                case Global.PLAY_TYPE.BATTLE:
-                    target = controller.targetPlayer;
-                    break;
-                case Global.PLAY_TYPE.COOP:
-                    target = controller.coopPlayer;
-                    break;
-                default:
-                    return null;
+                return null;
             }
 
             if (isAlive)
@@ -41,7 +35,7 @@ namespace ED
                 {
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
                     // 이건 자신이 데미지 입는것이기 때문에...
-                    controller.HitMyMinionDamage( controller.myUID , id , currentHealth );
+                    ActorProxy.HitDamage(ActorProxy.currentHealth);
                 }
             }
             
@@ -53,7 +47,6 @@ namespace ED
             SetControllEnable(false);
             _collider.enabled = false;
             animator.SetFloat(_animatorHashMoveSpeed, 0);
-            isPlayable = false;
             StopAllCoroutines();
             InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 

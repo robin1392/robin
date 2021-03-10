@@ -42,18 +42,17 @@ namespace ED
             ps_Fire.Stop();
         }
 
-        public override void Attack()
+        public override IEnumerator Attack()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
             //if (PhotonNetwork.IsConnected && isMine)
             if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
                 base.Attack();
                 
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack" , target.id);
                 
+                ActorProxy.PlayAnimationWithRelay(_animatorHashAttack, target);
+
                 //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
                 controller.ActionFireManFire(id);
             }
@@ -64,6 +63,8 @@ namespace ED
                 animator.SetTrigger(_animatorHashAttack);
                 controller.FiremanFire(id);
             }
+
+            yield return null;
         }
 
         public void MFire(GameObject target)

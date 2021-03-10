@@ -831,64 +831,6 @@ public class NetInfo
 
 public class ConvertNetMsg
 {
-
-    #region convert minion data
-    public static MsgSyncMinionData[] ConvertNetSyncToMsg(NetSyncData syncData)
-    {
-        //syncData.netSyncMinionData.Count
-        MsgSyncMinionData[] convData = new MsgSyncMinionData[syncData.netSyncMinionData.Count];
-        // 설마 100개를 넘진...
-        for (int i = 0; i < syncData.netSyncMinionData.Count; i++)
-        {
-            convData[i] = new MsgSyncMinionData();
-            convData[i].minionId = MsgUIntToUshort(syncData.netSyncMinionData[i].minionId);
-            convData[i].minionDataId = syncData.netSyncMinionData[i].minionDataId;
-            convData[i].minionHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionHp);
-            convData[i].minionMaxHp = MsgFloatToInt(syncData.netSyncMinionData[i].minionMaxHp);
-            convData[i].minionPower = MsgFloatToInt(syncData.netSyncMinionData[i].minionPower);
-            convData[i].minionEffect = MsgFloatToInt(syncData.netSyncMinionData[i].minionEffect);
-            convData[i].minionEffectUpgrade = MsgFloatToShort(syncData.netSyncMinionData[i].minionEffectUpgrade);
-            convData[i].minionEffectIngameUpgrade =
-                MsgFloatToShort(syncData.netSyncMinionData[i].minionEffectIngameUpgrade);
-            convData[i].minionDuration = MsgFloatToShort(syncData.netSyncMinionData[i].minionDuration);
-            convData[i].minionCooltime = MsgFloatToShort(syncData.netSyncMinionData[i].minionCooltime);
-
-            convData[i].minionPos = Vector3ToMsg(syncData.netSyncMinionData[i].minionPos);
-        }
-
-        return convData;
-    }
-
-    public static List<NetSyncMinionData> ConvertMsgToSync(MsgSyncMinionData[] minionData)
-    {
-        List<NetSyncMinionData> syncData = new List<NetSyncMinionData>();
-
-        for (int i = 0; i < minionData.Length; i++)
-        {
-            if (minionData[i].minionHp <= 0) continue;
-
-            NetSyncMinionData miniondata = new NetSyncMinionData();
-
-            miniondata.minionId = minionData[i].minionId;
-            miniondata.minionDataId = minionData[i].minionDataId;
-            miniondata.minionHp = MsgIntToFloat(minionData[i].minionHp);
-            miniondata.minionMaxHp = MsgIntToFloat(minionData[i].minionMaxHp);
-            miniondata.minionPower = MsgIntToFloat(minionData[i].minionPower);
-            miniondata.minionEffect = MsgIntToFloat(minionData[i].minionEffect);
-            miniondata.minionEffectUpgrade = MsgIntToFloat(minionData[i].minionEffectUpgrade);
-            miniondata.minionEffectIngameUpgrade = MsgIntToFloat(minionData[i].minionEffectIngameUpgrade);
-            miniondata.minionDuration = MsgIntToFloat(minionData[i].minionDuration);
-            miniondata.minionCooltime = MsgIntToFloat(minionData[i].minionCooltime);
-
-            miniondata.minionPos = MsgToVector3(minionData[i].minionPos);
-
-            syncData.Add(miniondata);
-        }
-
-        return syncData;
-    }
-    #endregion
-
     #region server msg convert
 
     public static ushort[] MsgIntArrToUshortArr(int[] value)

@@ -12,29 +12,13 @@ public class Guardian_01 : Minion
         StartCoroutine(SkillCoroutine());
     }
 
-    public override void Attack()
-    {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-        {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
-        }
-        else if(InGameManager.IsNetwork == false)
-        {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
-        }
-    }
-
     IEnumerator SkillCoroutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(effectCooltime);
             
-            controller.MinionAniTrigger(id, "Skill", 0);
+            ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
 
             yield return new WaitForSeconds(0.716f);
 

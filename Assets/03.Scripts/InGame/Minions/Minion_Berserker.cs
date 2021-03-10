@@ -16,7 +16,6 @@ namespace ED
         public AudioClip clip_Whirl;
         
         private float _skillCastedTime;
-        private bool _isSkillCasting;
 
         protected override void Start()
         {
@@ -31,32 +30,15 @@ namespace ED
             _skillCastedTime = -effectCooltime;
         }
 
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false || _isSkillCasting) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack" , target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
-        
-        public void Skill()
+        public override IEnumerator Attack()
         {
             if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
                 _skillCastedTime = _spawnedTime;
-                StartCoroutine(SkillCoroutine());
+                yield return SkillCoroutine();
             }
+
+            yield return base.Attack();
         }
 
         public void SkillEvent()
@@ -67,7 +49,6 @@ namespace ED
         IEnumerator SkillCoroutine()
         {
             animator.SetTrigger(_animatorHashSkill);
-            _isSkillCasting = true;
             SetControllEnable(false);
             
             yield return new WaitForSeconds(0.6f);
@@ -86,7 +67,6 @@ namespace ED
                 }
             }
             
-            _isSkillCasting = false;
             SetControllEnable(true);
         }
     }

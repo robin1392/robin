@@ -37,25 +37,6 @@ namespace ED
             base.Initialize(destroy);
         }
 
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
-
         public void AttackEvent()
         {
             SoundManager.instance?.Play(clip_Blade);
@@ -160,7 +141,8 @@ namespace ED
             StartCoroutine(PoisonCoroutine(2f));
             yield return new WaitForSeconds(2f);
 
-            currentHealth = (eyeLevel * 15) * 0.01f * maxHealth;
+            //KZSee:
+            // currentHealth = (eyeLevel * 15) * 0.01f * maxHealth;
             RefreshHealthBar();
             animator = animator_Dead;
             animator.gameObject.SetActive(true);

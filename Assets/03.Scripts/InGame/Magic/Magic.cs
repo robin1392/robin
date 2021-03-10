@@ -48,13 +48,12 @@ namespace ED
         {
             if (image_HealthBar != null)
             {
-                image_HealthBar.fillAmount = currentHealth / maxHealth;
+                image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
             }
         }
 
         public virtual void Initialize(bool pIsBottomPlayer)
         {
-            currentHealth = maxHealth;
             isBottomPlayer = pIsBottomPlayer;
 
             destroyCallback = null;
@@ -71,16 +70,8 @@ namespace ED
                     _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
                 }
                 
-                switch (Global.PLAY_TYPE.BATTLE)
-                {
-                    case Global.PLAY_TYPE.BATTLE:
-                        image_HealthBar.color = isMine ? Color.green : Color.red;
-                        break;
-                    case Global.PLAY_TYPE.COOP:
-                        image_HealthBar.color = isBottomPlayer ? Color.green : Color.red;
-                        break;
-                }
-                
+                image_HealthBar.color = isMine ? Color.green : Color.red;
+
                 StartCoroutine(LifetimeCoroutine());
             }
         }
@@ -181,7 +172,7 @@ namespace ED
 
         public void SetTarget(uint id)
         {
-            target = InGameManager.Get().GetBaseStatFromId(id);
+            target = ActorProxy.GetBaseStatWithNetId(id);
             StartCoroutine(Move());
         }
 
@@ -234,14 +225,13 @@ namespace ED
 
         public override void HitDamage(float damage)
         {
-            currentHealth -= damage;
-
-            if (currentHealth <= 0)
+            
+            if (ActorProxy.currentHealth <= 0)
             {
                 //if (PhotonNetwork.IsConnected && !isMine) return;
                 if (InGameManager.IsNetwork && !isMine) return;
 
-                currentHealth = 0;
+                ActorProxy.currentHealth = 0;
                 EndLifetime();
             }
         }
@@ -255,8 +245,9 @@ namespace ED
                 yield return null;
                 t += Time.deltaTime;
                 
-                currentHealth -= (maxHealth / lifeTime) * Time.deltaTime;
-                if (currentHealth <= 0)
+                //KZSee: health와 라이프타임을 조합해야 할 듯 하다. 계속 체력이 줄기때문에
+                // currentHealth -= (maxHealth / lifeTime) * Time.deltaTime;
+                // if (currentHealth <= 0)
                 {
                     EndLifetime();
                     break;
@@ -272,16 +263,6 @@ namespace ED
         {
             StopAllCoroutines();
             controller.DeathMagic(id);
-        }
-
-        public void SetNetworkValue(Vector3 pos, float hp)
-        {
-            if (castType == DICE_CAST_TYPE.INSTALLATION)
-            {
-                transform.position = pos;
-                if (currentHealth > 0 && currentHealth < hp) return;
-                currentHealth = hp;
-            }
         }
     }
 }

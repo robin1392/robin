@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,8 +15,7 @@ namespace ED
         public GameObject obj_EndEffect;
         public float endEffectDuration = 1f;
         
-        [HideInInspector]
-        public PlayerController controller;
+        public RWNetworkClient client;
         [Space]
         public float moveSpeed = 0.5f;
         [HideInInspector]
@@ -44,7 +44,7 @@ namespace ED
             _poad = GetComponent<PoolObjectAutoDeactivate>();
         }
 
-        public virtual void Initialize(uint pTargetId, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public virtual void Initialize(BaseStat target, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
         {
             obj_Bullet.SetActive(true);
             if (obj_EndEffect != null) obj_EndEffect.SetActive(false);
@@ -54,8 +54,8 @@ namespace ED
             _splashRange = splashRange;
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
-            _target = InGameManager.Get().GetBaseStatFromId(pTargetId);
-            
+            _target =target;
+
             if (_target)
             {
                 this._callback = pCallback;
@@ -129,25 +129,9 @@ namespace ED
 
             _callback?.Invoke();
 
-            if( (InGameManager.IsNetwork && (_isMine || controller.isPlayingAI)) || InGameManager.IsNetwork == false)
-                controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);
-
-            /*
-            //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
-            if( InGameManager.IsNetwork && _isMine )
-            {
-                if (_target != null)
-                    controller.HitMinionDamage( true , _target.id , _damage, 0f);
-                //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,_target.id, _damage, 0f);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                if (_target != null)
-                    controller.HitMinionDamage( true , _target.id , _damage, 0f);
-                //controller.targetPlayer.HitDamageMinionAndMagic(_target.id, _damage, 0f);
-            }
-            */
+            //KZSee:
+            // if( (InGameManager.IsNetwork && (_isMine || controller.isPlayingAI)) || InGameManager.IsNetwork == false)
+            //     controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);
 
 
             if (obj_EndEffect != null)

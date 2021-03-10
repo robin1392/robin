@@ -48,7 +48,7 @@ namespace ED
         {
             base.Update();
             
-            if (isPlayable && (isMine || controller.isPlayingAI) && _spawnedTime >= _skillCastedTime + _skillCooltime)
+            if (ActorProxy.isPlayingAI && _spawnedTime >= _skillCastedTime + _skillCooltime)
             {
                 _skillCastedTime = _spawnedTime;
                 Summon();
@@ -60,25 +60,6 @@ namespace ED
             base.Initialize(destroy);
             _skillCastedTime = -_skillCooltime;
         }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
         
         public void FireArrow()
         {
@@ -89,16 +70,15 @@ namespace ED
             else if (IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
                 SetControllEnable(true);
                 return;
             }
-            
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
-            {
-                controller.ActionFireBullet(E_BulletType.NECROMANCER , id, target.id, power, bulletMoveSpeed);
-            }
 
+            if (ActorProxy.isPlayingAI)
+            {
+                ActorProxy.FireBulletWithRelay(E_BulletType.NECROMANCER, target, power, bulletMoveSpeed);;
+            }
+            
             SoundManager.instance?.Play(clip_Attack);
         }
         
@@ -129,10 +109,12 @@ namespace ED
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
                 m.power = effect + (effectUpByInGameUp * ingameUpgradeLevel);
-                m.maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
+                //KZSee:
+                // m.maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
                 m.attackSpeed = 0.8f;
                 m.moveSpeed = 1.2f;
-                m.range = 0.7f;
+                //KZSee:
+                // m.range = 0.7f;
                 m.eyeLevel = eyeLevel;
                 m.ingameUpgradeLevel = ingameUpgradeLevel;
                 m.Initialize(destroyCallback);

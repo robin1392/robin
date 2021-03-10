@@ -16,27 +16,11 @@ public class Boss3 : Minion
         base.Initialize(destroy);
     }
 
-    public override void Attack()
+    public override IEnumerator Attack()
     {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-        
-        if( controller.isPlayingAI )
-        {
-            Skill(target.id);
-            //controller.MinionAniTrigger(id, "Attack", target.id);
-            controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.Skill, target.id);
-        }
-        else if(InGameManager.IsNetwork == false)
-        {
-            Skill(target.id);
-        }
+        yield return SkillCoroutine(target.id);
     }
-
-    public void Skill(uint targetId)
-    {
-        StartCoroutine(SkillCoroutine(targetId));
-    }
-
+    
     IEnumerator SkillCoroutine(uint targetId)
     {
         BaseStat targetBS = null;
@@ -51,7 +35,6 @@ public class Boss3 : Minion
 
         if (targetBS == null) yield break;
         
-        isAttacking = true;
         SetControllEnable(false);
         
         var targetPos = targetBS.transform.position;
@@ -79,7 +62,6 @@ public class Boss3 : Minion
         
         yield return new WaitForSeconds(1f);
         
-        isAttacking = false;
         SetControllEnable(true);
     }
 }

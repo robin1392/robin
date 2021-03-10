@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts
 {
-    public class ActorProxy : NetworkBehaviour
+    public partial class ActorProxy : NetworkBehaviour
     {
         [SyncVar] public byte ownerTag;
         [SyncVar(hook = nameof(SetTeam))] public byte team;
@@ -21,13 +21,15 @@ namespace MirageTest.Scripts
         [SyncVar] public ActorType actorType;
         [SyncVar] public int dataId;
 
-        [SyncVar(hook = nameof(SetHp))] public float health;
+        [SyncVar(hook = nameof(SetHp))] public float currentHealth;
         [SyncVar] public float maxHealth;
         [SyncVar] public float power;
         [SyncVar] public float effect;
         [SyncVar] public float attackSpeed;
         [SyncVar] public byte diceScale;
         [SyncVar] public byte ingameUpgradeLevel;
+        
+        [SyncVar] public int ccState;
 
         public bool isPlayingAI;
         public bool isMovable = true;
@@ -76,7 +78,7 @@ namespace MirageTest.Scripts
             client.RemoveActorProxy(this);
             if (baseStat is Minion minion)
             {
-                minion.currentHealth = 0;
+                currentHealth = 0;
                 minion._poolObjectAutoDeactivate.Deactive();    
             }
             
@@ -113,8 +115,6 @@ namespace MirageTest.Scripts
                 var playerController = Instantiate(towerPrefab, transform);
                 baseStat = playerController;
                 baseStat.id = NetId;
-                baseStat.currentHealth = health;
-                baseStat.maxHealth = maxHealth;
                 playerController.isMine = IsLocalPlayerActor;
                 var isBottom = team == GameConstants.BottomCamp;
                 playerController.isBottomPlayer = isBottom;
@@ -143,9 +143,9 @@ namespace MirageTest.Scripts
 
                 if (m != null)
                 {
-                    m.Initialize(null);
                     baseStat = m;
-                    m.actorProxy = this;
+                    m.ActorProxy = this;
+                    m.Initialize(null);
                     m.controller = (Client as RWNetworkClient).GetTower(ownerTag);
                     m.castType = (DICE_CAST_TYPE)diceInfo.castType;
                     m.id = NetId;
@@ -153,18 +153,14 @@ namespace MirageTest.Scripts
                     m.targetMoveType = (DICE_MOVE_TYPE)diceInfo.targetMoveType;
                     m.ChangeLayer(IsBottomCamp());
                     m.power = power;
-                    m.maxHealth = maxHealth;
-                    m.currentHealth = health;
                     m.effect = effect;
                     m.effectUpByUpgrade = diceInfo.effectUpgrade;
                     m.effectUpByInGameUp = diceInfo.effectInGameUp;
                     m.effectDuration = diceInfo.effectDuration;
                     m.attackSpeed = attackSpeed;
-                    m.range = diceInfo.range;
                     m.searchRange = diceInfo.searchRange;
                     m.eyeLevel = diceScale;
                     m.ingameUpgradeLevel = ingameUpgradeLevel;
-                    m.actorProxy = this;
                 }
 
                 var setting = UI_DiceField.Get().arrSlot[spawnSlot].ps.main;
@@ -218,10 +214,10 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            baseStat.image_HealthBar.fillAmount = health / maxHealth;
+            baseStat.image_HealthBar.fillAmount = currentHealth / maxHealth;
             if (baseStat.text_Health != null)
             {
-                baseStat.text_Health.text = $"{Mathf.CeilToInt(health)}";   
+                baseStat.text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";   
             }
         }
 
@@ -256,39 +252,30 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority = false)]
         public void HitDamageOnServer(float mPower)
         {
-            health -= mPower;
-            if (health < 0)
+            currentHealth -= mPower;
+            if (currentHealth < 0)
             {
                 ServerObjectManager.Destroy(gameObject);
                 return;
             }
 
-            HitDamageOnClient();
+            HitDamageOnClient(mPower);
         }
 
         [ClientRpc]
-        public void HitDamageOnClient()
+        public void HitDamageOnClient(float mPower)
         {
             if (baseStat == null)
             {
                 return;
             }
             
+            baseStat.HitDamage(mPower);
             var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseStat.ts_HitPos.position);
             obj.rotation = Quaternion.identity;
             obj.localScale = Vector3.one * 0.6f;
             
             SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
-        }
-        
-        public void PlayAnimation(uint baseStatId, int aniEnum, uint targetId)
-        {
-            Client.SendAsync(new PlayAnimationRelayMessage()
-            {
-                actorNetId = baseStatId,
-                aniId = aniEnum,
-                targetNetId = targetId,
-            }).Forget();
         }
 
         private MsgVector2 lastSend;
@@ -337,6 +324,28 @@ namespace MirageTest.Scripts
         {
             return a.X == b.X &&
                    a.Y == b.Y;
+        }
+
+        public bool IsLocalPlayerAlly()
+        {
+            return (Client as RWNetworkClient).IsLocalPlayerAlly(team);
+        }
+
+        public BaseStat GetHighestHealthEnemy()
+        {
+            var rwNetworkClient = Client as RWNetworkClient;
+            return rwNetworkClient.GetHighestHealthEnemy(team);
+        }
+
+        public BaseStat GetBaseStatWithNetId(uint netId)
+        {
+            var actor = ClientObjectManager[netId];
+            if (actor == null)
+            {
+                return null;
+            }
+            
+            return actor.GetComponent<ActorProxy>().baseStat;
         }
     }
 }

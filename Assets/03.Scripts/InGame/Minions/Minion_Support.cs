@@ -12,33 +12,13 @@ namespace ED
         [Header("AudioClip")]
         public AudioClip clip_Jump;
         public AudioClip clip_Landing;
-        
+
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
 
             PoolManager.instance.AddPool(pref_Dust, 1);
             StartCoroutine(Jump());
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            if (_collider.enabled == false) _collider.enabled = true;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
         }
 
         private Minion GetLongDistanceFriendlyTarget()
@@ -79,8 +59,9 @@ namespace ED
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
             SoundManager.instance?.Play(clip_Jump);
-            controller.MinionAniTrigger(id, "Skill" , m.GetComponent<BaseStat>().id);
             
+            ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
+
             var ts = transform;
             var startPos = ts.position;
             var targetPos = m.transform.position;

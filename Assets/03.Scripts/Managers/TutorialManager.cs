@@ -76,7 +76,7 @@ public class TutorialManager : MonoBehaviour
         switch (stepCount)
         {
             case 6:
-                InGameManager.Get().playerController.currentHealth = InGameManager.Get().playerController.maxHealth * 0.666f;
+                InGameManager.Get().playerController.ActorProxy.currentHealth = InGameManager.Get().playerController.ActorProxy.maxHealth * 0.666f;
                 InGameManager.Get().playerController.RefreshHealthBar();
 
                 MsgMonster msg = new MsgMonster();

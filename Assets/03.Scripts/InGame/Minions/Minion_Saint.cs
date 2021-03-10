@@ -26,15 +26,16 @@ namespace ED
             healTime = -effectCooltime;
         }
 
-        public override void Attack()
+        public override IEnumerator Attack()
         {
-            if (target == null || target.currentHealth >= target.maxHealth || healTime + effectCooltime > _spawnedTime) return;
-
+            if (target == null || target.IsHpFull || healTime + effectCooltime > _spawnedTime)
+            {
+                yield break;
+            }
+            
             var pos = transform.position;
             pos.y = 0.1f;
             
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, pref_HealArea.name, pos, Quaternion.identity, Vector3.one);
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Heal", transform.position, Quaternion.identity, new Vector3(1.5f, 1.5f, 0.3f));
             controller.ActionActivePoolObject(pref_HealArea.name, pos, Quaternion.identity, Vector3.one);
             
             var cols = Physics.OverlapSphere(pos, range, friendlyLayer);
@@ -44,8 +45,7 @@ namespace ED
                 if (InGameManager.IsNetwork && isMine)
                 {
                     base.Attack();
-                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-                    controller.MinionAniTrigger(id, "Skill", target.id);
+                    ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
                     
                     foreach (var col in cols)
                     {
@@ -87,7 +87,8 @@ namespace ED
                 if (col != null && col.CompareTag($"Minion_Ground") && col.gameObject != gameObject)
                 {
                     var m = col.GetComponentInParent<Minion>();
-                    var hp = m.currentHealth / m.maxHealth;
+                    //KZSee:
+                    // var hp = m.currentHealth / m.maxHealth;
                     var dis = Vector3.Distance(transform.position, col.transform.position);
 
                     if (dis > closeToDistance && m != null && m.GetType() != typeof(Minion_Healer))
@@ -96,12 +97,13 @@ namespace ED
                         closeToTarget = col;
                     }
 
-                    if (hp < 1f && dis < distance)
-                    {
-                        oldHp = hp;
-                        firstTarget = col;
-                        distance = dis;
-                    }
+                    //KZSee:
+                    // if (hp < 1f && dis < distance)
+                    // {
+                    //     oldHp = hp;
+                    //     firstTarget = col;
+                    //     distance = dis;
+                    // }
                 }
             }
 
@@ -126,14 +128,6 @@ namespace ED
                         return null;
                 }
             }
-        }
-
-        public override void SetAnimationTrigger(string triggerName, uint targetId)
-        {
-            var target = InGameManager.Get().GetBaseStatFromId(targetId);
-            transform.LookAt(target.transform);
-            
-            animator.SetTrigger(triggerName);
         }
     }
 }

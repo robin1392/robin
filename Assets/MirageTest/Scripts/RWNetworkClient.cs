@@ -19,6 +19,7 @@ namespace MirageTest.Scripts
 
         public string localPlayerId;
         public byte localPlayerOwnerTag;
+        public PlayerState localPlayerState;
 
         public List<PlayerState> PlayerStates = new List<PlayerState>(); 
         public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
@@ -44,7 +45,6 @@ namespace MirageTest.Scripts
 
         private void OnConnectedRW(INetworkConnection arg0)
         {
-            arg0.RegisterHandler<PlayAnimationRelayMessage>(OnPlayAnimationRelay);
             arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
         }
 
@@ -63,17 +63,16 @@ namespace MirageTest.Scripts
                 Y = msg.positionY,
             };
         }
-
-        private void OnPlayAnimationRelay(PlayAnimationRelayMessage msg)
+        
+        public BaseStat GetBaseStatWithNetId(uint netId)
         {
-            var actor = _clientObjectManager[msg.actorNetId];
+            var actor = _clientObjectManager[netId];
             if (actor == null)
             {
-                return;
+                return null;
             }
             
-            var minion = actor.GetComponent<ActorProxy>().baseStat as Minion;
-            minion?.SetAnimationTrigger(((E_AniTrigger)msg.aniId).ToString(), msg.targetNetId);
+            return actor.GetComponent<ActorProxy>().baseStat;
         }
 
         private void Start()
@@ -151,6 +150,18 @@ namespace MirageTest.Scripts
         {
             var tower = Towers.Find(p => p.ownerTag == ownerTag);
             return tower.baseStat as PlayerController;
+        }
+
+        public bool IsLocalPlayerAlly(byte team)
+        {
+            return localPlayerState.team == team;
+        }
+
+        public BaseStat GetHighestHealthEnemy(byte team)
+        {
+            return ActorProxies.Where(actor => actor.team != team)
+                .OrderByDescending(actor => actor.currentHealth)
+                .First().baseStat;
         }
     }
 }

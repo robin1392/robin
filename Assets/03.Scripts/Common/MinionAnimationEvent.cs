@@ -37,7 +37,8 @@ namespace ED
                 Minion m = _minion as Minion;
                 if (m != null)
                 {
-                    m.target?.ActorProxy?.HitDamage(m.power);
+                    var damage = m.target.CalcDamage(m.power);
+                    m.target?.ActorProxy?.HitDamage(damage);
                     event_Attack?.Invoke();
                     SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
                     
@@ -49,19 +50,21 @@ namespace ED
 
         public void FireArrow()
         {
-            if( _minion != null && (InGameManager.IsNetwork && (_minion.isMine || _minion.controller.isPlayingAI) && _minion.target != null) || InGameManager.IsNetwork == false)
-            {
-                event_FireLight?.Invoke();
-                event_FireArrow?.Invoke();
-                SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_BOW_SHOT);
-            }
+            FireInternal();
         }
 
         public void FireSpear()
         {
+            FireInternal();
+        }
+
+        public void FireInternal()
+        {
+            //TODO: 발사체서 프리팹 구분이 FireArrow, FireSpear 콜백으로 구분하는 방식에서 호출 클래스에서 Switch문으로 구분하는 방식으로 바뀜. 에니메이션 이벤트를 한가지로 통일해야 함
             if( _minion != null && _minion.target != null && (InGameManager.IsNetwork && (_minion.isMine || _minion.controller.isPlayingAI) && _minion.target != null) || InGameManager.IsNetwork == false)
             {
                 event_FireLight?.Invoke();
+                event_FireArrow?.Invoke();
                 event_FireSpear?.Invoke();
                 SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_BOW_SHOT);
             }

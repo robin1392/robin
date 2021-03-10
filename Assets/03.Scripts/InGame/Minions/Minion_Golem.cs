@@ -14,41 +14,15 @@ namespace ED
         public AudioClip clip_Attack;
         public AudioClip clip_Exposion;
 
-        public override void Attack()
+        public override IEnumerator Attack()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-
             SoundManager.instance?.Play(clip_Attack);
-            
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-
-            /*base.Attack();
-            //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-            controller.MinionAniTrigger(id, "Attack");*/
+            yield return base.Attack();
         }
 
         public override BaseStat SetTarget()
         {
-            switch (Global.PLAY_TYPE.BATTLE)
-            {
-                case Global.PLAY_TYPE.BATTLE:
-                    return controller.targetPlayer;
-                case Global.PLAY_TYPE.COOP:
-                    return controller.coopPlayer;
-                default:
-                    return null;
-            }
+            return ActorProxy.GetEnemyTower();
         }
 
         public override void Death()
@@ -64,10 +38,10 @@ namespace ED
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
                 m.power = effect;
-                m.maxHealth = maxHealth * eyeLevel * 0.1f;
+                // m.maxHealth = maxHealth * eyeLevel * 0.1f;
                 m.attackSpeed = attackSpeed;
                 m.moveSpeed = moveSpeed;
-                m.range = range;
+                // m.range = range;
                 m.eyeLevel = eyeLevel;
                 m.ingameUpgradeLevel = ingameUpgradeLevel;
                 m.Initialize(destroyCallback);

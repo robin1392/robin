@@ -35,22 +35,6 @@ public class Boss5 : Minion
         _animationEvent.event_Attack += Callback_Attack;
     }
 
-    public override void Attack()
-    {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-        
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-        {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
-        }
-        else if(InGameManager.IsNetwork == false)
-        {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
-        }
-    }
-
     public override void Death()
     {
         base.Death();
@@ -85,7 +69,7 @@ public class Boss5 : Minion
     // call relay
     public void FireBullet(uint targetId)
     {
-        target = InGameManager.Get().GetBaseStatFromId(targetId);
+        target = ActorProxy.GetBaseStatWithNetId(targetId);
 
         if (target != null)
         {

@@ -929,6 +929,7 @@ namespace ED
             StartCoroutine(EndGameCoroutine(winLose, winningStreak, normalReward, streakReward, perfectReward));
         }
 
+        //KZSee: 결과처리
         IEnumerator EndGameCoroutine(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
         {
             yield return new WaitForSeconds(4f);
@@ -991,40 +992,6 @@ namespace ED
             // playerController.InGameDiceUpgrade(diceId, serverUpgradeLv);
             UI_InGame.Get().SetDeckRefresh(diceId, serverUpgradeLv);
             NetSetSp(curSp);
-        }
-
-
-        public BaseStat GetRandomPlayerUnitHighHealth(bool pIsBottomPlayer)
-        {
-            BaseStat rtn = null;
-            float hp = 0;
-
-            if (pIsBottomPlayer)
-            {
-                for (int i = 1; i < listBottomPlayer.Count; i++)
-                {
-                    if (listBottomPlayer[i].currentHealth > hp)
-                    {
-                        rtn = listBottomPlayer[i];
-                        hp = rtn.currentHealth;
-                    }
-                }
-
-                return rtn;
-            }
-            else
-            {
-                for (int i = 1; i < listTopPlayer.Count; i++)
-                {
-                    if (listTopPlayer[i].currentHealth > hp)
-                    {
-                        rtn = listTopPlayer[i];
-                        hp = rtn.currentHealth;
-                    }
-                }
-
-                return rtn;
-            }
         }
 
         public void AddPlayerUnit(bool isBottomPlayer, BaseStat bs)
@@ -1138,184 +1105,6 @@ namespace ED
                 playerController.targetPlayer.SyncMinionResume();
             }
         }
-
-        public void SendSyncAllBattleInfo()
-        {
-            //if (isGamePlaying == false)
-            //    return;
-            
-            // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
-            UI_InGamePopup.Get().ViewGameIndicator(true);
-            
-            // 미니언들 idle 강제 idle 상태로 만든다
-            // foreach (var minion in playerController.listMinion)
-            // {
-            //     minion.StopAllCoroutines();
-            //     minion.behaviourTreeOwner.behaviour.Pause();
-            //     minion.animator.SetTrigger("Idle");
-            // }
-            // foreach (var minion in playerController.targetPlayer.listMinion)
-            // {
-            //     minion.StopAllCoroutines();
-            //     minion.behaviourTreeOwner.behaviour.Pause();
-            //     minion.animator.SetTrigger("Idle");
-            // }
-            //Time.timeScale = 0;
-            
-            
-            // 현재 전장에 있는 미니언 정보들 모은다 
-            NetSyncData myData = new NetSyncData();
-            NetSyncData otherData = new NetSyncData();
-            // 내 미니언
-            myData.towerHp = playerController.currentHealth;
-            myData.userId = (uint)NetworkManager.Get().UserUID;
-            
-            // 상대방 미니언
-            otherData.towerHp = playerController.targetPlayer.currentHealth;
-            otherData.userId = (uint)NetworkManager.Get().OtherUID;
-            
-            // NetSyncData my , other 
-            if (playerController.isBottomPlayer)
-            {
-                foreach (var stat in listBottomPlayer)
-                {
-                    var m = stat as Minion;
-                    if (m != null)
-                    {
-                        Debug.LogFormat("Send My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-                        myData.netSyncMinionData.Add(m.GetNetSyncMinionData());
-                    }
-                }
-                foreach (var stat in listTopPlayer)
-                {
-                    var m = stat as Minion;
-                    if (m != null)
-                    {
-                        Debug.LogFormat("Send Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-                        otherData.netSyncMinionData.Add(m.GetNetSyncMinionData());
-                    }
-                }
-            }
-            else
-            {
-                foreach (var stat in listTopPlayer)
-                {
-                    var m = stat as Minion;
-                    if (m != null)
-                    {
-                        Debug.LogFormat("Send My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-                        myData.netSyncMinionData.Add(m.GetNetSyncMinionData());
-                    }
-                }
-                foreach (var stat in listBottomPlayer)
-                {
-                    var m = stat as Minion;
-                    if (m != null)
-                    {
-                        Debug.LogFormat("Send Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-                        otherData.netSyncMinionData.Add(m.GetNetSyncMinionData());
-                    }
-                }
-            }
-
-            MsgSyncMinionData[] syncMyMinionData = ConvertNetMsg.ConvertNetSyncToMsg(myData);
-            MsgSyncMinionData[] syncOtherMinionData = ConvertNetMsg.ConvertNetSyncToMsg(otherData);
-            
-            // 돌리던 ai false
-            NetworkManager.Get().SetOtherDisconnect(false);
-
-            //
-            //Peer peer, int playerId, MsgSyncMinionData[] syncMinionData, int otherPlayerId, MsgSyncMinionData[] otherSyncMinionData
-            // 데이터 보냄
-            SendInGameManager(GameProtocol.START_SYNC_GAME_REQ , myData.userId, playerController.spawnCount , syncMyMinionData , otherData.userId, playerController.targetPlayer.spawnCount , syncOtherMinionData);
-        }
-
-        public void SyncGameData(MsgStartSyncGameAck gameData)
-        {
-            print("recv p info " + gameData.PlayerInfo.PlayerUId + "  " + gameData.PlayerInfo.Name);
-            print("recv other info " + gameData.OtherPlayerInfo.PlayerUId + "  " + gameData.OtherPlayerInfo.Name);
-
-            wave = gameData.Wave;
-
-            // 정보 셋팅
-            NetworkManager.Get().GetNetInfo().SetPlayerInfo(gameData.PlayerInfo);
-            playerController.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.PlayerInfo.TowerHp);
-            if (playerController.currentHealth <= 20000) playerController.isHalfHealth = true;
-            playerController.RefreshHealthBar();
-            playerController.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.PlayerInfo.IsBottomPlayer);
-            playerController.transform.position = FieldManager.Get().GetPlayerPos(gameData.PlayerInfo.IsBottomPlayer);
-            playerController.isMine = true;
-            playerController.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
-            getDiceCount = gameData.PlayerInfo.GetDiceCount;
-            playerController.SetSp(gameData.PlayerInfo.CurrentSp);
-
-            NetworkManager.Get().GetNetInfo().SetOtherInfo(gameData.OtherPlayerInfo);
-            playerController.targetPlayer.currentHealth = ConvertNetMsg.MsgIntToFloat(gameData.OtherPlayerInfo.TowerHp);
-            if (playerController.targetPlayer.currentHealth <= 20000) playerController.targetPlayer.isHalfHealth = true; 
-            playerController.targetPlayer.RefreshHealthBar();
-            playerController.targetPlayer.transform.parent = FieldManager.Get().GetPlayerTrs(gameData.OtherPlayerInfo.IsBottomPlayer);
-            playerController.targetPlayer.transform.position = FieldManager.Get().GetPlayerPos(gameData.OtherPlayerInfo.IsBottomPlayer);
-            playerController.targetPlayer.isMine = false;
-            playerController.targetPlayer.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
-            playerController.targetPlayer.SetSp(gameData.OtherPlayerInfo.CurrentSp);
-            
-            CameraController.Get().Start();
-
-            //
-            SyncInfo();
-            
-            // 주사위필드 데이터 셋팅
-            playerController.targetPlayer.SetDiceField(gameData.OtherGameDiceData);
-            playerController.SetDiceField(gameData.GameDiceData);
-            
-            // 미니언 셋팅
-            playerController.SyncMinion(gameData.LastStatusRelay.MinionInfo, null, gameData.LastStatusRelay.packetCount);
-            // List<NetSyncMinionData> myMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.SyncMinionData);
-            // foreach (var data in myMinionData)
-            // {
-            //     var diceData = data_DiceInfo.GetData(data.minionDataId);
-            //     var m = playerController.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
-            //     m.ChangeLayer(gameData.PlayerInfo.IsBottomPlayer);
-            //     m.Initialize(playerController.MinionDestroyCallback);
-            //     if (data.minionDataId == 4004)
-            //     {
-            //         m.CancelInvoke("Fusion");
-            //         ((Minion_Robot)m).Transform();
-            //     }
-            //     m.SetNetSyncMinionData(data);
-            //     Debug.LogFormat("Recv My SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-            // }
-            
-            playerController.targetPlayer.SyncMinion(gameData.OtherLastStatusRelay.MinionInfo, null, gameData.OtherLastStatusRelay.packetCount);
-            // List<NetSyncMinionData> otherMinionData = ConvertNetMsg.ConvertMsgToSync(gameData.OtherSyncMinionData);
-            // foreach (var data in otherMinionData)
-            // {
-            //     var diceData = data_DiceInfo.GetData(data.minionDataId);
-            //     var m = playerController.targetPlayer.CreateMinion(FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION), data.minionPos, 1, 1, false);
-            //     m.ChangeLayer(gameData.OtherPlayerInfo.IsBottomPlayer);
-            //     m.Initialize(playerController.targetPlayer.MinionDestroyCallback);
-            //     if (data.minionDataId == 4004)
-            //     {
-            //         m.CancelInvoke("Fusion");
-            //         ((Minion_Robot)m).Transform();
-            //     }
-            //     m.SetNetSyncMinionData(data);
-            //     Debug.LogFormat("Recv Other SyncMinion ID:{0}, DataID:{1}, HP:{2}", m.id, m.diceId, m.currentHealth);
-            // }
-
-            // Spawn Count
-            //playerController.spawnCount = gameData.PlayerSpawnCount;
-            //playerController.targetPlayer.spawnCount = gameData.OtherPlayerSpawnCount;
-            
-            NetworkManager.Get().SetReconnect(false);
-
-            // timer 돌려야됨
-            NetStartGame();
-            
-            //
-            SendInGameManager(GameProtocol.END_SYNC_GAME_REQ);
-        }
-
 
         public void SyncInfo()
         {
@@ -1613,7 +1402,7 @@ namespace ED
                 {
                     MsgStartSyncGameAck startsyncack = (MsgStartSyncGameAck) param[0];
                     // 데이터로 싱크 맞추기
-                    SyncGameData(startsyncack);
+                    // SyncGameData(startsyncack);
                     
                     break;
                 }
@@ -1823,54 +1612,6 @@ namespace ED
             //     yield return null;
             // }
             yield return null;
-        }
-        
-        public BaseStat GetBaseStatFromId(uint baseStatId)
-        {
-            //KZSee : netid를 사용하면 아래 절차는 필요없게됨.
-            var actorProxy = _client.ActorProxies.Find(a => a.NetId == baseStatId);
-            return actorProxy.baseStat;
-            // int uid = 0;
-            // if (baseStatId >= 10000) uid = baseStatId / 10000;
-            // else if (baseStatId < 1000) return null;
-            // else uid = baseStatId / 1000;
-            // //int bsID = baseStatId % 10000;
-            // //Debug.Log($"GetBaseStatFromID = UID:{uid}, ID:{baseStatId}");
-            //
-            // PlayerController pc = null;
-            // if (NetworkManager.Get().UserUID == uid)
-            // {
-            //     pc = playerController;
-            // }
-            // else if (NetworkManager.Get().OtherUID == uid)
-            // {
-            //     pc = playerController.targetPlayer;
-            // }
-            // else if (NetworkManager.Get().CoopUID == uid)
-            // {
-            //     pc = playerController.coopPlayer;
-            // }
-            //
-            // if (baseStatId < 0) return null;
-            // if (pc.id == baseStatId || (baseStatId >= 10000 && baseStatId % 10000 == 0)) return pc;
-            //
-            // var minion = pc.listMinion.Find(m => m.id == baseStatId);
-            // if (minion != null)
-            // {
-            //     return minion;
-            // }
-            // else
-            // {
-            //     var magic = pc.listMagic.Find(m => m.id == baseStatId);
-            //     if (magic != null)
-            //     {
-            //         return magic;
-            //     }
-            //     else
-            //     {
-            //         return null;
-            //     }
-            // }
         }
 
         #region not use old code

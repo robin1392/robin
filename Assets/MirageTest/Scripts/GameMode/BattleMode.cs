@@ -19,11 +19,11 @@ namespace MirageTest.Scripts.GameMode
 
         protected override void OnBeforeGameStart()
         {
-            PlayerState1.camp = GameConstants.BottomCamp;
+            PlayerState1.team = GameConstants.BottomCamp;
             var player1TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: true);
             SpawnTower(PlayerState1, player1TowerPosition);
             
-            PlayerState2.camp = GameConstants.TopCamp;
+            PlayerState2.team = GameConstants.TopCamp;
             var player2TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: false);
             SpawnTower(PlayerState2, player2TowerPosition);
         }
@@ -31,7 +31,7 @@ namespace MirageTest.Scripts.GameMode
         void SpawnTower(PlayerState playerState, Vector3 position)
         {
             var tower = UnityEngine.Object.Instantiate(ActorProxyPrefab, position, Quaternion.identity);
-            tower.team = playerState.camp;
+            tower.team = playerState.team;
             tower.ownerTag = playerState.ownerTag;
             tower.actorType = ActorType.Tower;
             
@@ -52,7 +52,7 @@ namespace MirageTest.Scripts.GameMode
                 }
             }
 
-            tower.health = hp;
+            tower.currentHealth = hp;
             tower.maxHealth = hp;
                 
             ServerObjectManager.Spawn(tower.NetIdentity);

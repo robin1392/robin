@@ -21,37 +21,37 @@ namespace ED
 
         protected override void Start()
         {
-            throw new NotImplementedException();
-            
-            // _myUID = NetworkManager.Get().OtherUID;
-            // id = myUID * 10000;
-            
-            sp = 200;
-            maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
-            currentHealth = maxHealth;
-            //Mirage => PlayerState Field
-            // _arrDice = new Dice[15];
+            // throw new NotImplementedException();
             //
-            // for (var i = 0; i < arrDice.Length; i++)
+            // // _myUID = NetworkManager.Get().OtherUID;
+            // // id = myUID * 10000;
+            //
+            // sp = 200;
+            // maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
+            // currentHealth = maxHealth;
+            // //Mirage => PlayerState Field
+            // // _arrDice = new Dice[15];
+            // //
+            // // for (var i = 0; i < arrDice.Length; i++)
+            // // {
+            // //     arrDice[i] = new Dice {diceFieldNum = i};
+            // // }
+            //
+            // InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
+            //
+            // targetPlayer = InGameManager.Get().playerController;
+            // InGameManager.Get().playerController.targetPlayer = this;
+            //
+            // //AI_SetRandomDeck();
+            //
+            // NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
+            //
+            // SetColor(E_MaterialType.TOP);
+            //
+            // if (TutorialManager.isTutorial)
             // {
-            //     arrDice[i] = new Dice {diceFieldNum = i};
+            //     SetDiceFieldOnTutorial(0);
             // }
-
-            InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
-
-            targetPlayer = InGameManager.Get().playerController;
-            InGameManager.Get().playerController.targetPlayer = this;
-
-            //AI_SetRandomDeck();
-            
-            NetworkManager.Get().GetNetInfo().otherInfo.DiceLevelArray = new short[5];
-
-            SetColor(E_MaterialType.TOP);
-
-            if (TutorialManager.isTutorial)
-            {
-                SetDiceFieldOnTutorial(0);
-            }
         }
 
         //KZSEE: 에이아이 스크립트에 적용할 것

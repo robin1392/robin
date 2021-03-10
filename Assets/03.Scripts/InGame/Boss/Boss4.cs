@@ -30,21 +30,29 @@ public class Boss4 : Minion
         attackSpeed = 3f;
     }
 
-    public override void Attack()
+    public override IEnumerator Attack()
     {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+        ActorProxy.PlayAnimationWithRelay(_animatorHashAttack, target);
+
+        yield return new WaitForSeconds(2f);
         
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-        {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
-            StartCoroutine(SkillCoroutine());
-        }
-        else if(InGameManager.IsNetwork == false)
-        {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
-        }
+        ActorProxy.FireBulletWithRelay(E_BulletType.VALLISTA_SPEAR, target, power, 12f);
+        
+        
+        // yield return base.Attack();
+        // if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+        //
+        // if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+        // {
+        //     base.Attack();
+        //     controller.MinionAniTrigger(id, "Attack", target.id);
+        //     StartCoroutine(SkillCoroutine());
+        // }
+        // else if(InGameManager.IsNetwork == false)
+        // {
+        //     base.Attack();
+        //     animator.SetTrigger(_animatorHashAttack);
+        // }
     }
 
     public void Skill()
@@ -56,11 +64,6 @@ public class Boss4 : Minion
     {
         yield return new WaitForSeconds(2f);
 
-        if (InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
-        {
-            controller.NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, target.id, ConvertNetMsg.MsgFloatToInt(power), ConvertNetMsg.MsgFloatToInt(12f), (int)E_BulletType.VALLISTA_SPEAR);
-        }
-        controller.FireBullet(E_BulletType.VALLISTA_SPEAR, id, target.id, power, 12f);
-        //NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, targetId , chDamage ,chSpeed , (int)bulletType);
+        ActorProxy.FireBulletWithRelay(E_BulletType.VALLISTA_SPEAR, target, power, 12f);
     }
 }

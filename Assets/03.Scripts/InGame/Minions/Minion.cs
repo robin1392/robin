@@ -5,6 +5,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ED;
+using Mirage;
 using MirageTest.Scripts;
 using NodeCanvas.BehaviourTrees;
 using Pathfinding;
@@ -12,6 +14,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 using RandomWarsProtocol;
+using Debug = ED.Debug;
 
 namespace ED
 {
@@ -21,7 +24,7 @@ namespace ED
         STURN,
         FREEZE,
     }
-    
+
     public enum TARGET_ORDER
     {
         NONE,
@@ -30,18 +33,19 @@ namespace ED
         RANDOM
     }
 
-    public class Minion : BaseStat
+    public partial class Minion : BaseStat
     {
         public DestroyCallback destroyCallback;
+
         public delegate void DestroyCallback(Minion minion);
 
         public DICE_CAST_TYPE castType;
-        public bool targetIsEnemy = true;
-        public bool isAttacking;
         public bool isPushing;
         public bool isAttackSpeedFactorWithAnimation = true;
         protected float _spawnedTime;
+
         public float spawnedTime => _spawnedTime;
+
         //private bool _isNexusAttacked;
         protected bool isInvincibility;
         protected bool _isCloacking;
@@ -57,7 +61,11 @@ namespace ED
         protected static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
         protected static readonly int _animatorHashIdle = Animator.StringToHash("Idle");
         protected static readonly int _animatorHashAttack = Animator.StringToHash("Attack");
+        protected static readonly int _animatorHashAttack1 = Animator.StringToHash("Attack1");
+        protected static readonly int _animatorHashAttack2 = Animator.StringToHash("Attack2");
+        protected static readonly int _animatorHashAttackReady = Animator.StringToHash("AttackReady");
         protected static readonly int _animatorHashSkill = Animator.StringToHash("Skill");
+        protected static readonly int _animatorHashSkillLoop = Animator.StringToHash("SkillLoop");
 
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
@@ -68,18 +76,16 @@ namespace ED
         protected int _flagOfWarCount;
 
         protected static readonly string _scarecrow = "Scarecrow";
-        protected static readonly E_BulletType _arrow = E_BulletType.ARROW;
-        protected static readonly E_BulletType _spear = E_BulletType.SPEAR;
 
-        protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
+        protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool =
+            new Dictionary<MAZ, PoolObjectAutoDeactivate>();
+
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
         protected BaseStat _attackedTarget;
         protected Seeker _seeker;
         protected AIPath _aiPath;
         protected MinionAnimationEvent _animationEvent;
-
-        public ActorProxy actorProxy;
 
         protected virtual void Awake()
         {
@@ -143,20 +149,20 @@ namespace ED
             //     }
 
 
-                //if (PhotonNetwork.IsConnected && !isMine) return;
-                // if (InGameManager.IsNetwork && !isMine) 
-                //     return;
+            //if (PhotonNetwork.IsConnected && !isMine) return;
+            // if (InGameManager.IsNetwork && !isMine) 
+            //     return;
 
-                // if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) 
-                //     return;
-                
-                // var lTargetDir = rb.velocity;
-                // lTargetDir.y = 0.0f;
-                // //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
-                // transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
+            // if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) 
+            //     return;
+
+            // var lTargetDir = rb.velocity;
+            // lTargetDir.y = 0.0f;
+            // //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
+            // transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
             // }
         }
-        
+
 
         public virtual void Initialize(DestroyCallback destroy)
         {
@@ -166,36 +172,20 @@ namespace ED
             //     maxHealth *= Mathf.Pow(2f, eyeLevel - 1);
             //     effect *= Mathf.Pow(2f, eyeLevel - 1);
             // }
-            
+
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;
-            //agent.speed = moveSpeed;
-            //agent.enabled = true;
-            //agent.isStopped = false;
-            //agent.updatePosition = true;
-            //agent.updateRotation = true;
             _collider.enabled = true;
-            isPlayable = true;
-            isAttacking = false;
             isPolymorph = false;
             animator.gameObject.SetActive(true);
             _spawnedTime = 0;
             target = null;
             _attackedTarget = null;
             _originalAttackSpeed = attackSpeed;
-            //_isNexusAttacked = false;
-            currentHealth = maxHealth;
             image_HealthBar.fillAmount = 1f;
-            switch (Global.PLAY_TYPE.BATTLE)
-            {
-                case Global.PLAY_TYPE.BATTLE:
-                    image_HealthBar.color = isMine ? Color.green : Color.red;
-                    break;
-                case Global.PLAY_TYPE.COOP:
-                    image_HealthBar.color = isBottomPlayer ? Color.green : Color.red;
-                    break;
-            }
             
+            RefreshHealthBarColor();
+
             if (animator != null)
             {
                 animator.SetFloat(_animatorHashMoveSpeed, 0);
@@ -206,27 +196,10 @@ namespace ED
                 }
             }
 
-            //if (PhotonNetwork.IsConnected)
-            // if(InGameManager.IsNetwork)
-            // {
-            //     if (isMine || controller.isPlayingAI)
-            //     {
-            //         behaviourTreeOwner.behaviour.Resume();
-            //         //_collider.isTrigger = false;
-            //         //agent.enabled = true;
-            //     }
-            //     else
-            //     {
-            //         behaviourTreeOwner.behaviour.Pause();
-            //         //_collider.isTrigger = true;
-            //         //agent.enabled = false;
-            //     }
-            // }
-
             if (destroy != null)
             {
                 destroyCallback = null;
-                destroyCallback += destroy;    
+                destroyCallback += destroy;
             }
 
             cloackingCount = 0;
@@ -235,17 +208,18 @@ namespace ED
 
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
         }
-
+        
         public void Heal(float heal)
         {
-            if(currentHealth > 0)
+            if (ActorProxy.currentHealth > 0)
             {
-                currentHealth += heal;
+                ActorProxy.currentHealth += heal;
 
-                if(currentHealth > maxHealth)
-                {
-                    currentHealth = maxHealth;
-                }
+                //KZSee:
+                // if(currentHealth > maxHealth)
+                // {
+                //     currentHealth = maxHealth;
+                // }
 
                 PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
             }
@@ -255,40 +229,38 @@ namespace ED
 
         public override void HitDamage(float damage)
         {
-            if (isInvincibility) return;
-            if (invincibilityCount > 0)
-            {
-                invincibilityCount--;
-                if (_shield != null && invincibilityCount == 0 && _invincibilityCoroutine == null)
-                {
-                    _shield.Deactive();
-                    _shield = null;
-                }
-                return;
-            }
-            
-            currentHealth -= damage;
-            RefreshHealthBar();
-
-            if (currentHealth <= 0)
-            {
-                //if (PhotonNetwork.IsConnected && !isMine)
-                if(InGameManager.IsNetwork && !isMine && controller.isPlayingAI == false)
-                    return;
-
-                currentHealth = 0;
-                controller.DeathMinion(id);
-            }
+            // if (isInvincibility) return;
+            // if (invincibilityCount > 0)
+            // {
+            //     invincibilityCount--;
+            //     if (_shield != null && invincibilityCount == 0 && _invincibilityCoroutine == null)
+            //     {
+            //         _shield.Deactive();
+            //         _shield = null;
+            //     }
+            //
+            //     return;
+            // }
+            //
+            // ActorProxy.currentHealth -= damage;
+            // RefreshHealthBar();
+            //
+            // if (ActorProxy.currentHealth <= 0)
+            // {
+            //     //if (PhotonNetwork.IsConnected && !isMine)
+            //     if (InGameManager.IsNetwork && !isMine && controller.isPlayingAI == false)
+            //         return;
+            //
+            //     ActorProxy.currentHealth = 0;
+            //     controller.DeathMinion(id);
+            // }
         }
 
         public virtual void Death()
         {
-            currentHealth = 0;
             SetControllEnable(false);
-            isPlayable = false;
             if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             StopAllCoroutines();
-            InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
 
             destroyCallback(this);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
@@ -296,38 +268,34 @@ namespace ED
             {
                 autoDeactivate.Value.Deactive();
             }
+
             _poolObjectAutoDeactivate.Deactive();
-            
+
             SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         protected void RefreshHealthBar()
         {
-            image_HealthBar.fillAmount = currentHealth / maxHealth;
+            image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
+        }
+        
+        protected bool CanAttackTarget()
+        {
+            if (target == null || !target.isAlive)
+            {
+                return false;
+            }
+
+            if (target is Minion minion)
+            {
+                return !minion.isCloacking;
+            }
+
+            return true;
         }
 
         public virtual BaseStat SetTarget()
         {
-            BaseStat defaultTarget = null;
-
-            switch (Global.PLAY_TYPE.BATTLE)
-            {
-                case Global.PLAY_TYPE.BATTLE:
-                    defaultTarget = controller.targetPlayer;
-                    break;
-                case Global.PLAY_TYPE.COOP:
-                    defaultTarget = controller.coopPlayer;
-                    break;
-                default:
-                    defaultTarget = null;
-                    break;
-            }
-            
-            if (isPushing)
-            {
-                return null;
-            }
-
             if (_attackedTarget != null && _attackedTarget.isAlive)
             {
                 var m = _attackedTarget as Minion;
@@ -340,20 +308,8 @@ namespace ED
                     return _attackedTarget;
                 }
             }
-            
-            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
 
-            if (cols.Length == 0)
-            {
-                if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
-                {
-                    return defaultTarget;
-                }
-                else
-                {
-                    return null;
-                }
-            }
+            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
 
             Collider firstTarget = null;
             var distance = float.MaxValue;
@@ -366,9 +322,9 @@ namespace ED
                 {
                     continue;
                 }
-                
+
                 var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
-                
+
                 if (sqr < distance)
                 {
                     distance = sqr;
@@ -376,41 +332,30 @@ namespace ED
                 }
             }
 
-            if (firstTarget == null && animator != null)
+            if (firstTarget != null)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                return firstTarget.GetComponentInParent<BaseStat>();
             }
 
-            return firstTarget ? firstTarget.GetComponentInParent<BaseStat>() : defaultTarget;
+            if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
+            {
+                return ActorProxy.GetEnemyTower();
+            }
+
+            return null;
         }
 
         public void ChangeLayer(bool pIsBottomPlayer)
         {
             //isBottomPlayer = string.Compare(layerName, "BottomPlayer", StringComparison.Ordinal) == 0;
             isBottomPlayer = pIsBottomPlayer;
-            var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}"; 
+            var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
             gameObject.layer = LayerMask.NameToLayer(layerName);
 
             if (!isBottomPlayer)
             {
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
-
-            //if (PhotonNetwork.IsConnected)
-            if(InGameManager.IsNetwork)
-            {
-                //switch (PhotonManager.Instance.playType)
-                switch (Global.PLAY_TYPE.BATTLE)
-                {
-                    case Global.PLAY_TYPE.BATTLE:
-                        image_HealthBar.color = isMine ? Color.green : Color.red;
-                        break;
-                    case Global.PLAY_TYPE.COOP:
-                        image_HealthBar.color = Color.green;
-                        break;
-                }
-            }
-            InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
         }
 
         public virtual void EndGameUnit()
@@ -420,7 +365,7 @@ namespace ED
                 animator.SetFloat(_animatorHashMoveSpeed, 0);
                 animator.SetTrigger(_animatorHashIdle);
             }
-            isPlayable = false;
+
             SetControllEnable(false);
             StopAllCoroutines();
             GetComponent<NodeCanvas.BehaviourTrees.BehaviourTreeOwner>().StopBehaviour();
@@ -442,7 +387,7 @@ namespace ED
             animator.SetTrigger(_animatorHashIdle);
             throw new NotImplementedException("리지드바디를 사용하지 않고 Push구현");
             // rb.AddForce(dir.normalized * pushPower, ForceMode.Impulse);
-            if(_crtPush != null) StopCoroutine(_crtPush);
+            if (_crtPush != null) StopCoroutine(_crtPush);
             _crtPush = StartCoroutine(PushCoroutine());
         }
 
@@ -465,18 +410,20 @@ namespace ED
         public virtual void Sturn(float duration)
         {
             //StopAllCoroutines();
-            
+
             if (_dicEffectPool.ContainsKey(MAZ.STURN))
             {
                 _dicEffectPool[MAZ.STURN].Deactive();
                 _dicEffectPool.Remove(MAZ.STURN);
             }
+
             _crtPush = StartCoroutine(SturnCoroutine(duration));
         }
 
         private IEnumerator SturnCoroutine(float duration)
         {
-            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn", ts_HitPos.position + Vector3.up * 0.65f);
+            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
+                ts_HitPos.position + Vector3.up * 0.65f);
             _dicEffectPool.Add(MAZ.STURN, ad);
             //rb.velocity = Vector3.zero;
             //rb.isKinematic = true;
@@ -514,6 +461,7 @@ namespace ED
                 _shield = PoolManager.instance.ActivateObject<Shield>("Shield", transform);
                 _shield.transform.localPosition = ts_HitPos.localPosition;
             }
+
             yield return new WaitForSeconds(time);
             isInvincibility = false;
             if (_shield != null && invincibilityCount == 0)
@@ -523,74 +471,6 @@ namespace ED
             }
         }
 
-        public void SetNetworkValue(Vector3 position, float hp)//, Quaternion rotation, Vector3 velocity, float health, double sendServerTime)
-        {
-            networkPosition = position;
-            //rb.rotation = rotation;
-            //rb.velocity = velocity;
-            //agent.velocity = velocity;
-            if (currentHealth > 0 && currentHealth < hp) return;
-            
-            currentHealth = hp;
-            RefreshHealthBar();
-
-            //var lag = Mathf.Abs((float)(PhotonNetwork.Time - sendServerTime));
-            //networkPosition += rb.velocity * lag;
-        }
-        
-
-        public virtual void Attack()
-        {
-            if (isPlayable && isPushing == false)
-            {
-                _attackedTarget = target;
-                if (_crtAttack != null) StopCoroutine(_crtAttack);
-                _crtAttack = StartCoroutine(AttackCoroutine());
-            }
-        }
-
-        private IEnumerator AttackCoroutine()
-        {
-            //if (target != null && target.id == 0) _isNexusAttacked = true;
-
-            //StartCoroutine(MoveToAttackInnerRanger());
-            SetControllEnable(false);
-            isAttacking = true;
-            var pos = transform.position;
-            pos.y = 0;
-            transform.position = pos;
-            pos = target.transform.position;
-            pos.y = 0;
-            transform.LookAt(pos);
-
-            float t = 0;
-            while (t < attackSpeed)
-            {
-                t += Time.deltaTime;
-                yield return null;
-
-                if (target == null || target.isAlive == false)
-                {
-                    animator.SetTrigger(_animatorHashIdle);
-                    isAttacking = false;
-                    SetControllEnable(true);
-                    yield break;
-                }
-            }
-            
-            //yield return new WaitForSeconds(attackSpeed);
-            // while (true)
-            // {
-            //     yield return null;
-            //     if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-            //     {
-            //         break;
-            //     }
-            // }
-            if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
-            isAttacking = false;
-            SetControllEnable(true);
-        }
 
         private IEnumerator MoveToAttackInnerRanger()
         {
@@ -610,7 +490,7 @@ namespace ED
                 transform.position = endPos;
             }
         }
-        
+
         public bool IsTargetAlive()
         {
             return target != null && target.isAlive;
@@ -622,7 +502,8 @@ namespace ED
             {
                 if (target != null && isAlive)
                 {
-                    Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
+                    Vector3 targetPos = target.transform.position +
+                                        (target.transform.position - transform.position).normalized * range;
                     _seeker.StartPath(transform.position, targetPos);
                 }
             }
@@ -639,11 +520,12 @@ namespace ED
         {
 #if UNITY_EDITOR
             Debug.DrawLine(transform.position + Vector3.up * 0.1f,
-                (transform.position + Vector3.up * 0.1f) + (target.transform.position - transform.position).normalized * range,
+                (transform.position + Vector3.up * 0.1f) +
+                (target.transform.position - transform.position).normalized * range,
                 Color.yellow);
 #endif
             //return Vector3.Distance(transform.position, target.transform.position) < range + 0.1f;
-            
+
             if (target != null)
             {
                 if (Vector3.Distance(transform.position, target.transform.position) <= range)
@@ -670,15 +552,16 @@ namespace ED
 
             return false;
         }
-        
+
         public bool IsTargetInnerRange(BaseStat bs)
         {
 #if UNITY_EDITOR
             Debug.DrawLine(transform.position + Vector3.up * 0.1f,
-                (transform.position + Vector3.up * 0.1f) + (target.transform.position - transform.position).normalized * range,
+                (transform.position + Vector3.up * 0.1f) +
+                (target.transform.position - transform.position).normalized * range,
                 Color.yellow);
 #endif
-            
+
             if (bs != null)
             {
                 return Vector3.Distance(transform.position, bs.transform.position) <= range;
@@ -714,7 +597,7 @@ namespace ED
                 SetAttackSpeedFactor(1f);
             }
         }
-        
+
         public void SetAttackSpeedFactor(float factor)
         {
             attackSpeed = _originalAttackSpeed * factor;
@@ -724,33 +607,7 @@ namespace ED
         public void SetControllEnable(bool isEnable)
         {
             isPushing = !isEnable;
-            isAttacking = !isEnable;
             _aiPath.isStopped = !isEnable;
-            //rb.isKinematic = isEnable;
-
-            // if (isMine || controller.isPlayingAI)
-            // {
-            //     // if (isEnable && agent.enabled == false)
-            //     // {
-            //     //     agent.enabled = true;
-            //     //     agent.isStopped = false;
-            //     //     agent.updatePosition = true;
-            //     //     agent.updateRotation = true;
-            //     // }
-            //     // else if (isEnable == false && agent.enabled == true)
-            //     // {
-            //     //     agent.isStopped = true;
-            //     //     agent.updatePosition = false;
-            //     //     agent.updateRotation = false;
-            //     //     agent.enabled = false;
-            //     // }
-            //
-            //     if (isEnable == false)
-            //     {
-            //         rb.velocity = Vector3.zero;
-            //         //agent.velocity = Vector3.zero;
-            //     }
-            // }
         }
 
         public void Scarecrow(float duration)
@@ -766,14 +623,14 @@ namespace ED
             animator.gameObject.SetActive(false);
             var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(_scarecrow, transform.position);
             ad.Deactive(duration);
-            
+
             yield return new WaitForSeconds(duration);
 
             isPolymorph = false;
             SetControllEnable(true);
             animator.gameObject.SetActive(true);
         }
-        
+
         protected bool IsFriendlyLayer(GameObject targetObject)
         {
             switch (targetMoveType)
@@ -781,10 +638,12 @@ namespace ED
                 case DICE_MOVE_TYPE.GROUND:
                     return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer");
                 case DICE_MOVE_TYPE.FLYING:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                    return targetObject.layer ==
+                           LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
                 case DICE_MOVE_TYPE.ALL:
-                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer") 
-                           || targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer")
+                           || targetObject.layer ==
+                           LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
                 default:
                     return false;
             }
@@ -816,63 +675,175 @@ namespace ED
             }
         }
 
-        public virtual void SetAnimationTrigger(string triggerName, uint targetId)
-        {
-            var target = ActorProxy.ClientObjectManager[targetId]?.gameObject;
-            if (target != null) transform.LookAt(target.transform);
-            
-            animator.SetTrigger(triggerName);
-        }
-
         public void CancelAttack()
         {
             if (_crtAttack != null) StopCoroutine((_crtAttack));
             if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
-            isAttacking = false;
             SetControllEnable(true);
 
             animator.SetTrigger(_animatorHashIdle);
-            controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY, isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int)E_AniTrigger.Idle, target.id);
+            controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY,
+                isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int) E_AniTrigger.Idle,
+                target.id);
+        }
+    }
+}
+
+namespace MirageTest.Scripts
+{
+    public partial class ActorProxy
+    {
+        void RelayPlayAnimation(int aniHash, BaseStat target)
+        {
+            uint targetId = 0;
+            if (target != null)
+            {
+                targetId = target.id;
+            }
+            PlayAnimationRelayServer(Client.Connection.Identity.NetId, aniHash, targetId);
+        }
+        
+        [ServerRpc]
+        public void PlayAnimationRelayServer(uint senderNetId, int aniHash, uint targetID)
+        {
+            foreach (var con in Server.connections)
+            {
+                if (senderNetId == con.Identity.NetId)
+                {
+                    continue;
+                }
+
+                RelayPlayAnimationOnClient(con, aniHash, targetID);
+            }
         }
 
-        public NetSyncMinionData GetNetSyncMinionData()
+        [ClientRpc(target = Mirage.Client.Connection)]
+        public void RelayPlayAnimationOnClient(INetworkConnection con, int aniHash, uint targetID)
         {
-            NetSyncMinionData data = new NetSyncMinionData();
+            var target = GetBaseStatWithNetId(targetID);
+            if (target == null)
+            {
+                return;
+            }
+            
+            PlayAnimationWithRelay(aniHash, target);
+        }
+        
+        public void PlayAnimationWithRelay(int hash, BaseStat target)
+        {
+            PlayAnimationInternal(hash, target);
+            RelayPlayAnimation(hash, target);
+        }
+        
+        void PlayAnimationInternal(int hash, BaseStat target)
+        {
+            if (target != null) transform.LookAt(target.transform);
+            baseStat.animator.SetTrigger(hash);
+        }
+        
+        
+        void RelayFireBullet(E_BulletType arrow, BaseStat target, float f, float bulletMoveSpeed)
+        {
+            uint targetId = 0;
+            if (target != null)
+            {
+                targetId = target.id;
+            }
+            
+            RelayFireBulletOnServer(Client.Connection.Identity.NetId, arrow, targetId, f, bulletMoveSpeed);
+        }
+        
+        [ServerRpc]
+        public void RelayFireBulletOnServer(uint senderNetId, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed)
+        {
+            foreach (var con in Server.connections)
+            {
+                if (senderNetId == con.Identity.NetId)
+                {
+                    continue;
+                }
 
-            data.minionId = id;
-            data.minionDataId = diceId;
-            data.minionHp = currentHealth;
-            data.minionMaxHp = maxHealth;
-            data.minionPower = power;
-            data.minionEffect = effect;
-            data.minionEffectUpgrade = effectUpByUpgrade;
-            data.minionEffectIngameUpgrade = effectUpByInGameUp;
-            data.minionDuration = effectDuration;
-            data.minionCooltime = effectCooltime;
-            data.minionPos = transform.position;
-
-            return data;
+                RelayFireBulletOnClient(con, arrow, targetID, f, bulletMoveSpeed);
+            }
         }
 
-        public void SetNetSyncMinionData(NetSyncMinionData data)
+        [ClientRpc(target = Mirage.Client.Connection)]
+        public void RelayFireBulletOnClient(INetworkConnection con, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed)
         {
-            id = data.minionId;
-            //KZSee:
-            if (id > controller.subSpawnCount) controller.subSpawnCount = id + 1;
-            diceId = data.minionDataId;
-            currentHealth = data.minionHp;
-            maxHealth = data.minionMaxHp;
-            RefreshHealthBar();
-            power = data.minionPower;
-            effect = data.minionEffect;
-            effectUpByUpgrade = data.minionEffectUpgrade;
-            effectUpByInGameUp = data.minionEffectIngameUpgrade;
-            effectDuration = data.minionDuration;
-            effectCooltime = data.minionCooltime;
+            var target = GetBaseStatWithNetId(targetID);
+            if (target == null)
+            {
+                return;
+            }
+            
+            FireBulletWithRelay(arrow, target, f, bulletMoveSpeed);
+        }
 
-            //agent.enabled = false;
-            transform.position = data.minionPos;
-            //agent.enabled = true;
+        public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
+        {
+            FireBulletInternal(bulletType, target, damage, moveSpeed);
+            RelayFireBullet(bulletType, target, damage, moveSpeed);
+        }
+
+        void FireBulletInternal(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
+        {
+            if (baseStat == null)
+            {
+                return;
+            }
+
+            Vector3 startPos = baseStat.ts_ShootingPos.position;
+            Bullet bullet = null;
+            switch (bulletType)
+            {
+                case E_BulletType.ARROW:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Arrow", startPos);
+                    break;
+                case E_BulletType.SPEAR:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
+                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
+                    break;
+                case E_BulletType.NECROMANCER:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
+                    break;
+                case E_BulletType.MAGICIAN:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Magician_Bullet", startPos);
+                    break;
+                case E_BulletType.ARBITER:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Arbiter_Bullet", startPos);
+                    break;
+                case E_BulletType.BABYDRAGON:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
+                    break;
+                case E_BulletType.VALLISTA_SPEAR:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Vallista_Spear", startPos);
+                    break;
+                case E_BulletType.GUARDIAN3_BULLET:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Guardian3_Bullet", startPos);
+                    break;
+                case E_BulletType.POSU_BULLET:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Posu_Bullet", startPos);
+                    break;
+                case E_BulletType.TURRET_BULLET:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Turret_Bullet", startPos);
+                    break;
+            }
+
+            if (bullet != null)
+            {
+                var rwClient = Client as RWNetworkClient;
+                bullet.transform.rotation = Quaternion.identity;
+                bullet.client = rwClient;
+                bullet.moveSpeed = moveSpeed;
+                bullet.Initialize(target, damage, 0, rwClient.IsPlayingAI, IsBottomCamp());
+            }
+        }
+
+        public BaseStat GetEnemyTower()
+        {
+            var rwClient = Client as RWNetworkClient;
+            var enemyTower = rwClient.Towers.Find(t => t.team != team);
+            return enemyTower.baseStat;
         }
     }
 }

@@ -24,23 +24,13 @@ namespace ED
             ae.event_FireLight += FireLightOn;
         }
 
-        public override void Attack()
+        public override IEnumerator Attack()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , target.isFlying ? "Attack2" : "Attack1");
-                controller.MinionAniTrigger(id, target.isFlying ? "Attack2" : "Attack1", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(target.isFlying ? "Attack2" : "Attack1");
-            }
+            _attackedTarget = target;
+            var aniHash = target.isFlying ? _animatorHashAttack2 : _animatorHashAttack1; 
+            ActorProxy.PlayAnimationWithRelay(aniHash, target);
+
+            yield return AttackCoroutine();
         }
 
         public override BaseStat SetTarget()
@@ -124,45 +114,15 @@ namespace ED
             else if (IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
                 SetControllEnable(true);
                 return;
             }
 
-            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+            if (ActorProxy.isPlayingAI)
             {
-                if (target.isFlying)
-                    controller.ActionFireBullet(_spear, id, target.id, effect, bulletMoveSpeedByFlying);
-                else 
-                    controller.ActionFireBullet(_arrow, id, target.id, power, bulletMoveSpeedByGround);
+                var bulletSpeed = target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround;
+                ActorProxy.FireBulletWithRelay(E_BulletType.SPEAR, target, effect, bulletSpeed);
             }
-            
-            /*//if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
-            {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET,
-                    //ts_ShootingPos.position, target.id, target.isFlying ? effect : power, 
-                    //target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround);
-
-                    if (target.isFlying)
-                        controller.ActionFireBullet(_spear, ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
-                    else 
-                        controller.ActionFireBullet(_arrow, ts_ShootingPos2.position, target.id, power, bulletMoveSpeedByGround);
-                                    
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
-            {
-                if (target.isFlying)
-                {
-                    controller.FireBullet(_spear, ts_ShootingPos2.position, target.id, effect, bulletMoveSpeedByFlying);
-                }
-                else
-                {
-                    controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeedByGround);
-                }
-            }*/
-            
         }
         
         public void FireLightOn()

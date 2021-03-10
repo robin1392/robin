@@ -16,7 +16,7 @@ namespace ED
         public Transform ts_Head;
         public Transform ts_ShootPoint;
         //public float lifeTime = 20f;
-        public Minion flyingTarget;
+        public BaseStat flyingTarget;
         public float bulletMoveSpeed = 6f;
         public float shootTime = 0;
 
@@ -85,23 +85,10 @@ namespace ED
 
         public void FireArrow()
         {
-            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+            if (ActorProxy.isPlayingAI)
             {
-                controller.ActionFireBullet(E_BulletType.TURRET_BULLET , id, flyingTarget.id, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.TURRET_BULLET, flyingTarget, power, bulletMoveSpeed);
             }
-            
-            /*//if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && isMine)
-            {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-                controller.ActionFireArrow(ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                controller.FireBullet(E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-            }*/
         }
 
         private void SetFlyingTarget()
@@ -136,7 +123,7 @@ namespace ED
 
         public void LookAndAniTrigger(uint targetId)
         {
-            flyingTarget = InGameManager.Get().GetBaseStatFromId(targetId) as Minion;
+            flyingTarget = ActorProxy.GetBaseStatWithNetId(targetId);
             if (flyingTarget)
             {
                 StartCoroutine(LookAtTargetCoroutine());

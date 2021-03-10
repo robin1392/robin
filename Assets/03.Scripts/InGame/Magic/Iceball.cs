@@ -42,7 +42,7 @@ namespace ED
             {
                 yield return null;
                 
-                target = InGameManager.Get().GetRandomPlayerUnitHighHealth(!isBottomPlayer);
+                target = ActorProxy.GetHighestHealthEnemy();
                 if (target != null)
                 {
                     //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);

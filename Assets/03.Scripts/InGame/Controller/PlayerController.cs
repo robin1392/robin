@@ -159,47 +159,6 @@ namespace ED
 
         protected virtual void StartPlayerControll()
         {
-            return;
-            
-            // _myUID = isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID;
-            // id = myUID * 10000;
-            
-            if (isMine && NetworkManager.Get().IsConnect())
-            {
-                NetworkManager.Get().event_OtherPause.AddListener(OtherPlayerPause);
-                StartCoroutine(HitDamageQueueCoroutine());
-            }
-
-            isHalfHealth = false;
-
-            sp = isMine ? NetworkManager.Get().GetNetInfo().playerInfo.CurrentSp : NetworkManager.Get().GetNetInfo().otherInfo.CurrentSp;
-            maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
-            
-            currentHealth = maxHealth;
-            RefreshHealthBar();
-
-            // for (var i = 0; i < arrDice.Length; i++)
-            // {
-            //     arrDice[i] = new Dice {diceFieldNum = i};
-            // }
-            // uiDiceField = FindObjectOfType<UI_DiceField>();
-            // uiDiceField.SetField(arrDice);
-
-            
-            InGameManager.Get().AddPlayerUnit(isBottomPlayer, this);
-            
-            SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
-
-            //
-            //StartCoroutine(SyncMinionStatus());
-            StartSyncMinion();
-
-            //Mirage => PlayerState로 이동
-            // for(int i = 0; i < arrDiceDeck.Length; i++)
-            // {
-            //     _dicMaxDamage.Add(arrDiceDeck[i].id, 0f);
-            //     _dicMaxEye.Add(arrDiceDeck[i].id, 0);
-            // }
         }
         
         protected override void SetColor(E_MaterialType type)
@@ -336,7 +295,7 @@ namespace ED
 
                     m.id = boss.Id;
                     m.diceId = boss.DataId;
-                    m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
+                    // m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
                     m.power = ConvertNetMsg.MsgIntToFloat(boss.Power);
                     m.effect = ConvertNetMsg.MsgIntToFloat(boss.Effect);
                     m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.Duration);
@@ -346,7 +305,8 @@ namespace ED
                     m.ChangeLayer(isBottomPlayer);
                     m.attackSpeed = ConvertNetMsg.MsgShortToFloat(boss.AttackSpeed);
                     m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
-                    m.range = 0.7f;
+                    //KZSee:
+                    // m.range = 0.7f;
                     m.eyeLevel = 1;
                     m.ingameUpgradeLevel = 0;
                     m.Initialize(MinionDestroyCallback);
@@ -414,8 +374,8 @@ namespace ED
         {
             if (isAlive)
             {
-                image_HealthBar.fillAmount = currentHealth / maxHealth;
-                text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+                image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
+                text_Health.text = $"{Mathf.CeilToInt(ActorProxy.currentHealth)}";
             }
         }
 
@@ -711,7 +671,7 @@ namespace ED
                         m.power *= Mathf.Pow(2f, wave - 10);
                     }
                     
-                    m.maxHealth = (data.maxHealth + (data.maxHpInGameUp * upgradeLevel)) * Mathf.Pow(2f, eyeLevel - 1);
+                    // m.maxHealth = (data.maxHealth + (data.maxHpInGameUp * upgradeLevel)) * Mathf.Pow(2f, eyeLevel - 1);
                     m.effect = (data.effect + (data.effectInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
                     m.effectUpByUpgrade = data.effectUpgrade;
                     m.effectUpByInGameUp = data.effectInGameUp;
@@ -720,7 +680,7 @@ namespace ED
                 
                     m.attackSpeed = data.attackSpeed;
                     m.moveSpeed = data.moveSpeed;
-                    m.range = data.range;
+                    // m.range = data.range;
                     m.searchRange = data.searchRange;
                     m.eyeLevel = eyeLevel;
                     m.upgradeLevel = upgradeLevel;
@@ -1015,11 +975,13 @@ namespace ED
             var m = CreateMinion(pref_Guardian, pos);
             m.targetMoveType = DICE_MOVE_TYPE.GROUND;
             m.ChangeLayer(isBottomPlayer);
-            m.power = maxHealth / 50f;
-            m.maxHealth = maxHealth * 0.3333f;
+            //KZSee:
+            // m.power = maxHealth / 50f;
+            // m.maxHealth = maxHealth * 0.3333f;
             m.attackSpeed = 0.8f;
             m.moveSpeed = 0.8f;
-            m.range = 0.7f;
+            //KZSee:
+            // m.range = 0.7f;
             m.eyeLevel = 1;
             m.ingameUpgradeLevel = 0;
             m.Initialize(MinionDestroyCallback);
@@ -1030,50 +992,24 @@ namespace ED
         
         public override void HitDamage(float damage)
         {
-            if (currentHealth > 0)
-            {
-                currentHealth -= damage;
-                
-                if (currentHealth <= 0)
-                {
-                    currentHealth = 0;
-                    
-                    Death();
-                }
-                else if(InGameManager.Get().isGamePlaying &&
-                    ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
-                         && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
-                {
-                    UI_InGamePopup.Get().ViewLowHP(true);
-                }
-            }
-        }
-
-        public virtual void HitDamageWithID(int id, float curHP)
-        {
-            if (this.id == id)
-            {
-                currentHealth = curHP;
-                RefreshHealthBar();
-                
-                if (curHP > 0)
-                {
-                    HitDamage(0);
-                }
-                else
-                {
-                    Death();
-                }
-            }
-            else
-            {
-                var minion = listMinion.Find(m => m.id == id);
-                if (minion != null)
-                {
-                    minion.currentHealth = curHP;
-                    minion.HitDamage(0);
-                }
-            }
+            //KZSee:
+            // if (currentHealth > 0)
+            // {
+            //     currentHealth -= damage;
+            //     
+            //     if (currentHealth <= 0)
+            //     {
+            //         currentHealth = 0;
+            //         
+            //         Death();
+            //     }
+            //     else if(InGameManager.Get().isGamePlaying &&
+            //         ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
+            //              && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
+            //     {
+            //         UI_InGamePopup.Get().ViewLowHP(true);
+            //     }
+            // }
         }
 
         // 네트워크 변환하면서 필요없어지긴 했으나 
@@ -1429,20 +1365,6 @@ namespace ED
         
         #endregion
         
-        
-        
-        public void MinionAniTrigger(uint baseStatId , string aniName , uint targetId )
-        {
-            if (isPlayingAI)
-            {
-                int aniEnum = (int)UnityUtil.StringToEnum<E_AniTrigger>(aniName);
-                // 
-                // NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY , baseStatId , aniEnum , targetId);
-                ActorProxy.PlayAnimation(baseStatId, aniEnum, targetId);
-            }
-            SetMinionAnimationTrigger(baseStatId, aniName , targetId);
-        }
-        
         public void ActionSendMsg(uint bastStatId, string msgFunc, uint targetId = 0)
         {
             if (InGameManager.IsNetwork && (isMine || isPlayingAI))
@@ -1746,7 +1668,7 @@ namespace ED
 
         public void SetMinionTarget(uint bastStatId , uint targetId )
         {
-            listMinion.Find(minion => minion.id == bastStatId).target = InGameManager.Get().GetBaseStatFromId(targetId);
+            
         }
 
         public void SetMinionInvincibility(uint bastStatId ,float time)
@@ -1803,128 +1725,11 @@ namespace ED
         }
         
         #endregion
-        
-        
-        
-        
-        
-        
-        #region fire bullet
 
-        public void ActionFireBullet(E_BulletType bulletType, uint id, uint targetId, float damage, float moveSpeed)
-        {
-            if (InGameManager.IsNetwork && (isMine || isPlayingAI))
-            {
-                // int x = ConvertNetMsg.MsgFloatToInt(startPos.x );
-                // int y = ConvertNetMsg.MsgFloatToInt(startPos.y );
-                // int z = ConvertNetMsg.MsgFloatToInt(startPos.z );
-                int chDamage = ConvertNetMsg.MsgFloatToInt(damage );
-                int chSpeed = ConvertNetMsg.MsgFloatToInt(moveSpeed );
-                
-                //NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
-                NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY, id, targetId , chDamage ,chSpeed , (int)bulletType);
-            }
-            FireBullet(bulletType , id, targetId, damage, moveSpeed);
-        }
-        
-        public void FireBullet(E_BulletType bulletType, uint id, uint targetId, float damage, float moveSpeed)
-        {
-            Bullet b = null;
-            BaseStat bs = listMinion.Find(m => m.id == id);
-            if(bs == null) bs = listMagic.Find(m => m.id == id);
 
-            if(bs != null)
-            {
-                Vector3 startPos = bs.ts_ShootingPos.position;
 
-                switch(bulletType)
-                {
-                case E_BulletType.ARROW:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Arrow", startPos);
-                    break;
-                case E_BulletType.SPEAR:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
-                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
-                    break;
-                case E_BulletType.NECROMANCER:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
-                    break;
-                case E_BulletType.MAGICIAN:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Magician_Bullet", startPos);
-                    break;
-                case E_BulletType.ARBITER:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Arbiter_Bullet", startPos);
-                    break;
-                case E_BulletType.BABYDRAGON:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
-                    break;
-                case E_BulletType.VALLISTA_SPEAR:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Vallista_Spear", startPos);
-                    break;
-                case E_BulletType.GUARDIAN3_BULLET:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Guardian3_Bullet", startPos);
-                    break;
-                case E_BulletType.POSU_BULLET:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Posu_Bullet", startPos);
-                    break;
-                case E_BulletType.TURRET_BULLET:
-                    b = PoolManager.instance.ActivateObject<Bullet>("Turret_Bullet", startPos);
-                    break;
-                }
 
-                if(b != null)
-                {
-                    b.transform.rotation = Quaternion.identity;
-                    b.controller = this;
-                    b.moveSpeed = moveSpeed;
-                    b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-                }
-            }
-        }
-        
-        /*public void ActionFireArrow(Vector3 startPos , uint targetId , float damage , float moveSpeed)
-        {
-            if (InGameManager.IsNetwork && isMine)
-            {
-                int x = (int) (startPos.x * Global.g_networkBaseValue);
-                int y = (int) (startPos.y * Global.g_networkBaseValue);
-                int z = (int) (startPos.z * Global.g_networkBaseValue);
-                int chDamage = (int) (damage * Global.g_networkBaseValue);
-                int chSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
-                
-                NetSendPlayer(GameProtocol.FIRE_ARROW_RELAY , NetworkManager.Get().UserUID , targetId , x, y, z ,chDamage , chSpeed);
-            }
-            FireArrow(startPos, targetId, damage, moveSpeed);
-        }
-        public void ActionNecroBullet(Vector3 shootPos , uint targetId , float damage , float moveSpeed)
-        {
-            if (InGameManager.IsNetwork && isMine)
-            {
-                int convDamage = (int) (damage * Global.g_networkBaseValue);
-                int convSpeed = (int) (moveSpeed * Global.g_networkBaseValue);
-                NetSendPlayer(GameProtocol.NECROMANCER_BULLET_RELAY, NetworkManager.Get().UserUID, shootPos , targetId ,convDamage , convSpeed );
-            }
-            FireNecromancerBullet(shootPos, targetId, damage, moveSpeed);
-        }
-        public void ActionFireSpear(Vector3 startPos, uint targetId, float damage, float moveSpeed)
-        {            
-            if (InGameManager.IsNetwork && isMine)
-            {
-                int chDamage = (int)(damage *  Global.g_networkBaseValue);
-                int chSpeed = (int)(moveSpeed *  Global.g_networkBaseValue);
-                
-                NetSendPlayer(GameProtocol.FIRE_SPEAR_RELAY, NetworkManager.Get().UserUID, startPos , targetId , chDamage , chSpeed);
-            }
-            FireSpear(startPos, targetId, damage, moveSpeed);
 
-        }*/
-        
-        #endregion
-        
-        
-        
-        
-        
         #region fire cannon
         public void ActionFireCannonBall(E_CannonType type, Vector3 shootPos , Vector3 targetPos , float damage , float range )
         {
@@ -1958,7 +1763,7 @@ namespace ED
             if (b != null)
             {
                 b.transform.rotation = Quaternion.identity;
-                b.controller = this;
+                b.client = ActorProxy.Client as RWNetworkClient;
                 b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
             }
         }
@@ -1975,49 +1780,7 @@ namespace ED
         }*/
         
         #endregion
-        
-        
-        
-        #region skill & effect
-        
-        public void FireArrow(Vector3 startPos, uint targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Bullet", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
-        public void FireSpear(Vector3 startPos, uint targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
-        
-        public void FireNecromancerBullet(Vector3 startPos, uint targetId, float damage, float moveSpeed)
-        {
-            var b = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.moveSpeed = moveSpeed;
-                b.Initialize(targetId, damage, 0, isMine, isBottomPlayer);
-            }
-        }
 
-        #endregion
-        
-        
         #region sync dice field
 
         public void SetDiceField(MsgGameDice[] arrDiceData)
@@ -2122,7 +1885,7 @@ namespace ED
                                 msgMinionInfos[i].Id = ConvertNetMsg.MsgUIntToUshort(listMinion[i].id);
                                 msgMinionInfos[i].DiceId = ConvertNetMsg.MsgIntToUshort(listMinion[i].diceId);
                                 msgMinionInfos[i].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMinion[i].eyeLevel);
-                                msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
+                                // msgMinionInfos[i].Hp = ConvertNetMsg.MsgFloatToInt(listMinion[i].currentHealth);
                                 // msgMinionInfos[i].Pos =
                                 //     ConvertNetMsg.Vector3ToMsg(new Vector2(listMinion[i].rb.position.x,
                                 //         listMinion[i].rb.position.z));
@@ -2139,7 +1902,7 @@ namespace ED
                                 msgMinionInfos[loop].Id = ConvertNetMsg.MsgUIntToUshort(listMagic[num].id);
                                 msgMinionInfos[loop].DiceId = ConvertNetMsg.MsgIntToUshort(listMagic[i].diceId);
                                 msgMinionInfos[loop].DiceEyeLevel = ConvertNetMsg.MsgIntToByte(listMagic[num].eyeLevel);
-                                msgMinionInfos[loop].Hp = ConvertNetMsg.MsgFloatToInt(listMagic[num].currentHealth);
+                                // msgMinionInfos[loop].Hp = ConvertNetMsg.MsgFloatToInt(listMagic[num].currentHealth);
                                 float x = Mathf.Clamp(listMagic[num].transform.position.x, -12.7f, 12.7f);
                                 float z = Mathf.Clamp(listMagic[num].transform.position.z, -12.7f, 12.7f);
                                 msgMinionInfos[loop].Pos = ConvertNetMsg.Vector3ToMsg(new Vector2(x, z));
@@ -2289,336 +2052,6 @@ namespace ED
                         packetCount++;
                     }
                 }
-            }
-        }
-
-        public virtual void SyncMinion(MsgMinionInfo[] msgMinionInfos, MsgMinionStatus relay, int packetCount)
-        {
-            // for (var i = 0; i < minionCount && i < listMinion.Count; i++)
-            // {
-            //     Vector3 chPos = ConvertNetMsg.MsgToVector3(msgPos[i]);
-            //     float chHP = ConvertNetMsg.MsgIntToFloat(minionHP[i]);
-            //     listMinion[i].SetNetworkValue(chPos, chHP);
-            // }
-
-            for (int i = 0; i < msgMinionInfos.Length; i++)
-            {
-                //if (_listDeadID.Contains(msgMinionInfos[i].Id)) continue;
-
-                int id = 0;
-                TDataDiceInfo data = null;
-                TDataGuardianInfo gData = null;
-                DICE_CAST_TYPE type = DICE_CAST_TYPE.MINION;
-                if (TableManager.Get().DiceInfo.GetData(d => d.id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out data) == false)
-                {
-                    if (TableManager.Get().GuardianInfo.GetData(g => g.id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out gData) == false)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        type = (DICE_CAST_TYPE) gData.castType;
-                    }
-                }
-                else
-                {
-                    type = (DICE_CAST_TYPE) data.castType;
-                }
-
-                BaseStat bs = null; //listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
-                if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO || type == DICE_CAST_TYPE.GUARDIAN)
-                {
-                    bs = listMinion.Find(minion => minion.id == msgMinionInfos[i].Id);
-                }
-                else if (type == DICE_CAST_TYPE.MAGIC || type == DICE_CAST_TYPE.INSTALLATION)
-                {
-                    bs = listMagic.Find(magic => magic.id == msgMinionInfos[i].Id);
-                }
-
-                if (bs != null)
-                {
-                    if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO || type == DICE_CAST_TYPE.GUARDIAN)
-                    {
-                        ((Minion) bs).SetNetworkValue(
-                            ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
-                            ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
-                        );
-                    }
-                    else if (type == DICE_CAST_TYPE.MAGIC || type == DICE_CAST_TYPE.INSTALLATION) // 설치형 오브젝트일 경우
-                    {
-                        ((Magic) bs).SetNetworkValue(
-                            ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos),
-                            ConvertNetMsg.MsgIntToFloat(msgMinionInfos[i].Hp)
-                        );
-                    }
-                }
-                else // 유닛이 없을 경우 생성하기 (ex. 재접속)
-                {
-                    if (data == null)
-                    {
-                        if (gData != null)
-                        {
-                            data = new TDataDiceInfo();
-                            data.color = gData.color;
-                            data.effect = gData.effect;
-                            data.effectUpgrade = gData.effectUpgrade;
-                            data.effectInGameUp = gData.effectInGameUp;
-                            data.grade = gData.grade;
-                            data.id = gData.id;
-                            data.name = gData.name;
-                            data.power = gData.power;
-                            data.powerUpgrade = gData.powerUpgrade;
-                            data.powerInGameUp = gData.powerInGameUp;
-                            data.maxHealth = gData.maxHealth;
-                            data.maxHpUpgrade = gData.maxHpUpgrade;
-                            data.maxHpInGameUp = gData.maxHpInGameUp;
-                            data.range = gData.range;
-                            data.attackSpeed = gData.attackSpeed;
-                            data.attackType = gData.attackType;
-                            data.cardName = gData.cardName;
-                            data.castType = gData.castType;
-                            data.effectCooltime = gData.effectCooltime;
-                            data.effectDuration = gData.effectDuration;
-                            data.enableDice = gData.enableDice;
-                            data.iconName = gData.iconName;
-                            data.illustName = gData.illustName;
-                            data.loadType = gData.loadType;
-                            data.modelName = gData.modelName;
-                            data.moveSpeed = gData.moveSpeed;
-                            data.moveType = gData.moveType;
-                            data.prefabName = gData.prefabName;
-                            data.searchRange = gData.searchRange;
-                            data.skillIndex = gData.skillIndex;
-                            data.spawnMultiply = gData.spawnMultiply;
-                            data.targetMoveType = gData.targetMoveType;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                    
-                    int wave = InGameManager.Get().wave;
-                    var myInfo = isMine
-                        ? NetworkManager.Get().GetNetInfo().playerInfo
-                        : NetworkManager.Get().GetNetInfo().otherInfo;
-                    var arrDiceLevel = myInfo.DiceLevelArray;
-                    
-                    if (type == DICE_CAST_TYPE.MINION || type == DICE_CAST_TYPE.HERO)
-                    {
-                        // 수호자일 경우 생성하지 않고 넘어가자
-                        if (msgMinionInfos[i].Id < 10000) continue;
-                        
-                        TDataDiceInfo diceData;
-                        if (TableManager.Get().DiceInfo.GetData(ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out diceData) == false)
-                        {
-                            continue;
-                        }
-                        
-                        GameObject prefab = FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MINION);
-
-                        if (prefab == null) continue;
-                            
-                        //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
-                        int diceIdIndex = 0;
-                        // for (int j = 0; j < arrDiceDeck.Length; j++)
-                        // {
-                        //     if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
-                        //     {
-                        //         diceIdIndex = j;
-                        //         break;
-                        //     }
-                        // }
-                            
-                        var minion = CreateMinion(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
-                        var diceLevel = arrDiceLevel[diceIdIndex];
-                        // var ingameUpgradeLevel = arrUpgradeLevel[diceIdIndex];
-                        var ingameUpgradeLevel = 1;
-                        
-                        minion.id = msgMinionInfos[i].Id;
-                        minion.diceId = data.id;
-                        minion.controller = this;
-                        minion.isMine = isMine;
-                        minion.targetMoveType = (DICE_MOVE_TYPE) data.targetMoveType;
-                        minion.ChangeLayer(isBottomPlayer);
-
-                        minion.power = data.power + (data.powerUpgrade * diceLevel) +
-                                       (data.powerInGameUp * ingameUpgradeLevel);
-                        if (wave > 10)
-                        {
-                            minion.power *= Mathf.Pow(2f, wave - 10);
-                        }
-
-                        minion.maxHealth = data.maxHealth + (data.maxHpUpgrade * diceLevel) +
-                                           (data.maxHpInGameUp * ingameUpgradeLevel);
-                        minion.currentHealth = msgMinionInfos[i].Hp;
-                        minion.HitDamage(0);
-                        minion.effect = data.effect + (data.effectUpgrade * diceLevel) +
-                                        (data.effectInGameUp * ingameUpgradeLevel);
-                        minion.effectDuration = data.effectDuration;
-                        minion.effectCooltime = data.effectCooltime;
-                        minion.attackSpeed = data.attackSpeed;
-                        minion.moveSpeed = data.moveSpeed;
-                        minion.range = data.range;
-                        minion.searchRange = data.searchRange;
-                        minion.eyeLevel = msgMinionInfos[i].DiceEyeLevel;
-                        minion.ingameUpgradeLevel = ingameUpgradeLevel;
-
-                        if ((DICE_CAST_TYPE) data.castType == DICE_CAST_TYPE.HERO)
-                        {
-                            minion.power *= minion.eyeLevel + 1;
-                            minion.maxHealth *= minion.eyeLevel + 1;
-                            minion.effect *= minion.eyeLevel + 1;
-                        }
-
-                        minion.Initialize(MinionDestroyCallback);
-
-                        if (!listMinion.Contains(minion))
-                            listMinion.Add(minion);
-                    }
-                    else if (type == DICE_CAST_TYPE.MAGIC || type == DICE_CAST_TYPE.INSTALLATION) // 설치형 오브젝트일 경우
-                    {
-                        TDataDiceInfo diceData;
-                        if (TableManager.Get().DiceInfo.GetData(ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId), out diceData) == false)
-                        {
-                            continue;
-                        }
-                        
-                        GameObject prefab = FileHelper.LoadPrefab(diceData.prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
-                        if (prefab == null) continue;
-                        // GameObject prefab = FileHelper.LoadPrefab(
-                        //     arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
-                        
-                        //Debug.Log($"CastMagic: prefName:{arrDiceDeck[msgMinionInfos[i].DiceIdIndex].prefabName}, objIsNull:{prefab == null}");
-                        //var data = arrDiceDeck[msgMinionInfos[i].DiceIdIndex];
-                        int diceIdIndex = 0;
-                        // for (int j = 0; j < arrDiceDeck.Length; j++)
-                        // {
-                        //     if (arrDiceDeck[j].id == ConvertNetMsg.MsgUshortToInt(msgMinionInfos[i].DiceId))
-                        //     {
-                        //         diceIdIndex = j;
-                        //         break;
-                        //     }
-                        // }
-                        var magic = CastMagic(prefab, ConvertNetMsg.MsgToVector3(msgMinionInfos[i].Pos));
-                        var diceLevel = arrDiceLevel[diceIdIndex];
-                        var ingameUpgradeLevel = 1;//arrUpgradeLevel[diceIdIndex];
-
-                        magic.id = msgMinionInfos[i].Id;
-                        magic.diceId = data.id;
-                        magic.controller = this;
-                        magic.isMine = isMine;
-                        magic.targetMoveType = (DICE_MOVE_TYPE) data.targetMoveType;
-                        magic.castType = (DICE_CAST_TYPE) data.castType;
-
-                        magic.power = data.power + (data.powerUpgrade * diceLevel) +
-                                       (data.powerInGameUp * ingameUpgradeLevel);
-                        if (wave > 10)
-                        {
-                            magic.power *= Mathf.Pow(2f, wave - 10);
-                        }
-
-                        magic.maxHealth = data.maxHealth + (data.maxHpUpgrade * diceLevel) +
-                                           (data.maxHpInGameUp * ingameUpgradeLevel);
-                        magic.currentHealth = msgMinionInfos[i].Hp;
-                        magic.HitDamage(0);
-                        magic.effect = data.effect + (data.effectUpgrade * diceLevel) +
-                                        (data.effectInGameUp * ingameUpgradeLevel);
-                        magic.effectDuration = data.effectDuration;
-                        magic.effectCooltime = data.effectCooltime;
-                        magic.attackSpeed = data.attackSpeed;
-                        magic.moveSpeed = data.moveSpeed;
-                        magic.range = data.range;
-                        magic.searchRange = data.searchRange;
-                        magic.eyeLevel = msgMinionInfos[i].DiceEyeLevel;
-                        magic.upgradeLevel = ingameUpgradeLevel;
-
-                        magic.Initialize(isBottomPlayer);
-
-                        if (!listMagic.Contains(magic))
-                            listMagic.Add(magic);
-                    }
-                }
-            }
-
-            if (relay != null)
-            {
-                var dic = MsgMinionStatusToDictionary(relay);
-
-#if ENABLE_LOG
-                string str = "MINION_STATUS_RELAY -> Dictionary count : " + dic.Keys.Count;
-#endif
-
-                foreach (var msg in dic)
-                {
-                    #region LOG
-
-#if ENABLE_LOG
-                    str += string.Format("\n{0} -> List count : {1}", msg.Key, msg.Value.Count);
-                    switch (msg.Key)
-                    {
-                        case GameProtocol.HIT_DAMAGE_MINION_RELAY:
-                            foreach (var value in msg.Value)
-                            {
-                                MsgHitDamageMinionRelay m = (MsgHitDamageMinionRelay) value;
-                                str += string.Format("\n      ID:{0}, DMG:{1}", m.Id, m.Damage);
-                            }
-
-                            break;
-                        case GameProtocol.HEAL_MINION_RELAY:
-                            foreach (var value in msg.Value)
-                            {
-                                MsgHealMinionRelay m = (MsgHealMinionRelay) value;
-                                str += string.Format("\n      ID:{0}, HEAL:{1}", m.Id, m.Heal);
-                            }
-
-                            break;
-                        case GameProtocol.DESTROY_MINION_RELAY:
-                            foreach (var value in msg.Value)
-                            {
-                                MsgDestroyMinionRelay m = (MsgDestroyMinionRelay) value;
-                                str += string.Format("\n      ID:{0}", m.Id);
-                            }
-
-                            break;
-                        case GameProtocol.DESTROY_MAGIC_RELAY:
-                            foreach (var value in msg.Value)
-                            {
-                                MsgDestroyMagicRelay m = (MsgDestroyMagicRelay) value;
-                                str += string.Format("\n      ID:{0}", m.BaseStatId);
-                            }
-
-                            break;
-                        case GameProtocol.ACTIVATE_POOL_OBJECT_RELAY:
-                            foreach (var value in msg.Value)
-                            {
-                                MsgActivatePoolObjectRelay m = (MsgActivatePoolObjectRelay) value;
-                                str += string.Format("\n      POOL: {0}", ((E_PoolName) m.PoolName).ToString());
-                            }
-
-                            break;
-                    }
-#endif
-
-                    #endregion
-                    
-                    if (msg.Value.Count > 0)
-                    {
-                        foreach (var obj in msg.Value)
-                        {
-                            //if (NetworkManager.Get().OtherUID == uid)
-                            NetRecvPlayer(msg.Key, obj);
-                            //else if (NetworkManager.Get().CoopUID == uid)
-//                            coopPlayer.NetRecvPlayer(msg.Key, obj);
-                        }
-                    }
-                }
-                
-
-#if ENABLE_LOG
-                UnityUtil.Print(string.Format("RECV [{0}][{1}] : ", myUID, packetCount), str, "green");
-#endif
-                
             }
         }
 
@@ -2799,25 +2232,6 @@ namespace ED
             }
         }
 
-        private void HitDamageAck(int uid, MsgDamageResult[] msg)
-        {
-            for (int i = 0; i < msg.Length; i++)
-            {
-                if (NetworkManager.Get().UserUID == uid)
-                {
-                    InGameManager.Get().playerController.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
-                }
-                else if (NetworkManager.Get().OtherUID == uid)
-                {
-                    InGameManager.Get().playerController.targetPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
-                }
-                else if (NetworkManager.Get().CoopUID == uid)
-                {
-                    InGameManager.Get().playerController.coopPlayer.HitDamageWithID(msg[i].Id, ConvertNetMsg.MsgIntToFloat(msg[i].Hp));
-                }
-            }
-        }
-        
         public void NetRecvPlayer(GameProtocol protocol, params object[] param)
         {
             //Debug.Log("RECV : " + protocol.ToString());
@@ -2828,19 +2242,19 @@ namespace ED
             
             switch (protocol)
             {
-                case GameProtocol.HIT_DAMAGE_ACK:
-                {
-                    // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
-                    MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
-                    HitDamageAck(damageack.PlayerUId, damageack.DamageResult);
-                    break;
-                }
-                case GameProtocol.HIT_DAMAGE_NOTIFY:
-                {
-                    MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
-                    HitDamageAck(damagenoti.PlayerUId, damagenoti.DamageResult);
-                    break;
-                }
+                // case GameProtocol.HIT_DAMAGE_ACK:
+                // {
+                //     // 기본적으로 타워가 맞은것을 상대방이 맞앗다고 보내는거니까...
+                //     MsgHitDamageAck damageack = (MsgHitDamageAck) param[0];
+                //     HitDamageAck(damageack.PlayerUId, damageack.DamageResult);
+                //     break;
+                // }
+                // case GameProtocol.HIT_DAMAGE_NOTIFY:
+                // {
+                //     MsgHitDamageNotify damagenoti = (MsgHitDamageNotify) param[0];
+                //     HitDamageAck(damagenoti.PlayerUId, damagenoti.DamageResult);
+                //     break;
+                // }
                 case GameProtocol.HIT_DAMAGE_MINION_RELAY:
                 {
                     MsgHitDamageMinionRelay hitminion = (MsgHitDamageMinionRelay) param[0];
@@ -3082,16 +2496,8 @@ namespace ED
                     float calDamage = ConvertNetMsg.MsgIntToFloat(arrrelay.Damage );
                     float calSpeed = ConvertNetMsg.MsgIntToFloat(arrrelay.MoveSpeed );
                     E_BulletType bulletType = (E_BulletType) arrrelay.Type;
-                    
-                    //NetSendPlayer(GameProtocol.FIRE_BULLET_RELAY , myUID, id, targetId , chDamage ,chSpeed , (int)bulletType);
-                    
-                    // if (NetworkManager.Get().UserUID == arrrelay.PlayerUId)
-                    //     InGameManager.Get().playerController.FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
-                    // else if (NetworkManager.Get().OtherUID == arrrelay.PlayerUId )
-                    //     InGameManager.Get().playerController.targetPlayer.FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
-                    // else if (NetworkManager.Get().CoopUID == arrrelay.PlayerUId )
-                    //     InGameManager.Get().playerController.coopPlayer.FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
-                    FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
+                  
+                    // FireBullet(bulletType , arrrelay.Id , arrrelay.targetId, calDamage , calSpeed);
                     
                     break;
                 }
@@ -3112,7 +2518,7 @@ namespace ED
                     //     InGameManager.Get().playerController.targetPlayer.FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
                     // else if (NetworkManager.Get().CoopUID == arrrelay.PlayerUId )
                     //     InGameManager.Get().playerController.coopPlayer.FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
-                    FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
+                    // FireArrow(sPos , arrrelay.Id, calDamage , calSpeed);
                     break;
                 }
                 case GameProtocol.FIRE_SPEAR_RELAY:
@@ -3129,7 +2535,7 @@ namespace ED
                     //     InGameManager.Get().playerController.targetPlayer.FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
                     // else if (NetworkManager.Get().CoopUID == spearrelay.PlayerUId )
                     //     InGameManager.Get().playerController.coopPlayer.FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
-                    FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
+                    // FireSpear(startPos, spearrelay.TargetId, chDamage, chSpeed);
                     
                     break;
                 }
@@ -3145,7 +2551,7 @@ namespace ED
                     //     InGameManager.Get().playerController.targetPlayer.FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
                     // else if (NetworkManager.Get().CoopUID == necrorelay.PlayerUId )
                     //     InGameManager.Get().playerController.coopPlayer.FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
-                    FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
+                    // FireNecromancerBullet(shootPos , necrorelay.TargetId , necrorelay.Power , necrorelay.BulletMoveSpeed );
                     
                     break;
                 }
@@ -3306,19 +2712,18 @@ namespace ED
                 
                 case GameProtocol.MINION_STATUS_RELAY:
                 {
-                    MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
-                    
-                    if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
-                        InGameManager.Get().playerController.targetPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
-                    else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
-                        InGameManager.Get().playerController.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
-                    else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
-                        InGameManager.Get().playerController.coopPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
+                    // MsgMinionStatusRelay statusrelay = (MsgMinionStatusRelay) param[0];
+                    //
+                    // if (NetworkManager.Get().OtherUID == statusrelay.PlayerUId)
+                    //     InGameManager.Get().playerController.targetPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
+                    // else if (NetworkManager.Get().UserUID == statusrelay.PlayerUId)
+                    //     InGameManager.Get().playerController.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
+                    // else if (NetworkManager.Get().CoopUID == statusrelay.PlayerUId)
+                    //     InGameManager.Get().playerController.coopPlayer.SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
                     //SyncMinion(statusrelay.MinionInfo, statusrelay.Relay, statusrelay.packetCount);
 
                     break;
                 }
-                
             }
         }
 

@@ -20,8 +20,7 @@ namespace ED
 
             // controller.robotPieceCount++;
             // controller.robotEyeTotalLevel += eyeLevel;
-
-            currentHealth = 0;
+            
             SetControllEnable(false);
             _collider.enabled = false;
             animator.gameObject.SetActive(false);
@@ -32,25 +31,7 @@ namespace ED
             SetParts();
             Invoke("Fusion", 1.6f);
         }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
+        
 
         public void Fusion()
         {
@@ -65,7 +46,6 @@ namespace ED
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 
                 SetControllEnable(false);
-                isPlayable = false;
                 if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
                 StopAllCoroutines();
                 InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
@@ -87,7 +67,6 @@ namespace ED
             else
             {
                 SetControllEnable(false);
-                isPlayable = false;
                 if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
                 StopAllCoroutines();
                 InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
@@ -119,9 +98,10 @@ namespace ED
 
         public void Transform()
         {
-            maxHealth *= controller.robotEyeTotalLevel;
+            //KZSee:
+            // maxHealth *= controller.robotEyeTotalLevel;
             controller.robotEyeTotalLevel = 0;
-            currentHealth = maxHealth;
+            // currentHealth = maxHealth;
 
             _collider.enabled = true;
             foreach (var tsPart in arrTs_Parts)

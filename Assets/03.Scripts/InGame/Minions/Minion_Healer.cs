@@ -38,27 +38,13 @@ namespace ED
             SoundManager.instance?.Play(clip_Heal);
         }
 
-        public override void Attack()
+        public override IEnumerator Attack()
         {
-            if (target == null || !IsFriendlyLayer(target.gameObject) || target.currentHealth >= target.maxHealth) return;
+            _attackedTarget = target;
+            ActorProxy.PlayAnimationWithRelay(_animatorHashAttack, target);
             
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-                
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HEALMINION, target.id, effect);
-                controller.HealerMinion(target.id, effect);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-                controller.HealMinion(target.id, effect);
-            }
+            yield return AttackCoroutine();
+            controller.HealerMinion(target.id, effect);
         }
 
         public override BaseStat SetTarget()
@@ -75,7 +61,7 @@ namespace ED
                 if (col != null && col.CompareTag($"Minion_Ground") && col.gameObject != gameObject)
                 {
                     var m = col.GetComponentInParent<Minion>();
-                    var hp = m.currentHealth / m.maxHealth;
+                    // var hp = m.currentHealth / m.maxHealth;
                     var dis = Vector3.Distance(transform.position, col.transform.position);
 
                     if (dis < closeToDistance && m.GetType() != typeof(Minion_Healer))
@@ -84,12 +70,12 @@ namespace ED
                         closeToTarget = col;
                     }
 
-                    if (hp < 1f && dis < distance)
-                    {
-                        oldHp = hp;
-                        firstTarget = col;
-                        distance = dis;
-                    }
+                    // if (hp < 1f && dis < distance)
+                    // {
+                    //     oldHp = hp;
+                    //     firstTarget = col;
+                    //     distance = dis;
+                    // }
                 }
             }
 

@@ -130,7 +130,7 @@ namespace ED
 
         public void LookAndAniTrigger(uint targetId)
         {
-            longTarget = InGameManager.Get().GetBaseStatFromId(targetId)?.transform;
+            longTarget = ActorProxy.GetBaseStatWithNetId(targetId)?.transform;
             if (longTarget != null)
             {
                 StartCoroutine(LookAtTargetCoroutine());

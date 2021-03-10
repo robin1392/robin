@@ -15,8 +15,8 @@ namespace MirageTest.Scripts.GameMode
 
         protected override void OnBeforeGameStart()
         {
-            PlayerState1.camp = GameConstants.BottomCamp;
-            PlayerState2.camp = GameConstants.BottomCamp;
+            PlayerState1.team = GameConstants.BottomCamp;
+            PlayerState2.team = GameConstants.BottomCamp;
             
             SpawnAllyTower();
         }
@@ -50,7 +50,7 @@ namespace MirageTest.Scripts.GameMode
                 }
             }
 
-            tower.health = hp;
+            tower.currentHealth = hp;
             tower.maxHealth = hp;
                 
             ServerObjectManager.Spawn(tower.NetIdentity);

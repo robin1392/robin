@@ -38,27 +38,6 @@ namespace ED
             _skillCastedTime = -effectCooltime;
         }
 
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
-
         public void Skill()
         {
             if (_spawnedTime >= _skillCastedTime + effectCooltime)
@@ -118,7 +97,7 @@ namespace ED
 
         public void DashMessage(uint targetId)
         {
-            var bs = InGameManager.Get().GetBaseStatFromId(targetId);
+            var bs =  ActorProxy.GetBaseStatWithNetId(targetId);
             if (bs != null)
             {
                 Transform ts = bs.transform;
@@ -132,10 +111,13 @@ namespace ED
             if (dashTarget != null) t.LookAt(dashTarget.position);
             isPushing = true;
             animator.SetTrigger(_animatorHashSkill);
+
+            if (dashTarget != null)
+            {
+                ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, dashTarget.GetComponentInParent<BaseStat>());    
+            }
             
-            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            if (dashTarget != null) controller.MinionAniTrigger(id, "Skill", dashTarget.GetComponentInParent<BaseStat>().id);
-            
+
             var ts = transform;
             while (dashTarget != null)
             {

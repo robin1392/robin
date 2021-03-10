@@ -34,27 +34,7 @@ namespace ED
             SetControllEnable(false);
             Skill();
         }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            ps_Rush.Stop();
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
-
+        
         public void Skill()
         {
             //if (_spawnedTime >= _skillCastedTime + _skillCooltime)
@@ -132,15 +112,13 @@ namespace ED
 #endif
             
             
-            // dash
-            //isPushing = true;
+            
             _collider.enabled = false;
             ps_Rush.Play();
             var ts = transform;
             
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "SkillLoop", 0);
-            
+            ActorProxy.PlayAnimationWithRelay(_animatorHashSkillLoop, null);
+
             float tick = 0.1f;
             while (dashTarget != null)
             {
@@ -177,15 +155,13 @@ namespace ED
                 yield return null;
             }
             
-            //rb.velocity = Vector3.zero;
-            //isPushing = false;
+            
             dashTarget = null;
             SetControllEnable(true);
             _collider.enabled = true;
             ps_Rush.Stop();
             
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
-            controller.MinionAniTrigger(id, "Idle" , 0);
+            ActorProxy.PlayAnimationWithRelay(_animatorHashIdle, null);
         }
 
         public override void Sturn(float duration)

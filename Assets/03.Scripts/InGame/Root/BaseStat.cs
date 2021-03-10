@@ -20,8 +20,6 @@ namespace ED
         [Header("Base Stat")]
         public DICE_MOVE_TYPE targetMoveType;
         public float power;
-        public float maxHealth;
-        public float currentHealth;
         public float effect;
         public float effectUpByUpgrade;
         public float effectUpByInGameUp;
@@ -29,7 +27,7 @@ namespace ED
         public float effectCooltime;
         public float attackSpeed;
         public float moveSpeed;
-        public float range;
+        public float range => ActorProxy.diceInfo.range;
         public float searchRange = 2f;
         public bool isBottomPlayer;
 
@@ -40,9 +38,9 @@ namespace ED
         [Header("UI Link")]
         public Image image_HealthBar;
         public Text text_Health;
-
-        public bool isPlayable = true;
-        public bool isAlive => currentHealth > 0;
+        
+        public bool isAlive => ActorProxy.currentHealth > 0;
+        public bool IsHpFull => ActorProxy.currentHealth >= ActorProxy.maxHealth;
 
         private static readonly string GROUND_TAG_NAME = "Minion_Ground";
         private static readonly string FLYING_TAG_NAME = "Minion_Flying";
@@ -58,7 +56,6 @@ namespace ED
             }
         }
 
-        //public int targetLayer => 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
         public int targetLayer
         {
             get
@@ -77,8 +74,7 @@ namespace ED
                 }
             }
         }
-
-        //public int friendlyLayer => 1 << LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer");
+        
         public int friendlyLayer
         {
             get
@@ -103,6 +99,11 @@ namespace ED
         protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
 
         protected virtual void Start() { }
+
+        protected void RefreshHealthBarColor()
+        {
+            image_HealthBar.color = ActorProxy.IsLocalPlayerAlly() ? Color.green : Color.red;
+        }
         
         protected virtual void SetColor(E_MaterialType type)
         {
@@ -172,8 +173,24 @@ namespace ED
                 }
             }
         }
+        
+        public virtual void SetAnimationTrigger(string triggerName, uint targetId)
+        {
+            var targetTransform = ActorProxy.ClientObjectManager[targetId]?.transform;
+            SetAnimationTrigger(triggerName, targetTransform);
+        }
 
-        //[PunRPC]
+        public void SetAnimationTrigger(string triggerName, Transform targetTransform)
+        {
+            if (targetTransform != null) transform.LookAt(targetTransform);
+            animator.SetTrigger(triggerName);
+        }
+
+        public virtual float CalcDamage(float power)
+        {
+            return power;
+        }
+        
         public virtual void HitDamage(float damage) { }
 
         protected bool IsTargetLayer(GameObject targetObject)

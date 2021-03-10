@@ -21,7 +21,7 @@ namespace MirageTest.Scripts.Entities
         [SyncVar] public string nickName;
         //TODO: 꼭 필요한지 고민이 필요함. connectionId는 재접 시 바뀌어서 사용못하고, 유저아이디는 스트링이어서 부담스러움.
         [SyncVar] public byte ownerTag;  
-        [SyncVar] public byte camp;  //상단 캠프, 하단 캠프 두가지로 나뉨. 팀의 개념
+        [SyncVar] public byte team;  //상단 캠프, 하단 캠프 두가지로 나뉨. 팀의 개념
         [SyncVar(hook = nameof(SetSpGrade))] public int spGrade;
         [SyncVar(hook = nameof(SetSp))] public int sp;
         [SyncVar(hook = nameof(SetGetDiceCount))] public int getDiceCount;
@@ -83,6 +83,7 @@ namespace MirageTest.Scripts.Entities
             if (client.localPlayerId == userId)
             {
                 client.localPlayerOwnerTag = ownerTag;
+                CameraController.Get().UpdateCameraRotation(team == GameConstants.BottomCamp);
             }
             
             EnableUI = client.enableUI;

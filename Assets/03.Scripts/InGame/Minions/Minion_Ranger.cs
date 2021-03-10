@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using ED;
+using Mirage;
 using UnityEngine;
 
 namespace ED
@@ -22,51 +25,21 @@ namespace ED
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-
             if (light_Fire != null) light_Fire.enabled = false;
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
         }
 
         public void FireArrow()
         {
+            //TODO: 빼도 되지 않을까? 고민해보자
             if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
                 return;
             }
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+
+            if (ActorProxy.isPlayingAI)
             {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(_arrow ,id, target.id, power, bulletMoveSpeed);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                controller.FireBullet(_arrow, id, target.id, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.ARROW, target, power, bulletMoveSpeed);
             }
         }
 
@@ -93,3 +66,4 @@ namespace ED
         }
     }
 }
+

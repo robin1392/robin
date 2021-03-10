@@ -52,7 +52,7 @@ namespace ED
             }
         }
 
-        public override void Attack()
+        public override IEnumerator Attack()
         {
             _attackedTarget = target;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
@@ -87,6 +87,7 @@ namespace ED
             }
             
             if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
+            yield break;
         }
 
         public override void Death()
@@ -126,7 +127,7 @@ namespace ED
                     //if (arr[i] == 0) _listTarget.Add(controller.targetPlayer);
                     //else _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
                     
-                    _listTarget.Add(InGameManager.Get().GetBaseStatFromId(arr[i]));
+                    _listTarget.Add(ActorProxy.GetBaseStatWithNetId(arr[i]));
                 }
             }
         }
