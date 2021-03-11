@@ -252,39 +252,41 @@ public class UI_Popup_Quest : UI_Popup
         if (errorCode == ERandomwarsQuestErrorCode.Success)
         {
             arrIsDailyRewardGet = dailyRewardInfo.DayRewardState;
-            List<ItemBaseInfo> list = new List<ItemBaseInfo>();
-
-            foreach (var reward in arrayRewardInfo)
-            {
-                var data = new TDataItemList();
-                if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
-                {
-                    switch (data.id)
-                    {
-                        case 1:             // 골드
-                            UserInfoManager.Get().GetUserInfo().gold += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, mousePos, Mathf.Clamp(reward.Value, 5, 20));
-                            break;
-                        case 2:             // 다이아
-                            UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
-                            UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, mousePos, Mathf.Clamp(reward.Value, 5, 20));
-                            break;
-                        default: // 주사위
-                        {
-                            ItemBaseInfo rw = new ItemBaseInfo();
-                            rw.ItemId = reward.ItemId;
-                            rw.Value = reward.Value;
-                            list.Add(rw);
-                        }
-                            break;
-                    }
-                }
-            }
-
-            if (list.Count > 0)
-            {
-                UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
-            }
+            // List<ItemBaseInfo> list = new List<ItemBaseInfo>();
+            //
+            // foreach (var reward in arrayRewardInfo)
+            // {
+            //     var data = new TDataItemList();
+            //     if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
+            //     {
+            //         switch (data.id)
+            //         {
+            //             case 1:             // 골드
+            //                 UserInfoManager.Get().GetUserInfo().gold += reward.Value;
+            //                 UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, mousePos, Mathf.Clamp(reward.Value, 5, 20));
+            //                 break;
+            //             case 2:             // 다이아
+            //                 UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
+            //                 UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, mousePos, Mathf.Clamp(reward.Value, 5, 20));
+            //                 break;
+            //             default: // 주사위
+            //             {
+            //                 ItemBaseInfo rw = new ItemBaseInfo();
+            //                 rw.ItemId = reward.ItemId;
+            //                 rw.Value = reward.Value;
+            //                 list.Add(rw);
+            //             }
+            //                 break;
+            //         }
+            //     }
+            // }
+            //
+            // if (list.Count > 0)
+            // {
+            //     UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
+            // }
+            
+            UserInfoManager.Get().GetUserInfo().AddItem(arrayRewardInfo, mousePos);
             
             QuestUpdate(arrayQuestData);
 

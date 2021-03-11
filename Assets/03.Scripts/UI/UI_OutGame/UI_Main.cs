@@ -57,6 +57,7 @@ namespace ED
         public UI_Popup_DailyShopReset dailyShopResetPopup;
         public UI_Popup_MoveShop moveShopPopup;
         public UI_Language languagePopup;
+        public UI_Mailbox mailboxPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -175,6 +176,9 @@ namespace ED
             // 퀘스트 뱃지 체크
             obj_QuestBadge.SetActive(UI_Popup_Quest.IsCompletedQuest());
             
+            // 우편함 뱃지 체크
+            //obj_MailboxBadge.SetActive(UserInfoManager.Get().GetUserInfo().)
+            
             // 메뉴버튼 뱃지 체크
             obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf);
         }
@@ -258,6 +262,12 @@ namespace ED
         {
             UI_Popup.AllClose();
             rankPopup.Initialize();
+        }
+
+        public void Click_MailboxButton()
+        {
+            UI_Popup.AllClose();
+            mailboxPopup.Initialize();
         }
 
         public void Click_MenuButton()

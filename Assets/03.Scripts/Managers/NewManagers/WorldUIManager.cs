@@ -76,7 +76,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
 
     public void SetWave(int wave)
     {
-        textWave.text = $"WAVE {wave}";
+        textWave.text = $"{wave}";
     }
 
     public void RotateTimerIcon()
@@ -108,50 +108,50 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         if (!isGaugeTweening)
         {
             if (amount < 0.2f) imageSpawnTime.fillAmount = 0f;
-            else if (amount > 0.2f && imageSpawnTime.fillAmount < 0.2f)
+            else if (amount > 0.25f && imageSpawnTime.fillAmount < 0.25f)
             {
                 isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.21f, 0.2f).SetEase(curve).OnComplete(() =>
+                imageSpawnTime.DOFillAmount(0.26f, 0.2f).SetEase(curve).OnComplete(() =>
                 {
-                    imageSpawnTime.DOFillAmount(0.2f, 0.1f).OnComplete(() =>
+                    imageSpawnTime.DOFillAmount(0.25f, 0.1f).OnComplete(() =>
                     {
                         isGaugeTweening = false;
                     });
                 });
             }
-            else if (amount > 0.4f && imageSpawnTime.fillAmount < 0.4f)
+            else if (amount > 0.5f && imageSpawnTime.fillAmount < 0.5f)
             {
                 isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.41f, 0.2f).SetEase(curve).OnComplete(() =>
+                imageSpawnTime.DOFillAmount(0.51f, 0.2f).SetEase(curve).OnComplete(() =>
                 {
-                    imageSpawnTime.DOFillAmount(0.4f, 0.1f).OnComplete(() =>
+                    imageSpawnTime.DOFillAmount(0.5f, 0.1f).OnComplete(() =>
                     {
                         isGaugeTweening = false;
                     });
                 });
             }
-            else if (amount > 0.6f && imageSpawnTime.fillAmount < 0.6f)
+            else if (amount > 0.75f && imageSpawnTime.fillAmount < 0.75f)
             {
                 isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.61f, 0.2f).SetEase(curve).OnComplete(() =>
+                imageSpawnTime.DOFillAmount(0.76f, 0.2f).SetEase(curve).OnComplete(() =>
                 {
-                    imageSpawnTime.DOFillAmount(0.6f, 0.1f).OnComplete(() =>
+                    imageSpawnTime.DOFillAmount(0.75f, 0.1f).OnComplete(() =>
                     {
                         isGaugeTweening = false;
                     });
                 });
             }
-            else if (amount > 0.8f && imageSpawnTime.fillAmount < 0.8f)
-            {
-                isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.81f, 0.2f).SetEase(curve).OnComplete(() =>
-                {
-                    imageSpawnTime.DOFillAmount(0.8f, 0.1f).OnComplete(() =>
-                    {
-                        isGaugeTweening = false;
-                    });
-                });
-            }
+            // else if (amount > 0.8f && imageSpawnTime.fillAmount < 0.8f)
+            // {
+            //     isGaugeTweening = true;
+            //     imageSpawnTime.DOFillAmount(0.81f, 0.2f).SetEase(curve).OnComplete(() =>
+            //     {
+            //         imageSpawnTime.DOFillAmount(0.8f, 0.1f).OnComplete(() =>
+            //         {
+            //             isGaugeTweening = false;
+            //         });
+            //     });
+            // }
             else if (amount >= 1f && imageSpawnTime.fillAmount < 1f) 
                 imageSpawnTime.DOFillAmount(1f, 0.2f).SetEase(curve);
         }

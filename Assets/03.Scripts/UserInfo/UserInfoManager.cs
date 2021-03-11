@@ -277,6 +277,44 @@ public class UserInfo
     //     
     //     
     // }
+
+    public void AddItem(ItemBaseInfo[] arrayItemBaseInfo, Vector2 ScreenPos)
+    {
+        List<ItemBaseInfo> list = new List<ItemBaseInfo>();
+
+        foreach (var reward in arrayItemBaseInfo)
+        {
+            var data = new TDataItemList();
+            if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
+            {
+                switch (data.id)
+                {
+                    case 1:             // 골드
+                        UserInfoManager.Get().GetUserInfo().gold += reward.Value;
+                        UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, ScreenPos, Mathf.Clamp(reward.Value, 5, 20));
+                        break;
+                    case 2:             // 다이아
+                        UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
+                        UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, ScreenPos, Mathf.Clamp(reward.Value, 5, 20));
+                        break;
+                    default: // 주사위
+                    {
+                        ItemBaseInfo rw = new ItemBaseInfo();
+                        rw.ItemId = reward.ItemId;
+                        rw.Value = reward.Value;
+                        list.Add(rw);
+                    }
+                        break;
+                }
+            }
+        }
+
+        if (list.Count > 0)
+        {
+            UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
+        }
+    }
+    
     #endregion
 
 

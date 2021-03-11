@@ -432,10 +432,9 @@ namespace ED
             sp += add;
         }
 
-        public readonly int[] arrSPUpgradeValue = {10, 15, 20, 25, 30, 35};
-        public void AddSpByWave(int addSp)
+        public void AddSpByWave(int wave)
         {
-            int total = 40 + addSp * arrSPUpgradeValue[spUpgradeLevel];
+            int total = 10 + (wave * ((10 + spUpgradeLevel) * 5));
             sp += total;
             if (InGameManager.IsNetwork || (InGameManager.IsNetwork == false && isMine))
             {

@@ -395,6 +395,7 @@ public class GameStateManager : Singleton<GameStateManager>
         UserInfoManager.Get().SetDice(arrayUserDice);
         UserInfoManager.Get().SetItem(arrayItemBase);
         UI_Popup_Quest.QuestUpdate(questInfo);
+        UI_Mailbox.UpdateMailbox(arrayMailInfo);
 
         GameStateManager.Get().UserAuthOK();
         //UnityUtil.Print("RECV AUTH => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");
