@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading;
 using Service.Core;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 
 namespace Service.Net
@@ -80,7 +82,7 @@ namespace Service.Net
             _gameSession = gameSession;
 
             //ServicePointManager.MaxServicePointIdleTime = 500;
-            //ServicePointManager.DefaultConnectionLimit = 20;
+            ServicePointManager.DefaultConnectionLimit = 100;
         }
 
 
@@ -112,8 +114,12 @@ namespace Service.Net
 
         public bool SendHttpPost(int protocolId, string method, string json)
         {
-            HttpPostAsync(protocolId, _baseUrl + "/" + method, json);
-            //HttpPost(protocolId, _baseUrl + "/" + method, json);
+            //HttpPostAsync2(protocolId, _baseUrl + "/" + method, json);
+            ThreadPool.QueueUserWorkItem(o =>
+           {
+               HttpPost(protocolId, _baseUrl + "/" + method, json);
+           });
+            
             return true;
         }
 
@@ -179,7 +185,6 @@ namespace Service.Net
                         }
 
                         response.Close();
-                        response.Dispose();
                     }
                 }
             }
@@ -195,19 +200,19 @@ namespace Service.Net
                 
                 request.Abort();
             }
-
-            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, End HttpPost.");
         }
 
 
         void HttpPostAsync(int protocolId, string url, string json)
         {
+            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 1 - url: {url}");
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = "application/json";
             request.Method = "POST";
-            request.Timeout = 5000;
+            request.Timeout = 300000;
 
-
+            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 2 - url: {url}");
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(json);
@@ -222,12 +227,16 @@ namespace Service.Net
             {
                 try
                 {
+                    Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 3 - url: {url}");
+
                     // End the operation
                     HttpWebResponse response = (HttpWebResponse)((HttpWebRequest)asynchronousResult.AsyncState).EndGetResponse(asynchronousResult);
                     if (request.HaveResponse == true)
                     {
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
+                            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 4 - url: {url}");
+
                             // 응답 Stream 읽기
                             using (Stream streamResponse = response.GetResponseStream())
                             using (StreamReader streamRead = new StreamReader(streamResponse))
@@ -239,6 +248,7 @@ namespace Service.Net
                                 resJson = resJson.Replace("\"[", "[");
                                 resJson = resJson.Replace("]\"", "]");
 
+                                Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 5 - url: {url}");
 
                                 byte[] ackBytes = Encoding.UTF8.GetBytes(resJson);
                                 _gameSession.PushExternalMessage(
@@ -253,6 +263,8 @@ namespace Service.Net
 
                             response.Close();
                             response.Dispose();
+                            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 6 - url: {url}");
+
                         }
                     }
                 }
@@ -295,5 +307,83 @@ namespace Service.Net
 
             Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, End HttpPost.");
         }
+
+        async void HttpPostAsync2(int protocolId, string url, string json)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+            request.Timeout = 30000;
+            request.KeepAlive = false;
+
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}][HTTP REQ - {url}] : {json}");
+
+
+            Task<WebResponse> task = Task.Factory.FromAsync(
+                request.BeginGetResponse,
+                asyncResult => request.EndGetResponse(asyncResult),
+                (object)null);
+
+            await task.ContinueWith(t => ReadStreamFromResponse(t.Result, protocolId, url));
+        }
+
+        private void ReadStreamFromResponse(WebResponse response, int protocolId, string url)
+        {
+            try
+            {
+                using (Stream responseStream = response.GetResponseStream())
+                using (StreamReader sr = new StreamReader(responseStream))
+                {
+                    //Need to return this response 
+                    string resJson = sr.ReadToEnd();
+                    resJson = Regex.Unescape(resJson);
+                    resJson = resJson.Replace("\"{", "{");
+                    resJson = resJson.Replace("}\"", "}");
+                    resJson = resJson.Replace("\"[", "[");
+                    resJson = resJson.Replace("]\"", "]");
+
+                    byte[] ackBytes = Encoding.UTF8.GetBytes(resJson);
+                    _gameSession.PushExternalMessage(
+                        this,
+                        protocolId + 1,
+                        ackBytes,
+                        ackBytes.Length);
+
+                    Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}][HTTP ACK - {url}] : {resJson}, size: {Encoding.Default.GetBytes(resJson).Length}");
+                }
+
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
     }
+
+    //void ResponseAsync(HttpWebRequest request, Action<HttpWebResponse> responseAction)
+    //    {
+    //        Action wrapperAction = () =>
+    //        {
+    //            request.BeginGetResponse(new AsyncCallback((iar) =>
+    //            {
+    //                var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
+    //                responseAction(response);
+
+    //                request.Abort();
+    //            }), request);
+    //        };
+    //        wrapperAction.BeginInvoke(new AsyncCallback((iar) =>
+    //        {
+    //            var action = (Action)iar.AsyncState;
+    //            action.EndInvoke(iar);
+    //        }), wrapperAction);
+    //    }
+    //}
 }
