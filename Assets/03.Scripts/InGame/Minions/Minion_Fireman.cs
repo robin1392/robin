@@ -17,8 +17,7 @@ namespace ED
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-
-            _aiPath.canMove = true;
+            
             ps_Fire.Stop();
             light.enabled = false;
             isFire = false;
@@ -90,7 +89,7 @@ namespace ED
                 if (target != null && isAlive)
                 {
                     Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                    _seeker.StartPath(transform.position, targetPos);
+                    Seeker.StartPath(transform.position, targetPos);
                 }
             }
         }
@@ -100,7 +99,7 @@ namespace ED
             SoundManager.instance?.Play(clip_Flame);
             
             SetControllEnable(false);
-            _aiPath.canMove = false;
+            AiPath.canMove = false;
             isFire = true;
             ps_Fire.Play();
             light.enabled = true;
@@ -135,7 +134,7 @@ namespace ED
             ps_Fire.Stop();
             light.enabled = false;
             isFire = false;
-            _aiPath.canMove = true;
+            AiPath.canMove = true;
             SetControllEnable(true);
         }
 

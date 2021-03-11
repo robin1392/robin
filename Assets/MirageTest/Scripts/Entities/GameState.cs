@@ -46,22 +46,20 @@ namespace MirageTest.Scripts.Entities
         public void SetMasterOwnerTag(byte oldValue, byte newValue)
         {
             var client = Client as RWNetworkClient;
-            var isPlayingAI = client.localPlayerOwnerTag == newValue;
-                
-            foreach (var actorProxy in client.ActorProxies)
-            {
-                actorProxy.EnableClientCombatLogic(isPlayingAI);
-            }
-
-            if (!client.enableActor)
+            
+            var localPlayerState = client.GetLocalPlayerState();
+            
+            //게임 시작 시나 재입장 시 GameState가 PlayerState보다 늦게 될 수 있다.
+            //그런경우 게임 진행 중에 상대방이 나갔을때 AI조작을 넘겨주기 위한 동작이기때문에 무시한다.
+            if (localPlayerState == null)
             {
                 return;
             }
-            
-            foreach (var tower in client.Towers)
+
+            var isPlayingAI = localPlayerState.ownerTag == newValue;
+            foreach (var actorProxy in client.ActorProxies)
             {
-                var playerController = tower.baseStat as PlayerController;
-                playerController.isPlayingAI = isPlayingAI;
+                actorProxy.EnableClientCombatLogic(isPlayingAI);
             }
         }
 

@@ -9,14 +9,26 @@ namespace MirageTest.Scripts.GameMode
 {
     public class CoopMode : GameModeBase
     {
-        public CoopMode(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab, ServerObjectManager serverObjectManager) : base(gameState, playerStates, actorProxyPrefab, serverObjectManager)
+        public CoopMode(PrefabHolder prefabHolder, ServerObjectManager serverObjectManager) : base( prefabHolder, serverObjectManager)
         {
         }
 
         protected override void OnBeforeGameStart()
         {
+            var gameState = CreateGameState();
+            var playerStates = CreatePlayerStates();
+            gameState.masterOwnerTag = playerStates[0].ownerTag;
+            GameState = gameState;
+            PlayerStates = playerStates;
+            
             PlayerState1.team = GameConstants.BottomCamp;
             PlayerState2.team = GameConstants.BottomCamp;
+            
+            ServerObjectManager.Spawn(gameState.NetIdentity);
+            foreach (var playerState in playerStates)
+            {
+                ServerObjectManager.Spawn(playerState.NetIdentity);
+            }
             
             SpawnAllyTower();
         }
@@ -24,7 +36,7 @@ namespace MirageTest.Scripts.GameMode
         void SpawnAllyTower()
         {
             var playerTowerPosition = FieldManager.Get().GetPlayerPos(true);
-            var tower = UnityEngine.Object.Instantiate(ActorProxyPrefab, playerTowerPosition, Quaternion.identity);
+            var tower = UnityEngine.Object.Instantiate(_prefabHolder.ActorProxy, playerTowerPosition, Quaternion.identity);
             tower.team = GameConstants.BottomCamp;
             tower.ownerTag = GameConstants.ServerTag;
             tower.actorType = ActorType.Tower;

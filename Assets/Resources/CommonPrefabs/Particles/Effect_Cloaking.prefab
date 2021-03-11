@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9017776126021403937}
   - component: {fileID: 1470147984752356551}
   m_Layer: 0
-  m_Name: particle_ninja
+  m_Name: Effect_Cloaking
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -13,24 +13,37 @@ namespace MirageTest.Scripts.GameMode
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(BattleMode));
         
-        public BattleMode(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab, ServerObjectManager serverObjectManager) : base(gameState, playerStates, actorProxyPrefab, serverObjectManager)
+        public BattleMode(PrefabHolder prefabHolder, ServerObjectManager serverObjectManager) : base(prefabHolder, serverObjectManager)
         {
         }
 
         protected override void OnBeforeGameStart()
         {
+            var gameState = CreateGameState();
+            var playerStates = CreatePlayerStates();
+            gameState.masterOwnerTag = playerStates[0].ownerTag;
+            GameState = gameState;
+            PlayerStates = playerStates;
+            
             PlayerState1.team = GameConstants.BottomCamp;
+            PlayerState2.team = GameConstants.TopCamp;
+            
+            ServerObjectManager.Spawn(gameState.NetIdentity);
+            foreach (var playerState in playerStates)
+            {
+                ServerObjectManager.Spawn(playerState.NetIdentity);
+            }
+
             var player1TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: true);
             SpawnTower(PlayerState1, player1TowerPosition);
             
-            PlayerState2.team = GameConstants.TopCamp;
             var player2TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: false);
             SpawnTower(PlayerState2, player2TowerPosition);
         }
 
         void SpawnTower(PlayerState playerState, Vector3 position)
         {
-            var tower = UnityEngine.Object.Instantiate(ActorProxyPrefab, position, Quaternion.identity);
+            var tower = UnityEngine.Object.Instantiate(_prefabHolder.ActorProxy, position, Quaternion.identity);
             tower.team = playerState.team;
             tower.ownerTag = playerState.ownerTag;
             tower.actorType = ActorType.Tower;
@@ -74,16 +87,33 @@ namespace MirageTest.Scripts.GameMode
                 }        
             }
 
+            Spawn(actorProxies).Forget();
+        }
+
+        private async UniTask Spawn(List<ActorProxy> actorProxies)
+        {
+            await UniTask.Delay(50);
+            if (IsGameEnd)
+            {
+                return;    
+            }
+            
             foreach (var actorProxy in actorProxies)
             {
                 ServerObjectManager.Spawn(actorProxy.NetIdentity);
+                
+                await UniTask.Delay(50);
+
+                if (IsGameEnd)
+                {
+                    return;
+                }
             }
         }
-
+        
         void ApplyDeathMatchEffect(ActorProxy actorProxy, int wave)
         {
             actorProxy.power *= Mathf.Pow(2f, GameState.wave - 10);
-             
             actorProxy.attackSpeed *= Mathf.Pow(0.9f, GameState.wave - 10);
             actorProxy.attackSpeed = Mathf.Max(actorProxy.attackSpeed * 0.5f, actorProxy.attackSpeed);
         }

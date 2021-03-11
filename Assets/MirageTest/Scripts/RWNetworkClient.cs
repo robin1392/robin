@@ -17,18 +17,15 @@ namespace MirageTest.Scripts
         public bool enableActor;
         public bool enableUI;
 
-        public string localPlayerId;
-        public byte localPlayerOwnerTag;
-        public PlayerState localPlayerState;
-
         public List<PlayerState> PlayerStates = new List<PlayerState>(); 
         public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
         public List<ActorProxy> ActorProxies = new List<ActorProxy>();
         public List<ActorProxy> Towers = new List<ActorProxy>();
         public GameState GameState;
-        public bool IsPlayingAI => localPlayerOwnerTag == GameState.masterOwnerTag;
+        public bool IsPlayingAI => GetLocalPlayerState().ownerTag== GameState.masterOwnerTag;
 
         private ClientObjectManager _clientObjectManager;
+        public string localPlayerId;
 
         private void Awake()
         {
@@ -125,12 +122,7 @@ namespace MirageTest.Scripts
                 Towers.Remove(actorProxy);
             }
         }
-        
-        public bool IsLocalPlayer(string userId)
-        {
-            return userId == this.localPlayerId;
-        }
-        
+
         public PlayerProxy GetLocalPlayerProxy()
         {
             return PlayerProxies.Find(p => p.IsLocalPlayer);
@@ -138,12 +130,12 @@ namespace MirageTest.Scripts
         
         public PlayerState GetLocalPlayerState()
         {
-            return PlayerStates.Find(p => p.IsLocalPlayerState);
+            return PlayerStates.Find(p => p.userId == localPlayerId);
         }
 
         public bool IsLocalPlayerTag(byte ownerTag)
         {
-            return ownerTag == this.localPlayerOwnerTag;
+            return GetLocalPlayerState().ownerTag == ownerTag;
         }
 
         public PlayerController GetTower(byte ownerTag)
@@ -154,7 +146,7 @@ namespace MirageTest.Scripts
 
         public bool IsLocalPlayerAlly(byte team)
         {
-            return localPlayerState.team == team;
+            return GetLocalPlayerState().team == team;
         }
 
         public BaseStat GetHighestHealthEnemy(byte team)

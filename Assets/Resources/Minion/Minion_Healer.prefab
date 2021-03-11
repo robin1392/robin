@@ -42,12 +42,7 @@ GameObject:
   - component: {fileID: 5081294253336761971}
   - component: {fileID: 8296046808690963834}
   - component: {fileID: 6627484982045453240}
-  - component: {fileID: 8884088491880997310}
-  - component: {fileID: 768372230881079717}
   - component: {fileID: -4338303788879903069}
-  - component: {fileID: 1353358374686828585}
-  - component: {fileID: 8011060312452255638}
-  - component: {fileID: 4004431925241913938}
   m_Layer: 0
   m_Name: Minion_Healer
   m_TagString: Minion_Ground
@@ -84,11 +79,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc043a2e557043eaae934254d2e656b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActorProxy: {fileID: 0}
   isMine: 0
   diceId: 1003
   id: 0
   controller: {fileID: 0}
-  rb: {fileID: 4004431925241913938}
   animator: {fileID: 1566937913257316316}
   arrMaterial:
   - {fileID: 2100000, guid: 01385919c99474b73bf8278122d39f48, type: 2}
@@ -98,12 +93,6 @@ MonoBehaviour:
   target: {fileID: 0}
   targetMoveType: 0
   power: 0
-  powerUpByUpgrade: 0
-  powerUpByInGameUp: 0
-  maxHealth: 120
-  currentHealth: 0
-  maxHealthUpByUpgrade: 12
-  maxHealthUpByInGameUp: 36
   effect: 20
   effectUpByUpgrade: 2
   effectUpByInGameUp: 6
@@ -111,21 +100,17 @@ MonoBehaviour:
   effectCooltime: 0
   attackSpeed: 1
   moveSpeed: 0.8
-  range: 0.45
-  searchRange: 2
   isBottomPlayer: 0
   ts_ShootingPos: {fileID: 5815220995847222813}
   ts_HitPos: {fileID: 5815220995847222813}
   image_HealthBar: {fileID: 6685159068713725074}
   text_Health: {fileID: 0}
-  isPlayable: 1
   castType: 0
-  targetIsEnemy: 0
-  isAttacking: 0
   isPushing: 0
   isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
   ingameUpgradeLevel: 0
+  _poolObjectAutoDeactivate: {fileID: 0}
   isPolymorph: 0
   pref_Heal: {fileID: 8196298747947456408, guid: 3256ab7ff4a554bf49fb0dcee0202a84,
     type: 3}
@@ -143,54 +128,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0.25, z: 0}
---- !u!114 &8884088491880997310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad115aca74ce3c4891b3f6de0b4aae8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serializedExposedParameters: []
-  _boundGraphSerialization: 
-  _boundGraphObjectReferences: []
-  _boundGraphSource:
-    _version: 0
-    _category: 
-    _comments: 
-    _translation: {x: 0, y: 0}
-    _zoomFactor: 1
-  _firstActivation: 1
-  _enableAction: 0
-  _disableAction: 0
-  _lockBoundGraphPrefabOverrides: 1
-  _preInitializeSubGraphs: 0
-  _updateMode: 0
-  _graph: {fileID: 11400000, guid: 20b927ff432514b32803bf6e4e1f2c35, type: 2}
-  _blackboard: {fileID: 768372230881079717}
---- !u!114 &768372230881079717
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b98a6db0b653f764eac834f85857a9dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serializedBlackboard: '{"_variables":{"isTargetAlive":{"_name":"isTargetAlive","_id":"f6ab4a0b-9cef-4923-b80b-34a7caf3ea0e","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
-  _objectReferences: []
-  _serializedVariables:
-  - _json: '{"_name":"isTargetAlive","_id":"f6ab4a0b-9cef-4923-b80b-34a7caf3ea0e","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
 --- !u!114 &-4338303788879903069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,86 +142,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolName: 
   lifeTime: 0
---- !u!114 &1353358374686828585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
---- !u!114 &8011060312452255638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 2
-  radius: 0.25
-  height: 1
-  repathRate: 0.5
-  canSearch: 1
-  canMove: 1
-  maxSpeed: 1
-  gravity: {x: NaN, y: NaN, z: NaN}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  centerOffsetCompatibility: NaN
-  orientation: 0
-  enableRotation: 1
-  targetCompatibility: {fileID: 0}
-  maxAcceleration: -2.5
-  rotationSpeed: 360
-  slowdownDistance: 0.6
-  pickNextWaypointDist: 2
-  endReachedDistance: 0.2
-  alwaysDrawGizmos: 0
-  slowWhenNotFacingTarget: 1
-  whenCloseToDestination: 0
-  constrainInsideGraph: 0
---- !u!54 &4004431925241913938
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 1.5
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
 --- !u!1 &8104807702746732193
 GameObject:
   m_ObjectHideFlags: 0

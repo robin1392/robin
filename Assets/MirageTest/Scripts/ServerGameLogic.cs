@@ -88,28 +88,33 @@ namespace MirageTest.Scripts
                 EndGameSession();
                 return;
             }
-            
-            var gameState = SpawnGameState();
-            var playerStates = SpawnPlayerStates();
-            gameState.masterOwnerTag = playerStates[0].ownerTag;
 
             _isGameStart = true;
+
+            var prefabHolder = new PrefabHolder()
+            {
+                PlayerState = playerStatePrefab,
+                GameState = gameStatePrefab,
+                ActorProxy = actorProxyPrefab,
+            };
             
             switch (modeType)
             {
                 case PLAY_TYPE.BATTLE:
-                    _gameMode = new BattleMode(gameState, playerStates, actorProxyPrefab, _serverObjectManager);  //TODO: 추후에 풀링에 문제가 없으면 프리팹이 아닌 풀러를 넘긴다.
+                    _gameMode = new BattleMode(prefabHolder, _serverObjectManager);  //TODO: 추후에 풀링에 문제가 없으면 프리팹이 아닌 풀러를 넘긴다.
                     break;
                 case PLAY_TYPE.CO_OP:
-                    _gameMode = new CoopMode(gameState, playerStates, actorProxyPrefab, _serverObjectManager);
+                    _gameMode = new CoopMode(prefabHolder, _serverObjectManager);
                     break;
                 case PLAY_TYPE.ActorDev:
-                    _gameMode = new ActorDevMode(gameState, playerStates, actorProxyPrefab, _serverObjectManager);
+                    _gameMode = new ActorDevMode(prefabHolder, _serverObjectManager);
                     break;
             }
 
             await _gameMode.UpdateLogic();
         }
+        
+        
 
         private void EndGameSession()
         {
@@ -159,65 +164,16 @@ namespace MirageTest.Scripts
             }
         }
 
-        private GameState SpawnGameState()
-        {
-            var gameState = Instantiate(gameStatePrefab);
-            _serverObjectManager.Spawn(gameState.NetIdentity);
-            return gameState;
-        }
-
-        private PlayerState[] SpawnPlayerStates()
-        {
-            var authData = _serverObjectManager
-                .SpawnedObjects
-                .Select(kvp => kvp.Value.GetComponent<PlayerProxy>())
-                .Where(p => p != null)
-                .Select(p => p.ConnectionToClient.AuthenticationData as AuthDataForConnection).ToList();
-
-            if (authData.Count < 2)
-            {
-                authData.Add(new AuthDataForConnection(){ PlayerId = "auto_setted", PlayerNickName = "auto_setted"});
-            }
-            
-            var getStartSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.GetStartSP].value;
-            
-            var playerStates = new PlayerState[2];
-            playerStates[0] = SpawnPlayerState(
-                authData[0].PlayerId, authData[0].PlayerNickName, getStartSp,
-                new DeckDice[]
-                {
-                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
-                }, GameConstants.Player1Tag);
-        
-            playerStates[1] = SpawnPlayerState(
-                authData[1].PlayerId, authData[1].PlayerNickName, getStartSp,
-                new DeckDice[]
-                {
-                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
-                }, GameConstants.Player2Tag);
-            return playerStates;
-        }
-
-        PlayerState SpawnPlayerState(string userId, string nickName, int sp, DeckDice[] deck, byte tag)
-        {
-            //원래 코드에서는 덱인덱스를 가지고 디비에서 긁어오는 중. 매칭서버에서 긁어서 넣어두는 방향을 제안
-            var playerState = Instantiate(playerStatePrefab);
-            playerState.Init(userId, nickName, sp, deck, tag);
-            _serverObjectManager.Spawn(playerState.NetIdentity);
-            return playerState;
-        }
-        
         public PlayerState GetPlayerState(string userId)
         {
             return _gameMode.GetPlayerState(userId);
         }
+    }
+
+    public class PrefabHolder
+    {
+        public GameState GameState;
+        public PlayerState PlayerState;
+        public ActorProxy ActorProxy;
     }
 }

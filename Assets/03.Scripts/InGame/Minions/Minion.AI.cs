@@ -1,4 +1,5 @@
 using System.Collections;
+using Pathfinding;
 using UnityEngine;
 
 namespace ED
@@ -6,13 +7,34 @@ namespace ED
     public partial class Minion
     {
         private Coroutine ai;
+        protected Seeker Seeker;
+        protected AIPath AiPath;
+
+        public void SetPathFinding(Seeker seeker, AIPath aiPath)
+        {
+            Seeker = seeker;
+            AiPath = aiPath;
+        }
+        
         public void StartAI()
         {
+            // behaviourTreeOwner.behaviour.Stop();
             ai = StartCoroutine(Root());
+            Seeker.enabled = true;
+            AiPath.enabled = true;
+            AiPath.isStopped = true;
         }
 
         public void StopAI()
         {
+            Seeker.enabled = false;
+            AiPath.enabled = false;
+            
+            if (ai == null)
+            {
+                return;
+            }
+            
             StopCoroutine(ai);
             ai = null;
         }
@@ -37,20 +59,33 @@ namespace ED
         {
             while (!IsTargetInnerRange())
             {
-                yield return ApproachToTarget();    
+                ApproachToTarget();  
+                
+                yield return null;
+
+                target = SetTarget();
+            }
+
+            StopApproachToTarget();
+            
+            if (target == null)
+            {
+                yield break;
             }
 
             yield return Attack();
         }
 
-        private IEnumerator ApproachToTarget()
+        private void ApproachToTarget()
         {
-            while(target != null && target.isAlive)
-            {
-                Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                _seeker.StartPath(transform.position, targetPos);
-                yield return _waitForSeconds0_1;
-            }
+            AiPath.isStopped = false;
+            Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
+            Seeker.StartPath(transform.position, targetPos);
+        }
+
+        private void StopApproachToTarget()
+        {
+            AiPath.isStopped = true;
         }
         
         public virtual IEnumerator Attack()
@@ -62,12 +97,13 @@ namespace ED
 
         protected IEnumerator AttackCoroutine()
         {
-            var pos = transform.position;
+            var tr = ActorProxy.transform;
+            var pos = tr.position;
             pos.y = 0;
-            transform.position = pos;
+            tr.position = pos;
             pos = target.transform.position;
             pos.y = 0;
-            transform.LookAt(pos);
+            tr.LookAt(pos);
 
             float t = 0;
             while (t < attackSpeed)

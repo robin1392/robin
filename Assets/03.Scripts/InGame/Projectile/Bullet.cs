@@ -129,6 +129,12 @@ namespace ED
 
             _callback?.Invoke();
 
+            if (client.IsPlayingAI)
+            {
+                //TODO: 발사체가 날아가는 사이 공격자가 죽을 수 있기때문에 직접 히트를 부른다.
+                //      액터 사망 시 유예시간을 두어서 공격자 액터프락시가 존재하지 않는 상황이 없도록 하는 방법을 고려해본다.
+                _target?.ActorProxy?.HitDamage(_damage);   
+            }
             //KZSee:
             // if( (InGameManager.IsNetwork && (_isMine || controller.isPlayingAI)) || InGameManager.IsNetwork == false)
             //     controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);

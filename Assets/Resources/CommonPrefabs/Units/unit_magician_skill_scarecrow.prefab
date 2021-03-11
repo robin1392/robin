@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4017329374158267023}
   - component: {fileID: 2306404198881738261}
   m_Layer: 0
-  m_Name: unit_wizard_skill_scarecrow
+  m_Name: unit_magician_skill_scarecrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

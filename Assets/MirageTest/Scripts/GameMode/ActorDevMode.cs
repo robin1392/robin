@@ -13,24 +13,37 @@ namespace MirageTest.Scripts.GameMode
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ActorDevMode));
         
-        public ActorDevMode(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab, ServerObjectManager serverObjectManager) : base(gameState, playerStates, actorProxyPrefab, serverObjectManager)
+        public ActorDevMode(PrefabHolder prefabHolder, ServerObjectManager serverObjectManager) : base(prefabHolder, serverObjectManager)
         {
         }
 
         protected override void OnBeforeGameStart()
         {
-            PlayerState1.team = GameConstants.BottomCamp;
-            var player1TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: true);
-            SpawnTower(PlayerState1, player1TowerPosition);
+            var gameState = CreateGameState();
+            var playerStates = CreatePlayerStates();
+            gameState.masterOwnerTag = playerStates[0].ownerTag;
+            GameState = gameState;
+            PlayerStates = playerStates;
             
+            PlayerState1.team = GameConstants.BottomCamp;
             PlayerState2.team = GameConstants.TopCamp;
+            
+            ServerObjectManager.Spawn(gameState.NetIdentity);
+            foreach (var playerState in playerStates)
+            {
+                ServerObjectManager.Spawn(playerState.NetIdentity);
+            }
+            
+            var player1TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: true);
+            CreateAndSpawnTower(PlayerState1, player1TowerPosition);
+            
             var player2TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: false);
-            SpawnTower(PlayerState2, player2TowerPosition);
+            CreateAndSpawnTower(PlayerState2, player2TowerPosition);
         }
 
-        void SpawnTower(PlayerState playerState, Vector3 position)
+        void CreateAndSpawnTower(PlayerState playerState, Vector3 position)
         {
-            var tower = UnityEngine.Object.Instantiate(ActorProxyPrefab, position, Quaternion.identity);
+            var tower = UnityEngine.Object.Instantiate(_prefabHolder.ActorProxy, position, Quaternion.identity);
             tower.team = playerState.team;
             tower.ownerTag = playerState.ownerTag;
             tower.actorType = ActorType.Tower;

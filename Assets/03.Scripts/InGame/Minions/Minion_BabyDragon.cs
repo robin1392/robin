@@ -103,8 +103,8 @@ namespace ED
             // range = originRange;
             
             ps_Smoke.Play();
-            power = effect;
             //KZSee:
+            // power = effect;
             // maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
             // currentHealth = maxHealth;
             RefreshHealthBar();

@@ -10,6 +10,7 @@ using RandomWarsResource;
 using RandomWarsResource.Data;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts.GameMode
 {
@@ -18,7 +19,7 @@ namespace MirageTest.Scripts.GameMode
         protected TableData<int, TDataDiceInfo> DiceInfos;
         protected GameState GameState;
         protected PlayerState[] PlayerStates;
-        protected ActorProxy ActorProxyPrefab;
+        protected PrefabHolder _prefabHolder;
         protected ServerObjectManager ServerObjectManager;
         protected bool IsGameEnd;
 
@@ -26,16 +27,68 @@ namespace MirageTest.Scripts.GameMode
         public PlayerState PlayerState2 => PlayerStates[1];
 
 
-        public GameModeBase(GameState gameState, PlayerState[] playerStates, ActorProxy actorProxyPrefab,
+        public GameModeBase(PrefabHolder prefabHolder,
             ServerObjectManager serverObjectManager)
         {
-            GameState = gameState;
-            GameState.wave = 0;
-            PlayerStates = playerStates;
-            ActorProxyPrefab = actorProxyPrefab;
+            _prefabHolder = prefabHolder;
             ServerObjectManager = serverObjectManager;
             DiceInfos = TableManager.Get().DiceInfo;
         }
+        
+         protected GameState CreateGameState()
+        {
+            var gameState = Object.Instantiate(_prefabHolder.GameState);
+            return gameState;
+        }
+
+         protected PlayerState[] CreatePlayerStates()
+        {
+            var authData = ServerObjectManager
+                .SpawnedObjects
+                .Select(kvp => kvp.Value.GetComponent<PlayerProxy>())
+                .Where(p => p != null)
+                .Select(p => p.ConnectionToClient.AuthenticationData as AuthDataForConnection).ToList();
+
+            authData.Sort((a, b) =>  String.Compare(a.PlayerId, b.PlayerId, StringComparison.Ordinal));
+            if (authData.Count < 2)
+            {
+                authData.Add(new AuthDataForConnection(){ PlayerId = "auto_setted", PlayerNickName = "auto_setted"});
+            }
+            
+            var getStartSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.GetStartSP].value;
+            
+            var playerStates = new PlayerState[2];
+            playerStates[0] = SpawnPlayerState(
+                authData[0].PlayerId, authData[0].PlayerNickName, getStartSp,
+                new DeckDice[]
+                {
+                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
+                }, GameConstants.Player1Tag);
+        
+            playerStates[1] = SpawnPlayerState(
+                authData[1].PlayerId, authData[1].PlayerNickName, getStartSp,
+                new DeckDice[]
+                {
+                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
+                    new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
+                }, GameConstants.Player2Tag);
+            return playerStates;
+        }
+         
+         PlayerState SpawnPlayerState(string userId, string nickName, int sp, DeckDice[] deck, byte tag)
+         {
+             //원래 코드에서는 덱인덱스를 가지고 디비에서 긁어오는 중. 매칭서버에서 긁어서 넣어두는 방향을 제안
+             var playerState = Object.Instantiate(_prefabHolder.PlayerState);
+             playerState.Init(userId, nickName, sp, deck, tag);
+             return playerState;
+         }
 
         public async UniTask UpdateLogic()
         {
@@ -161,10 +214,18 @@ namespace MirageTest.Scripts.GameMode
                     maxHealth *= diceScale + 1;
                     effect *= diceScale + 1;
                 }
+                
+                var spawnTransform = playerState.team == GameConstants.BottomCamp
+                    ? FieldManager.Get().GetBottomListTs(fieldIndex)
+                    : FieldManager.Get().GetTopListTs(fieldIndex);
 
                 for (int i = 0; i < spawnCount; ++i)
                 {
-                    var actorProxy = Object.Instantiate(ActorProxyPrefab);
+                    var spawnPosition = spawnTransform.position;
+                    spawnPosition.x += Random.Range(-0.2f, 0.2f);
+                    spawnPosition.z += Random.Range(-0.2f, 0.2f);
+                    
+                    var actorProxy = Object.Instantiate(_prefabHolder.ActorProxy, spawnPosition, Quaternion.identity);
                     actorProxy.SetDiceInfo(diceInfo);
                     actorProxy.ownerTag = playerState.ownerTag;
                     actorProxy.actorType = ActorType.MinionFromDice;

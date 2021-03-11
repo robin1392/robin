@@ -9454,7 +9454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8883707867032095614}
   m_Layer: 0
-  m_Name: Coop_Boss_5_Egg
+  m_Name: Boss_05_Egg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

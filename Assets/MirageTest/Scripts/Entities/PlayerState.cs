@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 using System.Linq;
 using ED;
 using Sirenix.OdinInspector;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts.Entities
@@ -35,7 +36,7 @@ namespace MirageTest.Scripts.Entities
 
         private bool _initalized;
 
-        public bool IsLocalPlayerState => (Client as RWNetworkClient).IsLocalPlayer(userId);
+        public bool IsLocalPlayerState => (Client as RWNetworkClient).localPlayerId == userId;
         
         public void Init(string userId, string nickName, int sp, DeckDice[] deck, byte tag)
         {
@@ -80,18 +81,19 @@ namespace MirageTest.Scripts.Entities
             var client = Client as RWNetworkClient;
             client.AddPlayerState(this);
             
-            if (client.localPlayerId == userId)
-            {
-                client.localPlayerOwnerTag = ownerTag;
-                CameraController.Get().UpdateCameraRotation(team == GameConstants.BottomCamp);
-            }
+            Debug.Log($"PlayerState id:{userId} t:{team} o:{ownerTag}");
             
             EnableUI = client.enableUI;
             if (!EnableUI)
             {
                 return;
             }
-
+            
+            if (client.localPlayerId == userId)
+            {
+                CameraController.Get().UpdateCameraRotation(team == GameConstants.BottomCamp);
+            }
+            
             Deck.OnChange += OnChangeDeckOnClientOnly;
             Field.OnSet += OnChangeFieldOnClientOnly;
             

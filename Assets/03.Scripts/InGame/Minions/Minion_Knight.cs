@@ -12,14 +12,8 @@ namespace ED
         {
             base.Initialize(destroy);
 
-            _animationEvent.event_Attack += AttackSound;
-        }
-
-        public override void Death()
-        {
-            base.Death();
-
             _animationEvent.event_Attack -= AttackSound;
+            _animationEvent.event_Attack += AttackSound;
         }
 
         public void AttackSound()

@@ -142,22 +142,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 898a4cad2f0654a2b861afe3fa7086b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActorProxy: {fileID: 0}
   isMine: 0
   diceId: 0
   id: 0
   controller: {fileID: 0}
-  rb: {fileID: 0}
   animator: {fileID: 0}
   arrMaterial: []
   target: {fileID: 0}
   targetMoveType: 2
   power: 0
-  powerUpByUpgrade: 0
-  powerUpByInGameUp: 0
-  maxHealth: 0
-  currentHealth: 0
-  maxHealthUpByUpgrade: 0
-  maxHealthUpByInGameUp: 0
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
@@ -165,14 +159,11 @@ MonoBehaviour:
   effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 0
-  range: 0
-  searchRange: 2
   isBottomPlayer: 0
   ts_ShootingPos: {fileID: 0}
   ts_HitPos: {fileID: 6636926182459783293}
   image_HealthBar: {fileID: 0}
   text_Health: {fileID: 0}
-  isPlayable: 1
   _collider: {fileID: 0}
   _hitCollider: {fileID: 0}
   castType: 1

@@ -18,7 +18,9 @@ namespace ED
             base.Start();
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow -= FireArrow;
             ae.event_FireArrow += FireArrow;
+            ae.event_FireLight -= FireLightOn;
             ae.event_FireLight += FireLightOn;
         }
 

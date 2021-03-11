@@ -4881,7 +4881,7 @@ GameObject:
   - component: {fileID: 1375822448578922707}
   - component: {fileID: 8296641988980223087}
   m_Layer: 0
-  m_Name: particle_dust
+  m_Name: Effect_Dust
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

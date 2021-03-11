@@ -37,13 +37,14 @@ namespace ED
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(isBottomPlayer);
-                m.power = effect;
-                // m.maxHealth = maxHealth * eyeLevel * 0.1f;
-                m.attackSpeed = attackSpeed;
-                m.moveSpeed = moveSpeed;
-                // m.range = range;
-                m.eyeLevel = eyeLevel;
-                m.ingameUpgradeLevel = ingameUpgradeLevel;
+                //KZSee:
+                // m.power = effect;
+                // // m.maxHealth = maxHealth * eyeLevel * 0.1f;
+                // m.attackSpeed = attackSpeed;
+                // m.moveSpeed = moveSpeed;
+                // // m.range = range;
+                // m.eyeLevel = eyeLevel;
+                // m.ingameUpgradeLevel = ingameUpgradeLevel;
                 m.Initialize(destroyCallback);
             }
 

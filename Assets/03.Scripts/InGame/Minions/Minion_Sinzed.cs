@@ -35,7 +35,8 @@ namespace ED
                 {
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
                     // 이건 자신이 데미지 입는것이기 때문에...
-                    ActorProxy.HitDamage(ActorProxy.currentHealth);
+                    //KZSee: 자살 기능 추가
+                    ActorProxy.DamageTo(this);
                 }
             }
             

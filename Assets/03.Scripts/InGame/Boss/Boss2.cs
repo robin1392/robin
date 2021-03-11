@@ -15,8 +15,9 @@ public class Boss2 : Minion
     {
         base.Initialize(destroy);
         _skillCastedTime = -effectCooltime;
-        attackSpeed = 1f;
-        effectCooltime = 1f;
+        //KZSee:
+        // attackSpeed = 1f;
+        // effectCooltime = 1f;
         Skill();
     }
 
@@ -37,7 +38,8 @@ public class Boss2 : Minion
 
             loopCount++;
             _localAttackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
-            attackSpeed = 1f / _localAttackSpeed;
+            //KZSee:
+            // attackSpeed = 1f / _localAttackSpeed;
             animator.SetFloat("AttackSpeed", _localAttackSpeed);
         }
     }

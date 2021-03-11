@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using MirageTest.Scripts.Messages;
+using Pathfinding;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
@@ -40,6 +41,9 @@ namespace MirageTest.Scripts
 
         private TDataDiceInfo _diceInfo;
         private bool stopped;
+        
+        public Seeker _seeker;
+        public AIPath _aiPath;
 
         public TDataDiceInfo diceInfo
         {
@@ -70,6 +74,9 @@ namespace MirageTest.Scripts
             NetIdentity.OnStartClient.AddListener(StartClient);
             NetIdentity.OnStopClient.AddListener(StopClient);
             NetIdentity.OnStartServer.AddListener(StartServer);
+            
+            _seeker = GetComponent<Seeker>();
+            _aiPath = GetComponent<AIPath>();
         }
 
         private void StopClient()
@@ -79,9 +86,9 @@ namespace MirageTest.Scripts
             if (baseStat is Minion minion)
             {
                 currentHealth = 0;
-                minion._poolObjectAutoDeactivate.Deactive();    
+                minion.OnDeath();
             }
-            
+
             baseStat = null;
             stopped = true;
         }
@@ -116,63 +123,60 @@ namespace MirageTest.Scripts
                 baseStat = playerController;
                 baseStat.id = NetId;
                 playerController.isMine = IsLocalPlayerActor;
-                var isBottom = team == GameConstants.BottomCamp;
-                playerController.isBottomPlayer = isBottom;
-                playerController.ChangeLayer(isBottom);
+                playerController.isBottomPlayer = IsBottomCamp();
+                playerController.ChangeLayer(IsBottomCamp());
                 // SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
                 isMovable = false;
             }
             else if (actorType == ActorType.MinionFromDice)
             {
                 //magicCastDelay 0.05f 로 시작해서 미니언 갯수 별로 0.6666666f 만큼 증가. 단일 프레임에 생성하지 않기 위한 트릭인듯한다. 처리 필요
-                var spawnTransform = IsBottomCamp()
-                    ? FieldManager.Get().GetBottomListTs(spawnSlot)
-                    : FieldManager.Get().GetTopListTs(spawnSlot);
-                var spawnPosition = spawnTransform.position;
-                spawnPosition.x += Random.Range(-0.2f, 0.2f);
-                spawnPosition.z += Random.Range(-0.2f, 0.2f);
 
+                if (diceInfo.castType == (int)DICE_CAST_TYPE.MINION || diceInfo.castType == (int)DICE_CAST_TYPE.HERO)
+                {
+                    PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
+                }
+                    
                 var m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
                 if (m == null)
                 {
                     PoolManager.instance.AddPool(
                         FileHelper.LoadPrefab(diceInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION, transform), 1);
                     //Debug.LogFormat("{0} Pool Added 1", data.prefabName);
-                    m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, spawnPosition, transform);
+                    m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
                 }
 
                 if (m != null)
                 {
+                    m.transform.localPosition = Vector3.zero;
+                    m.transform.localRotation = Quaternion.identity;
                     baseStat = m;
                     m.ActorProxy = this;
+                    m.SetPathFinding(_seeker, _aiPath);
                     m.Initialize(null);
                     m.controller = (Client as RWNetworkClient).GetTower(ownerTag);
                     m.castType = (DICE_CAST_TYPE)diceInfo.castType;
                     m.id = NetId;
                     m.isMine = IsLocalPlayerActor;
                     m.targetMoveType = (DICE_MOVE_TYPE)diceInfo.targetMoveType;
+                    m.isBottomPlayer = IsBottomCamp();
                     m.ChangeLayer(IsBottomCamp());
-                    m.power = power;
-                    m.effect = effect;
-                    m.effectUpByUpgrade = diceInfo.effectUpgrade;
-                    m.effectUpByInGameUp = diceInfo.effectInGameUp;
-                    m.effectDuration = diceInfo.effectDuration;
-                    m.attackSpeed = attackSpeed;
-                    m.searchRange = diceInfo.searchRange;
-                    m.eyeLevel = diceScale;
-                    m.ingameUpgradeLevel = ingameUpgradeLevel;
                 }
 
                 var setting = UI_DiceField.Get().arrSlot[spawnSlot].ps.main;
                 setting.startColor = FileHelper.GetColor(diceInfo.color);
-                UI_DiceField.Get().arrSlot[spawnSlot].ps.Play();
+                
                 var dicePos = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
                 if (!IsLocalPlayerActor)
                 {
                     dicePos.x *= -1f;
                     dicePos.z *= -1f;
                 }
-                
+                else
+                {
+                    UI_DiceField.Get().arrSlot[spawnSlot].ps.Play();    
+                }
+
                 var lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
                 if (lr == null)
                 {
@@ -223,6 +227,8 @@ namespace MirageTest.Scripts
 
         public void EnableClientCombatLogic(bool b)
         {
+            isPlayingAI = b;
+            
             var minion = baseStat as Minion;
             if (minion == null)
             {
@@ -231,55 +237,117 @@ namespace MirageTest.Scripts
 
             if (b)
             {
-                minion.behaviourTreeOwner.behaviour.Resume();
+                minion.StartAI();
             }
             else
             {
-                minion.behaviourTreeOwner.behaviour.Pause();
+                minion.StopAI();
             }
+
             minion.SetControllEnable(b);
 
             minion.GetComponent<Collider>().enabled = b;
-
-            isPlayingAI = b;
         }
         
-        public void HitDamage(float mPower)
+        public void HitDamage(float damage)
         {
-            HitDamageOnServer(power);
+            HitDamageOnServer(damage);
+        }
+
+        [ServerRpc(requireAuthority = false)]
+        public void HitDamageOnServer(float damage)
+        {
+            ApplyDamage(damage);
+        }
+
+        public void DamageTo(BaseStat target)
+        {
+            DamageToOnServer(target.id);
         }
         
         [ServerRpc(requireAuthority = false)]
-        public void HitDamageOnServer(float mPower)
+        public void DamageToOnServer(uint targetNetId)
         {
-            currentHealth -= mPower;
-            if (currentHealth < 0)
+            var target = ServerObjectManager[targetNetId];
+            if (target == null)
+            {
+                return;
+            }
+            
+            target.GetComponent<ActorProxy>().ApplyDamage(power);
+        }
+
+        [Server]
+        public void ApplyDamage(float damage)
+        {
+            currentHealth -= damage;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            
+            if (currentHealth <= 0)
             {
                 ServerObjectManager.Destroy(gameObject);
                 return;
             }
 
-            HitDamageOnClient(mPower);
+            DamagedOnClient(damage);
         }
 
         [ClientRpc]
-        public void HitDamageOnClient(float mPower)
+        public void DamagedOnClient(float damage)
         {
             if (baseStat == null)
             {
                 return;
             }
             
-            baseStat.HitDamage(mPower);
+            baseStat.HitDamage(damage);
             var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseStat.ts_HitPos.position);
             obj.rotation = Quaternion.identity;
             obj.localScale = Vector3.one * 0.6f;
             
             SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
         }
+        
+        public void HealTo(BaseStat target)
+        {
+            HealToOnServer(target.id);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void HealToOnServer(uint targetNetId)
+        {
+            var target = ServerObjectManager[targetNetId];
+            if (target == null)
+            {
+                return;
+            }
+            
+            target.GetComponent<ActorProxy>().AppyHeal(effect);
+        }
+
+        [Server]
+        public void AppyHeal(float amount)
+        {
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            HealedOnClient(amount);
+        }
+
+        [ClientRpc]
+        public void HealedOnClient(float amount)
+        {
+            if (baseStat == null)
+            {
+                return;
+            }
+            
+            PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
+        }
 
         private MsgVector2 lastSend;
         public MsgVector2 lastRecieved;
+        private bool hasRecieved = false;
+        
         private void Update()
         {
             if (IsServer)
@@ -299,7 +367,7 @@ namespace MirageTest.Scripts
             
             if (isPlayingAI)
             {
-                var position = baseStat.transform.position;
+                var position = transform.position;
                 var converted = ConvertNetMsg.Vector3ToMsg(new Vector2(position.x, position.z));
                 if (lastSend == null || !Equal(lastSend, converted))
                 {
@@ -314,9 +382,16 @@ namespace MirageTest.Scripts
             }
             else if(lastRecieved != null)
             {
-                //첫번째 동기화는 바로 설정하도록 한다.
                 var position = ConvertNetMsg.MsgToVector3(lastRecieved);
-                baseStat.transform.position = Vector3.Lerp(baseStat.transform.position, position, baseStat.moveSpeed * Time.deltaTime);
+                if (hasRecieved == false)
+                {
+                    hasRecieved = true;
+                    transform.position = position;
+                }
+                else
+                {
+                    transform.position = Vector3.Lerp(transform.position, position, diceInfo.moveSpeed * Time.deltaTime);   
+                }
             }
         }
         

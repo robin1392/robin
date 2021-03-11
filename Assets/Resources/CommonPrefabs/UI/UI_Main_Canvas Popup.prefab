@@ -3916,6 +3916,17 @@ MonoBehaviour:
   image_BG: {fileID: 1201705910692397276}
   clip_Open: {fileID: 8300000, guid: ecd6a3d76385b4e36bac71e4eabdf84c, type: 3}
   clip_Close: {fileID: 8300000, guid: 5572bc617d3544fa4833c50279dc7b75, type: 3}
+  rts_Content: {fileID: 0}
+  slider: {fileID: 0}
+  currentTrophy: {fileID: 0}
+  text_CurrentTrophy: {fileID: 0}
+  text_Name: {fileID: 0}
+  text_Win: {fileID: 0}
+  text_Lose: {fileID: 0}
+  text_WinLose: {fileID: 0}
+  text_MaxTrophy: {fileID: 0}
+  text_SearchDice: {fileID: 0}
+  text_SearchGaurdian: {fileID: 0}
   text_UID: {fileID: 7192404506282528285}
   input_Nickname: {fileID: 2092540690307748910}
   btn_EditNickname: {fileID: 5853713506869998999}
@@ -8909,6 +8920,8 @@ MonoBehaviour:
   clip_Close: {fileID: 8300000, guid: 5572bc617d3544fa4833c50279dc7b75, type: 3}
   text_Title: {fileID: 3272683681463365567}
   text_Message: {fileID: 5234922976647725980}
+  btn_OK: {fileID: 0}
+  text_Button: {fileID: 0}
 --- !u!1 &3192155865113008485
 GameObject:
   m_ObjectHideFlags: 0
@@ -18752,6 +18765,7 @@ MonoBehaviour:
   clip_Close: {fileID: 8300000, guid: 5572bc617d3544fa4833c50279dc7b75, type: 3}
   text_Searching: {fileID: 6362351359588108863}
   btn_Cancel: {fileID: 6362351360729102033}
+  text_Time: {fileID: 0}
 --- !u!1 &6362351359172861650
 GameObject:
   m_ObjectHideFlags: 0
@@ -19207,11 +19221,18 @@ MonoBehaviour:
   text_Grade: {fileID: 6362351360168756497}
   image_GradeBG: {fileID: 7210598717755358795}
   text_TowerHP: {fileID: 2553767101128551399}
+  text_Type: {fileID: 0}
+  text_TypeInfo: {fileID: 0}
+  image_Type: {fileID: 0}
+  arrSprite_Type: []
+  arrSprite_InfoBG: []
   btn_Upgrade: {fileID: 6362351360099728495}
   text_Upgrade: {fileID: 6362351359981114376}
   text_UpgradeGold: {fileID: 6362351360331843158}
   btn_Use: {fileID: 6362351360018517934}
   text_Use: {fileID: 6362351358851297649}
+  btn_ShowUpgrade: {fileID: 0}
+  btn_ShowLevelUp: {fileID: 0}
   obj_Result: {fileID: 1062037928752008227}
   image_ResultBG: {fileID: 6847842217567580680}
   image_ResubtBGPattern: {fileID: 8987433689064742376}
@@ -19223,6 +19244,7 @@ MonoBehaviour:
     type: 3}
   ps_ResultIconBackground: {fileID: 9133317526696106881}
   infosTranform: {fileID: 6362351360584251095}
+  listInfoUI: []
 --- !u!1 &6362351359322374670
 GameObject:
   m_ObjectHideFlags: 0

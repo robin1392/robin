@@ -172,13 +172,13 @@ namespace ED
 
                         m.targetMoveType = (DICE_MOVE_TYPE) dataDiceInfo.targetMoveType;
                         m.ChangeLayer(false);
-                        m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel +
-                                  dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
+                        // m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel +
+                        //           dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
                         // m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
-                        m.attackSpeed = dataDiceInfo.attackSpeed;
-                        m.moveSpeed = dataDiceInfo.moveSpeed;
-                        m.eyeLevel = 1;
-                        m.ingameUpgradeLevel = infos[i].DiceInGameUp;
+                        // m.attackSpeed = dataDiceInfo.attackSpeed;
+                        // m.moveSpeed = dataDiceInfo.moveSpeed;
+                        // m.eyeLevel = 1;
+                        // m.ingameUpgradeLevel = infos[i].DiceInGameUp;
                         m.Initialize(MinionDestroyCallback);
                     }
                         break;
@@ -193,11 +193,11 @@ namespace ED
                         var m = CastMagic(obj, pos);
                         m.targetMoveType = (DICE_MOVE_TYPE) dataDiceInfo.targetMoveType;
                         //m.ChangeLayer(false);
-                        m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel +
-                                  dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
-                        // m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
-                        m.attackSpeed = dataDiceInfo.attackSpeed;
-                        m.moveSpeed = dataDiceInfo.moveSpeed;
+                        // m.power = dataDiceInfo.power + dataDiceInfo.powerUpgrade * infos[i].DiceLevel +
+                        //           dataDiceInfo.powerInGameUp * infos[i].DiceInGameUp;
+                        // // m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
+                        // m.attackSpeed = dataDiceInfo.attackSpeed;
+                        // m.moveSpeed = dataDiceInfo.moveSpeed;
                         m.eyeLevel = 1;
                         //m.ingameUpgradeLevel = infos[i].DiceInGameUp;
                         m.Initialize(false);
@@ -276,15 +276,15 @@ namespace ED
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                 m.ChangeLayer(false);
                 // m.maxHealth = ConvertNetMsg.MsgIntToFloat(msgBoss.Hp);
-                m.power = ConvertNetMsg.MsgIntToFloat(msgBoss.Power);
-                m.effect = ConvertNetMsg.MsgIntToFloat(msgBoss.Effect);
-                m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.Duration);
-                m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.EffectCoolTime);
-                m.moveSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.MoveSpeed);
-                m.attackSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.AttackSpeed);
-                m.isMine = NetworkManager.Get().IsMaster;
-                m.eyeLevel = 1;
-                m.ingameUpgradeLevel = 0;
+                // m.power = ConvertNetMsg.MsgIntToFloat(msgBoss.Power);
+                // m.effect = ConvertNetMsg.MsgIntToFloat(msgBoss.Effect);
+                // m.effectDuration = ConvertNetMsg.MsgShortToFloat(msgBoss.Duration);
+                // m.effectCooltime = ConvertNetMsg.MsgShortToFloat(msgBoss.EffectCoolTime);
+                // m.moveSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.MoveSpeed);
+                // m.attackSpeed = ConvertNetMsg.MsgShortToFloat(msgBoss.AttackSpeed);
+                // m.isMine = NetworkManager.Get().IsMaster;
+                // m.eyeLevel = 1;
+                // m.ingameUpgradeLevel = 0;
                 m.Initialize(MinionDestroyCallback);
 
                 // m.currentHealth = currentHealth;

@@ -50,39 +50,15 @@ namespace ED
             lr.gameObject.SetActive(true);
             while (t < attackSpeed - 1.5f)
             {
-                
-                
-                var m = target as Minion;
-                target = SetTarget();
-                if (target == null || target.isAlive == false || (target.isAlive && m != null && !m.isCloacking))
+                if (IsTargetInnerRange() == false)
                 {
-                    
-
-                    if (target != null)
-                    {
-                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
-                        controller.ActionMinionTarget(id, target.id);
-                    }
-                    else if (target == null || IsTargetInnerRange() == false)
-                    {
-                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
-                        controller.ActionSendMsg(id, "StopAiming");
-                        break;
-                    }
-                }
-
-                if (target != null && IsTargetInnerRange())
-                {
-                    transform.LookAt(target.transform);
-                    lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
-                }
-                else if (target == null || IsTargetInnerRange() == false)
-                {
-
-                    //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
                     controller.ActionSendMsg(id, "StopAiming");
-                    yield break;
+                    break;
                 }
+                    
+                controller.ActionMinionTarget(id, target.id);
+                transform.LookAt(target.transform);
+                lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
 
                 t += Time.deltaTime;
                 yield return null;

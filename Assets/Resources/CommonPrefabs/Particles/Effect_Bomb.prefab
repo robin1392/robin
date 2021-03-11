@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5166360906345884416}
   - component: {fileID: 2529083842442625945}
   m_Layer: 0
-  m_Name: particle_mine_spell
+  m_Name: Effect_Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

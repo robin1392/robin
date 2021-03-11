@@ -27,7 +27,8 @@ public class Boss4 : Minion
         transform.position = transform.position.z > 0
             ? transform.position + Vector3.back
             : transform.position + Vector3.forward;
-        attackSpeed = 3f;
+        //KZSee:
+        // attackSpeed = 3f;
     }
 
     public override IEnumerator Attack()

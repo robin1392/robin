@@ -22,15 +22,10 @@ namespace ED
         public override void Initialize(DestroyCallback destroy)
         {
             base.Initialize(destroy);
-            attackSpeed = effectCooltime;
-            _animationEvent.event_Attack += AttackEvent;
-        }
-
-        public override void Death()
-        {
-            base.Death();
-
+            //KZSee:
+            // attackSpeed = effectCooltime;
             _animationEvent.event_Attack -= AttackEvent;
+            _animationEvent.event_Attack += AttackEvent;
         }
 
         public void AttackEvent()
@@ -40,11 +35,13 @@ namespace ED
 
         public override IEnumerator Attack()
         {
-            _attackedTarget = target;
-            ActorProxy.PlayAnimationWithRelay(_animatorHashAttack, target);
+            if (target == null || !IsFriendlyLayer(target.gameObject) || target.IsHpFull)
+            {
+                yield break;
+            }
             
-            yield return AttackCoroutine();
-            controller.HealerMinion(target.id, effect);
+            ActorProxy.HealTo(target);
+            yield return base.Attack();
         }
 
         public override BaseStat SetTarget()
@@ -54,14 +51,12 @@ namespace ED
             Collider closeToTarget = null;
             var closeToDistance = float.MaxValue;
             var distance = float.MaxValue;
-            var oldHp = 1f;
 
             foreach (var col in cols)
             {
                 if (col != null && col.CompareTag($"Minion_Ground") && col.gameObject != gameObject)
                 {
                     var m = col.GetComponentInParent<Minion>();
-                    // var hp = m.currentHealth / m.maxHealth;
                     var dis = Vector3.Distance(transform.position, col.transform.position);
 
                     if (dis < closeToDistance && m.GetType() != typeof(Minion_Healer))
@@ -69,13 +64,12 @@ namespace ED
                         closeToDistance = dis;
                         closeToTarget = col;
                     }
-
-                    // if (hp < 1f && dis < distance)
-                    // {
-                    //     oldHp = hp;
-                    //     firstTarget = col;
-                    //     distance = dis;
-                    // }
+                    
+                    if (!m.IsHpFull && dis < distance)
+                    {
+                        firstTarget = col;
+                        distance = dis;
+                    }
                 }
             }
 
@@ -90,16 +84,7 @@ namespace ED
             }
             else
             {
-                return controller.targetPlayer;
-                switch (Global.PLAY_TYPE.BATTLE)
-                {
-                    case Global.PLAY_TYPE.BATTLE:
-                        return controller.targetPlayer;
-                    case Global.PLAY_TYPE.COOP:
-                        return controller.coopPlayer;
-                    default:
-                        return null;
-                }
+                return ActorProxy.GetEnemyTower();
             }
         }
     }

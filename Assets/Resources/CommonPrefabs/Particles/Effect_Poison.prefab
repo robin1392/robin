@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3693968143308065273}
   - component: {fileID: 6259450006666314685}
   m_Layer: 10
-  m_Name: particle_sinzed
+  m_Name: Effect_Poison
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

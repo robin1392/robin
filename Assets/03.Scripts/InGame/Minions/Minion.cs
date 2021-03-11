@@ -54,8 +54,8 @@ namespace ED
         protected int invincibilityCount;
         private float _originalAttackSpeed;
 
-        [HideInInspector] public int eyeLevel;
-        [HideInInspector] public int ingameUpgradeLevel;
+        [HideInInspector] public int eyeLevel=> ActorProxy.diceScale;
+        [HideInInspector] public int ingameUpgradeLevel=>ActorProxy.ingameUpgradeLevel;
 
         private Vector3 _dodgeVelocity;
         protected static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
@@ -83,17 +83,16 @@ namespace ED
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
         protected BaseStat _attackedTarget;
-        protected Seeker _seeker;
-        protected AIPath _aiPath;
         protected MinionAnimationEvent _animationEvent;
+        
+        private bool _destroyed; 
+        public bool Destroyed => _destroyed;
 
         protected virtual void Awake()
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
-            behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
+            // behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
             _collider = GetComponentInChildren<Collider>();
-            _seeker = GetComponent<Seeker>();
-            _aiPath = GetComponent<AIPath>();
             _animationEvent = animator.GetComponent<MinionAnimationEvent>();
         }
 
@@ -173,6 +172,7 @@ namespace ED
             //     effect *= Mathf.Pow(2f, eyeLevel - 1);
             // }
 
+            // GetComponent<Rigidbody>().isKinematic = true;
             SetControllEnable(true);
             _dodgeVelocity = Vector3.zero;
             _collider.enabled = true;
@@ -296,29 +296,21 @@ namespace ED
 
         public virtual BaseStat SetTarget()
         {
-            if (_attackedTarget != null && _attackedTarget.isAlive)
+            if (_attackedTarget != null && _attackedTarget.CanBeTarget())
             {
-                var m = _attackedTarget as Minion;
-                if (m != null)
-                {
-                    if (m.isCloacking == false) return _attackedTarget;
-                }
-                else
-                {
-                    return _attackedTarget;
-                }
+                return _attackedTarget;
             }
 
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
 
             Collider firstTarget = null;
             var distance = float.MaxValue;
+            
+            Debug.Log(cols.Length);
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseStat>();
-                var m = bs as Minion;
-
-                if (bs == null || bs.isAlive == false || (m != null && m.isCloacking))
+                if (bs == null || !bs.CanBeTarget())
                 {
                     continue;
                 }
@@ -347,14 +339,13 @@ namespace ED
 
         public void ChangeLayer(bool pIsBottomPlayer)
         {
-            //isBottomPlayer = string.Compare(layerName, "BottomPlayer", StringComparison.Ordinal) == 0;
             isBottomPlayer = pIsBottomPlayer;
             var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
             gameObject.layer = LayerMask.NameToLayer(layerName);
 
             if (!isBottomPlayer)
             {
-                transform.rotation = Quaternion.Euler(0, 180f, 0);
+                ActorProxy.transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
         }
 
@@ -368,7 +359,7 @@ namespace ED
 
             SetControllEnable(false);
             StopAllCoroutines();
-            GetComponent<NodeCanvas.BehaviourTrees.BehaviourTreeOwner>().StopBehaviour();
+            // GetComponent<NodeCanvas.BehaviourTrees.BehaviourTreeOwner>().StopBehaviour();
         }
 
         public void DamageToTarget(BaseStat m, float delay = 0, float factor = 1f)
@@ -504,7 +495,7 @@ namespace ED
                 {
                     Vector3 targetPos = target.transform.position +
                                         (target.transform.position - transform.position).normalized * range;
-                    _seeker.StartPath(transform.position, targetPos);
+                    Seeker.StartPath(transform.position, targetPos);
                 }
             }
         }
@@ -572,14 +563,6 @@ namespace ED
 
         public bool IsFriendlyTargetInnerRange()
         {
-//             var hits = new RaycastHit[1];
-//             var count = Physics.RaycastNonAlloc(transform.position + Vector3.up * 0.1f, target.transform.position - transform.position, hits, range, friendlyLayer);
-// #if UNITY_EDITOR
-//             Debug.DrawLine(transform.position + Vector3.up * 0.1f,
-//                 (transform.position + Vector3.up * 0.1f) + rb.velocity * range,
-//                 Color.yellow);
-// #endif
-            //return count > 0 ? hits[0].collider.GetComponent<BaseStat>() : null;
             return Vector3.Distance(transform.position, target.transform.position) <= range;
         }
 
@@ -600,14 +583,15 @@ namespace ED
 
         public void SetAttackSpeedFactor(float factor)
         {
-            attackSpeed = _originalAttackSpeed * factor;
+            //KZSee:
+            // attackSpeed = _originalAttackSpeed * factor;
             if (animator != null) animator.SetFloat("AttackSpeed", 1f / attackSpeed);
         }
 
         public void SetControllEnable(bool isEnable)
         {
             isPushing = !isEnable;
-            _aiPath.isStopped = !isEnable;
+            AiPath.isStopped = !isEnable;
         }
 
         public void Scarecrow(float duration)
@@ -686,6 +670,19 @@ namespace ED
                 isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int) E_AniTrigger.Idle,
                 target.id);
         }
+
+        public void OnDeath()
+        {
+            _destroyed = true;
+            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            foreach (var autoDeactivate in _dicEffectPool)
+            {
+                autoDeactivate.Value.Deactive();
+            }
+            
+            _poolObjectAutoDeactivate.Deactive();
+        }
     }
 }
 
@@ -703,7 +700,7 @@ namespace MirageTest.Scripts
             PlayAnimationRelayServer(Client.Connection.Identity.NetId, aniHash, targetId);
         }
         
-        [ServerRpc]
+        [ServerRpc(requireAuthority = false)]
         public void PlayAnimationRelayServer(uint senderNetId, int aniHash, uint targetID)
         {
             foreach (var con in Server.connections)
@@ -726,7 +723,7 @@ namespace MirageTest.Scripts
                 return;
             }
             
-            PlayAnimationWithRelay(aniHash, target);
+            PlayAnimationInternal(aniHash, target);
         }
         
         public void PlayAnimationWithRelay(int hash, BaseStat target)
@@ -737,7 +734,7 @@ namespace MirageTest.Scripts
         
         void PlayAnimationInternal(int hash, BaseStat target)
         {
-            if (target != null) transform.LookAt(target.transform);
+            if (target != null) baseStat.transform.LookAt(target.transform);
             baseStat.animator.SetTrigger(hash);
         }
         
@@ -753,7 +750,7 @@ namespace MirageTest.Scripts
             RelayFireBulletOnServer(Client.Connection.Identity.NetId, arrow, targetId, f, bulletMoveSpeed);
         }
         
-        [ServerRpc]
+        [ServerRpc(requireAuthority = false)]
         public void RelayFireBulletOnServer(uint senderNetId, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed)
         {
             foreach (var con in Server.connections)
@@ -776,7 +773,7 @@ namespace MirageTest.Scripts
                 return;
             }
             
-            FireBulletWithRelay(arrow, target, f, bulletMoveSpeed);
+            FireBulletInternal(arrow, target, f, bulletMoveSpeed);
         }
 
         public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
@@ -839,6 +836,7 @@ namespace MirageTest.Scripts
             }
         }
 
+        //KZSee : TODO: 보스도 보게 할 것
         public BaseStat GetEnemyTower()
         {
             var rwClient = Client as RWNetworkClient;

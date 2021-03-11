@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8766685104022646928}
   - component: {fileID: 3211091699497431357}
   m_Layer: 10
-  m_Name: particle_dead
+  m_Name: Effect_Death
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

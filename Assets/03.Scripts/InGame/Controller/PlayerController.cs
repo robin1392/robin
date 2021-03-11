@@ -121,7 +121,7 @@ namespace ED
         private readonly string recvMessage = "RecvPlayer";
         private static readonly int Break = Animator.StringToHash("Break");
         public bool isHalfHealth;
-        public bool isPlayingAI { get; set; }
+        public bool isPlayingAI => ActorProxy.isPlayingAI;
         public bool isMinionAgentMove = true;
         protected Coroutine crt_SyncMinion;
         //protected Queue<int> queueHitDamage = new Queue<int>();
@@ -296,19 +296,19 @@ namespace ED
                     m.id = boss.Id;
                     m.diceId = boss.DataId;
                     // m.maxHealth = ConvertNetMsg.MsgIntToFloat(boss.Hp);
-                    m.power = ConvertNetMsg.MsgIntToFloat(boss.Power);
-                    m.effect = ConvertNetMsg.MsgIntToFloat(boss.Effect);
-                    m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.Duration);
-                    m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.EffectCoolTime);
+                    // m.power = ConvertNetMsg.MsgIntToFloat(boss.Power);
+                    // m.effect = ConvertNetMsg.MsgIntToFloat(boss.Effect);
+                    // m.effectDuration = ConvertNetMsg.MsgShortToFloat(boss.Duration);
+                    // m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.EffectCoolTime);
 
                     m.targetMoveType = DICE_MOVE_TYPE.GROUND;
                     m.ChangeLayer(isBottomPlayer);
-                    m.attackSpeed = ConvertNetMsg.MsgShortToFloat(boss.AttackSpeed);
-                    m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
+                    // m.attackSpeed = ConvertNetMsg.MsgShortToFloat(boss.AttackSpeed);
+                    // m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
                     //KZSee:
                     // m.range = 0.7f;
-                    m.eyeLevel = 1;
-                    m.ingameUpgradeLevel = 0;
+                    // m.eyeLevel = 1;
+                    // m.ingameUpgradeLevel = 0;
                     m.Initialize(MinionDestroyCallback);
                 }
 
@@ -665,23 +665,24 @@ namespace ED
                     m.castType = (DICE_CAST_TYPE)data.castType;
 
                     int wave = InGameManager.Get().wave;
-                    m.power = (data.power + (data.powerInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
-                    if (wave > 10)
-                    {
-                        m.power *= Mathf.Pow(2f, wave - 10);
-                    }
-                    
+                    //KZSee:
+                    // m.power = (data.power + (data.powerInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
+                    // if (wave > 10)
+                    // {
+                    //     m.power *= Mathf.Pow(2f, wave - 10);
+                    // }
+                    //
                     // m.maxHealth = (data.maxHealth + (data.maxHpInGameUp * upgradeLevel)) * Mathf.Pow(2f, eyeLevel - 1);
-                    m.effect = (data.effect + (data.effectInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
-                    m.effectUpByUpgrade = data.effectUpgrade;
-                    m.effectUpByInGameUp = data.effectInGameUp;
-                    m.effectDuration = data.effectDuration;
-                    m.effectCooltime = data.effectCooltime;
-                
-                    m.attackSpeed = data.attackSpeed;
-                    m.moveSpeed = data.moveSpeed;
+                    // m.effect = (data.effect + (data.effectInGameUp * upgradeLevel)) * Mathf.Pow(1.5f, eyeLevel - 1);
+                    // m.effectUpByUpgrade = data.effectUpgrade;
+                    // m.effectUpByInGameUp = data.effectInGameUp;
+                    // m.effectDuration = data.effectDuration;
+                    // m.effectCooltime = data.effectCooltime;
+                    //
+                    // m.attackSpeed = data.attackSpeed;
+                    // m.moveSpeed = data.moveSpeed;
                     // m.range = data.range;
-                    m.searchRange = data.searchRange;
+                    // m.searchRange = data.searchRange;
                     m.eyeLevel = eyeLevel;
                     m.upgradeLevel = upgradeLevel;
                     
@@ -861,12 +862,10 @@ namespace ED
 
         public void SetPlayingAI(bool isPlayingAI)
         {
-            this.isPlayingAI = isPlayingAI;
-
             foreach (var minion in listMinion)
             {
-                if (isPlayingAI) minion.behaviourTreeOwner.behaviour.Resume();
-                else minion.behaviourTreeOwner.behaviour.Pause();
+                // if (isPlayingAI) minion.behaviourTreeOwner.behaviour.Resume();
+                // else minion.behaviourTreeOwner.behaviour.Pause();
             }
 
             if (isPlayingAI)
@@ -978,12 +977,12 @@ namespace ED
             //KZSee:
             // m.power = maxHealth / 50f;
             // m.maxHealth = maxHealth * 0.3333f;
-            m.attackSpeed = 0.8f;
-            m.moveSpeed = 0.8f;
+            // m.attackSpeed = 0.8f;
+            // m.moveSpeed = 0.8f;
             //KZSee:
             // m.range = 0.7f;
-            m.eyeLevel = 1;
-            m.ingameUpgradeLevel = 0;
+            // m.eyeLevel = 1;
+            // m.ingameUpgradeLevel = 0;
             m.Initialize(MinionDestroyCallback);
             
             PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);

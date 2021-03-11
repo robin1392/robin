@@ -19,16 +19,17 @@ namespace ED
 
         [Header("Base Stat")]
         public DICE_MOVE_TYPE targetMoveType;
-        public float power;
-        public float effect;
-        public float effectUpByUpgrade;
-        public float effectUpByInGameUp;
-        public float effectDuration;
-        public float effectCooltime;
-        public float attackSpeed;
-        public float moveSpeed;
+
+        public float power => ActorProxy.power;
+        public float effect => ActorProxy.effect;
+        public float effectUpByUpgrade => ActorProxy.diceInfo.effectUpgrade;
+        public float effectUpByInGameUp => ActorProxy.diceInfo.effectInGameUp;
+        public float effectDuration => ActorProxy.diceInfo.effectDuration;
+        public float effectCooltime => ActorProxy.diceInfo.effectCooltime;
+        public float attackSpeed => ActorProxy.attackSpeed;
+        public float moveSpeed => ActorProxy.diceInfo.moveSpeed;
         public float range => ActorProxy.diceInfo.range;
-        public float searchRange = 2f;
+        public float searchRange => ActorProxy.diceInfo.searchRange;
         public bool isBottomPlayer;
 
         [Header("Positions")] 
@@ -73,6 +74,21 @@ namespace ED
                         return 0;
                 }
             }
+        }
+
+        public bool CanBeTarget()
+        {
+            if (!isAlive)
+            {
+                return false;
+            }
+            
+            if (this is Minion minion)
+            {
+                return !minion.isCloacking;
+            }
+
+            return true;
         }
         
         public int friendlyLayer

@@ -10838,6 +10838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  camera_Stage: {fileID: 0}
   rts_MainPages: {fileID: 6180031957041860477}
   rts_MainContents: {fileID: 4476014531782803759}
   rts_SafeArea: {fileID: 6180031956424645497}
@@ -10848,11 +10849,16 @@ MonoBehaviour:
   - {fileID: 6086142233104664410}
   - {fileID: 6086142234433816470}
   scrollRect: {fileID: 6180031956447869183}
+  scrollRectSeasonPass: {fileID: 0}
+  scrollRectTrophy: {fileID: 0}
   ui_ScrollViewEvent: {fileID: 6180031956447869180}
+  ui_ScrollViewEventSeasonPass: {fileID: 0}
+  ui_ScrollViewEventTrophy: {fileID: 0}
   btn_PlayBattle: {fileID: 6180031957398280906}
   btn_PlayCoop: {fileID: 502885068218367303}
   btn_SearchCancel: {fileID: 0}
   btn_AD: {fileID: 919146720}
+  arrSearchingCanvasGroup: []
   searchingPopup: {fileID: 0}
   boxPopup: {fileID: 0}
   boxOpenPopup: {fileID: 0}
@@ -10865,17 +10871,23 @@ MonoBehaviour:
   seasonStartPopup: {fileID: 0}
   commonMessageBoxPopup: {fileID: 0}
   menuPopup: {fileID: 0}
-  inputfield_Nicnname: {fileID: 6180031956554800236}
+  seasonPassUnlockPopup: {fileID: 0}
+  shopBuyPopup: {fileID: 0}
+  settingPopup: {fileID: 0}
+  dailyShopResetPopup: {fileID: 0}
+  moveShopPopup: {fileID: 0}
   text_Nickname: {fileID: 6180031955885183827}
   text_Class: {fileID: 6180031957443971796}
   text_Trophy: {fileID: 6180031955979394229}
   text_Diamond: {fileID: 6180031956997604750}
   text_Gold: {fileID: 2769207661950281864}
   text_Key: {fileID: 6117371186798686801}
+  cg_Money: {fileID: 0}
   obj_MenuBadge: {fileID: 0}
   obj_QuestBadge: {fileID: 0}
   isAIMode: 0
   panel_Dice: {fileID: 6180031956912710742}
+  arrPanels: []
 --- !u!114 &6180031956623453735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13629,7 +13641,17 @@ MonoBehaviour:
   ts_TrophyContent: {fileID: 2611290971937708191}
   text_SeasonID: {fileID: 4080964709320692557}
   text_SeasonName: {fileID: 4517009352601906885}
+  slider_Star: {fileID: 0}
+  text_StarCount: {fileID: 0}
+  text_StarLevel: {fileID: 0}
   text_SeasonRemainTime: {fileID: 1416487781260751810}
+  text_MyTrophy: {fileID: 0}
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6180031957565354952
 GameObject:
   m_ObjectHideFlags: 0

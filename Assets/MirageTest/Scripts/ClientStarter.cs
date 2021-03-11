@@ -71,8 +71,6 @@ namespace _Scripts.RCore.Networking
                 count++;
                 try
                 {
-                    Debug.Log("connect:" + builder.Uri);
-                    Debug.Log(builder.Uri.IsDefaultPort);
                     await _client.ConnectAsync(builder.Uri);
                 }
                 catch (OperationCanceledException e)
