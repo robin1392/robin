@@ -234,9 +234,13 @@ public class NetworkManager : Singleton<NetworkManager>
         InitNetwork();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        if (session != null)
+        {
+            session.Update();
+        }
+
         UpdateSocket();
 
         if (_socketService != null)
@@ -248,11 +252,28 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             _httpClient.Update();
         }
+    }
 
-        if (session != null)
-        {
-            session.Update();
-        }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //UpdateSocket();
+
+        //if (_socketService != null)
+        //{
+        //    _socketService.Update();
+        //}
+
+        //if (_httpClient != null)
+        //{
+        //    _httpClient.Update();
+        //}
+
+        //if (session != null)
+        //{
+        //    session.Update();
+        //}
     }
 
     public override void OnDestroy()
