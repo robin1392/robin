@@ -71,6 +71,7 @@ namespace ED
         [Header("Badge")]
         public GameObject obj_MenuBadge;
         public GameObject obj_QuestBadge;
+        public GameObject obj_MailboxBadge;
 
         [Space]
         public bool isAIMode;
@@ -177,10 +178,10 @@ namespace ED
             obj_QuestBadge.SetActive(UI_Popup_Quest.IsCompletedQuest());
             
             // 우편함 뱃지 체크
-            //obj_MailboxBadge.SetActive(UserInfoManager.Get().GetUserInfo().)
+            obj_MailboxBadge.SetActive(UI_Mailbox.GetMailCount() > 0);
             
             // 메뉴버튼 뱃지 체크
-            obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf);
+            obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf || obj_MailboxBadge.activeSelf);
         }
 
         public void RefreshUserInfoUI()

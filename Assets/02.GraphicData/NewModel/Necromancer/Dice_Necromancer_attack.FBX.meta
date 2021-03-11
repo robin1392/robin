@@ -39,7 +39,7 @@ ModelImporter:
       takeName: Dice_Necromancer_attack
       internalID: 0
       firstFrame: 0
-      lastFrame: 50
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -59,7 +59,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.07061047
+      - time: 0.5089666
         functionName: FireArrow
         data: 
         objectReferenceParameter: {instanceID: 0}
