@@ -114,12 +114,8 @@ namespace Service.Net
 
         public bool SendHttpPost(int protocolId, string method, string json)
         {
-            //HttpPostAsync2(protocolId, _baseUrl + "/" + method, json);
-            ThreadPool.QueueUserWorkItem(o =>
-           {
-               HttpPost(protocolId, _baseUrl + "/" + method, json);
-           });
-            
+            HttpPostAsync(protocolId, _baseUrl + "/" + method, json);
+            //HttpPost(protocolId, _baseUrl + "/" + method, json);
             return true;
         }
 
@@ -205,14 +201,11 @@ namespace Service.Net
 
         void HttpPostAsync(int protocolId, string url, string json)
         {
-            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 1 - url: {url}");
-
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = "application/json";
             request.Method = "POST";
             request.Timeout = 300000;
 
-            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 2 - url: {url}");
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(json);
@@ -227,16 +220,12 @@ namespace Service.Net
             {
                 try
                 {
-                    Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 3 - url: {url}");
-
                     // End the operation
                     HttpWebResponse response = (HttpWebResponse)((HttpWebRequest)asynchronousResult.AsyncState).EndGetResponse(asynchronousResult);
                     if (request.HaveResponse == true)
                     {
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
-                            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 4 - url: {url}");
-
                             // 응답 Stream 읽기
                             using (Stream streamResponse = response.GetResponseStream())
                             using (StreamReader streamRead = new StreamReader(streamResponse))
@@ -247,8 +236,6 @@ namespace Service.Net
                                 resJson = resJson.Replace("}\"", "}");
                                 resJson = resJson.Replace("\"[", "[");
                                 resJson = resJson.Replace("]\"", "]");
-
-                                Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 5 - url: {url}");
 
                                 byte[] ackBytes = Encoding.UTF8.GetBytes(resJson);
                                 _gameSession.PushExternalMessage(
@@ -263,8 +250,6 @@ namespace Service.Net
 
                             response.Close();
                             response.Dispose();
-                            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, 6 - url: {url}");
-
                         }
                     }
                 }
@@ -304,8 +289,6 @@ namespace Service.Net
                     //    Utility.Instance.log(logPath, ex + ". Please contact your administrator.", true);//Or you can do a different thing here
                 }
             }), request);
-
-            Logger.Debug($"[{Thread.CurrentThread.ManagedThreadId}, End HttpPost.");
         }
 
         async void HttpPostAsync2(int protocolId, string url, string json)

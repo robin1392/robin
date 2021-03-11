@@ -380,7 +380,7 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <param name="questInfo"></param>
     /// <param name="seasonInfo"></param>
     /// <returns></returns>
-    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, ItemBaseInfo[] arrayItemBase, QuestInfo questInfo, UserSeasonInfo seasonInfo, MailInfo[] arrayMailInfo)
+    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserItemInfo userItemInfo, QuestInfo questInfo, UserSeasonInfo seasonInfo)
     {
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {
@@ -393,9 +393,9 @@ public class GameStateManager : Singleton<GameStateManager>
         UserInfoManager.Get().SetUserInfo(userInfo, seasonInfo);
         UserInfoManager.Get().SetDeck(arrayUserDeck);
         UserInfoManager.Get().SetDice(arrayUserDice);
-        UserInfoManager.Get().SetItem(arrayItemBase);
+        UserInfoManager.Get().SetItem(userItemInfo);
         UI_Popup_Quest.QuestUpdate(questInfo);
-        UI_Mailbox.UpdateMailbox(arrayMailInfo);
+        //UI_Mailbox.UpdateMailbox(arrayMailInfo);
 
         GameStateManager.Get().UserAuthOK();
         //UnityUtil.Print("RECV AUTH => msg", Newtonsoft.Json.JsonConvert.SerializeObject(msg), "green");

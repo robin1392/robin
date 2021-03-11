@@ -490,37 +490,27 @@ public class UserInfoManager : Singleton<UserInfoManager>
         }
     }
 
-    public void SetItem(ItemBaseInfo[] arrayItemBase)
+    public void SetItem(UserItemInfo userItemInfo)
     {
+        // 상자 아이템
         _userInfo.dicBox.Clear();
-
-        for (int i = 0; i < arrayItemBase.Length; i++)
+        for (int i = 0; i < userItemInfo.listBox.Count; i++)
         {
-            TDataItemList tDataItemList;
-            if (TableManager.Get().ItemList.GetData(arrayItemBase[i].ItemId, out tDataItemList) == false)
-            {
-                Debug.LogError($"not found item. itemId: {arrayItemBase[i].ItemId}");
-            }
-
-            switch((ITEM_TYPE)tDataItemList.itemType)
-            {
-                case ITEM_TYPE.BOX:
-                    {
-                        _userInfo.dicBox.Add(arrayItemBase[i].ItemId, arrayItemBase[i].Value);
-                    }
-                    break;
-                case ITEM_TYPE.EMOTION:
-                    {
-                        // TODO : 이모티콘 아이템 추가 처리
-                    }
-                    break;
-                case ITEM_TYPE.PASS:
-                    {
-                        // TODO : 패스 아이템 추가 처리
-                    }
-                    break;
-            }
+            _userInfo.dicBox.Add(userItemInfo.listBox[i].ItemId, userItemInfo.listBox[i].Value);
         }
+
+        // 패스 아이템
+        for (int i = 0; i < userItemInfo.listPass.Count; i++)
+        {
+        }
+
+        // 이모티콘
+        for (int i = 0; i < userItemInfo.listEmoticon.Count; i++)
+        {
+        }
+
+        // 이모티콘 슬롯
+        //userItemInfo.listEmoticonSlot
     }
     #endregion
 }
