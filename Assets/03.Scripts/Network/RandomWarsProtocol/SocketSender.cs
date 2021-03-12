@@ -82,7 +82,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void LeaveGameReq(Peer peer) 
+        public void LeaveGameReq(Peer peer)
         {
             using (var ms = new MemoryStream())
             {
@@ -92,7 +92,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void LeaveGameAck(Peer peer, GameErrorCode code, ItemBaseInfo[] giveUpReward) 
+        public void LeaveGameAck(Peer peer, GameErrorCode code, ItemBaseInfo[] giveUpReward)
         {
             using (var ms = new MemoryStream())
             {
@@ -111,7 +111,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void LeaveGameNotify(Peer peer, int playerUId) 
+        public void LeaveGameNotify(Peer peer, int playerUId)
         {
             using (var ms = new MemoryStream())
             {
@@ -272,7 +272,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void ReadySyncGameReq(Peer peer) 
+        public void ReadySyncGameReq(Peer peer)
         {
             using (var ms = new MemoryStream())
             {
@@ -282,7 +282,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void ReadySyncGameAck(Peer peer, GameErrorCode code) 
+        public void ReadySyncGameAck(Peer peer, GameErrorCode code)
         {
             using (var ms = new MemoryStream())
             {
@@ -293,7 +293,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void ReadySyncGameNotify(Peer peer, int playerUId) 
+        public void ReadySyncGameNotify(Peer peer, int playerUId)
         {
             using (var ms = new MemoryStream())
             {
@@ -372,7 +372,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndSyncGameReq(Peer peer) 
+        public void EndSyncGameReq(Peer peer)
         {
             using (var ms = new MemoryStream())
             {
@@ -382,7 +382,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndSyncGameAck(Peer peer, GameErrorCode code, int wave, int remainWaveTime, byte spawnCount) 
+        public void EndSyncGameAck(Peer peer, GameErrorCode code, int wave, int remainWaveTime, byte spawnCount)
         {
             using (var ms = new MemoryStream())
             {
@@ -396,7 +396,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndSyncGameNotify(Peer peer, ushort playerUId, int remainWaveTime, byte spawnCount) 
+        public void EndSyncGameNotify(Peer peer, ushort playerUId, int remainWaveTime, byte spawnCount)
         {
             using (var ms = new MemoryStream())
             {
@@ -421,7 +421,7 @@ namespace RandomWarsProtocol
 
         public void GetDiceAck(Peer peer, GameErrorCode code, int diceId, short slotNum, short level, int currentSp)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -437,7 +437,7 @@ namespace RandomWarsProtocol
 
         public void GetDiceNotify(Peer peer, ushort playerUId, int diceId, short slotNum, short level)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -450,7 +450,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MergeDiceReq(Peer peer, short resetFieldNum, short leveupFieldNum) 
+        public void MergeDiceReq(Peer peer, short resetFieldNum, short leveupFieldNum)
         {
             using (var ms = new MemoryStream())
             {
@@ -462,7 +462,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MergeDiceAck(Peer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
+        public void MergeDiceAck(Peer peer, GameErrorCode code, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
         {
             using (var ms = new MemoryStream())
             {
@@ -477,7 +477,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MergeDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level) 
+        public void MergeDiceNotify(Peer peer, ushort playerUId, short resetFieldNum, short leveupFieldNum, int levelUpDiceId, short level)
         {
             using (var ms = new MemoryStream())
             {
@@ -492,7 +492,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void InGameUpDiceReq(Peer peer, int diceId) 
+        public void InGameUpDiceReq(Peer peer, int diceId)
         {
             using (var ms = new MemoryStream())
             {
@@ -503,7 +503,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void InGameUpDiceAck(Peer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp) 
+        public void InGameUpDiceAck(Peer peer, GameErrorCode code, int diceId, short inGameUp, int currentSp)
         {
             using (var ms = new MemoryStream())
             {
@@ -517,9 +517,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void InGameUpDiceNotify(Peer peer, ushort playerUId, int diceId, short inGameUp) 
+        public void InGameUpDiceNotify(Peer peer, ushort playerUId, int diceId, short inGameUp)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -531,9 +531,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void UpgradeSpReq(Peer peer) 
+        public void UpgradeSpReq(Peer peer)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -542,9 +542,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void UpgradeSpAck(Peer peer, GameErrorCode code, short upgrade, int currentSp) 
+        public void UpgradeSpAck(Peer peer, GameErrorCode code, short upgrade, int currentSp)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -556,9 +556,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void UpgradeSpNotify(Peer peer, ushort playerUId, short upgrade) 
+        public void UpgradeSpNotify(Peer peer, ushort playerUId, short upgrade)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -569,7 +569,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void HitDamageReq(Peer peer, ushort playerUId, MsgDamage[] damage) 
+        public void HitDamageReq(Peer peer, ushort playerUId, MsgDamage[] damage)
         {
             using (var ms = new MemoryStream())
             {
@@ -587,7 +587,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void HitDamageAck(Peer peer, GameErrorCode code, ushort playerUId, MsgDamageResult[] damageResult) 
+        public void HitDamageAck(Peer peer, GameErrorCode code, ushort playerUId, MsgDamageResult[] damageResult)
         {
             using (var ms = new MemoryStream())
             {
@@ -624,7 +624,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, byte WinningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, QuestData[] questData) 
+        public void EndGameNotify(Peer peer, GameErrorCode code, GAME_RESULT gameResult, short WinningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, ItemBaseInfo loseReward, QuestData[] questData)
         {
             using (var ms = new MemoryStream())
             {
@@ -653,6 +653,8 @@ namespace RandomWarsProtocol
                 {
                     perfectReward[i].Write(bw);
                 }
+
+                loseReward.Write(bw);
 
                 length = (questData == null) ? 0 : questData.Length;
                 bw.Write(length);
@@ -693,9 +695,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void DisconnectGameNotify(Peer peer, int playerUId) 
+        public void DisconnectGameNotify(Peer peer, int playerUId)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -705,7 +707,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void HitDamageMinionRelay(Peer peer, ushort playerUId, ushort id, int damage) 
+        public void HitDamageMinionRelay(Peer peer, ushort playerUId, ushort id, int damage)
         {
             using (var ms = new MemoryStream())
             {
@@ -718,7 +720,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void DestroyMinionRelay(Peer peer, ushort playerUId, ushort id) 
+        public void DestroyMinionRelay(Peer peer, ushort playerUId, ushort id)
         {
             using (var ms = new MemoryStream())
             {
@@ -730,7 +732,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void HealMinionRelay(Peer peer, ushort playerUId, ushort id, int heal) 
+        public void HealMinionRelay(Peer peer, ushort playerUId, ushort id, int heal)
         {
             using (var ms = new MemoryStream())
             {
@@ -743,7 +745,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void PushMinionRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, short pushPower) 
+        public void PushMinionRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, short pushPower)
         {
             using (var ms = new MemoryStream())
             {
@@ -757,7 +759,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void SetMinionAnimationTriggerRelay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte trigger) 
+        public void SetMinionAnimationTriggerRelay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte trigger)
         {
             using (var ms = new MemoryStream())
             {
@@ -771,7 +773,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void FireArrowRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeed) 
+        public void FireArrowRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeed)
         {
             using (var ms = new MemoryStream())
             {
@@ -786,9 +788,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void FireballBombRelay(Peer peer, ushort playerUId, ushort id) 
+        public void FireballBombRelay(Peer peer, ushort playerUId, ushort id)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -799,9 +801,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MineBombRelay(Peer peer, ushort playerUId, ushort id) 
+        public void MineBombRelay(Peer peer, ushort playerUId, ushort id)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -812,9 +814,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void SetMagicTargetIdRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) 
+        public void SetMagicTargetIdRelay(Peer peer, ushort playerUId, ushort id, ushort targetId)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -828,7 +830,7 @@ namespace RandomWarsProtocol
 
         public void SetMagicTargetRelay(Peer peer, ushort playerUId, ushort id, short x, short z)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -843,7 +845,7 @@ namespace RandomWarsProtocol
 
         public void SturnMinionRelay(Peer peer, ushort playerUId, ushort id, short sturnTime)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -855,9 +857,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void RocketBombRelay(Peer peer, ushort playerUId, ushort id) 
+        public void RocketBombRelay(Peer peer, ushort playerUId, ushort id)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -868,9 +870,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void IceBombRelay(Peer peer, ushort playerUId, ushort id) 
+        public void IceBombRelay(Peer peer, ushort playerUId, ushort id)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -881,9 +883,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MsgDestroyMagic(Peer peer, ushort playerUId, ushort baseStatId) 
+        public void MsgDestroyMagic(Peer peer, ushort playerUId, ushort baseStatId)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -894,9 +896,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MsgFireCannonBall(Peer peer, ushort playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, short range, byte type) 
+        public void MsgFireCannonBall(Peer peer, ushort playerUId, MsgVector3 shootPos, MsgVector3 targetPos, int power, short range, byte type)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -926,7 +928,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void FireManFireRelay(Peer peer, ushort playerUId, ushort id) 
+        public void FireManFireRelay(Peer peer, ushort playerUId, ushort id)
         {
             using (var ms = new MemoryStream())
             {
@@ -938,7 +940,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void ActivatePoolObjectRelay(Peer peer, int poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation) 
+        public void ActivatePoolObjectRelay(Peer peer, int poolName, MsgVector3 hitPos, MsgVector3 localScale, MsgQuaternion rotation)
         {
             using (var ms = new MemoryStream())
             {
@@ -954,7 +956,7 @@ namespace RandomWarsProtocol
 
         public void MinionCloackingRelay(Peer peer, ushort playerUId, ushort id, bool isCloacking)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -966,7 +968,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MinionFogOfWarRelay(Peer peer, ushort playerUId, ushort baseStatId, short effect, bool isFogOfWar) 
+        public void MinionFogOfWarRelay(Peer peer, ushort playerUId, ushort baseStatId, short effect, bool isFogOfWar)
         {
             using (var ms = new MemoryStream())
             {
@@ -980,7 +982,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void SendMessageVoidRelay(Peer peer, ushort playerUId, ushort id, byte message) 
+        public void SendMessageVoidRelay(Peer peer, ushort playerUId, ushort id, byte message)
         {
             using (var ms = new MemoryStream())
             {
@@ -993,7 +995,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void SendMessageParam1Relay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte message) 
+        public void SendMessageParam1Relay(Peer peer, ushort playerUId, ushort id, ushort targetId, byte message)
         {
             using (var ms = new MemoryStream())
             {
@@ -1007,7 +1009,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void NecromancerBulletRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short bulletMoveSpeed) 
+        public void NecromancerBulletRelay(Peer peer, ushort playerUId, MsgVector3 shootPos, ushort targetId, int power, short bulletMoveSpeed)
         {
             using (var ms = new MemoryStream())
             {
@@ -1022,9 +1024,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void SetMinionTargetRelay(Peer peer, ushort playerUId, ushort id, ushort targetId) 
+        public void SetMinionTargetRelay(Peer peer, ushort playerUId, ushort id, ushort targetId)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -1036,7 +1038,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MinionStatusRelay(Peer peer, ushort playerUId, MsgMinionInfo[] minionInfo, MsgMinionStatus relay, int packetCount) 
+        public void MinionStatusRelay(Peer peer, ushort playerUId, MsgMinionInfo[] minionInfo, MsgMinionStatus relay, int packetCount)
         {
             using (var ms = new MemoryStream())
             {
@@ -1058,7 +1060,7 @@ namespace RandomWarsProtocol
 
         public void ScarecrowRelay(Peer peer, ushort playerUId, ushort baseStatId, byte eyeLevel)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -1070,9 +1072,9 @@ namespace RandomWarsProtocol
         }
 
 
-        public void LayzerTargetRelay(Peer peer, ushort playerUId, ushort id, ushort[] targetId) 
+        public void LayzerTargetRelay(Peer peer, ushort playerUId, ushort id, ushort[] targetId)
         {
-            
+
             using (var ms = new MemoryStream())
             {
                 BinaryWriter bw = new BinaryWriter(ms);
@@ -1088,7 +1090,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void FireBulletRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeedk, byte type) 
+        public void FireBulletRelay(Peer peer, ushort playerUId, ushort id, MsgVector3 pos, int damage, short moveSpeedk, byte type)
         {
             using (var ms = new MemoryStream())
             {
@@ -1104,7 +1106,7 @@ namespace RandomWarsProtocol
         }
 
 
-        public void MinionInvincibilityRelay(Peer peer, ushort playerUId, ushort id, short time) 
+        public void MinionInvincibilityRelay(Peer peer, ushort playerUId, ushort id, short time)
         {
             using (var ms = new MemoryStream())
             {
