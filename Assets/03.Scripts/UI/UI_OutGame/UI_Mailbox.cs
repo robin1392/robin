@@ -73,6 +73,7 @@ public class UI_Mailbox : UI_Popup
         foreach (var info in list_MailInfo)
         {
             var mail = Instantiate(pref_MailSlot, Vector3.zero, Quaternion.identity, rts_Content).GetComponent<UI_MailSlot>();
+            mail.transform.localPosition = Vector3.zero;
             mail.Initialize(info);
         }
     }
