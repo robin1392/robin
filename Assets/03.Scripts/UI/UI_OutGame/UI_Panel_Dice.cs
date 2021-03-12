@@ -8,9 +8,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using CodeStage.AntiCheat.ObscuredTypes;
 using DG.Tweening;
+using RandomWarsResource.Data;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using Template.Character.RandomwarsDice.Common;
+using Template.Item.RandomwarsItem.Common;
 using Image = UnityEngine.UI.Image;
 
 namespace ED
@@ -22,29 +24,43 @@ namespace ED
         public UI_Popup_Dice_Info ui_Popup_Dice_Info;
         public RectTransform tsGettedDiceParent;
         public RectTransform tsGettedGuardianParent;
+        public RectTransform tsGettedEmotionParent;
         public RectTransform tsUngettedDiceParent;
         public RectTransform tsUngettedGuardianParent;
+        public RectTransform tsUngettedEmotionParent;
         public List<UI_Getted_Dice> listGettedDice = new List<UI_Getted_Dice>();
         public List<UI_Getted_Dice> listUngettedDice = new List<UI_Getted_Dice>();
+        public List<UI_Getted_Emotion> listGettedEmotion = new List<UI_Getted_Emotion>();
+        public List<UI_Getted_Emotion> listUngettedEmotion = new List<UI_Getted_Emotion>();
         public GameObject objSelectBlind;
         public RectTransform rts_ScrollView;
+        public RectTransform rts_ScrollViewGuardian;
+        public RectTransform rts_ScrollViewEmotion;
         public ScrollRect scrollView;
         public RectTransform rts_Content;
         public Text text_BonusHP;
         public GameObject obj_Ciritical;
 
         public List<UI_DeckInfo> listDeckInfo = new List<UI_DeckInfo>();
+        public GameObject obj_EmotionDeckInfo;
 
         public Text text_GettedDice;
         public Text text_UngettedDice;
         public Text text_GettedGuardian;
         public Text text_UngettedGuardian;
+        public Text text_GettedEmotion;
+        public Text text_UngettedEmotion;
         
         [Header("Prefabs")]
         public GameObject prefGettedDice;
+        public GameObject prefGettedEmotion;
 
-        private bool _isSelectMode;
+        [Header("Emotion")] 
+        public Image[] arrImage_EmotionDeck;
+
+        public bool _isSelectMode;
         private int _selectedDiceId;
+        private int _selectedEmotionId;
 
         
         private void Start()
@@ -69,6 +85,21 @@ namespace ED
             if(UserInfoManager.Get() == null)
                 print("user null");
             //scrollView.OnDrag(data => { GetComponentInParent<UI_Main>().OnDrag((PointerEventData)data);});
+            
+            // Emotion Deck
+            RefreshEmotionDeck();
+        }
+
+        public void RefreshEmotionDeck()
+        {
+            for (int i = 0; i < UserInfoManager.Get().GetUserInfo().emotionDeck.Count; i++)
+            {
+                TDataItemList data;
+                if (TableManager.Get().ItemList.GetData(UserInfoManager.Get().GetUserInfo().emotionDeck[i], out data))
+                {
+                    arrImage_EmotionDeck[i].sprite = FileHelper.GetIcon(data.itemIcon);
+                }
+            }
         }
 
         public void RefreshGettedDice()
@@ -80,7 +111,6 @@ namespace ED
                     DestroyImmediate(listGettedDice[i].gameObject);
                 }
             }
-            
             if (listUngettedDice.Count > 0)
             {
                 for (int i = listUngettedDice.Count - 1; i >= 0; --i)
@@ -88,9 +118,25 @@ namespace ED
                     DestroyImmediate(listUngettedDice[i].gameObject);
                 }
             }
+            if (listGettedEmotion.Count > 0)
+            {
+                for (int i = listGettedEmotion.Count - 1; i >= 0; --i)
+                {
+                    DestroyImmediate(listGettedEmotion[i].gameObject);
+                }
+            }
+            if (listUngettedEmotion.Count > 0)
+            {
+                for (int i = listUngettedEmotion.Count - 1; i >= 0; --i)
+                {
+                    DestroyImmediate(listUngettedEmotion[i].gameObject);
+                }
+            }
             
             listGettedDice.Clear();
             listUngettedDice.Clear();
+            listGettedEmotion.Clear();
+            listUngettedEmotion.Clear();
             int gettedSlotCount = 0;
             int ungettedSlotCount = 0;
             int bonusHP = 0;
@@ -98,11 +144,17 @@ namespace ED
 
             RandomWarsResource.Data.TDataDiceInfo[] dataDiceInfoArray;
             RandomWarsResource.Data.TDataGuardianInfo[] dataGuardianInfoArray;
+            RandomWarsResource.Data.TDataItemList[] dataEmotionInfoArray;
             if (TableManager.Get().DiceInfo.GetData( x => x.enableDice, out dataDiceInfoArray) == false)
             {
                 return;
             }
             if (TableManager.Get().GuardianInfo.GetData( x => x.enableDice == false, out dataGuardianInfoArray) == false)
+            {
+                return;
+            }
+
+            if (TableManager.Get().ItemList.GetData(x => x.id > 7000 && x.id < 8000, out dataEmotionInfoArray) == false)
             {
                 return;
             }
@@ -158,6 +210,27 @@ namespace ED
                     ugd.SetGrayscale();
                 }
             }
+
+            foreach (var dataEmotion in dataEmotionInfoArray)
+            {
+                // 보유중
+                if (UserInfoManager.Get().GetUserInfo().emotionIds.Contains(dataEmotion.id))
+                {
+                    var obj = Instantiate(prefGettedEmotion, tsGettedEmotionParent);
+                    var uge = obj.GetComponent<UI_Getted_Emotion>();
+                    listGettedEmotion.Add(uge);
+                    uge.Initialize(dataEmotion.id);
+                }
+                // 미보유중
+                else
+                {
+                    var obj = Instantiate(prefGettedEmotion, tsUngettedEmotionParent);
+                    var uge = obj.GetComponent<UI_Getted_Emotion>();
+                    listUngettedEmotion.Add(uge);
+                    uge.Initialize(dataEmotion.id);
+                    uge.Deactive();
+                }
+            }
             
             // Grid 즉시 업데이트
             // LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
@@ -187,6 +260,10 @@ namespace ED
             bool isUngettedGuardianEmpty = tsUngettedGuardianParent.childCount == 0;
             text_UngettedGuardian.gameObject.SetActive(!isUngettedGuardianEmpty);
             tsUngettedGuardianParent.gameObject.SetActive(!isUngettedGuardianEmpty);
+            
+            bool isUngettedEmotionEmpty = tsUngettedEmotionParent.childCount == 0;
+            text_UngettedEmotion.gameObject.SetActive(!isUngettedEmotionEmpty);
+            tsUngettedEmotionParent.gameObject.SetActive(!isUngettedEmotionEmpty);
 
             text_BonusHP.text = bonusHP.ToString();
         }
@@ -298,15 +375,6 @@ namespace ED
                 }
                 if (!isChanged) intDeck[deckSlotNum] = _selectedDiceId;
 
-                //if (WebPacket.Get() != null)
-                //{
-                //    NetworkManager.Get().UpdateDeckReq(UserInfoManager.Get().GetUserInfo().userID,(sbyte)active, intDeck);
-                //    UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-                //}
-                //else
-                //{
-                //    UserInfoManager.Get().GetUserInfo().SetDeck(active, intDeck);
-                //}
                 NetworkManager.session.DiceTemplate.DiceChangeDeckReq(NetworkManager.session.HttpClient, active, intDeck, OnReceiveDiceChangeDeckAck);
                 UI_Main.Get().obj_IndicatorPopup.SetActive(true);
 
@@ -316,12 +384,71 @@ namespace ED
                 _isSelectMode = false;
                 
                 Click_CancelSelectMode();
-                
-                //CallBackDeckUpdate();
             }
             else
             {
                 Click_Dice_Info(intDeck[deckSlotNum]);
+            }
+        }
+
+        public void Click_EmotionUse(int emotionId)
+        {
+            _isSelectMode = true;
+            _selectedEmotionId = emotionId;
+            
+            DeactivateSelectedObjectChild();
+            obj_Ciritical.SetActive(false);
+            objSelectBlind.SetActive(true);
+
+
+            RandomWarsResource.Data.TDataItemList data;
+            if (TableManager.Get().ItemList.GetData(emotionId, out data) == false)
+            {
+                return;
+            }
+
+            objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite =
+                FileHelper.GetIcon(data.itemIcon);
+
+            rts_Content.DOAnchorPosY(0, 0.1f);
+
+            tsGettedEmotionParent.gameObject.SetActive(false);
+            tsUngettedEmotionParent.gameObject.SetActive(false);
+            text_GettedEmotion.gameObject.SetActive(false);
+            text_UngettedEmotion.gameObject.SetActive(false);
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_UI_BUTTON);
+        }
+        
+        public void Click_EmotionDeck(int deckSlotNum)
+        {
+            if (_isSelectMode)
+            {
+                var isChanged = false;
+                
+                for (var i = 0; i < UserInfoManager.Get().GetUserInfo().emotionDeck.Count; i++)
+                {
+                    if (i == deckSlotNum) continue;
+                    if (UserInfoManager.Get().GetUserInfo().emotionDeck[i] == _selectedEmotionId)
+                    {
+                        var temp = UserInfoManager.Get().GetUserInfo().emotionDeck[deckSlotNum];
+                        UserInfoManager.Get().GetUserInfo().emotionDeck[deckSlotNum] = _selectedEmotionId;
+                        UserInfoManager.Get().GetUserInfo().emotionDeck[i] = temp;
+                        isChanged = true;
+                        break;
+                    }
+                }
+                
+                if (!isChanged) UserInfoManager.Get().GetUserInfo().emotionDeck[deckSlotNum] = _selectedEmotionId;
+                
+                NetworkManager.session.ItemTemplate.EmotionEquipReq(NetworkManager.session.HttpClient,
+                    UserInfoManager.Get().GetUserInfo().emotionDeck, OnRecieveEmotionChange);
+                UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+                
+                objSelectBlind.SetActive(false);
+                _isSelectMode = false;
+                
+                Click_CancelSelectMode();
             }
         }
 
@@ -338,6 +465,20 @@ namespace ED
             return true;
         }
 
+        public bool OnRecieveEmotionChange(ERandomwarsItemErrorCode errorCode, List<int> listItemId)
+        {
+            UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+            if (errorCode == ERandomwarsItemErrorCode.Success)
+            {
+                UserInfoManager.Get().GetUserInfo().emotionDeck = listItemId;
+                RefreshEmotionDeck();
+                
+                return true;
+            }
+
+            return false;
+        }
+
         public void HideSelectPanel()
         {
             Click_CancelSelectMode();
@@ -350,37 +491,6 @@ namespace ED
 
         public void SetActiveDeck()
         {
-            // int active = UserInfoManager.Get().GetActiveDeckIndex();
-            // switch (active)
-            // {
-            //     case 0:
-            //         arrImageDeckButton[0].sprite = sprite_Use;
-            //         arrImageDeckButton[1].sprite = sprite_UnUse;
-            //         arrImageDeckButton[2].sprite = sprite_UnUse;
-            //         arrTextDeckButton[0].color = Color.white;
-            //         arrTextDeckButton[1].color = Color.gray;
-            //         arrTextDeckButton[2].color = Color.gray;
-            //         break;
-            //     case 1:
-            //         arrImageDeckButton[0].sprite = sprite_UnUse;
-            //         arrImageDeckButton[1].sprite = sprite_Use;
-            //         arrImageDeckButton[2].sprite = sprite_UnUse;
-            //         arrTextDeckButton[0].color = Color.gray;
-            //         arrTextDeckButton[1].color = Color.white;
-            //         arrTextDeckButton[2].color = Color.gray;
-            //         break;
-            //     case 2:
-            //         arrImageDeckButton[0].sprite = sprite_UnUse;
-            //         arrImageDeckButton[1].sprite = sprite_UnUse;
-            //         arrImageDeckButton[2].sprite = sprite_Use;
-            //         arrTextDeckButton[0].color = Color.gray;
-            //         arrTextDeckButton[1].color = Color.gray;
-            //         arrTextDeckButton[2].color = Color.white;
-            //         break;
-            // }
-            //
-            // RefreshDeck();
-
             foreach (var deckInfo in listDeckInfo)
             {
                 deckInfo.SetActiveDeck();
@@ -401,8 +511,10 @@ namespace ED
             
             tsGettedDiceParent.gameObject.SetActive(true);
             tsGettedGuardianParent.gameObject.SetActive(true);
+            tsGettedEmotionParent.gameObject.SetActive(true);
             text_GettedDice.gameObject.SetActive(true);
             text_GettedGuardian.gameObject.SetActive(true);
+            text_GettedEmotion.gameObject.SetActive(true);
             
             bool isUngettedDiceEmpty = tsUngettedDiceParent.childCount == 0;
             text_UngettedDice.gameObject.SetActive(!isUngettedDiceEmpty);
@@ -411,6 +523,10 @@ namespace ED
             bool isUngettedGuardianEmpty = tsUngettedGuardianParent.childCount == 0;
             text_UngettedGuardian.gameObject.SetActive(!isUngettedGuardianEmpty);
             tsUngettedGuardianParent.gameObject.SetActive(!isUngettedGuardianEmpty);
+
+            bool isUngettedEmotionEmpty = tsUngettedEmotionParent.childCount == 0;
+            text_UngettedEmotion.gameObject.SetActive(!isUngettedEmotionEmpty);
+            tsUngettedEmotionParent.gameObject.SetActive(!isUngettedEmotionEmpty);
         }
     }
 }

@@ -955,6 +955,9 @@ MonoBehaviour:
   ddlTimeoutSec: 0
   sessionTimeoutSec: 0
   shortlinkResolveTimeout: 0
+  SKANEnabled: 0
+  manualSKANConversionManagement: 0
+  waitForTrackingAuthorizationWithTimeoutInterval: 0
 --- !u!1 &525998194
 GameObject:
   m_ObjectHideFlags: 0

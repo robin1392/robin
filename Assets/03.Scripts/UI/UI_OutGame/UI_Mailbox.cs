@@ -19,6 +19,7 @@ public class UI_Mailbox : UI_Popup
 
     private static List<MailInfo> list_MailInfo = new List<MailInfo>();
     private DateTime refreshTime;
+    private bool isInitialized;
 
     private void Update()
     {
@@ -30,7 +31,15 @@ public class UI_Mailbox : UI_Popup
     public void Initialize()
     {
         gameObject.SetActive(true);
-        RefreshSlots();
+        if (isInitialized == false)
+        {
+            isInitialized = true;
+            Click_RefreshButton();
+        }
+        else
+        {
+            RefreshSlots();
+        }
         Open();
     }
 

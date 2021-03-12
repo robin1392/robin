@@ -59,6 +59,8 @@ public class UserInfo
     public int rankPoint;
     public List<int> seasonPassRewardIds;
     public List<int> trophyRewardIds;
+    public List<int> emotionIds;
+    public List<int> emotionDeck;
     public DateTime seasonEndTime;
     
     private string _ticketId;
@@ -505,12 +507,21 @@ public class UserInfoManager : Singleton<UserInfoManager>
         }
 
         // 이모티콘
+        _userInfo.emotionIds = new List<int>();
         for (int i = 0; i < userItemInfo.listEmoticon.Count; i++)
         {
+            _userInfo.emotionIds.Add(userItemInfo.listEmoticon[i].ItemId);
+            Debug.Log($"Emotion : id={userItemInfo.listEmoticon[i].ItemId}, value={userItemInfo.listEmoticon[i].Value}");
         }
 
         // 이모티콘 슬롯
         //userItemInfo.listEmoticonSlot
+        _userInfo.emotionDeck = new List<int>();
+        foreach (var value in userItemInfo.listEmoticonSlot)
+        {
+            _userInfo.emotionDeck.Add(value);
+            Debug.Log($"Emotion slot : {value}");
+        }
     }
     #endregion
 }
