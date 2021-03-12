@@ -206,6 +206,8 @@ public class GameStateManager : Singleton<GameStateManager>
         
         yield return new WaitForSeconds(0.3f);
 
+#if UNITY_EDITOR
+#else
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             UI_Start.Get().commonMessageBox.Initialize(LocalizationManager.GetLangDesc("Option_Internet"),
@@ -218,7 +220,8 @@ public class GameStateManager : Singleton<GameStateManager>
 
             yield break;
         }
-        
+#endif
+
         // 서버 접속이 끝난후 버전 체크를 한다
         GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_VERSION);
     }

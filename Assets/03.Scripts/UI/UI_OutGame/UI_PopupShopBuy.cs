@@ -83,8 +83,14 @@ public class UI_PopupShopBuy : UI_Popup
                 {
                     obj_Gauge.SetActive(true);
 
-                    int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[diceInfo.id][0];
-                    int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[diceInfo.id][1];
+                    int level = 1;
+                    int diceCount = 0;
+
+                    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(diceInfo.id))
+                    {
+                        level = UserInfoManager.Get().GetUserInfo().dicGettedDice[diceInfo.id][0];
+                        diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[diceInfo.id][1];
+                    }
                     TDataDiceUpgrade dataDiceUpgrade;
                     if (TableManager.Get().DiceUpgrade
                         .GetData(x => x.diceLv == level + 1 && x.diceGrade == diceInfo.grade, out dataDiceUpgrade))

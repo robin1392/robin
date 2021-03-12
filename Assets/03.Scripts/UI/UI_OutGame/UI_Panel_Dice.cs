@@ -81,6 +81,8 @@ namespace ED
  
             //SafeAreaRect.anchorMin = anchorMin;
             rts_ScrollView.anchorMax = anchorMax;
+            rts_ScrollViewGuardian.anchorMax = anchorMax;
+            rts_ScrollViewEmotion.anchorMax = anchorMax;
             
             if(UserInfoManager.Get() == null)
                 print("user null");
@@ -232,9 +234,6 @@ namespace ED
                 }
             }
             
-            // Grid 즉시 업데이트
-            // LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
-            // LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedDiceParent);
             //
             // if (ungettedSlotCount > 0)
             // {
@@ -265,6 +264,14 @@ namespace ED
             text_UngettedEmotion.gameObject.SetActive(!isUngettedEmotionEmpty);
             tsUngettedEmotionParent.gameObject.SetActive(!isUngettedEmotionEmpty);
 
+            // Grid 즉시 업데이트
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedDiceParent);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedDiceParent);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedGuardianParent);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedGuardianParent);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedEmotionParent);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedEmotionParent);
+            
             text_BonusHP.text = bonusHP.ToString();
         }
 
