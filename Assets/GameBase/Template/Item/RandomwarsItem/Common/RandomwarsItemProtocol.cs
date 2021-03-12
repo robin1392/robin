@@ -89,7 +89,7 @@ namespace Template.Item.RandomwarsItem.Common
             JObject json = new JObject();
             json.Add("accessToken", sender.GetAccessToken());
             json.Add("listItemId", JsonConvert.SerializeObject(listItemId));
-            return sender.SendHttpPost((int)ERandomwarsItemProtocol.EmotionEquipReq, "emotionequip", json.ToString());
+            return sender.SendHttpPost((int)ERandomwarsItemProtocol.EmotionEquipReq, "emoticonequip", json.ToString());
         }
 
         public delegate (ERandomwarsItemErrorCode errorCode, List<int> listItemId) ReceiveEmotionEquipReqDelegate(string accessToken, List<int> listItemId);

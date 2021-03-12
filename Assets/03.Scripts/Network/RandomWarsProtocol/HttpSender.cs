@@ -67,7 +67,7 @@ namespace RandomWarsProtocol
 
         public void StartMatchReq(MsgStartMatchReq msg)
         {
-            _httpService.Send((int)GameProtocol.START_MATCH_REQ, "matchrequest", JsonConvert.SerializeObject(msg));
+            _httpService.Send((int)GameProtocol.START_MATCH_REQ, "matchrequest2", JsonConvert.SerializeObject(msg));
         }
 
 
