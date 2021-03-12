@@ -98,7 +98,6 @@ public class UI_Mailbox : UI_Popup
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         NetworkManager.session.MailBoxTemplate.MailBoxInfoReq(NetworkManager.session.HttpClient, 
-            NetworkManager.session.HttpClient.GetAccessToken(),
             MailBoxInfoAck);
 
         btn_Refresh.interactable = false;

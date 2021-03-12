@@ -83,13 +83,11 @@ public class UI_MailSlot : MonoBehaviour
     public void Click_ItemButton()
     {
         NetworkManager.session.MailBoxTemplate.MailReceiveReq(NetworkManager.session.HttpClient,
-            NetworkManager.session.HttpClient.GetAccessToken(),
             info.mailId,
             RecieveItemCallback);
     }
 
-    private bool RecieveItemCallback(GameBaseMailBoxErrorCode errorCode, ItemBaseInfo[] arrayMailItemInfo,
-        MailInfo[] arrayMailInfo)
+    private bool RecieveItemCallback(GameBaseMailBoxErrorCode errorCode, ItemBaseInfo[] arrayMailItemInfo)
     {
         if (errorCode == GameBaseMailBoxErrorCode.Success)
         {
