@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.Experimental.TerrainAPI;
+#endif
 
 [RequireComponent(typeof(RectTransform))]
 public class UI_FollowSizedelta : MonoBehaviour
@@ -33,6 +34,8 @@ public class UI_FollowSizedelta : MonoBehaviour
     }
 }
 
+
+#if UNITY_EDITOR
 [CustomEditor(typeof(UI_FollowSizedelta))]
 public class UI_FollowSizedeltaEditor : Editor
 {
@@ -51,3 +54,4 @@ public class UI_FollowSizedeltaEditor : Editor
         }
     }
 }
+#endif
