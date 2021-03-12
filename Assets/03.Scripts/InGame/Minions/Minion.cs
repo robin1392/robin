@@ -69,8 +69,8 @@ namespace ED
         protected int _flagOfWarCount;
 
         protected static readonly string _scarecrow = "Scarecrow";
-        protected static readonly E_BulletType _arrow = E_BulletType.ARROW;
-        protected static readonly E_BulletType _spear = E_BulletType.SPEAR;
+        [SerializeField] protected E_BulletType _arrow = E_BulletType.ARROW;
+        [SerializeField] protected E_BulletType _spear = E_BulletType.SPEAR;
 
         protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool = new Dictionary<MAZ, PoolObjectAutoDeactivate>();
         protected Shield _shield;

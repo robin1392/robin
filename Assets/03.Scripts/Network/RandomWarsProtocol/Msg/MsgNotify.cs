@@ -49,10 +49,11 @@ namespace RandomWarsProtocol.Msg
     {
         public int ErrorCode;
         public GAME_RESULT GameResult;
-        public byte WinningStreak;
+        public short WinningStreak;
         public ItemBaseInfo[] NormalReward;
         public ItemBaseInfo[] StreakReward;
         public ItemBaseInfo[] PerfectReward;
+        public ItemBaseInfo LoseReward;
         public QuestData[] QuestData;
     }
 

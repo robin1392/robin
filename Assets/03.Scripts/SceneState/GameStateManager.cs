@@ -205,7 +205,23 @@ public class GameStateManager : Singleton<GameStateManager>
         UI_Start.Get().SetTextStatus(Global.g_startStatusConnect);
         
         yield return new WaitForSeconds(0.3f);
-        
+
+#if UNITY_EDITOR
+#else
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            UI_Start.Get().commonMessageBox.Initialize(LocalizationManager.GetLangDesc("Option_Internet"),
+                LocalizationManager.GetLangDesc("Option_Internetconfirm"),
+                LocalizationManager.GetLangDesc("Option_Quit"), null,
+                () =>
+                {
+                    Application.Quit();
+                }, false);
+
+            yield break;
+        }
+#endif
+
         // 서버 접속이 끝난후 버전 체크를 한다
         GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_VERSION);
     }
@@ -304,9 +320,9 @@ public class GameStateManager : Singleton<GameStateManager>
 #if UNITY_EDITOR
                 NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
 #elif UNITY_ANDROID
-                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Android, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
 #elif UNITY_IOS
-                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.IOS, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
 #endif
             }
         }
@@ -338,8 +354,6 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <returns></returns>
     public bool OnReceiveAccountLoginAck(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo)
     {
-        Debug.Log($"OnReceiveAccountLoginAck. errorCode: {errorCode}, {Newtonsoft.Json.JsonConvert.SerializeObject(accountInfo)}");
-
         if (errorCode != EGameBaseAccountErrorCode.Success)
         {
             Debug.LogError("Error OnReceiveAccountLoginAck. errorCode: " + errorCode);
@@ -369,7 +383,7 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <param name="questInfo"></param>
     /// <param name="seasonInfo"></param>
     /// <returns></returns>
-    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo)
+    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserItemInfo userItemInfo, QuestInfo questInfo, UserSeasonInfo seasonInfo)
     {
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {
@@ -382,7 +396,7 @@ public class GameStateManager : Singleton<GameStateManager>
         UserInfoManager.Get().SetUserInfo(userInfo, seasonInfo);
         UserInfoManager.Get().SetDeck(arrayUserDeck);
         UserInfoManager.Get().SetDice(arrayUserDice);
-        UserInfoManager.Get().SetBox(arrayUserBox);
+        UserInfoManager.Get().SetItem(userItemInfo);
         UI_Popup_Quest.QuestUpdate(questInfo);
 
         GameStateManager.Get().UserAuthOK();

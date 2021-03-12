@@ -12,6 +12,8 @@ namespace ED
     {
         public float bulletMoveSpeed = 6f;
 
+        public GameObject pref_Bullet;
+
         protected override void Start()
         {
             base.Start();
@@ -19,6 +21,7 @@ namespace ED
             var ae = animator.GetComponent<MinionAnimationEvent>();
             ae.event_FireArrow += FireArrow;
             ae.event_FireSpear += FireSpear;
+            PoolManager.instance.AddPool(pref_Bullet, 2);
         }
 
         public override void Attack()

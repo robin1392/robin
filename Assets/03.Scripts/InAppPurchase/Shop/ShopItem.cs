@@ -183,11 +183,11 @@ namespace Percent.Platform
                         }
 
                         textPItemId.text = $"x{data.itemValue01}";
-                    }
-
-                    if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
-                    {
-                        imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
+                        
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
+                        {
+                            imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
+                        }
                     }
                     
                     buttonShopItem.interactable = shopProductInfo.buyCount == 0;

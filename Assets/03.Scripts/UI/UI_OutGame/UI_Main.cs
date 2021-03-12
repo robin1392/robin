@@ -57,6 +57,7 @@ namespace ED
         public UI_Popup_DailyShopReset dailyShopResetPopup;
         public UI_Popup_MoveShop moveShopPopup;
         public UI_Language languagePopup;
+        public UI_Mailbox mailboxPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -70,6 +71,7 @@ namespace ED
         [Header("Badge")]
         public GameObject obj_MenuBadge;
         public GameObject obj_QuestBadge;
+        public GameObject obj_MailboxBadge;
 
         [Space]
         public bool isAIMode;
@@ -108,7 +110,9 @@ namespace ED
             
             if (UserInfoManager.Get().GetUserInfo().needSeasonReset)
             {
-                ShowMessageBox("시즌 종료", "시즌이 종료되었습니다.", seasonEndPopup.Initialize);
+                ShowMessageBox(LocalizationManager.GetLangDesc("Seasonpass_Endseason"), 
+                    LocalizationManager.GetLangDesc("Seasonpass_Endseason"), 
+                    seasonEndPopup.Initialize);
             }
 
             // TDataShopProductList data;
@@ -155,7 +159,9 @@ namespace ED
                 }
                 else
                 {
-                    commonMessageBoxPopup.Initialize("게임 종료", "게임을 종료 하시겠습니까?", "종료", null, () =>
+                    commonMessageBoxPopup.Initialize(LocalizationManager.GetLangDesc("Option_Gamequit"),
+                        LocalizationManager.GetLangDesc("Option_Gamequitquestion"), 
+                        LocalizationManager.GetLangDesc("Option_Quit"), null, () =>
                     {
                         Application.Quit();
                     });
@@ -171,8 +177,11 @@ namespace ED
             // 퀘스트 뱃지 체크
             obj_QuestBadge.SetActive(UI_Popup_Quest.IsCompletedQuest());
             
+            // 우편함 뱃지 체크
+            obj_MailboxBadge.SetActive(UI_Mailbox.GetMailCount() > 0);
+            
             // 메뉴버튼 뱃지 체크
-            obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf);
+            obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf || obj_MailboxBadge.activeSelf);
         }
 
         public void RefreshUserInfoUI()
@@ -254,6 +263,12 @@ namespace ED
         {
             UI_Popup.AllClose();
             rankPopup.Initialize();
+        }
+
+        public void Click_MailboxButton()
+        {
+            UI_Popup.AllClose();
+            mailboxPopup.Initialize();
         }
 
         public void Click_MenuButton()

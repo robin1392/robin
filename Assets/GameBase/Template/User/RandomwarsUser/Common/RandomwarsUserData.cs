@@ -22,4 +22,14 @@ namespace Template.User.RandomwarsUser.Common
         public int HighTrophy;
         public bool EndTutorial;
     }
+
+
+    // 유저 아이템 정보
+    public class UserItemInfo
+    {
+        public List<ItemBaseInfo> listBox;
+        public List<ItemBaseInfo> listPass;
+        public List<ItemBaseInfo> listEmoticon;
+        public List<int> listEmoticonSlot;
+    }
 }

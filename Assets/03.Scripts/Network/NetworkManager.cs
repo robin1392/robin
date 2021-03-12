@@ -234,6 +234,7 @@ public class NetworkManager : Singleton<NetworkManager>
         InitNetwork();
     }
 
+
     // Update is called once per frame
     void Update()
     {

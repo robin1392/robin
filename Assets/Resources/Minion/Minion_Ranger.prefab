@@ -157,6 +157,8 @@ MonoBehaviour:
   eyeLevel: 0
   ingameUpgradeLevel: 0
   isPolymorph: 0
+  _arrow: 0
+  _spear: 1
   bulletMoveSpeed: 6
   ps_Fire: {fileID: 0}
   light_Fire: {fileID: 0}
@@ -376,6 +378,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 205224710312260670, guid: a6db5fea9637448d2b9c58a12d37c8cc,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 205224710312260670, guid: a6db5fea9637448d2b9c58a12d37c8cc,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 205224710312260670, guid: a6db5fea9637448d2b9c58a12d37c8cc,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 689836232376266372, guid: a6db5fea9637448d2b9c58a12d37c8cc,
         type: 3}

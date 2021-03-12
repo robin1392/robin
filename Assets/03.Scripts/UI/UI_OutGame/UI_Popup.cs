@@ -26,6 +26,7 @@ namespace ED
         public AudioClip clip_Close;
 
         protected Button btn_BG_Close;
+        protected bool isBgButtonEnable = true;
         public static Stack<UI_Popup> stack = new Stack<UI_Popup>();
 
         private void Awake()
@@ -43,23 +44,22 @@ namespace ED
             }
         }
 
-        protected void Open()
+        protected virtual void Open()
         {
-            btn_BG_Close.interactable = false;
+            if (btn_BG_Close != null) btn_BG_Close.interactable = false;
             StartCoroutine(BGButtonEnable());
             
             if (isPopAnimation)
             {
-                if (btn_BG_Close != null) btn_BG_Close.interactable = false;
                 rts_Frame.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
                 {
-                    if (btn_BG_Close != null) btn_BG_Close.interactable = true;
+                    if (btn_BG_Close != null) btn_BG_Close.interactable = isBgButtonEnable;
                 });
                 image_BG.DOFade(alphaBG, 0.2f);
             }
             else
             {
-                if (btn_BG_Close != null) btn_BG_Close.interactable = true;
+                if (btn_BG_Close != null) btn_BG_Close.interactable = isBgButtonEnable;
                 rts_Frame.DOScale(Vector3.one, 0f);
                 image_BG.DOFade(alphaBG, 0f);
             }
@@ -71,7 +71,7 @@ namespace ED
         IEnumerator BGButtonEnable()
         {
             yield return new WaitForSeconds(1f);
-            btn_BG_Close.interactable = true;
+            btn_BG_Close.interactable = isBgButtonEnable;
         }
 
         public virtual void Close()

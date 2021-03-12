@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using ED;
 using Percent.Platform.InAppPurchase;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 
 public class UI_Popup_MoveShop : UI_Popup
 {
     public RectTransform rts_VerticalGroup;
+    public Text text_Message;
 
     private UI_BoxOpenPopup.COST_TYPE type;
     
@@ -24,6 +27,24 @@ public class UI_Popup_MoveShop : UI_Popup
     {
         gameObject.SetActive(true);
         this.type = type;
+        switch (type)
+        {
+            case UI_BoxOpenPopup.COST_TYPE.KEY:
+                break;
+            case UI_BoxOpenPopup.COST_TYPE.GOLD:
+                text_Message.text = string.Format(LocalizationManager.GetLangDesc("Shop_Needgoodsmessage"),
+                    LocalizationManager.GetLangDesc("Gamemoney_Gold"));
+                break;
+            case UI_BoxOpenPopup.COST_TYPE.DIAMOND:
+                text_Message.text = string.Format(LocalizationManager.GetLangDesc("Shop_Needgoodsmessage"),
+                    LocalizationManager.GetLangDesc("Gamemoney_Diamond"));
+                break;
+        }
+        
+        LayoutRebuilder.ForceRebuildLayoutImmediate(text_Message.rectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)text_Message.rectTransform.parent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)text_Message.rectTransform.parent.parent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)text_Message.rectTransform.parent.parent.parent);
     }
 
     public void Click_MoveButton()

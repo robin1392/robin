@@ -218,6 +218,15 @@ namespace ED
             {
                 diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
+                btn_Use.gameObject.SetActive(true);
+                btn_Upgrade.gameObject.SetActive(true);
+            }
+            else
+            {
+                diceLevel = 1;
+                diceCount = 0;
+                btn_Use.gameObject.SetActive(false);
+                btn_Upgrade.gameObject.SetActive(false);
             }
 
             int bonusTowerHp = 0;
@@ -270,7 +279,7 @@ namespace ED
             SetUnitGrade();
             SetInfoDesc();
             
-            btn_Upgrade.gameObject.SetActive(!data.isGuardian);
+            btn_Upgrade.gameObject.SetActive(btn_Upgrade.gameObject.activeSelf && !data.isGuardian);
             btn_ShowUpgrade.gameObject.SetActive(!data.isGuardian);
             btn_ShowLevelUp.gameObject.SetActive(!data.isGuardian);
             text_TowerHP.transform.parent.gameObject.SetActive(!data.isGuardian);
@@ -529,26 +538,33 @@ namespace ED
             listInfoUI[7].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Searchrange");
 
             string castLangIndex = string.Empty;
+            string castInfoLangIndex = string.Empty;
             switch (data.castType)
             {
                 case DICE_CAST_TYPE.MINION:
-                    castLangIndex = "Gameui_Unit";
+                    castLangIndex = "Minioninfo_Casttype0";
+                    castInfoLangIndex = "Minioninfo_Casttypeguide0";
                     break;
                 case DICE_CAST_TYPE.MAGIC:
-                    castLangIndex = "Gameui_Magic";
+                    castLangIndex = "Minioninfo_Casttype2";
+                    castInfoLangIndex = "Minioninfo_Casttypeguide2";
                     break;
                 case DICE_CAST_TYPE.INSTALLATION:
-                    castLangIndex = "Gameui_Install";
+                    castLangIndex = "Minioninfo_Casttype3";
+                    castInfoLangIndex = "Minioninfo_Casttypeguide3";
                     break;
                 case DICE_CAST_TYPE.HERO:
-                    castLangIndex = "Gameui_Hero";
+                    castLangIndex = "Minioninfo_Casttype1";
+                    castInfoLangIndex = "Minioninfo_Casttypeguide1";
                     break;
                 default:
-                    castLangIndex = "Itemname_Guardian_5001";
+                    castLangIndex = "Minioninfo_Casttype4";
+                    castInfoLangIndex = "Minioninfo_Casttypeguide4";
                     break;
             }
             
-            text_Type.text = LocalizationManager.GetLangDesc( castLangIndex);
+            text_Type.text = LocalizationManager.GetLangDesc(castLangIndex);
+            text_TypeInfo.text = LocalizationManager.GetLangDesc(castInfoLangIndex);
             if (data.isGuardian)
             {
                 image_Type.sprite = arrSprite_Type[4];
