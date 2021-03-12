@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace ED
 {
     [System.Serializable]
-    public class BaseStat : MonoBehaviour
+    public partial class BaseStat : MonoBehaviour
     {
         public ActorProxy ActorProxy;
         public bool isMine;
@@ -121,20 +121,19 @@ namespace ED
             image_HealthBar.color = ActorProxy.IsLocalPlayerAlly() ? Color.green : Color.red;
         }
         
-        protected virtual void SetColor(E_MaterialType type)
+        public virtual void SetColor(E_MaterialType type, bool isAlly)
         {
             if (arrMeshRenderer == null)
             {
                 arrMeshRenderer = GetComponentsInChildren<MeshRenderer>();
             }
             
+            var mat = arrMaterial[isAlly ? 0 : 1];
+            
             foreach (var m in arrMeshRenderer)
             {
-                if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
-                    m.material = arrMaterial[isMine ? 0 : 1];
-                else
-                    m.material = arrMaterial[isBottomPlayer ? 0 : 1];
-                
+                m.material = mat;
+
                 switch (type)
                 {
                     case E_MaterialType.BOTTOM:
@@ -163,11 +162,8 @@ namespace ED
 
             foreach (var m in arrSkinnedMeshRenderer)
             {
-                if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
-                    m.material = arrMaterial[isMine ? 0 : 1];
-                else
-                    m.material = arrMaterial[isBottomPlayer ? 0 : 1];
-                
+                m.material = mat;
+
                 switch (type)
                 {
                     case E_MaterialType.BOTTOM:

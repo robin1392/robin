@@ -40,7 +40,7 @@ namespace ED
             SetTargetPosition();
         }
         
-        protected override IEnumerator Move()
+        protected override IEnumerator Activate()
         {
             SoundManager.instance?.Play(clip_Summon);
             var startPos = transform.position;

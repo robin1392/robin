@@ -136,7 +136,7 @@ namespace ED
                     //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
                     controller.ActionSetMagicTarget(id, target.id);
                     
-                    StartCoroutine(Move());
+                    StartCoroutine(Activate());
                 }
             }
             //else if (PhotonNetwork.IsConnected == false)
@@ -145,7 +145,7 @@ namespace ED
                 target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
                 if (target != null)
                 {
-                    StartCoroutine(Move());
+                    StartCoroutine(Activate());
                 }
             }
         }
@@ -160,29 +160,29 @@ namespace ED
                 //controller.SendPlayer(RpcTarget.Others , E_PTDefine.PT_SETMAGICTARGET,id, targetPos.x, targetPos.z);
                 controller.ActionSetMagicTarget(id, targetPos.x, targetPos.z);
                 
-                StartCoroutine(Move());
+                StartCoroutine(Activate());
             }
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false)
             {
                 targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
-                StartCoroutine(Move());
+                StartCoroutine(Activate());
             }
         }
 
         public void SetTarget(uint id)
         {
             target = ActorProxy.GetBaseStatWithNetId(id);
-            StartCoroutine(Move());
+            StartCoroutine(Activate());
         }
 
         public void SetTarget(float x, float z)
         {
             this.targetPos = new Vector3(x, 0, z);
-            StartCoroutine(Move());
+            StartCoroutine(Activate());
         }
 
-        protected virtual IEnumerator Move() { yield return null; }
+        protected virtual IEnumerator Activate() { yield return null; }
         
         public void DamageToTarget(BaseStat m, float delay = 0, float factor = 1f)
         {

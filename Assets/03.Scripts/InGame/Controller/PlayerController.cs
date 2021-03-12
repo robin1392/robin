@@ -161,18 +161,14 @@ namespace ED
         {
         }
         
-        protected override void SetColor(E_MaterialType type)
+        public override void SetColor(E_MaterialType type, bool isAlly)
         {
+            var mat = arrMaterial[isAlly ? 0 : 1];
             var mr = GetComponentsInChildren<MeshRenderer>();
             foreach (var m in mr)
             {
                 if (m.gameObject.CompareTag("Finish")) continue;
-
-                if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
-                    m.material = arrMaterial[isMine ? 0 : 1];
-                else if (Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.COOP)
-                    m.material = arrMaterial[isBottomPlayer ? 0 : 1];
-                    
+                
                 switch (type)
                 {
                     case E_MaterialType.BOTTOM:
@@ -830,29 +826,18 @@ namespace ED
         
         #region net etc system
         
-        public void ChangeLayer(bool pIsBottomPlayer)
+        public void ChangeLayer(bool pIsBottomPlayer, bool isAlly)
         {
             gameObject.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
             objCollider.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
             this.isBottomPlayer = pIsBottomPlayer;
 
-            if (InGameManager.IsNetwork == true && this.isBottomPlayer == false && Global.PLAY_TYPE.BATTLE == Global.PLAY_TYPE.BATTLE)
+            if (isBottomPlayer == false)
             {
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
             
-            if(InGameManager.IsNetwork)
-            {
-                switch (Global.PLAY_TYPE.BATTLE)
-                {
-                    case Global.PLAY_TYPE.BATTLE:
-                        image_HealthBar.color = isMine ? Color.green : Color.red;
-                        break;
-                    case Global.PLAY_TYPE.COOP:
-                        image_HealthBar.color = Color.green;
-                        break;
-                }
-            }
+            image_HealthBar.color = isAlly ? Color.green : Color.red;
         }
 
         public void OtherPlayerPause(bool isPause)

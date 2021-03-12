@@ -72,7 +72,7 @@ namespace ED
             }
         }
 
-        protected override IEnumerator Move()
+        protected override IEnumerator Activate()
         {
             var startPos = transform.position;
             var endPos = targetPos;

@@ -10,12 +10,7 @@ public class Boss3 : Minion
     private float _skillCastedTime;
     private bool _isSkillCasting;
     private float _localAttackSpeed = 1f;
-
-    public override void Initialize(DestroyCallback destroy)
-    {
-        base.Initialize(destroy);
-    }
-
+    
     public override IEnumerator Attack()
     {
         yield return SkillCoroutine(target.id);

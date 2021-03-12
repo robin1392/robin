@@ -37,7 +37,7 @@ namespace ED
             SoundManager.instance?.Play(Global.E_SOUND.SFX_FIREBALL_FIRE);
         }
 
-        protected override IEnumerator Move()
+        protected override IEnumerator Activate()
         {
             SoundManager.instance?.Play(clip_Fire);
             

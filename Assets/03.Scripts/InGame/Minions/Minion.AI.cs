@@ -1,4 +1,6 @@
 using System.Collections;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using Pathfinding;
 using UnityEngine;
 

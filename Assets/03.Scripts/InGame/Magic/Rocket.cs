@@ -23,10 +23,10 @@ namespace ED
         {
             target = controller.targetPlayer;
             SetColor();
-            StartCoroutine(Move());
+            StartCoroutine(Activate());
         }
 
-        protected override IEnumerator Move()
+        protected override IEnumerator Activate()
         {
             var startPos = transform.position;
             while (target == null) { yield return null; }

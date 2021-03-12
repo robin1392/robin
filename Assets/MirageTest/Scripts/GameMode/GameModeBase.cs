@@ -198,23 +198,22 @@ namespace MirageTest.Scripts.GameMode
 
                 var deckDice = playerState.GetDeckDice(fieldDice.diceId);
 
-                var power = diceInfo.power
-                            + (diceInfo.powerUpgrade * deckDice.outGameLevel)
-                            + (diceInfo.powerInGameUp * deckDice.inGameLevel);
 
-                var maxHealth = diceInfo.maxHealth + (diceInfo.maxHpUpgrade * deckDice.outGameLevel) +
-                                (diceInfo.maxHpInGameUp * deckDice.inGameLevel);
-                var effect = diceInfo.effect + (diceInfo.effectUpgrade * deckDice.outGameLevel) +
-                             (diceInfo.effectInGameUp * deckDice.inGameLevel);
-                var attackSpeed = diceInfo.attackSpeed;
-
-                if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
+                Stat stat = new Stat();
+                if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
                 {
-                    power *= diceScale + 1;
-                    maxHealth *= diceScale + 1;
-                    effect *= diceScale + 1;
+                    stat = CalcMinionStat(diceInfo, deckDice);    
                 }
-                
+                else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
+                {
+                    stat = CalcHeroStat(diceInfo, deckDice, diceScale);
+                }
+                else if((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.INSTALLATION ||
+                        (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MAGIC)
+                {
+                    stat = CalcMagicOrInstallationStat(diceInfo, deckDice, diceScale);
+                }
+
                 var spawnTransform = playerState.team == GameConstants.BottomCamp
                     ? FieldManager.Get().GetBottomListTs(fieldIndex)
                     : FieldManager.Get().GetTopListTs(fieldIndex);
@@ -232,11 +231,11 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.team = playerState.team;
                     actorProxy.ownerTag = playerState.ownerTag;
                     actorProxy.spawnSlot = fieldIndex;
-                    actorProxy.power = power;
-                    actorProxy.maxHealth = maxHealth;
-                    actorProxy.currentHealth = maxHealth;
-                    actorProxy.effect = effect;
-                    actorProxy.attackSpeed = attackSpeed;
+                    actorProxy.power = stat.power;
+                    actorProxy.maxHealth = stat.maxHealth;
+                    actorProxy.currentHealth = stat.maxHealth;
+                    actorProxy.effect = stat.effect;
+                    actorProxy.attackSpeed = diceInfo.attackSpeed;
                     actorProxy.diceScale = diceScale;
                     actorProxy.ingameUpgradeLevel = deckDice.inGameLevel;
                     actorProxies.Add(actorProxy);
@@ -249,6 +248,60 @@ namespace MirageTest.Scripts.GameMode
         public void End()
         {
             IsGameEnd = true;
+        }
+
+        Stat CalcMinionStat(TDataDiceInfo diceInfo, DeckDice deckDice)
+        {
+            var power = diceInfo.power
+                        + (diceInfo.powerUpgrade * deckDice.outGameLevel)
+                        + (diceInfo.powerInGameUp * deckDice.inGameLevel);
+            var maxHealth = diceInfo.maxHealth + (diceInfo.maxHpUpgrade * deckDice.outGameLevel) +
+                            (diceInfo.maxHpInGameUp * deckDice.inGameLevel);
+            var effect = diceInfo.effect + (diceInfo.effectUpgrade * deckDice.outGameLevel) +
+                         (diceInfo.effectInGameUp * deckDice.inGameLevel);
+
+            return new Stat()
+            {
+                power = power,
+                maxHealth = maxHealth,
+                effect = effect,
+            };
+        }
+        
+        Stat CalcHeroStat(TDataDiceInfo diceInfo, DeckDice deckDice, byte diceScale)
+        {
+            var stat = CalcMinionStat(diceInfo, deckDice);
+            return new Stat()
+            {
+                power = stat.power * (diceScale + 1),
+                maxHealth = stat.maxHealth * (diceScale + 1),
+                effect = stat.effect * (diceScale + 1),
+            };
+        }
+        
+        Stat CalcMagicOrInstallationStat(TDataDiceInfo diceInfo, DeckDice deckDice, byte diceScale)
+        {
+            var power = diceInfo.power
+                        + (diceInfo.powerUpgrade * deckDice.outGameLevel)
+                        + (diceInfo.powerInGameUp * deckDice.inGameLevel)  * Mathf.Pow(1.5f, diceScale - 1);
+            var maxHealth = diceInfo.maxHealth + (diceInfo.maxHpUpgrade * deckDice.outGameLevel) +
+                            (diceInfo.maxHpInGameUp * deckDice.inGameLevel) * Mathf.Pow(2f, diceScale - 1);
+            var effect = diceInfo.effect + (diceInfo.effectUpgrade * deckDice.outGameLevel) +
+                         (diceInfo.effectInGameUp * deckDice.inGameLevel)* Mathf.Pow(1.5f, diceScale - 1);
+            
+            return new Stat()
+            {
+                power = power,
+                maxHealth = maxHealth,
+                effect = effect
+            };
+        }
+        
+        public struct Stat
+        {
+            public float power;
+            public float maxHealth;
+            public float effect;
         }
     }
 }

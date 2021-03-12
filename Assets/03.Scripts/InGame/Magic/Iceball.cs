@@ -31,10 +31,10 @@ namespace ED
 
         public override void SetTarget()
         {
-            StartCoroutine(Move());
+            StartCoroutine(Activate());
         }
 
-        protected override IEnumerator Move()
+        protected override IEnumerator Activate()
         {
             SoundManager.instance?.Play(clip_Shoot);
             var startPos = transform.position;

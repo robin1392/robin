@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -29,19 +30,19 @@ namespace MirageTest.Scripts
         [SyncVar] public float attackSpeed;
         [SyncVar] public byte diceScale;
         [SyncVar] public byte ingameUpgradeLevel;
-        
+
         [SyncVar] public int ccState;
 
         public bool isPlayingAI;
         public bool isMovable = true;
-        
+
         public bool IsLocalPlayerActor => (Client as RWNetworkClient).IsLocalPlayerTag(ownerTag);
 
         public BaseStat baseStat;
 
         private TDataDiceInfo _diceInfo;
         private bool stopped;
-        
+
         public Seeker _seeker;
         public AIPath _aiPath;
 
@@ -70,11 +71,11 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             NetIdentity.OnStartClient.AddListener(StartClient);
             NetIdentity.OnStopClient.AddListener(StopClient);
             NetIdentity.OnStartServer.AddListener(StartServer);
-            
+
             _seeker = GetComponent<Seeker>();
             _aiPath = GetComponent<AIPath>();
         }
@@ -101,7 +102,7 @@ namespace MirageTest.Scripts
         private void StartServer()
         {
         }
-        
+
         private void StartClient()
         {
             var client = Client as RWNetworkClient;
@@ -117,88 +118,23 @@ namespace MirageTest.Scripts
         {
             if (actorType == ActorType.Tower)
             {
-                var towerPrefab = Resources.Load<PlayerController>("Tower/Player");
-                
-                var playerController = Instantiate(towerPrefab, transform);
-                baseStat = playerController;
-                baseStat.id = NetId;
-                playerController.isMine = IsLocalPlayerActor;
-                playerController.isBottomPlayer = IsBottomCamp();
-                playerController.ChangeLayer(IsBottomCamp());
-                // SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
-                isMovable = false;
+                SpawnTower();
             }
             else if (actorType == ActorType.MinionFromDice)
             {
-                //magicCastDelay 0.05f 로 시작해서 미니언 갯수 별로 0.6666666f 만큼 증가. 단일 프레임에 생성하지 않기 위한 트릭인듯한다. 처리 필요
-
-                if (diceInfo.castType == (int)DICE_CAST_TYPE.MINION || diceInfo.castType == (int)DICE_CAST_TYPE.HERO)
+                if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION || diceInfo.castType == (int) DICE_CAST_TYPE.HERO)
                 {
-                    PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
+                    SpawnMinionOrHero();
                 }
+                else if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC ||
+                         diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
+                {
                     
-                var m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
-                if (m == null)
-                {
-                    PoolManager.instance.AddPool(
-                        FileHelper.LoadPrefab(diceInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION, transform), 1);
-                    //Debug.LogFormat("{0} Pool Added 1", data.prefabName);
-                    m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
-                }
-
-                if (m != null)
-                {
-                    m.transform.localPosition = Vector3.zero;
-                    m.transform.localRotation = Quaternion.identity;
-                    baseStat = m;
-                    m.ActorProxy = this;
-                    m.SetPathFinding(_seeker, _aiPath);
-                    m.Initialize(null);
-                    m.controller = (Client as RWNetworkClient).GetTower(ownerTag);
-                    m.castType = (DICE_CAST_TYPE)diceInfo.castType;
-                    m.id = NetId;
-                    m.isMine = IsLocalPlayerActor;
-                    m.targetMoveType = (DICE_MOVE_TYPE)diceInfo.targetMoveType;
-                    m.isBottomPlayer = IsBottomCamp();
-                    m.ChangeLayer(IsBottomCamp());
-                }
-
-                var setting = UI_DiceField.Get().arrSlot[spawnSlot].ps.main;
-                setting.startColor = FileHelper.GetColor(diceInfo.color);
-                
-                var dicePos = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
-                if (!IsLocalPlayerActor)
-                {
-                    dicePos.x *= -1f;
-                    dicePos.z *= -1f;
-                }
-                else
-                {
-                    UI_DiceField.Get().arrSlot[spawnSlot].ps.Play();    
-                }
-
-                var lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
-                if (lr == null)
-                {
-                    var pool = PoolManager.instance.data.listPool.Find(data => data.obj.name == "Effect_SpawnLine");
-                    PoolManager.instance.AddPool(pool.obj, 1);    
-                    lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
-                }
-                
-                if (lr != null)
-                {
-                    lr.SetPositions(new Vector3[2] {dicePos, m.ts_HitPos.position});
-                    lr.startColor = FileHelper.GetColor(diceInfo.color);
-                    lr.endColor = FileHelper.GetColor(diceInfo.color);
                 }
             }
 
             baseStat.ActorProxy = this;
-
-            var client = Client as RWNetworkClient;
-            EnableClientCombatLogic(client.IsPlayingAI);
             RefreshHpUI();
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
 
         bool IsBottomCamp()
@@ -221,14 +157,14 @@ namespace MirageTest.Scripts
             baseStat.image_HealthBar.fillAmount = currentHealth / maxHealth;
             if (baseStat.text_Health != null)
             {
-                baseStat.text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";   
+                baseStat.text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
             }
         }
 
         public void EnableClientCombatLogic(bool b)
         {
             isPlayingAI = b;
-            
+
             var minion = baseStat as Minion;
             if (minion == null)
             {
@@ -248,7 +184,7 @@ namespace MirageTest.Scripts
 
             minion.GetComponent<Collider>().enabled = b;
         }
-        
+
         public void HitDamage(float damage)
         {
             HitDamageOnServer(damage);
@@ -264,7 +200,7 @@ namespace MirageTest.Scripts
         {
             DamageToOnServer(target.id);
         }
-        
+
         [ServerRpc(requireAuthority = false)]
         public void DamageToOnServer(uint targetNetId)
         {
@@ -273,7 +209,7 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             target.GetComponent<ActorProxy>().ApplyDamage(power);
         }
 
@@ -282,7 +218,7 @@ namespace MirageTest.Scripts
         {
             currentHealth -= damage;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-            
+
             if (currentHealth <= 0)
             {
                 ServerObjectManager.Destroy(gameObject);
@@ -299,20 +235,20 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             baseStat.HitDamage(damage);
             var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseStat.ts_HitPos.position);
             obj.rotation = Quaternion.identity;
             obj.localScale = Vector3.one * 0.6f;
-            
+
             SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
         }
-        
+
         public void HealTo(BaseStat target)
         {
             HealToOnServer(target.id);
         }
-        
+
         [ServerRpc(requireAuthority = false)]
         public void HealToOnServer(uint targetNetId)
         {
@@ -321,7 +257,7 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             target.GetComponent<ActorProxy>().AppyHeal(effect);
         }
 
@@ -340,14 +276,14 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
         }
 
         private MsgVector2 lastSend;
         public MsgVector2 lastRecieved;
         private bool hasRecieved = false;
-        
+
         private void Update()
         {
             if (IsServer)
@@ -359,12 +295,12 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             if (baseStat == null)
             {
                 return;
             }
-            
+
             if (isPlayingAI)
             {
                 var position = transform.position;
@@ -380,7 +316,7 @@ namespace MirageTest.Scripts
                     }, Channel.Unreliable).Forget();
                 }
             }
-            else if(lastRecieved != null)
+            else if (lastRecieved != null)
             {
                 var position = ConvertNetMsg.MsgToVector3(lastRecieved);
                 if (hasRecieved == false)
@@ -390,11 +326,12 @@ namespace MirageTest.Scripts
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, position, diceInfo.moveSpeed * Time.deltaTime);   
+                    transform.position =
+                        Vector3.Lerp(transform.position, position, diceInfo.moveSpeed * Time.deltaTime);
                 }
             }
         }
-        
+
         bool Equal(MsgVector2 a, MsgVector2 b)
         {
             return a.X == b.X &&
@@ -419,8 +356,16 @@ namespace MirageTest.Scripts
             {
                 return null;
             }
-            
+
             return actor.GetComponent<ActorProxy>().baseStat;
+        }
+
+        //KZSee : TODO: 보스도 보게 할 것
+        public BaseStat GetEnemyTower()
+        {
+            var rwClient = Client as RWNetworkClient;
+            var enemyTower = rwClient.Towers.Find(t => t.team != team);
+            return enemyTower.baseStat;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace ED
             SetPlayingAI(isPause);
         }
 
-        protected override void SetColor(E_MaterialType type)
+        public override void SetColor(E_MaterialType type, bool isAlly)
         {
         }
 
