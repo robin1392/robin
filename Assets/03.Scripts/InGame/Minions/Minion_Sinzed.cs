@@ -14,7 +14,16 @@ namespace ED
     {
         [Header("AudioClip")]
         public AudioClip clip_Explosion;
-        
+
+        private bool bombed;
+
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            bombed = false;
+        }
+
         private void OnEnable()
         {
             animator.gameObject.SetActive(true);
@@ -34,12 +43,34 @@ namespace ED
             {
                 if (Vector3.Distance(transform.position, target.transform.position) < 2f)
                 {
-                    ActorProxy.SummonActor(SummonActorInfos.SinzedPoison, transform.position);
-                    ActorProxy.Destroy();
+                    Bomb();
                 }
             }
             
             return target;
+        }
+
+        void Bomb()
+        {
+            if (bombed)
+            {
+                return;
+            }
+
+            bombed = true;
+            ActorProxy.DestroyAfterSummonActor(SummonActorInfos.SinzedPoison, transform.position);
+            StopAI();
+        }
+
+        public override bool OnBeforeHitDamage(float damage)
+        {
+            if (damage >= ActorProxy.currentHealth)
+            {
+                Bomb();
+                return true;
+            }
+
+            return false;
         }
 
         public override void OnBaseStatDestroyed()

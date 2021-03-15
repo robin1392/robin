@@ -11,13 +11,14 @@ namespace MirageTest.Scripts
         {
             var client = Client as RWNetworkClient;
             var summonActorInfo = SummonActorInfos.GetSummonActorInfo(dataId);
-            var summoned = PoolManager.instance.ActivateObject<SummonActor>(summonActorInfo.prefab, Vector3.zero, transform);
+            var summoned = PoolManager.instance.ActivateObject<SummonActor>(summonActorInfo.prefab, transform.position, transform);
             if (summoned != null)
             {
                 baseStat = summoned;
                 summoned.ActorProxy = this;
-                summoned.transform.localPosition = Vector3.zero;
-                summoned.transform.localRotation = Quaternion.identity;
+                var summonedTr = summoned.transform;
+                summonedTr.localPosition = Vector3.zero;
+                summonedTr.localRotation = Quaternion.identity;
                 summoned.Initialize();
                 summoned.controller = (Client as RWNetworkClient).GetTower(ownerTag);
                 summoned.id = NetId;

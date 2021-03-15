@@ -317,6 +317,11 @@ namespace MirageTest.Scripts
 
         public void HitDamage(float damage)
         {
+            if (baseStat.OnBeforeHitDamage(damage))
+            {
+                return;
+            }
+            
             HitDamageOnServer(damage);
         }
 
@@ -574,6 +579,19 @@ namespace MirageTest.Scripts
         {
             var server =Server as RWNetworkServer;
             server.SummonActor(this, summonActorId, position);
+        }
+        
+        public void DestroyAfterSummonActor(byte summonActorId, Vector3 position)
+        {
+            DestroyAfterSummonActorOnServer(summonActorId, position);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void DestroyAfterSummonActorOnServer(byte summonActorId, Vector3 position)
+        {
+            var server =Server as RWNetworkServer;
+            server.SummonActor(this, summonActorId, position);
+            DestroyInternal();
         }
     }
 }

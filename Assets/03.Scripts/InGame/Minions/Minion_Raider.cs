@@ -44,7 +44,7 @@ namespace ED
         
         protected override IEnumerator Combat()
         {
-            while (true )
+            while (true)
             {
                 yield return Skill();
                 

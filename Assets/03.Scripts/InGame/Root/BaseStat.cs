@@ -150,7 +150,7 @@ namespace ED
         public virtual void OnBaseStatDestroyed()
         {
             StopAI();
-            _poolObjectAutoDeactivate?.Deactive();            
+            _poolObjectAutoDeactivate?.Deactive();
         }
 
         protected void SetHealthBarColor()
@@ -264,6 +264,12 @@ namespace ED
                 default:
                     return false;
             }
+        }
+
+        public virtual bool OnBeforeHitDamage(float damage)
+        {
+            var cancel = false;
+            return cancel;
         }
     }
 }
