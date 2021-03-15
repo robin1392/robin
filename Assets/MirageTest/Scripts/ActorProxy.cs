@@ -33,6 +33,7 @@ namespace MirageTest.Scripts
         [SyncVar] public float attackSpeed;
         [SyncVar] public byte diceScale;
         [SyncVar] public byte ingameUpgradeLevel;
+        [SyncVar] public byte outgameUpgradeLevel;
         [SyncVar] public float spawnTime;
 
         public bool isPlayingAI;
@@ -47,6 +48,8 @@ namespace MirageTest.Scripts
 
         public Seeker _seeker;
         public AIPath _aiPath;
+        
+        private static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
 
         public TDataDiceInfo diceInfo
         {
@@ -318,24 +321,7 @@ namespace MirageTest.Scripts
         {
             ApplyDamage(damage);
         }
-
-        // public void DamageTo(BaseStat target)
-        // {
-        //     DamageToOnServer(target.id);
-        // }
-        //
-        // [ServerRpc(requireAuthority = false)]
-        // public void DamageToOnServer(uint targetNetId)
-        // {
-        //     var target = ServerObjectManager[targetNetId];
-        //     if (target == null)
-        //     {
-        //         return;
-        //     }
-        //
-        //     target.GetComponent<ActorProxy>().ApplyDamage(power);
-        // }
-        //
+        
         [Server]
         public void ApplyDamage(float damage)
         {
@@ -439,7 +425,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            if (isPlayingAI)
+            if (isPlayingAI && baseStat.NeedMoveSyncSend)
             {
                 var position = transform.position;
                 var converted = ConvertNetMsg.Vector3ToMsg(new Vector2(position.x, position.z));
@@ -469,7 +455,13 @@ namespace MirageTest.Scripts
                 else
                 {
                     transform.position = Vector3.Lerp(transform.position, position, 0.5f);
-                        
+                    transform.LookAt(position);
+                    
+                    if (baseStat.animator != null)
+                    {
+                        float distance = Vector3.Magnitude(position - transform.position);
+                        baseStat.animator.SetFloat(_animatorHashMoveSpeed, distance * 5);
+                    }
                 }
             }
         }
@@ -566,6 +558,20 @@ namespace MirageTest.Scripts
         {
             currentHealth = 0;
             ServerObjectManager.Destroy(gameObject);
+        }
+
+        public void SummonActor(byte summonActorId, Vector2 position)
+        {
+            SummonActorOnServer(summonActorId, position);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void SummonActorOnServer(byte summonActorId, Vector2 position)
+        {
+            var server =Server as RWNetworkServer;
+            server.SummonActor(this, summonActorId, position);
+            var prefab = SummonActorInfos.GetSummonActorPrefab(summonActorId);
+            
         }
     }
 }

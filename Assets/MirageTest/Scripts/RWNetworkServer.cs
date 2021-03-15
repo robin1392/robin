@@ -6,12 +6,14 @@ using Mirage;
 using MirageTest.Scripts;
 using MirageTest.Scripts.Messages;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class RWNetworkServer : NetworkServer
 {
     public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
     
     public ServerGameLogic serverGameLogic;
+    
     private void Awake()
     {
         serverGameLogic = GetComponent<ServerGameLogic>();
@@ -44,5 +46,24 @@ public class RWNetworkServer : NetworkServer
             
             con.SendAsync(arg2).Forget();
         }
+    }
+
+    public void SummonActor(ActorProxy summoner, byte summonActorId, Vector2 position)
+    {
+        var actorProxy = Instantiate(serverGameLogic.actorProxyPrefab, position, summoner.transform.rotation);
+        actorProxy.ownerTag = summoner.ownerTag;
+        actorProxy.actorType = ActorType.SummonByMinion;
+        actorProxy.dataId = summonActorId;
+        actorProxy.team = summoner.team;
+        actorProxy.spawnSlot = 0;
+        actorProxy.power = summoner.power;
+        actorProxy.maxHealth = summoner.maxHealth;
+        actorProxy.currentHealth = summoner.maxHealth;
+        actorProxy.effect = summoner.effect;
+        actorProxy.attackSpeed = summoner.attackSpeed;
+        actorProxy.diceScale = summoner.diceScale;
+        actorProxy.ingameUpgradeLevel = summoner.ingameUpgradeLevel;
+        actorProxy.spawnTime = (float) Time.Time;
+        serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
     }
 }

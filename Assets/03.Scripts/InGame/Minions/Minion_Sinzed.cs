@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
@@ -33,6 +34,7 @@ namespace ED
             {
                 if (Vector3.Distance(transform.position, target.transform.position) < 2f)
                 {
+                    ActorProxy.SummonActor(SummonActorInfos.SinzedPoison, transform.position);
                     ActorProxy.Destroy();
                 }
             }
@@ -42,21 +44,7 @@ namespace ED
 
         public override void Death()
         {
-            _collider.enabled = false;
-            animator.SetFloat(_animatorHashMoveSpeed, 0);
-            StopAllCoroutines();
-            InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
-
-            var position = ts_HitPos.position;
-            PoolManager.instance.ActivateObject("Effect_Death", position);
-            animator.gameObject.SetActive(false);
-            
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Poison", ts_HitPos.position, Quaternion.identity, Vector3.one);
-            controller.ActionActivePoolObject("Effect_Poison", position, Quaternion.identity, Vector3.one);
-            
             StartCoroutine(DeathCoroutine());
-            
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         IEnumerator DeathCoroutine()

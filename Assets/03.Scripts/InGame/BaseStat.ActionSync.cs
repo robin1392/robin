@@ -11,7 +11,20 @@ namespace ED
         protected Coroutine _localActionCoroutine;
         public SyncActionBase SyncAction;
         protected Coroutine _syncActionCoroutine;
-        
+
+        public bool NeedMoveSyncSend
+        {
+            get
+            {
+                if (RunningAction != null)
+                {
+                    return RunningAction.NeedMoveSync;
+                }
+
+                return true;
+            }
+        }
+
         public void RunLocalAction(IEnumerator action, bool aiStop)
         {
             _localActionCoroutine = StartCoroutine(RunLocalActionInternal(action, aiStop));

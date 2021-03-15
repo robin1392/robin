@@ -19,6 +19,8 @@ namespace MirageTest.Scripts
         
         private RWNetworkServer _networkServer;
         private ServerObjectManager _serverObjectManager;
+        public ServerObjectManager ServerObjectManager => _serverObjectManager;
+        
         private readonly int _gamePlayerCount = 2;
 
         //TODO: State를 Server가 가지고 있는 것이 좋을 듯 하다. 
