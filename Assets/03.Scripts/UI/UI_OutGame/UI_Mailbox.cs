@@ -34,7 +34,8 @@ public class UI_Mailbox : UI_Popup
         if (isInitialized == false)
         {
             isInitialized = true;
-            Click_RefreshButton();
+            UI_Main.Get().obj_IndicatorPopup.SetActive(true);
+            NetworkManager.session.MailBoxTemplate.MailBoxInfoReq(NetworkManager.session.HttpClient, MailBoxInfoAck);
         }
         else
         {
@@ -72,6 +73,7 @@ public class UI_Mailbox : UI_Popup
         foreach (var info in list_MailInfo)
         {
             var mail = Instantiate(pref_MailSlot, Vector3.zero, Quaternion.identity, rts_Content).GetComponent<UI_MailSlot>();
+            mail.transform.localPosition = Vector3.zero;
             mail.Initialize(info);
         }
     }
@@ -82,6 +84,11 @@ public class UI_Mailbox : UI_Popup
         {
             list_MailInfo.Add(infos[i]);
         }
+        
+        list_MailInfo.Sort(delegate(MailInfo a, MailInfo b)
+        {
+             return string.Compare(a.mailId, b.mailId);
+        });
     }
 
     public static void RemoveMailInfo(MailInfo info)
@@ -97,8 +104,7 @@ public class UI_Mailbox : UI_Popup
     public void Click_RefreshButton()
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
-        NetworkManager.session.MailBoxTemplate.MailBoxInfoReq(NetworkManager.session.HttpClient, 
-            MailBoxInfoAck);
+        NetworkManager.session.MailBoxTemplate.MailBoxRefreshReq(NetworkManager.session.HttpClient, MailBoxInfoAck);
 
         btn_Refresh.interactable = false;
         refreshTime = DateTime.Now;

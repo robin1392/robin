@@ -38,7 +38,6 @@ public class UI_Getted_Emotion : MonoBehaviour
 
     public void Deactive()
     {
-        image_Icon.color = Color.gray;
         btn.interactable = false;
     }
 

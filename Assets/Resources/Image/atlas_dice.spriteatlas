@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 6f13e070ecc1f0d4aa7b5034ad098b63, type: 3}
-    totalSpriteSurfaceArea: 12989459
+    totalSpriteSurfaceArea: 13007351
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -168,6 +168,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e391578e1b5724809b32931c41284a14, type: 3}
   - {fileID: 21300000, guid: 135d6f3fc71c64487aa0cf87698bb663, type: 3}
   - {fileID: 21300000, guid: 483b4e4f881d249b79ea3ae72b7afe2f, type: 3}
+  - {fileID: 21300000, guid: abaaca5f248e84aef9474ca44b5bb57b, type: 3}
   - {fileID: 21300000, guid: 02953b5f6b9c34e1e9ce2dc116661cdf, type: 3}
   - {fileID: 21300000, guid: 139d1f6f94657429fb55f4437004b912, type: 3}
   - {fileID: 21300000, guid: f173d58f79ef9473689e50809f3c4bb7, type: 3}
@@ -294,6 +295,7 @@ SpriteAtlas:
   - icon_dice_3004
   - icon_normalbox
   - icon_dice_1005
+  - icon_kingbox
   - diashopgoods03
   - card_1004
   - icon_dice_1000

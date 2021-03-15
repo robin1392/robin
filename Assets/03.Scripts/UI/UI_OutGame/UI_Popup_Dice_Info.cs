@@ -218,6 +218,15 @@ namespace ED
             {
                 diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
                 diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][1];
+                btn_Use.gameObject.SetActive(true);
+                btn_Upgrade.gameObject.SetActive(true);
+            }
+            else
+            {
+                diceLevel = 1;
+                diceCount = 0;
+                btn_Use.gameObject.SetActive(false);
+                btn_Upgrade.gameObject.SetActive(false);
             }
 
             int bonusTowerHp = 0;
@@ -270,7 +279,7 @@ namespace ED
             SetUnitGrade();
             SetInfoDesc();
             
-            btn_Upgrade.gameObject.SetActive(!data.isGuardian);
+            btn_Upgrade.gameObject.SetActive(btn_Upgrade.gameObject.activeSelf && !data.isGuardian);
             btn_ShowUpgrade.gameObject.SetActive(!data.isGuardian);
             btn_ShowLevelUp.gameObject.SetActive(!data.isGuardian);
             text_TowerHP.transform.parent.gameObject.SetActive(!data.isGuardian);

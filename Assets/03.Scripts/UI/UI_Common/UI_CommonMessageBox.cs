@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class UI_CommonMessageBox : UI_Popup
 {
+    public RectTransform rts_VerticalLayout;
     public Text text_Title;
     public Text text_Message;
 
@@ -36,7 +37,7 @@ public class UI_CommonMessageBox : UI_Popup
 
         gameObject.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(text_Message.rectTransform);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_Frame);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayout);
     }
 
     public void Initialize(string title, string message, string buttonText, Action closeCallback = null, Action buttonCallback = null, bool isBgButtonEnable = true)
@@ -52,7 +53,7 @@ public class UI_CommonMessageBox : UI_Popup
         
         gameObject.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(text_Message.rectTransform);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_Frame);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayout);
     }
 
     public void Click_OK()

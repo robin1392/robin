@@ -38,6 +38,14 @@ public class UI_DiceTab : MonoBehaviour
         panel.rts_ScrollViewEmotion.gameObject.SetActive(tabNum == 2);
         panel.listDeckInfo[0].gameObject.SetActive(tabNum < 2);
         panel.obj_EmotionDeckInfo.SetActive(tabNum == 2);
+        
+        // Grid 즉시 업데이트
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panel.tsGettedDiceParent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panel.tsUngettedDiceParent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panel.tsGettedGuardianParent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panel.tsUngettedGuardianParent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panel.tsGettedEmotionParent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panel.tsUngettedEmotionParent);
     }
 
     public void Unclick()
