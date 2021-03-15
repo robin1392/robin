@@ -75,17 +75,17 @@ namespace MirageTest.Scripts.GameMode
         {
         }
 
-        public void SpawnMyMinion(int diceId, byte ingameLevel, short outGameLevel, byte diceScale)
+        public void SpawnMyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
         {
             SpawnAtCenterField(PlayerState1, diceId, ingameLevel, outGameLevel, diceScale);
         }
         
-        public void SpawnEnemyMinion(int diceId, byte ingameLevel, short outGameLevel, byte diceScale)
+        public void SpawnEnemyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
         {
             SpawnAtCenterField(PlayerState2, diceId, ingameLevel, outGameLevel, diceScale);
         }
 
-        void SpawnAtCenterField(PlayerState playerState, int diceId, byte ingameLevel, short outGameLevel, byte diceScale)
+        void SpawnAtCenterField(PlayerState playerState, int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
         {
             playerState.Deck[0] = new DeckDice()
             {

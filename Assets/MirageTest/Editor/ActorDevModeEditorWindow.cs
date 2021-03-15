@@ -58,12 +58,12 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
 
     void SpawnMine(int diceId)
     {
-        _actorDevMode.SpawnMyMinion(diceId, (byte)inGameLevel, (short)outGameLevel, (byte)diceScale);
+        _actorDevMode.SpawnMyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
     }
     
     void SpawnEnemys(int diceId)
     {
-        _actorDevMode.SpawnEnemyMinion(diceId, (byte)inGameLevel, (short)outGameLevel, (byte)diceScale);
+        _actorDevMode.SpawnEnemyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
     }
     
     public class DiceElement

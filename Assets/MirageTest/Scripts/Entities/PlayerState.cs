@@ -347,7 +347,7 @@ namespace MirageTest.Scripts.Entities
     public struct DeckDice
     {
         public int diceId;
-        public short outGameLevel;
+        public byte outGameLevel;
         public byte inGameLevel;
         //TODO: entityDice.Count = short.Parse(response.Item["DiceInfo"].L[j].M["Count"].N); 원래 코드에 이런 구문이 있다. 사용처는 없음. 확인이 필요함.
 

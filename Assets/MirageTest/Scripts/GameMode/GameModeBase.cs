@@ -246,6 +246,7 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.attackSpeed = diceInfo.attackSpeed;
                     actorProxy.diceScale = diceScale;
                     actorProxy.ingameUpgradeLevel = deckDice.inGameLevel;
+                    actorProxy.outgameUpgradeLevel = deckDice.outGameLevel;
                     actorProxy.spawnTime = (float)ServerObjectManager.Server.Time.Time;
                     //HACK:닌자
                     if (diceInfo.id == 2000)
