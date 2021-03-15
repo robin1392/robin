@@ -4,6 +4,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -35,7 +37,8 @@ namespace ED
             if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
                 _skillCastedTime = _spawnedTime;
-                yield return SkillCoroutine();
+                var action = new BerserkerAction();
+                yield return action.ActionWithSync(ActorProxy, target.ActorProxy);
             }
 
             yield return base.Attack();
@@ -45,15 +48,24 @@ namespace ED
         {
             SoundManager.instance.Play(clip_Whirl);
         }
+    }
 
-        IEnumerator SkillCoroutine()
+    public class BerserkerAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            animator.SetTrigger(_animatorHashSkill);
+            actorProxy.baseStat.animator.SetTrigger(Minion._animatorHashSkill);
 
-            yield return new WaitForSeconds(0.6f);
+            ((Minion_Berserker)actorProxy.baseStat).ps_Wind.Play();
             
-            ps_Wind.Play();
-            var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
+            yield return new WaitForSeconds(1.5f);
+
+            if (actorProxy.isPlayingAI == false)
+            {
+                yield break;
+            }
+            
+            var cols = Physics.OverlapSphere(actorProxy.transform.position, 1f, actorProxy.baseStat.targetLayer);
             //Debug.LogFormat("BerserkerSkill: {0}", cols.Length);
             foreach (var col in cols)
             {
@@ -62,7 +74,7 @@ namespace ED
                 var m = col.GetComponent<BaseStat>();
                 if (m != null && m.isAlive)
                 {
-                    DamageToTarget(m, 0, 0.3f);
+                    m.ActorProxy.HitDamage(actorProxy.baseStat.power * 0.3f);
                 }
             }
         }

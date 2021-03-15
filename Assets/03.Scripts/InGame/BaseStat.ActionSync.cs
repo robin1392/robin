@@ -60,7 +60,7 @@ namespace ED
             _syncActionCoroutine = StartCoroutine( RunSyncAction(action.Action(actorProxy, targetActorProxy)));
         }
 
-        IEnumerator RunSyncAction(IEnumerator action)
+        public IEnumerator RunSyncAction(IEnumerator action)
         {
             yield return action;
             SyncAction = null;

@@ -52,14 +52,14 @@ namespace ED
         public int ingameUpgradeLevel => ActorProxy.ingameUpgradeLevel;
 
         private Vector3 _dodgeVelocity;
-        protected static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
-        protected static readonly int _animatorHashIdle = Animator.StringToHash("Idle");
-        protected static readonly int _animatorHashAttack = Animator.StringToHash("Attack");
-        protected static readonly int _animatorHashAttack1 = Animator.StringToHash("Attack1");
-        protected static readonly int _animatorHashAttack2 = Animator.StringToHash("Attack2");
-        protected static readonly int _animatorHashAttackReady = Animator.StringToHash("AttackReady");
-        protected static readonly int _animatorHashSkill = Animator.StringToHash("Skill");
-        protected static readonly int _animatorHashSkillLoop = Animator.StringToHash("SkillLoop");
+        public static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
+        public static readonly int _animatorHashIdle = Animator.StringToHash("Idle");
+        public static readonly int _animatorHashAttack = Animator.StringToHash("Attack");
+        public static readonly int _animatorHashAttack1 = Animator.StringToHash("Attack1");
+        public static readonly int _animatorHashAttack2 = Animator.StringToHash("Attack2");
+        public static readonly int _animatorHashAttackReady = Animator.StringToHash("AttackReady");
+        public static readonly int _animatorHashSkill = Animator.StringToHash("Skill");
+        public static readonly int _animatorHashSkillLoop = Animator.StringToHash("SkillLoop");
 
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
@@ -71,7 +71,7 @@ namespace ED
 
         protected static readonly string _scarecrow = "Scarecrow";
 
-        protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool =
+        public Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool =
             new Dictionary<MAZ, PoolObjectAutoDeactivate>();
 
         protected Shield _shield;
@@ -91,16 +91,69 @@ namespace ED
         
         protected virtual void Update()
         {
-            if (animator == null)
-            {
-                return;
-            }
-            
-            if (ActorProxy.isPlayingAI)
-            {
-                animator.SetFloat(_animatorHashMoveSpeed, AiPath.velocity.magnitude);
-            }
+            // if (currentHealth <= 0 && ((InGameManager.IsNetwork && !isMine) || controller.isPlayingAI))
+            // {
+            //     Death();
+            //     return;
+            // }
+            //
+            _spawnedTime += Time.deltaTime;
+            //
+            // if (isPlayable && isPushing == false && isAttacking == false)
+            // {
+            //     float distance = Vector3.Magnitude(networkPosition - transform.position);
+            //     //if (PhotonNetwork.IsConnected && !isMine)
+            //     if(InGameManager.IsNetwork && !isMine)// && agent.enabled)
+            //     {
+            //         //rb.position = Vector3.Lerp(rb.position, networkPosition, Time.fixedDeltaTime);
+            //         if (controller.isMinionAgentMove)
+            //         {
+            //             //agent.SetDestination(networkPosition);
+            //             if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") == false
+            //             && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") == false
+            //             && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") == false)
+            //             {
+            //                 // transform.rotation = Quaternion.RotateTowards(transform.rotation,
+            //                 //     Quaternion.LookRotation(networkPosition - transform.position), Time.deltaTime * 480f);
+            //             }
+            //
+            //             // transform.position =
+            //             //     Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
+            //             transform.position = Vector3.Lerp(transform.position, networkPosition, 0.5f);//Time.deltaTime * moveSpeed);
+            //             // _seeker.StartPath(transform.position, networkPosition);
+            //         }
+            //         else
+            //         {
+            //             //transform.LookAt(networkPosition);
+            //             transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed * 2f);
+            //         }
+            //     }
+            //
+            //     //var velocityMagnitude = rb.velocity.magnitude;
+            //     if (animator != null)
+            //     {
+            //         //animator.SetFloat(AnimatorHashMoveSpeed, velocityMagnitude);
+            //         if (isMine)
+            //             animator.SetFloat(_animatorHashMoveSpeed, _aiPath.velocity.magnitude);//agent.velocity.magnitude);
+            //         else
+            //             animator.SetFloat(_animatorHashMoveSpeed, distance * 5);
+            //     }
+
+
+            //if (PhotonNetwork.IsConnected && !isMine) return;
+            // if (InGameManager.IsNetwork && !isMine) 
+            //     return;
+
+            // if (isAttacking != false || isPushing != false || target == null || !(velocityMagnitude > 0.1f)) 
+            //     return;
+
+            // var lTargetDir = rb.velocity;
+            // lTargetDir.y = 0.0f;
+            // //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.fixedDeltaTime * 480f);
+            // transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(lTargetDir), Time.deltaTime * 480f);
+            // }
         }
+
 
         public virtual void Initialize()
         {
@@ -178,21 +231,7 @@ namespace ED
             // }
         }
 
-        public virtual void Death()
-        {
-            if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
-            StopAllCoroutines();
-
-            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
-            foreach (var autoDeactivate in _dicEffectPool)
-            {
-                autoDeactivate.Value.Deactive();
-            }
-
-            _poolObjectAutoDeactivate.Deactive();
-
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
-        }
+      
 
         protected void RefreshHealthBar()
         {
@@ -556,6 +595,7 @@ namespace ED
         public override void OnBaseStatDestroyed()
         {
             base.OnBaseStatDestroyed();
+            if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             _destroyed = true;
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
@@ -563,6 +603,22 @@ namespace ED
             {
                 autoDeactivate.Value.Deactive();
             }
+        }
+        
+        public virtual void Death()
+        {
+            
+            StopAllCoroutines();
+
+            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            foreach (var autoDeactivate in _dicEffectPool)
+            {
+                autoDeactivate.Value.Deactive();
+            }
+
+            _poolObjectAutoDeactivate.Deactive();
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
     }
 }
