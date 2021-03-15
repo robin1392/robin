@@ -8,7 +8,7 @@ namespace ED
 {
     public partial class Minion
     {
-        private Coroutine ai;
+        private Coroutine _ai;
         protected Seeker Seeker;
         protected AIPath AiPath;
 
@@ -23,15 +23,16 @@ namespace ED
             Seeker.enabled = true;
             AiPath.enabled = true;
             AiPath.isStopped = true;
-            ai = StartCoroutine(Root());
+            _ai = StartCoroutine(Root());
         }
 
         public override void StopAI()
         {
             Seeker.enabled = false;
             AiPath.enabled = false;
+            AiPath.isStopped = true;
             
-            if (ai == null)
+            if (_ai == null)
             {
                 return;
             }
@@ -39,10 +40,11 @@ namespace ED
             if (RunningAction != null)
             {
                 RunningAction.OnActionCancel(ActorProxy);
+                RunningAction = null;
             }
             
-            StopCoroutine(ai);
-            ai = null;
+            StopCoroutine(_ai);
+            _ai = null;
         }
 
         protected WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);

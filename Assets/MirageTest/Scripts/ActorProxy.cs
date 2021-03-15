@@ -397,6 +397,10 @@ namespace MirageTest.Scripts
                     }, Channel.Unreliable).Forget();
                 }
             }
+            else if (baseStat.SyncAction != null && baseStat.SyncAction.NeedMoveSync == false)
+            {
+                
+            }
             else if (lastRecieved != null)
             {
                 var position = ConvertNetMsg.MsgToVector3(lastRecieved);
@@ -503,6 +507,7 @@ namespace MirageTest.Scripts
 
         void DestroyInternal()
         {
+            currentHealth = 0;
             ServerObjectManager.Destroy(gameObject);
         }
     }

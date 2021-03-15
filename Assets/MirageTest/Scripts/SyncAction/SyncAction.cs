@@ -6,7 +6,12 @@ namespace MirageTest.Scripts.SyncAction
     {
         public virtual void OnActionCancel(ActorProxy actorProxy)
         {
+            //마스터와 동기화를 받는 플레이어 양쪽 모두 수행됨.
+            actorProxy.baseStat.RunningAction = null;
+            actorProxy.baseStat.SyncAction = null;
         }
+
+        public virtual bool NeedMoveSync => false;
     }
     
     public abstract class SyncActionWithTarget : SyncActionBase

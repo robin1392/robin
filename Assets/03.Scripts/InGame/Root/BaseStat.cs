@@ -150,7 +150,7 @@ namespace ED
         public virtual void OnBaseStatDestroyed()
         {
             StopAI();
-            _poolObjectAutoDeactivate.Deactive();            
+            _poolObjectAutoDeactivate?.Deactive();            
         }
 
         protected void SetHealthBarColor()

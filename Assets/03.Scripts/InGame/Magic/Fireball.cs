@@ -70,7 +70,7 @@ namespace ED
                 var bs = col.GetComponentInParent<BaseStat>();
                 if (bs != null)
                 {
-                    ActorProxy.DamageTo(bs);
+                    bs.ActorProxy.HitDamage(ActorProxy.power);
                 }
             }
         }
