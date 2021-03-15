@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3693968143306355885}
   - component: {fileID: 3693968143308065273}
   - component: {fileID: 6259450006666314685}
+  - component: {fileID: 2866506809764752895}
   m_Layer: 10
   m_Name: Effect_Poison
   m_TagString: Untagged
@@ -4764,7 +4765,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolName: 
-  lifeTime: 7
+  lifeTime: 0
+--- !u!114 &2866506809764752895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3693968143288254739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d167692186476f83022b57c6e85a7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActorProxy: {fileID: 0}
+  isMine: 0
+  diceId: 0
+  id: 0
+  controller: {fileID: 0}
+  animator: {fileID: 0}
+  arrMaterial: []
+  target: {fileID: 0}
+  targetMoveType: 0
+  ts_ShootingPos: {fileID: 0}
+  ts_HitPos: {fileID: 0}
+  image_HealthBar: {fileID: 0}
+  text_Health: {fileID: 0}
+  _poolObjectAutoDeactivate: {fileID: 0}
 --- !u!1 &3693968143288290363
 GameObject:
   m_ObjectHideFlags: 0
