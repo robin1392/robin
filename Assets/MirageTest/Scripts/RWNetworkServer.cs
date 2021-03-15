@@ -48,7 +48,7 @@ public class RWNetworkServer : NetworkServer
         }
     }
 
-    public void SummonActor(ActorProxy summoner, byte summonActorId, Vector2 position)
+    public void SummonActor(ActorProxy summoner, byte summonActorId, Vector3 position)
     {
         var actorProxy = Instantiate(serverGameLogic.actorProxyPrefab, position, summoner.transform.rotation);
         actorProxy.ownerTag = summoner.ownerTag;

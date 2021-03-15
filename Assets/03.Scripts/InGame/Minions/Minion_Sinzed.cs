@@ -42,42 +42,10 @@ namespace ED
             return target;
         }
 
-        public override void Death()
+        public override void OnBaseStatDestroyed()
         {
-            StartCoroutine(DeathCoroutine());
-        }
-
-        IEnumerator DeathCoroutine()
-        {
+            base.OnBaseStatDestroyed();
             SoundManager.instance.Play(clip_Explosion);
-            
-            var t = 0f;
-            var tick = 0f;
-            while (t < 5f)
-            {
-                if (t >= tick)
-                {
-                    tick += 0.1f;
-                    var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
-                    
-                    foreach (var col in cols)
-                    {
-                        if (col.CompareTag("Player")) continue;
-
-                        var bs = col.transform.GetComponentInParent<BaseStat>();
-
-                        if (bs == null || bs.id == id) continue;
-
-                        DamageToTarget(bs, 0, 1f);
-                    }
-                }
-
-                t += Time.deltaTime;
-                yield return null;
-            }
-            
-            yield return new WaitForSeconds(2f);
-            _poolObjectAutoDeactivate.Deactive();
         }
     }
 }

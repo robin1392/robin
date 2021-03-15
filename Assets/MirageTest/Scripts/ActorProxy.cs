@@ -195,6 +195,10 @@ namespace MirageTest.Scripts
                     SpawnMagicAndInstallation();
                 }
             }
+            else if (actorType == ActorType.SummonByMinion)
+            {
+                SpawnSummonActor();
+            }
 
             EnableAI(client.IsPlayingAI);
             RefreshHpUI();
@@ -522,12 +526,10 @@ namespace MirageTest.Scripts
         }
         
         [ServerRpc(requireAuthority = false)]
-        public void SummonActorOnServer(byte summonActorId, Vector2 position)
+        public void SummonActorOnServer(byte summonActorId, Vector3 position)
         {
             var server =Server as RWNetworkServer;
             server.SummonActor(this, summonActorId, position);
-            var prefab = SummonActorInfos.GetSummonActorPrefab(summonActorId);
-            
         }
     }
 }
