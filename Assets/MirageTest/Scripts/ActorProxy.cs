@@ -358,8 +358,9 @@ namespace MirageTest.Scripts
 
             PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
         }
-
+        
         private MsgVector2 lastSend;
+        [NonSerialized]
         public MsgVector2 lastRecieved;
         private bool hasRecieved = false;
 
