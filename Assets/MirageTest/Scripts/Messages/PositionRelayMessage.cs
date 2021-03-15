@@ -7,7 +7,7 @@ namespace MirageTest.Scripts.Messages
     public class PositionRelayMessage
     {
         public uint netId;
-        public float positionX;
-        public float positionY;
+        public short positionX;
+        public short positionY;
     }
 }

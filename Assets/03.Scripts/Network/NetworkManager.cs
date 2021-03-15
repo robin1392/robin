@@ -934,8 +934,8 @@ public class ConvertNetMsg
     {
         MsgVector2 chVec = new MsgVector2();
 
-        chVec.X = val.x;
-        chVec.Y = val.y;
+        chVec.X = MsgFloatToShort(val.x);
+        chVec.Y = MsgFloatToShort(val.y);
 
         return chVec;
     }
@@ -967,9 +967,9 @@ public class ConvertNetMsg
     {
         Vector3 vecVal = new Vector3();
 
-        vecVal.x = msgVec.X;
+        vecVal.x = MsgShortToFloat(msgVec.X);
         vecVal.y = 0;
-        vecVal.z = msgVec.Y;
+        vecVal.z = MsgShortToFloat(msgVec.Y);
 
         return vecVal;
     }
