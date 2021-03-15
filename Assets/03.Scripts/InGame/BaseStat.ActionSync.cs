@@ -7,8 +7,13 @@ namespace ED
 {
     public partial class BaseStat
     {
+        //마스터가 사용하는 액션으로 AI 루틴 수행중에 동기화 액션을 대입하거나
+        //실더의 방패막기 같은 AI루틴 이외의 액션을 대입함.
+        //_runningActionCoroutine 의 경우 AI루틴 이외의 액션을 실행하는 코루틴만 대입됨.  
         public SyncActionBase RunningAction;
-        protected Coroutine _localActionCoroutine;
+        protected Coroutine _runningActionCoroutine;
+        
+        //동기화 받는 플레이어가 동기화 받은 액션
         public SyncActionBase SyncAction;
         protected Coroutine _syncActionCoroutine;
 
@@ -27,7 +32,7 @@ namespace ED
 
         public void RunLocalAction(IEnumerator action, bool aiStop)
         {
-            _localActionCoroutine = StartCoroutine(RunLocalActionInternal(action, aiStop));
+            _runningActionCoroutine = StartCoroutine(RunLocalActionInternal(action, aiStop));
         }
 
         IEnumerator RunLocalActionInternal(IEnumerator action, bool aiStop)
@@ -38,7 +43,7 @@ namespace ED
             }
 
             yield return action;
-            _localActionCoroutine = null;
+            _runningActionCoroutine = null;
             RunningAction = null;
             
             if (aiStop)

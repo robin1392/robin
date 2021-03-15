@@ -32,17 +32,13 @@ namespace ED
             AiPath.enabled = false;
             AiPath.isStopped = true;
             
+            base.StopAI();
+            
             if (_ai == null)
             {
                 return;
             }
 
-            if (RunningAction != null)
-            {
-                RunningAction.OnActionCancel(ActorProxy);
-                RunningAction = null;
-            }
-            
             StopCoroutine(_ai);
             _ai = null;
         }

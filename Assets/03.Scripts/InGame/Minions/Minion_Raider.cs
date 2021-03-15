@@ -105,101 +105,6 @@ namespace ED
         {
             SoundManager.instance.Play(clip_Dash);
         }
-
-        protected void Dash()
-        {
-            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var distance = float.MaxValue;
-            Collider dashTarget = null;
-            foreach (var col in cols)
-            {
-                if (col.CompareTag("Player")) continue;
-                //var dis = Vector3.SqrMagnitude(col.transform.position);
-                var transform1 = transform;
-                // Physics.Raycast(transform1.position + Vector3.up * 0.2f,
-                //     transform1.forward,
-                //     out var hit,
-                //     7f,
-                //     targetLayer);
-
-                //if (col.collider != null)
-                {
-                    var m = col.GetComponentInParent<Minion>();
-                    var dis = Vector3.Distance(transform.position, col.transform.position);
-
-                    if (!col.CompareTag("Player") &&
-                        dis < distance &&
-                        (m != null && m.isCloacking == false))
-                    {
-                        distance = dis; 
-                        dashTarget = col;
-                    }
-                }
-            }
-
-            if (dashTarget != null)
-            {
-                _skillCastedTime = _spawnedTime;
-                StartCoroutine(DashCoroutine(dashTarget.transform));
-
-                
-                //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
-                controller.ActionSendMsg(id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
-                
-                Debug.DrawLine(transform.position + Vector3.up * 0.2f, dashTarget.transform.position + Vector3.up * 0.2f, Color.red, 2f);
-            }
-        }
-
-        public void DashMessage(uint targetId)
-        {
-            var bs =  ActorProxy.GetBaseStatWithNetId(targetId);
-            if (bs != null)
-            {
-                Transform ts = bs.transform;
-                StartCoroutine(DashCoroutine(ts)); 
-            }
-        }
-
-        private IEnumerator DashCoroutine(Transform dashTarget)
-        {
-            var t = PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
-            if (dashTarget != null) t.LookAt(dashTarget.position);
-            isPushing = true;
-            animator.SetTrigger(_animatorHashSkill);
-
-            if (dashTarget != null)
-            {
-                ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, dashTarget.GetComponentInParent<BaseStat>());    
-            }
-            
-
-            var ts = transform;
-            while (dashTarget != null)
-            {
-                ts.LookAt(dashTarget);
-                ts.position += (dashTarget.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
-
-                if (Vector3.Distance(dashTarget.position, transform.position) < range)
-                    break;
-                
-                yield return null;
-            }
-
-            isPushing = false;
-
-            if (dashTarget != null && dashTarget.gameObject.activeSelf)
-            {
-                var bs = dashTarget.GetComponentInParent<BaseStat>();
-                if (bs != null)
-                {
-                    var targetID = bs.id;
-                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-                    {
-                        controller.ActionSturn(true , targetID , 1f);
-                    }
-                }
-            }
-        }
     }
     
     public class DashAction : SyncActionWithTarget
@@ -212,7 +117,7 @@ namespace ED
 
             raider.animator.SetTrigger(Minion._animatorHashSkill);
 
-            Transform ts = raider.transform;
+            Transform ts = actorProxy.transform;
             while (targetActorProxy != null && targetActorProxy.baseStat.isAlive)
             {
                 ts.LookAt(targetActorProxy.transform);

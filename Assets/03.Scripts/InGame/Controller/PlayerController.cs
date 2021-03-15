@@ -1413,6 +1413,7 @@ namespace ED
             }
             MineBomb(baseStatId);
         }
+        
         public void ActionSturn(bool other , uint baseStatId, float duration)
         {
             int chDur = ConvertNetMsg.MsgFloatToInt(duration );
@@ -1582,11 +1583,11 @@ namespace ED
             var m = listMinion.Find(minion => minion.id == baseStatId);
             if (m != null)
             {
-                var fireman = m as Minion_Fireman;
-                if (fireman != null)
-                {
-                    fireman.Fire();
-                }
+                // var fireman = m as Minion_Fireman;
+                // if (fireman != null)
+                // {
+                //     fireman.Fire();
+                // }
             }
         }
         public void Cloacking(uint baseStatId , bool isCloack)

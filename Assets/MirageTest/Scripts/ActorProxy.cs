@@ -173,7 +173,7 @@ namespace MirageTest.Scripts
             if ((state & BuffState.CantAI) != 0)
             {
                 baseStat.animator.SetTrigger(Minion._animatorHashIdle);
-                baseStat.StopAI();
+                baseStat.StopAllAction();
             }
             else
             {
