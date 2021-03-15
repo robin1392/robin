@@ -934,8 +934,8 @@ public class ConvertNetMsg
     {
         MsgVector2 chVec = new MsgVector2();
 
-        chVec.X = MsgFloatToByte(val.x);
-        chVec.Y = MsgFloatToByte(val.y);
+        chVec.X = val.x;
+        chVec.Y = val.y;
 
         return chVec;
     }
@@ -967,9 +967,9 @@ public class ConvertNetMsg
     {
         Vector3 vecVal = new Vector3();
 
-        vecVal.x = MsgByteToFloat(msgVec.X);
+        vecVal.x = msgVec.X;
         vecVal.y = 0;
-        vecVal.z = MsgByteToFloat(msgVec.Y);
+        vecVal.z = msgVec.Y;
 
         return vecVal;
     }

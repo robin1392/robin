@@ -7,10 +7,12 @@ namespace MirageTest.Scripts
     public static class BuffInfos
     {
         public const byte NinjaClocking = 0;
+        public const byte HalfDamage = 1;
 
         public static BuffState[] Data = new[]
         {
             BuffState.Clocking,
+            BuffState.HalfDamage,
         };
     }
 
@@ -19,5 +21,6 @@ namespace MirageTest.Scripts
     {
         None = 0,
         Clocking = 1 << 1,
+        HalfDamage = 1 << 2,
     }
 }

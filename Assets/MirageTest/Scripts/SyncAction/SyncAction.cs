@@ -1,4 +1,6 @@
 using System.Collections;
+using ED;
+using UnityEngine;
 
 namespace MirageTest.Scripts.SyncAction
 {
@@ -25,5 +27,29 @@ namespace MirageTest.Scripts.SyncAction
         }
 
         public abstract IEnumerator Action(ActorProxy actor, ActorProxy target);
+    }
+    
+    public abstract class SyncActionWithoutTarget : SyncActionBase
+    {
+        public IEnumerator ActionWithSync(ActorProxy actor)
+        {
+            actor.SyncActionWithoutTarget(actor.Client.Connection.Identity.NetId, GetType().GetHashCode());
+            actor.baseStat.RunningAction = this;
+            yield return Action(actor);
+            actor.baseStat.RunningAction = null;
+        }
+
+        public abstract IEnumerator Action(ActorProxy actor);
+    }
+    
+    public class ShielderAction : SyncActionWithoutTarget
+    {
+        public override IEnumerator Action(ActorProxy actor)
+        {
+            var shielder = actor.baseStat as Minion_Shielder;
+            SoundManager.instance.Play(shielder.clip_ShieldMode);
+            shielder.animator.SetTrigger(Minion_Shielder.aniHashSkill);
+            yield return new WaitForSeconds(actor.baseStat.effectDuration);
+        }
     }
 }

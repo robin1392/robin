@@ -8,6 +8,7 @@ namespace MirageTest.Scripts.SyncAction
     public static class ActionLookup
     {
         private static Dictionary<int, SyncActionWithTarget> _syncActionWithTargets;
+        private static Dictionary<int, SyncActionWithoutTarget> _syncActionWithoutTargets;
         
         static ActionLookup()
         {
@@ -21,11 +22,27 @@ namespace MirageTest.Scripts.SyncAction
             }
 
             _syncActionWithTargets = syncActionWithTargets;
+            
+            Dictionary<int, SyncActionWithoutTarget> syncActionWithoutTargets = new Dictionary<int, SyncActionWithoutTarget>();
+            foreach (var type in 
+                Assembly.GetAssembly(typeof(SyncActionWithoutTarget)).GetTypes()
+                    .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(SyncActionWithoutTarget))))
+            {
+                var instance = (SyncActionWithoutTarget) Activator.CreateInstance(type);
+                syncActionWithoutTargets.Add(type.GetHashCode(), instance);
+            }
+
+            _syncActionWithoutTargets = syncActionWithoutTargets;
         }
         
         public static SyncActionWithTarget GetActionWithTarget(int hash)
         {
             return _syncActionWithTargets[hash];
+        }
+        
+        public static SyncActionWithoutTarget GetActionWithoutTarget(int hash)
+        {
+            return _syncActionWithoutTargets[hash];
         }
     }
 }

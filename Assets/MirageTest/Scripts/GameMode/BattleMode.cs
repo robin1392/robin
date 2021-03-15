@@ -92,7 +92,6 @@ namespace MirageTest.Scripts.GameMode
 
         private async UniTask Spawn(List<ActorProxy> actorProxies)
         {
-            await UniTask.Delay(50);
             if (IsGameEnd)
             {
                 return;    
@@ -101,8 +100,6 @@ namespace MirageTest.Scripts.GameMode
             foreach (var actorProxy in actorProxies)
             {
                 ServerObjectManager.Spawn(actorProxy.NetIdentity);
-                
-                await UniTask.Delay(50);
 
                 if (IsGameEnd)
                 {

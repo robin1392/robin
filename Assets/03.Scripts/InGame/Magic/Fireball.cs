@@ -53,6 +53,11 @@ namespace ED
                 return;
             }
 
+            if (ActorProxy.isPlayingAI == false)
+            {
+                return;
+            }
+
             if (target != null && other.gameObject == target.gameObject ||
                 other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {

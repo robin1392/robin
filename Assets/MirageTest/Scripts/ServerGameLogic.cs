@@ -79,8 +79,6 @@ namespace MirageTest.Scripts
                 await UniTask.Yield();
             }
 
-            await WaitForFirstPlayer();
-            
             await WaitForPlayers();
 
             if (NoPlayers)

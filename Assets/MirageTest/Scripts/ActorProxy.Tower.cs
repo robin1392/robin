@@ -7,6 +7,7 @@ namespace MirageTest.Scripts
     {
         void SpawnTower()
         {
+            //KZSee: 검토
             var towerPrefab = Resources.Load<PlayerController>("Tower/Player");
             var playerController = Instantiate(towerPrefab, transform);
             baseStat = playerController;

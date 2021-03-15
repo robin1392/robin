@@ -62,6 +62,7 @@ namespace MirageTest.Scripts
         public readonly Buffs BuffList = new Buffs();
         public BuffState buffState = BuffState.None;
         public bool isClocking => ((buffState & BuffState.Clocking) != 0);
+        public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
 
         [System.Serializable]
         public struct Buff
@@ -252,6 +253,17 @@ namespace MirageTest.Scripts
             }
         }
 
+        public void AddBuff(Buff buff)
+        {
+            AddBuffOnServer(buff);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void AddBuffOnServer(Buff buff)
+        {
+            BuffList.Add(buff);
+        }
+
         public void HitDamage(float damage)
         {
             HitDamageOnServer(damage);
@@ -411,8 +423,8 @@ namespace MirageTest.Scripts
                 }
                 else
                 {
-                    transform.position =
-                        Vector3.Lerp(transform.position, position, diceInfo.moveSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, position, 0.5f);
+                        
                 }
             }
         }

@@ -188,5 +188,35 @@ namespace MirageTest.Scripts
 
             baseStat.SyncActionWithTarget(actionTypeHash,this, target.GetComponent<ActorProxy>());
         }
+        
+        public void SyncActionWithoutTarget(uint senderNetId, int actionTypeHash)
+        {
+            SyncActionWithoutTargetOnServer(senderNetId, actionTypeHash);
+        }
+        
+        [ServerRpc(requireAuthority =  false)]
+        public void SyncActionWithoutTargetOnServer(uint senderNetId, int actionTypeHash)
+        {
+            foreach (var con in Server.connections)
+            {
+                if (senderNetId == con.Identity.NetId)
+                {
+                    continue;
+                }
+
+                SyncActionWithoutTargetOnClient(con, actionTypeHash);
+            }
+        }
+        
+        [ClientRpc(target = Mirage.Client.Connection)]
+        public void SyncActionWithoutTargetOnClient(INetworkConnection con, int actionTypeHash)
+        {
+            if (baseStat == null)
+            {
+                return;
+            }
+
+            baseStat.SyncActionWithoutTarget(actionTypeHash,this);
+        }
     }
 }

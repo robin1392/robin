@@ -41,7 +41,7 @@ namespace ED
                 return;
             }
             
-            _minion.target.ActorProxy.HitDamage(_minion.power);
+            _minion.target?.ActorProxy?.HitDamage(_minion.power);
             
             event_Attack?.Invoke();
             SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);

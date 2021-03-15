@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Mirage;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -10,8 +13,7 @@ namespace ED
         public AudioClip clip_ShieldMode;
         
         private float skillCastedTime;
-        private bool isHalfDamage;
-        private static readonly int aniHashSkill = Animator.StringToHash("Skill");
+        public static readonly int aniHashSkill = Animator.StringToHash("Skill");
 
         public override void Initialize()
         {
@@ -24,30 +26,24 @@ namespace ED
             if (_spawnedTime >= skillCastedTime + effectCooltime)
             {
                 skillCastedTime = _spawnedTime;
-                StartCoroutine(SkillCoroutine());
+                ActorProxy.AddBuff(new ActorProxy.Buff()
+                {
+                    id = BuffInfos.HalfDamage,
+                    endTime = (float)ActorProxy.NetworkTime.Time + effectDuration, 
+                });
 
-                SoundManager.instance.Play(clip_ShieldMode);
-                animator.SetTrigger(aniHashSkill);
+                var action = new ShielderAction();
+                RunningAction = action;
+                RunLocalAction(action.ActionWithSync(ActorProxy), true);
             }
         }
 
-        IEnumerator SkillCoroutine()
-        {
-            //rb.velocity = Vector3.zero;
-            //agent.velocity = Vector3.zero;
-            //agent.isStopped = true;
-            //agent.updatePosition = false;
-            //agent.updateRotation = false;
-            isHalfDamage = true;
-            yield return new WaitForSeconds(effectDuration);
-            isHalfDamage = false;
-        }
-        
+      
         public override void HitDamage(float damage)
         {
             Skill();
             
-            if (isHalfDamage) damage *= 0.5f;
+            // if (isHalfDamage) damage *= 0.5f;
             
             // base.HitDamage(damage);
         }

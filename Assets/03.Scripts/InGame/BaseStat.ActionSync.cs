@@ -8,8 +8,31 @@ namespace ED
     public partial class BaseStat
     {
         public SyncActionBase RunningAction;
+        protected Coroutine _localActionCoroutine;
         public SyncActionBase SyncAction;
         protected Coroutine _syncActionCoroutine;
+        
+        public void RunLocalAction(IEnumerator action, bool aiStop)
+        {
+            _localActionCoroutine = StartCoroutine(RunLocalActionInternal(action, aiStop));
+        }
+
+        IEnumerator RunLocalActionInternal(IEnumerator action, bool aiStop)
+        {
+            if (aiStop)
+            {
+                StopAI();
+            }
+
+            yield return action;
+            _localActionCoroutine = null;
+            RunningAction = null;
+            
+            if (aiStop)
+            {
+                StartAI();
+            }
+        }
 
         public void SyncActionWithTarget(int hash, ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
@@ -18,16 +41,30 @@ namespace ED
                 SyncAction.OnActionCancel(actorProxy);
                 StopCoroutine(_syncActionCoroutine);
             }
-
+            
             var action = ActionLookup.GetActionWithTarget(hash);
             SyncAction = action;
-            _syncActionCoroutine = StartCoroutine( RunAction(action.Action(actorProxy, targetActorProxy)));
+            _syncActionCoroutine = StartCoroutine( RunSyncAction(action.Action(actorProxy, targetActorProxy)));
         }
 
-        IEnumerator RunAction(IEnumerator action)
+        IEnumerator RunSyncAction(IEnumerator action)
         {
             yield return action;
             SyncAction = null;
+            _syncActionCoroutine = null;
+        }
+        
+        public void SyncActionWithoutTarget(int hash, ActorProxy actorProxy)
+        {
+            if (_syncActionCoroutine != null)
+            {
+                SyncAction.OnActionCancel(actorProxy);
+                StopCoroutine(_syncActionCoroutine);
+            }
+
+            var action = ActionLookup.GetActionWithoutTarget(hash);
+            SyncAction = action;
+            _syncActionCoroutine = StartCoroutine( RunSyncAction(action.Action(actorProxy)));
         }
     }
 }
