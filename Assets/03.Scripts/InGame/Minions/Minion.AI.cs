@@ -84,14 +84,14 @@ namespace ED
             yield return Attack();
         }
 
-        private void ApproachToTarget()
+        protected void ApproachToTarget()
         {
             AiPath.isStopped = false;
-            Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-            Seeker.StartPath(transform.position, targetPos);
+            Vector3 targetPos = target.ActorProxy.transform.position + (target.ActorProxy.transform.position - ActorProxy.transform.position).normalized * range;
+            Seeker.StartPath(ActorProxy.transform.position, targetPos);
         }
 
-        private void StopApproachToTarget()
+        protected void StopApproachToTarget()
         {
             AiPath.isStopped = true;
         }

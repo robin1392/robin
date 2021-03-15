@@ -4,6 +4,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -17,6 +19,7 @@ namespace ED
         public AudioClip clip_Dash;
         
         private float _skillCastedTime;
+        private Transform dashTarget;
 
         protected override void Awake()
         {
@@ -36,13 +39,65 @@ namespace ED
         {
             base.Initialize();
             _skillCastedTime = -effectCooltime;
+            
+        }
+        
+        protected override IEnumerator Combat()
+        {
+            while (true )
+            {
+                yield return Skill();
+                
+                if (!IsTargetInnerRange())
+                {
+                    ApproachToTarget();    
+                }
+                else
+                {
+                    break;
+                }
+
+                yield return null;
+
+                target = SetTarget();
+            }
+
+            StopApproachToTarget();
+            
+            if (target == null)
+            {
+                yield break;
+            }
+
+            yield return Attack();
         }
 
-        public void Skill()
+        public IEnumerator Skill()
         {
             if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
-                Dash();
+                var cols = Physics.OverlapSphere(ActorProxy.transform.position, 5, targetLayer);
+                var distance = float.MaxValue;
+                Minion dashTarget = null;
+                foreach (var col in cols)
+                {
+                    if (col.CompareTag("Player")) continue;
+                    var m = col.GetComponentInParent<Minion>();
+                    var dis = Vector3.Distance(transform.position, col.transform.position);
+
+                    if (!col.CompareTag("Player") && dis < distance && (m != null && m.CanBeTarget()))
+                    {
+                        distance = dis; 
+                        dashTarget = m;
+                    }
+                }
+
+                if (dashTarget != null)
+                {
+                    _skillCastedTime = _spawnedTime;
+                    var action = new DashAction();
+                    yield return action.ActionWithSync(ActorProxy, dashTarget.ActorProxy);
+                }
             }
         }
 
@@ -122,21 +177,15 @@ namespace ED
             while (dashTarget != null)
             {
                 ts.LookAt(dashTarget);
-                //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);
                 ts.position += (dashTarget.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
 
                 if (Vector3.Distance(dashTarget.position, transform.position) < range)
                     break;
                 
-                //var vel = (dashTarget.transform.position - transform.position).normalized * moveSpeed * 3f;
-                //vel.y = 0;
-                //rb.velocity = vel;
                 yield return null;
-                //yield return new WaitForSeconds(moveTime);
             }
 
             isPushing = false;
-            //dashTarget.GetComponent<Minion>()?.Sturn(1f);
 
             if (dashTarget != null && dashTarget.gameObject.activeSelf)
             {
@@ -144,18 +193,46 @@ namespace ED
                 if (bs != null)
                 {
                     var targetID = bs.id;
-                    //if (PhotonNetwork.IsConnected && isMine)
                     if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
                     {
-                        //controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f);
                         controller.ActionSturn(true , targetID , 1f);
                     }
-                    //else if (PhotonNetwork.IsConnected == false)
-                    //else if(InGameManager.IsNetwork == false)
-                    //{
-                        //controller.targetPlayer.SturnMinion(targetID, 1f);
-                    //}
                 }
+            }
+        }
+    }
+    
+    public class DashAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
+        {
+            var raider = (Minion_Raider) actorProxy.baseStat;
+            var t = PoolManager.instance.ActivateObject(raider.pref_EffectDash.name, raider.ts_HitPos.position);
+            if (targetActorProxy.transform != null) t.LookAt(targetActorProxy.transform.position);
+
+            raider.animator.SetTrigger(Minion._animatorHashSkill);
+
+            Transform ts = raider.transform;
+            while (targetActorProxy != null && targetActorProxy.baseStat.isAlive)
+            {
+                ts.LookAt(targetActorProxy.transform);
+                ts.position += (targetActorProxy.transform.position - ts.position).normalized * (raider.moveSpeed * 5f) * Time.deltaTime;
+
+                if (Vector3.Distance(targetActorProxy.transform.position, ts.position) < raider.range)
+                    break;
+                
+                yield return null;
+            }
+
+            if (actorProxy.isPlayingAI == false) yield break;
+            
+            if (targetActorProxy != null && targetActorProxy.baseStat.CanBeTarget())
+            {
+                targetActorProxy.AddBuff(new ActorProxy.Buff()
+                {
+                    id = BuffInfos.Sturn,
+                    endTime = (float)actorProxy.NetworkTime.Time + 1f,
+                });
             }
         }
     }

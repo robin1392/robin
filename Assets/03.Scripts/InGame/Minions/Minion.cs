@@ -52,14 +52,14 @@ namespace ED
         public int ingameUpgradeLevel => ActorProxy.ingameUpgradeLevel;
 
         private Vector3 _dodgeVelocity;
-        protected static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
-        protected static readonly int _animatorHashIdle = Animator.StringToHash("Idle");
-        protected static readonly int _animatorHashAttack = Animator.StringToHash("Attack");
-        protected static readonly int _animatorHashAttack1 = Animator.StringToHash("Attack1");
-        protected static readonly int _animatorHashAttack2 = Animator.StringToHash("Attack2");
-        protected static readonly int _animatorHashAttackReady = Animator.StringToHash("AttackReady");
-        protected static readonly int _animatorHashSkill = Animator.StringToHash("Skill");
-        protected static readonly int _animatorHashSkillLoop = Animator.StringToHash("SkillLoop");
+        public static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
+        public static readonly int _animatorHashIdle = Animator.StringToHash("Idle");
+        public static readonly int _animatorHashAttack = Animator.StringToHash("Attack");
+        public static readonly int _animatorHashAttack1 = Animator.StringToHash("Attack1");
+        public static readonly int _animatorHashAttack2 = Animator.StringToHash("Attack2");
+        public static readonly int _animatorHashAttackReady = Animator.StringToHash("AttackReady");
+        public static readonly int _animatorHashSkill = Animator.StringToHash("Skill");
+        public static readonly int _animatorHashSkillLoop = Animator.StringToHash("SkillLoop");
 
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
@@ -71,7 +71,7 @@ namespace ED
 
         protected static readonly string _scarecrow = "Scarecrow";
 
-        protected Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool =
+        public Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool =
             new Dictionary<MAZ, PoolObjectAutoDeactivate>();
 
         protected Shield _shield;
@@ -97,7 +97,7 @@ namespace ED
             //     return;
             // }
             //
-            // _spawnedTime += Time.deltaTime;
+            _spawnedTime += Time.deltaTime;
             //
             // if (isPlayable && isPushing == false && isAttacking == false)
             // {
@@ -231,21 +231,7 @@ namespace ED
             // }
         }
 
-        public virtual void Death()
-        {
-            if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
-            StopAllCoroutines();
-
-            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
-            foreach (var autoDeactivate in _dicEffectPool)
-            {
-                autoDeactivate.Value.Deactive();
-            }
-
-            _poolObjectAutoDeactivate.Deactive();
-
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
-        }
+      
 
         protected void RefreshHealthBar()
         {
@@ -609,6 +595,7 @@ namespace ED
         public override void OnBaseStatDestroyed()
         {
             base.OnBaseStatDestroyed();
+            if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             _destroyed = true;
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
@@ -616,6 +603,22 @@ namespace ED
             {
                 autoDeactivate.Value.Deactive();
             }
+        }
+        
+        public virtual void Death()
+        {
+            
+            StopAllCoroutines();
+
+            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            foreach (var autoDeactivate in _dicEffectPool)
+            {
+                autoDeactivate.Value.Deactive();
+            }
+
+            _poolObjectAutoDeactivate.Deactive();
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
     }
 }

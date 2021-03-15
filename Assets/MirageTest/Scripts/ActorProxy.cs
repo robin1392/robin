@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using MirageTest.Scripts.Messages;
+using MirageTest.Scripts.SyncAction;
 using Pathfinding;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
@@ -163,7 +165,49 @@ namespace MirageTest.Scripts
                 }
             }
 
+            EnableStunEffect((state & BuffState.Sturn) != 0);
+
+            if ((state & BuffState.CantAI) != 0)
+            {
+                baseStat.animator.SetTrigger(Minion._animatorHashIdle);
+                baseStat.StopAI();
+            }
+            else
+            {
+                baseStat.animator.SetTrigger(Minion._animatorHashIdle);
+                if (isPlayingAI)
+                {
+                    baseStat.StartAI();
+                }
+            }
+
             this.buffState = state;
+        }
+
+        private void EnableStunEffect(bool b)
+        {
+            if (baseStat is Minion minion)
+            {
+                if (b)
+                {
+                    var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
+                        baseStat.ts_HitPos.position + Vector3.up * 0.65f);
+                    minion._dicEffectPool.Add(MAZ.STURN, ad);
+                }
+                else
+                {
+                    if (minion._dicEffectPool.TryGetValue(MAZ.STURN, out var ad))
+                    {
+                        minion._dicEffectPool.Remove(MAZ.STURN);
+                        ad.Deactive();    
+                    }
+                }
+            }
+        }
+        
+        private void EnableFreezeEffect(bool b)
+        {
+            throw new NotImplementedException();
         }
 
         void SpawnActor()
