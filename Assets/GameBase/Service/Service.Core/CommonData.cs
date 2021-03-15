@@ -27,6 +27,30 @@ namespace Service.Core
         }
     }
 
+    [Serializable]
+    public class AdRewardInfo
+    {
+        public string RewardId;
+        public int ItemId;
+        public int Value;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(RewardId);
+            bw.Write(ItemId);
+            bw.Write(Value);
+        }
+
+        public static AdRewardInfo Read(BinaryReader br)
+        {
+            AdRewardInfo data = new AdRewardInfo();
+            data.RewardId = br.ReadString();
+            data.ItemId = br.ReadInt32();
+            data.Value = br.ReadInt32();
+            return data;
+        }
+    }
+
 
     [Serializable]
     public class UserBox

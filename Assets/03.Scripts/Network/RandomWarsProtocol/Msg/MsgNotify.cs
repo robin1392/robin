@@ -53,7 +53,7 @@ namespace RandomWarsProtocol.Msg
         public ItemBaseInfo[] NormalReward;
         public ItemBaseInfo[] StreakReward;
         public ItemBaseInfo[] PerfectReward;
-        public ItemBaseInfo LoseReward;
+        public AdRewardInfo LoseReward;
         public QuestData[] QuestData;
     }
 

@@ -570,7 +570,7 @@ namespace RandomWarsProtocol
                                 msg.PerfectReward[i] = ItemBaseInfo.Read(br);
                             }
 
-                            msg.LoseReward = ItemBaseInfo.Read(br);
+                            msg.LoseReward = AdRewardInfo.Read(br);
 
                             length = br.ReadInt32();
                             msg.QuestData = new QuestData[length];
