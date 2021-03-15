@@ -25,9 +25,9 @@ namespace ED
             PoolManager.instance.AddPool(pref_Bullet, 1);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
             if (light_Fire != null) light_Fire.enabled = false;
         }
@@ -37,11 +37,10 @@ namespace ED
             if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                SetControllEnable(true);
                 return;
             }
 
-            SoundManager.instance?.Play(clip_Fire);
+            SoundManager.instance.Play(clip_Fire);
 
             if (ActorProxy.isPlayingAI)
             {

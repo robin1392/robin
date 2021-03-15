@@ -11,9 +11,9 @@ public class Boss2 : Minion
     private bool _isSkillCasting;
     private float _localAttackSpeed = 1f;
 
-    public override void Initialize(DestroyCallback destroy)
+    public override void Initialize()
     {
-        base.Initialize(destroy);
+        base.Initialize();
         _skillCastedTime = -effectCooltime;
         //KZSee:
         // attackSpeed = 1f;

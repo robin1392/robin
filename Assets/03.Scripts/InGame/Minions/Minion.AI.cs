@@ -18,16 +18,15 @@ namespace ED
             AiPath = aiPath;
         }
         
-        public void StartAI()
+        public override void StartAI()
         {
-            // behaviourTreeOwner.behaviour.Stop();
-            ai = StartCoroutine(Root());
             Seeker.enabled = true;
             AiPath.enabled = true;
             AiPath.isStopped = true;
+            ai = StartCoroutine(Root());
         }
 
-        public void StopAI()
+        public override void StopAI()
         {
             Seeker.enabled = false;
             AiPath.enabled = false;
@@ -36,14 +35,19 @@ namespace ED
             {
                 return;
             }
+
+            if (RunningAction != null)
+            {
+                RunningAction.OnActionCancel(ActorProxy);
+            }
             
             StopCoroutine(ai);
             ai = null;
         }
 
-        private WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);
+        protected WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);
         
-        IEnumerator Root()
+        protected virtual IEnumerator Root()
         {
             while (isAlive)
             {
@@ -53,11 +57,11 @@ namespace ED
                     yield return Combat();
                 }
 
-                yield return _waitForSeconds0_1;    
+                yield return _waitForSeconds0_1;
             }
         }
 
-        private IEnumerator Combat()
+        protected virtual IEnumerator Combat()
         {
             while (!IsTargetInnerRange())
             {

@@ -20,10 +20,9 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
 
     protected override void Initialize()
     {
-        DiceInfos = new List<DiceElement>() {new DiceElement(SpawnMine, SpawnEnemys, 1), new DiceElement(SpawnMine, SpawnEnemys, 2)};
+        // DiceInfos = new List<DiceElement>() {new DiceElement(SpawnMine, SpawnEnemys, 1), new DiceElement(SpawnMine, SpawnEnemys, 2)};
     }
 
-    
     public int inGameLevel;
     public int outGameLevel;
     public int diceScale;
@@ -47,7 +46,7 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
             {
                 _actorDevMode = actorDevMode;
                 DiceInfos = TableManager.Get().DiceInfo.Values
-                    .Select(d => new DiceElement(SpawnMine, SpawnEnemys, d.id)).ToList();
+                    .Select(d => new DiceElement(SpawnMine, SpawnEnemys, d.id, d.prefabName)).ToList();
             }
         }
     
@@ -74,16 +73,17 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
         [NonSerialized]
         private Action<int> spawnEnemys;
         
-        public DiceElement(Action<int> spawnMine, Action<int> spawnEnemys, int diceId)
+        public int DiceId;
+        public string Prefab;
+        
+        public DiceElement(Action<int> spawnMine, Action<int> spawnEnemys, int diceId, string prefab)
         {
             this.spawnMine = spawnMine;
             this.spawnEnemys = spawnEnemys;
             DiceId = diceId;
+            Prefab = prefab;
         }
-        
-        
-        public int DiceId;
-        
+
         [Button]
         public void SpawnMine()
         {

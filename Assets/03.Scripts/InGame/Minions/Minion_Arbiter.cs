@@ -85,7 +85,6 @@ namespace ED
             if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                SetControllEnable(true);
                 return;
             }
 

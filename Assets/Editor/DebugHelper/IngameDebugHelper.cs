@@ -25,11 +25,11 @@ public class IngameDebugHelperWindow : OdinEditorWindow
             return;
         }
 
-        var bottomPlayerController = ingameManager.playerController.isBottomPlayer
+        var bottomPlayerController = ingameManager.playerController.isBottomCamp
             ? ingameManager.playerController
             : ingameManager.playerController.targetPlayer;
 
-        var topPlayerController = ingameManager.playerController.isBottomPlayer
+        var topPlayerController = ingameManager.playerController.isBottomCamp
             ? ingameManager.playerController.targetPlayer
             : ingameManager.playerController;
         

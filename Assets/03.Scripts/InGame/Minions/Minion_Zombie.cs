@@ -27,19 +27,19 @@ namespace ED
             _animationEvent.event_Attack += AttackEvent;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
             animator = animator_Alive;
             animator_Alive.gameObject.SetActive(true);
             animator_Dead.gameObject.SetActive(false);
             _reviveCount = 1;
 
-            base.Initialize(destroy);
+            base.Initialize();
         }
 
         public void AttackEvent()
         {
-            SoundManager.instance?.Play(clip_Blade);
+            SoundManager.instance.Play(clip_Blade);
         }
 
         public override void Death()
@@ -48,7 +48,7 @@ namespace ED
             {
                 StartCoroutine(ReviveCoroutine());
                 
-                SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace ED
             }
         }
         
-        protected override void SetColor(E_MaterialType type, bool isAlly)
+        public override void SetColor(E_MaterialType type, bool isAlly)
         {
             var mat = arrMaterial[isAlly ? 0 : 1];
 
@@ -131,7 +131,6 @@ namespace ED
         {
             _collider.enabled = false;
             _reviveCount--;
-            SetControllEnable(false);
             animator.gameObject.SetActive(false);
 
             StartCoroutine(PoisonCoroutine(2f));
@@ -142,14 +141,13 @@ namespace ED
             RefreshHealthBar();
             animator = animator_Dead;
             animator.gameObject.SetActive(true);
-            SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
-            SetControllEnable(true);
+            SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
             _collider.enabled = true;
         }
 
         IEnumerator PoisonCoroutine(float duration)
         {
-            SoundManager.instance?.Play(clip_Poison);
+            SoundManager.instance.Play(clip_Poison);
             PoolManager.instance.ActivateObject("Effect_Poison", transform.position);
             float t = 0;
             float tick = 0.1f;

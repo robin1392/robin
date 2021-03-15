@@ -100,7 +100,7 @@ namespace MirageTest.Scripts.GameMode
                 diceScale = diceScale,
             };
 
-            var actorProxies = CreateMinionsByPlayerField(playerState);
+            var actorProxies = CreateActorByPlayerFieldDice(playerState);
             foreach (var actorProxy in actorProxies)
             {
                 ServerObjectManager.Spawn(actorProxy.NetIdentity);

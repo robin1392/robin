@@ -62,11 +62,11 @@ namespace MirageTest.Editor
                         Object.DestroyImmediate(seeker);    
                     }
 
-                    var rigidbody = prefab.GetComponent<Rigidbody>();
-                    if (rigidbody != null)
-                    {
-                        Object.DestroyImmediate(rigidbody);    
-                    }
+                    // var rigidbody = prefab.GetComponent<Rigidbody>();
+                    // if (rigidbody != null)
+                    // {
+                    //     Object.DestroyImmediate(rigidbody);    
+                    // }
                     
                     var blackboard = prefab.GetComponent<Blackboard>();
                     if (blackboard != null)

@@ -38,9 +38,9 @@ namespace ED
             obj_LineStart.SetActive(isLayzerOn);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             
             _listTarget.Clear();
             

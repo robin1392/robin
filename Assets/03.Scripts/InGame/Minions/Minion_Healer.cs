@@ -19,9 +19,9 @@ namespace ED
             PoolManager.instance.AddPool(pref_Heal, 1);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             //KZSee:
             // attackSpeed = effectCooltime;
             _animationEvent.event_Attack -= AttackEvent;
@@ -30,12 +30,12 @@ namespace ED
 
         public void AttackEvent()
         {
-            SoundManager.instance?.Play(clip_Heal);
+            SoundManager.instance.Play(clip_Heal);
         }
 
         public override IEnumerator Attack()
         {
-            if (target == null || !IsFriendlyLayer(target.gameObject) || target.IsHpFull)
+            if (target == null || !IsFriendlyLayer(target.gameObject) || !target.isAlive || target.IsHpFull)
             {
                 yield break;
             }

@@ -60,22 +60,6 @@ namespace MirageTest.Scripts
                 Y = msg.positionY,
             };
         }
-        
-        public BaseStat GetBaseStatWithNetId(uint netId)
-        {
-            var actor = _clientObjectManager[netId];
-            if (actor == null)
-            {
-                return null;
-            }
-            
-            return actor.GetComponent<ActorProxy>().baseStat;
-        }
-
-        private void Start()
-        {
-            PoolManager.Get().MakePool();
-        }
 
         public void AddPlayerState(PlayerState playerState)
         {
@@ -151,6 +135,7 @@ namespace MirageTest.Scripts
 
         public BaseStat GetHighestHealthEnemy(byte team)
         {
+            //TODO: 팀별로 액터를 분리해놓는다.
             return ActorProxies.Where(actor => actor.team != team)
                 .OrderByDescending(actor => actor.currentHealth)
                 .First().baseStat;

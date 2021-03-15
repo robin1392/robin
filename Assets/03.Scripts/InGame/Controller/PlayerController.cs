@@ -206,7 +206,7 @@ namespace ED
                     int fieldIndex = infos[i].SlotIndex;
                     // var data = arrDice[fieldIndex].diceData;
                     var upgradeLevel = infos[i].DiceInGameUp;
-                    var ts = isBottomPlayer ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
+                    var ts = isBottomCamp ? FieldManager.Get().GetBottomListTs(fieldIndex): FieldManager.Get().GetTopListTs(fieldIndex);
 
                     // for (int j = 0; j < infos[i].Id.Length; j++)
                     // {
@@ -298,14 +298,14 @@ namespace ED
                     // m.effectCooltime = ConvertNetMsg.MsgShortToFloat(boss.EffectCoolTime);
 
                     m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                    m.ChangeLayer(isBottomPlayer);
+                    m.ChangeLayer(isBottomCamp);
                     // m.attackSpeed = ConvertNetMsg.MsgShortToFloat(boss.AttackSpeed);
                     // m.moveSpeed = ConvertNetMsg.MsgShortToFloat(boss.MoveSpeed);
                     //KZSee:
                     // m.range = 0.7f;
                     // m.eyeLevel = 1;
                     // m.ingameUpgradeLevel = 0;
-                    m.Initialize(MinionDestroyCallback);
+                    m.Initialize();
                 }
 
                 ps_ShieldOff.Play();
@@ -465,7 +465,7 @@ namespace ED
             if (m == null)
             {
                 //PoolManager.instance.AddPool(data.prefab, 1);
-                PoolManager.instance.AddPool(FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION , InGameManager.Get().transform), 1);
+                PoolManager.instance.AddPool(FileHelper.LoadPrefab(data.prefabName , Global.E_LOADTYPE.LOAD_MINION), 1);
                 //Debug.LogFormat("{0} Pool Added 1", data.prefabName);
                 m = PoolManager.instance.ActivateObject<Minion>(data.prefabName, spawnPos, InGameManager.Get().transform);
             }
@@ -480,7 +480,7 @@ namespace ED
                 //m.isMine = PhotonNetwork.IsConnected ? photonView.IsMine : isMine;
                 m.isMine = isMine;
                 m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
-                m.ChangeLayer(isBottomPlayer);
+                m.ChangeLayer(isBottomCamp);
 
                 // new code - by nevill
                 int wave = InGameManager.Get().wave;
@@ -534,7 +534,7 @@ namespace ED
                 //     m.effect *= arrDice[diceNum].eyeLevel + 1;
                 // }
 
-                m.Initialize(MinionDestroyCallback);
+                m.Initialize();
                 
                 if (!listMinion.Contains(m)) 
                     listMinion.Add(m);
@@ -553,7 +553,7 @@ namespace ED
                 }
             }
 
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_GENERATE);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
         
 
@@ -643,7 +643,7 @@ namespace ED
                 spawnPos.z *= -1f;
             }
 
-            GameObject loadMagic = FileHelper.LoadPrefab(data.prefabName, Global.E_LOADTYPE.LOAD_MAGIC , InGameManager.Get().transform);
+            GameObject loadMagic = FileHelper.LoadPrefab(data.prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
             //if (data.prefab != null)
             if(loadMagic != null )
             {
@@ -656,9 +656,7 @@ namespace ED
                     m.id = id;
                     m.diceId = data.id;
                     m.controller = this;
-                    m.diceFieldNum = diceNum;
                     m.targetMoveType = (DICE_MOVE_TYPE)data.targetMoveType;
-                    m.castType = (DICE_CAST_TYPE)data.castType;
 
                     int wave = InGameManager.Get().wave;
                     //KZSee:
@@ -679,10 +677,9 @@ namespace ED
                     // m.moveSpeed = data.moveSpeed;
                     // m.range = data.range;
                     // m.searchRange = data.searchRange;
-                    m.eyeLevel = eyeLevel;
-                    m.upgradeLevel = upgradeLevel;
                     
-                    m.Initialize(isBottomPlayer);
+                    
+                    m.Initialize(isBottomCamp);
                     m.SetTarget();
                     
                     _listMagic.Add(m);
@@ -830,9 +827,8 @@ namespace ED
         {
             gameObject.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
             objCollider.layer = LayerMask.NameToLayer(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer");
-            this.isBottomPlayer = pIsBottomPlayer;
 
-            if (isBottomPlayer == false)
+            if (isBottomCamp == false)
             {
                 transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
@@ -958,7 +954,7 @@ namespace ED
 
             var m = CreateMinion(pref_Guardian, pos);
             m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-            m.ChangeLayer(isBottomPlayer);
+            m.ChangeLayer(isBottomCamp);
             //KZSee:
             // m.power = maxHealth / 50f;
             // m.maxHealth = maxHealth * 0.3333f;
@@ -968,7 +964,7 @@ namespace ED
             // m.range = 0.7f;
             // m.eyeLevel = 1;
             // m.ingameUpgradeLevel = 0;
-            m.Initialize(MinionDestroyCallback);
+            m.Initialize();
             
             PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
         }
@@ -1006,7 +1002,7 @@ namespace ED
                 image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
                 ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
                 animator.SetTrigger("Death");
-                SoundManager.instance?.Play(clip_TowerExplosion);
+                SoundManager.instance.Play(clip_TowerExplosion);
                 ps_Destroy.gameObject.SetActive(true);
                 
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
@@ -1595,7 +1591,7 @@ namespace ED
         }
         public void Cloacking(uint baseStatId , bool isCloack)
         {
-            listMinion.Find(m => m.id == baseStatId)?.Cloacking(isCloack);
+            listMinion.Find(m => m.id == baseStatId)?.ApplyCloacking(isCloack);
         }
         public void FlagOfWar(uint bastStatId , bool isIn , float factor)
         {
@@ -1736,8 +1732,8 @@ namespace ED
             {
                 case E_CannonType.DEFAULT:
                     b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
-                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
-                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
                     break;
                 case E_CannonType.BOMBER:
                     b = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
@@ -1748,7 +1744,7 @@ namespace ED
             {
                 b.transform.rotation = Quaternion.identity;
                 b.client = ActorProxy.Client as RWNetworkClient;
-                b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
+                b.Initialize(targetPos, damage, splashRange, isMine, isBottomCamp);
             }
         }
         

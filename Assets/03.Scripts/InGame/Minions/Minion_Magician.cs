@@ -38,9 +38,9 @@ namespace  ED
             PoolManager.instance.AddPool(pref_Scarecrow, 1);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             _skillCastedCount = 0;
         }
 
@@ -50,7 +50,6 @@ namespace  ED
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                SetControllEnable(true);
                 return;
             }
 

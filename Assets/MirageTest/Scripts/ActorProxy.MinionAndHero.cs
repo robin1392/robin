@@ -9,52 +9,45 @@ namespace MirageTest.Scripts
         {
             var client = Client as RWNetworkClient;
             PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
-            var m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
-            if (m == null)
+            var minion = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
+            if (minion == null)
             {
                 PoolManager.instance.AddPool(
-                    FileHelper.LoadPrefab(diceInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION, transform), 1);
+                    FileHelper.LoadPrefab(diceInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION), 1);
                 //Debug.LogFormat("{0} Pool Added 1", data.prefabName);
-                m = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
+                //포지션을 원점으로 주고 있지만, StartClient 이후에 포지션 미라지 네트워크아이덴티티의 포지션 동기화가 이루어져 서버상의 위치로 바뀐다. 
+                minion = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
             }
-            
-            if (m != null)
+
+            if (minion != null)
             {
-                m.transform.localPosition = Vector3.zero;
-                m.transform.localRotation = Quaternion.identity;
-                baseStat = m;
-                m.ActorProxy = this;
-                m.SetPathFinding(_seeker, _aiPath);
-                m.Initialize(null);
-                m.controller = (Client as RWNetworkClient).GetTower(ownerTag);
-                m.castType = (DICE_CAST_TYPE) diceInfo.castType;
-                m.id = NetId;
-                m.isMine = IsLocalPlayerActor;
-                m.targetMoveType = (DICE_MOVE_TYPE) diceInfo.targetMoveType;
-                m.isBottomPlayer = IsBottomCamp();
-                m.ChangeLayer(IsBottomCamp());
+                baseStat = minion;
+                minion.ActorProxy = this;
+                minion.transform.localPosition = Vector3.zero;
+                minion.transform.localRotation = Quaternion.identity;
+                minion.SetPathFinding(_seeker, _aiPath);
+                minion.Initialize();
+                minion.controller = (Client as RWNetworkClient).GetTower(ownerTag);
+                minion.castType = (DICE_CAST_TYPE) diceInfo.castType;
+                minion.id = NetId;
+                minion.isMine = IsLocalPlayerActor;
+                minion.targetMoveType = (DICE_MOVE_TYPE) diceInfo.targetMoveType;
+                minion.ChangeLayer(IsBottomCamp());
             }
 
             if (client.enableUI)
             {
-                ShowSpawnLine(m);
+                ShowSpawnLine(minion);
             }
-
-            EnableClientCombatLogic(client.IsPlayingAI);
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_GENERATE);
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);
         }
 
         void ShowSpawnLine(Minion minion)
         {
-            var setting = UI_DiceField.Get().arrSlot[spawnSlot].ps.main;
-            setting.startColor = FileHelper.GetColor(diceInfo.color);
-
             var dicePos = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
-            if (IsLocalPlayerActor)
-            {
-                UI_DiceField.Get().arrSlot[spawnSlot].ps.Play();
-            }
-            else
+            //로컬플레이어의 진영이 하단에 위치하도록 카메라가 회전된다. 상대방 플레이어의 스폰라인정 시작점은 로컬플레이어 필드 유아이의 정반대로 계산한다. 
+            if(!IsLocalPlayerActor)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;

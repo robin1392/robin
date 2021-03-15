@@ -30,7 +30,7 @@ namespace ED
         public float moveSpeed => ActorProxy.diceInfo.moveSpeed;
         public float range => ActorProxy.diceInfo.range;
         public float searchRange => ActorProxy.diceInfo.searchRange;
-        public bool isBottomPlayer;
+        public bool isBottomCamp => ActorProxy.IsBottomCamp();
 
         [Header("Positions")] 
         public Transform ts_ShootingPos;
@@ -40,8 +40,32 @@ namespace ED
         public Image image_HealthBar;
         public Text text_Health;
         
-        public bool isAlive => ActorProxy.currentHealth > 0;
-        public bool IsHpFull => ActorProxy.currentHealth >= ActorProxy.maxHealth;
+        public bool isAlive
+        {
+            get
+            {
+                if (ActorProxy == null)
+                {
+                    return false;
+                }
+                
+                return ActorProxy.currentHealth > 0;
+            }
+        }
+
+        public bool IsHpFull
+        {
+            get
+            { 
+                if (ActorProxy == null)
+                {
+                    return false;
+                }
+                
+                return ActorProxy.currentHealth >= ActorProxy.maxHealth;
+            }
+        }
+        
 
         private static readonly string GROUND_TAG_NAME = "Minion_Ground";
         private static readonly string FLYING_TAG_NAME = "Minion_Flying";
@@ -64,12 +88,12 @@ namespace ED
                 switch (targetMoveType)
                 {
                     case DICE_MOVE_TYPE.GROUND:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer");
                     case DICE_MOVE_TYPE.FLYING:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                     case DICE_MOVE_TYPE.ALL:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer") 
-                               | 1 << LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer") 
+                               | 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                     default:
                         return 0;
                 }
@@ -98,12 +122,12 @@ namespace ED
                 switch (targetMoveType)
                 {
                     case DICE_MOVE_TYPE.GROUND:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer");
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer");
                     case DICE_MOVE_TYPE.FLYING:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                     case DICE_MOVE_TYPE.ALL:
-                        return 1 << LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer") 
-                               | 1 << LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer") 
+                               | 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                     default:
                         return 0;
                 }
@@ -113,14 +137,38 @@ namespace ED
         protected Vector3 networkPosition = Vector3.zero;
         protected MeshRenderer[] arrMeshRenderer;
         protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
+        
+        public PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
+
+        protected virtual void Awake()
+        {
+            _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
+        }
 
         protected virtual void Start() { }
-
-        protected void RefreshHealthBarColor()
+        
+        public virtual void OnBaseStatDestroyed()
         {
+            StopAI();
+            _poolObjectAutoDeactivate.Deactive();            
+        }
+
+        protected void SetHealthBarColor()
+        {
+            if (image_HealthBar == null)
+            {
+                return;
+            }
+            
             image_HealthBar.color = ActorProxy.IsLocalPlayerAlly() ? Color.green : Color.red;
         }
         
+        public void ChangeLayer(bool pIsBottomPlayer)
+        {
+            var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
+            gameObject.layer = LayerMask.NameToLayer(layerName);
+        }
+
         public virtual void SetColor(E_MaterialType type, bool isAlly)
         {
             if (arrMeshRenderer == null)
@@ -132,6 +180,8 @@ namespace ED
             
             foreach (var m in arrMeshRenderer)
             {
+                if (m.gameObject.CompareTag("Finish")) continue;
+                
                 m.material = mat;
 
                 switch (type)
@@ -198,11 +248,6 @@ namespace ED
             animator.SetTrigger(triggerName);
         }
 
-        public virtual float CalcDamage(float power)
-        {
-            return power;
-        }
-        
         public virtual void HitDamage(float damage) { }
 
         protected bool IsTargetLayer(GameObject targetObject)
@@ -210,12 +255,12 @@ namespace ED
             switch (targetMoveType)
             {
                 case DICE_MOVE_TYPE.GROUND:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer");
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer");
                 case DICE_MOVE_TYPE.FLYING:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                 case DICE_MOVE_TYPE.ALL:
-                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomPlayer ? "TopPlayer" : "BottomPlayer") 
-                           || targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "TopPlayerFlying" : "BottomPlayerFlying");
+                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer") 
+                           || targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                 default:
                     return false;
             }

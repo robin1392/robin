@@ -11,11 +11,11 @@ namespace ED
         
         private float skillCastedTime;
         private bool isHalfDamage;
-        private static readonly int aniHashAttack = Animator.StringToHash("Skill");
+        private static readonly int aniHashSkill = Animator.StringToHash("Skill");
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             skillCastedTime = -effectCooltime;
         }
 
@@ -26,8 +26,8 @@ namespace ED
                 skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine());
 
-                SoundManager.instance?.Play(clip_ShieldMode);
-                animator.SetTrigger(aniHashAttack);
+                SoundManager.instance.Play(clip_ShieldMode);
+                animator.SetTrigger(aniHashSkill);
             }
         }
 
@@ -38,12 +38,9 @@ namespace ED
             //agent.isStopped = true;
             //agent.updatePosition = false;
             //agent.updateRotation = false;
-            SetControllEnable(false);
             isHalfDamage = true;
             yield return new WaitForSeconds(effectDuration);
             isHalfDamage = false;
-            SetControllEnable(true);
-            
         }
         
         public override void HitDamage(float damage)

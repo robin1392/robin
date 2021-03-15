@@ -42,7 +42,7 @@ namespace ED
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             shootTime = 0;
-            SetColor();
+            
 
             if (pIsBottomPlayer == false)
             {

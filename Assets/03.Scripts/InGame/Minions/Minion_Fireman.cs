@@ -14,9 +14,9 @@ namespace ED
         [Header("AudioClip")]
         public AudioClip clip_Flame;
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             
             ps_Fire.Stop();
             light.enabled = false;
@@ -96,9 +96,8 @@ namespace ED
 
         IEnumerator FireCoroutine()
         {
-            SoundManager.instance?.Play(clip_Flame);
-            
-            SetControllEnable(false);
+            SoundManager.instance.Play(clip_Flame);
+
             AiPath.canMove = false;
             isFire = true;
             ps_Fire.Play();
@@ -135,7 +134,6 @@ namespace ED
             light.enabled = false;
             isFire = false;
             AiPath.canMove = true;
-            SetControllEnable(true);
         }
 
         public override void EndGameUnit()

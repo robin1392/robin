@@ -35,10 +35,6 @@ namespace ED
 
     public partial class Minion : BaseStat
     {
-        public DestroyCallback destroyCallback;
-
-        public delegate void DestroyCallback(Minion minion);
-
         public DICE_CAST_TYPE castType;
         public bool isPushing;
         public bool isAttackSpeedFactorWithAnimation = true;
@@ -48,14 +44,12 @@ namespace ED
 
         //private bool _isNexusAttacked;
         protected bool isInvincibility;
-        protected bool _isCloacking;
-        public bool isCloacking => _isCloacking;
-        protected int cloackingCount;
+        public bool isCloacking => ActorProxy.isClocking;
         protected int invincibilityCount;
         private float _originalAttackSpeed;
 
-        [HideInInspector] public int eyeLevel=> ActorProxy.diceScale;
-        [HideInInspector] public int ingameUpgradeLevel=>ActorProxy.ingameUpgradeLevel;
+        public int eyeLevel=> ActorProxy.diceScale;
+        public int ingameUpgradeLevel => ActorProxy.ingameUpgradeLevel;
 
         private Vector3 _dodgeVelocity;
         protected static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
@@ -70,7 +64,7 @@ namespace ED
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
         public BehaviourTreeOwner behaviourTreeOwner { get; protected set; }
-        public PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
+        
         protected Collider _collider;
         public bool isPolymorph;
         protected int _flagOfWarCount;
@@ -88,15 +82,13 @@ namespace ED
         private bool _destroyed; 
         public bool Destroyed => _destroyed;
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
-            _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
-            // behaviourTreeOwner = GetComponent<BehaviourTreeOwner>();
+            base.Awake();
             _collider = GetComponentInChildren<Collider>();
             _animationEvent = animator.GetComponent<MinionAnimationEvent>();
         }
-
-
+        
         protected virtual void Update()
         {
             // if (currentHealth <= 0 && ((InGameManager.IsNetwork && !isMine) || controller.isPlayingAI))
@@ -163,9 +155,9 @@ namespace ED
         }
 
 
-        public virtual void Initialize(DestroyCallback destroy)
+        public virtual void Initialize()
         {
-            SetControllEnable(true);
+            _destroyed = false;
             _dodgeVelocity = Vector3.zero;
             _collider.enabled = true;
             isPolymorph = false;
@@ -176,7 +168,7 @@ namespace ED
             _originalAttackSpeed = attackSpeed;
             image_HealthBar.fillAmount = 1f;
             
-            RefreshHealthBarColor();
+            SetHealthBarColor();
 
             if (animator != null)
             {
@@ -187,18 +179,9 @@ namespace ED
                     animator.SetFloat("AttackSpeed", 1f / attackSpeed);
                 }
             }
-
-            if (destroy != null)
-            {
-                destroyCallback = null;
-                destroyCallback += destroy;
-            }
-
-            cloackingCount = 0;
-            Cloacking(false);
+            
             _dicEffectPool.Clear();
-
-            SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
+            SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
         }
         
         public void Heal(float heal)
@@ -250,11 +233,9 @@ namespace ED
 
         public virtual void Death()
         {
-            SetControllEnable(false);
             if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
             StopAllCoroutines();
 
-            destroyCallback(this);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
             foreach (var autoDeactivate in _dicEffectPool)
             {
@@ -263,7 +244,7 @@ namespace ED
 
             _poolObjectAutoDeactivate.Deactive();
 
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         protected void RefreshHealthBar()
@@ -294,11 +275,10 @@ namespace ED
             }
 
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-
-            Collider firstTarget = null;
+            
+            Collider closestTarget = null;
             var distance = float.MaxValue;
             
-            Debug.Log(cols.Length);
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseStat>();
@@ -312,13 +292,13 @@ namespace ED
                 if (sqr < distance)
                 {
                     distance = sqr;
-                    firstTarget = col;
+                    closestTarget = col;
                 }
             }
 
-            if (firstTarget != null)
+            if (closestTarget != null)
             {
-                return firstTarget.GetComponentInParent<BaseStat>();
+                return closestTarget.GetComponentInParent<BaseStat>();
             }
 
             if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
@@ -329,18 +309,6 @@ namespace ED
             return null;
         }
 
-        public void ChangeLayer(bool pIsBottomPlayer)
-        {
-            isBottomPlayer = pIsBottomPlayer;
-            var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
-            gameObject.layer = LayerMask.NameToLayer(layerName);
-
-            if (!isBottomPlayer)
-            {
-                ActorProxy.transform.rotation = Quaternion.Euler(0, 180f, 0);
-            }
-        }
-
         public virtual void EndGameUnit()
         {
             if (animator != null)
@@ -349,7 +317,6 @@ namespace ED
                 animator.SetTrigger(_animatorHashIdle);
             }
 
-            SetControllEnable(false);
             StopAllCoroutines();
             // GetComponent<NodeCanvas.BehaviourTrees.BehaviourTreeOwner>().StopBehaviour();
         }
@@ -366,7 +333,6 @@ namespace ED
         public void Push(Vector3 dir, float pushPower)
         {
             //StopAllCoroutines();
-            SetControllEnable(false);
             animator.SetTrigger(_animatorHashIdle);
             throw new NotImplementedException("리지드바디를 사용하지 않고 Push구현");
             // rb.AddForce(dir.normalized * pushPower, ForceMode.Impulse);
@@ -387,7 +353,6 @@ namespace ED
             // }
             // rb.velocity = Vector3.zero;
             // rb.isKinematic = true;
-            SetControllEnable(true);
         }
 
         public virtual void Sturn(float duration)
@@ -410,10 +375,8 @@ namespace ED
             _dicEffectPool.Add(MAZ.STURN, ad);
             //rb.velocity = Vector3.zero;
             //rb.isKinematic = true;
-            SetControllEnable(false);
             if (animator != null) animator.SetTrigger(_animatorHashIdle);
             yield return new WaitForSeconds(duration);
-            SetControllEnable(true);
             ad.Deactive();
             _dicEffectPool.Remove(MAZ.STURN);
             //rb.isKinematic = false;
@@ -580,12 +543,6 @@ namespace ED
             if (animator != null) animator.SetFloat("AttackSpeed", 1f / attackSpeed);
         }
 
-        public void SetControllEnable(bool isEnable)
-        {
-            isPushing = !isEnable;
-            AiPath.isStopped = !isEnable;
-        }
-
         public void Scarecrow(float duration)
         {
             //StopAllCoroutines();
@@ -595,7 +552,6 @@ namespace ED
         IEnumerator ScarecrowCoroutine(float duration)
         {
             isPolymorph = true;
-            SetControllEnable(false);
             animator.gameObject.SetActive(false);
             var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(_scarecrow, transform.position);
             ad.Deactive(duration);
@@ -603,7 +559,6 @@ namespace ED
             yield return new WaitForSeconds(duration);
 
             isPolymorph = false;
-            SetControllEnable(true);
             animator.gameObject.SetActive(true);
         }
 
@@ -612,42 +567,30 @@ namespace ED
             switch (targetMoveType)
             {
                 case DICE_MOVE_TYPE.GROUND:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer");
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer");
                 case DICE_MOVE_TYPE.FLYING:
                     return targetObject.layer ==
-                           LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                           LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                 case DICE_MOVE_TYPE.ALL:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer")
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer")
                            || targetObject.layer ==
-                           LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                           LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                 default:
                     return false;
             }
         }
 
-        public void Cloacking(bool isCloacking)
+        public void ApplyCloacking(bool isCloacking)
         {
+            var isAlly = ActorProxy.IsLocalPlayerAlly();
             if (isCloacking)
             {
                 PoolManager.instance.ActivateObject("Effect_Cloaking", ts_HitPos.position);
-                cloackingCount++;
-                if (cloackingCount >= 1)
-                {
-                    this._isCloacking = true;
-                    //_collider.enabled = false;
-                    SetColor(isMine ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT, ActorProxy.IsLocalPlayerAlly());
-                }
+                SetColor(isAlly ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT, isAlly);
             }
             else
             {
-                cloackingCount--;
-                if (cloackingCount <= 0)
-                {
-                    cloackingCount = 0;
-                    this._isCloacking = false;
-                    //_collider.enabled = true;
-                    SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
-                }
+                SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, isAlly);
             }
         }
 
@@ -655,7 +598,6 @@ namespace ED
         {
             if (_crtAttack != null) StopCoroutine((_crtAttack));
             if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
-            SetControllEnable(true);
 
             animator.SetTrigger(_animatorHashIdle);
             controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY,
@@ -663,17 +605,17 @@ namespace ED
                 target.id);
         }
 
-        public void OnDeath()
+
+        public override void OnBaseStatDestroyed()
         {
+            base.OnBaseStatDestroyed();
             _destroyed = true;
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
             foreach (var autoDeactivate in _dicEffectPool)
             {
                 autoDeactivate.Value.Deactive();
             }
-            
-            _poolObjectAutoDeactivate.Deactive();
         }
     }
 }

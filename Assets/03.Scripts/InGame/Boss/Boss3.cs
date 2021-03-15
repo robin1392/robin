@@ -29,9 +29,7 @@ public class Boss3 : Minion
         }
 
         if (targetBS == null) yield break;
-        
-        SetControllEnable(false);
-        
+
         var targetPos = targetBS.transform.position;
         targetPos.y = 0;
         transform.LookAt(targetPos);
@@ -56,7 +54,5 @@ public class Boss3 : Minion
         }
         
         yield return new WaitForSeconds(1f);
-        
-        SetControllEnable(true);
     }
 }

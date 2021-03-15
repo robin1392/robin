@@ -17,6 +17,8 @@ namespace ED
             base.Start();
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow -= FireArrow;
+            ae.event_FireSpear -= FireSpear;
             ae.event_FireArrow += FireArrow;
             ae.event_FireSpear += FireSpear;
         }
@@ -26,7 +28,6 @@ namespace ED
             if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                SetControllEnable(true);
                 return;
             }
 
@@ -41,7 +42,6 @@ namespace ED
             if (target == null || IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                SetControllEnable(true);
                 return;
             }
             

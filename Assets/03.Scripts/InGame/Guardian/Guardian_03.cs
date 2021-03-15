@@ -14,9 +14,9 @@ public class Guardian_03 : Minion
         PoolManager.instance.AddPool(pref_Bullet, 5);
     }
     
-    public override void Initialize(DestroyCallback destroy)
+    public override void Initialize()
     {
-        base.Initialize(destroy);
+        base.Initialize();
 
         StartCoroutine(SkillCoroutine());
     }

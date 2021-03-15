@@ -182,7 +182,7 @@ namespace ED
             }
             */
             
-            SoundManager.instance?.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
+            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
         }
 
         protected void Update()
@@ -228,8 +228,8 @@ namespace ED
                 myTObj.transform.position = myTowerPos;
                 playerController = myTObj.GetComponent<PlayerController>();
                 playerController.isMine = true;
-                playerController.isBottomPlayer = NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer;
-                playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
+                
+                playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer, true);
 
 
                 Vector3 otherTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
@@ -238,10 +238,10 @@ namespace ED
                 otherTObj.transform.position = otherTowerPos;
                 playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 playerController.targetPlayer.isMine = false;
-                playerController.targetPlayer.isBottomPlayer = NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer;
+                
                 playerController.targetPlayer.targetPlayer = playerController;
                 
-                playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
+                playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer, true);
                 
                 //
                 UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
@@ -253,9 +253,9 @@ namespace ED
                 var obj = Instantiate(pref_Player, startPos, Quaternion.identity);
                 obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
                 playerController = obj.GetComponent<PlayerController>();
-                playerController.ChangeLayer(true);
+                playerController.ChangeLayer(true, true);
                 playerController.isMine = true;
-                playerController.isBottomPlayer = true;
+                
                 
                 // Set MsgUserinfo
                 var msgUserInfo = new MsgPlayerInfo();
@@ -724,7 +724,7 @@ namespace ED
             playerController.GetDice(diceId, slotNum, level);
             NetSetSp(curSp);
             
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
             
             UI_InGame.Get().ControlGetDiceButton(true);
         }
@@ -938,7 +938,7 @@ namespace ED
 
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
 
-            SoundManager.instance?.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
+            SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }
         
         /*public void EndGame(PhotonMessageInfo info)
@@ -979,7 +979,7 @@ namespace ED
             var localPlayerProxy = _client.GetLocalPlayerProxy(); 
             localPlayerProxy.UpgradeSp();
 
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
         }
 
         public void InGameUpgradeCallback(int diceId, int upgradeLv, int curSp)

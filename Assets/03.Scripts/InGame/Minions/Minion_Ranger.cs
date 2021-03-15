@@ -24,9 +24,9 @@ namespace ED
             ae.event_FireLight += FireLightOn;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             if (light_Fire != null) light_Fire.enabled = false;
         }
 

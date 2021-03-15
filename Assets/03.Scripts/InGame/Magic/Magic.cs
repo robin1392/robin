@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace ED
 {
-    public class Magic : BaseStat
+    public partial class Magic : BaseStat
     {
         public enum SPAWN_TYPE
         {
@@ -18,81 +19,34 @@ namespace ED
         [SerializeField]
         protected Collider _hitCollider;
 
-        public DICE_CAST_TYPE castType;
-        public SPAWN_TYPE spawnType;
-        public DestroyCallback destroyCallback;
-        public delegate void DestroyCallback(Magic magic);
+        public DICE_CAST_TYPE castType => (DICE_CAST_TYPE)ActorProxy.diceInfo.castType;
 
         public Vector3 targetPos;
+        public Vector3 startPos;
         
-        public int eyeLevel;
-        public int upgradeLevel;
+        public int eyeLevel => ActorProxy.diceScale;
+        public int upgradeLevel => ActorProxy.ingameUpgradeLevel;
         
         protected Coroutine destroyRoutine;
-        //private Vector3 networkPosition;
-        private PoolObjectAutoDeactivate poolDeactive;
-
-        //public Material[] arrMaterial;
-
-        [HideInInspector] public int diceFieldNum;
-
-        protected virtual void Awake()
-        {
-            if (poolDeactive == null)
-            {
-                poolDeactive = GetComponent<PoolObjectAutoDeactivate>();
-            }
-        }
-
-        protected void Update()
-        {
-            if (image_HealthBar != null)
-            {
-                image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
-            }
-        }
+        
+        public int diceFieldNum => ActorProxy.spawnSlot;
 
         public virtual void Initialize(bool pIsBottomPlayer)
         {
-            isBottomPlayer = pIsBottomPlayer;
-
-            destroyCallback = null;
-            destroyCallback += controller.MagicDestroyCallback;
-
-            if (image_HealthBar != null)
-            {
-                image_HealthBar.enabled = true;
-                image_HealthBar.fillAmount = 1f;
-                
-                if (_hitCollider != null)
-                {
-                    var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}"; 
-                    _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
-                }
-                
-                image_HealthBar.color = isMine ? Color.green : Color.red;
-
-                StartCoroutine(LifetimeCoroutine());
-            }
+            SetHealthBarColor();
         }
 
-        protected void SetColor()
+        public void SetColor(bool isBottomCamp)
         {
-            var isBlue = isMine;
-            if (InGameManager.Get().playType == Global.PLAY_TYPE.COOP)
-            {
-                isBlue = isBottomPlayer;
-            }
-
-            var mr = GetComponentsInChildren<MeshRenderer>();
+            var mr = GetComponentsInChildren<MeshRenderer>(true);
             foreach (var m in mr)
             {
-                m.material = arrMaterial[isBlue ? 0 : 1];
+                m.material = arrMaterial[isBottomCamp ? 0 : 1];
             }
-            var smr = GetComponentsInChildren<SkinnedMeshRenderer>();
+            var smr = GetComponentsInChildren<SkinnedMeshRenderer>(true);
             foreach (var m in smr)
             {
-                m.material = arrMaterial[isBlue ? 0 : 1];
+                m.material = arrMaterial[isBottomCamp ? 0 : 1];
             }
         }
 
@@ -104,14 +58,12 @@ namespace ED
 
         private IEnumerator DestroyCoroutine(float delay = 0)
         {
-            destroyCallback(this);
-
             if (delay > 0)
             {
                 yield return new WaitForSeconds(delay);
             }
 
-            poolDeactive.Deactive();
+            // poolDeactive.Deactive();
         }
 
         // public void SetNetworkValue(Vector3 position, Vector3 velocity, double sentServerTime)
@@ -130,7 +82,7 @@ namespace ED
             //if (PhotonNetwork.IsConnected && isMine)
             if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
             {
-                target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
+                target = InGameManager.Get().GetRandomPlayerUnit(!isBottomCamp);
                 if (target != null)
                 {
                     //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
@@ -142,7 +94,7 @@ namespace ED
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false)
             {
-                target = InGameManager.Get().GetRandomPlayerUnit(!isBottomPlayer);
+                target = InGameManager.Get().GetRandomPlayerUnit(!isBottomCamp);
                 if (target != null)
                 {
                     StartCoroutine(Activate());
@@ -155,7 +107,7 @@ namespace ED
             //if (PhotonNetwork.IsConnected && isMine)
             if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
             {
-                targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
+                targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomCamp);
                 
                 //controller.SendPlayer(RpcTarget.Others , E_PTDefine.PT_SETMAGICTARGET,id, targetPos.x, targetPos.z);
                 controller.ActionSetMagicTarget(id, targetPos.x, targetPos.z);
@@ -165,7 +117,7 @@ namespace ED
             //else if (PhotonNetwork.IsConnected == false)
             else if(InGameManager.IsNetwork == false)
             {
-                targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomPlayer);
+                targetPos = InGameManager.Get().GetRandomPlayerFieldPosition(isBottomCamp);
                 StartCoroutine(Activate());
             }
         }
@@ -212,12 +164,12 @@ namespace ED
             switch (targetMoveType)
             {
                 case DICE_MOVE_TYPE.GROUND:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer");
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer");
                 case DICE_MOVE_TYPE.FLYING:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                 case DICE_MOVE_TYPE.ALL:
-                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayer" : "TopPlayer") 
-                           || targetObject.layer == LayerMask.NameToLayer(isBottomPlayer ? "BottomPlayerFlying" : "TopPlayerFlying");
+                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer") 
+                           || targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                 default:
                     return false;
             }

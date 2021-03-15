@@ -14,14 +14,13 @@ namespace ED
         public Transform[] arrTs_Parts;
         public int pieceID;
         
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
             // controller.robotPieceCount++;
             // controller.robotEyeTotalLevel += eyeLevel;
-            
-            SetControllEnable(false);
+
             _collider.enabled = false;
             animator.gameObject.SetActive(false);
             animator.SetTrigger(_animatorHashSkill);
@@ -44,13 +43,11 @@ namespace ED
             else
             {
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
-                
-                SetControllEnable(false);
+
                 if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
                 StopAllCoroutines();
-                InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
+                InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
 
-                destroyCallback(this);
                 PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
                 _poolObjectAutoDeactivate.Deactive();
             }
@@ -66,12 +63,10 @@ namespace ED
             }
             else
             {
-                SetControllEnable(false);
                 if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
                 StopAllCoroutines();
-                InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
-            
-                destroyCallback(this);
+                InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
+
                 _poolObjectAutoDeactivate.Deactive();
             }
         }
@@ -109,8 +104,7 @@ namespace ED
                 tsPart.gameObject.SetActive(false);
             }
             animator.gameObject.SetActive(true);
-            SetControllEnable(true);
-            ChangeLayer(isBottomPlayer);
+            ChangeLayer(isBottomCamp);
         }
     }
 }

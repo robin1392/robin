@@ -61,7 +61,7 @@ namespace ED
             var localPlayerProxy = _client.GetLocalPlayerProxy();
             localPlayerProxy.UpgradeIngameLevel(pData.id);
 
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
         }
 
         public int GetDeckDiceId()

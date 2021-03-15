@@ -115,7 +115,7 @@ namespace MirageTest.Scripts
                     break;
                 case E_BulletType.SPEAR:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
-                    SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
                     break;
                 case E_BulletType.NECROMANCER:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
@@ -175,6 +175,11 @@ namespace MirageTest.Scripts
         [ClientRpc(target = Mirage.Client.Connection)]
         public void SyncActionWithTargetOnClient(INetworkConnection con, int actionTypeHash, uint targetNetId)
         {
+            if (baseStat == null)
+            {
+                return;
+            }
+
             var target = ClientObjectManager[targetNetId];
             if (target == null)
             {

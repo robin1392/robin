@@ -16,7 +16,7 @@ namespace ED
 
         public override IEnumerator Attack()
         {
-            SoundManager.instance?.Play(clip_Attack);
+            SoundManager.instance.Play(clip_Attack);
             yield return base.Attack();
         }
 
@@ -27,7 +27,7 @@ namespace ED
 
         public override void Death()
         {
-            SoundManager.instance?.Play(clip_Exposion);
+            SoundManager.instance.Play(clip_Exposion);
             
             for (int i = 0; i < 2; i++)
             {
@@ -36,7 +36,7 @@ namespace ED
                     transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f));
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomPlayer);
+                m.ChangeLayer(isBottomCamp);
                 //KZSee:
                 // m.power = effect;
                 // // m.maxHealth = maxHealth * eyeLevel * 0.1f;
@@ -45,7 +45,7 @@ namespace ED
                 // // m.range = range;
                 // m.eyeLevel = eyeLevel;
                 // m.ingameUpgradeLevel = ingameUpgradeLevel;
-                m.Initialize(destroyCallback);
+                m.Initialize();
             }
 
             base.Death();

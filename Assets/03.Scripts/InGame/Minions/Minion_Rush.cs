@@ -27,11 +27,10 @@ namespace ED
             _animationEvent.event_Skill += SkillEvent;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
-            SetControllEnable(false);
             Skill();
         }
         
@@ -46,7 +45,7 @@ namespace ED
 
         public void SkillEvent()
         {
-            SoundManager.instance?.Play(clip_Rush);
+            SoundManager.instance.Play(clip_Rush);
         }
 
         private void Dash()
@@ -157,7 +156,6 @@ namespace ED
             
             
             dashTarget = null;
-            SetControllEnable(true);
             _collider.enabled = true;
             ps_Rush.Stop();
             

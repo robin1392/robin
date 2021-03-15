@@ -32,12 +32,10 @@ namespace  ED
             base.Initialize(pIsBottomPlayer);
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
-            if (isBottomPlayer == false) transform.rotation = Quaternion.Euler(0, 180, 0);
+            if (isBottomCamp == false) transform.rotation = Quaternion.Euler(0, 180, 0);
             else transform.rotation = Quaternion.identity;
             ts_Model.gameObject.SetActive(true);
-            
-            SetColor();
-            
+
             StartCoroutine(AttackCoroutine());
             
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
@@ -45,13 +43,13 @@ namespace  ED
         
         private IEnumerator AttackCoroutine()
         {
-            SoundManager.instance?.Play(clip_Rolling);
+            SoundManager.instance.Play(clip_Rolling);
             float angle = 0f;
             Vector3 forward = transform.forward;
             while (true)
             {
                 transform.position += forward * moveSpeed * Time.deltaTime;
-                angle += (isBottomPlayer ? 45f : -45f) * Time.deltaTime;
+                angle += (isBottomCamp ? 45f : -45f) * Time.deltaTime;
                 ts_Model.rotation = Quaternion.AngleAxis(angle, Vector3.right);
                 yield return null;
             }
@@ -77,7 +75,7 @@ namespace  ED
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 StopAllCoroutines();
                 ts_Model.gameObject.SetActive(false);
-                SoundManager.instance?.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
                 Destroy(2f);
             }
         }

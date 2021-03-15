@@ -13,9 +13,9 @@ namespace ED
         public AudioClip clip_Jump;
         public AudioClip clip_Landing;
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
             PoolManager.instance.AddPool(pref_Dust, 1);
             StartCoroutine(Jump());
@@ -25,12 +25,12 @@ namespace ED
         {
             Minion rtn = null;
 
-            var distance = isBottomPlayer ? float.MinValue : float.MaxValue;
+            var distance = isBottomCamp ? float.MinValue : float.MaxValue;
             
             foreach (var minion in controller.listMinion)
             {
-                if (minion.spawnedTime < 3f && ((isBottomPlayer && minion.transform.position.z > distance) ||
-                    (isBottomPlayer == false && minion.transform.position.z < distance)))
+                if (minion.spawnedTime < 3f && ((isBottomCamp && minion.transform.position.z > distance) ||
+                    (isBottomCamp == false && minion.transform.position.z < distance)))
                 {
                     distance = minion.transform.position.z;
                     rtn = minion;
@@ -42,13 +42,11 @@ namespace ED
 
         private IEnumerator Jump()
         {
-            SetControllEnable(false);
             _collider.enabled = false;
             var m = GetLongDistanceFriendlyTarget();
 
             if (m == null)
             {
-                SetControllEnable(true);
                 _collider.enabled = true;
                 yield break;
             }
@@ -58,7 +56,7 @@ namespace ED
             yield return null;
             
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            SoundManager.instance?.Play(clip_Jump);
+            SoundManager.instance.Play(clip_Jump);
             
             ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
 
@@ -107,12 +105,11 @@ namespace ED
                 yield return null;
             }
 
-            SetControllEnable(true);
             _collider.enabled = true;
             var pos = transform.position;
             pos.y = 0.1f;
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
-            SoundManager.instance?.Play(clip_Landing);
+            SoundManager.instance.Play(clip_Landing);
             controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
         }
     }

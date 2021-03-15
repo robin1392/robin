@@ -5,9 +5,9 @@ using ED;
 
 public class Guardian_01 : Minion
 {
-    public override void Initialize(DestroyCallback destroy)
+    public override void Initialize()
     {
-        base.Initialize(destroy);
+        base.Initialize();
 
         StartCoroutine(SkillCoroutine());
     }

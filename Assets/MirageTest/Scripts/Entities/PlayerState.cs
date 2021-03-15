@@ -180,7 +180,7 @@ namespace MirageTest.Scripts.Entities
             var uiDiceField = UI_DiceField.Get(); //싱글턴으로 대체
             if (oldValue.IsEmpty)
             {
-                SoundManager.instance?.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
                 uiDiceField.arrSlot[index].ani.SetTrigger("BBoing");
             }
 

@@ -22,7 +22,7 @@ namespace ED
         public override void SetTarget()
         {
             target = controller.targetPlayer;
-            SetColor();
+            
             StartCoroutine(Activate());
         }
 

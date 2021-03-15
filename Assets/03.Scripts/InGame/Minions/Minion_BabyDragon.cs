@@ -47,9 +47,9 @@ namespace ED
             ae.event_FireSpear += FireSpear;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
             gameObject.tag = strTagGround;
             ani_Baby.gameObject.SetActive(true);
@@ -65,7 +65,7 @@ namespace ED
 
         public void AttackEvent()
         {
-            SoundManager.instance?.Play(clip_BabyAttack);
+            SoundManager.instance.Play(clip_BabyAttack);
         }
 
         public void FireSpear()
@@ -93,7 +93,7 @@ namespace ED
 
             gameObject.tag = strTagFlying;
             gameObject.layer =
-                LayerMask.NameToLayer(string.Format("{0}Flying", isBottomPlayer ? "BottomPlayer" : "TopPlayer"));
+                LayerMask.NameToLayer(string.Format("{0}Flying", isBottomCamp ? "BottomPlayer" : "TopPlayer"));
             targetMoveType = DICE_MOVE_TYPE.ALL;
             ani_Baby.gameObject.SetActive(false);
             ani_Dragon.gameObject.SetActive(true);

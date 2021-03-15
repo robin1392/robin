@@ -179,7 +179,7 @@ namespace ED
                         // m.moveSpeed = dataDiceInfo.moveSpeed;
                         // m.eyeLevel = 1;
                         // m.ingameUpgradeLevel = infos[i].DiceInGameUp;
-                        m.Initialize(MinionDestroyCallback);
+                        m.Initialize();
                     }
                         break;
                     case (int) DICE_CAST_TYPE.MAGIC:
@@ -198,7 +198,7 @@ namespace ED
                         // // m.maxHealth = dataDiceInfo.maxHealth + dataDiceInfo.maxHpUpgrade * infos[i].DiceLevel + dataDiceInfo.maxHpInGameUp * infos[i].DiceInGameUp;
                         // m.attackSpeed = dataDiceInfo.attackSpeed;
                         // m.moveSpeed = dataDiceInfo.moveSpeed;
-                        m.eyeLevel = 1;
+                        
                         //m.ingameUpgradeLevel = infos[i].DiceInGameUp;
                         m.Initialize(false);
                     }
@@ -285,7 +285,7 @@ namespace ED
                 // m.isMine = NetworkManager.Get().IsMaster;
                 // m.eyeLevel = 1;
                 // m.ingameUpgradeLevel = 0;
-                m.Initialize(MinionDestroyCallback);
+                m.Initialize();
 
                 // m.currentHealth = currentHealth;
                 m.HitDamage(0);

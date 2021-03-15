@@ -41,9 +41,10 @@ namespace ED
                 return;
             }
             
-            _minion.ActorProxy.DamageTo(_minion.target);
+            _minion.target.ActorProxy.HitDamage(_minion.power);
+            
             event_Attack?.Invoke();
-            SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
+            SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
         }
 
         public void FireArrow()
@@ -79,7 +80,7 @@ namespace ED
             event_FireLight?.Invoke();
             event_FireArrow?.Invoke();
             event_FireSpear?.Invoke();
-            SoundManager.instance?.PlayRandom(Global.E_SOUND.SFX_MINION_BOW_SHOT);
+            SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_BOW_SHOT);
         }
 
         public void Skill()

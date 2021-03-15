@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using CodeStage.AntiCheat.ObscuredTypes;
+using MirageTest.Scripts;
 using RandomWarsProtocol;
 
 namespace ED
@@ -31,7 +32,7 @@ namespace ED
 
             StartManager();
 
-            SoundManager.instance?.PlayBGM(Global.E_SOUND.BGM_INGAME_COOP);
+            SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_COOP);
         }
 
         public override void StartManager()
@@ -64,17 +65,16 @@ namespace ED
             myTObj.transform.position = towerPos;
             playerController = myTObj.GetComponent<PlayerController>();
             playerController.isMine = true;
-            playerController.isBottomPlayer = true;
-            playerController.ChangeLayer(true);
+            playerController.ChangeLayer(true, true);
             
             otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
             otherTObj.transform.position = towerPos;
             playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
             playerController.targetPlayer.isMine = false;
-            playerController.targetPlayer.isBottomPlayer = true;
+            // playerController.targetPlayer.isBottomCamp = true;
             playerController.targetPlayer.targetPlayer = playerController;
             
-            playerController.targetPlayer.ChangeLayer(true);
+            playerController.targetPlayer.ChangeLayer(true, true);
             
             FindObjectOfType<UI_CoopSpawnTurn>().Set(NetworkManager.Get().GetNetInfo().playerInfo.IsMaster);
             
@@ -85,10 +85,9 @@ namespace ED
             playerController.coopPlayer = AI;
             playerController.targetPlayer.coopPlayer = AI;
             AI.isMine = isMaster;
-            AI.isBottomPlayer = false;
             AI.targetPlayer = isMaster ? playerController : playerController.targetPlayer;
             AI.coopPlayer = AI.targetPlayer;
-            AI.ChangeLayer(false);
+            AI.ChangeLayer(false, true);
 
             //
             UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);

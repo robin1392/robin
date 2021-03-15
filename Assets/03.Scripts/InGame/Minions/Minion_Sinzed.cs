@@ -45,13 +45,11 @@ namespace ED
 
         public override void Death()
         {
-            SetControllEnable(false);
             _collider.enabled = false;
             animator.SetFloat(_animatorHashMoveSpeed, 0);
             StopAllCoroutines();
-            InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
+            InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
 
-            destroyCallback(this);
             var position = ts_HitPos.position;
             PoolManager.instance.ActivateObject("Effect_Death", position);
             animator.gameObject.SetActive(false);
@@ -61,12 +59,12 @@ namespace ED
             
             StartCoroutine(DeathCoroutine());
             
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
 
         IEnumerator DeathCoroutine()
         {
-            SoundManager.instance?.Play(clip_Explosion);
+            SoundManager.instance.Play(clip_Explosion);
             
             var t = 0f;
             var tick = 0f;

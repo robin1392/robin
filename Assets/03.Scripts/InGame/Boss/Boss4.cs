@@ -20,9 +20,9 @@ public class Boss4 : Minion
         PoolManager.instance.AddPool(pref_Spear, 2);
     }
 
-    public override void Initialize(DestroyCallback destroy)
+    public override void Initialize()
     {
-        base.Initialize(destroy);
+        base.Initialize();
         target = controller.targetPlayer;
         transform.position = transform.position.z > 0
             ? transform.position + Vector3.back

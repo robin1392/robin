@@ -1,3 +1,4 @@
+using System.Collections;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
 using UnityEngine;
@@ -6,16 +7,27 @@ namespace ED
 {
     public partial class BaseStat
     {
-        private Coroutine _action;
-        
-        public void SyncActionWithTarget(int hash, ActorProxy actor, ActorProxy target)
+        public SyncActionBase RunningAction;
+        public SyncActionBase SyncAction;
+        protected Coroutine _syncActionCoroutine;
+
+        public void SyncActionWithTarget(int hash, ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            if (_action != null)
+            if (_syncActionCoroutine != null)
             {
-                StopCoroutine(_action);
+                SyncAction.OnActionCancel(actorProxy);
+                StopCoroutine(_syncActionCoroutine);
             }
-            
-            _action = StartCoroutine(ActionLookup.GetActionWithTarget(hash).Action(actor, target));
+
+            var action = ActionLookup.GetActionWithTarget(hash);
+            SyncAction = action;
+            _syncActionCoroutine = StartCoroutine( RunAction(action.Action(actorProxy, targetActorProxy)));
+        }
+
+        IEnumerator RunAction(IEnumerator action)
+        {
+            yield return action;
+            SyncAction = null;
         }
     }
 }

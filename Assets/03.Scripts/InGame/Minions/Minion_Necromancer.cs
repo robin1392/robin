@@ -55,9 +55,9 @@ namespace ED
             }
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             _skillCastedTime = -_skillCooltime;
         }
         
@@ -70,7 +70,6 @@ namespace ED
             else if (IsTargetInnerRange() == false)
             {
                 animator.SetTrigger(_animatorHashIdle);
-                SetControllEnable(true);
                 return;
             }
 
@@ -79,12 +78,12 @@ namespace ED
                 ActorProxy.FireBulletWithRelay(E_BulletType.NECROMANCER, target, power, bulletMoveSpeed);;
             }
             
-            SoundManager.instance?.Play(clip_Attack);
+            SoundManager.instance.Play(clip_Attack);
         }
         
         public void Skill()
         {
-            SoundManager.instance?.Play(clip_Summon);
+            SoundManager.instance.Play(clip_Summon);
         }
 
         public void Summon()
@@ -94,7 +93,6 @@ namespace ED
 
         IEnumerator SummonCoroutine()
         {
-            SetControllEnable(false);
             animator.SetTrigger("Skill");
             _isSkillCasting = true;
             
@@ -107,7 +105,7 @@ namespace ED
                 var m = controller.CreateMinion(pref_Skeleton, arrSpawnPos[i].position);
 
                 m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomPlayer);
+                m.ChangeLayer(isBottomCamp);
                 // m.power = effect + (effectUpByInGameUp * ingameUpgradeLevel);
                 // //KZSee:
                 // // m.maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
@@ -117,12 +115,11 @@ namespace ED
                 // // m.range = 0.7f;
                 // m.eyeLevel = eyeLevel;
                 // m.ingameUpgradeLevel = ingameUpgradeLevel;
-                m.Initialize(destroyCallback);
+                m.Initialize();
             }
             
             yield return new WaitForSeconds(0.3f);
-            
-            SetControllEnable(true);
+
             _isSkillCasting = false;
         }
     }

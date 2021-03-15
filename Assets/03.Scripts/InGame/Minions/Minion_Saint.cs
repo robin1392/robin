@@ -18,9 +18,9 @@ namespace ED
             PoolManager.instance.AddPool(pref_HealArea, 1);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             
             //attackSpeed = effectCooltime;
             healTime = -effectCooltime;

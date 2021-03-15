@@ -32,9 +32,9 @@ namespace ED
             _animationEvent.event_Skill += SkillEvent;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             _skillCastedTime = -effectCooltime;
         }
 
@@ -48,7 +48,7 @@ namespace ED
 
         public void SkillEvent()
         {
-            SoundManager.instance?.Play(clip_Dash);
+            SoundManager.instance.Play(clip_Dash);
         }
 
         protected void Dash()

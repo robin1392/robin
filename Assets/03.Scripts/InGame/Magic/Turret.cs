@@ -42,7 +42,6 @@ namespace ED
 
             transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             shootTime = 0;
-            SetColor();
 
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
             if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
@@ -61,7 +60,7 @@ namespace ED
             // }
 
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
-            ts_Head.rotation = isBottomPlayer ? Quaternion.identity : Quaternion.Euler(0, 180f, 0);
+            ts_Head.rotation = isBottomCamp ? Quaternion.identity : Quaternion.Euler(0, 180f, 0);
         }
 
         private IEnumerator AttackCoroutine()
@@ -169,7 +168,7 @@ namespace ED
                 Invoke("FireLightOff", 0.15f);
             }
             
-            SoundManager.instance?.Play(clip_Fire);
+            SoundManager.instance.Play(clip_Fire);
         }
         
         private void FireLightOff()

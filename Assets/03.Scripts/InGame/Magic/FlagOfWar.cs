@@ -27,7 +27,8 @@ namespace ED
             _collider.enabled = false;
             _hitCollider.enabled = false;
             _listAttackSpeedUp.Clear();
-            SetColor();
+            //KZSee:
+            // SetColor();
             if (isMine) ps.Play(); else ps_NotIsMine.Play();
             
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
@@ -42,7 +43,7 @@ namespace ED
         
         protected override IEnumerator Activate()
         {
-            SoundManager.instance?.Play(clip_Summon);
+            SoundManager.instance.Play(clip_Summon);
             var startPos = transform.position;
             var endPos = targetPos;
             var distance = Vector3.Distance(startPos, endPos);

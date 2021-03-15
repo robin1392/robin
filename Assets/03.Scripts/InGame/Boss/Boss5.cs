@@ -27,9 +27,9 @@ public class Boss5 : Minion
         if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
     }
 
-    public override void Initialize(DestroyCallback destroy)
+    public override void Initialize()
     {
-        base.Initialize(destroy);
+        base.Initialize();
         _skillCastedTime = -effectCooltime;
         if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
         _animationEvent.event_Attack += Callback_Attack;
@@ -92,8 +92,7 @@ public class Boss5 : Minion
         if (_spawnedTime >= _skillCastedTime + effectCooltime)
         {
             _skillCastedTime = _spawnedTime;
-            
-            SetControllEnable(false);
+
             animator.SetTrigger(_animatorHashSkill);
             controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, id, E_ActionSendMessage.DropBullet);
             DropBullet();
@@ -141,7 +140,5 @@ public class Boss5 : Minion
 
             yield return new WaitForSeconds(0.1f);
         }
-        
-        SetControllEnable(true);
     }
 }

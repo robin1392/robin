@@ -33,7 +33,7 @@ namespace ED
                 instance = this;
 
             dic = new Dictionary<string, Dictionary<string, Transform>>();
-            //MakePool();
+            MakePool();
         }
 
         private void OnDestroy()

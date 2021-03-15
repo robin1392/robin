@@ -12,9 +12,9 @@ public class Boss1 : Minion
     private float _skillCastedTime;
     private bool _isSkillCasting;
 
-    public override void Initialize(DestroyCallback destroy)
+    public override void Initialize()
     {
-        base.Initialize(destroy);
+        base.Initialize();
         _skillCastedTime = -effectCooltime;
         PoolManager.instance.AddPool(pref_Dust, 1);
     }
@@ -95,7 +95,6 @@ public class Boss1 : Minion
         }
         
         _isSkillCasting = true;
-        SetControllEnable(false);
 
         animator.SetTrigger(_animatorHashSkill);
         
@@ -152,7 +151,6 @@ public class Boss1 : Minion
             yield return null;
         }
 
-        SetControllEnable(true);
         _isSkillCasting = false;
         _collider.enabled = true;
         var pos = transform.position;

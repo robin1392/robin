@@ -171,7 +171,7 @@ namespace MirageTest.Scripts.GameMode
             GameState.masterOwnerTag = newMaster.ownerTag;
         }
         
-        protected IEnumerable<ActorProxy> CreateMinionsByPlayerField(PlayerState playerState)
+        protected IEnumerable<ActorProxy> CreateActorByPlayerFieldDice(PlayerState playerState)
         {
             var actorProxies = new List<ActorProxy>();
             for (byte fieldIndex = 0; fieldIndex < playerState.Field.Count; ++fieldIndex)
@@ -197,8 +197,7 @@ namespace MirageTest.Scripts.GameMode
                 }
 
                 var deckDice = playerState.GetDeckDice(fieldDice.diceId);
-
-
+                
                 Stat stat = new Stat();
                 if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
                 {
@@ -214,22 +213,31 @@ namespace MirageTest.Scripts.GameMode
                     stat = CalcMagicOrInstallationStat(diceInfo, deckDice, diceScale);
                 }
 
-                var spawnTransform = playerState.team == GameConstants.BottomCamp
+                var isBottomCamp = playerState.team == GameConstants.BottomCamp;
+                var spawnTransform = isBottomCamp
                     ? FieldManager.Get().GetBottomListTs(fieldIndex)
                     : FieldManager.Get().GetTopListTs(fieldIndex);
 
                 for (int i = 0; i < spawnCount; ++i)
                 {
                     var spawnPosition = spawnTransform.position;
-                    spawnPosition.x += Random.Range(-0.2f, 0.2f);
-                    spawnPosition.z += Random.Range(-0.2f, 0.2f);
+                    //스폰 카운트에 따라 균일한 포지션을 같는 방법을 고려해본다. 예) 1일때는 스폰트랜스폼 포지션, 2개일때는 스폰트랜스폼 포지션을 기준으로 좌우 10센티미터
+                    if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
+                    {
+                        spawnPosition.x += Random.Range(-0.2f, 0.2f);
+                        spawnPosition.z += Random.Range(-0.2f, 0.2f);    
+                    }
+                    //지뢰
+                    else if (diceInfo.id == 1005)
+                    {
+                        spawnPosition = GetRandomPlayerFieldPosition();
+                    }
                     
-                    var actorProxy = Object.Instantiate(_prefabHolder.ActorProxy, spawnPosition, Quaternion.identity);
+                    var actorProxy = Object.Instantiate(_prefabHolder.ActorProxy, spawnPosition, GetRotation(isBottomCamp));
                     actorProxy.SetDiceInfo(diceInfo);
                     actorProxy.ownerTag = playerState.ownerTag;
                     actorProxy.actorType = ActorType.MinionFromDice;
                     actorProxy.team = playerState.team;
-                    actorProxy.ownerTag = playerState.ownerTag;
                     actorProxy.spawnSlot = fieldIndex;
                     actorProxy.power = stat.power;
                     actorProxy.maxHealth = stat.maxHealth;
@@ -238,11 +246,39 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.attackSpeed = diceInfo.attackSpeed;
                     actorProxy.diceScale = diceScale;
                     actorProxy.ingameUpgradeLevel = deckDice.inGameLevel;
+                    actorProxy.spawnTime = (float)ServerObjectManager.Server.Time.Time;
+                    //HACK:닌자
+                    if (diceInfo.id == 2000)
+                    {
+                        actorProxy.BuffList.Add(new ActorProxy.Buff()
+                        {
+                            id = BuffInfos.NinjaClocking,
+                            endTime = (float)ServerObjectManager.Server.Time.Time + diceInfo.effectDuration,
+                        });
+                    }
+                    
                     actorProxies.Add(actorProxy);
                 }
             }
 
             return actorProxies;
+        }
+
+        Quaternion GetRotation(bool isBottomCamp)
+        {
+            if (isBottomCamp)
+            {
+                return Quaternion.identity;
+            }
+ 
+            return Quaternion.Euler(0, 180f, 0);
+        }
+        
+        public Vector3 GetRandomPlayerFieldPosition()
+        {
+            var x = Random.Range(-3f, 3f);
+            var z = Random.Range(-2f, 2f);
+            return new Vector3(x, 0, z);
         }
 
         public void End()
@@ -281,19 +317,13 @@ namespace MirageTest.Scripts.GameMode
         
         Stat CalcMagicOrInstallationStat(TDataDiceInfo diceInfo, DeckDice deckDice, byte diceScale)
         {
-            var power = diceInfo.power
-                        + (diceInfo.powerUpgrade * deckDice.outGameLevel)
-                        + (diceInfo.powerInGameUp * deckDice.inGameLevel)  * Mathf.Pow(1.5f, diceScale - 1);
-            var maxHealth = diceInfo.maxHealth + (diceInfo.maxHpUpgrade * deckDice.outGameLevel) +
-                            (diceInfo.maxHpInGameUp * deckDice.inGameLevel) * Mathf.Pow(2f, diceScale - 1);
-            var effect = diceInfo.effect + (diceInfo.effectUpgrade * deckDice.outGameLevel) +
-                         (diceInfo.effectInGameUp * deckDice.inGameLevel)* Mathf.Pow(1.5f, diceScale - 1);
+            var stat = CalcMinionStat(diceInfo, deckDice);
             
             return new Stat()
             {
-                power = power,
-                maxHealth = maxHealth,
-                effect = effect
+                power = stat.power  * Mathf.Pow(1.5f, diceScale - 1),
+                maxHealth = stat.maxHealth * Mathf.Pow(2f, diceScale - 1),
+                effect = stat.effect * Mathf.Pow(1.5f, diceScale - 1)
             };
         }
         

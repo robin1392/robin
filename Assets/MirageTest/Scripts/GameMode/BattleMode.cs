@@ -76,7 +76,7 @@ namespace MirageTest.Scripts.GameMode
             var actorProxies = new List<ActorProxy>();
             foreach (var playerState in PlayerStates)
             {
-                actorProxies.AddRange(CreateMinionsByPlayerField(playerState));
+                actorProxies.AddRange(CreateActorByPlayerFieldDice(playerState));
             }
 
             if (wave > 10)

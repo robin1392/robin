@@ -39,8 +39,7 @@ namespace ED
             {
                 StartCoroutine(AttackCoroutine());
             }
-
-            SetColor();
+            
             SetParts();
         }
 

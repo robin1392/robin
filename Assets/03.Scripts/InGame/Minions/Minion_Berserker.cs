@@ -24,9 +24,9 @@ namespace ED
             _animationEvent.event_Skill += SkillEvent;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             _skillCastedTime = -effectCooltime;
         }
 
@@ -43,14 +43,13 @@ namespace ED
 
         public void SkillEvent()
         {
-            SoundManager.instance?.Play(clip_Whirl);
+            SoundManager.instance.Play(clip_Whirl);
         }
 
         IEnumerator SkillCoroutine()
         {
             animator.SetTrigger(_animatorHashSkill);
-            SetControllEnable(false);
-            
+
             yield return new WaitForSeconds(0.6f);
             
             ps_Wind.Play();
@@ -66,8 +65,6 @@ namespace ED
                     DamageToTarget(m, 0, 0.3f);
                 }
             }
-            
-            SetControllEnable(true);
         }
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine;
 public class FileHelper 
 {
 
-    public static GameObject LoadPrefab(string fileName , Global.E_LOADTYPE loadType , Transform parent = null)
+    public static GameObject LoadPrefab(string fileName, Global.E_LOADTYPE loadType)
     {
         string rscPath = "";
 

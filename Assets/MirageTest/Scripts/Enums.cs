@@ -5,5 +5,6 @@ namespace MirageTest.Scripts
         None,
         Tower,
         MinionFromDice,
+        SummonByMinion,
     }
 }

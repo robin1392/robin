@@ -8,9 +8,9 @@ namespace ED
     {
         [Header("Audio Clip")]
         public AudioClip clip_Blade;
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
             _animationEvent.event_Attack -= AttackSound;
             _animationEvent.event_Attack += AttackSound;
@@ -18,7 +18,7 @@ namespace ED
 
         public void AttackSound()
         {
-            SoundManager.instance?.Play(clip_Blade);
+            SoundManager.instance.Play(clip_Blade);
         }
     }
 }

@@ -107,7 +107,7 @@ namespace ED
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
             }
 
-            SoundManager.instance?.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
+            SoundManager.instance.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
             _poad.Deactive(3.5f);
         }
     }

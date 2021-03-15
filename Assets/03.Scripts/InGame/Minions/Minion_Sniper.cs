@@ -26,9 +26,9 @@ namespace ED
             ae.event_FireLight += FireLightOn;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             
             lr.gameObject.SetActive(false);
             light_Fire.enabled = false;
@@ -88,7 +88,6 @@ namespace ED
         public void StopAiming()
         {
             StopAllCoroutines();
-            SetControllEnable(true);
             lr.gameObject.SetActive(false);
             animator.SetTrigger(_animatorHashIdle);
         }
@@ -118,7 +117,7 @@ namespace ED
 
         public void FireArrow()
         {
-            SoundManager.instance?.Play(clip_Shot);
+            SoundManager.instance.Play(clip_Shot);
             
             if (target != null)
             {
