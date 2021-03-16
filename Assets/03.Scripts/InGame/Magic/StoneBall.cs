@@ -5,6 +5,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace  ED
@@ -30,59 +32,66 @@ namespace  ED
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
-
-            transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
-            if (isBottomCamp == false) transform.rotation = Quaternion.Euler(0, 180, 0);
-            else transform.rotation = Quaternion.identity;
+            
             ts_Model.gameObject.SetActive(true);
-
-            StartCoroutine(AttackCoroutine());
             
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
-        
-        private IEnumerator AttackCoroutine()
+
+        protected override IEnumerator Cast()
         {
-            SoundManager.instance.Play(clip_Rolling);
-            float angle = 0f;
-            Vector3 forward = transform.forward;
-            while (true)
-            {
-                transform.position += forward * moveSpeed * Time.deltaTime;
-                angle += (isBottomCamp ? 45f : -45f) * Time.deltaTime;
-                ts_Model.rotation = Quaternion.AngleAxis(angle, Vector3.right);
-                yield return null;
-            }
+            var stoneBallAction = new StoneBallAction();
+            RunningAction = stoneBallAction;
+            yield return stoneBallAction.ActionWithSync(ActorProxy);
+            RunningAction = null;
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (IsTargetLayer(other.gameObject) && other.CompareTag("Player") == false)
             {
-                //ps_Bomb.Play();
                 var bs = other.GetComponentInParent<BaseStat>();
                 PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
-
-                //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+                
+                if (ActorProxy.isPlayingAI)
                 {
-                    controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, power, 0f);
+                    if (bs != null && bs.isAlive)
+                    {
+                        bs.ActorProxy.HitDamage(power);
+                    }
                 }
             }
             else if (other.CompareTag("Wall"))
             {
-                //ps_Bomb.Play();
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
-                StopAllCoroutines();
                 ts_Model.gameObject.SetActive(false);
                 SoundManager.instance.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
-                Destroy(2f);
+                if (ActorProxy.isPlayingAI)
+                {
+                    ActorProxy.Destroy();
+                }
             }
         }
-
-        public void EndGameUnit()
+    }
+    
+    public class StoneBallAction : SyncActionWithoutTarget
+    {
+        public override IEnumerator Action(ActorProxy actor)
         {
-            StopAllCoroutines();
+            var stoneBall = actor.baseStat as StoneBall;
+            var actorTransform = actor.transform;
+            var isBottomCamp = stoneBall.isBottomCamp;
+            var modelTransform = stoneBall.ts_Model;
+            SoundManager.instance.Play(stoneBall.clip_Rolling);
+            float angle = 0f;
+            Vector3 forward = actorTransform.forward;
+            while (true)
+            {
+                actorTransform.position += forward * (stoneBall.moveSpeed * Time.deltaTime);
+                angle += (isBottomCamp? 45f : -45f) * Time.deltaTime;
+                modelTransform.rotation = Quaternion.AngleAxis(angle, Vector3.right);
+                yield return null;
+            }
         }
     }
 }
