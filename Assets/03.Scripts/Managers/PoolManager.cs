@@ -82,6 +82,11 @@ namespace ED
                 return;
             }
 
+            if (data.listPool.Find(p => p.obj == prefab) == null)
+            {
+                data.listPool.Add(new Pool() { obj = prefab, count = 1 });
+            }
+
             if (dic.ContainsKey(prefab.name) == false)
             {
                 dic[prefab.name] = new Dictionary<string, Transform>();
