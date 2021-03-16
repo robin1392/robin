@@ -27,8 +27,8 @@ namespace ED
         private void OnEnable()
         {
             animator.gameObject.SetActive(true);
-            if (_collider == null) _collider = GetComponentInChildren<Collider>();
-            _collider.enabled = true;
+            if (collider == null) collider = GetComponentInChildren<Collider>();
+            collider.enabled = true;
         }
 
         public override BaseStat SetTarget()

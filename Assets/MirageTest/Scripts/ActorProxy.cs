@@ -232,7 +232,7 @@ namespace MirageTest.Scripts
             {
                 SpawnTower();
             }
-            else if (actorType == ActorType.MinionFromDice)
+            else if (actorType == ActorType.Actor)
             {
                 if (client.enableUI && IsLocalPlayerActor)
                 {
@@ -536,12 +536,22 @@ namespace MirageTest.Scripts
                     return false;
                 }
 
-                if (actor.diceInfo == null)
+                if (actor.actorType == ActorType.Tower)
                 {
                     return true;
                 }
 
-                return actor.diceInfo.castType != (int) DICE_CAST_TYPE.MAGIC;
+                if (actor.baseStat is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
+                {
+                    return false;
+                }
+                
+                if (actor.baseStat is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
+                {
+                    return false; 
+                }
+
+                return true;
             });
 
             var actorProxies = enemies as ActorProxy[] ?? enemies.ToArray();
@@ -651,7 +661,7 @@ namespace MirageTest.Scripts
                 var actorProxy = Instantiate(actorProxyPrefab, spawnPosition, GameModeBase.GetRotation(isBottomCamp));
                 actorProxy.SetDiceInfo(diceInfo);
                 actorProxy.ownerTag = ownerTag;
-                actorProxy.actorType = ActorType.MinionFromDice;
+                actorProxy.actorType = ActorType.Actor;
                 actorProxy.team = team;
                 actorProxy.spawnSlot = 0;
                 actorProxy.power = stat.power;

@@ -236,7 +236,7 @@ namespace MirageTest.Scripts.GameMode
                     var actorProxy = Object.Instantiate(_prefabHolder.ActorProxy, spawnPosition, GetRotation(isBottomCamp));
                     actorProxy.SetDiceInfo(diceInfo);
                     actorProxy.ownerTag = playerState.ownerTag;
-                    actorProxy.actorType = ActorType.MinionFromDice;
+                    actorProxy.actorType = ActorType.Actor;
                     actorProxy.team = playerState.team;
                     actorProxy.spawnSlot = fieldIndex;
                     actorProxy.power = stat.power;

@@ -10,6 +10,7 @@ namespace ED
     {
         public ActorProxy ActorProxy;
         public bool isMine;
+        public bool isCanBeTarget = true;
         public int diceId;
         public uint id;
         public PlayerController controller;

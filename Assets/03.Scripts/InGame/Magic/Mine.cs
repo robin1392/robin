@@ -28,8 +28,9 @@ namespace ED
         {
             base.Initialize(pIsBottomPlayer);
 
+            isCanBeTarget = false;
             image_HealthBar.transform.parent.gameObject.SetActive(false);
-            _collider.enabled = true;
+            collider.enabled = true;
             animator.gameObject.SetActive(true);
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
             ps_Bomb.transform.localScale = Vector3.one * Mathf.Pow(1.5f, eyeLevel - 1);
@@ -38,7 +39,7 @@ namespace ED
             durationToTarget = distance / moveSpeed;
             isArrivedAtTargetPosition = false;
             isBombed = false;
-            _collider.enabled = false;
+            collider.enabled = false;
         }
 
         protected void Update()
@@ -79,7 +80,7 @@ namespace ED
             image_HealthBar.transform.parent.gameObject.SetActive(true);
             SoundManager.instance.Play(clip_Set);
             animator.SetTrigger(AnimationHash.Set);
-            _collider.enabled = true;
+            collider.enabled = true;
         }
 
         private void OnTriggerEnter(Collider collision)
@@ -128,7 +129,7 @@ namespace ED
 
         IEnumerator MineDestroyDelayed()
         {
-            _collider.enabled = false;
+            collider.enabled = false;
             image_HealthBar.transform.parent.gameObject.SetActive(false);
             animator.gameObject.SetActive(false);
             SoundManager.instance.Play(clip_Explosion);

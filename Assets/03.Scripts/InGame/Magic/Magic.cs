@@ -15,7 +15,7 @@ namespace ED
         }
 
         [SerializeField]
-        protected Collider _collider;
+        public Collider collider;
         [SerializeField]
         protected Collider _hitCollider;
 

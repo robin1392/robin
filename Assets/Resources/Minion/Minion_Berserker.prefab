@@ -29,7 +29,7 @@ Transform:
   m_Children:
   - {fileID: 6150823028870054215}
   m_Father: {fileID: 5081294253336761971}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5081294253336761964
 GameObject:
@@ -63,7 +63,6 @@ Transform:
   m_Children:
   - {fileID: 5117274487651612308}
   - {fileID: 8488758196635011245}
-  - {fileID: 6338614292095521861}
   - {fileID: 5772708475476200666}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -82,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 3005
   id: 0
   controller: {fileID: 0}
@@ -93,25 +93,15 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  power: 50
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  effectDuration: 0
-  effectCooltime: 0
-  attackSpeed: 0.5
-  moveSpeed: 0.8
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
+  _poolObjectAutoDeactivate: {fileID: 0}
   castType: 0
   isPushing: 0
   isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
-  _poolObjectAutoDeactivate: {fileID: 0}
+  collider: {fileID: 0}
   isPolymorph: 0
   ps_Wind: {fileID: 6338614292114849587}
   clip_Whirl: {fileID: 8300000, guid: 0f3d60e60c6a14ba5a5562e0ddd85b20, type: 3}
@@ -309,7 +299,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 5081294253336761971}
+    m_TransformParent: {fileID: 5117274487651612308}
     m_Modifications:
     - target: {fileID: 74367193981291150, guid: 7100059eecaaf4826af0532619e6673f,
         type: 3}
@@ -324,7 +314,7 @@ PrefabInstance:
     - target: {fileID: 74367193981291150, guid: 7100059eecaaf4826af0532619e6673f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 74367193981291150, guid: 7100059eecaaf4826af0532619e6673f,
         type: 3}
@@ -334,12 +324,12 @@ PrefabInstance:
     - target: {fileID: 74367193981291150, guid: 7100059eecaaf4826af0532619e6673f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 74367193981291150, guid: 7100059eecaaf4826af0532619e6673f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 74367193981291150, guid: 7100059eecaaf4826af0532619e6673f,
         type: 3}
@@ -374,16 +364,15 @@ PrefabInstance:
     - target: {fileID: 74367193996511634, guid: 7100059eecaaf4826af0532619e6673f,
         type: 3}
       propertyPath: playOnAwake
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 74367193996583416, guid: 7100059eecaaf4826af0532619e6673f,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7100059eecaaf4826af0532619e6673f, type: 3}
---- !u!4 &6338614292095521861 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 74367193981291150, guid: 7100059eecaaf4826af0532619e6673f,
-    type: 3}
-  m_PrefabInstance: {fileID: 6268866147675004619}
-  m_PrefabAsset: {fileID: 0}
 --- !u!198 &6338614292114849587 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 74367193996583416, guid: 7100059eecaaf4826af0532619e6673f,
