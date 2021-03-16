@@ -44,7 +44,7 @@ namespace ED
             _poad = GetComponent<PoolObjectAutoDeactivate>();
         }
 
-        public virtual void Initialize(BaseStat target, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public virtual void Initialize(BaseStat target, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer)
         {
             obj_Bullet.SetActive(true);
             if (obj_EndEffect != null) obj_EndEffect.SetActive(false);
@@ -58,7 +58,6 @@ namespace ED
 
             if (_target)
             {
-                this._callback = pCallback;
                 SetColor();
                 StartCoroutine(Move());
             }
@@ -68,7 +67,7 @@ namespace ED
             }
         }
 
-        public virtual void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public virtual void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer)
         {
             _isTarget = false;
             _damage = pDamage;
@@ -76,7 +75,6 @@ namespace ED
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
             _targetPos = pTargetPos;
-            _callback = pCallback;
             SetColor();
             StartCoroutine(Move());
         }
@@ -126,8 +124,6 @@ namespace ED
                 t += Time.deltaTime;
                 yield return null;
             }
-
-            _callback?.Invoke();
 
             if (client.IsPlayingAI)
             {

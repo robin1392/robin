@@ -55,6 +55,11 @@ namespace MirageTest.Scripts
             baseStat.animator.SetTrigger(hash);
         }
         
+        public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
+        {
+            FireBulletInternal(bulletType, target, damage, moveSpeed);
+            RelayFireBullet(bulletType, target, damage, moveSpeed);
+        }
         
         void RelayFireBullet(E_BulletType arrow, BaseStat target, float f, float bulletMoveSpeed)
         {
@@ -91,12 +96,6 @@ namespace MirageTest.Scripts
             }
             
             FireBulletInternal(arrow, target, f, bulletMoveSpeed);
-        }
-
-        public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
-        {
-            FireBulletInternal(bulletType, target, damage, moveSpeed);
-            RelayFireBullet(bulletType, target, damage, moveSpeed);
         }
 
         void FireBulletInternal(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
@@ -150,6 +149,66 @@ namespace MirageTest.Scripts
                 bullet.client = rwClient;
                 bullet.moveSpeed = moveSpeed;
                 bullet.Initialize(target, damage, 0, rwClient.IsPlayingAI, IsBottomCamp());
+            }
+        }
+        
+        public void FireCannonBallWithRelay(E_CannonType cannonType, Vector3 targetPosition)
+        {
+            FireCannonBallInternal(cannonType, targetPosition);
+            RelayFireCannonBall(cannonType, targetPosition);
+        }
+        
+        void RelayFireCannonBall(E_CannonType bullet, Vector3 targetPosition)
+        {
+            RelayFireCannonBallOnServer(Client.Connection.Identity.NetId, bullet, targetPosition);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void RelayFireCannonBallOnServer(uint senderNetId, E_CannonType cannonType, Vector3 targetPosition)
+        {
+            foreach (var con in Server.connections)
+            {
+                if (senderNetId == con.Identity.NetId)
+                {
+                    continue;
+                }
+
+                RelayFireCannonBallOnClient(con, cannonType, targetPosition);
+            }
+        }
+
+        [ClientRpc(target = Mirage.Client.Connection)]
+        public void RelayFireCannonBallOnClient(INetworkConnection con, E_CannonType cannonType, Vector3 targetPosition)
+        {
+            FireCannonBallInternal(cannonType, targetPosition);
+        }
+
+        void FireCannonBallInternal(E_CannonType cannonType, Vector3 targetPosition)
+        {
+            if (baseStat == null)
+            {
+                return;
+            }
+
+            Vector3 startPos = baseStat.ts_ShootingPos.position;
+            CannonBall cannonBall = null;
+            switch (cannonType)
+            {
+                case E_CannonType.DEFAULT:
+                    cannonBall = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
+                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
+                    break;
+                case E_CannonType.BOMBER:
+                    cannonBall = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
+                    break;
+            }
+
+            if (cannonBall != null)
+            {
+                cannonBall.transform.rotation = Quaternion.identity;
+                cannonBall.client = Client as RWNetworkClient;
+                cannonBall.Initialize(targetPosition, power, baseStat.range, IsLocalPlayerActor, IsBottomCamp());
             }
         }
 

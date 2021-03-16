@@ -1706,10 +1706,7 @@ namespace ED
         }
         
         #endregion
-
-
-
-
+        
 
         #region fire cannon
         public void ActionFireCannonBall(E_CannonType type, Vector3 shootPos , Vector3 targetPos , float damage , float range )
@@ -1728,37 +1725,26 @@ namespace ED
         
         public void FireCannonBall(E_CannonType type, Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
         {
-            CannonBall b = null;
+            CannonBall cannonBall = null;
             switch (type)
             {
                 case E_CannonType.DEFAULT:
-                    b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
+                    cannonBall = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
                     SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
                     SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
                     break;
                 case E_CannonType.BOMBER:
-                    b = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
+                    cannonBall = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
                     break;
             }
 
-            if (b != null)
+            if (cannonBall != null)
             {
-                b.transform.rotation = Quaternion.identity;
-                b.client = ActorProxy.Client as RWNetworkClient;
-                b.Initialize(targetPos, damage, splashRange, isMine, isBottomCamp);
+                cannonBall.transform.rotation = Quaternion.identity;
+                cannonBall.client = ActorProxy.Client as RWNetworkClient;
+                cannonBall.Initialize(targetPos, damage, splashRange, isMine, isBottomCamp);
             }
         }
-        
-        /*public void FireCannonBall(Vector3 startPos, Vector3 targetPos, float damage, float splashRange)
-        {
-            var b = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
-            if (b != null)
-            {
-                b.transform.rotation = Quaternion.identity;
-                b.controller = this;
-                b.Initialize(targetPos, damage, splashRange, isMine, isBottomPlayer);
-            }
-        }*/
         
         #endregion
 

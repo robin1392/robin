@@ -20,6 +20,11 @@ namespace MirageTest.Scripts.SyncAction
     {
         public IEnumerator ActionWithSync(ActorProxy actor, ActorProxy target)
         {
+            if (target == null)
+            {
+                yield break;
+            }
+            
             actor.SyncActionWithTarget(actor.Client.Connection.Identity.NetId, GetType().GetHashCode(), target.NetId);
             actor.baseStat.RunningAction = this;
             yield return Action(actor, target);

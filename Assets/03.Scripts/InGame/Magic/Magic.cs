@@ -34,6 +34,11 @@ namespace ED
         public virtual void Initialize(bool pIsBottomPlayer)
         {
             SetHealthBarColor();
+            if (_hitCollider != null)
+            {
+                var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}"; 
+                _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
+            }
         }
 
         public void SetColor(bool isBottomCamp)

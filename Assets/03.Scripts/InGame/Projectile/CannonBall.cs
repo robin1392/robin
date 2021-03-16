@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,9 +29,9 @@ namespace ED
             }
         }
 
-        public override void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer)
         {
-            base.Initialize(pTargetPos, pDamage, splashRange, pIsMine, pIsBottomPlayer, pCallback);
+            base.Initialize(pTargetPos, pDamage, splashRange, pIsMine, pIsBottomPlayer);
 
             obj_Model.SetActive(true);
             ps_Tail.Clear();
@@ -88,11 +89,12 @@ namespace ED
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseStat>();
-                if (bs != null)
+                if (bs != null && bs.isAlive)
                 {
-                    //KZSee:
-                    // if(( InGameManager.IsNetwork && _isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-                    //     controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, _damage, 0f);
+                    if (client.IsPlayingAI)
+                    {
+                        bs.ActorProxy.HitDamage(_damage);
+                    }
                 }
             }
 

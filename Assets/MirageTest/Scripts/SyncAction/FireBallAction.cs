@@ -18,9 +18,9 @@ namespace MirageTest.Scripts.SyncAction
             var target = targetActorProxy.baseStat;
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_FIREBALL_FIRE);
-            
+
             fireBall.light.enabled = true;
-            
+
             var startPos = actorTransform.position;
 
             //?
@@ -28,26 +28,27 @@ namespace MirageTest.Scripts.SyncAction
             {
                 yield return null;
             }
-            
+
             var endPos = target.ts_HitPos.position;
             var distance = Vector3.Distance(startPos, endPos);
             var moveTime = distance / fireBall.moveSpeed;
 
             float t = 0;
-            
+
             while (t < moveTime)
             {
                 if (target != null && target.isAlive)
                 {
                     endPos = target.ts_HitPos.position;
                 }
+
                 actorTransform.position = Vector3.Lerp(startPos, endPos, t / moveTime);
 
                 t += Time.deltaTime;
                 yield return null;
             }
 
-           fireBall.Bomb();
+            fireBall.Bomb();
         }
     }
 }

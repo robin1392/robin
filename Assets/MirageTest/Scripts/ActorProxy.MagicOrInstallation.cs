@@ -43,7 +43,7 @@ namespace MirageTest.Scripts
                 magic.targetMoveType = (DICE_MOVE_TYPE) diceInfo.targetMoveType;
                 magic.id = NetId;
                 magic.SetColor(IsBottomCamp());
-                // magic.ChangeLayer(IsBottomCamp());
+                magic.ChangeLayer(IsBottomCamp());
                 magic.Initialize(IsBottomCamp());
             }
             
