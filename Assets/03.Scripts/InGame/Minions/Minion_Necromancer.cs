@@ -44,15 +44,6 @@ namespace ED
             var ae = animator.GetComponent<MinionAnimationEvent>();
             ae.event_FireArrow -= FireArrow;
             ae.event_FireArrow += FireArrow;
-            // ae.event_Skill -= Skill;
-            // ae.event_Skill += Skill;
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-            
-            
         }
 
         public override void Initialize()
@@ -105,11 +96,6 @@ namespace ED
                 SoundManager.instance.Play(clip_Summon);
                 yield return SummonCoroutine();
             }
-        }
-
-        public void Summon()
-        {
-            StartCoroutine(SummonCoroutine());
         }
 
         IEnumerator SummonCoroutine()

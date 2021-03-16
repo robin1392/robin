@@ -617,7 +617,6 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority = false)]
         public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions)
         {
-            var actorProxies = new List<ActorProxy>();
             if (TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo) == false)
             {
                 ED.Debug.LogError(
