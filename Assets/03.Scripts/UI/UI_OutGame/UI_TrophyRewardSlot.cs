@@ -95,9 +95,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
         if (getVipRow < row)
         {
             isGetPremium = true;
-            //NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row,
-            //    (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, GetCallback);
-            NetworkManager.session.UserTemplate.UserRewardReq(NetworkManager.session.HttpClient,
+            NetworkManager.session.UserTemplate.UserTrophyRewardReq(NetworkManager.session.HttpClient,
                 row, (int)REWARD_TARGET_TYPE.SEASON_PASS_BUY, OnReceiveUserTrophyRewardAck);
 
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
@@ -111,8 +109,7 @@ public class UI_TrophyRewardSlot : MonoBehaviour
     public void Click_NormalGet()
     {
         isGetPremium = false;
-        //NetworkManager.Get().GetClassRewardReq(UserInfoManager.Get().GetUserInfo().userID, row, (int) REWARD_TARGET_TYPE.ALL, GetCallback);
-        NetworkManager.session.UserTemplate.UserRewardReq(NetworkManager.session.HttpClient,
+        NetworkManager.session.UserTemplate.UserTrophyRewardReq(NetworkManager.session.HttpClient,
             row, (int)REWARD_TARGET_TYPE.ALL, OnReceiveUserTrophyRewardAck);
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }

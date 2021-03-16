@@ -143,6 +143,8 @@ MonoBehaviour:
   ingameUpgradeLevel: 0
   _poolObjectAutoDeactivate: {fileID: 0}
   isPolymorph: 0
+  _arrow: 0
+  _spear: 1
   ps_Rush: {fileID: 7119920158266476447}
   clip_Rush: {fileID: 8300000, guid: be27d9f67c8b949649bf52d91eea6af3, type: 3}
   dashTarget: {fileID: 0}
@@ -381,6 +383,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4423585441667366557, guid: d51874f7a3b1c4e8b9d823413af36897,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4423585441667366557, guid: d51874f7a3b1c4e8b9d823413af36897,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4423585441667366557, guid: d51874f7a3b1c4e8b9d823413af36897,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 7451560298332470818, guid: d51874f7a3b1c4e8b9d823413af36897,
         type: 3}

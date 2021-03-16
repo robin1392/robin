@@ -12,6 +12,8 @@ namespace ED
     {
         public float bulletMoveSpeed = 6f;
 
+        public GameObject pref_Bullet;
+
         protected override void Start()
         {
             base.Start();
@@ -21,6 +23,7 @@ namespace ED
             ae.event_FireSpear -= FireSpear;
             ae.event_FireArrow += FireArrow;
             ae.event_FireSpear += FireSpear;
+            PoolManager.instance.AddPool(pref_Bullet, 2);
         }
 
         public void FireSpear()

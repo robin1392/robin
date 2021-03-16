@@ -173,6 +173,8 @@ MonoBehaviour:
   ingameUpgradeLevel: 0
   _poolObjectAutoDeactivate: {fileID: 0}
   isPolymorph: 0
+  _arrow: 0
+  _spear: 1
   clip_Explosion: {fileID: 8300000, guid: 892ca5f56f6fd434ab205b85ece7c908, type: 3}
 --- !u!135 &2463053660788652053
 SphereCollider:

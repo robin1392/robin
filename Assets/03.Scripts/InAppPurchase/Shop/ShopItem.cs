@@ -158,10 +158,12 @@ namespace Percent.Platform
                         switch (buyType)
                         {
                             case BuyType.gold:
+                                imagePriceIcon.enabled = true;
                                 imagePriceIcon.sprite = FileHelper.GetIcon("icon_gold");
                                 textPItemBuyCount.text = data.buyPrice.ToString();
                                 break;
                             case BuyType.dia:
+                                imagePriceIcon.enabled = true;
                                 imagePriceIcon.sprite = FileHelper.GetIcon("icon_dia");
                                 textPItemBuyCount.text = data.buyPrice.ToString();
                                 break;
@@ -181,11 +183,11 @@ namespace Percent.Platform
                         }
 
                         textPItemId.text = $"x{data.itemValue01}";
-                    }
-
-                    if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
-                    {
-                        imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
+                        
+                        if (TableManager.Get().ItemList.GetData(itm => itm.id == data.itemId01, out item))
+                        {
+                            imageIcon.sprite = FileHelper.GetIcon(item.itemIcon);
+                        }
                     }
                     
                     buttonShopItem.interactable = shopProductInfo.buyCount == 0;
@@ -587,6 +589,7 @@ namespace Percent.Platform
 
             foreach (var text in texts)
             {
+                color = Color.white;
                 color.a = text.color.a;
                 color.r *= factor;
                 color.g *= factor;
@@ -596,6 +599,7 @@ namespace Percent.Platform
 
             foreach (var image in images)
             {
+                color = Color.white;
                 color.a = image.color.a;
                 color.r *= factor;
                 color.g *= factor;

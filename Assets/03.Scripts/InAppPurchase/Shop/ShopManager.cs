@@ -94,11 +94,9 @@ namespace Percent.Platform.InAppPurchase
             {
                 isInitialized = true;
                 
+#if ENABLE_LOG
                 for (int i = 0; i < arrayShopInfo.Length; ++i)
                 {
-                    // Shop shop = Instantiate(prefabShop, transformShopParent).GetComponent<Shop>();
-                    // listShop.Add(shop);
-                    // shop.Initialize(shopInfo);
                     string str = $"ShopID:{arrayShopInfo[i].shopId}, r:{arrayShopInfo[i].resetRemainTime}";
                     foreach (var productInfo in arrayShopInfo[i].arrayProductInfo)
                     {
@@ -106,23 +104,19 @@ namespace Percent.Platform.InAppPurchase
                     }
                     Debug.Log(str);
                 }
+#endif
 
-                // int count = 0;
-                // for (int i = 0; i < listShop.Count; i++)
-                // {
-                //     if (i + 1 == arrayShopInfo[count].shopId)
-                //     {
-                //         listShop[i].EnableContent();
-                //         listShop[i].Initialize(arrayShopInfo[count]);
-                //         count++;
-                //     }
-                //     else listShop[i].DisableContent();
-                // }
                 for (int i = 0; i < arrayShopInfo.Length; i++)
                 {
                     var shop = listShop.Find(s => s.shopID == arrayShopInfo[i].shopId);
                     shop.EnableContent();
                     shop.Initialize(arrayShopInfo[i]);
+                }
+
+                // 초기화 안된 상점 비활성화
+                for (int i = 0; i < listShop.Count; i++)
+                {
+                    if (listShop[i].isInitialized == false) listShop[i].gameObject.SetActive(false);
                 }
                 
                 if (isShowGoldShop) Invoke("ScrollToGoldShop", 0.1f);

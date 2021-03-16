@@ -112,6 +112,8 @@ MonoBehaviour:
   ingameUpgradeLevel: 0
   _poolObjectAutoDeactivate: {fileID: 0}
   isPolymorph: 0
+  _arrow: 0
+  _spear: 1
   pref_Heal: {fileID: 8196298747947456408, guid: 3256ab7ff4a554bf49fb0dcee0202a84,
     type: 3}
   clip_Heal: {fileID: 8300000, guid: d1f542d4eea264a0eb81555e6893eb85, type: 3}

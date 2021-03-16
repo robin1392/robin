@@ -27,7 +27,7 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataLangKO> LangKO { get; private set; }
     public TableData<int, TDataErrorMessageKO> ErrorMessageKO { get; private set; }
     public TableData<int, TDataRankingReward> RankingReward { get; private set; }
-    public TableData<int, TDataRankInfo> RankInfo { get; private set; }
+    public TableData<int, TDataClassInfo> ClassInfo { get; private set; }
     public TableData<int, TDataSeasonpassInfo> SeasonpassInfo { get; private set; }
     public TableData<int, TDataSeasonpassReward> SeasonpassReward { get; private set; }
     public TableData<int, TDataClassReward> ClassReward { get; private set; }
@@ -37,6 +37,7 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataQuestDayReward> QuestDayReward { get; private set; }
     public TableData<int, TDataShopInfo> ShopInfo { get; private set; }
     public TableData<int, TDataShopProductList> ShopProductList { get; private set; }
+    public TableData<int, TDataMailInfo> MailInfo { get; private set; }
 
 
 
@@ -68,7 +69,7 @@ public class TableManager : Singleton<TableManager>
         LangKO = new TableData<int, TDataLangKO>();
         ErrorMessageKO = new TableData<int, TDataErrorMessageKO>();
         RankingReward = new TableData<int, TDataRankingReward>();
-        RankInfo = new TableData<int, TDataRankInfo>();
+        ClassInfo = new TableData<int, TDataClassInfo>();
         SeasonpassInfo = new TableData<int, TDataSeasonpassInfo>();
         SeasonpassReward = new TableData<int, TDataSeasonpassReward>();
         ClassReward = new TableData<int, TDataClassReward>();
@@ -81,56 +82,55 @@ public class TableManager : Singleton<TableManager>
         DiceLevelInfo = new TableData<int, TDataDiceLevelInfo>();
         ShopInfo = new TableData<int, TDataShopInfo>();
         ShopProductList = new TableData<int, TDataShopProductList>();
-        
-        TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
+        MailInfo = new TableData<int, TDataMailInfo>();
     }
 
 
     public void Init(string localPath)
     {
-        Debug.Log($"TableManager Init: {localPath}");
         string remoteTDataVersion = string.Empty;
         string localTDataVersion = string.Empty;
         string url = BucketUrl + "/Table/" + Enviroment;
 
-        // HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + "/version.json");
-        // request.ContentType = "application/json";
-        // request.Method = "GET";
-        // var response = (HttpWebResponse)request.GetResponse();
-        // var resStream = response.GetResponseStream();
-        //
-        // StreamReader streamRead = new StreamReader(resStream);
-        // string jsonServer = streamRead.ReadToEnd();
-        // jsonServer = jsonServer.Replace("\\", "");
-        // var jObjServer = Newtonsoft.Json.Linq.JObject.Parse(jsonServer);
-        // remoteTDataVersion = (string)jObjServer["dataVersion"];
+
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + "/version.json");
+        request.ContentType = "application/json";
+        request.Method = "GET";
+        var response = (HttpWebResponse)request.GetResponse();
+        var resStream = response.GetResponseStream();
+        
+        StreamReader streamRead = new StreamReader(resStream);
+        string jsonServer = streamRead.ReadToEnd();
+        jsonServer = jsonServer.Replace("\\", "");
+        var jObjServer = Newtonsoft.Json.Linq.JObject.Parse(jsonServer);
+        remoteTDataVersion = (string)jObjServer["dataVersion"];
 
 
         string targetPath = Path.Combine(localPath, "Table", Enviroment);
-        // string versionFile = Path.Combine(targetPath, "version.json");
-        // if (File.Exists(versionFile) == true)
-        // {
-        //     using (StreamReader r = new StreamReader(versionFile))
-        //     {
-        //         string jsonClient = r.ReadToEnd();
-        //         var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonClient);
-        //         localTDataVersion = (string)jObjClient["dataVersion"];
-        //     }
-        // }
-        //
-        // if (remoteTDataVersion != localTDataVersion)
-        // {
-        //     // 패치 파일 로컬 저장
-        //     var reqUrl = Path.Combine(url, remoteTDataVersion + ".zip");
-        //     if (RequestPatchFile(reqUrl, targetPath) == false)
-        //     {
-        //         return;
-        //     }
-        //
-        //     // 서버 버젼 파일 로컬 저장
-        //     File.WriteAllText(versionFile, jsonServer);
-        //     Debug.Log("Download Table Complete !!! version : " + remoteTDataVersion);
-        // }
+        string versionFile = Path.Combine(targetPath, "version.json");
+        if (File.Exists(versionFile) == true)
+        {
+            using (StreamReader r = new StreamReader(versionFile))
+            {
+                string jsonClient = r.ReadToEnd();
+                var jObjClient = Newtonsoft.Json.Linq.JObject.Parse(jsonClient);
+                localTDataVersion = (string)jObjClient["dataVersion"];
+            }
+        }
+
+        if (remoteTDataVersion != localTDataVersion)
+        {
+            // 패치 파일 로컬 저장
+            var reqUrl = Path.Combine(url, remoteTDataVersion + ".zip");
+            if (RequestPatchFile(reqUrl, targetPath) == false)
+            {
+                return;
+            }
+
+            // 서버 버젼 파일 로컬 저장
+            File.WriteAllText(versionFile, jsonServer);
+            Debug.Log("Download Table Complete !!! version : " + remoteTDataVersion);
+        }
 
         LoadFromFile(targetPath);
     }
@@ -250,28 +250,29 @@ public class TableManager : Singleton<TableManager>
 
     bool LoadFromFile(string path)
     {
-        // BoxProductInfo.Init(new TableLoaderLocalCSV<int, TDataBoxOpenInfo>(), path, "BoxOpenInfo.csv");
-        // CoopMode.Init(new TableLoaderLocalCSV<int, TDataCoopMode>(), path, "CoopMode.csv");
-        // CoopModeMinion.Init(new TableLoaderLocalCSV<int, TDataCoopModeMinion>(), path, "CoopModeMinion.csv");
-        // CoopModeBossInfo.Init(new TableLoaderLocalCSV<int, TDataCoopModeBossInfo>(), path, "CoopModeBossInfo.csv");
+        BoxProductInfo.Init(new TableLoaderLocalCSV<int, TDataBoxOpenInfo>(), path, "BoxOpenInfo.csv");
+        CoopMode.Init(new TableLoaderLocalCSV<int, TDataCoopMode>(), path, "CoopMode.csv");
+        CoopModeMinion.Init(new TableLoaderLocalCSV<int, TDataCoopModeMinion>(), path, "CoopModeMinion.csv");
+        CoopModeBossInfo.Init(new TableLoaderLocalCSV<int, TDataCoopModeBossInfo>(), path, "CoopModeBossInfo.csv");
         DiceInfo.Init(new TableLoaderLocalCSV<int, TDataDiceInfo>(), path, "DiceInfo.csv");
         DiceUpgrade.Init(new TableLoaderLocalCSV<int, TDataDiceUpgrade>(), path, "DiceUpgrade.csv");
         DiceLevelInfo.Init(new TableLoaderLocalCSV<int, TDataDiceLevelInfo>(), path, "DiceLevelInfo.csv");
         GuardianInfo.Init(new TableLoaderLocalCSV<int, TDataGuardianInfo>(), path, "GuardianInfo.csv");
         Vsmode.Init(new TableLoaderLocalCSV<int, TDataVsmode>(), path, "Vsmode.csv");
-        // LangEN.Init(new TableLoaderLocalCSV<int, TDataLangEN>(), path, "LangEN.csv");
-        // LangKO.Init(new TableLoaderLocalCSV<int, TDataLangKO>(), path, "LangKO.csv");
-        // RankingReward.Init(new TableLoaderLocalCSV<int, TDataRankingReward>(), path, "RankingReward.csv");
-        // RankInfo.Init(new TableLoaderLocalCSV<int, TDataRankInfo>(), path, "RankInfo.csv");
-        // SeasonpassInfo.Init(new TableLoaderLocalCSV<int, TDataSeasonpassInfo>(), path, "SeasonpassInfo.csv");
-        // SeasonpassReward.Init(new TableLoaderLocalCSV<int, TDataSeasonpassReward>(), path, "SeasonpassReward.csv");
-        // ClassReward.Init(new TableLoaderLocalCSV<int, TDataClassReward>(), path, "ClassReward.csv");
-        // ItemList.Init(new TableLoaderLocalCSV<int, TDataItemList>(), path, "ItemList.csv");
-        // QuestInfo.Init(new TableLoaderLocalCSV<int, TDataQuestInfo>(), path, "QuestInfo.csv");
-        // QuestData.Init(new TableLoaderLocalCSV<int, TDataQuestData>(), path, "QuestData.csv");
-        // QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
-        // ShopInfo.Init(new TableLoaderLocalCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
-        // ShopProductList.Init(new TableLoaderLocalCSV<int, TDataShopProductList>(), path, "ShopProductList.csv");
+        LangEN.Init(new TableLoaderLocalCSV<int, TDataLangEN>(), path, "LangEN.csv");
+        LangKO.Init(new TableLoaderLocalCSV<int, TDataLangKO>(), path, "LangKO.csv");
+        RankingReward.Init(new TableLoaderLocalCSV<int, TDataRankingReward>(), path, "RankingReward.csv");
+        ClassInfo.Init(new TableLoaderLocalCSV<int, TDataClassInfo>(), path, "ClassInfo.csv");
+        SeasonpassInfo.Init(new TableLoaderLocalCSV<int, TDataSeasonpassInfo>(), path, "SeasonpassInfo.csv");
+        SeasonpassReward.Init(new TableLoaderLocalCSV<int, TDataSeasonpassReward>(), path, "SeasonpassReward.csv");
+        ClassReward.Init(new TableLoaderLocalCSV<int, TDataClassReward>(), path, "ClassReward.csv");
+        ItemList.Init(new TableLoaderLocalCSV<int, TDataItemList>(), path, "ItemList.csv");
+        QuestInfo.Init(new TableLoaderLocalCSV<int, TDataQuestInfo>(), path, "QuestInfo.csv");
+        QuestData.Init(new TableLoaderLocalCSV<int, TDataQuestData>(), path, "QuestData.csv");
+        QuestDayReward.Init(new TableLoaderLocalCSV<int, TDataQuestDayReward>(), path, "QuestDayReward.csv");
+        ShopInfo.Init(new TableLoaderLocalCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
+        ShopProductList.Init(new TableLoaderLocalCSV<int, TDataShopProductList>(), path, "ShopProductList.csv");
+        MailInfo.Init(new TableLoaderLocalCSV<int, TDataMailInfo>(), path, "MailInfo.csv");
         return true;
     }
 }

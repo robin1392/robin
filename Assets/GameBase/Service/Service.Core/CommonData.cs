@@ -27,6 +27,30 @@ namespace Service.Core
         }
     }
 
+    [Serializable]
+    public class AdRewardInfo
+    {
+        public string RewardId;
+        public int ItemId;
+        public int Value;
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(RewardId);
+            bw.Write(ItemId);
+            bw.Write(Value);
+        }
+
+        public static AdRewardInfo Read(BinaryReader br)
+        {
+            AdRewardInfo data = new AdRewardInfo();
+            data.RewardId = br.ReadString();
+            data.ItemId = br.ReadInt32();
+            data.Value = br.ReadInt32();
+            return data;
+        }
+    }
+
 
     [Serializable]
     public class UserBox
@@ -181,6 +205,22 @@ namespace Service.Core
         public int RankPoint;
         // 랭킹 순위
         public int Rank;
+    }
+
+    // 우편 정보
+    [Serializable]
+    public class MailInfo
+    {
+        // 아이디 (식별값)
+        public string mailId;
+        // 테이블 아이디
+        public int mailTableId;
+        // 상품 목록
+        public ItemBaseInfo[] mailItems;
+        // 만료까지 남은 시간
+        public int expireRemainTime;
+        // 추가 텍스트 목록
+        public List<string> listText;
     }
 
 }

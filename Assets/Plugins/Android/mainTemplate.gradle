@@ -8,13 +8,16 @@
             url "https://maven.google.com"
         }
         maven {
+            url (unityProjectPath + "/Assets/GeneratedLocalRepo/GooglePlayGames/Editor/m2repository") // Assets/GooglePlayGames/Editor/GooglePlayGamesPluginDependencies.xml:11
+        }
+        maven {
             url "https://adcolony.bintray.com/AdColony" // Assets/MoPub/Mediation/AdColony/Editor/AdColonyDependencies.xml:9
         }
         maven {
             url "https://jitpack.io" // Assets/MoPub/Mediation/Vungle/Editor/VungleDependencies.xml:9
         }
         maven {
-            url (unityProjectPath + "/Assets/GeneratedLocalRepo/Firebase/m2repository") // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:22, Packages/com.google.firebase.crashlytics/Firebase/Editor/CrashlyticsDependencies.xml:20, Packages/com.google.firebase.analytics/Firebase/Editor/AnalyticsDependencies.xml:18
+            url (unityProjectPath + "/Assets/GeneratedLocalRepo/Firebase/m2repository") // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:22, Packages/com.google.firebase.analytics/Firebase/Editor/AnalyticsDependencies.xml:18
         }
         mavenLocal()
         jcenter()
@@ -50,8 +53,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-unity:7.1.0' // Packages/com.google.firebase.analytics/Firebase/Editor/AnalyticsDependencies.xml:18
     implementation 'com.google.firebase:firebase-app-unity:7.1.0' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:22
     implementation 'com.google.firebase:firebase-common:19.5.0' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:13
-    implementation 'com.google.firebase:firebase-crashlytics:17.3.1' // Packages/com.google.firebase.crashlytics/Firebase/Editor/CrashlyticsDependencies.xml:13
-    implementation 'com.google.firebase:firebase-crashlytics-unity:7.1.0' // Packages/com.google.firebase.crashlytics/Firebase/Editor/CrashlyticsDependencies.xml:20
+    implementation 'com.google.games:gpgs-plugin-support:0.10.12' // Assets/GooglePlayGames/Editor/GooglePlayGamesPluginDependencies.xml:11
     implementation 'com.mopub.mediation:adcolony:4.3.1.1' // Assets/MoPub/Mediation/AdColony/Editor/AdColonyDependencies.xml:4
     implementation 'com.mopub.mediation:admob:19.6.0.1' // Assets/MoPub/Mediation/AdMob/Editor/AdMobDependencies.xml:4
     implementation 'com.mopub.mediation:applovin:9.14.12.0' // Assets/MoPub/Mediation/AppLovin/Editor/AppLovinDependencies.xml:4

@@ -195,6 +195,9 @@ public class NetworkManager : Singleton<NetworkManager>
         }
     }
     public int matchSendCount;
+
+    [Header("Server Addr")] 
+    public string serverAddr = "https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/test";
     #endregion
 
 
@@ -244,6 +247,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         InitNetwork();
     }
+
 
     // Update is called once per frame
     void Update()

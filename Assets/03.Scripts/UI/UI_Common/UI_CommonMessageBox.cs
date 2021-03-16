@@ -8,15 +8,24 @@ using UnityEngine.UI;
 
 public class UI_CommonMessageBox : UI_Popup
 {
+    public RectTransform rts_VerticalLayout;
     public Text text_Title;
     public Text text_Message;
 
     [Header("Button")] 
+    public Button btn_Close;
     public Button btn_OK;
     public Text text_Button;
     
     private Action closeCallback;
     private Action buttonCallback;
+
+    protected override void Open()
+    {
+        base.Open();
+        
+        btn_Close.gameObject.SetActive(isBgButtonEnable);
+    }
 
     public void Initialize(string title, string message, Action closeCallback = null)
     {
@@ -28,22 +37,23 @@ public class UI_CommonMessageBox : UI_Popup
 
         gameObject.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(text_Message.rectTransform);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_Frame);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayout);
     }
 
-    public void Initialize(string title, string message, string buttonText, Action closeCallback = null, Action buttonCallback = null)
+    public void Initialize(string title, string message, string buttonText, Action closeCallback = null, Action buttonCallback = null, bool isBgButtonEnable = true)
     {
+        btn_OK.gameObject.SetActive(true);
+        
         text_Title.text = title;
         text_Message.text = message;
         this.closeCallback = closeCallback;
         this.buttonCallback = buttonCallback;
-
-        btn_OK.gameObject.SetActive(true);
+        this.isBgButtonEnable = isBgButtonEnable;
         text_Button.text = buttonText;
         
         gameObject.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(text_Message.rectTransform);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_Frame);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayout);
     }
 
     public void Click_OK()

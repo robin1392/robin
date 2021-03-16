@@ -6,7 +6,7 @@ using ED;
 using UnityEngine;
 using Service.Core;
 using Template.User.RandomwarsUser.Common;
-//using RandomWarsProtocol;
+using RandomWarsResource.Data;
 using Debug = UnityEngine.Debug;
 
 public class UserInfo
@@ -59,6 +59,8 @@ public class UserInfo
     public int rankPoint;
     public List<int> seasonPassRewardIds;
     public List<int> trophyRewardIds;
+    public List<int> emotionIds;
+    public List<int> emotionDeck;
     public DateTime seasonEndTime;
     
     private string _ticketId;
@@ -277,6 +279,44 @@ public class UserInfo
     //     
     //     
     // }
+
+    public void AddItem(ItemBaseInfo[] arrayItemBaseInfo, Vector2 ScreenPos)
+    {
+        List<ItemBaseInfo> list = new List<ItemBaseInfo>();
+
+        foreach (var reward in arrayItemBaseInfo)
+        {
+            var data = new TDataItemList();
+            if (TableManager.Get().ItemList.GetData(reward.ItemId, out data))
+            {
+                switch (data.id)
+                {
+                    case 1:             // 골드
+                        UserInfoManager.Get().GetUserInfo().gold += reward.Value;
+                        UI_GetProduction.Get().Initialize(ITEM_TYPE.GOLD, ScreenPos, Mathf.Clamp(reward.Value, 5, 20));
+                        break;
+                    case 2:             // 다이아
+                        UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
+                        UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, ScreenPos, Mathf.Clamp(reward.Value, 5, 20));
+                        break;
+                    default: // 주사위
+                    {
+                        ItemBaseInfo rw = new ItemBaseInfo();
+                        rw.ItemId = reward.ItemId;
+                        rw.Value = reward.Value;
+                        list.Add(rw);
+                    }
+                        break;
+                }
+            }
+        }
+
+        if (list.Count > 0)
+        {
+            UI_Main.Get().gerResult.Initialize(list.ToArray(), false, false);
+        }
+    }
+    
     #endregion
 
 
@@ -449,6 +489,38 @@ public class UserInfoManager : Singleton<UserInfoManager>
         for (int i = 0; i < msgUserBox.Length; i++)
         {
             _userInfo.dicBox.Add(msgUserBox[i].BoxId, msgUserBox[i].Count);
+        }
+    }
+
+    public void SetItem(UserItemInfo userItemInfo)
+    {
+        // 상자 아이템
+        _userInfo.dicBox.Clear();
+        for (int i = 0; i < userItemInfo.listBox.Count; i++)
+        {
+            _userInfo.dicBox.Add(userItemInfo.listBox[i].ItemId, userItemInfo.listBox[i].Value);
+        }
+
+        // 패스 아이템
+        for (int i = 0; i < userItemInfo.listPass.Count; i++)
+        {
+        }
+
+        // 이모티콘
+        _userInfo.emotionIds = new List<int>();
+        for (int i = 0; i < userItemInfo.listEmoticon.Count; i++)
+        {
+            _userInfo.emotionIds.Add(userItemInfo.listEmoticon[i].ItemId);
+            Debug.Log($"Emotion : id={userItemInfo.listEmoticon[i].ItemId}, value={userItemInfo.listEmoticon[i].Value}");
+        }
+
+        // 이모티콘 슬롯
+        //userItemInfo.listEmoticonSlot
+        _userInfo.emotionDeck = new List<int>();
+        foreach (var value in userItemInfo.listEmoticonSlot)
+        {
+            _userInfo.emotionDeck.Add(value);
+            Debug.Log($"Emotion slot : {value}");
         }
     }
     #endregion

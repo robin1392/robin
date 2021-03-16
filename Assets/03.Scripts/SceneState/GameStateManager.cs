@@ -205,7 +205,23 @@ public class GameStateManager : Singleton<GameStateManager>
         UI_Start.Get().SetTextStatus(Global.g_startStatusConnect);
         
         yield return new WaitForSeconds(0.3f);
-        
+
+#if UNITY_EDITOR
+#else
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            UI_Start.Get().commonMessageBox.Initialize(LocalizationManager.GetLangDesc("Option_Internet"),
+                LocalizationManager.GetLangDesc("Option_Internetconfirm"),
+                LocalizationManager.GetLangDesc("Option_Quit"), null,
+                () =>
+                {
+                    Application.Quit();
+                }, false);
+
+            yield break;
+        }
+#endif
+
         // 서버 접속이 끝난후 버전 체크를 한다
         GetState<GameStateStart>().SetStartState(Global.E_STARTSTEP.START_VERSION);
     }
@@ -260,7 +276,55 @@ public class GameStateManager : Singleton<GameStateManager>
         }
         else
         {
-            NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+            string id = UserInfoManager.Get().GetUserInfo().platformID;
+            if (string.IsNullOrEmpty(id))
+            {
+                UI_Start.Get().SetTextStatus(string.Empty);
+                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
+                // UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
+                // {
+                //     UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                //     UI_Start.Get().btn_GooglePlay.gameObject.SetActive(false);
+                //     UI_Start.Get().btn_GameCenter.gameObject.SetActive(false);
+                //     UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+                //
+                //     NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, string.Empty, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+                // });
+#if UNITY_EDITOR           
+#elif UNITY_ANDROID
+                UI_Start.Get().btn_GooglePlay.gameObject.SetActive(true);
+                UI_Start.Get().btn_GooglePlay.onClick.AddListener(() =>
+                {
+                    UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GooglePlay.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GameCenter.gameObject.SetActive(false);
+                    UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+
+                    AuthManager.Get().Login();
+                });
+#elif UNITY_IOS
+                UI_Start.Get().btn_GameCenter.gameObject.SetActive(true);
+                UI_Start.Get().btn_GameCenter.onClick.AddListener(() =>
+                {
+                    UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GooglePlay.gameObject.SetActive(false);
+                    UI_Start.Get().btn_GameCenter.gameObject.SetActive(false);
+                    UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
+
+                    AuthManager.Get().Login();
+                });
+#endif
+            }
+            else
+            {
+#if UNITY_EDITOR
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+#elif UNITY_ANDROID
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+#elif UNITY_IOS
+                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, UserInfoManager.Get().GetUserInfo().platformID, ObscuredPrefs.GetInt("PlatformType", (int)EPlatformType.Guest), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
+#endif
+            }
         }
 
 #else
@@ -290,8 +354,6 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <returns></returns>
     public bool OnReceiveAccountLoginAck(EGameBaseAccountErrorCode errorCode, AccountInfo accountInfo)
     {
-        Debug.Log($"OnReceiveAccountLoginAck. errorCode: {errorCode}, {Newtonsoft.Json.JsonConvert.SerializeObject(accountInfo)}");
-
         if (errorCode != EGameBaseAccountErrorCode.Success)
         {
             Debug.LogError("Error OnReceiveAccountLoginAck. errorCode: " + errorCode);
@@ -302,6 +364,7 @@ public class GameStateManager : Singleton<GameStateManager>
         NetworkManager.session.HttpClient.SetAccessToken(accountInfo.AccessToken);
 
         UserInfoManager.Get().GetUserInfo().SetPlatformID(accountInfo.PlatformId);
+        ObscuredPrefs.SetInt("PlatformType", accountInfo.PlatformType);
 
        // TODD : [임시] 곧바로 유저 정보 요청. 차후에 로그인 flow에 따라 위치를 변경해야함.
         NetworkManager.session.UserTemplate.UserInfoReq(NetworkManager.session.HttpClient, OnReceiveUserInfoAck);
@@ -320,29 +383,20 @@ public class GameStateManager : Singleton<GameStateManager>
     /// <param name="questInfo"></param>
     /// <param name="seasonInfo"></param>
     /// <returns></returns>
-    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserBox[] arrayUserBox, QuestInfo questInfo, UserSeasonInfo seasonInfo)
+    public bool OnReceiveUserInfoAck(ERandomwarsUserErrorCode errorCode, MsgUserInfo userInfo, UserDeck[] arrayUserDeck, UserDice[] arrayUserDice, UserItemInfo userItemInfo, QuestInfo questInfo, UserSeasonInfo seasonInfo)
     {
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {
             ObscuredPrefs.SetString("UserKey", string.Empty);
             ObscuredPrefs.Save();
 
-            UI_Start.Get().SetTextStatus(string.Empty);
-            UI_Start.Get().btn_GuestAccount.gameObject.SetActive(true);
-            UI_Start.Get().btn_GuestAccount.onClick.AddListener(() =>
-            {
-                UI_Start.Get().btn_GuestAccount.gameObject.SetActive(false);
-                UI_Start.Get().SetTextStatus(Global.g_startStatusUserData);
-
-                NetworkManager.session.AccountTemplate.AccountLoginReq(NetworkManager.session.HttpClient, string.Empty, (int)EPlatformType.Guest, string.Empty, string.Empty, string.Empty, string.Empty, OnReceiveAccountLoginAck);
-            });
             return true;
         }
 
         UserInfoManager.Get().SetUserInfo(userInfo, seasonInfo);
         UserInfoManager.Get().SetDeck(arrayUserDeck);
         UserInfoManager.Get().SetDice(arrayUserDice);
-        UserInfoManager.Get().SetBox(arrayUserBox);
+        UserInfoManager.Get().SetItem(userItemInfo);
         UI_Popup_Quest.QuestUpdate(questInfo);
 
         GameStateManager.Get().UserAuthOK();

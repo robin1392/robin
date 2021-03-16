@@ -547,7 +547,7 @@ namespace RandomWarsProtocol
                             MsgEndGameNotify msg = new MsgEndGameNotify();
                             msg.ErrorCode = br.ReadInt32();
                             msg.GameResult = (GAME_RESULT)br.ReadByte();
-                            msg.WinningStreak = br.ReadByte();
+                            msg.WinningStreak = br.ReadInt16();
 
                             int length = br.ReadInt32();
                             msg.NormalReward = new ItemBaseInfo[length];
@@ -569,6 +569,8 @@ namespace RandomWarsProtocol
                             {
                                 msg.PerfectReward[i] = ItemBaseInfo.Read(br);
                             }
+
+                            msg.LoseReward = AdRewardInfo.Read(br);
 
                             length = br.ReadInt32();
                             msg.QuestData = new QuestData[length];

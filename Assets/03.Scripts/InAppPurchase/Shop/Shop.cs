@@ -10,18 +10,22 @@ using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
+using EBuyTypeKey = RandomWarsResource.Data.EBuyTypeKey;
 using TDataShopInfo = RandomWarsResource.Data.TDataShopInfo;
 
 namespace Percent.Platform
 {
     public class Shop : MonoBehaviour
     {
+        public bool isInitialized { get; private set; }
+
         public int shopID;
         [SerializeField] private Transform transformShopItemGrid;
         [SerializeField] private GameObject prefabShopItem;
         private List<ShopItem> listShopItem;
         [SerializeField] private int poolSize;
         [SerializeField] private Text textLeftTime;
+        [SerializeField] private Button btn_Reset;
 
         private ShopInfo info;
 
@@ -62,6 +66,7 @@ namespace Percent.Platform
 
             shopID = shopInfo.shopId;
             UpdateContent(shopInfo);
+            isInitialized = true;
         }
 
         /// <summary>
@@ -99,8 +104,8 @@ namespace Percent.Platform
                 StartCoroutine(TimeleftCoroutine(shopInfo.resetRemainTime));
             }
             
-            if(poolSize<shopInfo.arrayProductInfo.Length)
-                Debug.LogError("풀 사이즈보다 표시해야하는 상품이 많은 경우 별도로 처리 필요");
+            // if(poolSize<shopInfo.arrayProductInfo.Length)
+            //     Debug.LogError("풀 사이즈보다 표시해야하는 상품이 많은 경우 별도로 처리 필요");
             
             if (prefabShopItem != null)
             {
@@ -116,6 +121,23 @@ namespace Percent.Platform
                     else
                     {
                         shopItemBase.DisableContent();
+                    }
+                }
+            }
+
+            if (btn_Reset != null)
+            {
+                TDataShopInfo data;
+                if (TableManager.Get().ShopInfo.GetData(sinfo => sinfo.id == shopID, out data))
+                {
+                    if (data.isReset)
+                    {
+                        int maxADCount = data.resetAdValue;
+                        int remainADCount = maxADCount - info.adResetCount;
+                        int maxPointCount = data.resetBuyValue.Length;
+                        int remainPointCount = maxPointCount - info.pointResetCount;
+
+                        btn_Reset.interactable = remainADCount > 0 || remainPointCount > 0;
                     }
                 }
             }
@@ -138,6 +160,19 @@ namespace Percent.Platform
                 yield return new WaitForSeconds(1f);
                 
                 subTime = resetDate.Subtract(DateTime.Now);
+            }
+
+            TDataShopInfo data;
+            if (TableManager.Get().ShopInfo.GetData(shopID, out data))
+            {
+                if (data.isReset)
+                {
+                    ResetShop(EBuyTypeKey.None);
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
             }
         }
 
@@ -165,7 +200,9 @@ namespace Percent.Platform
         /// <param name="shopID">리셋할 상점 ID</param>
         public void ResetShop(RandomWarsResource.Data.EBuyTypeKey type)
         {
-            NetworkManager.session.ShopTemplate.ShopResetReq(NetworkManager.session.HttpClient, shopID, (int)type, Reset);
+            int typeNum = (int) type;
+            if (typeNum < 0) typeNum = 0;
+            NetworkManager.session.ShopTemplate.ShopResetReq(NetworkManager.session.HttpClient, shopID, typeNum, Reset);
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
 
