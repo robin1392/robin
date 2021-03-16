@@ -5,6 +5,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
+using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
 using MirageTest.Scripts.SyncAction;
 using Pathfinding;
@@ -14,6 +15,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Channel = Mirage.Channel;
 using Debug = ED.Debug;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts
@@ -166,12 +168,12 @@ namespace MirageTest.Scripts
                     minion.ApplyCloacking(isClockkingNew);
                 }
             }
-            
+
             this.buffState = state;
 
             EnableStunEffect((buffState & BuffState.Sturn) != 0);
             EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
-            
+
             if (isCantAI)
             {
                 baseStat.animator.SetTrigger(AnimationHash.Idle);
@@ -202,12 +204,12 @@ namespace MirageTest.Scripts
                     if (minion._dicEffectPool.TryGetValue(MAZ.STURN, out var ad))
                     {
                         minion._dicEffectPool.Remove(MAZ.STURN);
-                        ad.Deactive();    
+                        ad.Deactive();
                     }
                 }
             }
         }
-        
+
         private void EnableFreezeEffect(bool b)
         {
             if (baseStat is Minion minion)
@@ -222,7 +224,7 @@ namespace MirageTest.Scripts
                 }
             }
         }
-        
+
         void SpawnActor()
         {
             var client = Client as RWNetworkClient;
@@ -318,14 +320,14 @@ namespace MirageTest.Scripts
         {
             AddBuffOnServer(id, duration);
         }
-        
+
         [ServerRpc(requireAuthority = false)]
         public void AddBuffOnServer(byte id, float duration)
         {
             BuffList.Add(new Buff()
             {
                 id = id,
-                endTime = (float)NetworkTime.Time + duration,
+                endTime = (float) NetworkTime.Time + duration,
             });
         }
 
@@ -335,7 +337,7 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             HitDamageOnServer(damage);
         }
 
@@ -344,19 +346,19 @@ namespace MirageTest.Scripts
         {
             ApplyDamage(damage);
         }
-        
+
         [Server]
         public void ApplyDamage(float damage)
         {
             currentHealth -= damage;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        
+
             if (currentHealth <= 0)
             {
                 ServerObjectManager.Destroy(gameObject);
                 return;
             }
-        
+
             DamagedOnClient(damage);
         }
 
@@ -411,10 +413,9 @@ namespace MirageTest.Scripts
 
             PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
         }
-        
+
         private MsgVector2 lastSend;
-        [NonSerialized]
-        public MsgVector2 lastRecieved;
+        [NonSerialized] public MsgVector2 lastRecieved;
         private bool hasRecieved = false;
 
         private void Update()
@@ -465,7 +466,6 @@ namespace MirageTest.Scripts
             }
             else if (baseStat.SyncAction != null && baseStat.SyncAction.NeedMoveSync == false)
             {
-                
             }
             else if (lastRecieved != null)
             {
@@ -479,7 +479,7 @@ namespace MirageTest.Scripts
                 {
                     transform.position = Vector3.Lerp(transform.position, position, 0.5f);
                     transform.LookAt(position);
-                    
+
                     if (baseStat.animator != null)
                     {
                         float distance = Vector3.Magnitude(position - transform.position);
@@ -587,25 +587,85 @@ namespace MirageTest.Scripts
         {
             SummonActorOnServer(summonActorId, position);
         }
-        
+
         [ServerRpc(requireAuthority = false)]
         public void SummonActorOnServer(byte summonActorId, Vector3 position)
         {
-            var server =Server as RWNetworkServer;
+            var server = Server as RWNetworkServer;
             server.SummonActor(this, summonActorId, position);
         }
-        
+
         public void DestroyAfterSummonActor(byte summonActorId, Vector3 position)
         {
             DestroyAfterSummonActorOnServer(summonActorId, position);
         }
-        
+
         [ServerRpc(requireAuthority = false)]
         public void DestroyAfterSummonActorOnServer(byte summonActorId, Vector3 position)
         {
-            var server =Server as RWNetworkServer;
+            var server = Server as RWNetworkServer;
             server.SummonActor(this, summonActorId, position);
             DestroyInternal();
+        }
+        
+        public void CreateActorBy(int diceId, byte ingameLevel, byte outgameLevel, Vector3[] positions)
+        {
+            CreateActorByOnServer(diceId, ingameLevel, outgameLevel, positions);
+        }
+
+
+        [ServerRpc(requireAuthority = false)]
+        public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions)
+        {
+            var actorProxies = new List<ActorProxy>();
+            if (TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo) == false)
+            {
+                ED.Debug.LogError(
+                    $"다이스정보 {diceId}가 없습니다.");
+            }
+
+            GameModeBase.Stat stat = new GameModeBase.Stat();
+            if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
+            {
+                stat = GameModeBase.CalcMinionStat(diceInfo, inGameLevel, outGameLevel);
+            }
+            else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
+            {
+                stat = GameModeBase.CalcHeroStat(diceInfo, inGameLevel, outGameLevel, 1);
+            }
+            else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.INSTALLATION ||
+                     (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MAGIC)
+            {
+                stat = GameModeBase.CalcMagicOrInstallationStat(diceInfo, inGameLevel, outGameLevel, 1);
+            }
+
+            var isBottomCamp = team == GameConstants.BottomCamp;
+            
+            var server = Server as RWNetworkServer;
+            var actorProxyPrefab = server.serverGameLogic.actorProxyPrefab;
+
+            for (byte index = 0; index < positions.Length; ++index)
+            {
+                var position = positions[index];
+                var spawnPosition = position;
+
+                var actorProxy = Instantiate(actorProxyPrefab, spawnPosition, GameModeBase.GetRotation(isBottomCamp));
+                actorProxy.SetDiceInfo(diceInfo);
+                actorProxy.ownerTag = ownerTag;
+                actorProxy.actorType = ActorType.MinionFromDice;
+                actorProxy.team = team;
+                actorProxy.spawnSlot = 0;
+                actorProxy.power = stat.power;
+                actorProxy.maxHealth = stat.maxHealth;
+                actorProxy.currentHealth = stat.maxHealth;
+                actorProxy.effect = stat.effect;
+                actorProxy.attackSpeed = diceInfo.attackSpeed;
+                actorProxy.diceScale = 1;
+                actorProxy.ingameUpgradeLevel = inGameLevel;
+                actorProxy.outgameUpgradeLevel = outGameLevel;
+                actorProxy.spawnTime = (float) ServerObjectManager.Server.Time.Time;
+                ServerObjectManager.Spawn(actorProxy.NetIdentity);
+            }
         }
     }
 }

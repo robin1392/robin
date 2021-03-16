@@ -201,16 +201,16 @@ namespace MirageTest.Scripts.GameMode
                 Stat stat = new Stat();
                 if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
                 {
-                    stat = CalcMinionStat(diceInfo, deckDice);    
+                    stat = CalcMinionStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel);    
                 }
                 else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
                 {
-                    stat = CalcHeroStat(diceInfo, deckDice, diceScale);
+                    stat = CalcHeroStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel, diceScale);
                 }
                 else if((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.INSTALLATION ||
                         (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MAGIC)
                 {
-                    stat = CalcMagicOrInstallationStat(diceInfo, deckDice, diceScale);
+                    stat = CalcMagicOrInstallationStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel, diceScale);
                 }
 
                 var isBottomCamp = playerState.team == GameConstants.BottomCamp;
@@ -265,7 +265,7 @@ namespace MirageTest.Scripts.GameMode
             return actorProxies;
         }
 
-        Quaternion GetRotation(bool isBottomCamp)
+        public static Quaternion GetRotation(bool isBottomCamp)
         {
             if (isBottomCamp)
             {
@@ -287,15 +287,15 @@ namespace MirageTest.Scripts.GameMode
             IsGameEnd = true;
         }
 
-        Stat CalcMinionStat(TDataDiceInfo diceInfo, DeckDice deckDice)
+        public static Stat CalcMinionStat(TDataDiceInfo diceInfo, byte inGameLevel, byte outGameLevel)
         {
             var power = diceInfo.power
-                        + (diceInfo.powerUpgrade * deckDice.outGameLevel)
-                        + (diceInfo.powerInGameUp * deckDice.inGameLevel);
-            var maxHealth = diceInfo.maxHealth + (diceInfo.maxHpUpgrade * deckDice.outGameLevel) +
-                            (diceInfo.maxHpInGameUp * deckDice.inGameLevel);
-            var effect = diceInfo.effect + (diceInfo.effectUpgrade * deckDice.outGameLevel) +
-                         (diceInfo.effectInGameUp * deckDice.inGameLevel);
+                        + (diceInfo.powerUpgrade * outGameLevel)
+                        + (diceInfo.powerInGameUp * inGameLevel);
+            var maxHealth = diceInfo.maxHealth + (diceInfo.maxHpUpgrade * outGameLevel) +
+                            (diceInfo.maxHpInGameUp * inGameLevel);
+            var effect = diceInfo.effect + (diceInfo.effectUpgrade * outGameLevel) +
+                         (diceInfo.effectInGameUp * inGameLevel);
 
             return new Stat()
             {
@@ -305,9 +305,9 @@ namespace MirageTest.Scripts.GameMode
             };
         }
         
-        Stat CalcHeroStat(TDataDiceInfo diceInfo, DeckDice deckDice, byte diceScale)
+        public static Stat CalcHeroStat(TDataDiceInfo diceInfo,  byte inGameLevel, byte outGameLevel, byte diceScale)
         {
-            var stat = CalcMinionStat(diceInfo, deckDice);
+            var stat = CalcMinionStat(diceInfo, inGameLevel, outGameLevel);
             return new Stat()
             {
                 power = stat.power * (diceScale + 1),
@@ -316,9 +316,9 @@ namespace MirageTest.Scripts.GameMode
             };
         }
         
-        Stat CalcMagicOrInstallationStat(TDataDiceInfo diceInfo, DeckDice deckDice, byte diceScale)
+        public static Stat CalcMagicOrInstallationStat(TDataDiceInfo diceInfo,  byte inGameLevel, byte outGameLevel, byte diceScale)
         {
-            var stat = CalcMinionStat(diceInfo, deckDice);
+            var stat = CalcMinionStat(diceInfo, inGameLevel, outGameLevel);
             
             return new Stat()
             {

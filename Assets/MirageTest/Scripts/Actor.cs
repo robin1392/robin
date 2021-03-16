@@ -7,7 +7,6 @@ namespace MirageTest.Scripts
     public class Actor : MonoBehaviour
     {
         public Animator animator;
-        public Stat Stat;
         public int Team;
         // public bool IsAlive => Stat.HP > 0;
 

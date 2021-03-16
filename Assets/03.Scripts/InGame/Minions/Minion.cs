@@ -83,6 +83,11 @@ namespace ED
         
         protected virtual void Update()
         {
+            if (ActorProxy == null)
+            {
+                return;
+            }
+            
             if (ActorProxy.isPlayingAI == false)
             {
                 return;

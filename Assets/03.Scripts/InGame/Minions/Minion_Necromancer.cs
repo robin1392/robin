@@ -5,6 +5,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
@@ -26,13 +28,13 @@ namespace ED
 
         private readonly float _skillCooltime = 10f;
         private float _skillCastedTime;
-        private bool _isSkillCasting;
 
         protected override void Awake()
         {
             base.Awake();
             
             PoolManager.instance.AddPool(pref_Bullet, 1);
+            PoolManager.instance.AddPool(pref_Skeleton, 2);
         }
 
         protected override void Start()
@@ -40,19 +42,17 @@ namespace ED
             base.Start();
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow -= FireArrow;
             ae.event_FireArrow += FireArrow;
-            ae.event_Skill += Skill;
+            // ae.event_Skill -= Skill;
+            // ae.event_Skill += Skill;
         }
 
         protected override void Update()
         {
             base.Update();
             
-            if (ActorProxy.isPlayingAI && _spawnedTime >= _skillCastedTime + _skillCooltime)
-            {
-                _skillCastedTime = _spawnedTime;
-                Summon();
-            }
+            
         }
 
         public override void Initialize()
@@ -60,7 +60,23 @@ namespace ED
             base.Initialize();
             _skillCastedTime = -_skillCooltime;
         }
-        
+
+        protected override IEnumerator Root()
+        {
+            while (isAlive)
+            {
+                yield return Skill();
+                
+                target = SetTarget();
+                if (target != null)
+                {
+                    yield return Combat();
+                }
+
+                yield return _waitForSeconds0_1;
+            }
+        }
+
         public void FireArrow()
         {
             if (target == null)
@@ -81,9 +97,14 @@ namespace ED
             SoundManager.instance.Play(clip_Attack);
         }
         
-        public void Skill()
+        public IEnumerator Skill()
         {
-            SoundManager.instance.Play(clip_Summon);
+            if (ActorProxy.isPlayingAI && _spawnedTime >= _skillCastedTime + _skillCooltime)
+            {
+                _skillCastedTime = _spawnedTime;
+                SoundManager.instance.Play(clip_Summon);
+                yield return SummonCoroutine();
+            }
         }
 
         public void Summon()
@@ -93,34 +114,23 @@ namespace ED
 
         IEnumerator SummonCoroutine()
         {
-            animator.SetTrigger("Skill");
-            _isSkillCasting = true;
-            
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, null);
+
             yield return new WaitForSeconds(0.4f);
+
+            if (ActorProxy.isPlayingAI)
+            {
+                var positions = arrSpawnPos.Select(t => t.position).ToArray();
+                ActorProxy.CreateActorBy(3012, ActorProxy.ingameUpgradeLevel, ActorProxy.outgameUpgradeLevel,
+                    positions);
+            }
 
             for (int i = 0; i < arrSpawnPos.Length; i++)
             {
                 arrPs_Spawn[i].Play();
-                
-                var m = controller.CreateMinion(pref_Skeleton, arrSpawnPos[i].position);
-
-                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomCamp);
-                // m.power = effect + (effectUpByInGameUp * ingameUpgradeLevel);
-                // //KZSee:
-                // // m.maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
-                // m.attackSpeed = 0.8f;
-                // m.moveSpeed = 1.2f;
-                // //KZSee:
-                // // m.range = 0.7f;
-                // m.eyeLevel = eyeLevel;
-                // m.ingameUpgradeLevel = ingameUpgradeLevel;
-                m.Initialize();
             }
             
             yield return new WaitForSeconds(0.3f);
-
-            _isSkillCasting = false;
         }
     }
 }
