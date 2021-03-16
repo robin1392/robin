@@ -96,7 +96,7 @@ public class Boss1 : Minion
         
         _isSkillCasting = true;
 
-        animator.SetTrigger(_animatorHashSkill);
+        animator.SetTrigger(AnimationHash.Skill);
         
         yield return new WaitForSeconds(1f);
 

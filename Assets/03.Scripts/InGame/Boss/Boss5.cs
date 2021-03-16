@@ -93,7 +93,7 @@ public class Boss5 : Minion
         {
             _skillCastedTime = _spawnedTime;
 
-            animator.SetTrigger(_animatorHashSkill);
+            animator.SetTrigger(AnimationHash.Skill);
             controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, id, E_ActionSendMessage.DropBullet);
             DropBullet();
         }
@@ -106,7 +106,7 @@ public class Boss5 : Minion
 
     public void DropBullet()
     {
-        animator.SetTrigger(_animatorHashSkill);
+        animator.SetTrigger(AnimationHash.Skill);
         StartCoroutine(DropBulletCoroutine());
     }
 

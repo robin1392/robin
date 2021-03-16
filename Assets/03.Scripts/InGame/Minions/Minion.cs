@@ -52,14 +52,6 @@ namespace ED
         public int ingameUpgradeLevel => ActorProxy.ingameUpgradeLevel;
 
         private Vector3 _dodgeVelocity;
-        public static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
-        public static readonly int _animatorHashIdle = Animator.StringToHash("Idle");
-        public static readonly int _animatorHashAttack = Animator.StringToHash("Attack");
-        public static readonly int _animatorHashAttack1 = Animator.StringToHash("Attack1");
-        public static readonly int _animatorHashAttack2 = Animator.StringToHash("Attack2");
-        public static readonly int _animatorHashAttackReady = Animator.StringToHash("AttackReady");
-        public static readonly int _animatorHashSkill = Animator.StringToHash("Skill");
-        public static readonly int _animatorHashSkillLoop = Animator.StringToHash("SkillLoop");
 
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
@@ -99,7 +91,7 @@ namespace ED
             _spawnedTime += Time.deltaTime;
             if (animator != null)
             {
-                animator.SetFloat(_animatorHashMoveSpeed, AiPath.velocity.magnitude);
+                animator.SetFloat(AnimationHash.MoveSpeed, AiPath.velocity.magnitude);
             }
         }
 
@@ -120,7 +112,7 @@ namespace ED
 
             if (animator != null)
             {
-                animator.SetFloat(_animatorHashMoveSpeed, 0);
+                animator.SetFloat(AnimationHash.MoveSpeed, 0);
 
                 if (isAttackSpeedFactorWithAnimation)
                 {
@@ -247,8 +239,8 @@ namespace ED
         {
             if (animator != null)
             {
-                animator.SetFloat(_animatorHashMoveSpeed, 0);
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetFloat(AnimationHash.MoveSpeed, 0);
+                animator.SetTrigger(AnimationHash.Idle);
             }
 
             StopAllCoroutines();
@@ -267,7 +259,7 @@ namespace ED
         public void Push(Vector3 dir, float pushPower)
         {
             //StopAllCoroutines();
-            animator.SetTrigger(_animatorHashIdle);
+            animator.SetTrigger(AnimationHash.Idle);
             throw new NotImplementedException("리지드바디를 사용하지 않고 Push구현");
             // rb.AddForce(dir.normalized * pushPower, ForceMode.Impulse);
             if (_crtPush != null) StopCoroutine(_crtPush);
@@ -309,7 +301,7 @@ namespace ED
             _dicEffectPool.Add(MAZ.STURN, ad);
             //rb.velocity = Vector3.zero;
             //rb.isKinematic = true;
-            if (animator != null) animator.SetTrigger(_animatorHashIdle);
+            if (animator != null) animator.SetTrigger(AnimationHash.Idle);
             yield return new WaitForSeconds(duration);
             ad.Deactive();
             _dicEffectPool.Remove(MAZ.STURN);
@@ -533,7 +525,7 @@ namespace ED
             if (_crtAttack != null) StopCoroutine((_crtAttack));
             if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
 
-            animator.SetTrigger(_animatorHashIdle);
+            animator.SetTrigger(AnimationHash.Idle);
             controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY,
                 isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int) E_AniTrigger.Idle,
                 target.id);
@@ -543,7 +535,7 @@ namespace ED
         public override void OnBaseStatDestroyed()
         {
             base.OnBaseStatDestroyed();
-            if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
+            if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
             _destroyed = true;
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
             PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);

@@ -54,7 +54,7 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            actorProxy.baseStat.animator.SetTrigger(Minion._animatorHashSkill);
+            actorProxy.baseStat.animator.SetTrigger(AnimationHash.Skill);
 
             ((Minion_Berserker)actorProxy.baseStat).ps_Wind.Play();
             

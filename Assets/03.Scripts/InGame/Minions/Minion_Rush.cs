@@ -116,7 +116,7 @@ namespace ED
             ps_Rush.Play();
             var ts = transform;
             
-            ActorProxy.PlayAnimationWithRelay(_animatorHashSkillLoop, null);
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.SkillLoop, null);
 
             float tick = 0.1f;
             while (dashTarget != null)
@@ -159,7 +159,7 @@ namespace ED
             _collider.enabled = true;
             ps_Rush.Stop();
             
-            ActorProxy.PlayAnimationWithRelay(_animatorHashIdle, null);
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.Idle, null);
         }
 
         public override void Sturn(float duration)

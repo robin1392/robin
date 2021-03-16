@@ -95,7 +95,7 @@ namespace ED
         public virtual IEnumerator Attack()
         {
             _attackedTarget = target;
-            ActorProxy.PlayAnimationWithRelay(_animatorHashAttack, target);
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
             yield return AttackCoroutine();
         }
 
@@ -118,7 +118,7 @@ namespace ED
                 //TODO: 히스토리: 공격모션 시작과 동시에 대상이 죽을 경우 허공에 칼질하는 문제를 피하려고 삽입된 코드. 동기화가 애매해 주석 처리함, 복구 방법 고려해볼 것. by Kwazii 
                 // if (target == null || target.isAlive == false)
                 // {
-                //     animator.SetTrigger(_animatorHashIdle);
+                //     animator.SetTrigger(AnimationHash.Idle);
                 //     yield break;
                 // }
             }

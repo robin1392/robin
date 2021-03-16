@@ -35,7 +35,7 @@ namespace ED
             //TODO: 빼도 되지 않을까? 고민해보자
             if (target == null || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
 

@@ -48,7 +48,7 @@ namespace MirageTest.Scripts.SyncAction
         {
             var shielder = actor.baseStat as Minion_Shielder;
             SoundManager.instance.Play(shielder.clip_ShieldMode);
-            shielder.animator.SetTrigger(Minion_Shielder.aniHashSkill);
+            shielder.animator.SetTrigger(AnimationHash.Skill);
             yield return new WaitForSeconds(actor.baseStat.effectDuration);
         }
     }

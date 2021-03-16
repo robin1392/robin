@@ -15,7 +15,7 @@ namespace ED
         [Header("AudioClip")]
         public AudioClip clip_Shot;
         
-        private static readonly int AttackReady = Animator.StringToHash("AttackReady");
+        
 
         protected override void Start()
         {
@@ -36,7 +36,7 @@ namespace ED
 
         public override IEnumerator Attack()
         {
-            ActorProxy.PlayAnimationWithRelay(_animatorHashAttackReady , target);
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.AttackReady , target);
 
             yield return new WaitForSeconds(0.5f);
 
@@ -68,7 +68,7 @@ namespace ED
 
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.PlayAnimationWithRelay(_animatorHashAttack, target);
+                ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
             }
         }
 
@@ -89,7 +89,7 @@ namespace ED
         {
             StopAllCoroutines();
             lr.gameObject.SetActive(false);
-            animator.SetTrigger(_animatorHashIdle);
+            animator.SetTrigger(AnimationHash.Idle);
         }
         
         IEnumerator AimingCoroutine()

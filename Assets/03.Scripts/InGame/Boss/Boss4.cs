@@ -33,7 +33,7 @@ public class Boss4 : Minion
 
     public override IEnumerator Attack()
     {
-        ActorProxy.PlayAnimationWithRelay(_animatorHashAttack, target);
+        ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
 
         yield return new WaitForSeconds(2f);
         
@@ -52,7 +52,7 @@ public class Boss4 : Minion
         // else if(InGameManager.IsNetwork == false)
         // {
         //     base.Attack();
-        //     animator.SetTrigger(_animatorHashAttack);
+        //     animator.SetTrigger(AnimationHash.Attack);
         // }
     }
 

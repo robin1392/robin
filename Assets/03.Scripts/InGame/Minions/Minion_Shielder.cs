@@ -13,7 +13,7 @@ namespace ED
         public AudioClip clip_ShieldMode;
         
         private float skillCastedTime;
-        public static readonly int aniHashSkill = Animator.StringToHash("Skill");
+        
 
         public override void Initialize()
         {

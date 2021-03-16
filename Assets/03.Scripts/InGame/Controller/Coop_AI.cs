@@ -18,8 +18,7 @@ namespace ED
         public GameObject obj_SummonParticle;
 
         private MsgMonster msgBoss;
-        private static readonly int Idle = Animator.StringToHash("Idle");
-        private static readonly int Incubation = Animator.StringToHash("Incubation");
+        
 
         protected override void StartPlayerControll()
         {
@@ -61,7 +60,7 @@ namespace ED
 
         private void DestroyEgg()
         {
-            animator.SetTrigger(Idle);
+            animator.SetTrigger(AnimationHash.Idle);
             if (ts_EggParent.childCount > 0)
             {
                 DestroyImmediate(ts_EggParent.GetChild(0).gameObject);
@@ -309,7 +308,7 @@ namespace ED
                 yield return null;
             }
 
-            animator.SetTrigger(Incubation);
+            animator.SetTrigger(AnimationHash.Incubation);
             obj_IncubationParticle.SetActive(true);
 
             t = 0;

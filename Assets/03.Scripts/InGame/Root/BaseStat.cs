@@ -149,7 +149,7 @@ namespace ED
         
         public virtual void OnBaseStatDestroyed()
         {
-            StopAI();
+            StopAllAction();
             _poolObjectAutoDeactivate?.Deactive();
         }
 

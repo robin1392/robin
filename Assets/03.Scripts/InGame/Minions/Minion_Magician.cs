@@ -49,7 +49,7 @@ namespace  ED
 
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
 
@@ -93,7 +93,7 @@ namespace  ED
 
                 var target = list[Random.Range(0, list.Count)];
                 
-                ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
+                ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
                 
                 controller.ActionMinionScareCrow(true, target.id, (float) eyeLevel);
 

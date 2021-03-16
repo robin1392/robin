@@ -76,7 +76,7 @@ namespace ED
             }
             else if (IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
 

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ED
 {
-    public class Mortar : Magic
+    public class Mortar : FixedPositionInstallation
     {
         [Header("Prefab")]
         public GameObject pref_Cannonball;
@@ -25,9 +25,7 @@ namespace ED
         public AudioClip clip_Shot;
 
         private Transform longTarget;
-        private static readonly int animatorHashShoot = Animator.StringToHash("Shoot");
-
-        //public Transform[] arrTs_Parts;
+        
 
         protected override void Awake()
         {
@@ -135,7 +133,7 @@ namespace ED
             {
                 StartCoroutine(LookAtTargetCoroutine());
                 //animator.SetTrigger(animatorHashShoot);
-                for (int i = 0; i < arrAnimator.Length; ++i) arrAnimator[i].SetTrigger(animatorHashShoot);
+                for (int i = 0; i < arrAnimator.Length; ++i) arrAnimator[i].SetTrigger(AnimationHash.Shoot);
             }
         }
         

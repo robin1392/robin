@@ -58,7 +58,7 @@ namespace ED
             //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
             SoundManager.instance.Play(clip_Jump);
             
-            ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
 
             var ts = transform;
             var startPos = ts.position;

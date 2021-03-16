@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ED
 {
-    public class Turret : Magic
+    public class Turret : FixedPositionInstallation
     {
         public ParticleSystem ps_Fire;
         public Light light_Fire;
@@ -31,6 +31,8 @@ namespace ED
             base.Start();
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow -= FireArrow;
+            ae.event_FireLight -= FireLightOn;
             ae.event_FireArrow += FireArrow;
             ae.event_FireLight += FireLightOn;
             PoolManager.instance.AddPool(pref_Bullet, 1);
@@ -39,28 +41,20 @@ namespace ED
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
-
-            transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
+            
             shootTime = 0;
-
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-            {
-                StartCoroutine(AttackCoroutine());
-            }
             
             SetParts();
         }
 
         private void SetParts()
         {
-            // for (int i = 0; i < arrTs_Parts.Length; i++)
-            // {
-            //     arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
-            // }
-
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
-            ts_Head.rotation = isBottomCamp ? Quaternion.identity : Quaternion.Euler(0, 180f, 0);
+        }
+        
+        protected override IEnumerator Cast()
+        {
+            return base.Cast();
         }
 
         private IEnumerator AttackCoroutine()
@@ -145,11 +139,6 @@ namespace ED
             animator.SetTrigger("Attack");
         }
 
-        public void EndGameUnit()
-        {
-            StopAllCoroutines();
-        }
-        
         public void FireLightOn()
         {
             if (target == null)

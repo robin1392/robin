@@ -27,7 +27,7 @@ namespace ED
         {
             if (target == null || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace ED
         {
             if (target == null || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
             

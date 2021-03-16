@@ -11,8 +11,6 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light;
 
-        public bool isFire;
-
         [Header("AudioClip")]
         public AudioClip clip_Flame;
 
@@ -22,14 +20,12 @@ namespace ED
             
             ps_Fire.Stop();
             light.enabled = false;
-            isFire = false;
         }
 
         public override void Death()
         {
             base.Death();
-
-            isFire = false;
+            
             light.enabled = false;
             ps_Fire.Stop();
         }
@@ -48,7 +44,7 @@ namespace ED
             var fireMan = actorProxy.baseStat as Minion_Fireman;
             SoundManager.instance.Play(fireMan.clip_Flame);
             
-            fireMan.animator.SetTrigger(Minion._animatorHashAttack);
+            fireMan.animator.SetTrigger(AnimationHash.Attack);
             
             actorProxy.transform.LookAt(targetActorProxy.transform);
             

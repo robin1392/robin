@@ -27,7 +27,7 @@ public class Guardian_03 : Minion
         {
             yield return new WaitForSeconds(effectCooltime);
             
-            ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
 
             yield return new WaitForSeconds(1.716f);
 

@@ -45,7 +45,7 @@ namespace ED
                 if (InGameManager.IsNetwork && isMine)
                 {
                     base.Attack();
-                    ActorProxy.PlayAnimationWithRelay(_animatorHashSkill, target);
+                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
                     
                     foreach (var col in cols)
                     {
@@ -59,7 +59,7 @@ namespace ED
                 else if (InGameManager.IsNetwork == false)
                 {
                     base.Attack();
-                    animator.SetTrigger(_animatorHashSkill);
+                    animator.SetTrigger(AnimationHash.Skill);
                     foreach (var col in cols)
                     {
                         if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)

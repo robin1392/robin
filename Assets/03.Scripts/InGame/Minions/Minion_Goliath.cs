@@ -27,7 +27,7 @@ namespace ED
         public override IEnumerator Attack()
         {
             _attackedTarget = target;
-            var aniHash = target.isFlying ? _animatorHashAttack2 : _animatorHashAttack1; 
+            var aniHash = target.isFlying ? AnimationHash.Attack2 : AnimationHash.Attack1; 
             ActorProxy.PlayAnimationWithRelay(aniHash, target);
 
             yield return AttackCoroutine();
@@ -84,7 +84,7 @@ namespace ED
 
             if (firstTarget == null && animator != null)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetTrigger(AnimationHash.Idle);
             }
 
             if (firstTarget)
@@ -113,7 +113,7 @@ namespace ED
             }
             else if (IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
 

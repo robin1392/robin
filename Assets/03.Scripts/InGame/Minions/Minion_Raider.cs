@@ -115,7 +115,7 @@ namespace ED
             var t = PoolManager.instance.ActivateObject(raider.pref_EffectDash.name, raider.ts_HitPos.position);
             if (targetActorProxy.transform != null) t.LookAt(targetActorProxy.transform.position);
 
-            raider.animator.SetTrigger(Minion._animatorHashSkill);
+            raider.animator.SetTrigger(AnimationHash.Skill);
 
             Transform ts = actorProxy.transform;
             while (targetActorProxy != null && targetActorProxy.baseStat.isAlive)

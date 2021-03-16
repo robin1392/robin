@@ -119,7 +119,7 @@ namespace ED
             protected set { _listMagic = value; }
         }
         private readonly string recvMessage = "RecvPlayer";
-        private static readonly int Break = Animator.StringToHash("Break");
+        
         public bool isHalfHealth;
         public bool isPlayingAI => ActorProxy.isPlayingAI;
         public bool isMinionAgentMove = true;
@@ -272,7 +272,7 @@ namespace ED
             if (boss != null)
             {
                 isHalfHealth = true;
-                animator.SetBool(Break, true);
+                animator.SetBool(AnimationHash.Break, true);
 
                 PushEnemyMinions(5f);
 

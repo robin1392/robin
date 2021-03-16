@@ -23,7 +23,7 @@ namespace ED
 
             _collider.enabled = false;
             animator.gameObject.SetActive(false);
-            animator.SetTrigger(_animatorHashSkill);
+            animator.SetTrigger(AnimationHash.Skill);
             pieceID = controller.robotPieceCount++;
             controller.robotEyeTotalLevel += eyeLevel;
 
@@ -44,7 +44,7 @@ namespace ED
             {
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
 
-                if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
+                if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
                 StopAllCoroutines();
                 InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
 
@@ -63,7 +63,7 @@ namespace ED
             }
             else
             {
-                if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
+                if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
                 StopAllCoroutines();
                 InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
 

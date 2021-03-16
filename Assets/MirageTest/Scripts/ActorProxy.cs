@@ -48,8 +48,6 @@ namespace MirageTest.Scripts
 
         public Seeker _seeker;
         public AIPath _aiPath;
-        
-        private static readonly int _animatorHashMoveSpeed = Animator.StringToHash("MoveSpeed");
 
         public TDataDiceInfo diceInfo
         {
@@ -176,12 +174,12 @@ namespace MirageTest.Scripts
             
             if (isCantAI)
             {
-                baseStat.animator.SetTrigger(Minion._animatorHashIdle);
+                baseStat.animator.SetTrigger(AnimationHash.Idle);
                 baseStat.StopAllAction();
             }
             else
             {
-                baseStat.animator.SetTrigger(Minion._animatorHashIdle);
+                baseStat.animator.SetTrigger(AnimationHash.Idle);
                 if (isPlayingAI)
                 {
                     baseStat.StartAI();
@@ -485,7 +483,7 @@ namespace MirageTest.Scripts
                     if (baseStat.animator != null)
                     {
                         float distance = Vector3.Magnitude(position - transform.position);
-                        baseStat.animator.SetFloat(_animatorHashMoveSpeed, distance * 5);
+                        baseStat.animator.SetFloat(AnimationHash.MoveSpeed, distance * 5);
                     }
                 }
             }

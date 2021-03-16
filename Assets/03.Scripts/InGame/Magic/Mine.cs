@@ -10,7 +10,7 @@ using UnityEngine.Events;
 
 namespace ED
 {
-    public class Mine : Magic
+    public class Mine : Installation
     {
         public ParticleSystem ps_Bomb;
 
@@ -18,12 +18,9 @@ namespace ED
         public AudioClip clip_Explosion;
 
         private bool isArrivedAtTargetPosition;
-        private static readonly int Set = Animator.StringToHash("Set");
+        
 
-        private float durationToTarget;
-        private float spawnTime;
-        protected float elapsedTime;
-        private float lifeTimeFactor;
+        protected float durationToTarget;
         private bool isBombed = false;
 
 
@@ -39,11 +36,8 @@ namespace ED
 
             var distance = Vector3.Distance(startPos, targetPos);
             durationToTarget = distance / moveSpeed;
-            elapsedTime = 0;
-            spawnTime = ActorProxy.spawnTime;
             isArrivedAtTargetPosition = false;
             isBombed = false;
-            lifeTimeFactor = ActorProxy.maxHealth / InGameManager.Get().spawnTime;
             _collider.enabled = false;
         }
 
@@ -53,8 +47,8 @@ namespace ED
             {
                 return;
             }
-            
-            elapsedTime = (float) ActorProxy.NetworkTime.Time - spawnTime;
+
+            var elapsedTime = this.elapsedTime;
             transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / durationToTarget);
 
             if (isArrivedAtTargetPosition == false)
@@ -64,8 +58,8 @@ namespace ED
                     EndMove();
                 }
             }
-
-            var damageByTime = lifeTimeFactor * elapsedTime;
+            
+            var damageByTime = lifeTimeFactor * (elapsedTime - durationToTarget);
             var currentHealth = ActorProxy.currentHealth - damageByTime; 
             
             if (image_HealthBar != null)
@@ -84,7 +78,7 @@ namespace ED
             isArrivedAtTargetPosition = true;
             image_HealthBar.transform.parent.gameObject.SetActive(true);
             SoundManager.instance.Play(clip_Set);
-            animator.SetTrigger(Set);
+            animator.SetTrigger(AnimationHash.Set);
             _collider.enabled = true;
         }
 
