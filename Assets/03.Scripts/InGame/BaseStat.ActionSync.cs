@@ -72,17 +72,25 @@ namespace ED
             _syncActionCoroutine = null;
         }
         
-        public void SyncActionWithoutTarget(int hash, ActorProxy actorProxy)
+        public void SyncActionWithoutTarget(int hash)
         {
+            //푸시를 만들면 이 부분에 수행되어야 한다.
+            //스턴 중에도 푸시 액션을 허용해야 함.
+            
+            if (ActorProxy.isCantAI)
+            {
+                return;
+            }
+            
             if (_syncActionCoroutine != null)
             {
-                SyncAction.OnActionCancel(actorProxy);
+                SyncAction.OnActionCancel(ActorProxy);
                 StopCoroutine(_syncActionCoroutine);
             }
 
             var action = ActionLookup.GetActionWithoutTarget(hash);
             SyncAction = action;
-            _syncActionCoroutine = StartCoroutine( RunSyncAction(action.Action(actorProxy)));
+            _syncActionCoroutine = StartCoroutine( RunSyncAction(action.Action(ActorProxy)));
         }
     }
 }

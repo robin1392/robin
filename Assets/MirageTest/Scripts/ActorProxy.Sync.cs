@@ -216,7 +216,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            baseStat.SyncActionWithoutTarget(actionTypeHash,this);
+            baseStat.SyncActionWithoutTarget(actionTypeHash);
         }
     }
 }

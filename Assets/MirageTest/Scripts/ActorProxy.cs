@@ -68,6 +68,7 @@ namespace MirageTest.Scripts
         public BuffState buffState = BuffState.None;
         public bool isClocking => ((buffState & BuffState.Clocking) != 0);
         public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
+        public bool isCantAI => ((buffState & BuffState.CantAI) != 0);
 
         [System.Serializable]
         public struct Buff
@@ -167,10 +168,11 @@ namespace MirageTest.Scripts
                     minion.ApplyCloacking(isClockkingNew);
                 }
             }
+            
+            this.buffState = state;
 
-            EnableStunEffect((state & BuffState.Sturn) != 0);
-
-            if ((state & BuffState.CantAI) != 0)
+            EnableStunEffect((buffState & BuffState.Sturn) != 0);
+            if (isCantAI)
             {
                 baseStat.animator.SetTrigger(Minion._animatorHashIdle);
                 baseStat.StopAllAction();
@@ -183,8 +185,6 @@ namespace MirageTest.Scripts
                     baseStat.StartAI();
                 }
             }
-
-            this.buffState = state;
         }
 
         private void EnableStunEffect(bool b)
