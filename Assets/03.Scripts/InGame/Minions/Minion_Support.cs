@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
+using Mirage;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -9,8 +13,7 @@ namespace ED
     {
         public GameObject pref_Dust;
 
-        [Header("AudioClip")]
-        public AudioClip clip_Jump;
+        [Header("AudioClip")] public AudioClip clip_Jump;
         public AudioClip clip_Landing;
 
         public override void Initialize()
@@ -18,51 +21,101 @@ namespace ED
             base.Initialize();
 
             PoolManager.instance.AddPool(pref_Dust, 1);
-            StartCoroutine(Jump());
         }
 
-        private Minion GetLongDistanceFriendlyTarget()
+        protected override IEnumerator Root()
         {
-            Minion rtn = null;
+            var targetMinion = GetLongDistanceFriendlyTarget();
+            var action = new JumpAction();
+            yield return action.ActionWithSync(ActorProxy, targetMinion.ActorProxy);
+
+            while (isAlive)
+            {
+                target = SetTarget();
+                if (target != null)
+                {
+                    yield return Combat();
+                }
+
+                yield return _waitForSeconds0_1;
+            }
+        }
+
+        private BaseStat GetLongDistanceFriendlyTarget()
+        {
+            BaseStat rtn = null;
 
             var distance = isBottomCamp ? float.MinValue : float.MaxValue;
-            
-            foreach (var minion in controller.listMinion)
+
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            var enemies = rwClient.ActorProxies.Where(actor =>
             {
-                if (minion.spawnedTime < 3f && ((isBottomCamp && minion.transform.position.z > distance) ||
-                    (isBottomCamp == false && minion.transform.position.z < distance)))
+                if (actor.team != ActorProxy.team)
+                {
+                    return false;
+                }
+
+                if (actor.actorType == ActorType.Tower)
+                {
+                    return false;
+                }
+
+                if (actor.baseStat is Magic)
+                {
+                    return false;
+                }
+
+                if (actor == ActorProxy)
+                {
+                    return false;
+                }
+
+                return true;
+            });
+
+            var actorProxies = enemies as ActorProxy[] ?? enemies.ToArray();
+
+
+
+
+            foreach (var minion in actorProxies)
+            {
+                if (((isBottomCamp && minion.transform.position.z > distance) ||
+                     (isBottomCamp == false && minion.transform.position.z < distance)))
                 {
                     distance = minion.transform.position.z;
-                    rtn = minion;
+                    rtn = minion.baseStat;
                 }
             }
-            
-            return rtn == this ? null : rtn;
+
+            return rtn;
         }
+    }
 
-        private IEnumerator Jump()
+    public class JumpAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetProxy)
         {
-            _collider.enabled = false;
-            var m = GetLongDistanceFriendlyTarget();
+            var m = actorProxy.baseStat as Minion_Support;
+            var ts = actorProxy.transform;
 
-            if (m == null)
+            if (targetProxy == null || targetProxy.baseStat.isAlive == false)
             {
-                _collider.enabled = true;
+                m.collider.enabled = true;
                 yield break;
             }
 
-            transform.LookAt(m.transform);
+            m.collider.enabled = false;
+            ts.LookAt(targetProxy.transform);
             
             yield return null;
             
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            SoundManager.instance.Play(clip_Jump);
+            SoundManager.instance.Play(m.clip_Jump);
             
-            ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
+            actorProxy.PlayAnimationWithRelay(AnimationHash.Skill, targetProxy.baseStat);
 
-            var ts = transform;
             var startPos = ts.position;
-            var targetPos = m.transform.position;
+            var targetPos = targetProxy.transform.position;
             var t = 0f;
 
             float fV_x;
@@ -105,12 +158,13 @@ namespace ED
                 yield return null;
             }
 
-            _collider.enabled = true;
-            var pos = transform.position;
+            m.collider.enabled = true;
+            var pos = ts.position;
             pos.y = 0.1f;
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
-            SoundManager.instance.Play(clip_Landing);
-            controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
+            
+            SoundManager.instance.Play(m.clip_Landing);
+            PoolManager.Get().ActivateObject(m.pref_Dust.name, pos);
+            yield return null;
         }
     }
 }

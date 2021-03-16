@@ -56,8 +56,6 @@ namespace ED
         {
             actorProxy.baseStat.animator.SetTrigger(AnimationHash.Skill);
 
-            ((Minion_Berserker)actorProxy.baseStat).ps_Wind.Play();
-            
             yield return new WaitForSeconds(1.5f);
 
             if (actorProxy.isPlayingAI == false)

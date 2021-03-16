@@ -57,7 +57,7 @@ namespace ED
         private Coroutine _crtPush;
         public BehaviourTreeOwner behaviourTreeOwner { get; protected set; }
         
-        protected Collider _collider;
+        public Collider collider;
         public bool isPolymorph;
         protected int _flagOfWarCount;
 
@@ -77,7 +77,7 @@ namespace ED
         protected override void Awake()
         {
             base.Awake();
-            _collider = GetComponentInChildren<Collider>();
+            collider = GetComponentInChildren<Collider>();
             _animationEvent = animator.GetComponent<MinionAnimationEvent>();
         }
         
@@ -104,7 +104,7 @@ namespace ED
         {
             _destroyed = false;
             _dodgeVelocity = Vector3.zero;
-            _collider.enabled = true;
+            collider.enabled = true;
             isPolymorph = false;
             animator.gameObject.SetActive(true);
             _spawnedTime = 0;

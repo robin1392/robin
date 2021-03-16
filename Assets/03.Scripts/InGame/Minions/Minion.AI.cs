@@ -63,7 +63,7 @@ namespace ED
         {
             while (!IsTargetInnerRange())
             {
-                ApproachToTarget();  
+                ApproachToTarget();
                 
                 yield return null;
 

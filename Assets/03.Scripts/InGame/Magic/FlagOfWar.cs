@@ -24,7 +24,7 @@ namespace ED
         {
             base.Initialize(pIsBottomPlayer);
 
-            _collider.enabled = false;
+            collider.enabled = false;
             _hitCollider.enabled = false;
             _listAttackSpeedUp.Clear();
             //KZSee:
@@ -33,7 +33,7 @@ namespace ED
             
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
             ps.transform.parent.localScale = animator.transform.localScale;
-            ((SphereCollider)_collider).radius = Mathf.Lerp(1.5f, 2.25f, (eyeLevel - 1) / 5f);
+            ((SphereCollider)collider).radius = Mathf.Lerp(1.5f, 2.25f, (eyeLevel - 1) / 5f);
         }
         
         public override void SetTarget()
@@ -61,7 +61,7 @@ namespace ED
         private void EndMove()
         {
             _isTriggerOn = true;
-            _collider.enabled = true;
+            collider.enabled = true;
             _hitCollider.enabled = true;
             StartCoroutine(LifetimeCoroutine());
         }

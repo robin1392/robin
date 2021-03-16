@@ -21,7 +21,7 @@ namespace ED
             // controller.robotPieceCount++;
             // controller.robotEyeTotalLevel += eyeLevel;
 
-            _collider.enabled = false;
+            collider.enabled = false;
             animator.gameObject.SetActive(false);
             animator.SetTrigger(AnimationHash.Skill);
             pieceID = controller.robotPieceCount++;
@@ -98,7 +98,7 @@ namespace ED
             controller.robotEyeTotalLevel = 0;
             // currentHealth = maxHealth;
 
-            _collider.enabled = true;
+            collider.enabled = true;
             foreach (var tsPart in arrTs_Parts)
             {
                 tsPart.gameObject.SetActive(false);
