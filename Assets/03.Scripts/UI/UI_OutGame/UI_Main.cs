@@ -391,7 +391,7 @@ namespace ED
             for (var i = 0; i < arrRts_MainButtons.Length; i++)
             {
                 //arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 390f : 213f, 260f), duration).SetEase(ease);
-                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? canvasWidth * 0.36f : canvasWidth * 0.16f, 260f), duration).SetEase(ease);
+                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 346 : 220, 600f), duration).SetEase(ease);
                 //arrRts_MainButtons[i].GetComponent<Image>().DOColor(i == num ? Color.white : Color.gray, duration);
                 arrRts_MainButtons[i]
                     .BroadcastMessage(i == num ? "Up" : "Down", SendMessageOptions.DontRequireReceiver);

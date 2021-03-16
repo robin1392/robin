@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: f49375dc539db4c0caa5e494fcfbc9fe, type: 3}
     - {fileID: 21300000, guid: 84c07fd673c5448bf8e1db3282b4dce5, type: 3}
-    totalSpriteSurfaceArea: 5804719
+    totalSpriteSurfaceArea: 5574319
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -94,7 +94,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 423542f21deff44888020712661afdb1, type: 3}
   - {fileID: 21300000, guid: 32692b03e9ea343afb8c7b3179c14430, type: 3}
   - {fileID: 21300000, guid: 4a00c63319b3e43f682defbf8206bac8, type: 3}
-  - {fileID: 21300000, guid: 13149543c608042d6b3db7cef63d6b56, type: 3}
   - {fileID: 21300000, guid: e1a1aa43ce4014233ad1171db0e110e0, type: 3}
   - {fileID: 21300000, guid: d4257973af4714efab074c1e7e0617d6, type: 3}
   - {fileID: 21300000, guid: b907dcb3795de462e95eda8d5d0ad6ff, type: 3}
@@ -268,7 +267,6 @@ SpriteAtlas:
   - ui_frame_01
   - icon_dice_tap_dice
   - ui_icon_stat_08
-  - bg_pattern_dice
   - icon_class_08
   - icon_season_rank_03
   - icon_menu_setting
