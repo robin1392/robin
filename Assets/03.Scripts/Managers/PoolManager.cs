@@ -82,6 +82,11 @@ namespace ED
                 return;
             }
 
+            if (data.listPool.Find(p => p.obj == prefab) == null)
+            {
+                data.listPool.Add(new Pool() { obj = prefab, count = 1 });
+            }
+
             if (dic.ContainsKey(prefab.name) == false)
             {
                 dic[prefab.name] = new Dictionary<string, Transform>();
@@ -182,6 +187,7 @@ namespace ED
                     if(!dic[poolName][kvp.Key].gameObject.activeInHierarchy)
                     {
                         t = dic[poolName][kvp.Key];
+
                         if (parent != null)
                         {
                             t.parent = parent;
@@ -197,6 +203,9 @@ namespace ED
                         return t.GetComponent<T>();
                     }
                 }
+                
+                AddPool(data.listPool.Find(data => data.obj.name == poolName).obj, 1);
+                return ActivateObject<T>(poolName, position, parent);
             }
             else
             {
@@ -205,8 +214,7 @@ namespace ED
             }
 
             Debug.LogWarning(poolName + " pool is empty. And add pool.");
-            //AddPool(data.listPool.Find(data => data.name == poolName).obj, 1);
-            //return ActivateObject<T>(poolName, position, parent);
+            
             return default;
         }
 

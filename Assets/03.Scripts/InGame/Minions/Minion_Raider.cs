@@ -39,7 +39,6 @@ namespace ED
         {
             base.Initialize();
             _skillCastedTime = -effectCooltime;
-            
         }
         
         protected override IEnumerator Combat()

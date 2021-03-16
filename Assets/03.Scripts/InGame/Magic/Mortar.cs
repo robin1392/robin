@@ -30,7 +30,7 @@ namespace ED
         {
             base.Awake();
 
-            PoolManager.instance.AddPool(pref_Cannonball, 1);
+            PoolManager.instance.AddPool(pref_Cannonball, 2);
         }
 
         public override void Initialize(bool pIsBottomPlayer)
