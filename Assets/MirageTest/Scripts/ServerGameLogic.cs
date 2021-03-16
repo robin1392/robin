@@ -30,6 +30,7 @@ namespace MirageTest.Scripts
 
         private bool _isGameStart;
         public GameModeBase _gameMode;
+        public bool isAIMode;
         
         public PLAY_TYPE modeType;
 
@@ -65,13 +66,6 @@ namespace MirageTest.Scripts
             await StartServerLogic();
         }
 
-        async UniTask StartServerAndLogic()
-        {
-            _networkServer.ListenAsync().Forget();
-            
-            await StartServerLogic();
-        }
-            
         async UniTask StartServerLogic()
         {
             logger.LogError($"StartServer");
@@ -80,8 +74,15 @@ namespace MirageTest.Scripts
             {
                 await UniTask.Yield();
             }
-
-            await WaitForPlayers();
+            
+            if (isAIMode)
+            {
+                await WaitForFirstPlayer();
+            }
+            else
+            {
+                await WaitForPlayers();    
+            }
 
             if (NoPlayers)
             {
@@ -114,8 +115,6 @@ namespace MirageTest.Scripts
             await _gameMode.UpdateLogic();
         }
         
-        
-
         private void EndGameSession()
         {
             logger.LogError($"EndGameSession");
@@ -130,8 +129,7 @@ namespace MirageTest.Scripts
             _gameMode?.End();
             _isGameStart = false;
             
-            //TODO: GameLift 연동 시 서버 프로세스를 재사용하지 않고 종료시킨다.
-            StartServerAndLogic().Forget();
+            //프로세스 종료
         }
         
         private async UniTask WaitForPlayers()

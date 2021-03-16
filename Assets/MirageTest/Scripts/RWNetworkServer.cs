@@ -13,7 +13,9 @@ public class RWNetworkServer : NetworkServer
     public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
     
     public ServerGameLogic serverGameLogic;
-    
+
+    public MatchData MatchData = new MatchData();
+
     private void Awake()
     {
         serverGameLogic = GetComponent<ServerGameLogic>();

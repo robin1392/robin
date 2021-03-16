@@ -29,14 +29,26 @@ public class PlayerRegisterer : MonoBehaviour
         server = FindObjectOfType<NetworkServer>();
         if (server != null)
         {
+            server.Connected.AddListener(OnServerConnected);
             server.Authenticated.AddListener(OnServerAuthenticated);
             serverObjectManager = server.GetComponent<ServerObjectManager>();
         }
     }
 
+    private void OnServerConnected(INetworkConnection connection)
+    {
+        if (server.authenticator == null)
+        {
+            connection.RegisterHandler<AddPlayerMessage>(OnServerAddPlayerInternal);    
+        }
+    }
+    
     private void OnServerAuthenticated(INetworkConnection connection)
     {
-        connection.RegisterHandler<AddPlayerMessage>(OnServerAddPlayerInternal);
+        if (server.authenticator != null)
+        {
+            connection.RegisterHandler<AddPlayerMessage>(OnServerAddPlayerInternal);    
+        }
     }
 
     private void OnClientAuthenticated(INetworkConnection connection)

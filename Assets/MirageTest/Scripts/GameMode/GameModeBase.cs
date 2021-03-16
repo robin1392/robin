@@ -41,44 +41,32 @@ namespace MirageTest.Scripts.GameMode
             return gameState;
         }
 
-         protected PlayerState[] CreatePlayerStates()
+        protected PlayerState[] CreatePlayerStates()
         {
-            var authData = ServerObjectManager
-                .SpawnedObjects
-                .Select(kvp => kvp.Value.GetComponent<PlayerProxy>())
-                .Where(p => p != null)
-                .Select(p => p.ConnectionToClient.AuthenticationData as AuthDataForConnection).ToList();
+            var server = ServerObjectManager.Server as RWNetworkServer;
+            var playerInfos = server.MatchData.PlayerInfos;
 
-            authData.Sort((a, b) =>  String.Compare(a.PlayerId, b.PlayerId, StringComparison.Ordinal));
-            if (authData.Count < 2)
-            {
-                authData.Add(new AuthDataForConnection(){ PlayerId = "auto_setted", PlayerNickName = "auto_setted"});
-            }
-            
             var getStartSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.GetStartSP].value;
             
             var playerStates = new PlayerState[2];
             playerStates[0] = SpawnPlayerState(
-                authData[0].PlayerId, authData[0].PlayerNickName, getStartSp,
-                new DeckDice[]
+                playerInfos[0].UserId, playerInfos[0].UserNickName, getStartSp,
+                playerInfos[0].Deck.DiceInfos.Select(d => new DeckDice()
                 {
-                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
-                }, GameConstants.Player1Tag);
+                    diceId = d.DiceId,
+                    outGameLevel = d.OutGameLevel,
+                    inGameLevel = 0,
+                }).ToArray(), GameConstants.Player1Tag);
         
             playerStates[1] = SpawnPlayerState(
-                authData[1].PlayerId, authData[1].PlayerNickName, getStartSp,
-                new DeckDice[]
+                playerInfos[1].UserId, playerInfos[1].UserNickName, getStartSp,
+                playerInfos[1].Deck.DiceInfos.Select(d => new DeckDice()
                 {
-                    new DeckDice(){ diceId = 1000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 1001, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2000, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2002, inGameLevel = 0, outGameLevel = 1 },
-                    new DeckDice(){ diceId = 2003, inGameLevel = 0, outGameLevel = 1 },
-                }, GameConstants.Player2Tag);
+                    diceId = d.DiceId,
+                    outGameLevel = d.OutGameLevel,
+                    inGameLevel = 0,
+                }).ToArray(), GameConstants.Player2Tag);
+
             return playerStates;
         }
          
