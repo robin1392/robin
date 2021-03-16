@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -15,7 +17,7 @@ namespace ED
         public AudioClip clip_Shoot;
         public AudioClip clip_Explosion;
         
-        private float sturnTime => effect + effectDuration * eyeLevel;
+        private float sturnTime => effect + (effectUpByUpgrade * ActorProxy.outgameUpgradeLevel) + (effectUpByInGameUp * ActorProxy.ingameUpgradeLevel);
         private bool isBombed = false;
 
         public override void Initialize(bool pIsBottomPlayer)
@@ -29,120 +31,32 @@ namespace ED
             ps_BombEffect.Clear();
         }
 
-        public override void SetTarget()
+        protected override IEnumerator Cast()
         {
-            StartCoroutine(Activate());
-        }
-
-        protected override IEnumerator Activate()
-        {
-            SoundManager.instance.Play(clip_Shoot);
-            var startPos = transform.position;
-            while (target == null)
-            {
-                yield return null;
-                
-                target = ActorProxy.GetHighestHealthEnemy();
-                if (target != null)
-                {
-                    //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMAGICTARGET, id, target.id);
-                    controller.ActionSetMagicTarget(id, target.id);
-                }
-            }
-            var endPos = target.ts_HitPos.position;
-            var distance = Vector3.Distance(startPos, endPos);
-            var moveTime = distance / moveSpeed;
-            var moveDistance = 0f;
-
-            float t = 0;
+            target = ActorProxy.GetRandomEnemyCanBeAttacked();
             
-            while (true)
-            {
-                if (target != null && target.isAlive)
-                {
-                    endPos = target.ts_HitPos.position;
-                }
-                
-                //rb.position = Vector3.Lerp(startPos, endPos, t / moveTime);
-                throw new NotImplementedException("매직 이동 함수를 만들고 같이 사용할 것.");
-                // rb.position += (endPos - transform.position).normalized * (moveSpeed * Time.deltaTime);
-
-                if (Vector3.Distance(transform.position, endPos) < 0.4f)
-                {
-                    break;
-                }
-
-                t += Time.deltaTime;
-                yield return null;
-            }
-
-            if ((InGameManager.IsNetwork && isMine || InGameManager.IsNetwork == false || controller.isPlayingAI) && isBombed == false)
-            {
-                isBombed = true;
-                
-                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
-                {
-                    if (target != null)
-                    {
-
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
-                        //controller.AttackEnemyMinion(target.id, power, 0f);
-                        //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, target.id, sturnTime);
-                        controller.ActionSturn(true , target.id , sturnTime);
-                    }
-
-                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ICEBALLBOMB, id);
-                    controller.ActionIceBallBomb(id);
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false)
-                {
-                    if (target != null)
-                    {
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
-                        controller.targetPlayer.SturnMinion(target.id, sturnTime);
-                    }
-
-                    Bomb();
-                }
-            }
+            var iceBallAction = new IceBallAction();
+            RunningAction = iceBallAction;
+            yield return iceBallAction.ActionWithSync(ActorProxy, target.ActorProxy);
+            RunningAction = null;
         }
-
+        
         private void OnTriggerEnter(Collider other)
         {
-            if (InGameManager.Get().isGamePlaying == false || destroyRoutine != null || isBombed) return;
+            if (isBombed)
+            {
+                return;
+            }
 
-            if ((InGameManager.IsNetwork && isMine || InGameManager.IsNetwork == false || controller.isPlayingAI) &&
-                target != null && other.gameObject == target.gameObject ||
+            if (ActorProxy.isPlayingAI == false)
+            {
+                return;
+            }
+
+            if (target != null && other.gameObject == target.gameObject ||
                 other.gameObject.layer == LayerMask.NameToLayer("Map"))
             {
-                isBombed = true;
-                
-                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
-                if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
-                {
-                    if (target != null)
-                    {
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
-                        //controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , target.id, sturnTime);
-                        controller.ActionSturn(true , target.id , sturnTime);
-                    }
-                    
-                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ICEBALLBOMB , id);
-                    controller.ActionIceBallBomb(id);
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false)
-                {
-                    if (target != null)
-                    {
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
-                        controller.targetPlayer.SturnMinion(target.id, sturnTime);
-                    }
-
-                    Bomb();
-                }
+                Bomb();
             }
         }
 
@@ -151,8 +65,57 @@ namespace ED
             SoundManager.instance.Play(clip_Explosion);
             ps_Tail.Stop();
             ps_BombEffect.Play();
+            
+            if (ActorProxy.isPlayingAI == false) return;
 
-            Destroy(1.1f);
+            var targetActorProxy = ActorProxy.baseStat.target.ActorProxy;
+            if (targetActorProxy != null && targetActorProxy.baseStat.CanBeTarget())
+            {
+                targetActorProxy.HitDamage(ActorProxy.power);
+                targetActorProxy.AddBuff(BuffInfos.Freeze, sturnTime);
+            }
+            
+            ActorProxy.Destroy(1.1f);
+        }
+    }
+    
+    public class IceBallAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
+        {
+            var iceBall = actorProxy.baseStat as Iceball;
+            var actorTransform = actorProxy.transform;
+            var target = targetActorProxy.baseStat;
+
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_ICEBALL_MISSILE);
+            
+            var startPos = actorTransform.position;
+
+            //?
+            while (target == null)
+            {
+                yield return null;
+            }
+            
+            var endPos = target.ts_HitPos.position;
+            var distance = Vector3.Distance(startPos, endPos);
+            var moveTime = distance / iceBall.moveSpeed;
+
+            float t = 0;
+            
+            while (t < moveTime)
+            {
+                if (target != null && target.isAlive)
+                {
+                    endPos = target.ts_HitPos.position;
+                }
+                actorTransform.position = Vector3.Lerp(startPos, endPos, t / moveTime);
+
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            iceBall.Bomb();
         }
     }
 }

@@ -172,6 +172,8 @@ namespace MirageTest.Scripts
             this.buffState = state;
 
             EnableStunEffect((buffState & BuffState.Sturn) != 0);
+            EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
+            
             if (isCantAI)
             {
                 baseStat.animator.SetTrigger(Minion._animatorHashIdle);
@@ -210,9 +212,19 @@ namespace MirageTest.Scripts
         
         private void EnableFreezeEffect(bool b)
         {
-            throw new NotImplementedException();
+            if (baseStat is Minion minion)
+            {
+                if (b)
+                {
+                    minion.animator.speed = 0f;
+                }
+                else
+                {
+                    minion.animator.speed = 1f;
+                }
+            }
         }
-
+        
         void SpawnActor()
         {
             var client = Client as RWNetworkClient;
@@ -304,15 +316,19 @@ namespace MirageTest.Scripts
             }
         }
 
-        public void AddBuff(Buff buff)
+        public void AddBuff(byte id, float duration)
         {
-            AddBuffOnServer(buff);
+            AddBuffOnServer(id, duration);
         }
         
         [ServerRpc(requireAuthority = false)]
-        public void AddBuffOnServer(Buff buff)
+        public void AddBuffOnServer(byte id, float duration)
         {
-            BuffList.Add(buff);
+            BuffList.Add(new Buff()
+            {
+                id = id,
+                endTime = (float)NetworkTime.Time + duration,
+            });
         }
 
         public void HitDamage(float damage)

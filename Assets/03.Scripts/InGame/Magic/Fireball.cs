@@ -46,25 +46,6 @@ namespace ED
             RunningAction = null;
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (isBombed)
-            {
-                return;
-            }
-
-            if (ActorProxy.isPlayingAI == false)
-            {
-                return;
-            }
-
-            if (target != null && other.gameObject == target.gameObject ||
-                other.gameObject.layer == LayerMask.NameToLayer("Map"))
-            {
-                Bomb();
-            }
-        }
-
         private void SplashDamage()
         {
             Vector3 pos = transform.position;

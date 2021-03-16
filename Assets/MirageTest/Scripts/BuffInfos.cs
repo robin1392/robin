@@ -9,12 +9,14 @@ namespace MirageTest.Scripts
         public const byte NinjaClocking = 0;
         public const byte HalfDamage = 1;
         public const byte Sturn = 2;
+        public const byte Freeze = 3;
 
         public static BuffState[] Data = new[]
         {
             BuffState.Clocking,
             BuffState.HalfDamage,
             BuffState.Sturn,
+            BuffState.Freeze,
         };
     }
 

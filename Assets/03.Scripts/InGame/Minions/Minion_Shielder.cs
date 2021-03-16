@@ -26,11 +26,7 @@ namespace ED
             if (_spawnedTime >= skillCastedTime + effectCooltime)
             {
                 skillCastedTime = _spawnedTime;
-                ActorProxy.AddBuff(new ActorProxy.Buff()
-                {
-                    id = BuffInfos.HalfDamage,
-                    endTime = (float)ActorProxy.NetworkTime.Time + effectDuration, 
-                });
+                ActorProxy.AddBuff(BuffInfos.HalfDamage, effectDuration);
 
                 var action = new ShielderAction();
                 RunningAction = action;
