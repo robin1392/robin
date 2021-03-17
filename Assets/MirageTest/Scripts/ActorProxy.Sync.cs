@@ -296,7 +296,7 @@ namespace MirageTest.Scripts
                 SyncMultiTargetOnClient(player, targetNetIds);
             }
         }
-
+        
         [ClientRpc(target = Mirage.Client.Player)]
         public void SyncMultiTargetOnClient(INetworkPlayer player, uint[] targetNetIds)
         {

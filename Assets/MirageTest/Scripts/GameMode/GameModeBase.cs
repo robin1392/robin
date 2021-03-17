@@ -237,6 +237,7 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.effect = stat.effect;
                     actorProxy.attackSpeed = diceInfo.attackSpeed;
                     actorProxy.diceScale = diceScale;
+                    actorProxy.moveSpeed = diceInfo.moveSpeed;
                     actorProxy.ingameUpgradeLevel = deckDice.inGameLevel;
                     actorProxy.outgameUpgradeLevel = deckDice.outGameLevel;
                     actorProxy.spawnTime = (float)ServerObjectManager.Server.Time.Time;
