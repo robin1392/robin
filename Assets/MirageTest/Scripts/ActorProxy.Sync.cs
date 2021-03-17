@@ -297,6 +297,7 @@ namespace MirageTest.Scripts
             }
         }
 
+        [ClientRpc(target = Mirage.Client.Connection)]
         public void SyncMultiTargetOnClient(INetworkConnection con, uint[] targetNetIds)
         {
             if (baseStat == null)
