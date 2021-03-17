@@ -75,7 +75,7 @@ namespace ED
             var n = bsCols.Take(ActorProxy.diceScale).ToHashSet();
             if (!n.SetEquals(_listTarget))
             {
-                ActorProxy.SyncMultiTarget(ActorProxy.Client.Connection.Identity.NetId, n.Select(d => d.id).ToArray());
+                ActorProxy.SyncMultiTarget(ActorProxy.Client.Player.Identity.NetId, n.Select(d => d.id).ToArray());
             }
 
             _listTarget = n;
