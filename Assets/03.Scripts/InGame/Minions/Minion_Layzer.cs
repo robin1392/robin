@@ -79,22 +79,6 @@ namespace ED
             }
 
             _listTarget = n;
-
-            // var old = new HashSet<BaseStat>(_listTarget);
-            // var intersect = new HashSet<BaseStat>(_listTarget);
-            // intersect.IntersectWith(collided);
-            //
-            // collided.ExceptWith(intersect);
-            // var newList = collided.Take(ActorProxy.diceScale - intersect.Count);
-            //
-            // var final = newList.Union(collided).ToHashSet();
-            //
-            // if (!final.SetEquals(old))
-            // {
-            //     ActorProxy.SyncMultiTarget(ActorProxy.NetId, collided.Select(c => c.ActorProxy.NetId).ToArray());
-            // }
-
-            // _listTarget = final;
         }
 
         public override IEnumerator Attack()
@@ -104,37 +88,13 @@ namespace ED
                 foreach (var baseStat in _listTarget)
                 {
                     _attackedTarget = baseStat;
-                    baseStat.ActorProxy.HitDamage(1f);
+                    baseStat.ActorProxy.HitDamage(power);
                 }
                 
                 if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
             }
             
             yield break;
-        }
-
-        public override void Death()
-        {
-            base.Death();
-
-            obj_LineStart.SetActive(false);
-            for (int i = 0; i < arrLineRenderer.Length; i++)
-            {
-                arrLineRenderer[i].gameObject.SetActive(false);
-                arrObj_LineEnd[i].SetActive(false);
-            }
-        }
-
-        public override void Sturn(float duration)
-        {
-            base.Sturn(duration);
-            
-            obj_LineStart.SetActive(false);
-            for (int i = 0; i < arrLineRenderer.Length; i++)
-            {
-                arrLineRenderer[i].gameObject.SetActive(false);
-                arrObj_LineEnd[i].SetActive(false);
-            }
         }
 
         public void SetTargetList(uint[] arr)
