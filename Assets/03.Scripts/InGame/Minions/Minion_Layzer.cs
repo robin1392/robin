@@ -18,7 +18,7 @@ namespace ED
             bool isLayzerOn = false;
             for (int i = 0; i < arrLineRenderer.Length; i++)
             {
-                if (i < _listTarget.Count && i < eyeLevel && _listTarget[i] != null && _listTarget[i].isAlive)
+                if (i < _listTarget.Count && i < ActorProxy.diceScale && _listTarget[i] != null && _listTarget[i].isAlive)
                 {
                     isLayzerOn = true;
                     arrLineRenderer[i].gameObject.SetActive(true);
@@ -52,41 +52,60 @@ namespace ED
             }
         }
 
-        public override IEnumerator Attack()
+        public override BaseStat SetTarget()
         {
+            SetMultiTarget();
+            
+            if (_listTarget.Count == 0)
+                return base.SetTarget();
+            else
+            {
+                return _listTarget[0];
+            }
+        }
+
+        public void SetMultiTarget()
+        {
+            List<BaseStat> beforeList = new List<BaseStat>(_listTarget);
             _attackedTarget = target;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
             _listTarget.Clear();
-            List<uint> intList = new List<uint>();
-            foreach (var col in cols)
+            for (int i = 0 ; i < cols.Length && _listTarget.Count < ActorProxy.diceScale; ++i)
             {
-                var bs = col.GetComponentInParent<BaseStat>();
+                var bs = cols[i].GetComponentInParent<BaseStat>();
                 var m = bs as Minion;
                 if (bs != null && bs.isAlive)
                 {
                     if (m != null && m.isCloacking) continue;
                     
                     _listTarget.Add(bs);
-                    intList.Add(bs.id);
-
-                    bs.ActorProxy.HitDamage(power);
                 }
             }
-
-            //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && isMine)
+            
+            if(ActorProxy.isPlayingAI && _listTarget.Equals(beforeList) == false)
             {
-                //KZSee:
-                // if(intList.Count > 0 )
-                //     controller.ActionLayzer(id, intList.ToArray());
-                // else
-                // {
-                //     uint[] emptyLst = new uint[6] { 0, 0, 0, 0, 0, 0 };
-                //     controller.ActionLayzer(id, emptyLst);
-                // }
+                List<uint> list = new List<uint>();
+                foreach (var baseStat in _listTarget)
+                {
+                    list.Add(baseStat.ActorProxy.NetId);
+                }
+                ActorProxy.SyncMultiTarget(ActorProxy.NetId, list.ToArray());
+            }
+        }
+
+        public override IEnumerator Attack()
+        {
+            if (ActorProxy.isPlayingAI)
+            {
+                foreach (var baseStat in _listTarget)
+                {
+                    _attackedTarget = baseStat;
+                    baseStat.ActorProxy.HitDamage(1f);
+                }
+                
+                if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
             }
             
-            if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
             yield break;
         }
 
@@ -122,11 +141,6 @@ namespace ED
             {
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    if (arr[i] == -1) continue;
-                    
-                    //if (arr[i] == 0) _listTarget.Add(controller.targetPlayer);
-                    //else _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
-                    
                     _listTarget.Add(ActorProxy.GetBaseStatWithNetId(arr[i]));
                 }
             }

@@ -650,63 +650,17 @@ namespace MirageTest.Scripts
             DestroyInternal();
         }
         
-        public void CreateActorBy(int diceId, byte ingameLevel, byte outgameLevel, Vector3[] positions)
+        public void CreateActorBy(int diceId, byte ingameLevel, byte outgameLevel, Vector3[] positions, float delay = 0f)
         {
-            CreateActorByOnServer(diceId, ingameLevel, outgameLevel, positions);
+            CreateActorByOnServer(diceId, ingameLevel, outgameLevel, positions, delay);
         }
 
 
         [ServerRpc(requireAuthority = false)]
-        public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions)
+        public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
         {
-            if (TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo) == false)
-            {
-                ED.Debug.LogError(
-                    $"다이스정보 {diceId}가 없습니다.");
-            }
-
-            GameModeBase.Stat stat = new GameModeBase.Stat();
-            if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
-            {
-                stat = GameModeBase.CalcMinionStat(diceInfo, inGameLevel, outGameLevel);
-            }
-            else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
-            {
-                stat = GameModeBase.CalcHeroStat(diceInfo, inGameLevel, outGameLevel, 1);
-            }
-            else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.INSTALLATION ||
-                     (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MAGIC)
-            {
-                stat = GameModeBase.CalcMagicOrInstallationStat(diceInfo, inGameLevel, outGameLevel, 1);
-            }
-
-            var isBottomCamp = team == GameConstants.BottomCamp;
-            
             var server = Server as RWNetworkServer;
-            var actorProxyPrefab = server.serverGameLogic.actorProxyPrefab;
-
-            for (byte index = 0; index < positions.Length; ++index)
-            {
-                var position = positions[index];
-                var spawnPosition = position;
-
-                var actorProxy = Instantiate(actorProxyPrefab, spawnPosition, GameModeBase.GetRotation(isBottomCamp));
-                actorProxy.SetDiceInfo(diceInfo);
-                actorProxy.ownerTag = ownerTag;
-                actorProxy.actorType = ActorType.Actor;
-                actorProxy.team = team;
-                actorProxy.spawnSlot = 0;
-                actorProxy.power = stat.power;
-                actorProxy.maxHealth = stat.maxHealth;
-                actorProxy.currentHealth = stat.maxHealth;
-                actorProxy.effect = stat.effect;
-                actorProxy.attackSpeed = diceInfo.attackSpeed;
-                actorProxy.diceScale = 1;
-                actorProxy.ingameUpgradeLevel = inGameLevel;
-                actorProxy.outgameUpgradeLevel = outGameLevel;
-                actorProxy.spawnTime = (float) ServerObjectManager.Server.Time.Time;
-                ServerObjectManager.Spawn(actorProxy.NetIdentity);
-            }
+            server.CreateActor(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
         }
     }
 }

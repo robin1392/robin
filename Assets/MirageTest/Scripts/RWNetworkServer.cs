@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Cysharp.Threading.Tasks;
+using ED;
 using Mirage;
 using MirageTest.Scripts;
+using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -41,6 +44,12 @@ public class RWNetworkServer : NetworkServer
     private void OnConnected(INetworkConnection arg0)
     {
         arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
+        arg0.RegisterHandler<CreateActorMessage>(OnCreateActor);
+    }
+
+    private void OnCreateActor(CreateActorMessage msg)
+    {
+        CreateActor(msg.diceId, msg.ownerTag, msg.team, msg.inGameLevel, msg.outGameLevel, msg.positions, msg.delay);
     }
 
     private void OnPositionRelay(INetworkConnection arg1, PositionRelayMessage arg2)
@@ -73,5 +82,64 @@ public class RWNetworkServer : NetworkServer
         actorProxy.ingameUpgradeLevel = summoner.ingameUpgradeLevel;
         actorProxy.spawnTime = (float) Time.Time;
         serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
+    }
+
+    public void CreateActor(int diceId, byte ownerTag, byte team, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
+    {
+        StartCoroutine(CreateActorCoroutine(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay));
+    }
+
+    private IEnumerator CreateActorCoroutine(int diceId, byte ownerTag, byte team, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
+    {
+        if (delay > 0) yield return new WaitForSeconds(delay);
+        
+        if (TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo) == false)
+        {
+            ED.Debug.LogError(
+                $"다이스정보 {diceId}가 없습니다.");
+        }
+
+        GameModeBase.Stat stat = new GameModeBase.Stat();
+        if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
+        {
+            stat = GameModeBase.CalcMinionStat(diceInfo, inGameLevel, outGameLevel);
+        }
+        else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
+        {
+            stat = GameModeBase.CalcHeroStat(diceInfo, inGameLevel, outGameLevel, 1);
+        }
+        else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.INSTALLATION ||
+                 (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MAGIC)
+        {
+            stat = GameModeBase.CalcMagicOrInstallationStat(diceInfo, inGameLevel, outGameLevel, 1);
+        }
+
+        var isBottomCamp = team == GameConstants.BottomCamp;
+        
+        
+        var actorProxyPrefab = serverGameLogic.actorProxyPrefab;
+
+        for (byte index = 0; index < positions.Length; ++index)
+        {
+            var position = positions[index];
+            var spawnPosition = position;
+
+            var actorProxy = Instantiate(actorProxyPrefab, spawnPosition, GameModeBase.GetRotation(isBottomCamp));
+            actorProxy.SetDiceInfo(diceInfo);
+            actorProxy.ownerTag = ownerTag;
+            actorProxy.actorType = ActorType.Actor;
+            actorProxy.team = team;
+            actorProxy.spawnSlot = 0;
+            actorProxy.power = stat.power;
+            actorProxy.maxHealth = stat.maxHealth;
+            actorProxy.currentHealth = stat.maxHealth;
+            actorProxy.effect = stat.effect;
+            actorProxy.attackSpeed = diceInfo.attackSpeed;
+            actorProxy.diceScale = 1;
+            actorProxy.ingameUpgradeLevel = inGameLevel;
+            actorProxy.outgameUpgradeLevel = outGameLevel;
+            actorProxy.spawnTime = (float) Time.Time;
+            serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
+        }
     }
 }

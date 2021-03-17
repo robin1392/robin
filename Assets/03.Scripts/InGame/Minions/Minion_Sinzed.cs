@@ -58,7 +58,10 @@ namespace ED
             }
 
             bombed = true;
-            ActorProxy.DestroyAfterSummonActor(SummonActorInfos.SinzedPoison, transform.position);
+            //ActorProxy.DestroyAfterSummonActor(SummonActorInfos.SinzedPoison, transform.position);
+            ActorProxy.CreateActorBy(3013, ActorProxy.ingameUpgradeLevel, ActorProxy.outgameUpgradeLevel,
+                new Vector3[] { transform.position });
+            ActorProxy.Destroy();
             StopAI();
         }
 

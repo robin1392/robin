@@ -8,7 +8,7 @@ namespace MirageTest.Scripts
         void SpawnMagicAndInstallation()
         {
             var client = Client as RWNetworkClient;
-            var magicSpawnPosition = GetMagicSpawnPosition();
+            var magicSpawnPosition = GetMagicSpawnPosition(diceInfo.enableDice);
             var magic = PoolManager.instance.ActivateObject<Magic>(diceInfo.prefabName, Vector3.zero, transform);
             if (magic == null)
             {
@@ -50,8 +50,10 @@ namespace MirageTest.Scripts
             isMovable = false;
         }
 
-        public Vector3 GetMagicSpawnPosition()
+        public Vector3 GetMagicSpawnPosition(bool isEnableDice)
         {
+            if (isEnableDice == false) return transform.position;
+            
             Vector3 spawnPosition = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
             if ((Client as RWNetworkClient).enableUI)
             {

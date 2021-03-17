@@ -277,5 +277,34 @@ namespace MirageTest.Scripts
 
             baseStat.SyncActionWithoutTarget(actionTypeHash);
         }
+
+        public void SyncMultiTarget(uint senderNetId, uint[] targetNetIds)
+        {
+            SyncMultiTargetOnServer(senderNetId, targetNetIds);
+        }
+
+        [ServerRpc(requireAuthority = false)]
+        public void SyncMultiTargetOnServer(uint senderNetId, uint[] targetNetIds)
+        {
+            foreach (var con in Server.connections)
+            {
+                if (senderNetId == con.Identity.NetId)
+                {
+                    continue;
+                }
+
+                SyncMultiTargetOnClient(con, targetNetIds);
+            }
+        }
+
+        public void SyncMultiTargetOnClient(INetworkConnection con, uint[] targetNetIds)
+        {
+            if (baseStat == null)
+            {
+                return;
+            }
+
+            ((Minion_Layzer)baseStat).SetTargetList(targetNetIds);
+        }
     }
 }

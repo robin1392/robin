@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ED.SummonActor
 {
-    public class SinzedPoison : SummonActor
+    public class Magic_PoisonFog : Magic
     {
         private const float lifeTime = 5.0f; 
         private Coroutine _ai;
