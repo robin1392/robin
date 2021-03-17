@@ -21,7 +21,13 @@ public class RWNetworkServer : NetworkServer
         serverGameLogic = GetComponent<ServerGameLogic>();
         Connected.AddListener(OnConnected);
     }
-    
+
+    private void Start()
+    {
+        string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+        TableManager.Get().LoadFromFile(targetPath);
+    }
+
     public void AddPlayerProxy(PlayerProxy playerProxy)
     {
         PlayerProxies.Add(playerProxy);

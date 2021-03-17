@@ -90,6 +90,32 @@ namespace MirageTest.Scripts
                 return;
             }
 
+            if (_networkServer.MatchData.PlayerInfos.Count < 2)
+            {
+                var proxies = _serverObjectManager
+                    .SpawnedObjects
+                    .Where(kvp => kvp.Value.GetComponent<PlayerProxy>() != null).ToArray();
+
+                var infos = proxies.Select(p =>
+                {
+                    var authData = p.Value.ConnectionToClient.AuthenticationData as AuthDataForConnection;
+                    return (authData.PlayerId, authData.PlayerNickName);
+                }).ToArray();
+                
+                var player1 = infos[0];
+                
+                _networkServer.MatchData.AddPlayerInfo(player1.PlayerId, player1.PlayerNickName, 0, new DeckInfo(new int[]
+                {
+                    1001, 1002,1003, 1004,1005
+                }));
+                
+                var player2 = infos[1];
+                _networkServer.MatchData.AddPlayerInfo(player2.PlayerId, player2.PlayerNickName, 0, new DeckInfo(new int[]
+                {
+                    1001, 1002,1003, 1004,1005
+                }));
+            }
+
             _isGameStart = true;
 
             var prefabHolder = new PrefabHolder()

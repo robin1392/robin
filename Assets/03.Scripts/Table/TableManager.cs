@@ -50,12 +50,7 @@ public class TableManager : Singleton<TableManager>
         }
 
         base.Awake();
-
-    }
-
-
-    void Start()
-    {
+        
         BoxProductInfo = new TableData<int, TDataBoxOpenInfo>();
         CoopMode = new TableData<int, TDataCoopMode>();
         CoopModeMinion = new TableData<int, TDataCoopModeMinion>();
@@ -84,7 +79,6 @@ public class TableManager : Singleton<TableManager>
         ShopProductList = new TableData<int, TDataShopProductList>();
         MailInfo = new TableData<int, TDataMailInfo>();
     }
-
 
     public void Init(string localPath)
     {
@@ -248,7 +242,7 @@ public class TableManager : Singleton<TableManager>
     }
 
 
-    bool LoadFromFile(string path)
+    public bool LoadFromFile(string path)
     {
         BoxProductInfo.Init(new TableLoaderLocalCSV<int, TDataBoxOpenInfo>(), path, "BoxOpenInfo.csv");
         CoopMode.Init(new TableLoaderLocalCSV<int, TDataCoopMode>(), path, "CoopMode.csv");
