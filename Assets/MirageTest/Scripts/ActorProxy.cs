@@ -5,6 +5,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
+using Mirage.Collections;
 using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
 using MirageTest.Scripts.SyncAction;
@@ -466,12 +467,12 @@ namespace MirageTest.Scripts
                 if (lastSend == null || !Equal(lastSend, converted))
                 {
                     lastSend = converted;
-                    Client.SendAsync(new PositionRelayMessage()
+                    Client.Send(new PositionRelayMessage()
                     {
                         netId = NetId,
                         positionX = converted.X,
                         positionY = converted.Y,
-                    }, Channel.Unreliable).Forget();
+                    }, Channel.Unreliable);
                 }
             }
             else if (baseStat.SyncAction != null && baseStat.SyncAction.NeedMoveSync == false)

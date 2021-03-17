@@ -101,7 +101,7 @@ namespace ED
         {
             var rwClient = ActorProxy.Client as RWNetworkClient;
             // 독구름
-            rwClient.SendAsync(new CreateActorMessage()
+            rwClient.Send(new CreateActorMessage()
             {
                 diceId = 3014,
                 ownerTag = ActorProxy.ownerTag,
@@ -110,10 +110,10 @@ namespace ED
                 outGameLevel = ActorProxy.outgameUpgradeLevel,
                 positions = new Vector3[] { transform.position },
                 delay = 0f,
-            }).Forget();
+            });
             
             // 부활
-            rwClient.SendAsync(new CreateActorMessage()
+            rwClient.Send(new CreateActorMessage()
             {
                 diceId = 3015,
                 ownerTag = ActorProxy.ownerTag,
@@ -122,7 +122,7 @@ namespace ED
                 outGameLevel = ActorProxy.outgameUpgradeLevel,
                 positions = new Vector3[] { transform.position },
                 delay = 2f,
-            }).Forget();
+            });
             
             base.OnBaseStatDestroyed();
         }

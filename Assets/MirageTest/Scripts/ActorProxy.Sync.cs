@@ -14,25 +14,25 @@ namespace MirageTest.Scripts
             {
                 targetId = target.id;
             }
-            PlayAnimationRelayServer(Client.Connection.Identity.NetId, aniHash, targetId);
+            PlayAnimationRelayServer(Client.Player.Identity.NetId, aniHash, targetId);
         }
         
         [ServerRpc(requireAuthority = false)]
         public void PlayAnimationRelayServer(uint senderNetId, int aniHash, uint targetID)
         {
-            foreach (var con in Server.connections)
+            foreach (var player in Server.Players)
             {
-                if (senderNetId == con.Identity.NetId)
+                if (senderNetId == player.Identity.NetId)
                 {
                     continue;
                 }
 
-                RelayPlayAnimationOnClient(con, aniHash, targetID);
+                RelayPlayAnimationOnClient(player, aniHash, targetID);
             }
         }
 
-        [ClientRpc(target = Mirage.Client.Connection)]
-        public void RelayPlayAnimationOnClient(INetworkConnection con, int aniHash, uint targetID)
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void RelayPlayAnimationOnClient(INetworkPlayer con, int aniHash, uint targetID)
         {
             var target = GetBaseStatWithNetId(targetID);
             if (target == null)
@@ -69,25 +69,25 @@ namespace MirageTest.Scripts
                 targetId = target.id;
             }
             
-            RelayFireBulletOnServer(Client.Connection.Identity.NetId, arrow, targetId, f, bulletMoveSpeed);
+            RelayFireBulletOnServer(Client.Player.Identity.NetId, arrow, targetId, f, bulletMoveSpeed);
         }
         
         [ServerRpc(requireAuthority = false)]
         public void RelayFireBulletOnServer(uint senderNetId, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed)
         {
-            foreach (var con in Server.connections)
+            foreach (var player in Server.Players)
             {
-                if (senderNetId == con.Identity.NetId)
+                if (senderNetId == player.Identity.NetId)
                 {
                     continue;
                 }
 
-                RelayFireBulletOnClient(con, arrow, targetID, f, bulletMoveSpeed);
+                RelayFireBulletOnClient(player, arrow, targetID, f, bulletMoveSpeed);
             }
         }
 
-        [ClientRpc(target = Mirage.Client.Connection)]
-        public void RelayFireBulletOnClient(INetworkConnection con, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed)
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void RelayFireBulletOnClient(INetworkPlayer con, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed)
         {
             var target = GetBaseStatWithNetId(targetID);
             if (target == null)
@@ -160,25 +160,25 @@ namespace MirageTest.Scripts
         
         void RelayFireCannonBall(E_CannonType bullet, Vector3 targetPosition)
         {
-            RelayFireCannonBallOnServer(Client.Connection.Identity.NetId, bullet, targetPosition);
+            RelayFireCannonBallOnServer(Client.Player.Identity.NetId, bullet, targetPosition);
         }
         
         [ServerRpc(requireAuthority = false)]
         public void RelayFireCannonBallOnServer(uint senderNetId, E_CannonType cannonType, Vector3 targetPosition)
         {
-            foreach (var con in Server.connections)
+            foreach (var player in Server.Players)
             {
-                if (senderNetId == con.Identity.NetId)
+                if (senderNetId == player.Identity.NetId)
                 {
                     continue;
                 }
 
-                RelayFireCannonBallOnClient(con, cannonType, targetPosition);
+                RelayFireCannonBallOnClient(player, cannonType, targetPosition);
             }
         }
 
-        [ClientRpc(target = Mirage.Client.Connection)]
-        public void RelayFireCannonBallOnClient(INetworkConnection con, E_CannonType cannonType, Vector3 targetPosition)
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void RelayFireCannonBallOnClient(INetworkPlayer con, E_CannonType cannonType, Vector3 targetPosition)
         {
             FireCannonBallInternal(cannonType, targetPosition);
         }
@@ -220,7 +220,7 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority =  false)]
         public void SyncActionWithTargetOnServer(uint senderNetId, int actionTypeHash, uint targetNetId)
         {
-            foreach (var con in Server.connections)
+            foreach (var con in Server.Players)
             {
                 if (senderNetId == con.Identity.NetId)
                 {
@@ -231,8 +231,8 @@ namespace MirageTest.Scripts
             }
         }
         
-        [ClientRpc(target = Mirage.Client.Connection)]
-        public void SyncActionWithTargetOnClient(INetworkConnection con, int actionTypeHash, uint targetNetId)
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void SyncActionWithTargetOnClient(INetworkPlayer con, int actionTypeHash, uint targetNetId)
         {
             if (baseStat == null)
             {
@@ -256,19 +256,19 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority =  false)]
         public void SyncActionWithoutTargetOnServer(uint senderNetId, int actionTypeHash)
         {
-            foreach (var con in Server.connections)
+            foreach (var player in Server.Players)
             {
-                if (senderNetId == con.Identity.NetId)
+                if (senderNetId == player.Identity.NetId)
                 {
                     continue;
                 }
 
-                SyncActionWithoutTargetOnClient(con, actionTypeHash);
+                SyncActionWithoutTargetOnClient(player, actionTypeHash);
             }
         }
         
-        [ClientRpc(target = Mirage.Client.Connection)]
-        public void SyncActionWithoutTargetOnClient(INetworkConnection con, int actionTypeHash)
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void SyncActionWithoutTargetOnClient(INetworkPlayer con, int actionTypeHash)
         {
             if (baseStat == null)
             {
@@ -286,18 +286,19 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority = false)]
         public void SyncMultiTargetOnServer(uint senderNetId, uint[] targetNetIds)
         {
-            foreach (var con in Server.connections)
+            foreach (var player in Server.Players)
             {
-                if (senderNetId == con.Identity.NetId)
+                if (senderNetId == player.Identity.NetId)
                 {
                     continue;
                 }
 
-                SyncMultiTargetOnClient(con, targetNetIds);
+                SyncMultiTargetOnClient(player, targetNetIds);
             }
         }
 
-        public void SyncMultiTargetOnClient(INetworkConnection con, uint[] targetNetIds)
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void SyncMultiTargetOnClient(INetworkPlayer player, uint[] targetNetIds)
         {
             if (baseStat == null)
             {

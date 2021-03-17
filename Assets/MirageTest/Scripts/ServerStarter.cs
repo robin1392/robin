@@ -45,12 +45,12 @@ public class ServerStarter : MonoBehaviour
         await server.ListenAsync();
     }
 
-    private void OnConnected(INetworkConnection arg0)
+    private void OnConnected(INetworkPlayer arg0)
     {
         Debug.Log("Server OnConnected");
     }
 
-    private void OnAuthenticated(INetworkConnection arg0)
+    private void OnAuthenticated(INetworkPlayer arg0)
     {
         Debug.Log("Server OnAuthenticated");
     }

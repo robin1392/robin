@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mirage;
+using Mirage.Logging;
 using UnityEngine;
 
 namespace MirageTest.Scripts

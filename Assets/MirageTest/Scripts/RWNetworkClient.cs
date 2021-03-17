@@ -45,7 +45,7 @@ namespace MirageTest.Scripts
             Connected.AddListener(OnConnectedRW);
         }
 
-        private void OnConnectedRW(INetworkConnection arg0)
+        private void OnConnectedRW(INetworkPlayer arg0)
         {
             arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
         }

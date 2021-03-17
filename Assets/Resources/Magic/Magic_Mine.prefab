@@ -66,6 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 0
   id: 0
   controller: {fileID: 0}
@@ -75,13 +76,12 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f02eabf025a9d43209506f9df6b96910, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 0}
   ts_HitPos: {fileID: 6865671536843905043}
   image_HealthBar: {fileID: 256646924921004661}
   text_Health: {fileID: 0}
   _poolObjectAutoDeactivate: {fileID: 0}
-  _collider: {fileID: 7220310024489854118}
+  collider: {fileID: 7220310024489854118}
   _hitCollider: {fileID: 0}
   targetPos: {x: 0, y: 0, z: 0}
   startPos: {x: 0, y: 0, z: 0}

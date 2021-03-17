@@ -3,6 +3,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using Mirage;
+using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.GameMode;
 using RandomWarsResource.Data;
@@ -46,7 +47,7 @@ namespace MirageTest.Scripts
             _networkServer.Disconnected.AddListener(OnClientDisconnected);
         }
 
-        private void OnClientDisconnected(INetworkConnection arg0)
+        private void OnClientDisconnected(INetworkPlayer arg0)
         {
             _gameMode?.OnClientDisconnected(arg0);
             CheckGameSession().Forget();

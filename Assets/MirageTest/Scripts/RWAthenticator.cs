@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Mirage;
+using Mirage.Logging;
 using MirageTest.Scripts;
 using UnityEngine;
 
@@ -27,22 +28,21 @@ public class RWAthenticator : NetworkAuthenticator
         OnClientAuthenticated += OnClientAuthenticatedCallback; 
     }
 
-    private void OnClientAuthenticatedCallback(INetworkConnection obj)
+    private void OnClientAuthenticatedCallback(INetworkPlayer obj)
     {
         // GetComponent<RWNetworkClient>().Authenticated.Invoke(obj);
     }
 
-    public override void OnServerAuthenticate(INetworkConnection conn)
+    public override void OnServerAuthenticate(INetworkPlayer conn)
     {
         // wait for AuthRequestMessage from client
         conn.RegisterHandler<AuthRequestMessage>(OnAuthRequestMessage);
     }
 
-    public override void OnClientAuthenticate(INetworkConnection conn)
+    public override void OnClientAuthenticate(INetworkPlayer conn)
     {
         conn.RegisterHandler<AuthResponseMessage>(OnAuthResponseMessage);
-
-        Debug.Log("Auth" + LocalId);
+        
         conn.AuthenticationData = new AuthDataForConnection()
         {
             PlayerId = LocalId,
@@ -58,7 +58,7 @@ public class RWAthenticator : NetworkAuthenticator
         conn.Send(authRequestMessage);
     }
 
-    public void OnAuthRequestMessage(INetworkConnection conn, AuthRequestMessage msg)
+    public void OnAuthRequestMessage(INetworkPlayer conn, AuthRequestMessage msg)
     {
         if (true)
         {
@@ -95,17 +95,17 @@ public class RWAthenticator : NetworkAuthenticator
         }
     }
 
-    public IEnumerator DelayedDisconnect(INetworkConnection conn, float waitTime)
+    public IEnumerator DelayedDisconnect(INetworkPlayer conn, float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        conn.Disconnect();
+        conn.Connection.Disconnect();
     }
 
-    public void OnAuthResponseMessage(INetworkConnection conn, AuthResponseMessage msg)
+    public void OnAuthResponseMessage(INetworkPlayer conn, AuthResponseMessage msg)
     {
         if (msg.Code == 100)
         {
-            if (Logger.LogEnabled()) Logger.LogFormat(LogType.Log, "Authentication Response: {0}", msg.Message);
+            if (Logger.logEnabled) Logger.LogFormat(LogType.Log, "Authentication Response: {0}", msg.Message);
 
             // Invoke the event to complete a successful authentication
             base.OnClientAuthenticate(conn);
@@ -114,7 +114,7 @@ public class RWAthenticator : NetworkAuthenticator
         {
             Logger.LogFormat(LogType.Error, "Authentication Response: {0}", msg.Message);
             // disconnect the client
-            conn.Disconnect();
+            conn.Connection.Disconnect();
         }
     }
 }

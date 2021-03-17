@@ -145,7 +145,7 @@ namespace MirageTest.Scripts.GameMode
         }
 
         [ClientRpc]
-        public void OnClientDisconnected(INetworkConnection arg0)
+        public void OnClientDisconnected(INetworkPlayer arg0)
         {
             var auth = arg0.AuthenticationData as AuthDataForConnection;
             var playerState = GetPlayerState(auth.PlayerId);

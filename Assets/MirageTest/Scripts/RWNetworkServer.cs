@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
+using Mirage.Logging;
 using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
@@ -69,7 +70,7 @@ public class RWNetworkServer : NetworkServer
         }
     }
 
-    private void OnConnected(INetworkConnection arg0)
+    private void OnConnected(INetworkPlayer arg0)
     {
         arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
         arg0.RegisterHandler<CreateActorMessage>(OnCreateActor);
@@ -80,16 +81,16 @@ public class RWNetworkServer : NetworkServer
         CreateActor(msg.diceId, msg.ownerTag, msg.team, msg.inGameLevel, msg.outGameLevel, msg.positions, msg.delay);
     }
 
-    private void OnPositionRelay(INetworkConnection arg1, PositionRelayMessage arg2)
+    private void OnPositionRelay(INetworkPlayer arg1, PositionRelayMessage arg2)
     {
-        foreach (var con in connections)
+        foreach (var player in Players)
         {
-            if (con == arg1)
+            if (player == arg1)
             {
                 continue;
             }
             
-            con.SendAsync(arg2).Forget();
+            player.Send(arg2);
         }
     }
 

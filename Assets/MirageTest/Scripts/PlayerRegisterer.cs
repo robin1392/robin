@@ -1,5 +1,6 @@
 ﻿using System;
 using Mirage;
+using Mirage.Logging;
 using UnityEngine;
 
 public class PlayerRegisterer : MonoBehaviour
@@ -35,28 +36,28 @@ public class PlayerRegisterer : MonoBehaviour
         }
     }
 
-    private void OnServerConnected(INetworkConnection connection)
+    private void OnServerConnected(INetworkPlayer connection)
     {
         if (server.authenticator == null)
         {
-            connection.RegisterHandler<AddPlayerMessage>(OnServerAddPlayerInternal);    
+            connection.RegisterHandler<AddCharacterMessage>(OnServerAddPlayerInternal);    
         }
     }
     
-    private void OnServerAuthenticated(INetworkConnection connection)
+    private void OnServerAuthenticated(INetworkPlayer connection)
     {
         if (server.authenticator != null)
         {
-            connection.RegisterHandler<AddPlayerMessage>(OnServerAddPlayerInternal);    
+            connection.RegisterHandler<AddCharacterMessage>(OnServerAddPlayerInternal);    
         }
     }
 
-    private void OnClientAuthenticated(INetworkConnection connection)
+    private void OnClientAuthenticated(INetworkPlayer connection)
     {
-        connection.Send(new AddPlayerMessage());
+        connection.Send(new AddCharacterMessage());
     }
 
-    void OnServerAddPlayerInternal(INetworkConnection conn, AddPlayerMessage msg)
+    void OnServerAddPlayerInternal(INetworkPlayer conn, AddCharacterMessage msg)
     {
         logger.Log("NetworkManager.OnServerAddPlayer");
 
@@ -68,9 +69,9 @@ public class PlayerRegisterer : MonoBehaviour
         OnServerAddPlayer(conn);
     }
 
-    public void OnServerAddPlayer(INetworkConnection conn)
+    public void OnServerAddPlayer(INetworkPlayer conn)
     {
         NetworkIdentity player = Instantiate(playerPrefab);
-        serverObjectManager.AddPlayerForConnection(conn, player.gameObject);
+        serverObjectManager.AddCharacter(conn, player.gameObject);
     }
 }

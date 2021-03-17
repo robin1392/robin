@@ -25,7 +25,7 @@ namespace MirageTest.Scripts.SyncAction
                 yield break;
             }
             
-            actor.SyncActionWithTarget(actor.Client.Connection.Identity.NetId, GetType().GetHashCode(), target.NetId);
+            actor.SyncActionWithTarget(actor.Client.Player.Identity.NetId, GetType().GetHashCode(), target.NetId);
             actor.baseStat.RunningAction = this;
             yield return Action(actor, target);
             actor.baseStat.RunningAction = null;
@@ -38,7 +38,7 @@ namespace MirageTest.Scripts.SyncAction
     {
         public IEnumerator ActionWithSync(ActorProxy actor)
         {
-            actor.SyncActionWithoutTarget(actor.Client.Connection.Identity.NetId, GetType().GetHashCode());
+            actor.SyncActionWithoutTarget(actor.Client.Player.Identity.NetId, GetType().GetHashCode());
             actor.baseStat.RunningAction = this;
             yield return Action(actor);
             actor.baseStat.RunningAction = null;

@@ -186,44 +186,44 @@ public class TutorialManager : MonoBehaviour
                 }
                 else
                 {
-                    Time.timeScale = 0.0001f;
+                    Time.timeScale = 0.0f;
                     image_NextStep.DOFade(0f, 0).SetUpdate(true);
                     transform.GetChild(stepCount + 1).GetChild(0).gameObject.SetActive(true);
                     Debug.Log("Ingame tutorial");
                 }
                 break;
             case 3:
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 //KZSee:
                 // InGameManager.Get().playerController.TutorialAddSP(50);
                 break;
             case 4: // 주사위 소환 버튼
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_GetDiceButton.parent;
                 ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 5:
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 break;
             case 6:
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 break;
             case 7:
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 //KZSee:
                 //InGameManager.Get().playerController.TutorialAddSP(5000);
                 break;
             case 8:    // 두번째 주사위 소환
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_GetDiceButton.parent;
                 ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 9:
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_DiceField.parent;
                 ts_DiceField.parent = transform.GetChild(stepCount + 1);
@@ -238,7 +238,7 @@ public class TutorialManager : MonoBehaviour
             case 11:
                 InGameManager.Get().playerController.uiDiceField.BroadcastMessage("AttachIcon");
                 image_NextStep.raycastTarget = true;
-                Time.timeScale = 0.00001f;
+                Time.timeScale = 0.0f;
                 
                 ts_OldParent = ts_UpgradeButton.parent;
                 ts_UpgradeButton.parent = transform.GetChild(stepCount + 1);

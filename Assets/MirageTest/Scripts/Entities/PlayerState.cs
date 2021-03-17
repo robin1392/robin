@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using System.Linq;
 using ED;
+using Mirage.Collections;
+using Mirage.Logging;
 using Sirenix.OdinInspector;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -306,7 +308,7 @@ namespace MirageTest.Scripts.Entities
             }
             
             var deckIndex = Random.Range(0, Deck.Count);
-            GetDice(fieldIndex, deckIndex);
+            GetDice(deckIndex, fieldIndex);
         }
 
         public void GetDice(int deckIndex, int fieldIndex)

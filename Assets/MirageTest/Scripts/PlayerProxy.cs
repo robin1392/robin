@@ -1,4 +1,5 @@
 ﻿using Mirage;
+using Mirage.Logging;
 using MirageTest.Scripts;
 using MirageTest.Scripts.Entities;
 using RandomWarsResource.Data;

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Mirage;
 using Mirage.KCP;
+using Mirage.Logging;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -89,12 +90,12 @@ namespace _Scripts.RCore.Networking
             Logger.Log("OnDisconnected");
         }
 
-        private void OnConnected(INetworkConnection arg0)
+        private void OnConnected(INetworkPlayer arg0)
         {
             Logger.Log($"Client OnConnected {gameObject.GetInstanceID()}");
         }
 
-        private void OnAuthenticated(INetworkConnection arg0)
+        private void OnAuthenticated(INetworkPlayer arg0)
         {
             Logger.Log($"Client OnAuthenticated {gameObject.GetInstanceID()}");
         }
