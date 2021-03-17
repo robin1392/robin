@@ -77,14 +77,14 @@ public class TutorialManager : MonoBehaviour
                 localPlayerTower.currentHealth = localPlayerTower.maxHealth * 0.666f;
 
                 var serverLocalPlayerState  = server.serverGameLogic.GetPlayerState(localPlayerState.userId);
-                var guadian = server.CreateGuadian(serverLocalPlayerState, localPlayerTower.transform.position, localPlayerTower.transform.rotation);
-                guadian.maxHealth = int.MaxValue;
-                guadian.currentHealth = int.MaxValue;
-                guadian.power = 30000;
-                guadian.attackSpeed = 100;
-                guadian.moveSpeed = 100;
-                guadian.effect = 30000;
-                server.serverGameLogic.ServerObjectManager.Spawn(guadian.NetIdentity);
+                //var guadian = server.CreateGuadian(serverLocalPlayerState, localPlayerTower.transform.position, localPlayerTower.transform.rotation);
+                // guadian.maxHealth = int.MaxValue;
+                // guadian.currentHealth = int.MaxValue;
+                // guadian.power = 30000;
+                // guadian.attackSpeed = 100;
+                // guadian.moveSpeed = 100;
+                // guadian.effect = 30000;
+                // server.serverGameLogic.ServerObjectManager.Spawn(guadian.NetIdentity);
                 break;
         }
     }
