@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -13,11 +13,20 @@ using Object = UnityEngine.Object;
 
 public class RWNetworkServer : NetworkServer
 {
+    static readonly ILogger logger = LogFactory.GetLogger(typeof(RWNetworkServer));
+    
+    public List<ActorProxy> ActorProxies = new List<ActorProxy>();
+    public List<ActorProxy> Towers = new List<ActorProxy>();
     public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
     
     public ServerGameLogic serverGameLogic;
 
     public MatchData MatchData = new MatchData();
+
+    public static RWNetworkServer Get()
+    {
+        return FindObjectOfType<RWNetworkServer>();
+    }
 
     private void Awake()
     {
@@ -39,6 +48,25 @@ public class RWNetworkServer : NetworkServer
     public void RemovePlayerProxy(PlayerProxy playerProxy)
     {
         PlayerProxies.Remove(playerProxy);
+    }
+    
+    public void AddActorProxy(ActorProxy actorProxy)
+    {
+        if (actorProxy.actorType == ActorType.Tower)
+        {
+            Towers.Add(actorProxy);
+        }
+            
+        ActorProxies.Add(actorProxy);
+    }
+
+    public void RemoveActorProxy(ActorProxy actorProxy)
+    {
+        ActorProxies.Remove(actorProxy);
+        if (actorProxy.actorType == ActorType.Tower)
+        {
+            Towers.Remove(actorProxy);
+        }
     }
 
     private void OnConnected(INetworkConnection arg0)

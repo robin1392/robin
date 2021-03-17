@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using Debug = ED.Debug;
 using DG.Tweening;
 using ED;
+using MirageTest.Scripts;
 using RandomWarsProtocol;
 using Template.User.RandomwarsUser.Common;
 
@@ -29,7 +30,7 @@ public class TutorialManager : MonoBehaviour
         get;
         private set;
     }
-    
+
     private void Start()
     {
         if (UserInfoManager.Get().GetUserInfo().isEndTutorial)
@@ -69,19 +70,21 @@ public class TutorialManager : MonoBehaviour
         switch (stepCount)
         {
             case 6:
-                InGameManager.Get().playerController.ActorProxy.currentHealth = InGameManager.Get().playerController.ActorProxy.maxHealth * 0.666f;
-                InGameManager.Get().playerController.RefreshHealthBar();
+                var localPlayerState = RWNetworkClient.Get().GetLocalPlayerState();
+                var localPlayerOwnerTag = localPlayerState.ownerTag;
+                var server = RWNetworkServer.Get();
+                var localPlayerTower = server.Towers.Find(t => t.ownerTag == localPlayerOwnerTag);
+                localPlayerTower.currentHealth = localPlayerTower.maxHealth * 0.666f;
 
-                MsgMonster msg = new MsgMonster();
-                msg.Hp = Int32.MaxValue;
-                msg.Id = 1;
-                msg.Power = 30000;
-                msg.AttackSpeed = 100;
-                msg.DataId = 5001;
-                msg.MoveSpeed = 100;
-                msg.Effect = 30000;
-                //KZSee:
-                // InGameManager.Get().playerController.SpawnMonster(msg);
+                var serverLocalPlayerState  = server.serverGameLogic.GetPlayerState(localPlayerState.userId);
+                var guadian = server.CreateGuadian(serverLocalPlayerState, localPlayerTower.transform.position, localPlayerTower.transform.rotation);
+                guadian.maxHealth = int.MaxValue;
+                guadian.currentHealth = int.MaxValue;
+                guadian.power = 30000;
+                guadian.attackSpeed = 100;
+                guadian.moveSpeed = 100;
+                guadian.effect = 30000;
+                server.serverGameLogic.ServerObjectManager.Spawn(guadian.NetIdentity);
                 break;
         }
     }
@@ -183,44 +186,44 @@ public class TutorialManager : MonoBehaviour
                 }
                 else
                 {
-                    Time.timeScale = 0f;
+                    Time.timeScale = 0.0001f;
                     image_NextStep.DOFade(0f, 0).SetUpdate(true);
                     transform.GetChild(stepCount + 1).GetChild(0).gameObject.SetActive(true);
                     Debug.Log("Ingame tutorial");
                 }
                 break;
             case 3:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 //KZSee:
                 // InGameManager.Get().playerController.TutorialAddSP(50);
                 break;
             case 4: // 주사위 소환 버튼
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_GetDiceButton.parent;
                 ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 5:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 break;
             case 6:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 break;
             case 7:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 //KZSee:
                 //InGameManager.Get().playerController.TutorialAddSP(5000);
                 break;
             case 8:    // 두번째 주사위 소환
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_GetDiceButton.parent;
                 ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 9:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_DiceField.parent;
                 ts_DiceField.parent = transform.GetChild(stepCount + 1);
@@ -235,7 +238,7 @@ public class TutorialManager : MonoBehaviour
             case 11:
                 InGameManager.Get().playerController.uiDiceField.BroadcastMessage("AttachIcon");
                 image_NextStep.raycastTarget = true;
-                Time.timeScale = 0f;
+                Time.timeScale = 0.00001f;
                 
                 ts_OldParent = ts_UpgradeButton.parent;
                 ts_UpgradeButton.parent = transform.GetChild(stepCount + 1);

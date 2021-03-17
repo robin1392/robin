@@ -26,7 +26,8 @@ namespace MirageTest.Scripts.Entities
         [SyncVar(hook = nameof(SetSpGrade))] public int spGrade;
         [SyncVar(hook = nameof(SetSp))] public int sp;
         [SyncVar(hook = nameof(SetGetDiceCount))] public int getDiceCount;
-
+        
+        [SyncVar] public int guadianId;
         public readonly Deck Deck = new Deck();
         public readonly Field Field = new Field();
 
@@ -38,7 +39,7 @@ namespace MirageTest.Scripts.Entities
 
         public bool IsLocalPlayerState => (Client as RWNetworkClient).localPlayerId == userId;
         
-        public void Init(string userId, string nickName, int sp, DeckDice[] deck, byte tag)
+        public void Init(string userId, string nickName, int sp, DeckDice[] deck, byte tag, int guadianId)
         {
             if (_initalized)
             {
@@ -50,6 +51,7 @@ namespace MirageTest.Scripts.Entities
             this.sp = sp;
             this.ownerTag = tag;
             this.spGrade = 0;
+            this.guadianId = guadianId;
 
             foreach (var deckDice in deck)
             {
@@ -302,18 +304,24 @@ namespace MirageTest.Scripts.Entities
                 logger.LogError($"비어있는 슬롯이 없습니다. playerId : {userId}");
                 return;
             }
-        
+            
+            var deckIndex = Random.Range(0, Deck.Count);
+            GetDice(fieldIndex, deckIndex);
+        }
+
+        public void GetDice(int deckIndex, int fieldIndex)
+        {
             // SP를 차감한다.
             int needSp = GetDiceCost();
-            // if (sp < needSp)
-            // {
-            //     logger.LogError($"주사위 추가를 위한 SP가 모자랍니다.: playerId:{userId} sp:{sp} 필요sp: {needSp}");
-            //     return;
-            // }
+            if (sp < needSp)
+            {
+                logger.LogError($"주사위 추가를 위한 SP가 모자랍니다.: playerId:{userId} sp:{sp} 필요sp: {needSp}");
+                return;
+            }
 
             sp -= needSp;
             getDiceCount += 1;
-            var selectedDeckDice = Deck[Random.Range(0, Deck.Count)];
+            var selectedDeckDice = Deck[deckIndex];
             Field[fieldIndex] = new FieldDice()
             {
                 diceId = selectedDeckDice.diceId,

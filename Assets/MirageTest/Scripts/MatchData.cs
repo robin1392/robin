@@ -39,10 +39,12 @@ namespace MirageTest.Scripts
 
     public class DeckInfo
     {
+        public int GuadialId;
         public DiceInfo[] DiceInfos;
 
-        public DeckInfo(params int[] diceIds)
+        public DeckInfo(int guadianId, params int[] diceIds)
         {
+            GuadialId = guadianId;
             DiceInfos = diceIds.Select(id => new DiceInfo()
             {
                 DiceId = id,

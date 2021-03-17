@@ -13,7 +13,7 @@ namespace MirageTest.Scripts.GameMode
         {
         }
 
-        protected override void OnBeforeGameStart()
+        protected override async UniTask OnBeforeGameStart()
         {
             var gameState = CreateGameState();
             var playerStates = CreatePlayerStates();
@@ -23,6 +23,8 @@ namespace MirageTest.Scripts.GameMode
             
             PlayerState1.team = GameConstants.BottomCamp;
             PlayerState2.team = GameConstants.BottomCamp;
+
+            await UniTask.Yield();
             
             ServerObjectManager.Spawn(gameState.NetIdentity);
             foreach (var playerState in playerStates)

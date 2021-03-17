@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4651702573362233943}
   - component: {fileID: 4651702573362233941}
   - component: {fileID: 4651702573362233940}
-  - component: {fileID: 4651702573362233939}
   - component: {fileID: 1999751920950500995}
   - component: {fileID: 343533738106072716}
   m_Layer: 0
@@ -81,20 +80,6 @@ MonoBehaviour:
   - {fileID: 1543683427229637218, guid: 96959fafd3b5d4a40a4a981101919585, type: 3}
   - {fileID: 5852545224420049431, guid: 876b771d2cd9448cdabec49b98843c0e, type: 3}
   - {fileID: 1543683427229637218, guid: 13bb752557e22490e816dc90bc0f20a2, type: 3}
---- !u!114 &4651702573362233939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4651702573362233942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2990a106877f5481f998bb3e4d944fb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WaitForAutoConnectionMs: 100
-  AutoConnect: 1
 --- !u!114 &1999751920950500995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,13 +105,12 @@ MonoBehaviour:
       m_Calls: []
   enableActor: 1
   enableUI: 1
-  localPlayerId: 
-  localPlayerOwnerTag: 0
   PlayerStates: []
   PlayerProxies: []
   ActorProxies: []
   Towers: []
   GameState: {fileID: 0}
+  localPlayerId: 
 --- !u!114 &343533738106072716
 MonoBehaviour:
   m_ObjectHideFlags: 0

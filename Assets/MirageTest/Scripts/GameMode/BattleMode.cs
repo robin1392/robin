@@ -17,7 +17,7 @@ namespace MirageTest.Scripts.GameMode
         {
         }
 
-        protected override void OnBeforeGameStart()
+        protected override async UniTask OnBeforeGameStart()
         {
             var gameState = CreateGameState();
             var playerStates = CreatePlayerStates();
@@ -33,6 +33,9 @@ namespace MirageTest.Scripts.GameMode
             {
                 ServerObjectManager.Spawn(playerState.NetIdentity);
             }
+
+            //액터보다 플레이어 스테이트가 먼저 생성되야해서 한 틱 양보
+            await UniTask.Yield();
 
             var player1TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: true);
             SpawnTower(PlayerState1, player1TowerPosition);

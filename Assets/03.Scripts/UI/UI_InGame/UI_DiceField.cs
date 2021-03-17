@@ -53,6 +53,8 @@ namespace ED
                 return;
             }
             
+            
+
             if (localPlayerState.sp >= diceCost && localPlayerState.GetEmptySlotCount() > 0)
             {
                 if (TutorialManager.isTutorial)
@@ -61,62 +63,62 @@ namespace ED
                     switch (TutorialManager.getDiceCount)
                     {
                         case 0:
-                            InGameManager.Get().playerController.GetDice(2, 0);
+                            _client.GetLocalPlayerProxy().GetDice(2, 0);
                             break;
                         case 1:
-                            InGameManager.Get().playerController.GetDice(2, 1);
+                            _client.GetLocalPlayerProxy().GetDice(2, 1);
                             break;
                         case 2:
-                            InGameManager.Get().playerController.GetDice(2, 3);
+                            _client.GetLocalPlayerProxy().GetDice(2, 3);
                             break;
                         case 3:
-                            InGameManager.Get().playerController.GetDice(0, 6);
+                            _client.GetLocalPlayerProxy().GetDice(0, 6);
                             break;
                         case 4:
-                            InGameManager.Get().playerController.GetDice(0, 8);
+                            _client.GetLocalPlayerProxy().GetDice(0, 8);
                             break;
                         case 5:
-                            InGameManager.Get().playerController.GetDice(2, 4);
+                            _client.GetLocalPlayerProxy().GetDice(2, 4);
                             break;
                         case 6:
-                            InGameManager.Get().playerController.GetDice(2, 2);
+                            _client.GetLocalPlayerProxy().GetDice(2, 2);
                             break;
                         case 7:
-                            InGameManager.Get().playerController.GetDice(2, 5);
+                            _client.GetLocalPlayerProxy().GetDice(2, 5);
                             break;
                         case 8:
-                            InGameManager.Get().playerController.GetDice(2, 7);
+                            _client.GetLocalPlayerProxy().GetDice(2, 7);
                             break;
                         case 9:
-                            InGameManager.Get().playerController.GetDice(2, 9);
+                            _client.GetLocalPlayerProxy().GetDice(2, 9);
                             break;
                         case 10:
-                            InGameManager.Get().playerController.GetDice(2, 10);
+                            _client.GetLocalPlayerProxy().GetDice(2, 10);
                             break;
                         case 11:
-                            InGameManager.Get().playerController.GetDice(0, 11);
+                            _client.GetLocalPlayerProxy().GetDice(0, 11);
                             break;
                         case 12:
-                            InGameManager.Get().playerController.GetDice(3, 12);
+                            _client.GetLocalPlayerProxy().GetDice(3, 12);
                             break;
                         case 13:
-                            InGameManager.Get().playerController.GetDice(0, 13);
+                            _client.GetLocalPlayerProxy().GetDice(0, 13);
                             break;
                         case 14:
-                            InGameManager.Get().playerController.GetDice(2, 14);
+                            _client.GetLocalPlayerProxy().GetDice(2, 14);
                             break;
                         default:
-                            InGameManager.Get().playerController.GetDice();
+                            _client.GetLocalPlayerProxy().GetRandomDice();
                             break;
                     }
 
-                    InGameManager.Get().playerController.uiDiceField.RefreshField();
+                    UI_DiceField.Get().RefreshField();
                 }
                 else
                 {
                     UI_InGame.Get().ControlGetDiceButton(false);
                     var playerProxy = _client.GetLocalPlayerProxy();
-                    playerProxy.GetDice();
+                    playerProxy.GetRandomDice();
                 }
             }
         }

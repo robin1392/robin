@@ -14,13 +14,16 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using TMPro;
+using System.Linq;
 
 
 using CodeStage.AntiCheat.ObscuredTypes;
+using Cysharp.Threading.Tasks;
 using MirageTest.Scripts;
 using Pathfinding;
 using RandomWarsResource.Data;
 using UnityEngine.U2D;
+using WebSocketSharp;
 using ITEM_TYPE = RandomWarsProtocol.ITEM_TYPE;
 using Random = UnityEngine.Random;
 
@@ -52,7 +55,6 @@ namespace ED
 
         private int _readyPlayerCount = 0;
         
-        public UnityEvent<int> event_SP_Edit;
 
         #endregion
 
@@ -81,20 +83,9 @@ namespace ED
 
         
         #region static
-        public static bool IsNetwork
-        {
-            get
-            {
-                return true;
-                if (NetworkManager.Get() == null)
-                    return false;
-                
-                if (NetworkManager.Get() != null && NetworkManager.Get().IsConnect())
-                    return true;
 
-                return false;
-            }
-        }
+        public static bool IsNetwork;
+        
         #endregion
         
         
@@ -156,8 +147,6 @@ namespace ED
         protected void Update()
         {
             RefreshTimeUI();
-            if (UI_InGame.Get() != null)
-                UI_InGame.Get().SetUnitCount(_client.ActorProxies.Count - _client.Towers.Count);
         }
 
         #endregion
@@ -177,7 +166,7 @@ namespace ED
         
         public virtual void StartManager()
         {
-            if (IsNetwork == true)
+            if (IsNetwork)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
 
@@ -208,150 +197,71 @@ namespace ED
                 UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
 
             }
+            //AIMode
             else
             {
-                Vector3 startPos = FieldManager.Get().GetPlayerPos(true);
-                var obj = Instantiate(pref_Player, startPos, Quaternion.identity);
-                obj.transform.parent = FieldManager.Get().GetPlayerTrs(true);
-                playerController = obj.GetComponent<PlayerController>();
-                playerController.ChangeLayer(true);
-                playerController.isMine = true;
-                
-                
-                // Set MsgUserinfo
-                var msgUserInfo = new MsgPlayerInfo();
-                msgUserInfo.PlayerUId = 1;
-                msgUserInfo.IsBottomPlayer = true;
-                msgUserInfo.IsMaster = true;
-                msgUserInfo.Name = UserInfoManager.Get().GetUserInfo().userNickName;
-                msgUserInfo.CurrentSp = 200;
-                int bonusHP = 0;
-
-
-                RandomWarsResource.Data.TDataDiceInfo[] dataDiceInfoArray;
-                if (TableManager.Get().DiceInfo.GetData( x => x.enableDice, out dataDiceInfoArray ) == false)
-                {
-                    return;
-                }
-
-                foreach (var info in dataDiceInfoArray)
-                {
-                    if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(info.id))
-                    {
-                        int level = UserInfoManager.Get().GetUserInfo().dicGettedDice[info.id][0];
-
-                        RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
-                        if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level && x.diceGrade == info.grade, out dataDiceUpgrade) == false)
-                        {
-                            return;
-                        }
-
-                        bonusHP += dataDiceUpgrade.getTowerHp;
-                    }
-                }
-                msgUserInfo.TowerHp = (30000 + bonusHP) * 100;
-                msgUserInfo.SpGrade = 0;
-                msgUserInfo.GetDiceCount = 0;
-                msgUserInfo.DiceIdArray = UserInfoManager.Get().GetUserInfo().GetActiveDeck;
-                msgUserInfo.DiceLevelArray = new short[5]
-                {
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[0]][0]), 
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[1]][0]), 
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[2]][0]), 
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[3]][0]), 
-                    ConvertNetMsg.MsgIntToShort(UserInfoManager.Get().GetUserInfo().dicGettedDice[msgUserInfo.DiceIdArray[4]][0])
-                }; 
-                NetworkManager.Get().GetNetInfo().SetPlayerInfo(msgUserInfo);
-                
-                // Set AI
-                msgUserInfo = new MsgPlayerInfo();
-                msgUserInfo.PlayerUId = 2;
-                msgUserInfo.IsBottomPlayer = false;
-                msgUserInfo.IsMaster = false;
-                msgUserInfo.CurrentSp = 200;
-                msgUserInfo.TowerHp = (30000 + Random.Range(0, 500)) * 100;
-                msgUserInfo.Name = "AI";
-                NetworkManager.Get().GetNetInfo().SetOtherInfo(msgUserInfo);
-
-                GameObject otherTObj = Instantiate(pref_AI, FieldManager.Get().GetPlayerPos(false), Quaternion.identity);
-                otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
-
-                // name
-                UI_InGame.Get().SetNickName(UserInfoManager.Get().GetUserInfo().userNickName, "AI");
-                otherTObj.SendMessage("ChangeLayer", false);
-                otherTObj.SendMessage("AI_SetRandomDeck", false);
-                isAIMode = true;
+                StartAIModeGame().Forget();
             }
-            
             
             UI_InGame.Get().ViewTargetDice(!IsNetwork);
-
-            event_SP_Edit.AddListener(RefreshSP);
-            event_SP_Edit.AddListener(SetSPUpgradeButton);
-
-
-            //
-            if (NetworkManager.Get().isReconnect)
-            {
-                UI_InGamePopup.Get().ViewGameIndicator(true);
-                
-                SendInGameManager(GameProtocol.READY_SYNC_GAME_REQ);
-                return;
-            }
-            
-
-            // deck setting
-            if (IsNetwork == true)
-            {
-                // my
-                for(int i = 0 ; i < NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray.Length; i++)
-                    print(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray[i]);
-                
-                //플레이어스테이트를 통한 동기화
-                // playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
-                // //other
-                // playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
-            }
-            else
-            {
-                // 네트워크 안쓰니까...개발용으로
-                //var deck = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004");
-                if (UserInfoManager.Get() != null)
-                {
-                    //플레이어스테이트를 통한 동기화
-                    // var deck = UserInfoManager.Get().GetActiveDeck();
-                    // playerController.SetDeck(deck);
-                }
-
-            }
-
-            //Mirage => PlayerState 클라이언트 동기화 로직으로 이동
-            // UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
-            // UI_InGame.Get().SetEnemyArrayDeck();
-            // UI_InGame.Get().SetEnemyUpgrade();
 
             if (IsNetwork == true)
             {
                 if (NetworkManager.Get().IsMaster == false)
                 {
+                    //KZSee: TopCamp처리인듯하다.
                     ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
                     ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
                     ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
                 }
             }
+            
+            //KZSee:AStarPathFinding MapScan
+            //Invoke("MapScan", 1f);
+        }
 
-            if (IsNetwork == true)
-            {
-                WorldUIManager.Get().SetWave(wave);
-                SendInGameManager(GameProtocol.READY_GAME_REQ);
-            }
-            else
-            {
-                StartGame();
-                RefreshTimeUI(true);
-            }
+        async UniTask StartAIModeGame()
+        {
+            var server = FindObjectOfType<RWNetworkServer>();
+            var userInfo = UserInfoManager.Get().GetUserInfo();
+            var userDeck = userInfo.GetActiveDeck;
+            var diceDeck = userDeck.Take(5).ToArray();
+            var guadianId = userDeck[5];
+            server.serverGameLogic.isAIMode = true;
+            server.MatchData.AddPlayerInfo(
+                userInfo.userID, 
+                userInfo.userNickName, 0, 
+                new DeckInfo(guadianId, diceDeck));
+            server.MatchData.AddPlayerInfo(
+                "AI", 
+                "AI", 0, 
+                new DeckInfo(guadianId, GetAIDeck(TutorialManager.isTutorial)));
+                
+            server.ListenAsync().Forget();
 
-            Invoke("MapScan", 1f);
+            while (server.Active == false)
+            {
+                await UniTask.Yield();
+            }
+            
+            var client = FindObjectOfType<RWNetworkClient>();
+            var auth =client.GetComponent<RWAthenticator>(); 
+            auth.LocalId = userInfo.userID;
+            auth.LocalName = userInfo.userNickName;
+            await client.ConnectAsync("localhost");
+        }
+
+        public int[] GetAIDeck(bool isTutorial)
+        {
+            if (isTutorial)
+            {
+                return new int[] {1000, 1002, 3011, 3003, 3005};
+            }
+            
+            var diceInfos = TableManager.Get().DiceInfo.Values;
+            var arr = diceInfos.Where(info => info.enableDice).ToArray();
+            var shuffled = arr.OrderBy(x => Guid.NewGuid()).ToList();
+            return shuffled.Take(5).Select(info => info.id).ToArray();
         }
         
         protected void RefreshSP(int sp)
@@ -365,12 +275,6 @@ namespace ED
             UI_InGame.Get().SetSPUpgrade(spGrade, sp);
         }
 
-
-        private void MapScan()
-        {
-            AstarPath.active.Scan();
-        }
-
         #endregion
 
 
@@ -380,31 +284,9 @@ namespace ED
         {
             DeactivateWaitingObject();
 
-            // start...
-            StartGame();
-
             RefreshTimeUI(true);
         }
 
-
-        protected void StartGame()
-        {
-            if (IsNetwork == true)
-            {
-                //KZSee:
-                //StartCoroutine(SpawnLoop());
-            }
-            else if (IsNetwork == false)
-            {
-
-                Debug.Log("StartGame: OfflineMode");
-                // 네트워크 연결 안됫으니 deactive...   
-                DeactivateWaitingObject();
-                //KZSee:
-                // StartCoroutine(SpawnLoop());
-            }
-        }
-        
         private void Ready()
         {
             _readyPlayerCount++;

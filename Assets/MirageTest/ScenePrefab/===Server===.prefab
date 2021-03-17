@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4832457519157374794}
   - component: {fileID: 4832457519157374792}
   - component: {fileID: 4832457519157374793}
-  - component: {fileID: 4832457519157374795}
   - component: {fileID: 1414178687038351121}
   - component: {fileID: 7684217455327188613}
   - component: {fileID: 8356133136237392226}
@@ -21,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4832457519157374794
 Transform:
   m_ObjectHideFlags: 0
@@ -76,18 +75,6 @@ MonoBehaviour:
   UnSpawned:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4832457519157374795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4832457519157374790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354a0386cc0bf4e25a5d4693537c992c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1414178687038351121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,6 +93,7 @@ MonoBehaviour:
     type: 3}
   actorProxyPrefab: {fileID: -9073835943446716441, guid: f631769355c16485a9c68f830ed15524,
     type: 3}
+  isAIMode: 0
   modeType: 0
 --- !u!114 &7684217455327188613
 MonoBehaviour:
@@ -144,6 +132,7 @@ MonoBehaviour:
   OnStopHost:
     m_PersistentCalls:
       m_Calls: []
+  PlayerProxies: []
   serverGameLogic: {fileID: 1414178687038351121}
 --- !u!114 &8356133136237392226
 MonoBehaviour:

@@ -27,6 +27,11 @@ namespace MirageTest.Scripts
         private ClientObjectManager _clientObjectManager;
         public string localPlayerId;
 
+        public static RWNetworkClient Get()
+        {
+            return FindObjectOfType<RWNetworkClient>();
+        }
+
         private void Awake()
         {
             if (enableUI)
@@ -89,6 +94,8 @@ namespace MirageTest.Scripts
             }
             
             ActorProxies.Add(actorProxy);
+            
+            OnActorProxyChanged();
         }
 
         public void RemoveActorProxy(ActorProxy actorProxy)
@@ -97,6 +104,16 @@ namespace MirageTest.Scripts
             if (actorProxy.actorType == ActorType.Tower)
             {
                 Towers.Remove(actorProxy);
+            }
+
+            OnActorProxyChanged();
+        }
+
+        void OnActorProxyChanged()
+        {
+            if (UI_InGame.Get() != null)
+            {
+                UI_InGame.Get().SetUnitCount(ActorProxies.Count - Towers.Count);
             }
         }
 

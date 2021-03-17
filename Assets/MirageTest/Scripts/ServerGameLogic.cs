@@ -104,13 +104,13 @@ namespace MirageTest.Scripts
                 
                 var player1 = infos[0];
                 
-                _networkServer.MatchData.AddPlayerInfo(player1.PlayerId, player1.PlayerNickName, 0, new DeckInfo(new int[]
+                _networkServer.MatchData.AddPlayerInfo(player1.PlayerId, player1.PlayerNickName, 0, new DeckInfo(5001, new int[]
                 {
                     1001, 1002,1003, 1004,1005
                 }));
                 
                 var player2 = infos[1];
-                _networkServer.MatchData.AddPlayerInfo(player2.PlayerId, player2.PlayerNickName, 0, new DeckInfo(new int[]
+                _networkServer.MatchData.AddPlayerInfo(player2.PlayerId, player2.PlayerNickName, 0, new DeckInfo(5001, new int[]
                 {
                     1001, 1002,1003, 1004,1005
                 }));

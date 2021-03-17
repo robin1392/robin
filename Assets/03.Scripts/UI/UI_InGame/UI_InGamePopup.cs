@@ -5,6 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
+using MirageTest.Scripts;
 using RandomWarsProtocol;
 using Service.Core;
 
@@ -65,7 +66,7 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         {
             winlose_My.Initialize(UserInfoManager.Get().GetActiveDeck(),
                 UserInfoManager.Get().GetUserInfo().userNickName, UserInfoManager.Get().GetUserInfo().trophy);
-            winlose_Other.Initialize(UserInfoManager.Get().GetActiveDeck(), "AI",
+            winlose_Other.Initialize(InGameManager.Get().GetAIDeck(true), "AI",
                 UserInfoManager.Get().GetUserInfo().trophy);
         }
         else
