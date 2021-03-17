@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -15,8 +17,6 @@ namespace ED
         [Header("AudioClip")]
         public AudioClip clip_Shot;
         
-        
-
         protected override void Start()
         {
             base.Start();
@@ -36,42 +36,39 @@ namespace ED
 
         public override IEnumerator Attack()
         {
-            ActorProxy.PlayAnimationWithRelay(AnimationHash.AttackReady , target);
-
-            yield return new WaitForSeconds(0.5f);
-
-            isPushing = false;
-            float t = 0;
-            if (CanAttackTarget())
-            {
-                yield break;
-            }
-            
-            lr.gameObject.SetActive(true);
-            while (t < attackSpeed - 1.5f)
-            {
-                if (IsTargetInnerRange() == false)
-                {
-                    //KZSee:
-                    // controller.ActionSendMsg(id, "StopAiming");
-                    break;
-                }
-                
-                //KZSee:
-                // controller.ActionMinionTarget(id, target.id);
-                transform.LookAt(target.transform);
-                lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
-
-                t += Time.deltaTime;
-                yield return null;
-            }
-            
-            lr.gameObject.SetActive(false);
-
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
+                ActorProxy.PlayAnimationWithRelay(AnimationHash.AttackReady, target);
             }
+
+            //yield return new WaitForSeconds(0.5f);
+            var aimingAction = new SniperAimingAction();
+            RunningAction = aimingAction;
+            yield return aimingAction.ActionWithSync(ActorProxy, target.ActorProxy);
+            RunningAction = null;
+
+            if (target != null && target.isAlive)
+            {
+                if (ActorProxy.isPlayingAI)
+                {
+                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
+                }
+            }
+            else
+            {
+                if (ActorProxy.isPlayingAI)
+                {
+                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Idle, target);
+                }
+            }
+        }
+
+        public bool IsCanAiming()
+        {
+            if (target == null || target.isAlive == false) return false;
+            if (IsTargetInnerRange() == false) return false;
+
+            return true;
         }
 
         public override void Death()
@@ -148,25 +145,6 @@ namespace ED
                 light_Fire.enabled = true;
                 Invoke("FireLightOff", 0.15f);
             }
-
-
-            /*if (target != null)
-            {
-                //if (PhotonNetwork.IsConnected && isMine)
-                if( InGameManager.IsNetwork && isMine )
-                {
-                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                    controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false)
-                {
-                    controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                }
-            }
-            */
-            
-
         }
 
         private void FireLightOff()
@@ -181,6 +159,32 @@ namespace ED
         {
             base.EndGameUnit();
             StopAiming();
+        }
+    }
+    
+    public class SniperAimingAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
+        {
+            var sniper = actorProxy.baseStat as Minion_Sniper;
+
+            float t = 0f;
+            sniper.lr.gameObject.SetActive(true);
+            while (t < 4f)
+            {
+                if (sniper.IsCanAiming() == false)
+                {
+                    break;
+                }
+                
+                actorProxy.transform.LookAt(targetActorProxy.transform);
+                sniper.lr.SetPositions(new Vector3[] { sniper.ts_ShootingPos.position, targetActorProxy.baseStat.ts_HitPos.position });
+
+                t += Time.deltaTime;
+                yield return null;
+            }
+            
+            sniper.lr.gameObject.SetActive(false);
         }
     }
 }
