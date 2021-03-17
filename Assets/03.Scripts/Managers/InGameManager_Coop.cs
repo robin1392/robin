@@ -141,7 +141,7 @@ namespace ED
             }
             else
             {
-                StartGame();
+                // StartGame();
                 RefreshTimeUI(true);
             }
         }

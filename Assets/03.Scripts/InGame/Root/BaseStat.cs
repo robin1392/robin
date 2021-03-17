@@ -28,7 +28,7 @@ namespace ED
         public float effectDuration => ActorProxy.diceInfo.effectDuration;
         public float effectCooltime => ActorProxy.diceInfo.effectCooltime;
         public float attackSpeed => ActorProxy.attackSpeed;
-        public float moveSpeed => ActorProxy.diceInfo.moveSpeed;
+        public float moveSpeed => ActorProxy.moveSpeed;
         public float range => ActorProxy.diceInfo.range;
         public float searchRange => ActorProxy.diceInfo.searchRange;
         public bool isBottomCamp => ActorProxy.IsBottomCamp();

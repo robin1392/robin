@@ -33,6 +33,7 @@ namespace MirageTest.Scripts
         [SyncVar] public float power;
         [SyncVar] public float effect;
         [SyncVar] public float attackSpeed;
+        [SyncVar] public float moveSpeed;
         [SyncVar] public byte diceScale;
         [SyncVar] public byte ingameUpgradeLevel;
         [SyncVar] public byte outgameUpgradeLevel;
@@ -103,6 +104,7 @@ namespace MirageTest.Scripts
             NetIdentity.OnStartClient.AddListener(StartClient);
             NetIdentity.OnStopClient.AddListener(StopClient);
             NetIdentity.OnStartServer.AddListener(StartServer);
+            NetIdentity.OnStopServer.AddListener(StopServer);
 
             _seeker = GetComponent<Seeker>();
             _aiPath = GetComponent<AIPath>();
@@ -131,6 +133,14 @@ namespace MirageTest.Scripts
 
         private void StartServer()
         {
+            var server = Server as RWNetworkServer;
+            server.AddActorProxy(this);
+        }
+        
+        private void StopServer()
+        {
+            var server = Server as RWNetworkServer;
+            server.RemoveActorProxy(this);
         }
 
         private void StartClient()
@@ -701,6 +711,7 @@ namespace MirageTest.Scripts
                 actorProxy.currentHealth = stat.maxHealth;
                 actorProxy.effect = stat.effect;
                 actorProxy.attackSpeed = diceInfo.attackSpeed;
+                actorProxy.moveSpeed = diceInfo.moveSpeed;
                 actorProxy.diceScale = 1;
                 actorProxy.ingameUpgradeLevel = inGameLevel;
                 actorProxy.outgameUpgradeLevel = outGameLevel;

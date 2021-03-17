@@ -47,20 +47,24 @@ namespace MirageTest.Scripts.GameMode
             var playerInfos = server.MatchData.PlayerInfos;
 
             var getStartSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.GetStartSP].value;
-            
+
             var playerStates = new PlayerState[2];
+            var playerInfo1 = playerInfos[0];
             playerStates[0] = SpawnPlayerState(
-                playerInfos[0].UserId, playerInfos[0].UserNickName, getStartSp,
-                playerInfos[0].Deck.DiceInfos.Select(d => new DeckDice()
+                playerInfo1.UserId, playerInfo1.UserNickName, getStartSp,
+                playerInfo1.Deck.GuadialId,
+                playerInfo1.Deck.DiceInfos.Select(d => new DeckDice()
                 {
                     diceId = d.DiceId,
                     outGameLevel = d.OutGameLevel,
                     inGameLevel = 0,
                 }).ToArray(), GameConstants.Player1Tag);
         
+            var playerInfo2 = playerInfos[1];
             playerStates[1] = SpawnPlayerState(
-                playerInfos[1].UserId, playerInfos[1].UserNickName, getStartSp,
-                playerInfos[1].Deck.DiceInfos.Select(d => new DeckDice()
+                playerInfo2.UserId, playerInfo2.UserNickName, getStartSp,
+                playerInfo2.Deck.GuadialId,
+                playerInfo2.Deck.DiceInfos.Select(d => new DeckDice()
                 {
                     diceId = d.DiceId,
                     outGameLevel = d.OutGameLevel,
@@ -70,11 +74,11 @@ namespace MirageTest.Scripts.GameMode
             return playerStates;
         }
          
-         PlayerState SpawnPlayerState(string userId, string nickName, int sp, DeckDice[] deck, byte tag)
+         PlayerState SpawnPlayerState(string userId, string nickName, int sp, int gudianId, DeckDice[] deck, byte tag)
          {
              //원래 코드에서는 덱인덱스를 가지고 디비에서 긁어오는 중. 매칭서버에서 긁어서 넣어두는 방향을 제안
              var playerState = Object.Instantiate(_prefabHolder.PlayerState);
-             playerState.Init(userId, nickName, sp, deck, tag);
+             playerState.Init(userId, nickName, sp, deck, tag, gudianId);
              return playerState;
          }
 
@@ -105,7 +109,7 @@ namespace MirageTest.Scripts.GameMode
             }
         }
 
-        protected abstract void OnBeforeGameStart();
+        protected abstract UniTask OnBeforeGameStart();
 
         protected abstract void OnWave(int wave);
 

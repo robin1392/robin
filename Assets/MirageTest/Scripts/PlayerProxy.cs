@@ -179,13 +179,13 @@ public class PlayerProxy : NetworkBehaviour
         };
     }
     
-    public void GetDice()
+    public void GetRandomDice()
     {
-        GetDiceOnServer();
+        GetRandomDiceOnServer();
     }
 
     [ServerRpc]
-    public void GetDiceOnServer()
+    public void GetRandomDiceOnServer()
     {
         logger.Log($"[GetDice]");
         var auth = ConnectionToClient.AuthenticationData as AuthDataForConnection;
@@ -193,6 +193,22 @@ public class PlayerProxy : NetworkBehaviour
         var server = Server as RWNetworkServer;
         var playerState = server.serverGameLogic.GetPlayerState(playerId);
         playerState.GetDice();
+    }
+    
+    public void GetDice(int deckIndex, int fieldIndex)
+    {
+        GetDiceOnServer(deckIndex, fieldIndex);
+    }
+    
+    [ServerRpc]
+    public void GetDiceOnServer(int deckIndex, int fieldIndex)
+    {
+        logger.Log($"[GetDice]");
+        var auth = ConnectionToClient.AuthenticationData as AuthDataForConnection;
+        var playerId = auth.PlayerId;
+        var server = Server as RWNetworkServer;
+        var playerState = server.serverGameLogic.GetPlayerState(playerId);
+        playerState.GetDice(deckIndex, fieldIndex);
     }
     
     public void UpgradeSp()

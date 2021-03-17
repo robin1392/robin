@@ -40,6 +40,11 @@ namespace ED
             {
                 return;
             }
+
+            if (_minion.IsTargetInnerRange() == false)
+            {
+                return;
+            }
             
             _minion.target?.ActorProxy?.HitDamage(_minion.power);
             
