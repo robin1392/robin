@@ -632,7 +632,6 @@ namespace MirageTest.Scripts
 
         void DestroyInternal()
         {
-            currentHealth = 0;
             ServerObjectManager.Destroy(gameObject);
         }
 

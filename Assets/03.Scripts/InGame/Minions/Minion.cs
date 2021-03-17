@@ -71,7 +71,7 @@ namespace ED
         protected BaseStat _attackedTarget;
         protected MinionAnimationEvent _animationEvent;
         
-        private bool _destroyed; 
+        protected bool _destroyed; 
         public bool Destroyed => _destroyed;
 
         protected override void Awake()
