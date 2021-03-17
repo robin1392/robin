@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ED
@@ -11,27 +13,27 @@ namespace ED
         public LineRenderer[] arrLineRenderer;
         public GameObject[] arrObj_LineEnd;
 
-        private List<BaseStat> _listTarget = new List<BaseStat>();
+        private HashSet<BaseStat> _listTarget = new HashSet<BaseStat>();
 
         private void LateUpdate()
         {
             bool isLayzerOn = false;
-            for (int i = 0; i < arrLineRenderer.Length; i++)
+            for (int index = 0; index < arrLineRenderer.Length; index++)
             {
-                if (i < _listTarget.Count && i < ActorProxy.diceScale && _listTarget[i] != null && _listTarget[i].isAlive)
+                arrLineRenderer[index].gameObject.SetActive(false);
+                arrObj_LineEnd[index].SetActive(false);
+            }
+
+            int i = 0;
+            foreach (var target in _listTarget)
+            {
+                if (target != null && target.isAlive)
                 {
                     isLayzerOn = true;
                     arrLineRenderer[i].gameObject.SetActive(true);
-                    arrLineRenderer[i].SetPositions(new Vector3[2] { ts_ShootingPos.position, _listTarget[i].ts_HitPos.position });
+                    arrLineRenderer[i].SetPositions(new Vector3[2] { ts_ShootingPos.position, target.ts_HitPos.position });
                     arrObj_LineEnd[i].SetActive(true);
-                    arrObj_LineEnd[i].transform.position = _listTarget[i].ts_HitPos.position;
-                    //arrLineRenderer[i].startColor = isMine ? Color.blue : Color.red;
-                    //arrLineRenderer[i].endColor = arrLineRenderer[i].startColor;
-                }
-                else
-                {
-                    arrLineRenderer[i].gameObject.SetActive(false);
-                    arrObj_LineEnd[i].SetActive(false);
+                    arrObj_LineEnd[i++].transform.position = target.ts_HitPos.position;
                 }
             }
 
@@ -60,37 +62,39 @@ namespace ED
                 return base.SetTarget();
             else
             {
-                return _listTarget[0];
+                return _listTarget.First();
             }
         }
 
         public void SetMultiTarget()
         {
-            List<BaseStat> beforeList = new List<BaseStat>(_listTarget);
             _attackedTarget = target;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
-            _listTarget.Clear();
-            for (int i = 0 ; i < cols.Length && _listTarget.Count < ActorProxy.diceScale; ++i)
-            {
-                var bs = cols[i].GetComponentInParent<BaseStat>();
-                var m = bs as Minion;
-                if (bs != null && bs.isAlive)
-                {
-                    if (m != null && m.isCloacking) continue;
-                    
-                    _listTarget.Add(bs);
-                }
-            }
+            var bsCols = cols.Select(c => c.GetComponentInParent<BaseStat>()).Where(bs => bs != null && bs.isAlive);
             
-            if(ActorProxy.isPlayingAI && _listTarget.Equals(beforeList) == false)
+            var n = bsCols.Take(ActorProxy.diceScale).ToHashSet();
+            if (!n.SetEquals(_listTarget))
             {
-                List<uint> list = new List<uint>();
-                foreach (var baseStat in _listTarget)
-                {
-                    list.Add(baseStat.ActorProxy.NetId);
-                }
-                ActorProxy.SyncMultiTarget(ActorProxy.NetId, list.ToArray());
+                ActorProxy.SyncMultiTarget(ActorProxy.NetId, n.Select(c => c.ActorProxy.NetId).ToArray());
             }
+
+            _listTarget = n;
+
+            // var old = new HashSet<BaseStat>(_listTarget);
+            // var intersect = new HashSet<BaseStat>(_listTarget);
+            // intersect.IntersectWith(collided);
+            //
+            // collided.ExceptWith(intersect);
+            // var newList = collided.Take(ActorProxy.diceScale - intersect.Count);
+            //
+            // var final = newList.Union(collided).ToHashSet();
+            //
+            // if (!final.SetEquals(old))
+            // {
+            //     ActorProxy.SyncMultiTarget(ActorProxy.NetId, collided.Select(c => c.ActorProxy.NetId).ToArray());
+            // }
+
+            // _listTarget = final;
         }
 
         public override IEnumerator Attack()
