@@ -65,16 +65,16 @@ namespace ED
             myTObj.transform.position = towerPos;
             playerController = myTObj.GetComponent<PlayerController>();
             playerController.isMine = true;
-            playerController.ChangeLayer(true, true);
+            playerController.ChangeLayer(true);
             
             otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
             otherTObj.transform.position = towerPos;
-            playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
-            playerController.targetPlayer.isMine = false;
-            // playerController.targetPlayer.isBottomCamp = true;
-            playerController.targetPlayer.targetPlayer = playerController;
-            
-            playerController.targetPlayer.ChangeLayer(true, true);
+            //KZSee:
+            // playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
+            // playerController.targetPlayer.isMine = false;
+            // playerController.targetPlayer.targetPlayer = playerController;
+            //
+            // playerController.targetPlayer.ChangeLayer(true, true);
             
             FindObjectOfType<UI_CoopSpawnTurn>().Set(NetworkManager.Get().GetNetInfo().playerInfo.IsMaster);
             
@@ -82,12 +82,13 @@ namespace ED
             coopTObj.transform.parent = FieldManager.Get().GetPlayerTrs(false);
             coopTObj.transform.position = AIPos;
             var AI = coopTObj.GetComponent<Coop_AI>();
-            playerController.coopPlayer = AI;
-            playerController.targetPlayer.coopPlayer = AI;
-            AI.isMine = isMaster;
-            AI.targetPlayer = isMaster ? playerController : playerController.targetPlayer;
-            AI.coopPlayer = AI.targetPlayer;
-            AI.ChangeLayer(false, true);
+            //KZSee:
+            // playerController.coopPlayer = AI;
+            // playerController.targetPlayer.coopPlayer = AI;
+            // AI.isMine = isMaster;
+            // AI.targetPlayer = isMaster ? playerController : playerController.targetPlayer;
+            // AI.coopPlayer = AI.targetPlayer;
+            // AI.ChangeLayer(false, true);
 
             //
             UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
@@ -95,8 +96,9 @@ namespace ED
             
             UI_InGame.Get().ViewTargetDice(true);
             
-            event_SP_Edit.AddListener(RefreshSP);
-            event_SP_Edit.AddListener(SetSPUpgradeButton);
+            //KZSee:
+            // event_SP_Edit.AddListener(RefreshSP);
+            // event_SP_Edit.AddListener(SetSPUpgradeButton);
             
             //
             if (NetworkManager.Get().isReconnect)
@@ -114,9 +116,10 @@ namespace ED
                 for(int i = 0 ; i < NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray.Length; i++)
                     print(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray[i]);
                 
-                playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
+                //서버에서 플레이어 스테이트를 통해 덱정보가 내려옴
+                // playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
                 //other
-                playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
+                // playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
             }
             else
             {
@@ -125,7 +128,8 @@ namespace ED
                 if (UserInfoManager.Get() != null)
                 {
                     var deck = UserInfoManager.Get().GetActiveDeck();
-                    playerController.SetDeck(deck);
+                    //KZSee:
+                    // playerController.SetDeck(deck);
                 }
 
             }

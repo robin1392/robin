@@ -18,15 +18,8 @@ namespace ED
             isBombed = false;
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 3f, (eyeLevel - 1) / 5f);
         }
-
-        public override void SetTarget()
-        {
-            target = controller.targetPlayer;
-            
-            StartCoroutine(Activate());
-        }
-
-        protected override IEnumerator Activate()
+        
+        protected override IEnumerator Cast()
         {
             var startPos = transform.position;
             while (target == null) { yield return null; }
@@ -57,24 +50,21 @@ namespace ED
             {
                 isBombed = true;
                 
-                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
                 if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
-                    if (target != null)
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
+                    //KZSee:
+                    // if (target != null)
+                    //     controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
                     
-                    //controller.HitMinionDamage( true , target.id , power, 0f);
-                    //controller.targetPlayer.SendPlayer(RpcTarget.Others, E_PTDefine.PT_HITMINIONANDMAGIC, target.id, power, 0f);
-                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ROCKETBOMB, id);
-                    controller.ActionRocketBomb(id);
+                    //KZSee:
+                    // controller.ActionRocketBomb(id);
                 }
-                //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.IsNetwork == false)
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
-                        //controller.HitMinionDamage( true , target.id , power, 0f);
+                        //KZSee:
+                        // controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
                     }
 
                     Bomb();
@@ -90,26 +80,22 @@ namespace ED
             {
                 StopAllCoroutines();
                 isBombed = true;
-
-                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && isMine)
+                
                 if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
                 {
-                    if (target != null)
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
-                    
-                    //controller.HitMinionDamage( true , target.id , power, 0f);
-                    //controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , target.id, power, 0f);
-                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_ROCKETBOMB ,id);
-                    controller.ActionRocketBomb(id);
+                    //KZSee:
+                    // if (target != null)
+                        
+                        // controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
+                    //KZSee:        
+                    // controller.ActionRocketBomb(id);
                 }
-                //else if (PhotonNetwork.IsConnected == false)
                 else if(InGameManager.IsNetwork == false)
                 {
                     if (target != null)
                     {
-                        controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
-                        //controller.HitMinionDamage( true , target.id , power, 0f);
-                        //controller.targetPlayer.HitDamageMinionAndMagic(target.id, power, 0f);
+                        //KZSee:
+                        // controller.AttackEnemyMinionOrMagic(target.UID, target.id, power, 0f);
                     }
 
                     Bomb();
@@ -122,7 +108,8 @@ namespace ED
             ps_Tail.Stop();
             ps_BombEffect.Play();
 
-            Destroy(1.1f);
+            //KZSee:
+            // Destroy(1.1f);
         }
     }
 }

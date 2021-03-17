@@ -36,7 +36,7 @@ namespace ED
             var pos = transform.position;
             pos.y = 0.1f;
             
-            controller.ActionActivePoolObject(pref_HealArea.name, pos, Quaternion.identity, Vector3.one);
+            // controller.ActionActivePoolObject(pref_HealArea.name, pos, Quaternion.identity, Vector3.one);
             
             var cols = Physics.OverlapSphere(pos, range, friendlyLayer);
             if (cols.Length > 0)
@@ -51,7 +51,7 @@ namespace ED
                     {
                         if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
                         {
-                            controller.HealMinion(col.GetComponentInParent<Minion>().id, effect);
+                            ActorProxy.HealTo(col.GetComponentInParent<Minion>());
                         }
                     }
                 }
@@ -64,7 +64,7 @@ namespace ED
                     {
                         if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
                         {
-                            controller.HealMinion(col.GetComponentInParent<Minion>().id, effect);
+                            ActorProxy.HealTo(col.GetComponentInParent<Minion>());
                         }
                     }
                 }
@@ -118,15 +118,7 @@ namespace ED
             }
             else
             {
-                switch (Global.PLAY_TYPE.BATTLE)
-                {
-                    case Global.PLAY_TYPE.BATTLE:
-                        return controller.targetPlayer;
-                    case Global.PLAY_TYPE.COOP:
-                        return controller.coopPlayer;
-                    default:
-                        return null;
-                }
+                return ActorProxy.GetEnemyTower();
             }
         }
     }

@@ -110,7 +110,7 @@ namespace ED
                 //flyingTarget = colTarget.GetComponentInParent<Minion>();
                 
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
-                controller.ActionSendMsg(id, "LookAndAniTrigger", flyingTarget.id);
+                // controller.ActionSendMsg(id, "LookAndAniTrigger", flyingTarget.id);
             }
         }
 

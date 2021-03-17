@@ -21,11 +21,11 @@ public class Boss3 : Minion
         BaseStat targetBS = null;
         if (targetId % 10000 == 0)
         {
-            targetBS = controller.targetPlayer;
+            // targetBS = controller.targetPlayer;
         }
         else
         {
-            targetBS = InGameManager.Get().GetBottomMinion(targetId);
+            targetBS = ActorProxy.GetBaseStatWithNetId(targetId);
         }
 
         if (targetBS == null) yield break;
@@ -48,7 +48,7 @@ public class Boss3 : Minion
                 var m = hits[i].collider.GetComponent<BaseStat>();
                 if (m != null)
                 {
-                    controller.AttackEnemyMinionOrMagic(m.UID, m.id, power, 0);
+                    // controller.AttackEnemyMinionOrMagic(m.UID, m.id, power, 0);
                 }
             }
         }

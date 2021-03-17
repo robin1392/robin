@@ -35,28 +35,24 @@ namespace ED
             ps.transform.parent.localScale = animator.transform.localScale;
             ((SphereCollider)collider).radius = Mathf.Lerp(1.5f, 2.25f, (eyeLevel - 1) / 5f);
         }
-        
-        public override void SetTarget()
-        {
-            SetTargetPosition();
-        }
-        
-        protected override IEnumerator Activate()
-        {
-            SoundManager.instance.Play(clip_Summon);
-            var startPos = transform.position;
-            var endPos = targetPos;
-            var distance = Vector3.Distance(startPos, endPos);
-            var max = distance / moveSpeed;
 
-            throw new NotImplementedException("정해진 위치로 이동시킨다.");
-            // transform.velocity = (endPos - startPos).normalized * moveSpeed;
-            yield return new WaitForSeconds(max);
-            // rb.velocity = Vector3.zero;
-            transform.position = endPos;
-
-            EndMove();
-        }
+        //KZSee:
+        // protected override IEnumerator Activate()
+        // {
+        //     SoundManager.instance.Play(clip_Summon);
+        //     var startPos = transform.position;
+        //     var endPos = targetPos;
+        //     var distance = Vector3.Distance(startPos, endPos);
+        //     var max = distance / moveSpeed;
+        //
+        //     throw new NotImplementedException("정해진 위치로 이동시킨다.");
+        //     // transform.velocity = (endPos - startPos).normalized * moveSpeed;
+        //     yield return new WaitForSeconds(max);
+        //     // rb.velocity = Vector3.zero;
+        //     transform.position = endPos;
+        //
+        //     EndMove();
+        // }
 
         private void EndMove()
         {
@@ -80,7 +76,7 @@ namespace ED
                 if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
                 {
                     //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,baseStatId, false, effect);
-                    controller.ActionFlagOfWar(baseStatId, false, effect);
+                    // controller.ActionFlagOfWar(baseStatId, false, effect);
                 }
             }
 
@@ -88,7 +84,7 @@ namespace ED
             ps_NotIsMine.Stop();
             yield return new WaitForSeconds(1.5f);
             
-            Destroy();
+            // Destroy();
         }
 
         private void OnTriggerEnter(Collider collision)
@@ -107,8 +103,8 @@ namespace ED
                     //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                     if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
                     {
-                        //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, true, effect);
-                        controller.ActionFlagOfWar(m.id, true, effect);
+                        //KZSee:
+                        // controller.ActionFlagOfWar(m.id, true, effect);
                     }
                 }
             }
@@ -128,11 +124,10 @@ namespace ED
                 {
                     _listAttackSpeedUp.Remove(m.id);
                     
-                    //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
                     if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
                     {
-                        //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,m.id, false, effect);
-                        controller.ActionFlagOfWar(m.id, false, effect);
+                        //KZSee:
+                        //controller.ActionFlagOfWar(m.id, false, effect);
                     }
                 }
             }

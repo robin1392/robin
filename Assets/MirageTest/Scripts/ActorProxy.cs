@@ -524,6 +524,38 @@ namespace MirageTest.Scripts
             var enemyTower = rwClient.Towers.Find(t => t.team != team);
             return enemyTower.baseStat;
         }
+        
+        public BaseStat[] GetEnemies()
+        {
+            var rwClient = Client as RWNetworkClient;
+            //TODO: 팀별로 액터를 분리해놓는다.
+            var enemies = rwClient.ActorProxies.Where(actor =>
+            {
+                if (actor.team == team)
+                {
+                    return false;
+                }
+
+                if (actor.actorType == ActorType.Tower)
+                {
+                    return false;
+                }
+
+                if (actor.baseStat is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
+                {
+                    return false;
+                }
+                
+                if (actor.baseStat is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
+                {
+                    return false; 
+                }
+
+                return true;
+            }).Select(actor => actor.baseStat);
+
+            return enemies.ToArray();
+        }
 
         public BaseStat GetRandomEnemyCanBeAttacked()
         {

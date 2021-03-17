@@ -48,7 +48,7 @@ public class Boss5 : Minion
         {
             if (isMine || controller.isPlayingAI)
             {
-                controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.FireBullet, target.id);
+                // controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.FireBullet, target.id);
             }
             
             var attack = PoolManager.Get().ActivateObject(obj_Attack.name, ts_ShootingPos.position);
@@ -94,7 +94,7 @@ public class Boss5 : Minion
             _skillCastedTime = _spawnedTime;
 
             animator.SetTrigger(AnimationHash.Skill);
-            controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, id, E_ActionSendMessage.DropBullet);
+            // controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, id, E_ActionSendMessage.DropBullet);
             DropBullet();
         }
     }
@@ -129,11 +129,12 @@ public class Boss5 : Minion
 
                     if (isMine || controller.isPlayingAI)
                     {
-                        var minions = InGameManager.Get().GetBottomMinions();
-                        for (int j = 0; j < minions.Length; j++)
-                        {
-                            DamageToTarget(minions[j], 0, 0.1f);
-                        }
+                        //KZSee:
+                        // var minions = ActorProxy.GetEnemies();;
+                        // for (int j = 0; j < minions.Length; j++)
+                        // {
+                        //     DamageToTarget(minions[j], 0, 0.1f);
+                        // }
                     }
                 });
             }

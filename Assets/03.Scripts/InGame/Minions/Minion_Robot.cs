@@ -25,7 +25,8 @@ namespace ED
             animator.gameObject.SetActive(false);
             animator.SetTrigger(AnimationHash.Skill);
             pieceID = controller.robotPieceCount++;
-            controller.robotEyeTotalLevel += eyeLevel;
+            //KZSee:
+            // controller.robotEyeTotalLevel += eyeLevel;
 
             SetParts();
             Invoke("Fusion", 1.6f);
@@ -46,7 +47,8 @@ namespace ED
 
                 if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
                 StopAllCoroutines();
-                InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
+                //KZSee:
+                // InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
 
                 PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
                 _poolObjectAutoDeactivate.Deactive();
@@ -65,7 +67,8 @@ namespace ED
             {
                 if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
                 StopAllCoroutines();
-                InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
+                //KZSee:
+                // InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
 
                 _poolObjectAutoDeactivate.Deactive();
             }
@@ -95,7 +98,7 @@ namespace ED
         {
             //KZSee:
             // maxHealth *= controller.robotEyeTotalLevel;
-            controller.robotEyeTotalLevel = 0;
+            // controller.robotEyeTotalLevel = 0;
             // currentHealth = maxHealth;
 
             collider.enabled = true;

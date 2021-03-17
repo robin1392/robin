@@ -129,7 +129,7 @@ namespace ED
 
         IEnumerator ReviveCoroutine()
         {
-            _collider.enabled = false;
+            collider.enabled = false;
             _reviveCount--;
             animator.gameObject.SetActive(false);
 
@@ -142,7 +142,7 @@ namespace ED
             animator = animator_Dead;
             animator.gameObject.SetActive(true);
             SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
-            _collider.enabled = true;
+            collider.enabled = true;
         }
 
         IEnumerator PoisonCoroutine(float duration)
@@ -160,9 +160,7 @@ namespace ED
                     var bs = col.GetComponentInParent<BaseStat>();
                     if (bs != null && bs.id > 0 && bs.isFlying == false && bs.isAlive)
                     {
-                        //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect * 10, 0f);
-                        controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, effect, 0f);
-                        //controller.HitMinionDamage( true , bs.id , effect * 10, 0f);
+                        bs.ActorProxy.HitDamage(effect);
                     }
                 }
                 

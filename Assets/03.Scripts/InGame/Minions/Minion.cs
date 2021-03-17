@@ -255,10 +255,10 @@ namespace ED
         public void DamageToTarget(BaseStat m, float delay = 0, float factor = 1f)
         {
             if (m == null || m.isAlive == false) return;
-
-            controller.AttackEnemyMinionOrMagic(m.UID, m.id, power * factor, delay);
-            //controller.AttackEnemyMinion(m.id, power * factor, delay);
-            controller.SetMaxDamageWithDiceID(diceId, power * factor);
+            
+            //KZSee:
+            // controller.AttackEnemyMinionOrMagic(m.UID, m.id, power * factor, delay);
+            // controller.SetMaxDamageWithDiceID(diceId, power * factor);
         }
 
         public void Push(Vector3 dir, float pushPower)
@@ -375,7 +375,8 @@ namespace ED
 
         public virtual void SetVelocityTarget()
         {
-            if (controller.isMinionAgentMove)
+            //KZSee:
+            // if (controller.isMinionAgentMove)
             {
                 if (target != null && isAlive)
                 {
@@ -531,9 +532,10 @@ namespace ED
             if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
 
             animator.SetTrigger(AnimationHash.Idle);
-            controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY,
-                isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int) E_AniTrigger.Idle,
-                target.id);
+            //KZSee:
+            // controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY,
+            //     isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int) E_AniTrigger.Idle,
+            //     target.id);
         }
 
 

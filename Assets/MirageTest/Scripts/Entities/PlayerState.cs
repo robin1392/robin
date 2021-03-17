@@ -133,7 +133,7 @@ namespace MirageTest.Scripts.Entities
                 }
                 
                 UI_InGame.Get().btn_GetDice.EditSpCallback(newValue > GetDiceCost());
-                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue > GetUpradeSpCost());
+                // UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue > GetUpradeSpCost());
                 UI_InGame.Get().SetSP(newValue);
             }
         }
@@ -225,8 +225,8 @@ namespace MirageTest.Scripts.Entities
             }
             else
             {
-                UI_InGame.Get().SetEnemyArrayDeck(deckArr.Select(d => d.diceInfo).ToArray());
-                UI_InGame.Get().SetEnemyUpgrade(deckArr.Select(d => d.inGameLevel).ToArray());
+                UI_InGame.Get().SetEnemyArrayDeck();
+                UI_InGame.Get().SetEnemyUpgrade();
             }
         }
 

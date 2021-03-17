@@ -52,11 +52,13 @@ namespace ED
             {
                 if (IsTargetInnerRange() == false)
                 {
-                    controller.ActionSendMsg(id, "StopAiming");
+                    //KZSee:
+                    // controller.ActionSendMsg(id, "StopAiming");
                     break;
                 }
-                    
-                controller.ActionMinionTarget(id, target.id);
+                
+                //KZSee:
+                // controller.ActionMinionTarget(id, target.id);
                 transform.LookAt(target.transform);
                 lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
 

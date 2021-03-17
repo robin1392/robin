@@ -1,18 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using CodeStage.AntiCheat.ObscuredTypes;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
+using MirageTest.Scripts;
 using RandomWarsResource.Data;
 
 
 public class UI_InGame : SingletonDestroy<UI_InGame>
 {
-    
-    
-    
     #region ui element variable
     public UI_UpgradeButton[] arrUpgradeButtons;
     public Text text_SP;
@@ -22,11 +22,9 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public Text text_GetDiceButton;
     public UI_GetDiceButton btn_GetDice;
     
-    
-
     public GameObject obj_ViewTargetDiceField;
     
-    public Button button_SP_Upgrade;
+    public UI_SPUpgradeButton button_SP_Upgrade;
     public Text text_SP_Upgrade;
     public Text text_SP_Upgrade_Price;
 
@@ -45,11 +43,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     [Header("SP upgrade message")] 
     public CanvasGroup cg_SpUpgradeMessage;
     public Text text_SpUpgradeMessage;
-    
-    
     #endregion
-
-    
     
     #region unity base
 
@@ -58,6 +52,17 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         base.Awake();
 
         InitUIElement();
+    }
+    
+    private RWNetworkClient _client;
+    public void InitClient(RWNetworkClient client)
+    {
+        _client = client;
+        foreach (var button in arrUpgradeButtons)
+        {
+            //KZSee:
+            //button.InitClient(client);
+        }
     }
 
     public override void OnDestroy()
@@ -92,18 +97,22 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     /// <param name="deckDice"></param>
     /// <param name="arrUpgradeLv"></param>
     //public void SetArrayDeck(Data_Dice[] deckDice, int[] arrUpgradeLv)
-    public void SetArrayDeck(RandomWarsResource.Data.TDataDiceInfo[] deckDice, int[] arrUpgradeLv)
+    public void SetArrayDeck((TDataDiceInfo diceInfo, byte inGameLevel)[] deckDice)
     {
         for (var i = 0; i < arrUpgradeButtons.Length; i++)
         {
-            arrUpgradeButtons[i].Initialize( deckDice[i], arrUpgradeLv[i]);
+            arrUpgradeButtons[i].Initialize( deckDice[i].diceInfo, deckDice[i].inGameLevel);
         }
     }
 
     public void SetEnemyArrayDeck()
     {
-        RandomWarsResource.Data.TDataDiceInfo[] deckDice = InGameManager.Get().playerController.targetPlayer.arrDiceDeck;
-        int[] arrUpgradeLv = InGameManager.Get().playerController.targetPlayer.arrUpgradeLevel;
+        var diceInfos = TableManager.Get().DiceInfo;
+        TDataDiceInfo[] deckDice = _client.GetEnemyPlayerState().Deck.Select(d =>
+        {
+            diceInfos.GetData(d.diceId, out var diceInfo);
+            return diceInfo;
+        }).ToArray();
         
         for (int i = 0; i < deckDice.Length; i++)
         {
@@ -113,7 +122,11 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     public void SetEnemyUpgrade()
     {
-        int[] arrUpgradeLv = InGameManager.Get().playerController.targetPlayer.arrUpgradeLevel;
+        var diceInfos = TableManager.Get().DiceInfo;
+        var arrUpgradeLv = _client.GetEnemyPlayerState().Deck.Select(d =>
+        {
+            return d.inGameLevel;
+        }).ToArray();
 
         for (int i = 0; i < arrUpgradeLv.Length; i++)
         {
@@ -225,6 +238,4 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     
     
     #endregion
-    
-    
 }

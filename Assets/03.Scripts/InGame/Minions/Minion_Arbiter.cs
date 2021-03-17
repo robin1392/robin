@@ -32,8 +32,8 @@ namespace ED
         {
             foreach (var minion in listCloaking)
             {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
-                controller.ActionCloacking(minion.id, false);
+                //KZSee:
+                //controller.ActionCloacking(minion.id, false);
             }
             listCloaking.Clear();
             
@@ -59,7 +59,7 @@ namespace ED
                 {
                     listCloaking.Add(temp);
                     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, temp.id, true);
-                    controller.ActionCloacking(temp.id, true);
+                    // controller.ActionCloacking(temp.id, true);
                 }
             }
 
@@ -76,7 +76,7 @@ namespace ED
             {
                 listCloaking.Remove(minion);
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONCLOACKING, minion.id, false);
-                controller.ActionCloacking(minion.id, false);
+                // controller.ActionCloacking(minion.id, false);
             }
         }
         

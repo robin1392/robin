@@ -14,7 +14,7 @@ namespace MirageTest.Scripts
             baseStat.ActorProxy = this;
             baseStat.id = NetId;
             playerController.isMine = IsLocalPlayerActor;
-            playerController.ChangeLayer(IsBottomCamp(), IsLocalPlayerAlly());
+            playerController.ChangeLayer(IsBottomCamp());
             playerController.SetColor(IsBottomCamp() ? E_MaterialType.BOTTOM : E_MaterialType.TOP, IsLocalPlayerAlly());
             isMovable = false;
         }

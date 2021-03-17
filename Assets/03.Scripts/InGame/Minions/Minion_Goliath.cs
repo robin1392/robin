@@ -45,15 +45,7 @@ namespace ED
             {
                 if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
                 {
-                    switch (Global.PLAY_TYPE.BATTLE)
-                    {
-                        case Global.PLAY_TYPE.BATTLE:
-                            return controller.targetPlayer;
-                        case Global.PLAY_TYPE.COOP:
-                            return controller.coopPlayer;
-                        default:
-                            return null;
-                    }
+                    return ActorProxy.GetEnemyTower();
                 }
                 else
                 {
@@ -93,15 +85,7 @@ namespace ED
             }
             else
             {
-                switch (Global.PLAY_TYPE.BATTLE)
-                {
-                    case Global.PLAY_TYPE.BATTLE:
-                        return controller.targetPlayer;
-                    case Global.PLAY_TYPE.COOP:
-                        return controller.coopPlayer;
-                    default:
-                        return null;
-                }
+                return ActorProxy.GetEnemyTower();
             }
         }
 

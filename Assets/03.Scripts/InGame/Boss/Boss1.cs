@@ -21,7 +21,8 @@ public class Boss1 : Minion
 
     private Minion GetLongDistanceTarget()
     {
-        var minions = InGameManager.Get().GetBottomMinions();
+        ActorProxy.GetEnemies();
+        var minions = ActorProxy.GetEnemies();;
         List<BaseStat> list = new List<BaseStat>();
         float min = 0f;
         float max = 0f;
@@ -65,19 +66,19 @@ public class Boss1 : Minion
             {
                 _skillCastedTime = _spawnedTime;
                 StartCoroutine(SkillCoroutine(m));
-                
-                controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.JumpTarget, m.id);
+                //KZSee:
+                // controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.JumpTarget, m.id);
             }
         }
     }
 
     public void JumpTarget(uint id)
     {
-        var m = InGameManager.Get().GetBottomMinion(id);
+        var m = ActorProxy.GetBaseStatWithNetId(id);
 
         if (m != null)
         {
-            StartCoroutine(SkillCoroutine(m));
+            StartCoroutine(SkillCoroutine(m as Minion));
         }
     }
     

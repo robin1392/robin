@@ -67,20 +67,9 @@ namespace ED
             }
         }
         
-
         private static readonly string GROUND_TAG_NAME = "Minion_Ground";
         private static readonly string FLYING_TAG_NAME = "Minion_Flying";
         public bool isFlying => gameObject.CompareTag(FLYING_TAG_NAME);
-        public uint UID
-        {
-            get
-            {
-                if (controller != null)
-                    return controller.myUID;
-                else
-                    return ((PlayerController)this).myUID;
-            }
-        }
 
         public int targetLayer
         {

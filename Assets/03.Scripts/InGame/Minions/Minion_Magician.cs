@@ -95,7 +95,8 @@ namespace  ED
                 
                 ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
                 
-                controller.ActionMinionScareCrow(true, target.id, (float) eyeLevel);
+                //KZSee:
+                // controller.ActionMinionScareCrow(true, target.id, (float) eyeLevel);
 
             }
         }

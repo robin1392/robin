@@ -10,12 +10,6 @@ namespace ED
     public class Battle_AI : PlayerController
     {
         public int[] deck;
-        public override int sp
-        {
-            get => _sp;
-            protected set { /*Debug.LogFormat("SP:{0}, Value:{1}", _sp, value);*/ _sp = value; }
-        }
-
         public int getDiceCost => 10 + getDiceCount * 10;
         public int getDiceCount;
 
@@ -98,17 +92,6 @@ namespace ED
             //
             // NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray = deck;
             // SetDeck(deck);
-        }
-
-        public void AI_GetDice()
-        {
-            if (sp >= getDiceCost)
-            {
-                sp -= getDiceCost;
-                getDiceCount++;
-
-                GetDice();
-            }
         }
 
         //KZSee: 에이에이 레벨업에 적용
@@ -203,5 +186,39 @@ namespace ED
                     break;
             }
         }
+        
+        public void GetDice(int diceId , int slotNum , int level = 0)
+        {
+            // arrDice[slotNum].Set(GetArrayDeckDice(diceId));
+            //
+            // if (uiDiceField != null)
+            // {
+            //     uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
+            //     uiDiceField.SetField(arrDice);
+            // }
+            //
+            // //
+            // uiDiceField.RefreshField();
+        }
+
+        public void OtherGetDice(int diceId, int slotNum)
+        {
+            // arrDice[slotNum].Set(GetArrayDeckDice(diceId));
+        }
+
+        // public RandomWarsResource.Data.TDataDiceInfo GetArrayDeckDice(int diceId)
+        // {
+        //     RandomWarsResource.Data.TDataDiceInfo dice = null;
+        //     for (int i = 0; i < arrDiceDeck.Length; i++)
+        //     {
+        //         if (arrDiceDeck[i].id == diceId)
+        //         {
+        //             dice = arrDiceDeck[i];
+        //             break;
+        //         }
+        //     }
+        //     return dice;
+        // }
+
     }
 }

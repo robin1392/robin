@@ -85,13 +85,6 @@ namespace MirageTest.Scripts
         {
             if (actorProxy.actorType == ActorType.Tower)
             {
-                if (enableActor && ActorProxies.Any())
-                {
-                    var other = ActorProxies.First().baseStat as PlayerController;
-                    var playerController = actorProxy.baseStat as PlayerController;
-                    other.targetPlayer = playerController;
-                    playerController.targetPlayer = other;
-                }
                 Towers.Add(actorProxy);
             }
             
@@ -115,6 +108,11 @@ namespace MirageTest.Scripts
         public PlayerState GetLocalPlayerState()
         {
             return PlayerStates.Find(p => p.userId == localPlayerId);
+        }
+        
+        public PlayerState GetEnemyPlayerState()
+        {
+            return PlayerStates.Find(p => p.userId != localPlayerId);
         }
 
         public bool IsLocalPlayerTag(byte ownerTag)

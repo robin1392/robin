@@ -69,21 +69,21 @@ namespace ED
                     _listTarget.Add(bs);
                     intList.Add(bs.id);
 
-                    controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, power, 0f);
+                    bs.ActorProxy.HitDamage(power);
                 }
             }
 
             //if (PhotonNetwork.IsConnected && isMine)
             if(InGameManager.IsNetwork && isMine)
             {
-                //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_LAYZERTARGET,id, intList.Count > 0 ? intList.ToArray() : null);
-                if(intList.Count > 0 )
-                    controller.ActionLayzer(id, intList.ToArray());
-                else
-                {
-                    uint[] emptyLst = new uint[6] { 0, 0, 0, 0, 0, 0 };
-                    controller.ActionLayzer(id, emptyLst);
-                }
+                //KZSee:
+                // if(intList.Count > 0 )
+                //     controller.ActionLayzer(id, intList.ToArray());
+                // else
+                // {
+                //     uint[] emptyLst = new uint[6] { 0, 0, 0, 0, 0, 0 };
+                //     controller.ActionLayzer(id, emptyLst);
+                // }
             }
             
             if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;

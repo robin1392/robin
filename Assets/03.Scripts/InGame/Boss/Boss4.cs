@@ -23,7 +23,6 @@ public class Boss4 : Minion
     public override void Initialize()
     {
         base.Initialize();
-        target = controller.targetPlayer;
         transform.position = transform.position.z > 0
             ? transform.position + Vector3.back
             : transform.position + Vector3.forward;

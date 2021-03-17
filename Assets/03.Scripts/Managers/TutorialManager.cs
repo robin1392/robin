@@ -55,13 +55,6 @@ public class TutorialManager : MonoBehaviour
             yield return new WaitWhile(() => stepCount < nextStepCount);
             nextStepCount++;
         }
-        // Step();
-        //
-        // yield return new WaitWhile(() => stepCount < 1);
-        // Step();
-        //
-        // yield return new WaitWhile(() => stepCount < 2);
-        // Step();
     }
     
     public void Click_NextStep()
@@ -87,7 +80,8 @@ public class TutorialManager : MonoBehaviour
                 msg.DataId = 5001;
                 msg.MoveSpeed = 100;
                 msg.Effect = 30000;
-                InGameManager.Get().playerController.SpawnMonster(msg);
+                //KZSee:
+                // InGameManager.Get().playerController.SpawnMonster(msg);
                 break;
         }
     }
@@ -196,9 +190,9 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 3:
-                //image_NextStep.DOFade(0.78f, 0f).SetUpdate(true);
                 Time.timeScale = 0f;
-                InGameManager.Get().playerController.TutorialAddSP(50);
+                //KZSee:
+                // InGameManager.Get().playerController.TutorialAddSP(50);
                 break;
             case 4: // 주사위 소환 버튼
                 Time.timeScale = 0f;
@@ -215,7 +209,8 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 7:
                 Time.timeScale = 0f;
-                InGameManager.Get().playerController.TutorialAddSP(5000);
+                //KZSee:
+                //InGameManager.Get().playerController.TutorialAddSP(5000);
                 break;
             case 8:    // 두번째 주사위 소환
                 Time.timeScale = 0f;

@@ -31,12 +31,12 @@ namespace ED
             
             for (int i = 0; i < 2; i++)
             {
-                // Spawn
-                var m = controller.CreateMinion(pref_MiniGolem,
-                    transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f));
+                //KZSee:
+                // var m = controller.CreateMinion(pref_MiniGolem,
+                //     transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f));
 
-                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomCamp);
+                // m.targetMoveType = DICE_MOVE_TYPE.GROUND;
+                // m.ChangeLayer(isBottomCamp);
                 //KZSee:
                 // m.power = effect;
                 // // m.maxHealth = maxHealth * eyeLevel * 0.1f;
@@ -45,7 +45,7 @@ namespace ED
                 // // m.range = range;
                 // m.eyeLevel = eyeLevel;
                 // m.ingameUpgradeLevel = ingameUpgradeLevel;
-                m.Initialize();
+                // m.Initialize();
             }
 
             base.Death();

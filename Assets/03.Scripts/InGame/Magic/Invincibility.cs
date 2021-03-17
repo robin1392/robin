@@ -12,22 +12,20 @@ namespace ED
 
             if (isMine)
             {
-                //controller.GetRandomMinion()?.Invincibility(1);
                 for (int i = 0; i < eyeLevel; i++)
                 {
-                    var m = controller.GetRandomMinion();
-                    if (m != null)
-                    {
-                        //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, m.id, effect);
-                        // add nev
-                        controller.ActionInvincibility(m.id, effect);
-                    }
+                    //KZSee:
+                    // var m = controller.GetRandomMinion();
+                    // if (m != null)
+                    // {
+                    //     //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONINVINCIBILITY, m.id, effect);
+                    //     // add nev
+                    //     controller.ActionInvincibility(m.id, effect);
+                    // }
                 }
             }
             
-            Destroy();
+            //Destroy();
         }
-
-        public override void SetTarget() { }
     }
 }

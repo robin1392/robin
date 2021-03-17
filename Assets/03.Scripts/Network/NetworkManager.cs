@@ -10,6 +10,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CodeStage.AntiCheat.ObscuredTypes;
 using ED;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 using Service.Core;
@@ -55,33 +56,9 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public Global.E_MATCHSTEP NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
 
-    SocketService _socketService;
-
     private HttpSender _httpSender;
     private HttpReceiver _httpReceiver;
     private HttpClient _httpClient;
-
-
-
-    // socket
-    private SocketManager _clientSocket = null;
-    // sender 
-    private SocketSender _packetSend;
-
-    /*public GamePacketSender SendSocket
-    {
-        get => _packetSend;
-        private set => _packetSend = value;
-    }*/
-
-    // 외부에서 얘를 건들일은 없도록하지
-    private SocketReceiver _packetRecv;
-
-    //
-    // 패킷 리시브 함수들 모아놓는곳
-    private SocketRecvEvent _socketRecv;
-    // 패킷 send 함수 모아놓는곳
-    private SocketSendEvent _socketSend;
     
     public static GameBaseClientSession session;
     
@@ -94,37 +71,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     #endregion
-
-    //#region socket addr
-
-    //private string _serverAddr;
-    //public string serverAddr
-    //{
-    //    get => _serverAddr;
-    //    private set => _serverAddr = value;
-    //}
-
-    //private int _port;
-
-    //public int port
-    //{
-    //    get => _port;
-    //    private set => _port = value;
-    //}
-
-    //private string _gameSession;
-
-    //public string gameSession
-    //{
-    //    get => _gameSession;
-    //    private set => _gameSession = value;
-    //}
-
-    //private string _battlePath = "/BattleInfo.bytes";
-
-    //#endregion
-
-
+    
     #region game process var
 
     private bool _recvJoinPlayerInfoCheck = false;
@@ -252,13 +199,6 @@ public class NetworkManager : Singleton<NetworkManager>
     // Update is called once per frame
     void Update()
     {
-        UpdateSocket();
-
-        if (_socketService != null)
-        {
-            _socketService.Update();
-        }
-
         if (_httpClient != null)
         {
             _httpClient.Update();
@@ -284,8 +224,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private void InitNetwork()
     {
-        _socketService = new SocketService();
-
         _httpReceiver = new HttpReceiver();
         _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
         _httpSender = new HttpSender(_httpClient);
@@ -299,13 +237,6 @@ public class NetworkManager : Singleton<NetworkManager>
         _netInfo = new NetInfo();
         _recvJoinPlayerInfoCheck = false;
 
-        _clientSocket = new SocketManager();
-        _packetSend = new SocketSender();
-
-        // 
-        _socketRecv = new SocketRecvEvent();
-        _socketSend = new SocketSendEvent(_packetSend);
-
         SetReconnect(false);
 
         // recv 셋팅
@@ -317,45 +248,14 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (IsConnect())
         {
-            DisconnectSocket(true);
+            
         }
-
-        //_battleInfo = null;
-
-        _packetSend = null;
-        _packetRecv = null;
-
-        _socketRecv = null;
-        _socketSend = null;
-
-        _clientSocket = null;
-
         _netInfo = null;
     }
     #endregion
 
-    #region update packet
-
-    private void UpdateSocket()
-    {
-        if (_clientSocket != null)
-            _clientSocket.Update();
-    }
-
-    #endregion
-
 
     #region connent
-
-    //public void SetAddr(string serveraddr, int port, string gamesession)
-    //{
-    //    _serverAddr = serveraddr;
-    //    _port = port;
-    //    _gameSession = gamesession;
-
-    //    _recvJoinPlayerInfoCheck = true;
-    //    _netInfo.Clear();
-    //}
 
     public void ConnectServer(Global.PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
     {
@@ -366,8 +266,6 @@ public class NetworkManager : Singleton<NetworkManager>
         //playType = type;
         _recvJoinPlayerInfoCheck = true;
         _netInfo.Clear();
-
-        _clientSocket.Connect(serverAddr, port, playerSessionId);
     }
 
 
@@ -379,27 +277,21 @@ public class NetworkManager : Singleton<NetworkManager>
         SetResume(false);        // resume
     }
 
-
-    public void DisconnectSocket(bool unexpected)
-    {
-        if (_clientSocket != null && _clientSocket.IsConnected() == true)
-            _clientSocket.Disconnect(unexpected == true ? ESessionState.None : ESessionState.Leave);
-    }
-
     public bool IsConnect()
     {
-        if (_clientSocket == null)
+        var client = FindObjectOfType<RWNetworkClient>();
+        if (client == null)
+        {
             return false;
-
-        return _clientSocket.IsConnected();
+        }
+        return client.IsConnected;
     }
 
     public void Send(GameProtocol protocol, params object[] param)
     {
         if (protocol != GameProtocol.MINION_STATUS_RELAY)
             UnityUtil.Print("SEND =>  ", protocol.ToString(), "magenta");
-
-        _socketSend.SendPacket(protocol, _clientSocket.Peer, param);
+        
     }
 
 
@@ -414,19 +306,19 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void PrintNetworkStatus()
     {
-        _clientSocket.PrintNetworkStatus();
+        
     }
 
 
     public void PauseGame()
     {
-        _clientSocket.Pause();
+        
     }
 
 
     public void ResumeGame()
     {
-        _clientSocket.Resume();
+        
     }
 
 
@@ -466,96 +358,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     public void CombineRecvDelegate()
     {
-        // TODO : 게임 서버 패킷 응답 처리 delegate를 설정해야합니다.
-        _packetRecv = new SocketReceiver();
-
-        _packetRecv.JoinGameAck = _socketRecv.OnJoinGameAck;
-        _packetRecv.JoinCoopGameAck = _socketRecv.OnJoinCoopGameAck;
-        _packetRecv.LeaveGameAck = _socketRecv.OnLeaveGameAck;
-        _packetRecv.ReadyGameAck = _socketRecv.OnReadyGameAck;
-        _packetRecv.GetDiceAck = _socketRecv.OnGetDiceAck;
-        _packetRecv.MergeDiceAck = _socketRecv.OnMergeDiceAck;
-
-        _packetRecv.UpgradeSpAck = _socketRecv.OnUpgradeSpAck;
-        _packetRecv.InGameUpDiceAck = _socketRecv.OnInGameUpDiceAck;
-
-        _packetRecv.HitDamageAck = _socketRecv.OnHitDamageAck;
-
-        // notify
-        _packetRecv.JoinGameNotify = _socketRecv.OnJoinGameNotify;
-        _packetRecv.JoinCoopGameNotify = _socketRecv.OnJoinCoopGameNotify;
-        _packetRecv.LeaveGameNotify = _socketRecv.OnLeaveGameNotify;
-        _packetRecv.GetDiceNotify = _socketRecv.OnGetDiceNotify;
-        _packetRecv.DeactiveWaitingObjectNotify = _socketRecv.OnDeactiveWaitingObjectNotify;
-        _packetRecv.SpawnNotify = _socketRecv.OnSpawnNotify;
-        _packetRecv.CoopSpawnNotify = _socketRecv.OnCoopSpawnNotify;
-        _packetRecv.AddSpNotify = _socketRecv.OnAddSpNotify;
-        _packetRecv.MonsterSpawnNotify = _socketRecv.OnMonsterSpawnNotify;
-
-        _packetRecv.MergeDiceNotify = _socketRecv.OnMergeDiceNotify;
-        _packetRecv.UpgradeSpNotify = _socketRecv.OnUpgradeSpNotify;
-        _packetRecv.InGameUpDiceNotify = _socketRecv.OnInGameUpDiceNotify;
-
-        _packetRecv.HitDamageNotify = _socketRecv.HitDamageNotify;
-        _packetRecv.EndGameNotify = _socketRecv.OnEndGameNotify;
-        _packetRecv.EndCoopGameNotify = _socketRecv.OnEndCoopGameNotify;
-
-
-        // relay
-        _packetRecv.HitDamageMinionRelay = _socketRecv.OnHitDamageMinionRelay;
-        _packetRecv.DestroyMinionRelay = _socketRecv.OnDestroyMinionRelay;
-        _packetRecv.HealMinionRelay = _socketRecv.OnHealMinionRelay;
-        _packetRecv.PushMinionRelay = _socketRecv.OnPushMinionRelay;
-        _packetRecv.SetMinionAnimationTriggerRelay = _socketRecv.OnSetMinionAnimationTriggerRelay;
-        _packetRecv.FireArrowRelay = _socketRecv.OnFireArrowRelay;
-        _packetRecv.FireballBombRelay = _socketRecv.OnFireballBombRelay;
-        _packetRecv.MineBombRelay = _socketRecv.OnMineBombRelay;
-        _packetRecv.SetMagicTargetIdRelay = _socketRecv.OnSetMagicTargetIdRelay;
-        _packetRecv.SetMagicTargetRelay = _socketRecv.OnSetMagicTargetRelay;
-
-        //
-        _packetRecv.SturnMinionRelay = _socketRecv.OnSturnMinionRelay;
-        _packetRecv.RocketBombRelay = _socketRecv.OnRocketBombRelay;
-        _packetRecv.IceBombRelay = _socketRecv.OnIceBombRelay;
-        _packetRecv.DestroyMagicRelay = _socketRecv.OnDestroyMagicRelay;
-        _packetRecv.FireCannonBallRelay = _socketRecv.OnFireCannonBallRelay;
-        _packetRecv.FireSpearRelay = _socketRecv.OnFireSpearRelay;
-        _packetRecv.FireManFireRelay = _socketRecv.OnFireManFireRelay;
-        _packetRecv.ActivatePoolObjectRelay = _socketRecv.OnActivatePoolObjectRelay;
-        _packetRecv.MinionCloackingRelay = _socketRecv.OnMinionCloackingRelay;
-        _packetRecv.MinionFlagOfWarRelay = _socketRecv.OnMinionFogOfWarRelay;
-        _packetRecv.SendMessageVoidRelay = _socketRecv.OnSendMessageVoidRelay;
-        _packetRecv.SendMessageParam1Relay = _socketRecv.OnSendMessageParam1Relay;
-        _packetRecv.NecromancerBulletRelay = _socketRecv.OnNecromancerBulletRelay;
-        _packetRecv.SetMinionTargetRelay = _socketRecv.OnSetMinionTargetRelay;
-
-        _packetRecv.ScarecrowRelay = _socketRecv.OnScarecrowRelay;
-        _packetRecv.LayzerTargetRelay = _socketRecv.OnLazerTargetRelay;
-
-        _packetRecv.MinionStatusRelay = _socketRecv.OnMinionStatusRelay;
-
-        _packetRecv.FireBulletRelay = _socketRecv.OnFireBulletRelay;
-        _packetRecv.MinionInvincibilityRelay = _socketRecv.OnMinionInvincibilityRelay;
-
-        // reconnect , pause , resume
-        _packetRecv.DisconnectGameNotify = _socketRecv.OnDisconnectGameNotify;
-        _packetRecv.ReconnectGameNotify = _socketRecv.OnReconnectGameNotify;
-        _packetRecv.ReconnectGameAck = _socketRecv.OnReconnectGameAck;
-
-        _packetRecv.StartSyncGameAck = _socketRecv.OnStartSyncGameAck;
-        _packetRecv.StartSyncGameNotify = _socketRecv.OnStartSyncGameNotify;
-        _packetRecv.EndSyncGameAck = _socketRecv.OnEndSyncGameAck;
-        _packetRecv.EndSyncGameNotify = _socketRecv.OnEndSyncGameNotify;
-
-        _packetRecv.ReadySyncGameAck = _socketRecv.OnReadySyncGameAck;
-        _packetRecv.ReadySyncGameNotify = _socketRecv.OnReadySyncGameNotify;
-
-
-        // not use...
-        _packetRecv.PauseGameNotify = _socketRecv.OnPauseGameNotify;
-        _packetRecv.ResumeGameNotify = _socketRecv.OnResumeGameNotify;
-
-        _clientSocket.Init((IPacketReceiver)_packetRecv);
     }
 
     #endregion
@@ -564,16 +366,18 @@ public class NetworkManager : Singleton<NetworkManager>
     #region reconnect to do
     public bool CheckReconnection()
     {
-        return _clientSocket.CheckReconnection();
+        //사전에 접속정보를 파일에 저장해두고 그 파일을 읽어드린다.
+        return false;
     }
 
     public void ReconnectPacket(MsgReconnectGameAck msg)
     {
+        //서버 접속이 끊어지면 메인으로 보낸다.
         // 에러코드가 0 이 아닐경우는 게임에 이상이 있다는 서버 메세지니...그냥 리턴 시켜서..메인으로
         if (msg.ErrorCode != 0)
         {
             //DeleteBattleInfo();
-            DisconnectSocket(false);
+            // DisconnectSocket(false);
 
             SetReconnect(false);
 

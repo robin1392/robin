@@ -19,20 +19,19 @@ namespace ED
         {
             ps_Bomb.transform.position = controller.transform.position;
             ps_Bomb.Play();
-
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
+            
             if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
             {
                 var cols = Physics.OverlapSphere(controller.transform.position, range, targetLayer);
                 foreach (var col in cols)
                 {
-                    DamageToTarget(col.GetComponentInParent<Minion>());
+                    //KZSee:
+                    // DamageToTarget(col.GetComponentInParent<Minion>());
                 }
             }
 
-            Destroy(2f);
+            //KZSee:
+            //Destroy(2f);
         }
-
-        public override void SetTarget() { }
     }
 }
