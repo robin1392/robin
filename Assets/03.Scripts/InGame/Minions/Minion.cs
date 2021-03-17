@@ -23,6 +23,7 @@ namespace ED
         NONE,
         STURN,
         FREEZE,
+        INVINCIBILITY,
     }
 
     public enum TARGET_ORDER

@@ -182,6 +182,7 @@ namespace MirageTest.Scripts
 
             this.buffState = state;
 
+            EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0);
             EnableStunEffect((buffState & BuffState.Sturn) != 0);
             EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
 
@@ -200,15 +201,45 @@ namespace MirageTest.Scripts
             }
         }
 
+        
+        private void EnableInvincibilityEffect(bool b)
+        {
+            if (baseStat is Minion minion)
+            {
+                if (b)
+                {
+                    if (minion._dicEffectPool.ContainsKey(MAZ.INVINCIBILITY) == false)
+                    {
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Shield", transform.position);
+                        ad.transform.SetParent(transform);
+                        minion._dicEffectPool.Add(MAZ.INVINCIBILITY, ad);
+                    }
+                }
+                else
+                {
+                    if (minion._dicEffectPool.TryGetValue(MAZ.INVINCIBILITY, out var ad))
+                    {
+                        minion._dicEffectPool.Remove(MAZ.INVINCIBILITY);
+                        ad.Deactive();
+                    }
+                }
+            }
+        }
+
+        
         private void EnableStunEffect(bool b)
         {
             if (baseStat is Minion minion)
             {
                 if (b)
                 {
-                    var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                        baseStat.ts_HitPos.position + Vector3.up * 0.65f);
-                    minion._dicEffectPool.Add(MAZ.STURN, ad);
+                    if (minion._dicEffectPool.ContainsKey(MAZ.STURN) == false)
+                    {
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
+                            baseStat.ts_HitPos.position + Vector3.up * 0.65f);
+                        ad.transform.SetParent(transform);
+                        minion._dicEffectPool.Add(MAZ.STURN, ad);
+                    }
                 }
                 else
                 {
@@ -335,6 +366,20 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority = false)]
         public void AddBuffOnServer(byte id, float duration)
         {
+            var current = BuffInfos.Data[id];
+            if ((current & BuffState.Invincibility) != 0)
+            {
+                for (var i = BuffList.Count - 1; i >= 0; --i)
+                {
+                    var buff = BuffList[i];
+                    var buffData = BuffInfos.Data[buff.id];
+                    if ((buffData & BuffState.CantAI) > 0)
+                    {
+                        BuffList.RemoveAt(i);
+                    }
+                }    
+            }
+            
             BuffList.Add(new Buff()
             {
                 id = id,
@@ -344,6 +389,11 @@ namespace MirageTest.Scripts
 
         public void HitDamage(float damage)
         {
+            if ((buffState & BuffState.Invincibility) != 0)
+            {
+                return;
+            }
+            
             if (baseStat.OnBeforeHitDamage(damage))
             {
                 return;
@@ -568,6 +618,26 @@ namespace MirageTest.Scripts
             return enemies.ToArray();
         }
 
+        public BaseStat GetRandomFirendlyMinion()
+        {
+            var rwClient = Client as RWNetworkClient;
+            var friends = rwClient.ActorProxies.Where(actor =>
+            {
+                if (actor.team != team) return false;
+                if (actor.actorType != ActorType.Actor) return false;
+                if (actor.baseStat is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
+                    return false;
+                if (actor.baseStat is Magic) return false;
+
+                return true;
+            });
+
+            var actorProxies = friends as ActorProxy[] ?? friends.ToArray();
+            if (actorProxies == null || actorProxies.Length == 0) return null;
+            var selected = actorProxies.ElementAt(UnityEngine.Random.Range(0, actorProxies.Count()));
+            return selected.baseStat;
+        }
+
         public BaseStat GetRandomEnemyCanBeAttacked()
         {
             var rwClient = Client as RWNetworkClient;
@@ -598,6 +668,7 @@ namespace MirageTest.Scripts
             });
 
             var actorProxies = enemies as ActorProxy[] ?? enemies.ToArray();
+            if (actorProxies == null || actorProxies.Length == 0) return null;
             var selected = actorProxies.ElementAt(UnityEngine.Random.Range(0, actorProxies.Count()));
             return selected.baseStat;
         }

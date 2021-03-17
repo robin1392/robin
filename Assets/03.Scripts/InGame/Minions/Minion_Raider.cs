@@ -132,7 +132,7 @@ namespace ED
             
             if (targetActorProxy != null && targetActorProxy.baseStat.CanBeTarget())
             {
-                targetActorProxy.AddBuff(BuffInfos.Sturn, 1f);
+                targetActorProxy.AddBuff(BuffInfos.Sturn, 10f);
             }
         }
     }
