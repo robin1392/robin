@@ -39,48 +39,15 @@ namespace ED
 
         [Header("SYSTEN INFO")] 
         public Global.PLAY_TYPE playType;
-        
-        public RandomWarsResource.TableData<int, RandomWarsResource.Data.TDataDiceInfo> data_DiceInfo;
-        
-        public GameObject pref_Player;
-        public GameObject pref_AI;
+
         public Transform ts_Lights;
         public Transform ts_StadiumTop;
         public Transform ts_NexusHealthBar;
-        
-        public bool isAIMode;
-        public bool isGamePlaying;
-
-        public PlayerController playerController;
-
-        private int _readyPlayerCount = 0;
-        
-
-        #endregion
-
-        #region wave variable
-
-        public int wave
-        {
-            get;
-            protected set;
-        }
-
-        public float startSpawnTime = 10f;
-        public float spawnTime = 45f;
-
-        protected float st => wave < 1 ? 10f : 5f;
 
         public float time { get; protected set; }
         protected DateTime pauseTime;
         #endregion
-
-        #region etc variable
         
-        private UI_CoopSpawnTurn _coopSpawnTurn;
-
-        #endregion
-
         
         #region static
 
@@ -120,13 +87,9 @@ namespace ED
             if (DataPatchManager.Get().isDataLoadComplete == false)
                 DataPatchManager.Get().JsonDownLoad();
 
-            // 전체 주사위 정보
-            data_DiceInfo = TableManager.Get().DiceInfo;
-
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
             PoolManager.Get().MakePool();
-
-
+            
             StartManager();
 
             // not use
@@ -164,22 +127,8 @@ namespace ED
             if (IsNetwork)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
-
-                // player controller create...my and other
-                Vector3 myTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
-                GameObject myTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
-                myTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
-                myTObj.transform.position = myTowerPos;
-                playerController = myTObj.GetComponent<PlayerController>();
-                playerController.isMine = true;
                 
-                playerController.ChangeLayer(NetworkManager.Get().GetNetInfo().playerInfo.IsBottomPlayer);
-
-
-                Vector3 otherTowerPos = FieldManager.Get().GetPlayerPos(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
-                GameObject otherTObj = UnityUtil.Instantiate("Tower/" + pref_Player.name);
-                otherTObj.transform.parent = FieldManager.Get().GetPlayerTrs(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer);
-                otherTObj.transform.position = otherTowerPos;
+                
                 //KZSee:
                 // playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 // playerController.targetPlayer.isMine = false;
@@ -276,34 +225,7 @@ namespace ED
         }
 
         #endregion
-
-
-        #region start game
-
-        public void NetStartGame()
-        {
-            DeactivateWaitingObject();
-
-            // RefreshTimeUI(true);
-        }
-
-        private void Ready()
-        {
-            _readyPlayerCount++;
-        }
-
-        #endregion
         
-
-        #region sp & spawn
-
-        private void DeactivateWaitingObject()
-        {
-            isGamePlaying = true;
-            UI_InGamePopup.Get().SetViewWaiting(false);
-        }
-
-        #endregion
 
         #region leave & end game
 
@@ -312,13 +234,13 @@ namespace ED
             if (IsNetwork == true)
             {
                 // 자신이 포기한경우 게임중을 꺼주자
-                if (isGamePlaying)
-                {
-                    isGamePlaying = false;
-                }
+                //KZSee:
+                // if (isGamePlaying)
+                // {
+                //     isGamePlaying = false;
+                // }
 
                 Time.timeScale = 1f;
-                SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
             }
             else
             {
@@ -343,11 +265,12 @@ namespace ED
             // 플레이 도중 나갓을경우...
             // 나중에 플레이어가 여러명일 경우 해당 플레이어만 초기화 해주는 로직이 필요하긴하다
             // 나도 나가자
-            if (isGamePlaying)
-            {
-                isGamePlaying = false;
-                SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
-            }
+            //KZSee:
+            // if (isGamePlaying)
+            // {
+            //     isGamePlaying = false;
+            //     SendInGameManager(GameProtocol.LEAVE_GAME_REQ);
+            // }
         }
 
 
@@ -366,7 +289,8 @@ namespace ED
                 UI_InGamePopup.Get().ViewGameIndicator(false);
             }
 
-            isGamePlaying = false;
+            //KZSee:
+            // isGamePlaying = false;
             StopAllCoroutines();
             SoundManager.instance?.StopBGM();
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
@@ -380,7 +304,8 @@ namespace ED
         {
             yield return new WaitForSeconds(4f);
 
-            playerController.SendEventLog_BatCheck();
+            //KZSee: 이벤트로그
+            //playerController.SendEventLog_BatCheck();
 
             UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
 
@@ -436,12 +361,9 @@ namespace ED
             }
             else
             {
-                if (isGamePlaying == false)
-                    return;
-
+                
                 time -= (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
                 print("Application Resume : " + ((float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds));
-                ResumeDelay();
             }
         }
 
@@ -461,102 +383,10 @@ namespace ED
             {
                 time -= (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
                 print("Application Resume : " + ((float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds));
-                if (isGamePlaying == false)
-                    return;
-                
-                ResumeDelay();
             }
-
         }
 #endif
-        void ResumeDelay()
-        {
-            /*
-            // resume 신호 -- player controll 에서 혹시 모를 릴레이 패킷들 다 패스 시키기위해
-            NetworkManager.Get().SetResume(true);
-            
-            // resume 을 하는 client 라면..
-            // 인디케이터 -- 어차피 재동기화 위해 데이터 날려야됨
-            UI_InGamePopup.Get().ViewGameIndicator(true);
-
-            //yield return new WaitForSeconds(2.0f);
-            RevmoeAllMinionAndMagic();
-            */
-
-            if (NetworkManager.Get().IsConnect())
-            {
-                // resume
-                NetworkManager.Get().ResumeGame();
-
-                // 1초 동안 NavMeshAgent를 사용하지 않고 즉시 이동하도록
-                // playerController.SyncMinionResume();
-                // playerController.targetPlayer.SyncMinionResume();
-            }
-        }
-
-        public void SyncInfo()
-        {
-            // deck setting
-            if (IsNetwork == true)
-            {
-                // my
-                for(int i = 0 ; i < NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray.Length; i++)
-                    print(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray[i]);
-                
-                //KZSee:
-                // playerController.SetDeck(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray);
-                // //other
-                // playerController.targetPlayer.SetDeck(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray);
-            }
-            
-            // Upgrade buttons
-            //Mirage : PlayerState로 이동
-            // UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, arrUpgradeLevel);
-
-            if (IsNetwork == true)
-            {
-                if (NetworkManager.Get().IsMaster == false)
-                {
-                    ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
-                    ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
-                    ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
-                }
-            }
-            
-        }
         #endregion
-        
-
-
-        // 매니저 외부에서 패킷을 보낼때 쓰자..
-
-        #region outter send
-
-        public void SendDiceLevelUp(int resetFieldNum, int levelUpFieldNum)
-        {
-            SendInGameManager(GameProtocol.MERGE_DICE_REQ, (short) resetFieldNum, (short) levelUpFieldNum);
-        }
-
-        public void SendInGameUpgrade(int diceId, int slotNum)
-        {
-            SendInGameManager(GameProtocol.INGAME_UP_DICE_REQ, diceId);
-        }
-
-        #endregion
-        
-        public void SendInGameManager(GameProtocol protocol, params object[] param)
-        {
-            
-            if (IsNetwork == true)
-            {
-                NetworkManager.Get().Send(protocol, param);
-            }
-            // 패킷프로토콜이 틀리기때문에 쓸모없슴...
-            /*else
-            {
-                RecvInGameManager(protocol, param);
-            }*/
-        }
 
         public void ShowAIField(bool isShow)
         {
@@ -607,122 +437,5 @@ namespace ED
             // }
             yield return null;
         }
-
-        #region not use old code
-        // photon remove
-        /*
-        #region rpc etc
-
-        // not use
-        public void SpawnPlayerMinions()
-        {
-            WorldUIManager.Get().SetSpawnTime(1.0f);
-            playerController.SendPlayer(RpcTarget.All, E_PTDefine.PT_SPAWN);
-        }
-
-        // 내가 언제 이런 함수를 만들엇지....???!!???
-        public void ShowAIField(bool isShow)
-        {
-            if (isShow)
-            {
-                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-                playerController.uiDiceField.RefreshField(0.5f);
-                StartCoroutine(nameof(ShowAiFieldCoroutine));
-            }
-            else
-            {
-                StopCoroutine(nameof(ShowAiFieldCoroutine));
-                playerController.uiDiceField.SetField(playerController.arrDice);
-                playerController.uiDiceField.RefreshField();
-            }
-        }
-
-        private IEnumerator ShowAiFieldCoroutine()
-        {
-            while (true)
-            {
-                playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-                playerController.uiDiceField.RefreshField(0.5f);
-                yield return null;
-            }
-        }
-
-
-        #endregion
-
-        
-        #region photon override
-        public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(time);
-                stream.SendNext(wave);
-            }
-            else
-            {
-                time = (float) stream.ReceiveNext();
-                wave = (int) stream.ReceiveNext();
-            }
-        }
-        public override void OnDisconnected(DisconnectCause cause)
-        {
-            Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
-
-            GameStateManager.Get().MoveMainScene();
-        }
-
-        public override void OnPlayerLeftRoom(Player otherPlayer)
-        {
-            if (isGamePlaying)
-            {
-                PhotonNetwork.Disconnect();
-            }
-        }
-        #endregion
-        
-
-        #region photon send recv
-        public void SendBattleManager(RpcTarget target, E_PTDefine ptID, params object[] param)
-        {
-            if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC(recvMessage, target, ptID, param);
-            }
-            else
-            {
-                RecvBattleManager(ptID, param);
-            }
-        }
-
-        [PunRPC]
-        public void RecvBattleManager(E_PTDefine ptID, params object[] param)
-        {
-            switch (ptID)
-            {
-                case E_PTDefine.PT_READY:
-                    Ready();
-                    break;
-                case E_PTDefine.PT_DEACTIVEWAIT:
-                    DeactivateWaitingObject();
-                    break;
-                case E_PTDefine.PT_ADDSP:
-                    int addsp = (int) param[0];
-                    AddSP(addsp);
-                    break;
-                case E_PTDefine.PT_SPAWNMINION:
-                    SpawnPlayerMinions();
-                    break;
-                case E_PTDefine.PT_ENDGAME:
-                    EndGame(new PhotonMessageInfo());
-                    break;
-                case E_PTDefine.PT_NICKNAME:
-                    UI_InGame.Get().SetNickname((string) param[0]);
-                    break;
-            }
-        }
-        #endregion
-        */
-        #endregion
     }
 }

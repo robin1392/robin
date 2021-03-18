@@ -25,9 +25,8 @@ namespace ED
         public Vector3 startPos;
         
         public int eyeLevel => ActorProxy.diceScale;
-        public int upgradeLevel => ActorProxy.ingameUpgradeLevel;
-        
-        protected Coroutine destroyRoutine;
+
+        protected const float magicLifeTime = 45.0f;
         
         public int diceFieldNum => ActorProxy.spawnSlot;
 

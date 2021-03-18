@@ -57,7 +57,7 @@ namespace ED
         {
             float t = 0;
             float shootTime = tick;
-            float lifeTime = InGameManager.Get().spawnTime;
+            float lifeTime = magicLifeTime;
             while (t < lifeTime)
             {
                 if (t >= shootTime)

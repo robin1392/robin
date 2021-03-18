@@ -109,7 +109,8 @@ namespace ED
         // 네트워크 모드에선 게임의 끝은 서버가 판단해준다
         private void Death()
         {
-            if (InGameManager.Get().isGamePlaying)
+            //KZSee:
+            // if (InGameManager.Get().isGamePlaying)
             {
                 image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
                 //KZSee:ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);

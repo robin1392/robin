@@ -236,7 +236,7 @@ public class TutorialManager : MonoBehaviour
                 Click_NextStepDelay(3f);
                 break;
             case 11:
-                InGameManager.Get().playerController.uiDiceField.BroadcastMessage("AttachIcon");
+                UI_DiceField.Get().BroadcastMessage("AttachIcon");
                 image_NextStep.raycastTarget = true;
                 Time.timeScale = 0.0f;
                 

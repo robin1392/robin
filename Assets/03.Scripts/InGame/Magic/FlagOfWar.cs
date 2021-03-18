@@ -64,9 +64,7 @@ namespace ED
 
         private IEnumerator LifetimeCoroutine()
         {
-            yield return new WaitForSeconds(InGameManager.Get().spawnTime - 1.5f);
-
-            if (InGameManager.Get().isGamePlaying == false) yield break;
+            yield return new WaitForSeconds(magicLifeTime - 1.5f);
 
             _isTriggerOn = false;
 
