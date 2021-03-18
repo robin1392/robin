@@ -12,6 +12,11 @@ public class ActorDevModeStarter : MonoBehaviour
     
     async void Start()
     {
+        var masterAuth = Master.GetComponent<RWAthenticator>();
+        var otherAuth = Other.GetComponent<RWAthenticator>();
+        Server.MatchData.AddPlayerInfo(masterAuth.LocalId, masterAuth.LocalName, 0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
+        Server.MatchData.AddPlayerInfo(otherAuth.LocalId, otherAuth.LocalName, 0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
+        
         Server.ListenAsync().Forget();
         while (Server.Active == false)
         {

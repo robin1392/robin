@@ -85,11 +85,9 @@ namespace MirageTest.Scripts.GameMode
 
         public async UniTask UpdateLogic()
         {
-            OnBeforeGameStart();
-
             await UniTask.Delay(TimeSpan.FromSeconds(1));
 
-            await UpdateWave();
+            await UniTask.WhenAny(UpdateWave());
         }
 
         private async UniTask UpdateWave()

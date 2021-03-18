@@ -69,7 +69,7 @@ namespace MirageTest.Scripts
 
         async UniTask StartServerLogic()
         {
-            logger.LogError($"StartServer");
+            logger.Log($"StartServer");
 
             while (!_networkServer.Active)
             {
@@ -139,7 +139,17 @@ namespace MirageTest.Scripts
                     break;
             }
 
-            await _gameMode.UpdateLogic();
+            await _gameMode.OnBeforeGameStart();
+            
+            if (isAIMode)
+            {
+                var aiPlayer = new AIPlayer(_gameMode.PlayerState2);
+                await UniTask.WhenAny(_gameMode.UpdateLogic(), aiPlayer.UpdataAI());   
+            }
+            else
+            {
+                await _gameMode.UpdateLogic();    
+            }
         }
         
         private void EndGameSession()

@@ -18,7 +18,7 @@ namespace MirageTest.Scripts.GameMode
         {
         }
 
-        protected override async UniTask OnBeforeGameStart()
+        public override async UniTask OnBeforeGameStart()
         {
             var gameState = CreateGameState();
             var playerStates = CreatePlayerStates();
