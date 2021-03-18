@@ -197,7 +197,7 @@ namespace ED
             }
             else
             {
-                FindObjectOfType<RWNetworkServer>().Disconnect();
+                FindObjectOfType<RWNetworkServer>().Finalize();
                 FindObjectOfType<RWNetworkClient>().Disconnect();
                 GameStateManager.Get().MoveMainScene();
             }

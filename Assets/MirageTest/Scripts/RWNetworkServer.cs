@@ -193,4 +193,9 @@ public class RWNetworkServer : NetworkServer
             playerProxy.EndGame(result);
         }
     }
+
+    public void Finalize()
+    {
+        serverGameLogic.ForceEnd();
+    }
 }

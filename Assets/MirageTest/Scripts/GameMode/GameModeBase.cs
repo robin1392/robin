@@ -22,7 +22,7 @@ namespace MirageTest.Scripts.GameMode
         protected PrefabHolder _prefabHolder;
         protected ServerObjectManager ServerObjectManager;
         protected RWNetworkServer Server;
-        protected bool IsGameEnd;
+        public bool IsGameEnd;
 
         public GameState GameState;
         public PlayerState PlayerState1 => PlayerStates[0];
@@ -178,7 +178,17 @@ namespace MirageTest.Scripts.GameMode
         public void OnClientDisconnected(INetworkPlayer arg0)
         {
             var auth = arg0.AuthenticationData as AuthDataForConnection;
+            if (auth == null)
+            {
+                return;
+            }
+            
             var playerState = GetPlayerState(auth.PlayerId);
+            if (playerState == null)
+            {
+                return;
+            }
+            
             if (GameState.masterOwnerTag != playerState.ownerTag)
             {
                 return;

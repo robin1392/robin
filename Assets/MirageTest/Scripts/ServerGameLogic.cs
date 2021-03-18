@@ -40,6 +40,8 @@ namespace MirageTest.Scripts
                 .SpawnedObjects
                 .Any(kvp => kvp.Value.GetComponent<PlayerProxy>() != null) == false;
 
+        public bool IsEnd => _gameMode?.IsGameEnd ?? false;
+
         private void Awake()
         {
             server = GetComponent<RWNetworkServer>();
@@ -193,7 +195,17 @@ namespace MirageTest.Scripts
 
         public void OnTowerDestroyed(ActorProxy destroyedTower)
         {
+            if (_gameMode.IsGameEnd)
+            {
+                return;
+            }
+            
             _gameMode.OnTowerDestroyed(destroyedTower);
+        }
+
+        public void ForceEnd()
+        {
+            _gameMode.End();
         }
     }
 
