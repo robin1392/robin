@@ -25,7 +25,7 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
 
     public int inGameLevel;
     public int outGameLevel;
-    public int diceScale = 1;
+    public int diceScale = 0;
     
     [TableList]
     public List<DiceElement> DiceInfos;

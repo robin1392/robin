@@ -60,8 +60,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         _client = client;
         foreach (var button in arrUpgradeButtons)
         {
-            //KZSee:
-            //button.InitClient(client);
+            button.InitClient(client);
         }
     }
 

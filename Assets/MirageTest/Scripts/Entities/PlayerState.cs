@@ -156,7 +156,7 @@ namespace MirageTest.Scripts.Entities
                 }
                 
                 UI_InGame.Get().btn_GetDice.EditSpCallback(newValue > GetDiceCost());
-                // UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue > GetUpradeSpCost());
+                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue > GetUpradeSpCost());
                 UI_InGame.Get().SetSP(newValue);
             }
         }
@@ -363,7 +363,7 @@ namespace MirageTest.Scripts.Entities
             Field[fieldIndex] = new FieldDice()
             {
                 diceId = selectedDeckDice.diceId,
-                diceScale = 1,
+                diceScale = 0,
             };
         }
     }
@@ -374,7 +374,7 @@ namespace MirageTest.Scripts.Entities
         public int diceId;
         public byte diceScale;
 
-        public static readonly FieldDice Empty = new FieldDice() { diceId = 0, diceScale = 1 };
+        public static readonly FieldDice Empty = new FieldDice() { diceId = 0, diceScale = 0 };
 
         public bool IsEmpty => Equals(Empty);
         

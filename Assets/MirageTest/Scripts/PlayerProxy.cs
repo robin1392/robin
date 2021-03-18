@@ -104,8 +104,8 @@ public class PlayerProxy : NetworkBehaviour
         }
 
         // 인게임 주사위의 최대 등급 여부를 체크한다.
-        short MaxInGameUp = 6;
-        if (targetFieldDice.diceScale >= MaxInGameUp)
+        short maxInGameUp = 5;
+        if (targetFieldDice.diceScale >= maxInGameUp)
         {
             logger.LogError($"주사위 눈금이 최대치입니다.: playerId:{playerState.userId}, fieldIndex:{targetDiceFieldIndex}");
             return;
