@@ -51,7 +51,7 @@ namespace MirageTest.Scripts
         
         void PlayAnimationInternal(int hash, BaseStat target)
         {
-            if (target != null) baseStat.transform.LookAt(target.transform);
+            if (target != null) transform.LookAt(target.transform);
             baseStat.animator.SetTrigger(hash);
         }
         

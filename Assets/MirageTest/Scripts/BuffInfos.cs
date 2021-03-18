@@ -10,6 +10,7 @@ namespace MirageTest.Scripts
         public const byte HalfDamage = 1;
         public const byte Sturn = 2;
         public const byte Freeze = 3;
+        public const byte Invincibility = 4;
 
         public static BuffState[] Data = new[]
         {
@@ -17,6 +18,7 @@ namespace MirageTest.Scripts
             BuffState.HalfDamage,
             BuffState.Sturn,
             BuffState.Freeze,
+            BuffState.Invincibility,
         };
     }
 
@@ -28,6 +30,7 @@ namespace MirageTest.Scripts
         HalfDamage = 1 << 2,
         Sturn = 1 << 3,
         Freeze = 1 << 4,
+        Invincibility = 1 << 5,
 
         CantAI = Sturn | Freeze,
     }

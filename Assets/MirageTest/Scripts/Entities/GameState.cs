@@ -2,6 +2,7 @@ using System;
 using ED;
 using Mirage;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace MirageTest.Scripts.Entities
 {
@@ -9,6 +10,8 @@ namespace MirageTest.Scripts.Entities
     public class GameState : NetworkBehaviour
     {
         [SyncVar(hook = nameof(SetWave))] public int wave;
+        public UnityEvent<int> WaveEvent;
+        
         private float _waveInterval;
         private float _waveRemainTime;
 
@@ -58,6 +61,8 @@ namespace MirageTest.Scripts.Entities
 
         public void SetWave(int oldValue, int newValue)
         {
+            WaveEvent.Invoke(newValue);
+            
             WorldUIManager.Get().SetWave(newValue);
             WorldUIManager.Get().RotateTimerIcon();
             

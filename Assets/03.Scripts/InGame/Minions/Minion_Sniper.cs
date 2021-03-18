@@ -47,17 +47,14 @@ namespace ED
             yield return aimingAction.ActionWithSync(ActorProxy, target.ActorProxy);
             RunningAction = null;
 
-            if (target != null && target.isAlive)
+            if (ActorProxy.isPlayingAI)
             {
-                if (ActorProxy.isPlayingAI)
+                if (IsCanAiming())
                 {
                     ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
                     yield return new WaitForSeconds(0.5f);
                 }
-            }
-            else
-            {
-                if (ActorProxy.isPlayingAI)
+                else
                 {
                     ActorProxy.PlayAnimationWithRelay(AnimationHash.Idle, target);
                 }
@@ -100,7 +97,7 @@ namespace ED
                 if (target != null)
                 {
                     lr.gameObject.SetActive(true);
-                    transform.LookAt(target.transform);
+                    ActorProxy.transform.LookAt(target.transform);
                     lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
                 }
                 else
@@ -185,6 +182,13 @@ namespace ED
                 yield return null;
             }
             
+            sniper.lr.gameObject.SetActive(false);
+        }
+
+        public override void OnActionCancel(ActorProxy actorProxy)
+        {
+            base.OnActionCancel(actorProxy);
+            var sniper = actorProxy.baseStat as Minion_Sniper;
             sniper.lr.gameObject.SetActive(false);
         }
     }
