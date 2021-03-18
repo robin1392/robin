@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.Messages;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,16 +10,20 @@ namespace ED
 {
     public class Minion_Golem : Minion
     {
-        public GameObject pref_MiniGolem;
-
         [Header("AudioClip")]
         public AudioClip clip_Attack;
         public AudioClip clip_Exposion;
 
-        public override IEnumerator Attack()
+        protected override void Awake()
+        {
+            base.Awake();
+
+            _animationEvent.event_Attack += AttackEvent;
+        }
+
+        private void AttackEvent()
         {
             SoundManager.instance.Play(clip_Attack);
-            yield return base.Attack();
         }
 
         public override BaseStat SetTarget()
@@ -25,30 +31,26 @@ namespace ED
             return ActorProxy.GetEnemyTower();
         }
 
-        public override void Death()
+        public override void OnBaseStatDestroyed()
         {
-            SoundManager.instance.Play(clip_Exposion);
-            
-            for (int i = 0; i < 2; i++)
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            // 미니골렘
+            rwClient.Send(new CreateActorMessage()
             {
-                //KZSee:
-                // var m = controller.CreateMinion(pref_MiniGolem,
-                //     transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f));
-
-                // m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                // m.ChangeLayer(isBottomCamp);
-                //KZSee:
-                // m.power = effect;
-                // // m.maxHealth = maxHealth * eyeLevel * 0.1f;
-                // m.attackSpeed = attackSpeed;
-                // m.moveSpeed = moveSpeed;
-                // // m.range = range;
-                // m.eyeLevel = eyeLevel;
-                // m.ingameUpgradeLevel = ingameUpgradeLevel;
-                // m.Initialize();
-            }
-
-            base.Death();
+                diceId = 4004,
+                ownerTag = ActorProxy.ownerTag,
+                team = ActorProxy.team,
+                inGameLevel = ActorProxy.ingameUpgradeLevel,
+                outGameLevel = ActorProxy.outgameUpgradeLevel,
+                positions = new Vector3[]
+                {
+                    ActorProxy.transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f),
+                    ActorProxy.transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f)
+                },
+                delay = 0f,
+            });
+            
+            base.OnBaseStatDestroyed();
         }
     }
 }
