@@ -73,7 +73,7 @@ namespace ED
         public float startSpawnTime = 10f;
         public float spawnTime = 45f;
 
-        protected float st => wave < 1 ? 10f : 20f;
+        protected float st => wave < 1 ? 10f : 5f;
 
         public float time { get; protected set; }
         protected DateTime pauseTime;
