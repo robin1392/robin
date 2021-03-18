@@ -12,6 +12,8 @@ namespace MirageTest.Scripts
         
         public List<MatchPlayer> PlayerInfos { get; private set; } = new List<MatchPlayer>();
 
+        public string GameMode { get; private set; } = string.Empty;
+
         public void AddPlayerInfo(string userId, string userNickName, int trophy, DeckInfo deck)
         {
             if(PlayerInfos.Find(p => p.UserId == userId) != null)
@@ -28,6 +30,11 @@ namespace MirageTest.Scripts
                 Deck = deck,
             });
         }
+
+        public void SetGameMode(string gameMode)
+        {
+            GameMode = gameMode;
+        }
     }
 
     public class MatchPlayer
@@ -40,7 +47,7 @@ namespace MirageTest.Scripts
 
     public class DeckInfo
     {
-        public int GuadialId;
+        public int GuadianId;
         public DiceInfo[] DiceInfos;
 
         public DeckInfo()
@@ -49,7 +56,7 @@ namespace MirageTest.Scripts
 
         public DeckInfo(int guadianId, params int[] diceIds)
         {
-            GuadialId = guadianId;
+            GuadianId = guadianId;
             DiceInfos = diceIds.Select(id => new DiceInfo()
             {
                 DiceId = id,

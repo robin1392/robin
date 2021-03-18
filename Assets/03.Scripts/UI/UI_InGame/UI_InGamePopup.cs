@@ -56,9 +56,9 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void InitUIElement(MatchPlayer player1, MatchPlayer player2)
     {
-        winlose_My.Initialize(player1.Deck.GuadialId, player1.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+        winlose_My.Initialize(player1.Deck.GuadianId, player1.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
             player1.UserNickName, player1.Trophy);
-        winlose_My.Initialize(player2.Deck.GuadialId, player2.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+        winlose_My.Initialize(player2.Deck.GuadianId, player2.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
             player2.UserNickName, player2.Trophy);
 
         obj_Start.SetActive(true);

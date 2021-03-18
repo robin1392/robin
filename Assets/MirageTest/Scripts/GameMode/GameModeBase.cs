@@ -53,7 +53,7 @@ namespace MirageTest.Scripts.GameMode
             var playerInfo1 = playerInfos[0];
             playerStates[0] = SpawnPlayerState(
                 playerInfo1.UserId, playerInfo1.UserNickName, getStartSp,
-                playerInfo1.Deck.GuadialId,
+                playerInfo1.Deck.GuadianId,
                 playerInfo1.Deck.DiceInfos.Select(d => new DeckDice()
                 {
                     diceId = d.DiceId,
@@ -64,7 +64,7 @@ namespace MirageTest.Scripts.GameMode
             var playerInfo2 = playerInfos[1];
             playerStates[1] = SpawnPlayerState(
                 playerInfo2.UserId, playerInfo2.UserNickName, getStartSp,
-                playerInfo2.Deck.GuadialId,
+                playerInfo2.Deck.GuadianId,
                 playerInfo2.Deck.DiceInfos.Select(d => new DeckDice()
                 {
                     diceId = d.DiceId,
