@@ -168,7 +168,7 @@ namespace MirageTest.Scripts.GameMode
             }
         }
 
-        protected abstract UniTask OnBeforeGameStart();
+        public abstract UniTask OnBeforeGameStart();
 
         protected abstract void OnWave(int wave);
         
