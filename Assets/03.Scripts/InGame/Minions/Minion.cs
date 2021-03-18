@@ -24,6 +24,7 @@ namespace ED
         STURN,
         FREEZE,
         INVINCIBILITY,
+        SCARECROW,
     }
 
     public enum TARGET_ORDER

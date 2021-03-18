@@ -196,6 +196,7 @@ namespace MirageTest.Scripts
             EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0);
             EnableStunEffect((buffState & BuffState.Sturn) != 0);
             EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
+            EnableScarecrowEffect((buffState & BuffState.Scarecrow) != 0);
 
             if (isCantAI)
             {
@@ -212,6 +213,31 @@ namespace MirageTest.Scripts
             }
         }
 
+        private void EnableScarecrowEffect(bool b)
+        {
+            if (baseStat is Minion minion)
+            {
+                if (b)
+                {
+                    if (minion._dicEffectPool.ContainsKey(MAZ.SCARECROW) == false)
+                    {
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow", transform.position);
+                        ad.transform.SetParent(transform);
+                        minion._dicEffectPool.Add(MAZ.SCARECROW, ad);
+                        minion.animator.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    if (minion._dicEffectPool.TryGetValue(MAZ.SCARECROW, out var ad))
+                    {
+                        minion._dicEffectPool.Remove(MAZ.SCARECROW);
+                        ad.Deactive();
+                        minion.animator.gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
         
         private void EnableInvincibilityEffect(bool b)
         {

@@ -4,6 +4,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace  ED
@@ -19,14 +21,13 @@ namespace  ED
         public GameObject pref_Scarecrow;
         
         //[SerializeField] private readonly float _skillCooltime = 10f;
-        private int _skillCastedCount;
+        private float _skillCastedTime;
 
         protected override void Start()
         {
             base.Start();
 
-            var ae = animator.GetComponent<MinionAnimationEvent>();
-            ae.event_FireArrow += FireArrow;
+            _animationEvent.event_FireArrow += FireArrow;
         }
 
         protected override void Awake()
@@ -41,9 +42,39 @@ namespace  ED
         public override void Initialize()
         {
             base.Initialize();
-            _skillCastedCount = 0;
+            _skillCastedTime = -effectCooltime;
         }
 
+        protected override IEnumerator Combat()
+        {
+            while (true)
+            {
+                yield return Skill();
+                
+                if (!IsTargetInnerRange())
+                {
+                    ApproachToTarget();    
+                }
+                else
+                {
+                    break;
+                }
+
+                yield return null;
+
+                target = SetTarget();
+            }
+
+            StopApproachToTarget();
+            
+            if (target == null)
+            {
+                yield break;
+            }
+
+            yield return Attack();
+        }
+        
         public void FireArrow()
         {
 
@@ -59,15 +90,15 @@ namespace  ED
             }
         }
 
-        public void Skill()
+        public IEnumerator Skill()
         {
-            if (_spawnedTime >= effectCooltime * _skillCastedCount)
+            if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
-                Polymorph();
+                yield return Polymorph();
             }
         }
 
-        private void Polymorph()
+        private IEnumerator Polymorph()
         {
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             var list = new List<BaseStat>();
@@ -87,18 +118,21 @@ namespace  ED
 
             if (list.Count > 0)
             {
-                _skillCastedCount++;
+                _skillCastedTime = _spawnedTime;
 
                 PoolManager.instance.ActivateObject(pref_SkillEffect.name, ts_SkillParticlePosition.position);
 
-                var target = list[Random.Range(0, list.Count)];
-                
-                ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
-                
-                //KZSee:
-                // controller.ActionMinionScareCrow(true, target.id, (float) eyeLevel);
-
+                for (int i = 0; i < ActorProxy.diceScale + 1 && i < list.Count; i++)
+                {
+                    var target = list[i];
+                    
+                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
+                    
+                    target.ActorProxy.AddBuff(BuffInfos.Scarecrow, effect);
+                }
             }
+
+            yield break;
         }
     }
 }
