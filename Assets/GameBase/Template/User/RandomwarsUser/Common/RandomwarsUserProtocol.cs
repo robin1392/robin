@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using Service.Core;
 using Service.Net;
+using Service.Template;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +10,7 @@ namespace Template.User.RandomwarsUser.Common
 {
     public enum ERandomwarsProtocol
     {
-        Begin = 20000,
+        Begin = ETemplateType.User * 10000,
 
         UserInfoReq,
         UserInfoAck,

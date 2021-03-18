@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using System.Text;
 using Service.Core;
 using Service.Net;
+using Service.Template;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace Template.Shop.GameBaseShop.Common
 {
     public enum EGameBaseShopProtocol
     {
-        Begin = 50000,
+        Begin = ETemplateType.Shop * 10000,
 
         ShopInfoReq,
         ShopInfoAck,

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Service.Net;
+using Service.Template;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +10,7 @@ namespace Template.Account.GameBaseAccount.Common
 {
     public enum EGameBaseAccountProtocol
     {
-        Begin = 10000,
+        Begin = ETemplateType.Account * 10000,
 
         AccountLoginReq,
         AccountLoginAck,
