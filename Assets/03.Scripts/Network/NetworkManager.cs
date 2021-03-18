@@ -239,16 +239,10 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
     #region connent
-
+    
     public void ConnectServer(Global.PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
     {
-        // 시작하면서 상대 디스커넥트
-        SetOtherDisconnect(false);    // disconnect
-        SetResume(false);        // resume
-        SetReconnect(false);        // reconnect
-        //playType = type;
-        _recvJoinPlayerInfoCheck = true;
-        _netInfo.Clear();
+        GameStateManager.Get().MoveInGameBattle();
     }
 
 

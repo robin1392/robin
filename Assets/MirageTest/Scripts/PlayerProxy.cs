@@ -1,14 +1,20 @@
-﻿using Mirage;
+﻿using ED;
+using Mirage;
 using Mirage.Logging;
+using MirageTest.Aws;
 using MirageTest.Scripts;
 using MirageTest.Scripts.Entities;
 using Percent.Platform;
+using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
 
 public class PlayerProxy : NetworkBehaviour
 {
     static readonly ILogger logger = LogFactory.GetLogger(typeof(PlayerProxy));
+
+    [SyncVar] public bool ready;
+    [SyncVar] public string userId;
 
     private void Awake()
     {
@@ -18,18 +24,27 @@ public class PlayerProxy : NetworkBehaviour
         }
 
         NetIdentity.OnStartClient.AddListener(OnStartClient);
-        NetIdentity.OnStopClient.AddListener(OnStopClient);
         NetIdentity.OnStartLocalPlayer.AddListener(OnStartLocalPlayer);
-        
+        NetIdentity.OnStopClient.AddListener(OnStopClient);
+
         NetIdentity.OnStartServer.AddListener(OnStartServer);
         NetIdentity.OnStopServer.AddListener(OnStopServer);
+    }
+
+    private void OnStartLocalPlayer()
+    {
+        var client = Client as RWNetworkClient;
+        if (client.GetLocalPlayerState().team == GameConstants.TopCamp)
+        {
+            InGameManager.Get().RotateTopCampObject();
+        }
     }
 
     private void OnStopServer()
     {
         var server = Server as RWNetworkServer;
         server.RemovePlayerProxy(this);
-        
+
         if (Server.LocalClientActive)
         {
             OnStopClient();
@@ -40,20 +55,28 @@ public class PlayerProxy : NetworkBehaviour
     {
         var server = Server as RWNetworkServer;
         server?.AddPlayerProxy(this);
-        
+
         if (Server.LocalClientActive)
         {
             OnStartClient();
             
             var client = Client as RWNetworkClient;
+            userId = UserInfoManager.Get().GetUserInfo().userID;
             client.localPlayerId = UserInfoManager.Get().GetUserInfo().userID;
         }
+        else
+        {
+            var auth = ConnectionToClient.AuthenticationData as AuthDataForConnection;
+            userId = auth.PlayerId;
+        }
     }
-
+    
     private void OnStartClient()
     {
         var client = Client as RWNetworkClient;
         client.AddPlayerProxy(this);
+        
+        ClientReady();
     }
 
     private void OnStopClient()
@@ -62,15 +85,28 @@ public class PlayerProxy : NetworkBehaviour
         client.RemovePlayerProxy(this);
     }
 
-    private void OnStartLocalPlayer()
+    public void ClientReady()
     {
-        if (IsLocalPlayer)
+        if (IsLocalClient)
         {
-            var client = Client as RWNetworkClient;
-            var authData = (ConnectionToServer.AuthenticationData as AuthDataForConnection);
-            client.localPlayerId = authData.PlayerId;
+            ClientReadyInternal();
+            return;
         }
+
+        ClientReadyOnServer();
     }
+
+    [ServerRpc(requireAuthority = false)]
+    void ClientReadyOnServer()
+    {
+        ClientReadyInternal();
+    }
+
+    void ClientReadyInternal()
+    {
+        ready = true;
+    }
+    
     
     public void MergeDice(int sourceDiceFieldIndex, int targetDiceFieldIndex)
     {
@@ -151,17 +187,7 @@ public class PlayerProxy : NetworkBehaviour
     PlayerState GetPlayerState()
     {
         var server = Server as RWNetworkServer;
-        if (Server.LocalClientActive)
-        {
-            var playerId = UserInfoManager.Get().GetUserInfo().userID;
-            return server.serverGameLogic.GetPlayerState(playerId);   
-        }
-        else
-        {
-            var auth = ConnectionToClient.AuthenticationData as AuthDataForConnection;
-            var playerId = auth.PlayerId;    
-            return server.serverGameLogic.GetPlayerState(playerId);
-        }
+        return server.serverGameLogic.GetPlayerState(userId);
     }
     
     [ServerRpc]
@@ -192,5 +218,42 @@ public class PlayerProxy : NetworkBehaviour
     {
         var playerState = GetPlayerState();
         playerState.UpgradSp();
+    }
+
+    public void EndGame(UserMatchResult result)
+    {
+        if (IsLocalClient)
+        {
+            EndGameInternal(result);
+            return;
+        }
+
+        EndGameOnServer(result);
+    }
+
+    [ServerRpc]
+    public void EndGameOnServer(UserMatchResult result)
+    {
+        EndGameInternal(result);
+    }
+
+    void EndGameInternal(UserMatchResult endNoti)
+    {
+        var client = Client as RWNetworkClient;
+        foreach (var actorProxy in client.ActorProxies)
+        {
+            actorProxy?.baseStat?.StopAllAction();
+        }
+
+        UI_InGamePopup.Get().SetViewWaiting(false);
+        if (UI_InGamePopup.Get().IsIndicatorActive() == true)
+        {
+            UI_InGamePopup.Get().ViewGameIndicator(false);
+        }
+        
+        SoundManager.instance.StopBGM();
+        UI_InGame.Get().ClearUI();
+        InGameManager.Get().
+        EndGame(((int)GAME_RESULT.VICTORY == endNoti.MatchResult || (int)GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.MatchResult), 0, endNoti.listReward.ToArray(), null, null);
     }
 }

@@ -388,6 +388,11 @@ namespace ED
 
         public bool IsTargetInnerRange()
         {
+            if (ActorProxy == null)
+            {
+                return false;
+            }
+            
 #if UNITY_EDITOR
             Debug.DrawLine(transform.position + Vector3.up * 0.1f,
                 (transform.position + Vector3.up * 0.1f) +
@@ -425,6 +430,10 @@ namespace ED
 
         public bool IsTargetInnerRange(BaseStat bs)
         {
+            if (ActorProxy == null)
+            {
+                return false;
+            }
 #if UNITY_EDITOR
             Debug.DrawLine(transform.position + Vector3.up * 0.1f,
                 (transform.position + Vector3.up * 0.1f) +

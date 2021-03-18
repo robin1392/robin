@@ -18,12 +18,13 @@ namespace MirageTest.Scripts.GameMode
     public abstract class GameModeBase
     {
         protected TableData<int, TDataDiceInfo> DiceInfos;
-        protected GameState GameState;
         protected PlayerState[] PlayerStates;
         protected PrefabHolder _prefabHolder;
         protected ServerObjectManager ServerObjectManager;
+        protected RWNetworkServer Server;
         protected bool IsGameEnd;
 
+        public GameState GameState;
         public PlayerState PlayerState1 => PlayerStates[0];
         public PlayerState PlayerState2 => PlayerStates[1];
 
@@ -33,6 +34,7 @@ namespace MirageTest.Scripts.GameMode
         {
             _prefabHolder = prefabHolder;
             ServerObjectManager = serverObjectManager;
+            Server = ServerObjectManager.Server as RWNetworkServer;
             DiceInfos = TableManager.Get().DiceInfo;
         }
         
@@ -60,7 +62,7 @@ namespace MirageTest.Scripts.GameMode
                     outGameLevel = d.OutGameLevel,
                     inGameLevel = 0,
                 }).ToArray(), GameConstants.Player1Tag);
-        
+
             var playerInfo2 = playerInfos[1];
             playerStates[1] = SpawnPlayerState(
                 playerInfo2.UserId, playerInfo2.UserNickName, getStartSp,
@@ -83,7 +85,7 @@ namespace MirageTest.Scripts.GameMode
              return playerState;
          }
 
-        public async UniTask UpdateLogic()
+         public async UniTask UpdateLogic()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1));
 
@@ -100,8 +102,6 @@ namespace MirageTest.Scripts.GameMode
             
             while (true)
             {
-                OnWave(GameState.wave);
-                CheckRobotFusion();
                 GameState.CountDown(waveTime);
                 
                 var addSpCount = 0;
@@ -122,13 +122,10 @@ namespace MirageTest.Scripts.GameMode
                         playerState.AddSpByWave(sp);
                     }
                 }
-                
-                if (IsGameEnd)
-                {
-                    break;
-                }
-                
+
                 GameState.wave++;
+                OnWave(GameState.wave);
+                CheckRobotFusion();
             }
         }
 
@@ -393,6 +390,10 @@ namespace MirageTest.Scripts.GameMode
             {
                 ServerObjectManager.Spawn(actorProxy.NetIdentity);
             }
+        }
+
+        public virtual void OnTowerDestroyed(ActorProxy destroyedTower)
+        {
         }
     }
 }

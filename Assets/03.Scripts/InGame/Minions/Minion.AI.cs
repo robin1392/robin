@@ -61,6 +61,11 @@ namespace ED
 
         protected virtual IEnumerator Combat()
         {
+            if (ActorProxy == null)
+            {
+                yield break;
+            }
+            
             while (!IsTargetInnerRange())
             {
                 ApproachToTarget();

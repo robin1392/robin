@@ -7,6 +7,7 @@ using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.GameMode;
 using RandomWarsResource.Data;
+using Service.Template;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,7 +19,7 @@ namespace MirageTest.Scripts
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameLogic));
         
-        private RWNetworkServer _networkServer;
+        private RWNetworkServer server;
         private ServerObjectManager _serverObjectManager;
         public ServerObjectManager ServerObjectManager => _serverObjectManager;
         
@@ -28,8 +29,7 @@ namespace MirageTest.Scripts
         public GameState gameStatePrefab;
         public PlayerState playerStatePrefab;
         public ActorProxy actorProxyPrefab;
-
-        private bool _isGameStart;
+        
         public GameModeBase _gameMode;
         public bool isAIMode;
         
@@ -42,9 +42,9 @@ namespace MirageTest.Scripts
 
         private void Awake()
         {
-            _networkServer = GetComponent<RWNetworkServer>();
+            server = GetComponent<RWNetworkServer>();
             _serverObjectManager = GetComponent<ServerObjectManager>();
-            _networkServer.Disconnected.AddListener(OnClientDisconnected);
+            server.Disconnected.AddListener(OnClientDisconnected);
         }
 
         private void OnClientDisconnected(INetworkPlayer arg0)
@@ -71,53 +71,15 @@ namespace MirageTest.Scripts
         {
             logger.Log($"StartServer");
 
-            while (!_networkServer.Active)
+            while (!server.Active)
             {
                 await UniTask.Yield();
             }
-            
-            if (isAIMode)
-            {
-                await WaitForFirstPlayer();
-            }
-            else
-            {
-                await WaitForPlayers();    
-            }
 
-            if (NoPlayers)
+            while (server.MatchData.PlayerInfos.Count < 2)
             {
-                EndGameSession();
-                return;
+                await UniTask.Yield();
             }
-
-            if (_networkServer.MatchData.PlayerInfos.Count < 2)
-            {
-                var proxies = _serverObjectManager
-                    .SpawnedObjects
-                    .Where(kvp => kvp.Value.GetComponent<PlayerProxy>() != null).ToArray();
-
-                var infos = proxies.Select(p =>
-                {
-                    var authData = p.Value.ConnectionToClient.AuthenticationData as AuthDataForConnection;
-                    return (authData.PlayerId, authData.PlayerNickName);
-                }).ToArray();
-                
-                var player1 = infos[0];
-                
-                _networkServer.MatchData.AddPlayerInfo(player1.PlayerId, player1.PlayerNickName, 0, new DeckInfo(5001, new int[]
-                {
-                    1001, 1002,1003, 1004,1005
-                }));
-                
-                var player2 = infos[1];
-                _networkServer.MatchData.AddPlayerInfo(player2.PlayerId, player2.PlayerNickName, 0, new DeckInfo(5001, new int[]
-                {
-                    1001, 1002,1003, 1004,1005
-                }));
-            }
-
-            _isGameStart = true;
 
             var prefabHolder = new PrefabHolder()
             {
@@ -143,9 +105,26 @@ namespace MirageTest.Scripts
             
             if (isAIMode)
             {
+                await WaitForFirstPlayer();
+            }
+            else
+            {
+                await WaitForPlayers();    
+            }
+
+            if (NoPlayers)
+            {
+                EndGameSession();
+                return;
+            }
+
+            _gameMode.GameState.state = EGameState.Playing;
+            
+            if (isAIMode)
+            {
                 var aiPlayer = new AIPlayer(_gameMode.PlayerState2);
-                var aiPlayer2 = new AIPlayer(_gameMode.PlayerState1);
-                await UniTask.WhenAny(_gameMode.UpdateLogic(), aiPlayer.UpdataAI(), aiPlayer2.UpdataAI());   
+                // var aiPlayer2 = new AIPlayer(_gameMode.PlayerState1);
+                await UniTask.WhenAny(_gameMode.UpdateLogic(), aiPlayer.UpdataAI()); //, aiPlayer2.UpdataAI());   
             }
             else
             {
@@ -157,7 +136,7 @@ namespace MirageTest.Scripts
         {
             logger.LogError($"EndGameSession");
             
-            _networkServer.Disconnect();
+            server.Disconnect();
             var objs = _serverObjectManager.SpawnedObjects.Values.ToArray();
             foreach (var obj in objs)
             {
@@ -165,18 +144,20 @@ namespace MirageTest.Scripts
             }
 
             _gameMode?.End();
-            _isGameStart = false;
-            
-            //프로세스 종료
         }
         
         private async UniTask WaitForPlayers()
         {
             while (true)
             {
-                var playerProxies =
-                    _serverObjectManager.SpawnedObjects.Where(kvp => kvp.Value.GetComponent<PlayerProxy>() != null);
-                if (playerProxies.Count() >= _gamePlayerCount)
+                var readyPlayerProxies =
+                    _serverObjectManager.SpawnedObjects.Where(p =>
+                    {
+                        var playerProxy = p.Value.GetComponent<PlayerProxy>();
+                        return (playerProxy != null && playerProxy.ready);
+                    });
+                
+                if (readyPlayerProxies.Count() >= _gamePlayerCount)
                 {
                     break;
                 }
@@ -189,9 +170,14 @@ namespace MirageTest.Scripts
         {
             while (true)
             {
-                var playerProxies =
-                    _serverObjectManager.SpawnedObjects.Where(kvp => kvp.Value.GetComponent<PlayerProxy>() != null);
-                if (playerProxies.Any())
+                var readyPlayerProxies =
+                    _serverObjectManager.SpawnedObjects.Where(p =>
+                    {
+                        var playerProxy = p.Value.GetComponent<PlayerProxy>();
+                        return (playerProxy != null && playerProxy.ready);
+                    });
+                
+                if (readyPlayerProxies.Any())
                 {
                     break;
                 }
@@ -203,6 +189,11 @@ namespace MirageTest.Scripts
         public PlayerState GetPlayerState(string userId)
         {
             return _gameMode.GetPlayerState(userId);
+        }
+
+        public void OnTowerDestroyed(ActorProxy destroyedTower)
+        {
+            _gameMode.OnTowerDestroyed(destroyedTower);
         }
     }
 

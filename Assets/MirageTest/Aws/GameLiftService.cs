@@ -7,6 +7,7 @@ using MirageTest.Scripts;
 using UnityEngine;
 using Aws.GameLift.Server;
 using Aws.GameLift.Server.Model;
+using Mirage.KCP;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -19,9 +20,33 @@ namespace MirageTest.Aws
         private void Start()
         {
             _server = FindObjectOfType<RWNetworkServer>();
+            var fps = CommandLineArgs.GetInt("fps"); 
+            if (fps.HasValue)
+            {
+                Application.targetFrameRate = fps.Value; 
+                Debug.Log($"fps from CommandLineArgs - {fps.Value}");
+            }
+            else
+            {
+                Application.targetFrameRate = 30;
+            }
+            
+            QualitySettings.vSyncCount = 0;
+
+            var transport = _server.GetComponent<KcpTransport>();
+            var portFromArgs = CommandLineArgs.GetInt("port"); 
+            if (portFromArgs.HasValue)
+            {
+                transport.Port = (ushort)portFromArgs.Value;
+                Debug.Log($"port from CommandLineArgs - {portFromArgs.Value}");
+            }
+
+            if (Init(transport.Port) == false)
+            {
+                Debug.LogError("GameLiftService Init 실패.");    
+            }
         }
-
-
+        
         public bool Init(int port)
         {
             var initSDKOutcome = GameLiftServerAPI.InitSDK();
@@ -29,7 +54,6 @@ namespace MirageTest.Aws
             {
                 return false;
             }
-
 
             // Set parameters and call ProcessReady
             var processParams = new ProcessParameters(
@@ -46,7 +70,6 @@ namespace MirageTest.Aws
                })
             );
 
-
             // Amazon GameLift 서비스에 서버 프로세스가 게임 세션을 호스팅할 준비가 되었음을 알립니다.
             var processReadyOutcome = GameLiftServerAPI.ProcessReady(processParams);
             if (processReadyOutcome.Success == false)
@@ -56,22 +79,21 @@ namespace MirageTest.Aws
 
             return true;
         }
-
-
+        
         public void Destroy()
         {
             GameLiftServerAPI.Destroy();
         }
-
-
+        
         public void TerminateGameSession()
         {
             GameLiftServerAPI.ProcessEnding();
         }
-
-
+        
         void OnGameSession(GameSession gameSession)
         {
+            TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
+            
             var outcome = GameLiftServerAPI.ActivateGameSession();
 
             if (string.IsNullOrEmpty(gameSession.GameSessionData) == false)
@@ -111,10 +133,8 @@ namespace MirageTest.Aws
                     }
                 }
             }
-
         }
-
-
+        
         void AddMatchPlayer(string playerId, string userName, int trophy, List<string> listDiceInfo)
         {
             if (_server == null)
@@ -142,8 +162,7 @@ namespace MirageTest.Aws
             // 플레이어 추가
             _server.MatchData.AddPlayerInfo(playerId, userName, trophy, deckInfo);
         }
-
-
+        
         void OnProcessTerminate()
         {
             // game-specific tasks required to gracefully shut down a game session, 
@@ -151,7 +170,6 @@ namespace MirageTest.Aws
             var ProcessEndingOutcome = GameLiftServerAPI.ProcessEnding();
             GameLiftServerAPI.Destroy();
         }
-
 
         bool OnHealthCheck()
         {
@@ -163,10 +181,9 @@ namespace MirageTest.Aws
 
         void OnUpdateGameSession(UpdateGameSession updateGameSession)
         {
-
+            
         }
-
-
+        
         public bool AcceptPlayerSession(string playerSessionId)
         {
             try

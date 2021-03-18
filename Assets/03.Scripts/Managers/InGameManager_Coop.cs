@@ -34,7 +34,7 @@ namespace ED
 
         public override void StartManager()
         {
-            UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
+            // UI_InGame.Get().SetMyNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
             
             
             UI_InGame.Get().ViewTargetDice(true);

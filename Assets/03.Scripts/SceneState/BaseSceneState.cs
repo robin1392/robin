@@ -80,10 +80,9 @@ public class BaseSceneState : BaseState<GameStateManager>
             }
             
             yield return new WaitForSeconds(0.1f);
-            //yield return null;    
         }
     }
-    
+
     public virtual void OnSceneLoadFinish(Scene scene, LoadSceneMode mode) { }
     
     #endregion

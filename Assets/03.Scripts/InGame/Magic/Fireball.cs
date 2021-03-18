@@ -55,7 +55,7 @@ namespace ED
         {
             Vector3 pos = transform.position;
             pos.y = 0;
-            var cols = Physics.OverlapSphere(pos, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
+            var cols = Physics.OverlapSphere(pos, range * Mathf.Pow(1.5f, eyeLevel), targetLayer);
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseStat>();

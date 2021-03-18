@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8396230075911770165
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8396230075911770166}
+  - component: {fileID: 8396230075911770167}
+  - component: {fileID: 8396230075911770169}
+  m_Layer: 0
+  m_Name: InGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8396230075911770166
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8396230075911770165}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8396230075911770167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8396230075911770165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bca06163687d34262bf75314fd2e82b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instanceID: 0
+  playType: 0
+  pref_Player: {fileID: 5883888954613411290, guid: 002ec50b4fca7424dbc66697ef6cb83b,
+    type: 3}
+  pref_AI: {fileID: 5883888954613411290, guid: a7b795ec78b3b4df688a07fa8e27c7a9, type: 3}
+  ts_Lights: {fileID: 0}
+  ts_StadiumTop: {fileID: 0}
+  ts_NexusHealthBar: {fileID: 0}
+  isAIMode: 1
+  isGamePlaying: 0
+  playerController: {fileID: 0}
+  startSpawnTime: 10
+  spawnTime: 20
+--- !u!114 &8396230075911770169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8396230075911770165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 769e217f7118a44eb9c6893b467ea785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instanceID: 0
+  imageSpawnTimeGray: {fileID: 0}
+  imageSpawnTime: {fileID: 0}
+  imageTimerIcon: {fileID: 0}
+  textSpawnTime: {fileID: 0}
+  textWave: {fileID: 0}
+  textAddSP: {fileID: 0}
+  canvas_UnitHPBar: {fileID: 0}
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.7936515
+      outSlope: 1.7936515
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.08407869
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -1.204299
+      outSlope: -1.204299
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.053667486
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

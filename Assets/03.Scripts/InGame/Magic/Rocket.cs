@@ -24,7 +24,11 @@ namespace ED
         protected override IEnumerator Cast()
         {
             target = ActorProxy.GetEnemyTower();
-
+            if (target == null)
+            {
+                yield break;
+            }
+            
             var rocketAction = new RocketAction();
             RunningAction = rocketAction;
             yield return rocketAction.ActionWithSync(ActorProxy, target.ActorProxy);

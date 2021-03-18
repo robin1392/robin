@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using MirageTest.Scripts.Entities;
@@ -54,11 +55,17 @@ namespace MirageTest.Scripts
             arg0.RegisterHandler<MatchDataMessage>(OnMatchData);
         }
 
-        private void OnMatchData(MatchDataMessage obj)
+        public void OnMatchData(MatchDataMessage obj)
         {
             Player1 = obj.Player1;
             Player2 = obj.Player2;
             
+            ShowMatchPopup().Forget();
+        }
+
+        async UniTask ShowMatchPopup()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
             UI_InGamePopup.Get().InitUIElement(Player1, Player2);
         }
 

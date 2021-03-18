@@ -66,7 +66,7 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         Invoke("DisableStartPopup", 2f);
     }
 
-    private void DisableStartPopup()
+    public void DisableStartPopup()
     {
         ((RectTransform) winlose_Other.transform).DOAnchorPosY(2000f, 0.5f);
         ((RectTransform) winlose_My.transform).DOAnchorPosY(-2000f, 0.5f);

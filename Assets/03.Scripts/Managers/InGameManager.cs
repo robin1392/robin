@@ -4,29 +4,12 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
-using Service.Core;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using UnityEngine.Events;
-using TMPro;
+using System.IO;
 using System.Linq;
-
-
-using CodeStage.AntiCheat.ObscuredTypes;
 using Cysharp.Threading.Tasks;
 using MirageTest.Scripts;
-using Pathfinding;
-using RandomWarsResource.Data;
-using UnityEngine.U2D;
-using WebSocketSharp;
-using ITEM_TYPE = RandomWarsProtocol.ITEM_TYPE;
-using Random = UnityEngine.Random;
-
+using Service.Core;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -90,20 +73,11 @@ namespace ED
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
             PoolManager.Get().MakePool();
             
+            Debug.Log(InGameManager.Get().playType);
+            Debug.Log(NetworkManager.Get().UseLocalServer);
+            
             StartManager();
 
-            // not use
-            /*             
-            if (PhotonNetwork.IsConnected)
-            {
-                SendBattleManager(RpcTarget.Others, E_PTDefine.PT_NICKNAME, ObscuredPrefs.GetString("Nickname"));
-            }
-            else
-            {
-                UI_InGame.Get().SetNickname("AI");
-            }
-            */
-            
             SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
         }
 
@@ -128,7 +102,6 @@ namespace ED
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
                 
-                
                 //KZSee:
                 // playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 // playerController.targetPlayer.isMine = false;
@@ -137,8 +110,7 @@ namespace ED
                 //
                 // playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer, true);
                 
-                //
-                UI_InGame.Get().SetNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
+                // UI_InGame.Get().SetMyNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
 
             }
             //AIMode
@@ -147,28 +119,24 @@ namespace ED
                 StartAIModeGame().Forget();
             }
             
-            UI_InGame.Get().ViewTargetDice(!IsNetwork);
+            UI_InGame.Get().ViewTargetDice(false);
 
-            if (IsNetwork == true)
-            {
-                if (NetworkManager.Get().IsMaster == false)
-                {
-                    //KZSee: TopCamp처리인듯하다.
-                    ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
-                    ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
-                    ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
-                }
-            }
-            
             //KZSee:AStarPathFinding MapScan
             //Invoke("MapScan", 1f);
+        }
+
+        public void RotateTopCampObject()
+        {
+            ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
+            ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
+            ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
         }
 
         async UniTask StartAIModeGame()
         {
             if (TableManager.Get().Loaded == false)
             {
-                string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+                string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
                 TableManager.Get().LoadFromFile(targetPath);
             }
             
@@ -191,13 +159,10 @@ namespace ED
             server.authenticator = null;
             var client = FindObjectOfType<RWNetworkClient>();
             client.authenticator = null;
+            client.localPlayerId = userInfo.userID;
 
             server.Listening = false;
             server.StartHost(client).Forget();
-
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-            
-            UI_InGamePopup.Get().InitUIElement(server.MatchData.PlayerInfos[0], server.MatchData.PlayerInfos[1]);
         }
 
         public int[] GetAIDeck(bool isTutorial)
@@ -212,18 +177,6 @@ namespace ED
             var shuffled = arr.OrderBy(x => Guid.NewGuid()).ToList();
             return shuffled.Take(5).Select(info => info.id).ToArray();
         }
-        
-        protected void RefreshSP(int sp)
-        {
-            UI_InGame.Get().SetSP(sp);
-        }
-
-        protected void SetSPUpgradeButton(int sp)
-        {
-            var spGrade = FindObjectOfType<RWNetworkClient>().GetLocalPlayerState().spGrade;
-            UI_InGame.Get().SetSPUpgrade(spGrade, sp);
-        }
-
         #endregion
         
 
@@ -244,6 +197,8 @@ namespace ED
             }
             else
             {
+                FindObjectOfType<RWNetworkServer>().Disconnect();
+                FindObjectOfType<RWNetworkClient>().Disconnect();
                 GameStateManager.Get().MoveMainScene();
             }
         }

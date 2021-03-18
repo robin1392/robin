@@ -32,6 +32,11 @@ namespace RandomWarsResource.Data
 		PerfectReward_Gold = 24,
 		PerfectWinReward_Key = 25,
 		EndWave = 26,
+		LoseUserRewardId = 27,
+		LoseUserRewardValue = 28,
+		LoseUserCondition01 = 29,
+		LoseUserCondition02 = 30,
+		LoseUserCondition03 = 31,
 	}
 
 	public class TDataVsmode : ITableData<int>

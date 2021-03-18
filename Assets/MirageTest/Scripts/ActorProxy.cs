@@ -634,6 +634,11 @@ namespace MirageTest.Scripts
         {
             var rwClient = Client as RWNetworkClient;
             var enemyTower = rwClient.Towers.Find(t => t.team != team);
+            if (enemyTower == null)
+            {
+                return null;
+            }
+            
             return enemyTower.baseStat;
         }
         

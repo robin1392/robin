@@ -1,16 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.IO;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using Mirage.Logging;
+using MirageTest.Aws;
 using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 public class RWNetworkServer : NetworkServer
 {
@@ -38,6 +38,16 @@ public class RWNetworkServer : NetworkServer
 
     private void OnAuthed(INetworkPlayer arg0)
     {
+        if (LocalClientActive)
+        {
+            return;
+        }
+
+        SendMatchData(arg0);
+    }
+
+    void SendMatchData(INetworkPlayer arg0)
+    {
         arg0.Send(new MatchDataMessage()
         {
             Player1 = MatchData.PlayerInfos[0],
@@ -49,7 +59,7 @@ public class RWNetworkServer : NetworkServer
     {
         if (TableManager.Get().Loaded == false)
         {
-            string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+            string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
             TableManager.Get().LoadFromFile(targetPath);
         }
     }
@@ -80,6 +90,7 @@ public class RWNetworkServer : NetworkServer
         if (actorProxy.actorType == ActorType.Tower)
         {
             Towers.Remove(actorProxy);
+            serverGameLogic.OnTowerDestroyed(actorProxy);
         }
     }
 
@@ -87,6 +98,11 @@ public class RWNetworkServer : NetworkServer
     {
         arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
         arg0.RegisterHandler<CreateActorMessage>(OnCreateActor);
+        
+        if (LocalClientActive)
+        {
+           SendMatchData(arg0);
+        }
     }
 
     private void OnCreateActor(CreateActorMessage msg)
@@ -163,6 +179,18 @@ public class RWNetworkServer : NetworkServer
             actorProxy.outgameUpgradeLevel = outGameLevel;
             actorProxy.spawnTime = (float) Time.Time;
             serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
+        }
+    }
+
+    public void OnGameEnd(List<UserMatchResult> listMatchResult)
+    {
+#if UNITY_EDITOR || UNITY_STANDALONE
+        FindObjectOfType<SQSService>()?.SendMessage(listMatchResult).Forget();
+#endif
+        foreach (var result in listMatchResult)
+        {
+            var playerProxy = PlayerProxies.First(p => result.UserId == p.userId);
+            playerProxy.EndGame(result);
         }
     }
 }

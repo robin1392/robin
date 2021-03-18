@@ -173,9 +173,13 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         obj_ViewTargetDiceField.SetActive(view);
     }
 
-    public void SetNickName(string myName, string enemyName)
+    public void SetMyNickName(string myName)
     {
         text_MyNickname.text = myName;
+    }
+    
+    public void SetEnemyNickName(string enemyName)
+    {
         text_EnemyNickname.text = enemyName;
     }
 

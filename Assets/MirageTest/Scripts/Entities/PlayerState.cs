@@ -22,7 +22,7 @@ namespace MirageTest.Scripts.Entities
         public bool EnableUI;
         [SyncVar] public string userId;
 
-        [SyncVar] public string nickName;
+        [SyncVar(hook = nameof(SetNickName))] public string nickName;
 
         //TODO: 꼭 필요한지 고민이 필요함. connectionId는 재접 시 바뀌어서 사용못하고, 유저아이디는 스트링이어서 부담스러움.
         [SyncVar] public byte ownerTag;
@@ -108,8 +108,6 @@ namespace MirageTest.Scripts.Entities
             var client = Client as RWNetworkClient;
             client.AddPlayerState(this);
 
-            Debug.Log($"PlayerState id:{userId} t:{team} o:{ownerTag}");
-
             EnableUI = client.enableUI;
             if (!EnableUI)
             {
@@ -128,6 +126,7 @@ namespace MirageTest.Scripts.Entities
             SetSpGrade(spGrade, spGrade);
             OnChangeDeckOnClientOnly();
             SetGetDiceCount(getDiceCount, getDiceCount);
+            SetNickName(nickName, nickName);
         }
 
         public DeckDice GetDeckDice(int diceId)
@@ -143,6 +142,23 @@ namespace MirageTest.Scripts.Entities
         public int GetDeckIndex(int diceId)
         {
             return Deck.IndexOf(GetDeckDice(diceId));
+        }
+        
+        public void SetNickName(string oldValue, string newValue)
+        {
+            if (!EnableUI)
+            {
+                return;
+            }
+
+            if (IsLocalPlayerState)
+            {
+                UI_InGame.Get().SetMyNickName(newValue);
+            }
+            else
+            {
+                UI_InGame.Get().SetEnemyNickName(newValue);
+            }
         }
 
         public void SetSp(int oldValue, int newValue)

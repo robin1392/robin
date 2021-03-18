@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MirageTest.Scripts;
-using UnityEngine;
-using Amazon;
+﻿using System.Collections.Generic;
+using Amazon.SecurityToken;
+using Amazon.SecurityToken.Model;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-//using Amazon.SecurityToken.Model;
-//using Amazon.SecurityToken;
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace MirageTest.Aws
 {
@@ -20,41 +15,44 @@ namespace MirageTest.Aws
         string _roleArn = string.Empty;
         string _roleName = string.Empty;
 
-
         private void Start()
         {
+#if UNITY_EDITOR || UNITY_STANDALONE
             _queueName = "randomdicewars-match-result";
             _roleArn = "arn:aws:iam::153269277707:role/randomwars-gameliftfleetrole";
             _roleName = "RandomWarsSession";
+#endif
         }
 
-
-        public bool SendMessage(List<UserMatchResult> listMatchResult)
+        public async UniTask SendMessage(List<UserMatchResult> listMatchResult)
         {
-            //AssumeRoleRequest roleRequest = new AssumeRoleRequest();
-            //roleRequest.RoleArn = _roleArn;
-            //roleRequest.RoleSessionName = _roleName;
-            //AmazonSecurityTokenServiceClient stsClient = new AmazonSecurityTokenServiceClient();
-            //AssumeRoleResponse roleResponse = stsClient.AssumeRole(roleRequest);
-            //if (roleResponse == null)
-            //{
-            //    return false;
-            //}
+            AssumeRoleRequest roleRequest = new AssumeRoleRequest();
+            roleRequest.RoleArn = _roleArn;
+            roleRequest.RoleSessionName = _roleName;
+            AmazonSecurityTokenServiceClient stsClient = new AmazonSecurityTokenServiceClient();
+            var roleResponse = stsClient.AssumeRoleAsync(roleRequest);
 
-            //// db 클라이언트 생성
-            //IAmazonSQS sqs = new AmazonSQSClient(roleResponse.Credentials);
-            IAmazonSQS sqs = new AmazonSQSClient(RegionEndpoint.APNortheast2);
+            await roleResponse;
+
+            if (roleResponse.Result == null)
+            {
+                Debug.LogError($"roleResponse 가 널입니다.");
+                return;
+            }
+
+            IAmazonSQS sqs = new AmazonSQSClient(roleResponse.Result.Credentials);
 
             var getQueueUrlResponse = sqs.GetQueueUrl(_queueName);
             var myQueueUrl = getQueueUrlResponse.QueueUrl;
             var sqsMessageRequest = new SendMessageRequest(myQueueUrl, JsonConvert.SerializeObject(listMatchResult));
-            var sendMessageResponse = sqs.SendMessage(sqsMessageRequest);
-            if (sendMessageResponse == null)
+            var sendMessageResponse = sqs.SendMessageAsync(sqsMessageRequest);
+            if (sendMessageResponse.Result == null)
             {
-                return false;
+                Debug.LogError($"sendMessageResponse 가 null입니다.");
+                return;
             }
 
-            return true;
+            Debug.Log($"메세지 아이디: {sendMessageResponse.Result.MessageId}");
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using ED;
 using Mirage;
+using MirageTest.Scripts.Messages;
+using Service.Template;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +11,7 @@ namespace MirageTest.Scripts.Entities
     [RequireComponent(typeof(NetworkIdentity))]
     public class GameState : NetworkBehaviour
     {
+        [SyncVar(hook = nameof(SetState))] public EGameState state;
         [SyncVar(hook = nameof(SetWave))] public int wave;
         public UnityEvent<int> WaveEvent;
         
@@ -57,6 +60,11 @@ namespace MirageTest.Scripts.Entities
         {
             var client = Client as RWNetworkClient;
             client.GameState = this;
+            SetWave(wave, wave);
+        }
+        
+        public void SetState(EGameState oldValue, EGameState newValue)
+        {
         }
 
         public void SetWave(int oldValue, int newValue)
@@ -65,8 +73,6 @@ namespace MirageTest.Scripts.Entities
             
             WorldUIManager.Get().SetWave(newValue);
             WorldUIManager.Get().RotateTimerIcon();
-            
-            
         }
         
         public void SetMasterOwnerTag(byte oldValue, byte newValue)
