@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using ED;
 using Mirage;
 using Mirage.Collections;
@@ -766,6 +767,35 @@ namespace MirageTest.Scripts
         {
             var server = Server as RWNetworkServer;
             server.CreateActor(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
+        }
+
+        public void Fusion()
+        {
+            if (IsLocalClient)
+            {
+                FusionInternal();
+                return;
+            }
+
+            FusionOnServer();
+        }
+
+        [ServerRpc(requireAuthority = false)]
+        public void FusionOnServer()
+        {
+            FusionInternal();
+        }
+
+        private void FusionInternal()
+        {
+            var rwClient = Client as RWNetworkClient;
+            var tower = rwClient.GetTower(ownerTag);
+            Vector3 fusionPosition = tower.transform.position;
+            fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
+            transform.DOMove(fusionPosition, 0.5f).OnComplete(() =>
+            {
+                Destroy();
+            });
         }
     }
 }

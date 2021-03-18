@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using MirageTest.Scripts.Entities;
+using MirageTest.Scripts.Messages;
 using RandomWarsResource;
 using RandomWarsResource.Data;
 using UnityEngine;
@@ -102,6 +103,7 @@ namespace MirageTest.Scripts.GameMode
             while (true)
             {
                 OnWave(GameState.wave);
+                CheckRobotFusion();
                 GameState.CountDown(waveTime);
                 
                 var addSpCount = 0;
@@ -129,6 +131,42 @@ namespace MirageTest.Scripts.GameMode
                 }
                 
                 GameState.wave++;
+            }
+        }
+
+        private void CheckRobotFusion()
+        {
+            var server = ServerObjectManager.Server as RWNetworkServer;
+            var robotId = 4005;
+            var robots = server.ActorProxies.Where(actor => actor.dataId == robotId);
+            var groupBy = robots.GroupBy(r => r.team);
+            foreach (var group in groupBy)
+            {
+                if (group.Count() == 4)
+                {
+                    ActorProxy actor = null;
+                    foreach (var robot in group)
+                    {
+                        actor = robot;
+                        robot.Fusion();
+                    }
+                    
+                    server.CreateActor(
+                        4012,
+                        actor.ownerTag,
+                        actor.team,
+                        actor.ingameUpgradeLevel,
+                        actor.outgameUpgradeLevel,
+                        new Vector3[] { actor.transform.position },
+                        2f);
+                }
+                else
+                {
+                    foreach (var robot in group)
+                    {
+                        robot.Destroy(1.6f);
+                    }
+                }
             }
         }
 
