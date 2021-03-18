@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
@@ -8,30 +9,28 @@ namespace ED
     public class RageOfTower : Magic
     {
         public ParticleSystem ps_Bomb;
+        private BaseStat tower;
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
             
-            Fire();
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            tower = rwClient.GetTower(ActorProxy.ownerTag);
+            
+            ps_Bomb.transform.position = tower.transform.position;
+            ps_Bomb.Play();
+            ActorProxy.Destroy(2f);
         }
 
-        private void Fire()
+        protected override IEnumerator Cast()
         {
-            ps_Bomb.transform.position = controller.transform.position;
-            ps_Bomb.Play();
-            
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+            var cols = Physics.OverlapSphere(tower.transform.position, range, targetLayer);
+            foreach (var col in cols)
             {
-                var cols = Physics.OverlapSphere(controller.transform.position, range, targetLayer);
-                foreach (var col in cols)
-                {
-                    //KZSee:
-                    // DamageToTarget(col.GetComponentInParent<Minion>());
-                }
+                col.GetComponentInParent<BaseStat>().ActorProxy.HitDamage(power);
             }
-
-            //KZSee:
-            //Destroy(2f);
+            
+            yield break;
         }
     }
 }
