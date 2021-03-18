@@ -2,14 +2,9 @@
 #define ENABLE_LOG
 #endif
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
-using ParadoxNotion.Design;
-using TMPro;
+using RandomWarsResource.Data;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ED
@@ -67,7 +62,7 @@ namespace ED
             int needDiceCount = int.MaxValue;
             if (_data.isGuardian == false)
             {
-                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == (int)_data.grade, out dataDiceUpgrade))
                 {
                     needDiceCount = dataDiceUpgrade.needCard;
@@ -153,7 +148,7 @@ namespace ED
                     int diceCount = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][1];
                     int diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[_data.id][0];
 
-                    RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                    TDataDiceUpgrade dataDiceUpgrade;
                     if (TableManager.Get().DiceUpgrade
                             .GetData(x => x.diceLv == diceLevel + 1 && x.diceGrade == (int)_data.grade,
                                 out dataDiceUpgrade) ==

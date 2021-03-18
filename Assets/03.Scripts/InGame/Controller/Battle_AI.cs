@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using NodeCanvas.BehaviourTrees;
-using Random = UnityEngine.Random;
+﻿using UnityEngine;
 
 namespace ED
 {
@@ -129,10 +124,11 @@ namespace ED
             //     }
             // }
         }
-        
-        
+
+
         //KZSee: AI 업그레이드에 적용
-        private readonly int[] _arrPrice = { 100, 200, 400, 700, 1100 };
+        private readonly int[] _arrPrice = {100, 200, 400, 700, 1100};
+
         public void AI_UpgradeDice()
         {
             // var arr = new int[arrDiceDeck.Length];
@@ -186,8 +182,8 @@ namespace ED
                     break;
             }
         }
-        
-        public void GetDice(int diceId , int slotNum , int level = 0)
+
+        public void GetDice(int diceId, int slotNum, int level = 0)
         {
             // arrDice[slotNum].Set(GetArrayDeckDice(diceId));
             //
@@ -219,6 +215,5 @@ namespace ED
         //     }
         //     return dice;
         // }
-
     }
 }

@@ -1,8 +1,5 @@
-using NodeCanvas.BehaviourTrees;
-using NodeCanvas.Framework;
 using Pathfinding;
 using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
 using Path = System.IO.Path;
 
@@ -15,7 +12,7 @@ namespace MirageTest.Editor
     
         [MenuItem ("RandomWars/AssetEditingMacro")]
         static void Init () {
-            AssetEditingMacro window = (AssetEditingMacro)EditorWindow.GetWindow (typeof (AssetEditingMacro));
+            AssetEditingMacro window = (AssetEditingMacro)GetWindow (typeof (AssetEditingMacro));
             window.Show();
         }
 	
@@ -53,13 +50,13 @@ namespace MirageTest.Editor
                     var aiPath = prefab.GetComponent<AIPath>();
                     if (aiPath != null)
                     {
-                        Object.DestroyImmediate(aiPath);    
+                        DestroyImmediate(aiPath);    
                     }
                     
                     var seeker = prefab.GetComponent<Seeker>();
                     if (seeker != null)
                     {
-                        Object.DestroyImmediate(seeker);    
+                        DestroyImmediate(seeker);    
                     }
 
                     // var rigidbody = prefab.GetComponent<Rigidbody>();
@@ -67,19 +64,7 @@ namespace MirageTest.Editor
                     // {
                     //     Object.DestroyImmediate(rigidbody);    
                     // }
-                    
-                    var blackboard = prefab.GetComponent<Blackboard>();
-                    if (blackboard != null)
-                    {
-                        Object.DestroyImmediate(blackboard);    
-                    }
-                    
-                    var behaviourTreeOwner = prefab.GetComponent<BehaviourTreeOwner>();
-                    if (behaviourTreeOwner != null)
-                    {
-                        Object.DestroyImmediate(behaviourTreeOwner);    
-                    }
-                    
+
                     PrefabUtility.SaveAsPrefabAsset(prefab, prefabPath);
                     PrefabUtility.UnloadPrefabContents(prefab);
                 }            

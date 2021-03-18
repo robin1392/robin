@@ -5,16 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using ED;
-using Mirage;
-using MirageTest.Scripts;
-using NodeCanvas.BehaviourTrees;
-using Pathfinding;
 using UnityEngine;
-using UnityEngine.AI;
-using Random = UnityEngine.Random;
-using RandomWarsProtocol;
-using Debug = ED.Debug;
 
 namespace ED
 {
@@ -57,8 +48,7 @@ namespace ED
 
         private Coroutine _crtAttack;
         private Coroutine _crtPush;
-        public BehaviourTreeOwner behaviourTreeOwner { get; protected set; }
-        
+
         public Collider collider;
         public bool isPolymorph;
         protected int _flagOfWarCount;

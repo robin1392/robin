@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using DG.Tweening;
-using MirageTest.Scripts;
-using MirageTest.Scripts.Entities;
-using NodeCanvas.Tasks.Actions;
 
 namespace ED
 {
