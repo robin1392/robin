@@ -298,15 +298,11 @@ MonoBehaviour:
   isAIMode: 1
   isGamePlaying: 0
   playerController: {fileID: 0}
-  startSpawnTime: 10
-  spawnTime: 20
-  arrUpgradeLevel: 
-  getDiceCount: 0
   event_SP_Edit:
     m_PersistentCalls:
       m_Calls: []
-  listBottomPlayer: []
-  listTopPlayer: []
+  startSpawnTime: 10
+  spawnTime: 20
 --- !u!114 &225455321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2809,7 +2805,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 156.3479
+      value: 157.59344
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}

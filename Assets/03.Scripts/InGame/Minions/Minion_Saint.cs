@@ -41,35 +41,25 @@ namespace ED
             var cols = Physics.OverlapSphere(pos, range, friendlyLayer);
             if (cols.Length > 0)
             {
-                //if (PhotonNetwork.IsConnected && isMine)
-                if (InGameManager.IsNetwork && isMine)
-                {
-                    base.Attack();
-                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
-                    
-                    foreach (var col in cols)
-                    {
-                        if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
-                        {
-                            ActorProxy.HealTo(col.GetComponentInParent<Minion>());
-                        }
-                    }
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if (InGameManager.IsNetwork == false)
-                {
-                    base.Attack();
-                    animator.SetTrigger(AnimationHash.Skill);
-                    foreach (var col in cols)
-                    {
-                        if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
-                        {
-                            ActorProxy.HealTo(col.GetComponentInParent<Minion>());
-                        }
-                    }
-                }
+                ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
 
+                if (ActorProxy.isPlayingAI)
+                {
+                    foreach (var col in cols)
+                    {
+                        if (col != null && col.CompareTag("Minion_Ground") && col.gameObject != gameObject)
+                        {
+                            var minion = col.GetComponentInParent<Minion>();
+                            if (minion != null)
+                            {
+                                minion.ActorProxy.Heal(effect);   
+                            }
+                        }
+                    }   
+                }
                 healTime = _spawnedTime;
+                
+                yield return base.Attack();
             }
         }
         

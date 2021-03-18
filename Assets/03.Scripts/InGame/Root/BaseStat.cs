@@ -143,7 +143,7 @@ namespace ED
             _poolObjectAutoDeactivate?.Deactive();
         }
 
-        protected void SetHealthBarColor()
+        public void SetHealthBarColor()
         {
             if (image_HealthBar == null)
             {

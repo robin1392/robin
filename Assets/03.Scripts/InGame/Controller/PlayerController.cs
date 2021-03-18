@@ -84,6 +84,8 @@ namespace ED
             {
                 if (m.gameObject.CompareTag("Finish")) continue;
 
+                m.material = mat;
+
                 switch (type)
                 {
                     case E_MaterialType.BOTTOM:

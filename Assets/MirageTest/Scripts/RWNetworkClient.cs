@@ -27,6 +27,9 @@ namespace MirageTest.Scripts
         private ClientObjectManager _clientObjectManager;
         public string localPlayerId;
 
+        public MatchPlayer Player1;
+        public MatchPlayer Player2;
+
         public static RWNetworkClient Get()
         {
             return FindObjectOfType<RWNetworkClient>();
@@ -48,6 +51,15 @@ namespace MirageTest.Scripts
         private void OnConnectedRW(INetworkPlayer arg0)
         {
             arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
+            arg0.RegisterHandler<MatchDataMessage>(OnMatchData);
+        }
+
+        private void OnMatchData(MatchDataMessage obj)
+        {
+            Player1 = obj.Player1;
+            Player2 = obj.Player2;
+            
+            UI_InGamePopup.Get().InitUIElement(Player1, Player2);
         }
 
         private void OnPositionRelay(PositionRelayMessage msg)
@@ -119,6 +131,11 @@ namespace MirageTest.Scripts
 
         public PlayerProxy GetLocalPlayerProxy()
         {
+            if (IsLocalClient)
+            { 
+                return PlayerProxies.First();
+            }
+            
             return PlayerProxies.Find(p => p.IsLocalPlayer);
         }
         

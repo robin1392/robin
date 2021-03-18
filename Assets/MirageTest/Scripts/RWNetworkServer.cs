@@ -33,12 +33,25 @@ public class RWNetworkServer : NetworkServer
     {
         serverGameLogic = GetComponent<ServerGameLogic>();
         Connected.AddListener(OnConnected);
+        Authenticated.AddListener(OnAuthed);
+    }
+
+    private void OnAuthed(INetworkPlayer arg0)
+    {
+        arg0.Send(new MatchDataMessage()
+        {
+            Player1 = MatchData.PlayerInfos[0],
+            Player2 = MatchData.PlayerInfos[1],
+        });
     }
 
     private void Start()
     {
-        string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
-        TableManager.Get().LoadFromFile(targetPath);
+        if (TableManager.Get().Loaded == false)
+        {
+            string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+            TableManager.Get().LoadFromFile(targetPath);
+        }
     }
 
     public void AddPlayerProxy(PlayerProxy playerProxy)

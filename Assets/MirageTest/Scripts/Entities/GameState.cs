@@ -21,8 +21,27 @@ namespace MirageTest.Scripts.Entities
                 return;
             }
             
+            NetIdentity.OnStartServer.AddListener(StartServer);
+            NetIdentity.OnStopServer.AddListener(StopServer);
+            
             NetIdentity.OnStartClient.AddListener(StartClient);
             NetIdentity.OnStopClient.AddListener(StopClient);
+        }
+
+        private void StartServer()
+        {
+            if (Server.LocalClientActive)
+            {
+                StartClient();
+            }
+        }
+        
+        private void StopServer()
+        {
+            if (Server.LocalClientActive)
+            {
+                StopClient();
+            }
         }
 
         private void StopClient()
@@ -41,6 +60,8 @@ namespace MirageTest.Scripts.Entities
         {
             WorldUIManager.Get().SetWave(newValue);
             WorldUIManager.Get().RotateTimerIcon();
+            
+            
         }
         
         public void SetMasterOwnerTag(byte oldValue, byte newValue)
@@ -65,7 +86,7 @@ namespace MirageTest.Scripts.Entities
 
         private void Update()
         {
-            if (IsServer)
+            if (IsLocalClient == false && IsServer)
             {
                 return;
             }
@@ -80,8 +101,23 @@ namespace MirageTest.Scripts.Entities
             WorldUIManager.Get().SetTextSpawnTime(_waveRemainTime);
         }
 
+        public void CountDown(int waveInterval)
+        {
+            if (IsLocalClient)
+            {
+                CountDownInternal(waveInterval);
+                return;
+            }
+            CountDownOnClient(waveInterval);
+        }
+        
         [ClientRpc]
         public void CountDownOnClient(int waveInterval)
+        {
+            CountDownInternal(waveInterval);
+        }
+
+        void CountDownInternal(int waveInterval)
         {
             _waveInterval = waveInterval;
             _waveRemainTime = waveInterval;

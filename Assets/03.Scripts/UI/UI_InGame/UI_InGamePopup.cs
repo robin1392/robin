@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,7 +41,6 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void Start()
     {
-        Invoke("InitUIElement", 0.05f);
     }
 
     public override void OnDestroy()
@@ -54,28 +54,12 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     
     #region init destroy
 
-    public void InitUIElement()
+    public void InitUIElement(MatchPlayer player1, MatchPlayer player2)
     {
-        if (NetworkManager.Get() == null)
-        {
-            return;
-        }
-
-        // start popup
-        if (TutorialManager.isTutorial)
-        {
-            winlose_My.Initialize(UserInfoManager.Get().GetActiveDeck(),
-                UserInfoManager.Get().GetUserInfo().userNickName, UserInfoManager.Get().GetUserInfo().trophy);
-            winlose_Other.Initialize(InGameManager.Get().GetAIDeck(true), "AI",
-                UserInfoManager.Get().GetUserInfo().trophy);
-        }
-        else
-        {
-            winlose_My.Initialize(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray,
-                NetworkManager.Get().GetNetInfo().playerInfo.Name, NetworkManager.Get().GetNetInfo().playerInfo.Trophy);
-            winlose_Other.Initialize(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray,
-                NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
-        }
+        winlose_My.Initialize(player1.Deck.GuadialId, player1.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+            player1.UserNickName, player1.Trophy);
+        winlose_My.Initialize(player2.Deck.GuadialId, player2.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+            player2.UserNickName, player2.Trophy);
 
         obj_Start.SetActive(true);
         

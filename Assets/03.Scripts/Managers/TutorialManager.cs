@@ -33,7 +33,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
-        if (UserInfoManager.Get().GetUserInfo().isEndTutorial)
+        if (true) //UserInfoManager.Get().GetUserInfo().isEndTutorial)
         {
             isTutorial = false;
             gameObject.SetActive(false);

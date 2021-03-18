@@ -144,11 +144,6 @@ namespace ED
             SoundManager.instance.PlayBGM(Global.E_SOUND.BGM_INGAME_BATTLE);
         }
 
-        protected void Update()
-        {
-            RefreshTimeUI();
-        }
-
         #endregion
 
 
@@ -222,8 +217,15 @@ namespace ED
 
         async UniTask StartAIModeGame()
         {
+            if (TableManager.Get().Loaded == false)
+            {
+                string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+                TableManager.Get().LoadFromFile(targetPath);
+            }
+            
             var server = FindObjectOfType<RWNetworkServer>();
             var userInfo = UserInfoManager.Get().GetUserInfo();
+
             var userDeck = userInfo.GetActiveDeck;
             var diceDeck = userDeck.Take(5).ToArray();
             var guadianId = userDeck[5];
@@ -236,19 +238,17 @@ namespace ED
                 "AI", 
                 "AI", 0, 
                 new DeckInfo(guadianId, GetAIDeck(TutorialManager.isTutorial)));
-                
-            server.ListenAsync().Forget();
 
-            while (server.Active == false)
-            {
-                await UniTask.Yield();
-            }
-            
+            server.authenticator = null;
             var client = FindObjectOfType<RWNetworkClient>();
-            var auth =client.GetComponent<RWAthenticator>(); 
-            auth.LocalId = userInfo.userID;
-            auth.LocalName = userInfo.userNickName;
-            await client.ConnectAsync("localhost");
+            client.authenticator = null;
+
+            server.Listening = false;
+            server.StartHost(client).Forget();
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+            
+            UI_InGamePopup.Get().InitUIElement(server.MatchData.PlayerInfos[0], server.MatchData.PlayerInfos[1]);
         }
 
         public int[] GetAIDeck(bool isTutorial)
@@ -284,7 +284,7 @@ namespace ED
         {
             DeactivateWaitingObject();
 
-            RefreshTimeUI(true);
+            // RefreshTimeUI(true);
         }
 
         private void Ready()
@@ -301,29 +301,6 @@ namespace ED
         {
             isGamePlaying = true;
             UI_InGamePopup.Get().SetViewWaiting(false);
-        }
-        
-        protected void RefreshTimeUI(bool isImmediately = false)
-        {
-            if (isImmediately)
-            {
-                WorldUIManager.Get().SetSpawnTime(1f - time % st / st);
-            }
-            else
-            {
-                float ff = Mathf.Lerp(WorldUIManager.Get().GetSpawnAmount(), 1f - time % st / st, Time.deltaTime * 5.0f);
-
-                if (ff > WorldUIManager.Get().GetSpawnAmount())
-                    WorldUIManager.Get().SetSpawnTime(ff);
-                else 
-                    WorldUIManager.Get().SetSpawnTime(1f - time % st / st);
-            }
-            
-       
-            WorldUIManager.Get().SetTextSpawnTime(time);
-            
-            if (IsNetwork == false)
-                WorldUIManager.Get().SetWave(wave);
         }
 
         #endregion
@@ -416,9 +393,9 @@ namespace ED
 
         private RWNetworkClient _client;
 
-        public void InitClient(RWNetworkClient _client)
+        public void InitClient(RWNetworkClient client)
         {
-            _client = _client;
+            _client = client;
         }
         
         public void Click_SP_Upgrade_Button()

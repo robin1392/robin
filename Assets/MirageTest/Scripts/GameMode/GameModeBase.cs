@@ -88,57 +88,54 @@ namespace MirageTest.Scripts.GameMode
 
             await UniTask.Delay(TimeSpan.FromSeconds(1));
 
-            await UniTask.WhenAll(UpdateWave(), UpdateSp());
+            await UpdateWave();
         }
 
         private async UniTask UpdateWave()
         {
-            var waveInterval = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
+            var vsmode = TableManager.Get().Vsmode;
+            var waveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
+            var addSp = vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
+            var addSpCountPerWave = 4;
+            var addSpInterval = waveTime / addSpCountPerWave;
+            
             while (true)
             {
-                GameState.wave++;
                 OnWave(GameState.wave);
-
-                GameState.CountDownOnClient(waveInterval);
-                await UniTask.Delay(TimeSpan.FromSeconds(waveInterval));
-
+                GameState.CountDown(waveTime);
+                
+                var addSpCount = 0;
+                while (addSpCount < addSpCountPerWave)
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(addSpInterval));
+                    if (IsGameEnd)
+                    {
+                        break;
+                    }
+                    
+                    addSpCount++;
+                    foreach (var playerState in PlayerStates)
+                    {
+                        var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
+                        var sp = addSp + (GameState.wave * upgradeSp);
+                        playerState.sp += sp;
+                        playerState.AddSpByWave(sp);
+                    }
+                }
+                
                 if (IsGameEnd)
                 {
                     break;
                 }
+                
+                GameState.wave++;
             }
         }
 
         protected abstract UniTask OnBeforeGameStart();
 
         protected abstract void OnWave(int wave);
-
-        private async UniTask UpdateSp()
-        {
-            var vsmode = TableManager.Get().Vsmode;
-            var waveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
-            var addSp = vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
-            var addSpInterval = waveTime / 5;
-
-            while (true)
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(addSpInterval));
-
-                if (IsGameEnd)
-                {
-                    break;
-                }
-
-                foreach (var playerState in PlayerStates)
-                {
-                    var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
-                    var sp = addSp + (GameState.wave * upgradeSp);
-                    playerState.sp += sp;
-                    playerState.AddSpByWave(sp);
-                }
-            }
-        }
-
+        
         public PlayerState GetPlayerState(string userId)
         {
             return PlayerStates.First(ps => ps.userId == userId);
@@ -185,7 +182,7 @@ namespace MirageTest.Scripts.GameMode
                 var spawnCount = diceInfo.spawnMultiply;
                 if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION)
                 {
-                    spawnCount *= (diceScale + 1);
+                    spawnCount *= diceScale;
                 }
 
                 var deckDice = playerState.GetDeckDice(fieldDice.diceId);

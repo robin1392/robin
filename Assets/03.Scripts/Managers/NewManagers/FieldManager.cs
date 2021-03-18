@@ -25,7 +25,6 @@ public class FieldManager : SingletonDestroy<FieldManager>
     public override void Awake()
     {
         base.Awake();
-
         InitializeFieldManager();
     }
     

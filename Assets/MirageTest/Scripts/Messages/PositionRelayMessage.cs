@@ -22,4 +22,10 @@ namespace MirageTest.Scripts.Messages
         public Vector3[] positions;
         public float delay;
     }
+    
+    public class MatchDataMessage
+    {
+        public MatchPlayer Player1;
+        public MatchPlayer Player2;
+    }
 }

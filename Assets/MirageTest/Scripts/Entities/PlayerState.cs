@@ -76,8 +76,27 @@ namespace MirageTest.Scripts.Entities
                 return;
             }
             
+            NetIdentity.OnStartServer.AddListener(StartServer);
+            NetIdentity.OnStopServer.AddListener(StopServer);
+            
             NetIdentity.OnStartClient.AddListener(StartClient);
             NetIdentity.OnStopClient.AddListener(StopClient);
+        }
+
+        private void StopServer()
+        {
+            if (Server.LocalClientActive)
+            {
+                StopClient();
+            }
+        }
+
+        private void StartServer()
+        {
+            if (Server.LocalClientActive)
+            {
+                StartClient();
+            }
         }
 
         private void StartClient()
@@ -289,14 +308,31 @@ namespace MirageTest.Scripts.Entities
             return selectedIndexOnField;
         }
 
-        [ClientRpc]
         public void AddSpByWave(int sp)
+        {
+            if (IsLocalClient)
+            {
+                AddSpByWaveInternal(sp);
+                return;
+            }
+
+            AddSpByWaveOnClient(sp);
+        }
+        
+        [ClientRpc]
+        public void AddSpByWaveOnClient(int sp)
+        {
+            AddSpByWaveInternal(sp);
+        }
+
+        void AddSpByWaveInternal(int sp)
         {
             if (IsLocalPlayerState)
             {
                 WorldUIManager.Get().AddSP(sp);
             }
         }
+        
         
         public void GetDice()
         {
@@ -327,7 +363,7 @@ namespace MirageTest.Scripts.Entities
             Field[fieldIndex] = new FieldDice()
             {
                 diceId = selectedDeckDice.diceId,
-                diceScale = 0,
+                diceScale = 1,
             };
         }
     }
@@ -338,7 +374,7 @@ namespace MirageTest.Scripts.Entities
         public int diceId;
         public byte diceScale;
 
-        public static readonly FieldDice Empty = new FieldDice() { diceId = 0, diceScale = 0 };
+        public static readonly FieldDice Empty = new FieldDice() { diceId = 0, diceScale = 1 };
 
         public bool IsEmpty => Equals(Empty);
         

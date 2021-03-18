@@ -40,7 +40,8 @@ namespace ED
                 yield break;
             }
             
-            ActorProxy.HealTo(target);
+            target.ActorProxy.Heal(effect);
+            
             yield return base.Attack();
         }
 

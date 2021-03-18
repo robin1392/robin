@@ -136,12 +136,22 @@ namespace MirageTest.Scripts
         {
             var server = Server as RWNetworkServer;
             server.AddActorProxy(this);
+
+            if (Server.LocalClientActive)
+            {
+                StartClient();
+            }
         }
         
         private void StopServer()
         {
             var server = Server as RWNetworkServer;
             server.RemoveActorProxy(this);
+            
+            if (Server.LocalClientActive)
+            {
+                StopClient();
+            }
         }
 
         private void StartClient()
@@ -329,11 +339,22 @@ namespace MirageTest.Scripts
 
         public void AddBuff(byte id, float duration)
         {
+            if (IsLocalClient)
+            {
+                AddBuffInternal(id, duration);
+                return;
+            }
+            
             AddBuffOnServer(id, duration);
         }
 
         [ServerRpc(requireAuthority = false)]
         public void AddBuffOnServer(byte id, float duration)
+        {
+            AddBuffInternal(id, duration);
+        }
+
+        void AddBuffInternal(byte id, float duration)
         {
             BuffList.Add(new Buff()
             {
@@ -349,6 +370,13 @@ namespace MirageTest.Scripts
                 return;
             }
 
+            if (IsLocalClient)
+            {
+                ApplyDamage(damage);
+                DamageOnInternal(damage);
+                return;
+            }
+            
             HitDamageOnServer(damage);
         }
 
@@ -376,6 +404,11 @@ namespace MirageTest.Scripts
         [ClientRpc]
         public void DamagedOnClient(float damage)
         {
+            DamageOnInternal(damage);
+        }
+
+        void DamageOnInternal(float damage)
+        {
             if (baseStat == null)
             {
                 return;
@@ -389,33 +422,38 @@ namespace MirageTest.Scripts
             SoundManager.instance.PlayRandom(Global.E_SOUND.SFX_MINION_HIT);
         }
 
-        public void HealTo(BaseStat target)
+        public void Heal(float amount)
         {
-            HealToOnServer(target.id);
-        }
-
-        [ServerRpc(requireAuthority = false)]
-        public void HealToOnServer(uint targetNetId)
-        {
-            var target = ServerObjectManager[targetNetId];
-            if (target == null)
+            if (IsLocalClient)
             {
+                AppyHealOnServer(amount);
+                HealOnInternal(amount);
                 return;
             }
-
-            target.GetComponent<ActorProxy>().AppyHeal(effect);
+            
+            AppyHealOnServer(amount);
+        }
+        
+        [Server]
+        public void AppyHealOnServer(float amount)
+        {
+            ApplyHealInternal(amount);
+            HealedOnClient(amount);
         }
 
-        [Server]
-        public void AppyHeal(float amount)
+        void ApplyHealInternal(float amount)
         {
             currentHealth += amount;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-            HealedOnClient(amount);
         }
 
         [ClientRpc]
         public void HealedOnClient(float amount)
+        {
+            HealOnInternal(amount);
+        }
+
+        void HealOnInternal(float amount)
         {
             if (baseStat == null)
             {

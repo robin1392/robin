@@ -52,8 +52,6 @@ namespace ED
             {
                 return;
             }
-            
-            
 
             if (localPlayerState.sp >= diceCost && localPlayerState.GetEmptySlotCount() > 0)
             {

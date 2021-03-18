@@ -39,7 +39,9 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataShopProductList> ShopProductList { get; private set; }
     public TableData<int, TDataMailInfo> MailInfo { get; private set; }
 
+    private bool loaded;
 
+    public bool Loaded => loaded;
 
     public void Awake()
     {
@@ -267,6 +269,7 @@ public class TableManager : Singleton<TableManager>
         ShopInfo.Init(new TableLoaderLocalCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
         ShopProductList.Init(new TableLoaderLocalCSV<int, TDataShopProductList>(), path, "ShopProductList.csv");
         MailInfo.Init(new TableLoaderLocalCSV<int, TDataMailInfo>(), path, "MailInfo.csv");
+        loaded = true;
         return true;
     }
 }

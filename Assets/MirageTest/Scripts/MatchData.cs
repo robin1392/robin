@@ -43,6 +43,10 @@ namespace MirageTest.Scripts
         public int GuadialId;
         public DiceInfo[] DiceInfos;
 
+        public DeckInfo()
+        {
+        }
+
         public DeckInfo(int guadianId, params int[] diceIds)
         {
             GuadialId = guadianId;

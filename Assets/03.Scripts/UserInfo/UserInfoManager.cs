@@ -118,9 +118,9 @@ public class UserInfo
 
     public UserInfo()
     {
-        arrDeck[0] = new int[5] {1000, 1001, 1002, 1003, 1004};
-        arrDeck[1] = new int[5] {1000, 1001, 1002, 1003, 1004};
-        arrDeck[2] = new int[5] {1000, 1001, 1002, 1003, 1004};
+        arrDeck[0] = new int[6] {1000, 1001, 1002, 1003, 1004, 5001};
+        arrDeck[1] = new int[6] {1000, 1001, 1002, 1003, 1004, 5001};
+        arrDeck[2] = new int[6] {1000, 1001, 1002, 1003, 1004, 5001};
 
         
         // _slotDeck[0] = ObscuredPrefs.GetString("Deck", "1000/1001/1002/1003/1004" );

@@ -52,6 +52,7 @@ namespace ED
                 if (ActorProxy.isPlayingAI)
                 {
                     ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
+                    yield return new WaitForSeconds(0.5f);
                 }
             }
             else
