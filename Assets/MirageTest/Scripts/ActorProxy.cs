@@ -196,6 +196,7 @@ namespace MirageTest.Scripts
             EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0);
             EnableStunEffect((buffState & BuffState.Sturn) != 0);
             EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
+            EnableScarecrowEffect((buffState & BuffState.Scarecrow) != 0);
 
             if (isCantAI)
             {
@@ -212,6 +213,31 @@ namespace MirageTest.Scripts
             }
         }
 
+        private void EnableScarecrowEffect(bool b)
+        {
+            if (baseStat is Minion minion)
+            {
+                if (b)
+                {
+                    if (minion._dicEffectPool.ContainsKey(MAZ.SCARECROW) == false)
+                    {
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow", transform.position);
+                        ad.transform.SetParent(transform);
+                        minion._dicEffectPool.Add(MAZ.SCARECROW, ad);
+                        minion.animator.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    if (minion._dicEffectPool.TryGetValue(MAZ.SCARECROW, out var ad))
+                    {
+                        minion._dicEffectPool.Remove(MAZ.SCARECROW);
+                        ad.Deactive();
+                        minion.animator.gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
         
         private void EnableInvincibilityEffect(bool b)
         {
@@ -463,7 +489,7 @@ namespace MirageTest.Scripts
         {
             if (IsLocalClient)
             {
-                AppyHealOnServer(amount);
+                ApplyHealInternal(amount);
                 HealOnInternal(amount);
                 return;
             }
@@ -471,7 +497,7 @@ namespace MirageTest.Scripts
             AppyHealOnServer(amount);
         }
         
-        [Server]
+        [ServerRpc(requireAuthority = false)]
         public void AppyHealOnServer(float amount)
         {
             ApplyHealInternal(amount);
@@ -732,7 +758,7 @@ namespace MirageTest.Scripts
             DestroyInternalDelayed(delay).Forget();
         }
 
-        async UniTask DestroyInternalDelayed(float delay)
+        public async UniTask DestroyInternalDelayed(float delay)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(delay));
             DestroyInternal();
@@ -770,11 +796,11 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            FusionOnServer();
+            FusionOnClient();
         }
 
-        [ServerRpc(requireAuthority = false)]
-        public void FusionOnServer()
+        [ClientRpc]
+        public void FusionOnClient()
         {
             FusionInternal();
         }
@@ -783,8 +809,14 @@ namespace MirageTest.Scripts
         {
             var rwClient = Client as RWNetworkClient;
             var tower = rwClient.GetTower(ownerTag);
-            Vector3 fusionPosition = tower.transform.position;
-            fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
+            Vector3 fusionPosition = transform.position;
+            
+            if (tower != null)
+            {
+                fusionPosition = tower.transform.position;
+                fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
+            }
+            
             transform.DOMove(fusionPosition, 0.5f).OnComplete(() =>
             {
                 Destroy();

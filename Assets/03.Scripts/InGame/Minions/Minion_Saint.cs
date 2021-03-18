@@ -7,36 +7,24 @@ namespace ED
 {
     public class Minion_Saint : Minion
     {
-        public GameObject pref_HealArea;
-
         private float healTime;
-
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            PoolManager.instance.AddPool(pref_HealArea, 1);
-        }
 
         public override void Initialize()
         {
             base.Initialize();
             
-            //attackSpeed = effectCooltime;
             healTime = -effectCooltime;
         }
 
         public override IEnumerator Attack()
         {
-            if (target == null || target.IsHpFull || healTime + effectCooltime > _spawnedTime)
+            if (target == null || _spawnedTime < healTime + effectCooltime)
             {
                 yield break;
             }
             
             var pos = transform.position;
             pos.y = 0.1f;
-            
-            // controller.ActionActivePoolObject(pref_HealArea.name, pos, Quaternion.identity, Vector3.one);
             
             var cols = Physics.OverlapSphere(pos, range, friendlyLayer);
             if (cols.Length > 0)
@@ -58,8 +46,8 @@ namespace ED
                     }   
                 }
                 healTime = _spawnedTime;
-                
-                yield return base.Attack();
+
+                yield return new WaitForSeconds(attackSpeed);
             }
         }
         
@@ -77,11 +65,9 @@ namespace ED
                 if (col != null && col.CompareTag($"Minion_Ground") && col.gameObject != gameObject)
                 {
                     var m = col.GetComponentInParent<Minion>();
-                    //KZSee:
-                    // var hp = m.currentHealth / m.maxHealth;
                     var dis = Vector3.Distance(transform.position, col.transform.position);
 
-                    if (dis > closeToDistance && m != null && m.GetType() != typeof(Minion_Healer))
+                    if (dis > closeToDistance && m != null && m.GetType() != typeof(Minion_Healer) && m.GetType() != typeof(Minion_Saint))
                     {
                         closeToDistance = dis;
                         closeToTarget = col;
