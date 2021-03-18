@@ -24,40 +24,42 @@ namespace ED
         {
             //image_BG.DOColor(Color.white, 0.5f);
             image_BG.sprite = arrSprite_BG[1];
-            rts_Icon.DOAnchorPosY(71f, duration);
+            //rts_Icon.DOAnchorPosY(71f, duration);
             rts_Icon.DOScale(1f, duration);
             text_Name.DOColor(Color.white, duration);
-            text_Name.rectTransform.DOAnchorPosY(-70f, duration);
-            if (image_Arrow_Left != null)
-            {
-                image_Arrow_Left.rectTransform.DOAnchorPosX(-170, 0.3f);
-                image_Arrow_Left.DOFade(1f, 0.3f);
-            }
-            if (image_Arrow_Right != null)
-            {
-                image_Arrow_Right.rectTransform.DOAnchorPosX(170, 0.3f);
-                image_Arrow_Right.DOFade(1f, 0.3f);
-            }
+            text_Name.transform.DOScale(1f, duration);
+            //text_Name.rectTransform.DOAnchorPosY(-70f, duration);
+            // if (image_Arrow_Left != null)
+            // {
+            //     image_Arrow_Left.rectTransform.DOAnchorPosX(-170, 0.3f);
+            //     image_Arrow_Left.DOFade(1f, 0.3f);
+            // }
+            // if (image_Arrow_Right != null)
+            // {
+            //     image_Arrow_Right.rectTransform.DOAnchorPosX(170, 0.3f);
+            //     image_Arrow_Right.DOFade(1f, 0.3f);
+            // }
         }
 
         public void Down()
         {
             //image_BG.DOColor(Color.gray, 0.5f);
             image_BG.sprite = arrSprite_BG[0];
-            rts_Icon.DOAnchorPosY(0f, duration);
-            rts_Icon.DOScale(0.5f, duration);
-            text_Name.DOColor(Color.clear, duration);
-            text_Name.rectTransform.DOAnchorPosY(-170f, duration);
-            if (image_Arrow_Left != null)
-            {
-                image_Arrow_Left.rectTransform.DOAnchorPosX(0, 0.3f);
-                image_Arrow_Left.DOFade(0, 0.3f);
-            }
-            if (image_Arrow_Right != null)
-            {
-                image_Arrow_Right.rectTransform.DOAnchorPosX(0, 0.3f);
-                image_Arrow_Right.DOFade(0, 0.3f);
-            }
+            //rts_Icon.DOAnchorPosY(0f, duration);
+            rts_Icon.DOScale(0.85f, duration);
+            text_Name.DOColor(FileHelper.GetColor(146, 137, 227), duration);
+            text_Name.transform.DOScale(0.7f, duration);
+            // text_Name.rectTransform.DOAnchorPosY(-170f, duration);
+            // if (image_Arrow_Left != null)
+            // {
+            //     image_Arrow_Left.rectTransform.DOAnchorPosX(0, 0.3f);
+            //     image_Arrow_Left.DOFade(0, 0.3f);
+            // }
+            // if (image_Arrow_Right != null)
+            // {
+            //     image_Arrow_Right.rectTransform.DOAnchorPosX(0, 0.3f);
+            //     image_Arrow_Right.DOFade(0, 0.3f);
+            // }
         }
     }
 }

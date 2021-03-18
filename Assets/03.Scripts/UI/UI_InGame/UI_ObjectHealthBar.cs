@@ -15,16 +15,8 @@ public class UI_ObjectHealthBar : MonoBehaviour
 
     private void Awake()
     {
-        // if (camera_UI == null)
-        // {
-        //     camera_UI = FindObjectOfType<CameraController>().camera_UI;
-        // }
-    
-        //canvas.worldCamera = camera_UI;
-
         rts_HPBar = transform.GetChild(0) as RectTransform;
         bs = GetComponentInParent<BaseStat>();
-        //ts_OldParent = transform.parent;
         camera_UI = CameraController.Get().camera_UI;
     }
 
@@ -34,13 +26,13 @@ public class UI_ObjectHealthBar : MonoBehaviour
         if (rts_HPBar.parent == transform)
         {
             rts_HPBar.parent = WorldUIManager.Get().canvas_UnitHPBar.transform;
+            rts_HPBar.localScale = Vector3.one;
             rts_HPBar.localRotation = Quaternion.identity;
         }
     }
 
     private void OnDisable()
     {
-        //rts_HPBar.parent = transform;
         if (rts_HPBar != null)
         {
             rts_HPBar.gameObject.SetActive(false);
@@ -49,7 +41,6 @@ public class UI_ObjectHealthBar : MonoBehaviour
 
     private void LateUpdate()
     {
-        //transform.forward = camera_UI.transform.forward;
-        rts_HPBar.anchoredPosition = camera_UI.WorldToScreenPoint(transform.position);
+        rts_HPBar.transform.position = transform.position;
     }
 }
