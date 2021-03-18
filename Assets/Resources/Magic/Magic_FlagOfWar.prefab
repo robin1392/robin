@@ -95,6 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 0
   id: 0
   controller: {fileID: 0}
@@ -104,27 +105,15 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 11a75b892b0324e67b7fb68d573019e2, type: 2}
   target: {fileID: 0}
   targetMoveType: 2
-  power: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  effectDuration: 0
-  effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 0
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 0}
   ts_HitPos: {fileID: 5993039447194216721}
   image_HealthBar: {fileID: 7669623942604069288}
   text_Health: {fileID: 0}
-  _collider: {fileID: 7220310024489854118}
+  _poolObjectAutoDeactivate: {fileID: 0}
+  collider: {fileID: 7220310024489854118}
   _hitCollider: {fileID: 5489973056171844951}
-  castType: 0
-  spawnType: 0
   targetPos: {x: 0, y: 0, z: 0}
-  eyeLevel: 0
-  upgradeLevel: 0
-  diceFieldNum: 0
+  startPos: {x: 0, y: 0, z: 0}
   ps: {fileID: 7474766724198679748}
   ps_NotIsMine: {fileID: 6269633718755841126}
   clip_Summon: {fileID: 8300000, guid: d20f126ff82a34d7e80b2b7b9fd00e5b, type: 3}
