@@ -164,7 +164,7 @@ namespace MirageTest.Scripts.GameMode
                 {
                     foreach (var robot in group)
                     {
-                        robot.DestroyInternalDelayed(1.6f).Forget();
+                        robot.DestroyInternalDelayed(1.6f);
                     }
                 }
             }
