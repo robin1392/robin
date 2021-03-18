@@ -50,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 4003
   id: 0
   controller: {fileID: 0}
@@ -61,28 +62,16 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  power: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  effectDuration: 0
-  effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 0
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
+  _poolObjectAutoDeactivate: {fileID: 0}
   castType: 0
   isPushing: 0
-  isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
-  _poolObjectAutoDeactivate: {fileID: 0}
+  isAttackSpeedFactorWithAnimation: 0
+  collider: {fileID: 0}
   isPolymorph: 0
-  pref_MiniGolem: {fileID: 5081294253336761964, guid: dca45631bd4c14b9191f44e7b9426b91,
-    type: 3}
   clip_Attack: {fileID: 8300000, guid: ec5a1b92f985d48fd8ef7da70f3e637d, type: 3}
   clip_Exposion: {fileID: 8300000, guid: 56def68020507495c972099294521a32, type: 3}
 --- !u!135 &6486029529450410244

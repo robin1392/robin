@@ -72,7 +72,7 @@ namespace ED
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
             var bsCols = cols.Select(c => c.GetComponentInParent<BaseStat>()).Where(bs => bs != null && bs.isAlive);
             
-            var n = bsCols.Take(ActorProxy.diceScale).ToHashSet();
+            var n = bsCols.Take(ActorProxy.diceScale + 1).ToHashSet();
             if (!n.SetEquals(_listTarget))
             {
                 ActorProxy.SyncMultiTarget(ActorProxy.Client.Player.Identity.NetId, n.Select(d => d.id).ToArray());
