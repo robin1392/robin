@@ -30,7 +30,7 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
     [TableList]
     public List<DiceElement> DiceInfos;
 
-    private ActorDevMode _actorDevMode;
+    private GameModeBase _actorDevMode;
     protected override void OnGUI()
     {
         if (_actorDevMode != null)
@@ -42,9 +42,9 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
         var serverGameLogic = FindObjectOfType<ServerGameLogic>();
         if (serverGameLogic != null)
         {
-            if (serverGameLogic._gameMode is ActorDevMode actorDevMode)
+            if (serverGameLogic._gameMode != null)
             {
-                _actorDevMode = actorDevMode;
+                _actorDevMode = serverGameLogic._gameMode;
                 DiceInfos = TableManager.Get().DiceInfo.Values
                     .Select(d => new DiceElement(SpawnMine, SpawnEnemys, d.id, d.prefabName)).ToList();
             }

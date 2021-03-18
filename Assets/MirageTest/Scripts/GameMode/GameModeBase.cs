@@ -360,5 +360,39 @@ namespace MirageTest.Scripts.GameMode
             public float maxHealth;
             public float effect;
         }
+        
+        public void SpawnMyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
+        {
+            SpawnAtCenterField(PlayerState1, diceId, ingameLevel, outGameLevel, diceScale);
+        }
+        
+        public void SpawnEnemyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
+        {
+            SpawnAtCenterField(PlayerState2, diceId, ingameLevel, outGameLevel, diceScale);
+        }
+
+        void SpawnAtCenterField(PlayerState playerState, int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
+        {
+            playerState.Deck[0] = new DeckDice()
+            {
+                diceId = diceId,
+                inGameLevel = ingameLevel,
+                outGameLevel = outGameLevel,
+            };
+
+            byte index = 7;
+            playerState.Field[index] = new FieldDice()
+            {
+                diceId = diceId,
+                diceScale = diceScale,
+                index = index,
+            };
+
+            var actorProxies = CreateActorByPlayerFieldDice(playerState);
+            foreach (var actorProxy in actorProxies)
+            {
+                ServerObjectManager.Spawn(actorProxy.NetIdentity);
+            }
+        }
     }
 }

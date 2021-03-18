@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using MirageTest.Scripts.Entities;
 
@@ -7,10 +8,12 @@ namespace MirageTest.Scripts
     public class AIPlayer
     {
         private PlayerState _playerState;
+        private Random _random;
 
         public AIPlayer(PlayerState playerState)
         {
             _playerState = playerState;
+            _random = new Random();
         }
 
         public async UniTask UpdataAI()
@@ -30,12 +33,18 @@ namespace MirageTest.Scripts
                 }
                 else
                 {
-                    foreach (var deck in _playerState.Deck)
+                    var groups = _playerState.Field.GroupBy(f => (f.diceId, f.diceScale));
+                    foreach (var group in groups)
                     {
-                        if (_playerState.GetUpgradeIngameCost(deck.inGameLevel) <= _playerState.sp)
+                        if (group.Key.diceId == 0)
                         {
-                            _playerState.UpgradeIngameLevel(deck.diceId);
-                            break;
+                            continue;
+                        }
+
+                        if (group.Count() >= 2)
+                        {
+                            var shuffled = group.OrderBy(x => _random.Next());
+                            _playerState.MergeDice(shuffled.ElementAt(0).index, shuffled.ElementAt(1).index);
                         }
                     }
                 }

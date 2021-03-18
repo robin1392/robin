@@ -71,8 +71,8 @@ namespace ED
             var targetActorProxy = ActorProxy.baseStat.target.ActorProxy;
             if (targetActorProxy != null && targetActorProxy.baseStat.CanBeTarget())
             {
-                targetActorProxy.HitDamage(ActorProxy.power);
                 targetActorProxy.AddBuff(BuffInfos.Freeze, sturnTime);
+                targetActorProxy.HitDamage(ActorProxy.power);
             }
             
             ActorProxy.Destroy(1.1f);

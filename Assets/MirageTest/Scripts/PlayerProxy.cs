@@ -76,20 +76,20 @@ public class PlayerProxy : NetworkBehaviour
     {
         if (IsLocalClient)
         {
-            MergeDiceInternal(sourceDiceFieldIndex, targetDiceFieldIndex);
+            MergeDiceInternal((byte)sourceDiceFieldIndex, (byte)targetDiceFieldIndex);
             return;
         }
         
-        MergeDiceOnServer(sourceDiceFieldIndex, targetDiceFieldIndex);
+        MergeDiceOnServer((byte)sourceDiceFieldIndex, (byte)targetDiceFieldIndex);
     }
     
     [ServerRpc]
-    public void MergeDiceOnServer(int sourceDiceFieldIndex, int targetDiceFieldIndex)
+    public void MergeDiceOnServer(byte sourceDiceFieldIndex, byte targetDiceFieldIndex)
     {
         MergeDiceInternal(sourceDiceFieldIndex, targetDiceFieldIndex);
     }
 
-    void MergeDiceInternal(int sourceDiceFieldIndex, int targetDiceFieldIndex)
+    void MergeDiceInternal(byte sourceDiceFieldIndex, byte targetDiceFieldIndex)
     {
         var playerState = GetPlayerState();
         playerState.MergeDice(sourceDiceFieldIndex, targetDiceFieldIndex);
@@ -144,7 +144,7 @@ public class PlayerProxy : NetworkBehaviour
     
     public void GetDice(int deckIndex, int fieldIndex)
     {
-        GetDiceOnServer(deckIndex, fieldIndex);
+        GetDiceOnServer((byte)deckIndex, (byte)fieldIndex);
     }
 
     [Server]
@@ -165,7 +165,7 @@ public class PlayerProxy : NetworkBehaviour
     }
     
     [ServerRpc]
-    public void GetDiceOnServer(int deckIndex, int fieldIndex)
+    public void GetDiceOnServer(byte deckIndex, byte fieldIndex)
     {
         logger.Log($"[GetDice]");
         var playerState = GetPlayerState();
