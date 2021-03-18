@@ -29,10 +29,9 @@ namespace ED
         {
             if (target != null)
             {
-                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+                if(ActorProxy.isPlayingAI)
                 {
-                    //KZSee:
-                    // controller.ActionFireCannonBall(E_CannonType.BOMBER , ts_ShootingPos.position, target.transform.position, power, 2f);
+                    ActorProxy.FireCannonBallWithRelay(E_CannonType.BOMBER, target.transform.position);
                 }
             }
         }
