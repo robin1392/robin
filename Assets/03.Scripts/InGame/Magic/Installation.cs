@@ -6,6 +6,7 @@ namespace ED
     public class Installation : Magic
     {
         protected float spawnTime;
+        protected float lifeTimeFactor;
 
         protected float elapsedTime
         {
@@ -19,14 +20,12 @@ namespace ED
                 return (float)ActorProxy.NetworkTime.Time - spawnTime;        
             }
         }
-        
-        protected float lifeTimeFactor;
 
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
             spawnTime = ActorProxy.spawnTime;
-            lifeTimeFactor = ActorProxy.maxHealth / InGameManager.Get().spawnTime;
+            lifeTimeFactor = ActorProxy.maxHealth / magicLifeTime;
         }
     }
 }

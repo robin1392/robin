@@ -60,7 +60,7 @@ namespace ED
         private IEnumerator AttackCoroutine()
         {
             var t = 0f;
-            var lifeTime = InGameManager.Get().spawnTime;
+            var lifeTime = magicLifeTime;
 
             while (t < lifeTime)
             {
