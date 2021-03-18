@@ -38,7 +38,9 @@ namespace ED
             {
                 _skillCastedTime = _spawnedTime;
                 var action = new BerserkerAction();
+                RunningAction = action;
                 yield return action.ActionWithSync(ActorProxy, target.ActorProxy);
+                RunningAction = null;
             }
 
             yield return base.Attack();

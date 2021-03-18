@@ -732,7 +732,7 @@ namespace MirageTest.Scripts
             DestroyInternalDelayed(delay).Forget();
         }
 
-        async UniTask DestroyInternalDelayed(float delay)
+        public async UniTask DestroyInternalDelayed(float delay)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(delay));
             DestroyInternal();
@@ -770,11 +770,11 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            FusionOnServer();
+            FusionOnClient();
         }
 
-        [ServerRpc(requireAuthority = false)]
-        public void FusionOnServer()
+        [ClientRpc]
+        public void FusionOnClient()
         {
             FusionInternal();
         }
@@ -783,8 +783,14 @@ namespace MirageTest.Scripts
         {
             var rwClient = Client as RWNetworkClient;
             var tower = rwClient.GetTower(ownerTag);
-            Vector3 fusionPosition = tower.transform.position;
-            fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
+            Vector3 fusionPosition = transform.position;
+            
+            if (tower != null)
+            {
+                fusionPosition = tower.transform.position;
+                fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
+            }
+            
             transform.DOMove(fusionPosition, 0.5f).OnComplete(() =>
             {
                 Destroy();

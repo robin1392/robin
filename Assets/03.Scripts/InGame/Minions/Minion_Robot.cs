@@ -4,8 +4,12 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using DG.Tweening;
+using Mirage;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 
 namespace ED
 {
@@ -18,65 +22,21 @@ namespace ED
         {
             base.Initialize();
 
-            // controller.robotPieceCount++;
-            // controller.robotEyeTotalLevel += eyeLevel;
-
             collider.enabled = false;
-            animator.gameObject.SetActive(false);
-            animator.SetTrigger(AnimationHash.Skill);
-            pieceID = controller.robotPieceCount++;
-            //KZSee:
-            // controller.robotEyeTotalLevel += eyeLevel;
-
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            var robots = rwClient.ActorProxies.Where(actor => actor.dataId == ActorProxy.dataId && actor.team == ActorProxy.team);
+            pieceID = robots.Count();
+            
             SetParts();
-            Invoke("Fusion", 1.6f);
         }
         
-
-        public void Fusion()
+        protected override IEnumerator Root()
         {
-            if (controller.robotPieceCount == 4)
-            {
-                Vector3 fusionPosition = controller.transform.position;
-                fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
-                transform.DOMove(fusionPosition, 0.5f).OnComplete(Callback_MoveComplete);
-            }
-            else
-            {
-                PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
-
-                if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
-                StopAllCoroutines();
-                //KZSee:
-                // InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
-
-                PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
-                _poolObjectAutoDeactivate.Deactive();
-            }
-        }
-
-        private void Callback_MoveComplete()
-        {
-            if (pieceID == 3)
-            {
-                PoolManager.instance.ActivateObject("Effect_Robot_Summon", transform.position);
-                
-                Transform();
-            }
-            else
-            {
-                if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
-                StopAllCoroutines();
-                //KZSee:
-                // InGameManager.Get().RemovePlayerUnit(isBottomCamp, this);
-
-                _poolObjectAutoDeactivate.Deactive();
-            }
+            yield break;
         }
 
         public void SetParts()
         {
-            animator.gameObject.SetActive(false);
             if (pieceID < 4)
             {
                 for (int i = 0; i < arrTs_Parts.Length; i++)
@@ -92,22 +52,6 @@ namespace ED
                     arrTs_Parts[i].gameObject.SetActive(i == rnd);
                 }
             }
-        }
-
-        public void Transform()
-        {
-            //KZSee:
-            // maxHealth *= controller.robotEyeTotalLevel;
-            // controller.robotEyeTotalLevel = 0;
-            // currentHealth = maxHealth;
-
-            collider.enabled = true;
-            foreach (var tsPart in arrTs_Parts)
-            {
-                tsPart.gameObject.SetActive(false);
-            }
-            animator.gameObject.SetActive(true);
-            ChangeLayer(isBottomCamp);
         }
     }
 }
