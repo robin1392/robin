@@ -13,8 +13,8 @@ using ED;
 using UnityEngine;
 using UnityEngine.Events;
 using Service.Core;
+using Template.Match.RandomwarsMatch.Common;
 using RandomWarsService.Network.Socket.NetPacket;
-using RandomWarsService.Network.Http;
 using RandomWarsService.Network.Socket.NetSession;
 using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
@@ -57,11 +57,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
     SocketService _socketService;
 
-    private HttpSender _httpSender;
-    private HttpReceiver _httpReceiver;
-    private HttpClient _httpClient;
-
-
 
     // socket
     private SocketManager _clientSocket = null;
@@ -94,35 +89,6 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
     #endregion
-
-    //#region socket addr
-
-    //private string _serverAddr;
-    //public string serverAddr
-    //{
-    //    get => _serverAddr;
-    //    private set => _serverAddr = value;
-    //}
-
-    //private int _port;
-
-    //public int port
-    //{
-    //    get => _port;
-    //    private set => _port = value;
-    //}
-
-    //private string _gameSession;
-
-    //public string gameSession
-    //{
-    //    get => _gameSession;
-    //    private set => _gameSession = value;
-    //}
-
-    //private string _battlePath = "/BattleInfo.bytes";
-
-    //#endregion
 
 
     #region game process var
@@ -245,11 +211,6 @@ public class NetworkManager : Singleton<NetworkManager>
             _socketService.Update();
         }
 
-        if (_httpClient != null)
-        {
-            _httpClient.Update();
-        }
-
         if (session != null)
         {
             session.Update();
@@ -271,15 +232,6 @@ public class NetworkManager : Singleton<NetworkManager>
     private void InitNetwork()
     {
         _socketService = new SocketService();
-
-        _httpReceiver = new HttpReceiver();
-        _httpClient = new HttpClient("https://vj7nnp92xd.execute-api.ap-northeast-2.amazonaws.com/prod", _httpReceiver);
-        _httpSender = new HttpSender(_httpClient);
-
-        _httpReceiver.StartMatchAck = OnStartMatchAck;
-        _httpReceiver.StatusMatchAck = OnStatusMatchAck;
-        _httpReceiver.StopMatchAck = OnStopMatchAck;
-
 
         //
         _netInfo = new NetInfo();
@@ -332,16 +284,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 
     #region connent
-
-    //public void SetAddr(string serveraddr, int port, string gamesession)
-    //{
-    //    _serverAddr = serveraddr;
-    //    _port = port;
-    //    _gameSession = gamesession;
-
-    //    _recvJoinPlayerInfoCheck = true;
-    //    _netInfo.Clear();
-    //}
 
     public void ConnectServer(Global.PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
     {
@@ -587,13 +529,13 @@ public class NetworkManager : Singleton<NetworkManager>
 
     IEnumerator WaitForMatch()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
         matchSendCount++;
         StatusMatchReq(UserInfoManager.Get().GetUserInfo().ticketId);
     }
 
 
-    public void StartMatchReq(string userId, int gameMode)
+    public void StartMatchReq(string userId, EGameMode gameMode)
     {
         if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START
             || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
@@ -605,26 +547,22 @@ public class NetworkManager : Singleton<NetworkManager>
         matchSendCount = 0;
         NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
 
-        MsgStartMatchReq msg = new MsgStartMatchReq();
-        msg.UserId = userId;
-        msg.GameMode = gameMode;
-        _httpSender.StartMatchReq(msg);
-        UnityUtil.Print("SEND MATCH START => userid", userId, "green");
+
+        session.MatchTemplate.MatchRequestReq(session.HttpClient, (int)gameMode, OnStartMatchAck);
     }
 
 
-    void OnStartMatchAck(MsgStartMatchAck msg)
+    bool OnStartMatchAck(ERandomwarsMatchErrorCode errorCode, string ticketId)
     {
-        if (string.IsNullOrEmpty(msg.TicketId))
+        if (string.IsNullOrEmpty(ticketId))
         {
             UnityUtil.Print("ticket id null");
-            return;
+            return false;
         }
 
-        UserInfoManager.Get().SetTicketId(msg.TicketId);
-        UnityUtil.Print("RECV MATCH START => ticketId", msg.TicketId, "green");
-
+        UserInfoManager.Get().SetTicketId(ticketId);
         StartCoroutine(WaitForMatch());
+        return true;
     }
 
 
@@ -636,19 +574,13 @@ public class NetworkManager : Singleton<NetworkManager>
             return;
         }
 
-
-        MsgStatusMatchReq msg = new MsgStatusMatchReq();
-        msg.UserId = UserInfoManager.Get().GetUserInfo().userID;
-        msg.TicketId = ticketId;
-
-        _httpSender.StatusMatchReq(msg);
-        UnityUtil.Print("SEND MATCH STATUS => ticketid", ticketId, "green");
+        session.MatchTemplate.MatchStatusReq(session.HttpClient, ticketId, OnStatusMatchAck);
     }
 
 
-    void OnStatusMatchAck(MsgStatusMatchAck msg)
+    bool OnStatusMatchAck(ERandomwarsMatchErrorCode errorCode, string playerSessionId, string ipAddress, int port)
     {
-        if (string.IsNullOrEmpty(msg.PlayerSessionId))
+        if (string.IsNullOrEmpty(playerSessionId))
         {
             if (NetMatchStep != Global.E_MATCHSTEP.MATCH_CANCEL)
             {
@@ -669,9 +601,9 @@ public class NetworkManager : Singleton<NetworkManager>
             NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
 
             // 우선 그냥 배틀로 지정하자
-            ConnectServer(Global.PLAY_TYPE.BATTLE, msg.ServerAddr, msg.Port, msg.PlayerSessionId);
+            ConnectServer(Global.PLAY_TYPE.BATTLE, ipAddress, port, playerSessionId);
         }
-        UnityUtil.Print("RECV MATCH STATUS => ", string.Format("server:{0}, player-session-id:{1}", msg.ServerAddr + ":" + msg.Port, msg.PlayerSessionId), "green");
+        return true;
     }
 
 
@@ -683,16 +615,13 @@ public class NetworkManager : Singleton<NetworkManager>
         }
 
         NetMatchStep = Global.E_MATCHSTEP.MATCH_CANCEL;
-        MsgStopMatchReq msg = new MsgStopMatchReq();
-        msg.TicketId = ticketId;
-        _httpSender.StopMatchReq(msg);
-        UnityUtil.Print("SEND MATCH STOP => ticketid", ticketId, "green");
+        session.MatchTemplate.MatchCancelReq(session.HttpClient, ticketId, OnStopMatchAck);
     }
 
 
-    void OnStopMatchAck(MsgStopMatchAck msg)
+    bool OnStopMatchAck(ERandomwarsMatchErrorCode errorCode)
     {
-        if (msg.ErrorCode == GameErrorCode.SUCCESS || msg.ErrorCode == GameErrorCode.ERROR_GAMELIFT_MATCH_STATE_INVALID)
+        if (errorCode == ERandomwarsMatchErrorCode.Success)
         {
             UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
             searchingPopup.ClickSearchingCancelResult();
@@ -701,9 +630,7 @@ public class NetworkManager : Singleton<NetworkManager>
         {
             NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
         }
-
-        UnityUtil.Print("RECV MATCH STOP => userid", UserInfoManager.Get().GetUserInfo().userID, "green");
-        UnityUtil.Print("RECV MATCH STOP => ErrorCode", msg.ErrorCode.ToString(), "green");
+        return true;
     }
 
     #endregion

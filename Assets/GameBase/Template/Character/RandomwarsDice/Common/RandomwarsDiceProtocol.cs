@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using Service.Core;
 using Service.Net;
+using Service.Template;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +10,7 @@ namespace Template.Character.RandomwarsDice.Common
 {
     public enum ERandomwarsDiceProtocol
     {
-        Begin = 30000,
+        Begin = ETemplateType.Character * 10000,
 
         DiceInfoReq,
         DiceInfoAck,
