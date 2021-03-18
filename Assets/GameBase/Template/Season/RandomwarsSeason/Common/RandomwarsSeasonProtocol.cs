@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using Service.Core;
 using Service.Net;
+using Service.Template;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +10,7 @@ namespace Template.Season.RandomwarsSeason.Common
 {
     public enum ERandomwarsSeasonProtocol
     {
-        Begin = 60000,
+        Begin = ETemplateType.Season * 10000,
 
         SeasonInfoReq,
         SeasonInfoAck,

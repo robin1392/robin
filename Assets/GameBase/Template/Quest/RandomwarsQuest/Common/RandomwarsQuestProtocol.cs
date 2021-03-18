@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using Service.Core;
 using Service.Net;
+using Service.Template;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +10,7 @@ namespace Template.Quest.RandomwarsQuest.Common
 {
     public enum ERandomwarsQuestProtocol
     {
-        Begin = 70000,
+        Begin = ETemplateType.Quest * 10000,
 
         QuestInfoReq,
         QuestInfoAck,
