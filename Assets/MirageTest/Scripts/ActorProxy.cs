@@ -489,7 +489,7 @@ namespace MirageTest.Scripts
         {
             if (IsLocalClient)
             {
-                AppyHealOnServer(amount);
+                ApplyHealInternal(amount);
                 HealOnInternal(amount);
                 return;
             }
@@ -497,7 +497,7 @@ namespace MirageTest.Scripts
             AppyHealOnServer(amount);
         }
         
-        [Server]
+        [ServerRpc(requireAuthority = false)]
         public void AppyHealOnServer(float amount)
         {
             ApplyHealInternal(amount);

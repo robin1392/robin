@@ -81,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 4006
   id: 0
   controller: {fileID: 0}
@@ -92,28 +93,16 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  power: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  effectDuration: 0
-  effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 0
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 5815220995847222813}
   ts_HitPos: {fileID: 5815220995847222813}
   image_HealthBar: {fileID: 6685159068713725074}
   text_Health: {fileID: 0}
+  _poolObjectAutoDeactivate: {fileID: 0}
   castType: 0
   isPushing: 0
   isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
-  _poolObjectAutoDeactivate: {fileID: 0}
+  collider: {fileID: 0}
   isPolymorph: 0
-  pref_HealArea: {fileID: 7065228085320518671, guid: 31de287e635204f6a9c67e714e7a1274,
-    type: 3}
 --- !u!135 &6627484982045453240
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -171,6 +160,81 @@ Transform:
   m_Father: {fileID: 5081294253336761971}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &4758021874912265394
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2949856754324132945}
+    m_Modifications:
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.217
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518670, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518671, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_Name
+      value: Effect_Saint
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065228085320518671, guid: 31de287e635204f6a9c67e714e7a1274,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5014125468800648885, guid: 31de287e635204f6a9c67e714e7a1274, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 31de287e635204f6a9c67e714e7a1274, type: 3}
 --- !u!1001 &5050582886796775449
 PrefabInstance:
   m_ObjectHideFlags: 0
