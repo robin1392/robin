@@ -122,6 +122,11 @@ namespace MirageTest.Scripts.GameMode
                         playerState.AddSpByWave(sp);
                     }
                 }
+                
+                if (IsGameEnd)
+                {
+                    break;
+                }
 
                 GameState.wave++;
                 OnWave(GameState.wave);
