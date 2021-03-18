@@ -139,7 +139,7 @@ namespace MirageTest.Scripts
                     break;
             }
 
-            _gameMode.OnBeforeGameStart();
+            await _gameMode.OnBeforeGameStart();
             
             if (isAIMode)
             {
