@@ -53,6 +53,13 @@ namespace ED
         {
         }
 
+        public override void ChangeLayer(bool pIsBottomPlayer)
+        {
+            base.ChangeLayer(pIsBottomPlayer);
+            var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
+            objCollider.layer = LayerMask.NameToLayer(layerName);
+        }
+
         protected override void Start()
         {
             StartPlayerControll();

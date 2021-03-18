@@ -153,7 +153,7 @@ namespace ED
             image_HealthBar.color = ActorProxy.IsLocalPlayerAlly() ? Color.green : Color.red;
         }
         
-        public void ChangeLayer(bool pIsBottomPlayer)
+        public virtual void ChangeLayer(bool pIsBottomPlayer)
         {
             var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
             gameObject.layer = LayerMask.NameToLayer(layerName);

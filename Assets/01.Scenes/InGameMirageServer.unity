@@ -214,24 +214,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   playType: 1
-  pref_Player: {fileID: 5883888954613411290, guid: 002ec50b4fca7424dbc66697ef6cb83b,
-    type: 3}
-  pref_AI: {fileID: 5883888954613411290, guid: a7b795ec78b3b4df688a07fa8e27c7a9, type: 3}
   ts_Lights: {fileID: 0}
   ts_StadiumTop: {fileID: 0}
   ts_NexusHealthBar: {fileID: 0}
-  isAIMode: 0
-  isGamePlaying: 0
-  playerController: {fileID: 0}
-  startSpawnTime: 10
-  spawnTime: 20
-  arrUpgradeLevel: 
-  getDiceCount: 0
-  event_SP_Edit:
-    m_PersistentCalls:
-      m_Calls: []
-  listBottomPlayer: []
-  listTopPlayer: []
   pref_PlayerEmpty: {fileID: 5883888954613411290, guid: ba3aa20b8a7e64ad981caaa6b6aa9365,
     type: 3}
   pref_Coop_AI: {fileID: 5883888954613411290, guid: c0d8d3bf7121b44508be80cde2cc8186,
@@ -429,8 +414,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
-  BucketUrl: https://randomdice-wars-bucket.s3.ap-northeast-2.amazonaws.com
-  Enviroment: DEV
+  BucketUrl: https://randomdicewars-bucket.s3.ap-northeast-2.amazonaws.com
+  Enviroment: Dev
 --- !u!850595691 &1664882037
 LightingSettings:
   m_ObjectHideFlags: 0
