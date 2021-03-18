@@ -26,8 +26,11 @@ namespace ED
         protected override IEnumerator Root()
         {
             var targetMinion = GetLongDistanceFriendlyTarget();
-            var action = new JumpAction();
-            yield return action.ActionWithSync(ActorProxy, targetMinion.ActorProxy);
+            if (targetMinion != null)
+            {
+                var action = new JumpAction();
+                yield return action.ActionWithSync(ActorProxy, targetMinion.ActorProxy);
+            }
 
             while (isAlive)
             {
@@ -74,10 +77,7 @@ namespace ED
             });
 
             var actorProxies = enemies as ActorProxy[] ?? enemies.ToArray();
-
-
-
-
+            
             foreach (var minion in actorProxies)
             {
                 if (((isBottomCamp && minion.transform.position.z > distance) ||

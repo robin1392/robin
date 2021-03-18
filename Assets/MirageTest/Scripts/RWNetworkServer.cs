@@ -107,25 +107,6 @@ public class RWNetworkServer : NetworkServer
         }
     }
 
-    public void SummonActor(ActorProxy summoner, byte summonActorId, Vector3 position)
-    {
-        var actorProxy = Instantiate(serverGameLogic.actorProxyPrefab, position, summoner.transform.rotation);
-        actorProxy.ownerTag = summoner.ownerTag;
-        actorProxy.actorType = ActorType.SummonByMinion;
-        actorProxy.dataId = summonActorId;
-        actorProxy.team = summoner.team;
-        actorProxy.spawnSlot = 0;
-        actorProxy.power = summoner.power;
-        actorProxy.maxHealth = summoner.maxHealth;
-        actorProxy.currentHealth = summoner.maxHealth;
-        actorProxy.effect = summoner.effect;
-        actorProxy.attackSpeed = summoner.attackSpeed;
-        actorProxy.diceScale = summoner.diceScale;
-        actorProxy.ingameUpgradeLevel = summoner.ingameUpgradeLevel;
-        actorProxy.spawnTime = (float) Time.Time;
-        serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
-    }
-
     public void CreateActor(int diceId, byte ownerTag, byte team, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
     {
         StartCoroutine(CreateActorCoroutine(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay));

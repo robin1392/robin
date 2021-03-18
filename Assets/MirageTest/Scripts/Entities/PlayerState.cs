@@ -348,10 +348,10 @@ namespace MirageTest.Scripts.Entities
             }
 
             var deckIndex = Random.Range(0, Deck.Count);
-            GetDice(deckIndex, fieldIndex);
+            GetDice((byte)deckIndex, (byte)fieldIndex);
         }
 
-        public void GetDice(int deckIndex, int fieldIndex)
+        public void GetDice(byte deckIndex, byte fieldIndex)
         {
             // SP를 차감한다.
             int needSp = GetDiceCost();
@@ -368,10 +368,11 @@ namespace MirageTest.Scripts.Entities
             {
                 diceId = selectedDeckDice.diceId,
                 diceScale = 0,
+                index = fieldIndex
             };
         }
 
-        public void MergeDice(int sourceDiceFieldIndex, int targetDiceFieldIndex)
+        public void MergeDice(byte sourceDiceFieldIndex, byte targetDiceFieldIndex)
         {
             logger.Log(
                 $"[MergeDice] sourceDiceFieldIndex:{sourceDiceFieldIndex} targetDiceFieldIndex{targetDiceFieldIndex}");
@@ -428,7 +429,8 @@ namespace MirageTest.Scripts.Entities
             Field[targetDiceFieldIndex] = new FieldDice()
             {
                 diceId = selectedDeck.diceId,
-                diceScale = ++sourceFieldDice.diceScale
+                diceScale = ++sourceFieldDice.diceScale,
+                index = targetDiceFieldIndex
             };
 
             // 선택 주사위는 제거한다.
@@ -509,8 +511,9 @@ namespace MirageTest.Scripts.Entities
     {
         public int diceId;
         public byte diceScale;
+        public byte index;
 
-        public static readonly FieldDice Empty = new FieldDice() {diceId = 0, diceScale = 0};
+        public static readonly FieldDice Empty = new FieldDice() {diceId = 0, diceScale = 0, index = 0};
 
         public bool IsEmpty => Equals(Empty);
 

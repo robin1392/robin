@@ -77,37 +77,5 @@ namespace MirageTest.Scripts.GameMode
         protected override void OnWave(int wave)
         {
         }
-
-        public void SpawnMyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
-        {
-            SpawnAtCenterField(PlayerState1, diceId, ingameLevel, outGameLevel, diceScale);
-        }
-        
-        public void SpawnEnemyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
-        {
-            SpawnAtCenterField(PlayerState2, diceId, ingameLevel, outGameLevel, diceScale);
-        }
-
-        void SpawnAtCenterField(PlayerState playerState, int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
-        {
-            playerState.Deck[0] = new DeckDice()
-            {
-                diceId = diceId,
-                inGameLevel = ingameLevel,
-                outGameLevel = outGameLevel,
-            };
-
-            playerState.Field[7] = new FieldDice()
-            {
-                diceId = diceId,
-                diceScale = diceScale,
-            };
-
-            var actorProxies = CreateActorByPlayerFieldDice(playerState);
-            foreach (var actorProxy in actorProxies)
-            {
-                ServerObjectManager.Spawn(actorProxy.NetIdentity);
-            }
-        }
     }
 }

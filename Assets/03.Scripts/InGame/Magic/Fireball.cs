@@ -39,6 +39,11 @@ namespace ED
         protected override IEnumerator Cast()
         {
             target = ActorProxy.GetRandomEnemyCanBeAttacked();
+
+            if (target == null)
+            {
+                yield break;
+            }
             
             var fireBallAction = new FireBallAction();
             RunningAction = fireBallAction;

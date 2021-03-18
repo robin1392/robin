@@ -144,7 +144,8 @@ namespace MirageTest.Scripts
             if (isAIMode)
             {
                 var aiPlayer = new AIPlayer(_gameMode.PlayerState2);
-                await UniTask.WhenAny(_gameMode.UpdateLogic(), aiPlayer.UpdataAI());   
+                var aiPlayer2 = new AIPlayer(_gameMode.PlayerState1);
+                await UniTask.WhenAny(_gameMode.UpdateLogic(), aiPlayer.UpdataAI(), aiPlayer2.UpdataAI());   
             }
             else
             {
