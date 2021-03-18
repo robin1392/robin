@@ -91,64 +91,8 @@ public class PlayerProxy : NetworkBehaviour
 
     void MergeDiceInternal(int sourceDiceFieldIndex, int targetDiceFieldIndex)
     {
-        logger.Log(
-            $"[MergeDice] sourceDiceFieldIndex:{sourceDiceFieldIndex} targetDiceFieldIndex{targetDiceFieldIndex}");
-
         var playerState = GetPlayerState();
-
-        var targetFieldDice = playerState.Field[targetDiceFieldIndex];
-        if (targetFieldDice.IsEmpty)
-        {
-            logger.LogError($"필드에 주사위가 존재하지 않습니다.: playerId:{playerState.userId}, fieldIndex:{targetDiceFieldIndex}");
-            return;
-        }
-
-        // 인게임 주사위의 최대 등급 여부를 체크한다.
-        short maxInGameUp = 5;
-        if (targetFieldDice.diceScale >= maxInGameUp)
-        {
-            logger.LogError($"주사위 눈금이 최대치입니다.: playerId:{playerState.userId}, fieldIndex:{targetDiceFieldIndex}");
-            return;
-        }
-
-        var sourceFieldDice = playerState.Field[sourceDiceFieldIndex];
-        if (sourceFieldDice.IsEmpty)
-        {
-            logger.LogError($"필드에 주사위가 존재하지 않습니다.: playerId:{playerState.userId}, fieldIndex:{sourceDiceFieldIndex}");
-            return;
-        }
-
-        // 주사위 아이디 체크
-        if (sourceFieldDice.diceId != targetFieldDice.diceId)
-        {
-            logger.LogError(
-                $"병합하려는 주사위의 아이디가 다릅니다.: playerId:{playerState.userId}, source:{sourceFieldDice.diceId} target:{targetFieldDice.diceId}");
-            return;
-        }
-
-        if (sourceFieldDice.diceScale != targetFieldDice.diceScale)
-        {
-            logger.LogError($"필드에 주사위가 존재하지 않습니다.: playerId:{playerState.userId}, fieldIndex:{sourceDiceFieldIndex}");
-            return;
-        }
-
-        // Deck에서 랜덤으로 주사위를 선택한다
-        int randDeckIndex = Random.Range(0, playerState.Deck.Count);
-        var selectedDeck = playerState.Deck[randDeckIndex];
-        if (selectedDeck.IsEmpty)
-        {
-            logger.LogError($"덱에 주사위가 존재하지 않습니다.: playerId:{playerState.userId}, selectedDeckIndex:{randDeckIndex}");
-            return;
-        }
-
-        playerState.Field[targetDiceFieldIndex] = new FieldDice()
-        {
-            diceId = selectedDeck.diceId,
-            diceScale = ++sourceFieldDice.diceScale
-        };
-
-        // 선택 주사위는 제거한다.
-        playerState.Field[sourceDiceFieldIndex] = FieldDice.Empty;
+        playerState.MergeDice(sourceDiceFieldIndex, targetDiceFieldIndex);
     }
     
     public void UpgradeIngameLevel(int diceId)
@@ -170,44 +114,8 @@ public class PlayerProxy : NetworkBehaviour
 
     void UpgradeIngameLevelInternal(int diceId)
     {
-        logger.Log($"[UpgradeIngameLevel] diceId:{diceId}");
-
         var playerState = GetPlayerState();
-
-        var deckDice = playerState.GetDeckDice(diceId);
-        if (deckDice.IsEmpty)
-        {
-            logger.LogError($"덱에 주사위가 존재하지 않습니다.: playerId:{playerState.userId}, diceId:{diceId}");
-            return;
-        }
-
-        byte MaxInGameUp = 6;
-        if (deckDice.inGameLevel >= MaxInGameUp)
-        {
-            logger.LogError($"덱 주사위 레벨이 최대치입니다.: playerId:{playerState.userId}, diceId:{diceId}");
-            return;
-        }
-
-        // 필요한 SP를 구한다.
-        int needSp = TableManager.Get().Vsmode
-            .KeyValues[(int) EVsmodeKey.DicePowerUpCost01 + deckDice.inGameLevel].value;
-        // 플레이어 SP를 업데이트 한다.
-        if (playerState.sp < needSp)
-        {
-            logger.LogError(
-                $"덱 주사위 업그레이드를 위한 SP가 모자랍니다.: playerId:{playerState.userId}, diceId:{diceId}, sp:{playerState.sp} 팔요sp:{needSp}");
-            return;
-        }
-
-        playerState.sp -= needSp;
-
-        var deckIndex = playerState.GetDeckIndex(diceId);
-        playerState.Deck[deckIndex] = new DeckDice()
-        {
-            diceId = deckDice.diceId,
-            inGameLevel = ++deckDice.inGameLevel,
-            outGameLevel = deckDice.outGameLevel,
-        };
+        playerState.UpgradeIngameLevel(diceId);
     }
     
     public void GetRandomDice()
@@ -282,26 +190,7 @@ public class PlayerProxy : NetworkBehaviour
 
     void UpgradeSpInternal()
     {
-        logger.Log($"[UpgradeSp]");
         var playerState = GetPlayerState();
-
-        // sp 등급 체크
-        int MaxSpGrade = 6;
-        if (playerState.spGrade >= MaxSpGrade)
-        {
-            logger.LogError($"Sp 등급이 최대치입니다.: playerId:{playerState.userId}");
-            return;
-        }
-            
-        // SP를 차감한다.
-        int needSp = playerState.GetUpradeSpCost();
-        if (playerState.sp < needSp)
-        {
-            logger.LogError($"Sp 업그레이드를 위한 SP가 모자랍니다.: playerId:{playerState.userId} sp:{playerState.sp} 필요sp: {needSp}");
-            return;
-        }
-
-        playerState.sp -= needSp;
-        playerState.spGrade += 1;
+        playerState.UpgradSp();
     }
 }

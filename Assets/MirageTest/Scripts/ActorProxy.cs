@@ -699,6 +699,12 @@ namespace MirageTest.Scripts
 
         public void Destroy()
         {
+            if (IsLocalClient)
+            {
+                DestroyInternal();
+                return;
+            }
+            
             DestroyOnServer();
         }
 
@@ -710,6 +716,12 @@ namespace MirageTest.Scripts
 
         public void Destroy(float delay)
         {
+            if (IsLocalClient)
+            {
+                DestroyInternalDelayed(delay).Forget();
+                return;
+            }
+            
             DestroyOnServerDelayed(delay);
         }
 
@@ -729,37 +741,18 @@ namespace MirageTest.Scripts
         {
             ServerObjectManager.Destroy(gameObject);
         }
-
-        public void SummonActor(byte summonActorId, Vector2 position)
-        {
-            SummonActorOnServer(summonActorId, position);
-        }
-
-        [ServerRpc(requireAuthority = false)]
-        public void SummonActorOnServer(byte summonActorId, Vector3 position)
-        {
-            var server = Server as RWNetworkServer;
-            server.SummonActor(this, summonActorId, position);
-        }
-
-        public void DestroyAfterSummonActor(byte summonActorId, Vector3 position)
-        {
-            DestroyAfterSummonActorOnServer(summonActorId, position);
-        }
-
-        [ServerRpc(requireAuthority = false)]
-        public void DestroyAfterSummonActorOnServer(byte summonActorId, Vector3 position)
-        {
-            var server = Server as RWNetworkServer;
-            server.SummonActor(this, summonActorId, position);
-            DestroyInternal();
-        }
         
-        public void CreateActorBy(int diceId, byte ingameLevel, byte outgameLevel, Vector3[] positions, float delay = 0f)
+        public void CreateActorBy(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay = 0f)
         {
-            CreateActorByOnServer(diceId, ingameLevel, outgameLevel, positions, delay);
+            if (IsLocalClient)
+            {
+                var server = Server as RWNetworkServer;
+                server.CreateActor(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
+                return;
+            }
+            
+            CreateActorByOnServer(diceId, inGameLevel, outGameLevel, positions, delay);
         }
-
 
         [ServerRpc(requireAuthority = false)]
         public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)

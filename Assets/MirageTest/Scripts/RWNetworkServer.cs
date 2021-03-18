@@ -137,8 +137,8 @@ public class RWNetworkServer : NetworkServer
         
         if (TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo) == false)
         {
-            ED.Debug.LogError(
-                $"다이스정보 {diceId}가 없습니다.");
+            logger.LogError($"다이스정보 {diceId}가 없습니다.");
+            yield break;
         }
 
         GameModeBase.Stat stat = new GameModeBase.Stat();
