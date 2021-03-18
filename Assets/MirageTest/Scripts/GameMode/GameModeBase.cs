@@ -182,7 +182,7 @@ namespace MirageTest.Scripts.GameMode
                 var spawnCount = diceInfo.spawnMultiply;
                 if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION)
                 {
-                    spawnCount *= diceScale;
+                    spawnCount *= diceScale + 1;
                 }
 
                 var deckDice = playerState.GetDeckDice(fieldDice.diceId);
