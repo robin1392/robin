@@ -1,5 +1,3 @@
-using Mono.Cecil.Cil;
-
 namespace ED
 {
     public partial class BaseStat
@@ -7,7 +5,7 @@ namespace ED
         public virtual void StartAI()
         {
         }
-        
+
         public virtual void StopAI()
         {
             if (RunningAction != null)
@@ -15,14 +13,14 @@ namespace ED
                 RunningAction.OnActionCancel(ActorProxy);
                 RunningAction = null;
             }
-            
+
             if (_runningActionCoroutine != null)
             {
                 StopCoroutine(_runningActionCoroutine);
                 _runningActionCoroutine = null;
             }
         }
-        
+
         public void StopAllAction()
         {
             StopAI();
@@ -32,7 +30,7 @@ namespace ED
                 SyncAction.OnActionCancel(ActorProxy);
                 SyncAction = null;
             }
-            
+
             if (_syncActionCoroutine != null)
             {
                 StopCoroutine(_syncActionCoroutine);

@@ -394,10 +394,13 @@ namespace ED
             }
             
 #if UNITY_EDITOR
-            Debug.DrawLine(transform.position + Vector3.up * 0.1f,
-                (transform.position + Vector3.up * 0.1f) +
-                (target.transform.position - transform.position).normalized * range,
-                Color.yellow);
+            if (target == null)
+            {
+                Debug.DrawLine(transform.position + Vector3.up * 0.1f,
+                    (transform.position + Vector3.up * 0.1f) +
+                    (target.transform.position - transform.position).normalized * range,
+                    Color.yellow);   
+            }
 #endif
             //return Vector3.Distance(transform.position, target.transform.position) < range + 0.1f;
 

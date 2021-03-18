@@ -189,7 +189,11 @@ public class RWNetworkServer : NetworkServer
 #endif
         foreach (var result in listMatchResult)
         {
-            var playerProxy = PlayerProxies.First(p => result.UserId == p.userId);
+            var playerProxy = PlayerProxies.FirstOrDefault(p => result.UserId == p.userId);
+            if (playerProxy == null)
+            {
+                continue;
+            }
             playerProxy.EndGame(result);
         }
     }
