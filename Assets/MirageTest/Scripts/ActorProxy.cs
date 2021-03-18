@@ -750,7 +750,7 @@ namespace MirageTest.Scripts
         {
             if (IsLocalClient)
             {
-                StartCoroutine(DestroyInternalDelayed(delay));
+                DestroyInternalDelayed(delay);
                 return;
             }
             
@@ -760,10 +760,15 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority = false)]
         public void DestroyOnServerDelayed(float delay)
         {
-            StartCoroutine(DestroyInternalDelayed(delay));
+            DestroyInternalDelayed(delay);
         }
 
-        public IEnumerator DestroyInternalDelayed(float delay)
+        public void DestroyInternalDelayed(float delay)
+        {
+            StartCoroutine(DestroyInternalDelayedCoroutine(delay));
+        }
+
+        IEnumerator DestroyInternalDelayedCoroutine(float delay)
         {
             yield return new WaitForSeconds(delay);
             
