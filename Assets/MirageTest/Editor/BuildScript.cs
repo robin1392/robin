@@ -35,7 +35,7 @@ public class BuildScript
         BuildPipeline.BuildPlayer(levels, BuildPath, BuildTarget.StandaloneLinux64, BuildOptions.EnableHeadlessMode);
 
         System.IO.File.WriteAllText($"{BuildRoot}/install.sh",
-            @"for var in {1..49}
+            @"for var in {1..19}
     do
     cp -r game_0 game_${var}
 done");
@@ -101,6 +101,11 @@ public static class ServerBuildHeadlessCallbacks
     {
         ED.Debug.Log("HeadlessBuildBefore");
         BuildScript.IgnoreUnusedAssetForServer();
+        System.IO.File.WriteAllText($"{BuildScript.BuildRoot}/install.sh",
+            @"for var in {1..19}
+    do
+    cp -r game_0 game_${var}
+done");
     }
 
     public static void HeadlessBuildSuccess()
