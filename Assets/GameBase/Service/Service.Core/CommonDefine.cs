@@ -1,13 +1,5 @@
 namespace Service.Core
 {
-    public enum ETemplateType
-    {
-        None,
-        Account,
-
-    }
-
-
     public enum EBuyType
     {
         None = 0,

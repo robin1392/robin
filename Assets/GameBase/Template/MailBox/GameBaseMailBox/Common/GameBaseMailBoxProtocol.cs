@@ -5,12 +5,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Service.Net;
 using Service.Core;
+using Service.Template;
 
 namespace Template.MailBox.GameBaseMailBox.Common
 {
     public enum EGameBaseMailBoxProtocol
     {
-        Begin = 80000,
+        Begin = ETemplateType.MailBox * 10000,
 
         MailInfoReq,
         MailInfoAck,

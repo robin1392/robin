@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using Service.Core;
 using Service.Net;
+using Service.Template;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +10,7 @@ namespace Template.Item.RandomwarsItem.Common
 {
     public enum ERandomwarsItemProtocol
     {
-        Begin = 40000,
+        Begin = ETemplateType.Item * 10000,
 
         BoxOpenReq,
         BoxOpenAck,
