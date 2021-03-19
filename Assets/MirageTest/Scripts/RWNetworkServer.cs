@@ -24,6 +24,8 @@ public class RWNetworkServer : NetworkServer
 
     public MatchData MatchData = new MatchData();
 
+    public bool downLoadGameData = false;
+
     public static RWNetworkServer Get()
     {
         return FindObjectOfType<RWNetworkServer>();
@@ -34,6 +36,11 @@ public class RWNetworkServer : NetworkServer
         serverGameLogic = GetComponent<ServerGameLogic>();
         Connected.AddListener(OnConnected);
         Authenticated.AddListener(OnAuthed);
+
+        if (downLoadGameData)
+        {
+            TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
+        }
     }
 
     private void OnAuthed(INetworkPlayer arg0)
@@ -59,7 +66,7 @@ public class RWNetworkServer : NetworkServer
     {
         if (TableManager.Get().Loaded == false)
         {
-            string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+            string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "Dev");
             TableManager.Get().LoadFromFile(targetPath);
         }
     }

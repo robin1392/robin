@@ -84,6 +84,8 @@ public class TableManager : Singleton<TableManager>
 
     public void Init(string localPath)
     {
+        Debug.Log($"TableManager. Init {localPath}");
+        
         string remoteTDataVersion = string.Empty;
         string localTDataVersion = string.Empty;
         string url = BucketUrl + "/Table/" + Enviroment;
@@ -113,6 +115,8 @@ public class TableManager : Singleton<TableManager>
                 localTDataVersion = (string)jObjClient["dataVersion"];
             }
         }
+        
+        Debug.Log($"need download. {remoteTDataVersion != localTDataVersion}");
 
         if (remoteTDataVersion != localTDataVersion)
         {
@@ -129,6 +133,7 @@ public class TableManager : Singleton<TableManager>
         }
 
         LoadFromFile(targetPath);
+        Debug.Log("TableManager initialzed.");
     }
 
 

@@ -62,11 +62,9 @@ namespace MirageTest.Aws
                OnProcessTerminate,
                OnHealthCheck,
                port,
-               // Examples of log and error files written by the game server
                new LogParameters(new List<string>()
                {
-                  "../../local/game/logs",
-                  "../../local/game/error"
+                  $"/local/game/game_{port - 7800}/log_{port}.txt",
                })
             );
 
