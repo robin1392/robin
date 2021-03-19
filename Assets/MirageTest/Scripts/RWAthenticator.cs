@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using Aws.GameLift.Server;
 using Mirage;
 using Mirage.Logging;
+using MirageTest.Aws;
 using MirageTest.Scripts;
 using UnityEngine;
 
 public class RWAthenticator : NetworkAuthenticator
 {
     static readonly ILogger Logger = LogFactory.GetLogger<RWAthenticator>();
-    public string LocalId;
-    public string LocalName;
+    public string LocalUserId;
+    public string LocalNickName;
+    public string LocalPlayerSessionId;
 
     public struct AuthRequestMessage
     {
         public string PlayerId;
         public string NickName;
+        public string PlayerSessionId;
     }
 
     public struct AuthResponseMessage
@@ -25,12 +30,12 @@ public class RWAthenticator : NetworkAuthenticator
 
     private void Awake()
     {
-        OnClientAuthenticated += OnClientAuthenticatedCallback; 
-    }
-
-    private void OnClientAuthenticatedCallback(INetworkPlayer obj)
-    {
-        // GetComponent<RWNetworkClient>().Authenticated.Invoke(obj);
+        if (GetComponent<RWNetworkClient>() != null)
+        {
+            var userInfo = UserInfoManager.Get().GetUserInfo();
+            LocalUserId = userInfo.userID;
+            LocalNickName = userInfo.userNickName;
+        }
     }
 
     public override void OnServerAuthenticate(INetworkPlayer conn)
@@ -45,14 +50,15 @@ public class RWAthenticator : NetworkAuthenticator
         
         conn.AuthenticationData = new AuthDataForConnection()
         {
-            PlayerId = LocalId,
-            PlayerNickName = LocalName,
+            PlayerId = LocalUserId,
+            PlayerNickName = LocalNickName,
         };
 
         var authRequestMessage = new AuthRequestMessage
         {
-            PlayerId = LocalId,
-            NickName = LocalName,
+            PlayerId = LocalUserId,
+            NickName = LocalNickName,
+            PlayerSessionId = LocalPlayerSessionId,
         };
 
         conn.Send(authRequestMessage);
@@ -60,7 +66,9 @@ public class RWAthenticator : NetworkAuthenticator
 
     public void OnAuthRequestMessage(INetworkPlayer conn, AuthRequestMessage msg)
     {
-        if (true)
+        var server = GetComponent<RWNetworkServer>(); 
+        var authedPlayerInfo = server.MatchData.PlayerInfos.FirstOrDefault(p => p.UserId == msg.PlayerId);
+        if (authedPlayerInfo != null)
         {
             var authResponseMessage = new AuthResponseMessage
             {
@@ -78,6 +86,11 @@ public class RWAthenticator : NetworkAuthenticator
                 PlayerId = msg.PlayerId,
                 PlayerNickName = msg.NickName,
             };
+            
+#if UNITY_EDITOR || UNITY_STANDALONE
+            GameLiftServerAPI.AcceptPlayerSession(msg.PlayerSessionId);
+#endif
+            
         }
         else
         {

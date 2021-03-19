@@ -125,6 +125,15 @@ public class NetworkManager : Singleton<NetworkManager>
     public int LocalServerPort;
     public string UserId;
 
+    public MatchInfo LastMatchInfo;
+    public class MatchInfo
+    {
+        public string PlayerGameSession;
+        public Global.PLAY_TYPE PlayType;
+        public string ServerAddress;
+        public int Port;    
+    }
+
     public string UserIdFromInspector
     {
         get
@@ -242,6 +251,13 @@ public class NetworkManager : Singleton<NetworkManager>
     
     public void ConnectServer(Global.PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
     {
+        LastMatchInfo = new MatchInfo()
+        {
+            ServerAddress = serverAddr,
+            Port = port,
+            PlayerGameSession = playerSessionId,
+            PlayType = type,
+        };
         GameStateManager.Get().MoveInGameBattle();
     }
 

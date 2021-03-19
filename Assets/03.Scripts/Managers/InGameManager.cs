@@ -98,10 +98,13 @@ namespace ED
         
         public virtual void StartManager()
         {
+            var matchInfo = NetworkManager.Get().LastMatchInfo;
+            NetworkManager.Get().LastMatchInfo = null;
+            IsNetwork =  matchInfo != null;
             if (IsNetwork)
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
-                
+                StartMatchGame(matchInfo).Forget();
                 //KZSee:
                 // playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
                 // playerController.targetPlayer.isMine = false;
@@ -109,7 +112,7 @@ namespace ED
                 // playerController.targetPlayer.targetPlayer = playerController;
                 //
                 // playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer, true);
-                
+
                 // UI_InGame.Get().SetMyNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
 
             }
@@ -130,6 +133,24 @@ namespace ED
             ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
             ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
             ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
+        }
+        
+        async UniTask StartMatchGame(NetworkManager.MatchInfo matchInfo)
+        {
+            if (TableManager.Get().Loaded == false)
+            {
+                string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+                TableManager.Get().LoadFromFile(targetPath);
+            }
+            
+            var userInfo = UserInfoManager.Get().GetUserInfo();
+            var client = FindObjectOfType<RWNetworkClient>();
+            var auth = client.authenticator as RWAthenticator;
+            auth.LocalUserId = userInfo.userID;
+            auth.LocalNickName = userInfo.userNickName;
+            auth.PlayerSessionId = matchInfo.PlayerGameSession;
+            client.localPlayerId = userInfo.userID;
+            client.ConnectAsync(matchInfo.ServerAddress, matchInfo.Port);
         }
 
         async UniTask StartAIModeGame()

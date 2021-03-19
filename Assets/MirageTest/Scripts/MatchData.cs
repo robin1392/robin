@@ -43,6 +43,7 @@ namespace MirageTest.Scripts
         public string UserNickName;
         public int Trophy;
         public DeckInfo Deck;
+        public string PlayerSessionId;
     }
 
     public class DeckInfo
