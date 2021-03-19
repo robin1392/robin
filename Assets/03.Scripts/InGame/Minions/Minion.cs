@@ -304,7 +304,7 @@ namespace ED
         protected void RefreshHealthBar()
         {
             image_HealthBar.fillAmount = currentHealth / maxHealth;
-            _canvasGroup_HpBar.alpha = image_HealthBar.fillAmount >= 1f ? 0f : 1f;
+            _canvasGroup_HpBar.alpha = 1f;//image_HealthBar.fillAmount >= 1f ? 0f : 1f;
         }
 
         public virtual BaseStat SetTarget()

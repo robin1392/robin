@@ -462,19 +462,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
                     NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
                         loseReward.RewardId, ADRewardCallback);
 #else
-                    MopubCommunicator.Instance.showVideo((bool b) =>
-                    {
-                        if (b)
-                        {
-                            UI_InGamePopup.Get().obj_Indicator.SetActive(true);
-                            NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
-                                loseReward.RewardId, ADRewardCallback);
-                        }
-                        else
-                        {
-                            InGameManager.Get().LeaveRoom();
-                        }
-                    });
+                    MopubCommunicator.Instance.showVideo(ADCallback);
 #endif
                 });
             }
@@ -483,6 +471,20 @@ public class UI_InGamePopup_Result : MonoBehaviour
             {
                 btn_AD.transform.localScale = Vector3.zero;
             });
+        }
+    }
+
+    private void ADCallback(bool b)
+    {
+        if (b)
+        {
+            UI_InGamePopup.Get().obj_Indicator.SetActive(true);
+            NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
+                loseReward.RewardId, ADRewardCallback);
+        }
+        else
+        {
+            InGameManager.Get().LeaveRoom();
         }
     }
 
