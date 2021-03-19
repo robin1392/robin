@@ -59,15 +59,6 @@ public class PlayerProxy : NetworkBehaviour
         if (Server.LocalClientActive)
         {
             OnStartClient();
-            
-            var client = Client as RWNetworkClient;
-            userId = UserInfoManager.Get().GetUserInfo().userID;
-            client.localPlayerId = UserInfoManager.Get().GetUserInfo().userID;
-        }
-        else
-        {
-            var auth = ConnectionToClient.AuthenticationData as AuthDataForConnection;
-            userId = auth.PlayerId;
         }
     }
     

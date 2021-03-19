@@ -18,15 +18,12 @@ public class ActorDevModeStarter : MonoBehaviour
             TableManager.Get().LoadFromFile(targetPath);
         }
         
-        var masterAuth = Master.GetComponent<RWAthenticator>();
-        Master.localPlayerId = masterAuth.LocalUserId;
-        var otherAuth = Other.GetComponent<RWAthenticator>();
-        Other.localPlayerId = otherAuth.LocalUserId;
-        Server.MatchData.AddPlayerInfo(masterAuth.LocalUserId, masterAuth.LocalNickName, 0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
-        Server.MatchData.AddPlayerInfo(otherAuth.LocalUserId, otherAuth.LocalNickName, 0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
+        Server.MatchData.AddPlayerInfo(Master.LocalUserId, Master.LocalNickName, 0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
+        Server.MatchData.AddPlayerInfo(Other.LocalUserId, Other.LocalNickName, 0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
 
         Master.authenticator = null;
         Other.authenticator = null;
+        Server.authenticator = null;
         
         Server.ListenAsync().Forget();
         while (Server.Active == false)

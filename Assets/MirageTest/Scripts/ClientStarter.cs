@@ -28,7 +28,7 @@ namespace _Scripts.RCore.Networking
             _client.Authenticated.AddListener(OnAuthenticated);
             _client.Connected.AddListener(OnConnected);
             _client.Disconnected.AddListener(OnDisconnected);
-        
+
             await Task.Delay(WaitForAutoConnectionMs);
 
             if (AutoConnect == false)
@@ -38,12 +38,12 @@ namespace _Scripts.RCore.Networking
 
             Connect().Forget();
         }
-        
+
         [Button]
         public async UniTask Connect()
         {
             //"127.0.0.1";
-            string address = Address;//"ec2-18-183-92-138.ap-northeast-1.compute.amazonaws.com";
+            string address = Address; //"ec2-18-183-92-138.ap-northeast-1.compute.amazonaws.com";
             ushort port = GetComponent<KcpTransport>().Port;
             await Connect(address, port);
         }
@@ -53,8 +53,7 @@ namespace _Scripts.RCore.Networking
         {
             _client.Disconnect();
         }
-        
-        
+
 
         public async UniTask Connect(string address, ushort port)
         {
@@ -64,7 +63,7 @@ namespace _Scripts.RCore.Networking
                 Host = address,
                 Scheme = _client.Transport.Scheme.First(),
             };
-            
+
             var retryCount = 5;
             var count = 0;
             while (count < retryCount)
@@ -80,9 +79,9 @@ namespace _Scripts.RCore.Networking
                     Logger.Log($"Retry {count}");
                     continue;
                 }
-                
+
                 break;
-            } 
+            }
         }
 
         private void OnDisconnected()

@@ -26,7 +26,10 @@ namespace MirageTest.Scripts
         public bool IsPlayingAI => GetLocalPlayerState().ownerTag== GameState.masterOwnerTag;
         
         private ClientObjectManager _clientObjectManager;
-        public string localPlayerId;
+        
+        public string LocalUserId;
+        public string LocalNickName;
+        public string PlayerSessionId;
 
         public MatchPlayer Player1;
         public MatchPlayer Player2;
@@ -62,7 +65,7 @@ namespace MirageTest.Scripts
             Player1 = obj.Player1;
             Player2 = obj.Player2;
 
-            if (Player1.UserId == localPlayerId)
+            if (Player1.UserId == LocalUserId)
             {
                 LocalMatchPlayer = Player1;
                 OtherMatchPlayer = Player2;
@@ -161,12 +164,12 @@ namespace MirageTest.Scripts
         
         public PlayerState GetLocalPlayerState()
         {
-            return PlayerStates.Find(p => p.userId == localPlayerId);
+            return PlayerStates.Find(p => p.userId == LocalUserId);
         }
         
         public PlayerState GetEnemyPlayerState()
         {
-            return PlayerStates.Find(p => p.userId != localPlayerId);
+            return PlayerStates.Find(p => p.userId != LocalUserId);
         }
 
         public bool IsLocalPlayerTag(byte ownerTag)

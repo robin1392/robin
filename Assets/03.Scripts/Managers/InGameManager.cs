@@ -105,16 +105,6 @@ namespace ED
             {
                 UI_InGamePopup.Get().SetViewWaiting(true);
                 StartMatchGame(matchInfo).Forget();
-                //KZSee:
-                // playerController.targetPlayer = otherTObj.GetComponent<PlayerController>();
-                // playerController.targetPlayer.isMine = false;
-                //
-                // playerController.targetPlayer.targetPlayer = playerController;
-                //
-                // playerController.targetPlayer.ChangeLayer(NetworkManager.Get().GetNetInfo().otherInfo.IsBottomPlayer, true);
-
-                // UI_InGame.Get().SetMyNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
-
             }
             else
             {
@@ -142,13 +132,16 @@ namespace ED
                 TableManager.Get().LoadFromFile(targetPath);
             }
             
+            var server = FindObjectOfType<RWNetworkServer>();
+            server.enabled = false;
+            
             var userInfo = UserInfoManager.Get().GetUserInfo();
             var client = FindObjectOfType<RWNetworkClient>();
-            var auth = client.authenticator as RWAthenticator;
-            auth.LocalUserId = userInfo.userID;
-            auth.LocalNickName = userInfo.userNickName;
-            auth.PlayerSessionId = matchInfo.PlayerGameSession;
-            client.localPlayerId = userInfo.userID;
+            
+            client.LocalUserId = userInfo.userID;
+            client.LocalNickName = userInfo.userNickName;
+            client.PlayerSessionId = matchInfo.PlayerGameSession;
+            
             client.ConnectAsync(matchInfo.ServerAddress, (ushort)matchInfo.Port);
         }
 
@@ -179,7 +172,8 @@ namespace ED
             server.authenticator = null;
             var client = FindObjectOfType<RWNetworkClient>();
             client.authenticator = null;
-            client.localPlayerId = userInfo.userID;
+            client.LocalUserId = userInfo.userID;
+            client.LocalNickName = userInfo.userNickName;
 
             server.Listening = false;
             server.StartHost(client).Forget();

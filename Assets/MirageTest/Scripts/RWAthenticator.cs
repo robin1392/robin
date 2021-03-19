@@ -11,9 +11,6 @@ using UnityEngine;
 public class RWAthenticator : NetworkAuthenticator
 {
     static readonly ILogger Logger = LogFactory.GetLogger<RWAthenticator>();
-    public string LocalUserId;
-    public string LocalNickName;
-    public string PlayerSessionId;
 
     public struct AuthRequestMessage
     {
@@ -28,37 +25,29 @@ public class RWAthenticator : NetworkAuthenticator
         public string Message;
     }
 
-    private void Awake()
-    {
-        if (GetComponent<RWNetworkClient>() != null)
-        {
-            var userInfo = UserInfoManager.Get().GetUserInfo();
-            LocalUserId = userInfo.userID;
-            LocalNickName = userInfo.userNickName;
-        }
-    }
-
     public override void OnServerAuthenticate(INetworkPlayer conn)
     {
-        // wait for AuthRequestMessage from client
         conn.RegisterHandler<AuthRequestMessage>(OnAuthRequestMessage);
     }
 
     public override void OnClientAuthenticate(INetworkPlayer conn)
     {
         conn.RegisterHandler<AuthResponseMessage>(OnAuthResponseMessage);
+
+        var client = GetComponent<RWNetworkClient>();
         
         conn.AuthenticationData = new AuthDataForConnection()
         {
-            PlayerId = LocalUserId,
-            PlayerNickName = LocalNickName,
+            PlayerId = client.LocalUserId,
+            PlayerNickName = client.LocalNickName,
+            PlayerSessionId = client.PlayerSessionId,
         };
 
         var authRequestMessage = new AuthRequestMessage
         {
-            PlayerId = LocalUserId,
-            NickName = LocalNickName,
-            PlayerSessionId = PlayerSessionId,
+            PlayerId = client.LocalUserId,
+            NickName = client.LocalNickName,
+            PlayerSessionId = client.PlayerSessionId,
         };
 
         conn.Send(authRequestMessage);
@@ -85,6 +74,7 @@ public class RWAthenticator : NetworkAuthenticator
             {
                 PlayerId = msg.PlayerId,
                 PlayerNickName = msg.NickName,
+                PlayerSessionId = msg.PlayerSessionId
             };
             
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -136,4 +126,5 @@ public class AuthDataForConnection
 {
     public string PlayerId;
     public string PlayerNickName;
+    public string PlayerSessionId;
 }

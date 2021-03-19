@@ -43,7 +43,7 @@ namespace MirageTest.Scripts.Entities
 
         private bool _initalized;
 
-        public bool IsLocalPlayerState => (Client as RWNetworkClient).localPlayerId == userId;
+        public bool IsLocalPlayerState => (Client as RWNetworkClient).LocalUserId == userId;
 
         public void Init(string userId, string nickName, int sp, DeckDice[] deck, byte tag, int guadianId)
         {
@@ -114,7 +114,7 @@ namespace MirageTest.Scripts.Entities
                 return;
             }
 
-            if (client.localPlayerId == userId)
+            if (client.LocalUserId == userId)
             {
                 CameraController.Get().UpdateCameraRotation(team == GameConstants.BottomCamp);
             }

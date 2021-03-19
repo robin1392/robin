@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1414178687038351121}
   - component: {fileID: 7684217455327188613}
   - component: {fileID: 8356133136237392226}
+  - component: {fileID: 1606419491325002067}
   m_Layer: 0
   m_Name: ===Server===
   m_TagString: Untagged
@@ -50,7 +51,7 @@ MonoBehaviour:
   Started:
     m_PersistentCalls:
       m_Calls: []
-  Port: 7778
+  Port: 7779
   HashCashBits: 18
   SendWindowSize: 1024
   ReceiveWindowSize: 8192
@@ -69,10 +70,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Server: {fileID: 7684217455327188613}
   NetworkSceneManager: {fileID: 0}
-  Spawned:
+  _spawned:
     m_PersistentCalls:
       m_Calls: []
-  UnSpawned:
+  _unSpawned:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &1414178687038351121
@@ -94,7 +95,7 @@ MonoBehaviour:
   actorProxyPrefab: {fileID: -9073835943446716441, guid: f631769355c16485a9c68f830ed15524,
     type: 3}
   isAIMode: 0
-  modeType: 0
+  modeType: 2
 --- !u!114 &7684217455327188613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,29 +112,32 @@ MonoBehaviour:
   Listening: 1
   Transport: {fileID: 4832457519157374792}
   authenticator: {fileID: 8356133136237392226}
-  Started:
+  _started:
     m_PersistentCalls:
       m_Calls: []
-  Connected:
+  _connected:
     m_PersistentCalls:
       m_Calls: []
-  Authenticated:
+  _authenticated:
     m_PersistentCalls:
       m_Calls: []
-  Disconnected:
+  _disconnected:
     m_PersistentCalls:
       m_Calls: []
-  Stopped:
+  _stopped:
     m_PersistentCalls:
       m_Calls: []
-  OnStartHost:
+  _onStartHost:
     m_PersistentCalls:
       m_Calls: []
-  OnStopHost:
+  _onStopHost:
     m_PersistentCalls:
       m_Calls: []
+  ActorProxies: []
+  Towers: []
   PlayerProxies: []
   serverGameLogic: {fileID: 1414178687038351121}
+  downLoadGameData: 0
 --- !u!114 &8356133136237392226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,5 +150,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c5b6870b673842049531ac3247807f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LocalId: 
-  LocalName: 
+--- !u!114 &1606419491325002067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4832457519157374790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a04bb5a7c740e40db803388cc078ee99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  server: {fileID: 7684217455327188613}
+  playerPrefab: {fileID: 5852545224420049431, guid: 876b771d2cd9448cdabec49b98843c0e,
+    type: 3}
+  serverObjectManager: {fileID: 4832457519157374793}

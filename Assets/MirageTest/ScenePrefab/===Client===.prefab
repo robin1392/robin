@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4651702573362233940}
   - component: {fileID: 1999751920950500995}
   - component: {fileID: 343533738106072716}
+  - component: {fileID: 17980219421307081}
   m_Layer: 0
   m_Name: ===Client===
   m_TagString: Untagged
@@ -49,7 +50,7 @@ MonoBehaviour:
   Started:
     m_PersistentCalls:
       m_Calls: []
-  Port: 7778
+  Port: 7779
   HashCashBits: 18
   SendWindowSize: 1024
   ReceiveWindowSize: 8192
@@ -68,10 +69,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Client: {fileID: 1999751920950500995}
   NetworkSceneManager: {fileID: 0}
-  Spawned:
+  _spawned:
     m_PersistentCalls:
       m_Calls: []
-  UnSpawned:
+  _unSpawned:
     m_PersistentCalls:
       m_Calls: []
   spawnPrefabs:
@@ -94,13 +95,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Transport: {fileID: 4651702573362233941}
   authenticator: {fileID: 343533738106072716}
-  Connected:
+  _connected:
     m_PersistentCalls:
       m_Calls: []
-  Authenticated:
+  _authenticated:
     m_PersistentCalls:
       m_Calls: []
-  Disconnected:
+  _disconnected:
     m_PersistentCalls:
       m_Calls: []
   enableActor: 1
@@ -110,7 +111,9 @@ MonoBehaviour:
   ActorProxies: []
   Towers: []
   GameState: {fileID: 0}
-  localPlayerId: 
+  LocalUserId: 11
+  LocalNickName: 11
+  PlayerSessionId: 
 --- !u!114 &343533738106072716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,5 +126,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c5b6870b673842049531ac3247807f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LocalId: 11
-  LocalName: 11n
+--- !u!114 &17980219421307081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4651702573362233942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d04a226806cd457d8538f3cc263736b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  client: {fileID: 1999751920950500995}
+  playerPrefab: {fileID: 5852545224420049431, guid: 876b771d2cd9448cdabec49b98843c0e,
+    type: 3}
