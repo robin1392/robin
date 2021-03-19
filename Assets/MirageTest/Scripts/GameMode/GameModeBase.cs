@@ -178,17 +178,11 @@ namespace MirageTest.Scripts.GameMode
         {
             return PlayerStates.First(ps => ps.userId == userId);
         }
-
-        [ClientRpc]
+        
         public void OnClientDisconnected(INetworkPlayer arg0)
         {
-            var auth = arg0.AuthenticationData as AuthDataForConnection;
-            if (auth == null)
-            {
-                return;
-            }
-            
-            var playerState = GetPlayerState(auth.PlayerId);
+            var userId = arg0.Identity.GetComponent<PlayerProxy>().userId;
+            var playerState = GetPlayerState(userId);
             if (playerState == null)
             {
                 return;

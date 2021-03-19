@@ -9,6 +9,7 @@ public class ActorDevModeStarter : MonoBehaviour
     public RWNetworkServer Server;
     public RWNetworkClient Master;
     public RWNetworkClient Other;
+    public string Address = "localhost";
     
     async void Start()
     {
@@ -31,7 +32,7 @@ public class ActorDevModeStarter : MonoBehaviour
             await UniTask.Yield();
         }
 
-        await Master.ConnectAsync("localhost");
-        await Other.ConnectAsync("localhost");
+        await Master.RWConnectAsync(Address);
+        await Other.RWConnectAsync(Address);
     }
 }

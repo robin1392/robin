@@ -57,7 +57,7 @@ namespace MirageTest.Scripts
 
         async UniTask CheckGameSession()
         {
-            await UniTask.Yield();
+            await UniTask.Delay(TimeSpan.FromSeconds(60));
             if (NoPlayers)
             {
                 EndGameSession();

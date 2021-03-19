@@ -77,6 +77,11 @@ namespace MirageTest.Scripts
         {
             foreach (var player in Server.Players)
             {
+                if (player == null)
+                {
+                    continue;
+                }
+                
                 if (senderNetId == player.Identity.NetId)
                 {
                     continue;

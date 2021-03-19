@@ -128,7 +128,7 @@ namespace ED
         {
             if (TableManager.Get().Loaded == false)
             {
-                string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
+                string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "Dev");
                 TableManager.Get().LoadFromFile(targetPath);
             }
             
@@ -142,7 +142,7 @@ namespace ED
             client.LocalNickName = userInfo.userNickName;
             client.PlayerSessionId = matchInfo.PlayerGameSession;
             
-            client.ConnectAsync(matchInfo.ServerAddress, (ushort)matchInfo.Port);
+            await client.RWConnectAsync(matchInfo.ServerAddress, (ushort)matchInfo.Port);
         }
 
         async UniTask StartFakeGame()
@@ -176,7 +176,7 @@ namespace ED
             client.LocalNickName = userInfo.userNickName;
 
             server.Listening = false;
-            server.StartHost(client).Forget();
+            await server.StartHost(client);
         }
 
         public int[] GetAIDeck(bool isTutorial)

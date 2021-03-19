@@ -4,17 +4,19 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
+using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.Messages;
 using RandomWarsProtocol;
 using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
-using Debug = UnityEngine.Debug;
 
 namespace MirageTest.Scripts
 {
     public class RWNetworkClient : NetworkClient
     {
+        static readonly UnityEngine.ILogger logger = LogFactory.GetLogger(typeof(RWNetworkClient));
+        
         public bool enableActor;
         public bool enableUI;
 
@@ -23,8 +25,26 @@ namespace MirageTest.Scripts
         public List<ActorProxy> ActorProxies = new List<ActorProxy>();
         public List<ActorProxy> Towers = new List<ActorProxy>();
         public GameState GameState;
-        public bool IsPlayingAI => GetLocalPlayerState().ownerTag== GameState.masterOwnerTag;
-        
+
+        public bool IsPlayingAI
+        {
+            get
+            {
+                var playerState = GetLocalPlayerState();
+                if (playerState == null)
+                {
+                    return false;
+                }
+
+                if (GameState == null)
+                {
+                    return false;
+                }
+                
+                return playerState.ownerTag== GameState.masterOwnerTag;       
+            }
+        }
+
         private ClientObjectManager _clientObjectManager;
         
         public string LocalUserId;
@@ -39,6 +59,33 @@ namespace MirageTest.Scripts
         public static RWNetworkClient Get()
         {
             return FindObjectOfType<RWNetworkClient>();
+        }
+
+
+        public string lastConnectServerIp;
+        public UniTask RWConnectAsync(string serverIp)
+        {
+            lastConnectServerIp = serverIp;
+            return ConnectAsync(serverIp);
+        }
+        
+        public UniTask RWConnectAsync(string serverIp, ushort port)
+        {
+            lastConnectServerIp = serverIp;
+            logger.LogError($"[RWConnectAsync] ip:{serverIp} port:{port}");
+            return ConnectAsync(serverIp, port);
+        }
+        
+        [Button]
+        public void ForceDisconnect()
+        {
+            Disconnect();
+        }
+        
+        [Button]
+        public void Reconnect()
+        {
+            RWConnectAsync(lastConnectServerIp).Forget();
         }
 
         private void Awake()
@@ -74,6 +121,11 @@ namespace MirageTest.Scripts
             {
                 LocalMatchPlayer = Player2;
                 OtherMatchPlayer = Player1;
+            }
+
+            if (enableUI == false)
+            {
+                return;
             }
             
             ShowMatchPopup().Forget();
@@ -164,6 +216,11 @@ namespace MirageTest.Scripts
         
         public PlayerState GetLocalPlayerState()
         {
+            if (PlayerStates == null)
+            {
+                return null;
+            }
+            
             return PlayerStates.Find(p => p.userId == LocalUserId);
         }
         
@@ -198,14 +255,6 @@ namespace MirageTest.Scripts
             return ActorProxies.Where(actor => actor.team != team)
                 .OrderByDescending(actor => actor.currentHealth)
                 .First().baseStat;
-        }
-
-        public List<MatchPlayer> GetMatchData()
-        {
-            return new List<MatchPlayer>()
-            {
-                Player1, Player2
-            };
         }
     }
 }

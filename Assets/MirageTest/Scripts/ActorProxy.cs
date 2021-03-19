@@ -450,7 +450,7 @@ namespace MirageTest.Scripts
         }
 
         [Server]
-        public void ApplyDamage(float damage)
+        private void ApplyDamage(float damage)
         {
             currentHealth -= damage;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
@@ -563,18 +563,7 @@ namespace MirageTest.Scripts
 
             if (isPlayingAI && baseStat.NeedMoveSyncSend)
             {
-                var position = transform.position;
-                var converted = ConvertNetMsg.Vector3ToMsg(new Vector2(position.x, position.z));
-                if (lastSend == null || !Equal(lastSend, converted))
-                {
-                    lastSend = converted;
-                    Client.Send(new PositionRelayMessage()
-                    {
-                        netId = NetId,
-                        positionX = converted.X,
-                        positionY = converted.Y,
-                    }, Channel.Unreliable);
-                }
+                SyncPosition(false);
             }
             else if (baseStat.SyncAction != null && baseStat.SyncAction.NeedMoveSync == false)
             {
@@ -598,6 +587,22 @@ namespace MirageTest.Scripts
                         baseStat.animator.SetFloat(AnimationHash.MoveSpeed, distance * 5);
                     }
                 }
+            }
+        }
+
+        public void SyncPosition(bool force)
+        {
+            var position = transform.position;
+            var converted = ConvertNetMsg.Vector3ToMsg(new Vector2(position.x, position.z));
+            if (lastSend == null || !Equal(lastSend, converted) || force)
+            {
+                lastSend = converted;
+                Client.Send(new PositionRelayMessage()
+                {
+                    netId = NetId,
+                    positionX = converted.X,
+                    positionY = converted.Y,
+                }, Channel.Unreliable);
             }
         }
 

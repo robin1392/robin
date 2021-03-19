@@ -1,4 +1,5 @@
-﻿using ED;
+﻿using System.Linq;
+using ED;
 using Mirage;
 using Mirage.Logging;
 using MirageTest.Aws;
@@ -7,6 +8,8 @@ using MirageTest.Scripts.Entities;
 using Percent.Platform;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
+using Service.Template;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class PlayerProxy : NetworkBehaviour
@@ -38,6 +41,8 @@ public class PlayerProxy : NetworkBehaviour
         {
             InGameManager.Get().RotateTopCampObject();
         }
+        
+        ClientReady();
     }
 
     private void OnStopServer()
@@ -54,6 +59,16 @@ public class PlayerProxy : NetworkBehaviour
     private void OnStartServer()
     {
         var server = Server as RWNetworkServer;
+        //재접속
+        if (server.serverGameLogic._gameMode.GameState.state == EGameState.Playing)
+        {
+            var master = server.PlayerProxies.FirstOrDefault();
+            if (master != null)
+            {
+                master.SyncAllPosition();
+            }
+        }
+
         server?.AddPlayerProxy(this);
 
         if (Server.LocalClientActive)
@@ -61,13 +76,21 @@ public class PlayerProxy : NetworkBehaviour
             OnStartClient();
         }
     }
-    
+
+    [ClientRpc]
+    private void SyncAllPosition()
+    {
+        var client = Client as RWNetworkClient;
+        foreach (var actorProxy in client.ActorProxies)
+        {
+            actorProxy.SyncPosition(true);
+        }
+    }
+
     private void OnStartClient()
     {
         var client = Client as RWNetworkClient;
         client.AddPlayerProxy(this);
-        
-        ClientReady();
     }
 
     private void OnStopClient()
@@ -75,6 +98,8 @@ public class PlayerProxy : NetworkBehaviour
         var client = Client as RWNetworkClient;
         client.RemovePlayerProxy(this);
     }
+    
+    
 
     public void ClientReady()
     {
