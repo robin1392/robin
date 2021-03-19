@@ -19,7 +19,7 @@ MonoBehaviour:
   scenesSection: 1
   valueOverrideScenes: 1
   valueSceneAssets:
-  - {fileID: 102900000, guid: b6d2d935f8b6649ea8f896bd5303f7a0, type: 3}
+  - {fileID: 102900000, guid: fc525078e6062469ba309a2dc36ff0ff, type: 3}
   targetSection: 1
   valueOverrideTarget: 1
   valuePlatform: 2
