@@ -62,15 +62,6 @@ public class RWNetworkServer : NetworkServer
         });
     }
 
-    private void Start()
-    {
-        if (TableManager.Get().Loaded == false)
-        {
-            string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "Dev");
-            TableManager.Get().LoadFromFile(targetPath);
-        }
-    }
-
     public void AddPlayerProxy(PlayerProxy playerProxy)
     {
         PlayerProxies.Add(playerProxy);

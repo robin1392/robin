@@ -150,7 +150,7 @@ namespace ED
             auth.LocalNickName = userInfo.userNickName;
             auth.PlayerSessionId = matchInfo.PlayerGameSession;
             client.localPlayerId = userInfo.userID;
-            client.ConnectAsync(matchInfo.ServerAddress, matchInfo.Port);
+            client.ConnectAsync(matchInfo.ServerAddress, (ushort)matchInfo.Port);
         }
 
         async UniTask StartAIModeGame()

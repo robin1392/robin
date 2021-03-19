@@ -13,7 +13,7 @@ public class RWAthenticator : NetworkAuthenticator
     static readonly ILogger Logger = LogFactory.GetLogger<RWAthenticator>();
     public string LocalUserId;
     public string LocalNickName;
-    public string LocalPlayerSessionId;
+    public string PlayerSessionId;
 
     public struct AuthRequestMessage
     {
@@ -58,7 +58,7 @@ public class RWAthenticator : NetworkAuthenticator
         {
             PlayerId = LocalUserId,
             NickName = LocalNickName,
-            PlayerSessionId = LocalPlayerSessionId,
+            PlayerSessionId = PlayerSessionId,
         };
 
         conn.Send(authRequestMessage);

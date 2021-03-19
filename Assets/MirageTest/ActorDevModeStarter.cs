@@ -12,6 +12,12 @@ public class ActorDevModeStarter : MonoBehaviour
     
     async void Start()
     {
+        if (TableManager.Get().Loaded == false)
+        {
+            string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "Dev");
+            TableManager.Get().LoadFromFile(targetPath);
+        }
+        
         var masterAuth = Master.GetComponent<RWAthenticator>();
         Master.localPlayerId = masterAuth.LocalUserId;
         var otherAuth = Other.GetComponent<RWAthenticator>();
