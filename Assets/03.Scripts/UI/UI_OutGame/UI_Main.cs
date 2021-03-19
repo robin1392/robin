@@ -295,8 +295,6 @@ namespace ED
         // send battle network
         private void ConnectBattle()
         {
-            InGameManager.Get().playType = Global.PLAY_TYPE.BATTLE;
-            
             if (NetworkManager.Get().UseLocalServer == true)
             {
                 NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);

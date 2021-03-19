@@ -24,12 +24,14 @@ namespace MirageTest.Scripts
         public List<ActorProxy> Towers = new List<ActorProxy>();
         public GameState GameState;
         public bool IsPlayingAI => GetLocalPlayerState().ownerTag== GameState.masterOwnerTag;
-
+        
         private ClientObjectManager _clientObjectManager;
         public string localPlayerId;
 
         public MatchPlayer Player1;
         public MatchPlayer Player2;
+        public MatchPlayer LocalMatchPlayer;
+        public MatchPlayer OtherMatchPlayer;
 
         public static RWNetworkClient Get()
         {
@@ -59,6 +61,17 @@ namespace MirageTest.Scripts
         {
             Player1 = obj.Player1;
             Player2 = obj.Player2;
+
+            if (Player1.UserId == localPlayerId)
+            {
+                LocalMatchPlayer = Player1;
+                OtherMatchPlayer = Player2;
+            }
+            else
+            {
+                LocalMatchPlayer = Player2;
+                OtherMatchPlayer = Player1;
+            }
             
             ShowMatchPopup().Forget();
         }
@@ -164,6 +177,10 @@ namespace MirageTest.Scripts
         public PlayerController GetTower(byte ownerTag)
         {
             var tower = Towers.Find(p => p.ownerTag == ownerTag);
+            if (tower == null)
+            {
+                return null;
+            }
             return tower.baseStat as PlayerController;
         }
 
@@ -178,6 +195,14 @@ namespace MirageTest.Scripts
             return ActorProxies.Where(actor => actor.team != team)
                 .OrderByDescending(actor => actor.currentHealth)
                 .First().baseStat;
+        }
+
+        public List<MatchPlayer> GetMatchData()
+        {
+            return new List<MatchPlayer>()
+            {
+                Player1, Player2
+            };
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ED;
 using UnityEngine;
 using UnityEngine.UI;
@@ -66,13 +67,19 @@ public class UI_InGamePopup_Result : MonoBehaviour
             TutorialManager.stepCount++;
         }
         
+        
         isWin = winLose;
 
         var client = FindObjectOfType<RWNetworkClient>();
         var enemyPlayerState = client.GetEnemyPlayerState();
         var enemyTower  = client.GetTower(enemyPlayerState.ownerTag);
-        winlose_My.Initialize(isWin, (perfectReward != null && perfectReward.Length > 0), winningStreak, NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().playerInfo.Name, NetworkManager.Get().GetNetInfo().playerInfo.Trophy);
-        winlose_Other.Initialize(!isWin,  enemyTower.ActorProxy.currentHealth > 20000, winningStreak, NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray, NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
+        var enemyPerfect = enemyTower == null ? false : enemyTower.ActorProxy.currentHealth > 20000;
+        var localMatchPlayer = client.LocalMatchPlayer;
+        var otherMatchPlayer = client.OtherMatchPlayer; 
+        var localPlayerDeck = localMatchPlayer.Deck;
+        var otherPlayerDeck = otherMatchPlayer.Deck;
+        winlose_My.Initialize(isWin, (perfectReward != null && perfectReward.Length > 0), winningStreak, localPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), localPlayerDeck.GuadianId, localMatchPlayer.UserNickName, localMatchPlayer.Trophy);
+        winlose_Other.Initialize(!isWin,  enemyPerfect, winningStreak, otherPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), otherPlayerDeck.GuadianId, otherMatchPlayer.UserNickName, otherMatchPlayer.Trophy);
         btn_ShowValues.interactable = false;
 
         // 경쟁전일경우

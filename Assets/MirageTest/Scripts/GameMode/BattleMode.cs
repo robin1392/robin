@@ -238,9 +238,9 @@ namespace MirageTest.Scripts.GameMode
             int defeatTrophy = ((winnerMatchPlayer.Trophy - defeatMatchPlayer.Trophy) / 12 + 30);
             defeatTrophy = Math.Min(defeatMatchPlayer.Trophy, defeatTrophy);
 
+            defeatReport.listReward = new List<ItemBaseInfo>();
             if (defeatTrophy != 0)
             {
-                defeatReport.listReward = new List<ItemBaseInfo>();
                 // 패배 트로피
                 defeatReport.listReward.Add(new ItemBaseInfo
                 {
