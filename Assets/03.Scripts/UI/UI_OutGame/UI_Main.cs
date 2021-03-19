@@ -8,9 +8,10 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Percent.Platform.InAppPurchase;
 
-using Service.Core;
-//using RandomWarsProtocol;
+
 using RandomWarsResource.Data;
+using Service.Core;
+using Template.Match.RandomwarsMatch.Common;
 using UnityEngine.SceneManagement;
 
 namespace ED
@@ -321,7 +322,7 @@ namespace ED
                 return;
             }
 
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, (int)Global.PLAY_TYPE.BATTLE);
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, EGameMode.DeathMatch);
         }
 
         private void ConnectCoop()
@@ -337,7 +338,7 @@ namespace ED
                 return;
             }
 
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, (int)Global.PLAY_TYPE.COOP);
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, EGameMode.Coop);
         }
         
         public void Click_DisconnectButton()
