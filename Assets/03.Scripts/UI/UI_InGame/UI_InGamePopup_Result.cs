@@ -8,6 +8,7 @@ using DG.Tweening;
 //using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using Service.Core;
+using Template.User.RandomwarsUser.Common;
 using Button = UnityEngine.UI.Button;
 
 public class UI_InGamePopup_Result : MonoBehaviour
@@ -31,6 +32,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
     [Header("Button")]
     public Button btn_ShowValues;
     public Button btn_End;
+    public Button btn_AD;
 
     [Header("Coop")] 
     public RectTransform rts_ScrollView;
@@ -57,9 +59,12 @@ public class UI_InGamePopup_Result : MonoBehaviour
     }
 
     private int[,] rewards = new int[3,5];
+    private AdRewardInfo loseReward;
     
-    public void Initialize(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
+    public void Initialize(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, AdRewardInfo loseReward)
     {
+        this.loseReward = loseReward;
+        
         if (TutorialManager.isTutorial)
         {
             TutorialManager.stepCount++;
@@ -439,6 +444,52 @@ public class UI_InGamePopup_Result : MonoBehaviour
         {
             btn_End.transform.localScale = Vector3.zero;
         });
+        
+        if (loseReward != null)
+        {
+            TDataItemList data;
+            if (TableManager.Get().ItemList.GetData(loseReward.ItemId, out data))
+            {
+                btn_AD.gameObject.SetActive(true);
+                btn_AD.transform.Find("Image_Icon").GetComponent<Image>().sprite = FileHelper.GetIcon(data.itemIcon);
+                btn_AD.transform.Find("Text_Count").GetComponent<Text>().text = $"x{loseReward.Value}";
+                btn_AD.onClick.AddListener(() =>
+                {
+                    MopubCommunicator.Instance.showVideo((bool b) =>
+                    {
+                        if (b)
+                        {
+                            UI_InGamePopup.Get().obj_Indicator.SetActive(true);
+                            NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
+                                loseReward.RewardId,
+                                (ERandomwarsUserErrorCode errorCode, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData) =>
+                                {
+                                    UI_InGamePopup.Get().obj_Indicator.SetActive(false);
+                                    if (errorCode == ERandomwarsUserErrorCode.Success)
+                                    {
+                                        UI_Main.adRewardInfo = loseReward;
+                                        UI_Popup_Quest.QuestUpdate(arrayQuestData);
+                                        InGameManager.Get().LeaveRoom();
+                                        return true;
+                                    }
+                                    
+                                    InGameManager.Get().LeaveRoom();
+                                    return false;
+                                });
+                        }
+                        else
+                        {
+                            InGameManager.Get().LeaveRoom();
+                        }
+                    });
+                });
+            }
+            
+            ((RectTransform) btn_AD.transform).DOScale(Vector3.one, 0.3f).SetEase(ease).OnStart(() =>
+            {
+                btn_AD.transform.localScale = Vector3.zero;
+            });
+        }
     }
 
     private void SetRewardMessage(string message)

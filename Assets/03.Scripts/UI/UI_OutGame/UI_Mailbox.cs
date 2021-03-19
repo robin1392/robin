@@ -11,7 +11,7 @@ using Debug = ED.Debug;
 public class UI_Mailbox : UI_Popup
 {
     public GameObject pref_MailSlot;
-    public RectTransform rts_Content;
+    public Transform ts_Content;
     
     [Header("Refresh")]
     public Button btn_Refresh;
@@ -19,7 +19,7 @@ public class UI_Mailbox : UI_Popup
 
     private static List<MailInfo> list_MailInfo = new List<MailInfo>();
     private DateTime refreshTime;
-    private bool isInitialized;
+    private static bool isInitialized;
 
     private void Update()
     {
@@ -64,15 +64,23 @@ public class UI_Mailbox : UI_Popup
 
     public void RefreshSlots()
     {
-        int childCount = rts_Content.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
+        // int childCount = ts_Content.childCount;
+        // if (childCount > 0)
+        // {
+        //     for (int i = childCount - 1; i >= 0; i--)
+        //     {
+        //         Destroy(ts_Content.GetChild(i).gameObject);
+        //     }
+        // }
+        var arrTs = ts_Content.GetComponentsInChildren<Transform>();
+        foreach (var ts in arrTs)
         {
-            DestroyImmediate(rts_Content.GetChild(i).gameObject);
+            if (ts == ts_Content) continue;
+            Destroy(ts.gameObject);
         }
-        
         foreach (var info in list_MailInfo)
         {
-            var mail = Instantiate(pref_MailSlot, Vector3.zero, Quaternion.identity, rts_Content).GetComponent<UI_MailSlot>();
+            var mail = Instantiate(pref_MailSlot, Vector3.zero, Quaternion.identity, ts_Content).GetComponent<UI_MailSlot>();
             mail.transform.localPosition = Vector3.zero;
             mail.Initialize(info);
         }

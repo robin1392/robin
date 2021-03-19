@@ -61,6 +61,7 @@ namespace ED
         
         [Header("User Info")] 
         public Text text_Nickname;
+        public Image image_ClassGuage;
         public Text text_Class;
         public Text text_Trophy;
         public Text text_Diamond;
@@ -82,6 +83,7 @@ namespace ED
         
         private float[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
         private float canvasWidth;
+        public static AdRewardInfo adRewardInfo;
 
         public override void Awake()
         {
@@ -145,6 +147,16 @@ namespace ED
                 ((RectTransform) arrPanels[4].transform).offsetMin.y);
             mainPagePosX = new float[] {canvasWidth * 2, canvasWidth, 0, -canvasWidth, -canvasWidth * 2};
             Click_MainButton(2);
+
+            if (adRewardInfo != null)
+            {
+                AddReward(new ItemBaseInfo[] { new ItemBaseInfo()
+                {
+                    ItemId = adRewardInfo.ItemId,
+                    Value = adRewardInfo.Value,
+                }}, btn_PlayBattle.transform.position);
+                adRewardInfo = null;
+            }
         }
 
         private void Update()
@@ -181,18 +193,25 @@ namespace ED
             obj_MailboxBadge.SetActive(UI_Mailbox.GetMailCount() > 0);
             
             // 메뉴버튼 뱃지 체크
-            obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf || obj_MailboxBadge.activeSelf);
+            obj_MenuBadge.SetActive(obj_MailboxBadge.activeSelf);
         }
 
         public void RefreshUserInfoUI()
         {
             string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
+            int trophy = UserInfoManager.Get().GetUserInfo().trophy;
+            int cls = UserInfoManager.Get().GetUserInfo().nClass;
             text_Nickname.text = nickname;
-            text_Trophy.text = UserInfoManager.Get().GetUserInfo().trophy.ToString();
-            text_Class.text = $"{Global.g_class} {UserInfoManager.Get().GetUserInfo().nClass}";
+            text_Trophy.text = trophy.ToString();
+            text_Class.text = $"{Global.g_class} {cls}";
             text_Diamond.text = UserInfoManager.Get().GetUserInfo().diamond.ToString();
             text_Gold.text = UserInfoManager.Get().GetUserInfo().gold.ToString();
             text_Key.text = UserInfoManager.Get().GetUserInfo().key.ToString();
+            TDataClassInfo classInfoData;
+            if (TableManager.Get().ClassInfo.GetData(cls, out classInfoData))
+            {
+                image_ClassGuage.fillAmount = trophy / (float) classInfoData.trophyPointMinMax[1];
+            }
         }
 
         public void Toggle(bool isOn)

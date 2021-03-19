@@ -106,10 +106,10 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
         popup_Waiting.SetActive(view);
     }
 
-    public void SetPopupResult(bool view, bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
+    public void SetPopupResult(bool view, bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, AdRewardInfo loseReward)
     {
         popup_Result.gameObject.SetActive(view);
-        if (view) popup_Result.Initialize(winLose, winningStreak, normalReward, streakReward, perfectReward);
+        if (view) popup_Result.Initialize(winLose, winningStreak, normalReward, streakReward, perfectReward, loseReward);
         ViewGameIndicator(false);
         ViewLowHP(false);
         SetViewWaiting(false);

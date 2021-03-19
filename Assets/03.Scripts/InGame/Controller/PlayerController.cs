@@ -169,6 +169,7 @@ namespace ED
         protected int _myUID;
         public new int myUID => _myUID;
         protected List<int> _listDeadID = new List<int>();
+        public Transform ts_HpbarPosition;
 
         #endregion
 
@@ -191,7 +192,7 @@ namespace ED
             {
                 base.Start();
             }
-            
+
             StartPlayerControll();
         }
 
@@ -263,6 +264,15 @@ namespace ED
             {
                 _dicMaxDamage.Add(arrDiceDeck[i].id, 0f);
                 _dicMaxEye.Add(arrDiceDeck[i].id, 0);
+            }
+            
+            // hp바 상하 위치 조절
+            if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE && isMine ||
+                InGameManager.Get().playType == Global.PLAY_TYPE.COOP && isBottomPlayer)
+            {
+                var pos = ts_HpbarPosition.localPosition;
+                pos.y *= -1;
+                ts_HpbarPosition.localPosition = pos;
             }
         }
         
@@ -1151,7 +1161,7 @@ namespace ED
                 // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
                 if (InGameManager.IsNetwork == false)
                 {
-                    InGameManager.Get().EndGame(!isMine, 1, null, null, null);
+                    InGameManager.Get().EndGame(!isMine, 1, null, null, null, null);
                 }
             }
         }
@@ -1928,6 +1938,9 @@ namespace ED
                     break;
                 case E_BulletType.RACE_BULLET:
                     b = PoolManager.instance.ActivateObject<Bullet>("Race_Bullet", startPos);
+                    break;
+                case E_BulletType.PLANE_BULLET:
+                    b = PoolManager.instance.ActivateObject<Bullet>("Plane_Bullet", startPos);
                     break;
                 }
 

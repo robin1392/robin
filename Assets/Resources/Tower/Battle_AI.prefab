@@ -28,7 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5883888954613411288}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3098623276119017545
 GameObject:
@@ -59,7 +59,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5883888954613411288}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!136 &6915671345922501416
 CapsuleCollider:
@@ -107,10 +107,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6247054757267352152}
-  - {fileID: 3018085998432373846}
   - {fileID: 3279894872179135023}
+  - {fileID: 3018085998432373846}
   - {fileID: 5019205329019974095}
+  - {fileID: 1512879596517253816}
   - {fileID: 1906823994401414479}
   - {fileID: 4390365756107265715}
   m_Father: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   isBottomPlayer: 0
   ts_ShootingPos: {fileID: 3279894872179135023}
   ts_HitPos: {fileID: 3279894872179135023}
-  image_HealthBar: {fileID: 5404308686961493377}
+  image_HealthBar: {fileID: 6247054757251374238}
   text_Health: {fileID: 878443519090128571}
   isPlayable: 1
   instanceID: 0
@@ -181,6 +181,7 @@ MonoBehaviour:
   _listMagic: []
   isHalfHealth: 0
   isMinionAgentMove: 1
+  ts_HpbarPosition: {fileID: 1512879596517253816}
   deck: 
   getDiceCount: 0
 --- !u!54 &7857655242034525463
@@ -704,6 +705,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5883888954613411288}
     m_Modifications:
+    - target: {fileID: 3058770736927964490, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7511374198539695530, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -767,7 +773,7 @@ PrefabInstance:
     - target: {fileID: 7511374198539695530, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.78
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7511374198539695530, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
         type: 3}
@@ -831,15 +837,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dcf1c1f30cb34c6d92b91fb191260c7, type: 3}
---- !u!224 &6247054757267352152 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7511374198539695530, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
+--- !u!4 &1512879596517253816 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3058770736927964490, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
     type: 3}
   m_PrefabInstance: {fileID: 4507043561084788722}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5404308686961493377 stripped
+--- !u!114 &6247054757251374238 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8391272783925893747, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
+  m_CorrespondingSourceObject: {fileID: 7511374198553068396, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
     type: 3}
   m_PrefabInstance: {fileID: 4507043561084788722}
   m_PrefabAsset: {fileID: 0}

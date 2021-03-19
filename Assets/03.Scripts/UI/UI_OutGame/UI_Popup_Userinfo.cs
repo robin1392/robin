@@ -27,6 +27,7 @@ public class UI_Popup_Userinfo : UI_Popup
     public Text text_UID;
     public InputField input_Nickname;
     public Button btn_EditNickname;
+    public Button btn_ResetWinLose;
 
     private string oldNickname;
     

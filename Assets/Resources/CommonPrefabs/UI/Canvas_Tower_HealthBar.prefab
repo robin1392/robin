@@ -344,7 +344,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7511374198539695530}
+  - component: {fileID: 3058770736927964490}
   - component: {fileID: 8341767415826000394}
   m_Layer: 5
   m_Name: Canvas_Tower_HealthBar
@@ -353,26 +353,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &7511374198539695530
-RectTransform:
+--- !u!4 &3058770736927964490
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7511374198539695531}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 100681594547013995}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 2.2800293}
-  m_SizeDelta: {x: 348, y: 68}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8341767415826000394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,7 +489,7 @@ RectTransform:
   - {fileID: 8644422488899650984}
   - {fileID: 7150597116441254683}
   - {fileID: 1170562023433173066}
-  m_Father: {fileID: 7511374198539695530}
+  m_Father: {fileID: 3058770736927964490}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

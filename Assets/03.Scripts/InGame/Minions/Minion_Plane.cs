@@ -55,7 +55,7 @@ namespace ED
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _spear, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
                 //controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
-                controller.ActionFireBullet(_spear ,id, target.id, power , bulletMoveSpeed);
+                controller.ActionFireBullet(E_BulletType.PLANE_BULLET,id, target.id, power , bulletMoveSpeed);
             }
         }
         

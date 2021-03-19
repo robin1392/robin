@@ -509,73 +509,6 @@ namespace ED
                     }
                 }
             }
-            
-            //not use
-            /*
-            if (PhotonNetwork.IsConnected)
-            {
-                while (PhotonNetwork.InRoom && _readyPlayerCount < PhotonNetwork.CurrentRoom.MaxPlayers)
-                {
-                    yield return null;
-                }
-                //photonView.RPC("DeactivateWaitingObject", RpcTarget.All);
-                SendBattleManager(RpcTarget.All , E_PTDefine.PT_DEACTIVEWAIT);
-            }
-            else
-            {
-                DeactivateWaitingObject();
-            }
-
-            wave = 0;
-            //tmp_Wave.text = $"{wave}";
-            WorldUIManager.Get().SetWave(wave);
-            time = startSpawnTime;
-            int[] arrAddTime = { 20, 15, 10, 5, -1 };
-            var addNum = 0;
-
-            while (true)
-            {
-                yield return null;
-
-                time -= Time.deltaTime;
-
-                if (wave > 0 && time <= arrAddTime[addNum])
-                {
-                    addNum++;
-                    if (PhotonNetwork.IsConnected)
-                    {
-                        //photonView.RPC("AddSP", RpcTarget.All, wave);
-                        SendBattleManager(RpcTarget.All , E_PTDefine.PT_ADDSP , wave);
-                        // clear cache
-                        PhotonNetwork.SendAllOutgoingCommands();
-                    }
-                    else
-                    {
-                        AddSP(wave);
-                    }
-                }
-
-                if (time <= 0)
-                {
-                    time = spawnTime;
-                    addNum = 0;
-                    if (PhotonNetwork.IsConnected)
-                    {
-                        //photonView.RPC("SpawnPlayerMinions", RpcTarget.All);
-                        
-                        SendBattleManager(RpcTarget.All , E_PTDefine.PT_SPAWNMINION );
-                    }
-                    else
-                    {
-                        playerController.Spawn();
-                        playerController.targetPlayer.Spawn();
-                    }
-
-                    wave++;
-                }
-            }
-            */
-            
         }
 
         #endregion
@@ -886,7 +819,7 @@ namespace ED
         }
 
 
-        public void EndGame(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
+        public void EndGame(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, AdRewardInfo loseReward)
         {
             // 게임이 끝낫으니까 그냥..
             if (NetworkManager.Get().isResume == true)
@@ -907,41 +840,16 @@ namespace ED
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
             UI_InGame.Get().ClearUI();
 
-            // switch (playType)
-            // {
-            //     case Global.PLAY_TYPE.BATTLE:
-            //         if (winLose)
-            //         {
-            //             playerController.targetPlayer.HitDamage(float.MaxValue);
-            //         }
-            //         else
-            //         {
-            //             playerController.HitDamage(float.MaxValue);
-            //         }
-            //         break;
-            //     case Global.PLAY_TYPE.COOP:
-            //         if (winLose)
-            //         {
-            //             playerController.coopPlayer.HitDamage(float.MaxValue);
-            //         }
-            //         else
-            //         {
-            //             if (NetworkManager.Get().IsMaster) playerController.HitDamage(float.MaxValue);
-            //             else playerController.targetPlayer.HitDamage(float.MaxValue);
-            //         }
-            //         break;
-            // }
-
-            StartCoroutine(EndGameCoroutine(winLose, winningStreak, normalReward, streakReward, perfectReward));
+            StartCoroutine(EndGameCoroutine(winLose, winningStreak, normalReward, streakReward, perfectReward, loseReward));
         }
 
-        IEnumerator EndGameCoroutine(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
+        IEnumerator EndGameCoroutine(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, AdRewardInfo loseReward)
         {
             yield return new WaitForSeconds(4f);
 
             playerController.SendEventLog_BatCheck();
 
-            UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
+            UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward, loseReward);
 
             SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }
@@ -1580,7 +1488,7 @@ namespace ED
                     // Quest update
                     UI_Popup_Quest.QuestUpdate(endNoti.QuestData);
                     
-                    EndGame((GAME_RESULT.VICTORY == endNoti.GameResult || GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.GameResult), Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward);
+                    EndGame((GAME_RESULT.VICTORY == endNoti.GameResult || GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.GameResult), Convert.ToInt32(endNoti.WinningStreak), endNoti.NormalReward, endNoti.StreakReward, endNoti.PerfectReward, endNoti.LoseReward);
                     
                     break;
                 }
@@ -1591,7 +1499,7 @@ namespace ED
                     // Quest update
                     UI_Popup_Quest.QuestUpdate(endNoti.QuestData);
                     
-                    EndGame((GAME_RESULT.VICTORY == endNoti.GameResult || GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.GameResult), 0, endNoti.NormalReward, null, null);
+                    EndGame((GAME_RESULT.VICTORY == endNoti.GameResult || GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.GameResult), 0, endNoti.NormalReward, null, null, null);
                 }
                     break;
                 

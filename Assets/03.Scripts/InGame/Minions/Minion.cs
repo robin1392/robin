@@ -79,6 +79,7 @@ namespace ED
         protected Seeker _seeker;
         protected AIPath _aiPath;
         protected MinionAnimationEvent _animationEvent;
+        protected CanvasGroup _canvasGroup_HpBar;
 
         protected virtual void Awake()
         {
@@ -88,6 +89,7 @@ namespace ED
             _seeker = GetComponent<Seeker>();
             _aiPath = GetComponent<AIPath>();
             _animationEvent = animator.GetComponent<MinionAnimationEvent>();
+            _canvasGroup_HpBar = image_HealthBar.GetComponentInParent<CanvasGroup>();
         }
 
 
@@ -301,6 +303,7 @@ namespace ED
         protected void RefreshHealthBar()
         {
             image_HealthBar.fillAmount = currentHealth / maxHealth;
+            _canvasGroup_HpBar.alpha = image_HealthBar.fillAmount >= 1f ? 0f : 1f;
         }
 
         public virtual BaseStat SetTarget()

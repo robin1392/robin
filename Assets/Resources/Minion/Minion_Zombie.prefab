@@ -128,6 +128,8 @@ MonoBehaviour:
   eyeLevel: 0
   ingameUpgradeLevel: 0
   isPolymorph: 0
+  _arrow: 0
+  _spear: 1
   ps_PoisonCloud: {fileID: 0}
   animator_Alive: {fileID: 4103123151041051536}
   animator_Dead: {fileID: 8147316409286131061}

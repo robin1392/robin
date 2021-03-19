@@ -170,11 +170,12 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         // {
         //     textAddSP.transform.DOScale(1f, 0.2f);
         // });
-        Sequence sq = DOTween.Sequence().OnStart(() =>
-        {
-            textAddSP.transform.localScale = Vector3.zero;
-        }).Append(textAddSP.transform.DOScale(1f, 0.3f))
-            .SetEase(Ease.OutBack);
+        // Sequence sq = DOTween.Sequence().OnStart(() =>
+        // {
+        //     textAddSP.transform.localScale = Vector3.zero;
+        // }).Append(textAddSP.transform.DOScale(1f, 0.3f))
+        //     .SetEase(Ease.OutBack);
+        textAddSP.transform.DOPunchScale(Vector3.one * 0.1f, 0.3f);
         // textAddSP.DOFade(1f, 0.5f).OnComplete(() =>
         // {
         //     textAddSP.DOFade(0f, 0.5f);

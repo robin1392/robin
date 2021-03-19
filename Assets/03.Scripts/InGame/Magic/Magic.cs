@@ -31,6 +31,7 @@ namespace ED
         protected Coroutine destroyRoutine;
         //private Vector3 networkPosition;
         private PoolObjectAutoDeactivate poolDeactive;
+        private CanvasGroup _canvasGroup_HpBar;
 
         //public Material[] arrMaterial;
 
@@ -46,13 +47,19 @@ namespace ED
             {
                 poolDeactive = GetComponent<PoolObjectAutoDeactivate>();
             }
+
+            if (image_HealthBar != null)
+            {
+                _canvasGroup_HpBar = image_HealthBar.GetComponentInParent<CanvasGroup>();
+            }
         }
 
         protected void Update()
         {
-            if (image_HealthBar != null)
+            if (image_HealthBar != null && _canvasGroup_HpBar != null)
             {
                 image_HealthBar.fillAmount = currentHealth / maxHealth;
+                _canvasGroup_HpBar.alpha = image_HealthBar.fillAmount >= 1f ? 0f : 1f;
             }
         }
 
