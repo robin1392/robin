@@ -63,5 +63,27 @@ namespace MirageTest
 
             return value;
         }
+        
+        public static bool HasArg(string key)
+        {
+            string value = null;
+            var args = System.Environment.GetCommandLineArgs();
+            for (int i = 0; i < args.Length; ++i)
+            {
+                var arg = args[i];
+                if (!arg.StartsWith("-"))
+                {
+                    continue;
+                }
+
+                var argKey = arg.TrimStart('-');
+                if (argKey == key)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

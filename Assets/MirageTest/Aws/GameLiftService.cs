@@ -39,6 +39,12 @@ namespace MirageTest.Aws
                 Debug.Log($"port from CommandLineArgs - {portFromArgs.Value}");
             }
 
+            var hasArg = CommandLineArgs.HasArg("table_test");
+            if (hasArg)
+            {
+                TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
+            }
+
             if (Init(transport.Port) == false)
             {
                 Debug.LogError("GameLiftService Init 실패.");    
