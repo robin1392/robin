@@ -116,10 +116,9 @@ namespace ED
                 // UI_InGame.Get().SetMyNickName(NetworkManager.Get().GetNetInfo().playerInfo.Name , NetworkManager.Get().GetNetInfo().otherInfo.Name);
 
             }
-            //AIMode
             else
             {
-                StartAIModeGame().Forget();
+                StartFakeGame().Forget();
             }
             
             UI_InGame.Get().ViewTargetDice(false);
@@ -153,7 +152,7 @@ namespace ED
             client.ConnectAsync(matchInfo.ServerAddress, (ushort)matchInfo.Port);
         }
 
-        async UniTask StartAIModeGame()
+        async UniTask StartFakeGame()
         {
             if (TableManager.Get().Loaded == false)
             {

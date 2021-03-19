@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eca2810275060546b42719775fadfae, type: 3}
   m_Name: HeadlessRuntime
   m_EditorClassIdentifier: 
-  profileName: server_linux_copy
+  profileName: server_linux
   valueFramerate: 30
   valueLimitFramerate: 1
   valueCamera: 1
