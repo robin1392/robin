@@ -32,25 +32,30 @@ public class Guardian_01 : Minion
     {
         while (true)
         {
-            yield return new WaitForSeconds(effectCooltime);
-
-            isPushing = true;
-            controller.MinionAniTrigger(id, "Skill", 0);
-
-            yield return new WaitForSeconds(1f);
-
-            var cols = Physics.OverlapSphere(transform.position, 2f, targetLayer);
-            for (int i = 0; i < cols.Length; i++)
+            if (IsTargetInnerRange())
             {
-                var bs = cols[i].GetComponentInParent<BaseStat>();
-                if (bs != null)
+                yield return new WaitForSeconds(effectCooltime);
+                
+                isPushing = true;
+                controller.MinionAniTrigger(id, "Skill", 0);
+
+                yield return new WaitForSeconds(1f);
+
+                var cols = Physics.OverlapSphere(transform.position, 2f, targetLayer);
+                for (int i = 0; i < cols.Length; i++)
                 {
-                    DamageToTarget(bs);
+                    var bs = cols[i].GetComponentInParent<BaseStat>();
+                    if (bs != null)
+                    {
+                        DamageToTarget(bs);
+                    }
                 }
+                
+                yield return new WaitForSeconds(1.2f);
+                isPushing = false;
             }
-            
-            yield return new WaitForSeconds(1.2f);
-            isPushing = false;
+
+            yield return null;
         }
     }
 }

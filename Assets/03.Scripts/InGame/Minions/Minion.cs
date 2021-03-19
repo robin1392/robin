@@ -233,6 +233,7 @@ namespace ED
             _dicEffectPool.Clear();
 
             SetColor(isBottomPlayer ? E_MaterialType.BOTTOM : E_MaterialType.TOP);
+            RefreshHealthBar();
         }
 
         public void Heal(float heal)
@@ -637,13 +638,6 @@ namespace ED
 
         public bool IsTargetInnerRange()
         {
-#if UNITY_EDITOR
-            Debug.DrawLine(transform.position + Vector3.up * 0.1f,
-                (transform.position + Vector3.up * 0.1f) + (target.transform.position - transform.position).normalized * range,
-                Color.yellow);
-#endif
-            //return Vector3.Distance(transform.position, target.transform.position) < range + 0.1f;
-            
             if (target != null)
             {
                 if (Vector3.Distance(transform.position, target.transform.position) <= range)

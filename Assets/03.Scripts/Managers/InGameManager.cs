@@ -256,7 +256,8 @@ namespace ED
                 msgUserInfo.IsBottomPlayer = true;
                 msgUserInfo.IsMaster = true;
                 msgUserInfo.Name = UserInfoManager.Get().GetUserInfo().userNickName;
-                msgUserInfo.CurrentSp = 200;
+                msgUserInfo.CurrentSp = 100;
+                if (TutorialManager.isTutorial) msgUserInfo.CurrentSp = 200;
                 int bonusHP = 0;
 
 
@@ -300,7 +301,7 @@ namespace ED
                 msgUserInfo.PlayerUId = 2;
                 msgUserInfo.IsBottomPlayer = false;
                 msgUserInfo.IsMaster = false;
-                msgUserInfo.CurrentSp = 200;
+                msgUserInfo.CurrentSp = 100;
                 msgUserInfo.TowerHp = (30000 + Random.Range(0, 500)) * 100;
                 msgUserInfo.Name = "AI";
                 NetworkManager.Get().GetNetInfo().SetOtherInfo(msgUserInfo);

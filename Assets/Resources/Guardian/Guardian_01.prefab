@@ -92,7 +92,7 @@ MonoBehaviour:
   targetIsEnemy: 1
   isAttacking: 0
   isPushing: 0
-  isAttackSpeedFactorWithAnimation: 1
+  isAttackSpeedFactorWithAnimation: 0
   eyeLevel: 0
   ingameUpgradeLevel: 0
   isPolymorph: 0

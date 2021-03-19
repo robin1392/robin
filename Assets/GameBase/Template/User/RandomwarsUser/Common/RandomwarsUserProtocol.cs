@@ -50,6 +50,8 @@ namespace Template.User.RandomwarsUser.Common
                 {(int)ERandomwarsProtocol.UserNameInitAck, ReceiveUserNameInitAck},
                 {(int)ERandomwarsProtocol.UserNameChangeReq, ReceiveUserNameChangeReq},
                 {(int)ERandomwarsProtocol.UserNameChangeAck, ReceiveUserNameChangeAck},
+                {(int)ERandomwarsProtocol.UserAdRewardReq, ReceiveUserAdRewardReq},
+                {(int)ERandomwarsProtocol.UserAdRewardAck, ReceiveUserAdRewardAck},
             };
         }
 

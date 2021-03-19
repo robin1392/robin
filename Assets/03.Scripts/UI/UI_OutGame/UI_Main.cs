@@ -12,6 +12,7 @@ using Percent.Platform.InAppPurchase;
 using RandomWarsResource.Data;
 using Service.Core;
 using Template.Match.RandomwarsMatch.Common;
+using UnityEditor;
 using UnityEngine.SceneManagement;
 
 namespace ED
@@ -84,7 +85,7 @@ namespace ED
         
         private float[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
         private float canvasWidth;
-        public static AdRewardInfo adRewardInfo;
+        public static List<ItemBaseInfo> listADReward = new List<ItemBaseInfo>();
 
         public override void Awake()
         {
@@ -99,6 +100,10 @@ namespace ED
                     settingPopup.Toggle_HighQuality(true);
                     break;
             }
+            
+#if UNITY_EDITOR
+            EditorApplication.pauseStateChanged += OnEditorAppPause;
+#endif
         }
         
         private void Start()
@@ -149,14 +154,11 @@ namespace ED
             mainPagePosX = new float[] {canvasWidth * 2, canvasWidth, 0, -canvasWidth, -canvasWidth * 2};
             Click_MainButton(2);
 
-            if (adRewardInfo != null)
+            if (listADReward.Count > 0)
             {
-                AddReward(new ItemBaseInfo[] { new ItemBaseInfo()
-                {
-                    ItemId = adRewardInfo.ItemId,
-                    Value = adRewardInfo.Value,
-                }}, btn_PlayBattle.transform.position);
-                adRewardInfo = null;
+                AddReward(listADReward.ToArray(), btn_PlayBattle.transform.position);
+
+                listADReward.Clear();
             }
         }
 
@@ -195,6 +197,14 @@ namespace ED
             
             // 메뉴버튼 뱃지 체크
             obj_MenuBadge.SetActive(obj_MailboxBadge.activeSelf);
+        }
+
+        public override void OnDestroy()
+        {
+#if UNITY_EDITOR
+            EditorApplication.pauseStateChanged -= OnEditorAppPause;
+#endif
+            base.OnDestroy();
         }
 
         public void RefreshUserInfoUI()
@@ -627,5 +637,48 @@ namespace ED
                 }
             }
         }
+
+        private DateTime pauseTime;
+        public void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                pauseTime = DateTime.UtcNow;
+                print("Application Pause");
+                NetworkManager.Get().PauseGame();
+            }
+            else
+            {
+                var totalSeconds = (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
+                if (totalSeconds >= 60)
+                {
+                    GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
+                }
+            }
+        }
+        
+#if UNITY_EDITOR
+        // 에디터에서 테스트용도로 사용하기 위해
+        public void OnEditorAppPause(PauseState pause)
+        {
+            NetworkManager.Get().PrintNetworkStatus();
+
+            if (pause == PauseState.Paused)
+            {
+                pauseTime = DateTime.UtcNow;
+                print("Application Pause");
+                NetworkManager.Get().PauseGame();
+            }
+            else
+            {
+                var totalSeconds = (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
+                if (totalSeconds >= 60)
+                {
+                    GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
+                }
+            }
+
+        }
+#endif
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using NodeCanvas.BehaviourTrees;
+using RandomWarsResource.Data;
 
 namespace ED
 {
@@ -18,12 +19,16 @@ namespace ED
         public int getDiceCost => 10 + getDiceCount * 10;
         public int getDiceCount;
 
+        private TDataVsmode _vsmodeData;
+
         protected override void Start()
         {
             _myUID = NetworkManager.Get().OtherUID;
             id = myUID * 10000;
-            
-            sp = 200;
+
+            TableManager.Get().Vsmode.GetData(d => d.name == "GetStartSP", out _vsmodeData);
+
+            sp = _vsmodeData.value;
             maxHealth = ConvertNetMsg.MsgIntToFloat(isMine ? NetworkManager.Get().GetNetInfo().playerInfo.TowerHp : NetworkManager.Get().GetNetInfo().otherInfo.TowerHp);
             currentHealth = maxHealth;
             _arrDice = new Dice[15];
@@ -60,11 +65,11 @@ namespace ED
                 var listDeck = new List<int>();
                 if (TutorialManager.isTutorial)
                 {
-                    listDeck.Add(1000);    // 궁수
-                    listDeck.Add(1002);    // 해골
-                    listDeck.Add(3011);    // 전사
-                    listDeck.Add(3003);    // 방패병
-                    listDeck.Add(3005);    // 화염술사
+                    listDeck.Add(31001);    // 궁수
+                    listDeck.Add(31002);    // 해골
+                    listDeck.Add(31003);    // 전사
+                    listDeck.Add(32002);    // 방패병
+                    listDeck.Add(32009);    // 화염술사
 
                     GetComponent<BehaviourTreeOwner>().behaviour.Pause();
                 }

@@ -8,6 +8,8 @@ using Debug = ED.Debug;
 using DG.Tweening;
 using ED;
 using RandomWarsProtocol;
+using RandomWarsResource.Data;
+using Template.Shop.GameBaseShop.Table;
 using Template.User.RandomwarsUser.Common;
 
 public class TutorialManager : MonoBehaviour
@@ -87,6 +89,7 @@ public class TutorialManager : MonoBehaviour
                 msg.DataId = 5001;
                 msg.MoveSpeed = 100;
                 msg.Effect = 30000;
+                msg.EffectCoolTime = 800;
                 InGameManager.Get().playerController.SpawnMonster(msg);
                 break;
         }
@@ -215,7 +218,7 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 7:
                 Time.timeScale = 0f;
-                InGameManager.Get().playerController.TutorialAddSP(5000);
+                InGameManager.Get().playerController.TutorialAddSP(3000);
                 break;
             case 8:    // 두번째 주사위 소환
                 Time.timeScale = 0f;

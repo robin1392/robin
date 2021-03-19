@@ -33,6 +33,8 @@ public class UI_InGamePopup_Result : MonoBehaviour
     public Button btn_ShowValues;
     public Button btn_End;
     public Button btn_AD;
+    public Image image_ADReward_Icon;
+    public Text text_ADReward_Count;
 
     [Header("Coop")] 
     public RectTransform rts_ScrollView;
@@ -445,43 +447,35 @@ public class UI_InGamePopup_Result : MonoBehaviour
             btn_End.transform.localScale = Vector3.zero;
         });
         
-        if (loseReward != null)
+        if (loseReward != null && string.IsNullOrEmpty(loseReward.RewardId) == false)
         {
-            TDataItemList data;
-            if (TableManager.Get().ItemList.GetData(loseReward.ItemId, out data))
+            // TDataItemList data;
+            // TableManager.Get().ItemList.GetData(loseReward.ItemId, out data);
             {
                 btn_AD.gameObject.SetActive(true);
-                btn_AD.transform.Find("Image_Icon").GetComponent<Image>().sprite = FileHelper.GetIcon(data.itemIcon);
-                btn_AD.transform.Find("Text_Count").GetComponent<Text>().text = $"x{loseReward.Value}";
+                //image_ADReward_Icon.sprite = FileHelper.GetIcon(data.itemIcon);
+                text_ADReward_Count.text = $"x{loseReward.Value}";
                 btn_AD.onClick.AddListener(() =>
                 {
+#if UNITY_EDITOR
+                    UI_InGamePopup.Get().obj_Indicator.SetActive(true);
+                    NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
+                        loseReward.RewardId, ADRewardCallback);
+#else
                     MopubCommunicator.Instance.showVideo((bool b) =>
                     {
                         if (b)
                         {
                             UI_InGamePopup.Get().obj_Indicator.SetActive(true);
                             NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
-                                loseReward.RewardId,
-                                (ERandomwarsUserErrorCode errorCode, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData) =>
-                                {
-                                    UI_InGamePopup.Get().obj_Indicator.SetActive(false);
-                                    if (errorCode == ERandomwarsUserErrorCode.Success)
-                                    {
-                                        UI_Main.adRewardInfo = loseReward;
-                                        UI_Popup_Quest.QuestUpdate(arrayQuestData);
-                                        InGameManager.Get().LeaveRoom();
-                                        return true;
-                                    }
-                                    
-                                    InGameManager.Get().LeaveRoom();
-                                    return false;
-                                });
+                                loseReward.RewardId, ADRewardCallback);
                         }
                         else
                         {
                             InGameManager.Get().LeaveRoom();
                         }
                     });
+#endif
                 });
             }
             
@@ -490,6 +484,25 @@ public class UI_InGamePopup_Result : MonoBehaviour
                 btn_AD.transform.localScale = Vector3.zero;
             });
         }
+    }
+
+    private bool ADRewardCallback(ERandomwarsUserErrorCode errorCode, ItemBaseInfo[] arrayRewardInfo,
+        QuestData[] arrayQuestData)
+    {
+        UI_InGamePopup.Get().obj_Indicator.SetActive(false);
+        if (errorCode == ERandomwarsUserErrorCode.Success)
+        {
+            foreach (var reward in arrayRewardInfo)
+            {
+                UI_Main.listADReward.Add(reward);
+            }
+            UI_Popup_Quest.QuestUpdate(arrayQuestData);
+            InGameManager.Get().LeaveRoom();
+            return true;
+        }
+                
+        InGameManager.Get().LeaveRoom();
+        return false;
     }
 
     private void SetRewardMessage(string message)

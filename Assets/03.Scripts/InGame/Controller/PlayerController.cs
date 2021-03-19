@@ -170,6 +170,7 @@ namespace ED
         public new int myUID => _myUID;
         protected List<int> _listDeadID = new List<int>();
         public Transform ts_HpbarPosition;
+        protected bool isSpawnedGuardian;
 
         #endregion
 
@@ -390,7 +391,7 @@ namespace ED
             if (boss != null)
             {
                 isHalfHealth = true;
-                animator.SetBool(Break, true);
+                //animator.SetBool(Break, true);
 
                 PushEnemyMinions(5f);
 
@@ -446,6 +447,7 @@ namespace ED
         {
             int total = 10 + (wave * ((10 + spUpgradeLevel) * 5));
             sp += total;
+            Debug.Log($"SP ADD : {total}");
             if (InGameManager.IsNetwork || (InGameManager.IsNetwork == false && isMine))
             {
                 WorldUIManager.Get().AddSP(total);
@@ -1109,11 +1111,31 @@ namespace ED
                     
                     Death();
                 }
-                else if(InGameManager.Get().isGamePlaying &&
-                    ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
-                         && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
+                else
                 {
-                    UI_InGamePopup.Get().ViewLowHP(true);
+                    if (InGameManager.IsNetwork == false && isSpawnedGuardian == false && currentHealth <= maxHealth * 0.666f)
+                    {
+                        isSpawnedGuardian = true;
+                        SpawnMonster(new MsgMonster()
+                        {
+                            DataId = 5001,
+                            Id = (ushort)(myUID * 1000 + spawnCount++),
+                            Hp = 800000,
+                            Power = 35000,
+                            Effect = 0,
+                            EffectCoolTime = 800,
+                            AttackSpeed = 310,
+                            MoveSpeed = 100,
+                            Duration = 0,
+                        });
+                    }
+                    
+                    if(InGameManager.Get().isGamePlaying &&
+                        ( (InGameManager.IsNetwork && isMine) || (InGameManager.IsNetwork == false && isMine) ) 
+                             && currentHealth < maxHealth * 0.1f && !UI_InGamePopup.Get().GetLowHP())
+                    {
+                        UI_InGamePopup.Get().ViewLowHP(true);
+                    }
                 }
             }
         }
@@ -1154,7 +1176,7 @@ namespace ED
             {
                 image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
                 ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
-                animator.SetTrigger("Death");
+                //animator.SetTrigger("Death");
                 SoundManager.instance.Play(clip_TowerExplosion);
                 ps_Destroy.gameObject.SetActive(true);
                 
