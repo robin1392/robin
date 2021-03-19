@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR || UNITY_STANDALONE
+using System.Collections.Generic;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
 using Amazon.SQS;
@@ -17,11 +18,9 @@ namespace MirageTest.Aws
 
         private void Start()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
             _queueName = "randomdicewars-match-result";
             _roleArn = "arn:aws:iam::153269277707:role/randomwars-gameliftfleetrole";
             _roleName = "RandomWarsSession";
-#endif
         }
 
         public async UniTask SendMessage(List<UserMatchResult> listMatchResult)
@@ -56,3 +55,4 @@ namespace MirageTest.Aws
         }
     }
 }
+#endif

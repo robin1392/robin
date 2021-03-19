@@ -1,15 +1,13 @@
-﻿using System;
+﻿#if UNITY_EDITOR || UNITY_STANDALONE
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MirageTest.Scripts;
-using UnityEngine;
 using Aws.GameLift.Server;
 using Aws.GameLift.Server.Model;
 using Mirage.KCP;
+using MirageTest.Scripts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace MirageTest.Aws
 {
@@ -220,3 +218,4 @@ namespace MirageTest.Aws
         }
     }
 }
+#endif
