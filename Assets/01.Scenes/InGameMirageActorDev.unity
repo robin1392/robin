@@ -170,6 +170,7 @@ MonoBehaviour:
   Server: {fileID: 1795011498}
   Master: {fileID: 391834481}
   Other: {fileID: 226801739}
+  Address: localhost
 --- !u!1 &176606790
 GameObject:
   m_ObjectHideFlags: 0
@@ -997,7 +998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 1460362
   BucketUrl: https://randomdicewars-bucket.s3.ap-northeast-2.amazonaws.com
-  Enviroment: DEV
+  Enviroment: Dev
 --- !u!850595691 &1664882037
 LightingSettings:
   m_ObjectHideFlags: 0

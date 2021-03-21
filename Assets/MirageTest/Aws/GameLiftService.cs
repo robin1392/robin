@@ -47,7 +47,7 @@ namespace MirageTest.Aws
                 Debug.Log($"port from CommandLineArgs - {portFromArgs.Value}");
             }
 
-            var logFilePath = $"{Application.dataPath}/../log_{transport.Port}.txt";
+            var logFilePath = $"{Application.dataPath}/../../log_{transport.Port}.txt";
             //유니티 로그파일 사용 시 플릿에서 서버가 뜰때 크래시가 난다. 그래서 별도의 파일로깅을 함. 서버 실행 시 아규먼트로 -nolog를 사용중
             _fileWriter = new FileWriter(logFilePath);
             Application.logMessageReceived += (string logString, string stackTrace, LogType type) =>
@@ -68,7 +68,6 @@ namespace MirageTest.Aws
                 }
             };
             
-            _fileWriter.WriteLine($"FileWriter Initialized: {logFilePath}");
             Debug.Log($"FileWriter Initialized: {logFilePath}");
 
             var hasArg = CommandLineArgs.HasArg("table_test");
