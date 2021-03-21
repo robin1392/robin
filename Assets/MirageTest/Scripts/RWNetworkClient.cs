@@ -71,6 +71,7 @@ namespace MirageTest.Scripts
         public async UniTask RWConnectAsync(string serverIp, ushort port)
         {
             lastConnectServerIp = serverIp;
+            GetComponent<KcpTransport>().Port = port;
             logger.LogError($"[RWConnectAsync] ip:{serverIp} port:{port}");
             
             var retryCount = 3;
@@ -80,7 +81,7 @@ namespace MirageTest.Scripts
                 count++;
                 try
                 {
-                    await ConnectAsync(serverIp, port);
+                    await ConnectAsync(serverIp);
                 }
                 catch (Exception e)
                 {

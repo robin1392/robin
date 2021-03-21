@@ -10,7 +10,7 @@ namespace ED
 {
     public class UI_UpgradeButton : MonoBehaviour
     {
-        public int num;
+        public int index;
         public Button btn;
         public Image image_Icon;
         public Image image_SP;
@@ -20,8 +20,9 @@ namespace ED
         private int level;
         private RandomWarsResource.Data.TDataDiceInfo pData;
         
-        public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level)
+        public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level, int index)
         {
+            this.index = index;
             this.pData = dataDice;
             this.level = level;
             image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
@@ -64,11 +65,16 @@ namespace ED
         {
             // sp 작으면 리턴
             var localPlayerState = _client.GetLocalPlayerState();
+            if (localPlayerState == null)
+            {
+                return;
+            }
+            
             if (localPlayerState.sp < GetUpgradeCost())
                 return;
 
             var localPlayerProxy = _client.GetLocalPlayerProxy();
-            localPlayerProxy.UpgradeIngameLevel(pData.id);
+            localPlayerProxy.UpgradeIngameLevel(index);
             
             SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
         }

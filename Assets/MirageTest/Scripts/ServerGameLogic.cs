@@ -33,6 +33,7 @@ namespace MirageTest.Scripts
         public bool isAIMode;
         
         public PLAY_TYPE modeType;
+        public bool attachPlayer2AI;
 
         bool NoPlayers =>
             _serverObjectManager
@@ -125,7 +126,7 @@ namespace MirageTest.Scripts
 
             _gameMode.GameState.state = EGameState.Playing;
             
-            if (isAIMode)
+            if (isAIMode || attachPlayer2AI)
             {
                 var aiPlayer = new AIPlayer(_gameMode.PlayerState2);
                 // var aiPlayer2 = new AIPlayer(_gameMode.PlayerState1);

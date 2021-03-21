@@ -9,6 +9,7 @@ public class ActorDevModeStarter : MonoBehaviour
     public RWNetworkServer Server;
     public RWNetworkClient Master;
     public RWNetworkClient Other;
+    public bool AttatchOtherAI;
     public string Address = "localhost";
     
     async void Start()
@@ -25,14 +26,15 @@ public class ActorDevModeStarter : MonoBehaviour
         Master.authenticator = null;
         Other.authenticator = null;
         Server.authenticator = null;
-        
+
+        Server.serverGameLogic.attachPlayer2AI = true;
         Server.ListenAsync().Forget();
         while (Server.Active == false)
         {
             await UniTask.Yield();
         }
-
+        
         await Master.RWConnectAsync(Address);
-        await Other.RWConnectAsync(Address);
+        await Other.RWConnectAsync(Address);   
     }
 }

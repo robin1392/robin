@@ -149,27 +149,27 @@ public class PlayerProxy : NetworkBehaviour
         playerState.MergeDice(sourceDiceFieldIndex, targetDiceFieldIndex);
     }
     
-    public void UpgradeIngameLevel(int diceId)
+    public void UpgradeIngameLevel(int deckIndex)
     {
         if (IsLocalClient)
         {
-            UpgradeIngameLevelInternal(diceId);
+            UpgradeIngameLevelInternal(deckIndex);
             return;
         }
         
-        UpgradeIngameLevelOnServer(diceId);
+        UpgradeIngameLevelOnServer(deckIndex);
     }
 
     [ServerRpc]
-    public  void UpgradeIngameLevelOnServer(int diceId)
+    public  void UpgradeIngameLevelOnServer(int deckIndex)
     {
-        UpgradeIngameLevelInternal(diceId);
+        UpgradeIngameLevelInternal(deckIndex);
     }
 
-    void UpgradeIngameLevelInternal(int diceId)
+    void UpgradeIngameLevelInternal(int deckIndex)
     {
         var playerState = GetPlayerState();
-        playerState.UpgradeIngameLevel(diceId);
+        playerState.UpgradeIngameLevel(deckIndex);
     }
     
     public void GetRandomDice()

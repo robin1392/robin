@@ -37,8 +37,6 @@ namespace MirageTest.Scripts.Entities
         public readonly Deck Deck = new Deck();
         public readonly Field Field = new Field();
 
-        private Dictionary<int, DeckDice> _deckDiceMap = new Dictionary<int, DeckDice>();
-
         public const int FieldCount = 15;
 
         private bool _initalized;
@@ -62,7 +60,6 @@ namespace MirageTest.Scripts.Entities
             foreach (var deckDice in deck)
             {
                 Deck.Add(deckDice);
-                _deckDiceMap.Add(deckDice.diceId, deckDice);
             }
 
             for (int i = 0; i < FieldCount; ++i)
@@ -131,10 +128,8 @@ namespace MirageTest.Scripts.Entities
 
         public DeckDice GetDeckDice(int diceId)
         {
-            if (_deckDiceMap.TryGetValue(diceId, out var deckDice))
-            {
-                return deckDice;
-            }
+            
+            
 
             return DeckDice.Empty;
         }
@@ -458,21 +453,21 @@ namespace MirageTest.Scripts.Entities
             Field[sourceDiceFieldIndex] = FieldDice.Empty;
         }
 
-        public void UpgradeIngameLevel(int diceId)
+        public void UpgradeIngameLevel(int deckIndex)
         {
-            logger.Log($"[UpgradeIngameLevel] diceId:{diceId}");
+            logger.Log($"[UpgradeIngameLevel] deckIndex:{deckIndex}");
         
-            var deckDice = GetDeckDice(diceId);
+            var deckDice = Deck[deckIndex];
             if (deckDice.IsEmpty)
             {
-                logger.LogError($"덱에 주사위가 존재하지 않습니다.: playerId:{userId}, diceId:{diceId}");
+                logger.LogError($"덱에 주사위가 존재하지 않습니다.: playerId:{userId}, index:{deckIndex}");
                 return;
             }
 
             byte MaxInGameUp = 6;
             if (deckDice.inGameLevel >= MaxInGameUp)
             {
-                logger.LogError($"덱 주사위 레벨이 최대치입니다.: playerId:{userId}, diceId:{diceId}");
+                logger.LogError($"덱 주사위 레벨이 최대치입니다.: playerId:{userId}, diceId:{deckDice.diceId}");
                 return;
             }
 
@@ -482,13 +477,12 @@ namespace MirageTest.Scripts.Entities
             if (sp < needSp)
             {
                 logger.LogError(
-                    $"덱 주사위 업그레이드를 위한 SP가 모자랍니다.: playerId:{userId}, diceId:{diceId}, sp:{sp} 팔요sp:{needSp}");
+                    $"덱 주사위 업그레이드를 위한 SP가 모자랍니다.: playerId:{userId}, :{deckDice.diceId}, sp:{sp} 팔요sp:{needSp}");
                 return;
             }
 
             sp -= needSp;
-
-            var deckIndex = GetDeckIndex(diceId);
+            
             Deck[deckIndex] = new DeckDice()
             {
                 diceId = deckDice.diceId,

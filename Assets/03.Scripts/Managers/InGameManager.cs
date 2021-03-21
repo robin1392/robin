@@ -197,16 +197,10 @@ namespace ED
 
         public void LeaveRoom()
         {
-            if (IsNetwork == true)
+            if (IsNetwork)
             {
-                // 자신이 포기한경우 게임중을 꺼주자
-                //KZSee:
-                // if (isGamePlaying)
-                // {
-                //     isGamePlaying = false;
-                // }
-
-                Time.timeScale = 1f;
+                FindObjectOfType<RWNetworkClient>().Disconnect();
+                GameStateManager.Get().MoveMainScene();
             }
             else
             {
@@ -214,6 +208,8 @@ namespace ED
                 FindObjectOfType<RWNetworkClient>().Disconnect();
                 GameStateManager.Get().MoveMainScene();
             }
+            
+            Time.timeScale = 1f;
         }
 
         // 내자신이 나간다고 눌럿을때 응답 받은것

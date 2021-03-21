@@ -100,7 +100,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     {
         for (var i = 0; i < arrUpgradeButtons.Length; i++)
         {
-            arrUpgradeButtons[i].Initialize( deckDice[i].diceInfo, deckDice[i].inGameLevel);
+            arrUpgradeButtons[i].Initialize( deckDice[i].diceInfo, deckDice[i].inGameLevel, i);
         }
     }
 
