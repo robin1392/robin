@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR || UNITY_STANDALONE
+﻿#if UNITY_EDITOR || UNITY_STANDALONE_LINUX
 using System.Collections.Generic;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;

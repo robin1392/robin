@@ -182,7 +182,7 @@ public class RWNetworkServer : NetworkServer
 
     public void OnGameEnd(List<UserMatchResult> listMatchResult)
     {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE_LINUX
         FindObjectOfType<SQSService>()?.SendMessage(listMatchResult).Forget();
 #endif
         foreach (var result in listMatchResult)

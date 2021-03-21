@@ -4,6 +4,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
+using Mirage.KCP;
 using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.Messages;
@@ -61,19 +62,35 @@ namespace MirageTest.Scripts
             return FindObjectOfType<RWNetworkClient>();
         }
 
-
         public string lastConnectServerIp;
-        public UniTask RWConnectAsync(string serverIp)
+        public async UniTask RWConnectAsync(string serverIp)
         {
-            lastConnectServerIp = serverIp;
-            return ConnectAsync(serverIp);
+            await RWConnectAsync(serverIp, GetComponent<KcpTransport>().Port);
         }
         
-        public UniTask RWConnectAsync(string serverIp, ushort port)
+        public async UniTask RWConnectAsync(string serverIp, ushort port)
         {
             lastConnectServerIp = serverIp;
             logger.LogError($"[RWConnectAsync] ip:{serverIp} port:{port}");
-            return ConnectAsync(serverIp, port);
+            
+            var retryCount = 3;
+            var count = 0;
+            while (count < retryCount)
+            {
+                count++;
+                try
+                {
+                    await ConnectAsync(serverIp, port);
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e.Message);
+                    logger.Log($"Retry {count}");
+                    continue;
+                }
+                
+                break;
+            }
         }
         
         [Button]

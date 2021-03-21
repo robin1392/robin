@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
-using Aws.GameLift.Server;
 using Mirage;
 using Mirage.Logging;
-using MirageTest.Aws;
 using MirageTest.Scripts;
 using UnityEngine;
 
@@ -35,7 +32,7 @@ public class RWAthenticator : NetworkAuthenticator
         conn.RegisterHandler<AuthResponseMessage>(OnAuthResponseMessage);
 
         var client = GetComponent<RWNetworkClient>();
-        
+
         conn.AuthenticationData = new AuthDataForConnection()
         {
             PlayerId = client.LocalUserId,
@@ -55,7 +52,7 @@ public class RWAthenticator : NetworkAuthenticator
 
     public void OnAuthRequestMessage(INetworkPlayer conn, AuthRequestMessage msg)
     {
-        var server = GetComponent<RWNetworkServer>(); 
+        var server = GetComponent<RWNetworkServer>();
         var authedPlayerInfo = server.MatchData.PlayerInfos.FirstOrDefault(p => p.UserId == msg.PlayerId);
         if (authedPlayerInfo != null)
         {
@@ -76,11 +73,10 @@ public class RWAthenticator : NetworkAuthenticator
                 PlayerNickName = msg.NickName,
                 PlayerSessionId = msg.PlayerSessionId
             };
-            
-#if UNITY_EDITOR || UNITY_STANDALONE
-            GameLiftServerAPI.AcceptPlayerSession(msg.PlayerSessionId);
+
+#if UNITY_EDITOR || UNITY_STANDALONE_LINUX
+            Aws.GameLift.Server.GameLiftServerAPI.AcceptPlayerSession(msg.PlayerSessionId);
 #endif
-            
         }
         else
         {
