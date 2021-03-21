@@ -35,14 +35,17 @@ namespace MirageTest.Scripts.GameMode
         public override async UniTask OnBeforeGameStart()
         {
             var gameState = CreateGameState();
+            Debug.Log($"gameState:{gameState != null} {gameState.state}");
             var playerStates = CreatePlayerStates();
+            Debug.Log($"playerStates1:{playerStates[0] != null} playerStates2:{playerStates[1] != null}");
             gameState.masterOwnerTag = playerStates[0].ownerTag;
             GameState = gameState;
             PlayerStates = playerStates;
 
             PlayerState1.team = GameConstants.BottomCamp;
             PlayerState2.team = GameConstants.TopCamp;
-
+            
+            Debug.Log($"ServerObjectManager:{ServerObjectManager != null}");
             ServerObjectManager.Spawn(gameState.NetIdentity);
             foreach (var playerState in playerStates)
             {
@@ -52,6 +55,7 @@ namespace MirageTest.Scripts.GameMode
             //액터보다 플레이어 스테이트가 먼저 생성되야해서 한 틱 양보
             await UniTask.Yield();
 
+            Debug.Log($"fieldManager:{FieldManager.Get() != null}");
             var player1TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: true);
             SpawnTower(PlayerState1, player1TowerPosition);
 

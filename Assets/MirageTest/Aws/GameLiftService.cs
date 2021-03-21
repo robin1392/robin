@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR || UNITY_STANDALONE_LINUX
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Remoting;
 using Aws.GameLift.Server;
 using Aws.GameLift.Server.Model;
@@ -204,7 +205,7 @@ namespace MirageTest.Aws
 
             // 플레이어 추가
             _server.MatchData.AddPlayerInfo(playerId, userName, trophy, deckInfo);
-            _fileWriter.WriteLine($"플레이어 추가:{playerId} name:{userName}");
+            Debug.Log($"플레이어 추가:{playerId} name:{userName} gudrdian:{deckInfo.GuardianId} deck:{String.Join(", ", deckInfo.DiceInfos.ToArray())}");
         }
         
         void OnProcessTerminate()

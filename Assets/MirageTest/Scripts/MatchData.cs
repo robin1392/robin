@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ED;
 using Mirage;
 using Mirage.Logging;
 using UnityEngine;
@@ -63,5 +64,10 @@ namespace MirageTest.Scripts
     {
         public int DiceId;
         public byte OutGameLevel;
+
+        public override string ToString()
+        {
+            return $"id:{DiceId}/lev:{OutGameLevel}";
+        }
     }
 }
