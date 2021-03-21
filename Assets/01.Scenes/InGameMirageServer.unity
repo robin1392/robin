@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485416e9321b38e4482bba9dbb59f008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnableTestData: 0
 --- !u!4 &435804278
 Transform:
   m_ObjectHideFlags: 0
@@ -1535,12 +1536,12 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[2].Name
-      value: RWNetworkClient
+      value: RemoteCallHelper
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[3].Name
-      value: RWAthenticator
+      value: ServerObjectManager
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -1550,17 +1551,17 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[4].Name
-      value: ServerObjectManager
+      value: PlayerState
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[5].Name
-      value: RemoteCallHelper
+      value: ServerPlayerProxySpawner
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[7].Name
-      value: ServerObjectManager
+      value: NetworkIdentity
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -1570,27 +1571,27 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[8].Name
-      value: PlayerState
+      value: RWNetworkServer
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[9].Name
-      value: ServerPlayerProxySpawner
+      value: PlayerProxy
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[10].Name
-      value: NetworkSceneManager
+      value: NetworkServer
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[11].Name
-      value: ClientPlayerProxySpawner
+      value: NetworkTime
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[12].Name
-      value: NetworkIdentity
+      value: ServerGameLogic
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -1600,22 +1601,22 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[13].Name
-      value: RWNetworkServer
+      value: RWNetworkClient
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[14].Name
-      value: PlayerProxy
+      value: NetworkClient
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[15].Name
-      value: NetworkServer
+      value: ClientObjectManager
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[16].Name
-      value: ServerGameLogic
+      value: ClientPlayerProxySpawner
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -1690,7 +1691,7 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[4].level
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -1700,7 +1701,7 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[6].Name
-      value: ClientObjectManager
+      value: NetworkSceneManager
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -1820,6 +1821,51 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[39].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[6].level
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[8].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[9].level
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[40].Name
+      value: BattleMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[40].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[41].Name
+      value: ActorDevMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[41].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[42].Name
+      value: NetworkPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[42].level
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []

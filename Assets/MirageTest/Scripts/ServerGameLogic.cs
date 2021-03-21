@@ -80,6 +80,8 @@ namespace MirageTest.Scripts
             {
                 await UniTask.Yield();
             }
+            
+            TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
 
             var prefabHolder = new PrefabHolder()
             {

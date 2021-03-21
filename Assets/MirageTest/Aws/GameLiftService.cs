@@ -19,10 +19,13 @@ namespace MirageTest.Aws
     {
         RWNetworkServer _server;
         private FileWriter _fileWriter;
-
+        string matchmakingData = "{\"matchId\":\"9cf2f612-403e-4aa1-aa7a-8c5afd7e4e31\",\"matchmakingConfigurationArn\":\"arn:aws:gamelift:ap-northeast-2:153269277707:matchmakingconfiguration/randomwars-config-dev\",\"teams\":[{\"name\":\"red\",\"players\":[{\"playerId\":\"8ab64c62-8843-4c6f-b940-8f6eb736b423\",\"attributes\":{\"addTowerHp\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0},\"class\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":1.0},\"diceInfo\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"DiceId\\\":1000,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1001,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1002,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1003,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1004,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":5001,\\\"Level\\\":1,\\\"Count\\\":0}\"]},\"gameMode\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"coop\"]},\"questData\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"QuestId\\\":14,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":6,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":3,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":9,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":17,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":1000,\\\"Value\\\":0,\\\"Status\\\":1}\"]},\"score\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":5.0},\"trophy\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0},\"userName\":{\"attributeType\":\"STRING\",\"valueAttribute\":\"GUEST79515\"},\"winStreak\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0}}}]},{\"name\":\"blue\",\"players\":[{\"playerId\":\"a2400798-6df1-4261-beb1-3f2a4e1cc60f\",\"attributes\":{\"addTowerHp\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0},\"class\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":3.0},\"diceInfo\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"DiceId\\\":1000,\\\"Level\\\":2,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1001,\\\"Level\\\":2,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1002,\\\"Level\\\":3,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":2004,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":3005,\\\"Level\\\":3,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":5001,\\\"Level\\\":1,\\\"Count\\\":0}\"]},\"gameMode\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"deathmatch\"]},\"questData\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"QuestId\\\":11,\\\"Value\\\":3,\\\"Status\\\":2}\",\"{\\\"QuestId\\\":2,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":6,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":16,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":8,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":1000,\\\"Value\\\":1,\\\"Status\\\":1}\"]},\"score\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":173.0},\"trophy\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":155.0},\"userName\":{\"attributeType\":\"STRING\",\"valueAttribute\":\"GUEST78045\"},\"winStreak\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0}}}]}],\"autoBackfillMode\":null,\"autoBackfillTicketId\":null}";
+        public bool EnableTestData;
+        
         private void Start()
         {
             _server = FindObjectOfType<RWNetworkServer>();
+
             var fps = CommandLineArgs.GetInt("fps"); 
             if (fps.HasValue)
             {
@@ -45,6 +48,7 @@ namespace MirageTest.Aws
             }
 
             var logFilePath = $"{Application.persistentDataPath}/log_{transport.Port}.txt";
+            //유니티 로그파일 사용 시 플릿에서 서버가 뜰때 크래시가 난다. 그래서 별도의 파일로깅을 함. 서버 실행 시 아규먼트로 -nolog를 사용중
             _fileWriter = new FileWriter(logFilePath);
             Application.logMessageReceived += (string logString, string stackTrace, LogType type) =>
             {
@@ -73,6 +77,11 @@ namespace MirageTest.Aws
             if (Init(transport.Port, logFilePath) == false)
             {
                 Debug.LogError("GameLiftService Init 실패.");    
+            }
+            
+            if (EnableTestData)
+            {
+                ApplyMatchmakerData(matchmakingData);
             }
             
             _server.ListenAsync().Forget();
@@ -121,8 +130,6 @@ namespace MirageTest.Aws
         
         void OnGameSession(GameSession gameSession)
         {
-            TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
-            
             var outcome = GameLiftServerAPI.ActivateGameSession();
 
             if (string.IsNullOrEmpty(gameSession.GameSessionData) == false)
@@ -139,27 +146,32 @@ namespace MirageTest.Aws
 
                     // 모드 설정
                     string gameMode = attribute.dictAttributeList["gameMode"][0];
-                    _server.MatchData.SetGameMode(gameMode);
+                    _server.SetGameMode(gameMode);
                 }
             }
             else if (string.IsNullOrEmpty(gameSession.MatchmakerData) == false)
             {
-                JObject jObject = JObject.Parse(gameSession.MatchmakerData);
-                foreach (var team in (JArray)jObject["teams"])
-                {
-                    foreach (var player in (JArray)team["players"])
-                    {
-                        // 캐릭터 추가
-                        string playerId = player["playerId"].ToString();
-                        string userName = player["attributes"]["userName"]["valueAttribute"].ToString();
-                        int trophy = int.Parse(player["attributes"]["trophy"]["valueAttribute"].ToString());
-                        var listDiceInfo = player["attributes"]["diceInfo"]["valueAttribute"].ToObject<List<string>>();
-                        AddMatchPlayer(playerId, userName, trophy, listDiceInfo);
+                ApplyMatchmakerData(gameSession.MatchmakerData);
+            }
+        }
 
-                        // 모드 설정
-                        string gameMode = player["attributes"]["gameMode"]["valueAttribute"].ToObject<List<string>>()[0];
-                        _server.MatchData.SetGameMode(gameMode);
-                    }
+        void ApplyMatchmakerData(string matchmakerData)
+        {
+            JObject jObject = JObject.Parse(matchmakerData);
+            foreach (var team in (JArray)jObject["teams"])
+            {
+                foreach (var player in (JArray)team["players"])
+                {
+                    // 캐릭터 추가
+                    string playerId = player["playerId"].ToString();
+                    string userName = player["attributes"]["userName"]["valueAttribute"].ToString();
+                    int trophy = int.Parse(player["attributes"]["trophy"]["valueAttribute"].ToString());
+                    var listDiceInfo = player["attributes"]["diceInfo"]["valueAttribute"].ToObject<List<string>>();
+                    AddMatchPlayer(playerId, userName, trophy, listDiceInfo);
+
+                    // 모드 설정
+                    string gameMode = player["attributes"]["gameMode"]["valueAttribute"].ToObject<List<string>>()[0];
+                    _server.SetGameMode(gameMode);
                 }
             }
         }

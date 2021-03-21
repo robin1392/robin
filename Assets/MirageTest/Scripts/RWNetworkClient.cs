@@ -128,12 +128,13 @@ namespace MirageTest.Scripts
 
         private void OnServerException(ServerExceptionMessage arg2)
         {
+            //TODO: 크래시리틱스로 보내고 유저에게 문제 발생 팝업 띄워주고 메인으로 뱉는다.
             logger.LogError($"[ServerException] {arg2.message}");
         }
 
         private void OnDisconnected()
         {
-            
+            //TODO: 게임중에 디스커넥티드 된 경우 재접을 시도한다.
         }
 
         public void OnMatchData(MatchDataMessage obj)

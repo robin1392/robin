@@ -200,4 +200,16 @@ public class RWNetworkServer : NetworkServer
     {
         serverGameLogic.ForceEnd();
     }
+
+    public void SetGameMode(string gameMode)
+    {
+        if (gameMode == "deathmatch")
+        {
+            serverGameLogic.modeType = PLAY_TYPE.BATTLE;
+        }
+        else if (gameMode == "coop")
+        {
+            serverGameLogic.modeType = PLAY_TYPE.CO_OP;
+        }
+    }
 }
