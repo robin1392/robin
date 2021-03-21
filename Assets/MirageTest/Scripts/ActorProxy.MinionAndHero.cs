@@ -27,7 +27,6 @@ namespace MirageTest.Scripts
                 minion.transform.localRotation = Quaternion.identity;
                 minion.SetPathFinding(_seeker, _aiPath);
                 minion.Initialize();
-                minion.controller = (Client as RWNetworkClient).GetTower(ownerTag);
                 minion.castType = (DICE_CAST_TYPE) diceInfo.castType;
                 minion.id = NetId;
                 minion.isMine = IsLocalPlayerActor;

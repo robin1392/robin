@@ -10,6 +10,7 @@ using MirageTest.Scripts.Messages;
 using RandomWarsResource;
 using RandomWarsResource.Data;
 using UnityEngine;
+using Debug = ED.Debug;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -55,7 +56,7 @@ namespace MirageTest.Scripts.GameMode
             var playerInfo1 = playerInfos[0];
             playerStates[0] = SpawnPlayerState(
                 playerInfo1.UserId, playerInfo1.UserNickName, getStartSp,
-                playerInfo1.Deck.GuadianId,
+                playerInfo1.Deck.GuardianId,
                 playerInfo1.Deck.DiceInfos.Select(d => new DeckDice()
                 {
                     diceId = d.DiceId,
@@ -66,7 +67,7 @@ namespace MirageTest.Scripts.GameMode
             var playerInfo2 = playerInfos[1];
             playerStates[1] = SpawnPlayerState(
                 playerInfo2.UserId, playerInfo2.UserNickName, getStartSp,
-                playerInfo2.Deck.GuadianId,
+                playerInfo2.Deck.GuardianId,
                 playerInfo2.Deck.DiceInfos.Select(d => new DeckDice()
                 {
                     diceId = d.DiceId,
@@ -151,7 +152,7 @@ namespace MirageTest.Scripts.GameMode
                         robot.Fusion();
                     }
                     
-                    server.CreateActor(
+                    server.CreateActorWithDiceId(
                         4012,
                         actor.ownerTag,
                         actor.team,
@@ -177,6 +178,11 @@ namespace MirageTest.Scripts.GameMode
         public PlayerState GetPlayerState(string userId)
         {
             return PlayerStates.First(ps => ps.userId == userId);
+        }
+        
+        public PlayerState GetPlayerStateByTeam(byte team)
+        {
+            return PlayerStates.First(ps => ps.team == team);
         }
         
         public void OnClientDisconnected(INetworkPlayer arg0)
@@ -402,6 +408,10 @@ namespace MirageTest.Scripts.GameMode
         }
 
         public virtual void OnTowerDestroyed(ActorProxy destroyedTower)
+        {
+        }
+
+        public virtual void OnHitDamageTower(ActorProxy actorProxy)
         {
         }
     }

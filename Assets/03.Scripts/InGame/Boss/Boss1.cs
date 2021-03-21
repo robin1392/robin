@@ -158,7 +158,7 @@ public class Boss1 : Minion
         pos.y = 0;
         transform.position = pos;
         
-        if (isMine || controller.isPlayingAI) SplashDamage();
+        if (ActorProxy.isPlayingAI) SplashDamage();
         
         var effect = PoolManager.instance.ActivateObject("Effect_Support", pos);
         effect.rotation = Quaternion.identity;

@@ -64,10 +64,20 @@ namespace MirageTest.Scripts.Entities
             _enableUI = client.enableUI;
             
             SetWave(wave, wave);
+            SetState(state, state);
         }
         
         public void SetState(EGameState oldValue, EGameState newValue)
         {
+            if (_enableUI == false)
+            {
+                return;
+            }
+            
+            if (newValue == EGameState.Playing)
+            {
+                UI_InGamePopup.Get().DisableStartPopup();
+            }
         }
 
         public void SetWave(int oldValue, int newValue)

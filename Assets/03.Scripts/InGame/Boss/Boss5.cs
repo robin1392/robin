@@ -46,7 +46,7 @@ public class Boss5 : Minion
     {
         if (target != null)
         {
-            if (isMine || controller.isPlayingAI)
+            if (ActorProxy.isPlayingAI)
             {
                 // controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.FireBullet, target.id);
             }
@@ -59,7 +59,7 @@ public class Boss5 : Minion
                 attack.DOMove(ts_hit.position, 0.5f).OnComplete(() =>
                 {
                     attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
-                    if (isMine || controller.isPlayingAI) DamageToTarget(target, 0);
+                    if (ActorProxy.isPlayingAI) DamageToTarget(target, 0);
                     PoolManager.Get().ActivateObject(obj_AttackHit.name, ts_hit.position);
                 });
             }
@@ -127,7 +127,7 @@ public class Boss5 : Minion
                     PoolManager.Get().ActivateObject(obj_SkillHit.name, bullet.position);
                     bullet.GetComponent<PoolObjectAutoDeactivate>().Deactive();
 
-                    if (isMine || controller.isPlayingAI)
+                    if (ActorProxy.isPlayingAI)
                     {
                         //KZSee:
                         // var minions = ActorProxy.GetEnemies();;

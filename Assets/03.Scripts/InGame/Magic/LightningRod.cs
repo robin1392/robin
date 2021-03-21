@@ -31,11 +31,11 @@ namespace ED
         {
             base.Initialize(pIsBottomPlayer);
 
-            transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
+            // transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             list.Clear();
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+            if( ActorProxy.isPlayingAI)
             {
                 StartCoroutine(AttackCoroutine());
             }

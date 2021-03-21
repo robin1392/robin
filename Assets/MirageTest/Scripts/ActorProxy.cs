@@ -1,29 +1,24 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ED;
 using Mirage;
 using Mirage.Collections;
-using MirageTest.Scripts.GameMode;
+using Mirage.Logging;
 using MirageTest.Scripts.Messages;
-using MirageTest.Scripts.SyncAction;
 using Pathfinding;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using Channel = Mirage.Channel;
-using Debug = ED.Debug;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts
 {
     public partial class ActorProxy : NetworkBehaviour
     {
+        static readonly ILogger _logger = LogFactory.GetLogger(typeof(ActorProxy));
+        
         [SyncVar] public byte ownerTag;
         [SyncVar(hook = nameof(SetTeam))] public byte team;
         [SyncVar] public byte spawnSlot; //0 ~ 14 필드 슬롯 
@@ -49,6 +44,7 @@ namespace MirageTest.Scripts
         public BaseStat baseStat;
 
         private TDataDiceInfo _diceInfo;
+        private TDataGuardianInfo _gudianInfo;
         private bool stopped;
 
         public Seeker _seeker;
@@ -66,6 +62,19 @@ namespace MirageTest.Scripts
                 return _diceInfo;
             }
         }
+        
+        public TDataGuardianInfo gudianInfo
+        {
+            get
+            {
+                if (_gudianInfo == null)
+                {
+                    TableManager.Get().GuardianInfo.GetData(dataId, out _gudianInfo);
+                }
+
+                return _gudianInfo;
+            }
+        }
 
         public readonly Buffs BuffList = new Buffs();
         public BuffState buffState = BuffState.None;
@@ -73,7 +82,9 @@ namespace MirageTest.Scripts
         public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
         public bool isCantAI => ((buffState & BuffState.CantAI) != 0);
 
-        [System.Serializable]
+        private Action<ActorProxy> OnHitDamageOnServerCallback;
+
+        [Serializable]
         public struct Buff
         {
             public byte id;
@@ -85,7 +96,7 @@ namespace MirageTest.Scripts
             }
         }
 
-        [System.Serializable]
+        [Serializable]
         public class Buffs : SyncList<Buff>
         {
         }
@@ -137,6 +148,14 @@ namespace MirageTest.Scripts
         {
             var server = Server as RWNetworkServer;
             server.AddActorProxy(this);
+
+            if (actorType == ActorType.Tower)
+            {
+                OnHitDamageOnServerCallback = f =>
+                {
+                    server.serverGameLogic.OnHitDamageTower(this);
+                };
+            }
 
             if (Server.LocalClientActive)
             {
@@ -330,9 +349,9 @@ namespace MirageTest.Scripts
                     SpawnMagicAndInstallation();
                 }
             }
-            else if (actorType == ActorType.SummonByMinion)
+            else if (actorType == ActorType.Guardian)
             {
-                SpawnSummonActor();
+                SpawnGuardian();
             }
 
             EnableAI(client.IsPlayingAI);
@@ -455,6 +474,8 @@ namespace MirageTest.Scripts
             currentHealth -= damage;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
+            OnHitDamageOnServerCallback?.Invoke(this);
+                
             if (currentHealth <= 0)
             {
                 ServerObjectManager.Destroy(gameObject);
@@ -695,7 +716,7 @@ namespace MirageTest.Scripts
 
             var actorProxies = friends as ActorProxy[] ?? friends.ToArray();
             if (actorProxies == null || actorProxies.Length == 0) return null;
-            var selected = actorProxies.ElementAt(UnityEngine.Random.Range(0, actorProxies.Count()));
+            var selected = actorProxies.ElementAt(Random.Range(0, actorProxies.Count()));
             return selected.baseStat;
         }
 
@@ -730,7 +751,7 @@ namespace MirageTest.Scripts
 
             var actorProxies = enemies as ActorProxy[] ?? enemies.ToArray();
             if (actorProxies == null || actorProxies.Length == 0) return null;
-            var selected = actorProxies.ElementAt(UnityEngine.Random.Range(0, actorProxies.Count()));
+            var selected = actorProxies.ElementAt(Random.Range(0, actorProxies.Count()));
             return selected.baseStat;
         }
 
@@ -790,7 +811,7 @@ namespace MirageTest.Scripts
             if (IsLocalClient)
             {
                 var server = Server as RWNetworkServer;
-                server.CreateActor(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
+                server.CreateActorWithDiceId(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
                 return;
             }
             
@@ -801,7 +822,7 @@ namespace MirageTest.Scripts
         public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
         {
             var server = Server as RWNetworkServer;
-            server.CreateActor(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
+            server.CreateActorWithDiceId(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
         }
 
         public void Fusion()

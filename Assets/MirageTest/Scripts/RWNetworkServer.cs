@@ -105,7 +105,7 @@ public class RWNetworkServer : NetworkServer
 
     private void OnCreateActor(CreateActorMessage msg)
     {
-        CreateActor(msg.diceId, msg.ownerTag, msg.team, msg.inGameLevel, msg.outGameLevel, msg.positions, msg.delay);
+        CreateActorWithDiceId(msg.diceId, msg.ownerTag, msg.team, msg.inGameLevel, msg.outGameLevel, msg.positions, msg.delay);
     }
 
     private void OnPositionRelay(INetworkPlayer arg1, PositionRelayMessage arg2)
@@ -121,7 +121,7 @@ public class RWNetworkServer : NetworkServer
         }
     }
 
-    public void CreateActor(int diceId, byte ownerTag, byte team, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
+    public void CreateActorWithDiceId(int diceId, byte ownerTag, byte team, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
     {
         StartCoroutine(CreateActorCoroutine(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay));
     }
@@ -178,6 +178,38 @@ public class RWNetworkServer : NetworkServer
             actorProxy.spawnTime = (float) Time.Time;
             serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
         }
+    }
+    
+    public void CreateActorWithGuardianId(int guadianId, byte ownerTag, byte team, Vector3 position)
+    {
+        if (TableManager.Get().GuardianInfo.GetData(guadianId, out var tGuardianInfo) == false)
+        {
+            logger.LogError($"존재하지 않는 수호자 아이디 입니다. {guadianId}");
+            return;
+        }
+            
+        var isBottomCamp = team == GameConstants.BottomCamp;
+        var actorProxyPrefab = serverGameLogic.actorProxyPrefab;
+        var actorProxy = Instantiate(actorProxyPrefab, position, GameModeBase.GetRotation(isBottomCamp));
+        actorProxy.actorType = ActorType.Guardian;
+        actorProxy.dataId = guadianId;
+        actorProxy.ownerTag = ownerTag;
+        actorProxy.team = team;
+        actorProxy.spawnSlot = 0;
+        actorProxy.power = tGuardianInfo.power;
+        actorProxy.maxHealth = tGuardianInfo.maxHealth;
+        actorProxy.currentHealth = tGuardianInfo.maxHealth * 100;
+        actorProxy.effect = tGuardianInfo.effect;
+        actorProxy.attackSpeed = tGuardianInfo.attackSpeed;
+        actorProxy.spawnTime = (float) Time.Time;
+        //충분히 긴 시간 버프를 준다.
+        actorProxy.BuffList.Add(new ActorProxy.Buff()
+        {
+            id = BuffInfos.HalfDamage,
+            endTime = float.MaxValue,
+        });
+
+        serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
     }
 
     public void OnGameEnd(List<UserMatchResult> listMatchResult)

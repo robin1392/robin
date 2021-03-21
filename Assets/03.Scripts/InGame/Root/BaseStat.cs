@@ -13,34 +13,103 @@ namespace ED
         public bool isCanBeTarget = true;
         public int diceId;
         public uint id;
-        public PlayerController controller;
         public Animator animator;
         public Material[] arrMaterial;
         public BaseStat target;
 
-        [Header("Base Stat")]
-        public DICE_MOVE_TYPE targetMoveType;
+        [Header("Base Stat")] public DICE_MOVE_TYPE targetMoveType;
 
         public float power => ActorProxy.power;
         public float effect => ActorProxy.effect;
-        public float effectUpByUpgrade => ActorProxy.diceInfo.effectUpgrade;
-        public float effectUpByInGameUp => ActorProxy.diceInfo.effectInGameUp;
-        public float effectDuration => ActorProxy.diceInfo.effectDuration;
-        public float effectCooltime => ActorProxy.diceInfo.effectCooltime;
+        public float effectUpByUpgrade
+        {
+            get
+            {
+                if (ActorProxy.actorType == ActorType.Guardian)
+                {
+                    return ActorProxy.gudianInfo.effectUpgrade;
+                }
+
+                return ActorProxy.diceInfo.effectUpgrade;
+            }
+        }
+        
+        public float effectUpByInGameUp
+        {
+            get
+            {
+                if (ActorProxy.actorType == ActorType.Guardian)
+                {
+                    return ActorProxy.gudianInfo.effectInGameUp;
+                }
+
+                return ActorProxy.diceInfo.effectInGameUp;
+            }
+        }
+        
+        public float effectDuration
+        {
+            get
+            {
+                if (ActorProxy.actorType == ActorType.Guardian)
+                {
+                    return ActorProxy.gudianInfo.effectDuration;
+                }
+
+                return ActorProxy.diceInfo.effectDuration;
+            }
+        }
+
+        public float effectCooltime
+        {
+            get
+            {
+                if (ActorProxy.actorType == ActorType.Guardian)
+                {
+                    return ActorProxy.gudianInfo.effectCooltime;
+                }
+
+                return ActorProxy.diceInfo.effectCooltime;
+            }
+        }
+
         public float attackSpeed => ActorProxy.attackSpeed;
         public float moveSpeed => ActorProxy.moveSpeed;
-        public float range => ActorProxy.diceInfo.range;
-        public float searchRange => ActorProxy.diceInfo.searchRange;
+
+        public float range
+        {
+            get
+            {
+                if (ActorProxy.actorType == ActorType.Guardian)
+                {
+                    return ActorProxy.gudianInfo.range;
+                }
+
+                return ActorProxy.diceInfo.range;
+            }
+        }
+
+        public float searchRange
+        {
+            get
+            {
+                if (ActorProxy.actorType == ActorType.Guardian)
+                {
+                    return ActorProxy.gudianInfo.searchRange;
+                }
+
+                return ActorProxy.diceInfo.searchRange;
+            }
+        }
+        
         public bool isBottomCamp => ActorProxy.IsBottomCamp();
 
-        [Header("Positions")] 
-        public Transform ts_ShootingPos;
+        [Header("Positions")] public Transform ts_ShootingPos;
         public Transform ts_HitPos;
 
-        [Header("UI Link")]
-        public Image image_HealthBar;
+        [Header("UI Link")] public Image image_HealthBar;
         public Text text_Health;
-        
+
         public bool isAlive
         {
             get
@@ -49,7 +118,7 @@ namespace ED
                 {
                     return false;
                 }
-                
+
                 return ActorProxy.currentHealth > 0;
             }
         }
@@ -57,16 +126,16 @@ namespace ED
         public bool IsHpFull
         {
             get
-            { 
+            {
                 if (ActorProxy == null)
                 {
                     return false;
                 }
-                
+
                 return ActorProxy.currentHealth >= ActorProxy.maxHealth;
             }
         }
-        
+
         private static readonly string GROUND_TAG_NAME = "Minion_Ground";
         private static readonly string FLYING_TAG_NAME = "Minion_Flying";
         public bool isFlying => gameObject.CompareTag(FLYING_TAG_NAME);
@@ -82,7 +151,7 @@ namespace ED
                     case DICE_MOVE_TYPE.FLYING:
                         return 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                     case DICE_MOVE_TYPE.ALL:
-                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer") 
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer")
                                | 1 << LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                     default:
                         return 0;
@@ -96,7 +165,7 @@ namespace ED
             {
                 return false;
             }
-            
+
             if (this is Minion minion)
             {
                 return !minion.isCloacking;
@@ -104,7 +173,7 @@ namespace ED
 
             return true;
         }
-        
+
         public int friendlyLayer
         {
             get
@@ -116,7 +185,7 @@ namespace ED
                     case DICE_MOVE_TYPE.FLYING:
                         return 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                     case DICE_MOVE_TYPE.ALL:
-                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer") 
+                        return 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayer" : "TopPlayer")
                                | 1 << LayerMask.NameToLayer(isBottomCamp ? "BottomPlayerFlying" : "TopPlayerFlying");
                     default:
                         return 0;
@@ -127,7 +196,7 @@ namespace ED
         protected Vector3 networkPosition = Vector3.zero;
         protected MeshRenderer[] arrMeshRenderer;
         protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
-        
+
         public PoolObjectAutoDeactivate _poolObjectAutoDeactivate;
 
         protected virtual void Awake()
@@ -135,8 +204,10 @@ namespace ED
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
         }
 
-        protected virtual void Start() { }
-        
+        protected virtual void Start()
+        {
+        }
+
         public virtual void OnBaseStatDestroyed()
         {
             StopAllAction();
@@ -149,10 +220,10 @@ namespace ED
             {
                 return;
             }
-            
+
             image_HealthBar.color = ActorProxy.IsLocalPlayerAlly() ? Color.green : Color.red;
         }
-        
+
         public virtual void ChangeLayer(bool pIsBottomPlayer)
         {
             var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
@@ -165,13 +236,13 @@ namespace ED
             {
                 arrMeshRenderer = GetComponentsInChildren<MeshRenderer>();
             }
-            
+
             var mat = arrMaterial[isAlly ? 0 : 1];
-            
+
             foreach (var m in arrMeshRenderer)
             {
                 if (m.gameObject.CompareTag("Finish")) continue;
-                
+
                 m.material = mat;
 
                 switch (type)
@@ -225,7 +296,7 @@ namespace ED
                 }
             }
         }
-        
+
         public virtual void SetAnimationTrigger(string triggerName, uint targetId)
         {
             var targetTransform = ActorProxy.ClientObjectManager[targetId]?.transform;
@@ -238,7 +309,9 @@ namespace ED
             animator.SetTrigger(triggerName);
         }
 
-        public virtual void HitDamage(float damage) { }
+        public virtual void HitDamage(float damage)
+        {
+        }
 
         protected bool IsTargetLayer(GameObject targetObject)
         {
@@ -247,10 +320,12 @@ namespace ED
                 case DICE_MOVE_TYPE.GROUND:
                     return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer");
                 case DICE_MOVE_TYPE.FLYING:
-                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
+                    return targetObject.layer ==
+                           LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                 case DICE_MOVE_TYPE.ALL:
-                    return targetObject.layer ==  LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer") 
-                           || targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
+                    return targetObject.layer == LayerMask.NameToLayer(isBottomCamp ? "TopPlayer" : "BottomPlayer")
+                           || targetObject.layer ==
+                           LayerMask.NameToLayer(isBottomCamp ? "TopPlayerFlying" : "BottomPlayerFlying");
                 default:
                     return false;
             }

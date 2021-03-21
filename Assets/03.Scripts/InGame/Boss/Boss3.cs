@@ -38,7 +38,7 @@ public class Boss3 : Minion
         yield return new WaitForSeconds(3f);
         
         animator.SetTrigger("Attack");
-        if (isMine || controller.isPlayingAI)
+        if (ActorProxy.isPlayingAI)
         {
             var col = ts_ShootingPos.GetComponent<BoxCollider>();
             var hits = Physics.BoxCastAll(transform.position + col.center, col.size, ts_ShootingPos.forward);

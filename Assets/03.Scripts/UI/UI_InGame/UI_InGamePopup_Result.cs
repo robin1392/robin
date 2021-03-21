@@ -78,8 +78,8 @@ public class UI_InGamePopup_Result : MonoBehaviour
         var otherMatchPlayer = client.OtherMatchPlayer; 
         var localPlayerDeck = localMatchPlayer.Deck;
         var otherPlayerDeck = otherMatchPlayer.Deck;
-        winlose_My.Initialize(isWin, (perfectReward != null && perfectReward.Length > 0), winningStreak, localPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), localPlayerDeck.GuadianId, localMatchPlayer.UserNickName, localMatchPlayer.Trophy);
-        winlose_Other.Initialize(!isWin,  enemyPerfect, winningStreak, otherPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), otherPlayerDeck.GuadianId, otherMatchPlayer.UserNickName, otherMatchPlayer.Trophy);
+        winlose_My.Initialize(isWin, (perfectReward != null && perfectReward.Length > 0), winningStreak, localPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), localPlayerDeck.GuardianId, localMatchPlayer.UserNickName, localMatchPlayer.Trophy);
+        winlose_Other.Initialize(!isWin,  enemyPerfect, winningStreak, otherPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), otherPlayerDeck.GuardianId, otherMatchPlayer.UserNickName, otherMatchPlayer.Trophy);
         btn_ShowValues.interactable = false;
 
         // 경쟁전일경우

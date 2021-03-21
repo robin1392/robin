@@ -71,7 +71,7 @@ namespace ED
             foreach (var baseStatId in _listAttackSpeedUp)
             {
                 //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+                if(ActorProxy.isPlayingAI)
                 {
                     //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONFOGOFWAR ,baseStatId, false, effect);
                     // controller.ActionFlagOfWar(baseStatId, false, effect);
@@ -88,7 +88,7 @@ namespace ED
         private void OnTriggerEnter(Collider collision)
         {
             //if (_isTriggerOn && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) && IsFriendlyLayer(collision.gameObject))
-            if (_isTriggerOn && ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI) && IsFriendlyLayer(collision.gameObject))
+            if (_isTriggerOn && ActorProxy.isPlayingAI && IsFriendlyLayer(collision.gameObject))
             {
                 var m = collision.GetComponentInParent<Minion>();
 
@@ -99,7 +99,7 @@ namespace ED
                     _listAttackSpeedUp.Add(m.id);
                     
                     //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+                    if( ActorProxy.isPlayingAI)
                     {
                         //KZSee:
                         // controller.ActionFlagOfWar(m.id, true, effect);
@@ -112,7 +112,7 @@ namespace ED
         {
             
             //if (_isTriggerOn && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) && IsFriendlyLayer(other.gameObject))
-            if (_isTriggerOn && ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI) && IsFriendlyLayer(other.gameObject))
+            if (ActorProxy.isPlayingAI && IsFriendlyLayer(other.gameObject))
             {
                 var m = other.GetComponentInParent<Minion>();
 
@@ -122,7 +122,7 @@ namespace ED
                 {
                     _listAttackSpeedUp.Remove(m.id);
                     
-                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+                    if(ActorProxy.isPlayingAI )
                     {
                         //KZSee:
                         //controller.ActionFlagOfWar(m.id, false, effect);

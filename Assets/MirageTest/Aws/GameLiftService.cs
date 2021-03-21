@@ -200,7 +200,7 @@ namespace MirageTest.Aws
 
             // 수호자
             var matchGuadianInfo = JsonConvert.DeserializeObject<MatchDiceInfo>(listDiceInfo[listDiceInfo.Count - 1]);
-            deckInfo.GuadianId = matchGuadianInfo.DiceId;
+            deckInfo.GuardianId = matchGuadianInfo.DiceId;
 
             // 플레이어 추가
             _server.MatchData.AddPlayerInfo(playerId, userName, trophy, deckInfo);

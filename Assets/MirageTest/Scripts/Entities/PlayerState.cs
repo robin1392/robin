@@ -33,7 +33,7 @@ namespace MirageTest.Scripts.Entities
         [SyncVar(hook = nameof(SetGetDiceCount))]
         public int getDiceCount;
 
-        [SyncVar] public int guadianId;
+        [SyncVar] public int guardianId;
         public readonly Deck Deck = new Deck();
         public readonly Field Field = new Field();
 
@@ -57,7 +57,7 @@ namespace MirageTest.Scripts.Entities
             this.sp = sp;
             this.ownerTag = tag;
             this.spGrade = 0;
-            this.guadianId = guadianId;
+            this.guardianId = guadianId;
 
             foreach (var deckDice in deck)
             {

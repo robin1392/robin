@@ -103,7 +103,6 @@ namespace ED
             IsNetwork =  matchInfo != null;
             if (IsNetwork)
             {
-                UI_InGamePopup.Get().SetViewWaiting(true);
                 StartMatchGame(matchInfo).Forget();
             }
             else

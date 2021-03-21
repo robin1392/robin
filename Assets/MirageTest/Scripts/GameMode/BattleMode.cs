@@ -21,11 +21,15 @@ namespace MirageTest.Scripts.GameMode
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(BattleMode));
         private readonly int endWave;
+        private readonly int towerHpForGudianSpawn;
+        public bool bottomGudianSpawned;
+        public bool topGudianSpawned;
 
         public BattleMode(PrefabHolder prefabHolder, ServerObjectManager serverObjectManager) : base(prefabHolder,
             serverObjectManager)
         {
             endWave = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.EndWave].value;
+            towerHpForGudianSpawn = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
         }
 
         public override async UniTask OnBeforeGameStart()
@@ -130,6 +134,36 @@ namespace MirageTest.Scripts.GameMode
             }
 
             Spawn(actorProxies).Forget();
+        }
+
+        public override void OnHitDamageTower(ActorProxy actorProxy)
+        {
+            if (actorProxy.currentHealth > towerHpForGudianSpawn)
+            {
+                return;
+            }
+            
+            if (actorProxy.team == GameConstants.BottomCamp)
+            {
+                if (bottomGudianSpawned)
+                {
+                    return;
+                }
+
+                bottomGudianSpawned = true;
+            }
+            else if (actorProxy.team == GameConstants.TopCamp)
+            {
+                if (topGudianSpawned)
+                {
+                    return;
+                }
+
+                topGudianSpawned = true;
+            }
+            
+            var playerState = GetPlayerStateByTeam(actorProxy.team);
+            Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team, actorProxy.transform.position);
         }
 
         private async UniTask Spawn(List<ActorProxy> actorProxies)
