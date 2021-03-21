@@ -50,6 +50,8 @@ public class PlayerProxy : NetworkBehaviour
         var server = Server as RWNetworkServer;
         server.RemovePlayerProxy(this);
 
+        logger.Log($"Client Disconnect: {userId}");
+        
         if (Server.LocalClientActive)
         {
             OnStopClient();
