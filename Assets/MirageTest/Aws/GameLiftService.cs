@@ -1,12 +1,14 @@
 ﻿#if UNITY_EDITOR || UNITY_STANDALONE_LINUX
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting;
 using Aws.GameLift.Server;
 using Aws.GameLift.Server.Model;
 using Cysharp.Threading.Tasks;
 using Mirage.KCP;
 using MirageTest.Scripts;
 using MirageTest.Scripts.Logging;
+using MirageTest.Scripts.Messages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -48,6 +50,18 @@ namespace MirageTest.Aws
             {
                 _fileWriter.WriteLine($"[{type.ToString()}] {logString}");
                 _fileWriter.WriteLine(stackTrace);
+                if (type == LogType.Exception)
+                {
+                    foreach (var player in _server.Players)
+                    {
+                        player.Send(new ServerExceptionMessage()
+                        {
+                            message = logString,  
+                        });
+                    }
+                    
+                    GameLiftServerAPI.ProcessEnding();
+                }
             };
 
             var hasArg = CommandLineArgs.HasArg("table_test");

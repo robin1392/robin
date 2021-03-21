@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Linq;
+#if UNITY_EDITOR || UNITY_STANDALONE_LINUX
+using Aws.GameLift.Server;
+#endif
 using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
 using Mirage;
 using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.GameMode;
-using RandomWarsResource.Data;
 using Service.Template;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace MirageTest.Scripts
 {
@@ -135,9 +134,7 @@ namespace MirageTest.Scripts
         
         private void EndGameSession()
         {
-            logger.LogError($"EndGameSession");
-            
-            server.Disconnect();
+            logger.Log($"EndGameSession");
             var objs = _serverObjectManager.SpawnedObjects.Values.ToArray();
             foreach (var obj in objs)
             {
@@ -145,6 +142,12 @@ namespace MirageTest.Scripts
             }
 
             _gameMode?.End();
+            
+            server.Disconnect();
+            
+#if UNITY_EDITOR || UNITY_STANDALONE_LINUX
+            GameLiftServerAPI.ProcessEnding();
+#endif
         }
         
         private async UniTask WaitForPlayers()

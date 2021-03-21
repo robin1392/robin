@@ -116,12 +116,24 @@ namespace MirageTest.Scripts
 
             _clientObjectManager = GetComponent<ClientObjectManager>();
             Connected.AddListener(OnConnectedRW);
+            Disconnected.AddListener(OnDisconnected);
         }
 
         private void OnConnectedRW(INetworkPlayer arg0)
         {
             arg0.RegisterHandler<PositionRelayMessage>(OnPositionRelay);
             arg0.RegisterHandler<MatchDataMessage>(OnMatchData);
+            arg0.RegisterHandler<ServerExceptionMessage>(OnServerException);
+        }
+
+        private void OnServerException(ServerExceptionMessage arg2)
+        {
+            logger.LogError($"[ServerException] {arg2.message}");
+        }
+
+        private void OnDisconnected()
+        {
+            
         }
 
         public void OnMatchData(MatchDataMessage obj)

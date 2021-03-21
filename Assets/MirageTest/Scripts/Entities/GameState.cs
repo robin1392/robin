@@ -17,6 +17,7 @@ namespace MirageTest.Scripts.Entities
         
         private float _waveInterval;
         private float _waveRemainTime;
+        private bool _enableUI;
 
         [SyncVar(hook = nameof(SetMasterOwnerTag))] public byte masterOwnerTag;
         
@@ -60,6 +61,8 @@ namespace MirageTest.Scripts.Entities
         {
             var client = Client as RWNetworkClient;
             client.GameState = this;
+            _enableUI = client.enableUI;
+            
             SetWave(wave, wave);
         }
         
@@ -69,6 +72,11 @@ namespace MirageTest.Scripts.Entities
 
         public void SetWave(int oldValue, int newValue)
         {
+            if (_enableUI == false)
+            {
+                return;
+            }
+            
             WaveEvent.Invoke(newValue);
             
             WorldUIManager.Get().SetWave(newValue);
@@ -108,6 +116,12 @@ namespace MirageTest.Scripts.Entities
             }
             
             _waveRemainTime -= Time.deltaTime;
+            
+            if (_enableUI == false)
+            {
+                return;
+            }
+            
             WorldUIManager.Get().SetSpawnTime( 1 - (_waveRemainTime / _waveInterval));
             WorldUIManager.Get().SetTextSpawnTime(_waveRemainTime);
         }

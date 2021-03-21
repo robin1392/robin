@@ -347,6 +347,11 @@ namespace MirageTest.Scripts.Entities
 
         void AddSpByWaveInternal(int sp)
         {
+            if (EnableUI == false)
+            {
+                return;
+            }
+            
             if (IsLocalPlayerState)
             {
                 WorldUIManager.Get().AddSP(sp);
