@@ -81,7 +81,8 @@ namespace MirageTest.Scripts
                 await UniTask.Yield();
             }
 
-            var tableDataPath = $"{Application.dataPath}/../TableData/";
+            var port = GetComponent<KcpTransport>().Port;
+            var tableDataPath = $"{Application.dataPath}/../../TableData_{port}/";
             TableManager.Get().Init(tableDataPath);
 
             var prefabHolder = new PrefabHolder()
