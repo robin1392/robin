@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Aws.GameLift.Server;
 using Aws.GameLift.Server.Model;
+using Cysharp.Threading.Tasks;
 using Mirage.KCP;
 using MirageTest.Scripts;
 using Newtonsoft.Json;
@@ -49,6 +50,8 @@ namespace MirageTest.Aws
             {
                 Debug.LogError("GameLiftService Init 실패.");    
             }
+            
+            _server.ListenAsync().Forget();
         }
         
         public bool Init(int port)
