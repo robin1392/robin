@@ -24,8 +24,7 @@ namespace MirageTest.Scripts
         public ServerObjectManager ServerObjectManager => _serverObjectManager;
         
         private readonly int _gamePlayerCount = 2;
-
-        //TODO: State를 Server가 가지고 있는 것이 좋을 듯 하다. 
+        
         public GameState gameStatePrefab;
         public PlayerState playerStatePrefab;
         public ActorProxy actorProxyPrefab;
@@ -130,7 +129,7 @@ namespace MirageTest.Scripts
             }
             else
             {
-                await _gameMode.UpdateLogic();    
+                await _gameMode.UpdateLogic();
             }
         }
         

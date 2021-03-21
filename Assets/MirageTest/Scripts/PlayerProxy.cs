@@ -247,7 +247,7 @@ public class PlayerProxy : NetworkBehaviour
         EndGameOnServer(result);
     }
 
-    [ServerRpc]
+    [ClientRpc]
     public void EndGameOnServer(UserMatchResult result)
     {
         EndGameInternal(result);
