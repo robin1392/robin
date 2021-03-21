@@ -76,6 +76,12 @@ namespace MirageTest.Aws
             {
                 TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             }
+            
+            var hasMatchDataArg = CommandLineArgs.HasArg("matchdata_test");
+            if (hasMatchDataArg)
+            {
+                EnableTestData = true;
+            }
 
             if (Init(transport.Port, logFilePath) == false)
             {
