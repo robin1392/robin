@@ -5,6 +5,7 @@ using Aws.GameLift.Server;
 #endif
 using Cysharp.Threading.Tasks;
 using Mirage;
+using Mirage.KCP;
 using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.GameMode;
