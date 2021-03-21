@@ -197,8 +197,13 @@ PrefabInstance:
         type: 3}
       propertyPath: actorProxyPrefab
       value: 
-      objectReference: {fileID: -9073835943446716441, guid: b3fcd3244a9d8489eaa1365f9f676d6e,
+      objectReference: {fileID: -9073835943446716441, guid: f631769355c16485a9c68f830ed15524,
         type: 3}
+    - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: modeType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832457519157374790, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: m_Name
@@ -209,6 +214,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4832457519157374793, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: NetworkSceneManager
+      value: 
+      objectReference: {fileID: 6543369002875930634}
     - target: {fileID: 4832457519157374794, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -617,3 +627,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d19bafb6a326f4fdfb9c693f850f595c, type: 3}
+--- !u!114 &6543369002875930634 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6877902827145461394, guid: d19bafb6a326f4fdfb9c693f850f595c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6543369002875930633}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30967dfd80dbb6c46a270a64ebecb951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

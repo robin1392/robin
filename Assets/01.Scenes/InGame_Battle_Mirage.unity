@@ -333,17 +333,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   playType: 0
-  pref_Player: {fileID: 5883888954613411290, guid: 002ec50b4fca7424dbc66697ef6cb83b,
-    type: 3}
-  pref_AI: {fileID: 5883888954613411290, guid: a7b795ec78b3b4df688a07fa8e27c7a9, type: 3}
   ts_Lights: {fileID: 1981603873}
   ts_StadiumTop: {fileID: 8136603715242153752}
   ts_NexusHealthBar: {fileID: 242093596}
-  isAIMode: 1
-  isGamePlaying: 0
-  playerController: {fileID: 0}
-  startSpawnTime: 10
-  spawnTime: 20
 --- !u!114 &225455321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3312,7 +3304,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 158.5125
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
