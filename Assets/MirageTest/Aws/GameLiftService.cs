@@ -6,6 +6,7 @@ using Aws.GameLift.Server.Model;
 using Cysharp.Threading.Tasks;
 using Mirage.KCP;
 using MirageTest.Scripts;
+using MirageTest.Scripts.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace MirageTest.Aws
     public class GameLiftService : MonoBehaviour
     {
         RWNetworkServer _server;
+        private FileWriter _fileWriter;
 
         private void Start()
         {
@@ -40,13 +42,21 @@ namespace MirageTest.Aws
                 Debug.Log($"port from CommandLineArgs - {portFromArgs.Value}");
             }
 
+            var logFilePath = $"{Application.persistentDataPath}/log_{transport.Port}.txt";
+            _fileWriter = new FileWriter(logFilePath);
+            Application.logMessageReceived += (string logString, string stackTrace, LogType type) =>
+            {
+                _fileWriter.WriteLine($"[{type.ToString()}] {logString}");
+                _fileWriter.WriteLine(stackTrace);
+            };
+
             var hasArg = CommandLineArgs.HasArg("table_test");
             if (hasArg)
             {
                 TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             }
 
-            if (Init(transport.Port) == false)
+            if (Init(transport.Port, logFilePath) == false)
             {
                 Debug.LogError("GameLiftService Init 실패.");    
             }
@@ -54,7 +64,7 @@ namespace MirageTest.Aws
             _server.ListenAsync().Forget();
         }
         
-        public bool Init(int port)
+        public bool Init(int port, string logFilePath)
         {
             var initSDKOutcome = GameLiftServerAPI.InitSDK();
             if (initSDKOutcome.Success == false)
@@ -71,7 +81,7 @@ namespace MirageTest.Aws
                port,
                new LogParameters(new List<string>()
                {
-                  $"/local/game/game_{port - 7800}/log_{port}.txt",
+                   logFilePath,
                })
             );
 
@@ -166,6 +176,7 @@ namespace MirageTest.Aws
 
             // 플레이어 추가
             _server.MatchData.AddPlayerInfo(playerId, userName, trophy, deckInfo);
+            _fileWriter.WriteLine($"플레이어 추가:{playerId} name:{userName}");
         }
         
         void OnProcessTerminate()
