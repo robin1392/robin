@@ -33,7 +33,7 @@ public class UI_ObjectHealthBar : MonoBehaviour
         rts_HPBar.gameObject.SetActive(true);
         if (rts_HPBar.parent == transform)
         {
-            rts_HPBar.parent = WorldUIManager.Get().canvas_UnitHPBar.transform;
+            rts_HPBar.SetParent(WorldUIManager.Get().canvas_UnitHPBar.transform, true);
             rts_HPBar.localRotation = Quaternion.identity;
         }
     }
