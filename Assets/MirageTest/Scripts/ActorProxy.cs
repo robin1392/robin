@@ -599,8 +599,16 @@ namespace MirageTest.Scripts
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, position, 0.5f);
-                    transform.LookAt(position);
+                    if (Vector3.SqrMagnitude(transform.position - position) <= 0.01f)
+                    {
+                        return;
+                    }
+                    
+                    transform.position = Vector3.Lerp(transform.position, position, 
+                        Time.deltaTime * moveSpeed * 10f);
+                    transform.rotation = Quaternion.Lerp(transform.rotation,
+                        Quaternion.LookRotation((position - transform.position).normalized),
+                        Time.deltaTime * moveSpeed * 10f);
 
                     if (baseStat.animator != null)
                     {
