@@ -76,11 +76,6 @@ namespace MirageTest.Scripts.Entities
             {
                 return;
             }
-            
-            if (newValue == EGameState.Playing)
-            {
-                UI_InGamePopup.Get().DisableStartPopup();
-            }
         }
 
         public void SetWave(int oldValue, int newValue)

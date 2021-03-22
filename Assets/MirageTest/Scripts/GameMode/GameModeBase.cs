@@ -34,7 +34,7 @@ namespace MirageTest.Scripts.GameMode
             {
                 if (GameState == null)
                 {
-                    return false;
+                    return true;
                 }
 
                 return GameState.state == EGameState.End;

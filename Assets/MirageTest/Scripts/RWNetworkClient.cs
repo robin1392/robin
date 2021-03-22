@@ -197,6 +197,8 @@ namespace MirageTest.Scripts
         {
             await UniTask.Yield();
             
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+            
             UI_InGamePopup.Get().InitUIElement(Player1, Player2);
             
             await UniTask.Delay(TimeSpan.FromSeconds(2.0f));
