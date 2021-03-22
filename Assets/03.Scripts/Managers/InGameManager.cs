@@ -240,7 +240,7 @@ namespace ED
         }
 
 
-        public void EndGame(MatchReport result)
+        public void EndGame(Global.PLAY_TYPE playType, MatchPlayer local, MatchPlayer other, MatchReport result)
         {
             UI_InGamePopup.Get().SetViewWaiting(false);
             
@@ -255,18 +255,18 @@ namespace ED
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
             UI_InGame.Get().ClearUI();
 
-            StartCoroutine(EndGameCoroutine(result));
+            StartCoroutine(EndGameCoroutine(playType, local, other, result));
         }
 
         //KZSee: 결과처리
-        IEnumerator EndGameCoroutine(MatchReport result)
+        IEnumerator EndGameCoroutine(Global.PLAY_TYPE playType, MatchPlayer localPlayer, MatchPlayer otherPlayer, MatchReport result)
         {
             yield return new WaitForSeconds(4f);
 
             //KZSee: 이벤트로그
             //playerController.SendEventLog_BatCheck();
-
-            UI_InGamePopup.Get().SetPopupResult(true, result.WinLose, result.IsPerfect, result.WinStreak, result.NormalRewards, result.StreakRewards, result.PerfectRewards);
+            
+            UI_InGamePopup.Get().SetPopupResult(playType, localPlayer, otherPlayer, true, result.WinLose, result.WinStreak, result.IsPerfect, result.NormalRewards, result.StreakRewards, result.PerfectRewards);
 
             SoundManager.instance.Play(result.WinLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }

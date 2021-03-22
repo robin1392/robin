@@ -7,15 +7,15 @@ namespace MirageTest.Scripts
 {
     public class MatchReport
     {
-        public string UserId { get; set; }
-        public GAME_RESULT GameResult { get; set; }
-        public short WinStreak { get; set; }
-        public List<ItemBaseInfo> NormalRewards { get; set; }
-        public List<ItemBaseInfo> StreakRewards { get; set; }
-        public List<ItemBaseInfo> PerfectRewards { get; set; }
-        public ItemBaseInfo LoseReward { get; set; }
-        public List<QuestCompleteParam> QuestCompleteParam { get; set; }
-        public bool IsPerfect { get; set; }
+        public string UserId;
+        public GAME_RESULT GameResult;
+        public short WinStreak;
+        public List<ItemBaseInfo> NormalRewards;
+        public List<ItemBaseInfo> StreakRewards;
+        public List<ItemBaseInfo> PerfectRewards;
+        public ItemBaseInfo LoseReward;
+        public List<QuestCompleteParam> QuestCompleteParam;
+        public bool IsPerfect;
 
         public bool WinLose
         {

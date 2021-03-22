@@ -60,6 +60,7 @@ public class RWNetworkServer : NetworkServer
     {
         arg0.Send(new MatchDataMessage()
         {
+            PlayType = serverGameLogic.modeType,
             Player1 = MatchData.PlayerInfos[0],
             Player2 = MatchData.PlayerInfos[1],
         });
@@ -237,7 +238,8 @@ public class RWNetworkServer : NetworkServer
             {
                 continue;
             }
-            playerProxy.EndGame(report);
+            
+            playerProxy.EndGame(playerProxy.ConnectionToClient, report);
         }
     }
 

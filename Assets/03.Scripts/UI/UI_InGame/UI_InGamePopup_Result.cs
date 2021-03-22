@@ -60,7 +60,9 @@ public class UI_InGamePopup_Result : MonoBehaviour
 
     private int[,] rewards = new int[3,5];
     
-    public void Initialize(bool winLose, bool perfectGame, int winningStreak, List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward)
+    public void Initialize(Global.PLAY_TYPE playType, MatchPlayer localMatchPlayer, MatchPlayer otherMatchPlayer,  
+        bool winLose, int winningStreak, bool perfectGame,
+        List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward)
     {
         if (TutorialManager.isTutorial)
         {
@@ -68,12 +70,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
         }
 
         isWin = winLose;
-
-        var client = FindObjectOfType<RWNetworkClient>();
-        var enemyPlayerState = client.GetEnemyPlayerState();
-        var enemyTower  = client.GetTower(enemyPlayerState.ownerTag);
-        var localMatchPlayer = client.LocalMatchPlayer;
-        var otherMatchPlayer = client.OtherMatchPlayer; 
+        
         var localPlayerDeck = localMatchPlayer.Deck;
         var otherPlayerDeck = otherMatchPlayer.Deck;
         winlose_My.Initialize(isWin, perfectGame, winningStreak, localPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), localPlayerDeck.GuardianId, localMatchPlayer.UserNickName, localMatchPlayer.Trophy);
@@ -81,7 +78,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
         btn_ShowValues.interactable = false;
 
         // 경쟁전일경우
-        if (NetworkManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+        if (playType == Global.PLAY_TYPE.BATTLE)
         {
             int normalGold = 0;
             int normalTrophy = 0;

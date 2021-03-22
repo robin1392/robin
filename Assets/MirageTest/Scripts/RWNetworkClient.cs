@@ -47,6 +47,8 @@ namespace MirageTest.Scripts
             }
         }
 
+        
+
         private ClientObjectManager _clientObjectManager;
         
         public string LocalUserId;
@@ -57,6 +59,7 @@ namespace MirageTest.Scripts
         public MatchPlayer Player2;
         public MatchPlayer LocalMatchPlayer;
         public MatchPlayer OtherMatchPlayer;
+        public Global.PLAY_TYPE PlayType;
 
         public static RWNetworkClient Get()
         {
@@ -146,10 +149,10 @@ namespace MirageTest.Scripts
             //TODO: 게임중에 디스커넥티드 된 경우 재접을 시도한다.
         }
 
-        public void OnMatchData(MatchDataMessage obj)
+        public void OnMatchData(MatchDataMessage msg)
         {
-            Player1 = obj.Player1;
-            Player2 = obj.Player2;
+            Player1 = msg.Player1;
+            Player2 = msg.Player2;
 
             if (Player1.UserId == LocalUserId)
             {
@@ -166,13 +169,16 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
+            PlayType = msg.PlayType == PLAY_TYPE.CO_OP ? Global.PLAY_TYPE.COOP : Global.PLAY_TYPE.BATTLE;
+                
             ShowMatchPopup().Forget();
         }
 
         async UniTask ShowMatchPopup()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+            await UniTask.Yield();
+            
             UI_InGamePopup.Get().InitUIElement(Player1, Player2);
             
             await UniTask.Delay(TimeSpan.FromSeconds(2.0f));

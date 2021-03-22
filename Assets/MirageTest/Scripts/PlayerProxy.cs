@@ -238,7 +238,7 @@ public class PlayerProxy : NetworkBehaviour
         playerState.UpgradSp();
     }
 
-    public void EndGame(MatchReport result)
+    public void EndGame(INetworkPlayer player, MatchReport result)
     {
         if (IsLocalClient)
         {
@@ -246,11 +246,11 @@ public class PlayerProxy : NetworkBehaviour
             return;
         }
 
-        EndGameOnServer(result);
+        EndGameOnClient(player, result);
     }
 
-    [ClientRpc]
-    public void EndGameOnServer(MatchReport result)
+    [ClientRpc(target = Mirage.Client.Player)]
+    public void EndGameOnClient(INetworkPlayer player, MatchReport result)
     {
         EndGameInternal(result);
     }
@@ -258,6 +258,11 @@ public class PlayerProxy : NetworkBehaviour
     void EndGameInternal(MatchReport endNoti)
     {
         var client = Client as RWNetworkClient;
+        if (client.enableUI == false)
+        {
+            return;
+        }
+        
         foreach (var actorProxy in client.ActorProxies)
         {
             actorProxy?.baseStat?.StopAllAction();
@@ -271,7 +276,7 @@ public class PlayerProxy : NetworkBehaviour
         
         SoundManager.instance.StopBGM();
         UI_InGame.Get().ClearUI();
-        InGameManager.Get().EndGame(endNoti);
+        InGameManager.Get().EndGame(client.PlayType, client.LocalMatchPlayer, client.OtherMatchPlayer, endNoti);
     }
     
     public void GiveUp()

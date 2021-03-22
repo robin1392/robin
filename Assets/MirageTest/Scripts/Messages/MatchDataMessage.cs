@@ -4,5 +4,6 @@ namespace MirageTest.Scripts.Messages
     {
         public MatchPlayer Player1;
         public MatchPlayer Player2;
+        public PLAY_TYPE PlayType;
     }
 }

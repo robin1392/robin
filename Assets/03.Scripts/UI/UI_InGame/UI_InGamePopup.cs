@@ -12,24 +12,22 @@ using Service.Core;
 
 public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 {
-    
-    
-    
     #region ui element variable
+
     public GameObject popup_Waiting;
     public UI_InGamePopup_Result popup_Result;
+
     public GameObject obj_Low_HP_Effect;
     //[Header("DEV UI")] 
 
     public GameObject obj_Indicator;
 
-    [Header("Start popup")] 
-    public GameObject obj_Start;
+    [Header("Start popup")] public GameObject obj_Start;
     public UI_WinLose winlose_My;
     public UI_WinLose winlose_Other;
     public RectTransform rts_Fight;
-    #endregion
 
+    #endregion
 
 
     #region unity base
@@ -46,12 +44,12 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     public override void OnDestroy()
     {
         DestroyElement();
-        
+
         base.OnDestroy();
     }
 
     #endregion
-    
+
     #region init destroy
 
     public void InitUIElement(MatchPlayer player1, MatchPlayer player2)
@@ -83,21 +81,27 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void DestroyElement()
     {
-        
     }
+
     #endregion
 
-    
-    
+
     public void SetViewWaiting(bool view)
     {
         popup_Waiting.SetActive(view);
     }
 
-    public void SetPopupResult(bool view, bool perfect, bool winLose, int winningStreak, List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward)
+    public void SetPopupResult(
+        Global.PLAY_TYPE playType, MatchPlayer localPlayer, MatchPlayer otherPlayer,
+        bool view, bool winLose, int winningStreak, bool perfect,
+        List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward)
     {
         popup_Result.gameObject.SetActive(view);
-        if (view) popup_Result.Initialize(winLose,  perfect, winningStreak, normalReward, streakReward, perfectReward);
+        if (view)
+            popup_Result.Initialize(playType, localPlayer, otherPlayer, 
+                winLose, winningStreak, perfect,
+                normalReward, streakReward, perfectReward);
+        
         ViewGameIndicator(false);
         ViewLowHP(false);
         SetViewWaiting(false);
