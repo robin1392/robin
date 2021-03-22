@@ -59,6 +59,16 @@ namespace MirageTest.Aws
                 {
                     foreach (var player in _server.Players)
                     {
+                        if (player == null)
+                        {
+                            continue;
+                        }
+
+                        if (player.Identity == null)
+                        {
+                            continue;
+                        }
+                        
                         player.Send(new ServerExceptionMessage()
                         {
                             message = logString,  

@@ -113,6 +113,16 @@ public class RWNetworkServer : NetworkServer
     {
         foreach (var player in Players)
         {
+            if (player == null)
+            {
+                continue;
+            }
+
+            if (player.Identity == null)
+            {
+                continue;
+            }
+            
             if (player == arg1)
             {
                 continue;

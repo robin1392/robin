@@ -22,6 +22,16 @@ namespace MirageTest.Scripts
         {
             foreach (var player in Server.Players)
             {
+                if (player == null)
+                {
+                    continue;
+                }
+
+                if (player.Identity == null)
+                {
+                    continue;
+                }
+                
                 if (senderNetId == player.Identity.NetId)
                 {
                     continue;
@@ -78,6 +88,11 @@ namespace MirageTest.Scripts
             foreach (var player in Server.Players)
             {
                 if (player == null)
+                {
+                    continue;
+                }
+
+                if (player.Identity == null)
                 {
                     continue;
                 }
@@ -173,6 +188,16 @@ namespace MirageTest.Scripts
         {
             foreach (var player in Server.Players)
             {
+                if (player == null)
+                {
+                    continue;
+                }
+
+                if (player.Identity == null)
+                {
+                    continue;
+                }
+                
                 if (senderNetId == player.Identity.NetId)
                 {
                     continue;
@@ -225,14 +250,24 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority =  false)]
         public void SyncActionWithTargetOnServer(uint senderNetId, string actionTypeHash, uint targetNetId)
         {
-            foreach (var con in Server.Players)
+            foreach (var player in Server.Players)
             {
-                if (senderNetId == con.Identity.NetId)
+                if (player == null)
                 {
                     continue;
                 }
 
-                SyncActionWithTargetOnClient(con, actionTypeHash, targetNetId);
+                if (player.Identity == null)
+                {
+                    continue;
+                }
+                
+                if (senderNetId == player.Identity.NetId)
+                {
+                    continue;
+                }
+
+                SyncActionWithTargetOnClient(player, actionTypeHash, targetNetId);
             }
         }
         
@@ -263,6 +298,16 @@ namespace MirageTest.Scripts
         {
             foreach (var player in Server.Players)
             {
+                if (player == null)
+                {
+                    continue;
+                }
+
+                if (player.Identity == null)
+                {
+                    continue;
+                }
+                
                 if (senderNetId == player.Identity.NetId)
                 {
                     continue;
@@ -293,6 +338,16 @@ namespace MirageTest.Scripts
         {
             foreach (var player in Server.Players)
             {
+                if (player == null)
+                {
+                    continue;
+                }
+
+                if (player.Identity == null)
+                {
+                    continue;
+                }
+                
                 if (senderNetId == player.Identity.NetId)
                 {
                     continue;
