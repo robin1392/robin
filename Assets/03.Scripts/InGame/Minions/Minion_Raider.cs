@@ -130,7 +130,7 @@ namespace ED
 
             if (actorProxy.isPlayingAI == false) yield break;
             
-            if (targetActorProxy != null && targetActorProxy.baseStat.CanBeTarget())
+            if (targetActorProxy != null && targetActorProxy.baseStat != null && targetActorProxy.baseStat.CanBeTarget())
             {
                 targetActorProxy.AddBuff(BuffInfos.Sturn, 10f);
             }
