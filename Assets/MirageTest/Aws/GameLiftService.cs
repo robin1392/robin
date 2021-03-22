@@ -166,6 +166,7 @@ namespace MirageTest.Aws
                     // 모드 설정
                     string gameMode = attribute.dictAttributeList["gameMode"][0];
                     _server.SetGameMode(gameMode);
+                    _server.serverGameLogic.isAIMode = true;
                 }
             }
             else if (string.IsNullOrEmpty(gameSession.MatchmakerData) == false)

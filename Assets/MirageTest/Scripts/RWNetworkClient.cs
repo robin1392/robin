@@ -9,6 +9,7 @@ using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.Messages;
 using RandomWarsProtocol;
+using Service.Template;
 using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 
@@ -173,6 +174,15 @@ namespace MirageTest.Scripts
         {
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
             UI_InGamePopup.Get().InitUIElement(Player1, Player2);
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(2.0f));
+
+            while (GameState != null && GameState.state != EGameState.Playing)
+            {
+                await UniTask.Yield();
+            }
+            
+            UI_InGamePopup.Get().DisableStartPopup();
         }
 
         private void OnPositionRelay(PositionRelayMessage msg)
