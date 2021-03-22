@@ -117,7 +117,7 @@ namespace ED
             raider.animator.SetTrigger(AnimationHash.Skill);
 
             Transform ts = actorProxy.transform;
-            while (targetActorProxy != null && targetActorProxy.baseStat.isAlive)
+            while (targetActorProxy != null && targetActorProxy.baseStat != null && targetActorProxy.baseStat.isAlive)
             {
                 ts.LookAt(targetActorProxy.transform);
                 ts.position += (targetActorProxy.transform.position - ts.position).normalized * (raider.moveSpeed * 5f) * Time.deltaTime;

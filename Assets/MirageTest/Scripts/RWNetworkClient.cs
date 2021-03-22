@@ -72,7 +72,7 @@ namespace MirageTest.Scripts
         {
             lastConnectServerIp = serverIp;
             GetComponent<KcpTransport>().Port = port;
-            logger.LogError($"[RWConnectAsync] ip:{serverIp} port:{port}");
+            logger.Log($"[RWConnectAsync] ip:{serverIp} port:{port}");
             
             var retryCount = 3;
             var count = 0;

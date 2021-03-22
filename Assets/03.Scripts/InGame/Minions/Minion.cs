@@ -394,7 +394,7 @@ namespace ED
             }
             
 #if UNITY_EDITOR
-            if (target == null)
+            if (target != null)
             {
                 Debug.DrawLine(transform.position + Vector3.up * 0.1f,
                     (transform.position + Vector3.up * 0.1f) +
