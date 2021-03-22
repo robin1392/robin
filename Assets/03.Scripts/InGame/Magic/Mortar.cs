@@ -119,8 +119,8 @@ namespace ED
             
             while (t < 0.5f)
             {
-                if (targetActorProxy == null && 
-                    targetActorProxy.baseStat == null &&
+                if (targetActorProxy == null || 
+                    targetActorProxy.baseStat == null ||
                     targetActorProxy.baseStat.CanBeTarget() == false)
                 {
                     yield break;
