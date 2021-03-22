@@ -238,7 +238,7 @@ public class PlayerProxy : NetworkBehaviour
         playerState.UpgradSp();
     }
 
-    public void EndGame(UserMatchResult result)
+    public void EndGame(MatchReport result)
     {
         if (IsLocalClient)
         {
@@ -250,12 +250,12 @@ public class PlayerProxy : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void EndGameOnServer(UserMatchResult result)
+    public void EndGameOnServer(MatchReport result)
     {
         EndGameInternal(result);
     }
 
-    void EndGameInternal(UserMatchResult endNoti)
+    void EndGameInternal(MatchReport endNoti)
     {
         var client = Client as RWNetworkClient;
         foreach (var actorProxy in client.ActorProxies)
@@ -271,7 +271,7 @@ public class PlayerProxy : NetworkBehaviour
         
         SoundManager.instance.StopBGM();
         UI_InGame.Get().ClearUI();
-        InGameManager.Get().EndGame(((int)GAME_RESULT.VICTORY == endNoti.MatchResult || (int)GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.MatchResult), 0, endNoti.listReward.ToArray(), null, null);
+        InGameManager.Get().EndGame(endNoti);
     }
     
     public void GiveUp()

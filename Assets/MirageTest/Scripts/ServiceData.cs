@@ -25,11 +25,10 @@ namespace MirageTest.Aws
     public class UserMatchResult
     {
         public string UserId;
-        public string MatchType;
         public int MatchResult;
         public List<ItemBaseInfo> listReward;
         public AdRewardInfo LoseReward;
-        public List<QuestCompleteParam> listQuestParam;
+        public ItemBaseInfo AdReward;
     }
 
     public class QuestCompleteParam

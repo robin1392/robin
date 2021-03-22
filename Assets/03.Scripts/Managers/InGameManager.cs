@@ -7,6 +7,7 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using MirageTest.Aws;
 using MirageTest.Scripts;
 using Service.Core;
 using UnityEngine;
@@ -161,11 +162,11 @@ namespace ED
             server.serverGameLogic.isAIMode = true;
             server.MatchData.AddPlayerInfo(
                 userInfo.userID, 
-                userInfo.userNickName, 0, 
+                userInfo.userNickName, 0, 0,
                 new DeckInfo(guadianId, diceDeck));
             server.MatchData.AddPlayerInfo(
                 "AI", 
-                "AI", 0, 
+                "AI", 0, 0,
                 new DeckInfo(guadianId, GetAIDeck(TutorialManager.isTutorial)));
 
             server.authenticator = null;
@@ -239,42 +240,35 @@ namespace ED
         }
 
 
-        public void EndGame(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
+        public void EndGame(MatchReport result)
         {
-            // 게임이 끝낫으니까 그냥..
-            if (NetworkManager.Get().isResume == true)
-            {
-                NetworkManager.Get().SetResume(false);
-                //
-                UI_InGamePopup.Get().SetViewWaiting(false);
-            }
+            UI_InGamePopup.Get().SetViewWaiting(false);
+            
             // 인디케이터도 다시 안보이게..
             if (UI_InGamePopup.Get().IsIndicatorActive() == true)
             {
                 UI_InGamePopup.Get().ViewGameIndicator(false);
             }
-
-            //KZSee:
-            // isGamePlaying = false;
+            
             StopAllCoroutines();
             SoundManager.instance?.StopBGM();
             BroadcastMessage("EndGameUnit", SendMessageOptions.DontRequireReceiver);
             UI_InGame.Get().ClearUI();
 
-            StartCoroutine(EndGameCoroutine(winLose, winningStreak, normalReward, streakReward, perfectReward));
+            StartCoroutine(EndGameCoroutine(result));
         }
 
         //KZSee: 결과처리
-        IEnumerator EndGameCoroutine(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
+        IEnumerator EndGameCoroutine(MatchReport result)
         {
             yield return new WaitForSeconds(4f);
 
             //KZSee: 이벤트로그
             //playerController.SendEventLog_BatCheck();
 
-            UI_InGamePopup.Get().SetPopupResult(true, winLose, winningStreak, normalReward, streakReward, perfectReward);
+            UI_InGamePopup.Get().SetPopupResult(true, result.WinLose, result.IsPerfect, result.WinStreak, result.NormalRewards, result.StreakRewards, result.PerfectRewards);
 
-            SoundManager.instance.Play(winLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
+            SoundManager.instance.Play(result.WinLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }
         #endregion
 

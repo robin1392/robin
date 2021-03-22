@@ -111,28 +111,6 @@ namespace ED
             }
         }
 
-        // 네트워크 변환하면서 필요없어지긴 했으나 
-        // 싱글 모드 테스트 일때는 게임 끝내는걸 호출해준다
-        // 네트워크 모드에선 게임의 끝은 서버가 판단해준다
-        private void Death()
-        {
-            //KZSee:
-            // if (InGameManager.Get().isGamePlaying)
-            {
-                image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
-                //KZSee:ActionActivePoolObject("Effect_Bomb", transform.position, Quaternion.identity, Vector3.one);
-                animator.SetTrigger("Death");
-                SoundManager.instance.Play(clip_TowerExplosion);
-                ps_Destroy.gameObject.SetActive(true);
-
-                // 연결은 안되었으나 == 싱글모드 일때 && 내 타워라면
-                if (InGameManager.IsNetwork == false)
-                {
-                    InGameManager.Get().EndGame(!isMine, 1, null, null, null);
-                }
-            }
-        }
-
         public void SendEventLog_BatCheck()
         {
             //KZSee: 게임 종료 시에 덱 정보를 아날리틱스로 보낸다  최대데미지와 최대 눈금을 주사위 아이디별로 저장해서 보낸

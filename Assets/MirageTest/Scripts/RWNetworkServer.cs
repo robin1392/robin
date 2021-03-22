@@ -10,6 +10,8 @@ using MirageTest.Aws;
 using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
+using RandomWarsProtocol;
+using Service.Core;
 using UnityEngine;
 using Debug = ED.Debug;
 
@@ -223,20 +225,37 @@ public class RWNetworkServer : NetworkServer
         serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
     }
 
-    public void OnGameEnd(List<UserMatchResult> listMatchResult)
+    public void OnGameEnd(List<MatchReport> matchReports)
     {
 #if UNITY_EDITOR || UNITY_STANDALONE_LINUX
-        FindObjectOfType<SQSService>()?.SendMessage(listMatchResult).Forget();
+        FindObjectOfType<SQSService>()?.SendMessage(ToMatchResults(matchReports)).Forget();
 #endif
-        foreach (var result in listMatchResult)
+        foreach (var report in matchReports)
         {
-            var playerProxy = PlayerProxies.FirstOrDefault(p => result.UserId == p.userId);
+            var playerProxy = PlayerProxies.FirstOrDefault(p => report.UserId == p.userId);
             if (playerProxy == null)
             {
                 continue;
             }
-            playerProxy.EndGame(result);
+            playerProxy.EndGame(report);
         }
+    }
+
+    List<UserMatchResult> ToMatchResults(List<MatchReport> matchReport)
+    {
+        return matchReport.Select(report =>
+        {
+            var isVictory = (report.GameResult == GAME_RESULT.VICTORY ||
+                             report.GameResult == GAME_RESULT.VICTORY_BY_DEFAULT);
+
+            return new UserMatchResult()
+            {
+                MatchResult = isVictory ? 1 : 2,
+                UserId = report.UserId,
+                listReward = report.NormalRewards.Concat(report.PerfectRewards).Concat(report.StreakRewards).ToList(),
+                AdReward = report.LoseReward,
+            };
+        }).ToList();
     }
 
     public void Finalize()

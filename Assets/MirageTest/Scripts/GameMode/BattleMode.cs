@@ -111,12 +111,14 @@ namespace MirageTest.Scripts.GameMode
                     }
                     else
                     {
-                        var ordered = server.Towers.OrderByDescending(t => t.currentHealth);
+                        var ordered = server.Towers.OrderByDescending(t => t.currentHealth).ToArray();
                         var winnerTower = ordered.ElementAt(0);
                         var loserTower = ordered.ElementAt(1);
                         var winner = PlayerStates.First(p => p.ownerTag == winnerTower.ownerTag);
                         var loser = PlayerStates.First(p => p.ownerTag == loserTower.ownerTag);
-                        EndGame(winner, loser, false);
+                        
+                        int getDefenderTowerHp = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
+                        EndGame(winner, loser, false, winnerTower.currentHealth > getDefenderTowerHp * 100);
                         loserTower.Destroy();
                     }
                 }
@@ -202,48 +204,48 @@ namespace MirageTest.Scripts.GameMode
             var winnerTower = server.Towers.First();
             var winner = PlayerStates.First(p => p.ownerTag == winnerTower.ownerTag);
             int getDefenderTowerHp = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
-            EndGame(winner, loser, winnerTower.currentHealth > getDefenderTowerHp * 100);
+            EndGame(winner, loser, false, winnerTower.currentHealth > getDefenderTowerHp * 100);
         }
 
-        private void EndGame(PlayerState winner, PlayerState loser, bool perfect)
+        private void EndGame(PlayerState winner, PlayerState loser, bool winByDefault, bool perfect)
         {
             IsGameEnd = true;
-            var victoryReport = new UserMatchResult();
-            victoryReport.MatchResult = (int) GAME_RESULT.VICTORY;
-            ;
+            var victoryReport = new MatchReport();
+            victoryReport.GameResult = winByDefault ?GAME_RESULT.VICTORY_BY_DEFAULT : GAME_RESULT.VICTORY;
             victoryReport.UserId = winner.userId;
+            victoryReport.IsPerfect = perfect;
 
-            // 연승 수치 적용
-
-            var winnerMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == winner.userId);
+            var victoryMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == winner.userId);
             var defeatMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == loser.userId);
-
+            
+            // 연승 수치 적용
+            victoryReport.WinStreak = (short)((victoryMatchPlayer.WinStreak > 0) ? Math.Min(victoryMatchPlayer.WinStreak + 1, 15) : 1);
+            
             // 트로피 추가
-            int victoryTrophy = (defeatMatchPlayer.Trophy - winnerMatchPlayer.Trophy) / 12 + 30;
-            victoryReport.listReward = new List<ItemBaseInfo>();
-            victoryReport.listReward.Add(new ItemBaseInfo
+            int victoryTrophy = (defeatMatchPlayer.Trophy - victoryMatchPlayer.Trophy) / 12 + 30;
+            victoryReport.NormalRewards.Add(new ItemBaseInfo
             {
                 ItemId = (int) EItemListKey.thropy,
                 Value = victoryTrophy,
             });
 
-            victoryReport.listReward.Add(new ItemBaseInfo
+            victoryReport.NormalRewards.Add(new ItemBaseInfo
             {
                 ItemId = (int) EItemListKey.rankthropy,
                 Value = victoryTrophy,
             });
 
-            victoryReport.listReward.Add(new ItemBaseInfo
+            victoryReport.NormalRewards.Add(new ItemBaseInfo
             {
                 ItemId = (int) EItemListKey.seasonthropy,
                 Value = 1,
             });
-
+            
             // 승리 골드 보상
             int addGold = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.NormalWinReward_Gold].value;
             if (addGold != 0)
             {
-                victoryReport.listReward.Add(new ItemBaseInfo
+                victoryReport.NormalRewards.Add(new ItemBaseInfo
                 {
                     ItemId = (int) EItemListKey.gold,
                     Value = addGold,
@@ -253,7 +255,7 @@ namespace MirageTest.Scripts.GameMode
             int addKey = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.NormalWinReward_Key].value;
             if (addKey != 0)
             {
-                victoryReport.listReward.Add(new ItemBaseInfo
+                victoryReport.NormalRewards.Add(new ItemBaseInfo
                 {
                     ItemId = (int) EItemListKey.key,
                     Value = addKey,
@@ -261,108 +263,105 @@ namespace MirageTest.Scripts.GameMode
             }
 
             //연승 보상
+            addGold = Math.Max(0, victoryReport.WinStreak - 1) * 5;
+            if (addGold != 0)
+            {
+                victoryReport.StreakRewards.Add(new ItemBaseInfo
+                {
+                    ItemId = (int)EItemListKey.gold,
+                    Value = addGold,
+                });
+            }
+            
+            addKey = (victoryMatchPlayer.WinStreak - 1) / 3;
+            if (addKey != 0)
+            {
+                victoryReport.StreakRewards.Add(new ItemBaseInfo
+                {
+                    ItemId = (int)EItemListKey.key,
+                    Value = addKey,
+                });
+            }
+            
             // 완벽한 승리 보상
+            if (perfect)
+            {
+                addGold = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.PerfectReward_Gold].value;
+                if (addGold != 0)
+                {
+                    victoryReport.PerfectRewards.Add(new ItemBaseInfo
+                    {
+                        ItemId = (int)EItemListKey.gold,
+                        Value = addGold,
+                    });
+                }
 
+                addKey = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.PerfectWinReward_Key].value;
+                if (addKey != 0)
+                {
+                    victoryReport.PerfectRewards.Add(new ItemBaseInfo
+                    {
+                        ItemId = (int)EItemListKey.key,
+                        Value = addKey,
+                    });
+                }
+            }
+            
+            
             // 패자 레포트 작성
-            var defeatReport = new UserMatchResult();
-            defeatReport.MatchResult = (int) GAME_RESULT.DEFEAT;
-            ;
+            var defeatReport = new MatchReport();
+            defeatReport.GameResult = GAME_RESULT.DEFEAT;
             defeatReport.UserId = loser.userId;
+            defeatReport.IsPerfect = perfect;
 
             // 연승 수치 적용
-
+            defeatReport.WinStreak = (short)((defeatMatchPlayer.WinStreak < 0) ? Math.Max(defeatMatchPlayer.WinStreak - 1, -15) : -1);
 
             // 트로피 차감
-            int defeatTrophy = ((winnerMatchPlayer.Trophy - defeatMatchPlayer.Trophy) / 12 + 30);
+            int defeatTrophy = ((victoryMatchPlayer.Trophy - defeatMatchPlayer.Trophy) / 12 + 30);
             defeatTrophy = Math.Min(defeatMatchPlayer.Trophy, defeatTrophy);
-
-            defeatReport.listReward = new List<ItemBaseInfo>();
+            
             if (defeatTrophy != 0)
             {
                 // 패배 트로피
-                defeatReport.listReward.Add(new ItemBaseInfo
+                defeatReport.NormalRewards.Add(new ItemBaseInfo
                 {
                     ItemId = (int) EItemListKey.thropy,
                     Value = defeatTrophy * -1,
                 });
 
                 // 패배 랭킹 포인트
-                defeatReport.listReward.Add(new ItemBaseInfo
+                defeatReport.NormalRewards.Add(new ItemBaseInfo
                 {
                     ItemId = (int) EItemListKey.rankthropy,
                     Value = defeatTrophy * -1,
                 });
             }
 
+            // 패배 보상 지급
+            // 확률 체크
+            TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserCondition01, out var tDataLoseUserCondition01);
+            var rate = Random.Range(0, 100);
+            if (rate < tDataLoseUserCondition01.value)
+            {
+                // 연패수 체크
+                TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserCondition02, out var tDataLoseUserCondition02);
+                if (defeatMatchPlayer.WinStreak < tDataLoseUserCondition02.value * -1)
+                {
+                    // 상대방 트로피 차이
+                    TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserCondition03, out var tDataLoseUserCondition03);
+                    if( Math.Abs(defeatMatchPlayer.Trophy  - victoryMatchPlayer.Trophy) > tDataLoseUserCondition03.value)
+                    {
+                        TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserRewardId, out var tDataLoseUserRewardId);
+                        TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserRewardValue, out var tDataLoseUserRewardValue);
 
-            // // 패배 보상 지급
-            // // 확률 체크
-            // TDataVsmode tDataLoseUserCondition01;
-            // TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserCondition02, out tDataLoseUserCondition01);
-            // var rate = Random.Range(0, 100);
-            // if (rate < tDataLoseUserCondition01.value)
-            // {
-            //     // 연패수 체크
-            //     TDataVsmode tDataLoseUserCondition02;
-            //     TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserCondition02, out tDataLoseUserCondition02);
-            //     if (defeatPlayer.User.WinStreak < tDataLoseUserCondition02.value * -1)
-            //     {
-            //         // 상대방 트로피 차이
-            //         TDataVsmode tDataLoseUserCondition03;
-            //         TableManager.Instance.Vsmode.GetData((int)EVsmodeKey.LoseUserCondition03, out tDataLoseUserCondition03);
-            //         if( Math.Abs(defeatPlayer.User.Trophy  - victoryPlayer.User.Trophy) > tDataLoseUserCondition03.value)
-            //         {
-            //             TDataVsmode tDataLoseUserRewardId;
-            //             TableManager.Instance.Vsmode.GetData((int)EVsmodeKey.LoseUserRewardId, out tDataLoseUserRewardId);
-            //             TDataVsmode tDataLoseUserRewardValue;
-            //             TableManager.Instance.Vsmode.GetData((int)EVsmodeKey.LoseUserRewardValue, out tDataLoseUserRewardValue);
-            //
-            //             defeatReport.LoseReward.ItemId = tDataLoseUserRewardId.value;
-            //             defeatReport.LoseReward.Value = tDataLoseUserRewardValue.value;
-            //         }
-            //     }
-            // }
-
-            // victoryReport.QuestCompleteParam.Add(new QuestCompleteParam
-            // {
-            //     QuestCompleteType = EQuestInfoKey.playAllMatch,
-            //     Value = 1
-            // });
-            //
-            // victoryReport.QuestCompleteParam.Add(new QuestCompleteParam
-            // {
-            //     QuestCompleteType = EQuestInfoKey.winAllMatch,
-            //     Value = 1
-            // });
-            //
-            // victoryReport.QuestCompleteParam.Add(new QuestCompleteParam
-            // {
-            //     QuestCompleteType = EQuestInfoKey.playDeathMatch,
-            //     Value = 1
-            // });
-            //
-            // if (totalGetKey > 0)
-            // {
-            //     victoryReport.QuestCompleteParam.Add(new QuestCompleteParam
-            //     {
-            //         QuestCompleteType = EQuestInfoKey.getKey,
-            //         Value = totalGetKey
-            //     });
-            // }
-            //
-            // defeatReport.QuestCompleteParam.Add(new QuestCompleteParam
-            // {
-            //     QuestCompleteType = EQuestInfoKey.playAllMatch,
-            //     Value = 1
-            // });
-            //
-            // defeatReport.QuestCompleteParam.Add(new QuestCompleteParam
-            // {
-            //     QuestCompleteType = EQuestInfoKey.playDeathMatch,
-            //     Value = 1
-            // });
-
-            Server.OnGameEnd(new List<UserMatchResult>() {victoryReport, defeatReport});
+                        defeatReport.LoseReward.ItemId = tDataLoseUserRewardId.value;
+                        defeatReport.LoseReward.Value = tDataLoseUserRewardValue.value;
+                    }
+                }
+            }
+            
+            Server.OnGameEnd(new List<MatchReport>() {victoryReport, defeatReport});
         }
 
         private void EndGamePlayerDidNothing(PlayerState[] losers)
@@ -370,14 +369,14 @@ namespace MirageTest.Scripts.GameMode
             IsGameEnd = true;
             var matchResult1 = CreateMatchResultEndGamePlayerDidNothing(losers[0], losers[1]);
             var matchResult2 = CreateMatchResultEndGamePlayerDidNothing(losers[1], losers[0]);
-            var matchResults = new List<UserMatchResult>() {matchResult1, matchResult2};
+            var matchResults = new List<MatchReport>() {matchResult1, matchResult2};
             Server.OnGameEnd(matchResults);
         }
 
-        UserMatchResult CreateMatchResultEndGamePlayerDidNothing(PlayerState defeatPlayer, PlayerState other)
+        MatchReport CreateMatchResultEndGamePlayerDidNothing(PlayerState defeatPlayer, PlayerState other)
         {
-            var result = new UserMatchResult();
-            result.MatchResult = (int) GAME_RESULT.DEFEAT;
+            var result = new MatchReport();
+            result.GameResult = GAME_RESULT.DEFEAT;
             result.UserId = defeatPlayer.userId;
 
             var otherMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == other.userId);
@@ -386,7 +385,7 @@ namespace MirageTest.Scripts.GameMode
             defeatTrophy = Math.Min(otherMatchPlayer.Trophy, defeatTrophy);
 
             // 패배 트로피
-            result.listReward.Add(new ItemBaseInfo
+            result.NormalRewards.Add(new ItemBaseInfo
             {
                 ItemId = (int) EItemListKey.thropy,
                 Value = defeatTrophy * -1,
@@ -397,7 +396,11 @@ namespace MirageTest.Scripts.GameMode
 
         public override void OnGiveUp(PlayerState playerState)
         {
-            Debug.LogError("Battle GiveUp");
+            var winner = PlayerStates.First(p => p.ownerTag != playerState.ownerTag);
+            int getDefenderTowerHp = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
+            var winnerTower = Server.Towers.Find(t => t.ownerTag == winner.ownerTag);
+            var loser = playerState;
+            EndGame(winner, loser, true, winnerTower.currentHealth > getDefenderTowerHp * 100);
         }
     }
 }

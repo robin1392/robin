@@ -60,26 +60,24 @@ public class UI_InGamePopup_Result : MonoBehaviour
 
     private int[,] rewards = new int[3,5];
     
-    public void Initialize(bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward)
+    public void Initialize(bool winLose, bool perfectGame, int winningStreak, List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward)
     {
         if (TutorialManager.isTutorial)
         {
             TutorialManager.stepCount++;
         }
-        
-        
+
         isWin = winLose;
 
         var client = FindObjectOfType<RWNetworkClient>();
         var enemyPlayerState = client.GetEnemyPlayerState();
         var enemyTower  = client.GetTower(enemyPlayerState.ownerTag);
-        var enemyPerfect = enemyTower == null ? false : enemyTower.ActorProxy.currentHealth > 20000;
         var localMatchPlayer = client.LocalMatchPlayer;
         var otherMatchPlayer = client.OtherMatchPlayer; 
         var localPlayerDeck = localMatchPlayer.Deck;
         var otherPlayerDeck = otherMatchPlayer.Deck;
-        winlose_My.Initialize(isWin, (perfectReward != null && perfectReward.Length > 0), winningStreak, localPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), localPlayerDeck.GuardianId, localMatchPlayer.UserNickName, localMatchPlayer.Trophy);
-        winlose_Other.Initialize(!isWin,  enemyPerfect, winningStreak, otherPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), otherPlayerDeck.GuardianId, otherMatchPlayer.UserNickName, otherMatchPlayer.Trophy);
+        winlose_My.Initialize(isWin, perfectGame, winningStreak, localPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), localPlayerDeck.GuardianId, localMatchPlayer.UserNickName, localMatchPlayer.Trophy);
+        winlose_Other.Initialize(!isWin,  perfectGame, winningStreak, otherPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), otherPlayerDeck.GuardianId, otherMatchPlayer.UserNickName, otherMatchPlayer.Trophy);
         btn_ShowValues.interactable = false;
 
         // 경쟁전일경우
@@ -207,7 +205,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
         {
             var userInfo = UserInfoManager.Get().GetUserInfo();
             TDataItemList data;
-            for (int i = 0; normalReward != null && i < normalReward.Length; i++)
+            for (int i = 0; normalReward != null && i < normalReward.Count; i++)
             {
                 if (TableManager.Get().ItemList.GetData(normalReward[i].ItemId, out data))
                 {
@@ -216,7 +214,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
                     else userInfo.dicBox.Add(data.id, normalReward[i].Value);
                 }
             }
-            for (int i = 0; streakReward != null && i < streakReward.Length; i++)
+            for (int i = 0; streakReward != null && i < streakReward.Count; i++)
             {
                 if (TableManager.Get().ItemList.GetData(streakReward[i].ItemId, out data))
                 {
@@ -225,7 +223,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
                     else userInfo.dicBox.Add(data.id, streakReward[i].Value);
                 }
             }
-            for (int i = 0; perfectReward != null && i < perfectReward.Length; i++)
+            for (int i = 0; perfectReward != null && i < perfectReward.Count; i++)
             {
                 if (TableManager.Get().ItemList.GetData(perfectReward[i].ItemId, out data))
                 {

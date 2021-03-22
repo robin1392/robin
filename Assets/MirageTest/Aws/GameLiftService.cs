@@ -161,7 +161,8 @@ namespace MirageTest.Aws
                     string userName = attribute.dictAttributeString["userName"];
                     int trophy = (int)attribute.dictAttributeNumber["trophy"];
                     var listDiceInfo = attribute.dictAttributeList["diceInfo"];
-                    AddMatchPlayer(playerId, userName, trophy, listDiceInfo);
+                    var winStreak = attribute.dictAttributeNumber["winStreak"];
+                    AddMatchPlayer(playerId, userName, trophy, (short)winStreak, listDiceInfo);
 
                     // 모드 설정
                     string gameMode = attribute.dictAttributeList["gameMode"][0];
@@ -185,9 +186,10 @@ namespace MirageTest.Aws
                     // 캐릭터 추가
                     string playerId = player["playerId"].ToString();
                     string userName = player["attributes"]["userName"]["valueAttribute"].ToString();
-                    int trophy = int.Parse(player["attributes"]["trophy"]["valueAttribute"].ToString());
+                    var trophy = int.Parse(player["attributes"]["trophy"]["valueAttribute"].ToString());
+                    var winStreak = int.Parse(player["attributes"]["winStreak"]["valueAttribute"].ToString());
                     var listDiceInfo = player["attributes"]["diceInfo"]["valueAttribute"].ToObject<List<string>>();
-                    AddMatchPlayer(playerId, userName, trophy, listDiceInfo);
+                    AddMatchPlayer(playerId, userName, trophy, winStreak, listDiceInfo);
 
                     // 모드 설정
                     string gameMode = player["attributes"]["gameMode"]["valueAttribute"].ToObject<List<string>>()[0];
@@ -196,7 +198,7 @@ namespace MirageTest.Aws
             }
         }
         
-        void AddMatchPlayer(string playerId, string userName, int trophy, List<string> listDiceInfo)
+        void AddMatchPlayer(string playerId, string userName, int trophy, int winStreak, List<string> listDiceInfo)
         {
             if (_server == null)
             {
@@ -221,7 +223,7 @@ namespace MirageTest.Aws
             deckInfo.GuardianId = matchGuadianInfo.DiceId;
 
             // 플레이어 추가
-            _server.MatchData.AddPlayerInfo(playerId, userName, trophy, deckInfo);
+            _server.MatchData.AddPlayerInfo(playerId, userName, trophy, winStreak, deckInfo);
             Debug.Log($"플레이어 추가:{playerId} name:{userName} gudrdian:{deckInfo.GuardianId} deck:{String.Join(", ", deckInfo.DiceInfos.ToArray())}");
         }
         
