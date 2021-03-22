@@ -174,6 +174,11 @@ namespace ED
                 {
                     break;
                 }
+
+                if (targetActorProxy == null || targetActorProxy.baseStat == null)
+                {
+                    break;
+                }
                 
                 actorProxy.transform.LookAt(targetActorProxy.transform);
                 sniper.lr.SetPositions(new Vector3[] { sniper.ts_ShootingPos.position, targetActorProxy.baseStat.ts_HitPos.position });
