@@ -24,6 +24,8 @@ namespace MirageTest.Scripts.GameMode
         protected PrefabHolder _prefabHolder;
         protected ServerObjectManager ServerObjectManager;
         protected RWNetworkServer Server;
+        protected int AddSp;
+        protected int WaveTime;
         public bool IsGameEnd;
 
         public GameState GameState;
@@ -38,6 +40,10 @@ namespace MirageTest.Scripts.GameMode
             ServerObjectManager = serverObjectManager;
             Server = ServerObjectManager.Server as RWNetworkServer;
             DiceInfos = TableManager.Get().DiceInfo;
+            
+            var vsmode = TableManager.Get().Vsmode;
+            WaveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
+            AddSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
         }
 
         protected GameState CreateGameState()
@@ -96,35 +102,18 @@ namespace MirageTest.Scripts.GameMode
 
         private async UniTask UpdateWave()
         {
-            var vsmode = TableManager.Get().Vsmode;
-            var waveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
-            var addSp = vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
-            var addSpCountPerWave = 4;
-            var addSpInterval = waveTime / addSpCountPerWave;
-
+            //처음은 절반
+            await UpdateWave(WaveTime / 2);
+            
+            if (IsGameEnd)
+            {
+                return;
+            }
+            
             while (true)
             {
-                GameState.CountDown(waveTime);
-
-                var addSpCount = 0;
-                while (addSpCount < addSpCountPerWave)
-                {
-                    await UniTask.Delay(TimeSpan.FromSeconds(addSpInterval));
-                    if (IsGameEnd)
-                    {
-                        break;
-                    }
-
-                    addSpCount++;
-                    foreach (var playerState in PlayerStates)
-                    {
-                        var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
-                        var sp = addSp + (GameState.wave * upgradeSp);
-                        playerState.sp += sp;
-                        playerState.AddSpByWave(sp);
-                    }
-                }
-
+                await UpdateWave(WaveTime);
+                
                 if (IsGameEnd)
                 {
                     break;
@@ -133,6 +122,32 @@ namespace MirageTest.Scripts.GameMode
                 GameState.wave++;
                 OnWave(GameState.wave);
                 CheckRobotFusion();
+            }
+        }
+        
+        async UniTask UpdateWave(int waveTime)
+        {
+            GameState.CountDown(waveTime);
+                
+            var addSpCountPerWave = 4;
+            var addSpInterval = waveTime / (float)addSpCountPerWave;
+            var addSpCount = 0;
+            while (addSpCount < addSpCountPerWave)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(addSpInterval));
+                if (IsGameEnd)
+                {
+                    break;
+                }
+
+                addSpCount++;
+                foreach (var playerState in PlayerStates)
+                {
+                    var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
+                    var sp = AddSp + (GameState.wave * upgradeSp);
+                    playerState.sp += sp;
+                    playerState.AddSpByWave(sp);
+                }
             }
         }
 
