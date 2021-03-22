@@ -69,6 +69,9 @@ namespace MirageTest.Scripts.Entities
         
         public void SetState(EGameState oldValue, EGameState newValue)
         {
+            var client = Client as RWNetworkClient;
+            client.playing = newValue == EGameState.Playing;
+                
             if (_enableUI == false)
             {
                 return;

@@ -8,6 +8,7 @@ using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using RandomWarsResource;
 using RandomWarsResource.Data;
+using Service.Template;
 using UnityEngine;
 using Debug = ED.Debug;
 using Object = UnityEngine.Object;
@@ -26,7 +27,19 @@ namespace MirageTest.Scripts.GameMode
         protected RWNetworkServer Server;
         protected int AddSp;
         protected int WaveTime;
-        public bool IsGameEnd;
+
+        public bool IsGameEnd
+        {
+            get
+            {
+                if (GameState == null)
+                {
+                    return false;
+                }
+
+                return GameState.state == EGameState.End;
+            }
+        }
 
         public GameState GameState;
         public PlayerState PlayerState1 => PlayerStates[0];
@@ -341,7 +354,7 @@ namespace MirageTest.Scripts.GameMode
 
         public void End()
         {
-            IsGameEnd = true;
+            GameState.state = EGameState.End;
         }
 
         public static Stat CalcMinionStat(TDataDiceInfo diceInfo, byte inGameLevel, byte outGameLevel)
@@ -438,6 +451,23 @@ namespace MirageTest.Scripts.GameMode
 
         public virtual void OnGiveUp(PlayerState player)
         {
+        }
+
+        public void OnClientPause(PlayerState playerState)
+        {
+            if (GameState == null)
+            {
+                return;
+            }
+
+            if (GameState.masterOwnerTag == playerState.ownerTag)
+            {
+                var newMaster = PlayerStates.FirstOrDefault(p => p.ownerTag != playerState.ownerTag);
+                if (newMaster != null)
+                {
+                    GameState.masterOwnerTag = newMaster.ownerTag;
+                }
+            }
         }
     }
 }

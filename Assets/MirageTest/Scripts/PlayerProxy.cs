@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ED;
 using Mirage;
 using Mirage.Logging;
@@ -93,6 +94,12 @@ public class PlayerProxy : NetworkBehaviour
     {
         var client = Client as RWNetworkClient;
         client.AddPlayerProxy(this);
+
+        if (IsLocalClient)
+        {
+            //OnStartLocalPlayer가 호출되지 않아 여기서 부름
+            ClientReady();
+        }
     }
 
     private void OnStopClient()
@@ -100,8 +107,32 @@ public class PlayerProxy : NetworkBehaviour
         var client = Client as RWNetworkClient;
         client.RemovePlayerProxy(this);
     }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            ClientPause();
+        }
+    }
+
+    public void ClientPause()
+    {
+        if (IsLocalClient)
+        {
+            return;
+        }
+
+        ClientPauseOnServer();
+    }
     
     
+    [ServerRpc(requireAuthority = false)]
+    void ClientPauseOnServer()
+    {
+        var server = Server as RWNetworkServer;
+        server.OnClientPause(userId);
+    }
 
     public void ClientReady()
     {
@@ -124,8 +155,7 @@ public class PlayerProxy : NetworkBehaviour
     {
         ready = true;
     }
-    
-    
+
     public void MergeDice(int sourceDiceFieldIndex, int targetDiceFieldIndex)
     {
         if (IsLocalClient)

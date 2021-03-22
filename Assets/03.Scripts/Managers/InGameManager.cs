@@ -159,6 +159,7 @@ namespace ED
             var userDeck = userInfo.GetActiveDeck;
             var diceDeck = userDeck.Take(5).ToArray();
             var guadianId = userDeck[5];
+            server.serverGameLogic.modeType = PLAY_TYPE.BATTLE;
             server.serverGameLogic.isAIMode = true;
             server.MatchData.AddPlayerInfo(
                 userInfo.userID, 
@@ -168,7 +169,7 @@ namespace ED
                 "AI", 
                 "AI", 0, 0,
                 new DeckInfo(guadianId, GetAIDeck(TutorialManager.isTutorial)));
-
+            
             server.authenticator = null;
             var client = FindObjectOfType<RWNetworkClient>();
             client.authenticator = null;

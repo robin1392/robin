@@ -11,6 +11,7 @@ using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
 using Service.Core;
+using Service.Template;
 using UnityEngine;
 using Debug = ED.Debug;
 using Random = UnityEngine.Random;
@@ -209,7 +210,7 @@ namespace MirageTest.Scripts.GameMode
 
         private void EndGame(PlayerState winner, PlayerState loser, bool winByDefault, bool perfect)
         {
-            IsGameEnd = true;
+            GameState.state = EGameState.End;
             var victoryReport = new MatchReport();
             victoryReport.GameResult = winByDefault ?GAME_RESULT.VICTORY_BY_DEFAULT : GAME_RESULT.VICTORY;
             victoryReport.UserId = winner.userId;
@@ -366,7 +367,7 @@ namespace MirageTest.Scripts.GameMode
 
         private void EndGamePlayerDidNothing(PlayerState[] losers)
         {
-            IsGameEnd = true;
+            GameState.state = EGameState.End;
             var matchResult1 = CreateMatchResultEndGamePlayerDidNothing(losers[0], losers[1]);
             var matchResult2 = CreateMatchResultEndGamePlayerDidNothing(losers[1], losers[0]);
             var matchResults = new List<MatchReport>() {matchResult1, matchResult2};

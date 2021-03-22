@@ -67,6 +67,8 @@ namespace MirageTest.Scripts
         }
 
         public string lastConnectServerIp;
+        public bool playing;                
+
         public async UniTask RWConnectAsync(string serverIp)
         {
             await RWConnectAsync(serverIp, GetComponent<KcpTransport>().Port);
@@ -78,14 +80,16 @@ namespace MirageTest.Scripts
             GetComponent<KcpTransport>().Port = port;
             logger.Log($"[RWConnectAsync] ip:{serverIp} port:{port}");
             
-            var retryCount = 3;
+            var retryCount = 1;
             var count = 0;
+            bool success = false;
             while (count < retryCount)
             {
                 count++;
                 try
                 {
                     await ConnectAsync(serverIp);
+                    success = true;
                 }
                 catch (Exception e)
                 {
@@ -95,6 +99,11 @@ namespace MirageTest.Scripts
                 }
                 
                 break;
+            }
+
+            if (success == false)
+            {
+                InGameManager.Get().LeaveRoom();
             }
         }
         
@@ -109,12 +118,18 @@ namespace MirageTest.Scripts
         {
             RWConnectAsync(lastConnectServerIp).Forget();
         }
-        
-         
+
+
         [Button]
         public void GiveUp()
         {
             GetLocalPlayerProxy()?.GiveUp();
+        }
+        
+        [Button]
+        public void Pause()
+        {
+            GetLocalPlayerProxy()?.ClientPause();
         }
 
         private void Awake()
@@ -146,7 +161,10 @@ namespace MirageTest.Scripts
 
         private void OnDisconnected()
         {
-            //TODO: 게임중에 디스커넥티드 된 경우 재접을 시도한다.
+            if (playing)
+            {
+                Reconnect();
+            }
         }
 
         public void OnMatchData(MatchDataMessage msg)

@@ -276,4 +276,10 @@ public class RWNetworkServer : NetworkServer
             serverGameLogic.modeType = PLAY_TYPE.CO_OP;
         }
     }
+
+    public void OnClientPause(string userId)
+    {
+        var playerState = serverGameLogic.GetPlayerState(userId);
+        serverGameLogic._gameMode.OnClientPause(playerState);
+    }
 }
