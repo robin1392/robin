@@ -394,5 +394,10 @@ namespace MirageTest.Scripts.GameMode
 
             return result;
         }
+
+        public override void OnGiveUp(PlayerState playerState)
+        {
+            Debug.LogError("Battle GiveUp");
+        }
     }
 }

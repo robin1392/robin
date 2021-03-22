@@ -273,4 +273,18 @@ public class PlayerProxy : NetworkBehaviour
         UI_InGame.Get().ClearUI();
         InGameManager.Get().EndGame(((int)GAME_RESULT.VICTORY == endNoti.MatchResult || (int)GAME_RESULT.VICTORY_BY_DEFAULT == endNoti.MatchResult), 0, endNoti.listReward.ToArray(), null, null);
     }
+    
+    public void GiveUp()
+    {
+        GiveUpOnServer();
+        Client.Disconnect();
+    }
+
+    [ServerRpc]
+    public void GiveUpOnServer()
+    {
+        var server = Server as RWNetworkServer;
+        var playerState = GetPlayerState();
+        server.serverGameLogic._gameMode.OnGiveUp(playerState);
+    }
 }

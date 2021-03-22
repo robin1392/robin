@@ -217,13 +217,13 @@ namespace MirageTest.Scripts
             }
         }
 
-        public void SyncActionWithTarget(uint senderNetId, int actionTypeHash, uint targetNetId)
+        public void SyncActionWithTarget(uint senderNetId, string actionTypeHash, uint targetNetId)
         {
             SyncActionWithTargetOnServer(senderNetId, actionTypeHash, targetNetId);
         }
         
         [ServerRpc(requireAuthority =  false)]
-        public void SyncActionWithTargetOnServer(uint senderNetId, int actionTypeHash, uint targetNetId)
+        public void SyncActionWithTargetOnServer(uint senderNetId, string actionTypeHash, uint targetNetId)
         {
             foreach (var con in Server.Players)
             {
@@ -237,7 +237,7 @@ namespace MirageTest.Scripts
         }
         
         [ClientRpc(target = Mirage.Client.Player)]
-        public void SyncActionWithTargetOnClient(INetworkPlayer con, int actionTypeHash, uint targetNetId)
+        public void SyncActionWithTargetOnClient(INetworkPlayer con, string actionTypeHash, uint targetNetId)
         {
             if (baseStat == null)
             {
@@ -253,13 +253,13 @@ namespace MirageTest.Scripts
             baseStat.SyncActionWithTarget(actionTypeHash,this, target.GetComponent<ActorProxy>());
         }
         
-        public void SyncActionWithoutTarget(uint senderNetId, int actionTypeHash)
+        public void SyncActionWithoutTarget(uint senderNetId, string actionTypeHash)
         {
             SyncActionWithoutTargetOnServer(senderNetId, actionTypeHash);
         }
         
         [ServerRpc(requireAuthority =  false)]
-        public void SyncActionWithoutTargetOnServer(uint senderNetId, int actionTypeHash)
+        public void SyncActionWithoutTargetOnServer(uint senderNetId, string actionTypeHash)
         {
             foreach (var player in Server.Players)
             {
@@ -273,7 +273,7 @@ namespace MirageTest.Scripts
         }
         
         [ClientRpc(target = Mirage.Client.Player)]
-        public void SyncActionWithoutTargetOnClient(INetworkPlayer con, int actionTypeHash)
+        public void SyncActionWithoutTargetOnClient(INetworkPlayer con, string actionTypeHash)
         {
             if (baseStat == null)
             {

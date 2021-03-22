@@ -11,6 +11,7 @@ using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
 using UnityEngine;
+using Debug = ED.Debug;
 
 public class RWNetworkServer : NetworkServer
 {

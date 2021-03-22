@@ -52,7 +52,7 @@ namespace ED
             }
         }
 
-        public void SyncActionWithTarget(int hash, ActorProxy actorProxy, ActorProxy targetActorProxy)
+        public void SyncActionWithTarget(string hash, ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
             if (_syncActionCoroutine != null)
             {
@@ -72,7 +72,7 @@ namespace ED
             _syncActionCoroutine = null;
         }
         
-        public void SyncActionWithoutTarget(int hash)
+        public void SyncActionWithoutTarget(string hash)
         {
             //푸시를 만들면 이 부분에 수행되어야 한다.
             //스턴 중에도 푸시 액션을 허용해야 함.

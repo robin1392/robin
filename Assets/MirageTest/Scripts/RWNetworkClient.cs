@@ -105,6 +105,13 @@ namespace MirageTest.Scripts
         {
             RWConnectAsync(lastConnectServerIp).Forget();
         }
+        
+         
+        [Button]
+        public void GiveUp()
+        {
+            GetLocalPlayerProxy()?.GiveUp();
+        }
 
         private void Awake()
         {

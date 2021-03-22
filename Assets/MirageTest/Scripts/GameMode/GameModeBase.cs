@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
+using Mirage.Logging;
 using MirageTest.Scripts.Entities;
-using MirageTest.Scripts.Messages;
 using RandomWarsResource;
 using RandomWarsResource.Data;
 using UnityEngine;
@@ -18,6 +17,8 @@ namespace MirageTest.Scripts.GameMode
 {
     public abstract class GameModeBase
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(GameModeBase));
+
         protected TableData<int, TDataDiceInfo> DiceInfos;
         protected PlayerState[] PlayerStates;
         protected PrefabHolder _prefabHolder;
@@ -38,8 +39,8 @@ namespace MirageTest.Scripts.GameMode
             Server = ServerObjectManager.Server as RWNetworkServer;
             DiceInfos = TableManager.Get().DiceInfo;
         }
-        
-         protected GameState CreateGameState()
+
+        protected GameState CreateGameState()
         {
             var gameState = Object.Instantiate(_prefabHolder.GameState);
             return gameState;
@@ -77,16 +78,16 @@ namespace MirageTest.Scripts.GameMode
 
             return playerStates;
         }
-         
-         PlayerState SpawnPlayerState(string userId, string nickName, int sp, int gudianId, DeckDice[] deck, byte tag)
-         {
-             //원래 코드에서는 덱인덱스를 가지고 디비에서 긁어오는 중. 매칭서버에서 긁어서 넣어두는 방향을 제안
-             var playerState = Object.Instantiate(_prefabHolder.PlayerState);
-             playerState.Init(userId, nickName, sp, deck, tag, gudianId);
-             return playerState;
-         }
 
-         public async UniTask UpdateLogic()
+        PlayerState SpawnPlayerState(string userId, string nickName, int sp, int gudianId, DeckDice[] deck, byte tag)
+        {
+            //원래 코드에서는 덱인덱스를 가지고 디비에서 긁어오는 중. 매칭서버에서 긁어서 넣어두는 방향을 제안
+            var playerState = Object.Instantiate(_prefabHolder.PlayerState);
+            playerState.Init(userId, nickName, sp, deck, tag, gudianId);
+            return playerState;
+        }
+
+        public async UniTask UpdateLogic()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1));
 
@@ -100,11 +101,11 @@ namespace MirageTest.Scripts.GameMode
             var addSp = vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
             var addSpCountPerWave = 4;
             var addSpInterval = waveTime / addSpCountPerWave;
-            
+
             while (true)
             {
                 GameState.CountDown(waveTime);
-                
+
                 var addSpCount = 0;
                 while (addSpCount < addSpCountPerWave)
                 {
@@ -113,7 +114,7 @@ namespace MirageTest.Scripts.GameMode
                     {
                         break;
                     }
-                    
+
                     addSpCount++;
                     foreach (var playerState in PlayerStates)
                     {
@@ -123,7 +124,7 @@ namespace MirageTest.Scripts.GameMode
                         playerState.AddSpByWave(sp);
                     }
                 }
-                
+
                 if (IsGameEnd)
                 {
                     break;
@@ -151,14 +152,14 @@ namespace MirageTest.Scripts.GameMode
                         actor = robot;
                         robot.Fusion();
                     }
-                    
+
                     server.CreateActorWithDiceId(
                         4012,
                         actor.ownerTag,
                         actor.team,
                         actor.ingameUpgradeLevel,
                         actor.outgameUpgradeLevel,
-                        new Vector3[] { actor.transform.position },
+                        new Vector3[] {actor.transform.position},
                         2f);
                 }
                 else
@@ -174,17 +175,17 @@ namespace MirageTest.Scripts.GameMode
         public abstract UniTask OnBeforeGameStart();
 
         protected abstract void OnWave(int wave);
-        
+
         public PlayerState GetPlayerState(string userId)
         {
             return PlayerStates.First(ps => ps.userId == userId);
         }
-        
+
         public PlayerState GetPlayerStateByTeam(byte team)
         {
             return PlayerStates.First(ps => ps.team == team);
         }
-        
+
         public void OnClientDisconnected(INetworkPlayer arg0)
         {
             var userId = arg0.Identity.GetComponent<PlayerProxy>().userId;
@@ -193,7 +194,7 @@ namespace MirageTest.Scripts.GameMode
             {
                 return;
             }
-            
+
             if (GameState.masterOwnerTag != playerState.ownerTag)
             {
                 return;
@@ -205,9 +206,10 @@ namespace MirageTest.Scripts.GameMode
                 return;
             }
 
+            logger.Log($"클라이언트 접속해제로 마스터가 변경됨: {GameState.masterOwnerTag} => {newMaster.ownerTag}");
             GameState.masterOwnerTag = newMaster.ownerTag;
         }
-        
+
         protected IEnumerable<ActorProxy> CreateActorByPlayerFieldDice(PlayerState playerState)
         {
             var actorProxies = new List<ActorProxy>();
@@ -221,7 +223,7 @@ namespace MirageTest.Scripts.GameMode
 
                 if (DiceInfos.GetData(fieldDice.diceId, out var diceInfo) == false)
                 {
-                    ED.Debug.LogError(
+                    Debug.LogError(
                         $"다이스정보 {fieldDice.diceId}가 없습니다. UserId : {playerState.userId} 필드 슬롯 : {fieldIndex}");
                     return Enumerable.Empty<ActorProxy>();
                 }
@@ -234,20 +236,21 @@ namespace MirageTest.Scripts.GameMode
                 }
 
                 var deckDice = playerState.GetDeckDice(fieldDice.diceId);
-                
+
                 Stat stat = new Stat();
                 if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
                 {
-                    stat = CalcMinionStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel);    
+                    stat = CalcMinionStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel);
                 }
                 else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
                 {
                     stat = CalcHeroStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel, diceScale);
                 }
-                else if((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.INSTALLATION ||
-                        (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MAGIC)
+                else if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.INSTALLATION ||
+                         (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MAGIC)
                 {
-                    stat = CalcMagicOrInstallationStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel, diceScale);
+                    stat = CalcMagicOrInstallationStat(diceInfo, deckDice.inGameLevel, deckDice.outGameLevel,
+                        diceScale);
                 }
 
                 var isBottomCamp = playerState.team == GameConstants.BottomCamp;
@@ -262,15 +265,16 @@ namespace MirageTest.Scripts.GameMode
                     if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
                     {
                         spawnPosition.x += Random.Range(-0.2f, 0.2f);
-                        spawnPosition.z += Random.Range(-0.2f, 0.2f);    
+                        spawnPosition.z += Random.Range(-0.2f, 0.2f);
                     }
                     //지뢰
                     else if (diceInfo.id == 1005)
                     {
                         spawnPosition = GetRandomPlayerFieldPosition();
                     }
-                    
-                    var actorProxy = Object.Instantiate(_prefabHolder.ActorProxy, spawnPosition, GetRotation(isBottomCamp));
+
+                    var actorProxy = Object.Instantiate(_prefabHolder.ActorProxy, spawnPosition,
+                        GetRotation(isBottomCamp));
                     actorProxy.SetDiceInfo(diceInfo);
                     actorProxy.ownerTag = playerState.ownerTag;
                     actorProxy.actorType = ActorType.Actor;
@@ -285,17 +289,17 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.moveSpeed = diceInfo.moveSpeed;
                     actorProxy.ingameUpgradeLevel = deckDice.inGameLevel;
                     actorProxy.outgameUpgradeLevel = deckDice.outGameLevel;
-                    actorProxy.spawnTime = (float)ServerObjectManager.Server.Time.Time;
+                    actorProxy.spawnTime = (float) ServerObjectManager.Server.Time.Time;
                     //HACK:닌자
                     if (diceInfo.id == 2000)
                     {
                         actorProxy.BuffList.Add(new ActorProxy.Buff()
                         {
                             id = BuffInfos.NinjaClocking,
-                            endTime = (float)ServerObjectManager.Server.Time.Time + diceInfo.effectDuration,
+                            endTime = (float) ServerObjectManager.Server.Time.Time + diceInfo.effectDuration,
                         });
                     }
-                    
+
                     actorProxies.Add(actorProxy);
                 }
             }
@@ -309,10 +313,10 @@ namespace MirageTest.Scripts.GameMode
             {
                 return Quaternion.identity;
             }
- 
+
             return Quaternion.Euler(0, 180f, 0);
         }
-        
+
         public Vector3 GetRandomPlayerFieldPosition()
         {
             var x = Random.Range(-3f, 3f);
@@ -342,8 +346,8 @@ namespace MirageTest.Scripts.GameMode
                 effect = effect,
             };
         }
-        
-        public static Stat CalcHeroStat(TDataDiceInfo diceInfo,  byte inGameLevel, byte outGameLevel, byte diceScale)
+
+        public static Stat CalcHeroStat(TDataDiceInfo diceInfo, byte inGameLevel, byte outGameLevel, byte diceScale)
         {
             var stat = CalcMinionStat(diceInfo, inGameLevel, outGameLevel);
             return new Stat()
@@ -353,37 +357,39 @@ namespace MirageTest.Scripts.GameMode
                 effect = stat.effect * (diceScale + 1),
             };
         }
-        
-        public static Stat CalcMagicOrInstallationStat(TDataDiceInfo diceInfo,  byte inGameLevel, byte outGameLevel, byte diceScale)
+
+        public static Stat CalcMagicOrInstallationStat(TDataDiceInfo diceInfo, byte inGameLevel, byte outGameLevel,
+            byte diceScale)
         {
             var stat = CalcMinionStat(diceInfo, inGameLevel, outGameLevel);
-            
+
             return new Stat()
             {
-                power = stat.power  * Mathf.Pow(1.5f, diceScale - 1),
+                power = stat.power * Mathf.Pow(1.5f, diceScale - 1),
                 maxHealth = stat.maxHealth * Mathf.Pow(2f, diceScale - 1),
                 effect = stat.effect * Mathf.Pow(1.5f, diceScale - 1)
             };
         }
-        
+
         public struct Stat
         {
             public float power;
             public float maxHealth;
             public float effect;
         }
-        
+
         public void SpawnMyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
         {
             SpawnAtCenterField(PlayerState1, diceId, ingameLevel, outGameLevel, diceScale);
         }
-        
+
         public void SpawnEnemyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
         {
             SpawnAtCenterField(PlayerState2, diceId, ingameLevel, outGameLevel, diceScale);
         }
 
-        void SpawnAtCenterField(PlayerState playerState, int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)
+        void SpawnAtCenterField(PlayerState playerState, int diceId, byte ingameLevel, byte outGameLevel,
+            byte diceScale)
         {
             playerState.Deck[0] = new DeckDice()
             {
@@ -412,6 +418,10 @@ namespace MirageTest.Scripts.GameMode
         }
 
         public virtual void OnHitDamageTower(ActorProxy actorProxy)
+        {
+        }
+
+        public virtual void OnGiveUp(PlayerState player)
         {
         }
     }

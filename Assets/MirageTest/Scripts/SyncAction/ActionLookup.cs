@@ -7,40 +7,40 @@ namespace MirageTest.Scripts.SyncAction
 {
     public static class ActionLookup
     {
-        private static Dictionary<int, SyncActionWithTarget> _syncActionWithTargets;
-        private static Dictionary<int, SyncActionWithoutTarget> _syncActionWithoutTargets;
+        private static Dictionary<string, SyncActionWithTarget> _syncActionWithTargets;
+        private static Dictionary<string, SyncActionWithoutTarget> _syncActionWithoutTargets;
         
         static ActionLookup()
         {
-            Dictionary<int, SyncActionWithTarget> syncActionWithTargets = new Dictionary<int, SyncActionWithTarget>();
+            Dictionary<string, SyncActionWithTarget> syncActionWithTargets = new Dictionary<string, SyncActionWithTarget>();
             foreach (var type in 
                 Assembly.GetAssembly(typeof(SyncActionWithTarget)).GetTypes()
                     .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(SyncActionWithTarget))))
             {
                 var instance = (SyncActionWithTarget) Activator.CreateInstance(type);
-                syncActionWithTargets.Add(type.GetHashCode(), instance);
+                syncActionWithTargets.Add(type.Name, instance);
             }
 
             _syncActionWithTargets = syncActionWithTargets;
             
-            Dictionary<int, SyncActionWithoutTarget> syncActionWithoutTargets = new Dictionary<int, SyncActionWithoutTarget>();
+            Dictionary<string, SyncActionWithoutTarget> syncActionWithoutTargets = new Dictionary<string, SyncActionWithoutTarget>();
             foreach (var type in 
                 Assembly.GetAssembly(typeof(SyncActionWithoutTarget)).GetTypes()
                     .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(SyncActionWithoutTarget))))
             {
                 var instance = (SyncActionWithoutTarget) Activator.CreateInstance(type);
-                syncActionWithoutTargets.Add(type.GetHashCode(), instance);
+                syncActionWithoutTargets.Add(type.Name, instance);
             }
 
             _syncActionWithoutTargets = syncActionWithoutTargets;
         }
         
-        public static SyncActionWithTarget GetActionWithTarget(int hash)
+        public static SyncActionWithTarget GetActionWithTarget(string hash)
         {
             return _syncActionWithTargets[hash];
         }
         
-        public static SyncActionWithoutTarget GetActionWithoutTarget(int hash)
+        public static SyncActionWithoutTarget GetActionWithoutTarget(string hash)
         {
             return _syncActionWithoutTargets[hash];
         }

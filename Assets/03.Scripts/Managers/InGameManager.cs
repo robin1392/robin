@@ -199,7 +199,8 @@ namespace ED
         {
             if (IsNetwork)
             {
-                FindObjectOfType<RWNetworkClient>().Disconnect();
+                var client = FindObjectOfType<RWNetworkClient>();
+                client.GetLocalPlayerProxy().GiveUp();
                 GameStateManager.Get().MoveMainScene();
             }
             else
