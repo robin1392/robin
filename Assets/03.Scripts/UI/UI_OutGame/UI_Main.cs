@@ -619,6 +619,11 @@ namespace ED
                                 UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, startPos,
                                     Mathf.Clamp(reward.Value, 5, 20));
                                 break;
+                            case 11: // 열쇠
+                                UserInfoManager.Get().GetUserInfo().key += reward.Value;
+                                UI_GetProduction.Get().Initialize(ITEM_TYPE.KEY, startPos,
+                                    Mathf.Clamp(reward.Value, 5, 20));
+                                break;
                             default: // 주사위
                             {
                                 ItemBaseInfo rw = new ItemBaseInfo();

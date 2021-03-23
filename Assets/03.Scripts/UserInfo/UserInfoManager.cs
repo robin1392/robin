@@ -299,6 +299,10 @@ public class UserInfo
                         UserInfoManager.Get().GetUserInfo().diamond += reward.Value;
                         UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, ScreenPos, Mathf.Clamp(reward.Value, 5, 20));
                         break;
+                    case 11:
+                        UserInfoManager.Get().GetUserInfo().key += reward.Value;
+                        UI_GetProduction.Get().Initialize(ITEM_TYPE.KEY, ScreenPos, Mathf.Clamp(reward.Value, 5, 20));
+                        break;
                     default: // 주사위
                     {
                         ItemBaseInfo rw = new ItemBaseInfo();
