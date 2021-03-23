@@ -462,7 +462,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
                     NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
                         loseReward.RewardId, ADRewardCallback);
 #else
-                    MopubCommunicator.Instance.showVideo(ADCallback);
+                    InGameManager.Get().LeaveRoomWithCallback(LeaveRoomCallback);
 #endif
                 });
             }
@@ -472,6 +472,11 @@ public class UI_InGamePopup_Result : MonoBehaviour
                 btn_AD.transform.localScale = Vector3.zero;
             });
         }
+    }
+
+    private void LeaveRoomCallback()
+    {
+        MopubCommunicator.Instance.showVideo(ADCallback);
     }
 
     private void ADCallback(bool b)
@@ -484,7 +489,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
         }
         else
         {
-            InGameManager.Get().LeaveRoom();
+            GameStateManager.Get().MoveMainScene();
         }
     }
 
@@ -499,11 +504,11 @@ public class UI_InGamePopup_Result : MonoBehaviour
                 UI_Main.listADReward.Add(reward);
             }
             UI_Popup_Quest.QuestUpdate(arrayQuestData);
-            InGameManager.Get().LeaveRoom();
+            GameStateManager.Get().MoveMainScene();
             return true;
         }
-                
-        InGameManager.Get().LeaveRoom();
+        
+        GameStateManager.Get().MoveMainScene();
         return false;
     }
 

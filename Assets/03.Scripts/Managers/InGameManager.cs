@@ -761,6 +761,13 @@ namespace ED
 
         #region leave & end game
 
+        private Action leaveroomCallback;
+        public void LeaveRoomWithCallback(Action callback)
+        {
+            leaveroomCallback = callback;
+            LeaveRoom();
+        }
+        
         public void LeaveRoom()
         {
             if (IsNetwork == true)
@@ -796,10 +803,17 @@ namespace ED
         public void CallBackLeaveRoom()
         {
             if(IsNetwork)
+            {
                 NetworkManager.Get().DisconnectSocket(false);
+                
+                if (leaveroomCallback != null)
+                {
+                    leaveroomCallback.Invoke();
+                    leaveroomCallback = null;
+                    return;
+                }
+            }
 
-            // 잠시 테스트로 주석
-            //NetworkManager.Get().DeleteBattleInfo();
             GameStateManager.Get().MoveMainScene();
         }
 
@@ -1269,16 +1283,10 @@ namespace ED
         #region network
         public void SendInGameManager(GameProtocol protocol, params object[] param)
         {
-            
             if (IsNetwork == true)
             {
                 NetworkManager.Get().Send(protocol, param);
             }
-            // 패킷프로토콜이 틀리기때문에 쓸모없슴...
-            /*else
-            {
-                RecvInGameManager(protocol, param);
-            }*/
         }
 
         // net direct player
