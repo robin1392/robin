@@ -157,8 +157,8 @@ MonoBehaviour:
   eyeLevel: 0
   ingameUpgradeLevel: 0
   isPolymorph: 0
-  _arrow: 0
-  _spear: 1
+  _arrow: 11
+  _spear: 11
   bulletMoveSpeed: 6
   pref_Bullet: {fileID: 6211001642194093043, guid: fb2147c6938bc4c23af4b93d5d2e8ea2,
     type: 3}
