@@ -496,7 +496,7 @@ public class UI_InGamePopup_Result : MonoBehaviour
     private bool ADRewardCallback(ERandomwarsUserErrorCode errorCode, ItemBaseInfo[] arrayRewardInfo,
         QuestData[] arrayQuestData)
     {
-        UI_InGamePopup.Get().obj_Indicator.SetActive(false);
+        //UI_InGamePopup.Get().obj_Indicator.SetActive(false);
         if (errorCode == ERandomwarsUserErrorCode.Success)
         {
             foreach (var reward in arrayRewardInfo)

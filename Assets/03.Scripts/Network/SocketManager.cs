@@ -183,7 +183,7 @@ public class SocketManager
             //NetworkManager.Get().DeleteBattleInfo();
             NetworkManager.Get().SetReconnect(false);
             //
-            GameStateManager.Get().MoveMainScene();
+            //GameStateManager.Get().MoveMainScene();
             return;
         }
         

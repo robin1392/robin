@@ -989,12 +989,17 @@ namespace ED
             {
                 pauseTime = DateTime.UtcNow;
                 print("Application Pause");
-                NetworkManager.Get().PauseGame();
+                if (isGamePlaying)
+                {
+                    NetworkManager.Get().PauseGame();
+                }
             }
             else
             {
                 if (isGamePlaying == false)
+                {
                     return;
+                }
 
                 time -= (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
                 print("Application Resume : " + ((float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds));

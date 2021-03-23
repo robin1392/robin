@@ -650,7 +650,6 @@ namespace ED
             {
                 pauseTime = DateTime.UtcNow;
                 print("Application Pause");
-                NetworkManager.Get().PauseGame();
             }
             else
             {
