@@ -268,8 +268,13 @@ public class TutorialManager : MonoBehaviour
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
                 image_NextStep.raycastTarget = false;
                 Time.timeScale = 1f;
-                NetworkManager.session.UserTemplate.UserTutorialEndReq(NetworkManager.session.HttpClient, OnEndTutorial);
+                if (isTutorial)
+                {
+                    NetworkManager.session.UserTemplate.UserTutorialEndReq(NetworkManager.session.HttpClient,
+                        OnEndTutorial);
+                }
                 isTutorial = false;
+                UserInfoManager.Get().GetUserInfo().isEndTutorial = true;
                 //NetworkManager.Get().EndTutorialReq(UserInfoManager.Get().GetUserInfo().userID);
                 break;
         }
