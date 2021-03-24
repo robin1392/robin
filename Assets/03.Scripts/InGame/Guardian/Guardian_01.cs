@@ -2,35 +2,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ED;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 
 public class Guardian_01 : Minion
 {
+    private float _skillCastedTime;
+
     public override void Initialize()
     {
         base.Initialize();
-
-        StartCoroutine(SkillCoroutine());
+        _skillCastedTime = -effectCooltime;
     }
 
-    IEnumerator SkillCoroutine()
+    public override IEnumerator Attack()
     {
-        while (true)
+        if (_spawnedTime >= _skillCastedTime + effectCooltime)
         {
-            yield return new WaitForSeconds(effectCooltime);
+            _skillCastedTime = _spawnedTime;
+            var action = new Guardian01Action();
+            RunningAction = action;
+            yield return action.ActionWithSync(ActorProxy, target.ActorProxy);
+            RunningAction = null;
+        }
+
+        yield return base.Attack();
+    }
+}
+
+public class Guardian01Action : SyncActionWithTarget
+{
+    public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
+    {
+        actorProxy.baseStat.animator.SetTrigger(AnimationHash.Skill);
+
+        yield return new WaitForSeconds(0.716f);
+
+        if (actorProxy.isPlayingAI == false)
+        {
+            yield break;
+        }
             
-            ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
+        var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseStat.targetLayer);
+        foreach (var col in cols)
+        {
+            if (col.CompareTag("Player")) continue;
 
-            yield return new WaitForSeconds(0.716f);
-
-            var cols = Physics.OverlapSphere(transform.position, 2f, targetLayer);
-            for (int i = 0; i < cols.Length; i++)
+            var m = col.GetComponentInParent<BaseStat>();
+            if (m != null && m.isAlive)
             {
-                var bs = cols[i].GetComponentInParent<BaseStat>();
-                if (bs != null)
-                {
-                    DamageToTarget(bs);
-                }
+                m.ActorProxy.HitDamage(actorProxy.baseStat.power);
             }
         }
+        
+        yield return new WaitForSeconds(0.284f);
     }
 }
