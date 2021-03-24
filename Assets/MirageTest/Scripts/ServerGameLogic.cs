@@ -226,6 +226,11 @@ namespace MirageTest.Scripts
         {
             _gameMode.OnHitDamageTower(actorProxy);
         }
+
+        public void OnBossDestroyed(BossActorProxy bossActorProxy)
+        {
+            _gameMode.OnBossDestroyed(bossActorProxy);
+        }
     }
 
     public class PrefabHolder

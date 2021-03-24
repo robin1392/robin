@@ -18,7 +18,7 @@ namespace MirageTest.Scripts.GameMode
 {
     public abstract class GameModeBase
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(GameModeBase));
+        protected static readonly ILogger logger = LogFactory.GetLogger(typeof(GameModeBase));
 
         protected TableData<int, TDataDiceInfo> DiceInfos;
         protected PlayerState[] PlayerStates;
@@ -55,7 +55,7 @@ namespace MirageTest.Scripts.GameMode
             DiceInfos = TableManager.Get().DiceInfo;
             
             var vsmode = TableManager.Get().Vsmode;
-            WaveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
+            WaveTime = 2;// vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
             AddSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
         }
 
@@ -446,6 +446,7 @@ namespace MirageTest.Scripts.GameMode
 
         public virtual void OnHitDamageTower(ActorProxy actorProxy)
         {
+            
         }
 
         public virtual void OnGiveUp(PlayerState player)
@@ -467,6 +468,11 @@ namespace MirageTest.Scripts.GameMode
                     GameState.masterOwnerTag = newMaster.ownerTag;
                 }
             }
+        }
+
+        
+        public virtual void OnBossDestroyed(BossActorProxy bossActorProxy)
+        {
         }
     }
 }

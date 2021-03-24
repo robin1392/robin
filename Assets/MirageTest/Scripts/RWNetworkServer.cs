@@ -94,6 +94,10 @@ public class RWNetworkServer : NetworkServer
             Towers.Remove(actorProxy);
             serverGameLogic.OnTowerDestroyed(actorProxy);
         }
+        else if (actorProxy is BossActorProxy bossActorProxy)
+        {
+            serverGameLogic.OnBossDestroyed(bossActorProxy);
+        }
     }
 
     private void OnConnected(INetworkPlayer arg0)
@@ -185,6 +189,7 @@ public class RWNetworkServer : NetworkServer
             actorProxy.currentHealth = stat.maxHealth;
             actorProxy.effect = stat.effect;
             actorProxy.attackSpeed = diceInfo.attackSpeed;
+            actorProxy.moveSpeed = diceInfo.moveSpeed;
             actorProxy.diceScale = 1;
             actorProxy.ingameUpgradeLevel = inGameLevel;
             actorProxy.outgameUpgradeLevel = outGameLevel;
@@ -195,7 +200,7 @@ public class RWNetworkServer : NetworkServer
     
     public void CreateActorWithGuardianId(int guadianId, byte ownerTag, byte team, Vector3 position)
     {
-        if (TableManager.Get().GuardianInfo.GetData(guadianId, out var tGuardianInfo) == false)
+        if (TableManager.Get().GuardianInfo.GetData(guadianId, out var guardianInfo) == false)
         {
             logger.LogError($"존재하지 않는 수호자 아이디 입니다. {guadianId}");
             return;
@@ -208,11 +213,12 @@ public class RWNetworkServer : NetworkServer
         actorProxy.ownerTag = ownerTag;
         actorProxy.team = team;
         actorProxy.spawnSlot = 0;
-        actorProxy.power = tGuardianInfo.power;
-        actorProxy.maxHealth = tGuardianInfo.maxHealth;
-        actorProxy.currentHealth = tGuardianInfo.maxHealth * 100;
-        actorProxy.effect = tGuardianInfo.effect;
-        actorProxy.attackSpeed = tGuardianInfo.attackSpeed;
+        actorProxy.power = guardianInfo.power;
+        actorProxy.maxHealth = guardianInfo.maxHealth;
+        actorProxy.currentHealth = guardianInfo.maxHealth;
+        actorProxy.effect = guardianInfo.effect;
+        actorProxy.attackSpeed = guardianInfo.attackSpeed;
+        actorProxy.moveSpeed = guardianInfo.moveSpeed;
         actorProxy.spawnTime = (float) Time.Time;
         //충분히 긴 시간 버프를 준다.
         actorProxy.BuffList.Add(new ActorProxy.Buff()

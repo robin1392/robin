@@ -80,59 +80,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dbcf7e96ad09404dbabb7bd4e4afd58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 0
   id: 0
-  controller: {fileID: 0}
-  rb: {fileID: 4956517791549293242}
   animator: {fileID: 1002647512809408800}
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
   - {fileID: 2100000, guid: ac788f276c741462d98f0b639b142b58, type: 2}
   target: {fileID: 0}
   targetMoveType: 2
-  power: 0
-  powerUpByUpgrade: 0
-  powerUpByInGameUp: 0
-  maxHealth: 20001
-  currentHealth: 0
-  maxHealthUpByUpgrade: 0
-  maxHealthUpByInGameUp: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
+  effectUpgrade: 0
+  effectInGameUp: 0
   effectDuration: 0
   effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 1
   range: 0
   searchRange: 2
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 980357762058366362}
   ts_HitPos: {fileID: 980357762058366362}
   image_HealthBar: {fileID: 4953143920641770040}
   text_Health: {fileID: 176264361659379970}
-  isPlayable: 1
-  instanceID: 0
-  targetPlayer: {fileID: 0}
-  coopPlayer: {fileID: 0}
+  _poolObjectAutoDeactivate: {fileID: 0}
   uiDiceField: {fileID: 0}
   objCollider: {fileID: 7007598002378707877}
   ps_ShieldOff: {fileID: 6893542662049175148}
   ps_Destroy: {fileID: 2445243117237966725}
   pref_Guardian: {fileID: 5081294253336761964, guid: 9d0b9ace6ba4c4164b1ff7d70e014e02,
     type: 3}
-  spawnCount: 1
-  spawnCountInWave: 0
-  subSpawnCount: 1000
-  _sp: 200
   robotPieceCount: 0
-  robotEyeTotalLevel: 0
   clip_TowerFalldown: {fileID: 8300000, guid: 5b28a4c4a99394596a6ee7736021ccb7, type: 3}
   clip_TowerExplosion: {fileID: 8300000, guid: eb47b1f09e5a14f60a242ca24f9d586a, type: 3}
-  _listMagic: []
-  isHalfHealth: 0
-  isMinionAgentMove: 1
 --- !u!54 &4956517791549293242
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -173,13 +151,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7007598002378707877}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5883888954613411288}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &4086366551248313644
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -192,8 +170,8 @@ CapsuleCollider:
   m_Enabled: 1
   m_Radius: 1
   m_Height: 10
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 4}
+  m_Direction: 1
+  m_Center: {x: 0, y: 4, z: 0}
 --- !u!1001 &1742328681609301097
 PrefabInstance:
   m_ObjectHideFlags: 0
