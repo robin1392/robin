@@ -29,11 +29,14 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
     
     [TableList]
     public List<DiceElement> DiceInfos;
+    [TableList]
+    public List<DiceElement> GuardianInfos;
 
-    private GameModeBase _actorDevMode;
+    private GameModeBase _gameMode;
+    private RWNetworkServer _server;
     protected override void OnGUI()
     {
-        if (_actorDevMode != null)
+        if (_gameMode != null)
         {
             base.OnGUI();
             return;   
@@ -44,13 +47,16 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
         {
             if (serverGameLogic._gameMode != null)
             {
-                _actorDevMode = serverGameLogic._gameMode;
+                _server = serverGameLogic.server;
+                _gameMode = serverGameLogic._gameMode;
                 DiceInfos = TableManager.Get().DiceInfo.Values
                     .Select(d => new DiceElement(SpawnMine, SpawnEnemys, d.id, d.prefabName)).ToList();
+                GuardianInfos = TableManager.Get().GuardianInfo.Values
+                    .Select(d => new DiceElement(SpawnMyGuardian, SpawnEnemyGuardian, d.id, d.prefabName)).ToList();
             }
         }
     
-        if (_actorDevMode == null)
+        if (_gameMode == null)
         {
             EditorGUILayout.HelpBox("InGameMirageActorDev 씬 실행 중에만 동작합니다.", MessageType.Info);
         }
@@ -58,12 +64,24 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
 
     void SpawnMine(int diceId)
     {
-        _actorDevMode.SpawnMyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
+        _gameMode.SpawnMyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
     }
     
     void SpawnEnemys(int diceId)
     {
-        _actorDevMode.SpawnEnemyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
+        _gameMode.SpawnEnemyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
+    }
+    
+    void SpawnMyGuardian(int diceId)
+    {
+        var playerState = _gameMode.PlayerState1;
+        _server.CreateActorWithGuardianId(diceId, playerState.ownerTag, playerState.team, Vector3.zero);
+    }
+    
+    void SpawnEnemyGuardian(int diceId)
+    {
+        var playerState = _gameMode.PlayerState2;
+        _server.CreateActorWithGuardianId(diceId, playerState.ownerTag, playerState.team, Vector3.zero);
     }
     
     public class DiceElement
