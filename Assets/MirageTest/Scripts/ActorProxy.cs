@@ -35,6 +35,7 @@ namespace MirageTest.Scripts
         [SyncVar] public byte ingameUpgradeLevel;
         [SyncVar] public byte outgameUpgradeLevel;
         [SyncVar] public float spawnTime;
+        [SyncVar] public bool isSkillInitialized;
 
         public bool isPlayingAI;
         public bool isMovable = true;

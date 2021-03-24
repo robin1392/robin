@@ -216,12 +216,6 @@ public class RWNetworkServer : NetworkServer
         actorProxy.effect = tGuardianInfo.effect;
         actorProxy.attackSpeed = tGuardianInfo.attackSpeed;
         actorProxy.spawnTime = (float) Time.Time;
-        //충분히 긴 시간 버프를 준다.
-        actorProxy.BuffList.Add(new ActorProxy.Buff()
-        {
-            id = BuffInfos.HalfDamage,
-            endTime = float.MaxValue,
-        });
 
         serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
     }
