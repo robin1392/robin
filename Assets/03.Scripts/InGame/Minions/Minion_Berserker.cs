@@ -71,7 +71,7 @@ namespace ED
             {
                 if (col.CompareTag("Player")) continue;
 
-                var m = col.GetComponent<BaseStat>();
+                var m = col.GetComponentInParent<BaseStat>();
                 if (m != null && m.isAlive)
                 {
                     m.ActorProxy.HitDamage(actorProxy.baseStat.power * 0.3f);

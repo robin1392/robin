@@ -19,7 +19,7 @@ namespace MirageTest.Scripts
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameLogic));
         
-        private RWNetworkServer server;
+        public RWNetworkServer server;
         private ServerObjectManager _serverObjectManager;
         public ServerObjectManager ServerObjectManager => _serverObjectManager;
         

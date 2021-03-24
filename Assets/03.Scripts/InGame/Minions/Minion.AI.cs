@@ -20,9 +20,15 @@ namespace ED
         
         public override void StartAI()
         {
+            Debug.Log("StartAI");
             Seeker.enabled = true;
             AiPath.enabled = true;
             AiPath.isStopped = true;
+            if (_ai != null)
+            {
+                StopCoroutine(_ai);
+            }
+            
             _ai = StartCoroutine(Root());
         }
 

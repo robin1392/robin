@@ -50,9 +50,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 0
   id: 0
-  controller: {fileID: 0}
   animator: {fileID: 5856391302593061823}
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
@@ -61,25 +61,15 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  power: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  effectDuration: 0
-  effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 0
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
+  _poolObjectAutoDeactivate: {fileID: 0}
   castType: 4
   isPushing: 0
-  isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
-  _poolObjectAutoDeactivate: {fileID: 0}
+  isAttackSpeedFactorWithAnimation: 0
+  collider: {fileID: 0}
   isPolymorph: 0
 --- !u!135 &6486029529450410244
 SphereCollider:
