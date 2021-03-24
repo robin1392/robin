@@ -27,7 +27,10 @@ namespace MirageTest.Scripts
         
         public GameState gameStatePrefab;
         public PlayerState playerStatePrefab;
-        public ActorProxy actorProxyPrefab;
+        public TowerActorProxy towerActorProxyPrefab;
+        public GuardianActorProxy guardianActorProxyPrefab;
+        public BossActorProxy bossActorProxyPrefab;
+        public DiceActorProxy diceActorProxyPrefab;
         
         public GameModeBase _gameMode;
         public bool isAIMode;
@@ -91,7 +94,10 @@ namespace MirageTest.Scripts
             {
                 PlayerState = playerStatePrefab,
                 GameState = gameStatePrefab,
-                ActorProxy = actorProxyPrefab,
+                TowerActorProxyPrefab = towerActorProxyPrefab,
+                GuardianActorProxyPrefab = guardianActorProxyPrefab,
+                BossActorProxyPrefab =  bossActorProxyPrefab,
+                DiceActorProxyPrefab = diceActorProxyPrefab,
             };
             
             switch (modeType)
@@ -226,6 +232,9 @@ namespace MirageTest.Scripts
     {
         public GameState GameState;
         public PlayerState PlayerState;
-        public ActorProxy ActorProxy;
+        public TowerActorProxy TowerActorProxyPrefab;
+        public DiceActorProxy DiceActorProxyPrefab;
+        public GuardianActorProxy GuardianActorProxyPrefab;
+        public BossActorProxy BossActorProxyPrefab;
     }
 }

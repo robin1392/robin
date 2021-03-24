@@ -1,14 +1,28 @@
 using ED;
-using Mirage;
 using Mirage.Logging;
+using RandomWarsResource.Data;
 using UnityEngine;
-using Debug = ED.Debug;
 
 namespace MirageTest.Scripts
 {
-    public partial class ActorProxy
+    public class GuardianActorProxy : ActorProxy
     {
-        void SpawnGuardian()
+        private TDataGuardianInfo _gudianInfo;
+
+        public TDataGuardianInfo gudianInfo
+        {
+            get
+            {
+                if (_gudianInfo == null)
+                {
+                    TableManager.Get().GuardianInfo.GetData(dataId, out _gudianInfo);
+                }
+
+                return _gudianInfo;
+            }
+        }
+
+        protected override void OnSpawnActor()
         {
             if (TableManager.Get().GuardianInfo.GetData(dataId, out var dataGuardianInfo) == false)
             {
@@ -22,14 +36,16 @@ namespace MirageTest.Scripts
             if (prefab != null)
             {
                 PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
-                var guadian = PoolManager.instance.ActivateObject<Minion>(dataGuardianInfo.prefabName, Vector3.zero, transform);
+                var guadian =
+                    PoolManager.instance.ActivateObject<Minion>(dataGuardianInfo.prefabName, Vector3.zero, transform);
                 if (guadian == null)
                 {
                     PoolManager.instance.AddPool(
                         FileHelper.LoadPrefab(dataGuardianInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION), 1);
-                    guadian = PoolManager.instance.ActivateObject<Minion>(dataGuardianInfo.prefabName, Vector3.zero, transform);
+                    guadian = PoolManager.instance.ActivateObject<Minion>(dataGuardianInfo.prefabName, Vector3.zero,
+                        transform);
                 }
-                
+
                 baseStat = guadian;
                 guadian.ActorProxy = this;
                 guadian.transform.localPosition = Vector3.zero;
@@ -42,6 +58,12 @@ namespace MirageTest.Scripts
                 guadian.targetMoveType = (DICE_MOVE_TYPE) gudianInfo.targetMoveType;
                 guadian.ChangeLayer(IsBottomCamp());
                 
+                guadian.effectUpgrade = dataGuardianInfo.effectUpgrade;
+                guadian.effectInGameUp = dataGuardianInfo.effectInGameUp;
+                guadian.effectDuration = dataGuardianInfo.effectDuration;
+                guadian.effectCooltime = dataGuardianInfo.effectCooltime;
+                guadian.range = dataGuardianInfo.range;
+                guadian.searchRange = dataGuardianInfo.searchRange;
             }
 
             var client = Client as RWNetworkClient;

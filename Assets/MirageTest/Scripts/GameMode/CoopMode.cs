@@ -38,11 +38,10 @@ namespace MirageTest.Scripts.GameMode
         void SpawnAllyTower()
         {
             var playerTowerPosition = FieldManager.Get().GetPlayerPos(true);
-            var tower = UnityEngine.Object.Instantiate(_prefabHolder.ActorProxy, playerTowerPosition, Quaternion.identity);
+            var tower = UnityEngine.Object.Instantiate(_prefabHolder.TowerActorProxyPrefab, playerTowerPosition, Quaternion.identity);
             tower.team = GameConstants.BottomCamp;
             tower.ownerTag = GameConstants.ServerTag;
-            tower.actorType = ActorType.Tower;
-            
+
             var tableManager = TableManager.Get();
             var hp = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.TowerHp].value;
 
@@ -72,6 +71,16 @@ namespace MirageTest.Scripts.GameMode
         
         protected override void OnWave(int wave)
         {
+            // if (wave == 1)
+            // {
+            //     SpawnBossEgg();
+            // }
+            // else if(wave % 5 == 0)
+            // {
+            //     var = SpawnBossEgg();
+            //     
+            // }
+
             
             //웨이브때마다 보스알을 몬스터를 스폰한다.
             //보스알 AI는 4웨이브 후에 변신한다.

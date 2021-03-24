@@ -21,87 +21,16 @@ namespace ED
 
         public float power => ActorProxy.power;
         public float effect => ActorProxy.effect;
-        public float effectUpByUpgrade
-        {
-            get
-            {
-                if (ActorProxy.actorType == ActorType.Guardian)
-                {
-                    return ActorProxy.gudianInfo.effectUpgrade;
-                }
-
-                return ActorProxy.diceInfo.effectUpgrade;
-            }
-        }
-        
-        public float effectUpByInGameUp
-        {
-            get
-            {
-                if (ActorProxy.actorType == ActorType.Guardian)
-                {
-                    return ActorProxy.gudianInfo.effectInGameUp;
-                }
-
-                return ActorProxy.diceInfo.effectInGameUp;
-            }
-        }
-        
-        public float effectDuration
-        {
-            get
-            {
-                if (ActorProxy.actorType == ActorType.Guardian)
-                {
-                    return ActorProxy.gudianInfo.effectDuration;
-                }
-
-                return ActorProxy.diceInfo.effectDuration;
-            }
-        }
-
-        public float effectCooltime
-        {
-            get
-            {
-                if (ActorProxy.actorType == ActorType.Guardian)
-                {
-                    return ActorProxy.gudianInfo.effectCooltime;
-                }
-
-                return ActorProxy.diceInfo.effectCooltime;
-            }
-        }
+        public float effectUpgrade;
+        public float effectInGameUp;
+        public float effectDuration;
+        public float effectCooltime;
+        public float range;
+        public float searchRange;
 
         public float attackSpeed => ActorProxy.attackSpeed;
         public float moveSpeed => ActorProxy.moveSpeed;
 
-        public float range
-        {
-            get
-            {
-                if (ActorProxy.actorType == ActorType.Guardian)
-                {
-                    return ActorProxy.gudianInfo.range;
-                }
-
-                return ActorProxy.diceInfo.range;
-            }
-        }
-
-        public float searchRange
-        {
-            get
-            {
-                if (ActorProxy.actorType == ActorType.Guardian)
-                {
-                    return ActorProxy.gudianInfo.searchRange;
-                }
-
-                return ActorProxy.diceInfo.searchRange;
-            }
-        }
-        
         public bool isBottomCamp => ActorProxy.IsBottomCamp();
 
         [Header("Positions")] public Transform ts_ShootingPos;

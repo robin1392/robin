@@ -77,10 +77,12 @@ MonoBehaviour:
       m_Calls: []
   spawnPrefabs:
   - {fileID: -6285551073327302030, guid: f631769355c16485a9c68f830ed15524, type: 3}
-  - {fileID: -6285551073327302030, guid: b3fcd3244a9d8489eaa1365f9f676d6e, type: 3}
+  - {fileID: -6285551073327302030, guid: 6ba3dee84a9354b1895e00b1e583a133, type: 3}
   - {fileID: 1543683427229637218, guid: 96959fafd3b5d4a40a4a981101919585, type: 3}
   - {fileID: 5852545224420049431, guid: 876b771d2cd9448cdabec49b98843c0e, type: 3}
   - {fileID: 1543683427229637218, guid: 13bb752557e22490e816dc90bc0f20a2, type: 3}
+  - {fileID: -6285551073327302030, guid: adceae40c3cd74fe5926f950fc566841, type: 3}
+  - {fileID: -6285551073327302030, guid: 963c489d773354b17b67fa225fe76e34, type: 3}
 --- !u!114 &1999751920950500995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +116,9 @@ MonoBehaviour:
   LocalUserId: 11
   LocalNickName: 11
   PlayerSessionId: 
+  PlayType: 0
+  lastConnectServerIp: 
+  playing: 0
 --- !u!114 &343533738106072716
 MonoBehaviour:
   m_ObjectHideFlags: 0

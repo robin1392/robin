@@ -17,7 +17,7 @@ namespace ED
         public AudioClip clip_Shoot;
         public AudioClip clip_Explosion;
         
-        private float sturnTime => effect + (effectUpByUpgrade * ActorProxy.outgameUpgradeLevel) + (effectUpByInGameUp * ActorProxy.ingameUpgradeLevel);
+        private float sturnTime => effect + (effectUpgrade * ActorProxy.outgameUpgradeLevel) + (effectInGameUp * ActorProxy.ingameUpgradeLevel);
         private bool isBombed = false;
 
         public override void Initialize(bool pIsBottomPlayer)

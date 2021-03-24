@@ -17,12 +17,11 @@ namespace MirageTest.Scripts
 {
     public partial class ActorProxy : NetworkBehaviour
     {
-        static readonly ILogger _logger = LogFactory.GetLogger(typeof(ActorProxy));
-        
+        protected static readonly ILogger _logger = LogFactory.GetLogger(typeof(ActorProxy));
+
         [SyncVar] public byte ownerTag;
         [SyncVar(hook = nameof(SetTeam))] public byte team;
         [SyncVar] public byte spawnSlot; //0 ~ 14 필드 슬롯 
-        [SyncVar] public ActorType actorType;
         [SyncVar] public int dataId;
 
         [SyncVar(hook = nameof(SetHp))] public float currentHealth;
@@ -44,46 +43,16 @@ namespace MirageTest.Scripts
 
         public BaseStat baseStat;
 
-        private TDataDiceInfo _diceInfo;
-        private TDataGuardianInfo _gudianInfo;
         private bool stopped;
 
         public Seeker _seeker;
         public AIPath _aiPath;
-
-        public TDataDiceInfo diceInfo
-        {
-            get
-            {
-                if (_diceInfo == null)
-                {
-                    TableManager.Get().DiceInfo.GetData(dataId, out _diceInfo);
-                }
-
-                return _diceInfo;
-            }
-        }
-        
-        public TDataGuardianInfo gudianInfo
-        {
-            get
-            {
-                if (_gudianInfo == null)
-                {
-                    TableManager.Get().GuardianInfo.GetData(dataId, out _gudianInfo);
-                }
-
-                return _gudianInfo;
-            }
-        }
 
         public readonly Buffs BuffList = new Buffs();
         public BuffState buffState = BuffState.None;
         public bool isClocking => ((buffState & BuffState.Clocking) != 0);
         public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
         public bool isCantAI => ((buffState & BuffState.CantAI) != 0);
-
-        private Action<ActorProxy> OnHitDamageOnServerCallback;
 
         [Serializable]
         public struct Buff
@@ -100,12 +69,6 @@ namespace MirageTest.Scripts
         [Serializable]
         public class Buffs : SyncList<Buff>
         {
-        }
-
-        public void SetDiceInfo(TDataDiceInfo info)
-        {
-            _diceInfo = info;
-            dataId = info.id;
         }
 
         private void Awake()
@@ -150,25 +113,17 @@ namespace MirageTest.Scripts
             var server = Server as RWNetworkServer;
             server.AddActorProxy(this);
 
-            if (actorType == ActorType.Tower)
-            {
-                OnHitDamageOnServerCallback = f =>
-                {
-                    server.serverGameLogic.OnHitDamageTower(this);
-                };
-            }
-
             if (Server.LocalClientActive)
             {
                 StartClient();
             }
         }
-        
+
         private void StopServer()
         {
             var server = Server as RWNetworkServer;
             server.RemoveActorProxy(this);
-            
+
             if (Server.LocalClientActive)
             {
                 StopClient();
@@ -241,7 +196,8 @@ namespace MirageTest.Scripts
                 {
                     if (minion._dicEffectPool.ContainsKey(MAZ.SCARECROW) == false)
                     {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow", transform.position);
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow",
+                            transform.position);
                         ad.transform.SetParent(transform);
                         minion._dicEffectPool.Add(MAZ.SCARECROW, ad);
                         minion.animator.gameObject.SetActive(false);
@@ -258,7 +214,7 @@ namespace MirageTest.Scripts
                 }
             }
         }
-        
+
         private void EnableInvincibilityEffect(bool b)
         {
             if (baseStat is Minion minion)
@@ -267,7 +223,8 @@ namespace MirageTest.Scripts
                 {
                     if (minion._dicEffectPool.ContainsKey(MAZ.INVINCIBILITY) == false)
                     {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Shield", transform.position);
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Shield",
+                            transform.position);
                         ad.transform.SetParent(transform);
                         minion._dicEffectPool.Add(MAZ.INVINCIBILITY, ad);
                     }
@@ -283,7 +240,7 @@ namespace MirageTest.Scripts
             }
         }
 
-        
+
         private void EnableStunEffect(bool b)
         {
             if (baseStat is Minion minion)
@@ -327,37 +284,16 @@ namespace MirageTest.Scripts
         void SpawnActor()
         {
             var client = Client as RWNetworkClient;
-            if (actorType == ActorType.Tower)
-            {
-                SpawnTower();
-            }
-            else if (actorType == ActorType.Actor)
-            {
-                if (client.enableUI && IsLocalPlayerActor)
-                {
-                    var setting = UI_DiceField.Get().arrSlot[spawnSlot].ps.main;
-                    setting.startColor = FileHelper.GetColor(diceInfo.color);
-                    UI_DiceField.Get().arrSlot[spawnSlot].ps.Play();
-                }
-
-                if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION || diceInfo.castType == (int) DICE_CAST_TYPE.HERO)
-                {
-                    SpawnMinionOrHero();
-                }
-                else if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC ||
-                         diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
-                {
-                    SpawnMagicAndInstallation();
-                }
-            }
-            else if (actorType == ActorType.Guardian)
-            {
-                SpawnGuardian();
-            }
+            OnSpawnActor();
 
             EnableAI(client.IsPlayingAI);
             RefreshHpUI();
         }
+
+        protected virtual void OnSpawnActor()
+        {
+        }
+
 
         public bool IsBottomCamp()
         {
@@ -422,7 +358,7 @@ namespace MirageTest.Scripts
                 AddBuffInternal(id, duration);
                 return;
             }
-            
+
             AddBuffOnServer(id, duration);
         }
 
@@ -447,7 +383,7 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
+
             if (baseStat.OnBeforeHitDamage(damage))
             {
                 return;
@@ -459,7 +395,7 @@ namespace MirageTest.Scripts
                 DamageOnInternal(damage);
                 return;
             }
-            
+
             HitDamageOnServer(damage);
         }
 
@@ -475,8 +411,8 @@ namespace MirageTest.Scripts
             currentHealth -= damage;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
-            OnHitDamageOnServerCallback?.Invoke(this);
-                
+            OnApplyDamageOnServer();
+
             if (currentHealth <= 0)
             {
                 ServerObjectManager.Destroy(gameObject);
@@ -484,6 +420,10 @@ namespace MirageTest.Scripts
             }
 
             DamagedOnClient(damage);
+        }
+
+        protected virtual void OnApplyDamageOnServer()
+        {
         }
 
         [ClientRpc]
@@ -515,10 +455,10 @@ namespace MirageTest.Scripts
                 HealOnInternal(amount);
                 return;
             }
-            
+
             AppyHealOnServer(amount);
         }
-        
+
         [ServerRpc(requireAuthority = false)]
         public void AppyHealOnServer(float amount)
         {
@@ -604,8 +544,8 @@ namespace MirageTest.Scripts
                     {
                         return;
                     }
-                    
-                    transform.position = Vector3.Lerp(transform.position, position, 
+
+                    transform.position = Vector3.Lerp(transform.position, position,
                         Time.deltaTime * moveSpeed * 10f);
                     transform.rotation = Quaternion.Lerp(transform.rotation,
                         Quaternion.LookRotation((position - transform.position).normalized),
@@ -673,10 +613,10 @@ namespace MirageTest.Scripts
             {
                 return null;
             }
-            
+
             return enemyTower.baseStat;
         }
-        
+
         public BaseStat[] GetEnemies()
         {
             var rwClient = Client as RWNetworkClient;
@@ -688,7 +628,7 @@ namespace MirageTest.Scripts
                     return false;
                 }
 
-                if (actor.actorType == ActorType.Tower)
+                if (actor is TowerActorProxy)
                 {
                     return false;
                 }
@@ -697,10 +637,10 @@ namespace MirageTest.Scripts
                 {
                     return false;
                 }
-                
+
                 if (actor.baseStat is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
                 {
-                    return false; 
+                    return false;
                 }
 
                 return true;
@@ -715,7 +655,7 @@ namespace MirageTest.Scripts
             var friends = rwClient.ActorProxies.Where(actor =>
             {
                 if (actor.team != team) return false;
-                if (actor.actorType != ActorType.Actor) return false;
+                if ((actor is DiceActorProxy) == false) return false;
                 if (actor.baseStat is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
                     return false;
                 if (actor.baseStat is Magic) return false;
@@ -740,7 +680,7 @@ namespace MirageTest.Scripts
                     return false;
                 }
 
-                if (actor.actorType == ActorType.Tower)
+                if (actor is TowerActorProxy)
                 {
                     return true;
                 }
@@ -749,10 +689,10 @@ namespace MirageTest.Scripts
                 {
                     return false;
                 }
-                
+
                 if (actor.baseStat is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
                 {
-                    return false; 
+                    return false;
                 }
 
                 return true;
@@ -771,7 +711,7 @@ namespace MirageTest.Scripts
                 DestroyInternal();
                 return;
             }
-            
+
             DestroyOnServer();
         }
 
@@ -788,7 +728,7 @@ namespace MirageTest.Scripts
                 DestroyInternalDelayed(delay);
                 return;
             }
-            
+
             DestroyOnServerDelayed(delay);
         }
 
@@ -806,7 +746,7 @@ namespace MirageTest.Scripts
         IEnumerator DestroyInternalDelayedCoroutine(float delay)
         {
             yield return new WaitForSeconds(delay);
-            
+
             DestroyInternal();
         }
 
@@ -814,8 +754,9 @@ namespace MirageTest.Scripts
         {
             ServerObjectManager.Destroy(gameObject);
         }
-        
-        public void CreateActorBy(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay = 0f)
+
+        public void CreateActorBy(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions,
+            float delay = 0f)
         {
             if (IsLocalClient)
             {
@@ -823,12 +764,13 @@ namespace MirageTest.Scripts
                 server.CreateActorWithDiceId(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
                 return;
             }
-            
+
             CreateActorByOnServer(diceId, inGameLevel, outGameLevel, positions, delay);
         }
 
         [ServerRpc(requireAuthority = false)]
-        public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions, float delay)
+        public void CreateActorByOnServer(int diceId, byte inGameLevel, byte outGameLevel, Vector3[] positions,
+            float delay)
         {
             var server = Server as RWNetworkServer;
             server.CreateActorWithDiceId(diceId, ownerTag, team, inGameLevel, outGameLevel, positions, delay);
@@ -856,17 +798,14 @@ namespace MirageTest.Scripts
             var rwClient = Client as RWNetworkClient;
             var tower = rwClient.GetTower(ownerTag);
             Vector3 fusionPosition = transform.position;
-            
+
             if (tower != null)
             {
                 fusionPosition = tower.transform.position;
                 fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
             }
-            
-            transform.DOMove(fusionPosition, 0.5f).OnComplete(() =>
-            {
-                Destroy();
-            });
+
+            transform.DOMove(fusionPosition, 0.5f).OnComplete(() => { Destroy(); });
         }
     }
 }

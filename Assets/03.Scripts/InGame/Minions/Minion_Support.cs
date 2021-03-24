@@ -58,7 +58,7 @@ namespace ED
                     return false;
                 }
 
-                if (actor.actorType == ActorType.Tower)
+                if (actor is TowerActorProxy)
                 {
                     return false;
                 }
