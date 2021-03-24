@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ED;
+using ED.Boss;
 using Microsoft.Win32.SafeHandles;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
 using RandomWarsProtocol;
 using UnityEngine;
 
-public class Boss1 : Minion
+public class Boss1 : BossBase
 {
     public GameObject pref_Dust;
 
@@ -19,26 +20,6 @@ public class Boss1 : Minion
         base.Initialize();
         _skillCastedTime = -effectCooltime;
         PoolManager.instance.AddPool(pref_Dust, 1);
-    }
-
-    protected override IEnumerator Root()
-    {
-        var bossActorProxy = ActorProxy as BossActorProxy;
-        while (isAlive)
-        {
-            while (bossActorProxy == null || bossActorProxy.isHatched == false)
-            {
-                yield return _waitForSeconds0_1;
-            }
-
-            target = SetTarget();
-            if (target != null)
-            {
-                yield return Combat();
-            }
-
-            yield return _waitForSeconds0_1;
-        }
     }
 
     protected override IEnumerator Combat()

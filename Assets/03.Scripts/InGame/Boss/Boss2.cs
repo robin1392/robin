@@ -1,46 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using ED;
-using Microsoft.Win32.SafeHandles;
-using RandomWarsProtocol;
+using ED.Boss;
 using UnityEngine;
 
-public class Boss2 : Minion
+public class Boss2 : BossBase
 {
-    private float _skillCastedTime;
-    private bool _isSkillCasting;
-    private float _localAttackSpeed = 1f;
-
-    public override void Initialize()
+    public override IEnumerator Attack()
     {
-        base.Initialize();
-        _skillCastedTime = -effectCooltime;
-        //KZSee:
-        // attackSpeed = 1f;
-        // effectCooltime = 1f;
-        Skill();
-    }
-
-    public void Skill()
-    {
-        StartCoroutine(SkillCoroutine());
-    }
-
-    IEnumerator SkillCoroutine()
-    {
-        float originAttackSpeed = attackSpeed;
-        float animationSpeed = 1f;
-        int loopCount = 1;
+        var elapsed = (float)ActorProxy.NetworkTime.Time - ActorProxy.spawnTime;
+        var loopCount = (int)(elapsed / effectCooltime);
+        var attackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
         
-        while (true)
-        {
-            yield return new WaitForSeconds(effectCooltime);
-
-            loopCount++;
-            _localAttackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
-            //KZSee:
-            // attackSpeed = 1f / _localAttackSpeed;
-            animator.SetFloat("AttackSpeed", _localAttackSpeed);
-        }
+        return AttackCoroutine(attackSpeed);
     }
 }

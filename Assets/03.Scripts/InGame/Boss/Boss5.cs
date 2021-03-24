@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using ED;
+using ED.Boss;
 using Microsoft.Win32.SafeHandles;
 using RandomWarsProtocol;
 using UnityEngine;
 
-public class Boss5 : Minion
+public class Boss5 : BossBase
 {
     [Header("Effect")]
     public GameObject obj_Attack;

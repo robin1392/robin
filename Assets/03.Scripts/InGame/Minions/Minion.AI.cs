@@ -115,13 +115,14 @@ namespace ED
         
         public virtual IEnumerator Attack()
         {
-            _attackedTarget = target;
-            ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
-            yield return AttackCoroutine();
+            yield return AttackCoroutine(attackSpeed);
         }
 
-        protected IEnumerator AttackCoroutine()
+        protected IEnumerator AttackCoroutine(float attackSpeed)
         {
+            _attackedTarget = target;
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
+            
             var tr = ActorProxy.transform;
             var pos = tr.position;
             pos.y = 0;
