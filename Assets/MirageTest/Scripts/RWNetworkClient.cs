@@ -249,7 +249,7 @@ namespace MirageTest.Scripts
         
         public void AddActorProxy(ActorProxy actorProxy)
         {
-            if (actorProxy.actorType == ActorType.Tower)
+            if (actorProxy is TowerActorProxy)
             {
                 Towers.Add(actorProxy);
             }
@@ -262,7 +262,7 @@ namespace MirageTest.Scripts
         public void RemoveActorProxy(ActorProxy actorProxy)
         {
             ActorProxies.Remove(actorProxy);
-            if (actorProxy.actorType == ActorType.Tower)
+            if (actorProxy is TowerActorProxy)
             {
                 Towers.Remove(actorProxy);
             }

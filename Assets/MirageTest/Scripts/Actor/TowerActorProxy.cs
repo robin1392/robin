@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace MirageTest.Scripts
 {
-    public partial class ActorProxy
+    public class TowerActorProxy : ActorProxy
     {
-        void SpawnTower()
+        protected override void OnSpawnActor()
         {
             //KZSee: 검토
             var towerPrefab = Resources.Load<PlayerController>("Tower/Player");
@@ -18,6 +18,12 @@ namespace MirageTest.Scripts
             playerController.SetColor(IsBottomCamp() ? E_MaterialType.BOTTOM : E_MaterialType.TOP, IsLocalPlayerAlly());
             baseStat.SetHealthBarColor();
             isMovable = false;
+        }
+
+        protected override void OnApplyDamageOnServer()
+        {
+            var server = Server as RWNetworkServer;
+            server.serverGameLogic.OnHitDamageTower(this);
         }
     }
 }

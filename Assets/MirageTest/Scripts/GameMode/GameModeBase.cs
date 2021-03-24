@@ -301,11 +301,10 @@ namespace MirageTest.Scripts.GameMode
                         spawnPosition = GetRandomPlayerFieldPosition();
                     }
 
-                    var actorProxy = Object.Instantiate(_prefabHolder.ActorProxy, spawnPosition,
+                    var actorProxy = Object.Instantiate(_prefabHolder.DiceActorProxyPrefab, spawnPosition,
                         GetRotation(isBottomCamp));
-                    actorProxy.SetDiceInfo(diceInfo);
+                    actorProxy.dataId = diceInfo.id;
                     actorProxy.ownerTag = playerState.ownerTag;
-                    actorProxy.actorType = ActorType.Actor;
                     actorProxy.team = playerState.team;
                     actorProxy.spawnSlot = fieldIndex;
                     actorProxy.power = stat.power;

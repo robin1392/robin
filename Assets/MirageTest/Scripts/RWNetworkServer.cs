@@ -78,7 +78,7 @@ public class RWNetworkServer : NetworkServer
     
     public void AddActorProxy(ActorProxy actorProxy)
     {
-        if (actorProxy.actorType == ActorType.Tower)
+        if (actorProxy is TowerActorProxy)
         {
             Towers.Add(actorProxy);
         }
@@ -89,7 +89,7 @@ public class RWNetworkServer : NetworkServer
     public void RemoveActorProxy(ActorProxy actorProxy)
     {
         ActorProxies.Remove(actorProxy);
-        if (actorProxy.actorType == ActorType.Tower)
+        if (actorProxy is TowerActorProxy)
         {
             Towers.Remove(actorProxy);
             serverGameLogic.OnTowerDestroyed(actorProxy);
@@ -168,7 +168,7 @@ public class RWNetworkServer : NetworkServer
         var isBottomCamp = team == GameConstants.BottomCamp;
         
         
-        var actorProxyPrefab = serverGameLogic.actorProxyPrefab;
+        var actorProxyPrefab = serverGameLogic.diceActorProxyPrefab;
 
         for (byte index = 0; index < positions.Length; ++index)
         {
@@ -176,9 +176,8 @@ public class RWNetworkServer : NetworkServer
             var spawnPosition = position;
 
             var actorProxy = Instantiate(actorProxyPrefab, spawnPosition, GameModeBase.GetRotation(isBottomCamp));
-            actorProxy.SetDiceInfo(diceInfo);
+            actorProxy.dataId = diceId;
             actorProxy.ownerTag = ownerTag;
-            actorProxy.actorType = ActorType.Actor;
             actorProxy.team = team;
             actorProxy.spawnSlot = 0;
             actorProxy.power = stat.power;
@@ -203,9 +202,8 @@ public class RWNetworkServer : NetworkServer
         }
             
         var isBottomCamp = team == GameConstants.BottomCamp;
-        var actorProxyPrefab = serverGameLogic.actorProxyPrefab;
+        var actorProxyPrefab = serverGameLogic.guardianActorProxyPrefab;
         var actorProxy = Instantiate(actorProxyPrefab, position, GameModeBase.GetRotation(isBottomCamp));
-        actorProxy.actorType = ActorType.Guardian;
         actorProxy.dataId = guadianId;
         actorProxy.ownerTag = ownerTag;
         actorProxy.team = team;

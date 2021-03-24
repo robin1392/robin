@@ -92,10 +92,17 @@ MonoBehaviour:
     type: 3}
   playerStatePrefab: {fileID: 3607057536086332031, guid: 13bb752557e22490e816dc90bc0f20a2,
     type: 3}
-  actorProxyPrefab: {fileID: -9073835943446716441, guid: f631769355c16485a9c68f830ed15524,
+  towerActorProxyPrefab: {fileID: -5179217754551845908, guid: adceae40c3cd74fe5926f950fc566841,
+    type: 3}
+  guardianActorProxyPrefab: {fileID: 563192727344034729, guid: 963c489d773354b17b67fa225fe76e34,
+    type: 3}
+  bossActorProxyPrefab: {fileID: -7784514558094390778, guid: 6ba3dee84a9354b1895e00b1e583a133,
+    type: 3}
+  diceActorProxyPrefab: {fileID: -172398696963782149, guid: f631769355c16485a9c68f830ed15524,
     type: 3}
   isAIMode: 0
-  modeType: 2
+  modeType: 1
+  attachPlayer2AI: 1
 --- !u!114 &7684217455327188613
 MonoBehaviour:
   m_ObjectHideFlags: 0

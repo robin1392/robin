@@ -19,16 +19,12 @@ namespace ED
         [SerializeField]
         protected Collider _hitCollider;
 
-        public DICE_CAST_TYPE castType => (DICE_CAST_TYPE)ActorProxy.diceInfo.castType;
-
         public Vector3 targetPos;
         public Vector3 startPos;
         
         public int eyeLevel => ActorProxy.diceScale;
 
         protected const float magicLifeTime = 45.0f;
-        
-        public int diceFieldNum => ActorProxy.spawnSlot;
 
         public virtual void Initialize(bool pIsBottomPlayer)
         {

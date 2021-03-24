@@ -170,6 +170,7 @@ MonoBehaviour:
   Server: {fileID: 1795011498}
   Master: {fileID: 391834481}
   Other: {fileID: 226801739}
+  AttatchOtherAI: 0
   Address: localhost
 --- !u!1 &176606790
 GameObject:
@@ -411,36 +412,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
-        type: 3}
-      propertyPath: authenticator
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
-        type: 3}
-      propertyPath: LocalUserId
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
-        type: 3}
-      propertyPath: LocalNickName
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 4651702573362233939, guid: 9cca993568f854e019d1c4f3df1c3f9a,
-        type: 3}
-      propertyPath: WaitForAutoConnectionMs
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4651702573362233939, guid: 9cca993568f854e019d1c4f3df1c3f9a,
-        type: 3}
-      propertyPath: AutoConnect
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4651702573362233941, guid: 9cca993568f854e019d1c4f3df1c3f9a,
-        type: 3}
-      propertyPath: Port
-      value: 7779
-      objectReference: {fileID: 0}
     - target: {fileID: 4651702573362233942, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: m_Name
@@ -621,7 +592,7 @@ PrefabInstance:
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: enableActor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
@@ -632,7 +603,7 @@ PrefabInstance:
         type: 3}
       propertyPath: authenticator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1548295693}
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: LocalUserId
@@ -760,8 +731,37 @@ PrefabInstance:
     - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: modeType
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: attachPlayer2AI
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: towerActorProxyPrefab
+      value: 
+      objectReference: {fileID: -5179217754551845908, guid: adceae40c3cd74fe5926f950fc566841,
+        type: 3}
+    - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: guardianActorProxyPrefab
+      value: 
+      objectReference: {fileID: 563192727344034729, guid: 963c489d773354b17b67fa225fe76e34,
+        type: 3}
+    - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: bossActorProxyPrefab
+      value: 
+      objectReference: {fileID: -7784514558094390778, guid: 6ba3dee84a9354b1895e00b1e583a133,
+        type: 3}
+    - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: diceActorProxyPrefab
+      value: 
+      objectReference: {fileID: -172398696963782149, guid: f631769355c16485a9c68f830ed15524,
+        type: 3}
     - target: {fileID: 4832457519157374790, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: m_Name
@@ -841,7 +841,7 @@ PrefabInstance:
         type: 3}
       propertyPath: authenticator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1500437230}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2c86073eb4dd48ba826c573f0409ce1, type: 3}
 --- !u!114 &1287816781 stripped
@@ -922,6 +922,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1500437230 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8356133136237392226, guid: c2c86073eb4dd48ba826c573f0409ce1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1156318456}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c5b6870b673842049531ac3247807f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1548295693 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 343533738106072716, guid: 9cca993568f854e019d1c4f3df1c3f9a,
+    type: 3}
+  m_PrefabInstance: {fileID: 983771774}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c5b6870b673842049531ac3247807f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1601396376 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6877902827145461394, guid: d19bafb6a326f4fdfb9c693f850f595c,
@@ -3302,7 +3326,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 158.5125
+      value: 156.01682
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}

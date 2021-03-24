@@ -66,10 +66,9 @@ namespace MirageTest.Scripts.GameMode
 
         void SpawnTower(PlayerState playerState, Vector3 position)
         {
-            var tower = UnityEngine.Object.Instantiate(_prefabHolder.ActorProxy, position, Quaternion.identity);
+            var tower = UnityEngine.Object.Instantiate(_prefabHolder.TowerActorProxyPrefab, position, Quaternion.identity);
             tower.team = playerState.team;
             tower.ownerTag = playerState.ownerTag;
-            tower.actorType = ActorType.Tower;
 
             var tableManager = TableManager.Get();
             var hp = tableManager.Vsmode.KeyValues[(int) EVsmodeKey.TowerHp].value;
