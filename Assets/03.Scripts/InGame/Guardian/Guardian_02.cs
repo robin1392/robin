@@ -2,27 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ED;
+using MirageTest.Scripts;
 
 public class Guardian_02 : Minion
 {
+    private float _skillCastedTime;
+
     public override void Initialize()
     {
         base.Initialize();
+        
+        _skillCastedTime = -effectCooltime;
+    }
+    
+    public override IEnumerator Attack()
+    {
+        if (_spawnedTime >= _skillCastedTime + effectCooltime)
+        {
+            _skillCastedTime = _spawnedTime;
+            yield return SkillCoroutine();
+        }
 
-        StartCoroutine(SkillCoroutine());
+        yield return base.Attack();
     }
     
     IEnumerator SkillCoroutine()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(effectCooltime);
-            
-            ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
-
-            yield return new WaitForSeconds(1.716f);
-
-            // Invincibility(2f);
-        }
+        ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
+        
+        yield return new WaitForSeconds(0.8f);
+        
+        ActorProxy.AddBuff(BuffInfos.Invincibility, 2f);
+        
+        yield return new WaitForSeconds(0.2f);
     }
 }
