@@ -89,6 +89,7 @@ public enum E_BulletType
     POSU_BULLET,
     TURRET_BULLET,
     RACE_BULLET,
+    BOSS5_BULLET,
 }
 
 public enum E_AniTrigger

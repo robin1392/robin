@@ -333,6 +333,24 @@ namespace MirageTest.Scripts.GameMode
 
             return actorProxies;
         }
+        
+        protected async UniTask Spawn(IEnumerable<ActorProxy> actorProxies)
+        {
+            if (IsGameEnd)
+            {
+                return;
+            }
+
+            foreach (var actorProxy in actorProxies)
+            {
+                ServerObjectManager.Spawn(actorProxy.NetIdentity);
+
+                if (IsGameEnd)
+                {
+                    return;
+                }
+            }
+        }
 
         public static Quaternion GetRotation(bool isBottomCamp)
         {
