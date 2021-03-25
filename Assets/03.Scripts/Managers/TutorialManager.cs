@@ -22,7 +22,7 @@ public class TutorialManager : MonoBehaviour
     public Transform ts_UpgradeButton;
 
     public static int stepCount = 2;
-    private static int nextStepCount = 1;
+    private static int nextStepCount = 3;
     private Transform ts_OldParent;
 
     public static int getDiceCount
@@ -63,6 +63,7 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 1f;
         Click_NextStepCallback();
         stepCount++;
+        Debug.Log($"Click_NextStep {stepCount} ");
     }
 
     private void Click_NextStepCallback()
@@ -107,7 +108,8 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator Click_NextStepDelayCoroutine(float delay)
     {
-        yield return new WaitForSeconds(delay);
+        Debug.Log("Click_NextStepDelayCoroutine ");
+        yield return new WaitForSecondsRealtime(delay);
         
         Click_NextStep();
     }
@@ -121,7 +123,7 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator UpdateTimeCoroutine(float time)
     {
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSecondsRealtime(time);
         
         Step();
     }
@@ -285,6 +287,7 @@ public class TutorialManager : MonoBehaviour
 
     public void Skip()
     {
+        Debug.Log("Tutorial Skip !!");
         StopAllCoroutines();
         stepCount = 15;
         Step();
