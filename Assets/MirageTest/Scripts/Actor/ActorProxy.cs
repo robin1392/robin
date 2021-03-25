@@ -561,10 +561,15 @@ namespace MirageTest.Scripts
                     {
                         moveSpeedCalculated *= distance * 2;
                     }
+                    else if (distance > 0.1f)
+                    {
+                        moveSpeedCalculated *= 1.5f;
+                    }
                     
                     _aiPath.maxSpeed = moveSpeedCalculated;
 
                     _seeker.StartPath(transform.position, position);
+                    baseStat.animator.SetFloat(AnimationHash.MoveSpeed, _aiPath.velocity.magnitude);
                     // if (Vector3.SqrMagnitude(transform.position - position) <= 0.001f)
                     // {
                     //     baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
