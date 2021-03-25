@@ -439,7 +439,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            baseStat.HitDamage(damage);
+            baseStat.OnHitDamageOnClient(damage);
             var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseStat.ts_HitPos.position);
             obj.rotation = Quaternion.identity;
             obj.localScale = Vector3.one * 0.6f;
@@ -603,18 +603,23 @@ namespace MirageTest.Scripts
 
             return actor.GetComponent<ActorProxy>().baseStat;
         }
-
-        //KZSee : TODO: 보스도 보게 할 것
-        public BaseStat GetEnemyTower()
+        
+        public BaseStat GetEnemyTowerOrBoss()
         {
             var rwClient = Client as RWNetworkClient;
             var enemyTower = rwClient.Towers.Find(t => t.team != team);
-            if (enemyTower == null)
+            if (enemyTower != null)
             {
-                return null;
+                return enemyTower.baseStat;
+            }
+            
+            var enemyBoss = rwClient.Bosses.Find(t => t.team != team);
+            if (enemyBoss != null)
+            {
+                return enemyBoss.baseStat;
             }
 
-            return enemyTower.baseStat;
+            return null;
         }
 
         public BaseStat[] GetEnemies()

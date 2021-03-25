@@ -33,7 +33,7 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            target = ActorProxy.GetEnemyTower();
+            target = ActorProxy.GetEnemyTowerOrBoss();
             if (target == null)
             {
                 return null;

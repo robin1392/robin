@@ -33,17 +33,11 @@ public class Boss5 : BossBase
         base.Initialize();
         _skillCastedTime = -effectCooltime;
         if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
-        _animationEvent.event_Attack += Callback_Attack;
+        _animationEvent.event_Attack -= Callback_OnAttackAnimationEvent;
+        _animationEvent.event_Attack += Callback_OnAttackAnimationEvent;
     }
 
-    public override void Death()
-    {
-        base.Death();
-
-        _animationEvent.event_Attack -= Callback_Attack;
-    }
-
-    public void Callback_Attack()
+    public void Callback_OnAttackAnimationEvent()
     {
         if (target != null)
         {
@@ -60,7 +54,7 @@ public class Boss5 : BossBase
                 attack.DOMove(ts_hit.position, 0.5f).OnComplete(() =>
                 {
                     attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
-                    if (ActorProxy.isPlayingAI) DamageToTarget(target, 0);
+                    // if (ActorProxy.isPlayingAI) DamageToTarget(target, 0);
                     PoolManager.Get().ActivateObject(obj_AttackHit.name, ts_hit.position);
                 });
             }

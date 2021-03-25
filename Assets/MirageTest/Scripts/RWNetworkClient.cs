@@ -25,7 +25,8 @@ namespace MirageTest.Scripts
         public List<PlayerState> PlayerStates = new List<PlayerState>(); 
         public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();
         public List<ActorProxy> ActorProxies = new List<ActorProxy>();
-        public List<ActorProxy> Towers = new List<ActorProxy>();
+        public List<TowerActorProxy> Towers = new List<TowerActorProxy>();
+        public List<BossActorProxy> Bosses = new List<BossActorProxy>();
         public GameState GameState;
 
         public bool IsPlayingAI
@@ -249,9 +250,13 @@ namespace MirageTest.Scripts
         
         public void AddActorProxy(ActorProxy actorProxy)
         {
-            if (actorProxy is TowerActorProxy)
+            if (actorProxy is TowerActorProxy towerActorProxy)
             {
-                Towers.Add(actorProxy);
+                Towers.Add(towerActorProxy);
+            }
+            else if (actorProxy is BossActorProxy bossActorProxy)
+            {
+                Bosses.Add(bossActorProxy);
             }
             
             ActorProxies.Add(actorProxy);
@@ -262,9 +267,13 @@ namespace MirageTest.Scripts
         public void RemoveActorProxy(ActorProxy actorProxy)
         {
             ActorProxies.Remove(actorProxy);
-            if (actorProxy is TowerActorProxy)
+            if (actorProxy is TowerActorProxy towerActorProxy)
             {
-                Towers.Remove(actorProxy);
+                Towers.Remove(towerActorProxy);
+            }
+            else if (actorProxy is BossActorProxy bossActorProxy)
+            {
+                Bosses.Remove(bossActorProxy);
             }
 
             OnActorProxyChanged();

@@ -238,7 +238,7 @@ namespace ED
             animator.SetTrigger(triggerName);
         }
 
-        public virtual void HitDamage(float damage)
+        public virtual void OnHitDamageOnClient(float damage)
         {
         }
 

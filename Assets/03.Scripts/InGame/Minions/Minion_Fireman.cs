@@ -22,14 +22,6 @@ namespace ED
             light.enabled = false;
         }
 
-        public override void Death()
-        {
-            base.Death();
-            
-            light.enabled = false;
-            ps_Fire.Stop();
-        }
-
         public override IEnumerator Attack()
         {
             var fireAction = new FireManAction();

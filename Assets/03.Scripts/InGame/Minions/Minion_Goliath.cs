@@ -35,17 +35,12 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            if (isPushing)
-            {
-                return null;
-            }
-            
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             if (cols.Length == 0)
             {
                 if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
                 {
-                    return ActorProxy.GetEnemyTower();
+                    return ActorProxy.GetEnemyTowerOrBoss();
                 }
                 else
                 {
@@ -85,7 +80,7 @@ namespace ED
             }
             else
             {
-                return ActorProxy.GetEnemyTower();
+                return ActorProxy.GetEnemyTowerOrBoss();
             }
         }
 
