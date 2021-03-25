@@ -1,12 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using ED;
 using ED.Boss;
-using Microsoft.Win32.SafeHandles;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
-using RandomWarsProtocol;
 using UnityEngine;
 
 public class Boss5 : BossBase
