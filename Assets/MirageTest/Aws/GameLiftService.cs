@@ -149,6 +149,10 @@ namespace MirageTest.Aws
         
         void OnGameSession(GameSession gameSession)
         {
+            var port = GetComponent<KcpTransport>().Port;
+            var tableDataPath = $"{Application.dataPath}/../../TableData_{port}/";
+            TableManager.Get().Init(tableDataPath);
+            
             var outcome = GameLiftServerAPI.ActivateGameSession();
 
             if (string.IsNullOrEmpty(gameSession.GameSessionData) == false)

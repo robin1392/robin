@@ -55,7 +55,7 @@ namespace MirageTest.Scripts.GameMode
             DiceInfos = TableManager.Get().DiceInfo;
             
             var vsmode = TableManager.Get().Vsmode;
-            WaveTime = 2;// vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
+            WaveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
             AddSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
         }
 

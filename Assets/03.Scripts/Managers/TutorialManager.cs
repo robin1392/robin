@@ -21,7 +21,7 @@ public class TutorialManager : MonoBehaviour
     public Transform ts_DiceField;
     public Transform ts_UpgradeButton;
 
-    public static int stepCount = 0;
+    public static int stepCount = 2;
     private static int nextStepCount = 1;
     private Transform ts_OldParent;
 
@@ -31,9 +31,9 @@ public class TutorialManager : MonoBehaviour
         private set;
     }
 
-    private void Start()
+    private void Awake()
     {
-        if (true) //UserInfoManager.Get().GetUserInfo().isEndTutorial)
+        if (false)//UserInfoManager.Get().GetUserInfo().isEndTutorial)
         {
             isTutorial = false;
             gameObject.SetActive(false);
@@ -48,7 +48,7 @@ public class TutorialManager : MonoBehaviour
     IEnumerator TutorialCoroutine()
     {
         yield return new WaitForSeconds(0.1f);
-        
+
         while (true)
         {
             Step();
@@ -76,8 +76,11 @@ public class TutorialManager : MonoBehaviour
                 var localPlayerTower = server.Towers.Find(t => t.ownerTag == localPlayerOwnerTag);
                 localPlayerTower.currentHealth = localPlayerTower.maxHealth * 0.666f;
 
-                var serverLocalPlayerState  = server.serverGameLogic.GetPlayerState(localPlayerState.userId);
-                //var guadian = server.CreateGuadian(serverLocalPlayerState, localPlayerTower.transform.position, localPlayerTower.transform.rotation);
+                server.CreateActorWithGuardianId(
+                    5001,
+                    server.Towers[0].ownerTag,
+                    server.Towers[0].team,
+                    server.Towers[0].transform.position);
                 // guadian.maxHealth = int.MaxValue;
                 // guadian.currentHealth = int.MaxValue;
                 // guadian.power = 30000;
@@ -155,6 +158,8 @@ public class TutorialManager : MonoBehaviour
             transform.GetChild(i).gameObject.SetActive(i == stepCount + 1);
         }
         
+        var server = FindObjectOfType<RWNetworkServer>();
+        
         switch (stepCount)
         {
             case 0:
@@ -194,8 +199,17 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 3:
                 Time.timeScale = 0.0f;
-                //KZSee:
-                // InGameManager.Get().playerController.TutorialAddSP(50);
+                server.serverGameLogic._gameMode.PlayerState1.sp += 100;
+                server.serverGameLogic._gameMode.PlayerState2.sp += 1000;
+
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(3, 1);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(1, 2);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(3, 3);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(2, 5);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(4, 7);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(2, 9);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(0, 11);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(0, 13);
                 break;
             case 4: // 주사위 소환 버튼
                 Time.timeScale = 0.0f;
@@ -212,8 +226,7 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 7:
                 Time.timeScale = 0.0f;
-                //KZSee:
-                //InGameManager.Get().playerController.TutorialAddSP(5000);
+                server.serverGameLogic._gameMode.PlayerState1.sp += 5000;
                 break;
             case 8:    // 두번째 주사위 소환
                 Time.timeScale = 0.0f;

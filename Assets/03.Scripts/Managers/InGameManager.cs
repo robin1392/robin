@@ -159,8 +159,18 @@ namespace ED
             var userDeck = userInfo.GetActiveDeck;
             var diceDeck = userDeck.Take(5).ToArray();
             var guadianId = userDeck[5];
-            server.serverGameLogic.modeType = PLAY_TYPE.BATTLE;
+
+            if (TutorialManager.isTutorial)
+            {
+                server.serverGameLogic.modeType = PLAY_TYPE.Tutorial;
+            }
+            else
+            {
+                server.serverGameLogic.modeType = PLAY_TYPE.BATTLE;    
+            }
+            
             server.serverGameLogic.isAIMode = true;
+
             server.MatchData.AddPlayerInfo(
                 userInfo.userID, 
                 userInfo.userNickName, 0, 0,
@@ -184,7 +194,7 @@ namespace ED
         {
             if (isTutorial)
             {
-                return new int[] {1000, 1002, 3011, 3003, 3005};
+                return new int[] {31001, 31003, 31002, 32002, 32009};
             }
             
             var diceInfos = TableManager.Get().DiceInfo.Values;

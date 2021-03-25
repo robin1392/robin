@@ -170,8 +170,8 @@ namespace MirageTest.Scripts.Entities
                     upgradeButton.EditSpCallback(newValue);
                 }
 
-                UI_InGame.Get().btn_GetDice.EditSpCallback(newValue > GetDiceCost());
-                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue > GetUpradeSpCost());
+                UI_InGame.Get().btn_GetDice.EditSpCallback(newValue >= GetDiceCost());
+                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue >= GetUpradeSpCost() && spGrade < GameConstants.MaxSpUpgradeLevel);
                 UI_InGame.Get().SetSP(newValue);
             }
         }
@@ -198,6 +198,7 @@ namespace MirageTest.Scripts.Entities
 
             if (IsLocalPlayerState)
             {
+                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(sp >= GetUpradeSpCost() && newValue < GameConstants.MaxSpUpgradeLevel);
                 UI_InGame.Get().SetSPUpgrade(newValue + 1, GetUpradeSpCost());
                 UI_InGame.Get().ShowSpUpgradeMessage();
             }
@@ -464,8 +465,7 @@ namespace MirageTest.Scripts.Entities
                 return;
             }
 
-            byte MaxInGameUp = 6;
-            if (deckDice.inGameLevel >= MaxInGameUp)
+            if (deckDice.inGameLevel >= GameConstants.MaxIngameUpgradeLevel)
             {
                 logger.LogError($"덱 주사위 레벨이 최대치입니다.: playerId:{userId}, diceId:{deckDice.diceId}");
                 return;
@@ -501,8 +501,7 @@ namespace MirageTest.Scripts.Entities
         {
             logger.Log($"[UpgradeSp]");
             // sp 등급 체크
-            int MaxSpGrade = 6;
-            if (spGrade >= MaxSpGrade)
+            if (spGrade >= GameConstants.MaxSpUpgradeLevel)
             {
                 logger.LogError($"Sp 등급이 최대치입니다.: playerId:{userId}");
                 return;

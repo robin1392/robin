@@ -86,9 +86,9 @@ namespace MirageTest.Scripts
                 await UniTask.Yield();
             }
 
-            var port = GetComponent<KcpTransport>().Port;
-            var tableDataPath = $"{Application.dataPath}/../../TableData_{port}/";
-            TableManager.Get().Init(tableDataPath);
+            
+            
+            
 
             var prefabHolder = new PrefabHolder()
             {
@@ -111,6 +111,10 @@ namespace MirageTest.Scripts
                 case PLAY_TYPE.ActorDev:
                     _gameMode = new ActorDevMode(prefabHolder, _serverObjectManager);
                     break;
+                case PLAY_TYPE.Tutorial:
+                    _gameMode = new BattleModeTutorial(prefabHolder, _serverObjectManager);
+                    break;
+                
             }
 
             await _gameMode.OnBeforeGameStart();
@@ -132,7 +136,7 @@ namespace MirageTest.Scripts
 
             _gameMode.GameState.state = EGameState.Playing;
             
-            if (isAIMode || attachPlayer2AI)
+            if (attachPlayer2AI)
             {
                 var aiPlayer = new AIPlayer(_gameMode.PlayerState2);
                 // var aiPlayer2 = new AIPlayer(_gameMode.PlayerState1);

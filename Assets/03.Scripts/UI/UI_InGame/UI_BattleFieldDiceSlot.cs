@@ -157,12 +157,10 @@ namespace ED
                 {
                     TutorialManager.MergeComplete();
                 }
-                else
-                {
-                    var localPlayerProxy = _client.GetLocalPlayerProxy();
-                    localPlayerProxy.MergeDice(dragDice.diceFieldNum, dice.diceFieldNum);
-                }
-                    
+                
+                var localPlayerProxy = _client.GetLocalPlayerProxy();
+                localPlayerProxy.MergeDice(dragDice.diceFieldNum, dice.diceFieldNum);
+                
                 ani.SetTrigger(BBoing);
                 SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);
             }

@@ -228,6 +228,12 @@ public class PlayerProxy : NetworkBehaviour
     
     public void GetDice(int deckIndex, int fieldIndex)
     {
+        if (IsLocalClient)
+        {
+            GetDiceOnServerInternal((byte)deckIndex, (byte)fieldIndex);
+            return;
+        }
+        
         GetDiceOnServer((byte)deckIndex, (byte)fieldIndex);
     }
 
@@ -240,6 +246,11 @@ public class PlayerProxy : NetworkBehaviour
     
     [ServerRpc]
     public void GetDiceOnServer(byte deckIndex, byte fieldIndex)
+    {
+        GetDiceOnServerInternal(deckIndex, fieldIndex);
+    }
+    
+    void GetDiceOnServerInternal(byte deckIndex, byte fieldIndex)
     {
         logger.Log($"[GetDice]");
         var playerState = GetPlayerState();
