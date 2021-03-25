@@ -30,7 +30,7 @@ namespace ED
             var aniHash = target.isFlying ? AnimationHash.Attack2 : AnimationHash.Attack1; 
             ActorProxy.PlayAnimationWithRelay(aniHash, target);
 
-            yield return AttackCoroutine();
+            yield return AttackCoroutine(attackSpeed);
         }
 
         public override BaseStat SetTarget()
