@@ -26,7 +26,7 @@ namespace ED
             AiPath.isStopped = true;
             if (_ai != null)
             {
-                StopCoroutine(_ai);
+                return;
             }
             
             _ai = StartCoroutine(Root());
