@@ -28,7 +28,7 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            return ActorProxy.GetEnemyTower();
+            return ActorProxy.GetEnemyTowerOrBoss();
         }
 
         public override void OnBaseStatDestroyed()

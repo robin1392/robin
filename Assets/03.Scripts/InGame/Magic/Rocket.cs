@@ -23,7 +23,7 @@ namespace ED
         
         protected override IEnumerator Cast()
         {
-            target = ActorProxy.GetEnemyTower();
+            target = ActorProxy.GetEnemyTowerOrBoss();
             if (target == null)
             {
                 yield break;

@@ -35,18 +35,14 @@ namespace ED
         }
 
       
-        public override void HitDamage(float damage)
+        public override void OnHitDamageOnClient(float damage)
         {
             Skill();
-            
-            // if (isHalfDamage) damage *= 0.5f;
-            
-            // base.HitDamage(damage);
         }
 
         public override BaseStat SetTarget()
         {
-            return ActorProxy.GetEnemyTower();
+            return ActorProxy.GetEnemyTowerOrBoss();
         }
     }
 }
