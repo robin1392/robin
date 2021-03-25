@@ -97,6 +97,7 @@ public class Boss1 : BossBase
             var target = GetLongDistanceTarget();
             if (target != null)
             {
+                _attackedTarget = target;
                 _skillCastedTime = _spawnedTime;
                 var action = new JumpSkillAction();
                 yield return action.ActionWithSync(ActorProxy, target.ActorProxy);

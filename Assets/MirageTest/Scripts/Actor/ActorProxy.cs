@@ -87,6 +87,13 @@ namespace MirageTest.Scripts
             _aiPath = GetComponent<AIPath>();
         }
 
+        public void EnablePathfinding(bool b)
+        {
+            _seeker.enabled = b;
+            _aiPath.enabled = b;
+            _aiPath.isStopped = !b;
+        }
+
         private void StopClient()
         {
             var client = Client as RWNetworkClient;
@@ -538,26 +545,44 @@ namespace MirageTest.Scripts
                 {
                     hasRecieved = true;
                     transform.position = position;
+                    EnablePathfinding(true);
                 }
                 else
                 {
-                    if (Vector3.SqrMagnitude(transform.position - position) <= 0.01f)
+                    var distance = (transform.position - position).magnitude;
+                    var moveSpeedCalculated = moveSpeed;
+
+                    if (distance > 2.0f)
                     {
-                        baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
+                        transform.position = position;
                         return;
                     }
-
-                    transform.position = Vector3.Lerp(transform.position, position,
-                        Time.deltaTime * moveSpeed * 10f);
-                    transform.rotation = Quaternion.Lerp(transform.rotation,
-                        Quaternion.LookRotation((position - transform.position).normalized),
-                        Time.deltaTime * moveSpeed * 10f);
-
-                    if (baseStat.animator != null)
+                    else if (distance > 0.5f)
                     {
-                        float distance = Vector3.Magnitude(position - transform.position);
-                        baseStat.animator.SetFloat(AnimationHash.MoveSpeed, distance * 5);
+                        moveSpeedCalculated *= distance * 2;
                     }
+                    
+                    _aiPath.maxSpeed = moveSpeedCalculated;
+
+                    _seeker.StartPath(transform.position, position);
+                    // if (Vector3.SqrMagnitude(transform.position - position) <= 0.001f)
+                    // {
+                    //     baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
+                    //     return;
+                    // }
+                    //
+                    // transform.position = Vector3.Lerp(transform.position, position,
+                    //     Time.deltaTime * moveSpeed * 10f);
+                    //
+                    // transform.rotation = Quaternion.Lerp(transform.rotation,
+                    //     Quaternion.LookRotation((position - transform.position).normalized),
+                    //     Time.deltaTime * moveSpeed * 10f);
+                    //
+                    // if (baseStat.animator != null)
+                    // {
+                    //     float distance = Vector3.Magnitude(position - transform.position);
+                    //     baseStat.animator.SetFloat(AnimationHash.MoveSpeed, distance * 5);
+                    // }
                 }
             }
         }

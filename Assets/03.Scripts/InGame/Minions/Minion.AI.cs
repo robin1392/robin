@@ -34,9 +34,7 @@ namespace ED
 
         public override void StopAI()
         {
-            Seeker.enabled = false;
-            AiPath.enabled = false;
-            AiPath.isStopped = true;
+            ActorProxy.EnablePathfinding(false);
             
             base.StopAI();
             

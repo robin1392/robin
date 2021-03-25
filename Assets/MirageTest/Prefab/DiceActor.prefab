@@ -142,7 +142,7 @@ MonoBehaviour:
   orientation: 0
   enableRotation: 1
   targetCompatibility: {fileID: 0}
-  maxAcceleration: -2.5
+  maxAcceleration: 10
   rotationSpeed: 360
   slowdownDistance: 0.6
   pickNextWaypointDist: 2
@@ -179,6 +179,7 @@ MonoBehaviour:
   ingameUpgradeLevel: 0
   outgameUpgradeLevel: 0
   spawnTime: 0
+  isSkillInitialized: 0
   isPlayingAI: 0
   isMovable: 1
   baseStat: {fileID: 0}
