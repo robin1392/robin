@@ -2,18 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using ED;
 using Mirage;
 using Mirage.Logging;
-using MirageTest.Aws;
 using MirageTest.Scripts.Entities;
 using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
 using Service.Core;
 using Service.Template;
 using UnityEngine;
 using Debug = ED.Debug;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts.GameMode
@@ -66,7 +64,7 @@ namespace MirageTest.Scripts.GameMode
 
         void SpawnTower(PlayerState playerState, Vector3 position)
         {
-            var tower = UnityEngine.Object.Instantiate(_prefabHolder.TowerActorProxyPrefab, position, Quaternion.identity);
+            var tower = Object.Instantiate(_prefabHolder.TowerActorProxyPrefab, position, Quaternion.identity);
             tower.team = playerState.team;
             tower.ownerTag = playerState.ownerTag;
 
@@ -169,25 +167,16 @@ namespace MirageTest.Scripts.GameMode
             }
             
             var playerState = GetPlayerStateByTeam(actorProxy.team);
-            Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team, actorProxy.transform.position);
-        }
-
-        private async UniTask Spawn(List<ActorProxy> actorProxies)
-        {
-            if (IsGameEnd)
+            var position = actorProxy.transform.position; 
+            if (actorProxy.team == GameConstants.BottomCamp)
             {
-                return;
+                position += Vector3.forward;
             }
-
-            foreach (var actorProxy in actorProxies)
+            else
             {
-                ServerObjectManager.Spawn(actorProxy.NetIdentity);
-
-                if (IsGameEnd)
-                {
-                    return;
-                }
+                position += Vector3.back;
             }
+            Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team, position);
         }
 
         void ApplyDeathMatchEffect(ActorProxy actorProxy, int wave)

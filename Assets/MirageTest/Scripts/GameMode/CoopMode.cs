@@ -113,7 +113,7 @@ namespace MirageTest.Scripts.GameMode
                     _guardian1stSpawned = true;
                     var playerState = PlayerState1;
                     Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team,
-                        actorProxy.transform.position);
+                        actorProxy.transform.position + Vector3.forward);
                 }
             }
 
@@ -124,7 +124,7 @@ namespace MirageTest.Scripts.GameMode
                     _guardian2ndSpawned = true;
                     var playerState = PlayerState2;
                     Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team,
-                        actorProxy.transform.position);
+                        actorProxy.transform.position + Vector3.forward);
                 }
             }
         }
@@ -138,8 +138,8 @@ namespace MirageTest.Scripts.GameMode
             }
 
             UpdateBoss(wave);
-            // SpawnEnemyMinions(wave);
-            // SpawnAllyMinions(wave);
+            SpawnEnemyMinions(wave);
+            SpawnAllyMinions(wave);
         }
 
         public override void OnBossDestroyed(BossActorProxy bossActorProxy)
@@ -480,6 +480,16 @@ namespace MirageTest.Scripts.GameMode
 
         void SpawnAllyMinions(int wave)
         {
+            if (wave % 2 == 1)
+            {
+                var actorProxies = CreateActorByPlayerFieldDice(PlayerState1);
+                Spawn(actorProxies).Forget();
+            }
+            else
+            {
+                var actorProxies = CreateActorByPlayerFieldDice(PlayerState2);
+                Spawn(actorProxies).Forget();
+            }
         }
 
         void SpawnEnemyMinions(int wave)
