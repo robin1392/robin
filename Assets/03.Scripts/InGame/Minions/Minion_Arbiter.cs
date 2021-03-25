@@ -28,17 +28,17 @@ namespace ED
             ae.event_FireArrow += FireArrow;
         }
 
-        public override void Death()
-        {
-            foreach (var minion in listCloaking)
-            {
-                //KZSee:
-                //controller.ActionCloacking(minion.id, false);
-            }
-            listCloaking.Clear();
-            
-            base.Death();
-        }
+        // public override void Death()
+        // {
+        //     foreach (var minion in listCloaking)
+        //     {
+        //         //KZSee:
+        //         //controller.ActionCloacking(minion.id, false);
+        //     }
+        //     listCloaking.Clear();
+        //     
+        //     base.Death();
+        // }
 
         public void Skill()
         {

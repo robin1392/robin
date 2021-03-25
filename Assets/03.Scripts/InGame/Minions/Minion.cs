@@ -29,25 +29,11 @@ namespace ED
     public partial class Minion : BaseStat
     {
         public DICE_CAST_TYPE castType;
-        public bool isPushing;
         public bool isAttackSpeedFactorWithAnimation = true;
         protected float _spawnedTime;
-
-        public float spawnedTime => _spawnedTime;
-
-        //private bool _isNexusAttacked;
-        protected bool isInvincibility;
+        
         public bool isCloacking => ActorProxy.isClocking;
         protected int invincibilityCount;
-        private float _originalAttackSpeed;
-
-        public int eyeLevel=> ActorProxy.diceScale;
-        public int ingameUpgradeLevel => ActorProxy.ingameUpgradeLevel;
-
-        private Vector3 _dodgeVelocity;
-
-        private Coroutine _crtAttack;
-        private Coroutine _crtPush;
 
         public Collider collider;
         public bool isPolymorph;
@@ -95,14 +81,12 @@ namespace ED
         public virtual void Initialize()
         {
             _destroyed = false;
-            _dodgeVelocity = Vector3.zero;
             collider.enabled = true;
             isPolymorph = false;
             animator.gameObject.SetActive(true);
             _spawnedTime = 0;
             target = null;
             _attackedTarget = null;
-            _originalAttackSpeed = attackSpeed;
             image_HealthBar.fillAmount = 1f;
             
             SetHealthBarColor();
@@ -120,76 +104,11 @@ namespace ED
             _dicEffectPool.Clear();
             SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
         }
-        
-        public void Heal(float heal)
+
+        public override void OnHitDamageOnClient(float damage)
         {
-            if (ActorProxy.currentHealth > 0)
-            {
-                ActorProxy.currentHealth += heal;
-
-                //KZSee:
-                // if(currentHealth > maxHealth)
-                // {
-                //     currentHealth = maxHealth;
-                // }
-
-                PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
-            }
-
-            RefreshHealthBar();
-        }
-
-        public override void HitDamage(float damage)
-        {
-            // if (isInvincibility) return;
-            // if (invincibilityCount > 0)
-            // {
-            //     invincibilityCount--;
-            //     if (_shield != null && invincibilityCount == 0 && _invincibilityCoroutine == null)
-            //     {
-            //         _shield.Deactive();
-            //         _shield = null;
-            //     }
-            //
-            //     return;
-            // }
-            //
-            // ActorProxy.currentHealth -= damage;
-            // RefreshHealthBar();
-            //
-            // if (ActorProxy.currentHealth <= 0)
-            // {
-            //     //if (PhotonNetwork.IsConnected && !isMine)
-            //     if (InGameManager.IsNetwork && !isMine && controller.isPlayingAI == false)
-            //         return;
-            //
-            //     ActorProxy.currentHealth = 0;
-            //     controller.DeathMinion(id);
-            // }
-        }
-
-      
-
-        protected void RefreshHealthBar()
-        {
-            image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
         }
         
-        protected bool CanAttackTarget()
-        {
-            if (target == null || !target.isAlive)
-            {
-                return false;
-            }
-
-            if (target is Minion minion)
-            {
-                return !minion.isCloacking;
-            }
-
-            return true;
-        }
-
         public virtual BaseStat SetTarget()
         {
             if (_attackedTarget != null && _attackedTarget.CanBeTarget())
@@ -226,121 +145,12 @@ namespace ED
 
             if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
             {
-                return ActorProxy.GetEnemyTower();
+                return ActorProxy.GetEnemyTowerOrBoss();
             }
 
             return null;
         }
-
-        public virtual void EndGameUnit()
-        {
-            if (animator != null)
-            {
-                animator.SetFloat(AnimationHash.MoveSpeed, 0);
-                animator.SetTrigger(AnimationHash.Idle);
-            }
-
-            StopAllCoroutines();
-            // GetComponent<NodeCanvas.BehaviourTrees.BehaviourTreeOwner>().StopBehaviour();
-        }
-
-        public void DamageToTarget(BaseStat m, float delay = 0, float factor = 1f)
-        {
-            if (m == null || m.isAlive == false) return;
-            
-            //KZSee:
-            // controller.AttackEnemyMinionOrMagic(m.UID, m.id, power * factor, delay);
-            // controller.SetMaxDamageWithDiceID(diceId, power * factor);
-        }
-
-        public void Push(Vector3 dir, float pushPower)
-        {
-            //StopAllCoroutines();
-            animator.SetTrigger(AnimationHash.Idle);
-            throw new NotImplementedException("리지드바디를 사용하지 않고 Push구현");
-            // rb.AddForce(dir.normalized * pushPower, ForceMode.Impulse);
-            if (_crtPush != null) StopCoroutine(_crtPush);
-            _crtPush = StartCoroutine(PushCoroutine());
-        }
-
-        private IEnumerator PushCoroutine()
-        {
-            yield return new WaitForSeconds(0.5f);
-
-            //KZSee : 마찰때문에 줄어드는 속도를 강제로 유지시키는 코드인듯 하다. 에드님께 물어볼 것.
-            // var vel = rb.velocity.magnitude;
-            // while (vel > 0.1f)
-            // {
-            //     yield return new WaitForSeconds(0.1f);
-            //     vel = rb.velocity.magnitude;
-            // }
-            // rb.velocity = Vector3.zero;
-            // rb.isKinematic = true;
-        }
-
-        public virtual void Sturn(float duration)
-        {
-            //StopAllCoroutines();
-
-            if (_dicEffectPool.ContainsKey(MAZ.STURN))
-            {
-                _dicEffectPool[MAZ.STURN].Deactive();
-                _dicEffectPool.Remove(MAZ.STURN);
-            }
-
-            _crtPush = StartCoroutine(SturnCoroutine(duration));
-        }
-
-        private IEnumerator SturnCoroutine(float duration)
-        {
-            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                ts_HitPos.position + Vector3.up * 0.65f);
-            _dicEffectPool.Add(MAZ.STURN, ad);
-            //rb.velocity = Vector3.zero;
-            //rb.isKinematic = true;
-            if (animator != null) animator.SetTrigger(AnimationHash.Idle);
-            yield return new WaitForSeconds(duration);
-            ad.Deactive();
-            _dicEffectPool.Remove(MAZ.STURN);
-            //rb.isKinematic = false;
-        }
-
-        // 무
-        public void Invincibility(float time)
-        {
-            if (_invincibilityCoroutine != null) StopCoroutine(_invincibilityCoroutine);
-            _invincibilityCoroutine = StartCoroutine(InvincibilityCoroutine(time));
-        }
-
-        public void Invincibility(int addCount)
-        {
-            invincibilityCount += addCount;
-            if (_shield == null)
-            {
-                _shield = PoolManager.instance.ActivateObject<Shield>("Shield", transform);
-                _shield.transform.localPosition = ts_HitPos.localPosition;
-            }
-        }
-
-        private IEnumerator InvincibilityCoroutine(float time)
-        {
-            isInvincibility = true;
-            if (_shield == null)
-            {
-                _shield = PoolManager.instance.ActivateObject<Shield>("Shield", transform);
-                _shield.transform.localPosition = ts_HitPos.localPosition;
-            }
-
-            yield return new WaitForSeconds(time);
-            isInvincibility = false;
-            if (_shield != null && invincibilityCount == 0)
-            {
-                _shield.Deactive();
-                _shield = null;
-            }
-        }
-
-
+        
         private IEnumerator MoveToAttackInnerRanger()
         {
             Vector3 startPos = transform.position;
@@ -364,28 +174,7 @@ namespace ED
         {
             return target != null && target.isAlive;
         }
-
-        public virtual void SetVelocityTarget()
-        {
-            //KZSee:
-            // if (controller.isMinionAgentMove)
-            {
-                if (target != null && isAlive)
-                {
-                    Vector3 targetPos = target.transform.position +
-                                        (target.transform.position - transform.position).normalized * range;
-                    Seeker.StartPath(transform.position, targetPos);
-                }
-            }
-        }
-
-        private IEnumerator ResetDodgeVelocityCoroutine()
-        {
-            yield return new WaitForSeconds(1f);
-
-            _dodgeVelocity = Vector3.zero;
-        }
-
+        
         public bool IsTargetInnerRange()
         {
             if (ActorProxy == null)
@@ -530,19 +319,6 @@ namespace ED
             }
         }
 
-        public void CancelAttack()
-        {
-            if (_crtAttack != null) StopCoroutine((_crtAttack));
-            if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
-
-            animator.SetTrigger(AnimationHash.Idle);
-            //KZSee:
-            // controller.NetSendPlayer(GameProtocol.SET_MINION_ANIMATION_TRIGGER_RELAY,
-            //     isMine ? NetworkManager.Get().UserUID : NetworkManager.Get().OtherUID, id, (int) E_AniTrigger.Idle,
-            //     target.id);
-        }
-
-
         public override void OnBaseStatDestroyed()
         {
             base.OnBaseStatDestroyed();
@@ -554,22 +330,6 @@ namespace ED
             {
                 autoDeactivate.Value.Deactive();
             }
-        }
-        
-        public virtual void Death()
-        {
-            
-            StopAllCoroutines();
-
-            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
-            foreach (var autoDeactivate in _dicEffectPool)
-            {
-                autoDeactivate.Value.Deactive();
-            }
-
-            _poolObjectAutoDeactivate.Deactive();
-
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
         }
     }
 }

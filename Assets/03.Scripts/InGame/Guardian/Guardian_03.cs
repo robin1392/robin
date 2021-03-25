@@ -31,7 +31,7 @@ public class Guardian_03 : Minion
 
             yield return new WaitForSeconds(1.716f);
 
-            Invincibility(2f);
+            // Invincibility(2f);
         }
     }
 }

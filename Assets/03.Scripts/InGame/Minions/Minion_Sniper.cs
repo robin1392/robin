@@ -69,14 +69,6 @@ namespace ED
             return true;
         }
 
-        public override void Death()
-        {
-            base.Death();
-
-            lr.gameObject.SetActive(false);
-            light_Fire.enabled = false;
-        }
-
         public void Aiming()
         {
             StartCoroutine(AimingCoroutine());
@@ -151,12 +143,6 @@ namespace ED
             {
                 light_Fire.enabled = false;
             }
-        }
-
-        public override void EndGameUnit()
-        {
-            base.EndGameUnit();
-            StopAiming();
         }
     }
     
