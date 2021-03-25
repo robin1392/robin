@@ -529,6 +529,7 @@ namespace MirageTest.Scripts
             }
             else if (baseStat.SyncAction != null && baseStat.SyncAction.NeedMoveSync == false)
             {
+                baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
             }
             else if (lastRecieved != null)
             {
@@ -542,6 +543,7 @@ namespace MirageTest.Scripts
                 {
                     if (Vector3.SqrMagnitude(transform.position - position) <= 0.01f)
                     {
+                        baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
                         return;
                     }
 

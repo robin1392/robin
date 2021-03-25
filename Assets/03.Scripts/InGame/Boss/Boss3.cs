@@ -25,7 +25,7 @@ public class Boss3SkillAction : SyncActionWithTarget
 {
     public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
     {
-        var boss = actorProxy.baseStat as Boss2;
+        var boss = actorProxy.baseStat as Boss3;
 
         if (targetActorProxy == null)
         {

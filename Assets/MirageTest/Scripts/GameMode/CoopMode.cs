@@ -532,10 +532,13 @@ namespace MirageTest.Scripts.GameMode
                     }
                 }
 
-                var bossEgg = SpawnBoss(wave);
-                if (bossEgg != null)
+                if (_bossIndex < _bossCount)
                 {
-                    _bosses.Add(bossEgg);
+                    var bossEgg = SpawnBoss(wave);
+                    if (bossEgg != null)
+                    {
+                        _bosses.Add(bossEgg);
+                    }   
                 }
             }
         }
@@ -555,31 +558,10 @@ namespace MirageTest.Scripts.GameMode
                 return null;
             }
 
-            if (tableManager.CoopModeBossInfo.GetData(bossId.value, out var bossInfo) == false)
-            {
-                logger.LogError($"보스데이터를 찾을 수 없습니다. id:{bossId}");
-                return null;
-            }
-
-            var actorProxy = Object.Instantiate(_prefabHolder.BossActorProxyPrefab,
-                FieldManager.Get().ts_TopPlayer.transform.position, GetRotation(false));
-            actorProxy.dataId = bossId.value;
-            actorProxy.ownerTag = GameConstants.ServerTag;
-            actorProxy.team = GameConstants.TopCamp;
-            actorProxy.spawnSlot = 0;
-            actorProxy.power = bossInfo.power;
-            actorProxy.maxHealth = bossInfo.maxHealth;
-            actorProxy.currentHealth = bossInfo.maxHealth;
-            actorProxy.effect = bossInfo.effect;
-            actorProxy.attackSpeed = bossInfo.attackSpeed;
-            actorProxy.moveSpeed = bossInfo.moveSpeed;
-            actorProxy.spawnTime = (float) Server.Time.Time;
-            actorProxy.waveSpawned = wave;
-            actorProxy.bossIndex = _bossIndex;
+            var position = FieldManager.Get().ts_TopPlayer.transform.position + Vector3.back;
+            var actorProxy = Server.CreateActorWithBossId(bossId.value, GameConstants.ServerTag, GameConstants.TopCamp, position, _bossIndex, wave, false);
             _bossIndex++;
-
-            ServerObjectManager.Spawn(actorProxy.NetIdentity);
-
+            
             return actorProxy;
         }
     }

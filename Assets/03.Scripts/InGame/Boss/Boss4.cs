@@ -21,50 +21,12 @@ public class Boss4 : BossBase
         PoolManager.instance.AddPool(pref_Spear, 2);
     }
 
-    public override void Initialize()
-    {
-        base.Initialize();
-        transform.position = transform.position.z > 0
-            ? transform.position + Vector3.back
-            : transform.position + Vector3.forward;
-        //KZSee:
-        // attackSpeed = 3f;
-    }
-
     public override IEnumerator Attack()
     {
         ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
 
         yield return new WaitForSeconds(2f);
         
-        ActorProxy.FireBulletWithRelay(E_BulletType.VALLISTA_SPEAR, target, power, 12f);
-        
-        
-        // yield return base.Attack();
-        // if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-        //
-        // if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-        // {
-        //     base.Attack();
-        //     controller.MinionAniTrigger(id, "Attack", target.id);
-        //     StartCoroutine(SkillCoroutine());
-        // }
-        // else if(InGameManager.IsNetwork == false)
-        // {
-        //     base.Attack();
-        //     animator.SetTrigger(AnimationHash.Attack);
-        // }
-    }
-
-    public void Skill()
-    {
-        StartCoroutine(SkillCoroutine());
-    }
-
-    IEnumerator SkillCoroutine()
-    {
-        yield return new WaitForSeconds(2f);
-
         ActorProxy.FireBulletWithRelay(E_BulletType.VALLISTA_SPEAR, target, power, 12f);
     }
 }

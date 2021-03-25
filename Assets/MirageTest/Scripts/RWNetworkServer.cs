@@ -223,6 +223,34 @@ public class RWNetworkServer : NetworkServer
 
         serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
     }
+    
+    public BossActorProxy CreateActorWithBossId(int bossId, byte playerStateOwnerTag, byte playerStateTeam, Vector3 position, int bossIndex, int waveSpawned, bool hatched)
+    {
+        if (TableManager.Get().CoopModeBossInfo.GetData(bossId, out var bossInfo) == false)
+        {
+            logger.LogError($"보스데이터를 찾을 수 없습니다. id:{bossId}");
+            return null;
+        }
+
+        var actorProxy = Object.Instantiate(serverGameLogic.bossActorProxyPrefab, position, GameModeBase.GetRotation(false));
+        actorProxy.dataId = bossId;
+        actorProxy.ownerTag = playerStateOwnerTag;
+        actorProxy.team = playerStateTeam;
+        actorProxy.spawnSlot = 0;
+        actorProxy.power = bossInfo.power;
+        actorProxy.maxHealth = bossInfo.maxHealth;
+        actorProxy.currentHealth = bossInfo.maxHealth;
+        actorProxy.effect = bossInfo.effect;
+        actorProxy.attackSpeed = bossInfo.attackSpeed;
+        actorProxy.moveSpeed = bossInfo.moveSpeed;
+        actorProxy.spawnTime = (float) Time.Time;
+        actorProxy.waveSpawned = waveSpawned;
+        actorProxy.bossIndex = bossIndex;
+        actorProxy.isHatched = hatched;
+
+        serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
+        return actorProxy;
+    }
 
     public void OnGameEnd(List<MatchReport> matchReports)
     {

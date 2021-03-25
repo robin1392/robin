@@ -33,11 +33,11 @@ public class Boss5 : BossBase
         base.Initialize();
         _skillCastedTime = -effectCooltime;
         if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
-        _animationEvent.event_Attack -= Callback_OnAttackAnimationEvent;
-        _animationEvent.event_Attack += Callback_OnAttackAnimationEvent;
+        _animationEvent.event_Attack -= Callback_Attack;
+        _animationEvent.event_Attack += Callback_Attack;
     }
 
-    public void Callback_OnAttackAnimationEvent()
+    public void Callback_Attack()
     {
         if (target != null)
         {

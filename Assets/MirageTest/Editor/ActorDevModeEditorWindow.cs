@@ -31,6 +31,8 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
     public List<DiceElement> DiceInfos;
     [TableList]
     public List<DiceElement> GuardianInfos;
+    [TableList]
+    public List<DiceElement> BossnInfos;
 
     private GameModeBase _gameMode;
     private RWNetworkServer _server;
@@ -53,12 +55,14 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
                     .Select(d => new DiceElement(SpawnMine, SpawnEnemys, d.id, d.prefabName)).ToList();
                 GuardianInfos = TableManager.Get().GuardianInfo.Values
                     .Select(d => new DiceElement(SpawnMyGuardian, SpawnEnemyGuardian, d.id, d.prefabName)).ToList();
+                BossnInfos = TableManager.Get().CoopModeBossInfo.Values
+                    .Select(d => new DiceElement(SpawnMyBoss, SpawnEnemyBoss, d.id, d.prefabName)).ToList();
             }
         }
     
         if (_gameMode == null)
         {
-            EditorGUILayout.HelpBox("InGameMirageActorDev 씬 실행 중에만 동작합니다.", MessageType.Info);
+            EditorGUILayout.HelpBox("Mirage 인게임 씬 실행 중에만 동작합니다.", MessageType.Info);
         }
     }
 
@@ -82,6 +86,18 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
     {
         var playerState = _gameMode.PlayerState2;
         _server.CreateActorWithGuardianId(diceId, playerState.ownerTag, playerState.team, Vector3.zero);
+    }
+    
+    void SpawnMyBoss(int id)
+    {
+        var playerState = _gameMode.PlayerState1;
+        _server.CreateActorWithBossId(id, playerState.ownerTag, playerState.team, Vector3.zero, 0, 0, true);
+    }
+    
+    void SpawnEnemyBoss(int id)
+    {
+        var playerState = _gameMode.PlayerState2;
+        _server.CreateActorWithBossId(id, playerState.ownerTag, playerState.team, Vector3.zero, 0, 0, true);
     }
     
     public class DiceElement
