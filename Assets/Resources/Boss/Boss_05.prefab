@@ -94,9 +94,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 0
   id: 0
-  controller: {fileID: 0}
   animator: {fileID: 4174956841683088918}
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
@@ -105,27 +105,22 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 2
-  power: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
+  effectUpgrade: 0
+  effectInGameUp: 0
   effectDuration: 0
   effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 0
-  isBottomPlayer: 0
+  range: 0
+  searchRange: 0
   ts_ShootingPos: {fileID: 7954714744482607572}
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
-  castType: 0
-  isPushing: 0
-  isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
   _poolObjectAutoDeactivate: {fileID: 0}
+  castType: 0
+  isAttackSpeedFactorWithAnimation: 1
+  collider: {fileID: 0}
   isPolymorph: 0
-  obj_Attack: {fileID: 638999433272946417, guid: 0d0816e05f29b054895a849820900531,
+  obj_Attack: {fileID: 1930512540053863835, guid: c812ffec346e944fab13a3e3a0e54be0,
     type: 3}
   obj_AttackHit: {fileID: 2511713277936034632, guid: 36957eb648b901f498b3eb16ec6bede6,
     type: 3}
@@ -133,6 +128,7 @@ MonoBehaviour:
     type: 3}
   obj_SkillHit: {fileID: 8535714404754721701, guid: 96b4a140ae6bc384ca243f89e4d15963,
     type: 3}
+  bulletMoveSpeed: 10
 --- !u!135 &6486029529450410244
 SphereCollider:
   m_ObjectHideFlags: 0

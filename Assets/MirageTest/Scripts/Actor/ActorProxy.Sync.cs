@@ -162,6 +162,9 @@ namespace MirageTest.Scripts
                 case E_BulletType.TURRET_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Turret_Bullet", startPos);
                     break;
+                case E_BulletType.BOSS5_BULLET:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Boss_05_Bullet", startPos);
+                    break;
             }
 
             if (bullet != null)
