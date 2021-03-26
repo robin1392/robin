@@ -44,6 +44,14 @@ public class PlayerProxy : NetworkBehaviour
         }
         
         ClientReady();
+        BindLocalDeckUI();
+    }
+
+    private void BindLocalDeckUI()
+    {
+        var client = Client as RWNetworkClient;
+        var localPlayerState = client.GetLocalPlayerState();
+        client.BindDeckUI(localPlayerState.userId);
     }
 
     private void OnStopServer()
@@ -77,6 +85,7 @@ public class PlayerProxy : NetworkBehaviour
         if (Server.LocalClientActive)
         {
             OnStartClient();
+            BindLocalDeckUI();
         }
     }
 

@@ -307,6 +307,19 @@ namespace MirageTest.Scripts
             return PlayerStates.Find(p => p.userId == LocalUserId);
         }
         
+        public void BindDeckUI(string userId)
+        {
+            if (PlayerStates == null)
+            {
+                return;
+            }
+
+            foreach (var playerState in PlayerStates)
+            {
+                playerState.IsDeckUITarget = playerState.userId == userId;
+            }
+        }
+        
         public PlayerState GetEnemyPlayerState()
         {
             return PlayerStates.Find(p => p.userId != LocalUserId);
