@@ -98,59 +98,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     
     public void SetSpawnTime(float amount)
     {
-        // if (amount < 0.05f && InGameManager.Get().time > 2f) amount = 1f;
         imageSpawnTimeGray.fillAmount = amount;
-
-        if (!isGaugeTweening)
-        {
-            if (amount < 0.2f) imageSpawnTime.fillAmount = 0f;
-            else if (amount > 0.25f && imageSpawnTime.fillAmount < 0.25f)
-            {
-                isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.26f, 0.2f).SetEase(curve).OnComplete(() =>
-                {
-                    imageSpawnTime.DOFillAmount(0.25f, 0.1f).OnComplete(() =>
-                    {
-                        isGaugeTweening = false;
-                    });
-                });
-            }
-            else if (amount > 0.5f && imageSpawnTime.fillAmount < 0.5f)
-            {
-                isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.51f, 0.2f).SetEase(curve).OnComplete(() =>
-                {
-                    imageSpawnTime.DOFillAmount(0.5f, 0.1f).OnComplete(() =>
-                    {
-                        isGaugeTweening = false;
-                    });
-                });
-            }
-            else if (amount > 0.75f && imageSpawnTime.fillAmount < 0.75f)
-            {
-                isGaugeTweening = true;
-                imageSpawnTime.DOFillAmount(0.76f, 0.2f).SetEase(curve).OnComplete(() =>
-                {
-                    imageSpawnTime.DOFillAmount(0.75f, 0.1f).OnComplete(() =>
-                    {
-                        isGaugeTweening = false;
-                    });
-                });
-            }
-            // else if (amount > 0.8f && imageSpawnTime.fillAmount < 0.8f)
-            // {
-            //     isGaugeTweening = true;
-            //     imageSpawnTime.DOFillAmount(0.81f, 0.2f).SetEase(curve).OnComplete(() =>
-            //     {
-            //         imageSpawnTime.DOFillAmount(0.8f, 0.1f).OnComplete(() =>
-            //         {
-            //             isGaugeTweening = false;
-            //         });
-            //     });
-            // }
-            else if (amount >= 1f && imageSpawnTime.fillAmount < 1f) 
-                imageSpawnTime.DOFillAmount(1f, 0.2f).SetEase(curve);
-        }
     }
 
     public float GetSpawnAmount()
@@ -161,20 +109,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     public void AddSP(int addSP)
     {
         SetAddSpText(addSP);
-        // textAddSP.transform.DOScale(1.3f, 0.1f).OnComplete(() =>
-        // {
-        //     textAddSP.transform.DOScale(1f, 0.2f);
-        // });
-        // Sequence sq = DOTween.Sequence().OnStart(() =>
-        // {
-        //     textAddSP.transform.localScale = Vector3.zero;
-        // }).Append(textAddSP.transform.DOScale(1f, 0.3f))
-        //     .SetEase(Ease.OutBack);
         textAddSP.transform.DOPunchScale(Vector3.one * 0.1f, 0.3f);
-        // textAddSP.DOFade(1f, 0.5f).OnComplete(() =>
-        // {
-        //     textAddSP.DOFade(0f, 0.5f);
-        // });
     }
 
     public void SetAddSpText(int addSp)
