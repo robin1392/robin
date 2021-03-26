@@ -232,7 +232,12 @@ namespace ED
 
         public void Click_PlayBattle()
         {
-            FirebaseManager.Get().LogEvent("PlayBattle");
+            Play(Global.PLAY_TYPE.BATTLE);
+        }
+
+        void Play(Global.PLAY_TYPE playType)
+        {
+            FirebaseManager.Get().LogEvent(playType == Global.PLAY_TYPE.BATTLE ? "PlayBattle":"PlayCoop");
 
             StopAllCoroutines();
             
@@ -245,38 +250,21 @@ namespace ED
                 btn_PlayCoop.interactable = false;
                 searchingPopup.gameObject.SetActive(true);
                 
-                StartCoroutine(AIMode());
+                StartCoroutine(AIMode(playType));
             }
             else
             {
-                // 취소중이라면 none 상태가 될때까지 기다리자...
-                //if (WebPacket.Get() != null && WebPacket.Get().netMatchStep == Global.E_MATCHSTEP.MATCH_CANCEL)
-                //{
-                    //return;
-                //}
-
                 btn_PlayBattle.interactable = false;
                 btn_PlayCoop.interactable = false;
                 searchingPopup.gameObject.SetActive(true);
                 
-                ConnectBattle();
+                ConnectBattle(playType);
             }
         }
 
         public void Click_PlayCoop()
         {
-            //StartCoroutine(ConnectCoop());
-            StopAllCoroutines();
-            
-            ShowMainUI(false);
-            CameraGyroController.Get().FocusIn();
-
-            btn_PlayBattle.interactable = false;
-            btn_PlayCoop.interactable = false;
-            searchingPopup.gameObject.SetActive(true);
-                
-            ConnectCoop();
-
+            Play(Global.PLAY_TYPE.COOP);
         }
         public void Click_BoxButton()
         {
@@ -313,42 +301,33 @@ namespace ED
             text_Nickname.text = str;
         }
         
-        private IEnumerator AIMode()
+        private IEnumerator AIMode(Global.PLAY_TYPE playType)
         {
             yield return new WaitForSeconds(1f);
 
-            GameStateManager.Get().MoveInGameBattle();
-        }
-
-
-        // send battle network
-        private void ConnectBattle()
-        {
-            if (NetworkManager.Get().UseLocalServer == true)
+            if (playType == Global.PLAY_TYPE.BATTLE)
             {
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.BATTLE, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
-                return;
+                GameStateManager.Get().MoveInGameBattle();    
             }
-
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, EGameMode.DeathMatch);
-        }
-
-        private void ConnectCoop()
-        {
-            InGameManager.Get().playType = Global.PLAY_TYPE.COOP;
-
-            ShowMainUI(false);
-            CameraGyroController.Get().FocusIn();
-            
-            if (NetworkManager.Get().UseLocalServer == true)
+            else
             {
-                NetworkManager.Get().ConnectServer(Global.PLAY_TYPE.COOP, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
-                return;
+                GameStateManager.Get().MoveInGameCoop();
             }
-
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, EGameMode.Coop);
         }
         
+        private void ConnectBattle(Global.PLAY_TYPE playType)
+        {
+            if (NetworkManager.Get().UseLocalServer == true)
+            {
+                //TODO: 기능 복구
+                NetworkManager.Get().ConnectServer(playType, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
+                return;
+            }
+
+            var eGameMode = playType == Global.PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
+            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, eGameMode);
+        }
+
         public void Click_DisconnectButton()
         {
             StopAllCoroutines();

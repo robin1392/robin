@@ -19,7 +19,7 @@ public class GameStateCoop : BaseSceneState
         base.InitializeState(_entity);
         
         //
-        sceneName = "InGame_Coop";
+        sceneName = "InGame_Coop_Mirage";
     }
 
     public override void OnRelease()
