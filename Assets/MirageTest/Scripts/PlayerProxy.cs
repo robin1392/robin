@@ -276,7 +276,7 @@ public class PlayerProxy : NetworkBehaviour
     void UpgradeSpInternal()
     {
         var playerState = GetPlayerState();
-        playerState.UpgradSp();
+        playerState.UpgradeSp();
     }
 
     public void EndGame(INetworkPlayer player, MatchReport result)

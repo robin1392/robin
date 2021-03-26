@@ -44,6 +44,8 @@ namespace MirageTest.Scripts.GameMode
             {
                 _bossCount = bossCount.value;
             }
+            
+            AddSp = TableManager.Get().CoopMode.KeyValues[(int) EVsmodeKey.AddSP].value;
         }
 
         public override async UniTask OnBeforeGameStart()

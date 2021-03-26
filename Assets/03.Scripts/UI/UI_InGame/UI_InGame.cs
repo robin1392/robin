@@ -107,12 +107,13 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public void SetEnemyArrayDeck()
     {
         var diceInfos = TableManager.Get().DiceInfo;
-        TDataDiceInfo[] deckDice = _client.GetEnemyPlayerState().Deck.Select(d =>
+        var deck = _client.GetEnemyPlayerState().Deck;
+        TDataDiceInfo[] deckDice = deck.Select(d =>
         {
             diceInfos.GetData(d.diceId, out var diceInfo);
             return diceInfo;
         }).ToArray();
-        
+
         for (int i = 0; i < deckDice.Length; i++)
         {
             arrImage_EnemyUpgradeIcon[i].sprite = FileHelper.GetIcon(deckDice[i].iconName);

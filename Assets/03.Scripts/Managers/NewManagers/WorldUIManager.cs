@@ -41,12 +41,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         InitializeManager();
     }
 
-    private void Update()
-    {
-        int total = 10 + (InGameManager.Get().wave * ((10 + InGameManager.Get().playerController.spUpgradeLevel) * 5));
-        SetAddSpText(total);
-    }
-
     public override void OnDestroy()
     {
         DestroyManager();

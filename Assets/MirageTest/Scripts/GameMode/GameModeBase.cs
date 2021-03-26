@@ -55,7 +55,7 @@ namespace MirageTest.Scripts.GameMode
             DiceInfos = TableManager.Get().DiceInfo;
             
             var vsmode = TableManager.Get().Vsmode;
-            WaveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
+            WaveTime = 4;//; vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
             AddSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
         }
 
@@ -137,9 +137,20 @@ namespace MirageTest.Scripts.GameMode
                 }
             }
         }
-        
+
+        private void UpdatePlayerCommingSp()
+        {
+            foreach (var playerState in PlayerStates)
+            {
+                var sp = CalculateSp(playerState);
+                playerState.commingSp = sp;
+            }
+        }
+
         async UniTask UpdateWave(int waveTime)
         {
+            UpdatePlayerCommingSp();
+            
             GameState.CountDown(waveTime);
                 
             var addSpCountPerWave = 4;
@@ -152,16 +163,20 @@ namespace MirageTest.Scripts.GameMode
                 {
                     break;
                 }
-
-                addSpCount++;
+                
                 foreach (var playerState in PlayerStates)
                 {
-                    var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
-                    var sp = AddSp + (GameState.wave * upgradeSp);
-                    playerState.sp += sp;
-                    playerState.AddSpByWave(sp);
+                    playerState.sp += playerState.commingSp;
+                    playerState.AddSpByWave(playerState.commingSp);
                 }
+                addSpCount++;
             }
+        }
+
+        public int CalculateSp(PlayerState playerState)
+        {
+            var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
+            return AddSp + GameState.wave * upgradeSp;
         }
 
         private void CheckRobotFusion()

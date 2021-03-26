@@ -35,6 +35,7 @@ public class UI_ObjectHealthBar : MonoBehaviour
         {
             rts_HPBar.SetParent(WorldUIManager.Get().canvas_UnitHPBar.transform, true);
             rts_HPBar.localRotation = Quaternion.identity;
+            rts_HPBar.localScale = Vector3.one;
         }
     }
 

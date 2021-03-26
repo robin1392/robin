@@ -42,6 +42,7 @@ namespace MirageTest.Scripts.Entities
         public const int FieldCount = 15;
 
         private bool _initalized;
+        [SyncVar(hook = nameof(SetCommingSp))]public int commingSp;
 
         public bool IsLocalPlayerState => (Client as RWNetworkClient).LocalUserId == userId;
 
@@ -175,6 +176,19 @@ namespace MirageTest.Scripts.Entities
                 UI_InGame.Get().btn_GetDice.EditSpCallback(newValue >= GetDiceCost());
                 UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue >= GetUpradeSpCost() && spGrade < GameConstants.MaxSpUpgradeLevel);
                 UI_InGame.Get().SetSP(newValue);
+            }
+        }
+        
+        public void SetCommingSp(int oldValue, int newValue)
+        {
+            if (!EnableUI)
+            {
+                return;
+            }
+
+            if (IsLocalPlayerState)
+            {
+                WorldUIManager.Get().SetAddSpText(newValue);
             }
         }
 
@@ -502,7 +516,7 @@ namespace MirageTest.Scripts.Entities
                 .KeyValues[(int) EVsmodeKey.DicePowerUpCost01 + ingameLevel].value;
         }
 
-        public void UpgradSp()
+        public void UpgradeSp()
         {
             logger.Log($"[UpgradeSp]");
             // sp 등급 체크
@@ -522,6 +536,9 @@ namespace MirageTest.Scripts.Entities
 
             sp -= needSp;
             spGrade += 1;
+
+            var server = Server as RWNetworkServer;
+            commingSp = server.serverGameLogic._gameMode.CalculateSp(this);
         }
     }
 
