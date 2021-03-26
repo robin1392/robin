@@ -41,9 +41,10 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         InitializeManager();
     }
 
-    public void Start()
+    private void Update()
     {
-        textAddSP.DOFade(0f, 0f);
+        int total = 10 + (InGameManager.Get().wave * ((10 + InGameManager.Get().playerController.spUpgradeLevel) * 5));
+        SetAddSpText(total);
     }
 
     public override void OnDestroy()
@@ -170,20 +171,21 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         // {
         //     textAddSP.transform.DOScale(1f, 0.2f);
         // });
-        Sequence sq = DOTween.Sequence().OnStart(() =>
-        {
-            textAddSP.transform.localScale = Vector3.zero;
-        }).Append(textAddSP.transform.DOScale(1f, 0.3f))
-            .SetEase(Ease.OutBack);
-        textAddSP.DOFade(1f, 0.5f).OnComplete(() =>
-        {
-            textAddSP.DOFade(0f, 0.5f);
-        });
+        // Sequence sq = DOTween.Sequence().OnStart(() =>
+        // {
+        //     textAddSP.transform.localScale = Vector3.zero;
+        // }).Append(textAddSP.transform.DOScale(1f, 0.3f))
+        //     .SetEase(Ease.OutBack);
+        textAddSP.transform.DOPunchScale(Vector3.one * 0.1f, 0.3f);
+        // textAddSP.DOFade(1f, 0.5f).OnComplete(() =>
+        // {
+        //     textAddSP.DOFade(0f, 0.5f);
+        // });
     }
 
     public void SetAddSpText(int addSp)
     {
-        textAddSP.text = $"+{addSp}";
+        textAddSP.text = $"{addSp}";
     }
 
     #endregion

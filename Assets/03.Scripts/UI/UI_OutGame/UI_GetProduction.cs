@@ -56,13 +56,13 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
                     case ITEM_TYPE.NONE:
                         break;
                     case ITEM_TYPE.GOLD:
-                        image.sprite = sprite_Gold;
+                        image.sprite = FileHelper.GetIcon("icon_gold");
                         image.SetNativeSize();
                         endPos = rts_Gold.position;
                         StartCoroutine(EndMove(ITEM_TYPE.GOLD));
                         break;
                     case ITEM_TYPE.DIAMOND:
-                        image.sprite = sprite_Diamond;
+                        image.sprite = FileHelper.GetIcon("icon_dia");
                         image.SetNativeSize();
                         endPos = rts_Diamond.position;
                         StartCoroutine(EndMove(ITEM_TYPE.DIAMOND));
@@ -72,7 +72,7 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
                         image.SetNativeSize();
                         break;
                     case ITEM_TYPE.KEY:
-                        image.sprite = sprite_Key;
+                        image.sprite = FileHelper.GetIcon("icon_key");
                         image.SetNativeSize();
                         endPos = rts_Key.position;
                         StartCoroutine(EndMove(ITEM_TYPE.KEY));
@@ -90,6 +90,8 @@ public class UI_GetProduction : SingletonDestroy<UI_GetProduction>
                 Move(image, startPos, endPos, i * 0.02f);
             }
         }
+        
+        UI_Main.Get().RefreshUserInfoUI();
     }
 
     public void Move(Image image, Vector2 startPos, Vector2 endPos, float delay)

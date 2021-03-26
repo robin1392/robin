@@ -60,7 +60,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6409487641813544417}
+  - {fileID: 1926484847551849729}
   - {fileID: 8550989317562966511}
   - {fileID: 2516192859207347962}
   - {fileID: 980357762058366362}
@@ -109,7 +109,7 @@ MonoBehaviour:
   isBottomPlayer: 0
   ts_ShootingPos: {fileID: 980357762058366362}
   ts_HitPos: {fileID: 980357762058366362}
-  image_HealthBar: {fileID: 4953143920641770040}
+  image_HealthBar: {fileID: 6409487641833184039}
   text_Health: {fileID: 176264361659379970}
   isPlayable: 1
   instanceID: 0
@@ -131,6 +131,7 @@ MonoBehaviour:
   _listMagic: []
   isHalfHealth: 0
   isMinionAgentMove: 1
+  ts_HpbarPosition: {fileID: 1926484847551849729}
   ts_EggParent: {fileID: 8151952964025758012}
   obj_IncubationParticle: {fileID: 685887222081563914}
   obj_SummonParticle: {fileID: 4358561870971360337}
@@ -330,15 +331,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dcf1c1f30cb34c6d92b91fb191260c7, type: 3}
---- !u!224 &6409487641813544417 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7511374198539695530, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
+--- !u!4 &1926484847551849729 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3058770736927964490, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
     type: 3}
   m_PrefabInstance: {fileID: 3516977076709316683}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4953143920641770040 stripped
+--- !u!114 &6409487641833184039 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8391272783925893747, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
+  m_CorrespondingSourceObject: {fileID: 7511374198553068396, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
     type: 3}
   m_PrefabInstance: {fileID: 3516977076709316683}
   m_PrefabAsset: {fileID: 0}

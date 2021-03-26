@@ -60,9 +60,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6409487641813544417}
-  - {fileID: 747782138026984127}
   - {fileID: 2516192859207347962}
+  - {fileID: 747782138026984127}
+  - {fileID: 1926484847551849729}
   - {fileID: 980357762058366362}
   - {fileID: 6893542662030880132}
   m_Father: {fileID: 0}
@@ -133,6 +133,7 @@ MonoBehaviour:
   _listMagic: []
   isHalfHealth: 0
   isMinionAgentMove: 1
+  ts_HpbarPosition: {fileID: 1926484847551849729}
 --- !u!54 &4956517791549293242
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -194,7 +195,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5883888954613411288}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!136 &4086366551248313644
 CapsuleCollider:
@@ -298,6 +299,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5883888954613411288}
     m_Modifications:
+    - target: {fileID: 3058770736927964490, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7511374198539695530, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -415,9 +421,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dcf1c1f30cb34c6d92b91fb191260c7, type: 3}
---- !u!224 &6409487641813544417 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7511374198539695530, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
+--- !u!4 &1926484847551849729 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3058770736927964490, guid: 7dcf1c1f30cb34c6d92b91fb191260c7,
     type: 3}
   m_PrefabInstance: {fileID: 3516977076709316683}
   m_PrefabAsset: {fileID: 0}

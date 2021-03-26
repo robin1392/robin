@@ -20,7 +20,7 @@ public class UI_Indicator : MonoBehaviour
         
         if (image_Blind != null)
         {
-            image_Blind.DOFade(0.8f, fadeTime).SetUpdate(true);
+            image_Blind.DOFade(0.6f, fadeTime).SetDelay(0.2f).SetUpdate(true);
         }
 
         //Invoke("OnIndicator", fadeTime);

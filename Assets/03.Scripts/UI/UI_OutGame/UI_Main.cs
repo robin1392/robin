@@ -12,6 +12,7 @@ using Percent.Platform.InAppPurchase;
 using RandomWarsResource.Data;
 using Service.Core;
 using Template.Match.RandomwarsMatch.Common;
+using UnityEditor;
 using UnityEngine.SceneManagement;
 
 namespace ED
@@ -62,6 +63,7 @@ namespace ED
         
         [Header("User Info")] 
         public Text text_Nickname;
+        public Image image_ClassGuage;
         public Text text_Class;
         public Text text_Trophy;
         public Text text_Diamond;
@@ -83,6 +85,7 @@ namespace ED
         
         private float[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
         private float canvasWidth;
+        public static List<ItemBaseInfo> listADReward = new List<ItemBaseInfo>();
 
         public override void Awake()
         {
@@ -97,6 +100,10 @@ namespace ED
                     settingPopup.Toggle_HighQuality(true);
                     break;
             }
+            
+#if UNITY_EDITOR
+            EditorApplication.pauseStateChanged += OnEditorAppPause;
+#endif
         }
         
         private void Start()
@@ -146,6 +153,13 @@ namespace ED
                 ((RectTransform) arrPanels[4].transform).offsetMin.y);
             mainPagePosX = new float[] {canvasWidth * 2, canvasWidth, 0, -canvasWidth, -canvasWidth * 2};
             Click_MainButton(2);
+
+            if (listADReward.Count > 0)
+            {
+                AddReward(listADReward.ToArray(), btn_PlayBattle.transform.position);
+
+                listADReward.Clear();
+            }
         }
 
         private void Update()
@@ -182,18 +196,33 @@ namespace ED
             obj_MailboxBadge.SetActive(UI_Mailbox.GetMailCount() > 0);
             
             // 메뉴버튼 뱃지 체크
-            obj_MenuBadge.SetActive(obj_QuestBadge.activeSelf || obj_MailboxBadge.activeSelf);
+            obj_MenuBadge.SetActive(obj_MailboxBadge.activeSelf);
+        }
+
+        public override void OnDestroy()
+        {
+#if UNITY_EDITOR
+            EditorApplication.pauseStateChanged -= OnEditorAppPause;
+#endif
+            base.OnDestroy();
         }
 
         public void RefreshUserInfoUI()
         {
             string nickname = UserInfoManager.Get().GetUserInfo().userNickName;
+            int trophy = UserInfoManager.Get().GetUserInfo().trophy;
+            int cls = UserInfoManager.Get().GetUserInfo().nClass;
             text_Nickname.text = nickname;
-            text_Trophy.text = UserInfoManager.Get().GetUserInfo().trophy.ToString();
-            text_Class.text = $"{Global.g_class} {UserInfoManager.Get().GetUserInfo().nClass}";
+            text_Trophy.text = trophy.ToString();
+            text_Class.text = $"{Global.g_class} {cls}";
             text_Diamond.text = UserInfoManager.Get().GetUserInfo().diamond.ToString();
             text_Gold.text = UserInfoManager.Get().GetUserInfo().gold.ToString();
             text_Key.text = UserInfoManager.Get().GetUserInfo().key.ToString();
+            TDataClassInfo classInfoData;
+            if (TableManager.Get().ClassInfo.GetData(cls, out classInfoData))
+            {
+                image_ClassGuage.fillAmount = trophy / (float) classInfoData.trophyPointMinMax[1];
+            }
         }
 
         public void Toggle(bool isOn)
@@ -390,7 +419,7 @@ namespace ED
             for (var i = 0; i < arrRts_MainButtons.Length; i++)
             {
                 //arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 390f : 213f, 260f), duration).SetEase(ease);
-                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? canvasWidth * 0.36f : canvasWidth * 0.16f, 260f), duration).SetEase(ease);
+                arrRts_MainButtons[i].DOSizeDelta(new Vector2(i == num ? 346 : 220, 600f), duration).SetEase(ease);
                 //arrRts_MainButtons[i].GetComponent<Image>().DOColor(i == num ? Color.white : Color.gray, duration);
                 arrRts_MainButtons[i]
                     .BroadcastMessage(i == num ? "Up" : "Down", SendMessageOptions.DontRequireReceiver);
@@ -588,6 +617,11 @@ namespace ED
                                 UI_GetProduction.Get().Initialize(ITEM_TYPE.DIAMOND, startPos,
                                     Mathf.Clamp(reward.Value, 5, 20));
                                 break;
+                            case 11: // 열쇠
+                                UserInfoManager.Get().GetUserInfo().key += reward.Value;
+                                UI_GetProduction.Get().Initialize(ITEM_TYPE.KEY, startPos,
+                                    Mathf.Clamp(reward.Value, 5, 20));
+                                break;
                             default: // 주사위
                             {
                                 ItemBaseInfo rw = new ItemBaseInfo();
@@ -606,5 +640,47 @@ namespace ED
                 }
             }
         }
+
+        private DateTime pauseTime;
+        public void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                pauseTime = DateTime.UtcNow;
+                print("Application Pause");
+            }
+            else
+            {
+                var totalSeconds = (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
+                if (totalSeconds >= 60)
+                {
+                    GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
+                }
+            }
+        }
+        
+#if UNITY_EDITOR
+        // 에디터에서 테스트용도로 사용하기 위해
+        public void OnEditorAppPause(PauseState pause)
+        {
+            NetworkManager.Get().PrintNetworkStatus();
+
+            if (pause == PauseState.Paused)
+            {
+                pauseTime = DateTime.UtcNow;
+                print("Application Pause");
+                NetworkManager.Get().PauseGame();
+            }
+            else
+            {
+                var totalSeconds = (float)DateTime.UtcNow.Subtract(pauseTime).TotalSeconds;
+                if (totalSeconds >= 60)
+                {
+                    GameStateManager.Get().ChangeScene(Global.E_GAMESTATE.STATE_START);
+                }
+            }
+
+        }
+#endif
     }
 }

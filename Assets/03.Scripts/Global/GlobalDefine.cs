@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -89,6 +89,7 @@ public enum E_BulletType
     POSU_BULLET,
     TURRET_BULLET,
     RACE_BULLET,
+    PLANE_BULLET,
     BOSS5_BULLET,
 }
 
