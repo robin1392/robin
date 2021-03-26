@@ -48,13 +48,14 @@ namespace MirageTest.Scripts
             }
         }
 
-        
+
 
         private ClientObjectManager _clientObjectManager;
         
         public string LocalUserId;
         public string LocalNickName;
         public string PlayerSessionId;
+        public string IsDeckTargetLocal;
 
         public MatchPlayer Player1;
         public MatchPlayer Player2;

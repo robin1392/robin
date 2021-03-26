@@ -111,7 +111,7 @@ namespace ED
                 StartFakeGame().Forget();
             }
             
-            UI_InGame.Get().ViewTargetDice(true);
+            UI_InGame.Get().ViewTargetDice(false);
 
             //KZSee:AStarPathFinding MapScan
             //Invoke("MapScan", 1f);
@@ -394,7 +394,7 @@ namespace ED
             }
             else
             {
-                var localPlayerState = _client.GetEnemyPlayerState();
+                var localPlayerState = _client.GetLocalPlayerState();
                 var tableManager = TableManager.Get();
                 var diceArr = localPlayerState.Field.Select(f =>
                 {
