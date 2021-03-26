@@ -360,51 +360,86 @@ namespace ED
 
         public void ShowAIField(bool isShow)
         {
-            //KZSee: 에이아이모드에서 사용중 확인 필요
-            // if (isShow)
-            // {
-            //     playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-            //     playerController.uiDiceField.RefreshField(0.5f);
-            //     
-            //     UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
-            //     int count = UI_InGame.Get().arrUpgradeButtons.Length;
-            //     for (int i = 0; i < count; i++)
-            //     {
-            //         UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
-            //     }
-            //     StartCoroutine(nameof(ShowAiFieldCoroutine));
-            // }
-            // else
-            // {
-            //     StopCoroutine(nameof(ShowAiFieldCoroutine));
-            //     playerController.uiDiceField.SetField(playerController.arrDice);
-            //     playerController.uiDiceField.RefreshField();
-            //     
-            //     UI_InGame.Get().SetArrayDeck(playerController.arrDiceDeck, playerController.arrUpgradeLevel);
-            //     int count = UI_InGame.Get().arrUpgradeButtons.Length;
-            //     for (int i = 0; i < count; i++)
-            //     {
-            //         UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(1f);
-            //     }
-            // }
+            if (isShow)
+            {
+                var enemyPlayerState = _client.GetEnemyPlayerState();
+                var tableManager = TableManager.Get();
+                var diceArr = enemyPlayerState.Field.Select(f =>
+                {
+                    tableManager.DiceInfo.GetData(f.diceId, out var diceInfo);
+                    return new Dice()
+                    {
+                        diceFieldNum = f.index,
+                        diceData = diceInfo
+                    };
+                }).ToArray();
+
+                UI_DiceField.Get().SetField(diceArr);
+                UI_DiceField.Get().RefreshField(0.5f);
+
+                var deckArr = enemyPlayerState.Deck.Select(d =>
+                {
+                    TableManager.Get().DiceInfo.GetData(d.diceId, out var diceInfo);
+                    return (diceInfo, d.inGameLevel);
+                }).ToArray();
+                
+                UI_InGame.Get().SetArrayDeck(deckArr);
+                int count = UI_InGame.Get().arrUpgradeButtons.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
+                }
+
+                StartCoroutine(nameof(ShowAiFieldCoroutine));
+            }
+            else
+            {
+                var localPlayerState = _client.GetEnemyPlayerState();
+                var tableManager = TableManager.Get();
+                var diceArr = localPlayerState.Field.Select(f =>
+                {
+                    tableManager.DiceInfo.GetData(f.diceId, out var diceInfo);
+                    return new Dice()
+                    {
+                        diceFieldNum = f.index,
+                        diceData = diceInfo
+                    };
+                }).ToArray();
+                
+                StopCoroutine(nameof(ShowAiFieldCoroutine));
+                UI_DiceField.Get().SetField(diceArr);
+                UI_DiceField.Get().RefreshField();
+
+                var deckArr = localPlayerState.Deck.Select(d =>
+                {
+                    TableManager.Get().DiceInfo.GetData(d.diceId, out var diceInfo);
+                    return (diceInfo, d.inGameLevel);
+                }).ToArray();
+                
+                UI_InGame.Get().SetArrayDeck(deckArr);
+                int count = UI_InGame.Get().arrUpgradeButtons.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
+                }
+            }
         }
 
         private IEnumerator ShowAiFieldCoroutine()
         {
-            //KZSee: 에이아이모드에서 사용중 확인 필요
-            // while (true)
-            // {
-            //     playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-            //     playerController.uiDiceField.RefreshField(0.5f);
-            //     
-            //     UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
-            //     int count = UI_InGame.Get().arrUpgradeButtons.Length;
-            //     for (int i = 0; i < count; i++)
-            //     {
-            //         UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
-            //     }
-            //     yield return null;
-            // }
+            while (true)
+             {
+                 // playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
+                 // playerController.uiDiceField.RefreshField(0.5f);
+                 //
+                 // UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
+                 // int count = UI_InGame.Get().arrUpgradeButtons.Length;
+                 // for (int i = 0; i < count; i++)
+                 // {
+                 //     UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
+                 // }
+                 // yield return null;
+             }
             yield return null;
         }
     }
