@@ -128,17 +128,17 @@ namespace MirageTest.Scripts.Entities
 
         public DeckDice GetDeckDice(int diceId)
         {
-            
-            
+            foreach (var deck in Deck)
+            {
+                if (deck.diceId == diceId)
+                {
+                    return deck;
+                }
+            }
 
             return DeckDice.Empty;
         }
 
-        public int GetDeckIndex(int diceId)
-        {
-            return Deck.IndexOf(GetDeckDice(diceId));
-        }
-        
         public void SetNickName(string oldValue, string newValue)
         {
             if (!EnableUI)
