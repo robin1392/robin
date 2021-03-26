@@ -351,6 +351,11 @@ namespace MirageTest.Scripts.GameMode
         
         protected async UniTask Spawn(IEnumerable<ActorProxy> actorProxies)
         {
+            if (Server == null)
+            {
+                return;
+            }
+            
             if (IsGameEnd)
             {
                 return;
