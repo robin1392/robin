@@ -20,6 +20,8 @@ namespace MirageTest.Scripts.Entities
         static readonly ILogger logger = LogFactory.GetLogger(typeof(PlayerState));
 
         public bool EnableUI;
+        //덱 유아이의 대상인지를 나타내는 값: 아군 덱을 보는 기능에서 사용중
+        public bool IsDeckUITarget;
         [SyncVar] public string userId;
 
         [SyncVar(hook = nameof(SetNickName))] public string nickName;
@@ -206,17 +208,17 @@ namespace MirageTest.Scripts.Entities
 
         private void OnChangeFieldOnClientOnly(int index, FieldDice oldValue, FieldDice newValue)
         {
-            if (!EnableUI)
+            if (EnableUI == false)
             {
                 return;
             }
 
-            if (!IsLocalPlayerState)
+            if (IsDeckUITarget == false)
             {
                 return;
             }
 
-            var uiDiceField = UI_DiceField.Get(); //싱글턴으로 대체
+            var uiDiceField = UI_DiceField.Get();
             if (oldValue.IsEmpty)
             {
                 SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
@@ -247,7 +249,18 @@ namespace MirageTest.Scripts.Entities
 
         private void OnChangeDeckOnClientOnly()
         {
-            if (!EnableUI)
+            if (EnableUI == false)
+            {
+                return;
+            }
+            
+            if(IsLocalPlayerState == false)
+            {
+                UI_InGame.Get().SetEnemyArrayDeck();
+                UI_InGame.Get().SetEnemyUpgrade();
+            }
+            
+            if(IsDeckUITarget == false)
             {
                 return;
             }
@@ -257,16 +270,8 @@ namespace MirageTest.Scripts.Entities
                 TableManager.Get().DiceInfo.GetData(d.diceId, out var diceInfo);
                 return (diceInfo, d.inGameLevel);
             }).ToArray();
-
-            if (IsLocalPlayerState)
-            {
-                UI_InGame.Get().SetArrayDeck(deckArr);
-            }
-            else
-            {
-                UI_InGame.Get().SetEnemyArrayDeck();
-                UI_InGame.Get().SetEnemyUpgrade();
-            }
+            
+            UI_InGame.Get().SetArrayDeck(deckArr);
         }
 
         private void StopClient()
