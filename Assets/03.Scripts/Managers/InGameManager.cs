@@ -111,7 +111,7 @@ namespace ED
                 StartFakeGame().Forget();
             }
             
-            UI_InGame.Get().ViewTargetDice(false);
+            UI_InGame.Get().ViewTargetDice(true);
 
             //KZSee:AStarPathFinding MapScan
             //Invoke("MapScan", 1f);
@@ -389,8 +389,8 @@ namespace ED
                 {
                     UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
                 }
-
-                StartCoroutine(nameof(ShowAiFieldCoroutine));
+                
+                _client.BindDeckUI(enemyPlayerState.userId);
             }
             else
             {
@@ -406,7 +406,6 @@ namespace ED
                     };
                 }).ToArray();
                 
-                StopCoroutine(nameof(ShowAiFieldCoroutine));
                 UI_DiceField.Get().SetField(diceArr);
                 UI_DiceField.Get().RefreshField();
 
@@ -422,25 +421,9 @@ namespace ED
                 {
                     UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
                 }
+                
+                _client.BindDeckUI(localPlayerState.userId);
             }
-        }
-
-        private IEnumerator ShowAiFieldCoroutine()
-        {
-            while (true)
-             {
-                 // playerController.uiDiceField.SetField(playerController.targetPlayer.arrDice);
-                 // playerController.uiDiceField.RefreshField(0.5f);
-                 //
-                 // UI_InGame.Get().SetArrayDeck(playerController.targetPlayer.arrDiceDeck, playerController.targetPlayer.arrUpgradeLevel);
-                 // int count = UI_InGame.Get().arrUpgradeButtons.Length;
-                 // for (int i = 0; i < count; i++)
-                 // {
-                 //     UI_InGame.Get().arrUpgradeButtons[i].SetIconAlpha(0.5f);
-                 // }
-                 // yield return null;
-             }
-            yield return null;
         }
     }
 }
