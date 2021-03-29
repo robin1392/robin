@@ -129,9 +129,24 @@ namespace MirageTest.Scripts.Entities
             {
                 return;
             }
-            
-            WorldUIManager.Get().SetSpawnTime( 1 - (_waveRemainTime / _waveInterval));
+
+            float calRemainTime = _waveRemainTime / _waveInterval;
+            if (wave < 1)
+            {
+                calRemainTime = 1f;
+            }
+            WorldUIManager.Get().SetSpawnTime(CalWaveRemainTime(1f - calRemainTime));
             WorldUIManager.Get().SetTextSpawnTime(_waveRemainTime);
+        }
+
+        private float CalWaveRemainTime(float a)
+        {
+            var mod = (a % 0.25f);
+            if (mod == 0 && a > 0)
+            {
+                return 1f;
+            }
+            return  mod / 0.25f;
         }
 
         public void CountDown(int waveInterval)

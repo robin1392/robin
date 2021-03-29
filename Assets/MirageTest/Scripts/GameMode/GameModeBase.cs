@@ -55,7 +55,7 @@ namespace MirageTest.Scripts.GameMode
             DiceInfos = TableManager.Get().DiceInfo;
             
             var vsmode = TableManager.Get().Vsmode;
-            WaveTime = 4;//; vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
+            WaveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
             AddSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
         }
 
@@ -178,8 +178,15 @@ namespace MirageTest.Scripts.GameMode
 
         public int CalculateSp(PlayerState playerState)
         {
-            var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
-            return AddSp + GameState.wave * upgradeSp;
+            if (GameState.wave < 1)
+            {
+                return 0;
+            }
+            else
+            {
+                var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
+                return AddSp + GameState.wave * upgradeSp;
+            }
         }
 
         private void CheckRobotFusion()
