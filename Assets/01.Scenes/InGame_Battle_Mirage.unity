@@ -1851,6 +1851,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 225455319}
+    - target: {fileID: 2608280262966641138, guid: c281f5911e2a54de8a9e3a667e36a364,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ED.InGameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2608280262966641138, guid: c281f5911e2a54de8a9e3a667e36a364,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickExit
+      objectReference: {fileID: 0}
     - target: {fileID: 2855210067595083575, guid: c281f5911e2a54de8a9e3a667e36a364,
         type: 3}
       propertyPath: m_AnchorMin.y
