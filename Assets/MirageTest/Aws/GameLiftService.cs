@@ -166,6 +166,7 @@ namespace MirageTest.Aws
                     string gameMode = attribute.dictAttributeList["gameMode"][0];
                     _server.SetGameMode(gameMode);
                     _server.serverGameLogic.isAIMode = true;
+                    _server.serverGameLogic.attachPlayer2AI = true;
                 }
             }
             else if (string.IsNullOrEmpty(gameSession.MatchmakerData) == false)
@@ -192,6 +193,8 @@ namespace MirageTest.Aws
                     // 모드 설정
                     string gameMode = player["attributes"]["gameMode"]["valueAttribute"].ToObject<List<string>>()[0];
                     _server.SetGameMode(gameMode);
+                    _server.serverGameLogic.isAIMode = false;
+                    _server.serverGameLogic.attachPlayer2AI = false;
                 }
             }
         }
