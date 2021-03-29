@@ -403,6 +403,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ===Server===
       objectReference: {fileID: 0}
+    - target: {fileID: 4832457519157374793, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: NetworkSceneManager
+      value: 
+      objectReference: {fileID: 946939539}
     - target: {fileID: 4832457519157374794, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -647,6 +652,11 @@ PrefabInstance:
       propertyPath: serverObjectManager
       value: 
       objectReference: {fileID: 244770881}
+    - target: {fileID: 6877902827145461394, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Server
+      value: 
+      objectReference: {fileID: 244770882}
     - target: {fileID: 6877902827182871556, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: m_Name
@@ -710,7 +720,7 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.size
-      value: 36
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -720,22 +730,22 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[2].Name
-      value: NetworkIdentity
+      value: NetworkBehaviour
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[3].Name
-      value: PlayerState
+      value: NetworkIdentity
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[3].level
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[4].Name
-      value: PlayerProxy
+      value: PlayerState
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -745,7 +755,7 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[6].Name
-      value: ClientObjectManager
+      value: ServerObjectManager
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -760,12 +770,12 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[8].Name
-      value: NetworkClient
+      value: RWAthenticator
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[9].Name
-      value: NetworkTime
+      value: RWNetworkServer
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -775,17 +785,17 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[12].Name
-      value: PlayerRegisterer
+      value: ClientObjectManager
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[13].Name
-      value: ClientStarter
+      value: ServerGameLogic
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[14].Name
-      value: ServerGameLogic
+      value: ClientPlayerProxySpawner
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -795,17 +805,17 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[15].Name
-      value: NetworkBehaviourInspector
+      value: ServerPlayerProxySpawner
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[16].Name
-      value: ActorRegisterer
+      value: RWNetworkClient
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[17].Name
-      value: PlayerSpawner
+      value: NetworkClient
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -815,47 +825,47 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[19].Name
-      value: TouchController
+      value: ClientStarter
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[20].Name
-      value: RNetworkClient
+      value: WelcomeWindow
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[21].Name
-      value: AutoController
+      value: PlayerRegisterer
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[22].Name
-      value: RNetworkServer
+      value: CharacterSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[23].Name
-      value: EnterPlayModeSettingsCheck
+      value: ActorRegisterer
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[24].Name
-      value: LocalCommandBag
+      value: PlayerSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[25].Name
-      value: ClientCommandHolder
+      value: RPlayerRegisterer
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[26].Name
-      value: NetworkScenePostProcess
+      value: TouchController
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[27].Name
-      value: NetworkConnection
+      value: RNetworkClient
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
@@ -865,15 +875,122 @@ PrefabInstance:
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[28].Name
-      value: NetworkWriterPool
+      value: AutoController
       objectReference: {fileID: 0}
     - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
         type: 3}
       propertyPath: Levels.Array.data[29].Name
-      value: NetworkReaderPool
+      value: RNetworkServer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[0].Name
+      value: ActorProxy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[6].level
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[9].level
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[11].Name
+      value: NetworkTime
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[11].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[17].level
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[19].level
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[30].Name
+      value: EnterPlayModeSettingsCheck
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[30].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[31].Name
+      value: LocalCommandBag
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[31].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[32].Name
+      value: ClientCommandHolder
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[32].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[33].Name
+      value: NetworkScenePostProcess
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[33].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[34].Name
+      value: NetworkConnection
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[34].level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[35].Name
+      value: NetworkWriterPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 6877902828077092745, guid: d19bafb6a326f4fdfb9c693f850f595c,
+        type: 3}
+      propertyPath: Levels.Array.data[35].level
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d19bafb6a326f4fdfb9c693f850f595c, type: 3}
+--- !u!114 &946939539 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6877902827145461394, guid: d19bafb6a326f4fdfb9c693f850f595c,
+    type: 3}
+  m_PrefabInstance: {fileID: 946939538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30967dfd80dbb6c46a270a64ebecb951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1042857468
 PrefabInstance:
   m_ObjectHideFlags: 0
