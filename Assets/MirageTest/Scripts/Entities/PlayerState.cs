@@ -124,6 +124,7 @@ namespace MirageTest.Scripts.Entities
 
             SetSp(sp, sp);
             SetSpGrade(spGrade, spGrade);
+            SetCommingSp(commingSp, commingSp);
             OnChangeDeckOnClientOnly();
             SetGetDiceCount(getDiceCount, getDiceCount);
             SetNickName(nickName, nickName);
@@ -258,7 +259,7 @@ namespace MirageTest.Scripts.Entities
                 });
             }
 
-            uiDiceField.arrSlot[index].SetIcon();
+            uiDiceField.arrSlot[index].SetIcon(IsLocalPlayerState ? 1.0f : 0.5f);
         }
 
         private void OnChangeDeckOnClientOnly()

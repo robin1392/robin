@@ -135,14 +135,14 @@ namespace MirageTest.Scripts.Entities
             {
                 calRemainTime = 1f;
             }
-            WorldUIManager.Get().SetSpawnTime(CalWaveRemainTime(1f - calRemainTime));
+            WorldUIManager.Get().SetSpawnTime(CalcWaveRemainTime(1f - calRemainTime));
             WorldUIManager.Get().SetTextSpawnTime(_waveRemainTime);
         }
 
-        private float CalWaveRemainTime(float a)
+        private float CalcWaveRemainTime(float value)
         {
-            var mod = (a % 0.25f);
-            if (mod == 0 && a > 0)
+            var mod = (value % 0.25f);
+            if (mod == 0 && value > 0)
             {
                 return 1f;
             }

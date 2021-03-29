@@ -116,6 +116,8 @@ namespace MirageTest.Scripts.GameMode
         private async UniTask UpdateWave()
         {
             //처음은 절반
+            UpdatePlayerCommingSp();
+            
             var waveWaitTime = WaveTime / 2;
             GameState.CountDown(waveWaitTime);
 
