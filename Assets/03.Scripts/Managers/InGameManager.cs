@@ -111,7 +111,7 @@ namespace ED
                 StartFakeGame().Forget();
             }
             
-            UI_InGame.Get().ViewTargetDice(false);
+            UI_InGame.Get().ViewTargetDice(playType == PLAY_TYPE.CO_OP);
 
             //KZSee:AStarPathFinding MapScan
             //Invoke("MapScan", 1f);
@@ -170,14 +170,15 @@ namespace ED
             
             server.serverGameLogic.isAIMode = true;
 
+            var userDeckInfo = new DeckInfo(guadianId, diceDeck);
             server.MatchData.AddPlayerInfo(
                 userInfo.userID, 
                 userInfo.userNickName, 0, 0,
-                new DeckInfo(guadianId, diceDeck));
+                userDeckInfo);
             server.MatchData.AddPlayerInfo(
                 "AI", 
                 "AI", 0, 0,
-                new DeckInfo(guadianId, GetAIDeck(TutorialManager.isTutorial)));
+                GetAIDeck(userDeckInfo, TutorialManager.isTutorial));
             
             server.authenticator = null;
             var client = FindObjectOfType<RWNetworkClient>();
@@ -189,47 +190,60 @@ namespace ED
             await server.StartHost(client);
         }
 
-        public int[] GetAIDeck(bool isTutorial)
+        public DeckInfo GetAIDeck(DeckInfo userDeckInfo, bool isTutorial)
         {
             if (isTutorial)
             {
-                return new int[] {31001, 31003, 31002, 32002, 32009};
+                return new DeckInfo(userDeckInfo.GuardianId, new int[] {31001, 31003, 31002, 32002, 32009});
             }
             
-            var diceInfos = TableManager.Get().DiceInfo.Values;
-            var arr = diceInfos.Where(info => info.enableDice).ToArray();
-            var shuffled = arr.OrderBy(x => Guid.NewGuid()).ToList();
-            return shuffled.Take(5).Select(info => info.id).ToArray();
+            // var diceInfos = TableManager.Get().DiceInfo.Values;
+            // var arr = diceInfos.Where(info => info.enableDice).ToArray();
+            // var shuffled = arr.OrderBy(x => Guid.NewGuid()).ToList();
+            // return shuffled.Take(5).Select(info => info.id).ToArray();
+
+            return userDeckInfo;
         }
         #endregion
         
 
         #region leave & end game
 
-        public void LeaveRoom()
+        public void OnClickGiveUp()
         {
             if (IsNetwork)
             {
                 var client = FindObjectOfType<RWNetworkClient>();
                 client.GetLocalPlayerProxy().GiveUp();
+            }
+            else
+            {
+                FindObjectOfType<RWNetworkServer>().Finalize();
+                FindObjectOfType<RWNetworkClient>().Disconnect();
+            }
+            
+            GameStateManager.Get().MoveMainScene();
+            
+            Time.timeScale = 1f;
+        }
+
+        // 내자신이 나간다고 눌럿을때 응답 받은것
+        public void OnClickExit()
+        {
+            if (IsNetwork)
+            {
+                var client = FindObjectOfType<RWNetworkClient>();
                 GameStateManager.Get().MoveMainScene();
             }
             else
             {
                 FindObjectOfType<RWNetworkServer>().Finalize();
                 FindObjectOfType<RWNetworkClient>().Disconnect();
-                GameStateManager.Get().MoveMainScene();
             }
             
-            Time.timeScale = 1f;
-        }
-
-        // 내자신이 나간다고 눌럿을때 응답 받은것
-        public void CallBackLeaveRoom()
-        {
-            // 잠시 테스트로 주석
-            //NetworkManager.Get().DeleteBattleInfo();
             GameStateManager.Get().MoveMainScene();
+            
+            Time.timeScale = 1f;
         }
 
 
