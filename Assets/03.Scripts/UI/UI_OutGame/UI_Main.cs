@@ -237,8 +237,8 @@ namespace ED
 
         void Play(PLAY_TYPE playType)
         {
-            InGameManager.Get().playType = playType;
-            
+            NetworkManager.Get().playType = playType;
+
             FirebaseManager.Get().LogEvent(playType == PLAY_TYPE.BATTLE ? "PlayBattle":"PlayCoop");
 
             StopAllCoroutines();

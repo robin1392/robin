@@ -73,7 +73,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     private bool _recvJoinPlayerInfoCheck = false;
 
-    public Global.PLAY_TYPE playType;
+    public PLAY_TYPE playType;
 
     private bool _isMaster;
     public bool IsMaster
@@ -468,7 +468,7 @@ public class NetworkManager : Singleton<NetworkManager>
         else
         {
             NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
-            ConnectServer(InGameManager.Get().playType, ipAddress, port, playerSessionId);
+            ConnectServer(playType, ipAddress, port, playerSessionId);
         }
         return true;
     }
