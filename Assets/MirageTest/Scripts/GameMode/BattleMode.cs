@@ -87,6 +87,7 @@ namespace MirageTest.Scripts.GameMode
             }
 
             tower.currentHealth = hp;
+            
             tower.maxHealth = hp;
 
             ServerObjectManager.Spawn(tower.NetIdentity);

@@ -541,6 +541,15 @@ namespace MirageTest.Scripts.Entities
             var server = Server as RWNetworkServer;
             commingSp = server.serverGameLogic._gameMode.CalculateSp(this);
         }
+
+        public void BindDeckUI(bool b)
+        {
+            IsDeckUITarget = b;
+            if (IsDeckUITarget)
+            {
+                OnChangeDeckOnClientOnly();   
+            }
+        }
     }
 
     [System.Serializable]

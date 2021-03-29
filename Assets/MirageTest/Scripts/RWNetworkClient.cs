@@ -317,7 +317,7 @@ namespace MirageTest.Scripts
 
             foreach (var playerState in PlayerStates)
             {
-                playerState.IsDeckUITarget = playerState.userId == userId;
+                playerState.BindDeckUI(playerState.userId == userId);
             }
         }
         
