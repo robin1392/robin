@@ -91,7 +91,7 @@ namespace MirageTest.Scripts
                     _egg = Instantiate(obj, transform);
                     _egg.transform.localPosition = Vector3.zero;
                     _egg.transform.localRotation = Quaternion.identity;
-                    _egg.transform.localScale = Vector3.one;
+                    _egg.transform.localScale = Vector3.one * 100;
                     var layerName = $"{(IsBottomCamp() ? "BottomPlayer" : "TopPlayer")}";
                     gameObject.layer = LayerMask.NameToLayer(layerName);   
                 }
