@@ -62,7 +62,6 @@ namespace ED
             ActorProxy.CreateActorBy(3013, ActorProxy.ingameUpgradeLevel, ActorProxy.outgameUpgradeLevel,
                 new Vector3[] { transform.position });
             ActorProxy.Destroy();
-            StopAI();
         }
 
         public override bool OnBeforeHitDamage(float damage)
