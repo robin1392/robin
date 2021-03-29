@@ -62,6 +62,11 @@ public class Boss1 : BossBase
         var position = transform.position;
         foreach (var minion in minions)
         {
+            if (minion == null)
+            {
+                continue;
+            }
+            
             float sqrDistance = Vector3.SqrMagnitude(minion.transform.position - position);
 
             if (list.Count == 0)

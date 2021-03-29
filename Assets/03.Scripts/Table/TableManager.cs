@@ -12,7 +12,7 @@ using ICSharpCode.SharpZipLib.Zip;
 public class TableManager : Singleton<TableManager>
 {
     public string BucketUrl;
-    public string Enviroment = "DEV";
+    public string Enviroment = "Dev";
 
     public TableData<int, TDataBoxOpenInfo> BoxProductInfo { get; private set; }
     public TableData<int, TDataCoopMode> CoopMode { get; private set; }

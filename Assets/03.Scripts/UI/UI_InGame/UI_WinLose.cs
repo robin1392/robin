@@ -19,7 +19,7 @@ public class UI_WinLose : MonoBehaviour
 
     public void Initialize(bool isWin, bool isPerfect, int winningStreak, int[] deck, int guadianId, string nickname, int trophy)
     {
-        if (InGameManager.Get().playType == Global.PLAY_TYPE.BATTLE)
+        if (InGameManager.Get().playType == PLAY_TYPE.BATTLE)
         {
             obj_Win.SetActive(isWin);
             obj_Lose.SetActive(!isWin);

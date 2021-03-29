@@ -86,10 +86,6 @@ namespace MirageTest.Scripts
                 await UniTask.Yield();
             }
 
-            
-            
-            
-
             var prefabHolder = new PrefabHolder()
             {
                 PlayerState = playerStatePrefab,

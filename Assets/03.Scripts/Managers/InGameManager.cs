@@ -22,7 +22,7 @@ namespace ED
         #region game system variable
 
         [Header("SYSTEN INFO")] 
-        public Global.PLAY_TYPE playType;
+        public PLAY_TYPE playType;
 
         public Transform ts_Lights;
         public Transform ts_StadiumTop;
@@ -149,8 +149,7 @@ namespace ED
         {
             if (TableManager.Get().Loaded == false)
             {
-                string targetPath = Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "DEV");
-                TableManager.Get().LoadFromFile(targetPath);
+                TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             }
             
             var server = FindObjectOfType<RWNetworkServer>();
@@ -166,7 +165,7 @@ namespace ED
             }
             else
             {
-                server.serverGameLogic.modeType = PLAY_TYPE.BATTLE;    
+                server.serverGameLogic.modeType = playType;    
             }
             
             server.serverGameLogic.isAIMode = true;
