@@ -105,7 +105,7 @@ namespace MirageTest.Scripts
 
             if (success == false)
             {
-                InGameManager.Get().LeaveRoom();
+                InGameManager.Get().OnClickExit();
             }
         }
         
