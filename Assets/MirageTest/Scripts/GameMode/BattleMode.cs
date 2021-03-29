@@ -345,6 +345,7 @@ namespace MirageTest.Scripts.GameMode
                         TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserRewardId, out var tDataLoseUserRewardId);
                         TableManager.Get().Vsmode.GetData((int)EVsmodeKey.LoseUserRewardValue, out var tDataLoseUserRewardValue);
 
+                        defeatReport.LoseReward.RewardId = Guid.NewGuid().ToString();;
                         defeatReport.LoseReward.ItemId = tDataLoseUserRewardId.value;
                         defeatReport.LoseReward.Value = tDataLoseUserRewardValue.value;
                     }

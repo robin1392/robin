@@ -281,7 +281,7 @@ public class RWNetworkServer : NetworkServer
                 MatchResult = isVictory ? 1 : 2,
                 UserId = report.UserId,
                 listReward = report.NormalRewards.Concat(report.PerfectRewards).Concat(report.StreakRewards).ToList(),
-                AdReward = report.LoseReward,
+                LoseReward = report.LoseReward,
             };
         }).ToList();
     }
@@ -289,6 +289,7 @@ public class RWNetworkServer : NetworkServer
     public void Finalize()
     {
         serverGameLogic.ForceEnd();
+        Disconnect();
     }
 
     public void SetGameMode(string gameMode)

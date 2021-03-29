@@ -13,7 +13,7 @@ namespace MirageTest.Scripts
         public List<ItemBaseInfo> NormalRewards;
         public List<ItemBaseInfo> StreakRewards;
         public List<ItemBaseInfo> PerfectRewards;
-        public ItemBaseInfo LoseReward;
+        public AdRewardInfo LoseReward;
         public List<QuestCompleteParam> QuestCompleteParam;
         public bool IsPerfect;
 
@@ -33,7 +33,7 @@ namespace MirageTest.Scripts
             NormalRewards = new List<ItemBaseInfo>();
             StreakRewards = new List<ItemBaseInfo>();
             PerfectRewards = new List<ItemBaseInfo>();
-            LoseReward = new ItemBaseInfo();
+            LoseReward = new AdRewardInfo();
             QuestCompleteParam = new List<QuestCompleteParam>();
         }
     }

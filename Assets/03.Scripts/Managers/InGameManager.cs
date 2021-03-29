@@ -230,20 +230,28 @@ namespace ED
         // 내자신이 나간다고 눌럿을때 응답 받은것
         public void OnClickExit()
         {
+            DisconnectGameServer();
+            MoveToMainScene();
+        }
+
+        public void MoveToMainScene()
+        {
+            GameStateManager.Get().MoveMainScene();
+            Time.timeScale = 1f;
+        }
+
+        public void DisconnectGameServer()
+        {
             if (IsNetwork)
             {
                 var client = FindObjectOfType<RWNetworkClient>();
-                GameStateManager.Get().MoveMainScene();
+                client.Disconnect();
             }
             else
             {
                 FindObjectOfType<RWNetworkServer>().Finalize();
                 FindObjectOfType<RWNetworkClient>().Disconnect();
             }
-            
-            GameStateManager.Get().MoveMainScene();
-            
-            Time.timeScale = 1f;
         }
 
 
@@ -290,7 +298,7 @@ namespace ED
             //KZSee: 이벤트로그
             //playerController.SendEventLog_BatCheck();
             
-            UI_InGamePopup.Get().SetPopupResult(playType, localPlayer, otherPlayer, true, result.WinLose, result.WinStreak, result.IsPerfect, result.NormalRewards, result.StreakRewards, result.PerfectRewards);
+            UI_InGamePopup.Get().SetPopupResult(playType, localPlayer, otherPlayer, true, result.WinLose, result.WinStreak, result.IsPerfect, result.NormalRewards, result.StreakRewards, result.PerfectRewards, result.LoseReward);
 
             SoundManager.instance.Play(result.WinLose ? Global.E_SOUND.BGM_INGAME_WIN : Global.E_SOUND.BGM_INGAME_LOSE);
         }

@@ -127,49 +127,19 @@ namespace ED
             //
             // FirebaseManager.Get().LogEvent("bat_check", param);
         }
-        
-        public void GetDice()
-        {
-            //Mirage => PlayerProxy GetDice
-            // var emptyCount = GetDiceFieldEmptySlotCount();
-            //
-            // if (emptyCount == 0)
-            // {
-            //     Debug.Log("DiceField is Full !!");
-            //     return;
-            // }
-            // else
-            // {
-            //     var emptySlotNum = 0;
-            //     do
-            //     {
-            //         emptySlotNum = Random.Range(0, arrDice.Length);
-            //     } while (arrDice[emptySlotNum].id >= 0);
-            //
-            //     int randomDeckNum = Random.Range(0, arrDiceDeck.Length);
-            //     arrDice[emptySlotNum].Set(arrDiceDeck[randomDeckNum]);
-            //     
-            //     if (uiDiceField != null)
-            //     {
-            //         uiDiceField.arrSlot[emptySlotNum].ani.SetTrigger("BBoing");
-            //         uiDiceField.SetField(arrDice);
-            //     }
-            // }
-        }
 
-        
-        public void GetDice(int diceId , int slotNum , int level = 0)
+        public override void OnBaseStatDestroyed()
         {
-            // arrDice[slotNum].Set(GetArrayDeckDice(diceId));
-            //
-            // if (uiDiceField != null)
-            // {
-            //     uiDiceField.arrSlot[slotNum].ani.SetTrigger("BBoing");
-            //     uiDiceField.SetField(arrDice);
-            // }
-            //
-            // //
-            // uiDiceField.RefreshField();
+            base.OnBaseStatDestroyed();
+            
+            image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
+            Transform ts = PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
+            animator.SetTrigger("Death");
+            SoundManager.instance.Play(clip_TowerExplosion);
+            ps_Destroy.gameObject.SetActive(true);
+            
+            //ActorProxy가 파괴되기 전 밖으로 빼놓는다. 
+            transform.SetParent(null);
         }
     }
 }

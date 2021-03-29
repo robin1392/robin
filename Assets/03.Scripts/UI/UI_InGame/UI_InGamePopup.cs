@@ -94,13 +94,13 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
     public void SetPopupResult(
         Global.PLAY_TYPE playType, MatchPlayer localPlayer, MatchPlayer otherPlayer,
         bool view, bool winLose, int winningStreak, bool perfect,
-        List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward)
+        List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward, AdRewardInfo loseReward)
     {
         popup_Result.gameObject.SetActive(view);
         if (view)
             popup_Result.Initialize(playType, localPlayer, otherPlayer, 
                 winLose, winningStreak, perfect,
-                normalReward, streakReward, perfectReward);
+                normalReward, streakReward, perfectReward, loseReward);
         
         ViewGameIndicator(false);
         ViewLowHP(false);

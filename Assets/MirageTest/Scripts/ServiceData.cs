@@ -28,7 +28,6 @@ namespace MirageTest.Aws
         public int MatchResult;
         public List<ItemBaseInfo> listReward;
         public AdRewardInfo LoseReward;
-        public ItemBaseInfo AdReward;
     }
 
     public class QuestCompleteParam
