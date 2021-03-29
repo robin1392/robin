@@ -87,9 +87,14 @@ namespace MirageTest.Scripts
 
         void ShowSpawnLine(Minion minion)
         {
+            if (ownerTag == GameConstants.ServerTag)
+            {
+                return;
+            }
+            
             var dicePos = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
-            //로컬플레이어의 진영이 하단에 위치하도록 카메라가 회전된다. 상대방 플레이어의 스폰라인정 시작점은 로컬플레이어 필드 유아이의 정반대로 계산한다. 
-            if(!IsLocalPlayerActor)
+            if((CameraController.Get().IsBottomOrientation && team == GameConstants.TopCamp) ||
+               CameraController.Get().IsBottomOrientation == false && team == GameConstants.BottomCamp)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;
