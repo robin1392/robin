@@ -16,9 +16,13 @@ namespace ED
             
             var rwClient = ActorProxy.Client as RWNetworkClient;
             tower = rwClient.GetTower(ActorProxy.ownerTag);
+
+            if (ps_Bomb != null)
+            {
+                ps_Bomb.transform.position = tower.transform.position;
+                ps_Bomb.Play();    
+            }
             
-            ps_Bomb.transform.position = tower.transform.position;
-            ps_Bomb.Play();
             ActorProxy.Destroy(2f);
         }
 

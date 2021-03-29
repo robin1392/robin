@@ -99,6 +99,11 @@ namespace ED
             {
                 return;
             }
+
+            if (ActorProxy == null)
+            {
+                return;
+            }
             
             AiPath.isStopped = false;
             Vector3 targetPos = target.ActorProxy.transform.position + (target.ActorProxy.transform.position - ActorProxy.transform.position).normalized * range;
