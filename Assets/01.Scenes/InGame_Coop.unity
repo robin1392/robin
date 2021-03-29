@@ -450,24 +450,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   playType: 1
-  pref_Player: {fileID: 5883888954613411290, guid: 002ec50b4fca7424dbc66697ef6cb83b,
-    type: 3}
-  pref_AI: {fileID: 5883888954613411290, guid: a7b795ec78b3b4df688a07fa8e27c7a9, type: 3}
   ts_Lights: {fileID: 1981603873}
   ts_StadiumTop: {fileID: 0}
   ts_NexusHealthBar: {fileID: 8136603716032395322}
-  isAIMode: 0
-  isGamePlaying: 0
-  playerController: {fileID: 0}
-  startSpawnTime: 10
-  spawnTime: 20
-  arrUpgradeLevel: 
-  getDiceCount: 0
-  event_SP_Edit:
-    m_PersistentCalls:
-      m_Calls: []
-  listBottomPlayer: []
-  listTopPlayer: []
   pref_PlayerEmpty: {fileID: 5883888954613411290, guid: ba3aa20b8a7e64ad981caaa6b6aa9365,
     type: 3}
   pref_Coop_AI: {fileID: 5883888954613411290, guid: c0d8d3bf7121b44508be80cde2cc8186,
@@ -3117,22 +3102,22 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 30
+      value: 159.60867
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -35.9301
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
