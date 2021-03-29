@@ -10,6 +10,7 @@ namespace MirageTest.Aws
     public class MatchPlayerAttribute
     {
         public string PlayerId;
+        public bool isPlayer;
         public Dictionary<string, double> dictAttributeNumber = null;
         public Dictionary<string, string> dictAttributeString = null;
         public Dictionary<string, List<string>> dictAttributeList = null;

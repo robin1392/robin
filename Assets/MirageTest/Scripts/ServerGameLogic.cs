@@ -85,6 +85,10 @@ namespace MirageTest.Scripts
             {
                 await UniTask.Yield();
             }
+            
+            var port = GetComponent<KcpTransport>().Port;
+            var tableDataPath = $"{Application.dataPath}/../../TableData_{port}/";
+            TableManager.Get().Init(tableDataPath);
 
             var prefabHolder = new PrefabHolder()
             {
@@ -112,6 +116,8 @@ namespace MirageTest.Scripts
                     break;
                 
             }
+            
+            logger.Log($"OnBeforeGameStart");
 
             await _gameMode.OnBeforeGameStart();
             
@@ -126,6 +132,7 @@ namespace MirageTest.Scripts
 
             if (NoPlayers)
             {
+                logger.Log($"NoPlayers");
                 EndGameSession();
                 return;
             }
