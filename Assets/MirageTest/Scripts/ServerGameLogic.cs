@@ -165,7 +165,10 @@ namespace MirageTest.Scripts
             server.Disconnect();
             
 #if UNITY_EDITOR || UNITY_STANDALONE_LINUX
-            GameLiftServerAPI.ProcessEnding();
+            if (server.LocalClientActive == false)
+            {
+                GameLiftServerAPI.ProcessEnding();   
+            }
 #endif
         }
         
