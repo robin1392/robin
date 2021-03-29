@@ -2,14 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting;
 using Aws.GameLift.Server;
 using Aws.GameLift.Server.Model;
 using Cysharp.Threading.Tasks;
 using Mirage.KCP;
 using MirageTest.Scripts;
-using MirageTest.Scripts.Logging;
-using MirageTest.Scripts.Messages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -19,7 +16,6 @@ namespace MirageTest.Aws
     public class GameLiftService : MonoBehaviour
     {
         RWNetworkServer _server;
-        private FileWriter _fileWriter;
         string matchmakingData = "{\"matchId\":\"9cf2f612-403e-4aa1-aa7a-8c5afd7e4e31\",\"matchmakingConfigurationArn\":\"arn:aws:gamelift:ap-northeast-2:153269277707:matchmakingconfiguration/randomwars-config-dev\",\"teams\":[{\"name\":\"red\",\"players\":[{\"playerId\":\"8ab64c62-8843-4c6f-b940-8f6eb736b423\",\"attributes\":{\"addTowerHp\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0},\"class\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":1.0},\"diceInfo\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"DiceId\\\":1000,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1001,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1002,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1003,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1004,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":5001,\\\"Level\\\":1,\\\"Count\\\":0}\"]},\"gameMode\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"coop\"]},\"questData\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"QuestId\\\":14,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":6,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":3,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":9,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":17,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":1000,\\\"Value\\\":0,\\\"Status\\\":1}\"]},\"score\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":5.0},\"trophy\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0},\"userName\":{\"attributeType\":\"STRING\",\"valueAttribute\":\"GUEST79515\"},\"winStreak\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0}}}]},{\"name\":\"blue\",\"players\":[{\"playerId\":\"a2400798-6df1-4261-beb1-3f2a4e1cc60f\",\"attributes\":{\"addTowerHp\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0},\"class\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":3.0},\"diceInfo\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"DiceId\\\":1000,\\\"Level\\\":2,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1001,\\\"Level\\\":2,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":1002,\\\"Level\\\":3,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":2004,\\\"Level\\\":1,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":3005,\\\"Level\\\":3,\\\"Count\\\":0}\",\"{\\\"DiceId\\\":5001,\\\"Level\\\":1,\\\"Count\\\":0}\"]},\"gameMode\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"deathmatch\"]},\"questData\":{\"attributeType\":\"STRING_LIST\",\"valueAttribute\":[\"{\\\"QuestId\\\":11,\\\"Value\\\":3,\\\"Status\\\":2}\",\"{\\\"QuestId\\\":2,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":6,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":16,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":8,\\\"Value\\\":0,\\\"Status\\\":1}\",\"{\\\"QuestId\\\":1000,\\\"Value\\\":1,\\\"Status\\\":1}\"]},\"score\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":173.0},\"trophy\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":155.0},\"userName\":{\"attributeType\":\"STRING\",\"valueAttribute\":\"GUEST78045\"},\"winStreak\":{\"attributeType\":\"DOUBLE\",\"valueAttribute\":0.0}}}]}],\"autoBackfillMode\":null,\"autoBackfillTicketId\":null}";
         public bool EnableTestData;
         
@@ -48,38 +44,32 @@ namespace MirageTest.Aws
                 Debug.Log($"port from CommandLineArgs - {portFromArgs.Value}");
             }
 
-            var logFilePath = $"{Application.dataPath}/../../log_{transport.Port}.txt";
-            //유니티 로그파일 사용 시 플릿에서 서버가 뜰때 크래시가 난다. 그래서 별도의 파일로깅을 함. 서버 실행 시 아규먼트로 -nolog를 사용중
-            _fileWriter = new FileWriter(logFilePath);
-            Application.logMessageReceived += (string logString, string stackTrace, LogType type) =>
-            {
-                _fileWriter.WriteLine($"[{type.ToString()}] {logString}");
-                _fileWriter.WriteLine(stackTrace);
-                if (type == LogType.Exception)
-                {
-                    foreach (var player in _server.Players)
-                    {
-                        if (player == null)
-                        {
-                            continue;
-                        }
-
-                        if (player.Identity == null)
-                        {
-                            continue;
-                        }
-                        
-                        player.Send(new ServerExceptionMessage()
-                        {
-                            message = logString,  
-                        });
-                    }
-                    
-                    GameLiftServerAPI.ProcessEnding();
-                }
-            };
-            
-            Debug.Log($"FileWriter Initialized: {logFilePath}");
+            //TODO: 서버 익셉션 시 클라이언트에서 서버 익셉션을 확인할 수 있도록 하자.
+            // Application.logMessageReceived += (string logString, string stackTrace, LogType type) =>
+            // {
+            //     if (type == LogType.Exception)
+            //     {
+            //         foreach (var player in _server.Players)
+            //         {
+            //             if (player == null)
+            //             {
+            //                 continue;
+            //             }
+            //
+            //             if (player.Identity == null)
+            //             {
+            //                 continue;
+            //             }
+            //             
+            //             player.Send(new ServerExceptionMessage()
+            //             {
+            //                 message = logString,  
+            //             });
+            //         }
+            //         
+            //         ProcessEnd(5).Forget();
+            //     }
+            // };
 
             var hasArg = CommandLineArgs.HasArg("table_test");
             if (hasArg)
@@ -93,6 +83,7 @@ namespace MirageTest.Aws
                 EnableTestData = true;
             }
 
+            var logFilePath = CommandLineArgs.GetString("logFile");
             if (Init(transport.Port, logFilePath) == false)
             {
                 Debug.LogError("GameLiftService Init 실패.");    
@@ -104,6 +95,13 @@ namespace MirageTest.Aws
             }
             
             _server.ListenAsync().Forget();
+        }
+
+        async UniTask ProcessEnd(float delay)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(5)); 
+            GameLiftServerAPI.ProcessEnding();
+            Application.Quit();
         }
         
         public bool Init(int port, string logFilePath)
