@@ -232,12 +232,14 @@ namespace ED
 
         public void Click_PlayBattle()
         {
-            Play(Global.PLAY_TYPE.BATTLE);
+            Play(PLAY_TYPE.BATTLE);
         }
 
-        void Play(Global.PLAY_TYPE playType)
+        void Play(PLAY_TYPE playType)
         {
-            FirebaseManager.Get().LogEvent(playType == Global.PLAY_TYPE.BATTLE ? "PlayBattle":"PlayCoop");
+            InGameManager.Get().playType = playType;
+            
+            FirebaseManager.Get().LogEvent(playType == PLAY_TYPE.BATTLE ? "PlayBattle":"PlayCoop");
 
             StopAllCoroutines();
             
@@ -257,14 +259,13 @@ namespace ED
                 btn_PlayBattle.interactable = false;
                 btn_PlayCoop.interactable = false;
                 searchingPopup.gameObject.SetActive(true);
-                
                 ConnectBattle(playType);
             }
         }
 
         public void Click_PlayCoop()
         {
-            Play(Global.PLAY_TYPE.COOP);
+            Play(PLAY_TYPE.CO_OP);
         }
         public void Click_BoxButton()
         {
@@ -301,11 +302,11 @@ namespace ED
             text_Nickname.text = str;
         }
         
-        private IEnumerator AIMode(Global.PLAY_TYPE playType)
+        private IEnumerator AIMode(PLAY_TYPE playType)
         {
             yield return new WaitForSeconds(1f);
 
-            if (playType == Global.PLAY_TYPE.BATTLE)
+            if (playType == PLAY_TYPE.BATTLE)
             {
                 GameStateManager.Get().MoveInGameBattle();    
             }
@@ -315,7 +316,7 @@ namespace ED
             }
         }
         
-        private void ConnectBattle(Global.PLAY_TYPE playType)
+        private void ConnectBattle(PLAY_TYPE playType)
         {
             if (NetworkManager.Get().UseLocalServer == true)
             {
@@ -324,7 +325,7 @@ namespace ED
                 return;
             }
 
-            var eGameMode = playType == Global.PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
+            var eGameMode = playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
             NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, eGameMode);
         }
 

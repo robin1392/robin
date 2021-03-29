@@ -129,7 +129,7 @@ public class NetworkManager : Singleton<NetworkManager>
     public class MatchInfo
     {
         public string PlayerGameSession;
-        public Global.PLAY_TYPE PlayType;
+        public PLAY_TYPE PlayType;
         public string ServerAddress;
         public int Port;    
     }
@@ -249,7 +249,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
     #region connent
     
-    public void ConnectServer(Global.PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
+    public void ConnectServer(PLAY_TYPE type, string serverAddr, int port, string playerSessionId)
     {
         LastMatchInfo = new MatchInfo()
         {
@@ -468,9 +468,7 @@ public class NetworkManager : Singleton<NetworkManager>
         else
         {
             NetMatchStep = Global.E_MATCHSTEP.MATCH_CONNECT;
-
-            // 우선 그냥 배틀로 지정하자
-            ConnectServer(Global.PLAY_TYPE.BATTLE, ipAddress, port, playerSessionId);
+            ConnectServer(InGameManager.Get().playType, ipAddress, port, playerSessionId);
         }
         return true;
     }
