@@ -21,6 +21,7 @@ using RandomWarsProtocol;
 using RandomWarsProtocol.Msg;
 using Percent.GameBaseClient;
 using UnityEditor;
+using Debug = ED.Debug;
 
 public class NetLogger2 : ILog
 {
@@ -258,7 +259,19 @@ public class NetworkManager : Singleton<NetworkManager>
             PlayerGameSession = playerSessionId,
             PlayType = type,
         };
-        GameStateManager.Get().MoveInGameBattle();
+
+        if (type == PLAY_TYPE.BATTLE)
+        {
+            GameStateManager.Get().MoveInGameBattle();    
+        }
+        else if(type == PLAY_TYPE.CO_OP)
+        {
+            GameStateManager.Get().MoveInGameCoop();    
+        }
+        else
+        {
+            Debug.LogError($"지원하지 않는 모드로 서버 접속 요청이 들어왔습니다. {type.ToString()}");
+        }
     }
 
 
