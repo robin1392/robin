@@ -20,6 +20,11 @@ namespace MirageTest.Scripts.SyncAction
     {
         public IEnumerator ActionWithSync(ActorProxy actor, ActorProxy target)
         {
+            if (actor == null || actor.Client == null || actor.Client.Player == null)
+            {
+                yield break;
+            }
+            
             if (target == null)
             {
                 yield break;
@@ -38,6 +43,11 @@ namespace MirageTest.Scripts.SyncAction
     {
         public IEnumerator ActionWithSync(ActorProxy actor)
         {
+            if (actor == null || actor.Client == null || actor.Client.Player == null)
+            {
+                yield break;
+            }
+            
             actor.SyncActionWithoutTarget(actor.Client.Player.Identity.NetId, GetType().Name);
             actor.baseStat.RunningAction = this;
             yield return Action(actor);
