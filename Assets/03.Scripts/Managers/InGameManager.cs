@@ -132,9 +132,6 @@ namespace ED
                 TableManager.Get().LoadFromFile(targetPath);
             }
             
-            var server = FindObjectOfType<RWNetworkServer>();
-            server.enabled = false;
-            
             var userInfo = UserInfoManager.Get().GetUserInfo();
             var client = FindObjectOfType<RWNetworkClient>();
             
