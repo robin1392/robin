@@ -187,7 +187,6 @@ namespace MirageTest.Scripts
             {
                 var outcome = GameLiftServerAPI.ProcessEnding();
                 Debug.Log($"GameLiftServerAPI.ProcessEnding {outcome.Success} - {outcome.Error}");
-                GameLiftServerAPI.Destroy();
                 Application.Quit();
             }
 #endif
