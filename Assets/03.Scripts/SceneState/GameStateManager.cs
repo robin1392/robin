@@ -387,9 +387,8 @@ public class GameStateManager : Singleton<GameStateManager>
     {
         if (errorCode != ERandomwarsUserErrorCode.Success)
         {
-            ObscuredPrefs.SetString("UserKey", string.Empty);
-            ObscuredPrefs.Save();
-
+            UserInfoManager.Get().ResetUserId();
+            
             return true;
         }
 

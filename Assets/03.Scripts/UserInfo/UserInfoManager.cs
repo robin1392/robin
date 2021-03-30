@@ -11,10 +11,13 @@ using Debug = UnityEngine.Debug;
 
 public class UserInfo
 {
-    private const string UserIdKey = "UserKey";
-    private const string UserNickNameKey = "UserNickNameKey";
+    private const string _userIdKey = "UserKey"; 
+    private const string _userNickNameKey = "UserNickNameKey";
+    public string UserIdKey => $"{_userIdKey}{_prefsPostfix}";
+    private string UserNickNameKey => $"{_userNickNameKey}{_prefsPostfix}";
     private Action<string> _onSetUserId;
     private Action<string> _onSetUserNickName;
+    private string _prefsPostfix;
 
     #region user info variable
 
@@ -116,8 +119,10 @@ public class UserInfo
     
     #region init func
 
-    public UserInfo()
+    public UserInfo(string prefsPostfix)
     {
+        _prefsPostfix = prefsPostfix;
+        
         arrDeck[0] = new int[6] {1000, 1001, 1002, 1003, 1004, 5001};
         arrDeck[1] = new int[6] {1000, 1001, 1002, 1003, 1004, 5001};
         arrDeck[2] = new int[6] {1000, 1001, 1002, 1003, 1004, 5001};
@@ -333,12 +338,20 @@ public class UserInfo
     {
         _onSetUserNickName = onSetNickName;
     }
+
+    public void ResetUserId()
+    {
+        ObscuredPrefs.SetString(UserIdKey, string.Empty);
+        ObscuredPrefs.Save();
+    }
 }
 
 
 
 public class UserInfoManager : Singleton<UserInfoManager>
 {
+    public string PrefsPostfix = "";
+    
     #region variable
 
     private UserInfo _userInfo = null;
@@ -375,7 +388,7 @@ public class UserInfoManager : Singleton<UserInfoManager>
     #region init destroy
     public void InitializeUserInfo()
     {
-        _userInfo = new UserInfo();
+        _userInfo = new UserInfo(PrefsPostfix);
         
         //print(_userInfo.slotDeck[0]);
         //print(_userInfo.slotDeck[1]);
@@ -528,5 +541,10 @@ public class UserInfoManager : Singleton<UserInfoManager>
         }
     }
     #endregion
+
+    public void ResetUserId()
+    {
+        _userInfo.ResetUserId();
+    }
 }
 
