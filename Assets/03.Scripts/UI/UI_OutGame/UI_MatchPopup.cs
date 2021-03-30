@@ -23,6 +23,7 @@ public class UI_MatchPopup : UI_Popup
 
     private PLAY_TYPE _playType;
     private string ticketId;
+    private bool isSearching;
 
     public void Initialize()
     {
@@ -30,7 +31,21 @@ public class UI_MatchPopup : UI_Popup
 
         text_MatchTitle.text = $"{_playType.ToString()}";
     }
-    
+
+    public override void Close()
+    {
+        if (isSearching && ticketId.IsNullOrEmpty() == false)
+        {
+            isSearching = false;
+            NetworkManager.Get().StopMatchReq(ticketId);
+        }
+        
+        base.Close();
+    }
+
+    /// <summary>
+    /// 랜덤 매칭
+    /// </summary>
     public void Click_RandomMatch()
     {
         UI_Main.Get().ShowMainUI(false);
@@ -58,6 +73,9 @@ public class UI_MatchPopup : UI_Popup
         Close();
     }
 
+    /// <summary>
+    /// 친구와 함께하기
+    /// </summary>
     public void Click_Invite()
     {
         obj_TypeButtons.SetActive(false);
@@ -65,6 +83,9 @@ public class UI_MatchPopup : UI_Popup
         LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
     }
 
+    /// <summary>
+    /// 초대코드 만들기 요청
+    /// </summary>
     public void Click_CreateRoom()
     {
         var eGameMode = _playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
@@ -76,6 +97,9 @@ public class UI_MatchPopup : UI_Popup
         );
     }
 
+    /// <summary>
+    /// 초대코드 입력창 열기
+    /// </summary>
     public void Click_JoinRoom()
     {
         obj_InviteButtons.SetActive(false);
@@ -83,13 +107,19 @@ public class UI_MatchPopup : UI_Popup
         LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
     }
 
+    /// <summary>
+    /// 첫화면으로 돌아가기
+    /// </summary>
     public void Click_CancelTogether()
     {
         obj_TypeButtons.SetActive(true);
         obj_InviteButtons.SetActive(false);
         LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
     }
-
+    
+    /// <summary>
+    /// 초대코드 복사하기 버튼
+    /// </summary>
     public void Click_CopyCode()
     {
         ticketId.CopyToClipboard();
@@ -97,6 +127,9 @@ public class UI_MatchPopup : UI_Popup
         UI_ErrorMessage.Get().ShowMessage(LocalizationManager.GetLangDesc("Option_Pidcopy"));
     }
 
+    /// <summary>
+    /// 초대코드 생성후에 취소요청
+    /// </summary>
     public void Click_CancelCreateRoom()
     {
         NetworkManager.session.MatchTemplate.MatchCancelReq(
@@ -106,6 +139,9 @@ public class UI_MatchPopup : UI_Popup
         );
     }
 
+    /// <summary>
+    /// 초대코드 입력창 닫고 뒤로 돌아가기
+    /// </summary>
     public void Click_CancelJoinRoom()
     {
         obj_JoinRoom.SetActive(false);
@@ -113,39 +149,56 @@ public class UI_MatchPopup : UI_Popup
         LayoutRebuilder.ForceRebuildLayoutImmediate(rts_VerticalLayoutGroup);
     }
 
+    /// <summary>
+    /// 입력된 코드로 입장 요청하기
+    /// </summary>
     public void Click_JoinRoomWithCode()
     {
         if (input_InviteCode.text.IsNullOrEmpty())
         {
             return;
         }
-        
+
+        ticketId = input_InviteCode.text;
         var eGameMode = _playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
         NetworkManager.session.MatchTemplate.MatchJoinReq(
             NetworkManager.session.HttpClient,
-            input_InviteCode.text,
+            ticketId,
             (int) eGameMode,
             UserInfoManager.Get().GetUserInfo().activateDeckIndex,
             JoinRoomCallback
         );
     }
 
+    /// <summary>
+    /// 입장 요청 콜백 (성공시 MatchStatusReq 요청)
+    /// </summary>
+    /// <param name="errorCode"></param>
+    /// <returns></returns>
     private bool JoinRoomCallback(ERandomwarsMatchErrorCode errorCode)
     {
         if (errorCode == ERandomwarsMatchErrorCode.Success)
         {
+            isSearching = true;
+            NetworkManager.Get().OnStartMatchAck(ERandomwarsMatchErrorCode.Success, ticketId);
             return true;
         }
 
         return false;
     }
 
+    /// <summary>
+    /// 방 생성 취소요청 콜백
+    /// </summary>
+    /// <param name="errorCode"></param>
+    /// <returns></returns>
     private bool CancelCreateRoomCallback(ERandomwarsMatchErrorCode errorCode)
     {
         StopAllCoroutines();
         
         if (errorCode == ERandomwarsMatchErrorCode.Success)
         {
+            isSearching = false;
             NetworkManager.Get().StopMatchReq(ticketId);
             ticketId = string.Empty;
             
@@ -159,6 +212,12 @@ public class UI_MatchPopup : UI_Popup
         return false;
     }
 
+    /// <summary>
+    /// 방생성 콜백 (성공시 MatchStatusReq 요청)
+    /// </summary>
+    /// <param name="errorCode"></param>
+    /// <param name="ticketId"></param>
+    /// <returns></returns>
     private bool InviteCallback(ERandomwarsMatchErrorCode errorCode, string ticketId)
     {
         if (errorCode == ERandomwarsMatchErrorCode.Success)
@@ -172,6 +231,7 @@ public class UI_MatchPopup : UI_Popup
             // 남은시간 표시하기
             text_InviteCode.text = $"CODE : {ticketId}";
 
+            isSearching = true;
             NetworkManager.Get().OnStartMatchAck(ERandomwarsMatchErrorCode.Success, ticketId);
 
             StartCoroutine(CreateRoomRemainTime());
@@ -182,6 +242,10 @@ public class UI_MatchPopup : UI_Popup
         return false;
     }
 
+    /// <summary>
+    /// 방생성 남은시간 표시 코루틴
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator CreateRoomRemainTime()
     {
         int t = 60;
