@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Levels:
   - Name: ServerGameLogic
-    level: 0
+    level: 3
   - Name: NetworkSceneManager
     level: 2
   - Name: ActorProxy
@@ -57,82 +57,22 @@ MonoBehaviour:
   - Name: NetworkIdentity
     level: 2
   - Name: PlayerState
-    level: 0
+    level: 2
   - Name: RWNetworkServer
     level: 3
   - Name: PlayerProxy
-    level: 0
+    level: 2
   - Name: NetworkServer
     level: 2
   - Name: NetworkTime
     level: 2
   - Name: RWAthenticator
-    level: 3
+    level: 2
   - Name: ServerObjectManager
     level: 2
   - Name: ServerPlayerProxySpawner
-    level: 2
-  - Name: ClientPlayerProxySpawner
-    level: 0
-  - Name: ClientObjectManager
-    level: 2
-  - Name: RWNetworkClient
-    level: 2
-  - Name: NetworkClient
     level: 3
-  - Name: NetworkBehaviourInspector
-    level: 2
-  - Name: ClientStarter
-    level: 2
   - Name: WelcomeWindow
-    level: 2
-  - Name: PlayerRegisterer
-    level: 2
-  - Name: CharacterSpawner
-    level: 2
-  - Name: ActorRegisterer
-    level: 2
-  - Name: PlayerSpawner
-    level: 2
-  - Name: RPlayerRegisterer
-    level: 2
-  - Name: TouchController
-    level: 2
-  - Name: RNetworkClient
-    level: 2
-  - Name: AutoController
-    level: 2
-  - Name: RNetworkServer
-    level: 2
-  - Name: EnterPlayModeSettingsCheck
-    level: 2
-  - Name: LocalCommandBag
-    level: 2
-  - Name: ClientCommandHolder
-    level: 2
-  - Name: NetworkScenePostProcess
-    level: 2
-  - Name: NetworkConnection
-    level: 2
-  - Name: NetworkWriterPool
-    level: 2
-  - Name: NetworkReaderPool
-    level: 2
-  - Name: NetworkReaderExtensions
-    level: 2
-  - Name: 
-    level: 0
-  - Name: FixedUpdateManager
-    level: 2
-  - Name: KcpConnection
-    level: 2
-  - Name: BattleMode
-    level: 2
-  - Name: ActorDevMode
-    level: 2
-  - Name: NetworkPlayer
-    level: 2
-  - Name: GameModeBase
     level: 2
 --- !u!1 &6877902827145461392
 GameObject:

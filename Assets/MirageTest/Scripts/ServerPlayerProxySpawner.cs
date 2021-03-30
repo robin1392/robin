@@ -44,7 +44,7 @@ public class ServerPlayerProxySpawner : MonoBehaviour
 
     void OnServerAddPlayerInternal(INetworkPlayer conn, AddPlayerProxyMessage msg)
     {
-        logger.Log("NetworkManager.OnServerAddPlayer");
+        logger.Log("ServerPlayerProxySpawner.OnServerAddPlayer");
 
         if (conn.Identity != null)
         {
@@ -59,5 +59,7 @@ public class ServerPlayerProxySpawner : MonoBehaviour
         var  player = Instantiate(playerPrefab);
         player.GetComponent<PlayerProxy>().userId = userId;
         serverObjectManager.AddCharacter(conn, player.gameObject);
+        
+        logger.Log($"OnServerAddPlayer - userId:{userId} netId:{conn.Identity.NetId}");
     }
 }
