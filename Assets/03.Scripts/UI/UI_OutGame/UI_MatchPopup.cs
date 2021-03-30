@@ -59,8 +59,7 @@ public class UI_MatchPopup : UI_Popup
             UI_Main.Get().btn_PlayBattle.interactable = false;
             UI_Main.Get().btn_PlayCoop.interactable = false;
             UI_Main.Get().searchingPopup.gameObject.SetActive(true);
-            
-            StartCoroutine(AIMode(_playType));
+            UI_Main.Get().searchingPopup.StartCoroutine(AIMode(_playType));
         }
         else
         {
