@@ -257,7 +257,9 @@ public class RWNetworkServer : NetworkServer
     {
         var matchResult = ToMatchResults(matchReports);
         var matchResultJson = JsonConvert.SerializeObject(matchResult);
-        logger.Log(matchResultJson);
+        
+        logger.Log($"매치 결과:{matchResultJson}");
+        
 #if UNITY_EDITOR || UNITY_STANDALONE_LINUX
         FindObjectOfType<SQSService>()?.SendMessage(matchResultJson).Forget();
 #endif

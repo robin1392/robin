@@ -51,9 +51,17 @@ namespace MirageTest.Scripts
 
         private void OnClientDisconnected(INetworkPlayer arg0)
         {
-            logger.Log($"OnClientDisconnected {arg0.Identity.NetId}");
             _gameMode?.OnClientDisconnected(arg0);
             CheckGameSession().Forget();
+            
+            if (arg0?.Identity != null)
+            {
+                logger.Log($"OnClientDisconnected {arg0.Identity.NetId}");    
+            }
+            else
+            {
+                logger.Log($"OnClientDisconnected identity is null.");
+            }
         }
 
         async UniTask CheckGameSession()

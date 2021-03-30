@@ -26,8 +26,6 @@ namespace MirageTest.Aws
 
         public async UniTask SendMessage(string matchResultJson)
         {
-            Debug.Log($"매치 결과:{matchResultJson}");
-            
             AssumeRoleRequest roleRequest = new AssumeRoleRequest();
             roleRequest.RoleArn = _roleArn;
             roleRequest.RoleSessionName = _roleName;
