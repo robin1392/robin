@@ -417,7 +417,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    public void StartMatchReq(string userId, EGameMode gameMode)
+    public void StartMatchReq(EGameMode gameMode, int deckIndex)
     {
         if (NetMatchStep == Global.E_MATCHSTEP.MATCH_START
             || NetMatchStep == Global.E_MATCHSTEP.MATCH_CONNECT)
@@ -430,7 +430,7 @@ public class NetworkManager : Singleton<NetworkManager>
         NetMatchStep = Global.E_MATCHSTEP.MATCH_START;
 
 
-        session.MatchTemplate.MatchRequestReq(session.HttpClient, (int)gameMode, OnStartMatchAck);
+        session.MatchTemplate.MatchRequestReq(session.HttpClient, (int)gameMode, deckIndex, OnStartMatchAck);
     }
 
 

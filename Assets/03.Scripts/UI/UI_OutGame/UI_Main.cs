@@ -326,7 +326,7 @@ namespace ED
             }
 
             var eGameMode = playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
-            NetworkManager.Get().StartMatchReq(UserInfoManager.Get().GetUserInfo().userID, eGameMode);
+            NetworkManager.Get().StartMatchReq(eGameMode, UserInfoManager.Get().GetActiveDeckIndex());
         }
 
         public void Click_DisconnectButton()

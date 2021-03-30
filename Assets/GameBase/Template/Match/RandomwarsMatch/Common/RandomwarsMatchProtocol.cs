@@ -52,12 +52,13 @@ namespace Template.Match.RandomwarsMatch.Common
 
 
         #region MatchRequest ---------------------------------------------------------------------
-        public bool MatchRequestReq(ISender sender, int gameMode, ReceiveMatchRequestAckDelegate callback)
+        public bool MatchRequestReq(ISender sender, int gameMode, int deckIndex, ReceiveMatchRequestAckDelegate callback)
         {
             ReceiveMatchRequestAckHandler = callback;
             JObject json = new JObject();
             json.Add("accessToken", sender.GetAccessToken());
             json.Add("gameMode", gameMode);
+            json.Add("deckIndex", deckIndex);
             return sender.SendHttpPost((int)ERandomwarsMatchProtocol.MatchRequestReq, "matchrequest", json.ToString());
         }
 
