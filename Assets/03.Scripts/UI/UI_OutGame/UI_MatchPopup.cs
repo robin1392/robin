@@ -119,7 +119,8 @@ public class UI_MatchPopup : UI_Popup
         {
             return;
         }
-        
+
+        this.ticketId = input_InviteCode.text;
         var eGameMode = _playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
         NetworkManager.session.MatchTemplate.MatchJoinReq(
             NetworkManager.session.HttpClient,
