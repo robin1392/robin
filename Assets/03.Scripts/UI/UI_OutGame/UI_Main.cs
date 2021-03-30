@@ -39,8 +39,9 @@ namespace ED
         public Button btn_SearchCancel;
         public Button btn_AD;
         public CanvasGroup[] arrSearchingCanvasGroup;
-        
-        [Header("Popup")]
+
+        [Header("Popup")] 
+        public RectTransform rts_Popup;
         public UI_SearchingPopup searchingPopup;
         public UI_BoxPopup boxPopup;
         public UI_BoxOpenPopup boxOpenPopup;
@@ -60,6 +61,7 @@ namespace ED
         public UI_Popup_MoveShop moveShopPopup;
         public UI_Language languagePopup;
         public UI_Mailbox mailboxPopup;
+        public UI_MatchPopup matchPopup;
         
         [Header("User Info")] 
         public Text text_Nickname;
@@ -235,38 +237,40 @@ namespace ED
             Play(PLAY_TYPE.BATTLE);
         }
 
-        void Play(PLAY_TYPE playType)
-        {
-            NetworkManager.Get().playType = playType;
-
-            FirebaseManager.Get().LogEvent(playType == PLAY_TYPE.BATTLE ? "PlayBattle":"PlayCoop");
-
-            StopAllCoroutines();
-            
-            ShowMainUI(false);
-            CameraGyroController.Get().FocusIn();
-
-            if (isAIMode || TutorialManager.isTutorial)
-            {
-                btn_PlayBattle.interactable = false;
-                btn_PlayCoop.interactable = false;
-                searchingPopup.gameObject.SetActive(true);
-                
-                StartCoroutine(AIMode(playType));
-            }
-            else
-            {
-                btn_PlayBattle.interactable = false;
-                btn_PlayCoop.interactable = false;
-                searchingPopup.gameObject.SetActive(true);
-                ConnectBattle(playType);
-            }
-        }
-
         public void Click_PlayCoop()
         {
             Play(PLAY_TYPE.CO_OP);
         }
+
+        void Play(PLAY_TYPE playType)
+        {
+            NetworkManager.Get().playType = playType;
+
+            StopAllCoroutines();
+            
+            // ShowMainUI(false);
+            // CameraGyroController.Get().FocusIn();
+            //
+            // if (isAIMode || TutorialManager.isTutorial)
+            // {
+            //     btn_PlayBattle.interactable = false;
+            //     btn_PlayCoop.interactable = false;
+            //     searchingPopup.gameObject.SetActive(true);
+            //     
+            //     StartCoroutine(AIMode(playType));
+            // }
+            // else
+            // {
+            //     btn_PlayBattle.interactable = false;
+            //     btn_PlayCoop.interactable = false;
+            //     searchingPopup.gameObject.SetActive(true);
+            //     ConnectBattle(playType);
+            // }
+
+            var match = Instantiate(matchPopup.gameObject, rts_Popup).GetComponent<UI_MatchPopup>();
+            match.Initialize();
+        }
+
         public void Click_BoxButton()
         {
             boxPopup.gameObject.SetActive(true);
@@ -302,32 +306,32 @@ namespace ED
             text_Nickname.text = str;
         }
         
-        private IEnumerator AIMode(PLAY_TYPE playType)
-        {
-            yield return new WaitForSeconds(1f);
-
-            if (playType == PLAY_TYPE.BATTLE)
-            {
-                GameStateManager.Get().MoveInGameBattle();    
-            }
-            else
-            {
-                GameStateManager.Get().MoveInGameCoop();
-            }
-        }
-        
-        private void ConnectBattle(PLAY_TYPE playType)
-        {
-            if (NetworkManager.Get().UseLocalServer == true)
-            {
-                //TODO: 기능 복구
-                NetworkManager.Get().ConnectServer(playType, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
-                return;
-            }
-
-            var eGameMode = playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
-            NetworkManager.Get().StartMatchReq(eGameMode, UserInfoManager.Get().GetActiveDeckIndex());
-        }
+        // private IEnumerator AIMode(PLAY_TYPE playType)
+        // {
+        //     yield return new WaitForSeconds(1f);
+        //
+        //     if (playType == PLAY_TYPE.BATTLE)
+        //     {
+        //         GameStateManager.Get().MoveInGameBattle();    
+        //     }
+        //     else
+        //     {
+        //         GameStateManager.Get().MoveInGameCoop();
+        //     }
+        // }
+        //
+        // private void ConnectBattle(PLAY_TYPE playType)
+        // {
+        //     if (NetworkManager.Get().UseLocalServer == true)
+        //     {
+        //         //TODO: 기능 복구
+        //         NetworkManager.Get().ConnectServer(playType, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
+        //         return;
+        //     }
+        //
+        //     var eGameMode = playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
+        //     NetworkManager.Get().StartMatchReq(eGameMode, UserInfoManager.Get().GetActiveDeckIndex());
+        // }
 
         public void Click_DisconnectButton()
         {

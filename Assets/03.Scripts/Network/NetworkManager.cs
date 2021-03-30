@@ -434,7 +434,7 @@ public class NetworkManager : Singleton<NetworkManager>
     }
 
 
-    bool OnStartMatchAck(ERandomwarsMatchErrorCode errorCode, string ticketId)
+    public bool OnStartMatchAck(ERandomwarsMatchErrorCode errorCode, string ticketId)
     {
         if (string.IsNullOrEmpty(ticketId))
         {
