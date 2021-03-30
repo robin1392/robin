@@ -43,7 +43,6 @@ public class PlayerProxy : NetworkBehaviour
             InGameManager.Get().RotateTopCampObject();
         }
         
-        ClientReady();
         BindLocalDeckUI();
     }
 
@@ -115,12 +114,6 @@ public class PlayerProxy : NetworkBehaviour
     {
         var client = Client as RWNetworkClient;
         client.AddPlayerProxy(this);
-
-        if (IsLocalClient)
-        {
-            //OnStartLocalPlayer가 호출되지 않아 여기서 부름
-            ClientReady();
-        }
     }
 
     private void OnStopClient()
