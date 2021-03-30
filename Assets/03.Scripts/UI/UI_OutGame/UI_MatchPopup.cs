@@ -134,6 +134,7 @@ public class UI_MatchPopup : UI_Popup
     {
         if (errorCode == ERandomwarsMatchErrorCode.Success)
         {
+            NetworkManager.Get().OnStartMatchAck(ERandomwarsMatchErrorCode.Success, ticketId);
             return true;
         }
 
