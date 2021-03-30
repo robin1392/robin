@@ -147,8 +147,17 @@ namespace MirageTest.Aws
         
         void OnGameSession(GameSession gameSession)
         {
-            var outcome = GameLiftServerAPI.ActivateGameSession();
+            InitGameSession(gameSession).Forget();
+        }
 
+        async UniTask InitGameSession(GameSession gameSession)
+        {
+            while (_server == null || _server.Active == false)
+            {
+                await UniTask.Yield();
+            }
+            
+            var outcome = GameLiftServerAPI.ActivateGameSession();
             if (string.IsNullOrEmpty(gameSession.GameSessionData) == false)
             {
                 Debug.Log($"GameSessionData로 시작");
@@ -159,17 +168,16 @@ namespace MirageTest.Aws
                 {
                     // 캐릭터 추가
                     string playerId = attribute.PlayerId;
+                    var isPlayer = attribute.isPlayer;
                     string userName = attribute.dictAttributeString["userName"];
                     int trophy = (int)attribute.dictAttributeNumber["trophy"];
                     var listDiceInfo = attribute.dictAttributeList["diceInfo"];
                     var winStreak = attribute.dictAttributeNumber["winStreak"];
-                    AddMatchPlayer(playerId, userName, trophy, (short)winStreak, listDiceInfo);
+                    AddMatchPlayer(playerId, userName, trophy, (short)winStreak, listDiceInfo, isPlayer);
 
                     // 모드 설정
                     string gameMode = attribute.dictAttributeList["gameMode"][0];
                     _server.SetGameMode(gameMode);
-                    _server.serverGameLogic.isAIMode = true;
-                    _server.serverGameLogic.attachPlayer2AI = true;
                 }
             }
             else if (string.IsNullOrEmpty(gameSession.MatchmakerData) == false)
@@ -193,24 +201,18 @@ namespace MirageTest.Aws
                     var trophy = int.Parse(player["attributes"]["trophy"]["valueAttribute"].ToString());
                     var winStreak = int.Parse(player["attributes"]["winStreak"]["valueAttribute"].ToString());
                     var listDiceInfo = player["attributes"]["diceInfo"]["valueAttribute"].ToObject<List<string>>();
-                    AddMatchPlayer(playerId, userName, trophy, winStreak, listDiceInfo);
+                    AddMatchPlayer(playerId, userName, trophy, winStreak, listDiceInfo, true);
 
                     // 모드 설정
                     string gameMode = player["attributes"]["gameMode"]["valueAttribute"].ToObject<List<string>>()[0];
                     _server.SetGameMode(gameMode);
-                    _server.serverGameLogic.isAIMode = false;
-                    _server.serverGameLogic.attachPlayer2AI = false;
                 }
             }
         }
         
-        void AddMatchPlayer(string playerId, string userName, int trophy, int winStreak, List<string> listDiceInfo)
+        void AddMatchPlayer(string playerId, string userName, int trophy, int winStreak, List<string> listDiceInfo,
+            bool isPlayer)
         {
-            if (_server == null)
-            {
-                return;
-            }
-
             // 주사위
             DeckInfo deckInfo = new DeckInfo();
             deckInfo.DiceInfos = new DiceInfo[listDiceInfo.Count - 1];
@@ -229,7 +231,7 @@ namespace MirageTest.Aws
             deckInfo.GuardianId = matchGuadianInfo.DiceId;
 
             // 플레이어 추가
-            _server.MatchData.AddPlayerInfo(playerId, userName, trophy, winStreak, deckInfo);
+            _server.MatchData.AddPlayerInfo(playerId, userName, trophy, winStreak, deckInfo, isPlayer);
             Debug.Log($"플레이어 추가:{playerId} name:{userName} gudrdian:{deckInfo.GuardianId} deck:{String.Join(", ", deckInfo.DiceInfos.ToArray())}");
         }
         

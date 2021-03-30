@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 #if UNITY_EDITOR || UNITY_STANDALONE_LINUX
 using Aws.GameLift.Server;
@@ -22,9 +23,7 @@ namespace MirageTest.Scripts
         public RWNetworkServer server;
         private ServerObjectManager _serverObjectManager;
         public ServerObjectManager ServerObjectManager => _serverObjectManager;
-        
-        private readonly int _gamePlayerCount = 2;
-        
+
         public GameState gameStatePrefab;
         public PlayerState playerStatePrefab;
         public TowerActorProxy towerActorProxyPrefab;
@@ -33,10 +32,8 @@ namespace MirageTest.Scripts
         public DiceActorProxy diceActorProxyPrefab;
         
         public GameModeBase _gameMode;
-        public bool isAIMode;
-        
+
         public PLAY_TYPE modeType;
-        public bool attachPlayer2AI;
 
         bool NoPlayers =>
             _serverObjectManager
@@ -124,15 +121,9 @@ namespace MirageTest.Scripts
             logger.Log($"OnBeforeGameStart");
 
             await _gameMode.OnBeforeGameStart();
-            
-            if (isAIMode)
-            {
-                await WaitForFirstPlayer().TimeoutWithoutException(TimeSpan.FromSeconds(60));
-            }
-            else
-            {
-                await WaitForPlayers().TimeoutWithoutException(TimeSpan.FromSeconds(60));
-            }
+
+            var playerCount = server.MatchData.PlayerInfos.Count(p => p.isPlayer);
+            await WaitForPlayers(playerCount).TimeoutWithoutException(TimeSpan.FromSeconds(60));
 
             if (NoPlayers)
             {
@@ -143,18 +134,36 @@ namespace MirageTest.Scripts
 
             _gameMode.GameState.state = EGameState.Playing;
             
-            if (attachPlayer2AI)
+            var aiTask = CreateAITask();
+            if (aiTask.Count > 0)
             {
-                var aiPlayer = new AIPlayer(_gameMode.PlayerState2);
-                // var aiPlayer2 = new AIPlayer(_gameMode.PlayerState1);
-                await UniTask.WhenAny(_gameMode.UpdateLogic(), aiPlayer.UpdataAI()); //, aiPlayer2.UpdataAI());   
+                aiTask.Add(_gameMode.UpdateLogic());
+                await UniTask.WhenAny(aiTask.ToArray());
             }
             else
             {
                 await _gameMode.UpdateLogic();
             }
         }
-        
+
+        List<UniTask> CreateAITask()
+        {
+            var list = new List<UniTask>();
+            foreach (var player in server.MatchData.PlayerInfos)
+            {
+                if (player.isPlayer)
+                {
+                    continue;
+                }
+
+                var playerState = _gameMode.GetPlayerState(player.UserId);
+                var ai = new AIPlayer(playerState);
+                list.Add(ai.UpdataAI());
+            }
+
+            return list;
+        }
+
         private void EndGameSession()
         {
             logger.Log($"EndGameSession");
@@ -184,7 +193,7 @@ namespace MirageTest.Scripts
 #endif
         }
 
-        private async UniTask WaitForPlayers()
+        private async UniTask WaitForPlayers(int playerCount)
         {
             while (true)
             {
@@ -195,27 +204,7 @@ namespace MirageTest.Scripts
                         return (playerProxy != null && playerProxy.ready);
                     });
                 
-                if (readyPlayerProxies.Count() >= _gamePlayerCount)
-                {
-                    break;
-                }
-
-                await UniTask.Yield();
-            }
-        }
-        
-        private async UniTask WaitForFirstPlayer()
-        {
-            while (true)
-            {
-                var readyPlayerProxies =
-                    _serverObjectManager.SpawnedObjects.Where(p =>
-                    {
-                        var playerProxy = p.Value.GetComponent<PlayerProxy>();
-                        return (playerProxy != null && playerProxy.ready);
-                    });
-                
-                if (readyPlayerProxies.Any())
+                if (readyPlayerProxies.Count() >= playerCount)
                 {
                     break;
                 }
