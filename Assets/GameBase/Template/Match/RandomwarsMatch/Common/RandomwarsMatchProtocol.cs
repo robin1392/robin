@@ -21,6 +21,12 @@ namespace Template.Match.RandomwarsMatch.Common
         MatchCancelReq,
         MatchCancelAck,
 
+        MatchInviteReq,
+        MatchInviteAck,
+
+        MatchJoinReq,
+        MatchJoinAck,
+
         End,
     }
 
@@ -36,8 +42,12 @@ namespace Template.Match.RandomwarsMatch.Common
                 {(int)ERandomwarsMatchProtocol.MatchStatusReq, ReceiveMatchStatusReq},
                 {(int)ERandomwarsMatchProtocol.MatchStatusAck, ReceiveMatchStatusAck},
                 {(int)ERandomwarsMatchProtocol.MatchCancelReq, ReceiveMatchCancelReq},
-                {(int)ERandomwarsMatchProtocol.MatchCancelAck, ReceiveMatchCancelAck},  
-            };         
+                {(int)ERandomwarsMatchProtocol.MatchCancelAck, ReceiveMatchCancelAck},
+                {(int)ERandomwarsMatchProtocol.MatchInviteReq, ReceiveMatchInviteReq},
+                {(int)ERandomwarsMatchProtocol.MatchInviteAck, ReceiveMatchInviteAck},
+                {(int)ERandomwarsMatchProtocol.MatchJoinReq, ReceiveMatchJoinReq},
+                {(int)ERandomwarsMatchProtocol.MatchJoinAck, ReceiveMatchJoinAck},
+            };
         }
 
 
@@ -48,7 +58,6 @@ namespace Template.Match.RandomwarsMatch.Common
             JObject json = new JObject();
             json.Add("accessToken", sender.GetAccessToken());
             json.Add("gameMode", gameMode);
-            json.Add("deckIndex", 0);
             return sender.SendHttpPost((int)ERandomwarsMatchProtocol.MatchRequestReq, "matchrequest", json.ToString());
         }
 
@@ -62,8 +71,8 @@ namespace Template.Match.RandomwarsMatch.Common
             int gameMode = (int)jObject["gameMode"];
             int deckIndex = (int)jObject["deckIndex"];
             var res = ReceiveMatchRequestReqHandler(accessToken, gameMode, deckIndex);
-            return MatchRequestAck(sender, res.errorCode, res.ticketId);     
-        }        
+            return MatchRequestAck(sender, res.errorCode, res.ticketId);
+        }
 
         public bool MatchRequestAck(ISender sender, ERandomwarsMatchErrorCode errorCode, string ticketId)
         {
@@ -71,7 +80,7 @@ namespace Template.Match.RandomwarsMatch.Common
             json.Add("errorCode", (int)errorCode);
             json.Add("ticketId", (string)ticketId);
             return sender.SendHttpResult(json.ToString());
-        }        
+        }
 
 
         public delegate bool ReceiveMatchRequestAckDelegate(ERandomwarsMatchErrorCode errorCode, string ticketId);
@@ -105,8 +114,8 @@ namespace Template.Match.RandomwarsMatch.Common
             string accessToken = (string)jObject["accessToken"];
             string ticketId = (string)jObject["ticketId"];
             var res = ReceiveMatchStatusReqHandler(accessToken, ticketId);
-            return MatchStatusAck(sender, res.errorCode, res.playerSessionId, res.ipAddress, res.port);     
-        }        
+            return MatchStatusAck(sender, res.errorCode, res.playerSessionId, res.ipAddress, res.port);
+        }
 
         public bool MatchStatusAck(ISender sender, ERandomwarsMatchErrorCode errorCode, string playerSessionId, string ipAddress, int port)
         {
@@ -116,7 +125,7 @@ namespace Template.Match.RandomwarsMatch.Common
             json.Add("ipAddress", ipAddress);
             json.Add("port", port);
             return sender.SendHttpResult(json.ToString());
-        }        
+        }
 
 
         public delegate bool ReceiveMatchStatusAckDelegate(ERandomwarsMatchErrorCode errorCode, string playerSessionId, string ipAddress, int port);
@@ -153,15 +162,15 @@ namespace Template.Match.RandomwarsMatch.Common
             string accessToken = (string)jObject["accessToken"];
             string ticketId = (string)jObject["ticketId"];
             var res = ReceiveMatchCancelReqHandler(accessToken, ticketId);
-            return MatchCancelAck(sender, res);     
-        }        
+            return MatchCancelAck(sender, res);
+        }
 
         public bool MatchCancelAck(ISender sender, ERandomwarsMatchErrorCode errorCode)
         {
             JObject json = new JObject();
             json.Add("errorCode", (int)errorCode);
             return sender.SendHttpResult(json.ToString());
-        }        
+        }
 
 
         public delegate bool ReceiveMatchCancelAckDelegate(ERandomwarsMatchErrorCode errorCode);
@@ -173,6 +182,97 @@ namespace Template.Match.RandomwarsMatch.Common
             ERandomwarsMatchErrorCode errorCode = (ERandomwarsMatchErrorCode)(int)jObject["errorCode"];
             return ReceiveMatchCancelAckHandler(errorCode);
         }
-        #endregion            
+        #endregion           
+
+        #region MatchInvite ---------------------------------------------------------------------
+        public bool MatchInviteReq(ISender sender, int gameMode, int deckIndex, ReceiveMatchInviteAckDelegate callback)
+        {
+            ReceiveMatchInviteAckHandler = callback;
+            JObject json = new JObject();
+            json.Add("accessToken", sender.GetAccessToken());
+            json.Add("gameMode", gameMode);
+            json.Add("deckIndex", deckIndex);
+            return sender.SendHttpPost((int)ERandomwarsMatchProtocol.MatchInviteReq, "matchinvite", json.ToString());
+        }
+
+        public delegate (ERandomwarsMatchErrorCode errorCode, string ticketId) ReceiveMatchInviteReqDelegate(string accessToken, int gameMode, int deckIndex);
+        public ReceiveMatchInviteReqDelegate ReceiveMatchInviteReqHandler;
+        public bool ReceiveMatchInviteReq(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            string accessToken = (string)jObject["accessToken"];
+            int gameMode = (int)jObject["gameMode"];
+            int deckIndex = (int)jObject["deckIndex"];
+            var res = ReceiveMatchInviteReqHandler(accessToken, gameMode, deckIndex);
+            return MatchInviteAck(sender, res.errorCode, res.ticketId);
+        }
+
+        public bool MatchInviteAck(ISender sender, ERandomwarsMatchErrorCode errorCode, string ticketId)
+        {
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            json.Add("ticketId", (string)ticketId);
+            return sender.SendHttpResult(json.ToString());
+        }
+
+
+        public delegate bool ReceiveMatchInviteAckDelegate(ERandomwarsMatchErrorCode errorCode, string ticketId);
+        public ReceiveMatchInviteAckDelegate ReceiveMatchInviteAckHandler;
+        public bool ReceiveMatchInviteAck(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            ERandomwarsMatchErrorCode errorCode = (ERandomwarsMatchErrorCode)(int)jObject["errorCode"];
+            string ticketId = (string)jObject["ticketId"];
+            return ReceiveMatchInviteAckHandler(errorCode, ticketId);
+        }
+        #endregion           
+
+        #region MatchJoin ---------------------------------------------------------------------
+        public bool MatchJoinReq(ISender sender, string ticketId, int gameMode, int deckIndex, ReceiveMatchJoinAckDelegate callback)
+        {
+            ReceiveMatchJoinAckHandler = callback;
+            JObject json = new JObject();
+            json.Add("accessToken", sender.GetAccessToken());
+            json.Add("ticketId", ticketId);
+            json.Add("gameMode", gameMode);
+            json.Add("deckIndex", deckIndex);
+            return sender.SendHttpPost((int)ERandomwarsMatchProtocol.MatchJoinReq, "matchjoin", json.ToString());
+        }
+
+        public delegate ERandomwarsMatchErrorCode ReceiveMatchJoinReqDelegate(string accessToken, string ticketId, int gameMode, int deckIndex);
+        public ReceiveMatchJoinReqDelegate ReceiveMatchJoinReqHandler;
+        public bool ReceiveMatchJoinReq(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            string accessToken = (string)jObject["accessToken"];
+            string ticketId = (string)jObject["ticketId"];
+            int gameMode = (int)jObject["gameMode"];
+            int deckIndex = (int)jObject["deckIndex"];
+            var res = ReceiveMatchJoinReqHandler(accessToken, ticketId, gameMode, deckIndex);
+            return MatchJoinAck(sender, res);
+        }
+
+        public bool MatchJoinAck(ISender sender, ERandomwarsMatchErrorCode errorCode)
+        {
+            JObject json = new JObject();
+            json.Add("errorCode", (int)errorCode);
+            return sender.SendHttpResult(json.ToString());
+        }
+
+
+        public delegate bool ReceiveMatchJoinAckDelegate(ERandomwarsMatchErrorCode errorCode);
+        public ReceiveMatchJoinAckDelegate ReceiveMatchJoinAckHandler;
+        public bool ReceiveMatchJoinAck(ISender sender, byte[] msg, int length)
+        {
+            string json = Encoding.Default.GetString(msg, 0, length);
+            JObject jObject = JObject.Parse(json);
+            ERandomwarsMatchErrorCode errorCode = (ERandomwarsMatchErrorCode)(int)jObject["errorCode"];
+            return ReceiveMatchJoinAckHandler(errorCode);
+        }
+        #endregion    
+
     }
 }
