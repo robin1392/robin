@@ -9667,7 +9667,7 @@ GameObject:
   - component: {fileID: 2028398663927964444}
   - component: {fileID: 2335456498029265822}
   m_Layer: 0
-  m_Name: particle_robot_summon
+  m_Name: Effect_Robot_Summon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

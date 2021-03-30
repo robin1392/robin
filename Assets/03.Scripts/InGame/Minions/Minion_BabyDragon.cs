@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.Messages;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,77 +9,46 @@ namespace ED
 {
     public class Minion_BabyDragon : Minion
     {
-        public Animator ani_Baby;
-        public Animator ani_Dragon;
-        public Transform ts_HitPosBaby;
-        public Transform ts_HitPosDragon;
-        public Transform ts_HPBarParent;
-        public Transform ts_BabyHPBarPoint;
-        public Transform ts_DragonHPBarPoint;
-        public ParticleSystem ps_Smoke;
-        public float polymophCooltime = 20f;
-
-        public float bulletMoveSpeedBaby = 6f;
-        public float bulletMoveSpeedDragon = 10f;
-
-        [Header("Prefab")] 
-        public GameObject pref_Fireball;
-
         [Header("AudioClip")]
         public AudioClip clip_BabyAttack;
 
-        private float originRange;
-        private readonly string strTagGround = "Minion_Ground";
-        private readonly string strTagFlying = "Minion_Flying";
-
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            PoolManager.instance.AddPool(pref_Fireball, 1);
-        }
+        private int spawnedWave;
 
         protected override void Start()
         {
             base.Start();
 
-            var ae = ani_Dragon.GetComponent<MinionAnimationEvent>();
+            var ae = animator.GetComponent<MinionAnimationEvent>();
 
             ae.event_Attack += AttackEvent;
-            ae.event_FireSpear += FireSpear;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
-
-            gameObject.tag = strTagGround;
-            ani_Baby.gameObject.SetActive(true);
-            ani_Dragon.gameObject.SetActive(false);
-            animator = ani_Baby;
-            ts_HitPos = ts_HitPosBaby;
-            ts_HPBarParent.localPosition = ts_BabyHPBarPoint.localPosition;
-            originRange = range;
-            range = 0.7f;
-            StartCoroutine(PolymorphCoroutine());
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            base.Initialize();
             
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            spawnedWave = rwClient.GameState.wave;
+            rwClient.GameState.WaveEvent.AddListener(OnWave);
+        }
+
+        private void OnWave(int wave)
+        {
+            if (wave > spawnedWave)
             {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
+                // 변신
+                var rwClient = ActorProxy.Client as RWNetworkClient;
+                rwClient.Send(new CreateActorMessage()
+                {
+                    diceId = 4011,
+                    ownerTag = ActorProxy.ownerTag,
+                    team = ActorProxy.team,
+                    inGameLevel = ActorProxy.ingameUpgradeLevel,
+                    outGameLevel = ActorProxy.outgameUpgradeLevel,
+                    positions = new Vector3[] { transform.position },
+                    delay = 0f,
+                });
+                ActorProxy.Destroy();
             }
         }
 
@@ -86,59 +57,26 @@ namespace ED
             SoundManager.instance.Play(clip_BabyAttack);
         }
 
-        public void FireSpear()
+        public override void OnBaseStatDestroyed()
         {
-            if (target == null)
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            rwClient.GameState.WaveEvent.RemoveListener(OnWave);
+
+            StopAllAction();
+            _poolObjectAutoDeactivate?.Deactive();
+            if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
+            _destroyed = true;
+
+            if (ActorProxy.currentHealth <= 0)
             {
-                return;
-            }
-            else if (IsTargetInnerRange() == false)
-            {
-                animator.SetTrigger(_animatorHashIdle);
-                return;
+                SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
+                PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
             }
 
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+            foreach (var autoDeactivate in _dicEffectPool)
             {
-                controller.ActionFireBullet(E_BulletType.BABYDRAGON , id, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
+                autoDeactivate.Value.Deactive();
             }
-
-            /*//if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
-            {
-                controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.BABYDRAGON, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-                controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
-            {
-                controller?.FireBullet(E_BulletType.BABYDRAGON, ts_ShootingPos.position, target.id, power, ani_Baby.gameObject.activeSelf ? bulletMoveSpeedBaby : bulletMoveSpeedDragon);
-            }
-            */
-            
-        }
-
-        IEnumerator PolymorphCoroutine()
-        {
-            yield return new WaitForSeconds(polymophCooltime);
-
-            gameObject.tag = strTagFlying;
-            gameObject.layer =
-                LayerMask.NameToLayer(string.Format("{0}Flying", isBottomPlayer ? "BottomPlayer" : "TopPlayer"));
-            targetMoveType = DICE_MOVE_TYPE.ALL;
-            ani_Baby.gameObject.SetActive(false);
-            ani_Dragon.gameObject.SetActive(true);
-            animator = ani_Dragon;
-            ts_HitPos = ts_HitPosDragon;
-            ts_HPBarParent.localPosition = ts_DragonHPBarPoint.localPosition;
-            range = originRange;
-            
-            ps_Smoke.Play();
-            power = effect;
-            maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
-            currentHealth = maxHealth;
-            RefreshHealthBar();
         }
     }
 }

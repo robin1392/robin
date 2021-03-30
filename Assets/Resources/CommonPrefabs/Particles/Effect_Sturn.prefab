@@ -9488,7 +9488,7 @@ GameObject:
   - component: {fileID: 1001158548176103538}
   - component: {fileID: 3089778319131824940}
   m_Layer: 0
-  m_Name: particle_sturn
+  m_Name: Effect_Sturn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

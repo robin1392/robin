@@ -4828,7 +4828,7 @@ GameObject:
   - component: {fileID: 7277101816312138090}
   - component: {fileID: 7277101816313846822}
   m_Layer: 0
-  m_Name: particle_shot_hit
+  m_Name: Effect_ShotHit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

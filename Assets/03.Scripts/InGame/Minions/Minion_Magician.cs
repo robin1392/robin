@@ -4,6 +4,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace  ED
@@ -19,14 +21,13 @@ namespace  ED
         public GameObject pref_Scarecrow;
         
         //[SerializeField] private readonly float _skillCooltime = 10f;
-        private int _skillCastedCount;
+        private float _skillCastedTime;
 
         protected override void Start()
         {
             base.Start();
 
-            var ae = animator.GetComponent<MinionAnimationEvent>();
-            ae.event_FireArrow += FireArrow;
+            _animationEvent.event_FireArrow += FireArrow;
         }
 
         protected override void Awake()
@@ -38,74 +39,69 @@ namespace  ED
             PoolManager.instance.AddPool(pref_Scarecrow, 1);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
-            _skillCastedCount = 0;
+            base.Initialize();
+            _skillCastedTime = -effectCooltime;
         }
 
-        public override void Attack()
+        protected override IEnumerator Combat()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            while (true)
+            {
+                yield return Skill();
+                
+                if (!IsTargetInnerRange())
+                {
+                    ApproachToTarget();    
+                }
+                else
+                {
+                    break;
+                }
+
+                yield return null;
+
+                target = SetTarget();
+            }
+
+            StopApproachToTarget();
             
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+            if (target == null)
             {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
+                yield break;
             }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
 
+            yield return Attack();
+        }
+        
         public void FireArrow()
         {
 
             if (target == null || target.isAlive == false || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
-            
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+
+            if (ActorProxy.isPlayingAI)
             {
-                controller.ActionFireBullet(E_BulletType.MAGICIAN , id, target.id, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.MAGICIAN , target, power, bulletMoveSpeed);
             }
-            
-            /*//if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && isMine )
-            {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.MAGICIAN, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(E_BulletType.MAGICIAN , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false )
-            {
-                controller.FireBullet(E_BulletType.MAGICIAN, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-            }*/
-            
         }
 
-        public void Skill()
+        public IEnumerator Skill()
         {
-            if (_spawnedTime >= effectCooltime * _skillCastedCount)
+            if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
-                Polymorph();
+                yield return Polymorph();
             }
         }
 
-        private void Polymorph()
+        private IEnumerator Polymorph()
         {
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var list = new List<int>();
+            var list = new List<BaseStat>();
 
             foreach (var col in cols)
             {
@@ -115,26 +111,28 @@ namespace  ED
                     var m = bs as Minion;
                     if (m != null && m.isPolymorph == false)
                     {
-                        list.Add(bs.id);
+                        list.Add(bs);
                     }
                 }
             }
 
             if (list.Count > 0)
             {
-                _skillCastedCount++;
+                _skillCastedTime = _spawnedTime;
 
                 PoolManager.instance.ActivateObject(pref_SkillEffect.name, ts_SkillParticlePosition.position);
 
-                int targetId = list[Random.Range(0, list.Count)];
-                
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-                controller.MinionAniTrigger(id, "Skill", targetId);
-                
-                //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_SCARECROW, list[Random.Range(0, list.Count)], effect);
-                controller.ActionMinionScareCrow(true, targetId, (float) eyeLevel);
-
+                for (int i = 0; i < ActorProxy.diceScale + 1 && i < list.Count; i++)
+                {
+                    var target = list[i];
+                    
+                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
+                    
+                    target.ActorProxy.AddBuff(BuffInfos.Scarecrow, effect);
+                }
             }
+
+            yield break;
         }
     }
 }

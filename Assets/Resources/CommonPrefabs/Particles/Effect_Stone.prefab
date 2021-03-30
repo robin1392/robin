@@ -9618,7 +9618,7 @@ GameObject:
   - component: {fileID: 3690115790117086732}
   - component: {fileID: 4988903016712927445}
   m_Layer: 0
-  m_Name: particle_stone
+  m_Name: Effect_Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

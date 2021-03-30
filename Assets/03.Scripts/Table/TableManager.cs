@@ -12,7 +12,7 @@ using ICSharpCode.SharpZipLib.Zip;
 public class TableManager : Singleton<TableManager>
 {
     public string BucketUrl;
-    public string Enviroment = "DEV";
+    public string Enviroment = "Dev";
 
     public TableData<int, TDataBoxOpenInfo> BoxProductInfo { get; private set; }
     public TableData<int, TDataCoopMode> CoopMode { get; private set; }
@@ -39,7 +39,9 @@ public class TableManager : Singleton<TableManager>
     public TableData<int, TDataShopProductList> ShopProductList { get; private set; }
     public TableData<int, TDataMailInfo> MailInfo { get; private set; }
 
+    private bool loaded;
 
+    public bool Loaded => loaded;
 
     public void Awake()
     {
@@ -50,12 +52,7 @@ public class TableManager : Singleton<TableManager>
         }
 
         base.Awake();
-
-    }
-
-
-    void Start()
-    {
+        
         BoxProductInfo = new TableData<int, TDataBoxOpenInfo>();
         CoopMode = new TableData<int, TDataCoopMode>();
         CoopModeMinion = new TableData<int, TDataCoopModeMinion>();
@@ -85,9 +82,10 @@ public class TableManager : Singleton<TableManager>
         MailInfo = new TableData<int, TDataMailInfo>();
     }
 
-
     public void Init(string localPath)
     {
+        Debug.Log($"TableManager. Init {localPath}");
+        
         string remoteTDataVersion = string.Empty;
         string localTDataVersion = string.Empty;
         string url = BucketUrl + "/Table/" + Enviroment;
@@ -117,6 +115,8 @@ public class TableManager : Singleton<TableManager>
                 localTDataVersion = (string)jObjClient["dataVersion"];
             }
         }
+        
+        Debug.Log($"need download. {remoteTDataVersion != localTDataVersion}");
 
         if (remoteTDataVersion != localTDataVersion)
         {
@@ -133,6 +133,7 @@ public class TableManager : Singleton<TableManager>
         }
 
         LoadFromFile(targetPath);
+        Debug.Log("TableManager initialzed.");
     }
 
 
@@ -248,7 +249,7 @@ public class TableManager : Singleton<TableManager>
     }
 
 
-    bool LoadFromFile(string path)
+    public bool LoadFromFile(string path)
     {
         BoxProductInfo.Init(new TableLoaderLocalCSV<int, TDataBoxOpenInfo>(), path, "BoxOpenInfo.csv");
         CoopMode.Init(new TableLoaderLocalCSV<int, TDataCoopMode>(), path, "CoopMode.csv");
@@ -273,6 +274,7 @@ public class TableManager : Singleton<TableManager>
         ShopInfo.Init(new TableLoaderLocalCSV<int, TDataShopInfo>(), path, "ShopInfo.csv");
         ShopProductList.Init(new TableLoaderLocalCSV<int, TDataShopProductList>(), path, "ShopProductList.csv");
         MailInfo.Init(new TableLoaderLocalCSV<int, TDataMailInfo>(), path, "MailInfo.csv");
+        loaded = true;
         return true;
     }
 }

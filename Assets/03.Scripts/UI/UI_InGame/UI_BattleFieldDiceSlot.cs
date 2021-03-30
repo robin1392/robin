@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using DG.Tweening;
-using NodeCanvas.Tasks.Actions;
 
 namespace ED
 {
@@ -152,35 +150,19 @@ namespace ED
         {
             if (dice != null && dragDice != null && dice != dragDice && dice.id == dragDice.id && dice.eyeLevel == dragDice.eyeLevel)
             {
-                //if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
+                dragDice.Reset();
+                ui_DiceField.RefreshField();
+                
+                if(TutorialManager.isTutorial)
                 {
-                    dragDice.Reset();
-                    ui_DiceField.RefreshField();
-                        
-                    //if (PhotonNetwork.IsConnected)
-                    if(InGameManager.IsNetwork == true)
-                    {
-                        //InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE , dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.eyeLevel);
-                        //InGameManager.Get().playerController.SendPlayer(RpcTarget.Others , E_PTDefine.PT_LEVELUPDICE ,dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.level);
-                        InGameManager.Get().SendDiceLevelUp(dragDice.diceFieldNum, dice.diceFieldNum);
-                    }
-                    else
-                    {
-                        if (TutorialManager.isTutorial)
-                        {
-                            TutorialManager.MergeComplete();
-                        }
-                        
-                        if (dice.LevelUp(InGameManager.Get().playerController.arrDiceDeck))
-                        {
-                            InGameManager.Get().playerController.LevelUpDice(dragDice.diceFieldNum, dice.diceFieldNum, dice.diceData.id, dice.eyeLevel);
-                            ui_DiceField.RefreshField();
-                        }
-                    }
-                    
-                    ani.SetTrigger(BBoing);
-                    SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);
+                    TutorialManager.MergeComplete();
                 }
+                
+                var localPlayerProxy = _client.GetLocalPlayerProxy();
+                localPlayerProxy.MergeDice(dragDice.diceFieldNum, dice.diceFieldNum);
+                
+                ani.SetTrigger(BBoing);
+                SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);
             }
         }
 
@@ -226,6 +208,12 @@ namespace ED
                     item.DOColor(Color.white / 2.5f, 0.3f).SetUpdate(true);
                 }
             }
+        }
+
+        private RWNetworkClient _client;
+        public void InitClient(RWNetworkClient client)
+        {
+            _client = client;
         }
     }
 }

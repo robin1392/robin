@@ -1,4 +1,4 @@
-#if !UNITY_WINDOW
+#if !UNITY_WINDOW && UNITY_IOS
 
 using System.Collections.Generic;
 using UnityEngine;

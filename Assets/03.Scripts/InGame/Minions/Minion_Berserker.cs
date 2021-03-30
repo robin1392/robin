@@ -4,6 +4,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -16,7 +18,6 @@ namespace ED
         public AudioClip clip_Whirl;
         
         private float _skillCastedTime;
-        private bool _isSkillCasting;
 
         protected override void Start()
         {
@@ -25,69 +26,57 @@ namespace ED
             _animationEvent.event_Skill += SkillEvent;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             _skillCastedTime = -effectCooltime;
         }
 
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false || _isSkillCasting) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack" , target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
-        
-        public void Skill()
+        public override IEnumerator Attack()
         {
             if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
                 _skillCastedTime = _spawnedTime;
-                StartCoroutine(SkillCoroutine());
+                var action = new BerserkerAction();
+                RunningAction = action;
+                yield return action.ActionWithSync(ActorProxy, target.ActorProxy);
+                RunningAction = null;
             }
+
+            yield return base.Attack();
         }
 
         public void SkillEvent()
         {
             SoundManager.instance.Play(clip_Whirl);
         }
+    }
 
-        IEnumerator SkillCoroutine()
+    public class BerserkerAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            animator.SetTrigger(_animatorHashSkill);
-            _isSkillCasting = true;
-            SetControllEnable(false);
+            actorProxy.baseStat.animator.SetTrigger(AnimationHash.Skill);
+
+            yield return new WaitForSeconds(1.5f);
+
+            if (actorProxy.isPlayingAI == false)
+            {
+                yield break;
+            }
             
-            yield return new WaitForSeconds(0.6f);
-            
-            ps_Wind.Play();
-            var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
+            var cols = Physics.OverlapSphere(actorProxy.transform.position, 1f, actorProxy.baseStat.targetLayer);
             //Debug.LogFormat("BerserkerSkill: {0}", cols.Length);
             foreach (var col in cols)
             {
                 if (col.CompareTag("Player")) continue;
 
-                var m = col.GetComponent<BaseStat>();
+                var m = col.GetComponentInParent<BaseStat>();
                 if (m != null && m.isAlive)
                 {
-                    DamageToTarget(m, 0, 0.3f);
+                    m.ActorProxy.HitDamage(actorProxy.baseStat.power * 0.3f);
                 }
             }
-            
-            _isSkillCasting = false;
-            SetControllEnable(true);
         }
     }
 }

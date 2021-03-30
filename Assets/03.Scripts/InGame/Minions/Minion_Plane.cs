@@ -19,43 +19,24 @@ namespace ED
             base.Start();
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow -= FireArrow;
+            ae.event_FireSpear -= FireSpear;
             ae.event_FireArrow += FireArrow;
             ae.event_FireSpear += FireSpear;
             PoolManager.instance.AddPool(pref_Bullet, 2);
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
         }
 
         public void FireSpear()
         {
             if (target == null || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
 
-            //if (target == null) return;
-            
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+            if (ActorProxy.isPlayingAI)
             {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _spear, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIRESPEAR , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.ActionFireSpear(ts_ShootingPos.position, target.id, power , bulletMoveSpeed);
-                controller.ActionFireBullet(_arrow, id, target.id, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.SPEAR , target, power , bulletMoveSpeed);
             }
         }
         
@@ -63,19 +44,13 @@ namespace ED
         {
             if (target == null || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
-
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+            
+            if (ActorProxy.isPlayingAI)
             {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(_arrow, id, target.id, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.ARROW , target, power , bulletMoveSpeed);
             }
         }
     }

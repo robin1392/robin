@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
@@ -13,94 +14,71 @@ namespace ED
     {
         [Header("AudioClip")]
         public AudioClip clip_Explosion;
-        
+
+        private bool bombed;
+
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            bombed = false;
+        }
+
         private void OnEnable()
         {
             animator.gameObject.SetActive(true);
-            if (_collider == null) _collider = GetComponentInChildren<Collider>();
-            _collider.enabled = true;
+            if (collider == null) collider = GetComponentInChildren<Collider>();
+            collider.enabled = true;
         }
 
         public override BaseStat SetTarget()
         {
-            switch (NetworkManager.Get().playType)
+            target = ActorProxy.GetEnemyTowerOrBoss();
+            if (target == null)
             {
-                case Global.PLAY_TYPE.BATTLE:
-                    target = controller.targetPlayer;
-                    break;
-                case Global.PLAY_TYPE.COOP:
-                    target = controller.coopPlayer;
-                    break;
-                default:
-                    return null;
+                return null;
             }
 
             if (isAlive)
             {
                 if (Vector3.Distance(transform.position, target.transform.position) < 2f)
                 {
-                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, id, float.MaxValue, 0f);
-                    // 이건 자신이 데미지 입는것이기 때문에...
-                    controller.HitMyMinionDamage( controller.myUID , id , currentHealth );
+                    Bomb();
                 }
             }
             
             return target;
         }
 
-        public override void Death()
+        void Bomb()
         {
-            SetControllEnable(false);
-            _collider.enabled = false;
-            animator.SetFloat(_animatorHashMoveSpeed, 0);
-            isPlayable = false;
-            StopAllCoroutines();
-            InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
+            if (bombed)
+            {
+                return;
+            }
 
-            destroyCallback(this);
-            var position = ts_HitPos.position;
-            PoolManager.instance.ActivateObject("Effect_Death", position);
-            animator.gameObject.SetActive(false);
-            
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Poison", ts_HitPos.position, Quaternion.identity, Vector3.one);
-            controller.ActionActivePoolObject("Effect_Poison", position, Quaternion.identity, Vector3.one);
-            
-            StartCoroutine(DeathCoroutine());
-            
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            bombed = true;
+            //ActorProxy.DestroyAfterSummonActor(SummonActorInfos.SinzedPoison, transform.position);
+            ActorProxy.CreateActorBy(3013, ActorProxy.ingameUpgradeLevel, ActorProxy.outgameUpgradeLevel,
+                new Vector3[] { transform.position });
+            ActorProxy.Destroy();
         }
 
-        IEnumerator DeathCoroutine()
+        public override bool OnBeforeHitDamage(float damage)
         {
-            SoundManager.instance.Play(clip_Explosion);
-            
-            var t = 0f;
-            var tick = 0f;
-            while (t < 5f)
+            if (damage >= ActorProxy.currentHealth)
             {
-                if (t >= tick)
-                {
-                    tick += 0.1f;
-                    var cols = Physics.OverlapSphere(transform.position, 1f, targetLayer);
-                    
-                    foreach (var col in cols)
-                    {
-                        if (col.CompareTag("Player")) continue;
-
-                        var bs = col.transform.GetComponentInParent<BaseStat>();
-
-                        if (bs == null || bs.id == id) continue;
-
-                        DamageToTarget(bs, 0, 1f);
-                    }
-                }
-
-                t += Time.deltaTime;
-                yield return null;
+                Bomb();
+                return true;
             }
-            
-            yield return new WaitForSeconds(2f);
-            _poolObjectAutoDeactivate.Deactive();
+
+            return false;
+        }
+
+        public override void OnBaseStatDestroyed()
+        {
+            base.OnBaseStatDestroyed();
+            SoundManager.instance.Play(clip_Explosion);
         }
     }
 }

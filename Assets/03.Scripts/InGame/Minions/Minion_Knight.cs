@@ -8,42 +8,17 @@ namespace ED
     {
         [Header("Audio Clip")]
         public AudioClip clip_Blade;
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
-
-            _animationEvent.event_Attack += AttackSound;
-        }
-
-        public override void Death()
-        {
-            base.Death();
+            base.Initialize();
 
             _animationEvent.event_Attack -= AttackSound;
+            _animationEvent.event_Attack += AttackSound;
         }
 
         public void AttackSound()
         {
             SoundManager.instance.Play(clip_Blade);
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
         }
     }
 }

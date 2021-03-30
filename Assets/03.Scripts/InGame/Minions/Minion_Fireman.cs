@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -9,93 +11,37 @@ namespace ED
         public ParticleSystem ps_Fire;
         public Light light;
 
-        public bool isFire;
-
         [Header("AudioClip")]
         public AudioClip clip_Flame;
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
-
-            _aiPath.canMove = true;
+            base.Initialize();
+            
             ps_Fire.Stop();
             light.enabled = false;
-            isFire = false;
         }
 
-        public override void Death()
+        public override IEnumerator Attack()
         {
-            base.Death();
-
-            isFire = false;
-            light.enabled = false;
-            ps_Fire.Stop();
+            var fireAction = new FireManAction();
+            yield return fireAction.ActionWithSync(ActorProxy, target.ActorProxy);
         }
-
-        public override void Sturn(float duration)
+    }
+    
+    public class FireManAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            base.Sturn(duration);
+            var fireMan = actorProxy.baseStat as Minion_Fireman;
+            SoundManager.instance.Play(fireMan.clip_Flame);
             
-            isFire = false;
-            light.enabled = false;
-            ps_Fire.Stop();
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            fireMan.animator.SetTrigger(AnimationHash.Attack);
             
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack" , target.id);
-                
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREMANFIRE , id);
-                controller.ActionFireManFire(id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-                controller.FiremanFire(id);
-            }
-        }
-
-        public void Fire()
-        {
-            if (isFire == false)
-            {
-                StartCoroutine(FireCoroutine());
-            }
-
-        }
-        
-        public override void SetVelocityTarget()
-        {
-            if (controller.isMinionAgentMove && isFire == false)
-            {
-                if (target != null && isAlive)
-                {
-                    Vector3 targetPos = target.transform.position + (target.transform.position - transform.position).normalized * range;
-                    _seeker.StartPath(transform.position, targetPos);
-                }
-            }
-        }
-
-        IEnumerator FireCoroutine()
-        {
-            SoundManager.instance.Play(clip_Flame);
+            actorProxy.transform.LookAt(targetActorProxy.transform);
             
-            SetControllEnable(false);
-            _aiPath.canMove = false;
-            isFire = true;
-            ps_Fire.Play();
-            light.enabled = true;
+            fireMan.ps_Fire.Play();
+            fireMan.light.enabled = true;
             var t = 0f;
             var tick = 0f;
             while (t < 0.95f)
@@ -104,38 +50,39 @@ namespace ED
                 
                 if (t >= tick)
                 {
-                    tick += attackSpeed;
-                    
-                    //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+                    tick += fireMan.attackSpeed;
+                    if(actorProxy.isPlayingAI)
                     {
-                        var cols = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range,
-                            targetLayer);
+                        var actorTransform = fireMan.transform;
+                        var cols = Physics.RaycastAll(actorTransform.position + Vector3.up * 0.1f, actorTransform.forward, fireMan.range,
+                            fireMan.targetLayer);
                         foreach (var col in cols)
                         {
                             var bs = col.transform.GetComponentInParent<BaseStat>();
-
-                            DamageToTarget(bs);
+                            if (bs != null && bs.isAlive)
+                            {
+                                bs.ActorProxy.HitDamage(actorProxy.power);    
+                            }
                         }
                     }
-                    
                 }
                 
                 yield return null;
             }
 
-            ps_Fire.Stop();
-            light.enabled = false;
-            isFire = false;
-            _aiPath.canMove = true;
-            SetControllEnable(true);
+            FireEffectOff(actorProxy);
         }
 
-        public override void EndGameUnit()
+        public override void OnActionCancel(ActorProxy actorProxy)
         {
-            base.EndGameUnit();
-            
-            ps_Fire.Stop();
+            FireEffectOff(actorProxy);
+        }
+
+        void FireEffectOff(ActorProxy actorProxy)
+        {
+            var fireMan = actorProxy.baseStat as Minion_Fireman;
+            fireMan.ps_Fire.Stop();
+            fireMan.light.enabled = false;
         }
     }
 }

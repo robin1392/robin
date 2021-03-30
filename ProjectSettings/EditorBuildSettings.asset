@@ -15,9 +15,9 @@ EditorBuildSettings:
     path: Assets/01.Scenes/Loading.unity
     guid: 518850541fc7f4f8790d21f0ba83378e
   - enabled: 1
-    path: Assets/01.Scenes/InGame_Battle.unity
-    guid: d72df2d063c8c40d590633d2af0072cd
+    path: Assets/01.Scenes/InGame_Battle_Mirage.unity
+    guid: 7586e1a1463684ffd87cd37a4e77dbea
   - enabled: 1
-    path: Assets/01.Scenes/InGame_Coop.unity
-    guid: 180ee33aac2b249d9af8127388003ccf
+    path: Assets/01.Scenes/InGame_Coop_Mirage.unity
+    guid: 0d92ed2199076476f8e6583816616d71
   m_configObjects: {}

@@ -285,7 +285,7 @@ GameObject:
   - component: {fileID: 4646889493595090424}
   - component: {fileID: 7384459712276733634}
   m_Layer: 0
-  m_Name: object_lightning
+  m_Name: object_lightningrod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

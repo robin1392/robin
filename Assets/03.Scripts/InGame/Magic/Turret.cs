@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ED
 {
-    public class Turret : Magic
+    public class Turret : FixedPositionInstallation
     {
         public ParticleSystem ps_Fire;
         public Light light_Fire;
@@ -16,7 +16,7 @@ namespace ED
         public Transform ts_Head;
         public Transform ts_ShootPoint;
         //public float lifeTime = 20f;
-        public Minion flyingTarget;
+        public BaseStat flyingTarget;
         public float bulletMoveSpeed = 6f;
         public float shootTime = 0;
 
@@ -31,6 +31,8 @@ namespace ED
             base.Start();
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow -= FireArrow;
+            ae.event_FireLight -= FireLightOn;
             ae.event_FireArrow += FireArrow;
             ae.event_FireLight += FireLightOn;
             PoolManager.instance.AddPool(pref_Bullet, 1);
@@ -39,35 +41,26 @@ namespace ED
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
-
-            transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
+            
             shootTime = 0;
-            SetColor();
-
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-            {
-                StartCoroutine(AttackCoroutine());
-            }
             
             SetParts();
         }
 
         private void SetParts()
         {
-            // for (int i = 0; i < arrTs_Parts.Length; i++)
-            // {
-            //     arrTs_Parts[i].localScale = i + 1 < eyeLevel ? Vector3.one : Vector3.zero;
-            // }
-
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
-            ts_Head.rotation = isBottomPlayer ? Quaternion.identity : Quaternion.Euler(0, 180f, 0);
+        }
+        
+        protected override IEnumerator Cast()
+        {
+            return base.Cast();
         }
 
         private IEnumerator AttackCoroutine()
         {
             var t = 0f;
-            var lifeTime = InGameManager.Get().spawnTime;
+            var lifeTime = magicLifeTime;
 
             while (t < lifeTime)
             {
@@ -85,23 +78,10 @@ namespace ED
 
         public void FireArrow()
         {
-            if ((InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
+            if (ActorProxy.isPlayingAI)
             {
-                controller.ActionFireBullet(E_BulletType.TURRET_BULLET , id, flyingTarget.id, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.TURRET_BULLET, flyingTarget, power, bulletMoveSpeed);
             }
-            
-            /*//if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && isMine)
-            {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_FIREARROW , ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-                controller.ActionFireArrow(ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                controller.FireBullet(E_BulletType.ARROW, ts_ShootPoint.position, flyingTarget.id, power, bulletMoveSpeed);
-            }*/
         }
 
         private void SetFlyingTarget()
@@ -130,13 +110,13 @@ namespace ED
                 //flyingTarget = colTarget.GetComponentInParent<Minion>();
                 
                 //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "LookAndAniTrigger", flyingTarget.id);
-                controller.ActionSendMsg(id, "LookAndAniTrigger", flyingTarget.id);
+                // controller.ActionSendMsg(id, "LookAndAniTrigger", flyingTarget.id);
             }
         }
 
-        public void LookAndAniTrigger(int targetID)
+        public void LookAndAniTrigger(uint targetId)
         {
-            flyingTarget = InGameManager.Get().GetBaseStatFromId(targetID) as Minion;
+            flyingTarget = ActorProxy.GetBaseStatWithNetId(targetId);
             if (flyingTarget)
             {
                 StartCoroutine(LookAtTargetCoroutine());
@@ -159,11 +139,6 @@ namespace ED
             animator.SetTrigger("Attack");
         }
 
-        public void EndGameUnit()
-        {
-            StopAllCoroutines();
-        }
-        
         public void FireLightOn()
         {
             if (target == null)

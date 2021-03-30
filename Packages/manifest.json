@@ -48,9 +48,23 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0"
+    "com.unity.modules.xr": "1.0.0",
+    "jillejr.newtonsoft.json-for-unity": "12.0.302",
+    "com.miragenet.mirage": "80.0.0"
   },
   "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.cysharp",
+        "com.cysharp.unitask",
+        "com.miragenet",
+        "com.miragenet.mirage",
+        "com.openupm",
+        "jillejr.newtonsoft.json-for-unity"
+      ]
+    },
     {
       "name": "Game Package Registry by Google",
       "url": "https://unityregistry-pa.googleapis.com",

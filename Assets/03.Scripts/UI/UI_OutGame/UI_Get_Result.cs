@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-//using RandomWarsProtocol;
+using DG.Tweening;
+using ED;
+using RandomWarsResource.Data;
 using Service.Core;
 using UnityEngine;
 using UnityEngine.UI;
-using ED;
-using DG.Tweening;
-using ParadoxNotion;
-using Debug = UnityEngine.Debug;
+using Debug = UnityEngine.Debug; //using RandomWarsProtocol;
 
 public class UI_Get_Result : MonoBehaviour
 {
@@ -69,7 +68,7 @@ public class UI_Get_Result : MonoBehaviour
                 count = UserInfoManager.Get().GetUserInfo().dicGettedDice[msg[i].ItemId][1];
             }
 
-            RandomWarsResource.Data.TDataItemList tDataItemList;
+            TDataItemList tDataItemList;
             if (TableManager.Get().ItemList.GetData(msg[i].ItemId, out tDataItemList) == false)
             {
                 Debug.LogErrorFormat($"Failed to get table data. ID:{msg[i].ItemId}");
@@ -104,14 +103,14 @@ public class UI_Get_Result : MonoBehaviour
                 {
                     if (level == 0)
                     {
-                        RandomWarsResource.Data.TDataDiceInfo tDataDiceInfo;
+                        TDataDiceInfo tDataDiceInfo;
                         if (TableManager.Get().DiceInfo.GetData(tDataItemList.id, out tDataDiceInfo) == false)
                         {
                             Debug.LogErrorFormat($"Failed to get table data from DiceInfo. ID:{tDataItemList.id}");
                             return;
                         }
 
-                        RandomWarsResource.Data.TDataDiceLevelInfo dataDiceLevelInfo;
+                        TDataDiceLevelInfo dataDiceLevelInfo;
                         if (TableManager.Get().DiceLevelInfo.GetData(tDataDiceInfo.grade, out dataDiceLevelInfo) == false)
                         {
                             return;
@@ -161,7 +160,7 @@ public class UI_Get_Result : MonoBehaviour
     {
         if (_currentAudio != null)
         {
-            SoundManager.instance.Stop(_currentAudio);
+            SoundManager.instance?.Stop(_currentAudio);
             _currentAudio = null;
         }
         
@@ -217,7 +216,7 @@ public class UI_Get_Result : MonoBehaviour
     {
         ItemBaseInfo reward = msg[Mathf.Clamp(openCount, 0, msg.Length - 1)];
 
-        RandomWarsResource.Data.TDataItemList tDataItemList;
+        TDataItemList tDataItemList;
         if (TableManager.Get().ItemList.GetData(reward.ItemId, out tDataItemList) == false)
         {
             Debug.LogErrorFormat($"Failed to get table data from ItemList. ID:{reward.ItemId}");
@@ -235,7 +234,7 @@ public class UI_Get_Result : MonoBehaviour
             if ((ITEM_TYPE) tDataItemList.itemType == ITEM_TYPE.DICE)
             {
                 // dice
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+                TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(reward.ItemId, out dataDiceInfo) == false)
                 {
                     return;
@@ -245,7 +244,7 @@ public class UI_Get_Result : MonoBehaviour
                 {
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][0];
                 }
-                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
                 {
                     return;
@@ -316,7 +315,7 @@ public class UI_Get_Result : MonoBehaviour
 
                 image_ItemIcon.sprite = arrSprite_UnknownDiceIcon[0];
 
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+                TDataDiceInfo dataDiceInfo;
                 if (TableManager.Get().DiceInfo.GetData(reward.ItemId, out dataDiceInfo) == false)
                 {
                     return;
@@ -348,7 +347,7 @@ public class UI_Get_Result : MonoBehaviour
                     level = UserInfoManager.Get().GetUserInfo().dicGettedDice[reward.ItemId][0];
                 }
 
-                RandomWarsResource.Data.TDataDiceUpgrade dataDiceUpgrade;
+                TDataDiceUpgrade dataDiceUpgrade;
                 if (TableManager.Get().DiceUpgrade.GetData(x => x.diceLv == level + 1 && x.diceGrade == dataDiceInfo.grade, out dataDiceUpgrade) == false)
                 {
                     return;
@@ -447,10 +446,10 @@ public class UI_Get_Result : MonoBehaviour
         
         List<ItemBaseInfo> list = new List<ItemBaseInfo>(msg);
         
-        var gold = list.Find(m => m.ItemId == (int)RandomWarsResource.Data.EItemListKey.gold);
+        var gold = list.Find(m => m.ItemId == (int)EItemListKey.gold);
         text_ResultGold.text = $"{gold?.Value ?? 0}";
         
-        var diamond = list.Find(m => m.ItemId == (int)RandomWarsResource.Data.EItemListKey.dia);
+        var diamond = list.Find(m => m.ItemId == (int)EItemListKey.dia);
         text_ResultDiamond.text = $"{diamond?.Value ?? 0}";
 
         int childCount = rts_ResultDiceParent.childCount;
@@ -462,12 +461,12 @@ public class UI_Get_Result : MonoBehaviour
         int loopCount = 0;
         foreach (var msgReward in list)
         {
-            RandomWarsResource.Data.TDataItemList tDataItemList;
+            TDataItemList tDataItemList;
             if (TableManager.Get().ItemList.GetData(msgReward.ItemId, out tDataItemList) == true)
             {
                 if (tDataItemList.itemType == (int)ITEM_TYPE.DICE)
                 {
-                    RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
+                    TDataDiceInfo dataDiceInfo;
                     if (TableManager.Get().DiceInfo.GetData(msgReward.ItemId, out dataDiceInfo) == false)
                     {
                         break;

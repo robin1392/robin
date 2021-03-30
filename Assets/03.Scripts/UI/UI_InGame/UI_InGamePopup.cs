@@ -1,33 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
+using MirageTest.Scripts;
 using RandomWarsProtocol;
 using Service.Core;
 
 public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 {
-    
-    
-    
     #region ui element variable
+
     public GameObject popup_Waiting;
     public UI_InGamePopup_Result popup_Result;
+
     public GameObject obj_Low_HP_Effect;
     //[Header("DEV UI")] 
 
     public GameObject obj_Indicator;
 
-    [Header("Start popup")] 
-    public GameObject obj_Start;
+    [Header("Start popup")] public GameObject obj_Start;
     public UI_WinLose winlose_My;
     public UI_WinLose winlose_Other;
     public RectTransform rts_Fight;
-    #endregion
 
+    #endregion
 
 
     #region unity base
@@ -39,44 +39,30 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void Start()
     {
-        Invoke("InitUIElement", 0.05f);
     }
 
     public override void OnDestroy()
     {
         DestroyElement();
-        
+
         base.OnDestroy();
     }
 
     #endregion
-    
+
     #region init destroy
 
-    public void InitUIElement()
+    public void InitUIElement(MatchPlayer player1, MatchPlayer player2)
     {
-        // start popup
-        if (TutorialManager.isTutorial)
-        {
-            winlose_My.Initialize(UserInfoManager.Get().GetActiveDeck(),
-                UserInfoManager.Get().GetUserInfo().userNickName, UserInfoManager.Get().GetUserInfo().trophy);
-            winlose_Other.Initialize(UserInfoManager.Get().GetActiveDeck(), "AI",
-                UserInfoManager.Get().GetUserInfo().trophy);
-        }
-        else
-        {
-            winlose_My.Initialize(NetworkManager.Get().GetNetInfo().playerInfo.DiceIdArray,
-                NetworkManager.Get().GetNetInfo().playerInfo.Name, NetworkManager.Get().GetNetInfo().playerInfo.Trophy);
-            winlose_Other.Initialize(NetworkManager.Get().GetNetInfo().otherInfo.DiceIdArray,
-                NetworkManager.Get().GetNetInfo().otherInfo.Name, NetworkManager.Get().GetNetInfo().otherInfo.Trophy);
-        }
+        winlose_My.Initialize(player1.Deck.GuardianId, player1.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+            player1.UserNickName, player1.Trophy);
+        winlose_Other.Initialize(player2.Deck.GuardianId, player2.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+            player2.UserNickName, player2.Trophy);
 
         obj_Start.SetActive(true);
-        
-        Invoke("DisableStartPopup", 2f);
     }
 
-    private void DisableStartPopup()
+    public void DisableStartPopup()
     {
         ((RectTransform) winlose_Other.transform).DOAnchorPosY(2000f, 0.5f);
         ((RectTransform) winlose_My.transform).DOAnchorPosY(-2000f, 0.5f);
@@ -95,21 +81,27 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void DestroyElement()
     {
-        
     }
+
     #endregion
 
-    
-    
+
     public void SetViewWaiting(bool view)
     {
         popup_Waiting.SetActive(view);
     }
 
-    public void SetPopupResult(bool view, bool winLose, int winningStreak, ItemBaseInfo[] normalReward, ItemBaseInfo[] streakReward, ItemBaseInfo[] perfectReward, AdRewardInfo loseReward)
+    public void SetPopupResult(
+        Global.PLAY_TYPE playType, MatchPlayer localPlayer, MatchPlayer otherPlayer,
+        bool view, bool winLose, int winningStreak, bool perfect,
+        List<ItemBaseInfo> normalReward, List<ItemBaseInfo> streakReward, List<ItemBaseInfo> perfectReward, AdRewardInfo loseReward)
     {
         popup_Result.gameObject.SetActive(view);
-        if (view) popup_Result.Initialize(winLose, winningStreak, normalReward, streakReward, perfectReward, loseReward);
+        if (view)
+            popup_Result.Initialize(playType, localPlayer, otherPlayer, 
+                winLose, winningStreak, perfect,
+                normalReward, streakReward, perfectReward, loseReward);
+        
         ViewGameIndicator(false);
         ViewLowHP(false);
         SetViewWaiting(false);

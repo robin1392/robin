@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using UnityEngine;
 
 
 namespace RandomWarsResource
@@ -16,59 +17,60 @@ namespace RandomWarsResource
     {
         public bool Run(string sourcePath, string fileName, string targetPath, ref Dictionary<K, V> outValues)
         {
-            using (var reader = new StreamReader(sourcePath + "/" + fileName))
-            {
-                int row = 0;
-                List<int> exceptIndex = new List<int>();
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    int replaceIndex = line.IndexOf("\"");
-                    while (replaceIndex != -1)
-                    {
-                        var originText = line.Substring(replaceIndex, line.IndexOf("\"", replaceIndex + 1) - replaceIndex + ("\"").Length);
-                        var replaceText = originText.Replace(",", "{$}");
-                        replaceText = replaceText.Replace("\"", "");
-                        line = line.Replace(originText, replaceText);
-                        replaceIndex = line.IndexOf("\"");
-                    };
+            // Debug.Log($"file: {fileName}");
+            var path = sourcePath + "/" + fileName;
 
-                    List<string> cols = new List<string>(line.Split(','));
-                    if (row == 0)
+            int row = 0;
+            List<int> exceptIndex = new List<int>();
+            var lines = System.IO.File.ReadAllLines(path);
+            foreach (var l in lines)
+            {
+                var line = l; 
+                // Debug.Log(line);
+                int replaceIndex = line.IndexOf("\"");
+                while (replaceIndex != -1)
+                {
+                    var originText = line.Substring(replaceIndex, line.IndexOf("\"", replaceIndex + 1) - replaceIndex + ("\"").Length);
+                    var replaceText = originText.Replace(",", "{$}");
+                    replaceText = replaceText.Replace("\"", "");
+                    line = line.Replace(originText, replaceText);
+                    replaceIndex = line.IndexOf("\"");
+                };
+
+                List<string> cols = new List<string>(line.Split(','));
+                if (row == 0)
+                {
+                    for (int i = cols.Count - 1; i >= 0; i--)
                     {
-                        for (int i = cols.Count - 1; i >= 0; i--)
+                        if (cols[i].StartsWith("~") == true)
                         {
-                            if (cols[i].StartsWith("~") == true)
-                            {
-                                exceptIndex.Add(i);
-                            }
+                            exceptIndex.Add(i);
                         }
                     }
-
-                    if (row++ < 2)
-                    {
-                        continue;
-                    }
-
-                    foreach (var index in exceptIndex)
-                    {
-                        cols.RemoveAt(index);
-                    }
-
-
-                    V col = new V();
-                    col.Serialize(cols.ToArray());
-
-                    K key = col.PK();
-                    if (outValues.ContainsKey(key) == true)
-                    {
-                        return false;
-                    }
-
-                    outValues.Add(key, col);
                 }
-            }
 
+                if (row++ < 2)
+                {
+                    continue;
+                }
+
+                foreach (var index in exceptIndex)
+                {
+                    cols.RemoveAt(index);
+                }
+
+                V col = new V();
+                col.Serialize(cols.ToArray());
+
+                K key = col.PK();
+                if (outValues.ContainsKey(key) == true)
+                {
+                    return false;
+                }
+
+                outValues.Add(key, col);
+            }
+           
             return true;
         }
     }

@@ -14326,7 +14326,7 @@ GameObject:
   - component: {fileID: 5215033719693472292}
   - component: {fileID: 3127566870974055516}
   m_Layer: 10
-  m_Name: particle_healing
+  m_Name: Effect_Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

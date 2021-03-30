@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,9 +29,9 @@ namespace ED
             }
         }
 
-        public override void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer)
         {
-            base.Initialize(pTargetPos, pDamage, splashRange, pIsMine, pIsBottomPlayer, pCallback);
+            base.Initialize(pTargetPos, pDamage, splashRange, pIsMine, pIsBottomPlayer);
 
             obj_Model.SetActive(true);
             ps_Tail.Clear();
@@ -88,25 +89,13 @@ namespace ED
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseStat>();
-                if (bs != null)
+                if (bs != null && bs.isAlive)
                 {
-                    if(( InGameManager.IsNetwork && _isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-                        controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, _damage, 0f);
+                    if (client.IsPlayingAI)
+                    {
+                        bs.ActorProxy.HitDamage(_damage);
+                    }
                 }
-                
-                /*
-                //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
-                if(InGameManager.IsNetwork && _isMine)
-                {
-                    controller.HitMinionDamage( true , GetComponentInParent<BaseStat>().id , _damage, 0f);
-                    //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false )
-                {
-                    controller.HitMinionDamage( true , GetComponentInParent<BaseStat>().id , _damage, 0f);
-                    //controller.targetPlayer.HitDamageMinionAndMagic(col.GetComponentInParent<BaseStat>().id, _damage, 0f);
-                }*/
             }
 
             obj_Model.SetActive(false);

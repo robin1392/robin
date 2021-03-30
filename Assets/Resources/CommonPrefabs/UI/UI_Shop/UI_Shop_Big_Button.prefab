@@ -385,7 +385,10 @@ MonoBehaviour:
   textPItemBuyCount: {fileID: 8098925241283175227}
   imageIcon: {fileID: 6602290398034280046}
   imagePriceIcon: {fileID: 7847796500305068722}
-  textDouble: {fileID: 0}
+  textBadge: {fileID: 0}
+  textValue: {fileID: 0}
+  textFirstBuy: {fileID: 0}
+  shopProductId: 0
 --- !u!1 &8098925240463617372
 GameObject:
   m_ObjectHideFlags: 0

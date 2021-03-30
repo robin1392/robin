@@ -2497,6 +2497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90f120e05553448e7aa883a015f4679a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instanceID: 0
   arrSlot:
   - {fileID: 2799760151822305297}
   - {fileID: 4611963802710457067}
@@ -2970,7 +2971,7 @@ MonoBehaviour:
   text_GetDiceButton: {fileID: 2799760150954390164}
   btn_GetDice: {fileID: 2799760152477126981}
   obj_ViewTargetDiceField: {fileID: 697933514972372889}
-  button_SP_Upgrade: {fileID: 2037759839458915803}
+  button_SP_Upgrade: {fileID: 1115411520}
   text_SP_Upgrade: {fileID: 8869831156245529957}
   text_SP_Upgrade_Price: {fileID: 3388622459063259960}
   text_MyNickname: {fileID: 4204854424594012258}

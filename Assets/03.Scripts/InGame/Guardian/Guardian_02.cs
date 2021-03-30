@@ -2,43 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ED;
+using MirageTest.Scripts;
 
 public class Guardian_02 : Minion
 {
-    public override void Initialize(DestroyCallback destroy)
+    private float _skillCastedTime;
+
+    public override void Initialize()
     {
-        base.Initialize(destroy);
-
-        StartCoroutine(SkillCoroutine());
+        base.Initialize();
+        
+        _skillCastedTime = -effectCooltime;
     }
-
-    public override void Attack()
+    
+    public override IEnumerator Attack()
     {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+        if (_spawnedTime >= _skillCastedTime + effectCooltime)
         {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
+            _skillCastedTime = _spawnedTime;
+            yield return SkillCoroutine();
         }
-        else if(InGameManager.IsNetwork == false)
-        {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
-        }
-    }
 
+        yield return base.Attack();
+    }
+    
     IEnumerator SkillCoroutine()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(effectCooltime);
-            
-            controller.MinionAniTrigger(id, "Skill", target.id);
-
-            yield return new WaitForSeconds(1.716f);
-
-            Invincibility(2f);
-        }
+        ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, target);
+        
+        yield return new WaitForSeconds(0.8f);
+        
+        ActorProxy.AddBuff(BuffInfos.Invincibility, 2f);
+        
+        yield return new WaitForSeconds(0.2f);
     }
 }

@@ -31,16 +31,15 @@ namespace ED
         {
             base.Initialize(pIsBottomPlayer);
 
-            transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
+            // transform.position = controller.transform.parent.GetChild(diceFieldNum).position;
             list.Clear();
             
             //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+            if( ActorProxy.isPlayingAI)
             {
                 StartCoroutine(AttackCoroutine());
             }
-
-            SetColor();
+            
             SetParts();
         }
 
@@ -58,7 +57,7 @@ namespace ED
         {
             float t = 0;
             float shootTime = tick;
-            float lifeTime = InGameManager.Get().spawnTime;
+            float lifeTime = magicLifeTime;
             while (t < lifeTime)
             {
                 if (t >= shootTime)
@@ -86,20 +85,18 @@ namespace ED
                     BaseStat bs = col.GetComponentInParent<BaseStat>();
                     if (bs != null)
                     {
-                        //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, pref_FireEffect.name, ts_ShootPoint.position, Quaternion.identity, Vector3.one);
-                        //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Lightning", bs.ts_HitPos.position, Quaternion.identity, Vector3.one);
-                        
-                        controller.ActionActivePoolObject(pref_FireEffect.name, col.transform.position, Quaternion.identity, Vector3.one);
-                        controller.ActionActivePoolObject("Effect_Lightning", col.transform.position, Quaternion.identity, Vector3.one);
+                        //KZSee:
+                        // controller.ActionActivePoolObject(pref_FireEffect.name, col.transform.position, Quaternion.identity, Vector3.one);
+                        // controller.ActionActivePoolObject("Effect_Lightning", col.transform.position, Quaternion.identity, Vector3.one);
 
                         // Damage and sturn
                         var cols2 = Physics.OverlapSphere(col.transform.position, 0.5f, targetLayer);
                         foreach (var col2 in cols2)
                         {
                             bs = col2.GetComponentInParent<BaseStat>();
-                            DamageToTarget(bs);
-                            //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_STURNMINION, bs.id, 1f);
-                            controller.ActionSturn(true , bs.id , 1f);
+                            //KZSee:
+                            // DamageToTarget(bs);
+                            // controller.ActionSturn(true , bs.id , 1f);
                         }
                     }
                 }
@@ -110,10 +107,6 @@ namespace ED
         {
             StopAllCoroutines();
         }
-
-        public override void SetTarget()
-        {
-            
-        }
+        
     }
 }

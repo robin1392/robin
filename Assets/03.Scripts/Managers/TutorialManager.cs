@@ -7,9 +7,8 @@ using UnityEngine.SceneManagement;
 using Debug = ED.Debug;
 using DG.Tweening;
 using ED;
+using MirageTest.Scripts;
 using RandomWarsProtocol;
-using RandomWarsResource.Data;
-using Template.Shop.GameBaseShop.Table;
 using Template.User.RandomwarsUser.Common;
 
 public class TutorialManager : MonoBehaviour
@@ -22,8 +21,8 @@ public class TutorialManager : MonoBehaviour
     public Transform ts_DiceField;
     public Transform ts_UpgradeButton;
 
-    public static int stepCount = 0;
-    private static int nextStepCount = 1;
+    public static int stepCount = 2;
+    private static int nextStepCount = 3;
     private Transform ts_OldParent;
 
     public static int getDiceCount
@@ -31,10 +30,10 @@ public class TutorialManager : MonoBehaviour
         get;
         private set;
     }
-    
-    private void Start()
+
+    private void Awake()
     {
-        if (UserInfoManager.Get().GetUserInfo().isEndTutorial)
+        if (true)//UserInfoManager.Get().GetUserInfo().isEndTutorial)
         {
             isTutorial = false;
             gameObject.SetActive(false);
@@ -49,7 +48,7 @@ public class TutorialManager : MonoBehaviour
     IEnumerator TutorialCoroutine()
     {
         yield return new WaitForSeconds(0.1f);
-        
+
         while (true)
         {
             Step();
@@ -57,13 +56,6 @@ public class TutorialManager : MonoBehaviour
             yield return new WaitWhile(() => stepCount < nextStepCount);
             nextStepCount++;
         }
-        // Step();
-        //
-        // yield return new WaitWhile(() => stepCount < 1);
-        // Step();
-        //
-        // yield return new WaitWhile(() => stepCount < 2);
-        // Step();
     }
     
     public void Click_NextStep()
@@ -71,6 +63,7 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 1f;
         Click_NextStepCallback();
         stepCount++;
+        Debug.Log($"Click_NextStep {stepCount} ");
     }
 
     private void Click_NextStepCallback()
@@ -78,19 +71,24 @@ public class TutorialManager : MonoBehaviour
         switch (stepCount)
         {
             case 6:
-                InGameManager.Get().playerController.currentHealth = InGameManager.Get().playerController.maxHealth * 0.666f;
-                InGameManager.Get().playerController.RefreshHealthBar();
+                var localPlayerState = RWNetworkClient.Get().GetLocalPlayerState();
+                var localPlayerOwnerTag = localPlayerState.ownerTag;
+                var server = RWNetworkServer.Get();
+                var localPlayerTower = server.Towers.Find(t => t.ownerTag == localPlayerOwnerTag);
+                localPlayerTower.currentHealth = localPlayerTower.maxHealth * 0.666f;
 
-                MsgMonster msg = new MsgMonster();
-                msg.Hp = Int32.MaxValue;
-                msg.Id = 1;
-                msg.Power = 30000;
-                msg.AttackSpeed = 100;
-                msg.DataId = 5001;
-                msg.MoveSpeed = 100;
-                msg.Effect = 30000;
-                msg.EffectCoolTime = 800;
-                InGameManager.Get().playerController.SpawnMonster(msg);
+                server.CreateActorWithGuardianId(
+                    5001,
+                    server.Towers[0].ownerTag,
+                    server.Towers[0].team,
+                    server.Towers[0].transform.position);
+                // guadian.maxHealth = int.MaxValue;
+                // guadian.currentHealth = int.MaxValue;
+                // guadian.power = 30000;
+                // guadian.attackSpeed = 100;
+                // guadian.moveSpeed = 100;
+                // guadian.effect = 30000;
+                // server.serverGameLogic.ServerObjectManager.Spawn(guadian.NetIdentity);
                 break;
         }
     }
@@ -110,7 +108,8 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator Click_NextStepDelayCoroutine(float delay)
     {
-        yield return new WaitForSeconds(delay);
+        Debug.Log("Click_NextStepDelayCoroutine ");
+        yield return new WaitForSecondsRealtime(delay);
         
         Click_NextStep();
     }
@@ -124,7 +123,7 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator UpdateTimeCoroutine(float time)
     {
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSecondsRealtime(time);
         
         Step();
     }
@@ -161,6 +160,8 @@ public class TutorialManager : MonoBehaviour
             transform.GetChild(i).gameObject.SetActive(i == stepCount + 1);
         }
         
+        var server = FindObjectOfType<RWNetworkServer>();
+        
         switch (stepCount)
         {
             case 0:
@@ -192,43 +193,52 @@ public class TutorialManager : MonoBehaviour
                 }
                 else
                 {
-                    Time.timeScale = 0f;
+                    Time.timeScale = 0.0f;
                     image_NextStep.DOFade(0f, 0).SetUpdate(true);
                     transform.GetChild(stepCount + 1).GetChild(0).gameObject.SetActive(true);
                     Debug.Log("Ingame tutorial");
                 }
                 break;
             case 3:
-                //image_NextStep.DOFade(0.78f, 0f).SetUpdate(true);
-                Time.timeScale = 0f;
-                InGameManager.Get().playerController.TutorialAddSP(50);
+                Time.timeScale = 0.0f;
+                server.serverGameLogic._gameMode.PlayerState1.sp += 100;
+                server.serverGameLogic._gameMode.PlayerState2.sp += 1000;
+
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(3, 1);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(1, 2);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(3, 3);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(2, 5);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(4, 7);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(2, 9);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(0, 11);
+                server.serverGameLogic._gameMode.PlayerState2.GetDice(0, 13);
                 break;
             case 4: // 주사위 소환 버튼
-                Time.timeScale = 0f;
+                Time.timeScale = 0.0f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_GetDiceButton.parent;
                 ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 5:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.0f;
                 break;
             case 6:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.0f;
                 break;
             case 7:
-                Time.timeScale = 0f;
-                InGameManager.Get().playerController.TutorialAddSP(3000);
+                Time.timeScale = 0.0f;
+                server.serverGameLogic._gameMode.PlayerState1.sp += 5000;
                 break;
             case 8:    // 두번째 주사위 소환
-                Time.timeScale = 0f;
+                Time.timeScale = 0.0f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_GetDiceButton.parent;
                 ts_GetDiceButton.parent = transform.GetChild(stepCount + 1);
                 ts_GetDiceButton.GetComponent<Button>().onClick.AddListener(GetDice);
                 break;
             case 9:
-                Time.timeScale = 0f;
+                Time.timeScale = 0.0f;
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_DiceField.parent;
                 ts_DiceField.parent = transform.GetChild(stepCount + 1);
@@ -241,9 +251,9 @@ public class TutorialManager : MonoBehaviour
                 Click_NextStepDelay(3f);
                 break;
             case 11:
-                InGameManager.Get().playerController.uiDiceField.BroadcastMessage("AttachIcon");
+                UI_DiceField.Get().BroadcastMessage("AttachIcon");
                 image_NextStep.raycastTarget = true;
-                Time.timeScale = 0f;
+                Time.timeScale = 0.0f;
                 
                 ts_OldParent = ts_UpgradeButton.parent;
                 ts_UpgradeButton.parent = transform.GetChild(stepCount + 1);
@@ -268,13 +278,8 @@ public class TutorialManager : MonoBehaviour
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
                 image_NextStep.raycastTarget = false;
                 Time.timeScale = 1f;
-                if (isTutorial)
-                {
-                    NetworkManager.session.UserTemplate.UserTutorialEndReq(NetworkManager.session.HttpClient,
-                        OnEndTutorial);
-                }
+                NetworkManager.session.UserTemplate.UserTutorialEndReq(NetworkManager.session.HttpClient, OnEndTutorial);
                 isTutorial = false;
-                UserInfoManager.Get().GetUserInfo().isEndTutorial = true;
                 //NetworkManager.Get().EndTutorialReq(UserInfoManager.Get().GetUserInfo().userID);
                 break;
         }
@@ -282,6 +287,7 @@ public class TutorialManager : MonoBehaviour
 
     public void Skip()
     {
+        Debug.Log("Tutorial Skip !!");
         StopAllCoroutines();
         stepCount = 15;
         Step();

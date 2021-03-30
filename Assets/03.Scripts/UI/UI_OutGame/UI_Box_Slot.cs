@@ -50,8 +50,8 @@ public class UI_Box_Slot : MonoBehaviour
         text_Name.text = LocalizationManager.GetLangDesc(tDataItemList.itemName_langId);
         text_Cost.text = needKey.ToString();
         text_Count.text = $"x{count}";
-
-        text_Cost.color = isEnable ? Color.white : ParadoxNotion.ColorUtils.HexToColor("DF362D");
+        
+        text_Cost.color = isEnable ? Color.white : UnityUtil.HexToColor("DF362D");
         text_Name.color = isEnable ? Color.white : Color.gray;
         text_Count.color = isEnable ? Color.white : Color.gray;
         image_CostIcon.color = isEnable ? Color.white : Color.gray;

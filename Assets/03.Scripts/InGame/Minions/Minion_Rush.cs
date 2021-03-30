@@ -4,22 +4,19 @@
 
 using System.Collections.Generic;
 using System.Collections;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
 {
     public class Minion_Rush : Minion
     {
-        //private float _skillCastedTime;
-        //private Collider _col;
         public ParticleSystem ps_Rush;
 
         [Header("AudioClip")]
         public AudioClip clip_Rush;
         
-        [SerializeField]
-        private Collider dashTarget;
-
         protected override void Start()
         {
             base.Start();
@@ -27,94 +24,48 @@ namespace ED
             _animationEvent.event_Skill += SkillEvent;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        protected override IEnumerator Root()
         {
-            base.Initialize(destroy);
-
-            SetControllEnable(false);
-            Skill();
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            var action = new RushAction();
+            yield return action.ActionWithSync(ActorProxy);
             
-            ps_Rush.Stop();
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+            while (isAlive)
             {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
+                target = SetTarget();
+                if (target != null)
+                {
+                    yield return Combat();
+                }
+
+                yield return _waitForSeconds0_1;
             }
         }
-
-        public void Skill()
-        {
-            //if (_spawnedTime >= _skillCastedTime + _skillCooltime)
-            {
-                //Dash();
-                StartCoroutine(DashCoroutine());
-            }
-        }
-
+        
         public void SkillEvent()
         {
             SoundManager.instance.Play(clip_Rush);
         }
-
-        private void Dash()
+    }
+    
+    
+    public class RushAction : SyncActionWithoutTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy)
         {
-            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var distance = float.MaxValue;
+            yield return new WaitForSeconds(1f);
+            
+            // target
+            var ts = actorProxy.transform;
+            var rush = (Minion_Rush)actorProxy.baseStat;
+            var cols = Physics.OverlapSphere(ts.position, rush.searchRange, rush.targetLayer);
+            var distance = 0f;
             Collider dashTarget = null;
             var hitPoint = Vector3.zero;
             foreach (var col in cols)
             {
                 if (col.CompareTag("Player")) continue;
-                //var dis = Vector3.SqrMagnitude(col.transform.position);
-                var transform1 = transform;
-                Physics.Raycast(transform1.position + Vector3.up * 0.2f, transform1.forward, out var hit,
-                    7f, targetLayer);
 
-                if (hit.collider != null && !hit.collider.CompareTag("Player") && hit.distance < distance)
-                {
-                    distance = hit.distance;
-                    dashTarget = col;
-                    hitPoint = hit.point;
-                }
-            }
-
-#if UNITY_EDITOR
-            if (dashTarget != null)
-            {
-                //_skillCastedTime = _spawnedTime;
-                //StartCoroutine(DashCoroutine(dashTarget));
-                Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
-            }
-#endif
-        }
-
-        private IEnumerator DashCoroutine(/*Collider dashTarget*/)
-        {
-            yield return new WaitForSeconds(1f);
-            
-            // target
-            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var distance = 0f;
-            dashTarget = null;
-            var hitPoint = Vector3.zero;
-            foreach (var col in cols)
-            {
-                if (col.CompareTag("Player")) continue;
-
-                var dis = Vector3.Distance(transform.position, col.transform.position); 
+                var dis = Vector3.Distance(ts.position, col.transform.position); 
                 if (dis > distance)
                 {
                     distance = dis;
@@ -125,82 +76,53 @@ namespace ED
 #if UNITY_EDITOR
             if (dashTarget != null)
             {
-                //_skillCastedTime = _spawnedTime;
-                //StartCoroutine(DashCoroutine(dashTarget));
-                Debug.DrawLine(transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
+                Debug.DrawLine(actorProxy.transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
             }
 #endif
             
+            rush.ps_Rush.Play();
             
-            // dash
-            //isPushing = true;
-            _collider.enabled = false;
-            ps_Rush.Play();
-            var ts = transform;
-            
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            controller.MinionAniTrigger(id, "SkillLoop", 0);
-            
+            actorProxy.PlayAnimationWithRelay(AnimationHash.SkillLoop, null);
+
             float tick = 0.1f;
             while (dashTarget != null)
             {
                 ts.LookAt(dashTarget.transform);
-                ts.position += (dashTarget.transform.position - transform.position).normalized * (moveSpeed * 2.5f) * Time.deltaTime;
+                ts.position += (dashTarget.transform.position - ts.position).normalized * (rush.moveSpeed * 2.5f) * Time.deltaTime;
 
                 if (tick < 0)
                 {
                     tick = 0.1f;
                     
-                    var hits = Physics.RaycastAll(transform.position + Vector3.up * 0.1f, transform.forward, range, targetLayer);
+                    var hits = Physics.RaycastAll(ts.position + Vector3.up * 0.1f, ts.forward, rush.range, rush.targetLayer);
                     foreach (var raycastHit in hits)
                     {
                         //if (list.Contains(raycastHit.collider) == false)
                         {
-                            var bs = raycastHit.collider.GetComponentInParent<BaseStat>();
+                            var bs = raycastHit.collider.GetComponentInChildren<BaseStat>();
                             if (bs != null && bs.isAlive)
                             {
-                                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC, bs.id, effect, 0f);
-                                controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, effect, 0f);
-                                //controller.HitMinionDamage( true , bs.id , effect);
-                                
-                                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
-                                controller.ActionActivePoolObject("Effect_Stone", raycastHit.point, Quaternion.identity, Vector3.one);
+                                if (actorProxy.isPlayingAI)
+                                {
+                                    bs.ActorProxy.HitDamage(rush.effect);
+                                }
+
+                                PoolManager.Get().ActivateObject("Effect_Stone", raycastHit.point);
                             }
                         }
                     } 
                 }
 
-                if (Vector3.Distance(dashTarget.transform.position, transform.position) <= range)
+                if (Vector3.Distance(dashTarget.transform.position, ts.position) <= rush.range)
                     break;
 
                 tick -= Time.deltaTime;
                 yield return null;
             }
             
-            //rb.velocity = Vector3.zero;
-            //isPushing = false;
-            dashTarget = null;
-            SetControllEnable(true);
-            _collider.enabled = true;
-            ps_Rush.Stop();
+            rush.ps_Rush.Stop();
             
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Idle");
-            controller.MinionAniTrigger(id, "Idle" , 0);
-        }
-
-        public override void Sturn(float duration)
-        {
-            base.Sturn(duration);
-
-            _collider.enabled = true;
-            ps_Rush.Stop();
-        }
-
-        public override void EndGameUnit()
-        {
-            base.EndGameUnit();
-            
-            ps_Rush.Stop();
+            actorProxy.PlayAnimationWithRelay(AnimationHash.Idle, null);
         }
     }
 }

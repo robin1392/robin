@@ -1019,7 +1019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   BucketUrl: https://randomdicewars-bucket.s3.ap-northeast-2.amazonaws.com
-  Enviroment: QA
+  Enviroment: Dev
 --- !u!1 &531239265
 GameObject:
   m_ObjectHideFlags: 0
@@ -2854,7 +2854,7 @@ MonoBehaviour:
   LocalServerPort: 40002
   UserId: 
   matchSendCount: 0
-  serverAddr: http://randomwarsqa-env.eba-ckjiykq5.ap-northeast-2.elasticbeanstalk.com
+  serverAddr: http://randomwarsdev-env.eba-qc7e3sjt.ap-northeast-2.elasticbeanstalk.com
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0

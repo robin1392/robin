@@ -4793,7 +4793,7 @@ GameObject:
   - component: {fileID: 5506211092621607325}
   - component: {fileID: -8508248718100885895}
   m_Layer: 0
-  m_Name: particle_arrow_hit
+  m_Name: Effect_ArrowHit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

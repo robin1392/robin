@@ -146,12 +146,13 @@ public class AuthManager : Singleton<AuthManager>
      {
           if (Social.localUser.authenticated)
           {
-#if UNITY_EDITOR
-               return null;
-#elif UNITY_ANDROID
+           
+#if UNITY_ANDROID
                return PlayGamesPlatform.Instance.GetIdToken();
 #elif UNITY_IOS
                return Social.localUser.id;
+#else
+               return null;
 #endif
           }
           else

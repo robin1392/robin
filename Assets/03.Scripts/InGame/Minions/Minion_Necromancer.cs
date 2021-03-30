@@ -5,6 +5,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
@@ -26,13 +28,13 @@ namespace ED
 
         private readonly float _skillCooltime = 10f;
         private float _skillCastedTime;
-        private bool _isSkillCasting;
 
         protected override void Awake()
         {
             base.Awake();
             
             PoolManager.instance.AddPool(pref_Bullet, 1);
+            PoolManager.instance.AddPool(pref_Skeleton, 2);
         }
 
         protected override void Start()
@@ -40,46 +42,32 @@ namespace ED
             base.Start();
 
             var ae = animator.GetComponent<MinionAnimationEvent>();
+            ae.event_FireArrow -= FireArrow;
             ae.event_FireArrow += FireArrow;
-            ae.event_Skill += Skill;
         }
 
-        protected override void Update()
+        public override void Initialize()
         {
-            base.Update();
-            
-            if (isPlayable && (isMine || controller.isPlayingAI) && _spawnedTime >= _skillCastedTime + _skillCooltime)
-            {
-                _skillCastedTime = _spawnedTime;
-                Summon();
-            }
-        }
-
-        public override void Initialize(DestroyCallback destroy)
-        {
-            base.Initialize(destroy);
+            base.Initialize();
             _skillCastedTime = -_skillCooltime;
         }
 
-        public override void Attack()
+        protected override IEnumerator Root()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+            while (isAlive)
             {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
+                yield return Skill();
+                
+                target = SetTarget();
+                if (target != null)
+                {
+                    yield return Combat();
+                }
+
+                yield return _waitForSeconds0_1;
             }
         }
-        
+
         public void FireArrow()
         {
             if (target == null)
@@ -88,60 +76,47 @@ namespace ED
             }
             else if (IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
-            
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
-            {
-                controller.ActionFireBullet(E_BulletType.NECROMANCER , id, target.id, power, bulletMoveSpeed);
-            }
 
+            if (ActorProxy.isPlayingAI)
+            {
+                ActorProxy.FireBulletWithRelay(E_BulletType.NECROMANCER, target, power, bulletMoveSpeed);;
+            }
+            
             SoundManager.instance.Play(clip_Attack);
         }
         
-        public void Skill()
+        public IEnumerator Skill()
         {
-            SoundManager.instance.Play(clip_Summon);
-        }
-
-        public void Summon()
-        {
-            StartCoroutine(SummonCoroutine());
+            if (ActorProxy.isPlayingAI && _spawnedTime >= _skillCastedTime + _skillCooltime)
+            {
+                _skillCastedTime = _spawnedTime;
+                SoundManager.instance.Play(clip_Summon);
+                yield return SummonCoroutine();
+            }
         }
 
         IEnumerator SummonCoroutine()
         {
-            SetControllEnable(false);
-            animator.SetTrigger("Skill");
-            _isSkillCasting = true;
-            
+            ActorProxy.PlayAnimationWithRelay(AnimationHash.Skill, null);
+
             yield return new WaitForSeconds(0.4f);
+
+            if (ActorProxy.isPlayingAI)
+            {
+                var positions = arrSpawnPos.Select(t => t.position).ToArray();
+                ActorProxy.CreateActorBy(3012, ActorProxy.ingameUpgradeLevel, ActorProxy.outgameUpgradeLevel,
+                    positions);
+            }
 
             for (int i = 0; i < arrSpawnPos.Length; i++)
             {
                 arrPs_Spawn[i].Play();
-                
-                var m = controller.CreateMinion(pref_Skeleton, arrSpawnPos[i].position);
-
-                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomPlayer);
-                m.power = effect + (effectUpByInGameUp * ingameUpgradeLevel);
-                m.maxHealth = effectDuration + (effectCooltime * ingameUpgradeLevel);
-                m.attackSpeed = 0.8f;
-                m.moveSpeed = 1.2f;
-                m.range = 0.7f;
-                m.eyeLevel = eyeLevel;
-                m.ingameUpgradeLevel = ingameUpgradeLevel;
-                m.Initialize(destroyCallback);
             }
             
             yield return new WaitForSeconds(0.3f);
-            
-            SetControllEnable(true);
-            _isSkillCasting = false;
         }
     }
 }

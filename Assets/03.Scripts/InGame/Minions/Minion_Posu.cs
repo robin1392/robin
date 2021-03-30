@@ -25,56 +25,26 @@ namespace ED
             PoolManager.instance.AddPool(pref_Bullet, 1);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
             if (light_Fire != null) light_Fire.enabled = false;
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
         }
 
         public void FireArrow()
         {
             if (target == null || IsTargetInnerRange() == false)
             {
-                animator.SetTrigger(_animatorHashIdle);
-                isAttacking = false;
-                SetControllEnable(true);
+                animator.SetTrigger(AnimationHash.Idle);
                 return;
             }
 
             SoundManager.instance.Play(clip_Fire);
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+
+            if (ActorProxy.isPlayingAI)
             {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW , ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                //controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                controller.ActionFireBullet(E_BulletType.POSU_BULLET, id, target.id, power, bulletMoveSpeed);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                controller.FireBullet(E_BulletType.POSU_BULLET, id, target.id, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.POSU_BULLET, target, power, bulletMoveSpeed);
             }
         }
 

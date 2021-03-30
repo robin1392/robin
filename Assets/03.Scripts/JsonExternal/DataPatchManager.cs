@@ -91,7 +91,7 @@ public class DataPatchManager : MonoBehaviour
         
         
         // configuration
-        m_configuration = Configuration.GetConfigFile();//config 파일 불러오기
+        m_configuration = new Configuration();//Configuration.GetConfigFile();//config 파일 불러오기
         eGameServiceMode = m_configuration.eGameServiceMode;
         eGamePlayMode = m_configuration.eGamePlayMode;
         

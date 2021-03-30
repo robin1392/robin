@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.Messages;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,72 +10,47 @@ namespace ED
 {
     public class Minion_Golem : Minion
     {
-        public GameObject pref_MiniGolem;
-
         [Header("AudioClip")]
         public AudioClip clip_Attack;
         public AudioClip clip_Exposion;
 
-        public override void Attack()
+        protected override void Awake()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            base.Awake();
 
+            _animationEvent.event_Attack += AttackEvent;
+        }
+
+        private void AttackEvent()
+        {
             SoundManager.instance.Play(clip_Attack);
-            
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-
-            /*base.Attack();
-            //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-            controller.MinionAniTrigger(id, "Attack");*/
         }
 
         public override BaseStat SetTarget()
         {
-            switch (NetworkManager.Get().playType)
-            {
-                case Global.PLAY_TYPE.BATTLE:
-                    return controller.targetPlayer;
-                case Global.PLAY_TYPE.COOP:
-                    return controller.coopPlayer;
-                default:
-                    return null;
-            }
+            return ActorProxy.GetEnemyTowerOrBoss();
         }
 
-        public override void Death()
+        public override void OnBaseStatDestroyed()
         {
-            SoundManager.instance.Play(clip_Exposion);
-            
-            for (int i = 0; i < 2; i++)
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            // 미니골렘
+            rwClient.Send(new CreateActorMessage()
             {
-                // Spawn
-                var m = controller.CreateMinion(pref_MiniGolem,
-                    transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f));
-
-                m.targetMoveType = DICE_MOVE_TYPE.GROUND;
-                m.ChangeLayer(isBottomPlayer);
-                m.power = effect;
-                m.maxHealth = maxHealth * eyeLevel * 0.1f;
-                m.attackSpeed = attackSpeed;
-                m.moveSpeed = moveSpeed;
-                m.range = range;
-                m.eyeLevel = eyeLevel;
-                m.ingameUpgradeLevel = ingameUpgradeLevel;
-                m.Initialize(destroyCallback);
-            }
-
-            base.Death();
+                diceId = 4004,
+                ownerTag = ActorProxy.ownerTag,
+                team = ActorProxy.team,
+                inGameLevel = ActorProxy.ingameUpgradeLevel,
+                outGameLevel = ActorProxy.outgameUpgradeLevel,
+                positions = new Vector3[]
+                {
+                    ActorProxy.transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f),
+                    ActorProxy.transform.position + Vector3.right * Random.Range(-0.5f, 0.5f) + Vector3.forward * Random.Range(-0.5f, 0.5f)
+                },
+                delay = 0f,
+            });
+            
+            base.OnBaseStatDestroyed();
         }
     }
 }

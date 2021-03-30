@@ -12,12 +12,11 @@ namespace ED
 
             if (isMine)
             {
-                controller.AddSp((int)power);
+                // controller.AddSp((int)power);
             }
             
-            Destroy();
+            //KZSee:
+           // Destroy();
         }
-
-        public override void SetTarget() { }
     }
 }

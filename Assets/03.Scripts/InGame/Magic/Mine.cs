@@ -10,173 +10,134 @@ using UnityEngine.Events;
 
 namespace ED
 {
-    public class Mine : Magic
+    public class Mine : Installation
     {
         public ParticleSystem ps_Bomb;
-        public float pushPower = 2f;
-        public float lifeTime = 20f;
 
-        [Header("AudioClip")]
-        public AudioClip clip_Set;
+        [Header("AudioClip")] public AudioClip clip_Set;
         public AudioClip clip_Explosion;
 
-        private bool isTriggerOn;
-        private float _originRange;
-        private static readonly int Set = Animator.StringToHash("Set");
+        private bool isArrivedAtTargetPosition;
+        
 
-        protected override void Awake()
-        {
-            base.Awake();
-            _originRange = range;
-        }
+        protected float durationToTarget;
+        private bool isBombed = false;
+
 
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
-            //
-            // if (maxHealth > 0)
-            // {
-            //     var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}"; 
-            //     _collider.gameObject.layer = LayerMask.NameToLayer(layerName);
-            // }
 
+            isCanBeTarget = false;
             image_HealthBar.transform.parent.gameObject.SetActive(false);
-            _collider.enabled = true;
+            collider.enabled = true;
             animator.gameObject.SetActive(true);
-            SetColor();
             animator.transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
             ps_Bomb.transform.localScale = Vector3.one * Mathf.Pow(1.5f, eyeLevel - 1);
+
+            var distance = Vector3.Distance(startPos, targetPos);
+            durationToTarget = distance / moveSpeed;
+            isArrivedAtTargetPosition = false;
+            isBombed = false;
+            collider.enabled = false;
         }
 
-        public override void SetTarget()
+        protected void Update()
         {
-            SetTargetPosition();
-        }
-
-        public override void Destroy(float delay = 0)
-        {
-            StopAllCoroutines();
-
-            // Bomb
-            isTriggerOn = false;
-            //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && (isMine || controller.isPlayingAI))
+            if (ActorProxy == null)
             {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINEBOMB, id);
-                controller.ActionMineBomb(id);
+                return;
             }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
+
+            var elapsedTime = this.elapsedTime;
+            transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / durationToTarget);
+
+            if (isArrivedAtTargetPosition == false)
+            {
+                if (elapsedTime >= durationToTarget)
+                {
+                    EndMove();
+                }
+            }
+            
+            var damageByTime = lifeTimeFactor * (elapsedTime - durationToTarget);
+            var currentHealth = ActorProxy.currentHealth - damageByTime; 
+            
+            if (image_HealthBar != null)
+            {
+                image_HealthBar.fillAmount = currentHealth / ActorProxy.maxHealth;
+            }
+
+            if (currentHealth <= 0 && isBombed == false)
             {
                 Bomb();
             }
         }
 
-        protected override IEnumerator Move()
-        {
-            var startPos = transform.position;
-            var endPos = targetPos;
-            var distance = Vector3.Distance(startPos, endPos);
-            var max = distance / moveSpeed;
-
-            rb.velocity = (endPos - startPos).normalized * moveSpeed;
-            yield return new WaitForSeconds(max);
-            rb.velocity = Vector3.zero;
-            transform.position = endPos;
-
-            EndMove();
-        }
-
         private void EndMove()
         {
-            //if ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false)
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
-            {
-                isTriggerOn = true;
-                image_HealthBar.transform.parent.gameObject.SetActive(true);
-            }
-
+            isArrivedAtTargetPosition = true;
+            image_HealthBar.transform.parent.gameObject.SetActive(true);
             SoundManager.instance.Play(clip_Set);
-            animator.SetTrigger(Set);
+            animator.SetTrigger(AnimationHash.Set);
+            collider.enabled = true;
         }
 
         private void OnTriggerEnter(Collider collision)
         {
-            if (isTriggerOn && 
-                //((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false) &&
-                ( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI ) && 
-                1 << collision.gameObject.layer == targetLayer)
+            if ((1 << collision.gameObject.layer) == targetLayer)
             {
-                StopAllCoroutines();
-
-                // Bomb
-                isTriggerOn = false;
-                //if (PhotonNetwork.IsConnected)
-                if(InGameManager.IsNetwork && isMine)
-                {
-                    //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
-                    controller.ActionMineBomb(id);
-                }
-                else
-                {
-                    Bomb();
-                }
+                Bomb();
             }
         }
 
         public void Bomb()
         {
-            StopAllCoroutines();
-            _collider.enabled = false;
-            image_HealthBar.transform.parent.gameObject.SetActive(false);
+            if (ActorProxy.isPlayingAI == false)
+            {
+                return;
+            }
             
-            //if (((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
-            if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+            if (isBombed)
+            {
+                return;
+            }
+
+            isBombed = true;
+            ActorProxy.Destroy();
+        }
+
+        public override void OnBaseStatDestroyed()
+        {
+            if (ActorProxy.isPlayingAI)
             {
                 var cols = Physics.OverlapSphere(transform.position, range * Mathf.Pow(1.5f, eyeLevel - 1), targetLayer);
                 foreach (var col in cols)
                 {
-                    var m = col.GetComponentInParent<Minion>();
-                    if(m != null)
+                    var minion = col.GetComponentInParent<Minion>();
+                    if(minion != null)
                     {
-                        controller.AttackEnemyMinionOrMagic(m.UID, m.id, power, 0f);
-
-                        //if(PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1)
-                        //controller.HitMinionDamage( true , m.id , power, 0f);
-                        /*if(InGameManager.IsNetwork == true)
-                        {
-                            controller.targetPlayer.SendPlayer(RpcTarget.Others , E_PTDefine.PT_HITMINIONANDMAGIC , m.id, power, 0f);
-                        }
-                        //else if (PhotonNetwork.IsConnected == false)
-                        else if(InGameManager.IsNetwork == false)
-                        {
-                            controller.targetPlayer.HitDamageMinionAndMagic(m.id, power, 0f);
-                        }*/
-
+                        minion.ActorProxy.HitDamage(power);
                     }
-                }
+                }   
             }
 
-            animator.gameObject.SetActive(false);
-            ps_Bomb.Play();
-            SoundManager.instance.Play(clip_Explosion);
-
-            base.Destroy(2f);
+            //ActorProxy가 Destroy 될 때 파괴 이펙트 재생을 위해 ActorProxy 밖으로 빼놓는다.
+            transform.SetParent(null);
+            StartCoroutine(MineDestroyDelayed());
         }
 
-        protected override void EndLifetime()
+        IEnumerator MineDestroyDelayed()
         {
-            isTriggerOn = false;
-            //if (PhotonNetwork.IsConnected)
-            if(InGameManager.IsNetwork && isMine)
-            {
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINEBOMB ,  id);
-                controller.ActionMineBomb(id);
-            }
-            else
-            {
-                Bomb();
-            }
+            collider.enabled = false;
+            image_HealthBar.transform.parent.gameObject.SetActive(false);
+            animator.gameObject.SetActive(false);
+            SoundManager.instance.Play(clip_Explosion);
+            ps_Bomb.Play();
+
+            yield return new WaitForSeconds(2.0f);
+            
+            _poolObjectAutoDeactivate.Deactive();
         }
     }
 }

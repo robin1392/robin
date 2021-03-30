@@ -33,6 +33,6 @@ public class UI_Rank_Slot : MonoBehaviour
             text_Class.text = string.Empty;
         }
         
-        winlose.Initialize(deck, name, trophy);
+        winlose.Initialize(deck[5], deck, name, trophy);
     }
 }

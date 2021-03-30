@@ -71,10 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5081294253336761971}
   - component: {fileID: 453527750053670697}
-  - component: {fileID: -3404390952063001827}
-  - component: {fileID: 8516434021989620041}
   - component: {fileID: 2463053660788652053}
-  - component: {fileID: 3843816562420455791}
   - component: {fileID: -308283106765298260}
   m_Layer: 0
   m_Name: Minion_Arbiter
@@ -112,11 +109,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db18b9a5bf074496193ed234e6a20713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActorProxy: {fileID: 0}
   isMine: 0
   diceId: 0
   id: 0
   controller: {fileID: 0}
-  rb: {fileID: 3843816562420455791}
   animator: {fileID: 249066921496726078}
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
@@ -126,12 +123,6 @@ MonoBehaviour:
   target: {fileID: 0}
   targetMoveType: 0
   power: 0
-  powerUpByUpgrade: 0
-  powerUpByInGameUp: 0
-  maxHealth: 0
-  currentHealth: 0
-  maxHealthUpByUpgrade: 0
-  maxHealthUpByInGameUp: 0
   effect: 0
   effectUpByUpgrade: 0
   effectUpByInGameUp: 0
@@ -139,73 +130,21 @@ MonoBehaviour:
   effectCooltime: 0
   attackSpeed: 0
   moveSpeed: 0
-  range: 0
-  searchRange: 2
   isBottomPlayer: 0
   ts_ShootingPos: {fileID: 7152074993467149670}
   ts_HitPos: {fileID: 9132690201994220243}
   image_HealthBar: {fileID: 5081294253014802598}
   text_Health: {fileID: 0}
-  isPlayable: 1
   castType: 0
-  targetIsEnemy: 1
-  isAttacking: 0
   isPushing: 0
   isAttackSpeedFactorWithAnimation: 1
   eyeLevel: 0
   ingameUpgradeLevel: 0
+  _poolObjectAutoDeactivate: {fileID: 0}
   isPolymorph: 0
   bulletMoveSpeed: 6
   pref_Bullet: {fileID: 665045047327999094, guid: ae34b4c157e9844129dd179fe891ea2c,
     type: 3}
---- !u!114 &-3404390952063001827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad115aca74ce3c4891b3f6de0b4aae8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serializedExposedParameters: []
-  _boundGraphSerialization: 
-  _boundGraphObjectReferences: []
-  _boundGraphSource:
-    _version: 0
-    _category: 
-    _comments: 
-    _translation: {x: 0, y: 0}
-    _zoomFactor: 1
-  _firstActivation: 1
-  _enableAction: 0
-  _disableAction: 0
-  _lockBoundGraphPrefabOverrides: 1
-  _preInitializeSubGraphs: 0
-  _updateMode: 0
-  _graph: {fileID: 11400000, guid: 55c717982dd40439d811339d50dfd96e, type: 2}
-  _blackboard: {fileID: 8516434021989620041}
---- !u!114 &8516434021989620041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b98a6db0b653f764eac834f85857a9dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serializedBlackboard: '{"_variables":{"isTargetAlive":{"_name":"isTargetAlive","_id":"b08d3e8b-cba4-460d-9b23-332048ce4f69","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
-  _objectReferences: []
-  _serializedVariables:
-  - _json: '{"_name":"isTargetAlive","_id":"b08d3e8b-cba4-460d-9b23-332048ce4f69","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
 --- !u!135 &2463053660788652053
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -219,22 +158,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0.25, z: 0}
---- !u!54 &3843816562420455791
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 1.5
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
 --- !u!114 &-308283106765298260
 MonoBehaviour:
   m_ObjectHideFlags: 0

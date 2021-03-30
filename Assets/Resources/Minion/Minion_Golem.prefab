@@ -10,13 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5081294253336761971}
   - component: {fileID: 8315656876777631932}
-  - component: {fileID: 5271869617561665627}
-  - component: {fileID: 17148726258424996}
   - component: {fileID: 6486029529450410244}
-  - component: {fileID: 4658676096167050152}
   - component: {fileID: 2583571212696764795}
-  - component: {fileID: 8577928039910037043}
-  - component: {fileID: -6576364168962938178}
   m_Layer: 0
   m_Name: Minion_Golem
   m_TagString: Minion_Ground
@@ -53,11 +48,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 186b051448a3c43be93363beda6c2d95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 4003
   id: 0
   controller: {fileID: 0}
-  rb: {fileID: 4658676096167050152}
   animator: {fileID: 4066135925180847929}
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
@@ -66,88 +62,18 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  power: 0
-  powerUpByUpgrade: 0
-  powerUpByInGameUp: 0
-  maxHealth: 0
-  currentHealth: 0
-  maxHealthUpByUpgrade: 0
-  maxHealthUpByInGameUp: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  effectDuration: 0
-  effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 0
-  range: 0
-  searchRange: 2
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
-  isPlayable: 1
+  _poolObjectAutoDeactivate: {fileID: 0}
   castType: 0
-  targetIsEnemy: 1
-  isAttacking: 0
   isPushing: 0
-  isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
+  isAttackSpeedFactorWithAnimation: 0
+  collider: {fileID: 0}
   isPolymorph: 0
-  pref_MiniGolem: {fileID: 5081294253336761964, guid: dca45631bd4c14b9191f44e7b9426b91,
-    type: 3}
   clip_Attack: {fileID: 8300000, guid: ec5a1b92f985d48fd8ef7da70f3e637d, type: 3}
   clip_Exposion: {fileID: 8300000, guid: 56def68020507495c972099294521a32, type: 3}
---- !u!114 &5271869617561665627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad115aca74ce3c4891b3f6de0b4aae8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serializedExposedParameters: []
-  _boundGraphSerialization: 
-  _boundGraphObjectReferences: []
-  _boundGraphSource:
-    _version: 0
-    _category: 
-    _comments: 
-    _translation: {x: 0, y: 0}
-    _zoomFactor: 1
-  _firstActivation: 1
-  _enableAction: 0
-  _disableAction: 0
-  _lockBoundGraphPrefabOverrides: 1
-  _preInitializeSubGraphs: 0
-  _updateMode: 0
-  _graph: {fileID: 11400000, guid: 11ad82d37c38e4f629bce5eaafc5a436, type: 2}
-  _blackboard: {fileID: 17148726258424996}
---- !u!114 &17148726258424996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b98a6db0b653f764eac834f85857a9dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serializedBlackboard: '{"_variables":{"isTargetAlive":{"_name":"isTargetAlive","_id":"b9331355-18e1-41d4-867d-1d3388922f65","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
-  _objectReferences: []
-  _serializedVariables:
-  - _json: '{"_name":"isTargetAlive","_id":"b9331355-18e1-41d4-867d-1d3388922f65","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
-      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
-    _references: []
 --- !u!135 &6486029529450410244
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -161,22 +87,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0.25, z: 0}
---- !u!54 &4658676096167050152
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 1.5
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
 --- !u!114 &2583571212696764795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,70 +101,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolName: 
   lifeTime: 0
---- !u!114 &8577928039910037043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
---- !u!114 &-6576364168962938178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 2
-  radius: 0.25
-  height: 1
-  repathRate: 0.5
-  canSearch: 1
-  canMove: 1
-  maxSpeed: 1
-  gravity: {x: NaN, y: NaN, z: NaN}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  centerOffsetCompatibility: NaN
-  orientation: 0
-  enableRotation: 1
-  targetCompatibility: {fileID: 0}
-  maxAcceleration: -2.5
-  rotationSpeed: 360
-  slowdownDistance: 0.6
-  pickNextWaypointDist: 2
-  endReachedDistance: 0.2
-  alwaysDrawGizmos: 0
-  slowWhenNotFacingTarget: 1
-  whenCloseToDestination: 0
-  constrainInsideGraph: 0
 --- !u!1 &7214476587837081310
 GameObject:
   m_ObjectHideFlags: 0

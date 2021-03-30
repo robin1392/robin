@@ -381,7 +381,7 @@ namespace Percent.Platform
         private void ResultPurchaseSuccessed(PurchaseEventArgs args)
         {
             
-            string payload;
+            string payload = null;
 #if UNITY_ANDROID
             payload = GetPayload(args).ToString();
 #elif UNITY_IOS

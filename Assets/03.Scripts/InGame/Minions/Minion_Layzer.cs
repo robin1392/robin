@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace ED
@@ -11,36 +13,36 @@ namespace ED
         public LineRenderer[] arrLineRenderer;
         public GameObject[] arrObj_LineEnd;
 
-        private List<BaseStat> _listTarget = new List<BaseStat>();
+        private HashSet<BaseStat> _listTarget = new HashSet<BaseStat>();
 
         private void LateUpdate()
         {
             bool isLayzerOn = false;
-            for (int i = 0; i < arrLineRenderer.Length; i++)
+            for (int index = 0; index < arrLineRenderer.Length; index++)
             {
-                if (i < _listTarget.Count && i < eyeLevel && _listTarget[i] != null && _listTarget[i].isAlive)
+                arrLineRenderer[index].gameObject.SetActive(false);
+                arrObj_LineEnd[index].SetActive(false);
+            }
+
+            int i = 0;
+            foreach (var target in _listTarget)
+            {
+                if (target != null && target.isAlive)
                 {
                     isLayzerOn = true;
                     arrLineRenderer[i].gameObject.SetActive(true);
-                    arrLineRenderer[i].SetPositions(new Vector3[2] { ts_ShootingPos.position, _listTarget[i].ts_HitPos.position });
+                    arrLineRenderer[i].SetPositions(new Vector3[2] { ts_ShootingPos.position, target.ts_HitPos.position });
                     arrObj_LineEnd[i].SetActive(true);
-                    arrObj_LineEnd[i].transform.position = _listTarget[i].ts_HitPos.position;
-                    //arrLineRenderer[i].startColor = isMine ? Color.blue : Color.red;
-                    //arrLineRenderer[i].endColor = arrLineRenderer[i].startColor;
-                }
-                else
-                {
-                    arrLineRenderer[i].gameObject.SetActive(false);
-                    arrObj_LineEnd[i].SetActive(false);
+                    arrObj_LineEnd[i++].transform.position = target.ts_HitPos.position;
                 }
             }
 
             obj_LineStart.SetActive(isLayzerOn);
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             
             _listTarget.Clear();
             
@@ -52,68 +54,50 @@ namespace ED
             }
         }
 
-        public override void Attack()
+        public override BaseStat SetTarget()
+        {
+            SetMultiTarget();
+            
+            if (_listTarget.Count == 0)
+                return base.SetTarget();
+            else
+            {
+                return _listTarget.First();
+            }
+        }
+
+        public void SetMultiTarget()
         {
             _attackedTarget = target;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
-            _listTarget.Clear();
-            List<int> intList = new List<int>();
-            foreach (var col in cols)
+            var bsCols = cols.Select(c => c.GetComponentInParent<BaseStat>()).Where(bs => bs != null && bs.isAlive);
+            
+            var n = bsCols.Take(ActorProxy.diceScale + 1).ToHashSet();
+            if (!n.SetEquals(_listTarget))
             {
-                var bs = col.GetComponentInParent<BaseStat>();
-                var m = bs as Minion;
-                if (bs != null && bs.isAlive)
-                {
-                    if (m != null && m.isCloacking) continue;
-                    
-                    _listTarget.Add(bs);
-                    intList.Add(bs.id);
-
-                    controller.AttackEnemyMinionOrMagic(bs.UID, bs.id, power, 0f);
-                }
+                ActorProxy.SyncMultiTarget(ActorProxy.Client.Player.Identity.NetId, n.Select(d => d.id).ToArray());
             }
 
-            //if (PhotonNetwork.IsConnected && isMine)
-            if(InGameManager.IsNetwork && isMine)
+            _listTarget = n;
+        }
+
+        public override IEnumerator Attack()
+        {
+            if (ActorProxy.isPlayingAI)
             {
-                //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_LAYZERTARGET,id, intList.Count > 0 ? intList.ToArray() : null);
-                if(intList.Count > 0 )
-                    controller.ActionLayzer(id, intList.ToArray());
-                else
+                foreach (var baseStat in _listTarget)
                 {
-                    int[] emptyLst = new int[6] { 0, 0, 0, 0, 0, 0 };
-                    controller.ActionLayzer(id, emptyLst);
+                    _attackedTarget = baseStat;
+                    baseStat.ActorProxy.HitDamage(power);
                 }
+                
+                if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
             }
             
-            if (_attackedTarget != null && _attackedTarget.isAlive == false) _attackedTarget = null;
+            yield break;
         }
 
-        public override void Death()
-        {
-            base.Death();
-
-            obj_LineStart.SetActive(false);
-            for (int i = 0; i < arrLineRenderer.Length; i++)
-            {
-                arrLineRenderer[i].gameObject.SetActive(false);
-                arrObj_LineEnd[i].SetActive(false);
-            }
-        }
-
-        public override void Sturn(float duration)
-        {
-            base.Sturn(duration);
-            
-            obj_LineStart.SetActive(false);
-            for (int i = 0; i < arrLineRenderer.Length; i++)
-            {
-                arrLineRenderer[i].gameObject.SetActive(false);
-                arrObj_LineEnd[i].SetActive(false);
-            }
-        }
-
-        public void SetTargetList(int[] arr)
+        public void SetTargetList(uint[] arr)
         {
             _listTarget.Clear();
             
@@ -121,12 +105,7 @@ namespace ED
             {
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    if (arr[i] == -1) continue;
-                    
-                    //if (arr[i] == 0) _listTarget.Add(controller.targetPlayer);
-                    //else _listTarget.Add(controller.targetPlayer.listMinion.Find(minion => minion.id == arr[i]));
-                    
-                    _listTarget.Add(InGameManager.Get().GetBaseStatFromId(arr[i]));
+                    _listTarget.Add(ActorProxy.GetBaseStatWithNetId(arr[i]));
                 }
             }
         }

@@ -1,163 +1,135 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using ED;
-using Microsoft.Win32.SafeHandles;
-using RandomWarsProtocol;
+using ED.Boss;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
-public class Boss5 : Minion
+public class Boss5 : BossBase
 {
     [Header("Effect")]
     public GameObject obj_Attack;
     public GameObject obj_AttackHit;
     public GameObject obj_Skill;
     public GameObject obj_SkillHit;
-    
+
+    public float bulletMoveSpeed = 10;
     private float _skillCastedTime;
 
     protected override void Start()
     {
         base.Start();
+
+        if (_animationEvent == null)
+        {
+            _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
+        }
+        
+        _animationEvent.event_FireArrow -= FireArrow;
+        _animationEvent.event_FireArrow += FireArrow;
         
         PoolManager.Get().AddPool(obj_Attack, 3);
         PoolManager.Get().AddPool(obj_AttackHit, 3);
         PoolManager.Get().AddPool(obj_Skill, 20);
         PoolManager.Get().AddPool(obj_SkillHit, 20);
-        if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
     }
 
-    public override void Initialize(DestroyCallback destroy)
+    void FireArrow()
     {
-        base.Initialize(destroy);
-        _skillCastedTime = -effectCooltime;
-        if (_animationEvent == null) _animationEvent = GetComponentInChildren<MinionAnimationEvent>();
-        _animationEvent.event_Attack += Callback_Attack;
-    }
-
-    public override void Attack()
-    {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-        
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+        if (target == null || IsTargetInnerRange() == false)
         {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
+            animator.SetTrigger(AnimationHash.Idle);
+            return;
         }
-        else if(InGameManager.IsNetwork == false)
+
+        if (ActorProxy.isPlayingAI)
         {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
+            ActorProxy.FireBulletWithRelay(E_BulletType.BOSS5_BULLET, target, power, bulletMoveSpeed);
         }
     }
-
-    public override void Death()
+    
+    protected override IEnumerator Combat()
     {
-        base.Death();
-
-        _animationEvent.event_Attack -= Callback_Attack;
-    }
-
-    public void Callback_Attack()
-    {
-        if (target != null)
+        while (true)
         {
-            if (isMine || controller.isPlayingAI)
+            yield return Skill();
+
+            if (!IsTargetInnerRange())
             {
-                controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_PARAM1_RELAY, id, E_ActionSendMessage.FireBullet, target.id);
+                ApproachToTarget();
             }
-            
-            var attack = PoolManager.Get().ActivateObject(obj_Attack.name, ts_ShootingPos.position);
-            if (attack != null)
+            else
             {
-                var ts_hit = target.ts_HitPos;
-                if (ts_hit == null) ts_hit = target.transform;
-                attack.DOMove(ts_hit.position, 0.5f).OnComplete(() =>
-                {
-                    attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
-                    if (isMine || controller.isPlayingAI) DamageToTarget(target, 0);
-                    PoolManager.Get().ActivateObject(obj_AttackHit.name, ts_hit.position);
-                });
+                break;
             }
+
+            yield return null;
+
+            target = SetTarget();
         }
-    }
 
-    // call relay
-    public void FireBullet(int targetID)
-    {
-        target = InGameManager.Get().GetBaseStatFromId(targetID);
+        StopApproachToTarget();
 
-        if (target != null)
+        if (target == null)
         {
-            var attack = PoolManager.Get().ActivateObject(obj_Attack.name, ts_ShootingPos.position);
-            if (attack != null)
-            {
-                var ts_hit = target.ts_HitPos;
-                if (ts_hit == null) ts_hit = target.transform;
-                attack.DOMove(ts_hit.position, 0.5f).OnComplete(() =>
-                {
-                    attack.GetComponent<PoolObjectAutoDeactivate>().Deactive();
-                    PoolManager.Get().ActivateObject(obj_AttackHit.name, ts_hit.position);
-                });
-            }
+            yield break;
         }
+
+        yield return Attack();
     }
 
-    public void Skill()
+    public IEnumerator Skill()
     {
         if (_spawnedTime >= _skillCastedTime + effectCooltime)
         {
             _skillCastedTime = _spawnedTime;
-            
-            SetControllEnable(false);
-            animator.SetTrigger(_animatorHashSkill);
-            controller.NetSendPlayer(GameProtocol.SEND_MESSAGE_VOID_RELAY, id, E_ActionSendMessage.DropBullet);
-            DropBullet();
+
+            var action = new Boss5SkillAction();
+            yield return action.ActionWithSync(ActorProxy);
         }
     }
-
-    // IEnumerator SkillCoroutine()
-    // {
-    //     
-    // }
-
-    public void DropBullet()
+    
+    public class Boss5SkillAction : SyncActionWithoutTarget
     {
-        animator.SetTrigger(_animatorHashSkill);
-        StartCoroutine(DropBulletCoroutine());
-    }
-
-    IEnumerator DropBulletCoroutine()
-    {
-        yield return new WaitForSeconds(1f);
-        
-        for (int i = 0; i < 20; i++)
+        public override IEnumerator Action(ActorProxy actorProxy)
         {
-            float x = Random.Range(-3.5f, 3.5f);
-            float z = Random.Range(-5.5f, 5.5f);
-            Vector3 startPos = new Vector3(x, 20f, z);
-            var bullet = PoolManager.Get().ActivateObject(obj_Skill.name, startPos);
-            if (bullet != null)
-            {
-                bullet.DOMoveY(0, 0.5f).OnComplete(() =>
-                {
-                    PoolManager.Get().ActivateObject(obj_SkillHit.name, bullet.position);
-                    bullet.GetComponent<PoolObjectAutoDeactivate>().Deactive();
+            var boss = (Boss5) actorProxy.baseStat;
 
-                    if (isMine || controller.isPlayingAI)
-                    {
-                        var minions = InGameManager.Get().GetBottomMinions();
-                        for (int j = 0; j < minions.Length; j++)
-                        {
-                            DamageToTarget(minions[j], 0, 0.1f);
-                        }
-                    }
-                });
-            }
+            boss.animator.SetTrigger(AnimationHash.Skill);
 
-            yield return new WaitForSeconds(0.1f);
-        }
+            yield return new WaitForSeconds(1f);
         
-        SetControllEnable(true);
+            for (int i = 0; i < 20; i++)
+            {
+                float x = Random.Range(-3.5f, 3.5f);
+                float z = Random.Range(-5.5f, 5.5f);
+                Vector3 startPos = new Vector3(x, 20f, z);
+                var bullet = PoolManager.Get().ActivateObject(boss.obj_Skill.name, startPos);
+                if (bullet != null)
+                {
+                    bullet.DOMoveY(0, 0.5f).OnComplete(() =>
+                    {
+                        PoolManager.Get().ActivateObject(boss.obj_SkillHit.name, bullet.position);
+                        bullet.GetComponent<PoolObjectAutoDeactivate>().Deactive();
+
+                        if (actorProxy.isPlayingAI)
+                        {
+                            var enemies = actorProxy.GetEnemies();
+                            foreach (var enemy in enemies)
+                            {
+                                enemy.ActorProxy.HitDamage(actorProxy.power * 0.1f);
+                            }
+                        }
+                    });
+                }
+
+                yield return new WaitForSeconds(0.1f);
+            }
+            
+            yield return new WaitForSeconds(0.4f);
+        }
     }
 }
+
+

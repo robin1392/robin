@@ -2,60 +2,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ED;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 
 public class Guardian_01 : Minion
 {
-    public override void Initialize(DestroyCallback destroy)
-    {
-        base.Initialize(destroy);
+    private float _skillCastedTime;
 
-        StartCoroutine(SkillCoroutine());
+    public override void Initialize()
+    {
+        base.Initialize();
+        _skillCastedTime = -effectCooltime;
     }
 
-    public override void Attack()
+    public override IEnumerator Attack()
     {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+        if (_spawnedTime >= _skillCastedTime + effectCooltime)
+        {
+            _skillCastedTime = _spawnedTime;
+            var action = new Guardian01Action();
+            RunningAction = action;
+            yield return action.ActionWithSync(ActorProxy, target.ActorProxy);
+            RunningAction = null;
+        }
+
+        yield return base.Attack();
+    }
+}
+
+public class Guardian01Action : SyncActionWithTarget
+{
+    public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
+    {
+        actorProxy.baseStat.animator.SetTrigger(AnimationHash.Skill);
+
+        yield return new WaitForSeconds(0.716f);
+
+        if (actorProxy.isPlayingAI == false)
+        {
+            yield break;
+        }
             
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+        var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseStat.targetLayer);
+        foreach (var col in cols)
         {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
-        }
-        else if(InGameManager.IsNetwork == false)
-        {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
-        }
-    }
+            if (col.CompareTag("Player")) continue;
 
-    IEnumerator SkillCoroutine()
-    {
-        while (true)
-        {
-            if (IsTargetInnerRange())
+            var m = col.GetComponentInParent<BaseStat>();
+            if (m != null && m.isAlive)
             {
-                yield return new WaitForSeconds(effectCooltime);
-                
-                isPushing = true;
-                controller.MinionAniTrigger(id, "Skill", 0);
-
-                yield return new WaitForSeconds(1f);
-
-                var cols = Physics.OverlapSphere(transform.position, 2f, targetLayer);
-                for (int i = 0; i < cols.Length; i++)
-                {
-                    var bs = cols[i].GetComponentInParent<BaseStat>();
-                    if (bs != null)
-                    {
-                        DamageToTarget(bs);
-                    }
-                }
-                
-                yield return new WaitForSeconds(1.2f);
-                isPushing = false;
+                m.ActorProxy.HitDamage(actorProxy.baseStat.power);
             }
-
-            yield return null;
         }
+        
+        yield return new WaitForSeconds(0.284f);
     }
 }

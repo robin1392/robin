@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using MirageTest.Scripts;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace ED
 {
     public class UI_UpgradeButton : MonoBehaviour
     {
-        public int num;
+        public int index;
         public Button btn;
         public Image image_Icon;
         public Image image_SP;
@@ -17,22 +18,27 @@ namespace ED
         public Text text_Level;
 
         private int level;
-        //private Data_Dice data;
         private RandomWarsResource.Data.TDataDiceInfo pData;
-
-        //public void Initialize(Data_Dice dataDice, int level)
-        public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level)
+        
+        public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level, int index)
         {
+            this.index = index;
             this.pData = dataDice;
             this.level = level;
             image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
             image_Icon.SetNativeSize();
             Refresh();
-
-            InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
+            
+            // InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
+        }
+        
+        private RWNetworkClient _client;
+        public void InitClient(RWNetworkClient client)
+        {
+            _client = client;
         }
 
-        private void EditSpCallback(int sp)
+        public void EditSpCallback(int sp)
         {
             if (this.level < 5)
             {
@@ -58,19 +64,18 @@ namespace ED
         public void Click()
         {
             // sp 작으면 리턴
-            var cost = GetUpgradeCost();
-            if (InGameManager.Get().playerController.sp < cost)
-                return;
-            
-            if( InGameManager.IsNetwork == true )
-                InGameManager.Get().SendInGameUpgrade(pData.id , num);
-            else
+            var localPlayerState = _client.GetLocalPlayerState();
+            if (localPlayerState == null)
             {
-                InGameManager.Get().playerController.AddSp(-cost);
-                level = InGameManager.Get().playerController.DiceUpgrade(num);
-                Refresh();
+                return;
             }
+            
+            if (localPlayerState.sp < GetUpgradeCost())
+                return;
 
+            var localPlayerProxy = _client.GetLocalPlayerProxy();
+            localPlayerProxy.UpgradeIngameLevel(index);
+            
             SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
         }
 

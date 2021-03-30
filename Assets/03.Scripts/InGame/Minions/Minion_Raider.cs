@@ -4,6 +4,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -17,6 +19,7 @@ namespace ED
         public AudioClip clip_Dash;
         
         private float _skillCastedTime;
+        private Transform dashTarget;
 
         protected override void Awake()
         {
@@ -32,38 +35,68 @@ namespace ED
             _animationEvent.event_Skill += SkillEvent;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             _skillCastedTime = -effectCooltime;
         }
-
-        public override void Attack()
+        
+        protected override IEnumerator Combat()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+            while (true)
+            {
+                yield return Skill();
+                
+                if (!IsTargetInnerRange())
+                {
+                    ApproachToTarget();    
+                }
+                else
+                {
+                    break;
+                }
+
+                yield return null;
+
+                target = SetTarget();
+            }
+
+            StopApproachToTarget();
             
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+            if (target == null)
             {
-                base.Attack();
-
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-
+                yield break;
             }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
+
+            yield return Attack();
         }
 
-        public void Skill()
+        public IEnumerator Skill()
         {
             if (_spawnedTime >= _skillCastedTime + effectCooltime)
             {
-                Dash();
+                var cols = Physics.OverlapSphere(ActorProxy.transform.position, 5, targetLayer);
+                var distance = float.MaxValue;
+                Minion dashTarget = null;
+                foreach (var col in cols)
+                {
+                    if (col.CompareTag("Player")) continue;
+                    var m = col.GetComponentInParent<Minion>();
+                    var dis = Vector3.Distance(transform.position, col.transform.position);
+
+                    if (!col.CompareTag("Player") && dis < distance && (m != null && m.CanBeTarget()))
+                    {
+                        distance = dis; 
+                        dashTarget = m;
+                    }
+                }
+
+                if (dashTarget != null)
+                {
+                    _skillCastedTime = _spawnedTime;
+                    var action = new DashAction();
+                    yield return action.ActionWithSync(ActorProxy, dashTarget.ActorProxy);
+                }
             }
         }
 
@@ -71,110 +104,35 @@ namespace ED
         {
             SoundManager.instance.Play(clip_Dash);
         }
-
-        protected void Dash()
+    }
+    
+    public class DashAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var distance = float.MaxValue;
-            Collider dashTarget = null;
-            foreach (var col in cols)
+            var raider = (Minion_Raider) actorProxy.baseStat;
+            var t = PoolManager.instance.ActivateObject(raider.pref_EffectDash.name, raider.ts_HitPos.position);
+            if (targetActorProxy.transform != null) t.LookAt(targetActorProxy.transform.position);
+
+            raider.animator.SetTrigger(AnimationHash.Skill);
+
+            Transform ts = actorProxy.transform;
+            while (targetActorProxy != null && targetActorProxy.baseStat != null && targetActorProxy.baseStat.isAlive)
             {
-                if (col.CompareTag("Player")) continue;
-                //var dis = Vector3.SqrMagnitude(col.transform.position);
-                var transform1 = transform;
-                // Physics.Raycast(transform1.position + Vector3.up * 0.2f,
-                //     transform1.forward,
-                //     out var hit,
-                //     7f,
-                //     targetLayer);
+                ts.LookAt(targetActorProxy.transform);
+                ts.position += (targetActorProxy.transform.position - ts.position).normalized * (raider.moveSpeed * 5f) * Time.deltaTime;
 
-                //if (col.collider != null)
-                {
-                    var m = col.GetComponentInParent<Minion>();
-                    var dis = Vector3.Distance(transform.position, col.transform.position);
-
-                    if (!col.CompareTag("Player") &&
-                        dis < distance &&
-                        (m != null && m.isCloacking == false))
-                    {
-                        distance = dis; 
-                        dashTarget = col;
-                    }
-                }
-            }
-
-            if (dashTarget != null)
-            {
-                _skillCastedTime = _spawnedTime;
-                StartCoroutine(DashCoroutine(dashTarget.transform));
-
-                
-                //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEPARAM1, id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
-                controller.ActionSendMsg(id, "DashMessage", dashTarget.GetComponentInParent<BaseStat>().id);
-                
-                Debug.DrawLine(transform.position + Vector3.up * 0.2f, dashTarget.transform.position + Vector3.up * 0.2f, Color.red, 2f);
-            }
-        }
-
-        public void DashMessage(int targetID)
-        {
-            var bs = InGameManager.Get().GetBaseStatFromId(targetID);
-            if (bs != null)
-            {
-                Transform ts = bs.transform;
-                StartCoroutine(DashCoroutine(ts)); 
-            }
-        }
-
-        private IEnumerator DashCoroutine(Transform dashTarget)
-        {
-            var t = PoolManager.instance.ActivateObject(pref_EffectDash.name, ts_HitPos.position);
-            if (dashTarget != null) t.LookAt(dashTarget.position);
-            isPushing = true;
-            animator.SetTrigger(_animatorHashSkill);
-            
-            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            if (dashTarget != null) controller.MinionAniTrigger(id, "Skill", dashTarget.GetComponentInParent<BaseStat>().id);
-            
-            var ts = transform;
-            while (dashTarget != null)
-            {
-                ts.LookAt(dashTarget);
-                //rb.MovePosition(transform.position + transform.forward * moveSpeed * 3f);
-                ts.position += (dashTarget.position - transform.position).normalized * (moveSpeed * 5f) * Time.deltaTime;
-
-                if (Vector3.Distance(dashTarget.position, transform.position) < range)
+                if (Vector3.Distance(targetActorProxy.transform.position, ts.position) < raider.range)
                     break;
                 
-                //var vel = (dashTarget.transform.position - transform.position).normalized * moveSpeed * 3f;
-                //vel.y = 0;
-                //rb.velocity = vel;
                 yield return null;
-                //yield return new WaitForSeconds(moveTime);
             }
-            rb.velocity = Vector3.zero;
 
-            isPushing = false;
-            //dashTarget.GetComponent<Minion>()?.Sturn(1f);
-
-            if (dashTarget != null && dashTarget.gameObject.activeSelf)
+            if (actorProxy.isPlayingAI == false) yield break;
+            
+            if (targetActorProxy != null && targetActorProxy.baseStat != null && targetActorProxy.baseStat.CanBeTarget())
             {
-                var bs = dashTarget.GetComponentInParent<BaseStat>();
-                if (bs != null)
-                {
-                    var targetID = bs.id;
-                    //if (PhotonNetwork.IsConnected && isMine)
-                    if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI)
-                    {
-                        //controller.targetPlayer.SendPlayer(RpcTarget.All , E_PTDefine.PT_STURNMINION , targetID, 1f);
-                        controller.ActionSturn(true , targetID , 1f);
-                    }
-                    //else if (PhotonNetwork.IsConnected == false)
-                    //else if(InGameManager.IsNetwork == false)
-                    //{
-                        //controller.targetPlayer.SturnMinion(targetID, 1f);
-                    //}
-                }
+                targetActorProxy.AddBuff(BuffInfos.Sturn, 10f);
             }
         }
     }

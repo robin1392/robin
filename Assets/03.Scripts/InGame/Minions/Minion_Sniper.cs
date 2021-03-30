@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -15,8 +17,6 @@ namespace ED
         [Header("AudioClip")]
         public AudioClip clip_Shot;
         
-        private static readonly int AttackReady = Animator.StringToHash("AttackReady");
-
         protected override void Start()
         {
             base.Start();
@@ -26,107 +26,47 @@ namespace ED
             ae.event_FireLight += FireLightOn;
         }
 
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
             
             lr.gameObject.SetActive(false);
             light_Fire.enabled = false;
         }
 
-        public override void Attack()
+        public override IEnumerator Attack()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+            if (ActorProxy.isPlayingAI)
             {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "AttackReady");
-                controller.MinionAniTrigger(id, "AttackReady" , target.id);
-                
-                StartCoroutine(AttackReadyCoroutine());
+                ActorProxy.PlayAnimationWithRelay(AnimationHash.AttackReady, target);
             }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
+
+            //yield return new WaitForSeconds(0.5f);
+            var aimingAction = new SniperAimingAction();
+            RunningAction = aimingAction;
+            yield return aimingAction.ActionWithSync(ActorProxy, target.ActorProxy);
+            RunningAction = null;
+
+            if (ActorProxy.isPlayingAI)
             {
-                base.Attack();
-                animator.SetTrigger(AttackReady);
-                StartCoroutine(AttackReadyCoroutine());
+                if (IsCanAiming())
+                {
+                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Attack, target);
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                {
+                    ActorProxy.PlayAnimationWithRelay(AnimationHash.Idle, target);
+                }
             }
         }
 
-        public override void Death()
+        public bool IsCanAiming()
         {
-            base.Death();
+            if (target == null || target.isAlive == false) return false;
+            if (IsTargetInnerRange() == false) return false;
 
-            lr.gameObject.SetActive(false);
-            light_Fire.enabled = false;
-        }
-
-        IEnumerator AttackReadyCoroutine()
-        {
-            yield return new WaitForSeconds(0.5f);
-
-            isPushing = false;
-            float t = 0;
-            if (controller == null || target == null)
-            {
-                yield break;
-            }
-            lr.gameObject.SetActive(true);
-            
-            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
-            controller.ActionMinionTarget(id, target.id);
-            
-            //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "Aiming");
-            controller.ActionSendMsg(id, "Aiming");
-            
-            while (t < attackSpeed - 1.5f)
-            {
-                var m = target as Minion;
-                if (target == null || target.isAlive == false || (target.isAlive && m != null && m.isCloacking))
-                {
-                    target = SetTarget();
-
-                    if (target != null)
-                    {
-                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SETMINIONTARGET, id, target.id);
-                        controller.ActionMinionTarget(id, target.id);
-                    }
-                    else if (target == null || IsTargetInnerRange() == false)
-                    {
-                        //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
-                        controller.ActionSendMsg(id, "StopAiming");
-                        break;
-                    }
-                }
-
-                if (target != null && IsTargetInnerRange())
-                {
-                    transform.LookAt(target.transform);
-                    lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
-                }
-                else if (target == null || IsTargetInnerRange() == false)
-                {
-
-                    //controller.SendPlayer(RpcTarget.Others, E_PTDefine.PT_SENDMESSAGEVOID, id, "StopAiming");
-                    controller.ActionSendMsg(id, "StopAiming");
-                    yield break;
-                }
-
-                t += Time.deltaTime;
-                yield return null;
-            }
-            
-            lr.gameObject.SetActive(false);
-
-            //if (target != null && ((PhotonNetwork.IsConnected && isMine) || PhotonNetwork.IsConnected == false))
-            if (target != null && ((InGameManager.IsNetwork && isMine ) || InGameManager.IsNetwork == false || controller.isPlayingAI))
-            {
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
+            return true;
         }
 
         public void Aiming()
@@ -137,9 +77,8 @@ namespace ED
         public void StopAiming()
         {
             StopAllCoroutines();
-            SetControllEnable(true);
             lr.gameObject.SetActive(false);
-            animator.SetTrigger(_animatorHashIdle);
+            animator.SetTrigger(AnimationHash.Idle);
         }
         
         IEnumerator AimingCoroutine()
@@ -150,7 +89,7 @@ namespace ED
                 if (target != null)
                 {
                     lr.gameObject.SetActive(true);
-                    transform.LookAt(target.transform);
+                    ActorProxy.transform.LookAt(target.transform);
                     lr.SetPositions(new Vector3[2] {ts_ShootingPos.position, target.ts_HitPos.position});
                 }
                 else
@@ -171,19 +110,10 @@ namespace ED
             
             if (target != null)
             {
-                if( (InGameManager.IsNetwork && isMine) || InGameManager.IsNetwork == false || controller.isPlayingAI )
+                if (ActorProxy.isPlayingAI)
                 {
-                    controller.ActionFireBullet(_arrow , id, target.id, power, bulletMoveSpeed);
+                    ActorProxy.FireBulletWithRelay(E_BulletType.ARROW, target, power, bulletMoveSpeed);
                 }
-                
-                /*if (PhotonNetwork.IsConnected && isMine)
-                {
-                    controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREBULLET, _arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                }
-                else if (PhotonNetwork.IsConnected == false)
-                {
-                    controller.FireBullet(_arrow, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                }*/
             }
         }
 
@@ -205,25 +135,6 @@ namespace ED
                 light_Fire.enabled = true;
                 Invoke("FireLightOff", 0.15f);
             }
-
-
-            /*if (target != null)
-            {
-                //if (PhotonNetwork.IsConnected && isMine)
-                if( InGameManager.IsNetwork && isMine )
-                {
-                    //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_FIREARROW, ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                    controller.ActionFireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                }
-                //else if (PhotonNetwork.IsConnected == false)
-                else if(InGameManager.IsNetwork == false)
-                {
-                    controller.FireArrow(ts_ShootingPos.position, target.id, power, bulletMoveSpeed);
-                }
-            }
-            */
-            
-
         }
 
         private void FireLightOff()
@@ -233,11 +144,43 @@ namespace ED
                 light_Fire.enabled = false;
             }
         }
-
-        public override void EndGameUnit()
+    }
+    
+    public class SniperAimingAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            base.EndGameUnit();
-            StopAiming();
+            var sniper = actorProxy.baseStat as Minion_Sniper;
+
+            float t = 0f;
+            sniper.lr.gameObject.SetActive(true);
+            while (t < 4f)
+            {
+                if (sniper.IsCanAiming() == false)
+                {
+                    break;
+                }
+
+                if (targetActorProxy == null || targetActorProxy.baseStat == null)
+                {
+                    break;
+                }
+                
+                actorProxy.transform.LookAt(targetActorProxy.transform);
+                sniper.lr.SetPositions(new Vector3[] { sniper.ts_ShootingPos.position, targetActorProxy.baseStat.ts_HitPos.position });
+
+                t += Time.deltaTime;
+                yield return null;
+            }
+            
+            sniper.lr.gameObject.SetActive(false);
+        }
+
+        public override void OnActionCancel(ActorProxy actorProxy)
+        {
+            base.OnActionCancel(actorProxy);
+            var sniper = actorProxy.baseStat as Minion_Sniper;
+            sniper.lr.gameObject.SetActive(false);
         }
     }
 }

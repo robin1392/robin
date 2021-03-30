@@ -1,60 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using ED;
-using Microsoft.Win32.SafeHandles;
-using RandomWarsProtocol;
+using ED.Boss;
 using UnityEngine;
 
-public class Boss2 : Minion
+public class Boss2 : BossBase
 {
-    private float _skillCastedTime;
-    private bool _isSkillCasting;
-    private float _localAttackSpeed = 1f;
-
-    public override void Initialize(DestroyCallback destroy)
+    public override IEnumerator Attack()
     {
-        base.Initialize(destroy);
-        _skillCastedTime = -effectCooltime;
-        attackSpeed = 1f;
-        effectCooltime = 1f;
-        Skill();
-    }
-
-    public override void Attack()
-    {
-        if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
+        var elapsed = (float)ActorProxy.NetworkTime.Time - ActorProxy.spawnTime;
+        var loopCount = (int)(elapsed / effectCooltime);
+        var attackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
         
-        if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-        {
-            base.Attack();
-            controller.MinionAniTrigger(id, "Attack", target.id);
-        }
-        else if(InGameManager.IsNetwork == false)
-        {
-            base.Attack();
-            animator.SetTrigger(_animatorHashAttack);
-        }
-    }
-
-    public void Skill()
-    {
-        StartCoroutine(SkillCoroutine());
-    }
-
-    IEnumerator SkillCoroutine()
-    {
-        float originAttackSpeed = attackSpeed;
-        float animationSpeed = 1f;
-        int loopCount = 1;
-        
-        while (true)
-        {
-            yield return new WaitForSeconds(effectCooltime);
-
-            loopCount++;
-            _localAttackSpeed = Mathf.Clamp(1f + 0.05f * loopCount, 1f, 5f);
-            attackSpeed = 1f / _localAttackSpeed;
-            animator.SetFloat("AttackSpeed", _localAttackSpeed);
-        }
+        return AttackCoroutine(attackSpeed);
     }
 }

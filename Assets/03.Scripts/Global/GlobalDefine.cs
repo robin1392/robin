@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,8 @@ public enum PLAY_TYPE
 {
     BATTLE,
     CO_OP,
+    ActorDev,
+    Tutorial
 }
 
 /// <summary>
@@ -88,6 +90,7 @@ public enum E_BulletType
     TURRET_BULLET,
     RACE_BULLET,
     PLANE_BULLET,
+    BOSS5_BULLET,
 }
 
 public enum E_AniTrigger

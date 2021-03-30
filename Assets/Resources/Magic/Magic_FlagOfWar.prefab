@@ -40,7 +40,6 @@ GameObject:
   m_Component:
   - component: {fileID: 563359602468480402}
   - component: {fileID: 7220310024489854118}
-  - component: {fileID: 8149992886170705306}
   - component: {fileID: 6856378085777108259}
   - component: {fileID: 4959641879111532696}
   m_Layer: 0
@@ -82,22 +81,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &8149992886170705306
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 563359602468480400}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &6856378085777108259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,47 +93,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2edd84b5612b40e488b7aa263a79011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 0
   id: 0
   controller: {fileID: 0}
-  rb: {fileID: 8149992886170705306}
   animator: {fileID: 8564387415273665120}
   arrMaterial:
   - {fileID: 2100000, guid: 7a1729becfb2948a38e3269cf616a376, type: 2}
   - {fileID: 2100000, guid: 11a75b892b0324e67b7fb68d573019e2, type: 2}
   target: {fileID: 0}
   targetMoveType: 2
-  power: 0
-  powerUpByUpgrade: 0
-  powerUpByInGameUp: 0
-  maxHealth: 0
-  currentHealth: 0
-  maxHealthUpByUpgrade: 0
-  maxHealthUpByInGameUp: 0
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
-  effectDuration: 0
-  effectCooltime: 0
-  attackSpeed: 0
-  moveSpeed: 0
-  range: 2
-  searchRange: 0
-  isBottomPlayer: 0
   ts_ShootingPos: {fileID: 0}
   ts_HitPos: {fileID: 5993039447194216721}
   image_HealthBar: {fileID: 7669623942604069288}
   text_Health: {fileID: 0}
-  isPlayable: 1
-  _collider: {fileID: 7220310024489854118}
+  _poolObjectAutoDeactivate: {fileID: 0}
+  collider: {fileID: 7220310024489854118}
   _hitCollider: {fileID: 5489973056171844951}
-  castType: 0
-  spawnType: 0
   targetPos: {x: 0, y: 0, z: 0}
-  eyeLevel: 0
-  upgradeLevel: 0
-  diceFieldNum: 0
+  startPos: {x: 0, y: 0, z: 0}
   ps: {fileID: 7474766724198679748}
   ps_NotIsMine: {fileID: 6269633718755841126}
   clip_Summon: {fileID: 8300000, guid: d20f126ff82a34d7e80b2b7b9fd00e5b, type: 3}

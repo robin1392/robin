@@ -4,8 +4,12 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using DG.Tweening;
+using Mirage;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 
 namespace ED
 {
@@ -14,92 +18,25 @@ namespace ED
         public Transform[] arrTs_Parts;
         public int pieceID;
         
-        public override void Initialize(DestroyCallback destroy)
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
-            // controller.robotPieceCount++;
-            // controller.robotEyeTotalLevel += eyeLevel;
-
-            currentHealth = 0;
-            SetControllEnable(false);
-            _collider.enabled = false;
-            animator.gameObject.SetActive(false);
-            animator.SetTrigger(_animatorHashSkill);
-            pieceID = controller.robotPieceCount++;
-            controller.robotEyeTotalLevel += eyeLevel;
-
-            SetParts();
-            Invoke("Fusion", 1.6f);
-        }
-
-        public override void Attack()
-        {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
-            {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
-            }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
-            }
-        }
-
-        public void Fusion()
-        {
-            if (controller.robotPieceCount == 4)
-            {
-                Vector3 fusionPosition = controller.transform.position;
-                fusionPosition.z += fusionPosition.z > 0 ? -2f : 2f;
-                transform.DOMove(fusionPosition, 0.5f).OnComplete(Callback_MoveComplete);
-            }
-            else
-            {
-                PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
-                
-                SetControllEnable(false);
-                isPlayable = false;
-                if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
-                StopAllCoroutines();
-                InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
-
-                destroyCallback(this);
-                PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
-                _poolObjectAutoDeactivate.Deactive();
-            }
-        }
-
-        private void Callback_MoveComplete()
-        {
-            if (pieceID == 3)
-            {
-                PoolManager.instance.ActivateObject("Effect_Robot_Summon", transform.position);
-                
-                Transform();
-            }
-            else
-            {
-                SetControllEnable(false);
-                isPlayable = false;
-                if (animator != null) animator.SetFloat(_animatorHashMoveSpeed, 0);
-                StopAllCoroutines();
-                InGameManager.Get().RemovePlayerUnit(isBottomPlayer, this);
+            collider.enabled = false;
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            var robots = rwClient.ActorProxies.Where(actor => actor.dataId == ActorProxy.dataId && actor.team == ActorProxy.team);
+            pieceID = robots.Count();
             
-                destroyCallback(this);
-                _poolObjectAutoDeactivate.Deactive();
-            }
+            SetParts();
+        }
+        
+        protected override IEnumerator Root()
+        {
+            yield break;
         }
 
         public void SetParts()
         {
-            animator.gameObject.SetActive(false);
             if (pieceID < 4)
             {
                 for (int i = 0; i < arrTs_Parts.Length; i++)
@@ -115,22 +52,6 @@ namespace ED
                     arrTs_Parts[i].gameObject.SetActive(i == rnd);
                 }
             }
-        }
-
-        public void Transform()
-        {
-            maxHealth *= controller.robotEyeTotalLevel;
-            controller.robotEyeTotalLevel = 0;
-            currentHealth = maxHealth;
-
-            _collider.enabled = true;
-            foreach (var tsPart in arrTs_Parts)
-            {
-                tsPart.gameObject.SetActive(false);
-            }
-            animator.gameObject.SetActive(true);
-            SetControllEnable(true);
-            ChangeLayer(isBottomPlayer);
         }
     }
 }

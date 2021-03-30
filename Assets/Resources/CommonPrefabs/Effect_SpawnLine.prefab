@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1454906240510229375}
   - component: {fileID: -443522016614572235}
   m_Layer: 10
-  m_Name: SpawnLine
+  m_Name: Effect_SpawnLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +48,7 @@ LineRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

@@ -17,6 +17,7 @@ public class UI_ObjectHealthBar : MonoBehaviour
     {
         rts_HPBar = transform.GetChild(0) as RectTransform;
         bs = GetComponentInParent<BaseStat>();
+        //ts_OldParent = transform.parent;
         camera_UI = CameraController.Get().camera_UI;
     }
 
@@ -25,9 +26,9 @@ public class UI_ObjectHealthBar : MonoBehaviour
         rts_HPBar.gameObject.SetActive(true);
         if (rts_HPBar.parent == transform)
         {
-            rts_HPBar.parent = WorldUIManager.Get().canvas_UnitHPBar.transform;
-            rts_HPBar.localScale = Vector3.one;
+            rts_HPBar.SetParent(WorldUIManager.Get().canvas_UnitHPBar.transform, true);
             rts_HPBar.localRotation = Quaternion.identity;
+            rts_HPBar.localScale = Vector3.one;
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,8 +15,7 @@ namespace ED
         public GameObject obj_EndEffect;
         public float endEffectDuration = 1f;
         
-        [HideInInspector]
-        public PlayerController controller;
+        public RWNetworkClient client;
         [Space]
         public float moveSpeed = 0.5f;
         [HideInInspector]
@@ -44,7 +44,7 @@ namespace ED
             _poad = GetComponent<PoolObjectAutoDeactivate>();
         }
 
-        public virtual void Initialize(int pTargetId, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public virtual void Initialize(BaseStat target, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer)
         {
             obj_Bullet.SetActive(true);
             if (obj_EndEffect != null) obj_EndEffect.SetActive(false);
@@ -54,11 +54,10 @@ namespace ED
             _splashRange = splashRange;
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
-            _target = InGameManager.Get().GetBaseStatFromId(pTargetId);
-            
+            _target =target;
+
             if (_target)
             {
-                this._callback = pCallback;
                 SetColor();
                 StartCoroutine(Move());
             }
@@ -68,7 +67,7 @@ namespace ED
             }
         }
 
-        public virtual void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer, UnityAction pCallback = null)
+        public virtual void Initialize(Vector3 pTargetPos, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer)
         {
             _isTarget = false;
             _damage = pDamage;
@@ -76,7 +75,6 @@ namespace ED
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
             _targetPos = pTargetPos;
-            _callback = pCallback;
             SetColor();
             StartCoroutine(Move());
         }
@@ -84,7 +82,7 @@ namespace ED
         private void SetColor()
         {
             var isBlue = _isMine;
-            if (InGameManager.Get().playType == Global.PLAY_TYPE.COOP)
+            if (InGameManager.Get().playType == PLAY_TYPE.CO_OP)
             {
                 isBlue = _isBottomPlayer;
             }
@@ -127,27 +125,15 @@ namespace ED
                 yield return null;
             }
 
-            _callback?.Invoke();
-
-            if( (InGameManager.IsNetwork && (_isMine || controller.isPlayingAI)) || InGameManager.IsNetwork == false)
-                controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);
-
-            /*
-            //if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount > 1 && _isMine)
-            if( InGameManager.IsNetwork && _isMine )
+            if (client.IsPlayingAI)
             {
-                if (_target != null)
-                    controller.HitMinionDamage( true , _target.id , _damage, 0f);
-                //controller.targetPlayer.SendPlayer(RpcTarget.All, E_PTDefine.PT_HITMINIONANDMAGIC,_target.id, _damage, 0f);
+                //TODO: 발사체가 날아가는 사이 공격자가 죽을 수 있기때문에 직접 히트를 부른다.
+                //      액터 사망 시 유예시간을 두어서 공격자 액터프락시가 존재하지 않는 상황이 없도록 하는 방법을 고려해본다.
+                _target?.ActorProxy?.HitDamage(_damage);   
             }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
-            {
-                if (_target != null)
-                    controller.HitMinionDamage( true , _target.id , _damage, 0f);
-                //controller.targetPlayer.HitDamageMinionAndMagic(_target.id, _damage, 0f);
-            }
-            */
+            //KZSee:
+            // if( (InGameManager.IsNetwork && (_isMine || controller.isPlayingAI)) || InGameManager.IsNetwork == false)
+            //     controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);
 
 
             if (obj_EndEffect != null)

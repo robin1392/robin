@@ -410,7 +410,7 @@ public class GameStateManager : Singleton<GameStateManager>
     #region server connect ok
     public void CheckSendInGame()
     {
-        switch (NetworkManager.Get().playType)
+        switch (Global.PLAY_TYPE.BATTLE)
         {
             case Global.PLAY_TYPE.BATTLE:
                 if (NetworkManager.Get().GetNetInfo().myInfoGet == true &&

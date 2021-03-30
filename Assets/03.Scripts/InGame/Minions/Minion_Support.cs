@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
+using Mirage;
+using MirageTest.Scripts;
+using MirageTest.Scripts.SyncAction;
 using UnityEngine;
 
 namespace ED
@@ -9,81 +13,109 @@ namespace ED
     {
         public GameObject pref_Dust;
 
-        [Header("AudioClip")]
-        public AudioClip clip_Jump;
+        [Header("AudioClip")] public AudioClip clip_Jump;
         public AudioClip clip_Landing;
-        
-        public override void Initialize(DestroyCallback destroy)
+
+        public override void Initialize()
         {
-            base.Initialize(destroy);
+            base.Initialize();
 
             PoolManager.instance.AddPool(pref_Dust, 1);
-            StartCoroutine(Jump());
         }
 
-        public override void Attack()
+        protected override IEnumerator Root()
         {
-            if (target == null || target.isAlive == false || IsTargetInnerRange() == false) return;
-            if (_collider.enabled == false) _collider.enabled = true;
-            
-            //if (PhotonNetwork.IsConnected && isMine)
-            if( InGameManager.IsNetwork && (isMine || controller.isPlayingAI) )
+            var targetMinion = GetLongDistanceFriendlyTarget();
+            if (targetMinion != null)
             {
-                base.Attack();
-                //controller.SendPlayer(RpcTarget.All , E_PTDefine.PT_MINIONANITRIGGER , id , "Attack");
-                controller.MinionAniTrigger(id, "Attack", target.id);
+                var action = new JumpAction();
+                yield return action.ActionWithSync(ActorProxy, targetMinion.ActorProxy);
             }
-            //else if (PhotonNetwork.IsConnected == false)
-            else if(InGameManager.IsNetwork == false)
+
+            while (isAlive)
             {
-                base.Attack();
-                animator.SetTrigger(_animatorHashAttack);
+                target = SetTarget();
+                if (target != null)
+                {
+                    yield return Combat();
+                }
+
+                yield return _waitForSeconds0_1;
             }
         }
 
-        private Minion GetLongDistanceFriendlyTarget()
+        private BaseStat GetLongDistanceFriendlyTarget()
         {
-            Minion rtn = null;
+            BaseStat rtn = null;
 
-            var distance = isBottomPlayer ? float.MinValue : float.MaxValue;
-            
-            foreach (var minion in controller.listMinion)
+            var distance = isBottomCamp ? float.MinValue : float.MaxValue;
+
+            var rwClient = ActorProxy.Client as RWNetworkClient;
+            var enemies = rwClient.ActorProxies.Where(actor =>
             {
-                if (minion.spawnedTime < 3f && ((isBottomPlayer && minion.transform.position.z > distance) ||
-                    (isBottomPlayer == false && minion.transform.position.z < distance)))
+                if (actor.team != ActorProxy.team)
+                {
+                    return false;
+                }
+
+                if (actor is TowerActorProxy)
+                {
+                    return false;
+                }
+
+                if (actor.baseStat is Magic)
+                {
+                    return false;
+                }
+
+                if (actor == ActorProxy)
+                {
+                    return false;
+                }
+
+                return true;
+            });
+
+            var actorProxies = enemies as ActorProxy[] ?? enemies.ToArray();
+            
+            foreach (var minion in actorProxies)
+            {
+                if (((isBottomCamp && minion.transform.position.z > distance) ||
+                     (isBottomCamp == false && minion.transform.position.z < distance)))
                 {
                     distance = minion.transform.position.z;
-                    rtn = minion;
+                    rtn = minion.baseStat;
                 }
             }
-            
-            return rtn == this ? null : rtn;
+
+            return rtn;
         }
+    }
 
-        private IEnumerator Jump()
+    public class JumpAction : SyncActionWithTarget
+    {
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetProxy)
         {
-            SetControllEnable(false);
-            _collider.enabled = false;
-            var m = GetLongDistanceFriendlyTarget();
+            var m = actorProxy.baseStat as Minion_Support;
+            var ts = actorProxy.transform;
 
-            if (m == null)
+            if (targetProxy == null || targetProxy.baseStat.isAlive == false)
             {
-                SetControllEnable(true);
-                _collider.enabled = true;
+                m.collider.enabled = true;
                 yield break;
             }
 
-            transform.LookAt(m.transform);
+            m.collider.enabled = false;
+            ts.LookAt(targetProxy.transform);
             
             yield return null;
             
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_MINIONANITRIGGER, id, "Skill");
-            SoundManager.instance.Play(clip_Jump);
-            controller.MinionAniTrigger(id, "Skill" , m.GetComponent<BaseStat>().id);
+            SoundManager.instance.Play(m.clip_Jump);
             
-            var ts = transform;
+            actorProxy.PlayAnimationWithRelay(AnimationHash.Skill, targetProxy.baseStat);
+
             var startPos = ts.position;
-            var targetPos = m.transform.position;
+            var targetPos = targetProxy.transform.position;
             var t = 0f;
 
             float fV_x;
@@ -126,13 +158,13 @@ namespace ED
                 yield return null;
             }
 
-            SetControllEnable(true);
-            _collider.enabled = true;
-            var pos = transform.position;
+            m.collider.enabled = true;
+            var pos = ts.position;
             pos.y = 0.1f;
-            //controller.SendPlayer(RpcTarget.All, E_PTDefine.PT_ACTIVATEPOOLOBJECT, "Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
-            SoundManager.instance.Play(clip_Landing);
-            controller.ActionActivePoolObject("Effect_Support", pos, Quaternion.identity, Vector3.one * 0.8f);
+            
+            SoundManager.instance.Play(m.clip_Landing);
+            PoolManager.Get().ActivateObject(m.pref_Dust.name, pos);
+            yield return null;
         }
     }
 }
