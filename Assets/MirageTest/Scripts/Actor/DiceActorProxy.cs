@@ -1,6 +1,8 @@
 using ED;
+using Mirage.Logging;
 using RandomWarsResource.Data;
 using UnityEngine;
+using Debug = ED.Debug;
 
 namespace MirageTest.Scripts
 {
@@ -38,6 +40,11 @@ namespace MirageTest.Scripts
                      diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
             {
                 SpawnMagicAndInstallation();
+            }
+            else
+            {
+                _logger.LogError($"잘못된 CastType입니다. {diceInfo.castType.ToString()} - id:{dataId}");
+                return;
             }
 
             baseStat.effectUpgrade = diceInfo.effectUpgrade;
@@ -156,6 +163,10 @@ namespace MirageTest.Scripts
                 magic.SetColor(IsBottomCamp());
                 magic.ChangeLayer(IsBottomCamp());
                 magic.Initialize(IsBottomCamp());
+            }
+            else
+            {
+                _logger.LogError($"리소스가 존재하지 않습니다. - {diceInfo.prefabName} - id:{dataId}");
             }
             
             isMovable = false;
