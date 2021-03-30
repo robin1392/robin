@@ -10,6 +10,7 @@ using MirageTest.Aws;
 using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
 using MirageTest.Scripts.Messages;
+using Newtonsoft.Json;
 using RandomWarsProtocol;
 using Service.Core;
 using UnityEngine;
@@ -254,8 +255,11 @@ public class RWNetworkServer : NetworkServer
 
     public void OnGameEnd(List<MatchReport> matchReports)
     {
+        var matchResult = ToMatchResults(matchReports);
+        var matchResultJson = JsonConvert.SerializeObject(matchResult);
+        logger.Log(matchResultJson);
 #if UNITY_EDITOR || UNITY_STANDALONE_LINUX
-        FindObjectOfType<SQSService>()?.SendMessage(ToMatchResults(matchReports)).Forget();
+        FindObjectOfType<SQSService>()?.SendMessage(matchResultJson).Forget();
 #endif
         foreach (var report in matchReports)
         {

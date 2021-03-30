@@ -23,7 +23,7 @@ namespace MirageTest.Aws
             _roleName = "RandomWarsSession";
         }
 
-        public async UniTask SendMessage(List<UserMatchResult> listMatchResult)
+        public async UniTask SendMessage(string matchResultJson)
         {
             AssumeRoleRequest roleRequest = new AssumeRoleRequest();
             roleRequest.RoleArn = _roleArn;
@@ -43,7 +43,7 @@ namespace MirageTest.Aws
 
             var getQueueUrlResponse = sqs.GetQueueUrl(_queueName);
             var myQueueUrl = getQueueUrlResponse.QueueUrl;
-            var sqsMessageRequest = new SendMessageRequest(myQueueUrl, JsonConvert.SerializeObject(listMatchResult));
+            var sqsMessageRequest = new SendMessageRequest(myQueueUrl, matchResultJson);
             var sendMessageResponse = sqs.SendMessageAsync(sqsMessageRequest);
             if (sendMessageResponse.Result == null)
             {
