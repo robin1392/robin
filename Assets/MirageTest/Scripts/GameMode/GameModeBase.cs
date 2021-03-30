@@ -243,26 +243,21 @@ namespace MirageTest.Scripts.GameMode
 
         public void OnClientDisconnected(INetworkPlayer arg0)
         {
-            var userId = arg0.Identity.GetComponent<PlayerProxy>().userId;
-            var playerState = GetPlayerState(userId);
+            var newMasterPlayerProxy = Server.PlayerProxies.FirstOrDefault(p => p.ConnectionToClient != arg0);
+            if (newMasterPlayerProxy == null)
+            {
+                GameState.masterOwnerTag = GameConstants.ServerTag;
+                return;
+            }
+            
+            var playerState = GetPlayerState(newMasterPlayerProxy.userId);
             if (playerState == null)
             {
                 return;
             }
 
-            if (GameState.masterOwnerTag != playerState.ownerTag)
-            {
-                return;
-            }
-
-            var newMaster = PlayerStates.FirstOrDefault(p => p.ownerTag != playerState.ownerTag);
-            if (newMaster == null)
-            {
-                return;
-            }
-
-            logger.Log($"클라이언트 접속해제로 마스터가 변경됨: {GameState.masterOwnerTag} => {newMaster.ownerTag}");
-            GameState.masterOwnerTag = newMaster.ownerTag;
+            logger.Log($"클라이언트 접속해제로 마스터가 변경됨: {GameState.masterOwnerTag} => {playerState.ownerTag}");
+            GameState.masterOwnerTag = playerState.ownerTag;
         }
 
         protected IEnumerable<ActorProxy> CreateActorByPlayerFieldDice(PlayerState playerState)

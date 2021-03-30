@@ -126,11 +126,11 @@ namespace MirageTest.Scripts
             
             if (isAIMode)
             {
-                await WaitForFirstPlayer();
+                await WaitForFirstPlayer().TimeoutWithoutException(TimeSpan.FromSeconds(60));
             }
             else
             {
-                await WaitForPlayers();    
+                await WaitForPlayers().TimeoutWithoutException(TimeSpan.FromSeconds(60));
             }
 
             if (NoPlayers)
@@ -166,15 +166,23 @@ namespace MirageTest.Scripts
             _gameMode?.End();
             
             server.Disconnect();
-            
+
+            TerminateServer();
+        }
+
+        public void TerminateServer()
+        {
 #if UNITY_EDITOR || UNITY_STANDALONE_LINUX
             if (server.LocalClientActive == false)
             {
-                GameLiftServerAPI.ProcessEnding();   
+                var outcome = GameLiftServerAPI.ProcessEnding();
+                Debug.Log($"GameLiftServerAPI.ProcessEnding {outcome.Success} - {outcome.Error}");
+                GameLiftServerAPI.Destroy();
+                Application.Quit();
             }
 #endif
         }
-        
+
         private async UniTask WaitForPlayers()
         {
             while (true)
@@ -232,7 +240,7 @@ namespace MirageTest.Scripts
 
         public void ForceEnd()
         {
-            _gameMode.End();
+            _gameMode?.End();
         }
 
         public void OnHitDamageTower(ActorProxy actorProxy)

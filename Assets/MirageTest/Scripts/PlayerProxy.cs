@@ -81,6 +81,18 @@ public class PlayerProxy : NetworkBehaviour
         }
 
         server?.AddPlayerProxy(this);
+        var gameState = server?.serverGameLogic?._gameMode?.GameState;
+        if(gameState != null)
+        {
+            if (gameState.masterOwnerTag == GameConstants.ServerTag)
+            {
+                var playerState = server.serverGameLogic.GetPlayerState(userId);
+                if (playerState != null)
+                {
+                    gameState.masterOwnerTag = playerState.ownerTag;
+                }
+            }
+        }
 
         if (Server.LocalClientActive)
         {

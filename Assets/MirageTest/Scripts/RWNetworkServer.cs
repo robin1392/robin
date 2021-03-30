@@ -286,7 +286,7 @@ public class RWNetworkServer : NetworkServer
         }).ToList();
     }
 
-    public void Finalize()
+    public void FinalizeServer()
     {
         serverGameLogic.ForceEnd();
         Disconnect();

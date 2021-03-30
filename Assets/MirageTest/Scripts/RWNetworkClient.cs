@@ -70,6 +70,7 @@ namespace MirageTest.Scripts
 
         public string lastConnectServerIp;
         public bool playing;                
+        public bool giveUp;
 
         public async UniTask RWConnectAsync(string serverIp)
         {
@@ -125,7 +126,16 @@ namespace MirageTest.Scripts
         [Button]
         public void GiveUp()
         {
-            GetLocalPlayerProxy()?.GiveUp();
+            var localPlayerProxy = GetLocalPlayerProxy();
+            if (localPlayerProxy == null)
+            {
+                return;
+            }
+
+            giveUp = true;
+            
+            localPlayerProxy.GiveUp();
+            Disconnect();
         }
         
         [Button]
@@ -163,7 +173,7 @@ namespace MirageTest.Scripts
 
         private void OnDisconnected()
         {
-            if (playing)
+            if (playing && giveUp == false)
             {
                 Reconnect();
             }

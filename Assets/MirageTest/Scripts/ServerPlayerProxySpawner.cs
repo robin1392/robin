@@ -9,7 +9,7 @@ using NetworkPlayer = Mirage.NetworkPlayer;
 public class ServerPlayerProxySpawner : MonoBehaviour
 {
     static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerPlayerProxySpawner));
-    public NetworkServer server;
+    public RWNetworkServer server;
     public NetworkIdentity playerPrefab;
     public ServerObjectManager serverObjectManager;
 

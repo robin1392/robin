@@ -214,17 +214,11 @@ namespace ED
             if (IsNetwork)
             {
                 var client = FindObjectOfType<RWNetworkClient>();
-                var playerProxy = client.GetLocalPlayerProxy();
-                if (playerProxy == null)
-                {
-                    return;
-                }
-                
-                playerProxy.GiveUp();
+                client.GiveUp();
             }
             else
             {
-                FindObjectOfType<RWNetworkServer>().Finalize();
+                FindObjectOfType<RWNetworkServer>().FinalizeServer();
                 FindObjectOfType<RWNetworkClient>().Disconnect();
             }
             
@@ -255,7 +249,7 @@ namespace ED
             }
             else
             {
-                FindObjectOfType<RWNetworkServer>().Finalize();
+                FindObjectOfType<RWNetworkServer>().FinalizeServer();
                 FindObjectOfType<RWNetworkClient>().Disconnect();
             }
         }
