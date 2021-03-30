@@ -310,6 +310,11 @@ namespace MirageTest.Scripts
         public void SetHp(float oldValue, float newValue)
         {
             RefreshHpUI();
+            OnSetHp();
+        }
+
+        protected virtual void OnSetHp()
+        {
         }
 
         void RefreshHpUI()
@@ -614,10 +619,7 @@ namespace MirageTest.Scripts
                    a.Y == b.Y;
         }
 
-        public bool IsLocalPlayerAlly()
-        {
-            return (Client as RWNetworkClient).IsLocalPlayerAlly(team);
-        }
+        public bool IsLocalPlayerAlly => (Client as RWNetworkClient).IsLocalPlayerAlly(team);
 
         public BaseStat GetHighestHealthEnemy()
         {

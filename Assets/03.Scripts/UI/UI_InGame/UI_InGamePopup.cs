@@ -103,16 +103,16 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
                 normalReward, streakReward, perfectReward, loseReward);
         
         ViewGameIndicator(false);
-        ViewLowHP(false);
+        ShowLowHPEffect(false);
         SetViewWaiting(false);
     }
 
-    public void ViewLowHP(bool view)
+    public void ShowLowHPEffect(bool view)
     {
         obj_Low_HP_Effect.SetActive(view);
     }
 
-    public bool GetLowHP()
+    public bool IsLowHpEffectActiveSelf()
     {
         return obj_Low_HP_Effect.activeSelf;
     }

@@ -195,7 +195,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }
-        UI_InGamePopup.Get().ViewLowHP(false);
+        UI_InGamePopup.Get().ShowLowHPEffect(false);
         var card = FindObjectOfType<UI_Card>();
         if (card != null) card.Off();
     }

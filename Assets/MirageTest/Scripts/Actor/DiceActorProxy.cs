@@ -179,7 +179,7 @@ namespace MirageTest.Scripts
             Vector3 spawnPosition = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
             if ((Client as RWNetworkClient).enableUI)
             {
-                if(IsLocalPlayerAlly() == false)
+                if(IsLocalPlayerAlly == false)
                 {
                     spawnPosition.x *= -1f;
                     spawnPosition.z *= -1f;

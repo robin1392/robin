@@ -150,7 +150,7 @@ namespace ED
                 return;
             }
 
-            image_HealthBar.color = ActorProxy.IsLocalPlayerAlly() ? Color.green : Color.red;
+            image_HealthBar.color = ActorProxy.IsLocalPlayerAlly ? Color.green : Color.red;
         }
 
         public virtual void ChangeLayer(bool pIsBottomPlayer)

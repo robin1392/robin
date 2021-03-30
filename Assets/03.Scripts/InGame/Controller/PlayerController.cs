@@ -78,7 +78,7 @@ namespace ED
                 text_Health.text = $"{Mathf.CeilToInt(ActorProxy.currentHealth)}";
             }
         }
-        
+
         protected virtual void StartPlayerControll()
         {
         }

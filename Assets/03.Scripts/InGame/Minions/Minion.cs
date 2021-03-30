@@ -102,7 +102,7 @@ namespace ED
             }
             
             _dicEffectPool.Clear();
-            SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly());
+            SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly);
         }
 
         public override void OnHitDamageOnClient(float damage)
@@ -307,7 +307,7 @@ namespace ED
 
         public void ApplyCloacking(bool isCloacking)
         {
-            var isAlly = ActorProxy.IsLocalPlayerAlly();
+            var isAlly = ActorProxy.IsLocalPlayerAlly;
             if (isCloacking)
             {
                 PoolManager.instance.ActivateObject("Effect_Cloaking", ts_HitPos.position);
