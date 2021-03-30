@@ -844,5 +844,12 @@ namespace MirageTest.Scripts
 
             transform.DOMove(fusionPosition, 0.5f).OnComplete(() => { Destroy(); });
         }
+
+        public void UpdateSyncPositionToCurrentPosition()
+        {
+            var position = transform.position;
+            var currentPosition = new Vector2(position.x, position.z);
+            lastRecieved = ConvertNetMsg.Vector3ToMsg(currentPosition);
+        }
     }
 }

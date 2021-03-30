@@ -67,9 +67,8 @@ namespace ED
 
         public IEnumerator RunSyncAction(IEnumerator action)
         {
-            // ActorProxy.EnablePathfinding(false);
             yield return action;
-            // ActorProxy.EnablePathfinding(true);
+            ActorProxy.UpdateSyncPositionToCurrentPosition();
             SyncAction = null;
             _syncActionCoroutine = null;
         }

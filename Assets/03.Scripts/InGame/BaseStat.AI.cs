@@ -28,6 +28,7 @@ namespace ED
             if (SyncAction != null)
             {
                 SyncAction.OnActionCancel(ActorProxy);
+                ActorProxy.UpdateSyncPositionToCurrentPosition();
                 SyncAction = null;
             }
 
