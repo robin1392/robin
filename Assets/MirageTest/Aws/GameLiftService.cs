@@ -232,7 +232,7 @@ namespace MirageTest.Aws
 
             // 플레이어 추가
             _server.MatchData.AddPlayerInfo(playerId, userName, trophy, winStreak, deckInfo, isPlayer);
-            Debug.Log($"플레이어 추가:{playerId} name:{userName} gudrdian:{deckInfo.GuardianId} deck:{String.Join(", ", deckInfo.DiceInfos.ToArray())}");
+            Debug.Log($"플레이어 추가:{playerId} name:{userName} gudrdian:{deckInfo.GuardianId} deck:{String.Join(", ", deckInfo.DiceInfos.ToArray())} isPlayer:{isPlayer}");
         }
         
         void OnProcessTerminate()
