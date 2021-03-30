@@ -152,7 +152,8 @@ namespace ED
                 TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             }
             
-            var server = FindObjectOfType<RWNetworkServer>();
+            var server = FindObjectOfType<RWNetworkServer>(true);
+            server.gameObject.SetActive(true);
             var userInfo = UserInfoManager.Get().GetUserInfo();
 
             var userDeck = userInfo.GetActiveDeck;

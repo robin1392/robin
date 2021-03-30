@@ -302,6 +302,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ===Server===
       objectReference: {fileID: 0}
+    - target: {fileID: 4832457519157374790, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832457519157374794, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1431,6 +1436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  PrefsPostfix: 
 --- !u!4 &1239686561
 Transform:
   m_ObjectHideFlags: 0
