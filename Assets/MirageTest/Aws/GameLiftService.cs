@@ -151,6 +151,9 @@ namespace MirageTest.Aws
 
             if (string.IsNullOrEmpty(gameSession.GameSessionData) == false)
             {
+                Debug.Log($"GameSessionData로 시작");
+                Debug.Log($"{gameSession.GameSessionData}");
+                
                 var listPlayerAttribute = JsonConvert.DeserializeObject<List<MatchPlayerAttribute>>(gameSession.GameSessionData);
                 foreach (var attribute in listPlayerAttribute)
                 {
@@ -171,6 +174,8 @@ namespace MirageTest.Aws
             }
             else if (string.IsNullOrEmpty(gameSession.MatchmakerData) == false)
             {
+                Debug.Log($"MatchmakerData 시작");
+                Debug.Log($"{gameSession.MatchmakerData}");
                 ApplyMatchmakerData(gameSession.MatchmakerData);
             }
         }
