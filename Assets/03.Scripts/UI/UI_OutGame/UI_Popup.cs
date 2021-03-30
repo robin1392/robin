@@ -16,6 +16,7 @@ namespace ED
         [Header("Setting")]
         public bool isAutoOpen = true;
         public bool isPopAnimation = true;
+        public bool isDestroyWithClose = false;
         public float alphaBG = 0.95f;
         [Space]
         public RectTransform rts_Frame;
@@ -81,7 +82,14 @@ namespace ED
                 if (btn_BG_Close != null) btn_BG_Close.interactable = false;
                 rts_Frame.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).OnComplete(() =>
                 {
-                    gameObject.SetActive(false);
+                    if (isDestroyWithClose)
+                    {
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        gameObject.SetActive(false);
+                    }
                 });
                 image_BG.DOFade(0, 0.2f);
             }
@@ -90,7 +98,14 @@ namespace ED
                 if (btn_BG_Close != null) btn_BG_Close.interactable = false;
                 rts_Frame.DOScale(Vector3.zero, 0f);
                 image_BG.DOFade(0, 0f);
-                gameObject.SetActive(false);
+                if (isDestroyWithClose)
+                {
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
             }
 
             if (stack.Contains(this) && stack.Peek() == this)
