@@ -209,7 +209,7 @@ namespace MirageTest.Scripts
 
             if (enableUI == false)
             {
-                GetLocalPlayerProxy()?.ClientReady();
+                GetLocalPlayerProxy().ClientReady();
                 return;
             }
 
@@ -315,7 +315,7 @@ namespace MirageTest.Scripts
         {
             if (IsLocalClient)
             { 
-                return PlayerProxies.First();
+                return PlayerProxies.FirstOrDefault();
             }
             
             return PlayerProxies.Find(p => p.IsLocalPlayer);
