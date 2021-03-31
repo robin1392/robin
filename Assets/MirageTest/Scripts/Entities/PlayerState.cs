@@ -5,6 +5,7 @@ using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.Serialization;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage.Collections;
 using Mirage.Logging;
@@ -259,7 +260,7 @@ namespace MirageTest.Scripts.Entities
                 });
             }
 
-            uiDiceField.arrSlot[index].SetIcon(IsLocalPlayerState ? 1.0f : 0.5f);
+            uiDiceField.arrSlot[index].SetIcon(IsLocalPlayerState ? 1.0f : 0.5f).Forget();
         }
 
         private void OnChangeDeckOnClientOnly()

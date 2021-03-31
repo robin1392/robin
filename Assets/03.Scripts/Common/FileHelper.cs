@@ -22,10 +22,10 @@ public class FileHelper
                 rscPath = "Magic/";
                 break;
             case Global.E_LOADTYPE.LOAD_MAIN_MINION:
-                rscPath = "CommonPrefabs/Units/";
+                rscPath = "Units/";
                 break;
             case Global.E_LOADTYPE.LOAD_MAIN_MAGIC:
-                rscPath = "CommonPrefabs/object/";
+                rscPath = $"object/";
                 break;
             case Global.E_LOADTYPE.LOAD_COOP_BOSS:
                 rscPath = "Boss/";
@@ -35,7 +35,7 @@ public class FileHelper
                 break;
         }
 
-        GameObject loadObj = Resources.Load<GameObject>(rscPath + fileName);
+        GameObject loadObj = SyncAddressables.LoadAsset<GameObject>(rscPath + fileName);
 //        loadObj = GameObject.Instantiate(loadObj);
 //        loadObj.name = fileName;
 //        if(parent != null)
@@ -62,9 +62,7 @@ public class FileHelper
 
     public static Sprite GetIcon(string name)
     {
-        string iconPath = "Image/icon/";
-        
-        Sprite iconSpr = Resources.Load<Sprite>(iconPath + name);
+        Sprite iconSpr = SyncAddressables.LoadAsset<Sprite>(name);
         if (iconSpr == null)
         {
             Debug.LogWarning("<color=yellow> " + name + "</color>" + "  Icon Not exist ");

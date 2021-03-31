@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using UnityEngine;
@@ -69,7 +70,7 @@ namespace MirageTest.Scripts
         
         public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
         {
-            FireBulletInternal(bulletType, target, damage, moveSpeed);
+            FireBulletInternal(bulletType, target, damage, moveSpeed).Forget();
             RelayFireBullet(bulletType, target, damage, moveSpeed);
         }
         
@@ -117,10 +118,10 @@ namespace MirageTest.Scripts
                 return;
             }
             
-            FireBulletInternal(arrow, target, f, bulletMoveSpeed);
+            FireBulletInternal(arrow, target, f, bulletMoveSpeed).Forget();
         }
 
-        void FireBulletInternal(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
+        async UniTask FireBulletInternal(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
         {
             if (baseStat == null)
             {
@@ -132,38 +133,41 @@ namespace MirageTest.Scripts
             switch (bulletType)
             {
                 case E_BulletType.ARROW:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Arrow", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Arrow", startPos);
                     break;
                 case E_BulletType.SPEAR:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
                     SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
                     break;
                 case E_BulletType.NECROMANCER:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
                     break;
                 case E_BulletType.MAGICIAN:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Magician_Bullet", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Magician_Bullet", startPos);
                     break;
                 case E_BulletType.ARBITER:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Arbiter_Bullet", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Arbiter_Bullet", startPos);
                     break;
                 case E_BulletType.BABYDRAGON:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
+                    bullet = await  PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
                     break;
                 case E_BulletType.VALLISTA_SPEAR:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Vallista_Spear", startPos);
+                    bullet = await  PoolManager.instance.ActivateObject<Bullet>("Vallista_Spear", startPos);
                     break;
                 case E_BulletType.GUARDIAN3_BULLET:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Guardian3_Bullet", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Guardian3_Bullet", startPos);
                     break;
                 case E_BulletType.POSU_BULLET:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Posu_Bullet", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Posu_Bullet", startPos);
                     break;
                 case E_BulletType.TURRET_BULLET:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Turret_Bullet", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Turret_Bullet", startPos);
                     break;
                 case E_BulletType.BOSS5_BULLET:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Boss_05_Bullet", startPos);
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Boss_05_Bullet", startPos);
+                    break;
+                case E_BulletType.WIND_BULLET:
+                    bullet = await PoolManager.instance.ActivateObject<Bullet>("Wind_Bullet", startPos);
                     break;
             }
 
@@ -179,7 +183,7 @@ namespace MirageTest.Scripts
         
         public void FireCannonBallWithRelay(E_CannonType cannonType, Vector3 targetPosition)
         {
-            FireCannonBallInternal(cannonType, targetPosition);
+            FireCannonBallInternal(cannonType, targetPosition).Forget();
             RelayFireCannonBall(cannonType, targetPosition);
         }
         
@@ -215,10 +219,10 @@ namespace MirageTest.Scripts
         [ClientRpc(target = Mirage.Client.Player)]
         public void RelayFireCannonBallOnClient(INetworkPlayer con, E_CannonType cannonType, Vector3 targetPosition)
         {
-            FireCannonBallInternal(cannonType, targetPosition);
+            FireCannonBallInternal(cannonType, targetPosition).Forget();
         }
 
-        void FireCannonBallInternal(E_CannonType cannonType, Vector3 targetPosition)
+        async UniTask FireCannonBallInternal(E_CannonType cannonType, Vector3 targetPosition)
         {
             if (baseStat == null)
             {
@@ -230,12 +234,12 @@ namespace MirageTest.Scripts
             switch (cannonType)
             {
                 case E_CannonType.DEFAULT:
-                    cannonBall = PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
+                    cannonBall =  await PoolManager.instance.ActivateObject<CannonBall>("CannonBall", startPos);
                     SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_SHOT);
                     SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MORTAR_MISSILE);
                     break;
                 case E_CannonType.BOMBER:
-                    cannonBall = PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
+                    cannonBall = await PoolManager.instance.ActivateObject<CannonBall>("Bomber_Bullet", startPos);
                     break;
             }
 

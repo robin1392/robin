@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ED;
 using Mirage;
@@ -11,6 +12,7 @@ using Pathfinding;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
+using Channel = Mirage.Channel;
 using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts
@@ -175,10 +177,10 @@ namespace MirageTest.Scripts
 
             this.buffState = state;
 
-            EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0);
-            EnableStunEffect((buffState & BuffState.Sturn) != 0);
+            EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0).Forget();
+            EnableStunEffect((buffState & BuffState.Sturn) != 0).Forget();
             EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
-            EnableScarecrowEffect((buffState & BuffState.Scarecrow) != 0);
+            EnableScarecrowEffect((buffState & BuffState.Scarecrow) != 0).Forget();
 
             if (isCantAI)
             {
@@ -195,7 +197,7 @@ namespace MirageTest.Scripts
             }
         }
 
-        private void EnableScarecrowEffect(bool b)
+        async UniTask EnableScarecrowEffect(bool b)
         {
             if (baseStat is Minion minion)
             {
@@ -203,7 +205,7 @@ namespace MirageTest.Scripts
                 {
                     if (minion._dicEffectPool.ContainsKey(MAZ.SCARECROW) == false)
                     {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow",
+                        var ad = await PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow",
                             transform.position);
                         ad.transform.SetParent(transform);
                         minion._dicEffectPool.Add(MAZ.SCARECROW, ad);
@@ -222,7 +224,7 @@ namespace MirageTest.Scripts
             }
         }
 
-        private void EnableInvincibilityEffect(bool b)
+        async UniTask EnableInvincibilityEffect(bool b)
         {
             if (baseStat is Minion minion)
             {
@@ -230,7 +232,7 @@ namespace MirageTest.Scripts
                 {
                     if (minion._dicEffectPool.ContainsKey(MAZ.INVINCIBILITY) == false)
                     {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Shield",
+                        var ad = await PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Shield",
                             transform.position);
                         ad.transform.SetParent(transform);
                         minion._dicEffectPool.Add(MAZ.INVINCIBILITY, ad);
@@ -248,7 +250,7 @@ namespace MirageTest.Scripts
         }
 
 
-        private void EnableStunEffect(bool b)
+        private async UniTask EnableStunEffect(bool b)
         {
             if (baseStat is Minion minion)
             {
@@ -256,7 +258,7 @@ namespace MirageTest.Scripts
                 {
                     if (minion._dicEffectPool.ContainsKey(MAZ.STURN) == false)
                     {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
+                        var ad = await PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
                             baseStat.ts_HitPos.position + Vector3.up * 0.65f);
                         ad.transform.SetParent(transform);
                         minion._dicEffectPool.Add(MAZ.STURN, ad);
@@ -292,9 +294,6 @@ namespace MirageTest.Scripts
         {
             var client = Client as RWNetworkClient;
             OnSpawnActor();
-
-            EnableAI(client.IsPlayingAI);
-            RefreshHpUI();
         }
 
         protected virtual void OnSpawnActor()
@@ -317,7 +316,7 @@ namespace MirageTest.Scripts
         {
         }
 
-        void RefreshHpUI()
+        public void RefreshHpUI()
         {
             if (baseStat == null)
             {

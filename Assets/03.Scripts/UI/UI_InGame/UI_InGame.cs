@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using CodeStage.AntiCheat.ObscuredTypes;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
 using MirageTest.Scripts;
 using RandomWarsResource.Data;
+using UnityEngine.AddressableAssets;
 
 
 public class UI_InGame : SingletonDestroy<UI_InGame>
@@ -100,7 +102,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     {
         for (var i = 0; i < arrUpgradeButtons.Length; i++)
         {
-            arrUpgradeButtons[i].Initialize( deckDice[i].diceInfo, deckDice[i].inGameLevel, i);
+            arrUpgradeButtons[i].Initialize( deckDice[i].diceInfo, deckDice[i].inGameLevel, i).Forget();
         }
     }
 
@@ -116,10 +118,16 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
         for (int i = 0; i < deckDice.Length; i++)
         {
-            arrImage_EnemyUpgradeIcon[i].sprite = FileHelper.GetIcon(deckDice[i].iconName);
+            SetIcon(arrImage_EnemyUpgradeIcon[i], deckDice[i].iconName).Forget();
         }
     }
 
+    async UniTask SetIcon(Image image, string icon)
+    {
+        image.sprite = await Addressables.LoadAssetAsync<Sprite>(icon);
+    }
+    
+    
     public void SetEnemyUpgrade()
     {
         var diceInfos = TableManager.Get().DiceInfo;

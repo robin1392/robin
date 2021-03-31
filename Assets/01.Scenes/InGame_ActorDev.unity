@@ -156,7 +156,6 @@ MonoBehaviour:
   Server: {fileID: 2039324051}
   Master: {fileID: 1426124182}
   Other: {fileID: 398029673}
-  AttatchOtherAI: 0
   Address: localhost
 --- !u!4 &59141817
 Transform:
@@ -232,6 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  PrefsPostfix: 
 --- !u!4 &188081435
 Transform:
   m_ObjectHideFlags: 0
@@ -3420,7 +3420,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 158.5125
+      value: 155.35
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}

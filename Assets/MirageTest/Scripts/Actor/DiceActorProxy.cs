@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage.Logging;
 using RandomWarsResource.Data;
@@ -24,6 +25,11 @@ namespace MirageTest.Scripts
         
         protected override void OnSpawnActor()
         {
+            SpawnActorAsync().Forget();
+        }
+
+        async UniTask SpawnActorAsync()
+        {
             var client = Client as RWNetworkClient;
             if (client.enableUI && IsLocalPlayerActor)
             {
@@ -34,12 +40,12 @@ namespace MirageTest.Scripts
 
             if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION || diceInfo.castType == (int) DICE_CAST_TYPE.HERO)
             {
-                SpawnMinionOrHero();
+                await SpawnMinionOrHeroAsync();
             }
             else if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC ||
                      diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
             {
-                SpawnMagicAndInstallation();
+                await SpawnMagicAndInstallationAsync();
             }
             else
             {
@@ -53,22 +59,18 @@ namespace MirageTest.Scripts
             baseStat.effectCooltime = diceInfo.effectCooltime;
             baseStat.range = diceInfo.range;
             baseStat.searchRange = diceInfo.searchRange;
+            
+            
+            EnableAI(client.IsPlayingAI);
+            RefreshHpUI();
         }
         
-        void SpawnMinionOrHero()
+
+        async UniTask SpawnMinionOrHeroAsync()
         {
             var client = Client as RWNetworkClient;
             PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
-            var minion = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
-            if (minion == null)
-            {
-                PoolManager.instance.AddPool(
-                    FileHelper.LoadPrefab(diceInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION), 1);
-                //Debug.LogFormat("{0} Pool Added 1", data.prefabName);
-                //포지션을 원점으로 주고 있지만, StartClient 이후에 포지션 미라지 네트워크아이덴티티의 포지션 동기화가 이루어져 서버상의 위치로 바뀐다. 
-                minion = PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
-            }
-
+            var minion = await PoolManager.instance.ActivateObject<Minion>(diceInfo.prefabName, Vector3.zero, transform);
             if (minion != null)
             {
                 baseStat = minion;
@@ -107,14 +109,15 @@ namespace MirageTest.Scripts
                 dicePos.z *= -1f;
             }
 
-            var lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
-            if (lr == null)
-            {
-                var pool = PoolManager.instance.data.listPool.Find(data => data.obj.name == "Effect_SpawnLine");
-                PoolManager.instance.AddPool(pool.obj, 1);
-                lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
-            }
-
+            var lrGo = PoolManager.instance.ActivateObject("Effect_SpawnLine", Vector3.zero);
+            var lr = lrGo.GetComponent<LineRenderer>();
+            // if (lr == null)
+            // {
+            //     var pool = PoolManager.instance.data.listPool.Find(data => data.obj.name == "Effect_SpawnLine");
+            //     PoolManager.instance.AddPool(pool.obj, 1);
+            //     lr = PoolManager.instance.ActivateObject<LineRenderer>("Effect_SpawnLine", Vector3.zero);
+            // }
+            
             if (lr != null)
             {
                 lr.SetPositions(new Vector3[2] {dicePos, minion.ts_HitPos.position});
@@ -122,18 +125,12 @@ namespace MirageTest.Scripts
                 lr.endColor = FileHelper.GetColor(diceInfo.color);
             }
         }
-        
-        void SpawnMagicAndInstallation()
+
+        async UniTask SpawnMagicAndInstallationAsync()
         {
-            var client = Client as RWNetworkClient;
+            isMovable = false;
             var magicSpawnPosition = GetMagicSpawnPosition(diceInfo.enableDice);
-            var magic = PoolManager.instance.ActivateObject<Magic>(diceInfo.prefabName, Vector3.zero, transform);
-            if (magic == null)
-            {
-                GameObject loadMagic = FileHelper.LoadPrefab(diceInfo.prefabName, Global.E_LOADTYPE.LOAD_MAGIC);
-                PoolManager.instance.AddPool(loadMagic, 1);
-                magic = PoolManager.instance.ActivateObject<Magic>(diceInfo.prefabName, magicSpawnPosition, transform);
-            }
+            var magic = await PoolManager.instance.ActivateObject<Magic>(diceInfo.prefabName, magicSpawnPosition, transform);
 
             if (magic != null)
             {
@@ -169,7 +166,7 @@ namespace MirageTest.Scripts
                 _logger.LogError($"리소스가 존재하지 않습니다. - {diceInfo.prefabName} - id:{dataId}");
             }
             
-            isMovable = false;
+            
         }
 
         public Vector3 GetMagicSpawnPosition(bool isEnableDice)

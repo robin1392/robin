@@ -1,5 +1,7 @@
+using Cysharp.Threading.Tasks;
 using ED;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace MirageTest.Scripts
 {
@@ -7,9 +9,13 @@ namespace MirageTest.Scripts
     {
         protected override void OnSpawnActor()
         {
-            //KZSee: 검토
-            var towerPrefab = Resources.Load<PlayerController>("Tower/Player");
-            var playerController = Instantiate(towerPrefab, transform);
+            Spawn().Forget();
+        }
+
+        async UniTask Spawn()
+        {
+            var go = await Addressables.InstantiateAsync("Player", transform);
+            var playerController = go.GetComponent<PlayerController>();
             baseStat = playerController;
             baseStat.ActorProxy = this;
             baseStat.id = NetId;
@@ -18,6 +24,10 @@ namespace MirageTest.Scripts
             playerController.SetColor(IsBottomCamp() ? E_MaterialType.BOTTOM : E_MaterialType.TOP, IsLocalPlayerAlly);
             baseStat.SetHealthBarColor();
             isMovable = false;
+            
+            var client = Client as RWNetworkClient;
+            EnableAI(client.IsPlayingAI);
+            RefreshHpUI();
         }
 
         protected override void OnApplyDamageOnServer()

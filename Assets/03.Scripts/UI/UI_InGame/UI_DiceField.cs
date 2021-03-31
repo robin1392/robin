@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,7 +41,7 @@ namespace ED
         {
             for (var i = 0; i < arrSlot.Length; i++)
             {
-                arrSlot[i].SetIcon(alpha);
+                arrSlot[i].SetIcon(alpha).Forget();
             }
         }
 

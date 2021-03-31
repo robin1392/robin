@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace ED
 {
@@ -19,10 +21,14 @@ namespace ED
 
         public RandomWarsResource.Data.TDataDiceInfo diceData;
 
-        public Sprite GetIcon()
+        public async UniTask<Sprite> GetIcon()
         {
-            //return data == null ? null : data.icon;
-            return diceData == null ? null : FileHelper.GetIcon(diceData.iconName);
+            if (diceData == null)
+            {
+                return null;
+            }
+
+            return await Addressables.LoadAssetAsync<Sprite>(diceData.iconName);
         }
 
         public void Reset()

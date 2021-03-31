@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using MirageTest.Scripts;
 using RandomWarsResource.Data;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 namespace ED
@@ -20,12 +22,12 @@ namespace ED
         private int level;
         private RandomWarsResource.Data.TDataDiceInfo pData;
         
-        public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level, int index)
+        public async UniTask Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level, int index)
         {
             this.index = index;
             this.pData = dataDice;
             this.level = level;
-            image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
+            image_Icon.sprite = await Addressables.LoadAssetAsync<Sprite>(dataDice.iconName);
             image_Icon.SetNativeSize();
             Refresh();
             

@@ -4,7 +4,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace ED
 {
@@ -109,6 +111,22 @@ namespace ED
             }
         }
 
+        public void AddPoolWithoutPrefab(string name, GameObject instance)
+        {
+            if (dic.ContainsKey(name) == false)
+            {
+                dic[name] = new Dictionary<string, Transform>();
+            }
+
+            instance.name = $"{name}[{dic[name].Count}]";
+            dic[name].Add(instance.name, instance.transform);
+            var pad = instance.GetComponent<PoolObjectAutoDeactivate>();
+            if(pad != null)
+            {
+                pad.poolName = name;
+            }
+        }
+
         /// <summary>
         /// 오브젝트 활성화
         /// </summary>
@@ -176,7 +194,7 @@ namespace ED
         /// <param name="position">활성화 후 위치</param>
         /// <param name="parent">활성화 후 부모 트랜스폼</param>
         /// <returns></returns>
-        public T ActivateObject<T>(string poolName, Vector3 position, Transform parent = null)
+        public async UniTask<T> ActivateObject<T>(string poolName, Vector3 position, Transform parent = null)
         {
             Transform t = null;
 
@@ -199,18 +217,32 @@ namespace ED
                             t.position = position;
                             t.gameObject.SetActive(true);
                         }
-
-                        return t.GetComponent<T>();
+                        
+                        return t.GetComponent<T>();;
                     }
                 }
-                
-                AddPool(data.listPool.Find(data => data.obj.name == poolName).obj, 1);
-                return ActivateObject<T>(poolName, position, parent);
+
+                var prefabInListPool = data.listPool.Find(data => data.obj.name == poolName);
+                if (prefabInListPool == null)
+                {
+                    var go = await Addressables.InstantiateAsync(poolName, transform);
+                    AddPoolWithoutPrefab(poolName, go);
+                    Debug.LogWarning(poolName + " pool is not created.");
+                    return go.GetComponent<T>();
+                }
+                else
+                {
+                    AddPool(prefabInListPool.obj, 1);
+                    var go = await Addressables.InstantiateAsync(poolName, position, Quaternion.identity, parent);
+                    return go.GetComponent<T>();
+                }
             }
             else
             {
+                var go = await Addressables.InstantiateAsync(poolName, parent);
+                AddPoolWithoutPrefab(poolName, go);
                 Debug.LogWarning(poolName + " pool is not created.");
-                return default;
+                return go.GetComponent<T>();
             }
 
             Debug.LogWarning(poolName + " pool is empty. And add pool.");

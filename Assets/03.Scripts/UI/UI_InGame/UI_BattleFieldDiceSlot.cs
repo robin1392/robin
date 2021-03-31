@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,11 +27,11 @@ namespace ED
             ui_DiceField = GetComponentInParent<UI_DiceField>();
         }
 
-        public void SetIcon(float alpha = 1f)
+        public async UniTask SetIcon(float alpha = 1f)
         {
             if (dice != null && dice.id >= 0)
             {
-                image_Icon.sprite = dice.GetIcon();
+                image_Icon.sprite = await dice.GetIcon();
                 image_Icon.SetNativeSize();
                 image_Icon.enabled = true;
                 var c = Color.white;

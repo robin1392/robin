@@ -91,6 +91,7 @@ public enum E_BulletType
     RACE_BULLET,
     PLANE_BULLET,
     BOSS5_BULLET,
+    WIND_BULLET,
 }
 
 public enum E_AniTrigger

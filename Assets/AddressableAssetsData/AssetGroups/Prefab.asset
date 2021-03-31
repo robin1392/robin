@@ -1,0 +1,2007 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Prefab
+  m_EditorClassIdentifier: 
+  m_GroupName: Prefab
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 36bae4c39833c46d59b9425fd7261e43
+  m_SerializeEntries:
+  - m_GUID: 002ec50b4fca7424dbc66697ef6cb83b
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0046d84093b1a452f8f656453332ff94
+    m_Address: Units/unit_fighterplane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 007e05ebde8f64b2a96c1f5ab77bc495
+    m_Address: Minion_Robot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0093c21256f0b4272a3851a81f67c957
+    m_Address: UI/UI_Shop/premiumgoods01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 01cd2d03c4ca04552aee489bf2b95cec
+    m_Address: UI/UI_lobby/sumon_epic
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 021165a7f50944efdaeb0d9ea4dd85ec
+    m_Address: Units/units_old/unit_sinzed
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 02d4efae96e874203ad5cfe39f375ad3
+    m_Address: Minion_Fireman
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 05d848b2db66e104ebd9aeb539efa37a
+    m_Address: UI/UI_Tutorial/UI_Tutorial_Canvas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 079e7de0bba914318834d03b2580feae
+    m_Address: Particles/particle_bomber_bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 07e7332af9a304fdfa2c09cb89207a20
+    m_Address: Units/units_new/unit_sinzed_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 08a354f4eada14c7bbe7445c492be60c
+    m_Address: Minion_Zergling
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 091a6054b99da471181e75cbfb834ed2
+    m_Address: Particles/particle_necromancer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0bd79b5bbf514489ca527765562ef956
+    m_Address: BattleField_Coop
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0bda04d34c8ac4aec9ec127fcd5ed781
+    m_Address: object/object_old/object_mine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0cbe4091e477e45a4adc3eadf50c0328
+    m_Address: Particles/Effect_Bomb
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0cbe6ce63894a48d8827b65c7d461f29
+    m_Address: Magic_PoisonFog
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0d0471a317026498da1a0ac97580df3f
+    m_Address: object/object_flagofwar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0d47b466550a84d058b8b3c6f20bd631
+    m_Address: UI/UI_lobby/UI_getdice
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0da29b73389d1445aaff721f5b466505
+    m_Address: Models
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0e095450ad2a3418c923a7fa4e264250
+    m_Address: object/core_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0ea023de6b3844087b74a1ab7b46579b
+    m_Address: UI/UI_lobby/UI_upgrade_green
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0ee7dba62ff7ebf4d9c5191ea9719ce5
+    m_Address: Guardian3_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0f376ac7d705a412da6e1dd00fb5f14f
+    m_Address: UI/Button_Main_Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0ff75ed7e7f894c289851f640b217873
+    m_Address: UI/UI_Shop/SubItem_Horizontal
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 101d90711ff9e48af9cd4eb45149a550
+    m_Address: Particles/Effect_Death
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 10de8a44dce2e4dbc86009b2f2429a42
+    m_Address: UI/UI_Shop/SubItem_Vertical
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 10e0899a117294a1a948fb5d20e70a32
+    m_Address: object/Astar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 10fd99e748096d14890874c71bf641db
+    m_Address: UI/UI_Tutorial_Arrow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 11f5a766a31714f76bff5deb83fc2187
+    m_Address: Particles/particle_dragon_summon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1208aada027994f499a0ad752caf3f6a
+    m_Address: Boss_04_Egg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 127896337789e468d99a1b4b07a001c1
+    m_Address: UI/UI_lobby/sumon_magic
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 13b11bd3eda164fc7a5f8a06587b15ac
+    m_Address: Minion_Zombie
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 140e8952d727d43e6bb922fd2f9e45df
+    m_Address: Units/guardian_sword
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 140f1ffeca50f41f5b40a0918a016f46
+    m_Address: Particles/particle_necromancer_hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 15258a876633c6144b0d696ab60cbd02
+    m_Address: Units/units_new/unit_bow_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1573f1e40902a4809ae7af2608c2f40d
+    m_Address: UI/UI_Popup/Match
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 15b7f0375913d44f0bf858c179740301
+    m_Address: UI/UI_Getted_Emotion
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 16972f0ca5f3b4208829859cc3864c63
+    m_Address: Units/unit_magician_skill_scarecrow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1741dd1727eed4be6b77676473a83847
+    m_Address: UI/UI_ingame/Image_SP_Frame
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 175fc6082f1294068814b8802c70d311
+    m_Address: UI/UI_Shop/eventshopgoods03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1967a342868941c4bbd5056ae0459586
+    m_Address: Guardian_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 19b579006f0db4e5ba5320e0ffdd171e
+    m_Address: UI/UI_lobby/Button_Close
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1a7aed7d6e9a342469cf8bc1326143b5
+    m_Address: Particles/particle_dragon_baby
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1c1432c60da8140acb3c5cbfc6486af2
+    m_Address: UI/UI_lobby/Image_Pattern_Mask
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1dd9ef4b26cb44f4cb1b20569171c400
+    m_Address: object/magic_ice
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1edc218f2724d433a9ae9d108e1873f9
+    m_Address: Particles/Effect_Support
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1eec9a2cfffa84becb696470dfef5ece
+    m_Address: object/object_old/object_turret
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1f1b2c1521fff443ba731ed7af39ff68
+    m_Address: Minion_BabyDragon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 20956dca586384d07af2f57395a6d005
+    m_Address: Particles/particle_overcharging
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 220770872ddce437f80d7abf072ee952
+    m_Address: UI/UI_Shop/packageshopgoods03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 225085627458743ea9b0ffb671b185b6
+    m_Address: Wind_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 4058551278812737087, guid: 225085627458743ea9b0ffb671b185b6,
+      type: 3}
+    m_TargetAsset: {fileID: 4058551278812737087, guid: 225085627458743ea9b0ffb671b185b6,
+      type: 3}
+  - m_GUID: 240bd35bc8090453a8b326f6905514b5
+    m_Address: object/object_rocket
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 25293f130f2ce9e40b685dbf0abe1473
+    m_Address: Units/units_new/unit_sword_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2a085a4fd526e3e40bc060f213109f4b
+    m_Address: Guardian_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2dfd74e7850804002aa7923dd5390440
+    m_Address: Particles/Effect_Robot_Summon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2e50f1b0c9a044d04af09b4d0698b9b9
+    m_Address: Magic_Rocket
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2f445a84ae3404c23a3f11ad6e1feeae
+    m_Address: Minion_Shielder
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2f8a194cb1d654891ba44c40f3211037
+    m_Address: Particles/particle_ice
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 31c84ef31376c4788817abb86c8b9d07
+    m_Address: Minion_Knight
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 31de287e635204f6a9c67e714e7a1274
+    m_Address: Particles/Effect_Saint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3256ab7ff4a554bf49fb0dcee0202a84
+    m_Address: Particles/Effect_Heal
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 334a09560a6f444d8939e1596781d340
+    m_Address: Particles/particle_ice_explosion
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 337f830c4e63c499ab0df3f6f6ab1cc6
+    m_Address: Magic_StoneBall
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3516f77b530c34e17869a401784c05b5
+    m_Address: Units/unit_robot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 365cd432ac11f4e60819d31a4772a8ef
+    m_Address: object/object_turret
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 36957eb648b901f498b3eb16ec6bede6
+    m_Address: Particles/particle_boss_5_hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 371cbc3125bd24bc49fceb2893f6da6c
+    m_Address: boss/Coop_Boss_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3721d9e1619f54b70a092babea08954e
+    m_Address: object/object_lightningrod
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 377711caba91141d994d96b42161e896
+    m_Address: Minion_Fire
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 37f3fccd4bcb443cab56bc6e6511cf3a
+    m_Address: UI/Diamond
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 387bdfbb8677b40dd9742d80b0066b13
+    m_Address: Particles/particle_beam_end
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 39675be7c42ce48c6924053d86856706
+    m_Address: object/coop_core
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3a1a11bb5aa8245d19d408c8ac900386
+    m_Address: object/object_stoneball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3a66dec7539cc4b0db19ba7b067a22a2
+    m_Address: UI/Image_Box_Result_Dice_Icon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3b07060399a514e2684ab3db36b3337b
+    m_Address: Particles/particle_flag
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3b0f68036ef14417b83a44cf87b6789a
+    m_Address: Units/unit_fireman
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3b66288860469481fbeb497f8cb3ee6f
+    m_Address: Scarecrow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3cb40e356812e4aaa8ffb760c74e57fc
+    m_Address: UI/UI_ingame/Ingame_Message
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3e2491a40bfc340aeb438bd8d4b5f745
+    m_Address: Minion_Ninja
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3e34987de61194a3b820c4526cbfa3b9
+    m_Address: Units/unit_sinzed
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3e9d03d9462f74cb79298cf533d67be5
+    m_Address: Particles/particle_shield
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3ed046ccf2786499c94e34e3efcc1864
+    m_Address: Units/units_old/unit_rush
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 40cbb653c14504cf48ea1afcb3b5d119
+    m_Address: UI/UI_lobby/UI_noti
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 40f9956fb52ec4f839aedfa299c1a091
+    m_Address: Units/unit_zombie
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 419f468fd10ac44ffae26fcd1ac939e6
+    m_Address: UI/UI_lobby/Button_Emotion_Deck
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4231e47ffb47d4ce385b64ea1a3cc733
+    m_Address: object/object_old/object_flagofwar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 428b09445b1284706acfa136818edb71
+    m_Address: Units/unit_skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 43bd5e5c1d1674796a796f46791fad1c
+    m_Address: Units/unit_necromancer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4403da926625e41e0aaff65796f87d40
+    m_Address: Posu_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 440caca90feb54a7187eeda8f6bff90e
+    m_Address: UI/UI_HPBar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 44f155666560f4176b25fa27b89c95ea
+    m_Address: Effect_SpawnLine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 470ed00c1473144a787aecb801ad8ec5
+    m_Address: Minion_Saint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 47c1a4bbc78bb4508ab4464c5a961853
+    m_Address: UI/UI_ingame/UI_result_perfect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 485d811fa31b54aa398449358ff1389a
+    m_Address: UI/UI_Rank_Reward_Slot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 48698d9ecd2904f2babd2ce2bfe3c332
+    m_Address: Minion_Sinzed
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 48794cafed9074fe181733204bcde09d
+    m_Address: UI/UI_Getted_Dice
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4963a33cbe1de419aa2d3436e9ce2a90
+    m_Address: Minion_Necromancer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4a3d6c774390941f9881b878d508afbc
+    m_Address: Units/unit_fire
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4ab646901316c4ce6bd0ad3acff78abc
+    m_Address: UI/UI_lobby/UI_setting/Button_Setting
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4b8557800e160384bb14778578a1dceb
+    m_Address: Boss_05
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4bf29046f8c6d491b8fcd3c8b2e3cf13
+    m_Address: Particles/particle_core_death
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4c365b0d8080c49088423e16e2df622e
+    m_Address: UI/UI_Shop/eventshopgoods01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4d9c6ce4b2bfb429e8c03c13df77b78e
+    m_Address: Particles/particle_arbiter_hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4f7f71717d26147ac8ff98d21d6ff401
+    m_Address: Minion_Magician
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 507e8b9da813a4affb935655dfcdf109
+    m_Address: Minion_Support
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 514c5d70ce3624d9f874bcbd14867ca0
+    m_Address: object/object_invincibility
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 51e29289e99c540259c30cebd2609e18
+    m_Address: Units/units_old/unit_gunner
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 528cccc526f964ed58a406dc034c31d3
+    m_Address: object/object_fireball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 52a4634a1e3bb4de7a918ec55f7651b8
+    m_Address: UI/UI_Box_Slot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 55f367a9602f2447a9ebb777b1340a83
+    m_Address: CannonBall
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 56b92bc06864f44a2afdfad1f2c36da1
+    m_Address: Minion_Race
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 578b7c80236ca4131b4cf4cb277cfda7
+    m_Address: Units/units_old/unit_race
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 57902bf35ca3b48b0b52e6298a9b93df
+    m_Address: Units/unit_sword
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5820d654af7d84e85894396f6e64712d
+    m_Address: Spear
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 58a4a590607854fda9b7098b130c9c79
+    m_Address: BattleField
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5a588058619e145ad8873c3b9e42f056
+    m_Address: Particles/particle_mine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5aa248c88c6344c22a9ab9c9cb9cad79
+    m_Address: UI/Canvas_Main
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5addc9e2a373b4a6a8d5f378dffe5d98
+    m_Address: object/skill_shield
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5b18fc5eb8bdc4448a9b7c1dafa14672
+    m_Address: Particles/particle_firewave
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5b2f5a3ed55744289a156c0e4a308b42
+    m_Address: Arrow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5b3b0089545624a48bd5daa3a5f86eff
+    m_Address: UI/UI_ingame/UI_result_coop
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5b4b530c3c48d4e719bf986fc912f631
+    m_Address: UI/UI_lobby/UI_shop/UI_box
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5c730da3d68bc460e9107ef67d5893eb
+    m_Address: UI/UI_lobby/illust_nomal_BG
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5d26ba9c6e87e4f369c2f78182ee3832
+    m_Address: Cameras
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5db9c642c15084f438222fe39f3b60aa
+    m_Address: Units/unit_guardian
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5dce95016ef6a4ea7a9cb7b789342933
+    m_Address: Particles/particle_arbiter_attack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5eb90dc1ca4b4455d80bc7a90460e7f7
+    m_Address: Minion_Skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5ee7558db0f494e3aa46aa0c26728c79
+    m_Address: UI/UI_Shop/packageshopgoods01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5f0d1d7804377425eaa1ad655f66c9b2
+    m_Address: Bottom player position
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5f437edf249134184b42b3760e390ae1
+    m_Address: Particles/particle_core_shield_off
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5fa40ba4bbd695c438dacd762c75568f
+    m_Address: UI/Button_VIP
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5fd51dd3b69774b26b1c96f318a8143d
+    m_Address: UI/UI_Shop/UI_Shop_OneDay_Button
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 60d66c5a845484f16ac1472b7c5291a6
+    m_Address: Units/units_new/unit_plane_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 612346b950ff54f1c9284be8340bb0fb
+    m_Address: Magic_Mortar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 62991292828f9410bb13bdf56ca7c2c9
+    m_Address: Units/units_old/unit_healer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 62ad33c6d76f5ae4e9395efbb76177d8
+    m_Address: Boss_04
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 62cb3397e1f3f48d5a7398ac6cb071a4
+    m_Address: Minion_Sniper
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 62f4f3e1200e64b22a64ed355d8e4371
+    m_Address: UI/Text_Message
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 64e2f0e52f4a645f2b2837ba665a003e
+    m_Address: Units/unit_shielder
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 65435e041e4ed4172b104a2f56f00e25
+    m_Address: Minion_Posu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 66034058991af544587175976c8e7490
+    m_Address: Vallista_Spear
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 660e4e8631b0745a5905a5051460f11e
+    m_Address: Particles/Effect_Dust
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 669cf2a872bbf496bb81328fc05ea7c2
+    m_Address: Units/unit_dragon_baby
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6724839cb14fa4fc2acb17713063e9c1
+    m_Address: Minion_Shield
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 68a47b912f62a49eca2c989569295432
+    m_Address: UI/UI_ingame/UI_Coop_Reward_Slot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 68bf0758d89cd4b9ea5e90f4309aa2f2
+    m_Address: Particles/particle_wizard_skill_book
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6921a49996ac641c6810bd40b2fb6d4f
+    m_Address: Particles/Effect_Stone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6a12669d7f1e347339b7c1e3e37ac9c2
+    m_Address: UI/UI_UserName
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6a998d57e18f84fe49e21ebba33e7eaa
+    m_Address: UI/UI_Main_Canvas Popup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6c72971523f734f4fb9421f9fe11742e
+    m_Address: Particles/particle_bomber_explosion
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6d05a387adefa49278d27f8b44755b7c
+    m_Address: UI/UI_Button_Reward
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6d323c74cf5e845888a6c49e060056c4
+    m_Address: UI/Button_Dice_Tab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6d44625e0ed534fe58de6c86981f7477
+    m_Address: Units/unit_zergling
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 70fc0aa7ff401423285fa5877ebe7107
+    m_Address: Particles/particle_map_fire
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7100059eecaaf4826af0532619e6673f
+    m_Address: Particles/particle_berserker
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 719fcd3c3fd704b3a871c91feefc2825
+    m_Address: UI/Button_DicePage_Deck
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 71c742ec616de481a97161c73dc5ca00
+    m_Address: UI/UI_Dice_Info
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 72a1339157a58420b9f37a622917d242
+    m_Address: Particles/particle_poison
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 750b5d29463e34e2eae08fd101b99528
+    m_Address: Minion_Bomber
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 75a5c063c10764a2a869508a87b8f6d4
+    m_Address: UI/UI_Shop/packageshopgoods04
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 75b42e874a7c24a20aff0e60c50e9558
+    m_Address: Magician_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7601f87af4f384aaf96f52798960d03e
+    m_Address: Minion_Electric
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 77b38f3f9ba2143dfbb39b55c03c66ab
+    m_Address: object/object_roket
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 789557666ddcb41f6b04a1c0a38a2aa1
+    m_Address: Particles/particle_fireman
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7991fe83e60db41e68c2170ff4a7dfe1
+    m_Address: Units/unit_support
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7a3768408ec1f43148269847194d010d
+    m_Address: Minion_Healer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7a6c5d31701164a639685113f372dba1
+    m_Address: UI/UI_lobby/Info_Frame
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7b5a53139eb5a40d18b9cdba17ddc40c
+    m_Address: Particles/Effect_ShotHit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7caa53e576af04ff38e0df064bd7aac7
+    m_Address: Babydragon_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7dcf1c1f30cb34c6d92b91fb191260c7
+    m_Address: UI/Canvas_Tower_HealthBar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7ee9c4aa6b6074c1886c672b8935581b
+    m_Address: Lights
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7efa3a1cfcca24fd0b0539aa0fcb3bd3
+    m_Address: Units/unit_robot_parts4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7f0293396fffc4ff9afda79a037f9dce
+    m_Address: Units/unit_laser
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7f14af6e58c34491a8d27968340d5629
+    m_Address: Particles/particle_wizard_skill_scarecrow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7f7c1c4f0cef20949abbd51a32b706f8
+    m_Address: Units/units_new/unit_skeleton_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8045dc04cbfd4794fb6bdc270cb45ea2
+    m_Address: Particles/particle_guardian_wizard_hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 819f64f760ce84b57bff01cd70ead97d
+    m_Address: UI/UI_Rank_Slot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 81c5f0038f2914eabbbcac37316143b9
+    m_Address: Particles/Effect_Cloaking
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 81fc164d7bf824d289bd7a7c3bd17aa0
+    m_Address: boss/Coop_Boss_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8287d0947f69d4764a23ac3c352904c9
+    m_Address: Magic_Supply
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 82c538fb4e5c64ca4a3ba99b1ba0bf93
+    m_Address: UI/Button_Battle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 847598912a0f0456cbae51ef0f7afe02
+    m_Address: Units/unit_bow_arrow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 84823fb686e10443dbef09318ec6becd
+    m_Address: Top player position
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 84cb7a7eccc614db4a7b542759e8184c
+    m_Address: Units/unit_plane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 86d46e2e66ac24368aa87adc3e14df7f
+    m_Address: object/object_mortar_bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 876930d4694ef411ba24e8e05b8fb7ee
+    m_Address: Magic_Iceball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 878413f681f3941baab6b9a0538d6a8f
+    m_Address: Particles/Effect_FireBombEffect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 87ba626cb25d1a8439130194d4556f8f
+    m_Address: Units/guardian_wizard
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 896ea5723ce5243788b45918fbb22fca
+    m_Address: UI/UI_lobby/Info_Trophy_Slider_Split
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 89bf7ff7307bf4bc59a84d8cafabd928
+    m_Address: object/map_coop_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 89ef9887e327543ef84acbd7af4aef31
+    m_Address: Minion_Raider
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8a349d18b1fa24c168b317ffbaf18748
+    m_Address: Boss_01_Egg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8a947469bf1f041cdb93011a0756f133
+    m_Address: Particles/particle_main
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8f00497e8e67e4693bbcc813239998dd
+    m_Address: Units/unit_saint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8f479d7ad842e4ac18f6ae903ef95fcb
+    m_Address: Units/units_old/unit_necromancer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 904bf75d9b07e41d29dae195e902d0dd
+    m_Address: object/core
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 90e289cdcd3b3438e9e4b77fd1771d7f
+    m_Address: Units/units_new/unit_ninja_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 91c88e103cdc64aa5bf7c9c972c7c0cf
+    m_Address: Boss_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 92357f2f4e2ab454da1d74150ef140d4
+    m_Address: Minion_AdultDragon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 92cdd3a59a1422848a7dc18eea572d2f
+    m_Address: boss/Coop_Boss_5
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 94c073845c7dd474a92cf5a2b07597d3
+    m_Address: UI/UI_Main_Canvas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 95512a30e020ef3419b040f6569d1503
+    m_Address: Magic_Mine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 96b4a140ae6bc384ca243f89e4d15963
+    m_Address: Particles/particle_boss_5_skill_hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 97df4dde0181a44c39b230aa7073061f
+    m_Address: Units/units_old/unit_ninja
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 997a3b2fd1e664e66b2739f87578e376
+    m_Address: Units/unit_raider
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9a5189e5086334d2d81072bfc0aa4f0e
+    m_Address: UI/Canvas_Unit_HealthBar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9b6de0ffd32fb45488f1f915bbd4154f
+    m_Address: Walls
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9c97f28897eba43e285d06df261a7912
+    m_Address: Particles/Effect_Lightning
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9d0b9ace6ba4c4164b1ff7d70e014e02
+    m_Address: Guardian_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9d76eafe1ee7248038be38bcb9460531
+    m_Address: Boss_02_Egg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9e88cd798d8da410298ecd27740aff4a
+    m_Address: Units/unit_dragon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a0adbb14d833f44b0a667f804475c5ae
+    m_Address: UI/UI_Shop/UI_Shop_Big_Button
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a14745bd4da0f4940b2f8f7fdc0f7b80
+    m_Address: Particles/particle_shot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a1da4a72325c34012a005155807781b4
+    m_Address: Units/units_old/unit_bow_old
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a2be662b7085b4c4b92374f15ca86cc4
+    m_Address: Minion_Ranger
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a32f51c8a806d42399dcca79fab0ebe7
+    m_Address: Turret_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a3c4681d181b94cacaa497f3d2d10c1a
+    m_Address: Units/unit_berserker
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a48880712c6845245a19ef1655c33216
+    m_Address: UI/RewardItem_Slot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a489b8496434e4f63abbeba59c5773b9
+    m_Address: Units/unit_zombie_dead
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a4a9a762e8fda8543b46253aa77959f1
+    m_Address: Particles/particle_guardian_wizard_attack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a674010536fcd4096839a5eaaddd850f
+    m_Address: UI/Image_Deck_Main
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a674b1c4646c443fa9adb22808d45a39
+    m_Address: object/core_main
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a6db5fea9637448d2b9c58a12d37c8cc
+    m_Address: Units/unit_bow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a7b795ec78b3b4df688a07fa8e27c7a9
+    m_Address: Battle_AI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a932c97d360844633a4853d8d30bd421
+    m_Address: Particles/particle_shield_suommon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a99920ffd166845d99d6061d7e16336c
+    m_Address: Minion_FighterPlane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: aa9704e194991244a9ea88056b50012e
+    m_Address: boss/Coop_Boss_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ab3b5f28b42a14a0c89031f698035924
+    m_Address: Particles/Effect_Dash
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ab81760e00fbd449999acd55f6ec2f0c
+    m_Address: object/lobby/main_lobby_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: acbd2836750c1469a967f97c1948994a
+    m_Address: UI/UI_lobby/Button_Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: acc65491d064a4539bb8fb32fc640e5e
+    m_Address: UI/UI_Dice_LevelUp_Result_Slot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ae34b4c157e9844129dd179fe891ea2c
+    m_Address: Arbiter_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: af54dc8b975ac49678e67b4f03f8fc70
+    m_Address: UI/UI_ingame/UI_result_win
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: afdc2f9623e274dfbb7dad6f1505a591
+    m_Address: Units/units_old/unit_skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b09f33d30bf4740198c95eee180922cb
+    m_Address: Particles/particle_lightning_attack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b5ec325a48e5d4a88a84a88a222dd56a
+    m_Address: Particles/particle_support
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b9914ccebd583f5498125e478cf1d379
+    m_Address: UI/UI_RewardSlot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ba3aa20b8a7e64ad981caaa6b6aa9365
+    m_Address: Player_Empty
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ba9dfaf8075e5437e8c4012162cda31c
+    m_Address: object/object_iceball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bb147ca469351454f813c44915284f74
+    m_Address: Magic_Invincibility
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bc7366d610c604155a587ee14d3458b0
+    m_Address: UI/UI_Quest_Slot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bcb3c0dc3e4b8466aa981d2cb6363f20
+    m_Address: Magic_LightningRod
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: beb01a535b0d94b5aa6838e018cd34d1
+    m_Address: object/map_battle_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bf8b7c5791de64776a5bba6209e0c6f6
+    m_Address: object/object_mine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bff63328ee9f54870bf0da1b7c6fd977
+    m_Address: Necromancer_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c075702325aa9d942b1079bef967daaa
+    m_Address: Boss_05_Egg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c0d8d3bf7121b44508be80cde2cc8186
+    m_Address: Coop_AI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c0f08441932954f89b6d5a761c3d7790
+    m_Address: Minion_ZombieRevived
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c281f5911e2a54de8a9e3a667e36a364
+    m_Address: UI/Canvas_Popup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c35c059e4efc14660b8bd70f95581971
+    m_Address: UI/UI_ingame/Value
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c399ca646b8e64a28bcef607de199642
+    m_Address: Units/unit_plane_spear
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c3e15a846bc9c43028960c1ceca38c37
+    m_Address: Units/unit_wind
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c46e898c60e20450e8540e9f561e1600
+    m_Address: Units/unit_healer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c48a32a38e6424aae9f8449dafd3772e
+    m_Address: Units/unit_arbiter
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c4be5e47d6cde43ad9503c1018030c08
+    m_Address: Magic_RageOfTower
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c56ab28334e1a419ea7e40b8e3256e1b
+    m_Address: UI/UI_Shop/packageshopgoods02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c59f6495ebf684e6190ec3b2e3bb28b7
+    m_Address: UI/UI_TrophyRewardListSlot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c6620e53b64a74ea094680d0c13adb8d
+    m_Address: boss/Coop_Boss_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c812ffec346e944fab13a3e3a0e54be0
+    m_Address: Boss_05_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c846ae2b4c82c48eb8c458b402bd9df8
+    m_Address: Units/unit_race
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c858101360ef54645a07f4a2192165b6
+    m_Address: Minion_Plane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c9efdefdc0ec44fa88dd2a66dc7cc056
+    m_Address: Particles/particle_beam_start
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ca02d1b51aeaa4c2183d0ee11a145cc1
+    m_Address: Minion_Goliath
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: caca4819ba14d4a678a6b30a838b2d61
+    m_Address: Particles/particle_heal_area
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cb6f6046f7a3e4b01bfeab35cc657f6a
+    m_Address: Particles/particle_beam
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cbce2755a196f47d08341d43b8bc81e4
+    m_Address: Units/unit_ninja
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ce146ffe4b4cb42b5a76691746158ad2
+    m_Address: Particles/Effect_Sturn
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ce56b8240e4aa411a9cdd16563a0766a
+    m_Address: UI/UI_ingame/Win_Lose
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ce6335d208492d843b0f7b30c1d630e8
+    m_Address: Magic_Fireball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cec9365f899844f968c9e47d0e171aab
+    m_Address: Minion_Rush
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cf4cd387476b041ecac60a93ac4533f4
+    m_Address: UI/UI_lobby/sumon_legend
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cf7cf9fca3dd64c9682ffc8275e49376
+    m_Address: Minion_Layzer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cfc7b7a3d377e4de3932abceb967e4f1
+    m_Address: object/Magic_stone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d0567e1dcb93a44e7bd79f5a2025aef8
+    m_Address: Minion_FusionRobot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d0dae7c161c184b4ca105935b2df3f0f
+    m_Address: Units/unit_shield
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d19a238d729c74d0582c76cf6d0fef24
+    m_Address: UI/UI_lobby/CurrentDeckInfo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d51874f7a3b1c4e8b9d823413af36897
+    m_Address: Units/unit_rush
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d55cf9aeadf314f498a30e131cdccd3c
+    m_Address: Shield
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d61f10289273a4967908abe9072769d8
+    m_Address: UI/UI_lobby/sumon_nomal
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d7125d645e8a6404caba339c8da21547
+    m_Address: Particles/particle_fire_spell
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d7749324233014c499829223ef76f9d0
+    m_Address: Particles/particle_necromancer_attack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d819789c2930c40c6bafdd474c41c730
+    m_Address: Units/unit_golem
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d90d34a69fa124c009a7169a7b13b34c
+    m_Address: Particles/particle_beam_red
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d92ac969513e84ca5afa49f5c00f0055
+    m_Address: Particles/Effect_ArrowHit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d9eae8feffb2c47c4ab335e50008e9f1
+    m_Address: UI/UI_Shop/Tap
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: da03f0dd8b1314e3aa9db31bc91a7532
+    m_Address: UI/UI_lobby/MessageFrame
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: da2dfa21f77bd480384bb7756a69f2c2
+    m_Address: Units/unit_gunner
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: db12faa716b9d41c88d3ee1a2496783c
+    m_Address: Race_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: db7c0aa6f7dbd4b039c80883dc2e20cc
+    m_Address: UI/UI_BattleFieldDiceSlot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: dc4ce9f05a62c4db293ec593f93011c3
+    m_Address: Units/unit_golem_baby
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: dca45631bd4c14b9191f44e7b9426b91
+    m_Address: Minion_MiniGolem
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: de09a040b24ac4e4ab6c466c2e32f0ee
+    m_Address: Particles/particle_boss_5_skill_attack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: deb29bcb1127948c1a17ab820aa252ad
+    m_Address: Minion_Golem
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: dfe0545ca30a24ac88fb85e7f35c15e9
+    m_Address: Particles/particle_wizard_hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e06d2e2f74b7946838bce610e60e238d
+    m_Address: Magic_Turret
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e1c37642e59454427834615c0f4ff311
+    m_Address: UI/UI_ingame/UI_result_coop_clear
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e2a9fc14140a849e2802b11eb57cc7b9
+    m_Address: Units/unit_robot_parts1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e2e4720eaf94a4cd182d7381272cf31e
+    m_Address: Units/unit_robot_parts2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e381f5a07f0995f4eaa0951a174b5a23
+    m_Address: UI/UI_ingame/UI_Game_start
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e39de8b763a14460a80e232fee9123d2
+    m_Address: Boss_03_Egg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e4925e0872f002747ac858d1a8d9afb2
+    m_Address: Units/guardian_viking
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e5445a73555494027a7c2424d82f23db
+    m_Address: object/object_mortar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e62b5c1f9b58f43f986c4659ae4f06df
+    m_Address: Units/units_old/unit_plane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e75e3f3345b264f43912a13d71fc5807
+    m_Address: Particles/particle_boss_1_skill
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e84d037110abb4bb7a429c6b885fb8f9
+    m_Address: Particles/particle_wizard_attack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e874932dc304f486eaa3676fc580e477
+    m_Address: object/object_old/object_mortar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: eaa3cc6d79d0641b9a8e6588d1c3b123
+    m_Address: Minion_Arbiter
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: eb04d87cbbbf4465e9780cab6f43f03a
+    m_Address: Units/unit_sniper
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: eb3a10df0b30a10489f783378501f3e8
+    m_Address: Boss_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ebe6fbda4c2c34782a8c1df17b0a9e84
+    m_Address: Magic_FlagOfWar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ee9d5f0ebc3a74014a4c7f81d91963c6
+    m_Address: Units/unit_magician
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: eecddeec5982244e2bb2645709fd7db4
+    m_Address: UI/UI_Shop/eventshopgoods02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: eeee8b29ac5dd47548de4193442ed4b3
+    m_Address: Minion_Wind
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f1dcd9eef8f3d4e3db849ea63c012ba5
+    m_Address: Minion_Berserker
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f2b587bbda6947b4abb67a7e1c2c39b3
+    m_Address: Boss_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f4245c9bf8e524348a835c29769a5440
+    m_Address: Bomber_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f42dc08dfb56a4f8e97694ce963e52eb
+    m_Address: UI/MailSlot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f4aa258bd7305de469b12a8691d38aec
+    m_Address: Units/units_new/unit_healer_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f53e0686cade64270ab2bbacabb19989
+    m_Address: Units/unit_robot_parts3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f5dcf249db17c4cf8a1da55e8aededdd
+    m_Address: Units/unit_bomber
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f6677fad5f6557a46aa81a70dbede624
+    m_Address: Units/units_old/guardian_sword
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f89eaef123ac044538c48c15edab056c
+    m_Address: UI/UI_UpgradeButton
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f8fa5c77fc64f46f1bcb71485986d185
+    m_Address: Particles/particle_ruch
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fa9ee39eb01fd4117a76c329c017298b
+    m_Address: UI/UI_ingame/UI_result_lose
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fb2147c6938bc4c23af4b93d5d2e8ea2
+    m_Address: Plane_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fe11b9bb142ba4e9c8fbe7f9b0efb00b
+    m_Address: Particles/particle_fire_explosion
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fe5e34d697e2a428385027337ede42f1
+    m_Address: UI/UI_lobby/illust_legend_BG
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ff27fe720e531497abc96d1fd04db6dd
+    m_Address: UI/UI_ingame/UI_suddendeath
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ff9dad47555dcca4e885df88394d1804
+    m_Address: UI/UI_Tutorial/Scene_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ffb2df0135b9c49c5acd7a5e2445c20a
+    m_Address: Units/unit_goliath
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8eab292fe8e454940b4d90efe697301b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9be2bce0303fb4ae18abba064d1c3f91, type: 2}
+    - {fileID: 11400000, guid: a72ae296a3bdf46b3b793bc6df033190, type: 2}

@@ -1,0 +1,817 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Png
+  m_EditorClassIdentifier: 
+  m_GroupName: Png
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 71927ddb36c57400ebe2175b4cc1955e
+  m_SerializeEntries:
+  - m_GUID: 0087b5ea4c5ae4733a70b8431cef4688
+    m_Address: icon_goldbox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 02953b5f6b9c34e1e9ce2dc116661cdf
+    m_Address: diashopgoods03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 05634187a27d2471ca7171d2521e9285
+    m_Address: diashopgoods04
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0b08253913e814abc91d47324c48d350
+    m_Address: icon_emotion_04
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0e98632c03c6a4eff8ae0626fb91d4f1
+    m_Address: icon_dice_1001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1079ac80240284109ac9213feab5e994
+    m_Address: icon_emotion_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 130d26c2454364977815fe7302ecd52b
+    m_Address: icon_dice_2001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 135d6f3fc71c64487aa0cf87698bb663
+    m_Address: icon_normalbox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 139d1f6f94657429fb55f4437004b912
+    m_Address: card_1004
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 14ad1344feb53499a95125809bfdbdb7
+    m_Address: dice_pip
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1687c6a9d962c4c7baa6301bb7969ed4
+    m_Address: illust_3007
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 16acf0d0734f843d08d41f5779820c54
+    m_Address: illust_1004
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1edd9527eba07416ba503291e7322a65
+    m_Address: icon_emotion_05
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 22aff6d3a480349f08875e719152727b
+    m_Address: illust_5003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 237f1a81e08164d129f6e509ae6c124d
+    m_Address: card_1005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 23cfb7948c55a4776a50046ec53859e9
+    m_Address: icon_bronzebox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 25badfc44d76548a29687b4a17067c24
+    m_Address: icon_silverbox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2bd996a5d70d7464bbc958b7819cb2f0
+    m_Address: illust_4001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2d7673da80d78487992a6cbee1cea89f
+    m_Address: icon_boss02box
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2efe5d1191c1b41408f85119ac73724e
+    m_Address: icon_dice_3005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 304edd7a5bbc44ed5a3248b0dfe7865e
+    m_Address: illust_4006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3055d6e1f034c4458b785153072e7e30
+    m_Address: diashopgoods01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 31b15af7b3aa245388c0ce05cfdceb25
+    m_Address: icon_dice_3010
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3329ee22f74f546c9a9868155aab5e77
+    m_Address: icon_emotion_10
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 33d313f37442305498013d6c2fac66c1
+    m_Address: dice_star
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 33f2244ab7970462bac0b42b3d951db8
+    m_Address: icon_dice_4003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3657489a33003446eae05a76b60d7288
+    m_Address: illust_3003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 389097a5b4b7d4e6486a838d4f2bbe7d
+    m_Address: dice_empty
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 38fa5895868a3480da21696f6498b286
+    m_Address: illust_2004
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3d5eb0fd683eb40169201ab976f55c1e
+    m_Address: illust_1001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 3fa8c3efd02f64c438d9b5613022b7fe
+    m_Address: icon_dice_3006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 400440a87533e4713a2216c5147e5ff2
+    m_Address: goldshopgoods01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 444262c924405415ab4c87d070742004
+    m_Address: icon_gold
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 472d68e2b710b4655bc5a2463f4f924f
+    m_Address: icon_dice_3011
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 483b4e4f881d249b79ea3ae72b7afe2f
+    m_Address: icon_dice_1005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 49613102f05fb451895202a8ed3c0e6d
+    m_Address: illust_4008
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4c1d082bd02814b6990d1e604b910c00
+    m_Address: illust_3011
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4e9cc670dbd044adf8f6bd423d3648e0
+    m_Address: goldshopgoods03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5161c66e78f70416fa80a03bb5bb5519
+    m_Address: illust_3001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 52901ad026b5f421cb667cd64306e013
+    m_Address: illust_2009
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 55ce98d4587124cb3b90c0c0e1b67c8c
+    m_Address: illust_4000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 57561b0487c4243bdbaa46c917826d58
+    m_Address: diashopgoods02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5987dcb48636940a780eb2c5071db7a8
+    m_Address: goldshopgoods02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5b8a2c989958146e88e27745e04bc8ca
+    m_Address: icon_dice_3008
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5c2c36338d0c14ea19c4f9a3e4c4de37
+    m_Address: illust_4002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5e677a96f0eda42f88017e7e22643371
+    m_Address: card_1003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 60719c7725f344b3ea6c5b68cb5b1bb1
+    m_Address: icon_supportbox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 615375d19b9d3471cab1c80918021f36
+    m_Address: icon_dice_2006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 61db896550039494787cb7ff34e05239
+    m_Address: icon_platinumbox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 63cfaca3a1ab74a84ab8eb72f7848801
+    m_Address: icon_dice_3001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 65c7d91100562435fbc7a130f3a5f3f7
+    m_Address: icon_emotion_08
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6ccf2ab513d31446faa1c4c3303c4d93
+    m_Address: illust_3002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6cf9aac8a9562463f8339e24bd9000dc
+    m_Address: icon_dice_5002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6d589fa442bb44eba825d221b76798cc
+    m_Address: illust_3010
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6e272cb6e305c4582b9a84d4e59fc968
+    m_Address: icon_dice_2000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6edc34096822b4d04be748e41f53c35c
+    m_Address: icon_ios
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 702e085250e0e449da7d343fefec08ab
+    m_Address: illust_2007
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 71ddc840662444d3e8f7287ae40c2dba
+    m_Address: illust_4005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 721025c34d280499ab6ff2717cf71989
+    m_Address: icon_dice_1002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 73198ac96da1c40d788d4c72b9f0f570
+    m_Address: icon_dice_4008
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 74aa7da23a7fc4bef8c391d580c1f702
+    m_Address: illust_3004
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 76c1ad4566bb94aaaa4f60eb8646e4ca
+    m_Address: illust_4007
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 79206212100b041d0bbb67d522d8d0f7
+    m_Address: illust_5001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7cf0c43465b8540da9e16fd71248fd75
+    m_Address: icon_dice_4006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7f5dc80aca9494bdb9b0267cc7d560a7
+    m_Address: card_1001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 81c04cfc5b404407cbc81c23398f1bfd
+    m_Address: icon_dice_2005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 866d0c53729c04d51a99c57314c7ec5e
+    m_Address: illust_1003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 86cf89200df4d4278931128198b98d2a
+    m_Address: icon_dice_4009
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 877443af660ba4b398f661f0dc0f6e0a
+    m_Address: icon_dice_5001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 88562ea7a04ff45bf8380521ef2b059d
+    m_Address: icon_emotion_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 89234546d7ee34ab880c5a1d12acd4cc
+    m_Address: icon_dice_3007
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 89c33e314125c4995ab88f714208760c
+    m_Address: illust_2000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8c9fd5764d60c4666bde4f57d0fdaa5c
+    m_Address: icon_key
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8e2ec0e850f2d4b76936c65e1849f2de
+    m_Address: illust_3000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 935df56be498a43a19be0043917f06a9
+    m_Address: icon_dice_1004
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 939c28839b6e84776b3bee6ad79970c6
+    m_Address: icon_emotion_09
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 93f82e38bf70c40e6b105cbece3b3962
+    m_Address: card_1002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 983fb25575ead4e5d9b619c35348fce8
+    m_Address: icon_dice_4000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 99cbd0800065d4edc98a7bb7953c6b12
+    m_Address: illust_3009
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9f0dff689e03a4f379bdc5ab19a351d4
+    m_Address: card_1000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a1cdbb028fd6249069a20170cb67e18c
+    m_Address: icon_dice_4002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a2d38c845448045cab30286c5324de9e
+    m_Address: icon_dice_4001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a6294618810a64ec381c3048cd2ef85f
+    m_Address: icon_dice_1007
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a6307a8e83a354c508e9fcf7c1060397
+    m_Address: icon_dice_1009
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: abaaca5f248e84aef9474ca44b5bb57b
+    m_Address: icon_kingbox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ac23ad11f53c94e62a1b7bb8beb574af
+    m_Address: icon_aos
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ac49302581e9e453ba76eeb592fed6e8
+    m_Address: icon_boss01box
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: af89353c51f7c98488e24ec126fdc433
+    m_Address: icon_unknown_dice
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b1d3860d14262448fbc7ce02d7903134
+    m_Address: icon_dice_1006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b1e7942cbe7954398b95d1657c36191f
+    m_Address: illust_3005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b738f0459b2924919a058a0e7b310576
+    m_Address: icon_dice_4005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bb1dae996e8284791bf9ccc3181c347e
+    m_Address: illust_2003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bbafdb88ff23e4c1ea0e8d5b30748c9c
+    m_Address: icon_emotion_07
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: bec0c01bf98654bd6a28fd92bb17e707
+    m_Address: icon_dice_3000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c2693b91674ce4d368dd54366812dc7e
+    m_Address: icon_dice_2007
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c305bc0b36f1a4d23a0b5babf63e2099
+    m_Address: icon_emotion_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c36c8681b146b4414ab6b09f3ee3d595
+    m_Address: illust_3008
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c5a9613abc9534f01af473d28097e614
+    m_Address: illust_1006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c7d85c28bc43f4b5287c05b9071319ac
+    m_Address: illust_1000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c8cc0d1e8cf3e4745aeebad8dd2cac02
+    m_Address: icon_dice_2002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ca80718e1ca9e403a8384d9f8aa7b1cc
+    m_Address: icon_dice_4010
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ce22c636769f64159bea03b10e298637
+    m_Address: diashopgoods05
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cece45e1bba844452b36a9b46f50ec99
+    m_Address: icon_dice_1010
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cee2ff6ffc1ea4162a7b8973812e762d
+    m_Address: icon_dice_1011
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: cf4a325ccaac24703b92f2147a34cc89
+    m_Address: icon_dice_2004
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d0b91380a99ec49aaa02bee5983a1f31
+    m_Address: icon_dice_3009
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d1095ee22d2704ad0901f1b3fc6921cf
+    m_Address: illust_1005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d3345b1aeb3524fb082d8f9600492960
+    m_Address: icon_dice_1003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d5ed8f2709c09474bb2a962b28baa942
+    m_Address: illust_2001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d69c87da74a824728abf4fe09dc17c51
+    m_Address: illust_3006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d75e4884f00684e07a3a0c52fe7b7522
+    m_Address: icon_dice_5003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: dd872e7c2bd11421caade61b3437eea8
+    m_Address: icon_dia
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ddcd0c5151979446a80db8c08bd4e260
+    m_Address: illust_2006
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: de3e9a0ba82d04bf3940b25e1ffa4ef6
+    m_Address: illust_2005
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e056f299a1ebb42ec962bce751727cfb
+    m_Address: icon_dice_2009
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e242fe2bad8034b4681a8d6407b0a433
+    m_Address: diashopgoods06
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e27889d170c304a1680ba61197e9cd7c
+    m_Address: icon_emotion_06
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e298990edf7994db3a7c15d5333a3161
+    m_Address: icon_diabox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e391578e1b5724809b32931c41284a14
+    m_Address: icon_dice_3004
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e42aba3f1b813414a996ad4741259931
+    m_Address: null.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e4917ed1c862649f8a7c572a75bec358
+    m_Address: icon_dice_1008
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e88832afb8fc14caf85b1c88dfb5124c
+    m_Address: icon_dice_3002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e8d53f1e3841741c6b5dc639249cd05f
+    m_Address: icon_dice_4007
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ea7b5605459ac4696ae08627838e0ba8
+    m_Address: icon_dice_2008
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ed7433d74af2e443db3d4744e7cd1680
+    m_Address: icon_dice_3003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ed855acc00efe4700af1535c8a0c250c
+    m_Address: icon_dice_2003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: eddb8c1c0d08e48f1b24fa104b8f12a7
+    m_Address: illust_4003
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f173d58f79ef9473689e50809f3c4bb7
+    m_Address: icon_dice_1000
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f31fd0905863646adb8ab040899d2551
+    m_Address: illust_2008
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f946460ca048d4eacb0050ba1569b3b5
+    m_Address: illust_1002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fbd4e9495fcff4856ab906bc3a0d506d
+    m_Address: illust_5002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ffebce575637143b09481a4ba5aae40b
+    m_Address: illust_2002
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8eab292fe8e454940b4d90efe697301b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 75d972ed28710423684deb624980053e, type: 2}
+    - {fileID: 11400000, guid: 525c9e9b57a56407c99719c716f44831, type: 2}

@@ -20,4 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/InGame_Coop_Mirage.unity
     guid: 0d92ed2199076476f8e6583816616d71
-  m_configObjects: {}
+  m_configObjects:
+    addressableimportsettings: {fileID: 11400000, guid: 6de20b3ff38f54ab8834c6fb9b4ed386,
+      type: 2}
+    com.unity.addressableassets: {fileID: 11400000, guid: 5e16f20bd5c524f0e9e8fef24dbeb181,
+      type: 2}

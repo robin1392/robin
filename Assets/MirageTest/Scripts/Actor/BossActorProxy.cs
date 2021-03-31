@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using Mirage.Logging;
@@ -30,7 +31,12 @@ namespace MirageTest.Scripts
         
         protected override void OnSpawnActor()
         {
-             if (bossInfo == null)
+            Spawn().Forget();
+        }
+
+        async UniTask Spawn()
+        {
+            if (bossInfo == null)
             {
                 _logger.LogError($"보스데이터가 없습니다. {dataId}");
                 return;
@@ -39,14 +45,7 @@ namespace MirageTest.Scripts
             Vector3 pos = transform.position;
             PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
             var boss =
-                PoolManager.instance.ActivateObject<Minion>(bossInfo.prefabName, Vector3.zero, transform);
-            if (boss == null)
-            {
-                PoolManager.instance.AddPool(
-                    FileHelper.LoadPrefab(bossInfo.prefabName, Global.E_LOADTYPE.LOAD_COOP_BOSS), 1);
-                boss = PoolManager.instance.ActivateObject<Minion>(bossInfo.prefabName, Vector3.zero,
-                    transform);
-            }
+                await PoolManager.instance.ActivateObject<Minion>(bossInfo.prefabName, Vector3.zero, transform);
 
             baseStat = boss;
             boss.ActorProxy = this;
@@ -68,6 +67,10 @@ namespace MirageTest.Scripts
             boss.searchRange = bossInfo.searchRange;
             
             SetIsHatched(isHatched, isHatched);
+
+            var client = Client as RWNetworkClient;
+            EnableAI(client.IsPlayingAI);
+            RefreshHpUI();
         }
 
         void SetIsHatched(bool oldValue, bool newValue)
@@ -84,11 +87,7 @@ namespace MirageTest.Scripts
             {
                 if (_egg == null)
                 {
-                    var obj = FileHelper.LoadPrefab(
-                        $"{bossInfo.prefabName}_Egg",
-                        Global.E_LOADTYPE.LOAD_COOP_BOSS);
-
-                    _egg = Instantiate(obj, transform);
+                    _egg = PoolManager.instance.ActivateObject<GameObject>($"{bossInfo.prefabName}_Egg", transform);
                     _egg.transform.localPosition = Vector3.zero;
                     _egg.transform.localRotation = Quaternion.identity;
                     _egg.transform.localScale = Vector3.one * 100;

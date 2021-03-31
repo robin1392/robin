@@ -1226,6 +1226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  PrefsPostfix: 11
 --- !u!4 &577192556
 Transform:
   m_ObjectHideFlags: 0
@@ -3222,6 +3223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 1560568039}
   image_BG: {fileID: 531239266}

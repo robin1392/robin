@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage.Logging;
 using RandomWarsResource.Data;
@@ -24,6 +25,11 @@ namespace MirageTest.Scripts
 
         protected override void OnSpawnActor()
         {
+            Spawn().Forget();
+        }
+
+        async UniTask Spawn()
+        {
             if (TableManager.Get().GuardianInfo.GetData(dataId, out var dataGuardianInfo) == false)
             {
                 _logger.LogError($"수호자데이터가 없습니다. {dataId}");
@@ -31,40 +37,28 @@ namespace MirageTest.Scripts
             }
 
             Vector3 pos = transform.position;
-            var prefab = FileHelper.LoadPrefab(dataGuardianInfo.prefabName, Global.E_LOADTYPE.LOAD_GUARDIAN);
-            PoolManager.instance.AddPool(prefab, 1);
-            if (prefab != null)
-            {
-                PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
-                var guadian =
-                    PoolManager.instance.ActivateObject<Minion>(dataGuardianInfo.prefabName, Vector3.zero, transform);
-                if (guadian == null)
-                {
-                    PoolManager.instance.AddPool(
-                        FileHelper.LoadPrefab(dataGuardianInfo.prefabName, Global.E_LOADTYPE.LOAD_MINION), 1);
-                    guadian = PoolManager.instance.ActivateObject<Minion>(dataGuardianInfo.prefabName, Vector3.zero,
-                        transform);
-                }
+            PoolManager.instance.ActivateObject("particle_necromancer", transform.position);
+            var guadian =
+                await PoolManager.instance.ActivateObject<Minion>(dataGuardianInfo.prefabName, Vector3.zero, transform);
 
-                baseStat = guadian;
-                guadian.ActorProxy = this;
-                guadian.transform.localPosition = Vector3.zero;
-                guadian.transform.localRotation = Quaternion.identity;
-                guadian.SetPathFinding(_seeker, _aiPath);
-                guadian.Initialize();
-                guadian.castType = (DICE_CAST_TYPE) gudianInfo.castType;
-                guadian.id = NetId;
-                guadian.isMine = IsLocalPlayerActor;
-                guadian.targetMoveType = (DICE_MOVE_TYPE) gudianInfo.targetMoveType;
-                guadian.ChangeLayer(IsBottomCamp());
+            baseStat = guadian;
+            guadian.ActorProxy = this;
+            guadian.transform.localPosition = Vector3.zero;
+            guadian.transform.localRotation = Quaternion.identity;
+            guadian.SetPathFinding(_seeker, _aiPath);
+            guadian.Initialize();
+            guadian.castType = (DICE_CAST_TYPE) gudianInfo.castType;
+            guadian.id = NetId;
+            guadian.isMine = IsLocalPlayerActor;
+            guadian.targetMoveType = (DICE_MOVE_TYPE) gudianInfo.targetMoveType;
+            guadian.ChangeLayer(IsBottomCamp());
                 
-                guadian.effectUpgrade = dataGuardianInfo.effectUpgrade;
-                guadian.effectInGameUp = dataGuardianInfo.effectInGameUp;
-                guadian.effectDuration = dataGuardianInfo.effectDuration;
-                guadian.effectCooltime = dataGuardianInfo.effectCooltime;
-                guadian.range = dataGuardianInfo.range;
-                guadian.searchRange = dataGuardianInfo.searchRange;
-            }
+            guadian.effectUpgrade = dataGuardianInfo.effectUpgrade;
+            guadian.effectInGameUp = dataGuardianInfo.effectInGameUp;
+            guadian.effectDuration = dataGuardianInfo.effectDuration;
+            guadian.effectCooltime = dataGuardianInfo.effectCooltime;
+            guadian.range = dataGuardianInfo.range;
+            guadian.searchRange = dataGuardianInfo.searchRange;
 
             var client = Client as RWNetworkClient;
             var tower = client.GetTower(ownerTag);
@@ -75,6 +69,10 @@ namespace MirageTest.Scripts
             }
 
             PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
+            
+            EnableAI(client.IsPlayingAI);
+            RefreshHpUI();
         }
+        
     }
 }
