@@ -194,6 +194,18 @@ namespace MirageTest.Scripts
                 LocalMatchPlayer = Player2;
                 OtherMatchPlayer = Player1;
             }
+            
+            PlayType = msg.PlayType == PLAY_TYPE.CO_OP ? Global.PLAY_TYPE.COOP : Global.PLAY_TYPE.BATTLE;
+
+            ShowMatchPopupAndReady().Forget();
+        }
+
+        async UniTask ShowMatchPopupAndReady()
+        {
+            while (GetLocalPlayerProxy() == null)
+            {
+                await UniTask.Yield();
+            }
 
             if (enableUI == false)
             {
@@ -201,9 +213,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            PlayType = msg.PlayType == PLAY_TYPE.CO_OP ? Global.PLAY_TYPE.COOP : Global.PLAY_TYPE.BATTLE;
-                
-            ShowMatchPopup().Forget();
+            await ShowMatchPopup();
         }
 
         async UniTask ShowMatchPopup()
