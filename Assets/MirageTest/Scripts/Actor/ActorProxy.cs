@@ -638,7 +638,7 @@ namespace MirageTest.Scripts
             return actor.GetComponent<ActorProxy>().baseStat;
         }
         
-        public BaseStat GetEnemyTowerOrBoss()
+        public BaseStat GetEnemyTowerOrBossEgg()
         {
             var rwClient = Client as RWNetworkClient;
             var enemyTower = rwClient.Towers.Find(t => t.team != team);
@@ -647,7 +647,7 @@ namespace MirageTest.Scripts
                 return enemyTower.baseStat;
             }
             
-            var enemyBoss = rwClient.Bosses.Find(t => t.team != team);
+            var enemyBoss = rwClient.Bosses.Find(t => t.team != team && t.isHatched == false);
             if (enemyBoss != null)
             {
                 return enemyBoss.baseStat;

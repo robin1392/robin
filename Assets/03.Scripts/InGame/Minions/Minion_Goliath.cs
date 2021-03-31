@@ -40,7 +40,7 @@ namespace ED
             {
                 if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
                 {
-                    return ActorProxy.GetEnemyTowerOrBoss();
+                    return ActorProxy.GetEnemyTowerOrBossEgg();
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace ED
             }
             else
             {
-                return ActorProxy.GetEnemyTowerOrBoss();
+                return ActorProxy.GetEnemyTowerOrBossEgg();
             }
         }
 

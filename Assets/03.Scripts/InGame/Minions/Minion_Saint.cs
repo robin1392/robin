@@ -94,7 +94,7 @@ namespace ED
             }
             else
             {
-                return ActorProxy.GetEnemyTowerOrBoss();
+                return ActorProxy.GetEnemyTowerOrBossEgg();
             }
         }
     }

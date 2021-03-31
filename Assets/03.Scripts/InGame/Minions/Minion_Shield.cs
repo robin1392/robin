@@ -42,7 +42,7 @@ namespace ED
 
         public override BaseStat SetTarget()
         {
-            return ActorProxy.GetEnemyTowerOrBoss();
+            return ActorProxy.GetEnemyTowerOrBossEgg();
         }
     }
 }
