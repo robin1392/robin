@@ -219,10 +219,8 @@ namespace MirageTest.Scripts
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Boss_05_Bullet", startPos);
                     break;
                 case E_BulletType.ICE_NORMAL_BULLET:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Ice_Bullet", startPos);
-                    break;
                 case E_BulletType.ICE_FREEZE_BULLET:
-                    bullet = PoolManager.instance.ActivateObject<Bullet>("Ice_Bullet", startPos);
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
                     break;
             }
 
