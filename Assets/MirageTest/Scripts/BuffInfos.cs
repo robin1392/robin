@@ -12,6 +12,7 @@ namespace MirageTest.Scripts
         public const byte Freeze = 3;
         public const byte Invincibility = 4;
         public const byte Scarecrow = 5;
+        public const byte IceFreeze = 6;
 
         public static BuffState[] Data = new[]
         {
@@ -21,6 +22,7 @@ namespace MirageTest.Scripts
             BuffState.Freeze,
             BuffState.Invincibility,
             BuffState.Scarecrow,
+            BuffState.Freeze,
         };
     }
 

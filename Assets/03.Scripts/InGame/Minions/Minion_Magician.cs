@@ -86,7 +86,7 @@ namespace  ED
 
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.FireBulletWithRelay(E_BulletType.MAGICIAN , target, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.MAGICIAN_BULLET , target, power, bulletMoveSpeed);
             }
         }
 

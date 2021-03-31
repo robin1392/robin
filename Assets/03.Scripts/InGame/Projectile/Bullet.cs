@@ -38,23 +38,28 @@ namespace ED
         protected int targetLayer => 1 << LayerMask.NameToLayer(_isBottomPlayer ? "TopPlayer" : "BottomPlayer");
         protected MeshRenderer[] _arrMeshRenderer;
         protected SkinnedMeshRenderer[] _arrSkinnedMeshRenderers;
+        protected E_BulletType _bulletType;
+        private float _effect;
 
         private void Awake()
         {
             _poad = GetComponent<PoolObjectAutoDeactivate>();
         }
 
-        public virtual void Initialize(BaseStat target, float pDamage, float splashRange, bool pIsMine, bool pIsBottomPlayer)
+        public virtual void Initialize(E_BulletType bulletType, BaseStat target, float pDamage, float splashRange,
+            bool pIsMine, bool pIsBottomPlayer, float effect)
         {
             obj_Bullet.SetActive(true);
             if (obj_EndEffect != null) obj_EndEffect.SetActive(false);
-            
+
+            _bulletType = bulletType;
             _isTarget = true;
             _damage = pDamage;
             _splashRange = splashRange;
             _isMine = pIsMine;
             _isBottomPlayer = pIsBottomPlayer;
             _target =target;
+            _effect = effect;
 
             if (_target)
             {
@@ -129,12 +134,15 @@ namespace ED
             {
                 //TODO: 발사체가 날아가는 사이 공격자가 죽을 수 있기때문에 직접 히트를 부른다.
                 //      액터 사망 시 유예시간을 두어서 공격자 액터프락시가 존재하지 않는 상황이 없도록 하는 방법을 고려해본다.
-                _target?.ActorProxy?.HitDamage(_damage);   
+                if (_target != null && _target.ActorProxy != null)
+                {
+                    _target.ActorProxy.HitDamage(_damage);
+                    if (_bulletType == E_BulletType.ICE_FREEZE_BULLET)
+                    {
+                        _target.ActorProxy.AddBuff(BuffInfos.IceFreeze, _effect);
+                    }   
+                }
             }
-            //KZSee:
-            // if( (InGameManager.IsNetwork && (_isMine || controller.isPlayingAI)) || InGameManager.IsNetwork == false)
-            //     controller.AttackEnemyMinionOrMagic(_target.UID, _target.id, _damage, 0f);
-
 
             if (obj_EndEffect != null)
             {

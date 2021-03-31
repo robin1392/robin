@@ -119,8 +119,61 @@ namespace MirageTest.Scripts
             
             FireBulletInternal(arrow, target, f, bulletMoveSpeed);
         }
+        
+        public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed, float effect)
+        {
+            FireBulletInternal(bulletType, target, damage, moveSpeed, effect);
+            RelayFireBulletWithEffect(bulletType, target, damage, moveSpeed, effect);
+        }
 
-        void FireBulletInternal(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
+        void RelayFireBulletWithEffect(E_BulletType arrow, BaseStat target, float f, float bulletMoveSpeed, float effect)
+        {
+            uint targetId = 0;
+            if (target != null)
+            {
+                targetId = target.id;
+            }
+            
+            RelayFireBulletWithEffectOnServer(Client.Player.Identity.NetId, arrow, targetId, f, bulletMoveSpeed, effect);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void RelayFireBulletWithEffectOnServer(uint senderNetId, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed, float effect)
+        {
+            foreach (var player in Server.Players)
+            {
+                if (player == null)
+                {
+                    continue;
+                }
+
+                if (player.Identity == null)
+                {
+                    continue;
+                }
+                
+                if (senderNetId == player.Identity.NetId)
+                {
+                    continue;
+                }
+
+                RelayFireBulletWithEffectOnClient(player, arrow, targetID, f, bulletMoveSpeed, effect);
+            }
+        }
+
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void RelayFireBulletWithEffectOnClient(INetworkPlayer con, E_BulletType arrow, uint targetID, float f, float bulletMoveSpeed, float effect)
+        {
+            var target = GetBaseStatWithNetId(targetID);
+            if (target == null)
+            {
+                return;
+            }
+            
+            FireBulletInternal(arrow, target, f, bulletMoveSpeed, effect);
+        }
+
+        void FireBulletInternal(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed, float effect = 0)
         {
             if (baseStat == null)
             {
@@ -131,23 +184,23 @@ namespace MirageTest.Scripts
             Bullet bullet = null;
             switch (bulletType)
             {
-                case E_BulletType.ARROW:
+                case E_BulletType.ARROW_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Arrow", startPos);
                     break;
-                case E_BulletType.SPEAR:
+                case E_BulletType.SPEAR_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Spear", startPos);
                     SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_MISSILE_SPEAR);
                     break;
-                case E_BulletType.NECROMANCER:
+                case E_BulletType.NECROMANCER_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
                     break;
-                case E_BulletType.MAGICIAN:
+                case E_BulletType.MAGICIAN_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Magician_Bullet", startPos);
                     break;
-                case E_BulletType.ARBITER:
+                case E_BulletType.ARBITER_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Arbiter_Bullet", startPos);
                     break;
-                case E_BulletType.BABYDRAGON:
+                case E_BulletType.BABYDRAGON_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Babydragon_Bullet", startPos);
                     break;
                 case E_BulletType.VALLISTA_SPEAR:
@@ -165,6 +218,12 @@ namespace MirageTest.Scripts
                 case E_BulletType.BOSS5_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Boss_05_Bullet", startPos);
                     break;
+                case E_BulletType.ICE_NORMAL_BULLET:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Ice_Bullet", startPos);
+                    break;
+                case E_BulletType.ICE_FREEZE_BULLET:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Ice_Bullet", startPos);
+                    break;
             }
 
             if (bullet != null)
@@ -173,7 +232,7 @@ namespace MirageTest.Scripts
                 bullet.transform.rotation = Quaternion.identity;
                 bullet.client = rwClient;
                 bullet.moveSpeed = moveSpeed;
-                bullet.Initialize(target, damage, 0, rwClient.IsPlayingAI, IsBottomCamp());
+                bullet.Initialize(bulletType, target, damage, 0, rwClient.IsPlayingAI, IsBottomCamp(), effect);
             }
         }
         

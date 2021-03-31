@@ -78,12 +78,12 @@ public enum E_CannonType
 
 public enum E_BulletType
 {
-    ARROW,
-    SPEAR,
-    NECROMANCER,
-    MAGICIAN,
-    ARBITER,
-    BABYDRAGON,
+    ARROW_BULLET,
+    SPEAR_BULLET,
+    NECROMANCER_BULLET,
+    MAGICIAN_BULLET,
+    ARBITER_BULLET,
+    BABYDRAGON_BULLET,
     VALLISTA_SPEAR,
     GUARDIAN3_BULLET,
     POSU_BULLET,
@@ -91,6 +91,8 @@ public enum E_BulletType
     RACE_BULLET,
     PLANE_BULLET,
     BOSS5_BULLET,
+    ICE_NORMAL_BULLET,
+    ICE_FREEZE_BULLET,
 }
 
 public enum E_AniTrigger

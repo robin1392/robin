@@ -49,7 +49,7 @@ namespace ED
 
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.FireBulletWithRelay(E_BulletType.BABYDRAGON, target, power, 10f);
+                ActorProxy.FireBulletWithRelay(E_BulletType.BABYDRAGON_BULLET, target, power, 10f);
             }
         }
     }

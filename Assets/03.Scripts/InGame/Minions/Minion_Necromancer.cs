@@ -82,7 +82,7 @@ namespace ED
 
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.FireBulletWithRelay(E_BulletType.NECROMANCER, target, power, bulletMoveSpeed);;
+                ActorProxy.FireBulletWithRelay(E_BulletType.NECROMANCER_BULLET, target, power, bulletMoveSpeed);;
             }
             
             SoundManager.instance.Play(clip_Attack);

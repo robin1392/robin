@@ -36,7 +36,7 @@ namespace ED
 
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.FireBulletWithRelay(E_BulletType.SPEAR , target, power , bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.SPEAR_BULLET , target, power , bulletMoveSpeed);
             }
         }
         
@@ -50,7 +50,7 @@ namespace ED
             
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.FireBulletWithRelay(E_BulletType.ARROW , target, power , bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.ARROW_BULLET , target, power , bulletMoveSpeed);
             }
         }
     }

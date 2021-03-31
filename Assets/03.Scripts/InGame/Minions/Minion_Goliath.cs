@@ -99,7 +99,7 @@ namespace ED
             if (ActorProxy.isPlayingAI)
             {
                 var bulletSpeed = target.isFlying ? bulletMoveSpeedByFlying : bulletMoveSpeedByGround;
-                ActorProxy.FireBulletWithRelay(E_BulletType.SPEAR, target, effect, bulletSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.SPEAR_BULLET, target, effect, bulletSpeed);
             }
         }
         

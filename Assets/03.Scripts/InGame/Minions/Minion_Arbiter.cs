@@ -90,7 +90,7 @@ namespace ED
 
             if (ActorProxy.isPlayingAI)
             {
-                ActorProxy.FireBulletWithRelay(E_BulletType.ARBITER , target, power, bulletMoveSpeed);
+                ActorProxy.FireBulletWithRelay(E_BulletType.ARBITER_BULLET , target, power, bulletMoveSpeed);
             }
         }
     }
