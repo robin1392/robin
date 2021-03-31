@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5081294253336761971}
-  - component: {fileID: 3650571420783958165}
+  - component: {fileID: -8304894821855655451}
   - component: {fileID: 6486029529450410244}
   - component: {fileID: 2583571212696764795}
   m_Layer: 0
@@ -36,7 +36,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3650571420783958165
+--- !u!114 &-8304894821855655451
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,13 +45,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5081294253336761964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae7347235d6c43f1af1f4be1e82a4d2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fd776bfece264f12b97ab8f4d9cb8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
   isCanBeTarget: 1
-  diceId: 2002
+  diceId: 0
   id: 0
   animator: {fileID: 2230211783694392203}
   arrMaterial:
@@ -231,6 +231,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485753882767951793, guid: d0dae7c161c184b4ca105935b2df3f0f,
+        type: 3}
+      propertyPath: _minion
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0dae7c161c184b4ca105935b2df3f0f, type: 3}
