@@ -503,8 +503,7 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         if (errorCode == ERandomwarsMatchErrorCode.Success)
         {
-            UI_SearchingPopup searchingPopup = FindObjectOfType<UI_SearchingPopup>();
-            searchingPopup.ClickSearchingCancelResult();
+            UI_Main.Get().searchingPopup.ClickSearchingCancelResult();
         }
         else
         {
