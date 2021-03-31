@@ -9,7 +9,6 @@ public class ActorDevModeStarter : MonoBehaviour
     public RWNetworkServer Server;
     public RWNetworkClient Master;
     public RWNetworkClient Other;
-    public bool EnableOtherAI;
     public string Address = "localhost";
 
     async void Start()
@@ -21,7 +20,7 @@ public class ActorDevModeStarter : MonoBehaviour
         }
         
         Server.MatchData.AddPlayerInfo(Master.LocalUserId, Master.LocalNickName, 0,0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
-        Server.MatchData.AddPlayerInfo(Other.LocalUserId, Other.LocalNickName, 0,0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005), !EnableOtherAI);
+        Server.MatchData.AddPlayerInfo(Other.LocalUserId, Other.LocalNickName, 0,0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
 
         Master.authenticator = null;
         Other.authenticator = null;

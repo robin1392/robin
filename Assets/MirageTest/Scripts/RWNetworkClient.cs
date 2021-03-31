@@ -197,6 +197,7 @@ namespace MirageTest.Scripts
 
             if (enableUI == false)
             {
+                GetLocalPlayerProxy()?.ClientReady();
                 return;
             }
 
@@ -214,7 +215,7 @@ namespace MirageTest.Scripts
             UI_InGamePopup.Get().InitUIElement(Player1, Player2);
             
             await UniTask.Delay(TimeSpan.FromSeconds(2.0f));
-            
+
             GetLocalPlayerProxy()?.ClientReady();
 
             while (GameState != null && GameState.state != EGameState.Playing)
