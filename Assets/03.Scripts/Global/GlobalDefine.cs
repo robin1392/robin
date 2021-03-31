@@ -93,6 +93,7 @@ public enum E_BulletType
     BOSS5_BULLET,
     ICE_NORMAL_BULLET,
     ICE_FREEZE_BULLET,
+    WIND_BULLET
 }
 
 public enum E_AniTrigger
