@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace ED
@@ -267,26 +268,7 @@ namespace ED
             // attackSpeed = _originalAttackSpeed * factor;
             if (animator != null) animator.SetFloat("AttackSpeed", 1f / attackSpeed);
         }
-
-        public void Scarecrow(float duration)
-        {
-            //StopAllCoroutines();
-            StartCoroutine(ScarecrowCoroutine(duration));
-        }
-
-        IEnumerator ScarecrowCoroutine(float duration)
-        {
-            isPolymorph = true;
-            animator.gameObject.SetActive(false);
-            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(_scarecrow, transform.position);
-            ad.Deactive(duration);
-
-            yield return new WaitForSeconds(duration);
-
-            isPolymorph = false;
-            animator.gameObject.SetActive(true);
-        }
-
+        
         protected bool IsFriendlyLayer(GameObject targetObject)
         {
             switch (targetMoveType)
