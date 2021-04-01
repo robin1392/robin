@@ -183,6 +183,8 @@ public class UI_MatchPopup : UI_Popup
             NetworkManager.Get().OnStartMatchAck(ERandomwarsMatchErrorCode.Success, ticketId);
             return true;
         }
+        
+        UI_ErrorMessage.Get().ShowMessage("존재하지 않는 방입니다");
 
         return false;
     }

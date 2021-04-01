@@ -20,5 +20,7 @@ public class UI_ErrorMessage : SingletonDestroy<UI_ErrorMessage>
             text.DOFade(1f, 0.5f);
             text.DOFade(0f, 0.5f).SetDelay(1f).OnComplete(() => { Destroy(text.gameObject); });
         }
+        
+        transform.SetAsLastSibling();
     }
 }
