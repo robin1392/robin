@@ -44,6 +44,11 @@ public class Minion_Fire : Minion
     {
         if (isBomb)
         {
+            if (target == null || target.ActorProxy == null)
+            {
+                return;
+            }
+            
             SetBomb(false);
             // 폭발 이펙트
             PoolManager.Get().ActivateObject(pref_FireBombEffect.name, target.ts_HitPos.position);
