@@ -52,7 +52,7 @@ namespace MirageTest.Aws
                 return;
             }
 
-            Debug.Log($"메세지 아이디: {sendMessageResponse.Result.MessageId}");
+            Debug.Log($"게임 결과 SQS 메세지 아이디: {sendMessageResponse.Result.MessageId}");
         }
 
         public async UniTask SendMessage2(string matchResultJson)
