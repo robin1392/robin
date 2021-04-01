@@ -26,8 +26,37 @@ namespace ED
 
         protected override IEnumerator Root()
         {
-            var action = new RushAction();
-            yield return action.ActionWithSync(ActorProxy);
+            yield return new WaitForSeconds(1f);
+            
+            // target
+            var ts = transform;
+            var rush = (Minion_Rush)ActorProxy.baseStat;
+            var cols = Physics.OverlapSphere(ts.position, rush.searchRange, rush.targetLayer);
+            var distance = 0f;
+            Minion dashTarget = null;
+           
+            foreach (var col in cols)
+            {
+                if (col.CompareTag("Player")) continue;
+                var minion = col.GetComponentInParent<Minion>();
+                if (minion == null || minion.isAlive == false)
+                {
+                    continue;
+                }
+
+                var dis = Vector3.Distance(ts.position, minion.transform.position); 
+                if (dis > distance)
+                {
+                    distance = dis;
+                    dashTarget = minion;
+                }
+            }
+
+            if (dashTarget != null)
+            {
+                var action = new RushAction();
+                yield return action.ActionWithSync(ActorProxy, dashTarget.ActorProxy);
+            }
             
             while (isAlive)
             {
@@ -48,81 +77,65 @@ namespace ED
     }
     
     
-    public class RushAction : SyncActionWithoutTarget
+    public class RushAction : SyncActionWithTarget
     {
-        public override IEnumerator Action(ActorProxy actorProxy)
+        public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            yield return new WaitForSeconds(1f);
-            
-            // target
-            var ts = actorProxy.transform;
-            var rush = (Minion_Rush)actorProxy.baseStat;
-            var cols = Physics.OverlapSphere(ts.position, rush.searchRange, rush.targetLayer);
-            var distance = 0f;
-            Collider dashTarget = null;
-            var hitPoint = Vector3.zero;
-            foreach (var col in cols)
-            {
-                if (col.CompareTag("Player")) continue;
-
-                var dis = Vector3.Distance(ts.position, col.transform.position); 
-                if (dis > distance)
-                {
-                    distance = dis;
-                    dashTarget = col;
-                }
-            }
-
 #if UNITY_EDITOR
-            if (dashTarget != null)
+            if (targetActorProxy != null)
             {
-                Debug.DrawLine(actorProxy.transform.position + Vector3.up * 0.2f, hitPoint, Color.red, 2f);
+                Debug.DrawLine(actorProxy.transform.position + Vector3.up * 0.2f, targetActorProxy.transform.position, Color.red, 2f);
             }
 #endif
-            
-            rush.ps_Rush.Play();
+            var minionRush = actorProxy.baseStat as Minion_Rush;
+            minionRush.ps_Rush.Play();
             
             actorProxy.PlayAnimationWithRelay(AnimationHash.SkillLoop, null);
 
+            var ts = actorProxy.transform;
             float tick = 0.1f;
-            while (dashTarget != null)
+            while (targetActorProxy != null && targetActorProxy.baseStat != null)
             {
-                ts.LookAt(dashTarget.transform);
-                ts.position += (dashTarget.transform.position - ts.position).normalized * (rush.moveSpeed * 2.5f) * Time.deltaTime;
+                ts.LookAt(targetActorProxy.transform);
+                ts.position += (targetActorProxy.transform.position - ts.position).normalized * (minionRush.moveSpeed * 2.5f) * Time.deltaTime;
 
                 if (tick < 0)
                 {
                     tick = 0.1f;
                     
-                    var hits = Physics.RaycastAll(ts.position + Vector3.up * 0.1f, ts.forward, rush.range, rush.targetLayer);
+                    var hits = Physics.RaycastAll(ts.position + Vector3.up * 0.1f, ts.forward, minionRush.range, minionRush.targetLayer);
                     foreach (var raycastHit in hits)
                     {
-                        //if (list.Contains(raycastHit.collider) == false)
+                        var bs = raycastHit.collider.GetComponentInChildren<BaseStat>();
+                        if (bs != null && bs.isAlive)
                         {
-                            var bs = raycastHit.collider.GetComponentInChildren<BaseStat>();
-                            if (bs != null && bs.isAlive)
+                            if (actorProxy.isPlayingAI)
                             {
-                                if (actorProxy.isPlayingAI)
-                                {
-                                    bs.ActorProxy.HitDamage(rush.effect);
-                                }
-
-                                PoolManager.Get().ActivateObject("Effect_Stone", raycastHit.point);
+                                bs.ActorProxy.HitDamage(minionRush.effect);
                             }
+
+                            PoolManager.Get().ActivateObject("Effect_Stone", raycastHit.point);
                         }
                     } 
                 }
 
-                if (Vector3.Distance(dashTarget.transform.position, ts.position) <= rush.range)
+                if (Vector3.Distance(targetActorProxy.transform.position, ts.position) <= minionRush.range)
                     break;
 
                 tick -= Time.deltaTime;
                 yield return null;
             }
             
-            rush.ps_Rush.Stop();
+            minionRush.ps_Rush.Stop();
             
             actorProxy.PlayAnimationWithRelay(AnimationHash.Idle, null);
+        }
+
+        public override void OnActionCancel(ActorProxy actorProxy)
+        {
+            base.OnActionCancel(actorProxy);
+            var minionRush = actorProxy.baseStat as Minion_Rush;
+            minionRush.ps_Rush.Stop();
         }
     }
 }
