@@ -67,7 +67,7 @@ public class Guardian_03 : Minion
             var minion = col.GetComponentInParent<Minion>();
             if (minion != null)
             {
-                minion.ActorProxy.HitDamage(effect);
+                minion.ActorProxy?.HitDamage(effect);
             }
         }
 
