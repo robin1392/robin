@@ -11,5 +11,7 @@ namespace MirageTest.Scripts
 
         public const int MaxSpUpgradeLevel = 6;
         public const int MaxIngameUpgradeLevel = 6;
+
+        public const int DeckDiceSize = 5;
     }
 }

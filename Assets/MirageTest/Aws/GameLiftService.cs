@@ -215,7 +215,7 @@ namespace MirageTest.Aws
         {
             // 주사위
             DeckInfo deckInfo = new DeckInfo();
-            deckInfo.DiceInfos = new DiceInfo[listDiceInfo.Count - 1];
+            deckInfo.DiceInfos = new DiceInfo[GameConstants.DeckDiceSize];
             for (int i = 0; i < deckInfo.DiceInfos.Length; i++)
             {
                 var matchDiceInfo = JsonConvert.DeserializeObject<MatchDiceInfo>(listDiceInfo[i]);

@@ -24,8 +24,7 @@ namespace MirageTest.Scripts
                 return GameResult == GAME_RESULT.VICTORY || GameResult == GAME_RESULT.VICTORY_BY_DEFAULT;
             }
         }
-
-
+        
         public MatchReport()
         {
             GameResult = GAME_RESULT.NONE;
