@@ -471,7 +471,6 @@ namespace ED
             image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[Mathf.Clamp((int)data.grade, 0, 3)]);
             text_Grade.text = LocalizationManager.GetLangDesc( gradeindex );
             text_Grade.color = image_GradeBG.color;
-            text_Name.color = UnityUtil.HexToColor(Global.g_gradeTextColor[Mathf.Clamp((int)data.grade, 0, 3)]);
         }
         
         public void SetInfoDesc()
