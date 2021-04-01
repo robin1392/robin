@@ -42,6 +42,7 @@ namespace ED
 
             if (target == null)
             {
+                ActorProxy.Destroy();
                 yield break;
             }
             

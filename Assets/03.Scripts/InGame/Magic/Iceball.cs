@@ -36,6 +36,7 @@ namespace ED
             target = ActorProxy.GetRandomEnemyCanBeAttacked();
             if (target == null)
             {
+                ActorProxy.Destroy();
                 yield break; 
             }
             

@@ -26,6 +26,7 @@ namespace ED
             target = ActorProxy.GetEnemyTowerOrBossEgg();
             if (target == null)
             {
+                ActorProxy.Destroy();
                 yield break;
             }
             
