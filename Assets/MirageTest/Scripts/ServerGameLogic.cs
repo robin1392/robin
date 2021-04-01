@@ -131,7 +131,7 @@ namespace MirageTest.Scripts
             await _gameMode.OnBeforeGameStart();
 
             var playerCount = server.MatchData.PlayerInfos.Count(p => p.isPlayer);
-            await WaitForPlayers(playerCount).TimeoutWithoutException(TimeSpan.FromSeconds(60));
+            await WaitForPlayers(playerCount).TimeoutWithoutException(TimeSpan.FromSeconds(30));
 
             if (NoPlayers)
             {
