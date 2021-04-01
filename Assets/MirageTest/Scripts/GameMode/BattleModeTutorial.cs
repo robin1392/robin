@@ -96,36 +96,6 @@ namespace MirageTest.Scripts.GameMode
             Server.OnGameEnd(new List<MatchReport>() {victoryReport, defeatReport});
         }
 
-        private void EndGamePlayerDidNothing(PlayerState[] losers)
-        {
-            GameState.state = EGameState.End;
-            var matchResult1 = CreateMatchResultEndGamePlayerDidNothing(losers[0], losers[1]);
-            var matchResult2 = CreateMatchResultEndGamePlayerDidNothing(losers[1], losers[0]);
-            var matchResults = new List<MatchReport>() {matchResult1, matchResult2};
-            Server.OnGameEnd(matchResults);
-        }
-
-        MatchReport CreateMatchResultEndGamePlayerDidNothing(PlayerState defeatPlayer, PlayerState other)
-        {
-            var result = new MatchReport();
-            result.GameResult = GAME_RESULT.DEFEAT;
-            result.UserId = defeatPlayer.userId;
-
-            var otherMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == other.userId);
-            var defeatMatchPlayer = Server.MatchData.PlayerInfos.First(p => p.UserId == defeatPlayer.userId);
-            int defeatTrophy = ((otherMatchPlayer.Trophy - defeatMatchPlayer.Trophy) / 12 + 30);
-            defeatTrophy = Math.Min(otherMatchPlayer.Trophy, defeatTrophy);
-
-            // 패배 트로피
-            result.NormalRewards.Add(new ItemBaseInfo
-            {
-                ItemId = (int) EItemListKey.thropy,
-                Value = defeatTrophy * -1,
-            });
-
-            return result;
-        }
-
         public override void OnGiveUp(PlayerState playerState)
         {
             var winner = PlayerStates.First(p => p.ownerTag != playerState.ownerTag);
