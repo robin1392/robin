@@ -248,25 +248,6 @@ namespace ED
 
             StopAllCoroutines();
             
-            // ShowMainUI(false);
-            // CameraGyroController.Get().FocusIn();
-            //
-            // if (isAIMode || TutorialManager.isTutorial)
-            // {
-            //     btn_PlayBattle.interactable = false;
-            //     btn_PlayCoop.interactable = false;
-            //     searchingPopup.gameObject.SetActive(true);
-            //     
-            //     StartCoroutine(AIMode(playType));
-            // }
-            // else
-            // {
-            //     btn_PlayBattle.interactable = false;
-            //     btn_PlayCoop.interactable = false;
-            //     searchingPopup.gameObject.SetActive(true);
-            //     ConnectBattle(playType);
-            // }
-
             var match = Instantiate(matchPopup.gameObject, rts_Popup).GetComponent<UI_MatchPopup>();
             match.Initialize();
         }
@@ -306,33 +287,6 @@ namespace ED
             text_Nickname.text = str;
         }
         
-        // private IEnumerator AIMode(PLAY_TYPE playType)
-        // {
-        //     yield return new WaitForSeconds(1f);
-        //
-        //     if (playType == PLAY_TYPE.BATTLE)
-        //     {
-        //         GameStateManager.Get().MoveInGameBattle();    
-        //     }
-        //     else
-        //     {
-        //         GameStateManager.Get().MoveInGameCoop();
-        //     }
-        // }
-        //
-        // private void ConnectBattle(PLAY_TYPE playType)
-        // {
-        //     if (NetworkManager.Get().UseLocalServer == true)
-        //     {
-        //         //TODO: 기능 복구
-        //         NetworkManager.Get().ConnectServer(playType, NetworkManager.Get().LocalServerAddr, NetworkManager.Get().LocalServerPort, UserInfoManager.Get().GetUserInfo().userID);
-        //         return;
-        //     }
-        //
-        //     var eGameMode = playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
-        //     NetworkManager.Get().StartMatchReq(eGameMode, UserInfoManager.Get().GetActiveDeckIndex());
-        // }
-
         public void Click_DisconnectButton()
         {
             StopAllCoroutines();

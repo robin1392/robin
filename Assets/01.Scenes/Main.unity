@@ -953,6 +953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 2114639660}
   image_BG: {fileID: 1524432344}
@@ -7848,6 +7849,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 2114538594}
   image_BG: {fileID: 1872582107}
@@ -8791,6 +8793,7 @@ MonoBehaviour:
   - {fileID: 6965502013037244914}
   - {fileID: 5001074855173098045}
   - {fileID: 607162153835697147}
+  rts_Popup: {fileID: 1613733754}
   searchingPopup: {fileID: 1735105245}
   boxPopup: {fileID: 1683126478458088271}
   boxOpenPopup: {fileID: 3869058008035699927}
@@ -8810,6 +8813,8 @@ MonoBehaviour:
   moveShopPopup: {fileID: 829747181}
   languagePopup: {fileID: 736052748}
   mailboxPopup: {fileID: 2121359489}
+  matchPopup: {fileID: 1461471528809594260, guid: 1573f1e40902a4809ae7af2608c2f40d,
+    type: 3}
   text_Nickname: {fileID: 1293162052}
   image_ClassGuage: {fileID: 903440675}
   text_Class: {fileID: 772788163}
@@ -16036,6 +16041,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 1645038263}
   image_BG: {fileID: 569516606}
@@ -18194,6 +18200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 1059805955}
   image_BG: {fileID: 1421352819}
@@ -36555,6 +36562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 2089451494}
   image_BG: {fileID: 1146837448}
@@ -38311,6 +38319,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 1162092626}
   image_BG: {fileID: 1229827897}
@@ -39988,6 +39997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 1845159069}
   image_BG: {fileID: 757784825}
@@ -40061,6 +40071,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 1559702455}
   image_BG: {fileID: 1501489279}
@@ -40182,6 +40193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  PrefsPostfix: 
 --- !u!4 &1748083685
 Transform:
   m_ObjectHideFlags: 0
@@ -41942,6 +41954,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 2030013724}
   image_BG: {fileID: 1825665986}
@@ -48285,6 +48298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 0
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 39652929}
   image_BG: {fileID: 1757140416}
@@ -52909,6 +52923,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 2374592685617608712}
   image_BG: {fileID: 4227877395159021328}
@@ -54264,6 +54279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 0
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 2195670119199239738}
   image_BG: {fileID: 6769230465535506407}
@@ -56922,6 +56938,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 1625405654893238961}
   image_BG: {fileID: 1155756838634632672}
@@ -58192,6 +58209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 7287041555012155846}
   image_BG: {fileID: 291100663416049293}
@@ -60733,6 +60751,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 0
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 6807494877133288689}
   image_BG: {fileID: 1725669880559142189}
@@ -65392,6 +65411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0
   rts_Frame: {fileID: 8484624545216962109}
   image_BG: {fileID: 4201922918220967280}
@@ -66796,6 +66816,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 2812066677105470866}
   image_BG: {fileID: 4195389933312812196}
@@ -82117,6 +82138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 0
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 3359607498942791715}
   image_BG: {fileID: 1772014542387766830}
@@ -82239,6 +82261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 6513414729257227680}
   image_BG: {fileID: 5515652639242982134}
@@ -87030,6 +87053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoOpen: 1
   isPopAnimation: 1
+  isDestroyWithClose: 0
   alphaBG: 0.95
   rts_Frame: {fileID: 4084349995039114471}
   image_BG: {fileID: 5253112458239961775}
