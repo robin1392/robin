@@ -52,23 +52,25 @@ namespace ED
             }
         }
 
-        public void SyncActionWithTarget(string hash, ActorProxy actorProxy, ActorProxy targetActorProxy)
+        public void SyncActionWithTarget(string hash, ActorProxy targetActorProxy)
         {
             if (_syncActionCoroutine != null)
             {
-                SyncAction.OnActionCancel(actorProxy);
+                SyncAction.OnActionCancel(ActorProxy);
                 StopCoroutine(_syncActionCoroutine);
             }
             
             var action = ActionLookup.GetActionWithTarget(hash);
             SyncAction = action;
-            _syncActionCoroutine = StartCoroutine( RunSyncAction(action.Action(actorProxy, targetActorProxy)));
+            _syncActionCoroutine = StartCoroutine( RunSyncAction(action.Action(ActorProxy, targetActorProxy)));
         }
 
         public IEnumerator RunSyncAction(IEnumerator action)
         {
+            ActorProxy.EnablePathfinding(false);
             yield return action;
             ActorProxy.UpdateSyncPositionToCurrentPosition();
+            ActorProxy.EnablePathfinding(true);
             SyncAction = null;
             _syncActionCoroutine = null;
         }

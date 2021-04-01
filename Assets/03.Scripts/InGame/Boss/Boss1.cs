@@ -147,13 +147,15 @@ public class JumpSkillAction : SyncActionWithTarget
         }
         
         var lookPos = targetTransform.position;
-        lookPos.y = 0;
+        lookPos.y = actorTransform.position.y;
         actorProxy.transform.LookAt(lookPos);
 
         yield return null;
 
         var startPos = actorTransform.position;
-        var targetPos = targetTransform.position;
+        var direction = (targetTransform.position - startPos).normalized;
+        var distance = Vector3.Distance(startPos, targetTransform.position); 
+        var targetPos = startPos + (direction * (distance - 1f));
         var t = 0f;
 
         float fV_x;
@@ -189,10 +191,12 @@ public class JumpSkillAction : SyncActionWithTarget
             t += Time.deltaTime;
 
             currentPos.x = startPos.x + fV_x * t;
-            currentPos.y = startPos.y + (fV_y * t) - (0.5f * fg * t * t);
+            currentPos.y = 0; 
+            var y =  startPos.y + (fV_y * t) - (0.5f * fg * t * t);
             currentPos.z = startPos.z + fV_z * t;
 
             actorTransform.position = currentPos;
+            actorProxy.baseStat.transform.localPosition = new Vector3(0, y, 0);
 
             yield return null;
         }
@@ -201,6 +205,7 @@ public class JumpSkillAction : SyncActionWithTarget
         var pos = actorTransform.position;
         pos.y = 0;
         actorTransform.position = pos;
+        actorProxy.baseStat.transform.localPosition = Vector3.zero;
 
         if (actorProxy.isPlayingAI)
         {
@@ -215,6 +220,7 @@ public class JumpSkillAction : SyncActionWithTarget
     public override void OnActionCancel(ActorProxy actorProxy)
     {
         var boss = (Boss1) actorProxy.baseStat;
+        boss.transform.localPosition = Vector3.zero;
         boss.collider.enabled = true;
     }
 }

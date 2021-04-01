@@ -347,7 +347,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            baseStat.SyncActionWithTarget(actionTypeHash,this, target.GetComponent<ActorProxy>());
+            baseStat.SyncActionWithTarget(actionTypeHash, target.GetComponent<ActorProxy>());
         }
         
         public void SyncActionWithoutTarget(uint senderNetId, string actionTypeHash)
