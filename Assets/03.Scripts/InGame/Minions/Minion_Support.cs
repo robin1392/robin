@@ -109,7 +109,12 @@ namespace ED
             ts.LookAt(targetProxy.transform);
             
             yield return null;
-            
+
+            if (targetProxy == null)
+            {
+                yield break;
+            }
+
             SoundManager.instance.Play(m.clip_Jump);
             
             actorProxy.PlayAnimationWithRelay(AnimationHash.Skill, targetProxy.baseStat);
