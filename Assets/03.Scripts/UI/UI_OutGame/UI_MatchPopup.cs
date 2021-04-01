@@ -36,9 +36,10 @@ public class UI_MatchPopup : UI_Popup
     {
         if (isSearching && ticketId.IsNullOrEmpty() == false)
         {
-            isSearching = false;
             NetworkManager.Get().StopMatchReq(ticketId);
         }
+        
+        isSearching = false;
         
         base.Close();
     }
@@ -257,7 +258,7 @@ public class UI_MatchPopup : UI_Popup
             t--;
         }
         
-        Click_CancelCreateRoom();
+        Close();
     }
     
     private IEnumerator AIMode(PLAY_TYPE playType)
