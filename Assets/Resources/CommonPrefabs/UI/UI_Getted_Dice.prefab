@@ -2449,9 +2449,6 @@ MonoBehaviour:
   obj_Selected: {fileID: 7851210546027284496}
   ts_Move: {fileID: 1743797428606034824}
   slotNum: 0
-  arrColor:
-  - {r: 0.101960786, g: 0.64705884, b: 1, a: 1}
-  - {r: 0.3019608, g: 1, b: 0.50980395, a: 1}
   image_DiceGuageBG: {fileID: 1311885635482921366}
   image_DiceGuage: {fileID: 9209534301741269175}
   arrSprite_DiceGuage:
@@ -2477,6 +2474,8 @@ MonoBehaviour:
   mtl_Grayscale: {fileID: 2100000, guid: 220abc303df33e24aa68030ee6cd65b5, type: 2}
   obj_Upgradeable: {fileID: 7566821643265248768}
   obj_Equiped: {fileID: 6647093468017815273}
+  sprite_UngettedBG: {fileID: 21300000, guid: 7869017a2716446d6aba1853fce7eb9b, type: 3}
+  text_UngettedGrade: {fileID: 747407735830177580}
 --- !u!1 &7851210546027284496
 GameObject:
   m_ObjectHideFlags: 0

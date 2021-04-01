@@ -4,6 +4,7 @@
 
 using DG.Tweening;
 using RandomWarsResource.Data;
+using Service.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +23,6 @@ namespace ED
         public int slotNum;
 
         [Header("Dice Info")]
-        public Color[] arrColor;
         public Image image_DiceGuageBG;
         public Image image_DiceGuage;
         public Sprite[] arrSprite_DiceGuage;
@@ -48,6 +48,10 @@ namespace ED
 
         [Header("Upgrade")] public GameObject obj_Upgradeable;
         [Header("Equiped")] public GameObject obj_Equiped;
+
+        [Header("Ungetted")] 
+        public Sprite sprite_UngettedBG;
+        public Text text_UngettedGrade;
         
         private bool isUngetted;
         private VerticalLayoutGroup verticalLayoutGroup;
@@ -225,11 +229,34 @@ namespace ED
         {
             isUngetted = true;
 
+            int gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
+            switch (_data.grade)
+            {
+                case DICE_GRADE.NORMAL:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_NORMAL;
+                    break;
+                case DICE_GRADE.MAGIC:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_MAGIC;
+                    break;
+                case DICE_GRADE.EPIC:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_EPIC;
+                    break;
+                case DICE_GRADE.LEGEND:
+                    gradeindex = (int) LANG_ENUM.UI_GRADE_LEGEND;
+                    break;
+            }
+
+            text_UngettedGrade.gameObject.SetActive(true);
+            text_UngettedGrade.text = LocalizationManager.GetLangDesc(gradeindex);
+            
             var images = GetComponentsInChildren<Image>();
             foreach(var item in images)
             {
                 item.material = mtl_Grayscale;
             }
+
+            image_GradeBG.sprite = sprite_UngettedBG;
+            image_GradeBG.material = null;
 
             if (_data.isGuardian == false)
             {
@@ -238,8 +265,6 @@ namespace ED
                 
                 if (_data != null)
                     text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp((int)_data.grade, 0, Global.g_grade.Length)]}";
-                // else
-                //     text_DiceCount.text = $"{Global.g_grade[Mathf.Clamp(_dataGuardian.grade, 0, Global.g_grade.Length)]}";
             }
         }
     }
