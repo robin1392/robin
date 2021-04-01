@@ -12,9 +12,12 @@ public class UI_DeckInfo : MonoBehaviour
     public Button[] arrButton_Dice;
     public Image[] arrImage_Dice;
     public Image[] arrImage_DiceEyes;
+    public Text[] arrText_DiceClass;
 
     [Header("Deck Select")]
     public Button[] arrButton_Deck;
+    public Image[] arrImage_DeckButton;
+    public Sprite[] arrSprite_DeckButtonOnOff;
     public Text[] arrText_Deck;
     public Image image_CurrentDeckSlot;
 
@@ -33,6 +36,7 @@ public class UI_DeckInfo : MonoBehaviour
         UserInfoManager.Get().SetActiveDeckIndex(index);
         UI_Main.Get().panel_Dice.SetActiveDeck();
         UI_Main.Get().panel_Dice.ui_MainStage.Set();
+        UI_Main.Get().panel_Dice.RefreshEquipedMarkObject();
     }
 
     public void SetActiveDeck()
@@ -59,6 +63,7 @@ public class UI_DeckInfo : MonoBehaviour
                 FileHelper.GetIcon(dataDiceInfo.iconName);
             arrImage_Dice[i].SetNativeSize();
             arrImage_DiceEyes[i].color = FileHelper.GetColor(dataDiceInfo.color);
+            arrText_DiceClass[i].text = UserInfoManager.Get().GetUserInfo().dicGettedDice[deck[i]][0].ToString();
 
             if (isImmediate == false)
             {
@@ -80,13 +85,15 @@ public class UI_DeckInfo : MonoBehaviour
     {
         int index = UserInfoManager.Get().GetActiveDeckIndex();
         
-        image_CurrentDeckSlot.rectTransform.DOAnchorPos(
-            ((RectTransform) arrButton_Deck[index].transform).anchoredPosition,
-            isImmediate ? 0f : 0.2f).SetEase(Ease.OutBack);
+        // image_CurrentDeckSlot.rectTransform.DOAnchorPos(
+        //     ((RectTransform) arrButton_Deck[index].transform).anchoredPosition,
+        //     isImmediate ? 0f : 0.2f).SetEase(Ease.OutBack);
 
+        Color gray = new Color(146, 137, 227);
         for (int i = 0; i < arrText_Deck.Length; i++)
         {
-            arrText_Deck[i].color = i == index ? Color.white : Color.gray;
+            arrImage_DeckButton[i].sprite = arrSprite_DeckButtonOnOff[i == index ? 1 : 0];
+            arrText_Deck[i].color = i == index ? Color.white : gray;
         }
     }
 }

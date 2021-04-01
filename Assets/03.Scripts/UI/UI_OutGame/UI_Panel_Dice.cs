@@ -33,6 +33,7 @@ namespace ED
         public List<UI_Getted_Emotion> listGettedEmotion = new List<UI_Getted_Emotion>();
         public List<UI_Getted_Emotion> listUngettedEmotion = new List<UI_Getted_Emotion>();
         public GameObject objSelectBlind;
+        public Image image_SelectDiceIcon;
         public RectTransform rts_ScrollView;
         public RectTransform rts_ScrollViewGuardian;
         public RectTransform rts_ScrollViewEmotion;
@@ -271,8 +272,10 @@ namespace ED
             LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedGuardianParent);
             LayoutRebuilder.ForceRebuildLayoutImmediate(tsGettedEmotionParent);
             LayoutRebuilder.ForceRebuildLayoutImmediate(tsUngettedEmotionParent);
+
+            text_BonusHP.text = $"<color=#9289e3>보유 효과: </color>타워 HP +{bonusHP}";
             
-            text_BonusHP.text = bonusHP.ToString();
+            RefreshEquipedMarkObject();
         }
 
         public void ResetYPos()
@@ -290,7 +293,7 @@ namespace ED
             
             if (diceId < 5000)
             {
-                DeactivateSelectedObjectChild();
+                //DeactivateSelectedObjectChild();
                 obj_Ciritical.SetActive(false);
                 objSelectBlind.SetActive(true);
 
@@ -301,19 +304,18 @@ namespace ED
                     return;
                 }
 
-                objSelectBlind.transform.GetChild(0).GetComponent<Image>().sprite =
-                    FileHelper.GetIcon(dataDiceInfo.iconName);
+                image_SelectDiceIcon.sprite = FileHelper.GetIcon(dataDiceInfo.iconName);
 
-                rts_Content.DOAnchorPosY(0, 0.1f);
+                //rts_Content.DOAnchorPosY(0, 0.1f);
 
-                tsGettedDiceParent.gameObject.SetActive(false);
-                tsGettedGuardianParent.gameObject.SetActive(false);
-                tsUngettedDiceParent.gameObject.SetActive(false);
-                tsUngettedGuardianParent.gameObject.SetActive(false);
-                text_GettedDice.gameObject.SetActive(false);
-                text_UngettedDice.gameObject.SetActive(false);
-                text_GettedGuardian.gameObject.SetActive(false);
-                text_UngettedGuardian.gameObject.SetActive(false);
+                // tsGettedDiceParent.gameObject.SetActive(false);
+                // tsGettedGuardianParent.gameObject.SetActive(false);
+                // tsUngettedDiceParent.gameObject.SetActive(false);
+                // tsUngettedGuardianParent.gameObject.SetActive(false);
+                // text_GettedDice.gameObject.SetActive(false);
+                // text_UngettedDice.gameObject.SetActive(false);
+                // text_GettedGuardian.gameObject.SetActive(false);
+                // text_UngettedGuardian.gameObject.SetActive(false);
             }
             else
             {
@@ -357,6 +359,11 @@ namespace ED
         public void DeactivateSelectedObjectChild()
         {
             BroadcastMessage("DeactivateSelectedObject", SendMessageOptions.DontRequireReceiver);
+        }
+
+        public void RefreshEquipedMarkObject()
+        {
+            BroadcastMessage("SetEquipedMark", SendMessageOptions.DontRequireReceiver);
         }
 
         public void Click_Deck(int deckSlotNum)
@@ -469,6 +476,7 @@ namespace ED
             }
             
             UI_Main.Get().panel_Dice.ui_MainStage.Set();
+            RefreshEquipedMarkObject();
             return true;
         }
 

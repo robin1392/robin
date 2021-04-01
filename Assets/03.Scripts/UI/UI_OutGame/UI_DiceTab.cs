@@ -26,7 +26,7 @@ public class UI_DiceTab : MonoBehaviour
         if (panel._isSelectMode) return;
         
         text_Name.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack);
-        image_Frame.rectTransform.DOSizeDelta(new Vector2(242, 134), 0.2f).SetEase(Ease.OutBack);
+        //image_Frame.rectTransform.DOSizeDelta(new Vector2(242, 134), 0.2f).SetEase(Ease.OutBack);
         
         foreach (var otherButton in list_OtherButtons)
         {
@@ -50,7 +50,7 @@ public class UI_DiceTab : MonoBehaviour
 
     public void Unclick()
     {
-        text_Name.transform.DOScale(0f, 0.2f).SetEase(Ease.OutBack);
-        image_Frame.rectTransform.DOSizeDelta(new Vector2(242, 100), 0.2f).SetEase(Ease.OutBack);
+        text_Name.transform.DOScale(0.8f, 0.2f).SetEase(Ease.OutBack);
+        //image_Frame.rectTransform.DOSizeDelta(new Vector2(242, 100), 0.2f).SetEase(Ease.OutBack);
     }
 }

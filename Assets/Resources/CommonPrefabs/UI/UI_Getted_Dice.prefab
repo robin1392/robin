@@ -176,7 +176,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1927294115
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1329,6 +1329,7 @@ RectTransform:
   - {fileID: 1885353084}
   - {fileID: 7851210546027284497}
   - {fileID: 7851210545866157148}
+  - {fileID: 210056564813368637}
   m_Father: {fileID: 7851210545955448652}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1395,7 +1396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.101960786, g: 0.64705884, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1406,7 +1407,7 @@ MonoBehaviour:
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -1441,8 +1442,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 7851210545955448652}
-  m_RootOrder: 1
+  m_Father: {fileID: 1743797428606034824}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2307,7 +2308,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1743797428606034824}
-  - {fileID: 210056564813368637}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2342,20 +2342,29 @@ MonoBehaviour:
   - {r: 0.3019608, g: 1, b: 0.50980395, a: 1}
   image_DiceGuageBG: {fileID: 1311885635482921366}
   image_DiceGuage: {fileID: 9209534301741269175}
+  arrSprite_DiceGuage:
+  - {fileID: 21300000, guid: 79038a436a5e54ef897916ad76dadd56, type: 3}
+  - {fileID: 21300000, guid: 44ae6a27d1637402e892f064e2db27bd, type: 3}
   slider_DiceGuage: {fileID: 3399897380262837232}
   obj_UpgradeIcon: {fileID: 1927294114}
   text_DiceCount: {fileID: 143046286}
   text_DiceLevel: {fileID: 3561196426392618691}
-  arrImage_GradeBG:
-  - {fileID: 5173148601974419704}
-  - {fileID: 7851210546027284494}
+  image_GradeBG: {fileID: 5173148601974419704}
+  image_SelectGradeBG: {fileID: 7851210546027284494}
   arrSprite_GradeBG:
   - {fileID: 21300000, guid: d851871bbdd3d4fac918260cbc3aef9b, type: 3}
   - {fileID: 21300000, guid: 6633818dffe4e41329ac21634b713f5f, type: 3}
   - {fileID: 21300000, guid: 56e2c8f1ee82f40d0a3e1a7e8145d50f, type: 3}
   - {fileID: 21300000, guid: 7faf6d5690fed4954bfb6652c3854a9b, type: 3}
   - {fileID: 21300000, guid: 15e1cc56ef96a496eae36f4607a44171, type: 3}
+  arrSprite_SelectGradeBG:
+  - {fileID: 21300000, guid: c2dc0bb5acc564c98aa029cfc1e00edd, type: 3}
+  - {fileID: 21300000, guid: 2e397e9b85f1f44b8a66e77843142592, type: 3}
+  - {fileID: 21300000, guid: fe3f25037547a4284911dbff42fa6b53, type: 3}
+  - {fileID: 21300000, guid: 3f00e8f56e51f4d5e87c4c0fbf938e93, type: 3}
   mtl_Grayscale: {fileID: 2100000, guid: 220abc303df33e24aa68030ee6cd65b5, type: 2}
+  obj_Upgradeable: {fileID: 7566821643265248768}
+  obj_Equiped: {fileID: 6647093468017815273}
 --- !u!1 &7851210546027284496
 GameObject:
   m_ObjectHideFlags: 0

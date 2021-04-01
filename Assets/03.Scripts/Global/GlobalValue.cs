@@ -56,7 +56,8 @@ public partial class Global
     public static readonly string g_class = "클래스";
     public static readonly string[] g_grade = {"일반", "매직", "에픽", "전설"};
 
-    public static string[] g_gradeColor = {"B3B3B3", "306CDB", "803AE8", "F5B231"};
+    public static string[] g_gradeColor = {"8790af", "517dd6", "c748d2", "e8a902"};
+    public static string[] g_gradeTextColor = {"a6afcb", "6990e1", "db66e6", "ffd71e"};
 
     #endregion
 }

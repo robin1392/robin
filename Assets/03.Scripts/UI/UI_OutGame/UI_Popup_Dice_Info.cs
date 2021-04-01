@@ -105,13 +105,11 @@ namespace ED
     public class UI_Popup_Dice_Info : UI_Popup
     {
         //
-        public const int INFOCOUNT = 8;
+        public readonly int INFOCOUNT = 8;
         
         public UI_Panel_Dice ui_Panel_Dice;
         public UI_Getted_Dice ui_getted_dice;
         public Image image_Character;
-        public ParticleSystem ps_NormalCharacterEffect;
-        public ParticleSystem ps_LegendCharacterEffect;
 
         [Header("Info")] 
         public Text text_Name;
@@ -119,11 +117,9 @@ namespace ED
         public Text text_Grade;
         public Image image_GradeBG;
         public Text text_TowerHP;
+        public Text text_TowerHPUpgrade;
         public Text text_Type;
         public Text text_TypeInfo;
-        public Image image_Type;
-        public Sprite[] arrSprite_Type;
-        public Sprite[] arrSprite_InfoBG;
 
         [Header("Button")]
         public Button btn_Upgrade;
@@ -145,6 +141,9 @@ namespace ED
         public GameObject pref_ResultStatSlot;
         public ParticleSystem ps_ResultIconBackground;
 
+        [Header("Color")] public Color color_ClassUp;
+        public Color color_PowerUp;
+
         //private Data_Dice data;
         //private RandomWarsResource.Data.TDataDiceInfo data;
         private InfoData data;
@@ -157,6 +156,8 @@ namespace ED
         private int diceLevel;
         private int needGold;
         private int needDiceCount;
+        private int upgradeTowerHp;
+        private readonly string none = "--";
         
         #region Base Region
         
@@ -166,12 +167,10 @@ namespace ED
             
             image_Character.color = Color.clear;
             image_Character.DOColor(Color.white, 0.2f).SetDelay(0.1f);
-            var anchPos = image_Character.rectTransform.anchoredPosition;
+            //var anchPos = image_Character.rectTransform.anchoredPosition;
             //anchPos.y -= 1000f;
             //image_Character.rectTransform.anchoredPosition = anchPos;
-            image_Character.rectTransform.DOAnchorPosY(0, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
-
-            ContentUIInfo();
+            //image_Character.rectTransform.DOAnchorPosY(0, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f);
         }
 
         //public void Initialize(Data_Dice pData)
@@ -201,19 +200,7 @@ namespace ED
             // }
 
             image_Character.sprite = FileHelper.GetIcon(data.illustName);
-            ps_LegendCharacterEffect.gameObject.SetActive(data.grade == DICE_GRADE.LEGEND);
-            ps_NormalCharacterEffect.gameObject.SetActive(!ps_LegendCharacterEffect.gameObject.activeSelf);
 
-            if (ps_NormalCharacterEffect.gameObject.activeSelf)
-            {
-                var particles = ps_NormalCharacterEffect.GetComponentsInChildren<ParticleSystem>();
-                for (int i = 0; i < particles.Length; i++)
-                {
-                    var module = particles[i].main;
-                    module.startColor = UnityUtil.HexToColor(Global.g_gradeColor[Mathf.Clamp((int)data.grade, 0, 3)]);
-                }
-            }
-                
             if (UserInfoManager.Get().GetUserInfo().dicGettedDice.ContainsKey(data.id))
             {
                 diceLevel = UserInfoManager.Get().GetUserInfo().dicGettedDice[data.id][0];
@@ -245,6 +232,7 @@ namespace ED
                 needGold = dataDiceUpgrade.needGold;
                 needDiceCount = dataDiceUpgrade.needCard;
                 bonusTowerHp = dataDiceCurrentUpgrade.getTowerHp;
+                upgradeTowerHp = dataDiceUpgrade.getTowerHp;
             }
 
             ui_getted_dice.Initialize(data, diceLevel, diceCount);
@@ -254,9 +242,7 @@ namespace ED
             text_UpgradeGold.text = needGold.ToString();
 
             btn_Use.interactable = diceLevel > 0;
-            btn_Upgrade.interactable = (diceLevel > 0) &&
-                                        //(UserInfoManager.Get().GetUserInfo().gold >= needGold) &&
-                                       (diceCount >= needDiceCount);
+            btn_Upgrade.gameObject.SetActive(diceLevel > 0 && diceCount >= needDiceCount);
             var images = btn_Upgrade.GetComponentsInChildren<Image>();
             for (int i = 1; i < images.Length; ++i)
             {
@@ -274,7 +260,11 @@ namespace ED
             }
             text_Use.color = btn_Use.interactable ? Color.white : Color.gray;
 
-            if (data.isGuardian == false ) text_TowerHP.text = bonusTowerHp.ToString();
+            if (data.isGuardian == false )
+            {
+                text_TowerHP.text = $"타워 HP {bonusTowerHp}";
+                text_TowerHPUpgrade.text = string.Empty;
+            }
 
             SetUnitGrade();
             SetInfoDesc();
@@ -282,18 +272,14 @@ namespace ED
             btn_Upgrade.gameObject.SetActive(btn_Upgrade.gameObject.activeSelf && !data.isGuardian);
             btn_ShowUpgrade.gameObject.SetActive(!data.isGuardian);
             btn_ShowLevelUp.gameObject.SetActive(!data.isGuardian);
-            text_TowerHP.transform.parent.gameObject.SetActive(!data.isGuardian);
+            text_TowerHP.gameObject.SetActive(!data.isGuardian);
 
             SoundManager.instance.Play(clip_Open);
         }
 
         public override void Close()
         {
-            CloseContectInfo();
-            
-            if (ps_LegendCharacterEffect.gameObject.activeSelf) ps_LegendCharacterEffect.Stop();
-            if (ps_NormalCharacterEffect.gameObject.activeSelf) ps_NormalCharacterEffect.Stop();
-            image_Character.rectTransform.DOAnchorPosY(image_Character.rectTransform.anchoredPosition.y - 1000f, 0.2f).SetEase(Ease.InBack);
+            //image_Character.rectTransform.DOAnchorPosY(image_Character.rectTransform.anchoredPosition.y - 1000f, 0.2f).SetEase(Ease.InBack);
             image_Character.DOFade(0, 0.2f);
             rts_Frame.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).SetDelay(0.1f).OnComplete(()=>
             {
@@ -462,40 +448,6 @@ namespace ED
         
         #region ui info
 
-        public void ContentUIInfo()
-        {
-            if(listInfoUI == null)
-                listInfoUI = new List<InfoUI>();
-            
-            listInfoUI.Clear();
-
-
-            if (infosTranform == null)
-            {
-                infosTranform = this.transform.Find("Frame/Image_Inner_Frame/Infos");
-            }
-
-            for (int i = 0; i < INFOCOUNT; i++)
-            {
-                InfoUI info = new InfoUI
-                {
-                    imageBG = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString()).GetComponent<Image>(),
-                    textType = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Type")
-                        .GetComponent<Text>(),
-                    textValue = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Value")
-                        .GetComponent<Text>(),
-                    textPlus = infosTranform.transform.Find("UI_Dice_Info_0" + i.ToString() + "/Text_Plus")
-                        .GetComponent<Text>()
-                };
-                listInfoUI.Add(info);
-            }
-        }
-
-        public void CloseContectInfo()
-        {
-            listInfoUI.Clear();
-        }
-
         public void SetUnitGrade()
         {
             //text_Grade
@@ -516,18 +468,14 @@ namespace ED
                     break;
             }
             
-            text_Grade.text = LocalizationManager.GetLangDesc( gradeindex );
-            //
-            // if(data.grade == (int)DICE_GRADE.NORMAL)
-            //     text_Grade.color = UnityUtil.HexToColor("FFFFFF");
-            // else
-            //     text_Grade.color = UnityUtil.HexToColor(Global.g_gradeColor[data.grade]);
             image_GradeBG.color = UnityUtil.HexToColor(Global.g_gradeColor[Mathf.Clamp((int)data.grade, 0, 3)]);
+            text_Grade.text = LocalizationManager.GetLangDesc( gradeindex );
+            text_Grade.color = image_GradeBG.color;
+            text_Name.color = UnityUtil.HexToColor(Global.g_gradeTextColor[Mathf.Clamp((int)data.grade, 0, 3)]);
         }
         
         public void SetInfoDesc()
         {
-            
             listInfoUI[0].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Hp");
             listInfoUI[1].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Movespd");
             listInfoUI[2].textType.text = LocalizationManager.GetLangDesc( "Minioninfo_Atk");
@@ -565,22 +513,34 @@ namespace ED
             
             text_Type.text = LocalizationManager.GetLangDesc(castLangIndex);
             text_TypeInfo.text = LocalizationManager.GetLangDesc(castInfoLangIndex);
-            if (data.isGuardian)
-            {
-                image_Type.sprite = arrSprite_Type[4];
-            }
-            else
-            {
-                image_Type.sprite = arrSprite_Type[(int) data.castType];
-            }
+
             //listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Type].textValue.text = LocalizationManager.GetLangDesc( castLangIndex);
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textValue.text = $"{data.maxHealth + data.maxHpUpgrade * diceLevel}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = $"{(data.power + data.powerUpgrade * diceLevel):f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = $"{data.attackSpeed:f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = $"{data.moveSpeed:f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Skill].textValue.text = $"{(data.effect + data.effectUpgrade * diceLevel):f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Cooltime].textValue.text = $"{data.effectCooltime:f1}";
-            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Range].textValue.text = $"{data.range:f1}";
+            float value = data.maxHealth + data.maxHpUpgrade * diceLevel;
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textValue.text = value > 0 ? $"{value:f1}" : none;
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Hp].textValue.DOFade(value > 0 ? 1f : 0.5f, 0f);
+            
+            value = data.power + data.powerUpgrade * diceLevel;
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.text = value > 0 ? $"{value:f1}" : none;
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkPower].textValue.DOFade(value > 0 ? 1f : 0.5f, 0f);
+            
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.text = data.attackSpeed > 0 ? $"{data.attackSpeed:f1}" : none;
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_AtkSpeed].textValue.DOFade(data.attackSpeed > 0 ? 1f : 0.5f, 0f);
+            
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.text = data.moveSpeed > 0 ? $"{data.moveSpeed:f1}" : none;
+            listInfoUI[(int) Global.E_DICEINFOSLOT.Info_MoveSpeed].textValue.DOFade(data.moveSpeed > 0 ? 1f : 0.5f, 0f);
+
+            value = data.effect + data.effectUpgrade * diceLevel;
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Skill].textValue.text = value > 0 ? $"{value:f1}" : none;
+            listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].textValue.DOFade(value > 0 ? 1f : 0.5f, 0f);
+            
+            listInfoUI[(int)Global.E_DICEINFOSLOT.Info_Cooltime].textValue.text = data.effectCooltime > 0 ? $"{data.effectCooltime:f1}" : none;
+            listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Cooltime].textValue
+                .DOFade(data.effectCooltime > 0 ? 1f : 0.5f, 0f);
+
+            listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Range].textValue.text =
+                data.range > 0 ? $"{data.range:f1}" : none;
+            listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Range].textValue.DOFade(data.range > 0 ? 1f : 0.5f, 0f);
+            
             switch ((DICE_MOVE_TYPE)data.targetMoveType)
             {
                 case DICE_MOVE_TYPE.GROUND:
@@ -603,19 +563,21 @@ namespace ED
             {
                 if (data.maxHpUpgrade > 0)
                 {
-                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].imageBG.sprite = arrSprite_InfoBG[1];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].imageBG.color = color_ClassUp;
                     listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpUpgrade}";
                 }
                 if (data.powerUpgrade > 0)
                 {
-                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].imageBG.sprite = arrSprite_InfoBG[1];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].imageBG.color = color_ClassUp;
                     listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerUpgrade:f1}";
                 }
                 if (data.effectUpgrade > 0)
                 {
-                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].imageBG.sprite = arrSprite_InfoBG[1];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].imageBG.color = color_ClassUp;
                     listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectUpgrade:f1}";
                 }
+
+                text_TowerHPUpgrade.text = $"+{upgradeTowerHp}";
             }
         }
         
@@ -623,9 +585,10 @@ namespace ED
         {
             for (int i = 0; i < listInfoUI.Count; i++)
             {
-                listInfoUI[i].imageBG.sprite = arrSprite_InfoBG[0];
+                listInfoUI[i].imageBG.color = Color.white;
                 listInfoUI[i].textPlus.text = String.Empty;
             }
+            text_TowerHPUpgrade.text = string.Empty;
         }
         
         public void PowerUpDown(BaseEventData baseEventData)
@@ -634,17 +597,17 @@ namespace ED
             {
                 if (data.maxHpInGameUp > 0)
                 {
-                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].imageBG.sprite = arrSprite_InfoBG[2];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].imageBG.color = color_PowerUp;
                     listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Hp].textPlus.text = $"+{data.maxHpInGameUp}";
                 }
                 if (data.powerInGameUp > 0)
                 {
-                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].imageBG.sprite = arrSprite_InfoBG[2];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].imageBG.color = color_PowerUp;
                     listInfoUI[(int) Global.E_DICEINFOSLOT.Info_AtkPower].textPlus.text = $"+{data.powerInGameUp:f1}";
                 }
                 if (data.effectInGameUp > 0)
                 {
-                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].imageBG.sprite = arrSprite_InfoBG[2];
+                    listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].imageBG.color = color_PowerUp;
                     listInfoUI[(int) Global.E_DICEINFOSLOT.Info_Skill].textPlus.text = $"+{data.effectInGameUp:f1}";
                 } 
             }
@@ -654,7 +617,7 @@ namespace ED
         {
             for (int i = 0; i < listInfoUI.Count; i++)
             {
-                listInfoUI[i].imageBG.sprite = arrSprite_InfoBG[0];
+                listInfoUI[i].imageBG.color = Color.white;
                 listInfoUI[i].textPlus.text = String.Empty;
             }
         }

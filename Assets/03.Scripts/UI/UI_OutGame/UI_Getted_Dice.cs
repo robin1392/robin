@@ -25,6 +25,7 @@ namespace ED
         public Color[] arrColor;
         public Image image_DiceGuageBG;
         public Image image_DiceGuage;
+        public Sprite[] arrSprite_DiceGuage;
         public Slider slider_DiceGuage;
         public GameObject obj_UpgradeIcon;
         public Text text_DiceCount;
@@ -39,9 +40,14 @@ namespace ED
         private Transform _grandParent;
 
         [Space]
-        public Image[] arrImage_GradeBG;
+        public Image image_GradeBG;
+        public Image image_SelectGradeBG;
         public Sprite[] arrSprite_GradeBG;
+        public Sprite[] arrSprite_SelectGradeBG;
         public Material mtl_Grayscale;
+
+        [Header("Upgrade")] public GameObject obj_Upgradeable;
+        [Header("Equiped")] public GameObject obj_Equiped;
         
         private bool isUngetted;
         private VerticalLayoutGroup verticalLayoutGroup;
@@ -74,16 +80,19 @@ namespace ED
             image_Icon.sprite = FileHelper.GetIcon( _data.iconName );
             image_Eye.color = FileHelper.GetColor(_data.color);
 
+            bool isUpgradePossible = count >= needDiceCount;
             text_DiceLevel.text = $"{Global.g_class} {level}";
             text_DiceCount.text = $"{count}/{needDiceCount}";
             //image_DiceGuage.fillAmount = count / (float)needDiceCount;
             slider_DiceGuage.gameObject.SetActive(!_data.isGuardian);
             slider_DiceGuage.value = count / (float)needDiceCount;
-            image_DiceGuage.color = arrColor[count >= needDiceCount ? 1 : 0];
+            //image_DiceGuage.color = arrColor[count >= needDiceCount ? 1 : 0];
+            image_DiceGuage.sprite = arrSprite_DiceGuage[isUpgradePossible ? 1 : 0];
             //count >= needDiceCount ? arrColor[1] : arrColor[0];//UnityUtil.HexToColor("6AD3E5");
 
             bool isUpgradeEnable = count >= needDiceCount;
             obj_UpgradeIcon.SetActive(isUpgradeEnable);
+            obj_Upgradeable.SetActive(isUpgradeEnable);
             button_LevelUp.gameObject.SetActive(isUpgradeEnable);
             //obj_UpgradeLight.SetActive(obj_UpgradeIcon.activeSelf);
             
@@ -93,15 +102,35 @@ namespace ED
 
             if (_data.isGuardian)
             {
-                for (int i = 0; i < arrImage_GradeBG.Length; ++i)
-                {
-                    arrImage_GradeBG[i].sprite = arrSprite_GradeBG[0];
-                }
+                image_GradeBG.sprite = arrSprite_GradeBG[0];
+                image_SelectGradeBG.sprite = arrSprite_SelectGradeBG[0];
             }
             else
             {
-                arrImage_GradeBG[0].sprite = arrSprite_GradeBG[(int)_data.grade];
-                arrImage_GradeBG[1].sprite = arrSprite_GradeBG[isUpgradeEnable ? 4 : (int)_data.grade];
+                image_GradeBG.sprite = arrSprite_GradeBG[(int)_data.grade];
+                //image_SelectGradeBG.sprite = arrSprite_SelectGradeBG[isUpgradeEnable ? 4 : (int)_data.grade];
+                image_SelectGradeBG.sprite = arrSprite_SelectGradeBG[(int)_data.grade];
+            }
+            
+            // 장착중인지
+            SetEquipedMark();
+        }
+
+        /// <summary>
+        /// 현재 덱에 장착중이면 장착중마크 활성화
+        /// </summary>
+        public void SetEquipedMark()
+        {
+            int currentDeckIndex = UserInfoManager.Get().GetUserInfo().activateDeckIndex;
+            var deck = UserInfoManager.Get().GetUserInfo().arrDeck;
+            obj_Equiped.SetActive(false);
+            for (int i = 0; i < deck[currentDeckIndex].Length; i++)
+            {
+                if (deck[currentDeckIndex][i] == _data.id)
+                {
+                    obj_Equiped.SetActive(true);
+                    return;
+                }
             }
         }
         
@@ -178,10 +207,10 @@ namespace ED
                 }
             }
             
-            var parent = transform.parent.parent;
-            ((RectTransform)parent).DOAnchorPosY(
-                Mathf.Clamp(Mathf.Abs((((RectTransform)transform.parent).anchoredPosition.y + 980) + ((RectTransform)transform).anchoredPosition.y - 200), 0,
-                    ((RectTransform)parent).sizeDelta.y - ((RectTransform)parent.parent).rect.height), 0.3f);
+            // var parent = transform.parent.parent;
+            // ((RectTransform)parent).DOAnchorPosY(
+            //     Mathf.Clamp(Mathf.Abs((((RectTransform)transform.parent).anchoredPosition.y + 980) + ((RectTransform)transform).anchoredPosition.y - 200), 0,
+            //         ((RectTransform)parent).sizeDelta.y - ((RectTransform)parent.parent).rect.height), 0.3f);
         }
 
         public void DeactivateSelectedObject()
