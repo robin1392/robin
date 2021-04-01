@@ -194,7 +194,7 @@ namespace MirageTest.Scripts.GameMode
             var winnerTower = server.Towers.First();
             var winner = PlayerStates.First(p => p.ownerTag == winnerTower.ownerTag);
             int getDefenderTowerHp = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
-            EndGame(winner, loser, false, winnerTower.currentHealth > getDefenderTowerHp * 100);
+            EndGame(winner, loser, false, winnerTower.currentHealth > getDefenderTowerHp);
         }
 
         private void EndGame(PlayerState winner, PlayerState loser, bool winByDefault, bool perfect)
