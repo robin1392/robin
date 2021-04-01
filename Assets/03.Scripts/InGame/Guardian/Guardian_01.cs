@@ -38,23 +38,21 @@ public class Guardian01Action : SyncActionWithTarget
 
         yield return new WaitForSeconds(0.716f);
 
-        if (actorProxy.isPlayingAI == false)
+        if (actorProxy.isPlayingAI)
         {
-            yield break;
-        }
-            
-        var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseStat.targetLayer);
-        foreach (var col in cols)
-        {
-            if (col.CompareTag("Player")) continue;
-
-            var m = col.GetComponentInParent<BaseStat>();
-            if (m != null && m.isAlive)
+            var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseStat.targetLayer);
+            foreach (var col in cols)
             {
-                m.ActorProxy.HitDamage(actorProxy.baseStat.power);
+                if (col.CompareTag("Player")) continue;
+
+                var m = col.GetComponentInParent<BaseStat>();
+                if (m != null && m.isAlive)
+                {
+                    m.ActorProxy.HitDamage(actorProxy.baseStat.power);
+                }
             }
         }
-        
+
         yield return new WaitForSeconds(0.284f);
     }
 }
