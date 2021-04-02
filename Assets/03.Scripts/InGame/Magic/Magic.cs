@@ -28,7 +28,7 @@ namespace ED
 
         public virtual void Initialize(bool pIsBottomPlayer)
         {
-            UpdateHealthBar();
+            SetHealthBarColor();
             if (_hitCollider != null)
             {
                 var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}"; 

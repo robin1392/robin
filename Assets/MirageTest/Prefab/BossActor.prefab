@@ -130,7 +130,7 @@ MonoBehaviour:
   version: 2
   radius: 0.25
   height: 1
-  repathRate: 0.5
+  repathRate: 2
   canSearch: 1
   canMove: 1
   maxSpeed: 1
@@ -184,4 +184,9 @@ MonoBehaviour:
   baseStat: {fileID: 0}
   _seeker: {fileID: 0}
   _aiPath: {fileID: 0}
+  _aiDestinationSetter: {fileID: 0}
+  _rvoController: {fileID: 0}
   buffState: 0
+  isHatched: 0
+  waveSpawned: 0
+  bossIndex: 0

@@ -130,7 +130,7 @@ MonoBehaviour:
   version: 2
   radius: 0.25
   height: 1
-  repathRate: 0.5
+  repathRate: 2
   canSearch: 1
   canMove: 1
   maxSpeed: 1
@@ -179,10 +179,11 @@ MonoBehaviour:
   ingameUpgradeLevel: 0
   outgameUpgradeLevel: 0
   spawnTime: 0
-  isSkillInitialized: 0
   isPlayingAI: 0
   isMovable: 1
   baseStat: {fileID: 0}
   _seeker: {fileID: 0}
   _aiPath: {fileID: 0}
+  _aiDestinationSetter: {fileID: 0}
+  _rvoController: {fileID: 0}
   buffState: 0

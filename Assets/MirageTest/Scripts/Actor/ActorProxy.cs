@@ -157,7 +157,9 @@ namespace MirageTest.Scripts
             {
                 _aiDestinationSetter = gameObject.AddComponent<AIDestinationSetter>();
                 _rvoController = gameObject.AddComponent<RVOController>();
+                var simpleSmoothModifier = gameObject.AddComponent<SimpleSmoothModifier>();
                 _rvoController.maxNeighbours = 20;
+                _rvoController.lockWhenNotMoving = true;
                 EnablePathfinding(false);
             }
             
@@ -314,6 +316,8 @@ namespace MirageTest.Scripts
         {
             var client = Client as RWNetworkClient;
             OnSpawnActor();
+            
+            _aiPath.maxSpeed = moveSpeed;
 
             EnableAI(client.IsPlayingAI);
             RefreshHpUI();

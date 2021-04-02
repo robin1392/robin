@@ -57,7 +57,7 @@ namespace MirageTest.Scripts.Entities
             this.nickName = nickName;
             this.sp = sp;
             this.ownerTag = tag;
-            this.spGrade = 0;
+            this.spGrade = 1;
             this.guardianId = guadianId;
 
             foreach (var deckDice in deck)
@@ -216,8 +216,7 @@ namespace MirageTest.Scripts.Entities
             if (IsLocalPlayerState)
             {
                 UI_InGame.Get().button_SP_Upgrade.EditSpCallback(sp >= GetUpradeSpCost() && newValue < GameConstants.MaxSpUpgradeLevel);
-                UI_InGame.Get().SetSPUpgrade(newValue + 1, GetUpradeSpCost());
-                UI_InGame.Get().ShowSpUpgradeMessage();
+                UI_InGame.Get().SetSPUpgrade(newValue, GetUpradeSpCost());
             }
         }
 
@@ -305,7 +304,7 @@ namespace MirageTest.Scripts.Entities
 
         public int GetUpradeSpCost()
         {
-            return TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.GetSPPlusLevelupCost01 + spGrade].value;
+            return TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.GetSPPlusLevelupCost01 + spGrade - 1].value;
         }
 
         public int GetEmptySlotCount()

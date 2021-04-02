@@ -33,7 +33,8 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
-        if (UserInfoManager.Get().GetUserInfo().isEndTutorial)
+        var userInfo = UserInfoManager.Get().GetUserInfo();
+        if (userInfo == null || userInfo.isEndTutorial)
         {
             isTutorial = false;
             gameObject.SetActive(false);
