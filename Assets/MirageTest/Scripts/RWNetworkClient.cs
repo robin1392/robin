@@ -225,11 +225,11 @@ namespace MirageTest.Scripts
         {
             await UniTask.Yield();
             
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), DelayType.Realtime);
             
             UI_InGamePopup.Get().InitUIElement(Player1, Player2);
             
-            await UniTask.Delay(TimeSpan.FromSeconds(2.0f));
+            await UniTask.Delay(TimeSpan.FromSeconds(2.0f), DelayType.Realtime);
 
             GetLocalPlayerProxy()?.ClientReady();
 

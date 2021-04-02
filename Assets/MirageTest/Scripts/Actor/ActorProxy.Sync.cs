@@ -227,6 +227,9 @@ namespace MirageTest.Scripts
                 case E_BulletType.ICE_FREEZE_BULLET:
                     bullet = PoolManager.instance.ActivateObject<Bullet>("Necromancer_Bullet", startPos);
                     break;
+                case E_BulletType.WIND_BULLET:
+                    bullet = PoolManager.instance.ActivateObject<Bullet>("Wind_Bullet", startPos);
+                    break;
             }
 
             if (bullet != null)

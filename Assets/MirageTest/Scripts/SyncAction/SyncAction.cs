@@ -67,4 +67,15 @@ namespace MirageTest.Scripts.SyncAction
             yield return new WaitForSeconds(actor.baseStat.effectDuration);
         }
     }
+    
+    public class ShieldAction : SyncActionWithoutTarget
+    {
+        public override IEnumerator Action(ActorProxy actor)
+        {
+            var shield = actor.baseStat as Minion_Shield;
+            SoundManager.instance.Play(shield.clip_ShieldMode);
+            shield.animator.SetTrigger(AnimationHash.Skill);
+            yield return new WaitForSeconds(actor.baseStat.effectDuration);
+        }
+    }
 }

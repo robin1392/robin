@@ -90,7 +90,7 @@ namespace ED
             _attackedTarget = null;
             image_HealthBar.fillAmount = 1f;
             
-            SetHealthBarColor();
+            UpdateHealthBar();
 
             if (animator != null)
             {

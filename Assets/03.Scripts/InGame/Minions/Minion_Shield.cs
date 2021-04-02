@@ -28,7 +28,7 @@ namespace ED
                 skillCastedTime = _spawnedTime;
                 ActorProxy.AddBuff(BuffInfos.HalfDamage, effectDuration);
 
-                var action = new ShielderAction();
+                var action = new ShieldAction();
                 RunningAction = action;
                 RunLocalAction(action.ActionWithSync(ActorProxy), true);
             }
