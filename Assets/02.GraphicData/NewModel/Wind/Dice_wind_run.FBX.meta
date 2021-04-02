@@ -1,8 +1,11 @@
 fileFormatVersion: 2
-guid: 721f3eac9ac4e4bda9b9f8fe11a2ae59
+guid: 7d73b4dd4bb484b91a7a022036f3e393
 ModelImporter:
   serializedVersion: 20101
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: -1635921667307638880
+    second: Dice_wind_run
   externalObjects: {}
   materials:
     materialImportMode: 1
