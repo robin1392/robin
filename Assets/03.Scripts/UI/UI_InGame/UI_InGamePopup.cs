@@ -64,14 +64,14 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     public void DisableStartPopup()
     {
-        ((RectTransform) winlose_Other.transform).DOAnchorPosY(2000f, 0.5f);
-        ((RectTransform) winlose_My.transform).DOAnchorPosY(-2000f, 0.5f);
-        obj_Start.transform.GetChild(1).DOScale(Vector3.zero, 0.5f).OnComplete(() =>
+        ((RectTransform) winlose_Other.transform).DOAnchorPosY(2000f, 0.5f).SetUpdate(true);
+        ((RectTransform) winlose_My.transform).DOAnchorPosY(-2000f, 0.5f).SetUpdate(true);
+        obj_Start.transform.GetChild(1).DOScale(Vector3.zero, 0.5f).SetUpdate(true).OnComplete(() =>
         {
             rts_Fight.localScale = Vector3.zero;
-            rts_Fight.DOScale(1f, 0.2f).SetEase(Ease.OutBack).OnComplete(() =>
+            rts_Fight.DOScale(1f, 0.2f).SetEase(Ease.OutBack).SetUpdate(true).OnComplete(() =>
             {
-                rts_Fight.DOScale(0, 0.2f).SetEase(Ease.OutBack).SetDelay(0.4f).OnComplete(() =>
+                rts_Fight.DOScale(0, 0.2f).SetEase(Ease.OutBack).SetUpdate(true).SetDelay(0.4f).OnComplete(() =>
                 {
                     obj_Start.SetActive(false);
                 });

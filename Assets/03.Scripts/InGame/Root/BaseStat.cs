@@ -143,7 +143,7 @@ namespace ED
             _poolObjectAutoDeactivate?.Deactive();
         }
 
-        public void SetHealthBarColor()
+        public void UpdateHealthBar()
         {
             if (image_HealthBar == null)
             {
@@ -151,6 +151,12 @@ namespace ED
             }
 
             image_HealthBar.color = ActorProxy.IsLocalPlayerAlly ? Color.green : Color.red;
+            if (ActorProxy.IsLocalPlayerActor)
+            {
+                var pos = image_HealthBar.transform.parent.parent.localPosition;
+                pos.y *= -1;
+                image_HealthBar.transform.parent.parent.localPosition = pos;
+            }
         }
 
         public virtual void ChangeLayer(bool pIsBottomPlayer)

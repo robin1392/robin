@@ -21,8 +21,8 @@ public class TutorialManager : MonoBehaviour
     public Transform ts_DiceField;
     public Transform ts_UpgradeButton;
 
-    public static int stepCount = 2;
-    private static int nextStepCount = 3;
+    public static int stepCount = 0;
+    private static int nextStepCount = 1;
     private Transform ts_OldParent;
 
     public static int getDiceCount
@@ -33,7 +33,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
-        if (true)//UserInfoManager.Get().GetUserInfo().isEndTutorial)
+        if (UserInfoManager.Get().GetUserInfo().isEndTutorial)
         {
             isTutorial = false;
             gameObject.SetActive(false);
@@ -41,7 +41,6 @@ public class TutorialManager : MonoBehaviour
         }
 
         isTutorial = true;
-        //Step();
         StartCoroutine(TutorialCoroutine());
     }
 
@@ -60,6 +59,7 @@ public class TutorialManager : MonoBehaviour
     
     public void Click_NextStep()
     {
+        CancelInvoke("TimeStop");
         Time.timeScale = 1f;
         Click_NextStepCallback();
         stepCount++;
@@ -168,17 +168,25 @@ public class TutorialManager : MonoBehaviour
                 //transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = true;
                 break;
             case 1:
+            {
+                var btn = ts_BattleButton.GetComponent<Button>();
                 transform.GetChild(stepCount + 1).GetComponent<Button>().interactable = false;
                 ts_OldParent = ts_BattleButton.parent;
                 ts_BattleButton.parent = transform.GetChild(stepCount + 1);
-                ts_BattleButton.GetComponent<Button>().onClick.AddListener(Click_NextStep);
+                btn.onClick = new Button.ButtonClickedEvent();
+                btn.onClick.AddListener(Click_NextStep);
+                btn.onClick.AddListener(MoveScene);
+                btn.onClick.AddListener(btn.GetComponent<AudioPlay>().Play);
+            }
                 break;
             case 2:
                 if (SceneManager.GetActiveScene().buildIndex == 1)
                 {
                     Debug.Log("Outgame tutorial end");
                     image_NextStep.DOFade(0f, 0f);
-                    ts_BattleButton.GetComponent<Button>().onClick.RemoveListener(Click_NextStep);
+                    var btn_Battle = ts_BattleButton.GetComponent<Button>();
+                    btn_Battle.onClick.RemoveListener(Click_NextStep);
+                    
                     var images = ts_BattleButton.GetComponentsInChildren<Image>();
                     foreach (var image in images)
                     {
@@ -193,7 +201,7 @@ public class TutorialManager : MonoBehaviour
                 }
                 else
                 {
-                    Time.timeScale = 0.0f;
+                    Invoke("TimeStop", 1f);
                     image_NextStep.DOFade(0f, 0).SetUpdate(true);
                     transform.GetChild(stepCount + 1).GetChild(0).gameObject.SetActive(true);
                     Debug.Log("Ingame tutorial");
@@ -201,7 +209,7 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 3:
                 Time.timeScale = 0.0f;
-                server.serverGameLogic._gameMode.PlayerState1.sp += 100;
+                server.serverGameLogic._gameMode.PlayerState1.sp += 110;
                 server.serverGameLogic._gameMode.PlayerState2.sp += 1000;
 
                 server.serverGameLogic._gameMode.PlayerState2.GetDice(3, 1);
@@ -278,6 +286,7 @@ public class TutorialManager : MonoBehaviour
                 image_NextStep.DOFade(0, 0).SetUpdate(true);
                 image_NextStep.raycastTarget = false;
                 Time.timeScale = 1f;
+                UserInfoManager.Get().GetUserInfo().isEndTutorial = true;
                 NetworkManager.session.UserTemplate.UserTutorialEndReq(NetworkManager.session.HttpClient, OnEndTutorial);
                 isTutorial = false;
                 //NetworkManager.Get().EndTutorialReq(UserInfoManager.Get().GetUserInfo().userID);
@@ -296,5 +305,39 @@ public class TutorialManager : MonoBehaviour
     bool OnEndTutorial(ERandomwarsUserErrorCode errorCode, bool endTutorial)
     {
         return true;
+    }
+
+    private void TimeStop()
+    {
+        Time.timeScale = 0;
+    }
+    
+    public void MoveScene()
+    {
+        UI_Main.Get().ShowMainUI(false);
+        
+        CameraGyroController.Get().FocusIn();
+        
+        if (UI_Main.Get().isAIMode || isTutorial)
+        {
+            UI_Main.Get().btn_PlayBattle.interactable = false;
+            UI_Main.Get().btn_PlayCoop.interactable = false;
+            UI_Main.Get().searchingPopup.gameObject.SetActive(true);
+            UI_Main.Get().searchingPopup.StartCoroutine(AIMode(PLAY_TYPE.BATTLE));
+        }
+    }
+    
+    private IEnumerator AIMode(PLAY_TYPE playType)
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (playType == PLAY_TYPE.BATTLE)
+        {
+            GameStateManager.Get().MoveInGameBattle();
+        }
+        else
+        {
+            GameStateManager.Get().MoveInGameCoop();
+        }
     }
 }
