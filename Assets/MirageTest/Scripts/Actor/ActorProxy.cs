@@ -8,6 +8,7 @@ using Mirage.Collections;
 using Mirage.Logging;
 using MirageTest.Scripts.Messages;
 using Pathfinding;
+using Pathfinding.RVO;
 using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
@@ -47,6 +48,9 @@ namespace MirageTest.Scripts
 
         public Seeker _seeker;
         public AIPath _aiPath;
+        
+        public AIDestinationSetter _aiDestinationSetter;
+        public RVOController _rvoController;
 
         public readonly Buffs BuffList = new Buffs();
         public BuffState buffState = BuffState.None;
@@ -88,6 +92,16 @@ namespace MirageTest.Scripts
         }
 
         public void EnablePathfinding(bool b)
+        {
+            EnableSeeker(b);
+            if (RWNetworkClient.EnableRVO)
+            {
+                _rvoController.enabled = b;
+                _aiDestinationSetter.enabled = b;
+            }
+        }
+        
+        public void EnableSeeker(bool b)
         {
             _seeker.enabled = b;
             _aiPath.enabled = b;
@@ -139,6 +153,14 @@ namespace MirageTest.Scripts
 
         private void StartClient()
         {
+            if (RWNetworkClient.EnableRVO)
+            {
+                _aiDestinationSetter = gameObject.AddComponent<AIDestinationSetter>();
+                _rvoController = gameObject.AddComponent<RVOController>();
+                _rvoController.maxNeighbours = 20;
+                EnablePathfinding(false);
+            }
+            
             var client = Client as RWNetworkClient;
             if (client.enableActor)
             {
@@ -545,12 +567,12 @@ namespace MirageTest.Scripts
             }
             else if (lastRecieved != null)
             {
-                var position = ConvertNetMsg.MsgToVector3(lastRecieved);
+                var position = MsgToVector3(lastRecieved);
                 if (hasRecieved == false)
                 {
                     hasRecieved = true;
                     transform.position = position;
-                    EnablePathfinding(true);
+                    EnableSeeker(true);
                 }
                 else
                 {
@@ -572,35 +594,48 @@ namespace MirageTest.Scripts
                     }
                     
                     _aiPath.maxSpeed = moveSpeedCalculated;
-
+                    
                     _seeker.StartPath(transform.position, position);
                     baseStat.animator.SetFloat(AnimationHash.MoveSpeed, _aiPath.velocity.magnitude);
-                    // if (Vector3.SqrMagnitude(transform.position - position) <= 0.001f)
-                    // {
-                    //     baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
-                    //     return;
-                    // }
-                    //
-                    // transform.position = Vector3.Lerp(transform.position, position,
-                    //     Time.deltaTime * moveSpeed * 10f);
-                    //
-                    // transform.rotation = Quaternion.Lerp(transform.rotation,
-                    //     Quaternion.LookRotation((position - transform.position).normalized),
-                    //     Time.deltaTime * moveSpeed * 10f);
-                    //
-                    // if (baseStat.animator != null)
-                    // {
-                    //     float distance = Vector3.Magnitude(position - transform.position);
-                    //     baseStat.animator.SetFloat(AnimationHash.MoveSpeed, distance * 5);
-                    // }
                 }
             }
+        }
+        
+        public static MsgVector2 Vector3ToMsg(Vector2 val)
+        {
+            MsgVector2 chVec = new MsgVector2();
+
+            chVec.X = MsgFloatToShort(val.x);
+            chVec.Y = MsgFloatToShort(val.y);
+
+            return chVec;
+        }
+    
+        public static Vector3 MsgToVector3(MsgVector2 msgVec)
+        {
+            Vector3 vecVal = new Vector3();
+
+            vecVal.x = MsgShortToFloat(msgVec.X);
+            vecVal.y = 0;
+            vecVal.z = MsgShortToFloat(msgVec.Y);
+
+            return vecVal;
+        }
+        
+        public static short MsgFloatToShort(float value)
+        {
+            return Convert.ToInt16(value * 100);
+        }
+
+        public static float MsgShortToFloat(short value)
+        {
+            return Convert.ToInt32(value) * 0.01f;
         }
 
         public void SyncPosition(bool force)
         {
             var position = transform.position;
-            var converted = ConvertNetMsg.Vector3ToMsg(new Vector2(position.x, position.z));
+            var converted = Vector3ToMsg(new Vector2(position.x, position.z));
             if (lastSend == null || !Equal(lastSend, converted) || force)
             {
                 lastSend = converted;
@@ -851,7 +886,7 @@ namespace MirageTest.Scripts
         {
             var position = transform.position;
             var currentPosition = new Vector2(position.x, position.z);
-            lastRecieved = ConvertNetMsg.Vector3ToMsg(currentPosition);
+            lastRecieved = Vector3ToMsg(currentPosition);
         }
     }
 }

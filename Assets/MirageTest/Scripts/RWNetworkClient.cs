@@ -8,6 +8,7 @@ using Mirage.KCP;
 using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.Messages;
+using Pathfinding.RVO;
 using RandomWarsProtocol;
 using Service.Template;
 using Sirenix.OdinInspector;
@@ -71,6 +72,7 @@ namespace MirageTest.Scripts
         public string lastConnectServerIp;
         public bool playing;                
         public bool giveUp;
+        public static bool EnableRVO = false;
 
         public async UniTask RWConnectAsync(string serverIp)
         {
@@ -156,6 +158,15 @@ namespace MirageTest.Scripts
             _clientObjectManager = GetComponent<ClientObjectManager>();
             Connected.AddListener(OnConnectedRW);
             Disconnected.AddListener(OnDisconnected);
+
+            if (EnableRVO)
+            {
+                var astarPath = FindObjectOfType<AstarPath>();
+                if (astarPath.GetComponent<RVOSimulator>() == null)
+                {
+                    astarPath.gameObject.AddComponent<RVOSimulator>();
+                }
+            }
         }
 
         private void OnConnectedRW(INetworkPlayer arg0)

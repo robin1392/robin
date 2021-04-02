@@ -601,13 +601,13 @@ namespace ED
         // 에디터에서 테스트용도로 사용하기 위해
         public void OnEditorAppPause(PauseState pause)
         {
-            NetworkManager.Get().PrintNetworkStatus();
+            //TODO: 네트워크 상태 확인 복구
+            //NetworkManager.Get().PrintNetworkStatus();
 
             if (pause == PauseState.Paused)
             {
                 pauseTime = DateTime.UtcNow;
                 print("Application Pause");
-                NetworkManager.Get().PauseGame();
             }
             else
             {

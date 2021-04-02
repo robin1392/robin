@@ -67,10 +67,10 @@ namespace ED
 
         public IEnumerator RunSyncAction(IEnumerator action)
         {
-            ActorProxy.EnablePathfinding(false);
+            ActorProxy.EnableSeeker(false);
             yield return action;
             ActorProxy.UpdateSyncPositionToCurrentPosition();
-            ActorProxy.EnablePathfinding(true);
+            ActorProxy.EnableSeeker(true);
             SyncAction = null;
             _syncActionCoroutine = null;
         }
