@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using ED;
 using Percent.Platform.InAppPurchase;
 using RandomWarsResource.Data;
-using Service.Core;
+using Service.Template;
+using Template.Shop.GameBaseShop;
 using Template.Shop.GameBaseShop.Common;
-using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
@@ -82,16 +82,16 @@ namespace Percent.Platform
                     DestroyImmediate(transformShopItemGrid.GetChild(i).gameObject);
                 }
 
-                for (int i = 0; i < shopInfo.arrayProductInfo.Length; i++)
+                for (int i = 0; i < shopInfo.listProductInfo.Count; i++)
                 {
                     TDataShopProductList data;
                     if (TableManager.Get().ShopProductList
-                        .GetData(shopInfo.arrayProductInfo[i].shopProductId, out data))
+                        .GetData(shopInfo.listProductInfo[i].shopProductId, out data))
                     {
                         var shopItemBase = Instantiate(FileHelper.LoadShopUIPrefab(data.shopImage), transformShopItemGrid).GetComponent<ShopItemBig>();
-                        shopItemBase.Initialize(shopInfo.arrayProductInfo[i].shopProductId);
+                        shopItemBase.Initialize(shopInfo.listProductInfo[i].shopProductId);
                         listShopItem.Add(shopItemBase);
-                        shopItemBase.UpdateContent(shopInfo, shopInfo.arrayProductInfo[i]);
+                        shopItemBase.UpdateContent(shopInfo, shopInfo.listProductInfo[i]);
                     }
                 }
             }
@@ -104,7 +104,7 @@ namespace Percent.Platform
                 StartCoroutine(TimeleftCoroutine(shopInfo.resetRemainTime));
             }
             
-            // if(poolSize<shopInfo.arrayProductInfo.Length)
+            // if(poolSize<shopInfo.listProductInfo.Length)
             //     Debug.LogError("풀 사이즈보다 표시해야하는 상품이 많은 경우 별도로 처리 필요");
             
             if (prefabShopItem != null)
@@ -112,9 +112,9 @@ namespace Percent.Platform
                 for (int i = 0; i < poolSize; i++)
                 {
                     ShopItem shopItemBase = listShopItem[i];
-                    if (i < shopInfo.arrayProductInfo.Length)
+                    if (i < shopInfo.listProductInfo.Count)
                     {
-                        shopItemBase.UpdateContent(shopInfo, shopInfo.arrayProductInfo[i]);
+                        shopItemBase.UpdateContent(shopInfo, shopInfo.listProductInfo[i]);
                         listShopItem.Add(shopItemBase);    
                         shopItemBase.EnableContent();
                     }

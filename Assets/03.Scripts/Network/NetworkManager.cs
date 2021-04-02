@@ -15,11 +15,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using Service.Core;
 using Template.Match.RandomwarsMatch.Common;
-using RandomWarsService.Network.Socket.NetPacket;
-using RandomWarsService.Network.Socket.NetSession;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
-using Percent.GameBaseClient;
 using UnityEditor;
 using Debug = ED.Debug;
 

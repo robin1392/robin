@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using CodeStage.AntiCheat.ObscuredTypes;
 using MirageTest.Scripts;
-using RandomWarsProtocol;
 
 namespace ED
 {

@@ -9,7 +9,6 @@ using UnityEngine.Events;
 using DG.Tweening;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
-using RandomWarsProtocol;
 
 namespace ED
 {

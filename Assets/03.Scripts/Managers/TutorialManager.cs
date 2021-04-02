@@ -8,8 +8,6 @@ using Debug = ED.Debug;
 using DG.Tweening;
 using ED;
 using MirageTest.Scripts;
-using RandomWarsProtocol;
-using Template.User.RandomwarsUser.Common;
 
 public class TutorialManager : MonoBehaviour
 {

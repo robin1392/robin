@@ -10,10 +10,6 @@ using System.Linq;
 using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.AI;
-using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
-using RandomWarsResource.Data;
-using Template.Shop.GameBaseShop.Table;
 
 //
 using UnityEngine.Serialization;

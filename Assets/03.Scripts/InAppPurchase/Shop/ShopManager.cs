@@ -5,13 +5,11 @@ using System.Linq;
 using System.Threading;
 using DG.Tweening;
 using ED;
-using Percent.GameBaseClient;
+using Percent;
 using Percent.Platform.InAppPurchase;
-//using RandomWarsProtocol;
-using Service.Core;
+using Service.Template;
 using Template.Shop.GameBaseShop;
 using Template.Shop.GameBaseShop.Common;
-using Template.Shop.GameBaseShop.Table;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -62,6 +60,8 @@ namespace Percent.Platform.InAppPurchase
                 //listShop = new List<Shop>();
 
                 NetworkManager.session.ShopTemplate.ShopInfoReq(NetworkManager.session.HttpClient, SetAllShop);
+
+                TemplateManager.Instance.Shop.ShopInfoReq(new ShopInfoRequest(), SetAllShop);
             }
             else
             {
@@ -86,19 +86,19 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="errorCode">네트워크 결과 값</param>
         /// <param name="arrayShopInfo">상점 결과 값</param>
         /// <returns>네트워크 처리가 정상적으로 됐는지 여부</returns>
-        private bool SetAllShop(GameBaseShopErrorCode errorCode, ShopInfo[] arrayShopInfo)
+        private bool SetAllShop(ShopInfoResponse response)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             
-            if (errorCode == GameBaseShopErrorCode.Success)
+            if (response.errorCode == (int)GameBaseShopErrorCode.Success)
             {
                 isInitialized = true;
                 
 #if ENABLE_LOG
-                for (int i = 0; i < arrayShopInfo.Length; ++i)
+                for (int i = 0; i < response.listShopInfo.Count; ++i)
                 {
-                    string str = $"ShopID:{arrayShopInfo[i].shopId}, r:{arrayShopInfo[i].resetRemainTime}";
-                    foreach (var productInfo in arrayShopInfo[i].arrayProductInfo)
+                    string str = $"ShopID:{response.listShopInfo[i].shopId}, r:{response.listShopInfo[i].resetRemainTime}";
+                    foreach (var productInfo in response.listShopInfo[i].listProductInfo)
                     {
                         str += $"\nProductID:{productInfo.shopProductId}, BuyCount:{productInfo.buyCount}";
                     }
@@ -106,11 +106,11 @@ namespace Percent.Platform.InAppPurchase
                 }
 #endif
 
-                for (int i = 0; i < arrayShopInfo.Length; i++)
+                for (int i = 0; i < response.listShopInfo.Count; i++)
                 {
-                    var shop = listShop.Find(s => s.shopID == arrayShopInfo[i].shopId);
+                    var shop = listShop.Find(s => s.shopID == response.listShopInfo[i].shopId);
                     shop.EnableContent();
-                    shop.Initialize(arrayShopInfo[i]);
+                    shop.Initialize(response.listShopInfo[i]);
                 }
 
                 // 초기화 안된 상점 비활성화
@@ -126,8 +126,8 @@ namespace Percent.Platform.InAppPurchase
             }
             else
             {
-                Debug.Log($"에러 발생 : {errorCode}");
-                UI_ErrorMessage.Get().ShowMessage($"Error : {errorCode}");
+                Debug.Log($"에러 발생 : {response.errorCode}");
+                UI_ErrorMessage.Get().ShowMessage($"Error : {response.errorCode}");
                 return false;
             }
         }
@@ -170,15 +170,15 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="payItemInfo"></param>
         /// <param name="arrayRewardItemInfo"></param>
         /// <returns></returns>
-        public bool ShowBuyResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
+        public bool ShowBuyResult(ShopBuyResponse response)
         {
             UI_Main.Get().obj_IndicatorPopup.SetActive(false);
             
-            if (errorCode == GameBaseShopErrorCode.Success)
+            if (response.errorCode == (int)GameBaseShopErrorCode.Success)
             {
                 //구매한 상품에 대한 정보
                 //shopProductInfo
-                switch (shopId)
+                switch (response.shopId)
                 {
                     case 1:
                     case 2:
@@ -189,24 +189,24 @@ namespace Percent.Platform.InAppPurchase
                         break;
                 }
             
-                if (payItemInfo != null)
+                if (response.deleteItemInfo != null)
                 {
                     //소모한 재화에 대한 연출 처리
                     //payItemInfo
                     ITEM_TYPE type;
-                    switch (payItemInfo.ItemId)
+                    switch (response.deleteItemInfo.ItemId)
                     {
                         case 1:
                             type = ITEM_TYPE.GOLD;
-                            UserInfoManager.Get().GetUserInfo().gold += payItemInfo.Value;
+                            UserInfoManager.Get().GetUserInfo().gold += response.deleteItemInfo.Value;
                             break;
                         case 2:
                             type = ITEM_TYPE.DIAMOND;
-                            UserInfoManager.Get().GetUserInfo().diamond += payItemInfo.Value;
+                            UserInfoManager.Get().GetUserInfo().diamond += response.deleteItemInfo.Value;
                             break;
                         case 11:
                             type = ITEM_TYPE.KEY;
-                            UserInfoManager.Get().GetUserInfo().key += payItemInfo.Value;
+                            UserInfoManager.Get().GetUserInfo().key += response.deleteItemInfo.Value;
                             break;
                         default:
                             type = ITEM_TYPE.NONE;
@@ -217,13 +217,13 @@ namespace Percent.Platform.InAppPurchase
             
                 //구매한 상품에 대한 결과 값
                 //arrayRewardItemInfo
-                ItemBaseInfo[] arr = new ItemBaseInfo[arrayRewardItemInfo.Length];
-                for (int i = 0; i < arrayRewardItemInfo.Length; i++)
+                ItemBaseInfo[] arr = new ItemBaseInfo[response.listRewardInfo.Count];
+                for (int i = 0; i < response.listRewardInfo.Count; i++)
                 {
-                    Debug.Log($"GET == ID:{arrayRewardItemInfo[i].ItemId}, Value:{arrayRewardItemInfo[i].Value}");
+                    Debug.Log($"GET == ID:{response.listRewardInfo[i].ItemId}, Value:{response.listRewardInfo[i].Value}");
                     arr[i] = new ItemBaseInfo();
-                    arr[i].ItemId = arrayRewardItemInfo[i].ItemId;
-                    arr[i].Value = arrayRewardItemInfo[i].Value;
+                    arr[i].ItemId = response.listRewardInfo[i].ItemId;
+                    arr[i].Value = response.listRewardInfo[i].Value;
                 }
                 UI_Main.Get().AddReward(arr, ShopItem.pos);
             
@@ -231,8 +231,8 @@ namespace Percent.Platform.InAppPurchase
             }
             else
             {
-                Debug.Log($"에러 발생 : {errorCode}");
-                UI_ErrorMessage.Get().ShowMessage($"Error : {errorCode}");
+                Debug.Log($"에러 발생 : {response.errorCode}");
+                UI_ErrorMessage.Get().ShowMessage($"Error : {response.errorCode}");
                 return false;
             }
         }
@@ -245,9 +245,9 @@ namespace Percent.Platform.InAppPurchase
         /// <param name="shopProductInfo"></param>
         /// <param name="arrayItemBaseInfo"></param>
         /// <returns></returns>
-        public bool ShowPurchaseResult(GameBaseShopErrorCode errorCode, int shopId, ShopProductInfo shopProductInfo, ShopProductInfo changeProductInfo, ItemBaseInfo payItemInfo, ItemBaseInfo[] arrayRewardItemInfo, QuestData[] arrayQuestData)
+        public bool ShowPurchaseResult(ShopPurchaseResponse response)
         {
-            return ShowBuyResult(errorCode, shopId, shopProductInfo, changeProductInfo, payItemInfo, arrayRewardItemInfo, arrayQuestData);
+            return ShowBuyResult(response);
         }
 
         public void ShowGoldShop()

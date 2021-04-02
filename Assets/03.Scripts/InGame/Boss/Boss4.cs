@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ED;
 using ED.Boss;
 using Microsoft.Win32.SafeHandles;
-using RandomWarsProtocol;
 using UnityEngine;
 
 public class Boss4 : BossBase

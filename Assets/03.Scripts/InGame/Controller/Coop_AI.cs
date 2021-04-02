@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections;
-using RandomWarsProtocol;
-using RandomWarsResource.Data;
 using UnityEngine;
 
 namespace ED
@@ -17,7 +15,7 @@ namespace ED
         public GameObject obj_IncubationParticle;
         public GameObject obj_SummonParticle;
 
-        private MsgMonster msgBoss;
+        //private MsgMonster msgBoss;
         
 
         protected override void StartPlayerControll()

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RandomWarsProtocol;
+using Service.Template;
 
 namespace ED
 {

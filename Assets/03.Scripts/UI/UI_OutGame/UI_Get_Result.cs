@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using ED;
 using RandomWarsResource.Data;
-using Service.Core;
+using Service.Template;
 using UnityEngine;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug; //using RandomWarsProtocol;

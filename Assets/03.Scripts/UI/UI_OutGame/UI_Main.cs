@@ -10,7 +10,7 @@ using Percent.Platform.InAppPurchase;
 
 
 using RandomWarsResource.Data;
-using Service.Core;
+using Service.Template;
 using Template.Match.RandomwarsMatch.Common;
 using UnityEditor;
 using UnityEngine.SceneManagement;

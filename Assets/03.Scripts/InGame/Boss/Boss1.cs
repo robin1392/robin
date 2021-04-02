@@ -5,7 +5,6 @@ using ED.Boss;
 using Microsoft.Win32.SafeHandles;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
-using RandomWarsProtocol;
 using UnityEngine;
 
 public class Boss1 : BossBase
