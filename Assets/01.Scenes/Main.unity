@@ -11093,7 +11093,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &523889762
 GameObject:
   m_ObjectHideFlags: 0
@@ -22395,7 +22395,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "<= \uCCB4\uD06C : RVO"
+  m_Text: "<= \uCCB4\uD06C : \uC548\uACB9\uCE58\uAC8C \uD558\uAE30"
 --- !u!222 &1012185563
 CanvasRenderer:
   m_ObjectHideFlags: 0
