@@ -312,11 +312,13 @@ namespace MirageTest.Scripts.GameMode
                 {
                     var spawnPosition = spawnTransform.position;
                     //스폰 카운트에 따라 균일한 포지션을 같는 방법을 고려해본다. 예) 1일때는 스폰트랜스폼 포지션, 2개일때는 스폰트랜스폼 포지션을 기준으로 좌우 10센티미터
-                    if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION)
+                    if ((DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.MINION ||
+                        (DICE_CAST_TYPE) diceInfo.castType == DICE_CAST_TYPE.HERO)
                     {
                         spawnPosition.x += Random.Range(-0.2f, 0.2f);
                         spawnPosition.z += Random.Range(-0.2f, 0.2f);
                     }
+                    
                     //지뢰
                     else if (diceInfo.id == 1005)
                     {

@@ -1152,7 +1152,7 @@ MonoBehaviour:
   image_BG: {fileID: 1461471529895637130}
   clip_Open: {fileID: 8300000, guid: ecd6a3d76385b4e36bac71e4eabdf84c, type: 3}
   clip_Close: {fileID: 8300000, guid: 5572bc617d3544fa4833c50279dc7b75, type: 3}
-  rts_VerticalLayoutGroup: {fileID: 0}
+  rts_VerticalLayoutGroup: {fileID: 1461471528585814778}
   text_MatchTitle: {fileID: 1461471528823026304}
   text_InviteRemainTime: {fileID: 3657259517187307578}
   text_InviteCode: {fileID: 4153451911138892032}
