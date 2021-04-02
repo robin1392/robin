@@ -2852,7 +2852,7 @@ MonoBehaviour:
   LocalServerPort: 40002
   UserId: 
   matchSendCount: 0
-  serverAddr: http://randomwarsqa-env.eba-ckjiykq5.ap-northeast-2.elasticbeanstalk.com/
+  serverAddr: http://randomwarsqa-env.eba-ckjiykq5.ap-northeast-2.elasticbeanstalk.com
 --- !u!4 &1270925139
 Transform:
   m_ObjectHideFlags: 0
