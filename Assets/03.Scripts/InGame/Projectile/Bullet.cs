@@ -137,7 +137,7 @@ namespace ED
                 if (_target != null && _target.ActorProxy != null)
                 {
                     _target.ActorProxy.HitDamage(_damage);
-                    if (_bulletType == E_BulletType.ICE_FREEZE_BULLET)
+                    if (_bulletType == E_BulletType.ICE_FREEZE_BULLET && _target != null && _target.ActorProxy != null)
                     {
                         _target.ActorProxy.AddBuff(BuffInfos.IceFreeze, _effect);
                     }   
