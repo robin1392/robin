@@ -1005,7 +1005,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6758650396018150193
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1397,6 +1397,25 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 3, y: -3}
   m_UseGraphicAlpha: 1
+--- !u!114 &8982955877034116081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9034175355228562897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1764de1de43cc4d19af52679d3eaae06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  desiredSimulationFPS: 10
+  workerThreads: 2
+  doubleBuffering: 1
+  symmetryBreakingBias: 0.2
+  movementPlane: 0
+  drawObstacles: 0
 --- !u!1001 &1884063247283223607
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1408,6 +1427,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Astar
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456376674084706792, guid: 10e0899a117294a1a948fb5d20e70a32,
+        type: 3}
+      propertyPath: data.dataString
+      value: UEsDBBQAAAgIAABIIexYBqJY4gEAAMgDAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGVU8GO2jAQ/RXkc4sgwCr02CzaHgpUhMNqqx4Ge5JY69jUsYEF8e+1HQey6l72lOTNvDee55cLoRVooAb1Bhi3Dfk2GA2T2ZcBoUoaZfUSTgutlXaFxKMoRM7PGPrGDjiCeIWdwB/Iy8rErg7MBK93odUr1nDKhdp77mTUfi9YiT9RlqbyzAByucGSKxmnTByGjBult1xgBMdJ6mATgef/kJcbYhv0PL+X0RYdolHgAaR50rCvcqsLoLhUzMuSR7VSZoN/LddIfC80zhknmCkhOEPtdQoQDfaLS2yqdxO6wha1Bi4/4mw19ik06m+6+iMa4MKv0TrVvLr3y4AcQNhg/uDq94Vy2ZZ+kyXsyR+PtUNzqPc3v7yJWhkwztdW5+Q1HPoWn+ebZqE0RfZdWcmaDKWT+wwjDoz96TCNjHFkjKfDJJCaSh29cWtrBJd4t8IXVu4+MiUlUn/ivukdLV7cnSYRNDYmdw9araV4e37p0VD6OK7gUDtuZo3hsrxzS8vZe3tJOpnOklG6mzKa4APAV7qbz+cPaZrOJjNMihkJW3DJDQfxy+kL0znjIi57B4M6KG6QussdhNj5bDENxyd+rlUvBlwWKqcuGnLdatzWdqEA4bxli/Av5BhW8FRyuZLrP1BLAwQUAAAICAAASCHsj4H3sW8AAAB6AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IzNNVRUEovSizIKAaKGII4pZkpIHa0koWxiamRgUWSSUqyUapZYqJucpKlpaWZhYWFqbFpqlGaqVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrpeUGpyYnGJO8hwpdhaAFBLAQItABQAAAgIAABIIexYBqJY4gEAAMgDAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAABIIeyPgfexbwAAAHoAAAAJACQAAAAAAAAAAAAAAC8CAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAA6QIAAAAA
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456376674084706792, guid: 10e0899a117294a1a948fb5d20e70a32,
+        type: 3}
+      propertyPath: data.file_cachedStartup
+      value: 
+      objectReference: {fileID: 4900000, guid: b199e750dabc24d49aa88364157a433b, type: 3}
+    - target: {fileID: 7456376674084706792, guid: 10e0899a117294a1a948fb5d20e70a32,
+        type: 3}
+      propertyPath: data.cacheStartup
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7456376674084706793, guid: 10e0899a117294a1a948fb5d20e70a32,
         type: 3}
@@ -1469,6 +1503,12 @@ PrefabInstance:
 --- !u!4 &9034175355228562910 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7456376674084706793, guid: 10e0899a117294a1a948fb5d20e70a32,
+    type: 3}
+  m_PrefabInstance: {fileID: 1884063247283223607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9034175355228562897 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7456376674084706790, guid: 10e0899a117294a1a948fb5d20e70a32,
     type: 3}
   m_PrefabInstance: {fileID: 1884063247283223607}
   m_PrefabAsset: {fileID: 0}
@@ -1633,6 +1673,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: map_coop_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945468809366244943, guid: 89bf7ff7307bf4bc59a84d8cafabd928,
+        type: 3}
+      propertyPath: m_TagString
+      value: Map
       objectReference: {fileID: 0}
     - target: {fileID: 7721583987233445109, guid: 89bf7ff7307bf4bc59a84d8cafabd928,
         type: 3}

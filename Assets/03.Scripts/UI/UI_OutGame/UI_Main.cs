@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using MirageTest.Scripts;
 using Percent.Platform.InAppPurchase;
 
 
@@ -230,6 +231,12 @@ namespace ED
         public void Toggle(bool isOn)
         {
             isAIMode = isOn;
+        }
+        
+        public void RVOToggle(bool isOn)
+        {
+            Debug.Log($"RVO:{isOn}");
+            RWNetworkClient.EnableRVO = isOn;
         }
 
         public void Click_PlayBattle()

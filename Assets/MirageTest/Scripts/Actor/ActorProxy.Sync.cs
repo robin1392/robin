@@ -75,6 +75,11 @@ namespace MirageTest.Scripts
         
         void RelayFireBullet(E_BulletType arrow, BaseStat target, float f, float bulletMoveSpeed)
         {
+            if (Client.IsConnected == false)
+            {
+                return;
+            }
+            
             uint targetId = 0;
             if (target != null)
             {

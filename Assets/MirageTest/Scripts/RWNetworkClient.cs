@@ -72,7 +72,7 @@ namespace MirageTest.Scripts
         public string lastConnectServerIp;
         public bool playing;                
         public bool giveUp;
-        public static bool EnableRVO = false;
+        public static bool EnableRVO = true;
 
         public async UniTask RWConnectAsync(string serverIp)
         {
@@ -159,14 +159,8 @@ namespace MirageTest.Scripts
             Connected.AddListener(OnConnectedRW);
             Disconnected.AddListener(OnDisconnected);
 
-            if (EnableRVO)
-            {
-                var astarPath = FindObjectOfType<AstarPath>();
-                if (astarPath.GetComponent<RVOSimulator>() == null)
-                {
-                    astarPath.gameObject.AddComponent<RVOSimulator>();
-                }
-            }
+            var rvoSimulator = FindObjectOfType<RVOSimulator>();
+            rvoSimulator.enabled = EnableRVO;
         }
 
         private void OnConnectedRW(INetworkPlayer arg0)
