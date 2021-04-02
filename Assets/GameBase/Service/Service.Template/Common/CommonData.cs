@@ -1,4 +1,0 @@
-namespace Service.Template.Common
-{
-
-}
