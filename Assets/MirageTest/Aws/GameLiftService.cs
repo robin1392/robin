@@ -70,6 +70,13 @@ namespace MirageTest.Aws
             //         ProcessEnd(5).Forget();
             //     }
             // };
+            
+            var tableEnv = CommandLineArgs.GetString("table_env"); 
+            if (string.IsNullOrWhiteSpace(tableEnv) == false)
+            {
+                TableManager.Get().Enviroment = tableEnv;
+                Debug.Log($"table_env from CommandLineArgs - {tableEnv}");
+            }
 
             var hasArg = CommandLineArgs.HasArg("table_test");
             if (hasArg)
