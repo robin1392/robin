@@ -168,6 +168,7 @@ public class UI_MatchPopup : UI_Popup
 
         ticketId = input_InviteCode.text;
         var eGameMode = _playType == PLAY_TYPE.BATTLE ? EGameMode.DeathMatch : EGameMode.Coop;
+        UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         NetworkManager.session.MatchTemplate.MatchJoinReq(
             NetworkManager.session.HttpClient,
             ticketId,
@@ -184,6 +185,7 @@ public class UI_MatchPopup : UI_Popup
     /// <returns></returns>
     private bool JoinRoomCallback(ERandomwarsMatchErrorCode errorCode)
     {
+        UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         if (errorCode == ERandomwarsMatchErrorCode.Success)
         {
             isSearching = true;
