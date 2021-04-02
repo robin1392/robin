@@ -94,6 +94,7 @@ Transform:
   - {fileID: 596961995325605319}
   - {fileID: 2115757108513445014}
   - {fileID: 3657007298173595865}
+  - {fileID: 6709451152062869432}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -111,9 +112,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 2004
   id: 0
-  controller: {fileID: 0}
   animator: {fileID: 6893924519127060579}
   arrMaterial:
   - {fileID: 2100000, guid: ae5088d78af0847269adefcacfd25608, type: 2}
@@ -122,28 +123,22 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  power: 20
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
+  effectUpgrade: 0
+  effectInGameUp: 0
   effectDuration: 0
   effectCooltime: 0
-  attackSpeed: 0.5
-  moveSpeed: 1
-  isBottomPlayer: 0
+  range: 0
+  searchRange: 0
   ts_ShootingPos: {fileID: 8696386360875725988}
   ts_HitPos: {fileID: 596961995325605319}
   image_HealthBar: {fileID: 5081294253014802598}
   text_Health: {fileID: 0}
-  castType: 0
-  isPushing: 0
-  isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
+  sr_Shadow: {fileID: 692864460355622896}
   _poolObjectAutoDeactivate: {fileID: 0}
+  castType: 0
+  isAttackSpeedFactorWithAnimation: 1
+  collider: {fileID: 0}
   isPolymorph: 0
-  _arrow: 0
-  _spear: 1
   bulletMoveSpeed: 6
   ps_Fire: {fileID: 0}
   light_Fire: {fileID: 0}
@@ -298,6 +293,87 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7793093457320279497, guid: da2dfa21f77bd480384bb7756a69f2c2,
     type: 3}
   m_PrefabInstance: {fileID: 489026356860486950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2900209096435394419
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 5081294253336761971}
+    m_Modifications:
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9078423967997170578, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+        type: 3}
+      propertyPath: m_Name
+      value: Shadow sprite
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 18dcb2683495a4e0c8a845e1c09c9bb6, type: 3}
+--- !u!4 &6709451152062869432 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2900209096435394419}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &692864460355622896 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2423517420361494659, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2900209096435394419}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6653312617869188141
 PrefabInstance:
