@@ -205,13 +205,12 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     #region system
 
-    public void SetSPUpgrade(int upgradeLv , int cost)
+    public void SetSPUpgrade(int currentLv , int cost)
     {
         //button_SP_Upgrade.interactable = (upgradeLv + 1) * 500 <= sp;
-        if (upgradeLv < 5)
+        if (currentLv < GameConstants.MaxSpUpgradeLevel)
         {
-            
-            text_SP_Upgrade.text = $"Lv.{upgradeLv + 1}";
+            text_SP_Upgrade.text = $"Lv.{currentLv}";
             text_SP_Upgrade_Price.text = $"{cost}";
         }
         else
