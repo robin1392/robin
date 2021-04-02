@@ -38,6 +38,7 @@ namespace ED
 
         [Header("UI Link")] public Image image_HealthBar;
         public Text text_Health;
+        public SpriteRenderer sr_Shadow;
 
         public bool isAlive
         {
@@ -229,6 +230,11 @@ namespace ED
                         m.material.color = c;
                         break;
                 }
+            }
+
+            if (sr_Shadow != null)
+            {
+                sr_Shadow.color = UnityUtil.HexToColor(isAlly ? "0D2F72" : "8C342E");
             }
         }
 
