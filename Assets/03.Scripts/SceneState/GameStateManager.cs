@@ -404,33 +404,7 @@ public class GameStateManager : Singleton<GameStateManager>
         return true;
     }
     #endregion
-
-
-    #region server connect ok
-    public void CheckSendInGame()
-    {
-        switch (Global.PLAY_TYPE.BATTLE)
-        {
-            case Global.PLAY_TYPE.BATTLE:
-                if (NetworkManager.Get().GetNetInfo().myInfoGet == true &&
-                    NetworkManager.Get().GetNetInfo().otherInfoGet == true)
-                {
-                    MoveInGameBattle();
-                }
-                break;
-            case Global.PLAY_TYPE.COOP:
-                if (NetworkManager.Get().GetNetInfo().myInfoGet == true &&
-                    NetworkManager.Get().GetNetInfo().otherInfoGet == true &&
-                    NetworkManager.Get().GetNetInfo().coopInfoGet == true)
-                {
-                    MoveInGameCoop();
-                }
-
-                break;
-        }
-    }
-
-    #endregion
+    
     
     #region main scene to do
 

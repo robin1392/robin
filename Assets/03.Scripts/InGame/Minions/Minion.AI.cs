@@ -20,8 +20,8 @@ namespace ED
         
         public override void StartAI()
         {
-            Seeker.enabled = true;
-            AiPath.enabled = true;
+            ActorProxy.lastRecieved = null;
+            ActorProxy.EnablePathfinding(true);
             AiPath.isStopped = true;
             if (_ai != null)
             {
@@ -34,7 +34,7 @@ namespace ED
         public override void StopAI()
         {
             ActorProxy.EnablePathfinding(false);
-            
+
             base.StopAI();
             
             if (_ai == null)
@@ -105,9 +105,17 @@ namespace ED
                 return;
             }
             
-            AiPath.isStopped = false;
-            Vector3 targetPos = target.ActorProxy.transform.position + (target.ActorProxy.transform.position - ActorProxy.transform.position).normalized * range;
-            Seeker.StartPath(ActorProxy.transform.position, targetPos);
+            ActorProxy.EnablePathfinding(true);
+
+            if (RWNetworkClient.EnableRVO)
+            {
+                ActorProxy._aiDestinationSetter.target = target.ActorProxy.transform;
+            }
+            else
+            {
+                Vector3 targetPos = target.ActorProxy.transform.position + (target.ActorProxy.transform.position - ActorProxy.transform.position).normalized * range;
+                Seeker.StartPath(ActorProxy.transform.position, targetPos);
+            }
         }
 
         protected void StopApproachToTarget()

@@ -5,7 +5,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-using RandomWarsProtocol;
 using UnityEngine;
 using UnityEngine.UI;
 

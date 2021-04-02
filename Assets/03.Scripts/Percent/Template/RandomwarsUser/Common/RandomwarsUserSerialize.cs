@@ -537,7 +537,7 @@ namespace Template.User.RandomwarsUser.Common
 	{
 		public static readonly int ProtocolId = 20051;
 		// 보상 아이디
-		public int rewardId;
+		public string rewardId;
 
 		public byte[] BinarySerialize()
 		{
@@ -556,7 +556,7 @@ namespace Template.User.RandomwarsUser.Common
 			{
 				BinaryReader br = new BinaryReader(ms);
 				base.BinaryDeserialize(br);
-				this.rewardId = br.ReadInt32();
+				this.rewardId = br.ReadString();
 			}
 		}
 
@@ -572,7 +572,7 @@ namespace Template.User.RandomwarsUser.Common
 		{
 			JObject jObject = JObject.Parse(json);
 			base.JsonDeserialize(jObject);
-			this.rewardId = (int)jObject["rewardId"];
+			this.rewardId = (string)jObject["rewardId"];
 		}
 
 	}

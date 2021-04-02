@@ -12,6 +12,7 @@ TagManager:
   - Wall
   - UI_AlphaImage
   - Tutorial
+  - Map
   layers:
   - Default
   - TransparentFX

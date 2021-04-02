@@ -1,11 +1,8 @@
 fileFormatVersion: 2
-guid: 7e7a5480e49c0407f948b19ecc7fd840
+guid: 5fca170c613a543ea8a2d0d4ea7b37dc
 ModelImporter:
   serializedVersion: 20101
-  internalIDToNameTable:
-  - first:
-      74: 5280354469488715294
-    second: Dice_Defence_attack
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
     materialImportMode: 1

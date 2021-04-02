@@ -8,6 +8,7 @@ using Mirage.KCP;
 using Mirage.Logging;
 using MirageTest.Scripts.Entities;
 using MirageTest.Scripts.Messages;
+using Pathfinding.RVO;
 using RandomWarsProtocol;
 using Service.Template;
 using Sirenix.OdinInspector;
@@ -71,6 +72,7 @@ namespace MirageTest.Scripts
         public string lastConnectServerIp;
         public bool playing;                
         public bool giveUp;
+        public static bool EnableRVO = true;
 
         public async UniTask RWConnectAsync(string serverIp)
         {
@@ -156,6 +158,9 @@ namespace MirageTest.Scripts
             _clientObjectManager = GetComponent<ClientObjectManager>();
             Connected.AddListener(OnConnectedRW);
             Disconnected.AddListener(OnDisconnected);
+
+            var rvoSimulator = FindObjectOfType<RVOSimulator>();
+            rvoSimulator.enabled = EnableRVO;
         }
 
         private void OnConnectedRW(INetworkPlayer arg0)
@@ -220,11 +225,11 @@ namespace MirageTest.Scripts
         {
             await UniTask.Yield();
             
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), DelayType.Realtime);
             
             UI_InGamePopup.Get().InitUIElement(Player1, Player2);
             
-            await UniTask.Delay(TimeSpan.FromSeconds(2.0f));
+            await UniTask.Delay(TimeSpan.FromSeconds(2.0f), DelayType.Realtime);
 
             GetLocalPlayerProxy()?.ClientReady();
 

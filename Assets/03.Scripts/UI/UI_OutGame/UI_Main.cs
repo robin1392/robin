@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using MirageTest.Scripts;
 using Percent.Platform.InAppPurchase;
 
 
@@ -230,6 +231,12 @@ namespace ED
         public void Toggle(bool isOn)
         {
             isAIMode = isOn;
+        }
+        
+        public void RVOToggle(bool isOn)
+        {
+            Debug.Log($"RVO:{isOn}");
+            RWNetworkClient.EnableRVO = isOn;
         }
 
         public void Click_PlayBattle()
@@ -601,13 +608,13 @@ namespace ED
         // 에디터에서 테스트용도로 사용하기 위해
         public void OnEditorAppPause(PauseState pause)
         {
-            NetworkManager.Get().PrintNetworkStatus();
+            //TODO: 네트워크 상태 확인 복구
+            //NetworkManager.Get().PrintNetworkStatus();
 
             if (pause == PauseState.Paused)
             {
                 pauseTime = DateTime.UtcNow;
                 print("Application Pause");
-                NetworkManager.Get().PauseGame();
             }
             else
             {

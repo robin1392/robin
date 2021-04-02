@@ -8,9 +8,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using MirageTest.Scripts;
-//using RandomWarsProtocol;
 using RandomWarsResource.Data;
-using Service.Core;
+using Service.Template;
+using Template.User.RandomwarsUser;
 using Template.User.RandomwarsUser.Common;
 using Button = UnityEngine.UI.Button;
 
@@ -479,8 +479,11 @@ public class UI_InGamePopup_Result : MonoBehaviour
                 {
 #if UNITY_EDITOR
                     UI_InGamePopup.Get().obj_Indicator.SetActive(true);
-                    NetworkManager.session.UserTemplate.UserAdRewardReq(NetworkManager.session.HttpClient,
-                        loseReward.RewardId, ADRewardCallback);
+                    Percent.TemplateManager.Instance.User.UserAdRewardReq(new UserAdRewardRequest
+                    {
+                        rewardId = loseReward.RewardId,
+                    },
+                    ADRewardCallback);
 #else
                     ShowAdd();
 #endif
@@ -514,18 +517,17 @@ public class UI_InGamePopup_Result : MonoBehaviour
         }
     }
     
-    private bool ADRewardCallback(ERandomwarsUserErrorCode errorCode, ItemBaseInfo[] arrayRewardInfo,
-        QuestData[] arrayQuestData)
+    private bool ADRewardCallback(UserAdRewardResponse response)
     {
         //UI_InGamePopup.Get().obj_Indicator.SetActive(false);
-        if (errorCode == ERandomwarsUserErrorCode.Success)
+        if (response.errorCode == (int)ERandomwarsUserErrorCode.Success)
         {
-            foreach (var reward in arrayRewardInfo)
+            foreach (var reward in response.listRewardInfo)
             {
                 UI_Main.listADReward.Add(reward);
             }
 
-            UI_Popup_Quest.QuestUpdate(arrayQuestData);
+            UI_Popup_Quest.QuestUpdate(response.listQuestData);
             InGameManager.Get().MoveToMainScene();
             return true;
         }

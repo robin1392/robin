@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-//using RandomWarsProtocol;
-//using RandomWarsProtocol.Msg;
 using RandomWarsResource.Data;
-using Service.Core;
-using Template.Quest.RandomwarsQuest.Common;
+using Service.Template;
+using Template.Quest.GameBaseQuest;
+using Template.Quest.GameBaseQuest.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -79,11 +78,11 @@ public class UI_Popup_Quest : UI_Popup
         }
     }
 
-    public static void QuestUpdate(QuestData[] datas)
+    public static void QuestUpdate(List<QuestData> datas)
     {
         if (datas != null)
         {
-            for (int i = 0; i < datas.Length; ++i)
+            for (int i = 0; i < datas.Count; ++i)
             {
                 var q = list.Find(m => m.QuestId == datas[i].QuestId);
                 if (q != null)
@@ -102,12 +101,12 @@ public class UI_Popup_Quest : UI_Popup
             dateTime = DateTime.Now.AddSeconds(questInfo.RemainResetTime);
 
             dailyRewardID = questInfo.DayRewardInfo.DayRewardId;
-            arrIsDailyRewardGet = questInfo.DayRewardInfo.DayRewardState;
+            arrIsDailyRewardGet = questInfo.DayRewardInfo.DayRewardState.ToArray();
 
             list.Clear();
-            for (int i = 0; i < questInfo.QuestData.Length; i++)
+            for (int i = 0; i < questInfo.listQuestData.Count; i++)
             {
-                list.Add(questInfo.QuestData[i]);
+                list.Add(questInfo.listQuestData[i]);
             }
         }
     }
@@ -127,7 +126,7 @@ public class UI_Popup_Quest : UI_Popup
         return false;
     }
 
-    public bool OnReceiveQuestInfoAck(ERandomwarsQuestErrorCode errorCode, QuestInfo questInfo)
+    public bool OnReceiveQuestInfoAck(QuestInfoResponse response)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
@@ -135,15 +134,15 @@ public class UI_Popup_Quest : UI_Popup
         // anchPos.y = 0;
         // rts_Content.anchoredPosition = anchPos;
         
-        if (errorCode == ERandomwarsQuestErrorCode.Success)
+        if (response.errorCode == (int)EGameBaseQuestErrorCode.Success)
         {
-            dateTime = DateTime.Now.AddSeconds(questInfo.RemainResetTime);
+            dateTime = DateTime.Now.AddSeconds(response.questInfo.RemainResetTime);
 
-            dailyRewardID = questInfo.DayRewardInfo.DayRewardId;
-            arrIsDailyRewardGet = questInfo.DayRewardInfo.DayRewardState;
+            dailyRewardID = response.questInfo.DayRewardInfo.DayRewardId;
+            arrIsDailyRewardGet = response.questInfo.DayRewardInfo.DayRewardState.ToArray();
 
             var dataDailyReward = new TDataQuestDayReward();
-            if (TableManager.Get().QuestDayReward.GetData(questInfo.DayRewardInfo.DayRewardId, out dataDailyReward))
+            if (TableManager.Get().QuestDayReward.GetData(response.questInfo.DayRewardInfo.DayRewardId, out dataDailyReward))
             {
                 TDataItemList itemData;
                 if (TableManager.Get().ItemList.GetData(item => item.id == dataDailyReward.rewardItem01, out itemData))
@@ -169,16 +168,16 @@ public class UI_Popup_Quest : UI_Popup
             }
             
             list.Clear();
-            for (int i = 0; i < questInfo.QuestData.Length || i < listSlot.Count; i++)
+            for (int i = 0; i < response.questInfo.listQuestData.Count || i < listSlot.Count; i++)
             {
-                if (i >= questInfo.QuestData.Length)
+                if (i >= response.questInfo.listQuestData.Count)
                 {
                     listSlot[i].gameObject.SetActive(false);
                     continue;
                 }
                 listSlot[i].gameObject.SetActive(true);
-                list.Add(questInfo.QuestData[i]);
-                listSlot[i].Initialize(questInfo.QuestData[i]);
+                list.Add(response.questInfo.listQuestData[i]);
+                listSlot[i].Initialize(response.questInfo.listQuestData[i]);
             }
         }
         

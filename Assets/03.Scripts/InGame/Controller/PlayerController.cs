@@ -55,12 +55,7 @@ namespace ED
             var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
             objCollider.layer = LayerMask.NameToLayer(layerName);
         }
-
-        protected override void Start()
-        {
-            StartPlayerControll();
-        }
-
+        
         private void Update()
         {
             RefreshHealthBar();
@@ -73,10 +68,6 @@ namespace ED
                 image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
                 text_Health.text = $"{Mathf.CeilToInt(ActorProxy.currentHealth)}";
             }
-        }
-
-        protected virtual void StartPlayerControll()
-        {
         }
 
         public override void SetColor(E_MaterialType type, bool isAlly)
@@ -136,6 +127,14 @@ namespace ED
             
             //ActorProxy가 파괴되기 전 밖으로 빼놓는다. 
             transform.SetParent(null);
+        }
+
+        public void AdjustLocalTowerHealthBarPosition()
+        {
+            var objHealthBar = GetComponentInChildren<UI_ObjectHealthBar>().transform;
+            var pos = objHealthBar.localPosition;
+            pos.y *= -1;
+            objHealthBar.localPosition = pos;
         }
     }
 }
