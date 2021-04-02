@@ -9,6 +9,8 @@ namespace MirageTest.Editor
     {
         private Vector3 _scale;
         private Object _animatorController;
+
+        public GameObject shadowPrefab;
     
         [MenuItem ("RandomWars/AssetEditingMacro")]
         static void Init () {
@@ -28,6 +30,49 @@ namespace MirageTest.Editor
             }
 
             EditorGUILayout.Space();
+        }
+
+        void Do()
+        {
+            foreach (var assetGuid in Selection.assetGUIDs)
+            {
+                var assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
+                var isValidFolder = AssetDatabase.IsValidFolder(assetPath);
+                if (!isValidFolder)
+                {
+                    continue;
+                }
+        
+                var prefabGuids = AssetDatabase.FindAssets("t:Prefab", new string[]{assetPath});
+                foreach (var prefabGuid in prefabGuids)
+                {
+                    var prefabPath = AssetDatabase.GUIDToAssetPath(prefabGuid);
+                    var prefab = PrefabUtility.LoadPrefabContents(prefabPath);
+                    
+                    
+                    
+                    var aiPath = prefab.GetComponent<AIPath>();
+                    if (aiPath != null)
+                    {
+                        DestroyImmediate(aiPath);    
+                    }
+                    
+                    var seeker = prefab.GetComponent<Seeker>();
+                    if (seeker != null)
+                    {
+                        DestroyImmediate(seeker);    
+                    }
+
+                    // var rigidbody = prefab.GetComponent<Rigidbody>();
+                    // if (rigidbody != null)
+                    // {
+                    //     Object.DestroyImmediate(rigidbody);    
+                    // }
+
+                    PrefabUtility.SaveAsPrefabAsset(prefab, prefabPath);
+                    PrefabUtility.UnloadPrefabContents(prefab);
+                }            
+            }
         }
         
         void RemoveLegacyScript()

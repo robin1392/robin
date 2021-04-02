@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: f0f1882e7c1c142a58f35e77ca43dcff
+guid: 8ae27510908f84a8c957fa6e0e1030da
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable:
   - first:
-      74: -6178130890299737345
-    second: Dice_shield_idle
+      74: -7407573203124111782
+    second: Dice_shield_skill_ing
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,10 +35,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Dice_shield_idle
-      takeName: Dice_shield_idle
+      name: Dice_shield_skill_ing
+      takeName: Dice_shield_skill_ing
       internalID: 0
-      firstFrame: 1
+      firstFrame: 0
       lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
@@ -62,7 +62,7 @@ ModelImporter:
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []

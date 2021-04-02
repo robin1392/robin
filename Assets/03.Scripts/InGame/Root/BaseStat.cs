@@ -228,7 +228,10 @@ namespace ED
 
             if (sr_Shadow != null)
             {
-                sr_Shadow.color = UnityUtil.HexToColor(isAlly ? "0D2F72" : "8C342E");
+                var color = UnityUtil.HexToColor(isAlly ? "0D2F72" : "8C342E");
+                color.a = 0.7f;
+                sr_Shadow.color = color;
+                sr_Shadow.transform.localScale = Vector3.one * 1.5f;
             }
         }
 

@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_Join
+  localizationKey: Gameinvite_Titlejoinroom
 --- !u!1 &339065415048942918
 GameObject:
   m_ObjectHideFlags: 0
@@ -1152,6 +1152,7 @@ MonoBehaviour:
   image_BG: {fileID: 1461471529895637130}
   clip_Open: {fileID: 8300000, guid: ecd6a3d76385b4e36bac71e4eabdf84c, type: 3}
   clip_Close: {fileID: 8300000, guid: 5572bc617d3544fa4833c50279dc7b75, type: 3}
+  rts_VerticalLayoutGroup: {fileID: 0}
   text_MatchTitle: {fileID: 1461471528823026304}
   text_InviteRemainTime: {fileID: 3657259517187307578}
   text_InviteCode: {fileID: 4153451911138892032}
@@ -1472,7 +1473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_Invite
+  localizationKey: Gameinvite_Btnwithfriendpvp
 --- !u!1 &1461471529418063753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,7 +1689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_Random
+  localizationKey: Gameinvite_Btnsolopvp
 --- !u!1 &1461471529650483424
 GameObject:
   m_ObjectHideFlags: 0
@@ -2021,7 +2022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_CreateRoom
+  localizationKey: Gameinvite_Btsmakeroom
 --- !u!1 &2139437519735917029
 GameObject:
   m_ObjectHideFlags: 0
@@ -2033,6 +2034,7 @@ GameObject:
   - component: {fileID: 8753806309768419063}
   - component: {fileID: 2126386581241498784}
   - component: {fileID: 8750972880841290959}
+  - component: {fileID: 7638846789623370387}
   m_Layer: 5
   m_Name: Placeholder
   m_TagString: Untagged
@@ -2101,6 +2103,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Enter Code
+--- !u!114 &7638846789623370387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139437519735917029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: Gameinvite_Entercode
 --- !u!1 &2659597427369027112
 GameObject:
   m_ObjectHideFlags: 0
@@ -2116,7 +2131,7 @@ GameObject:
   - component: {fileID: 3593909315507590848}
   - component: {fileID: 8627578933020448791}
   m_Layer: 5
-  m_Name: Text_Cost
+  m_Name: Text_Cancel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2225,7 +2240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_Cancel
+  localizationKey: Gameinvite_Btscancle
 --- !u!1 &2808895637013121083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2263,7 +2278,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 107.59999, y: -119}
+  m_AnchoredPosition: {x: 0, y: -176.25}
   m_SizeDelta: {x: 356.622, y: 113.99817}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4649937364954178398
@@ -2456,6 +2471,7 @@ GameObject:
   - component: {fileID: 7202487459002783594}
   - component: {fileID: 7194594751259770581}
   - component: {fileID: 220539616943439568}
+  - component: {fileID: 254897182158069616}
   m_Layer: 5
   m_Name: Text_Code
   m_TagString: Untagged
@@ -2479,8 +2495,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -161, y: -119}
-  m_SizeDelta: {x: 197.76416, y: 113.99878}
+  m_AnchoredPosition: {x: 0, y: -76}
+  m_SizeDelta: {x: 871.5847, y: 86.49597}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &109188704994254101
 CanvasRenderer:
@@ -2517,13 +2533,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 4
     m_MaxSize: 50
-    m_Alignment: 3
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'CODE :'
+  m_Text: INPUT CODE
 --- !u!114 &7194594751259770581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2554,6 +2570,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &254897182158069616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3028797858763532736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: Gameinvite_Modeguidejoinroom
 --- !u!1 &3309736424582730185
 GameObject:
   m_ObjectHideFlags: 0
@@ -2744,8 +2773,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 600, y: -680.36365}
-  m_SizeDelta: {x: 1080, y: 464.25256}
+  m_AnchoredPosition: {x: 600, y: -714.7318}
+  m_SizeDelta: {x: 1080, y: 498.62073}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5663228793805658450
 CanvasRenderer:
@@ -3265,7 +3294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_JoinRoom
+  localizationKey: Gameinvite_Btsjoinroom
 --- !u!1 &6194317658139868013
 GameObject:
   m_ObjectHideFlags: 0
@@ -3356,7 +3385,7 @@ GameObject:
   - component: {fileID: 452423821687273085}
   - component: {fileID: 6049178867483457885}
   m_Layer: 5
-  m_Name: Text_Cost
+  m_Name: Text_Copy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3755,7 +3784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_Cancel
+  localizationKey: Gameinvite_Btscancle
 --- !u!1 &6826091252589884964
 GameObject:
   m_ObjectHideFlags: 0
@@ -3958,7 +3987,7 @@ GameObject:
   - component: {fileID: 6876185453005461301}
   - component: {fileID: 9126820457377823268}
   m_Layer: 5
-  m_Name: Button_CancelCreateRoom (1)
+  m_Name: Button_CopyCode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4677,7 +4706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d9c1992bf2c45429bd52b4f6b9658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: Match_Cancel
+  localizationKey: Gameinvite_Btscancle
 --- !u!1 &9093268895634145024
 GameObject:
   m_ObjectHideFlags: 0

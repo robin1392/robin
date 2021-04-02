@@ -5,7 +5,6 @@ using ED;
 using Template.Match.RandomwarsMatch.Common;
 using UnityEngine;
 using UnityEngine.UI;
-using WebSocketSharp;
 
 public class UI_MatchPopup : UI_Popup
 {
@@ -29,12 +28,20 @@ public class UI_MatchPopup : UI_Popup
     {
         _playType = NetworkManager.Get().playType;
 
-        text_MatchTitle.text = $"{_playType.ToString()}";
+        switch (_playType)
+        {
+            case PLAY_TYPE.BATTLE:
+                text_MatchTitle.text = LocalizationManager.GetLangDesc("Gameinvite_Titlepvp");
+                break;
+            case PLAY_TYPE.CO_OP:
+                text_MatchTitle.text = LocalizationManager.GetLangDesc("Gameinvite_Titlecoop");
+                break;
+        }
     }
 
     public override void Close()
     {
-        if (isSearching && ticketId.IsNullOrEmpty() == false)
+        if (isSearching && string.IsNullOrEmpty(ticketId) == false)
         {
             NetworkManager.Get().StopMatchReq(ticketId);
         }
@@ -124,7 +131,7 @@ public class UI_MatchPopup : UI_Popup
     {
         ticketId.CopyToClipboard();
         
-        UI_ErrorMessage.Get().ShowMessage(LocalizationManager.GetLangDesc("Option_Pidcopy"));
+        UI_ErrorMessage.Get().ShowMessage(LocalizationManager.GetLangDesc("Gameinvite_Codecopyfin"));
     }
 
     /// <summary>
@@ -154,7 +161,7 @@ public class UI_MatchPopup : UI_Popup
     /// </summary>
     public void Click_JoinRoomWithCode()
     {
-        if (input_InviteCode.text.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(input_InviteCode.text))
         {
             return;
         }
