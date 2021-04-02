@@ -1413,7 +1413,7 @@ MonoBehaviour:
   desiredSimulationFPS: 10
   workerThreads: 2
   doubleBuffering: 1
-  symmetryBreakingBias: 0.2
+  symmetryBreakingBias: 0.1
   movementPlane: 0
   drawObstacles: 0
 --- !u!1001 &1884063247283223607
