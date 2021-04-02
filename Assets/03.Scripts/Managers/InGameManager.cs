@@ -166,6 +166,8 @@ namespace ED
                 server.serverGameLogic.modeType = playType;    
             }
 
+            server.serverGameLogic.hostMode = true;
+
             var userDeckInfo = new DeckInfo(guadianId, diceDeck);
             server.MatchData.AddPlayerInfo(
                 userInfo.userID, 

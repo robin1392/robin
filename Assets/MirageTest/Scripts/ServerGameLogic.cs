@@ -34,6 +34,7 @@ namespace MirageTest.Scripts
         public GameModeBase _gameMode;
 
         public PLAY_TYPE modeType;
+        public bool hostMode;
 
         bool NoPlayers =>
             _serverObjectManager
@@ -190,6 +191,11 @@ namespace MirageTest.Scripts
 
         public void TerminateServer()
         {
+            if (hostMode)
+            {
+                return;
+            }
+            
 #if UNITY_EDITOR || UNITY_STANDALONE_LINUX
             if (server.LocalClientActive == false)
             {
