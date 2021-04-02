@@ -16,7 +16,16 @@ namespace MirageTest.Scripts
             playerController.isMine = IsLocalPlayerActor;
             playerController.ChangeLayer(IsBottomCamp());
             playerController.SetColor(IsBottomCamp() ? E_MaterialType.BOTTOM : E_MaterialType.TOP, IsLocalPlayerAlly);
-            baseStat.UpdateHealthBar();
+            baseStat.SetHealthBarColor();
+
+            var client = Client as RWNetworkClient;
+            if (client.enableUI && IsLocalPlayerActor)
+            {
+                playerController.AdjustLocalTowerHealthBarPosition();
+            }
+            
+            playerController.image_HealthBar.transform.parent.gameObject.SetActive(client.enableUI);
+            
             isMovable = false;
         }
 
