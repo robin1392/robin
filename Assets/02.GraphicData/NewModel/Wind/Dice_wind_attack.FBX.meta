@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 7d73b4dd4bb484b91a7a022036f3e393
+guid: 2c4757dd3488046f9b9892b5d1bdbc6b
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable:
   - first:
-      74: -1635921667307638880
-    second: Dice_wind_run
+      74: 2061990016148581800
+    second: Dice_wind_attack
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,8 +35,8 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Dice_wind_run
-      takeName: Dice_wind_run
+      name: Dice_wind_attack
+      takeName: Dice_wind_attack
       internalID: 0
       firstFrame: 0
       lastFrame: 30
@@ -46,7 +46,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -58,7 +58,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.61097854
+        functionName: FireArrow
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

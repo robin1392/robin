@@ -10,6 +10,8 @@ public class Minion_Wind : Minion
     protected override void Awake()
     {
         base.Awake();
+        
+        PoolManager.Get().AddPool(pref_Bullet, 1);
     }
 
     protected override void Start()
