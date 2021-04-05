@@ -389,6 +389,37 @@ namespace MirageTest.Scripts
             }
         }
 
+        private void LateUpdate()
+        {
+            var client = Client as RWNetworkClient;
+            if (client == null || client.IsConnected == false)
+            {
+                return;
+            }
+
+            if (client.enableActor == false)
+            {
+                return;
+            }
+
+            var localPlayerState = client.GetLocalPlayerState();
+            if (localPlayerState == null)
+            {
+                return;
+            }
+            
+            baseStat.transform.localPosition = new Vector3(0, 2, 0);
+            if (localPlayerState.team == GameConstants.BottomCamp)
+            {
+                baseStat.transform.eulerAngles = new Vector3(10, 0, 0);
+                
+            }
+            else
+            {
+                baseStat.transform.eulerAngles = new Vector3(-10, 0, 0);
+            }
+        }
+
         public void AddBuff(byte id, float duration)
         {
             if (IsLocalClient)
