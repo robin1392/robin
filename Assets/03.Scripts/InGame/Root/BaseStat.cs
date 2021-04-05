@@ -224,6 +224,10 @@ namespace ED
                         m.material.color = c;
                         break;
                 }
+                
+                var color = UnityUtil.HexToColor(isAlly ? "0D2F72" : "8C342E");
+                m.material.SetColor("_OutlineColor", color);
+                m.material.SetFloat("_Outline", 0.4f);
             }
 
             if (sr_Shadow != null)
@@ -232,6 +236,7 @@ namespace ED
                 color.a = 0.7f;
                 sr_Shadow.color = color;
                 sr_Shadow.transform.localScale = Vector3.one * 1.5f;
+                sr_Shadow.gameObject.SetActive(false);
             }
         }
 
