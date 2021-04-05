@@ -232,6 +232,7 @@ namespace ED
                 color.a = 0.7f;
                 sr_Shadow.color = color;
                 sr_Shadow.transform.localScale = Vector3.one * 1.5f;
+                sr_Shadow.enabled = false;
             }
         }
 
