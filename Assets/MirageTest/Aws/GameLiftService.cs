@@ -170,6 +170,10 @@ namespace MirageTest.Aws
                 Debug.Log($"GameSessionData로 시작");
                 Debug.Log($"{gameSession.GameSessionData}");
                 
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(gameSession.GameSessionData);
+                string json = System.Text.Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+                Debug.Log($"Encoding.UTF8: {json}");
+
                 var listPlayerAttribute = JsonConvert.DeserializeObject<List<MatchPlayerAttribute>>(gameSession.GameSessionData);
                 foreach (var attribute in listPlayerAttribute)
                 {
