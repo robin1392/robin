@@ -171,17 +171,11 @@ namespace MirageTest.Aws
             var outcome = GameLiftServerAPI.ActivateGameSession();
             if (string.IsNullOrEmpty(gameSession.GameSessionData) == false)
             {
-                string json = JsonConvert.SerializeObject(gameSession);
-                Debug.Log($"GameProperty: {json}");
-                
-                byte[] decodedBytes = Convert.FromBase64String(gameSession.GameSessionData);
-                string decodedString = Encoding.UTF8.GetString(decodedBytes);
-                
                 Debug.Log($"GameSessionData로 시작");
-                Debug.Log($"{decodedString}");
+                Debug.Log($"{gameSession.GameSessionData}");
 
                 var listPlayerAttribute =
-                    JsonConvert.DeserializeObject<List<MatchPlayerAttribute>>(decodedString);
+                    JsonConvert.DeserializeObject<List<MatchPlayerAttribute>>(gameSession.GameSessionData);
                 
                 foreach (var attribute in listPlayerAttribute)
                 {
@@ -189,10 +183,12 @@ namespace MirageTest.Aws
                     string playerId = attribute.PlayerId;
                     var isPlayer = attribute.isPlayer;
                     string userName = attribute.dictAttributeString["userName"];
+                    string decodedUserName = DecodeFromBase64String(userName);
+                    
                     int trophy = (int) attribute.dictAttributeNumber["trophy"];
                     var listDiceInfo = attribute.dictAttributeList["diceInfo"];
                     var winStreak = attribute.dictAttributeNumber["winStreak"];
-                    AddMatchPlayer(playerId, userName, trophy, (short) winStreak, listDiceInfo, isPlayer);
+                    AddMatchPlayer(playerId, decodedUserName, trophy, (short) winStreak, listDiceInfo, isPlayer);
 
                     // 모드 설정
                     string gameMode = attribute.dictAttributeList["gameMode"][0];
@@ -201,16 +197,10 @@ namespace MirageTest.Aws
             }
             else if (string.IsNullOrEmpty(gameSession.MatchmakerData) == false)
             {
-                string json = JsonConvert.SerializeObject(gameSession);
-                Debug.Log($"GameProperty: {json}");
-                
-                byte[] decodedBytes = Convert.FromBase64String(gameSession.MatchmakerData);
-                string decodedString = Encoding.UTF8.GetString(decodedBytes);
-                
                 Debug.Log($"MatchmakerData로 시작");
-                Debug.Log($"{decodedString}");
+                Debug.Log($"{gameSession.MatchmakerData}");
                 
-                ApplyMatchmakerData(decodedString);
+                ApplyMatchmakerData(gameSession.MatchmakerData);
             }
         }
 
@@ -223,17 +213,24 @@ namespace MirageTest.Aws
                 {
                     // 캐릭터 추가
                     string playerId = player["playerId"].ToString();
-                    string userName = player["attributes"]["userName"]["valueAttribute"].ToString();
+                    string decodedUserName = DecodeFromBase64String(player["attributes"]["userName"]["valueAttribute"].ToString());
                     var trophy = int.Parse(player["attributes"]["trophy"]["valueAttribute"].ToString());
                     var winStreak = int.Parse(player["attributes"]["winStreak"]["valueAttribute"].ToString());
                     var listDiceInfo = player["attributes"]["diceInfo"]["valueAttribute"].ToObject<List<string>>();
-                    AddMatchPlayer(playerId, userName, trophy, winStreak, listDiceInfo, true);
+                    AddMatchPlayer(playerId, decodedUserName, trophy, winStreak, listDiceInfo, true);
 
                     // 모드 설정
                     string gameMode = player["attributes"]["gameMode"]["valueAttribute"].ToObject<List<string>>()[0];
                     _server.SetGameMode(gameMode);
                 }
             }
+        }
+
+        string DecodeFromBase64String(string str)
+        {
+            var decodedBytes = Convert.FromBase64String(str);
+            string decoded = Encoding.UTF8.GetString(decodedBytes);
+            return decoded;
         }
 
         void AddMatchPlayer(string playerId, string userName, int trophy, int winStreak, List<string> listDiceInfo,
