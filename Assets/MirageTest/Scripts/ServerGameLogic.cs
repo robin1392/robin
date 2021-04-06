@@ -160,7 +160,7 @@ namespace MirageTest.Scripts
             var list = new List<UniTask>();
             foreach (var player in server.MatchData.PlayerInfos)
             {
-                if (player.isPlayer)
+                if (player.isPlayer && player.enableAI == false)
                 {
                     continue;
                 }
