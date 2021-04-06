@@ -311,21 +311,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3793368002705530071, guid: c3e15a846bc9c43028960c1ceca38c37,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3793368002705530071, guid: c3e15a846bc9c43028960c1ceca38c37,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3793368002705530071, guid: c3e15a846bc9c43028960c1ceca38c37,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.7
-      objectReference: {fileID: 0}
     - target: {fileID: 4606919314290296429, guid: c3e15a846bc9c43028960c1ceca38c37,
         type: 3}
       propertyPath: m_Name
@@ -367,11 +352,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas_Unit_HealthBar
-      objectReference: {fileID: 0}
-    - target: {fileID: 1932381380993190476, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1932381380993190477, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
         type: 3}

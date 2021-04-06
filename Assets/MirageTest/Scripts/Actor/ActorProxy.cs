@@ -408,7 +408,7 @@ namespace MirageTest.Scripts
                 return;
             }
             
-            var tilt =  baseStat.transform.worldToLocalMatrix * new Vector3(10, 0, 0);
+            var tilt =  baseStat.transform.worldToLocalMatrix * new Vector3(20, 0, 0);
             baseStat.transform.localPosition = new Vector3(0, 2, 0);
             if (localPlayerState.team == GameConstants.BottomCamp)
             {
