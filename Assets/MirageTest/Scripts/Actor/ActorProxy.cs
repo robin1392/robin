@@ -48,7 +48,7 @@ namespace MirageTest.Scripts
 
         public Seeker _seeker;
         public AIPath _aiPath;
-        
+
         public AIDestinationSetter _aiDestinationSetter;
         public RVOController _rvoController;
 
@@ -57,6 +57,23 @@ namespace MirageTest.Scripts
         public bool isClocking => ((buffState & BuffState.Clocking) != 0);
         public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
         public bool isCantAI => ((buffState & BuffState.CantAI) != 0);
+
+        public bool isInAllyCamp
+        {
+            get
+            {
+                if (team == GameConstants.BottomCamp)
+                {
+                    return transform.position.z < 0;
+                }
+                else if(team == GameConstants.TopCamp)
+                {
+                    return transform.position.z > 0;
+                }
+                
+                return false;
+            }
+        }
 
         [Serializable]
         public struct Buff
@@ -725,6 +742,18 @@ namespace MirageTest.Scripts
 
             return null;
         }
+        
+        public BaseStat GetAllyTower()
+        {
+            var rwClient = Client as RWNetworkClient;
+            var allyTower = rwClient.Towers.Find(t => t.team == team);
+            if (allyTower != null)
+            {
+                return allyTower.baseStat;
+            }
+            
+            return null;
+        }
 
         public BaseStat[] GetEnemies()
         {
@@ -922,6 +951,6 @@ namespace MirageTest.Scripts
             var position = transform.position;
             var currentPosition = new Vector2(position.x, position.z);
             lastRecieved = Vector3ToMsg(currentPosition);
-        }
+        }   
     }
 }

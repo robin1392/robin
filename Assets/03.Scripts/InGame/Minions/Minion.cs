@@ -5,7 +5,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
+using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
@@ -115,6 +117,24 @@ namespace ED
             if (_attackedTarget != null && _attackedTarget.CanBeTarget())
             {
                 return _attackedTarget;
+            }
+
+            if (ActorProxy == null)
+            {
+                return null;
+            }
+            
+            if (ActorProxy.isInAllyCamp)
+            {
+                var allyTower = ActorProxy.GetAllyTower();
+                var position = transform.position;
+                var target = ActorProxy.GetEnemies().Where(e => e.target == allyTower)
+                    .OrderBy(e => (e.transform.position - position).sqrMagnitude).FirstOrDefault();
+
+                if (target != null)
+                {
+                    return target;
+                }
             }
 
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
