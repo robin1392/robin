@@ -131,9 +131,9 @@ namespace ED
             
             if (ActorProxy.isInAllyCamp)
             {
-                var allyTower = ActorProxy.GetAllyTower();
                 var position = transform.position;
-                var target = ActorProxy.GetEnemies().Where(e => e.target == allyTower)
+                
+                var target = ActorProxy.GetEnemies().Where(e => e.ActorProxy.isInEnemyCamp)
                     .OrderBy(e => (e.transform.position - position).sqrMagnitude).FirstOrDefault();
 
                 if (target != null)
