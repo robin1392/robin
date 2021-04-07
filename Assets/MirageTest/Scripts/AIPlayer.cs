@@ -18,7 +18,7 @@ namespace MirageTest.Scripts
 
         public async UniTask UpdataAI()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(5));
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
             
             while (true)
             {
