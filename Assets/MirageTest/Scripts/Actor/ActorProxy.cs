@@ -426,7 +426,7 @@ namespace MirageTest.Scripts
             }
             
             var tilt =  baseStat.transform.worldToLocalMatrix * new Vector3(20, 0, 0);
-            baseStat.transform.localPosition = new Vector3(0, 2, 0);
+            baseStat.transform.localPosition = new Vector3(0, 0.3f, 0);
             if (localPlayerState.team == GameConstants.BottomCamp)
             {
                 baseStat.transform.localEulerAngles = tilt;

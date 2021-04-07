@@ -189,8 +189,8 @@ public class RWNetworkServer : NetworkServer
             actorProxy.maxHealth = stat.maxHealth;
             actorProxy.currentHealth = stat.maxHealth;
             actorProxy.effect = stat.effect;
-            actorProxy.attackSpeed = diceInfo.attackSpeed;
-            actorProxy.moveSpeed = diceInfo.moveSpeed;
+            actorProxy.attackSpeed = diceInfo.attackSpeed / serverGameLogic._gameMode.GameState.factor;
+            actorProxy.moveSpeed = diceInfo.moveSpeed * serverGameLogic._gameMode.GameState.factor;
             actorProxy.diceScale = 1;
             actorProxy.ingameUpgradeLevel = inGameLevel;
             actorProxy.outgameUpgradeLevel = outGameLevel;
@@ -218,8 +218,8 @@ public class RWNetworkServer : NetworkServer
         actorProxy.maxHealth = guardianInfo.maxHealth;
         actorProxy.currentHealth = guardianInfo.maxHealth;
         actorProxy.effect = guardianInfo.effect;
-        actorProxy.attackSpeed = guardianInfo.attackSpeed;
-        actorProxy.moveSpeed = guardianInfo.moveSpeed;
+        actorProxy.attackSpeed = guardianInfo.attackSpeed / serverGameLogic._gameMode.GameState.factor;
+        actorProxy.moveSpeed = guardianInfo.moveSpeed * serverGameLogic._gameMode.GameState.factor;
         actorProxy.spawnTime = (float) Time.Time;
 
         serverGameLogic.ServerObjectManager.Spawn(actorProxy.NetIdentity);
@@ -242,8 +242,8 @@ public class RWNetworkServer : NetworkServer
         actorProxy.maxHealth = bossInfo.maxHealth;
         actorProxy.currentHealth = bossInfo.maxHealth;
         actorProxy.effect = bossInfo.effect;
-        actorProxy.attackSpeed = bossInfo.attackSpeed;
-        actorProxy.moveSpeed = bossInfo.moveSpeed;
+        actorProxy.attackSpeed = bossInfo.attackSpeed / serverGameLogic._gameMode.GameState.factor;
+        actorProxy.moveSpeed = bossInfo.moveSpeed * serverGameLogic._gameMode.GameState.factor;
         actorProxy.spawnTime = (float) Time.Time;
         actorProxy.waveSpawned = waveSpawned;
         actorProxy.bossIndex = bossIndex;

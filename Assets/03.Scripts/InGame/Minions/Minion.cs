@@ -98,10 +98,15 @@ namespace ED
             {
                 animator.SetFloat(AnimationHash.MoveSpeed, 0);
 
+                var client = ActorProxy.Client as RWNetworkClient;
+                var factor = client.GameState.factor;
+
                 if (isAttackSpeedFactorWithAnimation)
                 {
-                    animator.SetFloat("AttackSpeed", 1f / attackSpeed);
+                    animator.SetFloat("AttackSpeed", 1f / attackSpeed / factor);
                 }
+
+                animator.speed = factor;
             }
             
             _dicEffectPool.Clear();
