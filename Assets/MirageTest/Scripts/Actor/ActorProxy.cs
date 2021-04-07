@@ -75,6 +75,8 @@ namespace MirageTest.Scripts
             }
         }
 
+        public bool isInEnemyCamp => !isInAllyCamp;
+
         [Serializable]
         public struct Buff
         {
