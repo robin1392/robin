@@ -25,7 +25,9 @@ namespace MirageTest.Scripts.GameMode
         protected PrefabHolder _prefabHolder;
         protected ServerObjectManager ServerObjectManager;
         protected RWNetworkServer Server;
-        protected int AddSp;
+        protected int DefaultSp;
+        protected int UpgradeSp;
+        protected int WaveSp;
         protected int WaveTime;
 
         public bool IsGameEnd
@@ -56,7 +58,9 @@ namespace MirageTest.Scripts.GameMode
             
             var vsmode = TableManager.Get().Vsmode;
             WaveTime = vsmode.KeyValues[(int) EVsmodeKey.WaveTime].value;
-            AddSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.AddSP].value;
+            DefaultSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.DefaultSp].value;
+            UpgradeSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.UpgradeSp].value;
+            WaveSp = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.WaveSp].value;
         }
 
         protected GameState CreateGameState()
@@ -186,8 +190,8 @@ namespace MirageTest.Scripts.GameMode
             }
             else
             {
-                var upgradeSp = 10 + ((playerState.spGrade - 1) * 5);
-                return AddSp + GameState.wave * upgradeSp;
+                var upgradeSp = (playerState.spGrade - 1) * UpgradeSp;
+                return DefaultSp + GameState.wave * (WaveSp + upgradeSp);
             }
         }
 

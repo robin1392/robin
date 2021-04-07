@@ -37,6 +37,9 @@ namespace RandomWarsResource.Data
 		LoseUserCondition01 = 29,
 		LoseUserCondition02 = 30,
 		LoseUserCondition03 = 31,
+		DefaultSp = 32,
+		UpgradeSp = 33,
+		WaveSp = 34,
 	}
 
 	public class TDataVsmode : ITableData<int>
