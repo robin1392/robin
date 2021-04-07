@@ -494,7 +494,7 @@ namespace MirageTest.Scripts
             }
             else
             {
-                baseStat.transform.eulerAngles = -tilt;
+                baseStat.transform.localEulerAngles = -tilt;
             }
         }
 
