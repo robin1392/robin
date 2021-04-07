@@ -89,6 +89,11 @@ namespace ED
         private float[] mainPagePosX = {2484, 1242, 0, -1242, -2484};
         private float canvasWidth;
         public static List<ItemBaseInfo> listADReward = new List<ItemBaseInfo>();
+        public static float factor = 1f;
+        public static bool isNewMode;
+        public static bool isPushMode;
+        public Slider slider_Factor;
+        public Text text_Factor;
 
         public override void Awake()
         {
@@ -113,6 +118,11 @@ namespace ED
         
         private void Start()
         {
+            isPushMode = false;
+            isNewMode = false;
+            slider_Factor.value = factor;
+            text_Factor.text = $"x{factor:F1}";
+            
             DOTween.Init();
 
             RefreshUserInfoUI();
@@ -239,6 +249,16 @@ namespace ED
         {
             Debug.Log($"RVO:{isOn}");
             RWNetworkClient.EnableRVO = isOn;
+        }
+
+        public void NewModeToggle(bool isOn)
+        {
+            isNewMode = isOn;
+        }
+
+        public void PushMode(bool isOn)
+        {
+            isPushMode = isOn;
         }
 
         public void Click_PlayBattle()
@@ -629,5 +649,11 @@ namespace ED
 
         }
 #endif
+
+        public void FactorValueChanged(float value)
+        {
+            factor = value;
+            text_Factor.text = $"x{factor:F1}";
+        }
     }
 }
