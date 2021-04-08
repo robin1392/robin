@@ -110,7 +110,7 @@ namespace ED
             }
 
             RWNetworkClient.EnableRVO = true;
-            
+
 #if UNITY_EDITOR
             EditorApplication.pauseStateChanged += OnEditorAppPause;
 #endif

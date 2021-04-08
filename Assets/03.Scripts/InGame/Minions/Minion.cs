@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Mirage;
 using MirageTest.Scripts;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace ED
     public enum MAZ
     {
         NONE,
-        STURN,
+        STUN,
         FREEZE,
         INVINCIBILITY,
         SCARECROW,

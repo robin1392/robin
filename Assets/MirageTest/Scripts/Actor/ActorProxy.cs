@@ -180,7 +180,7 @@ namespace MirageTest.Scripts
                 _rvoController = gameObject.AddComponent<RVOController>();
                 var simpleSmoothModifier = gameObject.AddComponent<SimpleSmoothModifier>();
                 _rvoController.maxNeighbours = 20;
-                _rvoController.lockWhenNotMoving = true;
+                _rvoController.lockWhenNotMoving = !UI_Main.isPushMode;
                 EnablePathfinding(false);
             }
             
@@ -307,30 +307,46 @@ namespace MirageTest.Scripts
             }
         }
 
-
         private void EnableStunEffect(bool b)
         {
             if (baseStat is Minion minion)
             {
                 if (b)
                 {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.STURN) == false)
+                    if (minion._dicEffectPool.ContainsKey(MAZ.STUN) == false)
                     {
                         var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                            baseStat.ts_HitPos.position + Vector3.up * 0.65f);
+                            GetEffectPosition(baseStat, EffectLocation.Top));
                         ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.STURN, ad);
+                        
+                        minion._dicEffectPool.Add(MAZ.STUN, ad);
                     }
                 }
                 else
                 {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.STURN, out var ad))
+                    if (minion._dicEffectPool.TryGetValue(MAZ.STUN, out var ad))
                     {
-                        minion._dicEffectPool.Remove(MAZ.STURN);
+                        minion._dicEffectPool.Remove(MAZ.STUN);
                         ad.Deactive();
                     }
                 }
             }
+        }
+
+        Vector3 GetEffectPosition(BaseStat baseStat, EffectLocation effectLocation)
+        {
+            switch (effectLocation)
+            {
+                case EffectLocation.Top:
+                    // return baseStat.ts_TopEffectPosition.transform.position;
+                return baseStat.ts_HitPos.transform.position + new Vector3(0, 0.65f, 0);
+                case EffectLocation.Mid:
+                    return baseStat.ts_HitPos.transform.position;
+                case EffectLocation.Bottom:
+                    return baseStat.transform.position;
+            }
+            
+            return baseStat.transform.position;
         }
         
         private void EnableTauntedEffect(bool b)
@@ -342,7 +358,7 @@ namespace MirageTest.Scripts
                     if (minion._dicEffectPool.ContainsKey(MAZ.TAUNTED) == false)
                     {
                         var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                            baseStat.ts_HitPos.position + Vector3.up * 1.65f);
+                            GetEffectPosition(baseStat, EffectLocation.Top));
                         ad.transform.SetParent(transform);
                         minion._dicEffectPool.Add(MAZ.TAUNTED, ad);
                     }
