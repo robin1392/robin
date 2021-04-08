@@ -122,24 +122,13 @@ namespace ED
         public override void OnHitDamageOnClient(float damage)
         {
         }
-
-        NetworkIdentity GetNetworkIdentity(uint netId)
-        {
-            if (ActorProxy.IsLocalClient)
-            {
-                return ActorProxy.ServerObjectManager[netId];
-            }
-            
-            return ActorProxy.ClientObjectManager[netId];
-        }
-
+        
         public virtual BaseStat SetTarget()
         {
             if (ActorProxy.isTaunted)
             {
                 var taunted = ActorProxy.BuffList.Find(b => b.id == BuffInfos.Taunted);
-                var targetActorProxy  = GetNetworkIdentity(taunted.id);
-                
+                var targetActorProxy = ActorProxy.ClientObjectManager[taunted.target];
                 if (targetActorProxy != null)
                 {
                     var target = targetActorProxy.GetComponent<ActorProxy>();
