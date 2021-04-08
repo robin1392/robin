@@ -13,7 +13,7 @@ namespace MirageTest.Scripts
         
         public List<MatchPlayer> PlayerInfos { get; private set; } = new List<MatchPlayer>();
 
-        public void AddPlayerInfo(string userId, string userNickName, int trophy, int winStreak, DeckInfo deck, bool isPlayer = true)
+        public void AddPlayerInfo(string userId, string userNickName, int trophy, int winStreak, DeckInfo deck, bool isPlayer = true, bool enableAI = false)
         {
             if(PlayerInfos.Find(p => p.UserId == userId) != null)
             {
@@ -29,6 +29,7 @@ namespace MirageTest.Scripts
                 WinStreak = winStreak,
                 Deck = deck,
                 isPlayer = isPlayer,
+                enableAI = enableAI
             });
         }
     }
@@ -42,6 +43,7 @@ namespace MirageTest.Scripts
         public DeckInfo Deck;
         public string PlayerSessionId;
         public bool isPlayer;
+        public bool enableAI;
     }
 
     public class DeckInfo

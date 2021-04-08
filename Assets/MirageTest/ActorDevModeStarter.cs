@@ -19,8 +19,8 @@ public class ActorDevModeStarter : MonoBehaviour
             TableManager.Get().LoadFromFile(targetPath);
         }
         
-        Server.MatchData.AddPlayerInfo(Master.LocalUserId, Master.LocalNickName, 0,0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
-        Server.MatchData.AddPlayerInfo(Other.LocalUserId, Other.LocalNickName, 0,0, new DeckInfo(5001, 1001, 1002, 1003, 1004, 1005));
+        Server.MatchData.AddPlayerInfo(Master.LocalUserId, Master.LocalNickName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, Master.enableAI);
+        Server.MatchData.AddPlayerInfo(Other.LocalUserId, Other.LocalNickName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, Other.enableAI);
 
         Master.authenticator = null;
         Other.authenticator = null;

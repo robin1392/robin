@@ -152,21 +152,23 @@ public class PlayerProxy : NetworkBehaviour
     {
         if (IsLocalClient)
         {
-            ClientReadyInternal();
+            ClientReadyInternal(UI_Main.factor);
             return;
         }
 
-        ClientReadyOnServer();
+        ClientReadyOnServer(UI_Main.factor);
     }
 
     [ServerRpc(requireAuthority = false)]
-    void ClientReadyOnServer()
+    void ClientReadyOnServer(float factor)
     {
-        ClientReadyInternal();
+        ClientReadyInternal(factor);
     }
 
-    void ClientReadyInternal()
+    void ClientReadyInternal(float factor)
     {
+        var server = Server as RWNetworkServer;
+        server.serverGameLogic._gameMode.GameState.factor = factor;
         ready = true;
     }
 

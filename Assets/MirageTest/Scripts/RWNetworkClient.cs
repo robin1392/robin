@@ -22,6 +22,7 @@ namespace MirageTest.Scripts
         
         public bool enableActor;
         public bool enableUI;
+        public bool enableAI;
 
         public List<PlayerState> PlayerStates = new List<PlayerState>(); 
         public List<PlayerProxy> PlayerProxies = new List<PlayerProxy>();

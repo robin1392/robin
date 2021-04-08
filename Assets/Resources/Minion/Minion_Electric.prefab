@@ -209,11 +209,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas_Unit_HealthBar
       objectReference: {fileID: 0}
-    - target: {fileID: 1932381380993190476, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1932381380993190477, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
         type: 3}
       propertyPath: m_LocalPosition.x

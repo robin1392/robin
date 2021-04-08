@@ -5,7 +5,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
+using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
@@ -17,6 +19,7 @@ namespace ED
         FREEZE,
         INVINCIBILITY,
         SCARECROW,
+        TAUNTED
     }
 
     public enum TARGET_ORDER
@@ -96,14 +99,24 @@ namespace ED
             {
                 animator.SetFloat(AnimationHash.MoveSpeed, 0);
 
+                var client = ActorProxy.Client as RWNetworkClient;
+                var factor = client.GameState.factor;
+
                 if (isAttackSpeedFactorWithAnimation)
                 {
-                    animator.SetFloat("AttackSpeed", 1f / attackSpeed);
+                    animator.SetFloat("AttackSpeed", 1f / attackSpeed / factor);
                 }
+
+                animator.speed = factor;
             }
             
             _dicEffectPool.Clear();
             SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly);
+        }
+
+        public void ResetAttackedTarget()
+        {
+            _attackedTarget = null;
         }
 
         public override void OnHitDamageOnClient(float damage)
@@ -112,9 +125,38 @@ namespace ED
         
         public virtual BaseStat SetTarget()
         {
+            if (ActorProxy.isTaunted)
+            {
+                var taunted = ActorProxy.BuffList.Find(b => b.id == BuffInfos.Taunted);
+                var targetActorProxy = ActorProxy.ClientObjectManager[taunted.target];
+                if (targetActorProxy != null)
+                {
+                    var target = targetActorProxy.GetComponent<ActorProxy>();
+                    return target?.baseStat;
+                }
+            }
+            
             if (_attackedTarget != null && _attackedTarget.CanBeTarget())
             {
                 return _attackedTarget;
+            }
+
+            if (ActorProxy == null)
+            {
+                return null;
+            }
+            
+            if (ActorProxy.isInAllyCamp)
+            {
+                var position = transform.position;
+                
+                var target = ActorProxy.GetEnemies().Where(e => e.ActorProxy.isInEnemyCamp)
+                    .OrderBy(e => (e.transform.position - position).sqrMagnitude).FirstOrDefault();
+
+                if (target != null)
+                {
+                    return target;
+                }
             }
 
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);

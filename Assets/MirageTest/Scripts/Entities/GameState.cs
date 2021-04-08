@@ -20,7 +20,8 @@ namespace MirageTest.Scripts.Entities
         private bool _enableUI;
 
         [SyncVar(hook = nameof(SetMasterOwnerTag))] public byte masterOwnerTag;
-        
+        [SyncVar]public float factor = 1f;
+
         private void Awake()
         {
             if (NetIdentity == null)
@@ -149,7 +150,7 @@ namespace MirageTest.Scripts.Entities
             return  mod / 0.25f;
         }
 
-        public void CountDown(int waveInterval)
+        public void CountDown(float waveInterval)
         {
             if (IsLocalClient)
             {
@@ -160,12 +161,12 @@ namespace MirageTest.Scripts.Entities
         }
         
         [ClientRpc]
-        public void CountDownOnClient(int waveInterval)
+        public void CountDownOnClient(float waveInterval)
         {
             CountDownInternal(waveInterval);
         }
 
-        void CountDownInternal(int waveInterval)
+        void CountDownInternal(float waveInterval)
         {
             _waveInterval = waveInterval;
             _waveRemainTime = waveInterval;
