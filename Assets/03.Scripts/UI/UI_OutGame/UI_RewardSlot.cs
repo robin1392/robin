@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ED;
-using Service.Core;
-//using RandomWarsProtocol;
-//using RandomWarsProtocol.Msg;
-using Template.Season.RandomwarsSeason.Common;
+using Service.Template;
+using Template.Season.GameBaseSeason;
+using Template.Season.GameBaseSeason.Common;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -105,10 +104,15 @@ public class UI_RewardSlot : MonoBehaviour
         if (getVipRow + 1 == row)
         {
             isGetPremium = true;
-            //NetworkManager.Get().GetSeasonPassRewardReq(UserInfoManager.Get().GetUserInfo().userID,
-            //    (int) REWARD_TARGET_TYPE.SEASON_PASS_BUY, row, GetCallback);
-            NetworkManager.session.SeasonTemplate.SeasonPassRewardReq(NetworkManager.session.HttpClient, 
-                row, (int)REWARD_TARGET_TYPE.SEASON_PASS_BUY, OnReceiveSeasonPassRewardAck);
+
+            Percent.GameBase.Get().Season.SeasonPassRewardReq(
+                new SeasonPassRewardRequest
+                {
+                    rewardId = row,
+                    targetType = (int)REWARD_TARGET_TYPE.SEASON_PASS_BUY,
+                },
+                OnReceiveSeasonPassRewardAck);
+
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
         }
         else
@@ -135,10 +139,10 @@ public class UI_RewardSlot : MonoBehaviour
         }
     }
 
-    public bool OnReceiveSeasonPassRewardAck(ERandomwarsSeasonErrorCode errorCode, int[] arrayRewardId, ItemBaseInfo[] arrayRewardInfo, QuestData[] arrayQuestData)
+    public bool OnReceiveSeasonPassRewardAck(SeasonPassRewardResponse response)
     {
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
-        if (errorCode == ERandomwarsSeasonErrorCode.Success)
+        if (response.errorCode == (int)EGameBaseSeasonErrorCode.Success)
         {
             if (isGetPremium)
             {
@@ -149,8 +153,8 @@ public class UI_RewardSlot : MonoBehaviour
                 getNormalRow++;
             }
             
-            UI_Main.Get().AddReward(arrayRewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
-            UI_Popup_Quest.QuestUpdate(arrayQuestData);
+            UI_Main.Get().AddReward(response.listRewardInfo, arrButton[isGetPremium ? 0 : 1].transform.position);
+            UI_Popup_Quest.QuestUpdate(response.listQuestData);
         }
         
         SetButton();

@@ -6,11 +6,31 @@ using Service.Core;
 
 namespace Template.Account.GameBaseAccount.Common
 {
-	public class GameBaseAccountProtocol : ProtocolBase
+	public class GameBaseAccountProtocol
 	{
-		public GameBaseAccountProtocol(ISender sender = null, string serverAddr = "")
-			: base(sender, serverAddr)
+		public readonly ClientSession Session;
+		public readonly string ServerAddr;
+		public Dictionary<int, ControllerDelegate> MessageControllers { get;  private set; }
+
+		public GameBaseAccountProtocol()
 		{
+			Session = null;
+			ServerAddr = string.Empty;
+
+			Init();
+		}
+
+		public GameBaseAccountProtocol(ClientSession session, string serverAddr)
+		{
+			Session = session;
+			ServerAddr = serverAddr;
+
+			Init();
+		}
+
+		void Init()
+		{
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
 			MessageControllers.Add(AccountLoginRequest.ProtocolId, AccountLoginReqController);
 			MessageControllers.Add(AccountLoginResponse.ProtocolId, AccountLoginResController);
 			MessageControllers.Add(AccountPlatformLinkRequest.ProtocolId, AccountPlatformLinkReqController);
@@ -23,29 +43,28 @@ namespace Template.Account.GameBaseAccount.Common
 		public bool AccountLoginReq(AccountLoginRequest request, AccountLoginResCallback callback)
 		{
 			OnAccountLoginResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(AccountLoginRequest.ProtocolId,
-				_serverAddr + "accountlogin-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(AccountLoginRequest.ProtocolId,
+				ServerAddr + "accountlogin-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate AccountLoginResponse AccountLoginReqCallback(AccountLoginRequest request);
+		public delegate AccountLoginResponse AccountLoginReqCallback(ClientSession session, AccountLoginRequest request);
 		public AccountLoginReqCallback OnAccountLoginReqCallback;
-		public ISerializer AccountLoginReqController(byte[] msg, int length)
+		public ISerializer AccountLoginReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			AccountLoginRequest request = new AccountLoginRequest();
-			request.JsonDeserialize(json);
-			return OnAccountLoginReqCallback(request) as ISerializer;
+			AccountLoginRequest request = AccountLoginRequest.JsonDeserialize(json);
+			return OnAccountLoginReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool AccountLoginResCallback(AccountLoginResponse response);
 		public AccountLoginResCallback OnAccountLoginResCallback;
-		public ISerializer AccountLoginResController(byte[] msg, int length)
+		public ISerializer AccountLoginResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			AccountLoginResponse response = new AccountLoginResponse();
-			response.JsonDeserialize(json);
+			AccountLoginResponse response = AccountLoginResponse.JsonDeserialize(json);
 			OnAccountLoginResCallback(response);
 			return null;
 		}
@@ -55,29 +74,28 @@ namespace Template.Account.GameBaseAccount.Common
 		public bool AccountPlatformLinkReq(AccountPlatformLinkRequest request, AccountPlatformLinkResCallback callback)
 		{
 			OnAccountPlatformLinkResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(AccountPlatformLinkRequest.ProtocolId,
-				_serverAddr + "accountplatformlink-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(AccountPlatformLinkRequest.ProtocolId,
+				ServerAddr + "accountplatformlink-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate AccountPlatformLinkResponse AccountPlatformLinkReqCallback(AccountPlatformLinkRequest request);
+		public delegate AccountPlatformLinkResponse AccountPlatformLinkReqCallback(ClientSession session, AccountPlatformLinkRequest request);
 		public AccountPlatformLinkReqCallback OnAccountPlatformLinkReqCallback;
-		public ISerializer AccountPlatformLinkReqController(byte[] msg, int length)
+		public ISerializer AccountPlatformLinkReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			AccountPlatformLinkRequest request = new AccountPlatformLinkRequest();
-			request.JsonDeserialize(json);
-			return OnAccountPlatformLinkReqCallback(request) as ISerializer;
+			AccountPlatformLinkRequest request = AccountPlatformLinkRequest.JsonDeserialize(json);
+			return OnAccountPlatformLinkReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool AccountPlatformLinkResCallback(AccountPlatformLinkResponse response);
 		public AccountPlatformLinkResCallback OnAccountPlatformLinkResCallback;
-		public ISerializer AccountPlatformLinkResController(byte[] msg, int length)
+		public ISerializer AccountPlatformLinkResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			AccountPlatformLinkResponse response = new AccountPlatformLinkResponse();
-			response.JsonDeserialize(json);
+			AccountPlatformLinkResponse response = AccountPlatformLinkResponse.JsonDeserialize(json);
 			OnAccountPlatformLinkResCallback(response);
 			return null;
 		}
@@ -87,29 +105,28 @@ namespace Template.Account.GameBaseAccount.Common
 		public bool AccountLogoutReq(AccountLogoutRequest request, AccountLogoutResCallback callback)
 		{
 			OnAccountLogoutResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(AccountLogoutRequest.ProtocolId,
-				_serverAddr + "accountlogout-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(AccountLogoutRequest.ProtocolId,
+				ServerAddr + "accountlogout-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate AccountLogoutResponse AccountLogoutReqCallback(AccountLogoutRequest request);
+		public delegate AccountLogoutResponse AccountLogoutReqCallback(ClientSession session, AccountLogoutRequest request);
 		public AccountLogoutReqCallback OnAccountLogoutReqCallback;
-		public ISerializer AccountLogoutReqController(byte[] msg, int length)
+		public ISerializer AccountLogoutReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			AccountLogoutRequest request = new AccountLogoutRequest();
-			request.JsonDeserialize(json);
-			return OnAccountLogoutReqCallback(request) as ISerializer;
+			AccountLogoutRequest request = AccountLogoutRequest.JsonDeserialize(json);
+			return OnAccountLogoutReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool AccountLogoutResCallback(AccountLogoutResponse response);
 		public AccountLogoutResCallback OnAccountLogoutResCallback;
-		public ISerializer AccountLogoutResController(byte[] msg, int length)
+		public ISerializer AccountLogoutResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			AccountLogoutResponse response = new AccountLogoutResponse();
-			response.JsonDeserialize(json);
+			AccountLogoutResponse response = AccountLogoutResponse.JsonDeserialize(json);
 			OnAccountLogoutResCallback(response);
 			return null;
 		}

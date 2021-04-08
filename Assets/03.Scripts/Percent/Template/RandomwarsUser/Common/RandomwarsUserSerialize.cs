@@ -34,15 +34,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserInfoRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<UserInfoRequest>(json);
 		}
 
 	}
@@ -108,27 +105,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("userInfo", userInfo.JsonSerialize());
-			json.Add("listUserDeck", JsonConvert.SerializeObject(listUserDeck));
-			json.Add("listUserDice", JsonConvert.SerializeObject(listUserDice));
-			json.Add("userItemInfo", userItemInfo.JsonSerialize());
-			json.Add("questInfo", questInfo.JsonSerialize());
-			json.Add("seasonInfo", seasonInfo.JsonSerialize());
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserInfoResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.userInfo = MsgUserInfo.JsonDeserialize((JObject)jObject["userInfo"]);
-			this.listUserDeck = JsonConvert.DeserializeObject<List<UserDeck>>(jObject["listUserDeck"].ToString());
-			this.listUserDice = JsonConvert.DeserializeObject<List<UserDice>>(jObject["listUserDice"].ToString());
-			this.userItemInfo = UserItemInfo.JsonDeserialize((JObject)jObject["userItemInfo"]);
-			this.questInfo = QuestInfo.JsonDeserialize((JObject)jObject["questInfo"]);
-			this.seasonInfo = UserSeasonInfo.JsonDeserialize((JObject)jObject["seasonInfo"]);
+			return JsonConvert.DeserializeObject<UserInfoResponse>(json);
 		}
 
 	}
@@ -158,15 +140,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserTutorialEndRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<UserTutorialEndRequest>(json);
 		}
 
 	}
@@ -200,17 +179,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("endTutorial", endTutorial);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserTutorialEndResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.endTutorial = (bool)jObject["endTutorial"];
+			return JsonConvert.DeserializeObject<UserTutorialEndResponse>(json);
 		}
 
 	}
@@ -244,17 +218,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("userName", userName);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserNameInitRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.userName = (string)jObject["userName"];
+			return JsonConvert.DeserializeObject<UserNameInitRequest>(json);
 		}
 
 	}
@@ -292,19 +261,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("userName", userName);
-			json.Add("isNameInit", isNameInit);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserNameInitResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.userName = (string)jObject["userName"];
-			this.isNameInit = (bool)jObject["isNameInit"];
+			return JsonConvert.DeserializeObject<UserNameInitResponse>(json);
 		}
 
 	}
@@ -338,17 +300,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("userName", userName);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserNameChangeRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.userName = (string)jObject["userName"];
+			return JsonConvert.DeserializeObject<UserNameChangeRequest>(json);
 		}
 
 	}
@@ -392,19 +349,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("userName", userName);
-			json.Add("listDeleteItemInfo", JsonConvert.SerializeObject(listDeleteItemInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserNameChangeResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.userName = (string)jObject["userName"];
-			this.listDeleteItemInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listDeleteItemInfo"].ToString());
+			return JsonConvert.DeserializeObject<UserNameChangeResponse>(json);
 		}
 
 	}
@@ -442,19 +392,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("rewardId", rewardId);
-			json.Add("targetType", targetType);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserTrophyRewardRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.rewardId = (int)jObject["rewardId"];
-			this.targetType = (int)jObject["targetType"];
+			return JsonConvert.DeserializeObject<UserTrophyRewardRequest>(json);
 		}
 
 	}
@@ -514,21 +457,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listRewardId", JsonConvert.SerializeObject(listRewardId));
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserTrophyRewardResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listRewardId = JsonConvert.DeserializeObject<List<int>>(jObject["listRewardId"].ToString());
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<UserTrophyRewardResponse>(json);
 		}
 
 	}
@@ -537,7 +471,7 @@ namespace Template.User.RandomwarsUser.Common
 	{
 		public static readonly int ProtocolId = 20051;
 		// 보상 아이디
-		public string rewardId;
+		public int rewardId;
 
 		public byte[] BinarySerialize()
 		{
@@ -556,23 +490,18 @@ namespace Template.User.RandomwarsUser.Common
 			{
 				BinaryReader br = new BinaryReader(ms);
 				base.BinaryDeserialize(br);
-				this.rewardId = br.ReadString();
+				this.rewardId = br.ReadInt32();
 			}
 		}
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("rewardId", rewardId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserAdRewardRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.rewardId = (string)jObject["rewardId"];
+			return JsonConvert.DeserializeObject<UserAdRewardRequest>(json);
 		}
 
 	}
@@ -622,19 +551,12 @@ namespace Template.User.RandomwarsUser.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static UserAdRewardResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<UserAdRewardResponse>(json);
 		}
 
 	}

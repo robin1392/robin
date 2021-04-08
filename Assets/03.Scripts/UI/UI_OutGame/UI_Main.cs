@@ -12,7 +12,6 @@ using Percent.Platform.InAppPurchase;
 
 using RandomWarsResource.Data;
 using Service.Template;
-using Template.Match.RandomwarsMatch.Common;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 
@@ -171,7 +170,7 @@ namespace ED
 
             if (listADReward.Count > 0)
             {
-                AddReward(listADReward.ToArray(), btn_PlayBattle.transform.position);
+                AddReward(listADReward, btn_PlayBattle.transform.position);
 
                 listADReward.Clear();
             }
@@ -561,7 +560,7 @@ namespace ED
             commonMessageBoxPopup.Initialize(title, message, callback);
         }
 
-        public void AddReward(ItemBaseInfo[] rewards, Vector3 startPos)
+        public void AddReward(List<ItemBaseInfo> rewards, Vector3 startPos)
         {
             if (rewards != null)
             {

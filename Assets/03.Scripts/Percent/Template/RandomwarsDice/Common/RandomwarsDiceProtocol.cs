@@ -6,11 +6,31 @@ using Service.Core;
 
 namespace Template.Character.RandomwarsDice.Common
 {
-	public class RandomwarsDiceProtocol : ProtocolBase
+	public class RandomwarsDiceProtocol
 	{
-		public RandomwarsDiceProtocol(ISender sender = null, string serverAddr = "")
-			: base(sender, serverAddr)
+		public readonly ClientSession Session;
+		public readonly string ServerAddr;
+		public Dictionary<int, ControllerDelegate> MessageControllers { get;  private set; }
+
+		public RandomwarsDiceProtocol()
 		{
+			Session = null;
+			ServerAddr = string.Empty;
+
+			Init();
+		}
+
+		public RandomwarsDiceProtocol(ClientSession session, string serverAddr)
+		{
+			Session = session;
+			ServerAddr = serverAddr;
+
+			Init();
+		}
+
+		void Init()
+		{
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
 			MessageControllers.Add(DiceUpgradeRequest.ProtocolId, DiceUpgradeReqController);
 			MessageControllers.Add(DiceUpgradeResponse.ProtocolId, DiceUpgradeResController);
 			MessageControllers.Add(DiceChangeDeckRequest.ProtocolId, DiceChangeDeckReqController);
@@ -21,29 +41,28 @@ namespace Template.Character.RandomwarsDice.Common
 		public bool DiceUpgradeReq(DiceUpgradeRequest request, DiceUpgradeResCallback callback)
 		{
 			OnDiceUpgradeResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(DiceUpgradeRequest.ProtocolId,
-				_serverAddr + "diceupgrade-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(DiceUpgradeRequest.ProtocolId,
+				ServerAddr + "diceupgrade-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate DiceUpgradeResponse DiceUpgradeReqCallback(DiceUpgradeRequest request);
+		public delegate DiceUpgradeResponse DiceUpgradeReqCallback(ClientSession session, DiceUpgradeRequest request);
 		public DiceUpgradeReqCallback OnDiceUpgradeReqCallback;
-		public ISerializer DiceUpgradeReqController(byte[] msg, int length)
+		public ISerializer DiceUpgradeReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			DiceUpgradeRequest request = new DiceUpgradeRequest();
-			request.JsonDeserialize(json);
-			return OnDiceUpgradeReqCallback(request) as ISerializer;
+			DiceUpgradeRequest request = DiceUpgradeRequest.JsonDeserialize(json);
+			return OnDiceUpgradeReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool DiceUpgradeResCallback(DiceUpgradeResponse response);
 		public DiceUpgradeResCallback OnDiceUpgradeResCallback;
-		public ISerializer DiceUpgradeResController(byte[] msg, int length)
+		public ISerializer DiceUpgradeResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			DiceUpgradeResponse response = new DiceUpgradeResponse();
-			response.JsonDeserialize(json);
+			DiceUpgradeResponse response = DiceUpgradeResponse.JsonDeserialize(json);
 			OnDiceUpgradeResCallback(response);
 			return null;
 		}
@@ -53,29 +72,28 @@ namespace Template.Character.RandomwarsDice.Common
 		public bool DiceChangeDeckReq(DiceChangeDeckRequest request, DiceChangeDeckResCallback callback)
 		{
 			OnDiceChangeDeckResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(DiceChangeDeckRequest.ProtocolId,
-				_serverAddr + "dicechangedeck-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(DiceChangeDeckRequest.ProtocolId,
+				ServerAddr + "dicechangedeck-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate DiceChangeDeckResponse DiceChangeDeckReqCallback(DiceChangeDeckRequest request);
+		public delegate DiceChangeDeckResponse DiceChangeDeckReqCallback(ClientSession session, DiceChangeDeckRequest request);
 		public DiceChangeDeckReqCallback OnDiceChangeDeckReqCallback;
-		public ISerializer DiceChangeDeckReqController(byte[] msg, int length)
+		public ISerializer DiceChangeDeckReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			DiceChangeDeckRequest request = new DiceChangeDeckRequest();
-			request.JsonDeserialize(json);
-			return OnDiceChangeDeckReqCallback(request) as ISerializer;
+			DiceChangeDeckRequest request = DiceChangeDeckRequest.JsonDeserialize(json);
+			return OnDiceChangeDeckReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool DiceChangeDeckResCallback(DiceChangeDeckResponse response);
 		public DiceChangeDeckResCallback OnDiceChangeDeckResCallback;
-		public ISerializer DiceChangeDeckResController(byte[] msg, int length)
+		public ISerializer DiceChangeDeckResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			DiceChangeDeckResponse response = new DiceChangeDeckResponse();
-			response.JsonDeserialize(json);
+			DiceChangeDeckResponse response = DiceChangeDeckResponse.JsonDeserialize(json);
 			OnDiceChangeDeckResCallback(response);
 			return null;
 		}

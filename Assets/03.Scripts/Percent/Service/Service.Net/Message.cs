@@ -8,7 +8,7 @@ namespace Service.Net
         public int ProtocolId { get; private set; }
         public int Length { get; private set; }
         public byte[] Data { get; private set; }
-        public object Sender { get; private set; }
+        public ClientSession Session { get; private set; }
 
 
         public void Init(int bufferSize)
@@ -22,13 +22,13 @@ namespace Service.Net
             ProtocolId = 0;
             Length = 0;
             Array.Clear(Data, 0, Data.Length);
-            Sender = null;
+            Session = null;
         }
 
 
-        public void Set(object sender, byte[] buffer)
+        public void Set(ClientSession session, byte[] buffer)
         {
-            Sender = sender;
+            Session = session;
             ProtocolId = BitConverter.ToInt32(buffer, 0);
             Length = BitConverter.ToInt32(buffer, Defines.PROTOCOL_ID);
 
@@ -39,9 +39,9 @@ namespace Service.Net
         }
 
 
-        public void Set(object sender, int protocolId, byte[] data, int length)
+        public void Set(ClientSession session, int protocolId, byte[] data, int length)
         {
-            Sender = sender;
+            Session = session;
             ProtocolId = protocolId;
             Length = length;
 

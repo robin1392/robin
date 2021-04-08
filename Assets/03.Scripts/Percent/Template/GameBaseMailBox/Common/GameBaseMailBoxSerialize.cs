@@ -34,15 +34,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailBoxInfoRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<MailBoxInfoRequest>(json);
 		}
 
 	}
@@ -82,17 +79,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listMailInfo", JsonConvert.SerializeObject(listMailInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailBoxInfoResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listMailInfo = JsonConvert.DeserializeObject<List<MailInfo>>(jObject["listMailInfo"].ToString());
+			return JsonConvert.DeserializeObject<MailBoxInfoResponse>(json);
 		}
 
 	}
@@ -122,15 +114,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailBoxRefreshRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<MailBoxRefreshRequest>(json);
 		}
 
 	}
@@ -170,17 +159,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listMailInfo", JsonConvert.SerializeObject(listMailInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailBoxRefreshResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listMailInfo = JsonConvert.DeserializeObject<List<MailInfo>>(jObject["listMailInfo"].ToString());
+			return JsonConvert.DeserializeObject<MailBoxRefreshResponse>(json);
 		}
 
 	}
@@ -214,17 +198,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("mailId", mailId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailReceiveRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.mailId = (string)jObject["mailId"];
+			return JsonConvert.DeserializeObject<MailReceiveRequest>(json);
 		}
 
 	}
@@ -264,17 +243,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listMailItemInfo", JsonConvert.SerializeObject(listMailItemInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailReceiveResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listMailItemInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listMailItemInfo"].ToString());
+			return JsonConvert.DeserializeObject<MailReceiveResponse>(json);
 		}
 
 	}
@@ -304,15 +278,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailReceiveAllRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<MailReceiveAllRequest>(json);
 		}
 
 	}
@@ -352,17 +323,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listMailItemInfo", JsonConvert.SerializeObject(listMailItemInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailReceiveAllResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listMailItemInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listMailItemInfo"].ToString());
+			return JsonConvert.DeserializeObject<MailReceiveAllResponse>(json);
 		}
 
 	}
@@ -377,7 +343,7 @@ namespace Template.MailBox.GameBaseMailBox.Common
 		// 
 		public List<string> listCustomText;
 		// 
-		public List<Dictionary<string, int>> mailItems;
+		public List<ItemBaseInfo> mailItems;
 
 		public byte[] BinarySerialize()
 		{
@@ -394,7 +360,7 @@ namespace Template.MailBox.GameBaseMailBox.Common
 				int lengthmailItems = (mailItems == null) ? 0 : mailItems.Count;
 				bw.Write(lengthmailItems);
 				for (int i = 0; i < lengthmailItems; i++)
-					;
+					mailItems[i].BinarySerialize(bw);
 				return ms.ToArray();
 			}
 		}
@@ -412,31 +378,20 @@ namespace Template.MailBox.GameBaseMailBox.Common
 				for (int i = 0; i < lengthlistCustomText; i++)
 					this.listCustomText.Add(br.ReadString());
 				int lengthmailItems = br.ReadInt32();
-				this.mailItems = new List<Dictionary<string, int>>(lengthmailItems);
+				this.mailItems = new List<ItemBaseInfo>(lengthmailItems);
 				for (int i = 0; i < lengthmailItems; i++)
-					;
+					this.mailItems.Add(ItemBaseInfo.BinaryDeserialize(br));
 			}
 		}
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("userId", userId);
-			json.Add("mailTableId", mailTableId);
-			json.Add("listCustomText", JsonConvert.SerializeObject(listCustomText));
-			json.Add("mailItems", JsonConvert.SerializeObject(mailItems));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailSendRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.userId = (string)jObject["userId"];
-			this.mailTableId = (int)jObject["mailTableId"];
-			this.listCustomText = JsonConvert.DeserializeObject<List<string>>(jObject["listCustomText"].ToString());
-			this.mailItems = JsonConvert.DeserializeObject<List<Dictionary<string, int>>>(jObject["mailItems"].ToString());
+			return JsonConvert.DeserializeObject<MailSendRequest>(json);
 		}
 
 	}
@@ -470,17 +425,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("mailInfo", mailInfo.JsonSerialize());
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MailSendResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.mailInfo = MailInfo.JsonDeserialize((JObject)jObject["mailInfo"]);
+			return JsonConvert.DeserializeObject<MailSendResponse>(json);
 		}
 
 	}
@@ -493,7 +443,7 @@ namespace Template.MailBox.GameBaseMailBox.Common
 		// 
 		public List<string> listCustomText;
 		// 
-		public List<Dictionary<string, int>> mailItems;
+		public List<ItemBaseInfo> mailItems;
 		// 
 		public string sendTime;
 		// 
@@ -515,7 +465,7 @@ namespace Template.MailBox.GameBaseMailBox.Common
 				int lengthmailItems = (mailItems == null) ? 0 : mailItems.Count;
 				bw.Write(lengthmailItems);
 				for (int i = 0; i < lengthmailItems; i++)
-					;
+					mailItems[i].BinarySerialize(bw);
 				bw.Write(sendTime);
 				bw.Write(endTime);
 				bw.Write(storeDay);
@@ -535,9 +485,9 @@ namespace Template.MailBox.GameBaseMailBox.Common
 				for (int i = 0; i < lengthlistCustomText; i++)
 					this.listCustomText.Add(br.ReadString());
 				int lengthmailItems = br.ReadInt32();
-				this.mailItems = new List<Dictionary<string, int>>(lengthmailItems);
+				this.mailItems = new List<ItemBaseInfo>(lengthmailItems);
 				for (int i = 0; i < lengthmailItems; i++)
-					;
+					this.mailItems.Add(ItemBaseInfo.BinaryDeserialize(br));
 				this.sendTime = br.ReadString();
 				this.endTime = br.ReadString();
 				this.storeDay = br.ReadInt32();
@@ -546,27 +496,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("mailTableId", mailTableId);
-			json.Add("listCustomText", JsonConvert.SerializeObject(listCustomText));
-			json.Add("mailItems", JsonConvert.SerializeObject(mailItems));
-			json.Add("sendTime", sendTime);
-			json.Add("endTime", endTime);
-			json.Add("storeDay", storeDay);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SystemMailSendRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.mailTableId = (int)jObject["mailTableId"];
-			this.listCustomText = JsonConvert.DeserializeObject<List<string>>(jObject["listCustomText"].ToString());
-			this.mailItems = JsonConvert.DeserializeObject<List<Dictionary<string, int>>>(jObject["mailItems"].ToString());
-			this.sendTime = (string)jObject["sendTime"];
-			this.endTime = (string)jObject["endTime"];
-			this.storeDay = (int)jObject["storeDay"];
+			return JsonConvert.DeserializeObject<SystemMailSendRequest>(json);
 		}
 
 	}
@@ -600,17 +535,12 @@ namespace Template.MailBox.GameBaseMailBox.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("result", result);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SystemMailSendResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.result = (bool)jObject["result"];
+			return JsonConvert.DeserializeObject<SystemMailSendResponse>(json);
 		}
 
 	}

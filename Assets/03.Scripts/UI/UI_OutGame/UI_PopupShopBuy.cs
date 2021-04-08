@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using ED;
 using Percent.Platform;
-using RandomWarsProtocol;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.Events;

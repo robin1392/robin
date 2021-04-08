@@ -34,15 +34,12 @@ namespace Template.Quest.GameBaseQuest.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static QuestInfoRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<QuestInfoRequest>(json);
 		}
 
 	}
@@ -76,17 +73,12 @@ namespace Template.Quest.GameBaseQuest.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("questInfo", questInfo.JsonSerialize());
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static QuestInfoResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.questInfo = QuestInfo.JsonDeserialize((JObject)jObject["questInfo"]);
+			return JsonConvert.DeserializeObject<QuestInfoResponse>(json);
 		}
 
 	}
@@ -120,17 +112,12 @@ namespace Template.Quest.GameBaseQuest.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("questId", questId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static QuestRewardRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.questId = (int)jObject["questId"];
+			return JsonConvert.DeserializeObject<QuestRewardRequest>(json);
 		}
 
 	}
@@ -180,19 +167,12 @@ namespace Template.Quest.GameBaseQuest.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static QuestRewardResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
+			return JsonConvert.DeserializeObject<QuestRewardResponse>(json);
 		}
 
 	}
@@ -230,19 +210,12 @@ namespace Template.Quest.GameBaseQuest.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("rewardId", rewardId);
-			json.Add("index", index);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static QuestDailyRewardRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.rewardId = (int)jObject["rewardId"];
-			this.index = (int)jObject["index"];
+			return JsonConvert.DeserializeObject<QuestDailyRewardRequest>(json);
 		}
 
 	}
@@ -296,21 +269,12 @@ namespace Template.Quest.GameBaseQuest.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("dailyRewardInfo", dailyRewardInfo.JsonSerialize());
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static QuestDailyRewardResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.dailyRewardInfo = QuestDayReward.JsonDeserialize((JObject)jObject["dailyRewardInfo"]);
+			return JsonConvert.DeserializeObject<QuestDailyRewardResponse>(json);
 		}
 
 	}

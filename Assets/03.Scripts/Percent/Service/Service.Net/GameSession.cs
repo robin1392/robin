@@ -55,23 +55,23 @@ namespace Service.Net
         }
 
 
-        public void AddProtocol(ProtocolBase protocol)
+        public void AddControllers(Dictionary<int, ControllerDelegate> controllers)
         {
-            _messageController.AddControllers(protocol.MessageControllers);
+            _messageController.AddControllers(controllers);
         }
 
 
-        public virtual void PushInternalMessage(object sender, EInternalProtocol protocolId, byte[] msg, int length)
-        {
-
-        }
-
-        public virtual void PushExternalMessage(object sender, int protocolId, byte[] msg, int length)
+        public virtual void PushInternalMessage(ClientSession session, EInternalProtocol protocolId, byte[] msg, int length)
         {
 
         }
 
-        public virtual bool PushRelayMessage(object sender, int protocolId, byte[] msg, int length)
+        public virtual void PushExternalMessage(ClientSession session, int protocolId, byte[] msg, int length)
+        {
+
+        }
+
+        public virtual bool PushRelayMessage(ClientSession session, int protocolId, byte[] msg, int length)
         {
             return false;
         }
@@ -88,23 +88,23 @@ namespace Service.Net
                 return false;
             }
 
-            _messageController.OnRecevice(msg.ProtocolId, msg.Data, msg.Length);
+            _messageController.OnRecevice(msg.Session, msg.ProtocolId, msg.Data, msg.Length);
             return true;
         }
 
-        protected virtual void OnConnectClient(ClientSession clientSession) {}
+        protected virtual void OnConnectClient(UserToken userToken) {}
 
-        protected virtual void OnReconnectClient(ClientSession clientSession) {}
+        protected virtual void OnReconnectClient(UserToken userToken) {}
 
-        protected virtual void OnOfflineClient(ClientSession clientSession) {}
+        protected virtual void OnOfflineClient(UserToken userToken) {}
 
-        protected virtual void OnDisconnectClient(ClientSession clientSession) {}
+        protected virtual void OnDisconnectClient(UserToken userToken) {}
 
-        protected virtual void OnExpiredClient(ClientSession clientSession) {}
+        protected virtual void OnExpiredClient(UserToken userToken) {}
 
-        protected virtual void OnPauseClient(ClientSession clientSession) {}
+        protected virtual void OnPauseClient(UserToken userToken) {}
 
-        protected virtual void OnResumeClient(ClientSession clientSession) {}
+        protected virtual void OnResumeClient(UserToken userToken) {}
 
         protected virtual void OnTerminatedGameSession(string gameSessionId) {}
     }

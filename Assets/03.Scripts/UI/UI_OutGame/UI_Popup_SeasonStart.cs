@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-//using RandomWarsProtocol;
-using RandomWarsProtocol.Msg;
-using Service.Core;
+using Service.Template;
 using UnityEngine;
 using UnityEngine.UI;
 

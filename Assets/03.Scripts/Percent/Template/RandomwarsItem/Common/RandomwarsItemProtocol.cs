@@ -6,11 +6,31 @@ using Service.Core;
 
 namespace Template.Item.RandomwarsItem.Common
 {
-	public class RandomwarsItemProtocol : ProtocolBase
+	public class RandomwarsItemProtocol
 	{
-		public RandomwarsItemProtocol(ISender sender = null, string serverAddr = "")
-			: base(sender, serverAddr)
+		public readonly ClientSession Session;
+		public readonly string ServerAddr;
+		public Dictionary<int, ControllerDelegate> MessageControllers { get;  private set; }
+
+		public RandomwarsItemProtocol()
 		{
+			Session = null;
+			ServerAddr = string.Empty;
+
+			Init();
+		}
+
+		public RandomwarsItemProtocol(ClientSession session, string serverAddr)
+		{
+			Session = session;
+			ServerAddr = serverAddr;
+
+			Init();
+		}
+
+		void Init()
+		{
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
 			MessageControllers.Add(BoxOpenRequest.ProtocolId, BoxOpenReqController);
 			MessageControllers.Add(BoxOpenResponse.ProtocolId, BoxOpenResController);
 			MessageControllers.Add(EmoticonEquipRequest.ProtocolId, EmoticonEquipReqController);
@@ -21,29 +41,28 @@ namespace Template.Item.RandomwarsItem.Common
 		public bool BoxOpenReq(BoxOpenRequest request, BoxOpenResCallback callback)
 		{
 			OnBoxOpenResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(BoxOpenRequest.ProtocolId,
-				_serverAddr + "boxopen-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(BoxOpenRequest.ProtocolId,
+				ServerAddr + "boxopen-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate BoxOpenResponse BoxOpenReqCallback(BoxOpenRequest request);
+		public delegate BoxOpenResponse BoxOpenReqCallback(ClientSession session, BoxOpenRequest request);
 		public BoxOpenReqCallback OnBoxOpenReqCallback;
-		public ISerializer BoxOpenReqController(byte[] msg, int length)
+		public ISerializer BoxOpenReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			BoxOpenRequest request = new BoxOpenRequest();
-			request.JsonDeserialize(json);
-			return OnBoxOpenReqCallback(request) as ISerializer;
+			BoxOpenRequest request = BoxOpenRequest.JsonDeserialize(json);
+			return OnBoxOpenReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool BoxOpenResCallback(BoxOpenResponse response);
 		public BoxOpenResCallback OnBoxOpenResCallback;
-		public ISerializer BoxOpenResController(byte[] msg, int length)
+		public ISerializer BoxOpenResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			BoxOpenResponse response = new BoxOpenResponse();
-			response.JsonDeserialize(json);
+			BoxOpenResponse response = BoxOpenResponse.JsonDeserialize(json);
 			OnBoxOpenResCallback(response);
 			return null;
 		}
@@ -53,29 +72,28 @@ namespace Template.Item.RandomwarsItem.Common
 		public bool EmoticonEquipReq(EmoticonEquipRequest request, EmoticonEquipResCallback callback)
 		{
 			OnEmoticonEquipResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(EmoticonEquipRequest.ProtocolId,
-				_serverAddr + "emoticonequip-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(EmoticonEquipRequest.ProtocolId,
+				ServerAddr + "emoticonequip-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate EmoticonEquipResponse EmoticonEquipReqCallback(EmoticonEquipRequest request);
+		public delegate EmoticonEquipResponse EmoticonEquipReqCallback(ClientSession session, EmoticonEquipRequest request);
 		public EmoticonEquipReqCallback OnEmoticonEquipReqCallback;
-		public ISerializer EmoticonEquipReqController(byte[] msg, int length)
+		public ISerializer EmoticonEquipReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			EmoticonEquipRequest request = new EmoticonEquipRequest();
-			request.JsonDeserialize(json);
-			return OnEmoticonEquipReqCallback(request) as ISerializer;
+			EmoticonEquipRequest request = EmoticonEquipRequest.JsonDeserialize(json);
+			return OnEmoticonEquipReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool EmoticonEquipResCallback(EmoticonEquipResponse response);
 		public EmoticonEquipResCallback OnEmoticonEquipResCallback;
-		public ISerializer EmoticonEquipResController(byte[] msg, int length)
+		public ISerializer EmoticonEquipResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			EmoticonEquipResponse response = new EmoticonEquipResponse();
-			response.JsonDeserialize(json);
+			EmoticonEquipResponse response = EmoticonEquipResponse.JsonDeserialize(json);
 			OnEmoticonEquipResCallback(response);
 			return null;
 		}

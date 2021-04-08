@@ -34,15 +34,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonInfoRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<SeasonInfoRequest>(json);
 		}
 
 	}
@@ -86,19 +83,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("seasonInfo", seasonInfo.JsonSerialize());
-			json.Add("listRankInfo", JsonConvert.SerializeObject(listRankInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonInfoResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.seasonInfo = UserSeasonInfo.JsonDeserialize((JObject)jObject["seasonInfo"]);
-			this.listRankInfo = JsonConvert.DeserializeObject<List<RankUserInfo>>(jObject["listRankInfo"].ToString());
+			return JsonConvert.DeserializeObject<SeasonInfoResponse>(json);
 		}
 
 	}
@@ -128,15 +118,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonResetRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<SeasonResetRequest>(json);
 		}
 
 	}
@@ -190,21 +177,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("seasonInfo", seasonInfo.JsonSerialize());
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonResetResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.seasonInfo = UserSeasonInfo.JsonDeserialize((JObject)jObject["seasonInfo"]);
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<SeasonResetResponse>(json);
 		}
 
 	}
@@ -238,17 +216,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("pageNo", pageNo);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonRankRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.pageNo = (int)jObject["pageNo"];
+			return JsonConvert.DeserializeObject<SeasonRankRequest>(json);
 		}
 
 	}
@@ -292,19 +265,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("pageNo", pageNo);
-			json.Add("listRankInfo", JsonConvert.SerializeObject(listRankInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonRankResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.pageNo = (int)jObject["pageNo"];
-			this.listRankInfo = JsonConvert.DeserializeObject<List<RankUserInfo>>(jObject["listRankInfo"].ToString());
+			return JsonConvert.DeserializeObject<SeasonRankResponse>(json);
 		}
 
 	}
@@ -342,19 +308,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("rewardId", rewardId);
-			json.Add("targetType", targetType);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonPassRewardRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.rewardId = (int)jObject["rewardId"];
-			this.targetType = (int)jObject["targetType"];
+			return JsonConvert.DeserializeObject<SeasonPassRewardRequest>(json);
 		}
 
 	}
@@ -414,21 +373,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listRewardId", JsonConvert.SerializeObject(listRewardId));
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonPassRewardResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listRewardId = JsonConvert.DeserializeObject<List<int>>(jObject["listRewardId"].ToString());
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<SeasonPassRewardResponse>(json);
 		}
 
 	}
@@ -462,17 +412,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("rewardId", rewardId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonPassStepRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.rewardId = (int)jObject["rewardId"];
+			return JsonConvert.DeserializeObject<SeasonPassStepRequest>(json);
 		}
 
 	}
@@ -524,23 +469,12 @@ namespace Template.Season.GameBaseSeason.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("rewardId", rewardId);
-			json.Add("deleteItemInfo", deleteItemInfo.JsonSerialize());
-			json.Add("rewardInfo", rewardInfo.JsonSerialize());
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static SeasonPassStepResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.rewardId = (int)jObject["rewardId"];
-			this.deleteItemInfo = ItemBaseInfo.JsonDeserialize((JObject)jObject["deleteItemInfo"]);
-			this.rewardInfo = ItemBaseInfo.JsonDeserialize((JObject)jObject["rewardInfo"]);
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<SeasonPassStepResponse>(json);
 		}
 
 	}

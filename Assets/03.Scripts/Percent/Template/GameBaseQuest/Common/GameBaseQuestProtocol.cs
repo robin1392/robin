@@ -6,11 +6,31 @@ using Service.Core;
 
 namespace Template.Quest.GameBaseQuest.Common
 {
-	public class GameBaseQuestProtocol : ProtocolBase
+	public class GameBaseQuestProtocol
 	{
-		public GameBaseQuestProtocol(ISender sender = null, string serverAddr = "")
-			: base(sender, serverAddr)
+		public readonly ClientSession Session;
+		public readonly string ServerAddr;
+		public Dictionary<int, ControllerDelegate> MessageControllers { get;  private set; }
+
+		public GameBaseQuestProtocol()
 		{
+			Session = null;
+			ServerAddr = string.Empty;
+
+			Init();
+		}
+
+		public GameBaseQuestProtocol(ClientSession session, string serverAddr)
+		{
+			Session = session;
+			ServerAddr = serverAddr;
+
+			Init();
+		}
+
+		void Init()
+		{
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
 			MessageControllers.Add(QuestInfoRequest.ProtocolId, QuestInfoReqController);
 			MessageControllers.Add(QuestInfoResponse.ProtocolId, QuestInfoResController);
 			MessageControllers.Add(QuestRewardRequest.ProtocolId, QuestRewardReqController);
@@ -23,29 +43,28 @@ namespace Template.Quest.GameBaseQuest.Common
 		public bool QuestInfoReq(QuestInfoRequest request, QuestInfoResCallback callback)
 		{
 			OnQuestInfoResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(QuestInfoRequest.ProtocolId,
-				_serverAddr + "questinfo-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(QuestInfoRequest.ProtocolId,
+				ServerAddr + "questinfo-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate QuestInfoResponse QuestInfoReqCallback(QuestInfoRequest request);
+		public delegate QuestInfoResponse QuestInfoReqCallback(ClientSession session, QuestInfoRequest request);
 		public QuestInfoReqCallback OnQuestInfoReqCallback;
-		public ISerializer QuestInfoReqController(byte[] msg, int length)
+		public ISerializer QuestInfoReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			QuestInfoRequest request = new QuestInfoRequest();
-			request.JsonDeserialize(json);
-			return OnQuestInfoReqCallback(request) as ISerializer;
+			QuestInfoRequest request = QuestInfoRequest.JsonDeserialize(json);
+			return OnQuestInfoReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool QuestInfoResCallback(QuestInfoResponse response);
 		public QuestInfoResCallback OnQuestInfoResCallback;
-		public ISerializer QuestInfoResController(byte[] msg, int length)
+		public ISerializer QuestInfoResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			QuestInfoResponse response = new QuestInfoResponse();
-			response.JsonDeserialize(json);
+			QuestInfoResponse response = QuestInfoResponse.JsonDeserialize(json);
 			OnQuestInfoResCallback(response);
 			return null;
 		}
@@ -55,29 +74,28 @@ namespace Template.Quest.GameBaseQuest.Common
 		public bool QuestRewardReq(QuestRewardRequest request, QuestRewardResCallback callback)
 		{
 			OnQuestRewardResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(QuestRewardRequest.ProtocolId,
-				_serverAddr + "questreward-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(QuestRewardRequest.ProtocolId,
+				ServerAddr + "questreward-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate QuestRewardResponse QuestRewardReqCallback(QuestRewardRequest request);
+		public delegate QuestRewardResponse QuestRewardReqCallback(ClientSession session, QuestRewardRequest request);
 		public QuestRewardReqCallback OnQuestRewardReqCallback;
-		public ISerializer QuestRewardReqController(byte[] msg, int length)
+		public ISerializer QuestRewardReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			QuestRewardRequest request = new QuestRewardRequest();
-			request.JsonDeserialize(json);
-			return OnQuestRewardReqCallback(request) as ISerializer;
+			QuestRewardRequest request = QuestRewardRequest.JsonDeserialize(json);
+			return OnQuestRewardReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool QuestRewardResCallback(QuestRewardResponse response);
 		public QuestRewardResCallback OnQuestRewardResCallback;
-		public ISerializer QuestRewardResController(byte[] msg, int length)
+		public ISerializer QuestRewardResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			QuestRewardResponse response = new QuestRewardResponse();
-			response.JsonDeserialize(json);
+			QuestRewardResponse response = QuestRewardResponse.JsonDeserialize(json);
 			OnQuestRewardResCallback(response);
 			return null;
 		}
@@ -87,29 +105,28 @@ namespace Template.Quest.GameBaseQuest.Common
 		public bool QuestDailyRewardReq(QuestDailyRewardRequest request, QuestDailyRewardResCallback callback)
 		{
 			OnQuestDailyRewardResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(QuestDailyRewardRequest.ProtocolId,
-				_serverAddr + "questdailyreward-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(QuestDailyRewardRequest.ProtocolId,
+				ServerAddr + "questdailyreward-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate QuestDailyRewardResponse QuestDailyRewardReqCallback(QuestDailyRewardRequest request);
+		public delegate QuestDailyRewardResponse QuestDailyRewardReqCallback(ClientSession session, QuestDailyRewardRequest request);
 		public QuestDailyRewardReqCallback OnQuestDailyRewardReqCallback;
-		public ISerializer QuestDailyRewardReqController(byte[] msg, int length)
+		public ISerializer QuestDailyRewardReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			QuestDailyRewardRequest request = new QuestDailyRewardRequest();
-			request.JsonDeserialize(json);
-			return OnQuestDailyRewardReqCallback(request) as ISerializer;
+			QuestDailyRewardRequest request = QuestDailyRewardRequest.JsonDeserialize(json);
+			return OnQuestDailyRewardReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool QuestDailyRewardResCallback(QuestDailyRewardResponse response);
 		public QuestDailyRewardResCallback OnQuestDailyRewardResCallback;
-		public ISerializer QuestDailyRewardResController(byte[] msg, int length)
+		public ISerializer QuestDailyRewardResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			QuestDailyRewardResponse response = new QuestDailyRewardResponse();
-			response.JsonDeserialize(json);
+			QuestDailyRewardResponse response = QuestDailyRewardResponse.JsonDeserialize(json);
 			OnQuestDailyRewardResCallback(response);
 			return null;
 		}

@@ -38,17 +38,12 @@ namespace Template.Item.RandomwarsItem.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("boxId", boxId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static BoxOpenRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.boxId = (int)jObject["boxId"];
+			return JsonConvert.DeserializeObject<BoxOpenRequest>(json);
 		}
 
 	}
@@ -108,21 +103,12 @@ namespace Template.Item.RandomwarsItem.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listDeleteItemInfo", JsonConvert.SerializeObject(listDeleteItemInfo));
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static BoxOpenResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listDeleteItemInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listDeleteItemInfo"].ToString());
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<BoxOpenResponse>(json);
 		}
 
 	}
@@ -162,17 +148,12 @@ namespace Template.Item.RandomwarsItem.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listItemId", JsonConvert.SerializeObject(listItemId));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static EmoticonEquipRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listItemId = JsonConvert.DeserializeObject<List<int>>(jObject["listItemId"].ToString());
+			return JsonConvert.DeserializeObject<EmoticonEquipRequest>(json);
 		}
 
 	}
@@ -212,17 +193,12 @@ namespace Template.Item.RandomwarsItem.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listItemId", JsonConvert.SerializeObject(listItemId));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static EmoticonEquipResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listItemId = JsonConvert.DeserializeObject<List<int>>(jObject["listItemId"].ToString());
+			return JsonConvert.DeserializeObject<EmoticonEquipResponse>(json);
 		}
 
 	}

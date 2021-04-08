@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ED;
-//using RandomWarsProtocol;
-//using RandomWarsProtocol.Msg;
-using Service.Core;
-using Template.Season.RandomwarsSeason.Common;
+using Service.Template;
+using Template.Season.GameBaseSeason;
+using Template.Season.GameBaseSeason.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,30 +22,34 @@ public class UI_Popup_SeasonEnd : UI_Popup
     {
         gameObject.SetActive(true);
         //NetworkManager.Get().SeasonResetReq(UserInfoManager.Get().GetUserInfo().userID, ResetCallback);
-        NetworkManager.session.SeasonTemplate.SeasonResetReq(NetworkManager.session.HttpClient, OnReceiveSeasonResetAck);
+        Percent.GameBase.Get().Season.SeasonResetReq(
+            new SeasonResetRequest{}, 
+            OnReceiveSeasonResetAck);
+
+        // NetworkManager.session.SeasonTemplate.SeasonResetReq(NetworkManager.session.HttpClient, OnReceiveSeasonResetAck);
 
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public bool OnReceiveSeasonResetAck(ERandomwarsSeasonErrorCode errorCode, UserSeasonInfo seasonInfo, ItemBaseInfo[] arrayRewardInfo)
+    public bool OnReceiveSeasonResetAck(SeasonResetResponse response)
     {
-        this.seasonInfo = seasonInfo;
+        this.seasonInfo = response.seasonInfo;
         
         UI_Main.Get().obj_IndicatorPopup.SetActive(false);
 
-        if (errorCode == ERandomwarsSeasonErrorCode.Success)
+        if (response.errorCode == (int)EGameBaseSeasonErrorCode.Success)
         {
             UserInfoManager.Get().GetUserInfo().seasonTrophy = seasonInfo.SeasonTrophy;
             UserInfoManager.Get().GetUserInfo().rankPoint = seasonInfo.RankPoint;
             
-            if (arrayRewardInfo != null && arrayRewardInfo.Length > 0)
+            if (response.listRewardInfo != null && response.listRewardInfo.Count > 0)
             {
                 rewardSlot.gameObject.SetActive(true);
                 text_Unranked.gameObject.SetActive(false);
 
                 text_MyRank.text = seasonInfo.Rank.ToString();
 
-                rewardSlot.Initialize(arrayRewardInfo);
+                rewardSlot.Initialize(response.listRewardInfo);
                 btn_GetReward.interactable = true;
             }
             else

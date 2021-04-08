@@ -34,15 +34,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopInfoRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<ShopInfoRequest>(json);
 		}
 
 	}
@@ -82,17 +79,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("listShopInfo", JsonConvert.SerializeObject(listShopInfo));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopInfoResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.listShopInfo = JsonConvert.DeserializeObject<List<ShopInfo>>(jObject["listShopInfo"].ToString());
+			return JsonConvert.DeserializeObject<ShopInfoResponse>(json);
 		}
 
 	}
@@ -130,19 +122,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("shopId", shopId);
-			json.Add("shopProductId", shopProductId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopBuyRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.shopId = (int)jObject["shopId"];
-			this.shopProductId = (int)jObject["shopProductId"];
+			return JsonConvert.DeserializeObject<ShopBuyRequest>(json);
 		}
 
 	}
@@ -208,27 +193,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("shopId", shopId);
-			json.Add("shopProductInfo", shopProductInfo.JsonSerialize());
-			json.Add("changeProductInfo", changeProductInfo.JsonSerialize());
-			json.Add("deleteItemInfo", deleteItemInfo.JsonSerialize());
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopBuyResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.shopId = (int)jObject["shopId"];
-			this.shopProductInfo = ShopProductInfo.JsonDeserialize((JObject)jObject["shopProductInfo"]);
-			this.changeProductInfo = ShopProductInfo.JsonDeserialize((JObject)jObject["changeProductInfo"]);
-			this.deleteItemInfo = ItemBaseInfo.JsonDeserialize((JObject)jObject["deleteItemInfo"]);
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<ShopBuyResponse>(json);
 		}
 
 	}
@@ -270,21 +240,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("shopId", shopId);
-			json.Add("productId", productId);
-			json.Add("receiptInfo", receiptInfo);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopPurchaseRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.shopId = (int)jObject["shopId"];
-			this.productId = (int)jObject["productId"];
-			this.receiptInfo = (string)jObject["receiptInfo"];
+			return JsonConvert.DeserializeObject<ShopPurchaseRequest>(json);
 		}
 
 	}
@@ -350,27 +311,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("shopId", shopId);
-			json.Add("shopProductInfo", shopProductInfo.JsonSerialize());
-			json.Add("changeProductInfo", changeProductInfo.JsonSerialize());
-			json.Add("deleteItemInfo", deleteItemInfo.JsonSerialize());
-			json.Add("listRewardInfo", JsonConvert.SerializeObject(listRewardInfo));
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopPurchaseResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.shopId = (int)jObject["shopId"];
-			this.shopProductInfo = ShopProductInfo.JsonDeserialize((JObject)jObject["shopProductInfo"]);
-			this.changeProductInfo = ShopProductInfo.JsonDeserialize((JObject)jObject["changeProductInfo"]);
-			this.deleteItemInfo = ItemBaseInfo.JsonDeserialize((JObject)jObject["deleteItemInfo"]);
-			this.listRewardInfo = JsonConvert.DeserializeObject<List<ItemBaseInfo>>(jObject["listRewardInfo"].ToString());
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
+			return JsonConvert.DeserializeObject<ShopPurchaseResponse>(json);
 		}
 
 	}
@@ -408,19 +354,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("shopId", shopId);
-			json.Add("resetType", resetType);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopResetRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.shopId = (int)jObject["shopId"];
-			this.resetType = (int)jObject["resetType"];
+			return JsonConvert.DeserializeObject<ShopResetRequest>(json);
 		}
 
 	}
@@ -458,19 +397,12 @@ namespace Template.Shop.GameBaseShop.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("shopInfo", shopInfo.JsonSerialize());
-			json.Add("deleteItemInfo", deleteItemInfo.JsonSerialize());
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static ShopResetResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.shopInfo = ShopInfo.JsonDeserialize((JObject)jObject["shopInfo"]);
-			this.deleteItemInfo = ItemBaseInfo.JsonDeserialize((JObject)jObject["deleteItemInfo"]);
+			return JsonConvert.DeserializeObject<ShopResetResponse>(json);
 		}
 
 	}

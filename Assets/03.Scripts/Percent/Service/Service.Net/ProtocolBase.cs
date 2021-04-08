@@ -10,7 +10,7 @@ namespace Service.Net
         byte[] BinarySerialize();
         void BinaryDeserialize(byte[] buffer);
         string JsonSerialize();
-        void JsonDeserialize(string json);
+        //void JsonDeserialize(string json);
     }
 
 
@@ -68,14 +68,22 @@ namespace Service.Net
 
     public class ProtocolBase
     {
-		protected readonly string _serverAddr = string.Empty;
-		protected ISender _sender;
-        internal Dictionary<int, ControllerDelegate> MessageControllers { get; set; }
+		protected readonly string _serverAddr;
+		protected ClientSession _session;
+        public Dictionary<int, ControllerDelegate> MessageControllers { get;  private set; }
 
-        public ProtocolBase(ISender sender, string serverAddr)
+		public ProtocolBase()
+		{
+			_serverAddr = string.Empty;
+			_session = null;
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
+		}
+
+        public ProtocolBase(ClientSession session, string serverAddr)
         {
-            _sender = sender;
+            _session = session;
 			_serverAddr = serverAddr;
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
         }
     }
 }

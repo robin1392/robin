@@ -6,11 +6,31 @@ using Service.Core;
 
 namespace Template.Shop.GameBaseShop.Common
 {
-	public class GameBaseShopProtocol : ProtocolBase
+	public class GameBaseShopProtocol
 	{
-		public GameBaseShopProtocol(ISender sender = null, string serverAddr = "")
-			: base(sender, serverAddr)
+		public readonly ClientSession Session;
+		public readonly string ServerAddr;
+		public Dictionary<int, ControllerDelegate> MessageControllers { get;  private set; }
+
+		public GameBaseShopProtocol()
 		{
+			Session = null;
+			ServerAddr = string.Empty;
+
+			Init();
+		}
+
+		public GameBaseShopProtocol(ClientSession session, string serverAddr)
+		{
+			Session = session;
+			ServerAddr = serverAddr;
+
+			Init();
+		}
+
+		void Init()
+		{
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
 			MessageControllers.Add(ShopInfoRequest.ProtocolId, ShopInfoReqController);
 			MessageControllers.Add(ShopInfoResponse.ProtocolId, ShopInfoResController);
 			MessageControllers.Add(ShopBuyRequest.ProtocolId, ShopBuyReqController);
@@ -25,29 +45,28 @@ namespace Template.Shop.GameBaseShop.Common
 		public bool ShopInfoReq(ShopInfoRequest request, ShopInfoResCallback callback)
 		{
 			OnShopInfoResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(ShopInfoRequest.ProtocolId,
-				_serverAddr + "shopinfo-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(ShopInfoRequest.ProtocolId,
+				ServerAddr + "shopinfo-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate ShopInfoResponse ShopInfoReqCallback(ShopInfoRequest request);
+		public delegate ShopInfoResponse ShopInfoReqCallback(ClientSession session, ShopInfoRequest request);
 		public ShopInfoReqCallback OnShopInfoReqCallback;
-		public ISerializer ShopInfoReqController(byte[] msg, int length)
+		public ISerializer ShopInfoReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopInfoRequest request = new ShopInfoRequest();
-			request.JsonDeserialize(json);
-			return OnShopInfoReqCallback(request) as ISerializer;
+			ShopInfoRequest request = ShopInfoRequest.JsonDeserialize(json);
+			return OnShopInfoReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool ShopInfoResCallback(ShopInfoResponse response);
 		public ShopInfoResCallback OnShopInfoResCallback;
-		public ISerializer ShopInfoResController(byte[] msg, int length)
+		public ISerializer ShopInfoResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopInfoResponse response = new ShopInfoResponse();
-			response.JsonDeserialize(json);
+			ShopInfoResponse response = ShopInfoResponse.JsonDeserialize(json);
 			OnShopInfoResCallback(response);
 			return null;
 		}
@@ -57,29 +76,28 @@ namespace Template.Shop.GameBaseShop.Common
 		public bool ShopBuyReq(ShopBuyRequest request, ShopBuyResCallback callback)
 		{
 			OnShopBuyResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(ShopBuyRequest.ProtocolId,
-				_serverAddr + "shopbuy-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(ShopBuyRequest.ProtocolId,
+				ServerAddr + "shopbuy-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate ShopBuyResponse ShopBuyReqCallback(ShopBuyRequest request);
+		public delegate ShopBuyResponse ShopBuyReqCallback(ClientSession session, ShopBuyRequest request);
 		public ShopBuyReqCallback OnShopBuyReqCallback;
-		public ISerializer ShopBuyReqController(byte[] msg, int length)
+		public ISerializer ShopBuyReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopBuyRequest request = new ShopBuyRequest();
-			request.JsonDeserialize(json);
-			return OnShopBuyReqCallback(request) as ISerializer;
+			ShopBuyRequest request = ShopBuyRequest.JsonDeserialize(json);
+			return OnShopBuyReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool ShopBuyResCallback(ShopBuyResponse response);
 		public ShopBuyResCallback OnShopBuyResCallback;
-		public ISerializer ShopBuyResController(byte[] msg, int length)
+		public ISerializer ShopBuyResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopBuyResponse response = new ShopBuyResponse();
-			response.JsonDeserialize(json);
+			ShopBuyResponse response = ShopBuyResponse.JsonDeserialize(json);
 			OnShopBuyResCallback(response);
 			return null;
 		}
@@ -89,29 +107,28 @@ namespace Template.Shop.GameBaseShop.Common
 		public bool ShopPurchaseReq(ShopPurchaseRequest request, ShopPurchaseResCallback callback)
 		{
 			OnShopPurchaseResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(ShopPurchaseRequest.ProtocolId,
-				_serverAddr + "shoppurchase-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(ShopPurchaseRequest.ProtocolId,
+				ServerAddr + "shoppurchase-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate ShopPurchaseResponse ShopPurchaseReqCallback(ShopPurchaseRequest request);
+		public delegate ShopPurchaseResponse ShopPurchaseReqCallback(ClientSession session, ShopPurchaseRequest request);
 		public ShopPurchaseReqCallback OnShopPurchaseReqCallback;
-		public ISerializer ShopPurchaseReqController(byte[] msg, int length)
+		public ISerializer ShopPurchaseReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopPurchaseRequest request = new ShopPurchaseRequest();
-			request.JsonDeserialize(json);
-			return OnShopPurchaseReqCallback(request) as ISerializer;
+			ShopPurchaseRequest request = ShopPurchaseRequest.JsonDeserialize(json);
+			return OnShopPurchaseReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool ShopPurchaseResCallback(ShopPurchaseResponse response);
 		public ShopPurchaseResCallback OnShopPurchaseResCallback;
-		public ISerializer ShopPurchaseResController(byte[] msg, int length)
+		public ISerializer ShopPurchaseResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopPurchaseResponse response = new ShopPurchaseResponse();
-			response.JsonDeserialize(json);
+			ShopPurchaseResponse response = ShopPurchaseResponse.JsonDeserialize(json);
 			OnShopPurchaseResCallback(response);
 			return null;
 		}
@@ -121,29 +138,28 @@ namespace Template.Shop.GameBaseShop.Common
 		public bool ShopResetReq(ShopResetRequest request, ShopResetResCallback callback)
 		{
 			OnShopResetResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(ShopResetRequest.ProtocolId,
-				_serverAddr + "shopreset-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(ShopResetRequest.ProtocolId,
+				ServerAddr + "shopreset-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate ShopResetResponse ShopResetReqCallback(ShopResetRequest request);
+		public delegate ShopResetResponse ShopResetReqCallback(ClientSession session, ShopResetRequest request);
 		public ShopResetReqCallback OnShopResetReqCallback;
-		public ISerializer ShopResetReqController(byte[] msg, int length)
+		public ISerializer ShopResetReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopResetRequest request = new ShopResetRequest();
-			request.JsonDeserialize(json);
-			return OnShopResetReqCallback(request) as ISerializer;
+			ShopResetRequest request = ShopResetRequest.JsonDeserialize(json);
+			return OnShopResetReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool ShopResetResCallback(ShopResetResponse response);
 		public ShopResetResCallback OnShopResetResCallback;
-		public ISerializer ShopResetResController(byte[] msg, int length)
+		public ISerializer ShopResetResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			ShopResetResponse response = new ShopResetResponse();
-			response.JsonDeserialize(json);
+			ShopResetResponse response = ShopResetResponse.JsonDeserialize(json);
 			OnShopResetResCallback(response);
 			return null;
 		}

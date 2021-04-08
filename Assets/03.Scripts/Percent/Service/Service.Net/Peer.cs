@@ -2,116 +2,68 @@ using System;
 
 namespace Service.Net
 {
-    public interface ISender : IDisposable
-    {
-        void SetAccessToken(string accessToken);
-        string GetAccessToken();
-        bool SendMessage(int protocolId, byte[] buffer);
-        bool SendHttpPost(int protocolId, string method, string json);
-    }
 
-
-    public class Peer : ISender
+    public class Peer : ClientSession
     {
-        public ushort PlayerUId { get; set; }
-        public ClientSession ClientSession { get; set; }
+        public UserToken UserToken { get; private set; }
 
 
         public void Dispose()
         {
-            PlayerUId = 0;
-            ClientSession = null;
+            UserToken = null;
         }
-
-
-        public void SetAccessToken(string accessToken)
-        {
-
-        }
-
-
-        public string GetAccessToken()
-        {
-            return string.Empty;
-        }
-
 
         public bool IsConnected()
         {
-            return ClientSession != null 
-            && ClientSession.Socket != null 
-            && ClientSession.Socket.Connected;
+            return UserToken != null 
+            && UserToken.Socket != null 
+            && UserToken.Socket.Connected;
         }
 
 
         public bool Compare(Peer other)
         {
-            if (other.ClientSession == null)
+            if (other.UserToken == null)
             {
                 return false;
             }
             
-            return this.ClientSession.SessionId == other.ClientSession.SessionId;
+            return this.UserToken.SessionId == other.UserToken.SessionId;
         }
 
 
-        public void SetClientSession(ClientSession clientSession)
+        public void SetUserToken(UserToken userToken)
         {
-            ClientSession = clientSession;
-            if (ClientSession != null)
+            UserToken = userToken;
+            if (UserToken != null)
             {
-                ClientSession.Peer = this;
+                UserToken.Peer = this;
             }
         }
 
 
-        // public virtual bool SendPacket(int protocolId, byte[] msg)
-        // {
-        //     if (ClientSession == null 
-        //     || ClientSession.NetState != ENetState.Connected)
-        //     {
-        //         return false;
-        //     }
-
-        //     ClientSession.Send(protocolId, msg, msg.Length);
-        //     return true;
-        // }
-
-        public bool SendMessage(int protocolId, byte[] buffer)
+        public override bool Send(int protocolId, byte[] buffer)
         {
-            if (ClientSession == null 
-            || ClientSession.NetState != ENetState.Connected)
+            if (UserToken == null 
+            || UserToken.NetState != ENetState.Connected)
             {
                 return false;
             }
 
-            ClientSession.Send(protocolId, buffer, buffer.Length);
+            UserToken.Send(protocolId, buffer, buffer.Length);
             return true;
         }
 
 
-        public bool SendHttpPost(int protocolId, string method, string json)
-        {
-            return false;
-        }
-        
-
         public virtual void Disconnect(ESessionState sessionState)
         {
-            if (ClientSession == null 
-            || ClientSession.SessionState != ESessionState.None)
+            if (UserToken == null 
+            || UserToken.SessionState != ESessionState.None)
             {
                 return;
             }
 
-            ClientSession.SessionState = sessionState;
-            // ClientSession.SendNetDisconnectNotify();
-            // ClientSession.Disconnect();
-            // if (ClientSession.GameSession != null)
-            // {
-            //     ClientSession.GameSession.PushInternalMessage(ClientSession, EInternalProtocol. DISCONNECT_CLIENT, null, 0);
-            // }
-            
+            UserToken.SessionState = sessionState;
         }
     }
 }

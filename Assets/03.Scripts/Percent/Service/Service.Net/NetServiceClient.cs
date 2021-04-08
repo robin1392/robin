@@ -39,7 +39,7 @@ namespace Service.Net
             _nowTime = DateTime.UtcNow;
 
             // if (_peer != null
-            //     && _peer.ClientSession.NetState == ENetState.Reconnecting
+            //     && _peer.userToken.NetState == ENetState.Reconnecting
             //     && _reconnectTryTimeTick != 0
             //     && _reconnectTryTimeTick < _nowTime.Ticks)
             // {
@@ -141,19 +141,19 @@ namespace Service.Net
 
 
             Socket socket = sender as Socket;
-            ClientSession clientSession = new ClientSession(_config.BufferSize);
-            clientSession.CompletedMessageCallback += OnCompletedMessageCallback;
+            UserToken userToken = new UserToken(_config.BufferSize);
+            userToken.CompletedMessageCallback += OnCompletedMessageCallback;
 
 
             NetSocketAsyncEventArgs receiveArgs = new NetSocketAsyncEventArgs();
             receiveArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnCompletedReceiveCallback);
-            receiveArgs.UserToken = clientSession;
+            receiveArgs.UserToken = userToken;
             receiveArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
 
 
             NetSocketAsyncEventArgs sendArgs = new NetSocketAsyncEventArgs();
             sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnCompletedSendCallback);
-            sendArgs.UserToken = clientSession;
+            sendArgs.UserToken = userToken;
             sendArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
 
 
@@ -169,22 +169,22 @@ namespace Service.Net
 
 
             // 서버와의 연결이 성공하면 서버로 세션 상태를 요청한다.
-            clientSession.SessionId = token.PlayerSessionId;
-            clientSession.NetState = token.NetState;
-            clientSession.GameSession = token.GameSession;
-            SendNetAuthSessionReq(clientSession);
+            userToken.SessionId = token.PlayerSessionId;
+            userToken.NetState = token.NetState;
+            userToken.GameSession = token.GameSession;
+            SendNetAuthSessionReq(userToken);
         }
 
 
         public void Disconnect(Peer peer, ESessionState sessionState)
         {
-            if (peer.ClientSession.NetState == ENetState.Disconnected)
+            if (peer.UserToken.NetState == ENetState.Disconnected)
             {
                 return;
             }
 
-            peer.ClientSession.SessionState = sessionState;
-            peer.ClientSession.Disconnect();
+            peer.UserToken.SessionState = sessionState;
+            peer.UserToken.Disconnect();
         }
 
 
@@ -204,83 +204,83 @@ namespace Service.Net
             }
 
 
-            ClientSession clientSession = e.UserToken as ClientSession;
-            clientSession.NetState = ENetState.Disconnected; 
-            if (clientSession.SessionState == ESessionState.None)
+            UserToken userToken = e.UserToken as UserToken;
+            userToken.NetState = ENetState.Disconnected; 
+            if (userToken.SessionState == ESessionState.None)
             {
-                clientSession.SessionState = ESessionState.Wait;
+                userToken.SessionState = ESessionState.Wait;
             }
             
 
-            if (clientSession.GameSession != null)
+            if (userToken.GameSession != null)
             {
-                clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.OFFLINE_CLIENT, null, 0);
+                userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.OFFLINE_CLIENT, null, 0);
             }
         }
 
 
-        protected override void OnCompletedMessageCallback(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        protected override void OnCompletedMessageCallback(UserToken userToken, int protocolId, byte[] msg, int length)
         {
-            if (clientSession == null)
+            if (userToken == null)
             {
                 return;
             }
 
 
-            if (clientSession.GameSession == null)
+            if (userToken.GameSession == null)
             {
                 return;
             }
 
 
             // 서비스 내부 메세지을 처리한다.
-            bool f = ProcessNetServiceMessage(clientSession, protocolId, msg, length);
+            bool f = ProcessNetServiceMessage(userToken, protocolId, msg, length);
             if (f == false)
             {
                 // 릴레이 메세지를 처리한다.
-                if (clientSession.GameSession.PushRelayMessage(clientSession, protocolId, msg, length) == false)
+                if (userToken.GameSession.PushRelayMessage(userToken.Peer, protocolId, msg, length) == false)
                 {
                     // 외부 메세지를 처리한다.
-                    clientSession.GameSession.PushExternalMessage(clientSession.Peer, protocolId, msg, length);
+                    userToken.GameSession.PushExternalMessage(userToken.Peer, protocolId, msg, length);
                 }
             }
         }
 
 
-        protected override bool ProcessNetServiceMessage(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        protected override bool ProcessNetServiceMessage(UserToken userToken, int protocolId, byte[] msg, int length)
         {
             switch((ENetProtocol)protocolId)
             {
                 case ENetProtocol.AUTH_SESSION_ACK:
                 {
-                    string clientSessionId;
+                    string userTokenId;
                     ENetState netState;
                     ESessionState sessionState;
                     var bf = new BinaryFormatter();
                     using (var ms = new MemoryStream(msg))
                     {
-                        clientSessionId = (string)bf.Deserialize(ms);
+                        userTokenId = (string)bf.Deserialize(ms);
                         netState = (ENetState)(byte)bf.Deserialize(ms);
                         sessionState = (ESessionState)(short)bf.Deserialize(ms);
                     }
 
 
-                    clientSession.GameSession = _gameSession;
-                    clientSession.SessionState = sessionState;
+                    userToken.GameSession = _gameSession;
+                    userToken.SessionState = sessionState;
                     if (netState == ENetState.Connected)
                     {
-                        if (clientSession.NetState == ENetState.Connecting)
+                        if (userToken.NetState == ENetState.Connecting)
                         {
-                            clientSession.NetState = ENetState.Connected;
+                            userToken.NetState = ENetState.Connected;
                         }
                         else
                         {
-                            clientSession.NetState = ENetState.Reconnected;
+                            userToken.NetState = ENetState.Reconnected;
                         }
                     }                        
 
 
-                    clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.CONNECT_CLIENT, null, 0);
+                    userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.CONNECT_CLIENT, null, 0);
                 }
                 break;
                 default:
@@ -296,25 +296,25 @@ namespace Service.Net
 
         public void PauseSession(Peer peer)
         {
-            SendNetPauseSessionReq(peer.ClientSession);
+            SendNetPauseSessionReq(peer.UserToken);
         }
 
 
         public void ResumeSession(Peer peer)
         {
-            if (peer.ClientSession.PauseLimitTimeTick == 0)
+            if (peer.UserToken.PauseLimitTimeTick == 0)
             {
                 return;
             }
 
-            if (peer.ClientSession.PauseLimitTimeTick < DateTime.UtcNow.Ticks)
+            if (peer.UserToken.PauseLimitTimeTick < DateTime.UtcNow.Ticks)
             {
-                peer.ClientSession.Peer.Disconnect(ESessionState.Expired);
+                peer.UserToken.Peer.Disconnect(ESessionState.Expired);
                 return;
             }
 
-            peer.ClientSession.NetState = ENetState.Connected;
-            SendNetResumeSessionReq(peer.ClientSession);
+            peer.UserToken.NetState = ENetState.Connected;
+            SendNetResumeSessionReq(peer.UserToken);
         }
     }
 }

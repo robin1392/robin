@@ -2,10 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ED;
-//using RandomWarsProtocol;
-//using RandomWarsProtocol.Msg;
-using Service.Core;
-using Template.Season.RandomwarsSeason.Common;
+using Service.Template;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -72,6 +69,9 @@ public class UI_Popup_Rank : UI_Popup
             pageNum = 2;
             //NetworkManager.Get().GetSeasonInfoReq(UserInfoManager.Get().GetUserInfo().userID, GetSeasonInfoCallback);
             NetworkManager.session.SeasonTemplate.SeasonInfoReq(NetworkManager.session.HttpClient, OnReceiveSeasonInfoAck);
+
+            Percent.GameBase.Get().Season.SeasonInfoReq(request, OnReceiveSeasonInfoAck);
+
             UI_Main.Get().obj_IndicatorPopup.SetActive(true);
             //StartCoroutine(WaitCoroutine());
         }

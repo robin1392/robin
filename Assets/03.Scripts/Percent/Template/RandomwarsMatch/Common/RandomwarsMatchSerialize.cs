@@ -42,19 +42,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("gameMode", gameMode);
-			json.Add("deckIndex", deckIndex);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchRequestRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.gameMode = (int)jObject["gameMode"];
-			this.deckIndex = (int)jObject["deckIndex"];
+			return JsonConvert.DeserializeObject<MatchRequestRequest>(json);
 		}
 
 	}
@@ -88,17 +81,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("ticketId", ticketId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchRequestResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.ticketId = (string)jObject["ticketId"];
+			return JsonConvert.DeserializeObject<MatchRequestResponse>(json);
 		}
 
 	}
@@ -132,17 +120,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("ticketId", ticketId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchStatusRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.ticketId = (string)jObject["ticketId"];
+			return JsonConvert.DeserializeObject<MatchStatusRequest>(json);
 		}
 
 	}
@@ -184,21 +167,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("playerSessionId", playerSessionId);
-			json.Add("ipAddress", ipAddress);
-			json.Add("port", port);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchStatusResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.playerSessionId = (string)jObject["playerSessionId"];
-			this.ipAddress = (string)jObject["ipAddress"];
-			this.port = (int)jObject["port"];
+			return JsonConvert.DeserializeObject<MatchStatusResponse>(json);
 		}
 
 	}
@@ -232,17 +206,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("ticketId", ticketId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchCancelRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.ticketId = (string)jObject["ticketId"];
+			return JsonConvert.DeserializeObject<MatchCancelRequest>(json);
 		}
 
 	}
@@ -272,15 +241,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchCancelResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<MatchCancelResponse>(json);
 		}
 
 	}
@@ -318,19 +284,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("gameMode", gameMode);
-			json.Add("deckIndex", deckIndex);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchInviteRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.gameMode = (int)jObject["gameMode"];
-			this.deckIndex = (int)jObject["deckIndex"];
+			return JsonConvert.DeserializeObject<MatchInviteRequest>(json);
 		}
 
 	}
@@ -364,17 +323,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("ticketId", ticketId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchInviteResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.ticketId = (string)jObject["ticketId"];
+			return JsonConvert.DeserializeObject<MatchInviteResponse>(json);
 		}
 
 	}
@@ -416,21 +370,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("ticketId", ticketId);
-			json.Add("gameMode", gameMode);
-			json.Add("deckIndex", deckIndex);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchJoinRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.ticketId = (string)jObject["ticketId"];
-			this.gameMode = (int)jObject["gameMode"];
-			this.deckIndex = (int)jObject["deckIndex"];
+			return JsonConvert.DeserializeObject<MatchJoinRequest>(json);
 		}
 
 	}
@@ -460,15 +405,12 @@ namespace Template.Match.RandomwarsMatch.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static MatchJoinResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<MatchJoinResponse>(json);
 		}
 
 	}

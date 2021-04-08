@@ -6,11 +6,31 @@ using Service.Core;
 
 namespace Template.User.RandomwarsUser.Common
 {
-	public class RandomwarsUserProtocol : ProtocolBase
+	public class RandomwarsUserProtocol
 	{
-		public RandomwarsUserProtocol(ISender sender = null, string serverAddr = "")
-			: base(sender, serverAddr)
+		public readonly ClientSession Session;
+		public readonly string ServerAddr;
+		public Dictionary<int, ControllerDelegate> MessageControllers { get;  private set; }
+
+		public RandomwarsUserProtocol()
 		{
+			Session = null;
+			ServerAddr = string.Empty;
+
+			Init();
+		}
+
+		public RandomwarsUserProtocol(ClientSession session, string serverAddr)
+		{
+			Session = session;
+			ServerAddr = serverAddr;
+
+			Init();
+		}
+
+		void Init()
+		{
+			MessageControllers = new Dictionary<int, ControllerDelegate>();
 			MessageControllers.Add(UserInfoRequest.ProtocolId, UserInfoReqController);
 			MessageControllers.Add(UserInfoResponse.ProtocolId, UserInfoResController);
 			MessageControllers.Add(UserTutorialEndRequest.ProtocolId, UserTutorialEndReqController);
@@ -29,29 +49,28 @@ namespace Template.User.RandomwarsUser.Common
 		public bool UserInfoReq(UserInfoRequest request, UserInfoResCallback callback)
 		{
 			OnUserInfoResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(UserInfoRequest.ProtocolId,
-				_serverAddr + "userinfo-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(UserInfoRequest.ProtocolId,
+				ServerAddr + "userinfo-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate UserInfoResponse UserInfoReqCallback(UserInfoRequest request);
+		public delegate UserInfoResponse UserInfoReqCallback(ClientSession session, UserInfoRequest request);
 		public UserInfoReqCallback OnUserInfoReqCallback;
-		public ISerializer UserInfoReqController(byte[] msg, int length)
+		public ISerializer UserInfoReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserInfoRequest request = new UserInfoRequest();
-			request.JsonDeserialize(json);
-			return OnUserInfoReqCallback(request) as ISerializer;
+			UserInfoRequest request = UserInfoRequest.JsonDeserialize(json);
+			return OnUserInfoReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool UserInfoResCallback(UserInfoResponse response);
 		public UserInfoResCallback OnUserInfoResCallback;
-		public ISerializer UserInfoResController(byte[] msg, int length)
+		public ISerializer UserInfoResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserInfoResponse response = new UserInfoResponse();
-			response.JsonDeserialize(json);
+			UserInfoResponse response = UserInfoResponse.JsonDeserialize(json);
 			OnUserInfoResCallback(response);
 			return null;
 		}
@@ -61,29 +80,28 @@ namespace Template.User.RandomwarsUser.Common
 		public bool UserTutorialEndReq(UserTutorialEndRequest request, UserTutorialEndResCallback callback)
 		{
 			OnUserTutorialEndResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(UserTutorialEndRequest.ProtocolId,
-				_serverAddr + "usertutorialend-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(UserTutorialEndRequest.ProtocolId,
+				ServerAddr + "usertutorialend-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate UserTutorialEndResponse UserTutorialEndReqCallback(UserTutorialEndRequest request);
+		public delegate UserTutorialEndResponse UserTutorialEndReqCallback(ClientSession session, UserTutorialEndRequest request);
 		public UserTutorialEndReqCallback OnUserTutorialEndReqCallback;
-		public ISerializer UserTutorialEndReqController(byte[] msg, int length)
+		public ISerializer UserTutorialEndReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserTutorialEndRequest request = new UserTutorialEndRequest();
-			request.JsonDeserialize(json);
-			return OnUserTutorialEndReqCallback(request) as ISerializer;
+			UserTutorialEndRequest request = UserTutorialEndRequest.JsonDeserialize(json);
+			return OnUserTutorialEndReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool UserTutorialEndResCallback(UserTutorialEndResponse response);
 		public UserTutorialEndResCallback OnUserTutorialEndResCallback;
-		public ISerializer UserTutorialEndResController(byte[] msg, int length)
+		public ISerializer UserTutorialEndResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserTutorialEndResponse response = new UserTutorialEndResponse();
-			response.JsonDeserialize(json);
+			UserTutorialEndResponse response = UserTutorialEndResponse.JsonDeserialize(json);
 			OnUserTutorialEndResCallback(response);
 			return null;
 		}
@@ -93,29 +111,28 @@ namespace Template.User.RandomwarsUser.Common
 		public bool UserNameInitReq(UserNameInitRequest request, UserNameInitResCallback callback)
 		{
 			OnUserNameInitResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(UserNameInitRequest.ProtocolId,
-				_serverAddr + "usernameinit-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(UserNameInitRequest.ProtocolId,
+				ServerAddr + "usernameinit-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate UserNameInitResponse UserNameInitReqCallback(UserNameInitRequest request);
+		public delegate UserNameInitResponse UserNameInitReqCallback(ClientSession session, UserNameInitRequest request);
 		public UserNameInitReqCallback OnUserNameInitReqCallback;
-		public ISerializer UserNameInitReqController(byte[] msg, int length)
+		public ISerializer UserNameInitReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserNameInitRequest request = new UserNameInitRequest();
-			request.JsonDeserialize(json);
-			return OnUserNameInitReqCallback(request) as ISerializer;
+			UserNameInitRequest request = UserNameInitRequest.JsonDeserialize(json);
+			return OnUserNameInitReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool UserNameInitResCallback(UserNameInitResponse response);
 		public UserNameInitResCallback OnUserNameInitResCallback;
-		public ISerializer UserNameInitResController(byte[] msg, int length)
+		public ISerializer UserNameInitResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserNameInitResponse response = new UserNameInitResponse();
-			response.JsonDeserialize(json);
+			UserNameInitResponse response = UserNameInitResponse.JsonDeserialize(json);
 			OnUserNameInitResCallback(response);
 			return null;
 		}
@@ -125,29 +142,28 @@ namespace Template.User.RandomwarsUser.Common
 		public bool UserNameChangeReq(UserNameChangeRequest request, UserNameChangeResCallback callback)
 		{
 			OnUserNameChangeResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(UserNameChangeRequest.ProtocolId,
-				_serverAddr + "usernamechange-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(UserNameChangeRequest.ProtocolId,
+				ServerAddr + "usernamechange-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate UserNameChangeResponse UserNameChangeReqCallback(UserNameChangeRequest request);
+		public delegate UserNameChangeResponse UserNameChangeReqCallback(ClientSession session, UserNameChangeRequest request);
 		public UserNameChangeReqCallback OnUserNameChangeReqCallback;
-		public ISerializer UserNameChangeReqController(byte[] msg, int length)
+		public ISerializer UserNameChangeReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserNameChangeRequest request = new UserNameChangeRequest();
-			request.JsonDeserialize(json);
-			return OnUserNameChangeReqCallback(request) as ISerializer;
+			UserNameChangeRequest request = UserNameChangeRequest.JsonDeserialize(json);
+			return OnUserNameChangeReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool UserNameChangeResCallback(UserNameChangeResponse response);
 		public UserNameChangeResCallback OnUserNameChangeResCallback;
-		public ISerializer UserNameChangeResController(byte[] msg, int length)
+		public ISerializer UserNameChangeResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserNameChangeResponse response = new UserNameChangeResponse();
-			response.JsonDeserialize(json);
+			UserNameChangeResponse response = UserNameChangeResponse.JsonDeserialize(json);
 			OnUserNameChangeResCallback(response);
 			return null;
 		}
@@ -157,29 +173,28 @@ namespace Template.User.RandomwarsUser.Common
 		public bool UserTrophyRewardReq(UserTrophyRewardRequest request, UserTrophyRewardResCallback callback)
 		{
 			OnUserTrophyRewardResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(UserTrophyRewardRequest.ProtocolId,
-				_serverAddr + "usertrophyreward-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(UserTrophyRewardRequest.ProtocolId,
+				ServerAddr + "usertrophyreward-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate UserTrophyRewardResponse UserTrophyRewardReqCallback(UserTrophyRewardRequest request);
+		public delegate UserTrophyRewardResponse UserTrophyRewardReqCallback(ClientSession session, UserTrophyRewardRequest request);
 		public UserTrophyRewardReqCallback OnUserTrophyRewardReqCallback;
-		public ISerializer UserTrophyRewardReqController(byte[] msg, int length)
+		public ISerializer UserTrophyRewardReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserTrophyRewardRequest request = new UserTrophyRewardRequest();
-			request.JsonDeserialize(json);
-			return OnUserTrophyRewardReqCallback(request) as ISerializer;
+			UserTrophyRewardRequest request = UserTrophyRewardRequest.JsonDeserialize(json);
+			return OnUserTrophyRewardReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool UserTrophyRewardResCallback(UserTrophyRewardResponse response);
 		public UserTrophyRewardResCallback OnUserTrophyRewardResCallback;
-		public ISerializer UserTrophyRewardResController(byte[] msg, int length)
+		public ISerializer UserTrophyRewardResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserTrophyRewardResponse response = new UserTrophyRewardResponse();
-			response.JsonDeserialize(json);
+			UserTrophyRewardResponse response = UserTrophyRewardResponse.JsonDeserialize(json);
 			OnUserTrophyRewardResCallback(response);
 			return null;
 		}
@@ -189,29 +204,28 @@ namespace Template.User.RandomwarsUser.Common
 		public bool UserAdRewardReq(UserAdRewardRequest request, UserAdRewardResCallback callback)
 		{
 			OnUserAdRewardResCallback = callback;
-			request.accessToken = _sender.GetAccessToken();
-			return _sender.SendHttpPost(UserAdRewardRequest.ProtocolId,
-				_serverAddr + "useradreward-v1.0.0",
+
+			request.accessToken = Session.SessionKey;
+			return Session.Send(UserAdRewardRequest.ProtocolId,
+				ServerAddr + "useradreward-v1.0.0",
 				request.JsonSerialize());
 		}
 
-		public delegate UserAdRewardResponse UserAdRewardReqCallback(UserAdRewardRequest request);
+		public delegate UserAdRewardResponse UserAdRewardReqCallback(ClientSession session, UserAdRewardRequest request);
 		public UserAdRewardReqCallback OnUserAdRewardReqCallback;
-		public ISerializer UserAdRewardReqController(byte[] msg, int length)
+		public ISerializer UserAdRewardReqController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserAdRewardRequest request = new UserAdRewardRequest();
-			request.JsonDeserialize(json);
-			return OnUserAdRewardReqCallback(request) as ISerializer;
+			UserAdRewardRequest request = UserAdRewardRequest.JsonDeserialize(json);
+			return OnUserAdRewardReqCallback(session, request) as ISerializer;
 		}
 
 		public delegate bool UserAdRewardResCallback(UserAdRewardResponse response);
 		public UserAdRewardResCallback OnUserAdRewardResCallback;
-		public ISerializer UserAdRewardResController(byte[] msg, int length)
+		public ISerializer UserAdRewardResController(ClientSession session, byte[] msg, int length)
 		{
 			string json = Encoding.Default.GetString(msg, 0, length);
-			UserAdRewardResponse response = new UserAdRewardResponse();
-			response.JsonDeserialize(json);
+			UserAdRewardResponse response = UserAdRewardResponse.JsonDeserialize(json);
 			OnUserAdRewardResCallback(response);
 			return null;
 		}

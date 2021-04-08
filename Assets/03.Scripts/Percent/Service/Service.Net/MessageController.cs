@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Service.Net
 {   
-    public delegate ISerializer ControllerDelegate(byte[] msg, int length);
+    public delegate ISerializer ControllerDelegate(ClientSession session, byte[] msg, int length);
 
     public class MessageController
     {
@@ -37,7 +37,7 @@ namespace Service.Net
         }
 
 
-        public virtual ISerializer OnRecevice(int protocolId, byte[] msg, int length) 
+        public virtual ISerializer OnRecevice(ClientSession session, int protocolId, byte[] msg, int length) 
         {
             ControllerDelegate controllerCallback;
             if (_controllers.TryGetValue(protocolId, out controllerCallback) == false)
@@ -45,7 +45,7 @@ namespace Service.Net
                 return null;
             }
             
-            return controllerCallback(msg, length);
+            return controllerCallback(session, msg, length);
         }
     }
 }

@@ -5,7 +5,6 @@ using DG.Tweening;
 using ED;
 using UnityEngine;
 using UnityEngine.UI;
-using RandomWarsProtocol.Msg;
 
 public class UI_Popup_Userinfo : UI_Popup
 {
@@ -114,13 +113,13 @@ public class UI_Popup_Userinfo : UI_Popup
         UI_Main.Get().obj_IndicatorPopup.SetActive(true);
     }
 
-    public void EditNicknameCallback(MsgEditUserNameAck msg)
-    {
-        UI_Main.Get().obj_IndicatorPopup.SetActive(false);
+    // public void EditNicknameCallback(MsgEditUserNameAck msg)
+    // {
+    //     UI_Main.Get().obj_IndicatorPopup.SetActive(false);
         
-        UserInfoManager.Get().GetUserInfo().SetNickName(msg.UserName);
-        oldNickname = msg.UserName;
-        UI_Main.Get().RefreshUserInfoUI();
-        SetEditButton(false);
-    }
+    //     UserInfoManager.Get().GetUserInfo().SetNickName(msg.UserName);
+    //     oldNickname = msg.UserName;
+    //     UI_Main.Get().RefreshUserInfoUI();
+    //     SetEditButton(false);
+    // }
 }

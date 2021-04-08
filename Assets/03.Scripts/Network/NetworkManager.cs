@@ -14,37 +14,12 @@ using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 using Service.Core;
+using Service.Net;
+using Percent;
 using Template.Match.RandomwarsMatch.Common;
 using UnityEditor;
 using Debug = ED.Debug;
 
-public class NetLogger2 : ILog
-{
-    public void Info(string text)
-    {
-        UnityEngine.Debug.Log(text);
-    }
-
-    public void Fatal(string text)
-    {
-        UnityEngine.Debug.LogError(text);
-    }
-
-    public void Error(string text)
-    {
-        UnityEngine.Debug.LogError(text);
-    }
-
-    public void Warn(string text)
-    {
-        UnityEngine.Debug.Log(text);
-    }
-
-    public void Debug(string text)
-    {
-        UnityEngine.Debug.Log(text);
-    }
-}
 
 public class NetworkManager : Singleton<NetworkManager>
 {
@@ -81,6 +56,7 @@ public class NetworkManager : Singleton<NetworkManager>
     [Header("Server Addr")] 
     public string serverAddr = "https://er12bk2rue.execute-api.ap-northeast-2.amazonaws.com/test";
 
+
     public override void Awake()
     {
         if (Get() != null && this != Get())
@@ -92,6 +68,11 @@ public class NetworkManager : Singleton<NetworkManager>
         base.Awake();
 
     }
+
+    void Start()
+    {
+    }
+
 
     void Update()
     {

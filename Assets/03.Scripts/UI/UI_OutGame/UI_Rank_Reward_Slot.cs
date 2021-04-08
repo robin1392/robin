@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using RandomWarsProtocol;
 using RandomWarsResource.Data;
-using Service.Core;
+using Service.Template;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,7 +44,7 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
         }
     }
 
-    public void Initialize(ItemBaseInfo[] rewards)
+    public void Initialize(List<ItemBaseInfo> rewards)
     {
         if (rewards != null)
         {
@@ -59,7 +58,7 @@ public class UI_Rank_Reward_Slot : MonoBehaviour
                 // {
                 //     arrText_RewardSlot[i].text = string.Empty;
                 // }
-                if (i < rewards.Length)
+                if (i < rewards.Count)
                 {
                     arrRewardItemSlots[i].Initialize(rewards[i].ItemId,
                         rewards[i].ItemId > 100 && rewards[i].ItemId < 1000 ? 1 : rewards[i].Value);

@@ -45,14 +45,14 @@ namespace Service.Net
 
         protected void BeginReceive(Socket clientSocket, NetSocketAsyncEventArgs receiveArgs, NetSocketAsyncEventArgs sendArgs)
         {
-            // receive_args, send_args 아무곳에서나 꺼내와도 됨. 둘 다 동일한 clientSession 물고 있음
-            ClientSession clientSession = receiveArgs.UserToken as ClientSession;
-            clientSession.SetEventArgs(receiveArgs, sendArgs);
+            // receive_args, send_args 아무곳에서나 꺼내와도 됨. 둘 다 동일한 userToken 물고 있음
+            UserToken userToken = receiveArgs.UserToken as UserToken;
+            userToken.SetEventArgs(receiveArgs, sendArgs);
 
 
             // 생성된 클라이언트 소켓을 보관해 놓고 통신할 때 사용함
-            clientSession.Socket = clientSocket;
-            clientSession.SetKeepAlive(_config.KeepAliveTime, _config.KeepAliveInterval);
+            userToken.Socket = clientSocket;
+            userToken.SetKeepAlive(_config.KeepAliveTime, _config.KeepAliveInterval);
 
 
             // 데이터를 받을 수 있도록 소켓 메소드를 호출해준다.
@@ -71,12 +71,12 @@ namespace Service.Net
             // 원격 호스트가 연결을 종료했는지 확인
             if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
             {
-                ClientSession clientSession = e.UserToken as ClientSession;
-                clientSession.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
+                UserToken userToken = e.UserToken as UserToken;
+                userToken.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
     
 
                 // 다음 메시지 수신을 위해서 다시 ReceiveAsync 메소드를 호출한다.
-                bool pending = clientSession.Socket.ReceiveAsync(e);
+                bool pending = userToken.Socket.ReceiveAsync(e);
                 if (pending == false)
                 {
                     ProcessReceive(e);
@@ -107,105 +107,105 @@ namespace Service.Net
 
         protected virtual void OnCompletedSendCallback(object sender, SocketAsyncEventArgs e)
         {
-            ClientSession clientSession = e.UserToken as ClientSession;
-            byte[] msg = clientSession.ProcessSend(e);
+            UserToken userToken = e.UserToken as UserToken;
+            byte[] msg = userToken.ProcessSend(e);
         }
 
 
-        protected virtual void OnCompletedMessageCallback(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        protected virtual void OnCompletedMessageCallback(UserToken userToken, int protocolId, byte[] msg, int length)
         {
         }
 
 
-        protected virtual bool ProcessNetServiceMessage(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        protected virtual bool ProcessNetServiceMessage(UserToken userToken, int protocolId, byte[] msg, int length)
         {
             return false;
         }
 
 
-        public void SendNetAuthSessionReq(ClientSession clientSession)
+        public void SendNetAuthSessionReq(UserToken userToken)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, clientSession.SessionId);
-                bf.Serialize(ms, (byte)clientSession.NetState);
-                clientSession.Send((int)ENetProtocol.AUTH_SESSION_REQ,
+                bf.Serialize(ms, userToken.SessionId);
+                bf.Serialize(ms, (byte)userToken.NetState);
+                userToken.Send((int)ENetProtocol.AUTH_SESSION_REQ,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
         }
 
-        public void SendNetAuthSessionAck(ClientSession clientSession)
+        public void SendNetAuthSessionAck(UserToken userToken)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, clientSession.SessionId);
-                bf.Serialize(ms, (byte)clientSession.NetState);
-                bf.Serialize(ms, (short)clientSession.SessionState);
-                clientSession.Send((int)ENetProtocol.AUTH_SESSION_ACK,
-                    ms.ToArray(),
-                    ms.ToArray().Length);
-            }
-        }
-
-
-        public void SendNetDisconnectNotify(ClientSession clientSession)
-        {
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, (short)clientSession.SessionState);
-                clientSession.Send((int)ENetProtocol.DISCONNECT_SESSION_NOTIFY,
+                bf.Serialize(ms, userToken.SessionId);
+                bf.Serialize(ms, (byte)userToken.NetState);
+                bf.Serialize(ms, (short)userToken.SessionState);
+                userToken.Send((int)ENetProtocol.AUTH_SESSION_ACK,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
         }
 
 
-        public void SendNetPauseSessionReq(ClientSession clientSession)
+        public void SendNetDisconnectNotify(UserToken userToken)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                clientSession.Send((int)ENetProtocol.PAUSE_SESSION_REQ,
+                bf.Serialize(ms, (short)userToken.SessionState);
+                userToken.Send((int)ENetProtocol.DISCONNECT_SESSION_NOTIFY,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
         }
 
 
-        protected void SendNetPauseSessionAck(ClientSession clientSession)
+        public void SendNetPauseSessionReq(UserToken userToken)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                clientSession.Send((int)ENetProtocol.PAUSE_SESSION_ACK,
+                userToken.Send((int)ENetProtocol.PAUSE_SESSION_REQ,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
         }
 
 
-        public void SendNetResumeSessionReq(ClientSession clientSession)
+        protected void SendNetPauseSessionAck(UserToken userToken)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                clientSession.Send((int)ENetProtocol.RESUME_SESSION_REQ,
+                userToken.Send((int)ENetProtocol.PAUSE_SESSION_ACK,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }
         }
 
 
-        public void SendNetResumeSessionAck(ClientSession clientSession)
+        public void SendNetResumeSessionReq(UserToken userToken)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                clientSession.Send((int)ENetProtocol.RESUME_SESSION_ACK,
+                userToken.Send((int)ENetProtocol.RESUME_SESSION_REQ,
+                    ms.ToArray(),
+                    ms.ToArray().Length);
+            }
+        }
+
+
+        public void SendNetResumeSessionAck(UserToken userToken)
+        {
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                userToken.Send((int)ENetProtocol.RESUME_SESSION_ACK,
                     ms.ToArray(),
                     ms.ToArray().Length);
             }

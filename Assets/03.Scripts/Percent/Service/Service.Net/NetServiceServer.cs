@@ -11,13 +11,13 @@ namespace Service.Net
     public class NetServiceServer : NetServiceBase
     {
         // 인증된 클라이언트 세션
-        protected Dictionary<string, ClientSession> _authedClientSessions;
+        protected Dictionary<string, UserToken> _autheduserTokens;
 
         // 재연결 대기 세션
-        protected List<ClientSession> _offlineClientSessions;
+        protected List<UserToken> _offlineuserTokens;
 
         // 만료된 클라이언트 세션
-        protected List<string> _expiredClientSessions;
+        protected List<string> _expireduserTokens;
 
         // 소켓 리스너
         private SocketListener _listener;
@@ -32,9 +32,9 @@ namespace Service.Net
             _listener = new SocketListener();
             _listener.ConnectedClientCallback += OnConnectedClientCallback;
 
-            _authedClientSessions = new Dictionary<string, ClientSession>();
-            _offlineClientSessions = new List<ClientSession>();
-            _expiredClientSessions = new List<string>();
+            _autheduserTokens = new Dictionary<string, UserToken>();
+            _offlineuserTokens = new List<UserToken>();
+            _expireduserTokens = new List<string>();
             
             _offlineSessionUpdateTime = 0;
         }
@@ -50,9 +50,9 @@ namespace Service.Net
         {
             base.Clear();
 
-            lock (_authedClientSessions)
+            lock (_autheduserTokens)
             {
-                // foreach (var session in _authedClientSessions.Values)
+                // foreach (var session in _autheduserTokens.Values)
                 // {
                 //     if (_receiveEventAragePool != null)
                 //     {
@@ -65,17 +65,17 @@ namespace Service.Net
                 //     }
                 // }
 
-                _authedClientSessions.Clear();
+                _autheduserTokens.Clear();
             }
 
-            lock (_offlineClientSessions)
+            lock (_offlineuserTokens)
             {
-                _offlineClientSessions.Clear();
+                _offlineuserTokens.Clear();
             }
             
-            lock (_expiredClientSessions)
+            lock (_expireduserTokens)
             {
-                _expiredClientSessions.Clear();
+                _expireduserTokens.Clear();
             }
 
             _offlineSessionUpdateTime = 0;
@@ -92,13 +92,13 @@ namespace Service.Net
         {
             base.Update();
 
-            UpdateDisconnectedClientSession();
+            UpdateDisconnecteduserToken();
 
             // offline 세션 갱신
-            UpdateOfflineClientSession();
+            UpdateOfflineuserToken();
 
             // pause 세션 갱신
-            UpdatePauseClientSession();
+            UpdatePauseuserToken();
         }
 
 
@@ -106,18 +106,18 @@ namespace Service.Net
         {
             // NetSocketAsyncEventArgs receiveArgs = _receiveEventAragePool.Pop();
             // NetSocketAsyncEventArgs sendArgs = _sendEventAragePool.Pop();
-            ClientSession clientSession = new ClientSession(_config.BufferSize);
-            clientSession.CompletedMessageCallback += OnCompletedMessageCallback;
+            UserToken userToken = new UserToken(_config.BufferSize);
+            userToken.CompletedMessageCallback += OnCompletedMessageCallback;
 
 
             NetSocketAsyncEventArgs receiveArgs = new NetSocketAsyncEventArgs();
             receiveArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnCompletedReceiveCallback);
-            receiveArgs.UserToken = clientSession;
+            receiveArgs.UserToken = userToken;
             receiveArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
 
             NetSocketAsyncEventArgs sendArgs = new NetSocketAsyncEventArgs();
             sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnCompletedSendCallback);
-            sendArgs.UserToken = clientSession;
+            sendArgs.UserToken = userToken;
             sendArgs.SetBuffer(new byte[_config.BufferSize], 0, _config.BufferSize);
 
 
@@ -127,136 +127,136 @@ namespace Service.Net
 
 
             // 패킷 수신 시작
-            //ClientSession clientSession = receiveArgs.UserToken as ClientSession;
+            //userToken userToken = receiveArgs.UserToken as userToken;
             BeginReceive(clientSocket, receiveArgs, sendArgs);
         }
 
 
         protected override void OnCloseClientSocket(SocketAsyncEventArgs e)
         {
-            ClientSession clientSession = e.UserToken as ClientSession;
-            RemoveAuthedClientSession(clientSession);
+            UserToken userToken = e.UserToken as UserToken;
+            RemoveAutheduserToken(userToken);
 
-            if (clientSession.SessionState == ESessionState.None
-                || clientSession.SessionState == ESessionState.Wait)
+            if (userToken.SessionState == ESessionState.None
+                || userToken.SessionState == ESessionState.Wait)
             {
-                AddOfflineClientSession(clientSession, 15);
+                AddOfflineuserToken(userToken, 15);
 
-                if (clientSession.GameSession != null)
+                if (userToken.GameSession != null)
                 {
-                    clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.OFFLINE_CLIENT, null, 0);
+                    userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.OFFLINE_CLIENT, null, 0);
                 }
             }
             else
             {
-                if (clientSession.NetState != ENetState.Reconnecting)
+                if (userToken.NetState != ENetState.Reconnecting)
                 {
-                    AddExpiredClientSession(clientSession);
+                    AddExpireduserToken(userToken);
 
-                    if (clientSession.GameSession != null)
+                    if (userToken.GameSession != null)
                     {
-                        clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.EXPIRED_CLIENT, null, 0);
+                        userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.EXPIRED_CLIENT, null, 0);
                     }
                 }
             }
 
-            clientSession.Clear();
+            userToken.Clear();
             // if (_receiveEventAragePool != null)
             // {
-            //     _receiveEventAragePool.Push(clientSession.ReceiveEventArgs);
+            //     _receiveEventAragePool.Push(userToken.ReceiveEventArgs);
             // }
 
             // if (_sendEventAragePool != null)
             // {
-            //     _sendEventAragePool.Push(clientSession.SendEventArgs);
+            //     _sendEventAragePool.Push(userToken.SendEventArgs);
             // }
         }
 
 
-        protected override void OnCompletedMessageCallback(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        protected override void OnCompletedMessageCallback(UserToken userToken, int protocolId, byte[] msg, int length)
         {
-            if (clientSession == null)
+            if (userToken == null)
             {
                 return;
             }
 
 
             // 서비스 내부 메세지을 처리한다.
-            if (ProcessNetServiceMessage(clientSession, protocolId, msg, length) == false)
+            if (ProcessNetServiceMessage(userToken, protocolId, msg, length) == false)
             {
                 // 릴레이 메세지를 처리한다.
-                if (clientSession.GameSession.PushRelayMessage(clientSession, protocolId, msg, length) == false)
+                if (userToken.GameSession.PushRelayMessage(userToken.Peer, protocolId, msg, length) == false)
                 {
                     // 외부 메세지를 처리한다.
-                    clientSession.GameSession.PushExternalMessage(clientSession.Peer, protocolId, msg, length);
+                    userToken.GameSession.PushExternalMessage(userToken.Peer, protocolId, msg, length);
                 }
             }
         }
 
 
-        protected override bool ProcessNetServiceMessage(ClientSession clientSession, int protocolId, byte[] msg, int length)
+        protected override bool ProcessNetServiceMessage(UserToken userToken, int protocolId, byte[] msg, int length)
         {
             switch((ENetProtocol)protocolId)
             {
                 case ENetProtocol.AUTH_SESSION_REQ:
                     {
-                        string clientSessionId = string.Empty;
+                        string userTokenId = string.Empty;
                         ENetState clientNetState = ENetState.End;
                         var bf = new BinaryFormatter();
                         using (var ms = new MemoryStream(msg))
                         {
-                            clientSessionId = (string)bf.Deserialize(ms);
+                            userTokenId = (string)bf.Deserialize(ms);
                             clientNetState = (ENetState)(byte)bf.Deserialize(ms);
                         }
 
-                        if (clientSessionId == string.Empty)
+                        if (userTokenId == string.Empty)
                         {
                             break;
                         }
 
-                        Logger.Debug(string.Format("[NetService] auth session. clientSessionId: {0}, clientNetState: {1}", clientSessionId, clientNetState));
+                        Logger.Debug(string.Format("[NetService] auth session. userTokenId: {0}, clientNetState: {1}", userTokenId, clientNetState));
 
                         // 세션 기본 정보 설정.
-                        clientSession.SessionId = clientSessionId;
-                        clientSession.SessionState = ESessionState.None;
-                        clientSession.NetState = ENetState.Connected;
+                        userToken.SessionId = userTokenId;
+                        userToken.SessionState = ESessionState.None;
+                        userToken.NetState = ENetState.Connected;
 
 
                         // 게임 세션 
-                        clientSession.GameSession = _gameSession;
-                        if (clientSession.GameSession == null)
+                        userToken.GameSession = _gameSession;
+                        if (userToken.GameSession == null)
                         {
                             // 세션 인증 실패
-                            SendNetAuthSessionAck(clientSession);
+                            SendNetAuthSessionAck(userToken);
                             break;
                         }
 
 
                         // 만료된 클라이언트 세션 체크
-                        if (CheckExpiredClientSession(clientSession) == true)
+                        if (CheckExpireduserToken(userToken) == true)
                         {
                             break;
                         }
 
 
                         // 중복 클라이언트 세션 체크
-                        if (CheckDuplicatedClientSession(clientSession) == true)
+                        if (CheckDuplicateduserToken(userToken) == true)
                         {
                             break;
                         }
 
 
-                        ClientSession offlineSession = null;
-                        if (GetOfflineClientSession(clientSessionId, out offlineSession) == true)
+                        UserToken offlineSession = null;
+                        if (GetOfflineuserToken(userTokenId, out offlineSession) == true)
                         {
                             // 기존 peer에 새로운 세션을 설정한다.
-                            offlineSession.Peer.SetClientSession(clientSession);
+                            offlineSession.Peer.SetUserToken(userToken);
 
 
                             // 게임 세션에 클라이언트 재연결을 알리기 위해 내부 메세지를 푸시한다.
-                            if (clientSession.GameSession != null)
+                            if (userToken.GameSession != null)
                             {
-                                clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.RECONNECT_CLIENT, null, 0);
+                                userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.RECONNECT_CLIENT, null, 0);
                             }
                             
                         }
@@ -264,49 +264,49 @@ namespace Service.Net
                         {
                             if (clientNetState != ENetState.Connecting)
                             {
-                                clientSession.SessionState = ESessionState.Expired;
-                                SendNetDisconnectNotify(clientSession);
-                                clientSession.Disconnect();
+                                userToken.SessionState = ESessionState.Expired;
+                                SendNetDisconnectNotify(userToken);
+                                userToken.Disconnect();
                                 break;
                             }
 
 
                             // 게임 세션에 클라이언트 접속을 알리기 위해 내부 메세지를 푸시한다.
-                            clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.CONNECT_CLIENT, null, 0);
+                            userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.CONNECT_CLIENT, null, 0);
                         }
 
 
                         // 인증 클라이언트 세션 추가
-                        if (AddAuthedClientSession(clientSession) == false)
+                        if (AddAutheduserToken(userToken) == false)
                         {
                             break;
                         }
 
-                        SendNetAuthSessionAck(clientSession);
+                        SendNetAuthSessionAck(userToken);
                     }
                     break;
                 case ENetProtocol.PAUSE_SESSION_REQ:
                     {
-                        if (clientSession.OverPauseCount() == true)
+                        if (userToken.OverPauseCount() == true)
                         {
-                            clientSession.SessionState = ESessionState.Blocked;
-                            SendNetDisconnectNotify(clientSession);
-                            clientSession.Disconnect();
+                            userToken.SessionState = ESessionState.Blocked;
+                            SendNetDisconnectNotify(userToken);
+                            userToken.Disconnect();
                         }
                         else
                         {
-                            clientSession.PauseLimitTimeTick = DateTime.UtcNow.AddSeconds(5).Ticks;
+                            userToken.PauseLimitTimeTick = DateTime.UtcNow.AddSeconds(5).Ticks;
 
-                            if (clientSession.GameSession != null)
+                            if (userToken.GameSession != null)
                             {
-                                clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.PAUSE_CLIENT, null, 0);
+                                userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.PAUSE_CLIENT, null, 0);
                             }
                         }
                     }
                     break;
                 case ENetProtocol.RESUME_SESSION_REQ:
                     {
-                        clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.RESUME_CLIENT, null, 0);
+                        userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.RESUME_CLIENT, null, 0);
                     }
                     break;
                 default:
@@ -319,33 +319,33 @@ namespace Service.Net
         }
 
 
-        private bool AddExpiredClientSession(ClientSession clientSession)
+        private bool AddExpireduserToken(UserToken userToken)
         {
-            lock (_expiredClientSessions)
+            lock (_expireduserTokens)
             {
-                if (_expiredClientSessions.Exists(x => x == clientSession.SessionId) == true)
+                if (_expireduserTokens.Exists(x => x == userToken.SessionId) == true)
                 {
                     return false;
                 }
 
 
-                _expiredClientSessions.Add(clientSession.SessionId);
+                _expireduserTokens.Add(userToken.SessionId);
             }
 
             return true;
         }
 
 
-        private bool CheckExpiredClientSession(ClientSession clientSession)
+        private bool CheckExpireduserToken(UserToken userToken)
         {
             return false;
         }
 
 
-        private bool CheckDuplicatedClientSession(ClientSession clientSession)
+        private bool CheckDuplicateduserToken(UserToken userToken)
         {
-            ClientSession duplicatedSession;
-            if (GetAuthedClientSession(clientSession.SessionId, out duplicatedSession) == false)
+            UserToken duplicatedSession;
+            if (GetAutheduserToken(userToken.SessionId, out duplicatedSession) == false)
             {
                 return false;
             }
@@ -358,54 +358,54 @@ namespace Service.Net
 
 
             // 기존 peer에 새로운 세션을 설정한다.
-            clientSession.SessionState = ESessionState.None;
-            duplicatedSession.Peer.SetClientSession(clientSession);
-            RemoveAuthedClientSession(clientSession);
+            userToken.SessionState = ESessionState.None;
+            duplicatedSession.Peer.SetUserToken(userToken);
+            RemoveAutheduserToken(userToken);
 
 
             // 게임 세션에 클라이언트 재연결을 알리기 위해 내부 메세지를 푸시한다.
-            if (clientSession.GameSession != null)
+            if (userToken.GameSession != null)
             {
-                clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.RECONNECT_CLIENT, null, 0);
+                userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.RECONNECT_CLIENT, null, 0);
             }
 
-            SendNetAuthSessionAck(clientSession);
+            SendNetAuthSessionAck(userToken);
             return true;
         }
 
 
-        private bool AddAuthedClientSession(ClientSession clientSession)
+        private bool AddAutheduserToken(UserToken userToken)
         {
-            lock (_authedClientSessions)
+            lock (_autheduserTokens)
             {
-                if (_authedClientSessions.ContainsKey(clientSession.SessionId) == true)
+                if (_autheduserTokens.ContainsKey(userToken.SessionId) == true)
                 {
                     return false;
                 }
-                _authedClientSessions.Add(clientSession.SessionId, clientSession);
+                _autheduserTokens.Add(userToken.SessionId, userToken);
             }
             return true;
         }
 
 
-        private void RemoveAuthedClientSession(ClientSession clientSession)
+        private void RemoveAutheduserToken(UserToken userToken)
         {
-            lock (_authedClientSessions)
+            lock (_autheduserTokens)
             {
-                if (_authedClientSessions.ContainsKey(clientSession.SessionId) == false)
+                if (_autheduserTokens.ContainsKey(userToken.SessionId) == false)
                 {
                     return;
                 }
-                _authedClientSessions.Remove(clientSession.SessionId);
+                _autheduserTokens.Remove(userToken.SessionId);
             }
         }
 
 
-        private bool GetAuthedClientSession(string id, out ClientSession value)
+        private bool GetAutheduserToken(string id, out UserToken value)
         {
-            lock (_authedClientSessions)
+            lock (_autheduserTokens)
             {
-                if (_authedClientSessions.TryGetValue(id, out value) == false)
+                if (_autheduserTokens.TryGetValue(id, out value) == false)
                 {
                     return false;
                 }
@@ -414,52 +414,52 @@ namespace Service.Net
         }
 
 
-        private bool AddOfflineClientSession(ClientSession clientSession, int expireTime)
+        private bool AddOfflineuserToken(UserToken userToken, int expireTime)
         {
-            clientSession.NetState = ENetState.Reconnecting;
-            clientSession.AliveTimeTick = DateTime.UtcNow.AddSeconds(expireTime).Ticks;
+            userToken.NetState = ENetState.Reconnecting;
+            userToken.AliveTimeTick = DateTime.UtcNow.AddSeconds(expireTime).Ticks;
 
             if (_offlineSessionUpdateTime == 0)
             {
                 _offlineSessionUpdateTime = DateTime.UtcNow.AddSeconds(10).Ticks;
             }
 
-            lock (_offlineClientSessions)
+            lock (_offlineuserTokens)
             {
-                if (_offlineClientSessions.Contains(clientSession) == true)
+                if (_offlineuserTokens.Contains(userToken) == true)
                 {
                     return false;
                 }
 
-                _offlineClientSessions.Insert(0, clientSession);
+                _offlineuserTokens.Insert(0, userToken);
             }
 
             return true;
         }
 
 
-        private bool GetOfflineClientSession(string id, out ClientSession value)
+        private bool GetOfflineuserToken(string id, out UserToken value)
         {
-            lock (_offlineClientSessions)
+            lock (_offlineuserTokens)
             {
-                value = _offlineClientSessions.Find(x => x.SessionId ==  id);
+                value = _offlineuserTokens.Find(x => x.SessionId ==  id);
                 if (value == null)
                 {
                     return false;
                 }
 
-                _offlineClientSessions.Remove(value);
+                _offlineuserTokens.Remove(value);
                 return true;
             }
         }
 
 
-        void UpdateDisconnectedClientSession()
+        void UpdateDisconnecteduserToken()
         {
-            lock (_authedClientSessions)
+            lock (_autheduserTokens)
             {
                 List<string> removeSession = new List<string>();
-                foreach (var elem in _authedClientSessions)
+                foreach (var elem in _autheduserTokens)
                 {
                     if (elem.Value.SessionState == ESessionState.Blocked)
                     {
@@ -468,7 +468,7 @@ namespace Service.Net
 
                         if (elem.Value.GameSession != null)
                         {
-                            elem.Value.GameSession.PushInternalMessage(elem.Value, EInternalProtocol. DISCONNECT_CLIENT, null, 0);
+                            elem.Value.GameSession.PushInternalMessage(elem.Value.Peer, EInternalProtocol. DISCONNECT_CLIENT, null, 0);
                         }
 
                         removeSession.Add(elem.Value.SessionId);
@@ -478,14 +478,14 @@ namespace Service.Net
 
                 foreach (var id in removeSession)
                 {
-                    _authedClientSessions.Remove(id);
+                    _autheduserTokens.Remove(id);
                 }
             }
         }
 
 
         // offline 클라이언트 세션 갱신처리
-        private void UpdateOfflineClientSession()
+        private void UpdateOfflineuserToken()
         {
             long nowTick = DateTime.UtcNow.Ticks;
             if (_offlineSessionUpdateTime == 0 || nowTick < _offlineSessionUpdateTime)
@@ -495,32 +495,32 @@ namespace Service.Net
             _offlineSessionUpdateTime = DateTime.UtcNow.AddSeconds(1).Ticks;
 
 
-            lock (_offlineClientSessions)
+            lock (_offlineuserTokens)
             {
-                if (_offlineClientSessions.Count == 0)
+                if (_offlineuserTokens.Count == 0)
                 {
                     return;
                 }
 
 
-                ClientSession clientSession = _offlineClientSessions[_offlineClientSessions.Count - 1];
-                while (clientSession != null && clientSession.AliveTimeTick < nowTick)
+                UserToken userToken = _offlineuserTokens[_offlineuserTokens.Count - 1];
+                while (userToken != null && userToken.AliveTimeTick < nowTick)
                 {
-                    clientSession.NetState = ENetState.Disconnected;
-                    clientSession.GameSession.PushInternalMessage(clientSession, EInternalProtocol.EXPIRED_CLIENT, null, 0);
+                    userToken.NetState = ENetState.Disconnected;
+                    userToken.GameSession.PushInternalMessage(userToken.Peer, EInternalProtocol.EXPIRED_CLIENT, null, 0);
 
 
-                    _offlineClientSessions.RemoveAt(_offlineClientSessions.Count - 1);
-                    if (_offlineClientSessions.Count == 0)
+                    _offlineuserTokens.RemoveAt(_offlineuserTokens.Count - 1);
+                    if (_offlineuserTokens.Count == 0)
                     {
                         break;
                     }
-                    clientSession = _offlineClientSessions[_offlineClientSessions.Count - 1];
+                    userToken = _offlineuserTokens[_offlineuserTokens.Count - 1];
                 }
             }
         }
 
-        private void UpdatePauseClientSession()
+        private void UpdatePauseuserToken()
         {
 
         }     

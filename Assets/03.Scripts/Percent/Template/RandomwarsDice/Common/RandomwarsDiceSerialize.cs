@@ -38,17 +38,12 @@ namespace Template.Character.RandomwarsDice.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("diceId", diceId);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static DiceUpgradeRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.diceId = (int)jObject["diceId"];
+			return JsonConvert.DeserializeObject<DiceUpgradeRequest>(json);
 		}
 
 	}
@@ -96,21 +91,12 @@ namespace Template.Character.RandomwarsDice.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("diceInfo", diceInfo.JsonSerialize());
-			json.Add("listQuestData", JsonConvert.SerializeObject(listQuestData));
-			json.Add("deleteItemInfo", deleteItemInfo.JsonSerialize());
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static DiceUpgradeResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.diceInfo = UserDice.JsonDeserialize((JObject)jObject["diceInfo"]);
-			this.listQuestData = JsonConvert.DeserializeObject<List<QuestData>>(jObject["listQuestData"].ToString());
-			this.deleteItemInfo = ItemBaseInfo.JsonDeserialize((JObject)jObject["deleteItemInfo"]);
+			return JsonConvert.DeserializeObject<DiceUpgradeResponse>(json);
 		}
 
 	}
@@ -154,19 +140,12 @@ namespace Template.Character.RandomwarsDice.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("index", index);
-			json.Add("listDiceId", JsonConvert.SerializeObject(listDiceId));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static DiceChangeDeckRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.index = (int)jObject["index"];
-			this.listDiceId = JsonConvert.DeserializeObject<List<int>>(jObject["listDiceId"].ToString());
+			return JsonConvert.DeserializeObject<DiceChangeDeckRequest>(json);
 		}
 
 	}
@@ -210,19 +189,12 @@ namespace Template.Character.RandomwarsDice.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("index", index);
-			json.Add("listDiceId", JsonConvert.SerializeObject(listDiceId));
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static DiceChangeDeckResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.index = (int)jObject["index"];
-			this.listDiceId = JsonConvert.DeserializeObject<List<int>>(jObject["listDiceId"].ToString());
+			return JsonConvert.DeserializeObject<DiceChangeDeckResponse>(json);
 		}
 
 	}

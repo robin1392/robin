@@ -34,19 +34,19 @@ namespace Service.Net
         }
 
 
-        public override void PushInternalMessage(object sender, EInternalProtocol protocolId, byte[] msg, int length)
+        public override void PushInternalMessage(ClientSession session, EInternalProtocol protocolId, byte[] msg, int length)
         {
-            _messageQueue.Enqueue(sender, (int)protocolId, msg, length);
+            _messageQueue.Enqueue(session, (int)protocolId, msg, length);
         }
 
 
-        public override void PushExternalMessage(object sender, int protocolId, byte[] msg, int length)
+        public override void PushExternalMessage(ClientSession session, int protocolId, byte[] msg, int length)
         {
-            _messageQueue.Enqueue(sender, protocolId, msg, length);
+            _messageQueue.Enqueue(session, protocolId, msg, length);
         }
 
 
-        public override bool PushRelayMessage(object sender, int protocolId, byte[] msg, int length)
+        public override bool PushRelayMessage(ClientSession session, int protocolId, byte[] msg, int length)
         {
             return false;
         }
@@ -54,36 +54,36 @@ namespace Service.Net
 
         public override bool ProcessInternalMessage(Message msg)
         {
-            ClientSession clientSession = msg.Sender as ClientSession;
+            var peer = msg.Session as Peer;
             switch ((EInternalProtocol)msg.ProtocolId)
             {
                 case EInternalProtocol.CONNECT_CLIENT:
                 {
-                    OnConnectClient(clientSession);
-                    _peers.Add(clientSession.Peer);
+                    OnConnectClient(peer.UserToken);
+                    _peers.Add(peer);
                     break;
                 }
                 case EInternalProtocol.RECONNECT_CLIENT:
                 {
-                    OnReconnectClient(clientSession);
+                    OnReconnectClient(peer.UserToken);
                     break;  
                 }
                 case EInternalProtocol.OFFLINE_CLIENT:
                 {
-                    OnOfflineClient(clientSession);
+                    OnOfflineClient(peer.UserToken);
                     break;  
                 }
                 case EInternalProtocol.DISCONNECT_CLIENT:
                 {
-                    OnDisconnectClient(clientSession);
+                    OnDisconnectClient(peer.UserToken);
                     break;  
                 }
                 case EInternalProtocol.EXPIRED_CLIENT:
                 {
-                    OnExpiredClient(clientSession);
+                    OnExpiredClient(peer.UserToken);
 
                     // 모든 클라이언트 세션이 만료되면 게임 세션을 종료시킨다.
-                    _peers.Remove(clientSession.Peer);
+                    _peers.Remove(peer);
                     if (_peers.Count == 0)
                     {
                         OnTerminatedGameSession(GameSessionId);
@@ -92,12 +92,12 @@ namespace Service.Net
                 }
                 case EInternalProtocol.PAUSE_CLIENT:
                 {
-                    OnPauseClient(clientSession);
+                    OnPauseClient(peer.UserToken);
                     break;  
                 }
                 case EInternalProtocol.RESUME_CLIENT:
                 {
-                    OnResumeClient(clientSession);
+                    OnResumeClient(peer.UserToken);
                     break;  
                 }
                 default:
@@ -121,19 +121,19 @@ namespace Service.Net
             return true; 
         }
         
-        public Peer[] GetPeers(EBroadCastType type, ISender sender)
+        public Peer[] GetPeers(EBroadCastType type, ClientSession session)
         {
             List<Peer> peerList = new List<Peer>();
             foreach (var peer in _peers)
             {
                 // sender 자신을 제외한다.
-                if (type == EBroadCastType.OTHERS && peer == sender)
+                if (type == EBroadCastType.OTHERS && peer == session)
                 {
                     continue;
                 }
 
                 // sender 자신이 아니면 제외한다.
-                if (type == EBroadCastType.TO_MYSELF && peer != sender)
+                if (type == EBroadCastType.TO_MYSELF && peer != session)
                 {
                     continue;
                 }

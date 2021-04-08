@@ -9,8 +9,6 @@ using Mirage.Logging;
 using MirageTest.Scripts.Messages;
 using Pathfinding;
 using Pathfinding.RVO;
-using RandomWarsProtocol;
-using RandomWarsResource.Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

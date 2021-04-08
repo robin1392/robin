@@ -9,27 +9,21 @@ using Service.Core;
 
 namespace Service.Net
 {
-    class HttpResponse
+    public class HttpClient : ClientSession
     {
-        public int ProtocolId { get; set; }
-        public string Json { get; set; }
-        public byte[] msg { get; set; }
-    }
-
-
-    public class HttpClient : ISender
-    {
-        private string _accessToken;
         private GameSessionClient _gameSession;
 
 
+        public HttpClient()
+        {
+            //ServicePointManager.MaxServicePointIdleTime = 500;
+            //ServicePointManager.DefaultConnectionLimit = 100;
+        }
 
-        public HttpClient(GameSessionClient gameSession)
+
+        public void Init(GameSessionClient gameSession)
         {
             _gameSession = gameSession;
-
-            //ServicePointManager.MaxServicePointIdleTime = 500;
-            ServicePointManager.DefaultConnectionLimit = 100;
         }
 
 
@@ -39,25 +33,7 @@ namespace Service.Net
         }
 
 
-        public void SetAccessToken(string accessToken)
-        {
-            _accessToken = accessToken;
-        }
-
-
-        public string GetAccessToken()
-        {
-            return _accessToken;
-        }
-
-
-        public bool SendMessage(int protocolId, byte[] buffer)
-        {
-            return false;
-        }
-
-
-        public bool SendHttpPost(int protocolId, string url, string json)
+        public override bool Send(int protocolId, string url, string json)
         {
             HttpPostAsync(protocolId, url, json);
             return true;
@@ -138,7 +114,7 @@ namespace Service.Net
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = "application/json";
             request.Method = "POST";
-            request.Timeout = 300000;
+            //request.Timeout = 300000;
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {

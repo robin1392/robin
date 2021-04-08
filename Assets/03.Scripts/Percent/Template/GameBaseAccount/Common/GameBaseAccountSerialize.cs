@@ -74,35 +74,12 @@ namespace Template.Account.GameBaseAccount.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("platformId", platformId);
-			json.Add("platformType", platformType);
-			json.Add("guid", guid);
-			json.Add("adid", adid);
-			json.Add("appid", appid);
-			json.Add("version", version);
-			json.Add("os", os);
-			json.Add("osVersion", osVersion);
-			json.Add("device", device);
-			json.Add("country", country);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static AccountLoginRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.platformId = (string)jObject["platformId"];
-			this.platformType = (int)jObject["platformType"];
-			this.guid = (string)jObject["guid"];
-			this.adid = (string)jObject["adid"];
-			this.appid = (string)jObject["appid"];
-			this.version = (string)jObject["version"];
-			this.os = (string)jObject["os"];
-			this.osVersion = (string)jObject["osVersion"];
-			this.device = (string)jObject["device"];
-			this.country = (string)jObject["country"];
+			return JsonConvert.DeserializeObject<AccountLoginRequest>(json);
 		}
 
 	}
@@ -136,17 +113,12 @@ namespace Template.Account.GameBaseAccount.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("accountInfo", accountInfo.JsonSerialize());
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static AccountLoginResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.accountInfo = AccountInfo.JsonDeserialize((JObject)jObject["accountInfo"]);
+			return JsonConvert.DeserializeObject<AccountLoginResponse>(json);
 		}
 
 	}
@@ -188,21 +160,12 @@ namespace Template.Account.GameBaseAccount.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("platformId", platformId);
-			json.Add("platformType", platformType);
-			json.Add("isConfirm", isConfirm);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static AccountPlatformLinkRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.platformId = (string)jObject["platformId"];
-			this.platformType = (int)jObject["platformType"];
-			this.isConfirm = (bool)jObject["isConfirm"];
+			return JsonConvert.DeserializeObject<AccountPlatformLinkRequest>(json);
 		}
 
 	}
@@ -240,19 +203,12 @@ namespace Template.Account.GameBaseAccount.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			json.Add("accountInfo", accountInfo.JsonSerialize());
-			json.Add("needConfirm", needConfirm);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static AccountPlatformLinkResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
-			this.accountInfo = AccountInfo.JsonDeserialize((JObject)jObject["accountInfo"]);
-			this.needConfirm = (bool)jObject["needConfirm"];
+			return JsonConvert.DeserializeObject<AccountPlatformLinkResponse>(json);
 		}
 
 	}
@@ -282,15 +238,12 @@ namespace Template.Account.GameBaseAccount.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static AccountLogoutRequest JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<AccountLogoutRequest>(json);
 		}
 
 	}
@@ -320,15 +273,12 @@ namespace Template.Account.GameBaseAccount.Common
 
 		public string JsonSerialize()
 		{
-			JObject json = new JObject();
-			base.JsonSerialize(json);
-			return json.ToString();
+			return JsonConvert.SerializeObject(this).ToString();
 		}
 
-		public void JsonDeserialize(string json)
+		public static AccountLogoutResponse JsonDeserialize(string json)
 		{
-			JObject jObject = JObject.Parse(json);
-			base.JsonDeserialize(jObject);
+			return JsonConvert.DeserializeObject<AccountLogoutResponse>(json);
 		}
 
 	}
