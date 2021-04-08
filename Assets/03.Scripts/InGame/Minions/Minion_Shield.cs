@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Mirage;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
@@ -21,75 +20,29 @@ namespace ED
             base.Initialize();
             skillCastedTime = -effectCooltime;
         }
-        
-        protected override IEnumerator Combat()
-        {
-            while (true)
-            {
-                yield return Skill();
 
-                if (!IsTargetInnerRange())
-                {
-                    ApproachToTarget();
-                }
-                else
-                {
-                    break;
-                }
-
-                yield return null;
-
-                target = SetTarget();
-            }
-
-            StopApproachToTarget();
-
-            if (target == null)
-            {
-                yield break;
-            }
-
-            yield return Attack();
-        }
-
-        public IEnumerator Skill()
+        public void Skill()
         {
             if (_spawnedTime >= skillCastedTime + effectCooltime)
             {
-                var targets = new List<Minion>();
-                var skillDistance = (ActorProxy as DiceActorProxy).diceInfo.range;
-                var cols = Physics.OverlapSphere(transform.position, skillDistance, targetLayer);
-                foreach (var col in cols)
-                {
-                    var minion = col.GetComponentInParent<Minion>();
-                    if(minion != null && minion.CanBeTarget())
-                    {
-                        targets.Add(minion);
-                    }
-                }
-
-                if (targets.Any() == false)
-                {
-                    yield break;
-                }
-                
-                var duration = 5;//effectDuration;
-                ActorProxy.AddBuff(BuffInfos.HalfDamage, duration);
-
-                foreach (var target in targets)
-                {
-                    target.ActorProxy.AddBuffWithNetId(BuffInfos.Taunted, ActorProxy.NetId, duration);
-                }
-                
-                var action = new ShieldAction();
-                yield return action.ActionWithSync(ActorProxy);
-
                 skillCastedTime = _spawnedTime;
+                ActorProxy.AddBuff(BuffInfos.HalfDamage, effectDuration);
+
+                var action = new ShieldAction();
+                RunningAction = action;
+                RunLocalAction(action.ActionWithSync(ActorProxy), true);
             }
         }
 
+      
         public override void OnHitDamageOnClient(float damage)
         {
+            Skill();
+        }
+
+        public override BaseStat SetTarget()
+        {
+            return ActorProxy.GetEnemyTowerOrBossEgg();
         }
     }
 }

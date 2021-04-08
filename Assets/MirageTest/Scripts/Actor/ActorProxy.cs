@@ -57,7 +57,6 @@ namespace MirageTest.Scripts
         public bool isClocking => ((buffState & BuffState.Clocking) != 0);
         public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
         public bool isCantAI => ((buffState & BuffState.CantAI) != 0);
-        public bool isTaunted => ((buffState & BuffState.Taunted) != 0);
 
         public bool isInAllyCamp
         {
@@ -82,7 +81,6 @@ namespace MirageTest.Scripts
         public struct Buff
         {
             public byte id;
-            public uint target;
             public float endTime;
 
             public override string ToString()
@@ -187,15 +185,15 @@ namespace MirageTest.Scripts
             var client = Client as RWNetworkClient;
             if (client.enableActor)
             {
-                BuffList.OnChange += OnBuffListChangedOnClient;
+                BuffList.OnChange += OnBuffListChangedOnClientOnly;
                 SpawnActor();
-                OnBuffListChangedOnClient();
+                OnBuffListChangedOnClientOnly();
             }
 
             client.AddActorProxy(this);
         }
 
-        private void OnBuffListChangedOnClient()
+        private void OnBuffListChangedOnClientOnly()
         {
             var state = BuffState.None;
             foreach (var buff in BuffList)
@@ -210,35 +208,20 @@ namespace MirageTest.Scripts
 
             if (baseStat is Minion minion)
             {
-                var isClockingOld = (buffState & BuffState.Clocking) != 0;
+                var isClockingBefore = (buffState & BuffState.Clocking) != 0;
                 var isClockkingNew = (state & BuffState.Clocking) != 0;
-                if (isClockingOld != isClockkingNew)
+                if (isClockingBefore != isClockkingNew)
                 {
                     minion.ApplyCloacking(isClockkingNew);
                 }
-                
-                var isTauntedOld = (buffState & BuffState.Taunted) != 0;
-                var isTauntedNew = (state & BuffState.Taunted) != 0;
-                if (isTauntedOld != isTauntedNew)
-                {
-                    if (isTauntedNew)
-                    {
-                        RestartAI();   
-                    }
-                    else
-                    {
-                        minion.ResetAttackedTarget();
-                    }
-                }
             }
-            
+
             this.buffState = state;
 
             EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0);
             EnableStunEffect((buffState & BuffState.Sturn) != 0);
             EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
             EnableScarecrowEffect((buffState & BuffState.Scarecrow) != 0);
-            EnableTauntedEffect((buffState & BuffState.Taunted) != 0);
 
             if (isCantAI)
             {
@@ -327,31 +310,6 @@ namespace MirageTest.Scripts
                     if (minion._dicEffectPool.TryGetValue(MAZ.STURN, out var ad))
                     {
                         minion._dicEffectPool.Remove(MAZ.STURN);
-                        ad.Deactive();
-                    }
-                }
-            }
-        }
-        
-        private void EnableTauntedEffect(bool b)
-        {
-            if (baseStat is Minion minion)
-            {
-                if (b)
-                {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.TAUNTED) == false)
-                    {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                            baseStat.ts_HitPos.position + Vector3.up * 1.65f);
-                        ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.TAUNTED, ad);
-                    }
-                }
-                else
-                {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.TAUNTED, out var ad))
-                    {
-                        minion._dicEffectPool.Remove(MAZ.TAUNTED);
                         ad.Deactive();
                     }
                 }
@@ -449,23 +407,6 @@ namespace MirageTest.Scripts
                 collider.enabled = b;
             }
         }
-        
-        public void RestartAI()
-        {
-            if (isPlayingAI == false)
-            {
-                return;
-            }
-            
-            var actor = baseStat;
-            if (actor == null)
-            {
-                return;
-            }
-
-            actor.StopAI();
-            actor.StartAI();
-        }
 
         private void LateUpdate()
         {
@@ -517,48 +458,9 @@ namespace MirageTest.Scripts
 
         void AddBuffInternal(byte id, float duration)
         {
-            var findIndex = BuffList.FindIndex(buff => buff.id == id);
-            if (findIndex >= 0)
-            {
-                BuffList.RemoveAt(findIndex);
-            }
-            
             BuffList.Add(new Buff()
             {
                 id = id,
-                endTime = (float) NetworkTime.Time + duration,
-            });
-        }
-        
-        public void AddBuffWithNetId(byte id, uint targetNetId, float duration)
-        {
-            if (IsLocalClient)
-            {
-                AddBuffWithNetIdInternal(id, targetNetId, duration);
-                return;
-            }
-
-            AddBuffWithNetIdOnServer(id, targetNetId, duration);
-        }
-
-        [ServerRpc(requireAuthority = false)]
-        public void AddBuffWithNetIdOnServer(byte id, uint targetNetId, float duration)
-        {
-            AddBuffWithNetIdInternal(id, targetNetId, duration);
-        }
-
-        void AddBuffWithNetIdInternal(byte id, uint targetNetId, float duration)
-        {
-            var findIndex = BuffList.FindIndex(buff => buff.id == id);
-            if (findIndex >= 0)
-            {
-                BuffList.RemoveAt(findIndex);
-            }
-            
-            BuffList.Add(new Buff()
-            {
-                id = id,
-                target = targetNetId,
                 endTime = (float) NetworkTime.Time + duration,
             });
         }

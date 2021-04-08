@@ -19,7 +19,6 @@ namespace ED
         FREEZE,
         INVINCIBILITY,
         SCARECROW,
-        TAUNTED
     }
 
     public enum TARGET_ORDER
@@ -114,28 +113,12 @@ namespace ED
             SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly);
         }
 
-        public void ResetAttackedTarget()
-        {
-            _attackedTarget = null;
-        }
-
         public override void OnHitDamageOnClient(float damage)
         {
         }
         
         public virtual BaseStat SetTarget()
         {
-            if (ActorProxy.isTaunted)
-            {
-                var taunted = ActorProxy.BuffList.Find(b => b.id == BuffInfos.Taunted);
-                var targetActorProxy = ActorProxy.ClientObjectManager[taunted.target];
-                if (targetActorProxy != null)
-                {
-                    var target = targetActorProxy.GetComponent<ActorProxy>();
-                    return target?.baseStat;
-                }
-            }
-            
             if (_attackedTarget != null && _attackedTarget.CanBeTarget())
             {
                 return _attackedTarget;
