@@ -103,6 +103,8 @@ namespace ED
                     settingPopup.Toggle_HighQuality(true);
                     break;
             }
+
+            RWNetworkClient.EnableRVO = true;
             
 #if UNITY_EDITOR
             EditorApplication.pauseStateChanged += OnEditorAppPause;

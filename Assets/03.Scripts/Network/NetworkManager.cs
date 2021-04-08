@@ -171,6 +171,7 @@ public class NetworkManager : Singleton<NetworkManager>
             return false;
         }
 
+        NetMatchStep = Global.E_MATCHSTEP.MATCH_NONE;
         UserInfoManager.Get().SetTicketId(ticketId);
         StartCoroutine(WaitForMatch());
         return true;
