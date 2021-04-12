@@ -189,6 +189,7 @@ namespace MirageTest.Scripts
             {
                 BuffList.OnChange += OnBuffListChangedOnClient;
                 SpawnActor();
+
                 OnBuffListChangedOnClient();
             }
 
@@ -393,6 +394,11 @@ namespace MirageTest.Scripts
         {
             var client = Client as RWNetworkClient;
             OnSpawnActor();
+
+            if ((baseStat as Minion)?.collider is SphereCollider collider)
+            {
+                _aiPath.radius = collider.radius;
+            }
             
             _aiPath.maxSpeed = moveSpeed;
 
