@@ -77,3 +77,7 @@ MonoBehaviour:
     count: 1
   - obj: {fileID: 6636926182459783295, guid: ce6335d208492d843b0f7b30c1d630e8, type: 3}
     count: 1
+  - obj: {fileID: 563359602468480400, guid: 95512a30e020ef3419b040f6569d1503, type: 3}
+    count: 1
+  - obj: {fileID: 301605326952073379, guid: 5a23b16f0d45e4b159aebb853f20fff2, type: 3}
+    count: 1
