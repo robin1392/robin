@@ -26,7 +26,6 @@ namespace ED
 
         public Transform ts_Lights;
         public Transform ts_StadiumTop;
-        public Transform ts_NexusHealthBar;
 
         public float time { get; protected set; }
         protected DateTime pauseTime;
@@ -120,7 +119,6 @@ namespace ED
         public void RotateTopCampObject()
         {
             ts_StadiumTop.localRotation = Quaternion.Euler(180f, 0, 180f);
-            ts_NexusHealthBar.localRotation = Quaternion.Euler(0, 0, 180f);
             ts_Lights.localRotation = Quaternion.Euler(0, 340f, 0);
         }
         

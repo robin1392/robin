@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using ED;
 using Mirage;
 using Mirage.Logging;
@@ -43,13 +44,20 @@ public class PlayerProxy : NetworkBehaviour
             InGameManager.Get().RotateTopCampObject();
         }
         
-        BindLocalDeckUI();
+        BindLocalDeckUI().Forget();
     }
 
-    private void BindLocalDeckUI()
+    async UniTask BindLocalDeckUI()
     {
         var client = Client as RWNetworkClient;
+
         var localPlayerState = client.GetLocalPlayerState();
+        while (localPlayerState == null)
+        {
+            localPlayerState = client.GetLocalPlayerState();
+            await UniTask.Yield();
+        }
+        
         client.BindDeckUI(localPlayerState.userId);
     }
 

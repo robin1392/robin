@@ -80,14 +80,21 @@ namespace ED
         {
             RefreshHealthBar();
         }
-        
+
         public void RefreshHealthBar()
         {
-            if (isAlive)
+            if (image_HealthBar == null)
             {
-                image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
-                text_Health.text = $"{Mathf.CeilToInt(ActorProxy.currentHealth)}";
+                return;
             }
+
+            if (isAlive == false)
+            {
+                return;
+            }
+
+            image_HealthBar.fillAmount = ActorProxy.currentHealth / ActorProxy.maxHealth;
+            text_Health.text = $"{Mathf.CeilToInt(ActorProxy.currentHealth)}";
         }
 
         public override void SetColor(E_MaterialType type, bool isAlly)
@@ -139,7 +146,9 @@ namespace ED
         {
             base.OnBaseStatDestroyed();
             
-            image_HealthBar.transform.parent.parent.gameObject.SetActive(false);
+            image_HealthBar?.transform.parent.gameObject.SetActive(false);
+            image_HealthBar = null;
+            text_Health = null;
             Transform ts = PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
             animator.SetTrigger("Death");
             SoundManager.instance.Play(clip_TowerExplosion);

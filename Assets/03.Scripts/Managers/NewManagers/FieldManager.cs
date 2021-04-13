@@ -22,11 +22,7 @@ public class FieldManager : SingletonDestroy<FieldManager>
     
     #region unity base
 
-    public override void Awake()
-    {
-        base.Awake();
-        InitializeFieldManager();
-    }
+   
     
     public override void OnDestroy()
     {
@@ -38,23 +34,7 @@ public class FieldManager : SingletonDestroy<FieldManager>
     #endregion
     
     #region init & destroy
-
-    public void InitializeFieldManager()
-    {
-        listTopPosition = new List<Transform>();
-        listBottomPosition = new List<Transform>();
-
-        for (int i = 0; i < ts_TopPlayer.childCount; i++)
-        {
-            listTopPosition.Add(ts_TopPlayer.GetChild(i));    
-        }
-        
-        for (int i = 0; i < ts_BottomPlayer.childCount; i++)
-        {
-            listBottomPosition.Add(ts_BottomPlayer.GetChild(i));    
-        }
-        
-    }
+    
 
     public void DestroyManager()
     {

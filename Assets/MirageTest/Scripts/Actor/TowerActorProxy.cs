@@ -1,3 +1,4 @@
+using System;
 using ED;
 using UnityEngine;
 
@@ -19,13 +20,22 @@ namespace MirageTest.Scripts
             baseStat.SetHealthBarColor();
 
             var client = Client as RWNetworkClient;
-            if (client.enableUI && IsLocalPlayerActor)
+            if (client.enableUI)
             {
-                playerController.AdjustLocalTowerHealthBarPosition();
+                if (IsLocalPlayerAlly)
+                {
+                    UI_InGame.Get().image_BottomTowerHealthBar.transform.parent.gameObject.SetActive(true);
+                    playerController.image_HealthBar = UI_InGame.Get().image_BottomTowerHealthBar;
+                    playerController.text_Health = UI_InGame.Get().text_BottomTowerHealthBar;
+                }
+                else
+                {
+                    UI_InGame.Get().image_TopTowerHealthBar.transform.parent.gameObject.SetActive(true);
+                    playerController.image_HealthBar = UI_InGame.Get().image_TopTowerHealthBar;
+                    playerController.text_Health = UI_InGame.Get().text_TopTowerHealthBar;
+                }
             }
-            
-            playerController.image_HealthBar.transform.parent.gameObject.SetActive(client.enableUI);
-            
+
             isMovable = false;
         }
 

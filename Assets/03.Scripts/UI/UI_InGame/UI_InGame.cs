@@ -43,7 +43,14 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     [Header("SP upgrade message")] 
     public CanvasGroup cg_SpUpgradeMessage;
     public Text text_SpUpgradeMessage;
+    
+    public Image image_TopTowerHealthBar;
+    public Text text_TopTowerHealthBar;
+    public Image image_BottomTowerHealthBar;
+    public Text text_BottomTowerHealthBar;
     #endregion
+    
+    
     
     #region unity base
 
@@ -52,6 +59,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         base.Awake();
 
         InitUIElement();
+        image_TopTowerHealthBar.transform.parent.gameObject.SetActive(false);
+        image_BottomTowerHealthBar.transform.parent.gameObject.SetActive(false);
     }
     
     private RWNetworkClient _client;
