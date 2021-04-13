@@ -918,6 +918,11 @@ namespace MirageTest.Scripts
 
         public void Destroy()
         {
+            if (Client.IsConnected == false)
+            {
+                return;    
+            }
+            
             if (IsLocalClient)
             {
                 DestroyInternal();
