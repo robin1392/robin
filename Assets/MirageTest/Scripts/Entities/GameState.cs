@@ -18,7 +18,7 @@ namespace MirageTest.Scripts.Entities
         private float _waveInterval;
         private float _waveRemainTime;
         private bool _enableUI;
-        private int _lastRemainTime = -1;
+        private int _lastRemainTime = int.MaxValue;
 
         [SyncVar(hook = nameof(SetMasterOwnerTag))] public byte masterOwnerTag;
         [SyncVar]public float factor = 1f;
@@ -143,7 +143,7 @@ namespace MirageTest.Scripts.Entities
             string remainTimeStr = $"{remainTimeInt:F0}";
             WorldUIManager.Get().SetTextSpawnTime(remainTimeStr);
 
-            if (_lastRemainTime == remainTimeInt)
+            if (_lastRemainTime == remainTimeInt || _lastRemainTime < remainTimeInt)
             {
                 return;
             }
