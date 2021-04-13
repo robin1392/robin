@@ -59,7 +59,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5883888954613411288}
   - component: {fileID: 5883888954613411289}
-  - component: {fileID: 4956517791549293242}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -133,22 +132,6 @@ MonoBehaviour:
   robotPieceCount: 0
   clip_TowerFalldown: {fileID: 8300000, guid: 5b28a4c4a99394596a6ee7736021ccb7, type: 3}
   clip_TowerExplosion: {fileID: 8300000, guid: eb47b1f09e5a14f60a242ca24f9d586a, type: 3}
---- !u!54 &4956517791549293242
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5883888954613411290}
-  serializedVersion: 2
-  m_Mass: 100
-  m_Drag: 100
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
 --- !u!1 &7007598002378707877
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +173,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1
+  m_Radius: 2
   m_Height: 10
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 4}
@@ -260,6 +243,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: be4bf0fa186439646a69d1870789e706,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: be4bf0fa186439646a69d1870789e706,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: be4bf0fa186439646a69d1870789e706,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: be4bf0fa186439646a69d1870789e706,
         type: 3}
