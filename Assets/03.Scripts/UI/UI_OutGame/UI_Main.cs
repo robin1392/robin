@@ -118,7 +118,7 @@ namespace ED
         
         private void Start()
         {
-            isPushMode = false;
+            isPushMode = true;
             isTeamColorMode = false;
             slider_Factor.value = factor;
             text_Factor.text = $"x{factor:F1}";
