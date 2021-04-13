@@ -7,20 +7,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Mirage;
 using MirageTest.Scripts;
 using UnityEngine;
 
 namespace ED
 {
-    public enum MAZ
-    {
-        NONE,
-        STURN,
-        FREEZE,
-        INVINCIBILITY,
-        SCARECROW,
-    }
-
     public enum TARGET_ORDER
     {
         NONE,
@@ -44,8 +36,8 @@ namespace ED
 
         protected static readonly string _scarecrow = "Scarecrow";
 
-        public Dictionary<MAZ, PoolObjectAutoDeactivate> _dicEffectPool =
-            new Dictionary<MAZ, PoolObjectAutoDeactivate>();
+        public Dictionary<BuffType, PoolObjectAutoDeactivate> _dicEffectPool =
+            new Dictionary<BuffType, PoolObjectAutoDeactivate>();
 
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
@@ -54,6 +46,19 @@ namespace ED
         
         protected bool _destroyed; 
         public bool Destroyed => _destroyed;
+
+        public override float Radius
+        {
+            get
+            {
+                if (collider is SphereCollider sphereCollider)
+                {
+                    return sphereCollider.radius;
+                }
+
+                return 0;
+            }
+        }
 
         protected override void Awake()
         {
@@ -113,10 +118,20 @@ namespace ED
             SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly);
         }
 
+        public void ResetAttackedTarget()
+        {
+            _attackedTarget = null;
+        }
+        
+        public void SetAttackedTarget(BaseStat target)
+        {
+            _attackedTarget = target;
+        }
+
         public override void OnHitDamageOnClient(float damage)
         {
         }
-        
+
         public virtual BaseStat SetTarget()
         {
             if (_attackedTarget != null && _attackedTarget.CanBeTarget())
@@ -221,7 +236,7 @@ namespace ED
 
             if (target != null)
             {
-                if (Vector3.Distance(transform.position, target.transform.position) <= range)
+                if (Vector3.Distance(transform.position, target.transform.position) <= range + target.Radius + Radius)
                 {
                     return true;
                 }

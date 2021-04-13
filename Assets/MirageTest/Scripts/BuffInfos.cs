@@ -13,30 +13,33 @@ namespace MirageTest.Scripts
         public const byte Invincibility = 4;
         public const byte Scarecrow = 5;
         public const byte IceFreeze = 6;
+        public const byte Taunted = 7;
 
-        public static BuffState[] Data = new[]
+        public static BuffType[] Data = new[]
         {
-            BuffState.Clocking,
-            BuffState.HalfDamage,
-            BuffState.Sturn,
-            BuffState.Freeze,
-            BuffState.Invincibility,
-            BuffState.Scarecrow,
-            BuffState.Freeze,
+            BuffType.Clocking,
+            BuffType.HalfDamage,
+            BuffType.Stun,
+            BuffType.Freeze,
+            BuffType.Invincibility,
+            BuffType.Scarecrow,
+            BuffType.Freeze,
+            BuffType.Taunted,
         };
     }
 
     [Flags]
-    public enum BuffState
+    public enum BuffType
     {
         None = 0,
         Clocking = 1 << 1,
         HalfDamage = 1 << 2,
-        Sturn = 1 << 3,
+        Stun = 1 << 3,
         Freeze = 1 << 4,
         Invincibility = 1 << 5,
         Scarecrow = 1 << 6,
+        Taunted = 1 << 7,
 
-        CantAI = Sturn | Freeze | Scarecrow,
+        CantAI = Stun | Freeze | Scarecrow,
     }
 }

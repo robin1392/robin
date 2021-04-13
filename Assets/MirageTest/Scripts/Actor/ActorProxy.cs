@@ -53,10 +53,11 @@ namespace MirageTest.Scripts
         public RVOController _rvoController;
 
         public readonly Buffs BuffList = new Buffs();
-        public BuffState buffState = BuffState.None;
-        public bool isClocking => ((buffState & BuffState.Clocking) != 0);
-        public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
-        public bool isCantAI => ((buffState & BuffState.CantAI) != 0);
+        public BuffType buffType = BuffType.None;
+        public bool isClocking => ((buffType & BuffType.Clocking) != 0);
+        public bool isHalfDamage => ((buffType & BuffType.HalfDamage) != 0);
+        public bool isCantAI => ((buffType & BuffType.CantAI) != 0);
+        public bool isTaunted => ((buffType & BuffType.Taunted) != 0);
 
         public bool isInAllyCamp
         {
@@ -81,6 +82,7 @@ namespace MirageTest.Scripts
         public struct Buff
         {
             public byte id;
+            public uint target;
             public float endTime;
 
             public override string ToString()
@@ -178,50 +180,81 @@ namespace MirageTest.Scripts
                 _rvoController = gameObject.AddComponent<RVOController>();
                 var simpleSmoothModifier = gameObject.AddComponent<SimpleSmoothModifier>();
                 _rvoController.maxNeighbours = 20;
-                _rvoController.lockWhenNotMoving = true;
+                _rvoController.lockWhenNotMoving = !UI_Main.isPushMode;
                 EnablePathfinding(false);
             }
             
             var client = Client as RWNetworkClient;
             if (client.enableActor)
             {
-                BuffList.OnChange += OnBuffListChangedOnClientOnly;
+                BuffList.OnChange += OnBuffListChangedOnClient;
                 SpawnActor();
-                OnBuffListChangedOnClientOnly();
+
+                OnBuffListChangedOnClient();
             }
 
             client.AddActorProxy(this);
         }
 
-        private void OnBuffListChangedOnClientOnly()
+        private void OnBuffListChangedOnClient()
         {
-            var state = BuffState.None;
+            var state = BuffType.None;
             foreach (var buff in BuffList)
             {
                 state |= BuffInfos.Data[buff.id];
             }
 
-            if (this.buffState == state)
+            if (this.buffType == state)
             {
                 return;
             }
 
             if (baseStat is Minion minion)
             {
-                var isClockingBefore = (buffState & BuffState.Clocking) != 0;
-                var isClockkingNew = (state & BuffState.Clocking) != 0;
-                if (isClockingBefore != isClockkingNew)
+                var isClockingOld = (buffType & BuffType.Clocking) != 0;
+                var isClockkingNew = (state & BuffType.Clocking) != 0;
+                if (isClockingOld != isClockkingNew)
                 {
                     minion.ApplyCloacking(isClockkingNew);
                 }
+                
+                var isTauntedOld = (buffType & BuffType.Taunted) != 0;
+                var isTauntedNew = (state & BuffType.Taunted) != 0;
+                if (isTauntedOld != isTauntedNew)
+                {
+                    if (isTauntedNew)
+                    {
+                        var taunted = BuffList.Find(b => b.id == BuffInfos.Taunted);
+                        var targetActorProxy  = GetNetworkIdentity(taunted.target);
+
+                        if (targetActorProxy != null)
+                        {
+                            var target = targetActorProxy.GetComponent<ActorProxy>();
+                            if (target != null && target.baseStat != null)
+                            {
+                                minion.SetAttackedTarget(target.baseStat);
+                                transform.LookAt(target.transform);
+                            }
+                        }
+
+                        RestartAI();
+                    }
+                    else
+                    {
+                        minion.ResetAttackedTarget();
+                    }
+                }
             }
+            
+            this.buffType = state;
 
-            this.buffState = state;
-
-            EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0);
-            EnableStunEffect((buffState & BuffState.Sturn) != 0);
-            EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
-            EnableScarecrowEffect((buffState & BuffState.Scarecrow) != 0);
+            //TODO: Buff를 데이터 시트로 뺀다.
+            EnableBuffEffect(buffType, BuffType.Invincibility, "Shield", EffectLocation.Bottom);
+            EnableBuffEffect(buffType, BuffType.Stun, "Effect_Sturn", EffectLocation.Top);
+            EnableFreezeEffect((buffType & BuffType.Freeze) != 0);
+            EnableBuffEffect(buffType, BuffType.Scarecrow, "Scarecrow", EffectLocation.Bottom);
+            EnableBuffEffect(buffType, BuffType.Taunted, "Effect_Taunted", EffectLocation.Top);
+            EnableBuffEffect(buffType, BuffType.HalfDamage, "Effect_HalfDamage", EffectLocation.Mid);
 
             if (isCantAI)
             {
@@ -230,92 +263,65 @@ namespace MirageTest.Scripts
             }
             else
             {
-                baseStat.animator.SetTrigger(AnimationHash.Idle);
                 if (isPlayingAI)
                 {
                     baseStat.StartAI();
                 }
             }
         }
-
-        private void EnableScarecrowEffect(bool b)
+        
+        NetworkIdentity GetNetworkIdentity(uint netId)
         {
-            if (baseStat is Minion minion)
+            if (IsLocalClient)
             {
-                if (b)
-                {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.SCARECROW) == false)
-                    {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow",
-                            transform.position);
-                        ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.SCARECROW, ad);
-                        minion.animator.gameObject.SetActive(false);
-                    }
-                }
-                else
-                {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.SCARECROW, out var ad))
-                    {
-                        minion._dicEffectPool.Remove(MAZ.SCARECROW);
-                        ad.Deactive();
-                        minion.animator.gameObject.SetActive(true);
-                    }
-                }
+                return ServerObjectManager[netId];
             }
+            
+            return ClientObjectManager[netId];
         }
 
-        private void EnableInvincibilityEffect(bool b)
+        void EnableBuffEffect(BuffType buffState, BuffType buffType, string resource, EffectLocation effectLocation)
         {
             if (baseStat is Minion minion)
             {
-                if (b)
+                if ((buffState & buffType) != 0)
                 {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.INVINCIBILITY) == false)
+                    if (minion._dicEffectPool.ContainsKey(buffType) == false)
                     {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Shield",
-                            transform.position);
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(resource,
+                            GetEffectPosition(baseStat, effectLocation));
                         ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.INVINCIBILITY, ad);
+                        minion._dicEffectPool.Add(buffType, ad);
                     }
                 }
                 else
                 {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.INVINCIBILITY, out var ad))
+                    if (minion._dicEffectPool.TryGetValue(buffType, out var ad))
                     {
-                        minion._dicEffectPool.Remove(MAZ.INVINCIBILITY);
+                        minion._dicEffectPool.Remove(buffType);
                         ad.Deactive();
                     }
                 }
             }
         }
 
-
-        private void EnableStunEffect(bool b)
+        Vector3 GetEffectPosition(BaseStat baseStat, EffectLocation effectLocation)
         {
-            if (baseStat is Minion minion)
+            switch (effectLocation)
             {
-                if (b)
-                {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.STURN) == false)
-                    {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                            baseStat.ts_HitPos.position + Vector3.up * 0.65f);
-                        ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.STURN, ad);
-                    }
-                }
-                else
-                {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.STURN, out var ad))
-                    {
-                        minion._dicEffectPool.Remove(MAZ.STURN);
-                        ad.Deactive();
-                    }
-                }
+                case EffectLocation.Top:
+                    // return baseStat.ts_TopEffectPosition.transform.position;
+                return baseStat.ts_HitPos.transform.position + new Vector3(0, 0.65f, 0);
+                case EffectLocation.Mid:
+                    return baseStat.ts_HitPos.transform.position;
+                case EffectLocation.Bottom:
+                    return baseStat.transform.position;
             }
+            
+            return baseStat.transform.position;
         }
-
+        
+       
         private void EnableFreezeEffect(bool b)
         {
             if (baseStat is Minion minion)
@@ -335,6 +341,11 @@ namespace MirageTest.Scripts
         {
             var client = Client as RWNetworkClient;
             OnSpawnActor();
+
+            if ((baseStat as Minion)?.collider is SphereCollider collider)
+            {
+                _aiPath.radius = collider.radius;
+            }
             
             _aiPath.maxSpeed = moveSpeed;
 
@@ -407,6 +418,23 @@ namespace MirageTest.Scripts
                 collider.enabled = b;
             }
         }
+        
+        public void RestartAI()
+        {
+            if (isPlayingAI == false)
+            {
+                return;
+            }
+            
+            var actor = baseStat;
+            if (actor == null)
+            {
+                return;
+            }
+
+            actor.StopAI();
+            actor.StartAI();
+        }
 
         private void LateUpdate()
         {
@@ -458,16 +486,55 @@ namespace MirageTest.Scripts
 
         void AddBuffInternal(byte id, float duration)
         {
+            var findIndex = BuffList.FindIndex(buff => buff.id == id);
+            if (findIndex >= 0)
+            {
+                BuffList.RemoveAt(findIndex);
+            }
+            
             BuffList.Add(new Buff()
             {
                 id = id,
                 endTime = (float) NetworkTime.Time + duration,
             });
         }
+        
+        public void AddBuffWithNetId(byte id, uint targetNetId, float duration)
+        {
+            if (IsLocalClient)
+            {
+                AddBuffWithNetIdInternal(id, targetNetId, duration);
+                return;
+            }
+
+            AddBuffWithNetIdOnServer(id, targetNetId, duration);
+        }
+
+        [ServerRpc(requireAuthority = false)]
+        public void AddBuffWithNetIdOnServer(byte id, uint targetNetId, float duration)
+        {
+            AddBuffWithNetIdInternal(id, targetNetId, duration);
+        }
+
+        void AddBuffWithNetIdInternal(byte id, uint targetNetId, float duration)
+        {
+            var findIndex = BuffList.FindIndex(buff => buff.id == id);
+            if (findIndex >= 0)
+            {
+                BuffList.RemoveAt(findIndex);
+            }
+            
+            BuffList.Add(new Buff()
+            {
+                id = id,
+                target = targetNetId,
+                endTime = (float) NetworkTime.Time + duration,
+            });
+        }
 
         public void HitDamage(float damage)
         {
-            if ((buffState & BuffState.Invincibility) != 0)
+            if ((buffType & BuffType.Invincibility) != 0)
             {
                 return;
             }

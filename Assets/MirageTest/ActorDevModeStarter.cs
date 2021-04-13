@@ -15,8 +15,7 @@ public class ActorDevModeStarter : MonoBehaviour
     {
         if (TableManager.Get().Loaded == false)
         {
-            string targetPath = System.IO.Path.Combine(Application.persistentDataPath + "/Resources/", "Table", "Dev");
-            TableManager.Get().LoadFromFile(targetPath);
+            TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
         }
         
         Server.MatchData.AddPlayerInfo(Master.LocalUserId, Master.LocalNickName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, Master.enableAI);

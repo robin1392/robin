@@ -35,6 +35,7 @@ namespace ED
 
         [Header("Positions")] public Transform ts_ShootingPos;
         public Transform ts_HitPos;
+        // public Transform ts_TopEffectPosition;
 
         [Header("UI Link")] public Image image_HealthBar;
         public Text text_Health;
@@ -122,6 +123,8 @@ namespace ED
                 }
             }
         }
+
+        public virtual float Radius => 0;
 
         protected Vector3 networkPosition = Vector3.zero;
         protected MeshRenderer[] arrMeshRenderer;
