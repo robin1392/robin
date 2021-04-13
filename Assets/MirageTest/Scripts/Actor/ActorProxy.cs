@@ -534,6 +534,11 @@ namespace MirageTest.Scripts
 
         public void HitDamage(float damage)
         {
+            if (Client.IsConnected == false)
+            {
+                return;
+            }
+            
             if ((buffType & BuffType.Invincibility) != 0)
             {
                 return;

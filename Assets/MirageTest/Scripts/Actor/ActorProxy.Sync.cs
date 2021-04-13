@@ -9,6 +9,11 @@ namespace MirageTest.Scripts
     {
         void RelayPlayAnimation(int aniHash, BaseStat target)
         {
+            if (Client.IsConnected == false)
+            {
+                return;
+            }
+            
             uint targetId = 0;
             if (target != null)
             {
