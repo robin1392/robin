@@ -150,7 +150,7 @@ MonoBehaviour:
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
-  constrainInsideGraph: 0
+  constrainInsideGraph: 1
 --- !u!114 &-7784514558094390778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +179,7 @@ MonoBehaviour:
   ingameUpgradeLevel: 0
   outgameUpgradeLevel: 0
   spawnTime: 0
+  isSkillInitialized: 0
   isPlayingAI: 0
   isMovable: 1
   baseStat: {fileID: 0}
@@ -186,7 +187,7 @@ MonoBehaviour:
   _aiPath: {fileID: 0}
   _aiDestinationSetter: {fileID: 0}
   _rvoController: {fileID: 0}
-  buffState: 0
+  buffType: 0
   isHatched: 0
   waveSpawned: 0
   bossIndex: 0

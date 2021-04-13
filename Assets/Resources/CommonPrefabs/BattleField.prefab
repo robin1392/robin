@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 279318559}
   m_Layer: 13
   m_Name: Collider_Bottom
-  m_TagString: Wall
+  m_TagString: Map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 426359044}
   m_Layer: 13
   m_Name: Collider_Left
-  m_TagString: Wall
+  m_TagString: Map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 508343081}
   m_Layer: 13
   m_Name: Collider_Top
-  m_TagString: Wall
+  m_TagString: Map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -591,7 +591,7 @@ GameObject:
   - component: {fileID: 1292289518}
   m_Layer: 13
   m_Name: Collider_Right
-  m_TagString: Wall
+  m_TagString: Map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -635,7 +635,7 @@ GameObject:
   - component: {fileID: 1714986618}
   m_Layer: 12
   m_Name: Collider_Floor
-  m_TagString: Untagged
+  m_TagString: Map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -649,7 +649,7 @@ Transform:
   m_GameObject: {fileID: 1714986616}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.36, y: 1.18, z: 1}
   m_Children: []
   m_Father: {fileID: 1173776345}
   m_RootOrder: 4
@@ -665,7 +665,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9, y: 13, z: 1}
+  m_Size: {x: 9, y: 14, z: 1}
   m_Center: {x: 0, y: 0, z: 0.5}
 --- !u!1 &1897541420
 GameObject:
@@ -785,7 +785,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1934731930
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1869,7 +1869,7 @@ PrefabInstance:
     - target: {fileID: 7456376674084706792, guid: 10e0899a117294a1a948fb5d20e70a32,
         type: 3}
       propertyPath: data.dataString
-      value: UEsDBBQAAAgIAABIIey79d9q8AEAANoDAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGVU02P2jAQ/SvI5xYlEBa2x7JoeyhQEQ6rrXoY7ElirWNTxwYWxH/vOB+QVXvpycmbeW/ynicXxguwwB3aDQjpK/ZlEA1Hk08Dxo12xtslnBbWGkuFUUBRqVSese6LCTiCeoOdwm8o88K1XR04V7Lc1a1BsYRTqsw+cMdR874QOX5HnbsiMGtQ6g3m0uh2ypgwFNIZu5UKWzAezQh2LfDyF/J6Q3yFgRd8OeuREIsKD6Dds4V9kXqbAcelEUGWPZmVcRv87aVFFnqhomRIcG6UkgJt0MlAVdgvLrEqPkzoClu0FqT+F2drEftivB2w6Rqe0IFUwUcTVfVGz5cBO4DydfqDazAM+bIp/WRL2LNfAWumplDub4GFFK1x4CjYRucUNAh9b8/zTTMzlqP4arwW1Rw1yf0Pox3Y9sfR8HE8nU4fk444jKK4JcfTYTyjUpLUKlVhjiHKtXdKarznGQoruqG50Rp5sNBPrqO1V3mnaQSLlUvp4MVaq/eX1x4NdVjQFRxK4s69c1Lnd27upfiYN5ty/oBRJni0m02Sh+yzyEY8fsRdMpnMIEkyVruQWjoJ6gfpK9dFRUuvex8GZa24QU63PagXMWybsHB8lufS9HZJ6syknJZFrxuNm23aElAUtljUf0eKtYVAZZcru/4BUEsDBBQAAAgIAABIIewGbrMDbwAAAHoAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM01VFQSi9KLMgoBooYgjilmSkgdrSSeXKyWapBWkqyQZKFqYlZmm5KmlGyoWVqkompqUWiiUmaUixQfUllQapfYm4qRE9AYklGWmZeSmZeul5QanJicYk7yHCl2FoAUEsBAi0AFAAACAgAAEgh7Lv132rwAQAA2gMAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAEgh7AZuswNvAAAAegAAAAkAJAAAAAAAAAAAAAAAPQIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAAD3AgAAAAA=
+      value: UEsDBBQAAAgIAABIIez/JqxP9AEAANsDAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGVU02P2jAQ/SvI5xYlEDbQW0vp9lCWiuxhtVUPgz1JrHVs6tjAgvjvtR2HD6mXnpK8N++N53lyIrQGDdSgXgPjtiWfBslwNPkwIFRJo6xewmGhtdKOGHkUhSj4EUNd6oA9iDfYCPyOvKpNrOrBueDNJpR6xwYOhVBbrx0n3feCVfgDZWVqrwwgl2usuJKxy9hhyLhR+pkLjGA6mjrYRODFI8nsBnn1SO5PYlv0Oj9XCaJFB2kUuANpHjVs68LqEiguFfO+ZI1/LNf4TenPQhBfDK3LxlnOlRCcofZORlu85ZbY1vcteuYZtQYu/0lpvNPQ2GDdF3xFA1yE2UJY7Zt7Pw3IDoQN+Q/OfmSolh31iyxhS357rOtaQLO9ROZz1MqAcdF2Pgfv4dD3+DxePEulKbIvykrWzlE6u/9RxIaxPk2Gs3Ge57OsFw6TJI3iNB+mU0dlWXBpa7X3Wa6sEVziNWlPPLkrmispkfoRbpPrZfEurzKJoLE1hXvQeiXF+8vrlUTpN/QJdo2Tzq0xXFZXtrKc3cdNckofMCkZTTbTSfZQfmTliKYz3GSTyRSyrCRhCC654SB+On9h+qTc1subc0ETt426yx6ERfTLxjTsH/mxUTdLxmWpCup2Ra46j8vUbklAuKzZIvweBYYRvJSczuT8F1BLAwQUAAAICAAASCHsBm6zA28AAAB6AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IzNNVRUEovSizIKAaKGII4pZkpIHa0knlyslmqQVpKskGShamJWZpuSppRsqFlapKJqalFoolJmlIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrpeUGpyYnGJO8hwpdhaAFBLAQItABQAAAgIAABIIez/JqxP9AEAANsDAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAABIIewGbrMDbwAAAHoAAAAJACQAAAAAAAAAAAAAAEECAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAA+wIAAAAA
       objectReference: {fileID: 0}
     - target: {fileID: 7456376674084706792, guid: 10e0899a117294a1a948fb5d20e70a32,
         type: 3}
