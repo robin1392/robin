@@ -347,7 +347,8 @@ namespace ED
             if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
             _destroyed = true;
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
-            PoolManager.instance.ActivateObject("Effect_Death", ts_HitPos.position);
+            
+            PoolManager.instance.ActivateObject(ActorProxy.IsBottomCamp() ? "Effect_Death_blue" : "Effect_Death_red", ts_HitPos.position);
             foreach (var autoDeactivate in _dicEffectPool)
             {
                 autoDeactivate.Value.Deactive();

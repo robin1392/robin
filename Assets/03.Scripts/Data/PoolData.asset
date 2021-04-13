@@ -17,8 +17,6 @@ MonoBehaviour:
     count: 50
   - obj: {fileID: 4058551278812737087, guid: 5820d654af7d84e85894396f6e64712d, type: 3}
     count: 50
-  - obj: {fileID: 4336589901522608097, guid: 101d90711ff9e48af9cd4eb45149a550, type: 3}
-    count: 50
   - obj: {fileID: 4559156952497101338, guid: 44f155666560f4176b25fa27b89c95ea, type: 3}
     count: 30
   - obj: {fileID: 3693968143288254739, guid: 0cbe6ce63894a48d8827b65c7d461f29, type: 3}
@@ -81,3 +79,7 @@ MonoBehaviour:
     count: 1
   - obj: {fileID: 301605326952073379, guid: 5a23b16f0d45e4b159aebb853f20fff2, type: 3}
     count: 1
+  - obj: {fileID: 4336589901522608097, guid: 2a50e0f748b0b4785a7916c3a5e0bb11, type: 3}
+    count: 30
+  - obj: {fileID: 4336589901522608097, guid: 910587db189e74b2bb152d955785b461, type: 3}
+    count: 30
