@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TopPlayer
+  m_Name: Default
   m_Shader: {fileID: 4800000, guid: dd496457a855aa341b0d7b7b475a7a3a, type: 3}
   m_ShaderKeywords: OUTLINES TCP2_OUTLINE_CONST_SIZE TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK
     TCP2_UV_NORMALS_FULL TCP2_ZSMOOTH_ON
@@ -45,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 027083d8125d14cf9929b76863cf428d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 394fdddc120fd4646b31a88ee67702ba, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
