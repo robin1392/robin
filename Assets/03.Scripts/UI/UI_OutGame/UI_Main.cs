@@ -90,7 +90,7 @@ namespace ED
         private float canvasWidth;
         public static List<ItemBaseInfo> listADReward = new List<ItemBaseInfo>();
         public static float factor = 1f;
-        public static bool isNewMode;
+        public static bool isTeamColorMode;
         public static bool isPushMode;
         public Slider slider_Factor;
         public Text text_Factor;
@@ -119,7 +119,7 @@ namespace ED
         private void Start()
         {
             isPushMode = false;
-            isNewMode = false;
+            isTeamColorMode = false;
             slider_Factor.value = factor;
             text_Factor.text = $"x{factor:F1}";
             
@@ -251,9 +251,9 @@ namespace ED
             RWNetworkClient.EnableRVO = isOn;
         }
 
-        public void NewModeToggle(bool isOn)
+        public void TeamColorToggle(bool isOn)
         {
-            isNewMode = isOn;
+            isTeamColorMode = isOn;
         }
 
         public void PushMode(bool isOn)

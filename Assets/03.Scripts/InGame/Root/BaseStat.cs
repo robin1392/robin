@@ -175,8 +175,11 @@ namespace ED
             foreach (var m in arrMeshRenderer)
             {
                 if (m.gameObject.CompareTag("Finish")) continue;
-
-                m.material = mat;
+                
+                if (UI_Main.isTeamColorMode)
+                {
+                    m.material = mat;
+                }
 
                 switch (type)
                 {
@@ -206,7 +209,10 @@ namespace ED
 
             foreach (var m in arrSkinnedMeshRenderer)
             {
-                m.material = mat;
+                if (UI_Main.isTeamColorMode)
+                {
+                    m.material = mat;
+                }
 
                 switch (type)
                 {
