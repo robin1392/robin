@@ -34,6 +34,8 @@ namespace ED
     {
         #region game variable
 
+        public Collider collider;
+        
         public UI_DiceField uiDiceField;
         public GameObject objCollider;
         public ParticleSystem ps_ShieldOff;
@@ -49,8 +51,22 @@ namespace ED
 
         public bool isPlayingAI => ActorProxy.isPlayingAI;
 
+        public override float Radius
+        {
+            get
+            {
+                if (collider is CapsuleCollider capsuleCollider)
+                {
+                    return capsuleCollider.radius;
+                }
+
+                return 0;
+            }
+        }
+
         protected void Awake()
         {
+            collider = GetComponentInChildren<Collider>();
         }
 
         public override void ChangeLayer(bool pIsBottomPlayer)
