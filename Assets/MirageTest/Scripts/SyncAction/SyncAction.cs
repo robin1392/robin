@@ -1,6 +1,7 @@
 using System.Collections;
 using ED;
 using UnityEngine;
+using Debug = ED.Debug;
 
 namespace MirageTest.Scripts.SyncAction
 {
@@ -75,7 +76,7 @@ namespace MirageTest.Scripts.SyncAction
             var shield = actor.baseStat as Minion_Shield;
             SoundManager.instance.Play(shield.clip_ShieldMode);
             shield.animator.SetTrigger(AnimationHash.SkillLoop);
-            yield return new WaitForSeconds(actor.baseStat.effectDuration);
+            yield return new WaitForSeconds(actor.effect);
         }
     }
 }

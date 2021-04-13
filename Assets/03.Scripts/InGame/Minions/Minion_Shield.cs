@@ -57,7 +57,8 @@ namespace ED
             if (_spawnedTime >= skillCastedTime + effectCooltime)
             {
                 var targets = new List<Minion>();
-                var skillDistance = (ActorProxy as DiceActorProxy).diceInfo.range;
+                //Hack: EffectDuration이지만 성장치 적용을 위해 스킬범위로 사용중
+                var skillDistance = (ActorProxy as DiceActorProxy).diceInfo.effectDuration; 
                 var cols = Physics.OverlapSphere(transform.position, skillDistance, targetLayer);
                 foreach (var col in cols)
                 {
@@ -73,7 +74,10 @@ namespace ED
                     yield break;
                 }
                 
-                var duration = 5;//effectDuration;
+                //TODO: 호스트모드 플레이 시 AddBuff에서 CC가 추가되면 AI를 재시작한다. 따라서 재귀가 반복될 수 있다. 다른 대안을 강구할 것.
+                skillCastedTime = _spawnedTime;
+
+                var duration = ActorProxy.effect;
                 ActorProxy.AddBuff(BuffInfos.HalfDamage, duration);
 
                 foreach (var target in targets)
@@ -83,8 +87,6 @@ namespace ED
                 
                 var action = new ShieldAction();
                 yield return action.ActionWithSync(ActorProxy);
-
-                skillCastedTime = _spawnedTime;
             }
         }
 

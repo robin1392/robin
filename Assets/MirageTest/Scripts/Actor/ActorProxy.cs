@@ -53,11 +53,11 @@ namespace MirageTest.Scripts
         public RVOController _rvoController;
 
         public readonly Buffs BuffList = new Buffs();
-        public BuffState buffState = BuffState.None;
-        public bool isClocking => ((buffState & BuffState.Clocking) != 0);
-        public bool isHalfDamage => ((buffState & BuffState.HalfDamage) != 0);
-        public bool isCantAI => ((buffState & BuffState.CantAI) != 0);
-        public bool isTaunted => ((buffState & BuffState.Taunted) != 0);
+        public BuffType buffType = BuffType.None;
+        public bool isClocking => ((buffType & BuffType.Clocking) != 0);
+        public bool isHalfDamage => ((buffType & BuffType.HalfDamage) != 0);
+        public bool isCantAI => ((buffType & BuffType.CantAI) != 0);
+        public bool isTaunted => ((buffType & BuffType.Taunted) != 0);
 
         public bool isInAllyCamp
         {
@@ -198,33 +198,46 @@ namespace MirageTest.Scripts
 
         private void OnBuffListChangedOnClient()
         {
-            var state = BuffState.None;
+            var state = BuffType.None;
             foreach (var buff in BuffList)
             {
                 state |= BuffInfos.Data[buff.id];
             }
 
-            if (this.buffState == state)
+            if (this.buffType == state)
             {
                 return;
             }
 
             if (baseStat is Minion minion)
             {
-                var isClockingOld = (buffState & BuffState.Clocking) != 0;
-                var isClockkingNew = (state & BuffState.Clocking) != 0;
+                var isClockingOld = (buffType & BuffType.Clocking) != 0;
+                var isClockkingNew = (state & BuffType.Clocking) != 0;
                 if (isClockingOld != isClockkingNew)
                 {
                     minion.ApplyCloacking(isClockkingNew);
                 }
                 
-                var isTauntedOld = (buffState & BuffState.Taunted) != 0;
-                var isTauntedNew = (state & BuffState.Taunted) != 0;
+                var isTauntedOld = (buffType & BuffType.Taunted) != 0;
+                var isTauntedNew = (state & BuffType.Taunted) != 0;
                 if (isTauntedOld != isTauntedNew)
                 {
                     if (isTauntedNew)
                     {
-                        RestartAI();   
+                        var taunted = BuffList.Find(b => b.id == BuffInfos.Taunted);
+                        var targetActorProxy  = GetNetworkIdentity(taunted.target);
+
+                        if (targetActorProxy != null)
+                        {
+                            var target = targetActorProxy.GetComponent<ActorProxy>();
+                            if (target != null && target.baseStat != null)
+                            {
+                                minion.SetAttackedTarget(target.baseStat);
+                                transform.LookAt(target.transform);
+                            }
+                        }
+
+                        RestartAI();
                     }
                     else
                     {
@@ -233,13 +246,15 @@ namespace MirageTest.Scripts
                 }
             }
             
-            this.buffState = state;
+            this.buffType = state;
 
-            EnableInvincibilityEffect((buffState & BuffState.Invincibility) != 0);
-            EnableStunEffect((buffState & BuffState.Sturn) != 0);
-            EnableFreezeEffect((buffState & BuffState.Freeze) != 0);
-            EnableScarecrowEffect((buffState & BuffState.Scarecrow) != 0);
-            EnableTauntedEffect((buffState & BuffState.Taunted) != 0);
+            //TODO: Buff를 데이터 시트로 뺀다.
+            EnableBuffEffect(buffType, BuffType.Invincibility, "Shield", EffectLocation.Bottom);
+            EnableBuffEffect(buffType, BuffType.Stun, "Effect_Sturn", EffectLocation.Top);
+            EnableFreezeEffect((buffType & BuffType.Freeze) != 0);
+            EnableBuffEffect(buffType, BuffType.Scarecrow, "Scarecrow", EffectLocation.Bottom);
+            EnableBuffEffect(buffType, BuffType.Taunted, "Effect_Taunted", EffectLocation.Top);
+            EnableBuffEffect(buffType, BuffType.HalfDamage, "Effect_HalfDamage", EffectLocation.Mid);
 
             if (isCantAI)
             {
@@ -248,86 +263,42 @@ namespace MirageTest.Scripts
             }
             else
             {
-                baseStat.animator.SetTrigger(AnimationHash.Idle);
                 if (isPlayingAI)
                 {
                     baseStat.StartAI();
                 }
             }
         }
-
-        private void EnableScarecrowEffect(bool b)
+        
+        NetworkIdentity GetNetworkIdentity(uint netId)
         {
-            if (baseStat is Minion minion)
+            if (IsLocalClient)
             {
-                if (b)
-                {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.SCARECROW) == false)
-                    {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Scarecrow",
-                            transform.position);
-                        ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.SCARECROW, ad);
-                        minion.animator.gameObject.SetActive(false);
-                    }
-                }
-                else
-                {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.SCARECROW, out var ad))
-                    {
-                        minion._dicEffectPool.Remove(MAZ.SCARECROW);
-                        ad.Deactive();
-                        minion.animator.gameObject.SetActive(true);
-                    }
-                }
+                return ServerObjectManager[netId];
             }
+            
+            return ClientObjectManager[netId];
         }
 
-        private void EnableInvincibilityEffect(bool b)
+        void EnableBuffEffect(BuffType buffState, BuffType buffType, string resource, EffectLocation effectLocation)
         {
             if (baseStat is Minion minion)
             {
-                if (b)
+                if ((buffState & buffType) != 0)
                 {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.INVINCIBILITY) == false)
+                    if (minion._dicEffectPool.ContainsKey(buffType) == false)
                     {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Shield",
-                            transform.position);
+                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(resource,
+                            GetEffectPosition(baseStat, effectLocation));
                         ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.INVINCIBILITY, ad);
+                        minion._dicEffectPool.Add(buffType, ad);
                     }
                 }
                 else
                 {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.INVINCIBILITY, out var ad))
+                    if (minion._dicEffectPool.TryGetValue(buffType, out var ad))
                     {
-                        minion._dicEffectPool.Remove(MAZ.INVINCIBILITY);
-                        ad.Deactive();
-                    }
-                }
-            }
-        }
-
-        private void EnableStunEffect(bool b)
-        {
-            if (baseStat is Minion minion)
-            {
-                if (b)
-                {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.STUN) == false)
-                    {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                            GetEffectPosition(baseStat, EffectLocation.Top));
-                        ad.transform.SetParent(transform);
-                        
-                        minion._dicEffectPool.Add(MAZ.STUN, ad);
-                    }
-                }
-                else
-                {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.STUN, out var ad))
-                    {
-                        minion._dicEffectPool.Remove(MAZ.STUN);
+                        minion._dicEffectPool.Remove(buffType);
                         ad.Deactive();
                     }
                 }
@@ -350,31 +321,7 @@ namespace MirageTest.Scripts
             return baseStat.transform.position;
         }
         
-        private void EnableTauntedEffect(bool b)
-        {
-            if (baseStat is Minion minion)
-            {
-                if (b)
-                {
-                    if (minion._dicEffectPool.ContainsKey(MAZ.TAUNTED) == false)
-                    {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_Sturn",
-                            GetEffectPosition(baseStat, EffectLocation.Top));
-                        ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(MAZ.TAUNTED, ad);
-                    }
-                }
-                else
-                {
-                    if (minion._dicEffectPool.TryGetValue(MAZ.TAUNTED, out var ad))
-                    {
-                        minion._dicEffectPool.Remove(MAZ.TAUNTED);
-                        ad.Deactive();
-                    }
-                }
-            }
-        }
-
+       
         private void EnableFreezeEffect(bool b)
         {
             if (baseStat is Minion minion)
@@ -587,7 +534,7 @@ namespace MirageTest.Scripts
 
         public void HitDamage(float damage)
         {
-            if ((buffState & BuffState.Invincibility) != 0)
+            if ((buffType & BuffType.Invincibility) != 0)
             {
                 return;
             }

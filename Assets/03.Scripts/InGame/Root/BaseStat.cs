@@ -124,6 +124,8 @@ namespace ED
             }
         }
 
+        public virtual float Radius => 0;
+
         protected Vector3 networkPosition = Vector3.zero;
         protected MeshRenderer[] arrMeshRenderer;
         protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
