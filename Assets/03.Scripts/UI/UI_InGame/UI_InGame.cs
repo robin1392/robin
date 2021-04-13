@@ -48,10 +48,12 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public Text text_TopTowerHealthBar;
     public Image image_BottomTowerHealthBar;
     public Text text_BottomTowerHealthBar;
+    
+    public Animator startAnimator;
+    public Text startNumber;
+    public GameObject startFight;
     #endregion
-    
-    
-    
+
     #region unity base
 
     public override void Awake()
@@ -61,6 +63,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         InitUIElement();
         image_TopTowerHealthBar.transform.parent.gameObject.SetActive(false);
         image_BottomTowerHealthBar.transform.parent.gameObject.SetActive(false);
+        startAnimator.gameObject.SetActive(false);
+        startFight.gameObject.SetActive(false);
     }
     
     private RWNetworkClient _client;

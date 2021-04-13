@@ -83,9 +83,8 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
         });
     }
 
-    public void SetTextSpawnTime(float time)
+    public void SetTextSpawnTime(string str)
     {
-        string str = $"{Mathf.CeilToInt(time):F0}";
         if (String.CompareOrdinal(textSpawnTime.text, str) != 0)
         {
             textSpawnTime.text = str;

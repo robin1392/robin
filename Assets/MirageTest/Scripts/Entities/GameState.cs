@@ -18,6 +18,7 @@ namespace MirageTest.Scripts.Entities
         private float _waveInterval;
         private float _waveRemainTime;
         private bool _enableUI;
+        private int _lastRemainTime = -1;
 
         [SyncVar(hook = nameof(SetMasterOwnerTag))] public byte masterOwnerTag;
         [SyncVar]public float factor = 1f;
@@ -137,7 +138,33 @@ namespace MirageTest.Scripts.Entities
                 calRemainTime = 1f;
             }
             WorldUIManager.Get().SetSpawnTime(CalcWaveRemainTime(1f - calRemainTime));
-            WorldUIManager.Get().SetTextSpawnTime(_waveRemainTime);
+            var remainTimeInt = Mathf.CeilToInt(_waveRemainTime);
+             
+            string remainTimeStr = $"{remainTimeInt:F0}";
+            WorldUIManager.Get().SetTextSpawnTime(remainTimeStr);
+
+            if (_lastRemainTime == remainTimeInt)
+            {
+                return;
+            }
+            
+            if (wave == 0)
+            {
+                UI_InGame.Get().startAnimator.gameObject.SetActive(true);
+                
+                if (remainTimeInt == 0)
+                {
+                    UI_InGame.Get().startFight.SetActive(true);
+                    UI_InGame.Get().startAnimator.SetTrigger("Fight");
+                }
+                else
+                {
+                    UI_InGame.Get().startNumber.text = remainTimeStr;    
+                    UI_InGame.Get().startAnimator.SetTrigger("Number");
+                }
+            }
+            
+            _lastRemainTime = remainTimeInt;
         }
 
         private float CalcWaveRemainTime(float value)
