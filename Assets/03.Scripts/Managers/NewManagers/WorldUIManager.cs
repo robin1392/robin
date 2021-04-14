@@ -17,7 +17,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     #region world ui element
 
     [Header("Stage UI")] 
-    public Image imageSpawnTimeGray;
     public Image imageSpawnTime;
     public Image imageTimerIcon;
     public Text textSpawnTime;
@@ -97,12 +96,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     
     public void SetSpawnTime(float amount)
     {
-        imageSpawnTimeGray.fillAmount = amount;
-    }
-
-    public float GetSpawnAmount()
-    {
-        return imageSpawnTimeGray.fillAmount;
+        imageSpawnTime.fillAmount = amount;
     }
 
     public void AddSP(int addSP)

@@ -131,13 +131,8 @@ namespace MirageTest.Scripts.Entities
             {
                 return;
             }
-
-            float calRemainTime = _waveRemainTime / _waveInterval;
-            if (wave < 1)
-            {
-                calRemainTime = 1f;
-            }
-            WorldUIManager.Get().SetSpawnTime(CalcWaveRemainTime(1f - calRemainTime));
+            
+            WorldUIManager.Get().SetSpawnTime(1 - (_waveRemainTime / _waveInterval));
             var remainTimeInt = Mathf.CeilToInt(_waveRemainTime);
              
             string remainTimeStr = $"{remainTimeInt:F0}";
