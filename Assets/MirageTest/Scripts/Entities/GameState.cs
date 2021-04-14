@@ -91,6 +91,12 @@ namespace MirageTest.Scripts.Entities
             
             WorldUIManager.Get().SetWave(newValue);
             WorldUIManager.Get().RotateTimerIcon();
+
+            if (newValue == 1)
+            {
+                UI_InGame.Get().startFight.SetActive(true);
+                UI_InGame.Get().startAnimator.SetTrigger("Fight");   
+            }
         }
         
         public void SetMasterOwnerTag(byte oldValue, byte newValue)
@@ -142,21 +148,18 @@ namespace MirageTest.Scripts.Entities
             {
                 return;
             }
-            
-            if (wave == 0)
+
+            if (wave > 0)
             {
-                UI_InGame.Get().startAnimator.gameObject.SetActive(true);
+                return;
+            }
+
+            UI_InGame.Get().startAnimator.gameObject.SetActive(true);
                 
-                if (remainTimeInt == 0)
-                {
-                    UI_InGame.Get().startFight.SetActive(true);
-                    UI_InGame.Get().startAnimator.SetTrigger("Fight");
-                }
-                else
-                {
-                    UI_InGame.Get().startNumber.text = remainTimeStr;    
-                    UI_InGame.Get().startAnimator.SetTrigger("Number");
-                }
+            if (remainTimeInt != 0)
+            {
+                UI_InGame.Get().startNumber.text = remainTimeStr;    
+                UI_InGame.Get().startAnimator.SetTrigger("Number");    
             }
             
             _lastRemainTime = remainTimeInt;
