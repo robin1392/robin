@@ -171,11 +171,11 @@ namespace MirageTest.Scripts.GameMode
             var position = actorProxy.transform.position; 
             if (actorProxy.team == GameConstants.BottomCamp)
             {
-                position += Vector3.forward;
+                position += Vector3.forward * 3;
             }
             else
             {
-                position += Vector3.back;
+                position += Vector3.back * 3;
             }
             Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team, position);
         }

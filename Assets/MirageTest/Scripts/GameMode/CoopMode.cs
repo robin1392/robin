@@ -117,7 +117,7 @@ namespace MirageTest.Scripts.GameMode
                     _guardian1stSpawned = true;
                     var playerState = PlayerState1;
                     Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team,
-                        actorProxy.transform.position + Vector3.forward);
+                        actorProxy.transform.position + Vector3.forward * 3);
                 }
             }
 
@@ -128,7 +128,7 @@ namespace MirageTest.Scripts.GameMode
                     _guardian2ndSpawned = true;
                     var playerState = PlayerState2;
                     Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team,
-                        actorProxy.transform.position + Vector3.forward);
+                        actorProxy.transform.position + Vector3.forward * 3);
                 }
             }
         }
