@@ -84,6 +84,7 @@ MonoBehaviour:
   searchRange: 0
   ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
+  ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 23861676137816518}
@@ -103,7 +104,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.4
   m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &2583571212696764795
 MonoBehaviour:
