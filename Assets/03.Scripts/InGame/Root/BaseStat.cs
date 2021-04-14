@@ -147,6 +147,7 @@ namespace ED
         {
             StopAllAction();
             _poolObjectAutoDeactivate?.Deactive();
+            ActorProxy = null;
         }
 
         public void SetHealthBarColor()
@@ -276,6 +277,11 @@ namespace ED
         {
             var cancel = false;
             return cancel;
+        }
+
+        public virtual float ModifyDamage(float damage)
+        {
+            return damage;
         }
     }
 }

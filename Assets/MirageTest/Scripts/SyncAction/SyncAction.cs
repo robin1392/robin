@@ -76,7 +76,33 @@ namespace MirageTest.Scripts.SyncAction
             var shield = actor.baseStat as Minion_Shield;
             SoundManager.instance.Play(shield.clip_ShieldMode);
             shield.animator.SetTrigger(AnimationHash.SkillLoop);
+            shield.halfDamage = true;
+            
+            var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>("Effect_HalfDamage",
+                ActorProxy.GetEffectPosition(shield, EffectLocation.Mid));
+            ad.transform.SetParent(actor.transform);
+            shield.effectShield = ad;
+            
             yield return new WaitForSeconds(actor.effect);
+            DisableShield(shield);
+        }
+
+        void DisableShield(Minion_Shield shield)
+        {
+            shield.halfDamage = false;
+            if (shield.effectShield != null)
+            {
+                shield.effectShield.Deactive();
+                shield.effectShield = null;
+            }
+        }
+
+        public override void OnActionCancel(ActorProxy actorProxy)
+        {            
+            base.OnActionCancel(actorProxy);
+            var shield = actorProxy.baseStat as Minion_Shield;
+            DisableShield(shield);
+            shield.animator.SetTrigger(AnimationHash.Idle);
         }
     }
 }

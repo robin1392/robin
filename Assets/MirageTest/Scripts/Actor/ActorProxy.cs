@@ -226,7 +226,7 @@ namespace MirageTest.Scripts
                     {
                         var taunted = BuffList.Find(b => b.id == BuffInfos.Taunted);
                         var targetActorProxy  = GetNetworkIdentity(taunted.target);
-
+                        
                         if (targetActorProxy != null)
                         {
                             var target = targetActorProxy.GetComponent<ActorProxy>();
@@ -282,30 +282,43 @@ namespace MirageTest.Scripts
 
         void EnableBuffEffect(BuffType buffState, BuffType buffType, string resource, EffectLocation effectLocation)
         {
+            if ((buffState & buffType) != 0)
+            {
+                EnableBuffEffect(this.buffType, resource, effectLocation);    
+            }
+            else
+            {
+                DisableBuffEffect(buffType);
+            }
+        }
+
+        public void EnableBuffEffect(BuffType buffType, string resource,  EffectLocation effectLocation)
+        {
             if (baseStat is Minion minion)
             {
-                if ((buffState & buffType) != 0)
+                if (minion._dicEffectPool.ContainsKey(buffType) == false)
                 {
-                    if (minion._dicEffectPool.ContainsKey(buffType) == false)
-                    {
-                        var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(resource,
-                            GetEffectPosition(baseStat, effectLocation));
-                        ad.transform.SetParent(transform);
-                        minion._dicEffectPool.Add(buffType, ad);
-                    }
-                }
-                else
-                {
-                    if (minion._dicEffectPool.TryGetValue(buffType, out var ad))
-                    {
-                        minion._dicEffectPool.Remove(buffType);
-                        ad.Deactive();
-                    }
+                    var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(resource,
+                        GetEffectPosition(baseStat, effectLocation));
+                    ad.transform.SetParent(transform);
+                    minion._dicEffectPool.Add(buffType, ad);
                 }
             }
         }
 
-        Vector3 GetEffectPosition(BaseStat baseStat, EffectLocation effectLocation)
+        public void DisableBuffEffect(BuffType buffType)
+        {
+            if (baseStat is Minion minion)
+            {
+                if (minion._dicEffectPool.TryGetValue(buffType, out var ad))
+                {
+                    minion._dicEffectPool.Remove(buffType);
+                    ad.Deactive();
+                }
+            }
+        }
+
+        public static Vector3 GetEffectPosition(BaseStat baseStat, EffectLocation effectLocation)
         {
             switch (effectLocation)
             {
@@ -558,6 +571,8 @@ namespace MirageTest.Scripts
             {
                 return;
             }
+            
+            damage = baseStat.ModifyDamage(damage);
 
             if (IsLocalClient)
             {

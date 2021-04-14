@@ -138,6 +138,10 @@ namespace ED
             {
                 return _attackedTarget;
             }
+            else if(ActorProxy != null && ActorProxy.isTaunted)
+            {
+                ActorProxy.DisableBuffEffect(BuffType.Taunted);
+            }
 
             if (ActorProxy == null)
             {
@@ -342,8 +346,7 @@ namespace ED
         }
 
         public override void OnBaseStatDestroyed()
-        {
-            base.OnBaseStatDestroyed();
+        {            
             if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
             _destroyed = true;
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
@@ -353,6 +356,8 @@ namespace ED
             {
                 autoDeactivate.Value.Deactive();
             }
+            
+            base.OnBaseStatDestroyed();
         }
     }
 }

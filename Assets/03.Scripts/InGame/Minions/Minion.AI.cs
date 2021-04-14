@@ -121,6 +121,10 @@ namespace ED
         protected void StopApproachToTarget()
         {
             AiPath.isStopped = true;
+            if (RWNetworkClient.EnableRVO)
+            {
+                ActorProxy._aiDestinationSetter.target = null;
+            }
         }
         
         public virtual IEnumerator Attack()

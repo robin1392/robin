@@ -14,12 +14,15 @@ namespace ED
         public AudioClip clip_ShieldMode;
         
         private float skillCastedTime;
+        public bool halfDamage = false;
+        public PoolObjectAutoDeactivate effectShield;
         
 
         public override void Initialize()
         {
             base.Initialize();
             skillCastedTime = -effectCooltime;
+            halfDamage = false;
         }
         
         protected override IEnumerator Combat()
@@ -78,7 +81,6 @@ namespace ED
                 skillCastedTime = _spawnedTime;
 
                 var duration = ActorProxy.effect;
-                ActorProxy.AddBuff(BuffInfos.HalfDamage, duration);
 
                 foreach (var target in targets)
                 {
@@ -88,6 +90,21 @@ namespace ED
                 var action = new ShieldAction();
                 yield return action.ActionWithSync(ActorProxy);
             }
+        }
+
+        public override bool OnBeforeHitDamage(float damage)
+        {
+            return base.OnBeforeHitDamage(damage);
+        }
+
+        public override float ModifyDamage(float damage)
+        {
+            if (halfDamage)
+            {
+                return damage / 2;
+            }
+            
+            return base.ModifyDamage(damage);
         }
 
         public override void OnHitDamageOnClient(float damage)
