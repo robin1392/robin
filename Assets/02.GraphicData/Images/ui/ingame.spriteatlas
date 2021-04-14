@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: cdc18c0b60b52446cbfbad7ffd4e89ce, type: 3}
-    totalSpriteSurfaceArea: 1398153
+    totalSpriteSurfaceArea: 1417297
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -51,6 +51,7 @@ SpriteAtlas:
   m_PackedSprites:
   - {fileID: 21300000, guid: 4cf13f00d281544e2b96626f53664129, type: 3}
   - {fileID: 21300000, guid: 6277af00d099842c2804b26cbf920f24, type: 3}
+  - {fileID: 21300000, guid: 0f66cc30adcec4c8d870554e55159dfe, type: 3}
   - {fileID: 21300000, guid: cdb37840536b244509706ccc3d72dfa4, type: 3}
   - {fileID: 21300000, guid: 13e730904ebe54d269262e63f92edd77, type: 3}
   - {fileID: 21300000, guid: 7eeb8790de1a44c8498860a9c99fa945, type: 3}
@@ -67,6 +68,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ba3ac694266124874945c4e2190c75da, type: 3}
   - {fileID: 21300000, guid: 4d8694b4a2054435085ff7d2e07b3cdf, type: 3}
   - {fileID: 21300000, guid: b1de7aa59ded4410aa1938cf55e26b43, type: 3}
+  - {fileID: 21300000, guid: 0a290bc6021c9406096d20e7fe7dc89c, type: 3}
+  - {fileID: 21300000, guid: b7ed69d63dc67426e8574d91d45cefee, type: 3}
   - {fileID: 21300000, guid: 5c197b277ebda44e09032171595e53a6, type: 3}
   - {fileID: 21300000, guid: 8fafc247e4c70474a98f04f834ff3c14, type: 3}
   - {fileID: 21300000, guid: cf20d25706be74f3aa4e039402fc7a70, type: 3}
@@ -87,6 +90,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 567f735ade2b4462f8f18d19802a6892, type: 3}
   - {fileID: 21300000, guid: de871e6a6febf4436a8c43787279b229, type: 3}
   - {fileID: 21300000, guid: a8881eabd5cf741f8bb3542ec4fe2a0f, type: 3}
+  - {fileID: 21300000, guid: 7e22412cd579b49678a4bc4ba8864068, type: 3}
   - {fileID: 21300000, guid: f95bf2ecbbd1241b596177574c063a28, type: 3}
   - {fileID: 21300000, guid: 02836c9d84f424ac1840c8483d1237d6, type: 3}
   - {fileID: 21300000, guid: 60bee11ea732041238e99a088e28db6d, type: 3}
@@ -100,6 +104,7 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - 0_square
   - icon_ingame_win_03
+  - icon_view
   - icon_ingame_lose_00
   - icon_bubble_0
   - ui_frame_ingame_dice_0
@@ -116,6 +121,8 @@ SpriteAtlas:
   - icon_wave_02
   - 0_square_r30
   - btn_basic_0
+  - sp_back
+  - 0_square_line4_r10
   - icon_ingame_co-op
   - fight
   - icon_ban
@@ -136,6 +143,7 @@ SpriteAtlas:
   - SP_Gauge_BG
   - icon_bubble_0_enemy
   - icon_wave_time
+  - wave_gauge
   - ui_frame_ingame_dice_1
   - icon_bubble_1
   - icon_sp_plus
