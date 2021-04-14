@@ -310,8 +310,13 @@ namespace MirageTest.Scripts
             switch (effectLocation)
             {
                 case EffectLocation.Top:
-                    // return baseStat.ts_TopEffectPosition.transform.position;
-                return baseStat.ts_HitPos.transform.position + new Vector3(0, 0.65f, 0);
+                    if (baseStat.ts_TopEffectPosition != null)
+                    {
+                        return baseStat.ts_TopEffectPosition.transform.position;
+                    }
+                    
+                    return baseStat.ts_HitPos.transform.position + new Vector3(0, 0.65f, 0);
+                
                 case EffectLocation.Mid:
                     return baseStat.ts_HitPos.transform.position;
                 case EffectLocation.Bottom:

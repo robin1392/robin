@@ -35,6 +35,8 @@ namespace ED
 
         [Header("Positions")] public Transform ts_ShootingPos;
         public Transform ts_HitPos;
+        public Transform ts_TopEffectPosition;
+        
         // public Transform ts_TopEffectPosition;
 
         [Header("UI Link")] public Image image_HealthBar;
