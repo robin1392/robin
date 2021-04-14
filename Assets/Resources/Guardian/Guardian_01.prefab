@@ -73,6 +73,7 @@ MonoBehaviour:
   ts_HitPos: {fileID: 8488758196635011245}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
+  sr_Shadow: {fileID: 0}
   _poolObjectAutoDeactivate: {fileID: 0}
   castType: 4
   isAttackSpeedFactorWithAnimation: 0
@@ -301,6 +302,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1129590438914022759, guid: 140e8952d727d43e6bb922fd2f9e45df,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1129590438914022759, guid: 140e8952d727d43e6bb922fd2f9e45df,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1129590438914022759, guid: 140e8952d727d43e6bb922fd2f9e45df,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 140e8952d727d43e6bb922fd2f9e45df, type: 3}
