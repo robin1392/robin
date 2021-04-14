@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Mirage;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
@@ -27,6 +29,8 @@ namespace ED
         
         protected override IEnumerator Combat()
         {
+            yield return _waitForSeconds0_1;
+            
             while (true)
             {
                 yield return Skill();
@@ -55,6 +59,16 @@ namespace ED
             yield return Attack();
         }
 
+        async UniTask Debug(Vector3 position, float radius)
+        {
+            //TODO: 와이어로 변경 후 반경 디버깅해보자. 가끔 멀리있는 적이 도발에 걸리는 경우가 있는 것 같다.
+            var s = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            s.transform.position = position;
+            s.transform.localScale = Vector3.one * radius * 2;
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
+            Destroy(s);
+        }
+        
         public IEnumerator Skill()
         {
             if (_spawnedTime >= skillCastedTime + effectCooltime)
@@ -63,6 +77,8 @@ namespace ED
                 //Hack: EffectDuration이지만 성장치 적용을 위해 스킬범위로 사용중
                 var skillDistance = (ActorProxy as DiceActorProxy).diceInfo.effectDuration; 
                 var cols = Physics.OverlapSphere(transform.position, skillDistance, targetLayer);
+                // Debug(transform.position, skillDistance).Forget();
+                
                 foreach (var col in cols)
                 {
                     var minion = col.GetComponentInParent<Minion>();
