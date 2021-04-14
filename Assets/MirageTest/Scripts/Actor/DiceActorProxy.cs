@@ -47,12 +47,12 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            baseStat.effectUpgrade = diceInfo.effectUpgrade;
-            baseStat.effectInGameUp = diceInfo.effectInGameUp;
-            baseStat.effectDuration = diceInfo.effectDuration;
-            baseStat.effectCooltime = diceInfo.effectCooltime;
-            baseStat.range = diceInfo.range;
-            baseStat.searchRange = diceInfo.searchRange;
+            baseEntity.effectUpgrade = diceInfo.effectUpgrade;
+            baseEntity.effectInGameUp = diceInfo.effectInGameUp;
+            baseEntity.effectDuration = diceInfo.effectDuration;
+            baseEntity.effectCooltime = diceInfo.effectCooltime;
+            baseEntity.range = diceInfo.range;
+            baseEntity.searchRange = diceInfo.searchRange;
         }
         
         void SpawnMinionOrHero()
@@ -71,7 +71,7 @@ namespace MirageTest.Scripts
 
             if (minion != null)
             {
-                baseStat = minion;
+                baseEntity = minion;
                 minion.ActorProxy = this;
                 minion.transform.localPosition = Vector3.zero;
                 minion.transform.localRotation = Quaternion.identity;
@@ -137,7 +137,7 @@ namespace MirageTest.Scripts
 
             if (magic != null)
             {
-                baseStat = magic;
+                baseEntity = magic;
                 
                 if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC)
                 {

@@ -283,6 +283,7 @@ namespace MirageTest.Scripts
             if (actorProxy is TowerActorProxy towerActorProxy)
             {
                 Towers.Add(towerActorProxy);
+                AstarPath.active.Scan();
             }
             else if (actorProxy is BossActorProxy bossActorProxy)
             {
@@ -360,14 +361,14 @@ namespace MirageTest.Scripts
             return GetLocalPlayerState().ownerTag == ownerTag;
         }
 
-        public PlayerController GetTower(byte ownerTag)
+        public Tower GetTower(byte ownerTag)
         {
             var tower = Towers.Find(p => p.ownerTag == ownerTag);
             if (tower == null)
             {
                 return null;
             }
-            return tower.baseStat as PlayerController;
+            return tower.baseEntity as Tower;
         }
 
         public bool IsLocalPlayerAlly(byte team)
@@ -375,12 +376,12 @@ namespace MirageTest.Scripts
             return GetLocalPlayerState().team == team;
         }
 
-        public BaseStat GetHighestHealthEnemy(byte team)
+        public BaseEntity GetHighestHealthEnemy(byte team)
         {
             //TODO: 팀별로 액터를 분리해놓는다.
             return ActorProxies.Where(actor => actor.team != team)
                 .OrderByDescending(actor => actor.currentHealth)
-                .First().baseStat;
+                .First().baseEntity;
         }
     }
 }

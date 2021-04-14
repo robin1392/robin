@@ -33,7 +33,7 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            var fireMan = actorProxy.baseStat as Minion_Fireman;
+            var fireMan = actorProxy.baseEntity as Minion_Fireman;
             SoundManager.instance.Play(fireMan.clip_Flame);
             
             fireMan.animator.SetTrigger(AnimationHash.Attack);
@@ -58,7 +58,7 @@ namespace ED
                             fireMan.targetLayer);
                         foreach (var col in cols)
                         {
-                            var bs = col.transform.GetComponentInParent<BaseStat>();
+                            var bs = col.transform.GetComponentInParent<BaseEntity>();
                             if (bs != null && bs.isAlive)
                             {
                                 bs.ActorProxy.HitDamage(actorProxy.power);    
@@ -80,7 +80,7 @@ namespace ED
 
         void FireEffectOff(ActorProxy actorProxy)
         {
-            var fireMan = actorProxy.baseStat as Minion_Fireman;
+            var fireMan = actorProxy.baseEntity as Minion_Fireman;
             fireMan.ps_Fire.Stop();
             fireMan.light.enabled = false;
         }

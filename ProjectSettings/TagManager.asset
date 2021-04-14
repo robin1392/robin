@@ -13,6 +13,7 @@ TagManager:
   - UI_AlphaImage
   - Tutorial
   - Map
+  - Tower
   layers:
   - Default
   - TransparentFX

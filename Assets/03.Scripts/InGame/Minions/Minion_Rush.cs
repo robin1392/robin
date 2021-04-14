@@ -30,14 +30,13 @@ namespace ED
             
             // target
             var ts = transform;
-            var rush = (Minion_Rush)ActorProxy.baseStat;
+            var rush = (Minion_Rush)ActorProxy.baseEntity;
             var cols = Physics.OverlapSphere(ts.position, rush.searchRange, rush.targetLayer);
             var distance = 0f;
             Minion dashTarget = null;
            
             foreach (var col in cols)
             {
-                if (col.CompareTag("Player")) continue;
                 var minion = col.GetComponentInParent<Minion>();
                 if (minion == null || minion.isAlive == false)
                 {
@@ -87,14 +86,14 @@ namespace ED
                 Debug.DrawLine(actorProxy.transform.position + Vector3.up * 0.2f, targetActorProxy.transform.position, Color.red, 2f);
             }
 #endif
-            var minionRush = actorProxy.baseStat as Minion_Rush;
+            var minionRush = actorProxy.baseEntity as Minion_Rush;
             minionRush.ps_Rush.Play();
             
             actorProxy.PlayAnimationWithRelay(AnimationHash.SkillLoop, null);
 
             var ts = actorProxy.transform;
             float tick = 0.1f;
-            while (targetActorProxy != null && targetActorProxy.baseStat != null)
+            while (targetActorProxy != null && targetActorProxy.baseEntity != null)
             {
                 ts.LookAt(targetActorProxy.transform);
                 ts.position += (targetActorProxy.transform.position - ts.position).normalized * (minionRush.moveSpeed * 2.5f) * Time.deltaTime;
@@ -106,7 +105,7 @@ namespace ED
                     var hits = Physics.RaycastAll(ts.position + Vector3.up * 0.1f, ts.forward, minionRush.range, minionRush.targetLayer);
                     foreach (var raycastHit in hits)
                     {
-                        var bs = raycastHit.collider.GetComponentInChildren<BaseStat>();
+                        var bs = raycastHit.collider.GetComponentInChildren<BaseEntity>();
                         if (bs != null && bs.isAlive)
                         {
                             if (actorProxy.isPlayingAI)
@@ -134,7 +133,7 @@ namespace ED
         public override void OnActionCancel(ActorProxy actorProxy)
         {
             base.OnActionCancel(actorProxy);
-            var minionRush = actorProxy.baseStat as Minion_Rush;
+            var minionRush = actorProxy.baseEntity as Minion_Rush;
             minionRush.ps_Rush.Stop();
         }
     }

@@ -25,7 +25,7 @@ public class Boss3SkillAction : SyncActionWithTarget
 {
     public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
     {
-        var boss = actorProxy.baseStat as Boss3;
+        var boss = actorProxy.baseEntity as Boss3;
 
         if (targetActorProxy == null)
         {
@@ -50,7 +50,7 @@ public class Boss3SkillAction : SyncActionWithTarget
             var hits = Physics.BoxCastAll(actorTransform.position + col.center, col.size, boss.ts_ShootingPos.forward);
             for (int i = 0; i < hits.Length; i++)
             {
-                var m = hits[i].collider.GetComponent<BaseStat>();
+                var m = hits[i].collider.GetComponent<BaseEntity>();
                 if (m != null && m.isAlive)
                 {
                     m.ActorProxy.HitDamage(actorProxy.power);

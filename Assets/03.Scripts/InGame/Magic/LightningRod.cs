@@ -82,7 +82,7 @@ namespace ED
                 if (list.Contains(col) == false)
                 {
                     list.Add(col);
-                    BaseStat bs = col.GetComponentInParent<BaseStat>();
+                    BaseEntity bs = col.GetComponentInParent<BaseEntity>();
                     if (bs != null)
                     {
                         //KZSee:
@@ -93,7 +93,7 @@ namespace ED
                         var cols2 = Physics.OverlapSphere(col.transform.position, 0.5f, targetLayer);
                         foreach (var col2 in cols2)
                         {
-                            bs = col2.GetComponentInParent<BaseStat>();
+                            bs = col2.GetComponentInParent<BaseEntity>();
                             //KZSee:
                             // DamageToTarget(bs);
                             // controller.ActionSturn(true , bs.id , 1f);

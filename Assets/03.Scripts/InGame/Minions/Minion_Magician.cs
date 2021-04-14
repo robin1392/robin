@@ -101,11 +101,11 @@ namespace  ED
         private IEnumerator Polymorph()
         {
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
-            var list = new List<BaseStat>();
+            var list = new List<BaseEntity>();
 
             foreach (var col in cols)
             {
-                var bs = col.GetComponentInParent<BaseStat>();
+                var bs = col.GetComponentInParent<BaseEntity>();
                 if (bs != null && bs.id > 0 && bs.isFlying == false)
                 {
                     var m = bs as Minion;

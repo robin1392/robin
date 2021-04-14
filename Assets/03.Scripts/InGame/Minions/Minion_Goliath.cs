@@ -33,7 +33,7 @@ namespace ED
             yield return AttackCoroutine(attackSpeed);
         }
 
-        public override BaseStat SetTarget()
+        public override BaseEntity SetTarget()
         {
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             if (cols.Length == 0)
@@ -52,7 +52,7 @@ namespace ED
             var distance = float.MaxValue;
             foreach (var col in cols)
             {
-                var bs = col.GetComponentInParent<BaseStat>();
+                var bs = col.GetComponentInParent<BaseEntity>();
                 var m = bs as Minion;
 
                 if (bs == null || bs.isAlive == false || (m != null && m.isCloacking) || (bs.CompareTag("Minion_Ground") && Vector3.Distance(bs.transform.position, transform.position) > 1.5f))
@@ -76,7 +76,7 @@ namespace ED
 
             if (firstTarget)
             {
-                return firstTarget.GetComponentInParent<BaseStat>();
+                return firstTarget.GetComponentInParent<BaseEntity>();
             }
             else
             {

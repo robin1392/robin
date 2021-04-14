@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 namespace ED
 {
+    //TODO: 비즈니스 로지을 모두 덜어낸다. AI는 볼트로 이전하고, 모델에 붙어있는 위치 트랜스폼이나, 이펙트를 참조하는 역할로만 사용한다. 그리고 ModelReferenceHolder 정도로 리네임
     [System.Serializable]
-    public partial class BaseStat : MonoBehaviour
+    public partial class BaseEntity : MonoBehaviour
     {
         public ActorProxy ActorProxy;
         public bool isMine;
@@ -15,7 +16,7 @@ namespace ED
         public uint id;
         public Animator animator;
         public Material[] arrMaterial;
-        public BaseStat target;
+        public BaseEntity target;
 
         [Header("Base Stat")] public DICE_MOVE_TYPE targetMoveType;
 

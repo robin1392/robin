@@ -78,8 +78,6 @@ namespace ED
 
             foreach (var col in cols)
             {
-                if (col.CompareTag("Player")) continue;
-
                 var dis = Vector3.SqrMagnitude(transform.position - col.transform.position);
                 var m = col.GetComponentInParent<Minion>();
                 if (dis > distance && m != null && m.CanBeTarget())
@@ -112,7 +110,7 @@ namespace ED
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
             var actorTransform = actorProxy.transform;
-            var mortar = actorProxy.baseStat as Mortar;
+            var mortar = actorProxy.baseEntity as Mortar;
             float t = 0f;
             Quaternion q = mortar.ts_Head.rotation;
             var targetTransform = targetActorProxy.transform;
@@ -120,8 +118,8 @@ namespace ED
             while (t < 0.5f)
             {
                 if (targetActorProxy == null || 
-                    targetActorProxy.baseStat == null ||
-                    targetActorProxy.baseStat.CanBeTarget() == false)
+                    targetActorProxy.baseEntity == null ||
+                    targetActorProxy.baseEntity.CanBeTarget() == false)
                 {
                     yield break;
                 }
@@ -154,7 +152,7 @@ namespace ED
 
         public override void OnActionCancel(ActorProxy actorProxy)
         {
-            var mortar = actorProxy.baseStat as Mortar;
+            var mortar = actorProxy.baseEntity as Mortar;
             mortar.FireLightOff();
         }
     }

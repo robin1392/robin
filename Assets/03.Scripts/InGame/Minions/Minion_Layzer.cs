@@ -13,7 +13,7 @@ namespace ED
         public LineRenderer[] arrLineRenderer;
         public GameObject[] arrObj_LineEnd;
 
-        private HashSet<BaseStat> _listTarget = new HashSet<BaseStat>();
+        private HashSet<BaseEntity> _listTarget = new HashSet<BaseEntity>();
 
         private void LateUpdate()
         {
@@ -54,7 +54,7 @@ namespace ED
             }
         }
 
-        public override BaseStat SetTarget()
+        public override BaseEntity SetTarget()
         {
             SetMultiTarget();
             
@@ -70,7 +70,7 @@ namespace ED
         {
             _attackedTarget = target;
             var cols = Physics.OverlapSphere(transform.position, range, targetLayer);
-            var bsCols = cols.Select(c => c.GetComponentInParent<BaseStat>()).Where(bs => bs != null && bs.isAlive);
+            var bsCols = cols.Select(c => c.GetComponentInParent<BaseEntity>()).Where(bs => bs != null && bs.isAlive);
             
             var n = bsCols.Take(ActorProxy.diceScale + 1).ToHashSet();
             if (!n.SetEquals(_listTarget))

@@ -155,7 +155,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Server: {fileID: 2039324051}
   Master: {fileID: 1426124182}
+  EnableMasterAI: 0
+  MasterName: 
   Other: {fileID: 398029673}
+  EnableOtherAI: 1
+  OtherName: 
   Address: localhost
 --- !u!4 &59141817
 Transform:
@@ -534,12 +538,17 @@ PrefabInstance:
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: LocalUserId
-      value: 22
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: LocalNickName
-      value: 22
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651702573362233941, guid: 9cca993568f854e019d1c4f3df1c3f9a,
+        type: 3}
+      propertyPath: Port
+      value: 7779
       objectReference: {fileID: 0}
     - target: {fileID: 4651702573362233942, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
@@ -828,6 +837,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
+        type: 3}
+      propertyPath: LocalNickName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
+        type: 3}
+      propertyPath: LocalUserId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651702573362233941, guid: 9cca993568f854e019d1c4f3df1c3f9a,
+        type: 3}
+      propertyPath: Port
+      value: 7779
+      objectReference: {fileID: 0}
     - target: {fileID: 4651702573362233942, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: m_Name
@@ -1581,7 +1605,7 @@ PrefabInstance:
     - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: modeType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
@@ -1592,6 +1616,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ===Server===
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832457519157374790, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832457519157374792, guid: c2c86073eb4dd48ba826c573f0409ce1,
+        type: 3}
+      propertyPath: Port
+      value: 7779
       objectReference: {fileID: 0}
     - target: {fileID: 4832457519157374793, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
@@ -3312,7 +3346,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 159.5
+      value: 159.11186
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}

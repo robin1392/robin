@@ -32,9 +32,7 @@ namespace ED.SummonActor
                     
                 foreach (var col in cols)
                 {
-                    if (col.CompareTag("Player")) continue;
-
-                    var bs = col.transform.GetComponentInParent<BaseStat>();
+                    var bs = col.transform.GetComponentInParent<Minion>();
 
                     if (bs == null || bs.CanBeTarget() == false ||  bs.id == id) continue;
 

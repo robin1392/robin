@@ -16,7 +16,7 @@ namespace ED
         public Transform ts_Head;
         public Transform ts_ShootPoint;
         //public float lifeTime = 20f;
-        public BaseStat flyingTarget;
+        public BaseEntity flyingTarget;
         public float bulletMoveSpeed = 6f;
         public float shootTime = 0;
 
@@ -92,8 +92,6 @@ namespace ED
 
             foreach (var col in cols)
             {
-                if (col.CompareTag("Player")) continue;
-                
                 var dis = Vector3.SqrMagnitude(transform.position - col.transform.position);
                 var m = col.GetComponentInParent<Minion>();
                 if (dis < distance && m != null && m.isCloacking == false)

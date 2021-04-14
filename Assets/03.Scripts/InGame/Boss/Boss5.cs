@@ -94,7 +94,7 @@ public class Boss5 : BossBase
     {
         public override IEnumerator Action(ActorProxy actorProxy)
         {
-            var boss = (Boss5) actorProxy.baseStat;
+            var boss = (Boss5) actorProxy.baseEntity;
 
             boss.animator.SetTrigger(AnimationHash.Skill);
 

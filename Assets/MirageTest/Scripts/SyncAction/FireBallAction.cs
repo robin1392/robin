@@ -13,9 +13,9 @@ namespace MirageTest.Scripts.SyncAction
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            var fireBall = actorProxy.baseStat as Fireball;
+            var fireBall = actorProxy.baseEntity as Fireball;
             var actorTransform = actorProxy.transform;
-            var target = targetActorProxy.baseStat;
+            var target = targetActorProxy.baseEntity;
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_FIREBALL_FIRE);
 

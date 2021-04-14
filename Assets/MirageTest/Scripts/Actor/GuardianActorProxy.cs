@@ -46,7 +46,7 @@ namespace MirageTest.Scripts
                         transform);
                 }
 
-                baseStat = guadian;
+                baseEntity = guadian;
                 guadian.ActorProxy = this;
                 guadian.transform.localPosition = Vector3.zero;
                 guadian.transform.localRotation = Quaternion.identity;

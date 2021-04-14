@@ -59,7 +59,7 @@ namespace ED
             var cols = Physics.OverlapSphere(pos, range * Mathf.Pow(1.5f, eyeLevel), targetLayer);
             foreach (var col in cols)
             {
-                var bs = col.GetComponentInParent<BaseStat>();
+                var bs = col.GetComponentInParent<BaseEntity>();
                 if (bs != null)
                 {
                     bs.ActorProxy?.HitDamage(ActorProxy.power);

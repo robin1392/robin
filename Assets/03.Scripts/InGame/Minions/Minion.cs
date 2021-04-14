@@ -21,7 +21,7 @@ namespace ED
         RANDOM
     }
 
-    public partial class Minion : BaseStat
+    public partial class Minion : BaseEntity
     {
         public DICE_CAST_TYPE castType;
         public bool isAttackSpeedFactorWithAnimation = true;
@@ -41,7 +41,7 @@ namespace ED
 
         protected Shield _shield;
         protected Coroutine _invincibilityCoroutine;
-        protected BaseStat _attackedTarget;
+        protected BaseEntity _attackedTarget;
         protected MinionAnimationEvent _animationEvent;
         
         protected bool _destroyed; 
@@ -123,7 +123,7 @@ namespace ED
             _attackedTarget = null;
         }
         
-        public void SetAttackedTarget(BaseStat target)
+        public void SetAttackedTarget(BaseEntity target)
         {
             _attackedTarget = target;
         }
@@ -132,7 +132,7 @@ namespace ED
         {
         }
 
-        public virtual BaseStat SetTarget()
+        public virtual BaseEntity SetTarget()
         {
             if (_attackedTarget != null && _attackedTarget.CanBeTarget())
             {
@@ -168,7 +168,7 @@ namespace ED
             
             foreach (var col in cols)
             {
-                var bs = col.GetComponentInParent<BaseStat>();
+                var bs = col.GetComponentInParent<BaseEntity>();
                 if (bs == null || !bs.CanBeTarget())
                 {
                     continue;
@@ -185,7 +185,7 @@ namespace ED
 
             if (closestTarget != null)
             {
-                return closestTarget.GetComponentInParent<BaseStat>();
+                return closestTarget.GetComponentInParent<BaseEntity>();
             }
 
             if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
@@ -252,7 +252,7 @@ namespace ED
                     bool rtn = false;
                     foreach (var hit in hits)
                     {
-                        if (hit.collider.GetComponentInParent<BaseStat>() == target)
+                        if (hit.collider.GetComponentInParent<BaseEntity>() == target)
                         {
                             rtn = true;
                         }
@@ -265,7 +265,7 @@ namespace ED
             return false;
         }
 
-        public bool IsTargetInnerRange(BaseStat bs)
+        public bool IsTargetInnerRange(BaseEntity bs)
         {
             if (ActorProxy == null)
             {

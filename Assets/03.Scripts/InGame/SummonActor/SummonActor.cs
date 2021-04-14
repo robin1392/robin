@@ -1,6 +1,6 @@
 namespace ED.SummonActor
 {
-    public class SummonActor : BaseStat
+    public class SummonActor : BaseEntity
     {
         public virtual void Initialize()
         {

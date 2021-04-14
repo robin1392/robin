@@ -31,7 +31,7 @@ namespace ED
             collider.enabled = true;
         }
 
-        public override BaseStat SetTarget()
+        public override BaseEntity SetTarget()
         {
             target = ActorProxy.GetEnemyTowerOrBossEgg();
             if (target == null)

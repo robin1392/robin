@@ -1,5 +1,6 @@
 using System;
 using ED;
+using Pathfinding;
 using UnityEngine;
 
 namespace MirageTest.Scripts
@@ -9,15 +10,15 @@ namespace MirageTest.Scripts
         protected override void OnSpawnActor()
         {
             //KZSee: 검토
-            var towerPrefab = Resources.Load<PlayerController>("Tower/Player");
+            var towerPrefab = Resources.Load<Tower>("Tower/Tower");
             var playerController = Instantiate(towerPrefab, transform);
-            baseStat = playerController;
-            baseStat.ActorProxy = this;
-            baseStat.id = NetId;
+            baseEntity = playerController;
+            baseEntity.ActorProxy = this;
+            baseEntity.id = NetId;
             playerController.isMine = IsLocalPlayerActor;
             playerController.ChangeLayer(IsBottomCamp());
             playerController.SetColor(IsBottomCamp() ? E_MaterialType.BOTTOM : E_MaterialType.TOP, IsLocalPlayerAlly);
-            baseStat.SetHealthBarColor();
+            baseEntity.SetHealthBarColor();
 
             var client = Client as RWNetworkClient;
             if (client.enableUI)

@@ -56,7 +56,7 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            actorProxy.baseStat.animator.SetTrigger(AnimationHash.Skill);
+            actorProxy.baseEntity.animator.SetTrigger(AnimationHash.Skill);
 
             yield return new WaitForSeconds(1.5f);
 
@@ -65,16 +65,14 @@ namespace ED
                 yield break;
             }
             
-            var cols = Physics.OverlapSphere(actorProxy.transform.position, 1f, actorProxy.baseStat.targetLayer);
+            var cols = Physics.OverlapSphere(actorProxy.transform.position, 1f, actorProxy.baseEntity.targetLayer);
             //Debug.LogFormat("BerserkerSkill: {0}", cols.Length);
             foreach (var col in cols)
             {
-                if (col.CompareTag("Player")) continue;
-
-                var m = col.GetComponentInParent<BaseStat>();
+                var m = col.GetComponentInParent<Minion>();
                 if (m != null && m.isAlive)
                 {
-                    m.ActorProxy.HitDamage(actorProxy.baseStat.power * 0.3f);
+                    m.ActorProxy.HitDamage(actorProxy.baseEntity.power * 0.3f);
                 }
             }
         }

@@ -7,7 +7,7 @@ namespace MirageTest.Scripts
 {
     public partial class ActorProxy 
     {
-        void RelayPlayAnimation(int aniHash, BaseStat target)
+        void RelayPlayAnimation(int aniHash, BaseEntity target)
         {
             if (Client.IsConnected == false)
             {
@@ -58,30 +58,30 @@ namespace MirageTest.Scripts
             PlayAnimationInternal(aniHash, target);
         }
         
-        public void PlayAnimationWithRelay(int hash, BaseStat target)
+        public void PlayAnimationWithRelay(int hash, BaseEntity target)
         {
             PlayAnimationInternal(hash, target);
             RelayPlayAnimation(hash, target);
         }
         
-        void PlayAnimationInternal(int hash, BaseStat target)
+        void PlayAnimationInternal(int hash, BaseEntity target)
         {
             if (target != null && target.ActorProxy != null)
             {
                 transform.LookAt(target.ActorProxy.transform);
             }
 
-            baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
-            baseStat.animator.SetTrigger(hash);
+            baseEntity.animator.SetFloat(AnimationHash.MoveSpeed, 0);
+            baseEntity.animator.SetTrigger(hash);
         }
         
-        public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed)
+        public void FireBulletWithRelay(E_BulletType bulletType, BaseEntity target, float damage, float moveSpeed)
         {
             FireBulletInternal(bulletType, target, damage, moveSpeed);
             RelayFireBullet(bulletType, target, damage, moveSpeed);
         }
         
-        void RelayFireBullet(E_BulletType arrow, BaseStat target, float f, float bulletMoveSpeed)
+        void RelayFireBullet(E_BulletType arrow, BaseEntity target, float f, float bulletMoveSpeed)
         {
             if (Client.IsConnected == false)
             {
@@ -133,13 +133,13 @@ namespace MirageTest.Scripts
             FireBulletInternal(arrow, target, f, bulletMoveSpeed);
         }
         
-        public void FireBulletWithRelay(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed, float effect)
+        public void FireBulletWithRelay(E_BulletType bulletType, BaseEntity target, float damage, float moveSpeed, float effect)
         {
             FireBulletInternal(bulletType, target, damage, moveSpeed, effect);
             RelayFireBulletWithEffect(bulletType, target, damage, moveSpeed, effect);
         }
 
-        void RelayFireBulletWithEffect(E_BulletType arrow, BaseStat target, float f, float bulletMoveSpeed, float effect)
+        void RelayFireBulletWithEffect(E_BulletType arrow, BaseEntity target, float f, float bulletMoveSpeed, float effect)
         {
             uint targetId = 0;
             if (target != null)
@@ -186,14 +186,14 @@ namespace MirageTest.Scripts
             FireBulletInternal(arrow, target, f, bulletMoveSpeed, effect);
         }
 
-        void FireBulletInternal(E_BulletType bulletType, BaseStat target, float damage, float moveSpeed, float effect = 0)
+        void FireBulletInternal(E_BulletType bulletType, BaseEntity target, float damage, float moveSpeed, float effect = 0)
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
 
-            Vector3 startPos = baseStat.ts_ShootingPos.position;
+            Vector3 startPos = baseEntity.ts_ShootingPos.position;
             Bullet bullet = null;
             switch (bulletType)
             {
@@ -293,12 +293,12 @@ namespace MirageTest.Scripts
 
         void FireCannonBallInternal(E_CannonType cannonType, Vector3 targetPosition)
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
 
-            Vector3 startPos = baseStat.ts_ShootingPos.position;
+            Vector3 startPos = baseEntity.ts_ShootingPos.position;
             CannonBall cannonBall = null;
             switch (cannonType)
             {
@@ -316,7 +316,7 @@ namespace MirageTest.Scripts
             {
                 cannonBall.transform.rotation = Quaternion.identity;
                 cannonBall.client = Client as RWNetworkClient;
-                cannonBall.Initialize(targetPosition, power, baseStat.range, IsLocalPlayerActor, IsBottomCamp());
+                cannonBall.Initialize(targetPosition, power, baseEntity.range, IsLocalPlayerActor, IsBottomCamp());
             }
         }
 
@@ -352,7 +352,7 @@ namespace MirageTest.Scripts
         [ClientRpc(target = Mirage.Client.Player)]
         public void SyncActionWithTargetOnClient(INetworkPlayer con, string actionTypeHash, uint targetNetId)
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
@@ -363,7 +363,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            baseStat.SyncActionWithTarget(actionTypeHash, target.GetComponent<ActorProxy>());
+            baseEntity.SyncActionWithTarget(actionTypeHash, target.GetComponent<ActorProxy>());
         }
         
         public void SyncActionWithoutTarget(uint senderNetId, string actionTypeHash)
@@ -398,12 +398,12 @@ namespace MirageTest.Scripts
         [ClientRpc(target = Mirage.Client.Player)]
         public void SyncActionWithoutTargetOnClient(INetworkPlayer con, string actionTypeHash)
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
 
-            baseStat.SyncActionWithoutTarget(actionTypeHash);
+            baseEntity.SyncActionWithoutTarget(actionTypeHash);
         }
 
         public void SyncMultiTarget(uint senderNetId, uint[] targetNetIds)
@@ -438,12 +438,12 @@ namespace MirageTest.Scripts
         [ClientRpc(target = Mirage.Client.Player)]
         public void SyncMultiTargetOnClient(INetworkPlayer player, uint[] targetNetIds)
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
 
-            ((Minion_Layzer)baseStat).SetTargetList(targetNetIds);
+            ((Minion_Layzer)baseEntity).SetTargetList(targetNetIds);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace ED
             yield return base.Attack();
         }
 
-        public override BaseStat SetTarget()
+        public override BaseEntity SetTarget()
         {
             var cols = Physics.OverlapSphere(transform.position, searchRange, friendlyLayer);
             Collider firstTarget = null;
@@ -76,12 +76,12 @@ namespace ED
 
             if (firstTarget != null)
             {
-                return firstTarget.GetComponentInParent<BaseStat>();
+                return firstTarget.GetComponentInParent<BaseEntity>();
             }
 
             if (closeToTarget != null)
             {
-                return closeToTarget.GetComponentInParent<BaseStat>();
+                return closeToTarget.GetComponentInParent<BaseEntity>();
             }
             else
             {

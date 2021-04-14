@@ -73,8 +73,8 @@ namespace ED
             
             if (ActorProxy.isPlayingAI == false) return;
 
-            var targetActorProxy = ActorProxy.baseStat.target.ActorProxy;
-            if (targetActorProxy != null && targetActorProxy.baseStat.CanBeTarget())
+            var targetActorProxy = ActorProxy.baseEntity.target.ActorProxy;
+            if (targetActorProxy != null && targetActorProxy.baseEntity.CanBeTarget())
             {
                 targetActorProxy.AddBuff(BuffInfos.Freeze, sturnTime);
                 targetActorProxy.HitDamage(ActorProxy.power);
@@ -88,9 +88,9 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            var iceBall = actorProxy.baseStat as Iceball;
+            var iceBall = actorProxy.baseEntity as Iceball;
             var actorTransform = actorProxy.transform;
-            var target = targetActorProxy.baseStat;
+            var target = targetActorProxy.baseEntity;
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_ICEBALL_MISSILE);
             

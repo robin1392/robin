@@ -48,9 +48,9 @@ namespace  ED
 
         private void OnTriggerEnter(Collider other)
         {
-            if (IsTargetLayer(other.gameObject) && other.CompareTag("Player") == false)
+            if (IsTargetLayer(other.gameObject))
             {
-                var bs = other.GetComponentInParent<BaseStat>();
+                var bs = other.GetComponentInParent<Minion>();
                 PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
                 
                 if (ActorProxy.isPlayingAI)
@@ -78,7 +78,7 @@ namespace  ED
     {
         public override IEnumerator Action(ActorProxy actor)
         {
-            var stoneBall = actor.baseStat as StoneBall;
+            var stoneBall = actor.baseEntity as StoneBall;
             var actorTransform = actor.transform;
             var isBottomCamp = stoneBall.isBottomCamp;
             var modelTransform = stoneBall.ts_Model;

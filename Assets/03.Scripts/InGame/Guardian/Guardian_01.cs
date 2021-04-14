@@ -34,21 +34,19 @@ public class Guardian01Action : SyncActionWithTarget
 {
     public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
     {
-        actorProxy.baseStat.animator.SetTrigger(AnimationHash.Skill);
+        actorProxy.baseEntity.animator.SetTrigger(AnimationHash.Skill);
 
         yield return new WaitForSeconds(0.716f);
 
         if (actorProxy.isPlayingAI)
         {
-            var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseStat.targetLayer);
+            var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseEntity.targetLayer);
             foreach (var col in cols)
             {
-                if (col.CompareTag("Player")) continue;
-
-                var m = col.GetComponentInParent<BaseStat>();
+                var m = col.GetComponentInParent<Minion>();
                 if (m != null && m.isAlive)
                 {
-                    m.ActorProxy.HitDamage(actorProxy.baseStat.power);
+                    m.ActorProxy.HitDamage(actorProxy.baseEntity.power);
                 }
             }
         }

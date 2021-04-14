@@ -40,7 +40,7 @@ namespace ED
             Skill();
         }
 
-        public override BaseStat SetTarget()
+        public override BaseEntity SetTarget()
         {
             return ActorProxy.GetEnemyTowerOrBossEgg();
         }

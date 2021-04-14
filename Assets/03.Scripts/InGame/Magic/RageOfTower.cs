@@ -9,7 +9,7 @@ namespace ED
     public class RageOfTower : Magic
     {
         public ParticleSystem ps_Bomb;
-        private BaseStat tower;
+        private BaseEntity tower;
         public override void Initialize(bool pIsBottomPlayer)
         {
             base.Initialize(pIsBottomPlayer);
@@ -31,7 +31,7 @@ namespace ED
             var cols = Physics.OverlapSphere(tower.transform.position, range, targetLayer);
             foreach (var col in cols)
             {
-                col.GetComponentInParent<BaseStat>().ActorProxy.HitDamage(power);
+                col.GetComponentInParent<BaseEntity>().ActorProxy.HitDamage(power);
             }
             
             yield break;

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace ED
 {
-    public partial class Magic : BaseStat
+    public partial class Magic : BaseEntity
     {
         public enum SPAWN_TYPE
         {

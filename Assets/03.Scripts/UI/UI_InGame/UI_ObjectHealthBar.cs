@@ -11,12 +11,12 @@ public class UI_ObjectHealthBar : MonoBehaviour
     public static Camera camera_UI;
 
     private RectTransform rts_HPBar;
-    private BaseStat bs;
+    private BaseEntity bs;
 
     private void Awake()
     {
         rts_HPBar = transform.GetChild(0) as RectTransform;
-        bs = GetComponentInParent<BaseStat>();
+        bs = GetComponentInParent<BaseEntity>();
         //ts_OldParent = transform.parent;
         camera_UI = CameraController.Get().camera_UI;
     }

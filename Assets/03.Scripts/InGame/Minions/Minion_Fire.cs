@@ -72,7 +72,7 @@ public class FireAction : SyncActionWithoutTarget
     public override IEnumerator Action(ActorProxy actorProxy)
     {
         // 트리거 On
-        var fire = (Minion_Fire) actorProxy.baseStat;
+        var fire = (Minion_Fire) actorProxy.baseEntity;
         fire.SetBomb(true);
         
         yield break;
@@ -81,7 +81,7 @@ public class FireAction : SyncActionWithoutTarget
     public override void OnActionCancel(ActorProxy actorProxy)
     {
         // 트리거 Off
-        var fire = (Minion_Fire) actorProxy.baseStat;
+        var fire = (Minion_Fire) actorProxy.baseEntity;
         fire.SetBomb(false);
         
         base.OnActionCancel(actorProxy);

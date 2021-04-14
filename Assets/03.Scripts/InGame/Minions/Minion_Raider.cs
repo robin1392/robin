@@ -84,7 +84,7 @@ namespace ED
                     var m = col.GetComponentInParent<Minion>();
                     var dis = Vector3.Distance(transform.position, col.transform.position);
 
-                    if (!col.CompareTag("Player") && dis < distance && (m != null && m.CanBeTarget()))
+                    if (dis < distance && (m != null && m.CanBeTarget()))
                     {
                         distance = dis; 
                         dashTarget = m;
@@ -110,14 +110,14 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            var raider = (Minion_Raider) actorProxy.baseStat;
+            var raider = (Minion_Raider) actorProxy.baseEntity;
             var t = PoolManager.instance.ActivateObject(raider.pref_EffectDash.name, raider.ts_HitPos.position);
             if (targetActorProxy.transform != null) t.LookAt(targetActorProxy.transform.position);
 
             raider.animator.SetTrigger(AnimationHash.Skill);
 
             Transform ts = actorProxy.transform;
-            while (targetActorProxy != null && targetActorProxy.baseStat != null && targetActorProxy.baseStat.isAlive)
+            while (targetActorProxy != null && targetActorProxy.baseEntity != null && targetActorProxy.baseEntity.isAlive)
             {
                 ts.LookAt(targetActorProxy.transform);
                 ts.position += (targetActorProxy.transform.position - ts.position).normalized * (raider.moveSpeed * 5f) * Time.deltaTime;
@@ -130,7 +130,7 @@ namespace ED
 
             if (actorProxy.isPlayingAI == false) yield break;
             
-            if (targetActorProxy != null && targetActorProxy.baseStat != null && targetActorProxy.baseStat.CanBeTarget())
+            if (targetActorProxy != null && targetActorProxy.baseEntity != null && targetActorProxy.baseEntity.CanBeTarget())
             {
                 targetActorProxy.AddBuff(BuffInfos.Sturn, 10f);
             }

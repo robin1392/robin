@@ -55,7 +55,7 @@ public class Boss1 : BossBase
     private Minion GetLongDistanceTarget()
     {
         var minions = ActorProxy.GetEnemies();
-        List<BaseStat> list = new List<BaseStat>();
+        List<BaseEntity> list = new List<BaseEntity>();
         float min = 0f;
         float max = 0f;
 
@@ -115,7 +115,7 @@ public class Boss1 : BossBase
         var targets = Physics.OverlapSphere(ActorProxy.transform.position, 1f, targetLayer);
         for (int i = 0; i < targets.Length; i++)
         {
-            var bs = targets[i].GetComponentInParent<BaseStat>();
+            var bs = targets[i].GetComponentInParent<BaseEntity>();
             if (bs != null && bs.isAlive)
             {
                 bs.ActorProxy.HitDamage(power);
@@ -128,7 +128,7 @@ public class JumpSkillAction : SyncActionWithTarget
 {
     public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
     {
-        var boss = (Boss1) actorProxy.baseStat;
+        var boss = (Boss1) actorProxy.baseEntity;
         if (boss == null)
         {
             boss.collider.enabled = true;
@@ -196,7 +196,7 @@ public class JumpSkillAction : SyncActionWithTarget
             currentPos.z = startPos.z + fV_z * t;
 
             actorTransform.position = currentPos;
-            actorProxy.baseStat.transform.localPosition = new Vector3(0, y, 0);
+            actorProxy.baseEntity.transform.localPosition = new Vector3(0, y, 0);
 
             yield return null;
         }
@@ -205,7 +205,7 @@ public class JumpSkillAction : SyncActionWithTarget
         var pos = actorTransform.position;
         pos.y = 0;
         actorTransform.position = pos;
-        actorProxy.baseStat.transform.localPosition = Vector3.zero;
+        actorProxy.baseEntity.transform.localPosition = Vector3.zero;
 
         if (actorProxy.isPlayingAI)
         {
@@ -219,7 +219,7 @@ public class JumpSkillAction : SyncActionWithTarget
 
     public override void OnActionCancel(ActorProxy actorProxy)
     {
-        var boss = (Boss1) actorProxy.baseStat;
+        var boss = (Boss1) actorProxy.baseEntity;
         boss.transform.localPosition = Vector3.zero;
         boss.collider.enabled = true;
     }

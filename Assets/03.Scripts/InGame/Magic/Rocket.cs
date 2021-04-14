@@ -53,14 +53,14 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            var rocket = actorProxy.baseStat as Rocket;
+            var rocket = actorProxy.baseEntity as Rocket;
             var actorTransform = actorProxy.transform;
-            var target = targetActorProxy.baseStat;
+            var target = targetActorProxy.baseEntity;
 
             var startPos = actorTransform.position;
-            var endPos = targetActorProxy.baseStat.ts_HitPos.position;
+            var endPos = targetActorProxy.baseEntity.ts_HitPos.position;
             var distance = Vector3.Distance(startPos, endPos);
-            var moveTime = distance / actorProxy.baseStat.moveSpeed;
+            var moveTime = distance / actorProxy.baseEntity.moveSpeed;
             actorProxy.transform.LookAt(targetActorProxy.transform);
 
             float t = 0;

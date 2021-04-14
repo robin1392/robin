@@ -88,7 +88,7 @@ namespace ED
             var cols = Physics.OverlapSphere(targetPos, _splashRange, targetLayer);
             foreach (var col in cols)
             {
-                var bs = col.GetComponentInParent<BaseStat>();
+                var bs = col.GetComponentInParent<BaseEntity>();
                 if (bs != null && bs.isAlive)
                 {
                     if (client.IsPlayingAI)

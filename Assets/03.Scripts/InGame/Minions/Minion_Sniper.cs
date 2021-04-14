@@ -150,7 +150,7 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetActorProxy)
         {
-            var sniper = actorProxy.baseStat as Minion_Sniper;
+            var sniper = actorProxy.baseEntity as Minion_Sniper;
 
             float t = 0f;
             sniper.lr.gameObject.SetActive(true);
@@ -161,13 +161,13 @@ namespace ED
                     break;
                 }
 
-                if (targetActorProxy == null || targetActorProxy.baseStat == null)
+                if (targetActorProxy == null || targetActorProxy.baseEntity == null)
                 {
                     break;
                 }
                 
                 actorProxy.transform.LookAt(targetActorProxy.transform);
-                sniper.lr.SetPositions(new Vector3[] { sniper.ts_ShootingPos.position, targetActorProxy.baseStat.ts_HitPos.position });
+                sniper.lr.SetPositions(new Vector3[] { sniper.ts_ShootingPos.position, targetActorProxy.baseEntity.ts_HitPos.position });
 
                 t += Time.deltaTime;
                 yield return null;
@@ -179,7 +179,7 @@ namespace ED
         public override void OnActionCancel(ActorProxy actorProxy)
         {
             base.OnActionCancel(actorProxy);
-            var sniper = actorProxy.baseStat as Minion_Sniper;
+            var sniper = actorProxy.baseEntity as Minion_Sniper;
             sniper.lr.gameObject.SetActive(false);
         }
     }

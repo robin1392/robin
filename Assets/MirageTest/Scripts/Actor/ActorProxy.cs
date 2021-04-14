@@ -42,7 +42,7 @@ namespace MirageTest.Scripts
 
         public bool IsLocalPlayerActor => (Client as RWNetworkClient).IsLocalPlayerTag(ownerTag);
 
-        public BaseStat baseStat;
+        public BaseEntity baseEntity;
 
         private bool stopped;
 
@@ -135,11 +135,11 @@ namespace MirageTest.Scripts
             client.RemoveActorProxy(this);
             currentHealth = 0;
 
-            if (baseStat != null)
+            if (baseEntity != null)
             {
-                baseStat.OnBaseStatDestroyed();
-                baseStat.ActorProxy = null;
-                baseStat = null;
+                baseEntity.OnBaseStatDestroyed();
+                baseEntity.ActorProxy = null;
+                baseEntity = null;
             }
 
             stopped = true;
@@ -209,7 +209,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            if (baseStat is Minion minion)
+            if (baseEntity is Minion minion)
             {
                 var isClockingOld = (buffType & BuffType.Clocking) != 0;
                 var isClockkingNew = (state & BuffType.Clocking) != 0;
@@ -230,9 +230,9 @@ namespace MirageTest.Scripts
                         if (targetActorProxy != null)
                         {
                             var target = targetActorProxy.GetComponent<ActorProxy>();
-                            if (target != null && target.baseStat != null)
+                            if (target != null && target.baseEntity != null)
                             {
-                                minion.SetAttackedTarget(target.baseStat);
+                                minion.SetAttackedTarget(target.baseEntity);
                                 transform.LookAt(target.transform);
                             }
                         }
@@ -258,14 +258,14 @@ namespace MirageTest.Scripts
 
             if (isCantAI)
             {
-                baseStat.animator.SetTrigger(AnimationHash.Idle);
-                baseStat.StopAllAction();
+                baseEntity.animator.SetTrigger(AnimationHash.Idle);
+                baseEntity.StopAllAction();
             }
             else
             {
                 if (isPlayingAI)
                 {
-                    baseStat.StartAI();
+                    baseEntity.StartAI();
                 }
             }
         }
@@ -294,12 +294,12 @@ namespace MirageTest.Scripts
 
         public void EnableBuffEffect(BuffType buffType, string resource,  EffectLocation effectLocation)
         {
-            if (baseStat is Minion minion)
+            if (baseEntity is Minion minion)
             {
                 if (minion._dicEffectPool.ContainsKey(buffType) == false)
                 {
                     var ad = PoolManager.instance.ActivateObject<PoolObjectAutoDeactivate>(resource,
-                        GetEffectPosition(baseStat, effectLocation));
+                        GetEffectPosition(baseEntity, effectLocation));
                     ad.transform.SetParent(transform);
                     minion._dicEffectPool.Add(buffType, ad);
                 }
@@ -308,7 +308,7 @@ namespace MirageTest.Scripts
 
         public void DisableBuffEffect(BuffType buffType)
         {
-            if (baseStat is Minion minion)
+            if (baseEntity is Minion minion)
             {
                 if (minion._dicEffectPool.TryGetValue(buffType, out var ad))
                 {
@@ -318,31 +318,31 @@ namespace MirageTest.Scripts
             }
         }
 
-        public static Vector3 GetEffectPosition(BaseStat baseStat, EffectLocation effectLocation)
+        public static Vector3 GetEffectPosition(BaseEntity baseEntity, EffectLocation effectLocation)
         {
             switch (effectLocation)
             {
                 case EffectLocation.Top:
-                    if (baseStat.ts_TopEffectPosition != null)
+                    if (baseEntity.ts_TopEffectPosition != null)
                     {
-                        return baseStat.ts_TopEffectPosition.transform.position;
+                        return baseEntity.ts_TopEffectPosition.transform.position;
                     }
                     
-                    return baseStat.ts_HitPos.transform.position + new Vector3(0, 0.65f, 0);
+                    return baseEntity.ts_HitPos.transform.position + new Vector3(0, 0.65f, 0);
                 
                 case EffectLocation.Mid:
-                    return baseStat.ts_HitPos.transform.position;
+                    return baseEntity.ts_HitPos.transform.position;
                 case EffectLocation.Bottom:
-                    return baseStat.transform.position;
+                    return baseEntity.transform.position;
             }
             
-            return baseStat.transform.position;
+            return baseEntity.transform.position;
         }
         
        
         private void EnableFreezeEffect(bool b)
         {
-            if (baseStat is Minion minion)
+            if (baseEntity is Minion minion)
             {
                 if (b)
                 {
@@ -360,7 +360,7 @@ namespace MirageTest.Scripts
             var client = Client as RWNetworkClient;
             OnSpawnActor();
 
-            if ((baseStat as Minion)?.collider is SphereCollider collider)
+            if ((baseEntity as Minion)?.collider is SphereCollider collider)
             {
                 _aiPath.radius = collider.radius;
             }
@@ -393,21 +393,21 @@ namespace MirageTest.Scripts
 
         void RefreshHpUI()
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
 
-            if (baseStat.image_HealthBar == null)
+            if (baseEntity.image_HealthBar == null)
             {
                 return;
             }
 
-            baseStat.image_HealthBar.fillAmount = currentHealth / maxHealth;
+            baseEntity.image_HealthBar.fillAmount = currentHealth / maxHealth;
 
-            if (baseStat.text_Health != null)
+            if (baseEntity.text_Health != null)
             {
-                baseStat.text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
+                baseEntity.text_Health.text = $"{Mathf.CeilToInt(currentHealth)}";
             }
         }
 
@@ -415,7 +415,7 @@ namespace MirageTest.Scripts
         {
             isPlayingAI = b;
 
-            var actor = baseStat;
+            var actor = baseEntity;
             if (actor == null)
             {
                 return;
@@ -444,7 +444,7 @@ namespace MirageTest.Scripts
                 return;
             }
             
-            var actor = baseStat;
+            var actor = baseEntity;
             if (actor == null)
             {
                 return;
@@ -478,15 +478,15 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            var tilt =  baseStat.transform.worldToLocalMatrix * new Vector3(20, 0, 0);
-            baseStat.transform.localPosition = new Vector3(0, 0.3f, 0);
+            var tilt =  baseEntity.transform.worldToLocalMatrix * new Vector3(20, 0, 0);
+            baseEntity.transform.localPosition = new Vector3(0, 0.3f, 0);
             if (localPlayerState.team == GameConstants.BottomCamp)
             {
-                baseStat.transform.localEulerAngles = tilt;
+                baseEntity.transform.localEulerAngles = tilt;
             }
             else
             {
-                baseStat.transform.localEulerAngles = -tilt;
+                baseEntity.transform.localEulerAngles = -tilt;
             }
         }
 
@@ -567,12 +567,12 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            if (baseStat.OnBeforeHitDamage(damage))
+            if (baseEntity.OnBeforeHitDamage(damage))
             {
                 return;
             }
             
-            damage = baseStat.ModifyDamage(damage);
+            damage = baseEntity.ModifyDamage(damage);
 
             if (IsLocalClient)
             {
@@ -619,13 +619,13 @@ namespace MirageTest.Scripts
 
         void DamageOnInternal(float damage)
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
 
-            baseStat.OnHitDamageOnClient(damage);
-            var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseStat.ts_HitPos.position);
+            baseEntity.OnHitDamageOnClient(damage);
+            var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseEntity.ts_HitPos.position);
             obj.rotation = Quaternion.identity;
             obj.localScale = Vector3.one * 0.6f;
 
@@ -665,7 +665,7 @@ namespace MirageTest.Scripts
 
         void HealOnInternal(float amount)
         {
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
@@ -703,18 +703,18 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
 
-            if (isPlayingAI && baseStat.NeedMoveSyncSend)
+            if (isPlayingAI && baseEntity.NeedMoveSyncSend)
             {
                 SyncPosition(false);
             }
-            else if (baseStat.SyncAction != null && baseStat.SyncAction.NeedMoveSync == false)
+            else if (baseEntity.SyncAction != null && baseEntity.SyncAction.NeedMoveSync == false)
             {
-                baseStat.animator.SetFloat(AnimationHash.MoveSpeed, 0);
+                baseEntity.animator.SetFloat(AnimationHash.MoveSpeed, 0);
             }
             else if (lastRecieved != null)
             {
@@ -747,7 +747,7 @@ namespace MirageTest.Scripts
                     _aiPath.maxSpeed = moveSpeedCalculated;
                     
                     _seeker.StartPath(transform.position, position);
-                    baseStat.animator.SetFloat(AnimationHash.MoveSpeed, _aiPath.velocity.magnitude);
+                    baseEntity.animator.SetFloat(AnimationHash.MoveSpeed, _aiPath.velocity.magnitude);
                 }
             }
         }
@@ -807,13 +807,13 @@ namespace MirageTest.Scripts
 
         public bool IsLocalPlayerAlly => (Client as RWNetworkClient).IsLocalPlayerAlly(team);
 
-        public BaseStat GetHighestHealthEnemy()
+        public BaseEntity GetHighestHealthEnemy()
         {
             var rwNetworkClient = Client as RWNetworkClient;
             return rwNetworkClient.GetHighestHealthEnemy(team);
         }
 
-        public BaseStat GetBaseStatWithNetId(uint netId)
+        public BaseEntity GetBaseStatWithNetId(uint netId)
         {
             var actor = ClientObjectManager[netId];
             if (actor == null)
@@ -821,40 +821,40 @@ namespace MirageTest.Scripts
                 return null;
             }
 
-            return actor.GetComponent<ActorProxy>().baseStat;
+            return actor.GetComponent<ActorProxy>().baseEntity;
         }
         
-        public BaseStat GetEnemyTowerOrBossEgg()
+        public BaseEntity GetEnemyTowerOrBossEgg()
         {
             var rwClient = Client as RWNetworkClient;
             var enemyTower = rwClient.Towers.Find(t => t.team != team);
             if (enemyTower != null)
             {
-                return enemyTower.baseStat;
+                return enemyTower.baseEntity;
             }
             
             var enemyBoss = rwClient.Bosses.Find(t => t.team != team && t.isHatched == false);
             if (enemyBoss != null)
             {
-                return enemyBoss.baseStat;
+                return enemyBoss.baseEntity;
             }
 
             return null;
         }
         
-        public BaseStat GetAllyTower()
+        public BaseEntity GetAllyTower()
         {
             var rwClient = Client as RWNetworkClient;
             var allyTower = rwClient.Towers.Find(t => t.team == team);
             if (allyTower != null)
             {
-                return allyTower.baseStat;
+                return allyTower.baseEntity;
             }
             
             return null;
         }
 
-        public BaseStat[] GetEnemies()
+        public BaseEntity[] GetEnemies()
         {
             var rwClient = Client as RWNetworkClient;
             //TODO: 팀별로 액터를 분리해놓는다.
@@ -870,32 +870,32 @@ namespace MirageTest.Scripts
                     return false;
                 }
 
-                if (actor.baseStat is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
+                if (actor.baseEntity is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
                 {
                     return false;
                 }
 
-                if (actor.baseStat is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
+                if (actor.baseEntity is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
                 {
                     return false;
                 }
 
                 return true;
-            }).Select(actor => actor.baseStat);
+            }).Select(actor => actor.baseEntity);
 
             return enemies.ToArray();
         }
 
-        public BaseStat GetRandomFirendlyMinion()
+        public BaseEntity GetRandomFirendlyMinion()
         {
             var rwClient = Client as RWNetworkClient;
             var friends = rwClient.ActorProxies.Where(actor =>
             {
                 if (actor.team != team) return false;
                 if ((actor is DiceActorProxy) == false) return false;
-                if (actor.baseStat is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
+                if (actor.baseEntity is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
                     return false;
-                if (actor.baseStat is Magic) return false;
+                if (actor.baseEntity is Magic) return false;
 
                 return true;
             });
@@ -903,10 +903,10 @@ namespace MirageTest.Scripts
             var actorProxies = friends as ActorProxy[] ?? friends.ToArray();
             if (actorProxies == null || actorProxies.Length == 0) return null;
             var selected = actorProxies.ElementAt(Random.Range(0, actorProxies.Count()));
-            return selected.baseStat;
+            return selected.baseEntity;
         }
 
-        public BaseStat GetRandomEnemyCanBeAttacked()
+        public BaseEntity GetRandomEnemyCanBeAttacked()
         {
             var rwClient = Client as RWNetworkClient;
             //TODO: 팀별로 액터를 분리해놓는다.
@@ -922,12 +922,12 @@ namespace MirageTest.Scripts
                     return true;
                 }
 
-                if (actor.baseStat is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
+                if (actor.baseEntity is Minion minion && (minion.collider == null || minion.isCanBeTarget == false))
                 {
                     return false;
                 }
 
-                if (actor.baseStat is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
+                if (actor.baseEntity is Magic magic && (magic.collider == null || magic.isCanBeTarget == false))
                 {
                     return false;
                 }
@@ -938,7 +938,7 @@ namespace MirageTest.Scripts
             var actorProxies = enemies as ActorProxy[] ?? enemies.ToArray();
             if (actorProxies == null || actorProxies.Length == 0) return null;
             var selected = actorProxies.ElementAt(Random.Range(0, actorProxies.Count()));
-            return selected.baseStat;
+            return selected.baseEntity;
         }
 
         public void Destroy()

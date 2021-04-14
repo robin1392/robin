@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ED
 {
-    public partial class BaseStat
+    public partial class BaseEntity
     {
         //마스터가 사용하는 액션으로 AI 루틴 수행중에 동기화 액션을 대입하거나
         //실더의 방패막기 같은 AI루틴 이외의 액션을 대입함.

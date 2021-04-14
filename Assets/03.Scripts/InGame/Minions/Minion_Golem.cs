@@ -26,7 +26,7 @@ namespace ED
             SoundManager.instance.Play(clip_Attack);
         }
 
-        public override BaseStat SetTarget()
+        public override BaseEntity SetTarget()
         {
             return ActorProxy.GetEnemyTowerOrBossEgg();
         }

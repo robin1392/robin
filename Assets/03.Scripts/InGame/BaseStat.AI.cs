@@ -1,6 +1,6 @@
 namespace ED
 {
-    public partial class BaseStat
+    public partial class BaseEntity
     {
         public virtual void StartAI()
         {

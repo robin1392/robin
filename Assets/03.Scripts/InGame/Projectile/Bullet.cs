@@ -25,7 +25,7 @@ namespace ED
         [Header("Audio")]
         public AudioSource audio_Explosion;
         
-        protected BaseStat _target;
+        protected BaseEntity _target;
         protected Vector3 _targetPos;
         protected UnityAction _callback;
         protected bool _isTarget;
@@ -46,7 +46,7 @@ namespace ED
             _poad = GetComponent<PoolObjectAutoDeactivate>();
         }
 
-        public virtual void Initialize(E_BulletType bulletType, BaseStat target, float pDamage, float splashRange,
+        public virtual void Initialize(E_BulletType bulletType, BaseEntity target, float pDamage, float splashRange,
             bool pIsMine, bool pIsBottomPlayer, float effect)
         {
             obj_Bullet.SetActive(true);

@@ -91,7 +91,7 @@ namespace ED
         public static List<ItemBaseInfo> listADReward = new List<ItemBaseInfo>();
         public static float factor = 1f;
         public static bool isTeamColorMode;
-        public static bool isPushMode;
+        public static bool isPushMode = true;
         public Slider slider_Factor;
         public Text text_Factor;
 

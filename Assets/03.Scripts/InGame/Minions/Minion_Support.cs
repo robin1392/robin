@@ -44,9 +44,9 @@ namespace ED
             }
         }
 
-        private BaseStat GetLongDistanceFriendlyTarget()
+        private BaseEntity GetLongDistanceFriendlyTarget()
         {
-            BaseStat rtn = null;
+            BaseEntity rtn = null;
 
             var distance = isBottomCamp ? float.MinValue : float.MaxValue;
 
@@ -63,7 +63,7 @@ namespace ED
                     return false;
                 }
 
-                if (actor.baseStat is Magic)
+                if (actor.baseEntity is Magic)
                 {
                     return false;
                 }
@@ -84,7 +84,7 @@ namespace ED
                      (isBottomCamp == false && minion.transform.position.z < distance)))
                 {
                     distance = minion.transform.position.z;
-                    rtn = minion.baseStat;
+                    rtn = minion.baseEntity;
                 }
             }
 
@@ -96,10 +96,10 @@ namespace ED
     {
         public override IEnumerator Action(ActorProxy actorProxy, ActorProxy targetProxy)
         {
-            var m = actorProxy.baseStat as Minion_Support;
+            var m = actorProxy.baseEntity as Minion_Support;
             var ts = actorProxy.transform;
 
-            if (targetProxy == null || targetProxy.baseStat.isAlive == false)
+            if (targetProxy == null || targetProxy.baseEntity.isAlive == false)
             {
                 m.collider.enabled = true;
                 yield break;
@@ -117,7 +117,7 @@ namespace ED
 
             SoundManager.instance.Play(m.clip_Jump);
             
-            actorProxy.PlayAnimationWithRelay(AnimationHash.Skill, targetProxy.baseStat);
+            actorProxy.PlayAnimationWithRelay(AnimationHash.Skill, targetProxy.baseEntity);
 
             var startPos = ts.position;
             var targetPos = targetProxy.transform.position;

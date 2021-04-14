@@ -48,7 +48,7 @@ namespace MirageTest.Scripts
                     transform);
             }
 
-            baseStat = boss;
+            baseEntity = boss;
             boss.ActorProxy = this;
             boss.transform.localPosition = Vector3.zero;
             boss.transform.localRotation = Quaternion.identity;
@@ -73,12 +73,12 @@ namespace MirageTest.Scripts
         void SetIsHatched(bool oldValue, bool newValue)
         {
             //서버에서 생성 할 때 변수에 값을 넣으면 클라이언트에서 hook이 startClient보다 먼저 불린다.
-            if (baseStat == null)
+            if (baseEntity == null)
             {
                 return;
             }
             
-            baseStat.animator.gameObject.SetActive(isHatched);
+            baseEntity.animator.gameObject.SetActive(isHatched);
             
             if (newValue == false)
             {

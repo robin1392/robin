@@ -330,7 +330,7 @@ public class PlayerProxy : NetworkBehaviour
         
         foreach (var actorProxy in client.ActorProxies)
         {
-            actorProxy?.baseStat?.StopAllAction();
+            actorProxy?.baseEntity?.StopAllAction();
         }
 
         UI_InGamePopup.Get().SetViewWaiting(false);

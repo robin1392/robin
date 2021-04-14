@@ -10,8 +10,8 @@ namespace MirageTest.Scripts.SyncAction
         public virtual void OnActionCancel(ActorProxy actorProxy)
         {
             //마스터와 동기화를 받는 플레이어 양쪽 모두 수행됨.
-            actorProxy.baseStat.RunningAction = null;
-            actorProxy.baseStat.SyncAction = null;
+            actorProxy.baseEntity.RunningAction = null;
+            actorProxy.baseEntity.SyncAction = null;
         }
 
         public virtual bool NeedMoveSync => false;
@@ -32,9 +32,9 @@ namespace MirageTest.Scripts.SyncAction
             }
             
             actor.SyncActionWithTarget(actor.Client.Player.Identity.NetId, GetType().Name, target.NetId);
-            actor.baseStat.RunningAction = this;
+            actor.baseEntity.RunningAction = this;
             yield return Action(actor, target);
-            actor.baseStat.RunningAction = null;
+            actor.baseEntity.RunningAction = null;
         }
 
         public abstract IEnumerator Action(ActorProxy actor, ActorProxy target);
@@ -50,9 +50,9 @@ namespace MirageTest.Scripts.SyncAction
             }
             
             actor.SyncActionWithoutTarget(actor.Client.Player.Identity.NetId, GetType().Name);
-            actor.baseStat.RunningAction = this;
+            actor.baseEntity.RunningAction = this;
             yield return Action(actor);
-            actor.baseStat.RunningAction = null;
+            actor.baseEntity.RunningAction = null;
         }
 
         public abstract IEnumerator Action(ActorProxy actor);
@@ -62,10 +62,10 @@ namespace MirageTest.Scripts.SyncAction
     {
         public override IEnumerator Action(ActorProxy actor)
         {
-            var shielder = actor.baseStat as Minion_Shielder;
+            var shielder = actor.baseEntity as Minion_Shielder;
             SoundManager.instance.Play(shielder.clip_ShieldMode);
             shielder.animator.SetTrigger(AnimationHash.Skill);
-            yield return new WaitForSeconds(actor.baseStat.effectDuration);
+            yield return new WaitForSeconds(actor.baseEntity.effectDuration);
         }
     }
     
@@ -73,7 +73,7 @@ namespace MirageTest.Scripts.SyncAction
     {
         public override IEnumerator Action(ActorProxy actor)
         {
-            var shield = actor.baseStat as Minion_Shield;
+            var shield = actor.baseEntity as Minion_Shield;
             SoundManager.instance.Play(shield.clip_ShieldMode);
             shield.animator.SetTrigger(AnimationHash.SkillLoop);
             shield.halfDamage = true;
@@ -100,7 +100,7 @@ namespace MirageTest.Scripts.SyncAction
         public override void OnActionCancel(ActorProxy actorProxy)
         {            
             base.OnActionCancel(actorProxy);
-            var shield = actorProxy.baseStat as Minion_Shield;
+            var shield = actorProxy.baseEntity as Minion_Shield;
             DisableShield(shield);
             shield.animator.SetTrigger(AnimationHash.Idle);
         }
