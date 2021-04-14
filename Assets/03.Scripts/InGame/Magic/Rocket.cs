@@ -61,7 +61,7 @@ namespace ED
             var endPos = targetActorProxy.baseStat.ts_HitPos.position;
             var distance = Vector3.Distance(startPos, endPos);
             var moveTime = distance / actorProxy.baseStat.moveSpeed;
-            actorProxy.transform.LookAt(target.transform);
+            actorProxy.transform.LookAt(targetActorProxy.transform);
 
             float t = 0;
 
