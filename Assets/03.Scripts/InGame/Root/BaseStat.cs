@@ -234,12 +234,6 @@ namespace ED
                         break;
                 }
             }
-
-            if (sr_Shadow != null)
-            {
-                var color = UnityUtil.HexToColor(isAlly ? "1886EF" : "FF2B2B");
-                sr_Shadow.color = color;
-            }
         }
 
         public virtual void SetAnimationTrigger(string triggerName, uint targetId)
