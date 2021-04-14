@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,7 @@ using RandomWarsProtocol;
 using Service.Core;
 using UnityEngine;
 using Debug = ED.Debug;
+using Object = UnityEngine.Object;
 
 public class RWNetworkServer : NetworkServer
 {
@@ -273,6 +275,14 @@ public class RWNetworkServer : NetworkServer
             
             playerProxy.EndGame(playerProxy.ConnectionToClient, report);
         }
+        
+        EndGameSessionOnGameEnd().Forget();
+    }
+
+    public async UniTask EndGameSessionOnGameEnd()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        serverGameLogic.EndGameSession();
     }
 
     List<UserMatchResult> ToMatchResults(List<MatchReport> matchReport)

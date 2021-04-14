@@ -173,7 +173,7 @@ namespace MirageTest.Scripts
             return list;
         }
 
-        private void EndGameSession()
+        public void EndGameSession()
         {
             logger.Log($"EndGameSession");
             var objs = _serverObjectManager.SpawnedObjects.Values.ToArray();
