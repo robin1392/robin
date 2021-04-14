@@ -47,7 +47,7 @@ namespace ED
 
             StopApproachToTarget();
 
-            if (target == null)
+            if (target == null || target.CanBeTarget() == false)
             {
                 yield break;
             }

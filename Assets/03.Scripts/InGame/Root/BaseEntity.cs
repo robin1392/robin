@@ -100,6 +100,11 @@ namespace ED
                 return false;
             }
 
+            if (ActorProxy == null)
+            {
+                return false;
+            }
+
             if (this is Minion minion)
             {
                 return !minion.isCloacking;

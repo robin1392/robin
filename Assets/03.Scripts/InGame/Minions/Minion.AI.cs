@@ -80,7 +80,7 @@ namespace ED
 
             StopApproachToTarget();
             
-            if (target == null || target.ActorProxy == null)
+            if (target == null || target.CanBeTarget() == false)
             {
                 yield break;
             }
