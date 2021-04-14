@@ -58,7 +58,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.7
+  orthographic size: 15
   m_Depth: 2
   m_CullingMask:
     serializedVersion: 2
@@ -103,7 +103,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8948819810862951791}
   m_LocalRotation: {x: -0.258819, y: 0, z: 0, w: 0.9659259}
-  m_LocalPosition: {x: 0, y: -17.09, z: 0.39}
+  m_LocalPosition: {x: 0, y: -16.8, z: 1.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8948819811752150841}
@@ -139,7 +139,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.7
+  orthographic size: 15
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -182,14 +182,15 @@ MonoBehaviour:
   isMoveimmit: 0
   arrPos:
   - {x: 0, y: -17.09, z: 0.39}
-  - {x: 7.576797, y: -14.39293, z: 10.86556}
-  - {x: 14.16, y: -0.2457943, z: 11.90595}
+  - {x: 7.576797, y: -14.39293, z: 12.95}
+  - {x: 14.16, y: -0.25, z: 9.46}
   - {x: 0, y: -11.00523, z: 16.4556}
   arrRot:
   - {x: -30, y: 0, z: 0}
   - {x: -43.739, y: -34.295, z: 44.61}
-  - {x: 0, y: -45, z: 90}
+  - {x: 0, y: -32.6, z: 90}
   - {x: -55, y: 0, z: 0}
+  IsBottomOrientation: 0
 --- !u!114 &8948819812043943772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,7 +316,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.7
+  orthographic size: 15
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -389,7 +390,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.7
+  orthographic size: 15
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2

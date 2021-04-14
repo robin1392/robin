@@ -50,9 +50,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorProxy: {fileID: 0}
   isMine: 0
+  isCanBeTarget: 1
   diceId: 0
   id: 0
-  controller: {fileID: 0}
   animator: {fileID: 7618562884179390382}
   arrMaterial:
   - {fileID: 2100000, guid: dc7773798ff9e4b10af277a90e8fc7d4, type: 2}
@@ -61,25 +61,22 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1cd1550af585cc045a209933db9b8ca8, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
-  power: 50
-  effect: 0
-  effectUpByUpgrade: 0
-  effectUpByInGameUp: 0
+  effectUpgrade: 0
+  effectInGameUp: 0
   effectDuration: 0
   effectCooltime: 0
-  attackSpeed: 1
-  moveSpeed: 0.8
-  isBottomPlayer: 0
+  range: 0
+  searchRange: 0
   ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
+  ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 6150823028887648129}
   text_Health: {fileID: 0}
-  castType: 0
-  isPushing: 0
-  isAttackSpeedFactorWithAnimation: 1
-  eyeLevel: 0
-  ingameUpgradeLevel: 0
+  sr_Shadow: {fileID: 0}
   _poolObjectAutoDeactivate: {fileID: 0}
+  castType: 0
+  isAttackSpeedFactorWithAnimation: 1
+  collider: {fileID: 0}
   isPolymorph: 0
   pref_Dust: {fileID: 8926562141571314491, guid: 1edc218f2724d433a9ae9d108e1873f9,
     type: 3}
@@ -178,7 +175,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7939766581204017874}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.918, z: 0}
+  m_LocalPosition: {x: 0, y: 2.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6150823028870054215}
