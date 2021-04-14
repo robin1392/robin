@@ -8,7 +8,11 @@ public class ActorDevModeStarter : MonoBehaviour
 {
     public RWNetworkServer Server;
     public RWNetworkClient Master;
+    public bool EnableMasterAI;
+    public string MasterName;
     public RWNetworkClient Other;
+    public bool EnableOtherAI;
+    public string OtherName;
     public string Address = "localhost";
 
     async void Start()
@@ -18,20 +22,28 @@ public class ActorDevModeStarter : MonoBehaviour
             TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
         }
         
-        Server.MatchData.AddPlayerInfo(Master.LocalUserId, Master.LocalNickName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, Master.enableAI);
-        Server.MatchData.AddPlayerInfo(Other.LocalUserId, Other.LocalNickName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, Other.enableAI);
-
-        Master.authenticator = null;
-        Other.authenticator = null;
-        Server.authenticator = null;
-        
-        Server.ListenAsync().Forget();
-        while (Server.Active == false)
+        if (Server != null && Server.gameObject.activeInHierarchy)
         {
-            await UniTask.Yield();
+            Server.authenticator = null;
+            Server.MatchData.AddPlayerInfo(Master?.LocalUserId ?? MasterName, Master?.LocalNickName ?? MasterName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, EnableMasterAI);
+            Server.MatchData.AddPlayerInfo(Other?.LocalUserId ?? OtherName, Other?.LocalNickName ?? OtherName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, EnableOtherAI);
+            Server.ListenAsync().Forget();
+            while (Server.Active == false)
+            {
+                await UniTask.Yield();
+            }
         }
-        
-        await Master.RWConnectAsync(Address);
-        await Other.RWConnectAsync(Address);   
+
+        if (Master != null && Master.gameObject.activeInHierarchy)
+        {
+            Master.authenticator = null;
+            await Master.RWConnectAsync(Address);    
+        }
+
+        if (Other != null && Other.gameObject.activeInHierarchy)
+        {
+            Other.authenticator = null;    
+            await Other.RWConnectAsync(Address);
+        }
     }
 }
