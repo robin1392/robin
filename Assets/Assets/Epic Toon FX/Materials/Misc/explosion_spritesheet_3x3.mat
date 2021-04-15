@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: explosion_spritesheet_3x3
-  m_Shader: {fileID: 10720, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 2b9ccfaa78997ac4b9f709dd47f45e7f, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
@@ -26,5 +26,4 @@ Material:
     m_Floats:
     - _InvFade: 3
     m_Colors:
-    - _TintColor: {r: 1, g: 1, b: 1, a: 0.5}
-  m_BuildTextureStacks: []
+    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
