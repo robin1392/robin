@@ -10,7 +10,6 @@ using MirageTest.Scripts.Messages;
 using Pathfinding;
 using Pathfinding.RVO;
 using RandomWarsProtocol;
-using RandomWarsResource.Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -783,12 +782,29 @@ namespace MirageTest.Scripts
             return Convert.ToInt32(value) * 0.1f;
         }
 
+        // public float? start;
+        // private int count;
+        
+        private const float SyncPositionInterval = 0.1f;
+        private float _lastSyncPositionTime;
         public void SyncPosition(bool force)
         {
+            if (force == false && _lastSyncPositionTime + SyncPositionInterval > Time.time)
+            {
+                return;
+            }
+                
+            // if (start == null)
+            // {
+            //     start = Time.time;
+            // }
+
             var position = transform.position;
             var converted = Vector3ToMsg(new Vector2(position.x, position.z));
             if (lastSend == null || !Equal(lastSend, converted) || force)
             {
+                // count++;
+                
                 lastSend = converted;
                 Client.Send(new PositionRelayMessage()
                 {
@@ -796,7 +812,11 @@ namespace MirageTest.Scripts
                     positionX = converted.X,
                     positionY = converted.Y,
                 }, Channel.Unreliable);
+
+                _lastSyncPositionTime = Time.time;
             }
+            
+            // _logger.Log($"perSec: {count / (Time.time - start)}");
         }
 
         bool Equal(MsgVector2 a, MsgVector2 b)
