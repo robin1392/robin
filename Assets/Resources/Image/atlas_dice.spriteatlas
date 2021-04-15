@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 6f13e070ecc1f0d4aa7b5034ad098b63, type: 3}
-    totalSpriteSurfaceArea: 13271851
+    totalSpriteSurfaceArea: 13718095
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -87,6 +87,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 721025c34d280499ab6ff2717cf71989, type: 3}
   - {fileID: 21300000, guid: 22aff6d3a480349f08875e719152727b, type: 3}
   - {fileID: 21300000, guid: 33d313f37442305498013d6c2fac66c1, type: 3}
+  - {fileID: 21300000, guid: 5d884804e07d741bb853e52fd6a337ab, type: 3}
   - {fileID: 21300000, guid: 57561b0487c4243bdbaa46c917826d58, type: 3}
   - {fileID: 21300000, guid: 7cf0c43465b8540da9e16fd71248fd75, type: 3}
   - {fileID: 21300000, guid: 14ad1344feb53499a95125809bfdbdb7, type: 3}
@@ -111,6 +112,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 89234546d7ee34ab880c5a1d12acd4cc, type: 3}
   - {fileID: 21300000, guid: 8c9fd5764d60c4666bde4f57d0fdaa5c, type: 3}
   - {fileID: 21300000, guid: 5e677a96f0eda42f88017e7e22643371, type: 3}
+  - {fileID: 21300000, guid: cab1e3a6c3a2b4d92a91f3387812c274, type: 3}
   - {fileID: 21300000, guid: 6e272cb6e305c4582b9a84d4e59fc968, type: 3}
   - {fileID: 21300000, guid: 1edd9527eba07416ba503291e7322a65, type: 3}
   - {fileID: 21300000, guid: d5ed8f2709c09474bb2a962b28baa942, type: 3}
@@ -159,6 +161,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: af89353c51f7c98488e24ec126fdc433, type: 3}
   - {fileID: 21300000, guid: cf4a325ccaac24703b92f2147a34cc89, type: 3}
   - {fileID: 21300000, guid: dd872e7c2bd11421caade61b3437eea8, type: 3}
+  - {fileID: 21300000, guid: d89afb8cf2ae54d1c909e32e7b7032c3, type: 3}
   - {fileID: 21300000, guid: ed855acc00efe4700af1535c8a0c250c, type: 3}
   - {fileID: 21300000, guid: 81c04cfc5b404407cbc81c23398f1bfd, type: 3}
   - {fileID: 21300000, guid: b1d3860d14262448fbc7ce02d7903134, type: 3}
@@ -219,6 +222,7 @@ SpriteAtlas:
   - icon_dice_1002
   - illust_5003
   - dice_star
+  - icon_dice_1012
   - diashopgoods02
   - icon_dice_4006
   - dice_pip
@@ -243,6 +247,7 @@ SpriteAtlas:
   - icon_dice_3007
   - icon_key
   - card_1003
+  - illust_1012
   - icon_dice_2000
   - icon_emotion_05
   - illust_2001
@@ -291,6 +296,7 @@ SpriteAtlas:
   - icon_unknown_dice
   - icon_dice_2004
   - icon_dia
+  - card_1012
   - icon_dice_2003
   - icon_dice_2005
   - icon_dice_1006
