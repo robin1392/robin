@@ -533,7 +533,7 @@ PrefabInstance:
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: enableActor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
@@ -3346,7 +3346,7 @@ PrefabInstance:
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 159.11186
+      value: 159.5
       objectReference: {fileID: 0}
     - target: {fileID: 6251786045742648351, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
@@ -3619,6 +3619,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9043858505857969643, guid: 58a4a590607854fda9b7098b130c9c79,
+        type: 3}
+      propertyPath: data.dataString
+      value: UEsDBBQAAAgIAABIIex5pLds6gEAANoDAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGVU02P2jAQ/SvI57YKCWjZHptF20OBiiB1tVUPgz0k1jo2dWxgQfz3epyED7WXnhzezHsz82Y4MV6BBe7QLkFI37DPg+RT9mHAuNHOeDuDw9RaYwOeEopKFfKIMW04Dsge1BusFX5FWVauS+vBXMl6HXMptYZDocyWyFnS/p6KEr+hLl1FzAhKvcRSGt2VoV5QSGfsSirswGE6CbDrgJe/kNcL4hskHs3lrMeAWFS4A+2eLWyrwtsNcJwZQbLsycyNW+JvLy0yyoUmOBMEc6OUFGhvdfrYDJsqFtiAau4iK7QWpP5nyOIdh3cFln3CEzqQiuZorWrewvdpwHagfLR/cKaBoZy1oZ9sBlvq+QcoRe/K7NGyX5TUtlFAvb04SLZa48AFp1vhA4kG9L17j5ciG2M5ii/Ga9HkqIPc/zC6gl3+MOkZo54SoEhqKrMnLxfeKanx6jQF5mFDudEaOXV861xP61Z5pWkEi40rwsOrhVbvL683NNR0oHPY1YGbe+ekLq/c0ktx7zcbZYJPHvkwGybpOHtMP2K6eUgmk3GWPIxH63TC4hRSSydBfQ/6yvXOhKPXN41BHRWXyMO2B/EQaWPCwv5ZHmtzc2VSb0zBw7HoRatxGTtcCajgrZjGf0eBcQSistOZnf8AUEsDBBQAAAgIAABIIezv6Md1bwAAAHoAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM01VFQSi9KLMgoBooYgjilmSkgdrSSiXFKsoVlsqGxoYGRqbGlkW6qUZq5gYWFqbGBualJkpGFUixQfUllQapfYm4qRE9AYklGWmZeSmZeul5QanJicYk7yHCl2FoAUEsBAi0AFAAACAgAAEgh7Hmkt2zqAQAA2gMAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAEgh7O/ox3VvAAAAegAAAAkAJAAAAAAAAAAAAAAANwIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAADxAgAAAAA=
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58a4a590607854fda9b7098b130c9c79, type: 3}
