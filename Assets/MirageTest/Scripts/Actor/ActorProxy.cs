@@ -775,12 +775,12 @@ namespace MirageTest.Scripts
         
         public static short MsgFloatToShort(float value)
         {
-            return Convert.ToInt16(value * 100);
+            return Convert.ToInt16(value * 10);
         }
 
         public static float MsgShortToFloat(short value)
         {
-            return Convert.ToInt32(value) * 0.01f;
+            return Convert.ToInt32(value) * 0.1f;
         }
 
         public void SyncPosition(bool force)
