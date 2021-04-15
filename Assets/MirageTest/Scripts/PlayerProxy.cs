@@ -39,7 +39,7 @@ public class PlayerProxy : NetworkBehaviour
     private void OnStartLocalPlayer()
     {
         var client = Client as RWNetworkClient;
-        if (client.enableActor && client.GetLocalPlayerState().team == GameConstants.TopCamp)
+        if (client.enableUI && client.GetLocalPlayerState().team == GameConstants.TopCamp)
         {
             InGameManager.Get().RotateTopCampObject();
         }
