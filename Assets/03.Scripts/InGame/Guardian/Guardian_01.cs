@@ -26,6 +26,11 @@ public class Guardian_01 : Minion
             RunningAction = null;
         }
 
+        if (IsTargetInnerRange() == false)
+        {
+            yield break;
+        }
+
         yield return base.Attack();
     }
 }

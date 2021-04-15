@@ -227,6 +227,11 @@ namespace ED
                 return false;
             }
             
+            if (target == null || target.isAlive == false)
+            {
+                return false;
+            }
+            
 #if UNITY_EDITOR
             if (target != null)
             {
