@@ -124,21 +124,27 @@ namespace MirageTest.Scripts.GameMode
                 return;
             }
 
-            var actorProxies = new List<ActorProxy>();
+            var actorProxiesOfPlayers = new List<IEnumerable<ActorProxy>>();
             foreach (var playerState in PlayerStates)
             {
-                actorProxies.AddRange(CreateActorByPlayerFieldDice(playerState));
+                actorProxiesOfPlayers.Add(CreateActorByPlayerFieldDice(playerState));
             }
 
             if (wave > 10)
             {
-                foreach (var actorProxy in actorProxies)
+                foreach (var actorProxiesOfPlayer in actorProxiesOfPlayers)
                 {
-                    ApplyDeathMatchEffect(actorProxy, wave);
+                    foreach (var actorProxy in actorProxiesOfPlayer)
+                    {
+                        ApplyDeathMatchEffect(actorProxy, wave);    
+                    }
                 }
             }
-
-            Spawn(actorProxies).Forget();
+            
+            foreach (var actorProxiesOfPlayer in actorProxiesOfPlayers)
+            {
+                Spawn(actorProxiesOfPlayer).Forget();   
+            }
         }
 
         public override void OnHitDamageTower(ActorProxy actorProxy)

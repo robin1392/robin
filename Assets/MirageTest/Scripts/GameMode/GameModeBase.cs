@@ -378,6 +378,8 @@ namespace MirageTest.Scripts.GameMode
             {
                 ServerObjectManager.Spawn(actorProxy.NetIdentity);
 
+                await UniTask.Yield();
+
                 if (IsGameEnd)
                 {
                     return;
