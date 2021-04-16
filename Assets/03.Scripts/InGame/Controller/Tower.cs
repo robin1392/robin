@@ -55,9 +55,9 @@ namespace ED
         {
             get
             {
-                if (collider is CapsuleCollider capsuleCollider)
+                if (collider is SphereCollider sphereCollider)
                 {
-                    return capsuleCollider.radius;
+                    return sphereCollider.radius;
                 }
 
                 return 0;

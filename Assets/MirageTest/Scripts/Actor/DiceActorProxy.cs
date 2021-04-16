@@ -75,7 +75,6 @@ namespace MirageTest.Scripts
                 minion.ActorProxy = this;
                 minion.transform.localPosition = Vector3.zero;
                 minion.transform.localRotation = Quaternion.identity;
-                minion.SetPathFinding(_seeker, _aiPath);
                 minion.Initialize();
                 minion.castType = (DICE_CAST_TYPE) diceInfo.castType;
                 minion.id = NetId;

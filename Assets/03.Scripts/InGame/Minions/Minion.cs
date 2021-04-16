@@ -82,7 +82,7 @@ namespace ED
             _spawnedTime += Time.deltaTime;
             if (animator != null)
             {
-                animator.SetFloat(AnimationHash.MoveSpeed, AiPath.velocity.magnitude);
+                animator.SetFloat(AnimationHash.MoveSpeed, ActorProxy._aiPath.velocity.magnitude);
             }
         }
 

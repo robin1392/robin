@@ -47,8 +47,7 @@ namespace MirageTest.Scripts
 
         public Seeker _seeker;
         public AIPath _aiPath;
-
-        public AIDestinationSetter _aiDestinationSetter;
+        
         public RVOController _rvoController;
 
         public readonly Buffs BuffList = new Buffs();
@@ -117,7 +116,6 @@ namespace MirageTest.Scripts
             if (RWNetworkClient.EnableRVO)
             {
                 _rvoController.enabled = b;
-                _aiDestinationSetter.enabled = b;
             }
         }
         
@@ -175,9 +173,7 @@ namespace MirageTest.Scripts
         {
             if (RWNetworkClient.EnableRVO)
             {
-                _aiDestinationSetter = gameObject.AddComponent<AIDestinationSetter>();
                 _rvoController = gameObject.AddComponent<RVOController>();
-                var simpleSmoothModifier = gameObject.AddComponent<SimpleSmoothModifier>();
                 _rvoController.maxNeighbours = 20;
                 _rvoController.lockWhenNotMoving = !UI_Main.isPushMode;
                 EnablePathfinding(false);

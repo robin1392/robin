@@ -158,7 +158,7 @@ MonoBehaviour:
   EnableMasterAI: 0
   MasterName: 
   Other: {fileID: 398029673}
-  EnableOtherAI: 1
+  EnableOtherAI: 0
   OtherName: 
   Address: localhost
 --- !u!4 &59141817
@@ -173,7 +173,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &176606790
 GameObject:
@@ -204,51 +204,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &188081433
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 188081435}
-  - component: {fileID: 188081434}
-  m_Layer: 0
-  m_Name: UserInfoManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &188081434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 188081433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9dd2685ea4a46a689922997f9c9761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  instanceID: 0
-  PrefsPostfix: 
---- !u!4 &188081435
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 188081433}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.432014, y: -0.88627005, z: -14.463273}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &210836845
 GameObject:
@@ -533,7 +488,7 @@ PrefabInstance:
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: enableActor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1999751920950500995, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
@@ -593,7 +548,7 @@ PrefabInstance:
     - target: {fileID: 4651702573362233943, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 23
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 4651702573362233943, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
@@ -856,6 +811,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ===Client===
+      objectReference: {fileID: 0}
+    - target: {fileID: 4651702573362233942, guid: 9cca993568f854e019d1c4f3df1c3f9a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4651702573362233943, guid: 9cca993568f854e019d1c4f3df1c3f9a,
         type: 3}
@@ -1126,7 +1086,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c875c46a300553e4d89a43dd2e99b8da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instanceID: 0
+  instanceID: 120856
   BucketUrl: https://randomdicewars-bucket.s3.ap-northeast-2.amazonaws.com
   Enviroment: Dev
 --- !u!850595691 &1664882037
@@ -1345,6 +1305,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 1947262303292508555, guid: 05d848b2db66e104ebd9aeb539efa37a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1947262303292508558, guid: 05d848b2db66e104ebd9aeb539efa37a,
         type: 3}
@@ -1605,7 +1570,7 @@ PrefabInstance:
     - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
       propertyPath: modeType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1414178687038351121, guid: c2c86073eb4dd48ba826c573f0409ce1,
         type: 3}
@@ -1746,7 +1711,7 @@ PrefabInstance:
     - target: {fileID: 7605708601348007467, guid: 85aa9dcc09b0649b2bb80aa794370da2,
         type: 3}
       propertyPath: m_RootOrder
-      value: 22
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 7605708601348007467, guid: 85aa9dcc09b0649b2bb80aa794370da2,
         type: 3}
@@ -3426,7 +3391,7 @@ PrefabInstance:
     - target: {fileID: 8409670914944511768, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -19
+      value: -19.000002
       objectReference: {fileID: 0}
     - target: {fileID: 8487804432831368136, guid: 5aa248c88c6344c22a9ab9c9cb9cad79,
         type: 3}
@@ -3623,7 +3588,7 @@ PrefabInstance:
     - target: {fileID: 9043858505857969643, guid: 58a4a590607854fda9b7098b130c9c79,
         type: 3}
       propertyPath: data.dataString
-      value: UEsDBBQAAAgIAABIIex5pLds6gEAANoDAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGVU02P2jAQ/SvI57YKCWjZHptF20OBiiB1tVUPgz0k1jo2dWxgQfz3epyED7WXnhzezHsz82Y4MV6BBe7QLkFI37DPg+RT9mHAuNHOeDuDw9RaYwOeEopKFfKIMW04Dsge1BusFX5FWVauS+vBXMl6HXMptYZDocyWyFnS/p6KEr+hLl1FzAhKvcRSGt2VoV5QSGfsSirswGE6CbDrgJe/kNcL4hskHs3lrMeAWFS4A+2eLWyrwtsNcJwZQbLsycyNW+JvLy0yyoUmOBMEc6OUFGhvdfrYDJsqFtiAau4iK7QWpP5nyOIdh3cFln3CEzqQiuZorWrewvdpwHagfLR/cKaBoZy1oZ9sBlvq+QcoRe/K7NGyX5TUtlFAvb04SLZa48AFp1vhA4kG9L17j5ciG2M5ii/Ga9HkqIPc/zC6gl3+MOkZo54SoEhqKrMnLxfeKanx6jQF5mFDudEaOXV861xP61Z5pWkEi40rwsOrhVbvL683NNR0oHPY1YGbe+ekLq/c0ktx7zcbZYJPHvkwGybpOHtMP2K6eUgmk3GWPIxH63TC4hRSSydBfQ/6yvXOhKPXN41BHRWXyMO2B/EQaWPCwv5ZHmtzc2VSb0zBw7HoRatxGTtcCajgrZjGf0eBcQSistOZnf8AUEsDBBQAAAgIAABIIezv6Md1bwAAAHoAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM01VFQSi9KLMgoBooYgjilmSkgdrSSiXFKsoVlsqGxoYGRqbGlkW6qUZq5gYWFqbGBualJkpGFUixQfUllQapfYm4qRE9AYklGWmZeSmZeul5QanJicYk7yHCl2FoAUEsBAi0AFAAACAgAAEgh7Hmkt2zqAQAA2gMAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAEgh7O/ox3VvAAAAegAAAAkAJAAAAAAAAAAAAAAANwIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAADxAgAAAAA=
+      value: UEsDBBQAAAgIAABIIey5rBoW7AEAANwDAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGVU8GO2jAQ/RXkc3cFYWFRj2XR9lCgIkhdbdXDYE8Sax2bOjawIP69MyGBrNpLT47ezHsz82ZyErIADzKgX4HSsRKfe/374aeekM4GF/0cDjPvnSc8YRSNSfUR67TBiJA9mDfYGPyKOi8C4YN+B50aXW4abgmH1Lgtc4f3jxdgpnL8hjYPBScxs9R2hbl29laGUFQ6OL/WBht4kEwIDg3w8hfyekVihczjyYKPSIhHgzuw4dnDtkijz0Di3CmWFU9u4cIKf0ftUXAuVOQNCU6dMVqh7+q0sTlWRV0gA1N9iKzRe9D2nyGP3aZko79q408YQJvW0BKqN/o+9cQOTORW7wa9Mw8M+fwS+yl+gDHc9By2/KzdHr34xUmXNlIot1cHecneBQjk9UX5wHYT+t68R37rIpnzEtUXF62qpmhJ7n8YTcEmf9BvGQ8thaCaVBVuz14uYzDa4s0cDixoQ1NnLUruuOt2S2tWeaNZBI9VSOmRxdKa95fXDg0tX+gCdiVxpzEEbfMbN49afTRcjB9G/fFmnIyyLBlOMrx7TBKcyMlIbSbJMEmkqKfQVgcN5jvpm9A6Q3dvO41BWSuuUNK6e/Uh8saUh/2zPpaucxjaZi6VdCx2edG4jk1nAoa8VbP670ixHoGp4nQW5z9QSwMEFAAACAgAAEgh7MWdIp1vAAAAegAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSMzTVUVBKL0osyCgGihiCOKWZKSB2tJKZiamBWZKZkWlampGxRVqqrrmRUapFsoVpSpKFkbGRUbJSLFB9SWVBql9ibipET0BiSUZaZl5KZl66XlBqcmJxiTvIcKXYWgBQSwECLQAUAAAICAAASCHsuawaFuwBAADcAwAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAASCHsxZ0inW8AAAB6AAAACQAkAAAAAAAAAAAAAAA5AgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAPMCAAAAAA==
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58a4a590607854fda9b7098b130c9c79, type: 3}

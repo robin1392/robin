@@ -50,7 +50,6 @@ namespace MirageTest.Scripts
                 guadian.ActorProxy = this;
                 guadian.transform.localPosition = Vector3.zero;
                 guadian.transform.localRotation = Quaternion.identity;
-                guadian.SetPathFinding(_seeker, _aiPath);
                 guadian.Initialize();
                 guadian.castType = (DICE_CAST_TYPE) gudianInfo.castType;
                 guadian.id = NetId;

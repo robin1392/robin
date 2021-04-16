@@ -52,7 +52,6 @@ namespace MirageTest.Scripts
             boss.ActorProxy = this;
             boss.transform.localPosition = Vector3.zero;
             boss.transform.localRotation = Quaternion.identity;
-            boss.SetPathFinding(_seeker, _aiPath);
             boss.Initialize();
             boss.castType = (DICE_CAST_TYPE) bossInfo.castType;
             boss.id = NetId;
