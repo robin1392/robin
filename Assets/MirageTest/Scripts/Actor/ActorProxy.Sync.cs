@@ -75,6 +75,57 @@ namespace MirageTest.Scripts
             baseEntity.animator.SetTrigger(hash);
         }
         
+        void RelayEffect(string effectName, Vector3 position)
+        {
+            if (Client.IsConnected == false)
+            {
+                return;
+            }
+            
+            PlayEffectRelayServer(Client.Player.Identity.NetId, effectName, position);
+        }
+        
+        [ServerRpc(requireAuthority = false)]
+        public void PlayEffectRelayServer(uint senderNetId, string effectName, Vector3 position)
+        {
+            foreach (var player in Server.Players)
+            {
+                if (player == null)
+                {
+                    continue;
+                }
+
+                if (player.Identity == null)
+                {
+                    continue;
+                }
+                
+                if (senderNetId == player.Identity.NetId)
+                {
+                    continue;
+                }
+
+                RelayPlayEffectOnClient(player, effectName, position);
+            }
+        }
+
+        [ClientRpc(target = Mirage.Client.Player)]
+        public void RelayPlayEffectOnClient(INetworkPlayer con, string effectName, Vector3 position)
+        {
+            PlayEffectInternal(effectName, position);
+        }
+        
+        public void PlayEffectWithRelay(string effectName, Vector3 position)
+        {
+            PlayEffectInternal(effectName, position);
+            RelayEffect(effectName, position);
+        }
+        
+        void PlayEffectInternal(string effectName, Vector3 position)
+        {
+            PoolManager.instance.ActivateObject(effectName, position);
+        }
+        
         public void FireBulletWithRelay(E_BulletType bulletType, BaseEntity target, float damage, float moveSpeed)
         {
             FireBulletInternal(bulletType, target, damage, moveSpeed);
