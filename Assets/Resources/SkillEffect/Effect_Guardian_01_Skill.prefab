@@ -28790,8 +28790,9 @@ GameObject:
   - component: {fileID: 5132733613406276691}
   - component: {fileID: 5132733613390954655}
   - component: {fileID: 5132733613391067115}
+  - component: {fileID: -2022822215752600632}
   m_Layer: 0
-  m_Name: guardian_1
+  m_Name: Effect_Guardian_01_Skill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33574,3 +33575,17 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-2022822215752600632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5132733613406484277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8392b961c9f7d4742ad6368d481d198a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolName: 
+  lifeTime: 1.2

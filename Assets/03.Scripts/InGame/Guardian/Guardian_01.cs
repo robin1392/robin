@@ -8,11 +8,13 @@ using MirageTest.Scripts.SyncAction;
 public class Guardian_01 : Minion
 {
     private float _skillCastedTime;
+    public GameObject _effectSkill;
 
     public override void Initialize()
     {
         base.Initialize();
         _skillCastedTime = -effectCooltime;
+        PoolManager.instance.AddPool(_effectSkill, 1);
     }
 
     public override IEnumerator Attack()
@@ -43,6 +45,8 @@ public class Guardian01Action : SyncActionWithTarget
 
         yield return new WaitForSeconds(0.716f);
 
+        PoolManager.instance.ActivateObject("Effect_Guardian_01_Skill", actorProxy.transform.position);
+        
         if (actorProxy.isPlayingAI)
         {
             var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseEntity.targetLayer);

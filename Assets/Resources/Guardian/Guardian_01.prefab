@@ -81,6 +81,8 @@ MonoBehaviour:
   isAttackSpeedFactorWithAnimation: 0
   collider: {fileID: 0}
   isPolymorph: 0
+  _effectSkill: {fileID: 5132733613406484277, guid: e676367227ba6470e8174236818a0361,
+    type: 3}
 --- !u!135 &6486029529450410244
 SphereCollider:
   m_ObjectHideFlags: 0
