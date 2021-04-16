@@ -16,6 +16,8 @@ namespace ED
     {
         [Header("Prefab")]
         public GameObject pref_Bullet;
+
+        public GameObject effect_Freeze; 
         [Space]
         public float bulletMoveSpeed = 6f;
 
@@ -27,6 +29,7 @@ namespace ED
             base.Awake();
             
             PoolManager.instance.AddPool(pref_Bullet, 1);
+            PoolManager.instance.AddPool(effect_Freeze, 1);
         }
 
         protected override void Start()

@@ -111,6 +111,8 @@ MonoBehaviour:
   isPolymorph: 0
   pref_Bullet: {fileID: 665045047327999094, guid: 09a148e86cdb046edb32055e3387a5e8,
     type: 3}
+  effect_Freeze: {fileID: 8813737514600411033, guid: ea5d0d9ecd1ae4aeb860d02e444b7869,
+    type: 3}
   bulletMoveSpeed: 6
   clip_Attack: {fileID: 8300000, guid: 5cfb230f843fc412db11414ce1ad09f3, type: 3}
 --- !u!135 &2463053660788652053

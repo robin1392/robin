@@ -140,6 +140,7 @@ namespace ED
                     if (_bulletType == E_BulletType.ICE_FREEZE_BULLET && _target != null && _target.ActorProxy != null)
                     {
                         _target.ActorProxy.AddBuff(BuffInfos.IceFreeze, _effect);
+                        PoolManager.instance.ActivateObject("Effect_Ice_Freeze", _target.ActorProxy.transform.position);
                     }   
                 }
             }
