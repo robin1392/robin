@@ -40,6 +40,10 @@ namespace RandomWarsResource.Data
 		DefaultSp = 32,
 		UpgradeSp = 33,
 		WaveSp = 34,
+		SuddenDeathAtkSpeed  = 35,
+		SuddenDeathMoveSpeed = 36,
+		SuddenDeathWaveTime1 = 37,
+		SuddenDeathWaveTime2 = 38,
 	}
 
 	public class TDataVsmode : ITableData<int>

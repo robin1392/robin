@@ -52,6 +52,9 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public Animator startAnimator;
     public Text startNumber;
     public GameObject startFight;
+    public GameObject suddenDeath;
+    public Slider sliderWave;
+    public RawImageFlow waveFlow;
     #endregion
 
     #region unity base
@@ -251,7 +254,15 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     
     #region event
     
-    
+    public void SetSpawnTime(float amount)
+    {
+        sliderWave.value = amount;
+    }
     
     #endregion
+
+    public void EnableSuddenDeath()
+    {
+        suddenDeath.gameObject.SetActive(true);
+    }
 }
