@@ -25,7 +25,7 @@ namespace MirageTest.Editor
             {
                 if (GUILayout.Button("변경"))
                 {
-                    RemoveLegacyScript();
+                    Do();
                 }
             }
 
@@ -34,6 +34,9 @@ namespace MirageTest.Editor
 
         void Do()
         {
+            var oldShader = Shader.Find("Hidden/Toony Colors Pro 2/Variants/Mobile Outline");
+            var newShader = Shader.Find("Toony Colors Pro 2/User/RWOutline");
+            
             foreach (var assetGuid in Selection.assetGUIDs)
             {
                 var assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
@@ -43,34 +46,23 @@ namespace MirageTest.Editor
                     continue;
                 }
         
-                var prefabGuids = AssetDatabase.FindAssets("t:Prefab", new string[]{assetPath});
-                foreach (var prefabGuid in prefabGuids)
+                var materials = AssetDatabase.FindAssets("t:Material", new string[]{assetPath});
+                foreach (var materialGuid in materials)
                 {
-                    var prefabPath = AssetDatabase.GUIDToAssetPath(prefabGuid);
-                    var prefab = PrefabUtility.LoadPrefabContents(prefabPath);
-                    
-                    
-                    
-                    var aiPath = prefab.GetComponent<AIPath>();
-                    if (aiPath != null)
+                    var materialPath = AssetDatabase.GUIDToAssetPath(materialGuid);
+                    var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+                    var texture = material.mainTexture;
+                    if (material.shader != oldShader)
                     {
-                        DestroyImmediate(aiPath);    
+                        continue;
                     }
                     
-                    var seeker = prefab.GetComponent<Seeker>();
-                    if (seeker != null)
-                    {
-                        DestroyImmediate(seeker);    
-                    }
-
-                    // var rigidbody = prefab.GetComponent<Rigidbody>();
-                    // if (rigidbody != null)
-                    // {
-                    //     Object.DestroyImmediate(rigidbody);    
-                    // }
-
-                    PrefabUtility.SaveAsPrefabAsset(prefab, prefabPath);
-                    PrefabUtility.UnloadPrefabContents(prefab);
+                    material.shader = newShader;
+                    material.SetTexture("_BaseMap", texture);
+                    material.SetFloat("_OutlineZSmooth", -0.5f);
+                    material.SetFloat("_OutlineWidth", 0.1f);
+                    
+                    Debug.Log($"{materialPath} Changed");
                 }            
             }
         }

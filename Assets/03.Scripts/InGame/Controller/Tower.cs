@@ -111,15 +111,15 @@ namespace ED
                 {
                     case E_MaterialType.BOTTOM:
                     case E_MaterialType.TOP:
-                        Color c = m.material.color;
+                        Color c = m.material.GetColor("_BaseColor");
                         c.a = 1f;
-                        m.material.color = c;
+                        m.material.SetColor("_BaseColor", c);
                         break;
                     case E_MaterialType.HALFTRANSPARENT:
                     case E_MaterialType.TRANSPARENT:
-                        c = m.material.color;
+                        c = m.material.GetColor("_BaseColor");
                         c.a = 0.3f;
-                        m.material.color = c;
+                        m.material.SetColor("_BaseColor", c);
                         break;
                 }
             }
