@@ -49,7 +49,7 @@ namespace MirageTest.Scripts
 
             baseEntity.effectUpgrade = diceInfo.effectUpgrade;
             baseEntity.effectInGameUp = diceInfo.effectInGameUp;
-            baseEntity.effectDuration = diceInfo.effectDurationTime;
+            baseEntity.effectDuration = effectDurationTime;
             baseEntity.effectCooltime = diceInfo.effectCooltime;
             baseEntity.range = diceInfo.range;
             baseEntity.searchRange = diceInfo.searchRange;

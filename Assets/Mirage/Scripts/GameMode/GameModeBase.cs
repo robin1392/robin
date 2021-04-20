@@ -423,12 +423,15 @@ namespace MirageTest.Scripts.GameMode
                             (diceInfo.maxHpInGameUp * inGameLevel);
             var effect = diceInfo.effect + (diceInfo.effectUpgrade * outGameLevel) +
                          (diceInfo.effectInGameUp * inGameLevel);
+            var effectDurationTime = diceInfo.effectDurationTime + (diceInfo.effectDurationTimeUpgrade * outGameLevel) +
+                                     (diceInfo.effectDurationTimeIngameUp * inGameLevel); 
 
             return new Stat()
             {
                 power = power,
                 maxHealth = maxHealth,
                 effect = effect,
+                effectDurationTime = effectDurationTime,
             };
         }
 
@@ -440,6 +443,7 @@ namespace MirageTest.Scripts.GameMode
                 power = stat.power * (diceScale + 1),
                 maxHealth = stat.maxHealth * (diceScale + 1),
                 effect = stat.effect * (diceScale + 1),
+                effectDurationTime = stat.effectDurationTime
             };
         }
 
@@ -452,7 +456,8 @@ namespace MirageTest.Scripts.GameMode
             {
                 power = stat.power * Mathf.Pow(1.5f, diceScale - 1),
                 maxHealth = stat.maxHealth * Mathf.Pow(2f, diceScale - 1),
-                effect = stat.effect * Mathf.Pow(1.5f, diceScale - 1)
+                effect = stat.effect * Mathf.Pow(1.5f, diceScale - 1),
+                effectDurationTime = stat.effectDurationTime,
             };
         }
 
@@ -461,6 +466,7 @@ namespace MirageTest.Scripts.GameMode
             public float power;
             public float maxHealth;
             public float effect;
+            public float effectDurationTime;
         }
 
         public void SpawnMyMinion(int diceId, byte ingameLevel, byte outGameLevel, byte diceScale)

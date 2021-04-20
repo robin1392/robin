@@ -37,7 +37,7 @@ public class Minion_Fire : Minion
             Vector3 pos = transform.position;
             ActorProxy.PlayEffectWithRelay("Effect_FireBomb", pos);
             
-            var cols = Physics.OverlapSphere(pos, effectDuration, targetLayer);
+            var cols = Physics.OverlapSphere(pos, (ActorProxy as DiceActorProxy).diceInfo.effectRangeValue, targetLayer);
             foreach (var col in cols)
             {
                 var bs = col.GetComponentInParent<BaseEntity>();

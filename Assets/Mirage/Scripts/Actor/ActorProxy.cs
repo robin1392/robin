@@ -28,6 +28,7 @@ namespace MirageTest.Scripts
         [SyncVar] public float maxHealth;
         [SyncVar] public float power;
         [SyncVar] public float effect;
+        [SyncVar] public float effectDurationTime;
         [SyncVar] public float attackSpeed;
         [SyncVar] public float moveSpeed;
         [SyncVar] public byte diceScale;
