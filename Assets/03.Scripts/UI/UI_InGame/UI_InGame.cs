@@ -55,6 +55,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public GameObject suddenDeath;
     public Slider sliderWave;
     public RawImageFlow waveFlow;
+    public Texture suddenDeathTexture;
     #endregion
 
     #region unity base
@@ -264,5 +265,6 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public void EnableSuddenDeath()
     {
         suddenDeath.gameObject.SetActive(true);
+        waveFlow.image.texture = suddenDeathTexture;
     }
 }

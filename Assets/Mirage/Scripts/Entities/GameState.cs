@@ -15,8 +15,8 @@ namespace MirageTest.Scripts.Entities
         [SyncVar(hook = nameof(SetWave))] public int wave;
         public UnityEvent<int> WaveEvent;
         
-        private float _waveInterval;
-        private float _waveRemainTime;
+        [SerializeField] private float _waveInterval;
+        [SerializeField] private float _waveRemainTime;
         private bool _enableUI;
         private int _lastRemainTime = int.MaxValue;
 
