@@ -23,8 +23,8 @@ namespace MirageTest.Scripts.GameMode
         private readonly int towerHpForGudianSpawn;
         private readonly int suddenDeathAtkSpeed;
         private readonly int suddenDeathMoveSpeed;
-        private readonly int suddenDeathStartWave = 2;
-        private readonly int suddenDeathSecondWave = 4;
+        private readonly int suddenDeathStartWave = 11;
+        private readonly int suddenDeathSecondWave = 16;
         private readonly int suddenDeathWaveTime1;
         private readonly int suddenDeathWaveTime2;
 
