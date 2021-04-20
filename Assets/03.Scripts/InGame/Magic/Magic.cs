@@ -38,6 +38,11 @@ namespace ED
 
         public void SetColor(bool isBottomCamp)
         {
+            if (UI_Main.isTeamColorMode == false)
+            {
+                return;
+            }
+            
             var mr = GetComponentsInChildren<MeshRenderer>(true);
             foreach (var m in mr)
             {
