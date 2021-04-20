@@ -21,22 +21,32 @@ namespace MirageTest.Scripts.GameMode
         static readonly ILogger logger = LogFactory.GetLogger(typeof(BattleMode));
         private readonly int endWave;
         private readonly int towerHpForGudianSpawn;
+        private readonly int suddenDeathAtkSpeed;
+        private readonly int suddenDeathMoveSpeed;
+        private readonly int suddenDeathStartWave = 11;
+        private readonly int suddenDeathSecondWave = 16;
+        private readonly int suddenDeathWaveTime1;
+        private readonly int suddenDeathWaveTime2;
+
         public bool bottomGudianSpawned;
         public bool topGudianSpawned;
 
         public BattleMode(PrefabHolder prefabHolder, ServerObjectManager serverObjectManager) : base(prefabHolder,
             serverObjectManager)
         {
-            endWave = TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.EndWave].value;
+            var tableManager = TableManager.Get(); 
+            endWave = tableManager.Vsmode.KeyValues[(int) EVsmodeKey.EndWave].value;
             towerHpForGudianSpawn = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
+            suddenDeathAtkSpeed = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.SuddenDeathAtkSpeed].value;
+            suddenDeathMoveSpeed = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.SuddenDeathMoveSpeed].value;
+            suddenDeathWaveTime1 = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.SuddenDeathWaveTime1].value;
+            suddenDeathWaveTime2 = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.SuddenDeathWaveTime2].value;
         }
 
         public override async UniTask OnBeforeGameStart()
         {
             var gameState = CreateGameState();
-            Debug.Log($"gameState:{gameState != null} {gameState.state}");
             var playerStates = CreatePlayerStates();
-            Debug.Log($"playerStates1:{playerStates[0] != null} playerStates2:{playerStates[1] != null}");
             gameState.masterOwnerTag = playerStates[0].ownerTag;
             GameState = gameState;
             PlayerStates = playerStates;
@@ -44,7 +54,6 @@ namespace MirageTest.Scripts.GameMode
             PlayerState1.team = GameConstants.BottomCamp;
             PlayerState2.team = GameConstants.TopCamp;
             
-            Debug.Log($"ServerObjectManager:{ServerObjectManager != null}");
             ServerObjectManager.Spawn(gameState.NetIdentity);
             foreach (var playerState in playerStates)
             {
@@ -53,8 +62,7 @@ namespace MirageTest.Scripts.GameMode
 
             //액터보다 플레이어 스테이트가 먼저 생성되야해서 한 틱 양보
             await UniTask.Yield();
-
-            Debug.Log($"fieldManager:{FieldManager.Get() != null}");
+            
             var player1TowerPosition = FieldManager.Get().GetPlayerPos(isBottomPlayer: true);
             SpawnTower(PlayerState1, player1TowerPosition);
 
@@ -124,27 +132,49 @@ namespace MirageTest.Scripts.GameMode
                 return;
             }
 
+            if (GameState.suddenDeath == false)
+            {
+                if (wave >= suddenDeathStartWave)
+                {
+                    GameState.suddenDeath = true;
+                }
+            }
+
             var actorProxiesOfPlayers = new List<IEnumerable<ActorProxy>>();
             foreach (var playerState in PlayerStates)
             {
                 actorProxiesOfPlayers.Add(CreateActorByPlayerFieldDice(playerState));
             }
-
-            if (wave > 10)
+            
+            if (GameState.suddenDeath)
             {
                 foreach (var actorProxiesOfPlayer in actorProxiesOfPlayers)
                 {
                     foreach (var actorProxy in actorProxiesOfPlayer)
                     {
-                        ApplyDeathMatchEffect(actorProxy, wave);    
+                        ApplySuddenDeathEffect(actorProxy, wave);    
                     }
                 }
             }
-            
+
             foreach (var actorProxiesOfPlayer in actorProxiesOfPlayers)
             {
                 Spawn(actorProxiesOfPlayer).Forget();   
             }
+        }
+
+        protected override int CalcWaveTime()
+        {
+            if (GameState.wave >= suddenDeathSecondWave)
+            {
+                return suddenDeathWaveTime2;
+            }
+            else if (GameState.wave >= suddenDeathStartWave)
+            {
+                return suddenDeathWaveTime1;
+            }
+            
+            return base.CalcWaveTime();
         }
 
         public override void OnHitDamageTower(ActorProxy actorProxy)
@@ -186,11 +216,10 @@ namespace MirageTest.Scripts.GameMode
             Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team, position);
         }
 
-        void ApplyDeathMatchEffect(ActorProxy actorProxy, int wave)
+        void ApplySuddenDeathEffect(ActorProxy actorProxy, int wave)
         {
-            actorProxy.power *= Mathf.Pow(2f, GameState.wave - 10);
-            actorProxy.attackSpeed *= Mathf.Pow(0.9f, GameState.wave - 10);
-            actorProxy.attackSpeed = Mathf.Max(actorProxy.attackSpeed * 0.5f, actorProxy.attackSpeed);
+            actorProxy.attackSpeed *= (float)Math.Pow(suddenDeathAtkSpeed / 100.0f, wave - suddenDeathStartWave + 1);
+            actorProxy.moveSpeed *= (float)Math.Pow(suddenDeathMoveSpeed / 100.0f, wave - suddenDeathStartWave + 1);
         }
 
         public override void OnTowerDestroyed(ActorProxy destroyedTower)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using ED;
 using Mirage;
 using Mirage.KCP;
@@ -251,11 +252,7 @@ namespace MirageTest.Scripts
             }
 
             var actor = identity.GetComponent<ActorProxy>();
-            actor.lastRecieved = new MsgVector2()
-            {
-                X = msg.positionX,
-                Y = msg.positionY,
-            };
+            actor.lastRecieved = msg;
         }
 
         public void AddPlayerState(PlayerState playerState)
@@ -373,7 +370,12 @@ namespace MirageTest.Scripts
 
         public bool IsLocalPlayerAlly(byte team)
         {
-            return GetLocalPlayerState().team == team;
+            var localPlayerState = GetLocalPlayerState();
+            if (localPlayerState == null)
+            {
+                return false;
+            }
+            return localPlayerState.team == team;
         }
 
         public BaseEntity GetHighestHealthEnemy(byte team)

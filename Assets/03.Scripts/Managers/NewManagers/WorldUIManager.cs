@@ -16,8 +16,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     
     #region world ui element
 
-    [Header("Stage UI")] 
-    public Image imageSpawnTime;
+    [Header("Stage UI")]
     public Image imageTimerIcon;
     public Text textSpawnTime;
     public Text textWave;
@@ -93,11 +92,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
 
     public AnimationCurve curve;
     private bool isGaugeTweening;
-    
-    public void SetSpawnTime(float amount)
-    {
-        imageSpawnTime.fillAmount = amount;
-    }
 
     public void AddSP(int addSP)
     {

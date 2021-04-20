@@ -138,13 +138,18 @@ namespace MirageTest.Scripts.GameMode
                 OnWave(GameState.wave);
                 CheckRobotFusion();
                 
-                await UpdateWave(WaveTime);
+                await UpdateWave(CalcWaveTime());
 
                 if (IsGameEnd)
                 {
                     break;
                 }
             }
+        }
+
+        protected virtual int CalcWaveTime()
+        {
+            return WaveTime;
         }
 
         private void UpdatePlayerCommingSp()
