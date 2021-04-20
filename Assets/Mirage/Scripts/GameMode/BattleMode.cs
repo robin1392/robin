@@ -151,7 +151,7 @@ namespace MirageTest.Scripts.GameMode
                 {
                     foreach (var actorProxy in actorProxiesOfPlayer)
                     {
-                        ApplySuddenDeathEffect(actorProxy);    
+                        ApplySuddenDeathEffect(actorProxy, wave);    
                     }
                 }
             }
@@ -215,10 +215,10 @@ namespace MirageTest.Scripts.GameMode
             Server.CreateActorWithGuardianId(playerState.guardianId, actorProxy.ownerTag, actorProxy.team, position);
         }
 
-        void ApplySuddenDeathEffect(ActorProxy actorProxy)
+        void ApplySuddenDeathEffect(ActorProxy actorProxy, int wave)
         {
-            actorProxy.attackSpeed *= suddenDeathAtkSpeed / 100.0f;
-            actorProxy.moveSpeed *= suddenDeathMoveSpeed / 100.0f;
+            actorProxy.attackSpeed *= (float)Math.Pow(suddenDeathAtkSpeed / 100.0f, wave - suddenDeathStartWave + 1);
+            actorProxy.moveSpeed *= (float)Math.Pow(suddenDeathMoveSpeed / 100.0f, wave - suddenDeathStartWave + 1);
         }
 
         public override void OnTowerDestroyed(ActorProxy destroyedTower)
