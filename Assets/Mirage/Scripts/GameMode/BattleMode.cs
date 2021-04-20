@@ -36,6 +36,7 @@ namespace MirageTest.Scripts.GameMode
         {
             var tableManager = TableManager.Get(); 
             endWave = tableManager.Vsmode.KeyValues[(int) EVsmodeKey.EndWave].value;
+            towerHpForGudianSpawn = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
             suddenDeathAtkSpeed = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.SuddenDeathAtkSpeed].value;
             suddenDeathMoveSpeed = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.SuddenDeathMoveSpeed].value;
             suddenDeathWaveTime1 = tableManager.Vsmode.KeyValues[(int)EVsmodeKey.SuddenDeathWaveTime1].value;
