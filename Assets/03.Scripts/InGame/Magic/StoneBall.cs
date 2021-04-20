@@ -51,13 +51,15 @@ namespace  ED
             if (IsTargetLayer(other.gameObject))
             {
                 var bs = other.GetComponentInParent<Minion>();
-                PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
-                
-                if (ActorProxy.isPlayingAI)
+                if (bs != null && bs.CanBeTarget())
                 {
-                    if (bs != null && bs.isAlive)
+                    PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
+                    if (ActorProxy.isPlayingAI)
                     {
-                        bs.ActorProxy.HitDamage(power);
+                        if (bs != null && bs.isAlive)
+                        {
+                            bs.ActorProxy.HitDamage(power);
+                        }
                     }
                 }
             }
