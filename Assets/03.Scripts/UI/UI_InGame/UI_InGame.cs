@@ -56,6 +56,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public Slider sliderWave;
     public RawImageFlow waveFlow;
     public Texture suddenDeathTexture;
+    public Animator waveAnimator;
     #endregion
 
     #region unity base

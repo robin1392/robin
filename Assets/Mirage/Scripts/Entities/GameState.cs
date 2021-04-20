@@ -99,7 +99,16 @@ namespace MirageTest.Scripts.Entities
             if (newValue == 1)
             {
                 UI_InGame.Get().startFight.SetActive(true);
-                UI_InGame.Get().startAnimator.SetTrigger("Fight");   
+                UI_InGame.Get().startAnimator.SetTrigger("Fight");
+            }
+
+            if (suddenDeath)
+            {
+                UI_InGame.Get().waveAnimator.SetTrigger("SuddenDeath");
+            }
+            else
+            {
+                UI_InGame.Get().waveAnimator.SetTrigger("Change");   
             }
         }
         
@@ -108,6 +117,7 @@ namespace MirageTest.Scripts.Entities
             if (newValue)
             {
                 UI_InGame.Get().EnableSuddenDeath();
+                UI_InGame.Get().waveAnimator.SetTrigger("SuddenDeath");
             }
         }
         
