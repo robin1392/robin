@@ -95,11 +95,16 @@ namespace ED
 
         public bool CanBeTarget()
         {
+            if (isCanBeTarget == false)
+            {
+                return false;
+            }
+            
             if (!isAlive)
             {
                 return false;
             }
-
+            
             if (ActorProxy == null)
             {
                 return false;
