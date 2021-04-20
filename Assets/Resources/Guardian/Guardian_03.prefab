@@ -116,6 +116,7 @@ MonoBehaviour:
   ts_HitPos: {fileID: 8488758196635011245}
   ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 7045236939893536523}
+  objectHealthBar: {fileID: 0}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 9154342064432707993}
   _poolObjectAutoDeactivate: {fileID: 0}
@@ -207,7 +208,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8937148887549176886}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.781, z: 0}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7045236939911594445}

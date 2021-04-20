@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1932381380993190477}
   - component: {fileID: 85314325294552557}
   m_Layer: 5
-  m_Name: Canvas_Guardian_HealthBar
+  m_Name: Canvas_Boss_HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ PrefabInstance:
     - target: {fileID: 53241925038946590, guid: 440caca90feb54a7187eeda8f6bff90e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 53241925038946591, guid: 440caca90feb54a7187eeda8f6bff90e,
         type: 3}
@@ -93,7 +93,7 @@ PrefabInstance:
     - target: {fileID: 170546853015290986, guid: 440caca90feb54a7187eeda8f6bff90e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 835604417146249008, guid: 440caca90feb54a7187eeda8f6bff90e,
         type: 3}
