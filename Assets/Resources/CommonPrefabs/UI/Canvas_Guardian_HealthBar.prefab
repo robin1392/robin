@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1932381380993190477}
   - component: {fileID: 85314325294552557}
   m_Layer: 5
-  m_Name: Canvas_Unit_HealthBar
+  m_Name: Canvas_Guardian_HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,6 +56,53 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1932381380993190477}
     m_Modifications:
+    - target: {fileID: 53241925038946590, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 114
+      objectReference: {fileID: 0}
+    - target: {fileID: 53241925038946590, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 53241925038946591, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4d52bafb0fb304a8ab3403c4cca40400,
+        type: 3}
+    - target: {fileID: 53241925038946591, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 170546853015290986, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 118
+      objectReference: {fileID: 0}
+    - target: {fileID: 170546853015290986, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 835604417146249008, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: acd71ff1d68a0473abe20623ad98a7a7,
+        type: 3}
+    - target: {fileID: 835604417146249008, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 835604417146249008, guid: 440caca90feb54a7187eeda8f6bff90e,
+        type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2014752963692213703, guid: 440caca90feb54a7187eeda8f6bff90e,
         type: 3}
       propertyPath: m_Name
