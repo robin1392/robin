@@ -356,7 +356,7 @@ namespace MirageTest.Scripts.GameMode
                         actorProxy.BuffList.Add(new ActorProxy.Buff()
                         {
                             id = BuffInfos.NinjaClocking,
-                            endTime = (float) ServerObjectManager.Server.Time.Time + diceInfo.effectDuration,
+                            endTime = (float) ServerObjectManager.Server.Time.Time + diceInfo.effectDurationTime,
                         });
                     }
 

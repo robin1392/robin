@@ -65,7 +65,7 @@ namespace ED
             effectUpgrade = pData.effectUpgrade;
             effectInGameUp = pData.effectInGameUp;
             effectCooltime = pData.effectCooltime;
-            effectDuration = pData.effectDuration;
+            effectDuration = pData.effectDurationTime;
             attackSpeed = pData.attackSpeed;
             moveSpeed = pData.moveSpeed;
             range = pData.range;

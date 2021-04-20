@@ -75,7 +75,7 @@ namespace ED
             {
                 var targets = new List<Minion>();
                 //Hack: EffectDuration이지만 성장치 적용을 위해 스킬범위로 사용중
-                var skillDistance = (ActorProxy as DiceActorProxy).diceInfo.effectDuration; 
+                var skillDistance = (ActorProxy as DiceActorProxy).diceInfo.effectDurationTime; 
                 var cols = Physics.OverlapSphere(transform.position, skillDistance, targetLayer);
                 // Debug(transform.position, skillDistance).Forget();
                 

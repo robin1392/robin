@@ -114,7 +114,11 @@ namespace RandomWarsResource.Data
 		public float effect { get; set; }
 		public float effectUpgrade { get; set; }
 		public float effectInGameUp { get; set; }
-		public float effectDuration { get; set; }
+		public float effectDurationTime { get; set; }
+		public float effectDurationTimeUpgrade { get; set; }
+		public float effectDurationTimeIngameUp { get; set; }
+		public float effectRangeValue { get; set; }
+		public float effectProbability { get; set; }
 		public float effectCooltime { get; set; }
 		public float attackSpeed { get; set; }
 		public float moveSpeed { get; set; }
@@ -146,7 +150,7 @@ namespace RandomWarsResource.Data
 			iconName = cols[11].Replace("{#$}", ",");
 			illustName = cols[12].Replace("{#$}", ",");
 			cardName = cols[13].Replace("{#$}", ",");
-			color = Array.ConvertAll(cols[14].Split('|'), s => int.Parse(s));
+			color = (cols[14] == "-1") ? null : Array.ConvertAll(cols[14].Split('|'), s => int.Parse(s));
 			power = float.Parse(cols[15]);
 			powerUpgrade = float.Parse(cols[16]);
 			powerInGameUp = float.Parse(cols[17]);
@@ -156,14 +160,18 @@ namespace RandomWarsResource.Data
 			effect = float.Parse(cols[21]);
 			effectUpgrade = float.Parse(cols[22]);
 			effectInGameUp = float.Parse(cols[23]);
-			effectDuration = float.Parse(cols[24]);
-			effectCooltime = float.Parse(cols[25]);
-			attackSpeed = float.Parse(cols[26]);
-			moveSpeed = float.Parse(cols[27]);
-			range = float.Parse(cols[28]);
-			searchRange = float.Parse(cols[29]);
-			skillIndex = int.Parse(cols[30]);
-			attackType = bool.Parse(cols[31]);
+			effectDurationTime = float.Parse(cols[24]);
+			effectDurationTimeUpgrade = float.Parse(cols[25]);
+			effectDurationTimeIngameUp = float.Parse(cols[26]);
+			effectRangeValue = float.Parse(cols[27]);
+			effectProbability = float.Parse(cols[28]);
+			effectCooltime = float.Parse(cols[29]);
+			attackSpeed = float.Parse(cols[30]);
+			moveSpeed = float.Parse(cols[31]);
+			range = float.Parse(cols[32]);
+			searchRange = float.Parse(cols[33]);
+			skillIndex = int.Parse(cols[34]);
+			attackType = bool.Parse(cols[35]);
 		}
 	}
 }
