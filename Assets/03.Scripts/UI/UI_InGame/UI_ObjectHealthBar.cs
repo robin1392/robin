@@ -13,12 +13,28 @@ public class UI_ObjectHealthBar : MonoBehaviour
     private RectTransform rts_HPBar;
     private BaseEntity bs;
 
+    public Image healthBar;
+    public Sprite allySprite;
+    public Sprite enemySprite;
+
     private void Awake()
     {
         rts_HPBar = transform.GetChild(0) as RectTransform;
         bs = GetComponentInParent<BaseEntity>();
         //ts_OldParent = transform.parent;
         camera_UI = CameraController.Get().camera_UI;
+    }
+
+    public void SetColor(bool isAlly)
+    {
+        if (isAlly)
+        {
+            healthBar.sprite = allySprite;
+        }
+        else
+        {
+            healthBar.sprite = enemySprite;
+        }
     }
 
     private void OnEnable()

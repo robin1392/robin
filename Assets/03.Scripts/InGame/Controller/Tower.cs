@@ -157,13 +157,5 @@ namespace ED
             //ActorProxy가 파괴되기 전 밖으로 빼놓는다. 
             transform.SetParent(null);
         }
-
-        public void AdjustLocalTowerHealthBarPosition()
-        {
-            var objHealthBar = GetComponentInChildren<UI_ObjectHealthBar>().transform;
-            var pos = objHealthBar.localPosition;
-            pos.y *= -1;
-            objHealthBar.localPosition = pos;
-        }
     }
 }

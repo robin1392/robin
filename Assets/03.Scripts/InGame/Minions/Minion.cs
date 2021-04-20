@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _03.Scripts.ResourceManaging;
 using Cysharp.Threading.Tasks;
 using Mirage;
 using MirageTest.Scripts;
@@ -96,8 +97,6 @@ namespace ED
             target = null;
             _attackedTarget = null;
             image_HealthBar.fillAmount = 1f;
-            
-            SetHealthBarColor();
 
             if (animator != null)
             {
@@ -113,9 +112,10 @@ namespace ED
 
                 animator.speed = factor;
             }
-            
+
             _dicEffectPool.Clear();
             SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly);
+            objectHealthBar.SetColor(ActorProxy.IsLocalPlayerAlly);
         }
 
         public void ResetAttackedTarget()

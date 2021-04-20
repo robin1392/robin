@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _03.Scripts.ResourceManaging;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,12 +30,12 @@ namespace ED
 
         public virtual void Initialize(bool pIsBottomPlayer)
         {
-            SetHealthBarColor();
             if (_hitCollider != null)
             {
                 var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}"; 
                 _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
             }
+            objectHealthBar.SetColor(ActorProxy.IsLocalPlayerAlly);
         }
 
         public void SetColor(bool isBottomCamp)

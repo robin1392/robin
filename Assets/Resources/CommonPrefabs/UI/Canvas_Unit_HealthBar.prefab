@@ -49,6 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017a0d0fe8ec54b4e9790bbae55a7bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthBar: {fileID: 1932381381008686219}
+  allySprite: {fileID: 21300000, guid: 5027e7dbc70a94360a688f16649388f1, type: 3}
+  enemySprite: {fileID: 21300000, guid: 7a71604bd086b4360bb382ff6ee7b3a1, type: 3}
 --- !u!1001 &1903920515459007892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -174,3 +177,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1903920515459007892}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1932381381008686219 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 53241925038946591, guid: 440caca90feb54a7187eeda8f6bff90e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1903920515459007892}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

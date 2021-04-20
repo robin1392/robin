@@ -18,7 +18,6 @@ namespace MirageTest.Scripts
             playerController.isMine = IsLocalPlayerActor;
             playerController.ChangeLayer(IsBottomCamp());
             playerController.SetColor(IsBottomCamp() ? E_MaterialType.BOTTOM : E_MaterialType.TOP, IsLocalPlayerAlly);
-            baseEntity.SetHealthBarColor();
 
             var client = Client as RWNetworkClient;
             if (client.enableUI)
