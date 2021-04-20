@@ -2,13 +2,9 @@
 #define ENABLE_LOG
 #endif
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using _03.Scripts.ResourceManaging;
-using Cysharp.Threading.Tasks;
-using Mirage;
 using MirageTest.Scripts;
 using UnityEngine;
 
