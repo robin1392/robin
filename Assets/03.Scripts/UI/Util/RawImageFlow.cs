@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using WebSocketSharp;
 
 [RequireComponent(typeof(RawImage))]
 public class RawImageFlow : MonoBehaviour
