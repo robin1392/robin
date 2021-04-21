@@ -72,6 +72,7 @@ MonoBehaviour:
   ts_HitPos: {fileID: 8488758196635011245}
   ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 6150823028887648129}
+  objectHealthBar: {fileID: 0}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 3942675236717271529}
   _poolObjectAutoDeactivate: {fileID: 0}
@@ -469,6 +470,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 1464929914647962967, guid: 4a3d6c774390941f9881b878d508afbc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: b554ea205d0c44de39e10c92ce9219a6, type: 2}
     - target: {fileID: 1823055910198512366, guid: 4a3d6c774390941f9881b878d508afbc,
         type: 3}
       propertyPath: m_Name
