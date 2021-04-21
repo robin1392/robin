@@ -41,6 +41,7 @@ namespace ED
         // public Transform ts_TopEffectPosition;
 
         [Header("UI Link")] public Image image_HealthBar;
+        public UI_ObjectHealthBar objectHealthBar;
         public Text text_Health;
         public SpriteRenderer sr_Shadow;
 
@@ -95,11 +96,16 @@ namespace ED
 
         public bool CanBeTarget()
         {
+            if (isCanBeTarget == false)
+            {
+                return false;
+            }
+            
             if (!isAlive)
             {
                 return false;
             }
-
+            
             if (ActorProxy == null)
             {
                 return false;
@@ -133,8 +139,7 @@ namespace ED
         }
 
         public virtual float Radius => 0;
-
-        protected Vector3 networkPosition = Vector3.zero;
+        
         protected MeshRenderer[] arrMeshRenderer;
         protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
 
@@ -143,6 +148,7 @@ namespace ED
         protected virtual void Awake()
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
+            objectHealthBar = GetComponentInChildren<UI_ObjectHealthBar>();
         }
 
         protected virtual void Start()
@@ -154,16 +160,6 @@ namespace ED
             StopAllAction();
             _poolObjectAutoDeactivate?.Deactive();
             ActorProxy = null;
-        }
-
-        public void SetHealthBarColor()
-        {
-            if (image_HealthBar == null)
-            {
-                return;
-            }
-
-            image_HealthBar.color = ActorProxy.IsLocalPlayerAlly ? Color.green : Color.red;
         }
 
         public virtual void ChangeLayer(bool pIsBottomPlayer)

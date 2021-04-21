@@ -51,13 +51,15 @@ namespace  ED
             if (IsTargetLayer(other.gameObject))
             {
                 var bs = other.GetComponentInParent<Minion>();
-                PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
-                
-                if (ActorProxy.isPlayingAI)
+                if (bs != null && bs.CanBeTarget())
                 {
-                    if (bs != null && bs.isAlive)
+                    PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
+                    if (ActorProxy.isPlayingAI)
                     {
-                        bs.ActorProxy.HitDamage(power);
+                        if (bs != null && bs.isAlive)
+                        {
+                            bs.ActorProxy.HitDamage(power);
+                        }
                     }
                 }
             }
@@ -85,10 +87,11 @@ namespace  ED
             SoundManager.instance.Play(stoneBall.clip_Rolling);
             float angle = 0f;
             Vector3 forward = actorTransform.forward;
+            var rotationSpeed = 45 * 9;
             while (true)
             {
                 actorTransform.position += forward * (stoneBall.moveSpeed * Time.deltaTime);
-                angle += (isBottomCamp? 45f : -45f) * Time.deltaTime;
+                angle += (isBottomCamp? 1f : -1f) * rotationSpeed * Time.deltaTime;
                 modelTransform.rotation = Quaternion.AngleAxis(angle, Vector3.right);
                 yield return null;
             }

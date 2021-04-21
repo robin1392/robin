@@ -158,6 +158,11 @@ namespace ED
                     TutorialManager.MergeComplete();
                 }
                 
+                if (_client == null || _client.IsConnected == false)
+                {
+                    return;
+                }
+                
                 var localPlayerProxy = _client.GetLocalPlayerProxy();
                 localPlayerProxy.MergeDice(dragDice.diceFieldNum, dice.diceFieldNum);
                 

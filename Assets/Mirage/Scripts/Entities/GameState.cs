@@ -15,13 +15,17 @@ namespace MirageTest.Scripts.Entities
         [SyncVar(hook = nameof(SetWave))] public int wave;
         public UnityEvent<int> WaveEvent;
         
-        private float _waveInterval;
-        private float _waveRemainTime;
+        [SerializeField] private float _waveInterval;
+        [SerializeField] private float _waveRemainTime;
         private bool _enableUI;
         private int _lastRemainTime = int.MaxValue;
 
         [SyncVar(hook = nameof(SetMasterOwnerTag))] public byte masterOwnerTag;
         [SyncVar]public float factor = 1f;
+        
+        [SyncVar(hook = nameof(SetSuddenDeath))]public bool suddenDeath;
+        [SyncVar]public float suddenDeathAttackSpeedFactor = 1f;
+        [SyncVar]public float suddenDeathMoveSpeedFactor = 1f;
 
         private void Awake()
         {
@@ -95,7 +99,25 @@ namespace MirageTest.Scripts.Entities
             if (newValue == 1)
             {
                 UI_InGame.Get().startFight.SetActive(true);
-                UI_InGame.Get().startAnimator.SetTrigger("Fight");   
+                UI_InGame.Get().startAnimator.SetTrigger("Fight");
+            }
+
+            if (suddenDeath)
+            {
+                UI_InGame.Get().waveAnimator.SetTrigger("SuddenDeath");
+            }
+            else
+            {
+                UI_InGame.Get().waveAnimator.SetTrigger("Change");   
+            }
+        }
+        
+        public void SetSuddenDeath(bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                UI_InGame.Get().EnableSuddenDeath();
+                UI_InGame.Get().waveAnimator.SetTrigger("SuddenDeath");
             }
         }
         
@@ -138,7 +160,7 @@ namespace MirageTest.Scripts.Entities
                 return;
             }
             
-            WorldUIManager.Get().SetSpawnTime(1 - (_waveRemainTime / _waveInterval));
+            UI_InGame.Get().SetSpawnTime(1 - (_waveRemainTime / _waveInterval));
             var remainTimeInt = Mathf.CeilToInt(_waveRemainTime);
              
             string remainTimeStr = $"{remainTimeInt:F0}";
@@ -195,6 +217,12 @@ namespace MirageTest.Scripts.Entities
         {
             _waveInterval = waveInterval;
             _waveRemainTime = waveInterval;
+
+            if (_enableUI)
+            {
+                var defaultWaveTime = 20;
+                UI_InGame.Get().waveFlow.factor = defaultWaveTime / _waveInterval;
+            }
         }
     }
 }

@@ -56,9 +56,9 @@ namespace ED
             if (ActorProxy.isPlayingAI)
             {
                 var diceActorProxy = ActorProxy as DiceActorProxy;
-                if (Random.Range(0, 100) < diceActorProxy.diceInfo.effectDuration)
+                if (Random.Range(0, 100) < diceActorProxy.diceInfo.effectProbability)
                 {
-                    ActorProxy.FireBulletWithRelay(E_BulletType.ICE_FREEZE_BULLET, target, power, bulletMoveSpeed, diceActorProxy.effect);
+                    ActorProxy.FireBulletWithRelay(E_BulletType.ICE_FREEZE_BULLET, target, power, bulletMoveSpeed, diceActorProxy.effectDurationTime);
                 }
                 else
                 {

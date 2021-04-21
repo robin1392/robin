@@ -83,7 +83,7 @@ Material:
     - _Offset1: 0
     - _Offset2: 0
     - _Outline: 0.1
-    - _OutlineWidth: 0.1
+    - _OutlineWidth: 0.001
     - _OutlineZSmooth: -0.5
     - _Parallax: 0.02
     - _RampSmooth: 0.1

@@ -46,6 +46,11 @@ namespace ED
 
         public void Click_GetDiceButton()
         {
+            if (_client == null || _client.IsConnected == false)
+            {
+                return;
+            }
+            
             var localPlayerState = _client.GetLocalPlayerState();
             var diceCost = localPlayerState.GetDiceCost();
             if (localPlayerState == null)
@@ -110,7 +115,7 @@ namespace ED
                             break;
                     }
 
-                    UI_DiceField.Get().RefreshField();
+                    RefreshField();
                 }
                 else
                 {

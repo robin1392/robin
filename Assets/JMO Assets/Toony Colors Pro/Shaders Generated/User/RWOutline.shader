@@ -13,7 +13,7 @@ Shader "Toony Colors Pro 2/User/RWOutline"
 		[TCP2Separator]
 
 		[TCP2HeaderHelp(Outline)]
-		_OutlineWidth ("Width", Range(0.1,4)) = 1
+		_OutlineWidth ("Width", Range(0.001,4)) = 1
 		_OutlineColorVertex ("Color", Color) = (0,0,0,1)
 		[Space]
 		_OutlineZSmooth ("Z Correction", Range(-3,3)) = 0

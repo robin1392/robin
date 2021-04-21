@@ -79,7 +79,7 @@ MonoBehaviour:
   isAttackSpeedFactorWithAnimation: 1
   collider: {fileID: 0}
   isPolymorph: 0
-  pref_FireBombEffect: {fileID: 5166360906360891136, guid: 878413f681f3941baab6b9a0538d6a8f,
+  pref_FireBombEffect: {fileID: 2325903116925014942, guid: 878413f681f3941baab6b9a0538d6a8f,
     type: 3}
 --- !u!135 &6486029529450410244
 SphereCollider:
