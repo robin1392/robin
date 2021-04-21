@@ -246,6 +246,7 @@ namespace MirageTest.Scripts
             EnableBuffEffect(buffType, BuffType.Invincibility, "Shield", EffectLocation.Bottom);
             EnableBuffEffect(buffType, BuffType.Stun, "Effect_Sturn", EffectLocation.Top);
             EnableFreezeEffect((buffType & BuffType.Freeze) != 0);
+            EnableBuffEffect(buffType, BuffType.Freeze, "DiceState_IceEffect", EffectLocation.Bottom);
             EnableBuffEffect(buffType, BuffType.Scarecrow, "Scarecrow", EffectLocation.Bottom);
             EnableBuffEffect(buffType, BuffType.Taunted, "Effect_Taunted", EffectLocation.Top);
             EnableBuffEffect(buffType, BuffType.HalfDamage, "Effect_HalfDamage", EffectLocation.Mid);
