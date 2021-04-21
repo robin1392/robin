@@ -161,7 +161,7 @@ SpriteAtlas:
   - icon_surrender
   - icon_ingame_lose_02
   - icon_bubble_1_enemy
-  - sp_gauge_bar
+  - SP_Gauge_Bar
   - icon_bubble_dot
   - icon_ingame_fire_04
   - icon_ingame_win_02
