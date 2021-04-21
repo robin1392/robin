@@ -49,8 +49,9 @@ namespace ED
                 return;
             }
 
+            var actorTransform = ActorProxy.transform;
             var elapsedTime = this.elapsedTime;
-            transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / durationToTarget);
+            actorTransform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / durationToTarget);
 
             if (isArrivedAtTargetPosition == false)
             {

@@ -328,8 +328,9 @@ namespace MirageTest.Scripts.GameMode
                         spawnPosition.z += Random.Range(-0.2f, 0.2f);
                     }
                     
-                    //지뢰
-                    else if (diceInfo.id == 1005)
+                    //TODO: 데이터 시트에 스폰포지션 컬럼을 추가한다.
+                    //지뢰 
+                    else if (diceInfo.id == 1005 || diceInfo.id == 1013)
                     {
                         spawnPosition = GetRandomPlayerFieldPosition();
                     }

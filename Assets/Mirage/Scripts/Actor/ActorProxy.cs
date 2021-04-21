@@ -43,8 +43,8 @@ namespace MirageTest.Scripts
         public bool IsLocalPlayerActor => (Client as RWNetworkClient).IsLocalPlayerTag(ownerTag);
 
         public BaseEntity baseEntity;
-
-        private bool stopped;
+        
+        private bool _destoryRequested = false;
 
         public Seeker _seeker;
         public AIPath _aiPath;
@@ -139,8 +139,6 @@ namespace MirageTest.Scripts
                 baseEntity.ActorProxy = null;
                 baseEntity = null;
             }
-
-            stopped = true;
         }
 
         public void SetTeam(byte oldValue, byte newValue)
@@ -954,8 +952,15 @@ namespace MirageTest.Scripts
             return selected.baseEntity;
         }
 
+        
         public void Destroy()
         {
+            if (_destoryRequested)
+            {
+                return;
+            }
+            
+            _destoryRequested = true;
             if (IsLocalClient)
             {
                 DestroyInternal();
