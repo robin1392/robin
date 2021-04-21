@@ -62,26 +62,6 @@ namespace ED
         
         protected virtual void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                RendererEffect.ChangeToIceMaterial();
-            }
-            
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                RendererEffect.ResetToOriginal();
-            }
-            
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                RendererEffect.SetTintColor(Color.red);
-            }
-            
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                RendererEffect.ResetTint();
-            }
-            
             if (ActorProxy == null)
             {
                 return;
