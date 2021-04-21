@@ -29,7 +29,7 @@ namespace ED
                 _hitCollider.gameObject.layer = LayerMask.NameToLayer(layerName);
             }
 
-            objectHealthBar.SetColor(ActorProxy.IsLocalPlayerAlly);
+            objectHealthBar?.SetColor(ActorProxy.IsLocalPlayerAlly);
         }
 
         public void SetColor(bool isBottomCamp)
