@@ -130,7 +130,7 @@ namespace MirageTest.Scripts
         private void StopClient()
         {
             var client = Client as RWNetworkClient;
-            client.RemoveActorProxy(this);
+            client?.RemoveActorProxy(this);
             currentHealth = 0;
 
             if (baseEntity != null)
