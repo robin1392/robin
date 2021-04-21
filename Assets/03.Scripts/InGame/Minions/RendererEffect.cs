@@ -16,6 +16,7 @@ namespace ED
 
         private bool _isTinting = false;
         private Color _tintColor;
+        private float _tintValue;
 
         public RendererEffect(GameObject gameObject)
         {
@@ -41,7 +42,7 @@ namespace ED
 
                 if (_isTinting)
                 {
-                    SetTintColor(renderer, _tintColor);
+                    SetTintColor(renderer, _tintColor, _tintValue);
                 }
                 else
                 {
@@ -85,7 +86,7 @@ namespace ED
 
                 if (_isTinting)
                 {
-                    SetTintColor(renderer, _tintColor);
+                    SetTintColor(renderer, _tintColor, _tintValue);
                 }
                 else
                 {
@@ -94,14 +95,15 @@ namespace ED
             }
         }
 
-        public void SetTintColor(Color color)
+        public void SetTintColor(Color color, float value = 1.0f)
         {
             _tintColor = color;
             _isTinting = true;
+            _tintValue = value;
             for (var i = 0; i < _renderers.Length; ++i)
             {
                 var renderer = _renderers[i];
-                SetTintColor(renderer, color);
+                SetTintColor(renderer, color, value);
             }
         }
 
@@ -118,12 +120,12 @@ namespace ED
             }
         }
 
-        void SetTintColor(Renderer renderer, Color color)
+        void SetTintColor(Renderer renderer, Color color, float value)
         {
             var materials = renderer.materials;
             for (var materialIndex = 0; materialIndex < materials.Length; ++materialIndex)
             {
-                materials[materialIndex].SetFloat(_tintFactorProperty, 1);
+                materials[materialIndex].SetFloat(_tintFactorProperty, value);
                 materials[materialIndex].SetColor(_tintColorProperty, color);   
             }
         }

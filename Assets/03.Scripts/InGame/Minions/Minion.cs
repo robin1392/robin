@@ -2,9 +2,11 @@
 #define ENABLE_LOG
 #endif
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using MirageTest.Scripts;
 using UnityEngine;
 
@@ -64,9 +66,20 @@ namespace ED
             {
                 RendererEffect.ChangeToIceMaterial();
             }
+            
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 RendererEffect.ResetToOriginal();
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                RendererEffect.SetTintColor(Color.red);
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                RendererEffect.ResetTint();
             }
             
             if (ActorProxy == null)
@@ -357,14 +370,12 @@ namespace ED
 
         public void PlayRendererHitEffect()
         {
-            StartCoroutine(PlayRendererHitEffectCoroutine());
-        }
-        
-        IEnumerator PlayRendererHitEffectCoroutine()
-        {
-            RendererEffect.SetTintColor(Color.red);
-            yield return _waitForSeconds0_3;
-            RendererEffect.ResetTint();
+            var amount = 0.0f;
+            var targetValue = 0.7f;
+            var duration = 0.2f;
+            Tweener tweener = DOTween.To(() => amount, x => amount = x, targetValue, duration);
+            tweener.OnUpdate(() => { RendererEffect.SetTintColor(Color.red, amount); });
+            tweener.SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutQuad);
         }
     }
 }
