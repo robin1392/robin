@@ -726,24 +726,14 @@ namespace MirageTest.Scripts
                     var distance = (tr.position - position).magnitude;
                     var moveSpeedCalculated = moveSpeed;
 
-                    if (distance > 2.0f)
+                    if (distance > 3.0f)
                     {
                         tr.position = position;
                         tr.rotation = rotation;
                         return;
                     }
-                    else if (distance > 0.5f)
-                    {
-                        moveSpeedCalculated *= distance * 2;
-                    }
-                    else if (distance > 0.1f)
-                    {
-                        moveSpeedCalculated *= 1.5f;
-                    }
-                    
-                    _aiPath.maxSpeed = moveSpeedCalculated;
 
-                    var t = Time.deltaTime * 20;
+                    var t = 0.5f;
                     transform.position = Vector3.Lerp(transform.position, position, t);
                     transform.rotation = Quaternion.Lerp(transform.rotation, rotation, t);
                     
