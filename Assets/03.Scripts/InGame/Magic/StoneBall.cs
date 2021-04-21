@@ -87,10 +87,11 @@ namespace  ED
             SoundManager.instance.Play(stoneBall.clip_Rolling);
             float angle = 0f;
             Vector3 forward = actorTransform.forward;
+            var rotationSpeed = 45 * 9;
             while (true)
             {
                 actorTransform.position += forward * (stoneBall.moveSpeed * Time.deltaTime);
-                angle += (isBottomCamp? 45f : -45f) * Time.deltaTime;
+                angle += (isBottomCamp? 1f : -1f) * rotationSpeed * Time.deltaTime;
                 modelTransform.rotation = Quaternion.AngleAxis(angle, Vector3.right);
                 yield return null;
             }
