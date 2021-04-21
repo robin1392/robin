@@ -312,6 +312,11 @@ namespace ED
         
         public void Click_SP_Upgrade_Button()
         {
+            if (_client == null || _client.IsConnected == false)
+            {
+                return;
+            }
+            
             var localPlayerProxy = _client.GetLocalPlayerProxy(); 
             localPlayerProxy.UpgradeSp();
 
