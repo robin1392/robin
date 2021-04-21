@@ -52,7 +52,8 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "com.coffee.ui-effect": "4.0.0-preview.9"
+    "com.coffee.ui-effect": "4.0.0-preview.9",
+    "com.coffee.ui-particle": "3.3.5"
   },
   "scopedRegistries": [
     {
@@ -60,6 +61,7 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.coffee.ui-effect",
+        "com.coffee.ui-particle",
         "com.cysharp",
         "com.cysharp.unitask",
         "com.miragenet",
