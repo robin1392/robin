@@ -43,7 +43,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: cdc18c0b60b52446cbfbad7ffd4e89ce, type: 3}
-    totalSpriteSurfaceArea: 3585013
+    totalSpriteSurfaceArea: 3611513
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -73,6 +73,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1bb1030459fb04c2881a4dab7692fd8e, type: 3}
   - {fileID: 21300000, guid: ba3ac694266124874945c4e2190c75da, type: 3}
   - {fileID: 21300000, guid: 4d8694b4a2054435085ff7d2e07b3cdf, type: 3}
+  - {fileID: 21300000, guid: f8ee55e42688d473691603d7b02e064b, type: 3}
   - {fileID: 21300000, guid: b1de7aa59ded4410aa1938cf55e26b43, type: 3}
   - {fileID: 21300000, guid: 8df8dab50e781455a917ca38502520b2, type: 3}
   - {fileID: 21300000, guid: 0a290bc6021c9406096d20e7fe7dc89c, type: 3}
@@ -107,6 +108,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5027e7dbc70a94360a688f16649388f1, type: 3}
   - {fileID: 21300000, guid: 4d52bafb0fb304a8ab3403c4cca40400, type: 3}
   - {fileID: 21300000, guid: 8236d01c18f954de980b4d22a8c036d0, type: 3}
+  - {fileID: 21300000, guid: 1e44d07c88a0f4f689e94f969319a15b, type: 3}
   - {fileID: 21300000, guid: f95bf2ecbbd1241b596177574c063a28, type: 3}
   - {fileID: 21300000, guid: 5edbb2fccbce84c69a13b76d062d12e1, type: 3}
   - {fileID: 21300000, guid: 02836c9d84f424ac1840c8483d1237d6, type: 3}
@@ -142,6 +144,7 @@ SpriteAtlas:
   - tower_health_bar_1
   - icon_wave_02
   - 0_square_r30
+  - sp_fx_0
   - btn_basic_0
   - sudden_death_3
   - sp_back
@@ -158,7 +161,7 @@ SpriteAtlas:
   - icon_surrender
   - icon_ingame_lose_02
   - icon_bubble_1_enemy
-  - SP_Gauge_Bar
+  - sp_gauge_bar
   - icon_bubble_dot
   - icon_ingame_fire_04
   - icon_ingame_win_02
@@ -176,6 +179,7 @@ SpriteAtlas:
   - unit_health_bar_0
   - guardian_health_bar_0
   - sudden_death_2
+  - sp_fx_1
   - ui_frame_ingame_dice_1
   - sudden_death_icon
   - icon_bubble_1
