@@ -341,10 +341,12 @@ namespace MirageTest.Scripts
                 if (b)
                 {
                     minion.animator.speed = 0f;
+                    minion.RendererEffect.ChangeToIceMaterial();
                 }
                 else
                 {
                     minion.animator.speed = 1f;
+                    minion.RendererEffect.ResetToOriginal();
                 }
             }
         }
@@ -551,6 +553,11 @@ namespace MirageTest.Scripts
 
         public void HitDamage(float damage)
         {
+            HitDamage(damage, DamageType.Default);
+        }
+
+        public void HitDamage(float damage, DamageType damageType)
+        {
             if (Client.IsConnected == false)
             {
                 return;
@@ -570,22 +577,22 @@ namespace MirageTest.Scripts
 
             if (IsLocalClient)
             {
-                ApplyDamage(damage);
-                DamageOnInternal(damage);
+                ApplyDamageOnServer(damage,damageType);
+                DamageOnInternal(damage, damageType);
                 return;
             }
 
-            HitDamageOnServer(damage);
+            HitDamageOnServer(damage, damageType);
         }
 
         [ServerRpc(requireAuthority = false)]
-        public void HitDamageOnServer(float damage)
+        public void HitDamageOnServer(float damage, DamageType damageType)
         {
-            ApplyDamage(damage);
+            ApplyDamageOnServer(damage, damageType);
         }
 
         [Server]
-        private void ApplyDamage(float damage)
+        private void ApplyDamageOnServer(float damage, DamageType damageType)
         {
             currentHealth -= damage;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
@@ -598,7 +605,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            DamagedOnClient(damage);
+            DamagedOnClientRPC(damage, damageType);
         }
 
         protected virtual void OnApplyDamageOnServer()
@@ -606,19 +613,19 @@ namespace MirageTest.Scripts
         }
 
         [ClientRpc]
-        public void DamagedOnClient(float damage)
+        public void DamagedOnClientRPC(float damage, DamageType damageType)
         {
-            DamageOnInternal(damage);
+            DamageOnInternal(damage, damageType);
         }
 
-        void DamageOnInternal(float damage)
+        void DamageOnInternal(float damage, DamageType damageType)
         {
             if (baseEntity == null)
             {
                 return;
             }
 
-            baseEntity.OnHitDamageOnClient(damage);
+            baseEntity.OnHitDamageOnClient(damage, damageType);
             var obj = PoolManager.Get().ActivateObject("Effect_ArrowHit", baseEntity.ts_HitPos.position);
             obj.rotation = Quaternion.identity;
             obj.localScale = Vector3.one * 0.6f;
@@ -953,6 +960,7 @@ namespace MirageTest.Scripts
         }
 
         
+        [Client]
         public void Destroy()
         {
             if (_destoryRequested)
@@ -963,7 +971,7 @@ namespace MirageTest.Scripts
             _destoryRequested = true;
             if (IsLocalClient)
             {
-                DestroyInternal();
+                DestroyOnServer();
                 return;
             }
             
@@ -972,20 +980,20 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            DestroyOnServer();
+            DestroyServerRPC();
         }
 
         [ServerRpc(requireAuthority = false)]
-        public void DestroyOnServer()
+        public void DestroyServerRPC()
         {
-            DestroyInternal();
+            DestroyOnServer();
         }
 
         public void Destroy(float delay)
         {
             if (IsLocalClient)
             {
-                DestroyInternalDelayed(delay);
+                DestroyInternalDelayedOnServer(delay);
                 return;
             }
 
@@ -995,10 +1003,10 @@ namespace MirageTest.Scripts
         [ServerRpc(requireAuthority = false)]
         public void DestroyOnServerDelayed(float delay)
         {
-            DestroyInternalDelayed(delay);
+            DestroyInternalDelayedOnServer(delay);
         }
 
-        public void DestroyInternalDelayed(float delay)
+        public void DestroyInternalDelayedOnServer(float delay)
         {
             StartCoroutine(DestroyInternalDelayedCoroutine(delay));
         }
@@ -1007,10 +1015,10 @@ namespace MirageTest.Scripts
         {
             yield return new WaitForSeconds(delay);
 
-            DestroyInternal();
+            DestroyOnServer();
         }
 
-        void DestroyInternal()
+        void DestroyOnServer()
         {
             ServerObjectManager.Destroy(gameObject);
         }

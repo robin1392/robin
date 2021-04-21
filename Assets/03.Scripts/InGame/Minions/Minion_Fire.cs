@@ -43,7 +43,7 @@ public class Minion_Fire : Minion
                 var bs = col.GetComponentInParent<BaseEntity>();
                 if (bs != null && bs.CanBeTarget())
                 {
-                    bs.ActorProxy?.HitDamage(ActorProxy.effect);
+                    bs.ActorProxy?.HitDamage(ActorProxy.effect, DamageType.Fire);
                 }
             }
         }

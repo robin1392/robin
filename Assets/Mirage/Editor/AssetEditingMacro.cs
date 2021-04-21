@@ -34,8 +34,8 @@ namespace MirageTest.Editor
 
         void Do()
         {
-            var oldShader = Shader.Find("Hidden/Toony Colors Pro 2/Variants/Mobile Outline");
-            var newShader = Shader.Find("Toony Colors Pro 2/User/RWOutline");
+            var oldShader = Shader.Find("Toony Colors Pro 2/User/RWOutline");
+            var newShader = Shader.Find("Shader Graphs/DefaultBody");
             
             foreach (var assetGuid in Selection.assetGUIDs)
             {
@@ -51,17 +51,15 @@ namespace MirageTest.Editor
                 {
                     var materialPath = AssetDatabase.GUIDToAssetPath(materialGuid);
                     var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
-                    var texture = material.mainTexture;
+                    var texture = material.GetTexture("_BaseMap");
                     if (material.shader != oldShader)
                     {
                         continue;
                     }
                     
                     material.shader = newShader;
-                    material.SetTexture("_BaseMap", texture);
-                    material.SetFloat("_OutlineZSmooth", -0.5f);
-                    material.SetFloat("_OutlineWidth", 0.1f);
-                    
+                    material.SetTexture("_MainTex", texture);
+
                     Debug.Log($"{materialPath} Changed");
                 }            
             }

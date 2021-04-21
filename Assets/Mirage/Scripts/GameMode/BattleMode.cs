@@ -113,7 +113,7 @@ namespace MirageTest.Scripts.GameMode
                         EndGamePlayerDidNothing(PlayerStates);
                         foreach (var tower in server.Towers)
                         {
-                            tower.Destroy();
+                            ServerObjectManager.Destroy(tower.gameObject);
                         }
                     }
                     else
@@ -126,7 +126,7 @@ namespace MirageTest.Scripts.GameMode
                         
                         int getDefenderTowerHp = TableManager.Get().Vsmode.KeyValues[(int)EVsmodeKey.GetDefenderTowerHp].value;
                         EndGame(winner, loser, false, winnerTower.currentHealth > getDefenderTowerHp * 100);
-                        loserTower.Destroy();
+                        ServerObjectManager.Destroy(loserTower.gameObject);
                     }
                 }
                 return;

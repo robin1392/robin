@@ -6,4 +6,10 @@ namespace MirageTest.Scripts
         Mid,
         Bottom
     }
+    
+    public enum DamageType
+    {
+        Default,
+        Fire,
+    }
 }
