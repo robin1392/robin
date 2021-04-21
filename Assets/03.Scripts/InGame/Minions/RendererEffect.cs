@@ -13,9 +13,7 @@ namespace ED
         private const string IceResourceName = "DiceState_Ice";
         private readonly int _tintColorProperty = Shader.PropertyToID("_TintColor");
         private readonly int _tintFactorProperty = Shader.PropertyToID("_TintFactor");
-
-        private bool _isTinting = false;
-        private Color _tintColor;
+        private readonly MaterialPropertyBlock _tintPropertyBlock;
 
         public RendererEffect(GameObject gameObject)
         {
@@ -24,6 +22,7 @@ namespace ED
 
             _renderers = meshRenderer.Union(skinnedMeshRenderer).ToArray();
             _materials = _renderers.Select(r => r.materials).ToArray();
+            _tintPropertyBlock = new MaterialPropertyBlock();
         }
 
         public void Reset()
@@ -38,15 +37,6 @@ namespace ED
             {
                 var renderer = _renderers[i];
                 renderer.materials = _materials[i];
-
-                if (_isTinting)
-                {
-                    SetTintColor(renderer, _tintColor);
-                }
-                else
-                {
-                    ResetTint();
-                }
             }
         }
 
@@ -82,22 +72,11 @@ namespace ED
                 }
 
                 renderer.materials = _iceMaterials[i];
-
-                if (_isTinting)
-                {
-                    SetTintColor(renderer, _tintColor);
-                }
-                else
-                {
-                    ResetTint();
-                }
             }
         }
 
         public void SetTintColor(Color color)
         {
-            _tintColor = color;
-            _isTinting = true;
             for (var i = 0; i < _renderers.Length; ++i)
             {
                 var renderer = _renderers[i];
@@ -107,34 +86,23 @@ namespace ED
 
         public void ResetTint()
         {
-            _isTinting = false;
             for (var i = 0; i < _renderers.Length; ++i)
             {
                 var renderer = _renderers[i];
-                for (var materialIndex = 0; materialIndex < renderer.materials.Length; ++materialIndex)
-                {
-                    ResetTintColor(renderer);
-                }
+                ResetTintColor(renderer);
             }
         }
 
         void SetTintColor(Renderer renderer, Color color)
         {
-            var materials = renderer.materials;
-            for (var materialIndex = 0; materialIndex < materials.Length; ++materialIndex)
-            {
-                materials[materialIndex].SetFloat(_tintFactorProperty, 1);
-                materials[materialIndex].SetColor(_tintColorProperty, color);   
-            }
+            _tintPropertyBlock.SetFloat(_tintFactorProperty, 1);
+            _tintPropertyBlock.SetColor(_tintColorProperty, color);
+            renderer.SetPropertyBlock(_tintPropertyBlock);
         }
         
         void ResetTintColor(Renderer renderer)
         {
-            var materials = renderer.materials;
-            for (var materialIndex = 0; materialIndex < materials.Length; ++materialIndex)
-            {
-                materials[materialIndex].SetFloat(_tintFactorProperty, 0);
-            }
+            renderer.SetPropertyBlock(null);
         }
     }
 }
