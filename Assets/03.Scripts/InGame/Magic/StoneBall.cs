@@ -63,7 +63,8 @@ namespace  ED
                     }
                 }
             }
-            else if (other.CompareTag("Wall"))
+            
+            if (other.CompareTag("Wall") || other.CompareTag("Tower"))
             {
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 ts_Model.gameObject.SetActive(false);
