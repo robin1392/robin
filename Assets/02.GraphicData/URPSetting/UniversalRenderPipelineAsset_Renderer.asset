@@ -57,7 +57,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 769
+        m_Bits: 0
       PassNames:
       - SRPDefaultUnlit
       - UniversalForward
