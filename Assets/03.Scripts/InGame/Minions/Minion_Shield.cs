@@ -123,8 +123,9 @@ namespace ED
             return base.ModifyDamage(damage);
         }
 
-        public override void OnHitDamageOnClient(float damage)
+        public override void OnHitDamageOnClient(float damage, DamageType damageType)
         {
+            base.OnHitDamageOnClient(damage, damageType);
         }
     }
 }

@@ -8,7 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BottomPlayer_Weapon
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: -6465566751694194690, guid: f1da083a54d49174ba2988450f40f4ba,
+    type: 3}
   m_ShaderKeywords: OUTLINES TCP2_OUTLINE_CONST_SIZE TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK
     TCP2_UV_NORMALS_FULL TCP2_ZSMOOTH_ON
   m_LightmapFlags: 4
@@ -169,6 +170,7 @@ Material:
     - _TCP2_SPEC_TOON: 0
     - _TCP2_STYLIZED_FRESNEL: 0
     - _TexLod: 5
+    - _TintFactor: 0
     - _UVSec: 0
     - _UseAlphaTest: 0
     - _UseEmission: 0
@@ -212,5 +214,6 @@ Material:
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SColor: {r: 0.19499996, g: 0.19499996, b: 0.19499996, a: 1}
     - _SpecularColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _TintColor: {r: 1, g: 0, b: 0, a: 0}
     - _TopColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []

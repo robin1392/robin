@@ -35,7 +35,7 @@ namespace ED
         }
 
       
-        public override void OnHitDamageOnClient(float damage)
+        public override void OnHitDamageOnClient(float damage, DamageType damageType)
         {
             Skill();
         }

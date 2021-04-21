@@ -137,7 +137,7 @@ namespace MirageTest.Scripts
             if (magic != null)
             {
                 baseEntity = magic;
-                
+                magic.ActorProxy = this;
                 if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC)
                 {
                     transform.position = magicSpawnPosition;

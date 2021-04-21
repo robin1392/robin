@@ -97,34 +97,6 @@ namespace ED
             text_Health.text = $"{Mathf.CeilToInt(ActorProxy.currentHealth)}";
         }
 
-        public override void SetColor(E_MaterialType type, bool isAlly)
-        {
-            var mat = arrMaterial[isAlly ? 0 : 1];
-            var mr = GetComponentsInChildren<MeshRenderer>();
-            foreach (var m in mr)
-            {
-                if (m.gameObject.CompareTag("Finish")) continue;
-
-                m.material = mat;
-
-                switch (type)
-                {
-                    case E_MaterialType.BOTTOM:
-                    case E_MaterialType.TOP:
-                        Color c = m.material.GetColor("_BaseColor");
-                        c.a = 1f;
-                        m.material.SetColor("_BaseColor", c);
-                        break;
-                    case E_MaterialType.HALFTRANSPARENT:
-                    case E_MaterialType.TRANSPARENT:
-                        c = m.material.GetColor("_BaseColor");
-                        c.a = 0.3f;
-                        m.material.SetColor("_BaseColor", c);
-                        break;
-                }
-            }
-        }
-
         public void SendEventLog_BatCheck()
         {
             //KZSee: 게임 종료 시에 덱 정보를 아날리틱스로 보낸다  최대데미지와 최대 눈금을 주사위 아이디별로 저장해서 보낸

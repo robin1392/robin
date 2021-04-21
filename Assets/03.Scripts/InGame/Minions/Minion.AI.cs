@@ -39,6 +39,7 @@ namespace ED
         }
 
         protected WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);
+        protected WaitForSeconds _waitForSeconds0_3 = new WaitForSeconds(0.3f);
         
         protected virtual IEnumerator Root()
         {
