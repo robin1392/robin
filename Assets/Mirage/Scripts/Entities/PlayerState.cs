@@ -174,9 +174,18 @@ namespace MirageTest.Scripts.Entities
                     upgradeButton.EditSpCallback(newValue);
                 }
 
+                if (newValue > oldValue)
+                {
+                    UI_InGame.Get().addSpAnimator.SetTrigger("Sp_Get");
+                    UI_InGame.Get().SetSPGradually(sp);
+                }
+                else
+                {
+                    UI_InGame.Get().SetSP(newValue);    
+                }
+                
                 UI_InGame.Get().btn_GetDice.EditSpCallback(newValue >= GetDiceCost());
                 UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue >= GetUpradeSpCost() && spGrade < GameConstants.MaxSpUpgradeLevel);
-                UI_InGame.Get().SetSP(newValue);
             }
         }
         
@@ -341,39 +350,6 @@ namespace MirageTest.Scripts.Entities
             }
 
             return selectedIndexOnField;
-        }
-
-        public void AddSpByWave(int commingSp, int sp)
-        {
-            if (IsLocalClient)
-            {
-                AddSpByWaveInternal(commingSp, sp);
-                return;
-            }
-
-            AddSpByWaveOnClient(commingSp, sp);
-        }
-        
-        
-
-        [ClientRpc]
-        public void AddSpByWaveOnClient(int commingSp, int sp)
-        {
-            AddSpByWaveInternal(commingSp, sp);
-        }
-
-        void AddSpByWaveInternal(int commingSp, int sp)
-        {
-            if (EnableUI == false)
-            {
-                return;
-            }
-            
-            if (IsLocalPlayerState)
-            {
-                UI_InGame.Get().addSpAnimator.SetTrigger("Sp_Get");
-                UI_InGame.Get().SetSPGradually(sp);
-            }
         }
 
         public void GetDice()
