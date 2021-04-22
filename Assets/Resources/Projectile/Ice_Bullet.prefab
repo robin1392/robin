@@ -90,10 +90,25 @@ PrefabInstance:
       propertyPath: InitialModule.startColor.maxColor.g
       value: 0.37083045
       objectReference: {fileID: 0}
+    - target: {fileID: 107435489885642114, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 107435489885642114, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime1
+      value: 65535
+      objectReference: {fileID: 0}
     - target: {fileID: 107435489900607476, guid: 140f1ffeca50f41f5b40a0918a016f46,
         type: 3}
       propertyPath: m_Name
       value: particle_necromancer_hit
+      objectReference: {fileID: 0}
+    - target: {fileID: 107435489900607476, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 107435489900771766, guid: 140f1ffeca50f41f5b40a0918a016f46,
         type: 3}
@@ -204,6 +219,31 @@ PrefabInstance:
         type: 3}
       propertyPath: RotationBySpeedModule.enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336013142568458290, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336013142568458290, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336013142568458290, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336013142568458290, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336013142568458290, guid: 140f1ffeca50f41f5b40a0918a016f46,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8336013142569545516, guid: 140f1ffeca50f41f5b40a0918a016f46,
         type: 3}
