@@ -66,7 +66,7 @@ namespace ED
             
             var insObj = Instantiate(obj);
             var animator = insObj.GetComponentInChildren<Animator>();
-            insObj.transform.SetParent(parent);
+            insObj.transform.SetParent(parent, false);
             insObj.transform.localPosition = Vector3.zero;
             insObj.transform.localRotation = Quaternion.identity;
             animator.SetTrigger(Set1);
@@ -98,10 +98,10 @@ namespace ED
             {
                 return null;
             }
-
+            
             var insObj = Instantiate(obj);
             var animator = insObj.GetComponentInChildren<Animator>();
-            insObj.transform.SetParent(parent);
+            insObj.transform.SetParent(parent,false);
             insObj.transform.localPosition = Vector3.zero;
             insObj.transform.localRotation = Quaternion.identity;
             animator.SetTrigger(Set1);
