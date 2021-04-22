@@ -144,8 +144,9 @@ namespace MirageTest.Scripts
                     magic.transform.localPosition = Vector3.zero;
                     magic.transform.localRotation = Quaternion.identity;
                 }
+                //TODO: 아래 동작의 타입을 정의하고 데이터 컬럼을 추가해서 제어한다.
                 //지뢰의 경우 서버에서 설치위치를 설정한다. 이동 전에 서버에서 설정한 설치위치를 저장
-                else if ( diceInfo.id == 1005)
+                else if ( diceInfo.id == 1005 || diceInfo.id == 1013)
                 {
                     magic.targetPos = transform.position;
                     magic.startPos = magicSpawnPosition;
