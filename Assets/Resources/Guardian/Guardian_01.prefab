@@ -54,7 +54,6 @@ MonoBehaviour:
   ActorProxy: {fileID: 0}
   isMine: 0
   isCanBeTarget: 1
-  diceId: 0
   id: 0
   animator: {fileID: 2396902138092696232}
   arrMaterial:
@@ -74,11 +73,12 @@ MonoBehaviour:
   ts_HitPos: {fileID: 8488758196635011245}
   ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 6833717783988505743}
+  objectHealthBar: {fileID: 0}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 6215123843679124105}
   _poolObjectAutoDeactivate: {fileID: 0}
   castType: 4
-  isAttackSpeedFactorWithAnimation: 0
+  isAttackSpeedFactorWithAnimation: 1
   collider: {fileID: 0}
   isPolymorph: 0
   _effectSkill: {fileID: 5132733613406484277, guid: e676367227ba6470e8174236818a0361,

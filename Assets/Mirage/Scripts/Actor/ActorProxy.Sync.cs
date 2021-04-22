@@ -70,7 +70,7 @@ namespace MirageTest.Scripts
             {
                 transform.LookAt(target.ActorProxy.transform);
             }
-
+            
             baseEntity.animator.SetFloat(AnimationHash.MoveSpeed, 0);
             baseEntity.animator.SetTrigger(hash);
         }

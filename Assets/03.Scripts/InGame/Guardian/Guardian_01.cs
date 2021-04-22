@@ -13,7 +13,7 @@ public class Guardian_01 : Minion
     public override void Initialize()
     {
         base.Initialize();
-        _skillCastedTime = -effectCooltime;
+        _skillCastedTime = 0;
         PoolManager.instance.AddPool(_effectSkill, 1);
     }
 
@@ -26,8 +26,6 @@ public class Guardian_01 : Minion
 
     public override IEnumerator Attack()
     {
-        yield return null;
-        
         yield return Skill();
 
         if (IsTargetInnerRange() == false)
@@ -57,7 +55,7 @@ public class Guardian01Action : SyncActionWithTarget
     {
         actorProxy.baseEntity.animator.SetTrigger(AnimationHash.Skill);
 
-        yield return new WaitForSeconds(0.716f);
+        yield return new WaitForSeconds(0.5f);
 
         PoolManager.instance.ActivateObject("Effect_Guardian_01_Skill", actorProxy.transform.position);
         
