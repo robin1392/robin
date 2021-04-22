@@ -96,7 +96,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     public void AddSP(int addSP)
     {
         SetAddSpText(addSP);
-        textAddSP.transform.DOPunchScale(Vector3.one * 0.1f, 0.3f);
+        
     }
 
     public void SetAddSpText(int addSp)
