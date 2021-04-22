@@ -189,7 +189,7 @@ namespace MirageTest.Scripts.Entities
 
             if (IsLocalPlayerState)
             {
-                WorldUIManager.Get().SetAddSpText(newValue);
+                UI_InGame.Get().SetComingSp(newValue);
             }
         }
 
@@ -343,24 +343,26 @@ namespace MirageTest.Scripts.Entities
             return selectedIndexOnField;
         }
 
-        public void AddSpByWave(int sp)
+        public void AddSpByWave(int commingSp, int sp)
         {
             if (IsLocalClient)
             {
-                AddSpByWaveInternal(sp);
+                AddSpByWaveInternal(commingSp, sp);
                 return;
             }
 
-            AddSpByWaveOnClient(sp);
+            AddSpByWaveOnClient(commingSp, sp);
         }
+        
+        
 
         [ClientRpc]
-        public void AddSpByWaveOnClient(int sp)
+        public void AddSpByWaveOnClient(int commingSp, int sp)
         {
-            AddSpByWaveInternal(sp);
+            AddSpByWaveInternal(commingSp, sp);
         }
 
-        void AddSpByWaveInternal(int sp)
+        void AddSpByWaveInternal(int commingSp, int sp)
         {
             if (EnableUI == false)
             {
@@ -369,10 +371,10 @@ namespace MirageTest.Scripts.Entities
             
             if (IsLocalPlayerState)
             {
-                WorldUIManager.Get().AddSP(sp);
+                UI_InGame.Get().addSpAnimator.SetTrigger("Sp_Get");
+                UI_InGame.Get().SetSPGradually(sp);
             }
         }
-
 
         public void GetDice()
         {

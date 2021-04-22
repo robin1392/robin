@@ -10568,6 +10568,7 @@ MonoBehaviour:
   image_SP: {fileID: 3498041685231142941}
   text_Price: {fileID: 3167798211382646463}
   text_Level: {fileID: 653133224281942466}
+  ingameUpAnimator: {fileID: 2421127598620027154}
 --- !u!95 &2042612898235342127
 Animator:
   serializedVersion: 3

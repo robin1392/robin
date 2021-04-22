@@ -13,6 +13,8 @@ using RandomWarsResource.Data;
 
 public class UI_InGame : SingletonDestroy<UI_InGame>
 {
+    private int lastSetSp;
+    
     #region ui element variable
     public UI_UpgradeButton[] arrUpgradeButtons;
     public Text text_SP;
@@ -57,6 +59,9 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public RawImageFlow waveFlow;
     public Texture suddenDeathTexture;
     public Animator waveAnimator;
+    public Text textComingSP;
+    public Animator addSpAnimator;
+    public Animator spUpgradeAnimator;
     #endregion
 
     #region unity base
@@ -170,9 +175,17 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     {
         viewTargetDiceField.SetActive(view);
     }
+    
+    public void SetSPGradually(int sp)
+    {
+        text_SP.text = sp.ToString();
+        DOTween.To(() => lastSetSp, x => SetSP(x), sp, 5.0f/ 60.0f);
+    }
 
+    
     public void SetSP(int sp)
     {
+        lastSetSp = sp;
         text_SP.text = sp.ToString();
     }
 
@@ -267,5 +280,10 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     {
         suddenDeath.gameObject.SetActive(true);
         waveFlow.image.texture = suddenDeathTexture;
+    }
+    
+    public void SetComingSp(int addSP)
+    {
+        textComingSP.text = $"{addSP}";
     }
 }

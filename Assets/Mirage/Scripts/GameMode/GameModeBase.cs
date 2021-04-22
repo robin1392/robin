@@ -181,7 +181,7 @@ namespace MirageTest.Scripts.GameMode
                 foreach (var playerState in PlayerStates)
                 {
                     playerState.sp += playerState.commingSp;
-                    playerState.AddSpByWave(playerState.commingSp);
+                    playerState.AddSpByWave(playerState.commingSp, playerState.sp);
                 }
                 addSpCount++;
             }

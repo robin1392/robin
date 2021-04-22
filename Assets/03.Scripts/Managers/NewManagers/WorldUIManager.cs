@@ -20,7 +20,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     public Image imageTimerIcon;
     public Text textSpawnTime;
     public Text textWave;
-    public Text textAddSP;
+    
 
     [Header("Canvas")] public Canvas canvas_UnitHPBar;
 
@@ -92,17 +92,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
 
     public AnimationCurve curve;
     private bool isGaugeTweening;
-
-    public void AddSP(int addSP)
-    {
-        SetAddSpText(addSP);
-        
-    }
-
-    public void SetAddSpText(int addSp)
-    {
-        textAddSP.text = $"{addSp}";
-    }
 
     #endregion
 
