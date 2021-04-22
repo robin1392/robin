@@ -114,9 +114,9 @@ namespace ED
             // FirebaseManager.Get().LogEvent("bat_check", param);
         }
 
-        public override void OnBaseStatDestroyed()
+        public override void OnBaseEntityDestroyed()
         {
-            base.OnBaseStatDestroyed();
+            base.OnBaseEntityDestroyed();
             
             image_HealthBar?.transform.parent.gameObject.SetActive(false);
             image_HealthBar = null;

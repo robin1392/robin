@@ -26,7 +26,7 @@ namespace ED
             SoundManager.instance.Play(clip_Blade);
         }
 
-        public override void OnBaseStatDestroyed()
+        public override void OnBaseEntityDestroyed()
         {
             var rwClient = ActorProxy.Client as RWNetworkClient;
             // 독구름
@@ -53,7 +53,7 @@ namespace ED
                 delay = 2f,
             });
             
-            base.OnBaseStatDestroyed();
+            base.OnBaseEntityDestroyed();
         }
     }
 }

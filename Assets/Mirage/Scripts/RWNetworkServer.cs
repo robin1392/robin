@@ -276,13 +276,7 @@ public class RWNetworkServer : NetworkServer
             playerProxy.EndGame(playerProxy.ConnectionToClient, report);
         }
         
-        EndGameSessionOnGameEnd().Forget();
-    }
-
-    public async UniTask EndGameSessionOnGameEnd()
-    {
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
-        serverGameLogic.EndGameSession();
+        serverGameLogic.EndGameSession().Forget();
     }
 
     List<UserMatchResult> ToMatchResults(List<MatchReport> matchReport)

@@ -12,7 +12,6 @@ namespace ED
         public ActorProxy ActorProxy;
         public bool isMine;
         public bool isCanBeTarget = true;
-        public int diceId;
         public uint id;
         public Animator animator;
         public Material[] arrMaterial;
@@ -46,6 +45,9 @@ namespace ED
         public SpriteRenderer sr_Shadow;
 
         public RendererEffect RendererEffect;
+
+        public bool IsExtracted => _extractedOnGameEnd;
+        private bool _extractedOnGameEnd = false;
 
         public bool isAlive
         {
@@ -141,7 +143,7 @@ namespace ED
         }
 
         public virtual float Radius => 0;
-        
+
         protected MeshRenderer[] arrMeshRenderer;
         protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
 
@@ -158,7 +160,7 @@ namespace ED
         {
         }
 
-        public virtual void OnBaseStatDestroyed()
+        public virtual void OnBaseEntityDestroyed()
         {
             StopAllAction();
             _poolObjectAutoDeactivate?.Deactive();
@@ -214,6 +216,13 @@ namespace ED
         public virtual float ModifyDamage(float damage)
         {
             return damage;
+        }
+
+        public void ExtractOnGameSessionEnd()
+        {
+            _extractedOnGameEnd = true;
+            StopAllAction();
+            transform.SetParent(null, true);
         }
     }
 }

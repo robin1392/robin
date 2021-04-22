@@ -70,7 +70,7 @@ namespace MirageTest.Scripts
             await UniTask.Delay(TimeSpan.FromSeconds(60));
             if (NoPlayers)
             {
-                EndGameSession();
+                await EndGameSession();
             }
         }
         
@@ -137,7 +137,7 @@ namespace MirageTest.Scripts
             if (NoPlayers)
             {
                 logger.Log($"NoPlayers");
-                EndGameSession();
+                EndGameSession().Forget();
                 return;
             }
 
@@ -173,16 +173,13 @@ namespace MirageTest.Scripts
             return list;
         }
 
-        public void EndGameSession()
+        public async UniTask EndGameSession()
         {
             logger.Log($"EndGameSession");
-            var objs = _serverObjectManager.SpawnedObjects.Values.ToArray();
-            foreach (var obj in objs)
-            {
-                _serverObjectManager.Destroy(obj.gameObject);
-            }
-
+            
             _gameMode?.End();
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
             
             server.Disconnect();
 

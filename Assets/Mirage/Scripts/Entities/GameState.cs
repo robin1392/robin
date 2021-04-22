@@ -77,6 +77,11 @@ namespace MirageTest.Scripts.Entities
         {
             var client = Client as RWNetworkClient;
             client.playing = newValue == EGameState.Playing;
+
+            if (newValue == EGameState.End)
+            {
+                client.ExtractModelBeforeGameSessionEnd();
+            }
                 
             if (_enableUI == false)
             {

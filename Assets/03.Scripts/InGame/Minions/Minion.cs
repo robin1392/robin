@@ -333,8 +333,8 @@ namespace ED
             }
         }
 
-        public override void OnBaseStatDestroyed()
-        {            
+        public override void OnBaseEntityDestroyed()
+        {
             if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
             _destroyed = true;
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
@@ -345,7 +345,7 @@ namespace ED
                 autoDeactivate.Value.Deactive();
             }
             
-            base.OnBaseStatDestroyed();
+            base.OnBaseEntityDestroyed();
         }
 
         public void PlayRendererHitEffect()
