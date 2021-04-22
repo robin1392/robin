@@ -1156,6 +1156,11 @@ namespace MirageTest.Scripts
 
         public void UpdateSyncPositionToCurrentPosition()
         {
+            if (transform == null)
+            {
+                return;
+            }
+            
             lastRecieved = TransformToMsg(transform);
         }
 
