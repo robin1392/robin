@@ -528,7 +528,7 @@ namespace MirageTest.Scripts
         {
             if (this is GuardianActorProxy)
             {
-                if (id == BuffInfos.Freeze)
+                if (id == BuffInfos.IceFreeze)
                 {
                     return;
                 }
