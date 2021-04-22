@@ -58,7 +58,7 @@ namespace ED
                 var diceActorProxy = ActorProxy as DiceActorProxy;
                 if (Random.Range(0, 100) < diceActorProxy.diceInfo.effectProbability)
                 {
-                    ActorProxy.FireBulletWithRelay(E_BulletType.ICE_FREEZE_BULLET, target, power, bulletMoveSpeed, 3);// diceActorProxy.effectDurationTime);
+                    ActorProxy.FireBulletWithRelay(E_BulletType.ICE_FREEZE_BULLET, target, power, bulletMoveSpeed, diceActorProxy.effectDurationTime);
                 }
                 else
                 {
