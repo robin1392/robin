@@ -178,7 +178,6 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     
     public void SetSPGradually(int sp)
     {
-        text_SP.text = sp.ToString();
         DOTween.To(() => lastSetSp, x => SetSP(x), sp, 5.0f/ 60.0f);
     }
 
