@@ -9,7 +9,6 @@ using Mirage.Logging;
 using MirageTest.Scripts.Messages;
 using Pathfinding;
 using Pathfinding.RVO;
-using RandomWarsProtocol;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -57,7 +56,11 @@ namespace MirageTest.Scripts
         public bool isHalfDamage => ((buffType & BuffType.HalfDamage) != 0);
         public bool isCantAI => ((buffType & BuffType.CantAI) != 0);
         public bool isTaunted => ((buffType & BuffType.Taunted) != 0);
+        public bool isKnockBacked => ((buffType & BuffType.Knockbacked) != 0);
 
+        
+        const float knockBackSpeed = 5.0f;
+        
         public bool isInAllyCamp
         {
             get
@@ -82,6 +85,7 @@ namespace MirageTest.Scripts
         {
             public byte id;
             public uint target;
+            public Vector2 position;
             public float endTime;
 
             public override string ToString()
@@ -487,6 +491,29 @@ namespace MirageTest.Scripts
             }
         }
 
+        public void Knockback(Vector3 destination)
+        {
+            var position = transform.position;
+            var positionXZ = new Vector2(position.x, position.z);
+            var destinationXZ = new Vector2(destination.x, destination.z); 
+            var diff = destinationXZ - positionXZ;
+            var direction = diff.normalized;
+            var originalDistance = diff.magnitude;
+            var duration = originalDistance / knockBackSpeed;
+            var rayDistance = baseEntity.Radius + originalDistance;
+            if (Physics.Raycast(position, new Vector3(direction.x, position.y, direction.y), out var hit, rayDistance))
+            {
+                var go = hit.collider.gameObject;
+                if (go.CompareTag("Tower") || go.CompareTag("Wall"))
+                {
+                    var hitXZ = new Vector2(hit.point.x, hit.point.z);
+                    destinationXZ = hitXZ + (positionXZ - hitXZ).normalized * baseEntity.Radius;    
+                }
+            }
+            
+            AddBuffWithPosition(BuffInfos.Knockbacked, destinationXZ, duration);
+        }
+
         public void AddBuff(byte id, float duration)
         {
             if (IsLocalClient)
@@ -551,7 +578,40 @@ namespace MirageTest.Scripts
                 endTime = (float) NetworkTime.Time + duration,
             });
         }
+        
+        public void AddBuffWithPosition(byte id, Vector2 position, float duration)
+        {
+            if (IsLocalClient)
+            {
+                AddBuffWithPositionInternal(id, position, duration);
+                return;
+            }
 
+            AddBuffWithPositionOnServer(id, position, duration);
+        }
+
+        [ServerRpc(requireAuthority = false)]
+        public void AddBuffWithPositionOnServer(byte id, Vector2 position, float duration)
+        {
+            AddBuffWithPositionInternal(id, position, duration);
+        }
+
+        void AddBuffWithPositionInternal(byte id, Vector2 position, float duration)
+        {
+            var findIndex = BuffList.FindIndex(buff => buff.id == id);
+            if (findIndex >= 0)
+            {
+                BuffList.RemoveAt(findIndex);
+            }
+            
+            BuffList.Add(new Buff()
+            {
+                id = id,
+                position = position,
+                endTime = (float) NetworkTime.Time + duration,
+            });
+        }
+        
         public void HitDamage(float damage)
         {
             HitDamage(damage, DamageType.Default);
@@ -708,6 +768,13 @@ namespace MirageTest.Scripts
             if (baseEntity == null)
             {
                 return;
+            }
+
+            if (isKnockBacked)
+            {
+                var knockbacked = BuffList.Find(b => b.id == BuffInfos.Knockbacked);
+                var destination = knockbacked.position;
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(destination.x, 0, destination.y), knockBackSpeed * Time.deltaTime);
             }
 
             if (isPlayingAI && baseEntity.NeedMoveSyncSend)

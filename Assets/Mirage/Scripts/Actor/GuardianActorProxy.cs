@@ -74,6 +74,21 @@ namespace MirageTest.Scripts
             }
 
             PoolManager.instance.ActivateObject("Effect_Robot_Summon", pos);
+
+            var knockBackDistance = 1f;
+            var position = transform.position;
+            var knockBackTargets = Physics.OverlapSphere(position, 3f, baseEntity.targetLayer);
+            foreach (var knockBackTarget in knockBackTargets)
+            {
+                var bs = knockBackTarget.GetComponentInParent<Minion>();
+                if (bs != null && bs.isAlive)
+                {
+                    var diff = bs.ActorProxy.transform.position - position;
+                    var direction = diff.normalized;
+                    var knockBackDestination = position + direction.normalized * (diff.magnitude + knockBackDistance);
+                    bs.ActorProxy.Knockback(knockBackDestination);
+                }    
+            }
         }
     }
 }

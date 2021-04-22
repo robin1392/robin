@@ -8,12 +8,13 @@ namespace MirageTest.Scripts
     {
         public const byte NinjaClocking = 0;
         public const byte HalfDamage = 1;
-        public const byte Sturn = 2;
+        public const byte Stun = 2;
         public const byte Freeze = 3;
         public const byte Invincibility = 4;
         public const byte Scarecrow = 5;
         public const byte IceFreeze = 6;
         public const byte Taunted = 7;
+        public const byte Knockbacked = 8;
 
         public static BuffType[] Data = new[]
         {
@@ -25,6 +26,7 @@ namespace MirageTest.Scripts
             BuffType.Scarecrow,
             BuffType.Freeze,
             BuffType.Taunted,
+            BuffType.Knockbacked
         };
     }
 
@@ -39,7 +41,8 @@ namespace MirageTest.Scripts
         Invincibility = 1 << 5,
         Scarecrow = 1 << 6,
         Taunted = 1 << 7,
+        Knockbacked = 1 << 8,
 
-        CantAI = Stun | Freeze | Scarecrow,
+        CantAI = Stun | Freeze | Scarecrow | Knockbacked,
     }
 }
