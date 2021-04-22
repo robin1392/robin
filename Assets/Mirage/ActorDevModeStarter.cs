@@ -25,8 +25,8 @@ public class ActorDevModeStarter : MonoBehaviour
         if (Server != null && Server.gameObject.activeInHierarchy)
         {
             Server.authenticator = null;
-            Server.MatchData.AddPlayerInfo(Master?.LocalUserId ?? MasterName, Master?.LocalNickName ?? MasterName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, EnableMasterAI);
-            Server.MatchData.AddPlayerInfo(Other?.LocalUserId ?? OtherName, Other?.LocalNickName ?? OtherName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1010, 1011), true, EnableOtherAI);
+            Server.MatchData.AddPlayerInfo(Master?.LocalUserId ?? MasterName, Master?.LocalNickName ?? MasterName, 0,0, new DeckInfo(5001, 1007, 1008, 1009, 1013, 1014), true, EnableMasterAI);
+            Server.MatchData.AddPlayerInfo(Other?.LocalUserId ?? OtherName, Other?.LocalNickName ?? OtherName, 0,0, new DeckInfo(5001, 1013, 1014, 1009, 1010, 1011), true, EnableOtherAI);
             Server.ListenAsync().Forget();
             while (Server.Active == false)
             {
