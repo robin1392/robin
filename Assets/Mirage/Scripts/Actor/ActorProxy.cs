@@ -9,7 +9,9 @@ using Mirage.Logging;
 using MirageTest.Scripts.Messages;
 using Pathfinding;
 using Pathfinding.RVO;
+using Service.Template;
 using UnityEngine;
+using Debug = ED.Debug;
 using Random = UnityEngine.Random;
 
 namespace MirageTest.Scripts
@@ -139,9 +141,12 @@ namespace MirageTest.Scripts
 
             if (baseEntity != null)
             {
-                baseEntity.OnBaseStatDestroyed();
-                baseEntity.ActorProxy = null;
-                baseEntity = null;
+                if (baseEntity.IsExtracted == false)
+                {
+                    baseEntity.OnBaseEntityDestroyed();
+                    baseEntity.ActorProxy = null;
+                    baseEntity = null;   
+                }
             }
         }
 
@@ -463,6 +468,11 @@ namespace MirageTest.Scripts
                 return;
             }
 
+            if (client.playing == false)
+            {
+                return;
+            }
+            
             if (client.enableActor == false)
             {
                 return;
@@ -1146,7 +1156,17 @@ namespace MirageTest.Scripts
 
         public void UpdateSyncPositionToCurrentPosition()
         {
+            if (transform == null)
+            {
+                return;
+            }
+            
             lastRecieved = TransformToMsg(transform);
-        }   
+        }
+
+        public void ExtractModelBeforeGameSessionEnd()
+        {
+            baseEntity?.ExtractOnGameSessionEnd();
+        }
     }
 }

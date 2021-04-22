@@ -385,5 +385,13 @@ namespace MirageTest.Scripts
                 .OrderByDescending(actor => actor.currentHealth)
                 .First().baseEntity;
         }
+
+        public void ExtractModelBeforeGameSessionEnd()
+        {
+            foreach (var actor in ActorProxies)
+            {
+                actor.ExtractModelBeforeGameSessionEnd();
+            }
+        }
     }
 }

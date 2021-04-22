@@ -108,7 +108,7 @@ namespace ED
             ActorProxy.Destroy();
         }
 
-        public override void OnBaseStatDestroyed()
+        public override void OnBaseEntityDestroyed()
         {
             if (ActorProxy.isPlayingAI)
             {
