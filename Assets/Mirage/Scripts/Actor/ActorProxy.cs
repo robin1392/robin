@@ -526,6 +526,19 @@ namespace MirageTest.Scripts
 
         public void AddBuff(byte id, float duration)
         {
+            if (this is GuardianActorProxy)
+            {
+                if (id == BuffInfos.Freeze)
+                {
+                    return;
+                }
+                
+                if (id == BuffInfos.Taunted)
+                {
+                    return;
+                }
+            }
+            
             if (IsLocalClient)
             {
                 AddBuffInternal(id, duration);
@@ -558,6 +571,19 @@ namespace MirageTest.Scripts
         
         public void AddBuffWithNetId(byte id, uint targetNetId, float duration)
         {
+            if (this is GuardianActorProxy)
+            {
+                if (id == BuffInfos.Freeze)
+                {
+                    return;
+                }
+                
+                if (id == BuffInfos.Taunted)
+                {
+                    return;
+                }
+            }
+            
             if (IsLocalClient)
             {
                 AddBuffWithNetIdInternal(id, targetNetId, duration);
@@ -624,6 +650,7 @@ namespace MirageTest.Scripts
         
         public void HitDamage(float damage)
         {
+            Debug.Log($"1:{damage}");
             HitDamage(damage, DamageType.Default);
         }
 
@@ -653,6 +680,7 @@ namespace MirageTest.Scripts
                 return;
             }
 
+            Debug.Log($"2:{damage}");
             HitDamageOnServer(damage, damageType);
         }
 
@@ -670,12 +698,15 @@ namespace MirageTest.Scripts
 
             OnApplyDamageOnServer();
 
+            Debug.Log($"3:{damage}");
+            
             if (currentHealth <= 0)
             {
                 ServerObjectManager.Destroy(gameObject);
                 return;
             }
 
+            
             DamagedOnClientRPC(damage, damageType);
         }
 
@@ -1160,7 +1191,6 @@ namespace MirageTest.Scripts
             {
                 return;
             }
-            
             lastRecieved = TransformToMsg(transform);
         }
 

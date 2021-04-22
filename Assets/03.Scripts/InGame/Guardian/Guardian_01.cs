@@ -17,7 +17,28 @@ public class Guardian_01 : Minion
         PoolManager.instance.AddPool(_effectSkill, 1);
     }
 
+    protected override IEnumerator Combat()
+    {
+        yield return Skill();
+        
+        yield return base.Combat();
+    }
+
     public override IEnumerator Attack()
+    {
+        yield return null;
+        
+        yield return Skill();
+
+        if (IsTargetInnerRange() == false)
+        {
+            yield break;
+        }
+
+        yield return base.Attack();
+    }
+
+    IEnumerator Skill()
     {
         if (_spawnedTime >= _skillCastedTime + effectCooltime)
         {
@@ -27,13 +48,6 @@ public class Guardian_01 : Minion
             yield return action.ActionWithSync(ActorProxy, target.ActorProxy);
             RunningAction = null;
         }
-
-        if (IsTargetInnerRange() == false)
-        {
-            yield break;
-        }
-
-        yield return base.Attack();
     }
 }
 
