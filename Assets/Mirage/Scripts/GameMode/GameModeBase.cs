@@ -344,6 +344,7 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.maxHealth = stat.maxHealth;
                     actorProxy.currentHealth = stat.maxHealth;
                     actorProxy.effect = stat.effect;
+                    actorProxy.effectDurationTime = stat.effectDurationTime;
                     actorProxy.attackSpeed = diceInfo.attackSpeed / GameState.factor;
                     actorProxy.diceScale = diceScale;
                     actorProxy.moveSpeed = diceInfo.moveSpeed * GameState.factor;
