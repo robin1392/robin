@@ -120,7 +120,7 @@ public class Guardian01Action : SyncActionWithTarget
 
         if (actorProxy.isPlayingAI)
         {
-            var cols = Physics.OverlapSphere(actorProxy.transform.position, 4f, actorProxy.baseEntity.targetLayer);
+            var cols = Physics.OverlapSphere(actorProxy.transform.position, 5f, actorProxy.baseEntity.targetLayer);
             foreach (var col in cols)
             {
                 var m = col.GetComponentInParent<Minion>();
