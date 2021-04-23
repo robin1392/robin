@@ -34,7 +34,10 @@ namespace  ED
             base.Initialize(pIsBottomPlayer);
             
             ts_Model.gameObject.SetActive(true);
-            
+            var position = ActorProxy.transform.position;
+            ActorProxy.transform.position = ActorProxy.team == GameConstants.BottomCamp
+                ? new Vector3(position.x, position.y, -12)
+                : new Vector3(position.x, position.y, 12);
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
 
@@ -66,6 +69,11 @@ namespace  ED
             
             if (other.CompareTag("Wall") || other.CompareTag("Tower"))
             {
+                if (elapsedTime < 1.0f)
+                {
+                    return;
+                }
+                
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 ts_Model.gameObject.SetActive(false);
                 SoundManager.instance.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);

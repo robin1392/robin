@@ -19,9 +19,24 @@ namespace ED
         public int eyeLevel => ActorProxy.diceScale;
 
         protected const float magicLifeTime = 45.0f;
+        
+        protected float elapsedTime
+        {
+            get
+            {
+                if (ActorProxy == null)
+                {
+                    return 0;
+                }
+                
+                return (float)ActorProxy.NetworkTime.Time - spawnTime;        
+            }
+        }
+        protected float spawnTime;
 
         public virtual void Initialize(bool pIsBottomPlayer)
         {
+            spawnTime = ActorProxy.spawnTime;
             if (_hitCollider != null)
             {
                 var layerName =
