@@ -9,6 +9,7 @@ using Mirage.Logging;
 using MirageTest.Scripts.Messages;
 using Pathfinding;
 using Pathfinding.RVO;
+using RandomWarsProtocol;
 using Service.Template;
 using UnityEngine;
 using Debug = ED.Debug;
@@ -650,7 +651,6 @@ namespace MirageTest.Scripts
         
         public void HitDamage(float damage)
         {
-            Debug.Log($"1:{damage}");
             HitDamage(damage, DamageType.Default);
         }
 
@@ -679,8 +679,7 @@ namespace MirageTest.Scripts
                 DamageOnInternal(damage, damageType);
                 return;
             }
-
-            Debug.Log($"2:{damage}");
+            
             HitDamageOnServer(damage, damageType);
         }
 
@@ -698,8 +697,6 @@ namespace MirageTest.Scripts
 
             OnApplyDamageOnServer();
 
-            Debug.Log($"3:{damage}");
-            
             if (currentHealth <= 0)
             {
                 ServerObjectManager.Destroy(gameObject);
@@ -776,8 +773,8 @@ namespace MirageTest.Scripts
             PoolManager.instance.ActivateObject("Effect_Heal", transform.position);
         }
 
-        private PositionRelayMessage lastSend;
-        [NonSerialized] public PositionRelayMessage lastRecieved;
+        private MsgVector2 lastSend;
+        [NonSerialized] public MsgVector2 lastRecieved;
         private bool hasRecieved = false;
 
         private void Update()
@@ -828,53 +825,59 @@ namespace MirageTest.Scripts
             }
             else if (lastRecieved != null)
             {
-                MessageToTransform(lastRecieved, out var position, out var rotation);
+                var position = MsgToVector3(lastRecieved);
                 if (hasRecieved == false)
                 {
                     hasRecieved = true;
                     transform.position = position;
+                    EnableSeeker(true);
                 }
                 else
                 {
-                    var tr = transform;
-                    var distance = (tr.position - position).magnitude;
+                    var distance = (transform.position - position).magnitude;
                     var moveSpeedCalculated = moveSpeed;
 
                     if (distance > 3.0f)
                     {
-                        tr.position = position;
-                        tr.rotation = rotation;
+                        transform.position = position;
                         return;
                     }
-
-                    var t = 0.5f;
-                    transform.position = Vector3.Lerp(transform.position, position, t);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, rotation, t);
+                    else if (distance > 0.5f)
+                    {
+                        moveSpeedCalculated *= distance * 2;
+                    }
+                    else if (distance > 0.1f)
+                    {
+                        moveSpeedCalculated *= 1.5f;
+                    }
                     
+                    _aiPath.maxSpeed = moveSpeedCalculated;
+
+                    _seeker.StartPath(transform.position, position);
                     baseEntity.animator.SetFloat(AnimationHash.MoveSpeed, _aiPath.velocity.magnitude);
                 }
             }
         }
         
-        public static PositionRelayMessage TransformToMsg(Transform val)
+        public static MsgVector2 Vector3ToMsg(Vector2 val)
         {
-            var  msg = new PositionRelayMessage();
-            msg.PositionX = MsgFloatToShort(val.position.x);
-            msg.PositionY = MsgFloatToShort(val.position.z);
-            msg.RotationY = MsgFloatToShort(val.eulerAngles.y);
+            MsgVector2 chVec = new MsgVector2();
 
-            return msg;
+            chVec.X = MsgFloatToShort(val.x);
+            chVec.Y = MsgFloatToShort(val.y);
+
+            return chVec;
         }
     
-        public static void MessageToTransform(PositionRelayMessage msg, out Vector3 position, out Quaternion rotation)
+        public static Vector3 MsgToVector3(MsgVector2 msgVec)
         {
-            var  vecVal = new Vector3();
-            vecVal.x = MsgShortToFloat(msg.PositionX);
+            Vector3 vecVal = new Vector3();
+
+            vecVal.x = MsgShortToFloat(msgVec.X);
             vecVal.y = 0;
-            vecVal.z = MsgShortToFloat(msg.PositionY);
-            position = vecVal;
-            
-            rotation = Quaternion.Euler(0, MsgShortToFloat(msg.RotationY), 0);
+            vecVal.z = MsgShortToFloat(msgVec.Y);
+
+            return vecVal;
         }
         
         public static short MsgFloatToShort(float value)
@@ -905,8 +908,8 @@ namespace MirageTest.Scripts
             // }
 
             var position = transform.position;
-            var converted = TransformToMsg(transform);
-            if (lastSend == null || !EqualTransform(lastSend, converted) || force)
+            var converted = Vector3ToMsg(new Vector2(position.x, position.z));
+            if (lastSend == null || !Equal(lastSend, converted) || force)
             {
                 // count++;
                 
@@ -914,9 +917,8 @@ namespace MirageTest.Scripts
                 Client.Send(new PositionRelayMessage()
                 {
                     netId = NetId,
-                    PositionX = converted.PositionX,
-                    PositionY = converted.PositionY,
-                    RotationY = converted.RotationY
+                    positionX = converted.X,
+                    positionY = converted.Y,
                 }, Channel.Unreliable);
 
                 _lastSyncPositionTime = Time.time;
@@ -925,13 +927,12 @@ namespace MirageTest.Scripts
             // _logger.Log($"perSec: {count / (Time.time - start)}");
         }
 
-        bool EqualTransform(PositionRelayMessage a, PositionRelayMessage b)
+        bool Equal(MsgVector2 a, MsgVector2 b)
         {
-            return a.PositionX == b.PositionX &&
-                   a.PositionY == b.PositionY &&
-                   a.RotationY == b.RotationY;
+            return a.X == b.X &&
+                   a.Y == b.Y;
         }
-        
+
         public bool IsLocalPlayerAlly => (Client as RWNetworkClient).IsLocalPlayerAlly(team);
 
         public BaseEntity GetHighestHealthEnemy()
@@ -1187,11 +1188,9 @@ namespace MirageTest.Scripts
 
         public void UpdateSyncPositionToCurrentPosition()
         {
-            if (transform == null)
-            {
-                return;
-            }
-            lastRecieved = TransformToMsg(transform);
+            var position = transform.position;
+            var currentPosition = new Vector2(position.x, position.z);
+            lastRecieved = Vector3ToMsg(currentPosition);
         }
 
         public void ExtractModelBeforeGameSessionEnd()
