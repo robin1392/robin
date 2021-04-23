@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using ED;
 using MirageTest.Scripts;
 using MirageTest.Scripts.SyncAction;
+using UnityEngine;
 
 public class Guardian_01 : Minion
 {
@@ -20,7 +20,7 @@ public class Guardian_01 : Minion
     protected override IEnumerator Combat()
     {
         yield return Skill();
-        
+
         yield return base.Combat();
     }
 
@@ -47,6 +47,65 @@ public class Guardian_01 : Minion
             RunningAction = null;
         }
     }
+
+    public override BaseEntity SetTarget()
+    {
+        if (_attackedTarget != null && _attackedTarget.CanBeTarget())
+        {
+            return _attackedTarget;
+        }
+        else if (ActorProxy != null && ActorProxy.isTaunted)
+        {
+            ActorProxy.DisableBuffEffect(BuffType.Taunted);
+        }
+
+        if (ActorProxy == null)
+        {
+            return null;
+        }
+
+        if (ActorProxy.isInAllyCamp)
+        {
+            var position = transform.position;
+
+            var target = ActorProxy.GetEnemies().Where(e => e.ActorProxy.isInEnemyCamp)
+                .OrderBy(e => (e.transform.position - position).sqrMagnitude).FirstOrDefault();
+
+            if (target != null)
+            {
+                return target;
+            }
+        }
+
+        var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
+
+        Minion closestTarget = null;
+        var distance = float.MaxValue;
+
+        foreach (var col in cols)
+        {
+            var bs = col.GetComponentInParent<Minion>();
+            if (bs == null || !bs.CanBeTarget())
+            {
+                continue;
+            }
+
+            var sqr = Vector3.SqrMagnitude(transform.position - col.transform.position);
+
+            if (sqr < distance)
+            {
+                distance = sqr;
+                closestTarget = bs;
+            }
+        }
+
+        if (closestTarget != null)
+        {
+            return closestTarget;
+        }
+
+        return null;
+    }
 }
 
 public class Guardian01Action : SyncActionWithTarget
@@ -58,7 +117,7 @@ public class Guardian01Action : SyncActionWithTarget
         yield return new WaitForSeconds(0.2f);
 
         PoolManager.instance.ActivateObject("Effect_Guardian_01_Skill", actorProxy.transform.position);
-        
+
         if (actorProxy.isPlayingAI)
         {
             var cols = Physics.OverlapSphere(actorProxy.transform.position, 2f, actorProxy.baseEntity.targetLayer);

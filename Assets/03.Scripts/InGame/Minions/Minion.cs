@@ -159,12 +159,12 @@ namespace ED
 
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             
-            Collider closestTarget = null;
+            Minion closestTarget = null;
             var distance = float.MaxValue;
             
             foreach (var col in cols)
             {
-                var bs = col.GetComponentInParent<BaseEntity>();
+                var bs = col.GetComponentInParent<Minion>();
                 if (bs == null || !bs.CanBeTarget())
                 {
                     continue;
@@ -175,13 +175,13 @@ namespace ED
                 if (sqr < distance)
                 {
                     distance = sqr;
-                    closestTarget = col;
+                    closestTarget = bs;
                 }
             }
 
             if (closestTarget != null)
             {
-                return closestTarget.GetComponentInParent<BaseEntity>();
+                return closestTarget;
             }
 
             if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)

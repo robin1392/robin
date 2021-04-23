@@ -252,7 +252,11 @@ namespace MirageTest.Scripts
             }
 
             var actor = identity.GetComponent<ActorProxy>();
-            actor.lastRecieved = msg;
+            actor.lastRecieved = new MsgVector2()
+            {
+                X = msg.positionX,
+                Y = msg.positionY,
+            };
         }
 
         public void AddPlayerState(PlayerState playerState)

@@ -99,7 +99,6 @@ namespace ED
             }
             
             ActorProxy.EnablePathfinding(true);
-            ActorProxy._aiPath.enableRotation = true;
 
             Vector3 targetPos = target.ActorProxy.transform.position + (ActorProxy.transform.position - target.ActorProxy.transform.position).normalized * target.Radius;
             ActorProxy._aiPath.destination = targetPos;
@@ -108,7 +107,6 @@ namespace ED
         protected void StopApproachToTarget()
         {
             ActorProxy._aiPath.isStopped = true;
-            ActorProxy._aiPath.enableRotation = false;
         }
         
         public virtual IEnumerator Attack()
