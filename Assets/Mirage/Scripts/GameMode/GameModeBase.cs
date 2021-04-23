@@ -119,10 +119,10 @@ namespace MirageTest.Scripts.GameMode
 
         private async UniTask UpdateWave()
         {
-            //처음은 절반
+            
             UpdatePlayerCommingSp();
             
-            var waveWaitTime = WaveTime / 2;
+            var waveWaitTime =  TableManager.Get().Vsmode.KeyValues[(int) EVsmodeKey.StartCoolTime].value;
             GameState.CountDown(waveWaitTime);
 
             await UniTask.Delay(TimeSpan.FromSeconds(waveWaitTime));
