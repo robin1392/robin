@@ -83,7 +83,7 @@ public class UI_SearchingPopup : UI_Popup
         Close();
 
         UI_Main.Get().ShowMainUI(true);
-        CameraGyroController.Get().FocusOut();
+        // CameraGyroController.Get().FocusOut();
 
     }
     #endregion

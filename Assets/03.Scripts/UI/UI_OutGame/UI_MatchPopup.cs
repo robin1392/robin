@@ -60,7 +60,7 @@ public class UI_MatchPopup : UI_Popup
         
         FirebaseManager.Get().LogEvent(_playType == PLAY_TYPE.BATTLE ? "PlayBattle":"PlayCoop");
 
-        CameraGyroController.Get().FocusIn();
+        // CameraGyroController.Get().FocusIn();
         
         if (UI_Main.Get().isAIMode || TutorialManager.isTutorial)
         {

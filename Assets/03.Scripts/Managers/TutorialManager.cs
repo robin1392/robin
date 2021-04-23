@@ -317,7 +317,7 @@ public class TutorialManager : MonoBehaviour
     {
         UI_Main.Get().ShowMainUI(false);
         
-        CameraGyroController.Get().FocusIn();
+        // CameraGyroController.Get().FocusIn();
         
         if (UI_Main.Get().isAIMode || isTutorial)
         {
