@@ -75,9 +75,9 @@ namespace ED
             return false;
         }
 
-        public override void OnBaseStatDestroyed()
+        public override void OnBaseEntityDestroyed()
         {
-            base.OnBaseStatDestroyed();
+            base.OnBaseEntityDestroyed();
             SoundManager.instance.Play(clip_Explosion);
         }
     }

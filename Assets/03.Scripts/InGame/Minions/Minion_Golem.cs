@@ -31,7 +31,7 @@ namespace ED
             return ActorProxy.GetEnemyTowerOrBossEgg();
         }
 
-        public override void OnBaseStatDestroyed()
+        public override void OnBaseEntityDestroyed()
         {
             var rwClient = ActorProxy.Client as RWNetworkClient;
             // 미니골렘
@@ -50,7 +50,7 @@ namespace ED
                 delay = 0f,
             });
             
-            base.OnBaseStatDestroyed();
+            base.OnBaseEntityDestroyed();
         }
     }
 }

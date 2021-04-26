@@ -103,6 +103,7 @@ MonoBehaviour:
   ts_HitPos: {fileID: 8488758196635011245}
   ts_TopEffectPosition: {fileID: 7185519046992743507}
   image_HealthBar: {fileID: 6150823028887648129}
+  objectHealthBar: {fileID: 0}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 8986779303929021038}
   _poolObjectAutoDeactivate: {fileID: 0}
@@ -124,7 +125,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.54
+  m_Radius: 0.44
   m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &2583571212696764795
 MonoBehaviour:
@@ -267,6 +268,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8835779767655599664, guid: d0dae7c161c184b4ca105935b2df3f0f,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8835779767655599664, guid: d0dae7c161c184b4ca105935b2df3f0f,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8835779767655599664, guid: d0dae7c161c184b4ca105935b2df3f0f,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0dae7c161c184b4ca105935b2df3f0f, type: 3}
@@ -434,7 +450,7 @@ PrefabInstance:
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}

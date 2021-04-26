@@ -34,7 +34,10 @@ namespace  ED
             base.Initialize(pIsBottomPlayer);
             
             ts_Model.gameObject.SetActive(true);
-            
+            var position = ActorProxy.transform.position;
+            ActorProxy.transform.position = ActorProxy.team == GameConstants.BottomCamp
+                ? new Vector3(position.x, position.y, -12)
+                : new Vector3(position.x, position.y, 12);
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);
         }
 
@@ -51,18 +54,26 @@ namespace  ED
             if (IsTargetLayer(other.gameObject))
             {
                 var bs = other.GetComponentInParent<Minion>();
-                PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
-                
-                if (ActorProxy.isPlayingAI)
+                if (bs != null && bs.CanBeTarget())
                 {
-                    if (bs != null && bs.isAlive)
+                    PoolManager.instance.ActivateObject("Effect_Stone", bs.ts_HitPos.position);
+                    if (ActorProxy.isPlayingAI)
                     {
-                        bs.ActorProxy.HitDamage(power);
+                        if (bs != null && bs.isAlive)
+                        {
+                            bs.ActorProxy.HitDamage(power);
+                        }
                     }
                 }
             }
-            else if (other.CompareTag("Wall"))
+            
+            if (other.CompareTag("Wall") || other.CompareTag("Tower"))
             {
+                if (elapsedTime < 1.0f)
+                {
+                    return;
+                }
+                
                 PoolManager.instance.ActivateObject("Effect_Bomb", transform.position);
                 ts_Model.gameObject.SetActive(false);
                 SoundManager.instance.Play(Global.E_SOUND.SFX_COMMON_EXPLOSION);
@@ -85,10 +96,11 @@ namespace  ED
             SoundManager.instance.Play(stoneBall.clip_Rolling);
             float angle = 0f;
             Vector3 forward = actorTransform.forward;
+            var rotationSpeed = 45 * 9;
             while (true)
             {
                 actorTransform.position += forward * (stoneBall.moveSpeed * Time.deltaTime);
-                angle += (isBottomCamp? 45f : -45f) * Time.deltaTime;
+                angle += (isBottomCamp? 1f : -1f) * rotationSpeed * Time.deltaTime;
                 modelTransform.rotation = Quaternion.AngleAxis(angle, Vector3.right);
                 yield return null;
             }

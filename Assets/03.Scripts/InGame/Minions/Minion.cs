@@ -6,8 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
-using Mirage;
+using DG.Tweening;
 using MirageTest.Scripts;
 using UnityEngine;
 
@@ -28,19 +27,13 @@ namespace ED
         protected float _spawnedTime;
         
         public bool isCloacking => ActorProxy.isClocking;
-        protected int invincibilityCount;
 
         public Collider collider;
         public bool isPolymorph;
-        protected int _flagOfWarCount;
-
-        protected static readonly string _scarecrow = "Scarecrow";
 
         public Dictionary<BuffType, PoolObjectAutoDeactivate> _dicEffectPool =
             new Dictionary<BuffType, PoolObjectAutoDeactivate>();
-
-        protected Shield _shield;
-        protected Coroutine _invincibilityCoroutine;
+        
         protected BaseEntity _attackedTarget;
         protected MinionAnimationEvent _animationEvent;
         
@@ -82,7 +75,7 @@ namespace ED
             _spawnedTime += Time.deltaTime;
             if (animator != null)
             {
-                animator.SetFloat(AnimationHash.MoveSpeed, AiPath.velocity.magnitude);
+                animator.SetFloat(AnimationHash.MoveSpeed, ActorProxy._aiPath.velocity.magnitude);
             }
         }
 
@@ -96,8 +89,7 @@ namespace ED
             target = null;
             _attackedTarget = null;
             image_HealthBar.fillAmount = 1f;
-            
-            SetHealthBarColor();
+            RendererEffect.Reset();
 
             if (animator != null)
             {
@@ -113,9 +105,9 @@ namespace ED
 
                 animator.speed = factor;
             }
-            
+
             _dicEffectPool.Clear();
-            SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, ActorProxy.IsLocalPlayerAlly);
+            objectHealthBar?.SetColor(ActorProxy.IsLocalPlayerAlly);
         }
 
         public void ResetAttackedTarget()
@@ -128,8 +120,12 @@ namespace ED
             _attackedTarget = target;
         }
 
-        public override void OnHitDamageOnClient(float damage)
+        public override void OnHitDamageOnClient(float damage, DamageType damageType)
         {
+            if (damageType == DamageType.Fire)
+            {
+                PlayRendererHitEffect();
+            }   
         }
 
         public virtual BaseEntity SetTarget()
@@ -163,12 +159,12 @@ namespace ED
 
             var cols = Physics.OverlapSphere(transform.position, searchRange, targetLayer);
             
-            Collider closestTarget = null;
+            Minion closestTarget = null;
             var distance = float.MaxValue;
             
             foreach (var col in cols)
             {
-                var bs = col.GetComponentInParent<BaseEntity>();
+                var bs = col.GetComponentInParent<Minion>();
                 if (bs == null || !bs.CanBeTarget())
                 {
                     continue;
@@ -179,13 +175,13 @@ namespace ED
                 if (sqr < distance)
                 {
                     distance = sqr;
-                    closestTarget = col;
+                    closestTarget = bs;
                 }
             }
 
             if (closestTarget != null)
             {
-                return closestTarget.GetComponentInParent<BaseEntity>();
+                return closestTarget;
             }
 
             if (targetMoveType == DICE_MOVE_TYPE.GROUND || targetMoveType == DICE_MOVE_TYPE.ALL)
@@ -296,20 +292,7 @@ namespace ED
             return Vector3.Distance(transform.position, target.transform.position) <= range;
         }
 
-        public void SetFlagOfWar(bool isIn, float factor)
-        {
-            _flagOfWarCount += isIn ? 1 : -1;
-
-            if (_flagOfWarCount > 0)
-            {
-                SetAttackSpeedFactor(factor);
-            }
-            else
-            {
-                _flagOfWarCount = 0;
-                SetAttackSpeedFactor(1f);
-            }
-        }
+      
 
         public void SetAttackSpeedFactor(float factor)
         {
@@ -342,16 +325,16 @@ namespace ED
             if (isCloacking)
             {
                 PoolManager.instance.ActivateObject("Effect_Cloaking", ts_HitPos.position);
-                SetColor(isAlly ? E_MaterialType.HALFTRANSPARENT : E_MaterialType.TRANSPARENT, isAlly);
+                Debug.LogError("URP로 변경되면서 은신 효과가 사라진 상태입니다. 구현이 필요합니다.");
             }
             else
             {
-                SetColor(isBottomCamp ? E_MaterialType.BOTTOM : E_MaterialType.TOP, isAlly);
+                Debug.LogError("URP로 변경되면서 은신 효과가 사라진 상태입니다. 구현이 필요합니다.");
             }
         }
 
-        public override void OnBaseStatDestroyed()
-        {            
+        public override void OnBaseEntityDestroyed()
+        {
             if (animator != null) animator.SetFloat(AnimationHash.MoveSpeed, 0);
             _destroyed = true;
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
@@ -362,7 +345,17 @@ namespace ED
                 autoDeactivate.Value.Deactive();
             }
             
-            base.OnBaseStatDestroyed();
+            base.OnBaseEntityDestroyed();
+        }
+
+        public void PlayRendererHitEffect()
+        {
+            var amount = 0.0f;
+            var targetValue = 0.7f;
+            var duration = 0.2f;
+            Tweener tweener = DOTween.To(() => amount, x => amount = x, targetValue, duration);
+            tweener.OnUpdate(() => { RendererEffect.SetTintColor(Color.red, amount); });
+            tweener.SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutQuad);
         }
     }
 }

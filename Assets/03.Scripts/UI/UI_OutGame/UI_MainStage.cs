@@ -12,26 +12,14 @@ namespace ED
         private static readonly int Idle2 = Animator.StringToHash("Idle2");
         private static readonly int Set1 = Animator.StringToHash("Set");
 
-        private Dictionary<int, GameObject[]> dicAura = new Dictionary<int, GameObject[]>();
-
         private void Start()
         {
             if (arrAni_Model == null) arrAni_Model = new Animator[arrTs_SpawnPos.Length];
-            //StartCoroutine(Idle2Coroutine());
-            for (int i = 0; i < arrTs_SpawnPos.Length; i++)
-            {
-                dicAura.Add(i, new GameObject[4]);
-                dicAura[i][0] = arrTs_SpawnPos[i].GetChild(0).gameObject;
-                dicAura[i][1] = arrTs_SpawnPos[i].GetChild(1).gameObject;
-                dicAura[i][2] = arrTs_SpawnPos[i].GetChild(2).gameObject;
-                dicAura[i][3] = arrTs_SpawnPos[i].GetChild(3).gameObject;
-            }
             Set();
         }
 
         public void Set()
         {
-            //Debug.Log("Main stage set");
             if (arrAni_Model == null) arrAni_Model = new Animator[arrTs_SpawnPos.Length];
             
             int active = UserInfoManager.Get().GetActiveDeckIndex();
@@ -51,59 +39,85 @@ namespace ED
                     }
                 }
 
-                //var num = int.Parse(splitDeck[i]);
-                RandomWarsResource.Data.TDataDiceInfo dataDiceInfo;
-                if (TableManager.Get().DiceInfo.GetData(deck[i], out dataDiceInfo) == false)
+                if (i == 5)
                 {
-                    return;
+                    arrAni_Model[i] = LoadGuardianModel(deck[i], arrTs_SpawnPos[i]);
                 }
-                
-                var obj = FileHelper.LoadPrefab(dataDiceInfo.modelName, dataDiceInfo.loadType == 0 ? Global.E_LOADTYPE.LOAD_MAIN_MINION : Global.E_LOADTYPE.LOAD_MAIN_MAGIC);
-
-                if (obj != null)
+                else
                 {
-                    var insObj = Instantiate(obj);
-                    arrAni_Model[i] = insObj.GetComponentInChildren<Animator>();
-                    insObj.transform.parent = arrTs_SpawnPos[i];
-                    insObj.transform.localScale = Vector3.one;
-                    insObj.transform.localPosition = Vector3.zero;
-                    insObj.transform.localRotation = Quaternion.identity;
-                    arrAni_Model[i].SetTrigger(Set1);
-
-                    if (dicAura.Count > 0)
-                    {
-                        for (int j = 0; j < 4; j++)
-                        {
-                            dicAura[i][j].SetActive(j == dataDiceInfo.grade);
-                        }
-                    }
-                }
-
-                if (dataDiceInfo.moveType == 1)
-                {
-                    arrAni_Model[i].transform.localPosition += Vector3.up * 0.4f;
-                }
-
-                var particles = arrAni_Model[i].GetComponentsInChildren<ParticleSystem>();
-                for (int j = 0; j < particles.Length; j++)
-                {
-                    particles[j].Clear();
+                    arrAni_Model[i] = LoadDiceModel(deck[i], arrTs_SpawnPos[i]);
                 }
             }
         }
 
-        IEnumerator Idle2Coroutine()
+        private Animator LoadGuardianModel(int id, Transform parent)
         {
-            while (true)
+            if (TableManager.Get().GuardianInfo.GetData(id, out var guardianInfo) == false)
             {
-                yield return new WaitForSeconds(Random.Range(1f, 8f));
-
-                var rnd = Random.Range(0, arrAni_Model.Length);
-                if (arrAni_Model != null && arrAni_Model[rnd] != null)
-                {
-                    arrAni_Model[rnd].SetTrigger(Idle2);
-                }
+                return null;
             }
+                
+            var obj = FileHelper.LoadPrefab(guardianInfo.modelName, Global.E_LOADTYPE.LOAD_MAIN_MINION);
+
+            if (obj == null)
+            {
+                return null;
+            }
+            
+            var insObj = Instantiate(obj);
+            var animator = insObj.GetComponentInChildren<Animator>();
+            insObj.transform.SetParent(parent, false);
+            insObj.transform.localPosition = Vector3.zero;
+            insObj.transform.localRotation = Quaternion.identity;
+            animator.SetTrigger(Set1);
+            
+            if (guardianInfo.moveType == 1)
+            {
+                insObj.transform.localPosition += Vector3.up * 0.4f;
+            }
+
+            var particles = insObj.GetComponentsInChildren<ParticleSystem>();
+            for (int j = 0; j < particles.Length; j++)
+            {
+                particles[j].Clear();
+            }
+
+            return animator;
+        }
+
+        Animator LoadDiceModel(int id, Transform parent)
+        {
+            if (TableManager.Get().DiceInfo.GetData(id, out var dataDiceInfo) == false)
+            {
+                return null;
+            }
+                
+            var obj = FileHelper.LoadPrefab(dataDiceInfo.modelName, dataDiceInfo.loadType == 0 ? Global.E_LOADTYPE.LOAD_MAIN_MINION : Global.E_LOADTYPE.LOAD_MAIN_MAGIC);
+
+            if (obj == null)
+            {
+                return null;
+            }
+            
+            var insObj = Instantiate(obj);
+            var animator = insObj.GetComponentInChildren<Animator>();
+            insObj.transform.SetParent(parent,false);
+            insObj.transform.localPosition = Vector3.zero;
+            insObj.transform.localRotation = Quaternion.identity;
+            animator.SetTrigger(Set1);
+            
+            if (dataDiceInfo.moveType == 1)
+            {
+                insObj.transform.localPosition += Vector3.up * 0.4f;
+            }
+            
+            var particles = insObj.GetComponentsInChildren<ParticleSystem>();
+            for (int j = 0; j < particles.Length; j++)
+            {
+                particles[j].Clear();
+            }
+            
+            return animator;
         }
 
         public void Click_MainDiceIcon(int num)

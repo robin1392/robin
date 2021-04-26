@@ -8,8 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TopPlayer
-  m_Shader: {fileID: 4800000, guid: dd496457a855aa341b0d7b7b475a7a3a, type: 3}
-  m_ShaderKeywords: OUTLINES TCP2_OUTLINE_CONST_SIZE TCP2_ZSMOOTH_ON
+  m_Shader: {fileID: 4800000, guid: eee8d60992e6d48089d164b2c55401b9, type: 3}
+  m_ShaderKeywords: OUTLINES TCP2_OUTLINE_CONST_SIZE TCP2_UV_NORMALS_FULL TCP2_ZSMOOTH_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 1c1b69b8c77764e61851d3528625271f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -73,13 +77,19 @@ Material:
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
+    - _NormalsSource: 0
+    - _NormalsUVType: 0
     - _OcclusionStrength: 1
     - _Offset1: 0
     - _Offset2: 0
     - _Outline: 0.1
+    - _OutlineWidth: 0.001
+    - _OutlineZSmooth: -0.5
     - _Parallax: 0.02
     - _RampSmooth: 0.1
+    - _RampSmoothing: 0.5
     - _RampThreshold: 0.5
+    - _ReceiveShadowsOff: 1
     - _RimAmount: 0.233
     - _RimThreshold: 0.329
     - _SmoothnessTextureChannel: 0
@@ -89,12 +99,15 @@ Material:
     - _UVSec: 0
     - _ZSmooth: -0.5
     - _ZWrite: 1
+    - __dummy__: 0
     m_Colors:
     - _AmbientColor: {r: 0.26321647, g: 0.30762476, b: 0.8584906, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HColor: {r: 0.785, g: 0.785, b: 0.785, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColorVertex: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SColor: {r: 0.19499996, g: 0.19499996, b: 0.19499996, a: 1}
     - _SpecularColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}

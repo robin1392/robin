@@ -12,7 +12,6 @@ namespace ED
         public ActorProxy ActorProxy;
         public bool isMine;
         public bool isCanBeTarget = true;
-        public int diceId;
         public uint id;
         public Animator animator;
         public Material[] arrMaterial;
@@ -41,8 +40,14 @@ namespace ED
         // public Transform ts_TopEffectPosition;
 
         [Header("UI Link")] public Image image_HealthBar;
+        public UI_ObjectHealthBar objectHealthBar;
         public Text text_Health;
         public SpriteRenderer sr_Shadow;
+
+        public RendererEffect RendererEffect;
+
+        public bool IsExtracted => _extractedOnGameEnd;
+        private bool _extractedOnGameEnd = false;
 
         public bool isAlive
         {
@@ -95,11 +100,16 @@ namespace ED
 
         public bool CanBeTarget()
         {
+            if (isCanBeTarget == false)
+            {
+                return false;
+            }
+            
             if (!isAlive)
             {
                 return false;
             }
-
+            
             if (ActorProxy == null)
             {
                 return false;
@@ -134,7 +144,6 @@ namespace ED
 
         public virtual float Radius => 0;
 
-        protected Vector3 networkPosition = Vector3.zero;
         protected MeshRenderer[] arrMeshRenderer;
         protected SkinnedMeshRenderer[] arrSkinnedMeshRenderer;
 
@@ -143,106 +152,25 @@ namespace ED
         protected virtual void Awake()
         {
             _poolObjectAutoDeactivate = GetComponent<PoolObjectAutoDeactivate>();
+            objectHealthBar = GetComponentInChildren<UI_ObjectHealthBar>();
+            RendererEffect = new RendererEffect(gameObject);
         }
 
         protected virtual void Start()
         {
         }
 
-        public virtual void OnBaseStatDestroyed()
+        public virtual void OnBaseEntityDestroyed()
         {
             StopAllAction();
             _poolObjectAutoDeactivate?.Deactive();
             ActorProxy = null;
         }
 
-        public void SetHealthBarColor()
-        {
-            if (image_HealthBar == null)
-            {
-                return;
-            }
-
-            image_HealthBar.color = ActorProxy.IsLocalPlayerAlly ? Color.green : Color.red;
-        }
-
         public virtual void ChangeLayer(bool pIsBottomPlayer)
         {
             var layerName = $"{(pIsBottomPlayer ? "BottomPlayer" : "TopPlayer")}{(isFlying ? "Flying" : string.Empty)}";
             gameObject.layer = LayerMask.NameToLayer(layerName);
-        }
-
-        public virtual void SetColor(E_MaterialType type, bool isAlly)
-        {
-            if (arrMeshRenderer == null)
-            {
-                arrMeshRenderer = GetComponentsInChildren<MeshRenderer>();
-            }
-
-            var mat = arrMaterial[isAlly ? 0 : 1];
-
-            foreach (var m in arrMeshRenderer)
-            {
-                if (m.gameObject.CompareTag("Finish")) continue;
-                
-                if (UI_Main.isTeamColorMode)
-                {
-                    m.material = mat;
-                }
-
-                switch (type)
-                {
-                    case E_MaterialType.BOTTOM:
-                    case E_MaterialType.TOP:
-                        Color c = m.material.color;
-                        c.a = 1f;
-                        m.material.color = c;
-                        break;
-                    case E_MaterialType.HALFTRANSPARENT:
-                        c = m.material.color;
-                        c.a = 0.2f;
-                        m.material.color = c;
-                        break;
-                    case E_MaterialType.TRANSPARENT:
-                        c = m.material.color;
-                        c.a = 0.1f;
-                        m.material.color = c;
-                        break;
-                }
-            }
-
-            if (arrSkinnedMeshRenderer == null)
-            {
-                arrSkinnedMeshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
-            }
-
-            foreach (var m in arrSkinnedMeshRenderer)
-            {
-                if (UI_Main.isTeamColorMode)
-                {
-                    m.material = mat;
-                }
-
-                switch (type)
-                {
-                    case E_MaterialType.BOTTOM:
-                    case E_MaterialType.TOP:
-                        Color c = m.material.color;
-                        c.a = 1f;
-                        m.material.color = c;
-                        break;
-                    case E_MaterialType.HALFTRANSPARENT:
-                        c = m.material.color;
-                        c.a = 0.2f;
-                        m.material.color = c;
-                        break;
-                    case E_MaterialType.TRANSPARENT:
-                        c = m.material.color;
-                        c.a = 0.1f;
-                        m.material.color = c;
-                        break;
-                }
-            }
         }
 
         public virtual void SetAnimationTrigger(string triggerName, uint targetId)
@@ -257,7 +185,7 @@ namespace ED
             animator.SetTrigger(triggerName);
         }
 
-        public virtual void OnHitDamageOnClient(float damage)
+        public virtual void OnHitDamageOnClient(float damage, DamageType damageType)
         {
         }
 
@@ -288,6 +216,13 @@ namespace ED
         public virtual float ModifyDamage(float damage)
         {
             return damage;
+        }
+
+        public void ExtractOnGameSessionEnd()
+        {
+            _extractedOnGameEnd = true;
+            StopAllAction();
+            transform.SetParent(null, true);
         }
     }
 }

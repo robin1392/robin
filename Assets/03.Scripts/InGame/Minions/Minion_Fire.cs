@@ -9,8 +9,6 @@ using UnityEngine;
 public class Minion_Fire : Minion
 {
     public GameObject pref_FireBombEffect;
-    
-    private bool isBomb;
 
     protected override void Awake()
     {
@@ -27,63 +25,27 @@ public class Minion_Fire : Minion
         _animationEvent.event_Attack += AttackBomb;
     }
 
-    public override IEnumerator Attack()
-    {
-        if (Random.value < 0.05f)
-        {
-            var action = new FireAction();
-            RunningAction = action;
-            yield return action.ActionWithSync(ActorProxy);
-            RunningAction = null;
-        }
-
-        yield return base.Attack();
-    }
-
     public void AttackBomb()
     {
-        if (isBomb)
+        if (ActorProxy.isPlayingAI == false)
         {
-            if (target == null || target.ActorProxy == null)
-            {
-                return;
-            }
+            return;
+        }
+        
+        if (Random.value < 0.05f)
+        {
+            Vector3 pos = transform.position;
+            ActorProxy.PlayEffectWithRelay("Effect_FireBomb", pos);
             
-            SetBomb(false);
-            // 폭발 이펙트
-            PoolManager.Get().ActivateObject(pref_FireBombEffect.name, target.ts_HitPos.position);
-            
-            // 데미지
-            if (ActorProxy.isPlayingAI)
+            var cols = Physics.OverlapSphere(pos, (ActorProxy as DiceActorProxy).diceInfo.effectRangeValue, targetLayer);
+            foreach (var col in cols)
             {
-                target.ActorProxy.HitDamage(effect);
+                var bs = col.GetComponentInParent<BaseEntity>();
+                if (bs != null && bs.CanBeTarget())
+                {
+                    bs.ActorProxy?.HitDamage(ActorProxy.effect, DamageType.Fire);
+                }
             }
         }
-    }
-
-    public void SetBomb(bool b)
-    {
-        isBomb = b;
-    }
-}
-
-public class FireAction : SyncActionWithoutTarget
-{
-    public override IEnumerator Action(ActorProxy actorProxy)
-    {
-        // 트리거 On
-        var fire = (Minion_Fire) actorProxy.baseEntity;
-        fire.SetBomb(true);
-        
-        yield break;
-    }
-
-    public override void OnActionCancel(ActorProxy actorProxy)
-    {
-        // 트리거 Off
-        var fire = (Minion_Fire) actorProxy.baseEntity;
-        fire.SetBomb(false);
-        
-        base.OnActionCancel(actorProxy);
     }
 }

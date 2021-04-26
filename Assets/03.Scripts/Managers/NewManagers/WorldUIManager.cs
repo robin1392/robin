@@ -16,12 +16,11 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     
     #region world ui element
 
-    [Header("Stage UI")] 
-    public Image imageSpawnTime;
+    [Header("Stage UI")]
     public Image imageTimerIcon;
     public Text textSpawnTime;
     public Text textWave;
-    public Text textAddSP;
+    
 
     [Header("Canvas")] public Canvas canvas_UnitHPBar;
 
@@ -93,22 +92,6 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
 
     public AnimationCurve curve;
     private bool isGaugeTweening;
-    
-    public void SetSpawnTime(float amount)
-    {
-        imageSpawnTime.fillAmount = amount;
-    }
-
-    public void AddSP(int addSP)
-    {
-        SetAddSpText(addSP);
-        textAddSP.transform.DOPunchScale(Vector3.one * 0.1f, 0.3f);
-    }
-
-    public void SetAddSpText(int addSp)
-    {
-        textAddSP.text = $"{addSp}";
-    }
 
     #endregion
 

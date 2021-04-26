@@ -114,7 +114,6 @@ MonoBehaviour:
   ActorProxy: {fileID: 0}
   isMine: 0
   isCanBeTarget: 1
-  diceId: 1008
   id: 0
   animator: {fileID: 247207038996581446}
   arrMaterial:
@@ -132,7 +131,9 @@ MonoBehaviour:
   searchRange: 0
   ts_ShootingPos: {fileID: 4735070485192432045}
   ts_HitPos: {fileID: 1552512765847086028}
+  ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 887776035416822996}
+  objectHealthBar: {fileID: 0}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 8766972557533169251}
   _poolObjectAutoDeactivate: {fileID: 0}
@@ -349,7 +350,7 @@ PrefabInstance:
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}

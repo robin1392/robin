@@ -69,17 +69,24 @@ MonoBehaviour:
   isCanBeTarget: 1
   diceId: 0
   id: 0
-  controller: {fileID: 0}
   animator: {fileID: 3831247773943993334}
   arrMaterial:
   - {fileID: 2100000, guid: cfb37c76c2c0a4de4b5f2b4b5e1cd295, type: 2}
   - {fileID: 2100000, guid: f02eabf025a9d43209506f9df6b96910, type: 2}
   target: {fileID: 0}
   targetMoveType: 0
+  effectUpgrade: 0
+  effectInGameUp: 0
+  effectDuration: 0
+  effectCooltime: 0
+  range: 0
+  searchRange: 0
   ts_ShootingPos: {fileID: 0}
   ts_HitPos: {fileID: 6865671536843905043}
+  ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 256646924921004661}
   text_Health: {fileID: 0}
+  sr_Shadow: {fileID: 0}
   _poolObjectAutoDeactivate: {fileID: 0}
   collider: {fileID: 7220310024489854118}
   _hitCollider: {fileID: 0}
@@ -520,18 +527,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3693616411150301188, guid: bf8b7c5791de64776a5bba6209e0c6f6,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.7
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3693616411150301188, guid: bf8b7c5791de64776a5bba6209e0c6f6,
         type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.7
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3693616411150301188, guid: bf8b7c5791de64776a5bba6209e0c6f6,
         type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.7
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4037912622624596670, guid: bf8b7c5791de64776a5bba6209e0c6f6,
         type: 3}

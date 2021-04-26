@@ -57,7 +57,7 @@ namespace ED
             SoundManager.instance.Play(clip_BabyAttack);
         }
 
-        public override void OnBaseStatDestroyed()
+        public override void OnBaseEntityDestroyed()
         {
             var rwClient = ActorProxy.Client as RWNetworkClient;
             rwClient.GameState.WaveEvent.RemoveListener(OnWave);

@@ -9,20 +9,12 @@ namespace ED
     public partial class Minion
     {
         private Coroutine _ai;
-        protected Seeker Seeker;
-        protected AIPath AiPath;
 
-        public void SetPathFinding(Seeker seeker, AIPath aiPath)
-        {
-            Seeker = seeker;
-            AiPath = aiPath;
-        }
-        
         public override void StartAI()
         {
             ActorProxy.lastRecieved = null;
             ActorProxy.EnablePathfinding(true);
-            AiPath.isStopped = true;
+            ActorProxy._aiPath.isStopped = true;
             if (_ai != null)
             {
                 return;
@@ -47,6 +39,7 @@ namespace ED
         }
 
         protected WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);
+        protected WaitForSeconds _waitForSeconds0_3 = new WaitForSeconds(0.3f);
         
         protected virtual IEnumerator Root()
         {
@@ -107,24 +100,13 @@ namespace ED
             
             ActorProxy.EnablePathfinding(true);
 
-            if (RWNetworkClient.EnableRVO)
-            {
-                ActorProxy._aiDestinationSetter.target = target.ActorProxy.transform;
-            }
-            else
-            {
-                Vector3 targetPos = target.ActorProxy.transform.position + (target.ActorProxy.transform.position - ActorProxy.transform.position).normalized * range;
-                Seeker.StartPath(ActorProxy.transform.position, targetPos);
-            }
+            Vector3 targetPos = target.ActorProxy.transform.position + (ActorProxy.transform.position - target.ActorProxy.transform.position).normalized * target.Radius;
+            ActorProxy._aiPath.destination = targetPos;
         }
 
         protected void StopApproachToTarget()
         {
-            AiPath.isStopped = true;
-            if (RWNetworkClient.EnableRVO)
-            {
-                ActorProxy._aiDestinationSetter.target = null;
-            }
+            ActorProxy._aiPath.isStopped = true;
         }
         
         public virtual IEnumerator Attack()

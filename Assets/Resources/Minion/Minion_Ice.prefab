@@ -100,6 +100,7 @@ MonoBehaviour:
   searchRange: 0
   ts_ShootingPos: {fileID: 8977681267721128585}
   ts_HitPos: {fileID: 596961995325605319}
+  ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 5081294253014802598}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 8267810006794538117}
@@ -109,6 +110,8 @@ MonoBehaviour:
   collider: {fileID: 0}
   isPolymorph: 0
   pref_Bullet: {fileID: 665045047327999094, guid: 09a148e86cdb046edb32055e3387a5e8,
+    type: 3}
+  effect_Freeze: {fileID: 8813737514600411033, guid: ea5d0d9ecd1ae4aeb860d02e444b7869,
     type: 3}
   bulletMoveSpeed: 6
   clip_Attack: {fileID: 8300000, guid: 5cfb230f843fc412db11414ce1ad09f3, type: 3}
@@ -123,7 +126,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.3
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &-308283106765298260
 MonoBehaviour:
@@ -185,7 +188,7 @@ PrefabInstance:
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}

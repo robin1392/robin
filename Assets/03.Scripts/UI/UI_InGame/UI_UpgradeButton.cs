@@ -16,20 +16,25 @@ namespace ED
         public Image image_SP;
         public Text text_Price;
         public Text text_Level;
+        public Animator ingameUpAnimator;
 
         private int level;
-        private RandomWarsResource.Data.TDataDiceInfo pData;
+        private TDataDiceInfo pData;
         
-        public void Initialize(RandomWarsResource.Data.TDataDiceInfo dataDice, int level, int index)
+        public void Initialize(TDataDiceInfo dataDice, int level, int index)
         {
             this.index = index;
             this.pData = dataDice;
+            
+            if (level != 0 && this.level != level)
+            {
+                ingameUpAnimator.SetTrigger("Dice_Power_Up");
+            }
+            
             this.level = level;
             image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
             image_Icon.SetNativeSize();
             Refresh();
-            
-            // InGameManager.Get().event_SP_Edit.AddListener(EditSpCallback);
         }
         
         private RWNetworkClient _client;

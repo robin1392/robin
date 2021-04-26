@@ -55,9 +55,9 @@ namespace ED
         {
             get
             {
-                if (collider is CapsuleCollider capsuleCollider)
+                if (collider is SphereCollider sphereCollider)
                 {
-                    return capsuleCollider.radius;
+                    return sphereCollider.radius;
                 }
 
                 return 0;
@@ -97,34 +97,6 @@ namespace ED
             text_Health.text = $"{Mathf.CeilToInt(ActorProxy.currentHealth)}";
         }
 
-        public override void SetColor(E_MaterialType type, bool isAlly)
-        {
-            var mat = arrMaterial[isAlly ? 0 : 1];
-            var mr = GetComponentsInChildren<MeshRenderer>();
-            foreach (var m in mr)
-            {
-                if (m.gameObject.CompareTag("Finish")) continue;
-
-                m.material = mat;
-
-                switch (type)
-                {
-                    case E_MaterialType.BOTTOM:
-                    case E_MaterialType.TOP:
-                        Color c = m.material.color;
-                        c.a = 1f;
-                        m.material.color = c;
-                        break;
-                    case E_MaterialType.HALFTRANSPARENT:
-                    case E_MaterialType.TRANSPARENT:
-                        c = m.material.color;
-                        c.a = 0.3f;
-                        m.material.color = c;
-                        break;
-                }
-            }
-        }
-
         public void SendEventLog_BatCheck()
         {
             //KZSee: 게임 종료 시에 덱 정보를 아날리틱스로 보낸다  최대데미지와 최대 눈금을 주사위 아이디별로 저장해서 보낸
@@ -142,9 +114,9 @@ namespace ED
             // FirebaseManager.Get().LogEvent("bat_check", param);
         }
 
-        public override void OnBaseStatDestroyed()
+        public override void OnBaseEntityDestroyed()
         {
-            base.OnBaseStatDestroyed();
+            base.OnBaseEntityDestroyed();
             
             image_HealthBar?.transform.parent.gameObject.SetActive(false);
             image_HealthBar = null;
@@ -156,14 +128,6 @@ namespace ED
             
             //ActorProxy가 파괴되기 전 밖으로 빼놓는다. 
             transform.SetParent(null);
-        }
-
-        public void AdjustLocalTowerHealthBarPosition()
-        {
-            var objHealthBar = GetComponentInChildren<UI_ObjectHealthBar>().transform;
-            var pos = objHealthBar.localPosition;
-            pos.y *= -1;
-            objHealthBar.localPosition = pos;
         }
     }
 }

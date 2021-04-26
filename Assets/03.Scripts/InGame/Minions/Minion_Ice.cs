@@ -16,6 +16,8 @@ namespace ED
     {
         [Header("Prefab")]
         public GameObject pref_Bullet;
+
+        public GameObject effect_Freeze; 
         [Space]
         public float bulletMoveSpeed = 6f;
 
@@ -27,6 +29,7 @@ namespace ED
             base.Awake();
             
             PoolManager.instance.AddPool(pref_Bullet, 1);
+            PoolManager.instance.AddPool(effect_Freeze, 1);
         }
 
         protected override void Start()
@@ -53,9 +56,9 @@ namespace ED
             if (ActorProxy.isPlayingAI)
             {
                 var diceActorProxy = ActorProxy as DiceActorProxy;
-                if (Random.Range(0, 100) < diceActorProxy.diceInfo.effectDuration)
+                if (Random.Range(0, 100) < diceActorProxy.diceInfo.effectProbability)
                 {
-                    ActorProxy.FireBulletWithRelay(E_BulletType.ICE_FREEZE_BULLET, target, power, bulletMoveSpeed, diceActorProxy.effect);
+                    ActorProxy.FireBulletWithRelay(E_BulletType.ICE_FREEZE_BULLET, target, power, bulletMoveSpeed, diceActorProxy.effectDurationTime);
                 }
                 else
                 {

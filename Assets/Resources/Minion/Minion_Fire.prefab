@@ -70,7 +70,9 @@ MonoBehaviour:
   searchRange: 0
   ts_ShootingPos: {fileID: 8488758196635011245}
   ts_HitPos: {fileID: 8488758196635011245}
+  ts_TopEffectPosition: {fileID: 0}
   image_HealthBar: {fileID: 6150823028887648129}
+  objectHealthBar: {fileID: 0}
   text_Health: {fileID: 0}
   sr_Shadow: {fileID: 3942675236717271529}
   _poolObjectAutoDeactivate: {fileID: 0}
@@ -78,7 +80,7 @@ MonoBehaviour:
   isAttackSpeedFactorWithAnimation: 1
   collider: {fileID: 0}
   isPolymorph: 0
-  pref_FireBombEffect: {fileID: 5166360906360891136, guid: 878413f681f3941baab6b9a0538d6a8f,
+  pref_FireBombEffect: {fileID: 2325903116925014942, guid: 878413f681f3941baab6b9a0538d6a8f,
     type: 3}
 --- !u!135 &6486029529450410244
 SphereCollider:
@@ -91,7 +93,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.3
   m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &2583571212696764795
 MonoBehaviour:
@@ -183,7 +185,7 @@ PrefabInstance:
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440694068788955339, guid: 18dcb2683495a4e0c8a845e1c09c9bb6,
         type: 3}
@@ -468,6 +470,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 1464929914647962967, guid: 4a3d6c774390941f9881b878d508afbc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: b554ea205d0c44de39e10c92ce9219a6, type: 2}
     - target: {fileID: 1823055910198512366, guid: 4a3d6c774390941f9881b878d508afbc,
         type: 3}
       propertyPath: m_Name
