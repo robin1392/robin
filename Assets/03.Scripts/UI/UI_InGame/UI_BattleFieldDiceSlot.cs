@@ -165,9 +165,6 @@ namespace ED
                 
                 var localPlayerProxy = _client.GetLocalPlayerProxy();
                 localPlayerProxy.MergeDice(dragDice.diceFieldNum, dice.diceFieldNum);
-                
-                ani.SetTrigger(BBoing);
-                SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);
             }
         }
 
@@ -219,6 +216,12 @@ namespace ED
         public void InitClient(RWNetworkClient client)
         {
             _client = client;
+        }
+
+        public void Bboing()
+        {
+            transform.SetAsLastSibling();
+            ani.SetTrigger(BBoing);
         }
     }
 }

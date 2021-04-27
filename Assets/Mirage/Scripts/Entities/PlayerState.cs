@@ -245,8 +245,13 @@ namespace MirageTest.Scripts.Entities
             if (oldValue.IsEmpty)
             {
                 SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
-                uiDiceField.arrSlot[index].ani.SetTrigger("BBoing");
             }
+            else
+            {
+                SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);    
+            }
+
+            uiDiceField.arrSlot[index].Bboing();
 
             if (newValue.IsEmpty)
             {
