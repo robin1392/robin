@@ -21,7 +21,8 @@ namespace Quantum {
         // user systems go here
         new BTUpdateSystem(),
         new BotSDKSystem(),
-        new ActorSystem()
+        new ActorSystem(),
+        new TestTestSystem()
       };
     }
   }

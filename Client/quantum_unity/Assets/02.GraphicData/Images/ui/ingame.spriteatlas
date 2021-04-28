@@ -40,6 +40,7 @@ SpriteAtlas:
       allowAlphaSplitting: 0
       enableRotation: 0
       enableTightPacking: 0
+    secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: cdc18c0b60b52446cbfbad7ffd4e89ce, type: 3}
@@ -190,5 +191,6 @@ SpriteAtlas:
   - icon_team
   - icon_ingame_fire_06
   - icon_wave_01
+  m_RenderDataMap: {}
   m_Tag: ingame
   m_IsVariant: 0

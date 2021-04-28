@@ -40,6 +40,7 @@ SpriteAtlas:
       allowAlphaSplitting: 0
       enableRotation: 0
       enableTightPacking: 0
+    secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 51cece0bd76e84203a9bb83bc800ecae, type: 3}
@@ -347,5 +348,6 @@ SpriteAtlas:
   - lobby_start_ cooperation
   - shop_diamond_botton
   - class_11
+  m_RenderDataMap: {}
   m_Tag: Atlas
   m_IsVariant: 0

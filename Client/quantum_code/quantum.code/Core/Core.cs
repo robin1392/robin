@@ -1098,7 +1098,7 @@ namespace Quantum {
 }
 
 // Core/FrameEvents.cs
-﻿
+ 
 namespace Quantum {
   partial class Frame {
     public partial struct FrameEvents {
@@ -1113,7 +1113,7 @@ namespace Quantum {
 
 
 // Core/FrameSignals.cs
-﻿
+ 
 namespace Quantum {
   public unsafe interface ISignalOnComponentAdded<T> : ISignal where T : unmanaged, IComponent {
     void OnAdded(Frame f, EntityRef entity, T* component);
@@ -1342,7 +1342,7 @@ namespace Quantum {
 
 
 // Core/NavMeshSignals.cs
-﻿
+ 
 namespace Quantum
 {
   /// <summary>
@@ -1383,7 +1383,7 @@ namespace Quantum
 
 
 // Core/RecordingFlags.cs
-﻿
+ 
 namespace  Quantum {
   [Flags]
   public enum RecordingFlags {
@@ -2194,7 +2194,6 @@ namespace Quantum {
         args.UsePhysics3D = _systemsAll.FirstOrDefault(x => x is PhysicsSystem3D) != null;
         args.UseNavigation = _systemsAll.FirstOrDefault(x => x is NavigationSystem) != null;
         args.UseCullingArea = _systemsAll.FirstOrDefault(x => x is CullingSystem2D) != null || _systemsAll.FirstOrDefault(x => x is CullingSystem3D) != null;
-
         // create frame context
         _context = new FrameContextUser(args);
       }

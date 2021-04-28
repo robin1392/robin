@@ -4,3 +4,7 @@ component Actor {
     FP MaxHealth;
     FP Power;
 }
+
+component TestTest {
+    int A;
+}

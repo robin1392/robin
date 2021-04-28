@@ -40,6 +40,7 @@ SpriteAtlas:
       allowAlphaSplitting: 0
       enableRotation: 0
       enableTightPacking: 0
+    secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 6f13e070ecc1f0d4aa7b5034ad098b63, type: 3}
@@ -326,5 +327,6 @@ SpriteAtlas:
   - icon_dice_3002
   - icon_dice_5001
   - icon_dice_3006
+  m_RenderDataMap: {}
   m_Tag: atlas_dice
   m_IsVariant: 0
