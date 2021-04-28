@@ -1,0 +1,395 @@
+Apr 08, 2021
+- Bot SDK 2.1.7 Beta2
+ 
+* Behaviour Tree
+- Changing the fields from Leaf/Decorators/Service nodes on the quantum code will automatically show those fields on pre-existing nodes at the Unity Editor;
+- Fixed issue where Composite/Leaf nodes would keep in memory even after deleted;
+ 
+* Migration from v1 to v2
+- Added functionality to convert from Quantum v1’s string Guids to Quantum v2’s long Guids;
+ 
+ 
+Apr 06, 2021
+- Bot SDK 2.1.6 Beta2
+ 
+* Behaviour Tree
+- It is now possible to rename Decorator and Service nodes;
+- Composite and Leaf nodes now display a number which represents its execution order;
+- Composite nodes now has an increased width;
+ 
+ 
+Apr 01, 2021
+- Bot SDK 2.1.5 Beta2
+ 
+* Visual Editor
+- Fixed issue with the HFSM Hierarchy debugger related to the state indicator arrow;
+- Fixed issue where renaming Transitions would only have effect after domain reload;
+- Fixed issue which happened when having an “ANY Transition” but no State on the same hierarchy level;
+ 
+- It is now possible to delete Transitions by using the “Delete” key;
+- The Debugger buttons doesn’t disappear during runtime anymore;
+- Added messages for when toggling the Debugger active state;
+- Removed duplicate “Make Constant” button from the Configs panel;
+- Removed the right click panel from the Action Root nodes;
+- The Actions Root node is now named “Actions - <StateName>”;
+
+
+Feb 26, 2021
+- Bot SDK 2.1.4 Beta2
+ 
+* Visual Editor
+- Fixed issue upon creating new AI documents;
+ 
+ 
+Feb 24, 2021
+- Bot SDK 2.1.3 Beta2
+ 
+* Visual Editor
+- Fixed issue in which closing and reopening AI documents would cause errors upon compilation and upon playing the scene with the Circuit window opened;
+
+
+Feb 24, 2021
+- Bot SDK 2.1.2 Beta2
+
+* Visual Editor
+- Fixed issue in which closing and reopening AI documents would lead to a crash in the Bot SDK window;
+
+
+Feb 23, 2021
+- Bot SDK 2.1.1 Beta2
+ 
+* Visual Editor
+- Fixed issue regarding Asset Refs fields in any node type;
+ 
+ 
+Feb 16, 2021
+- Bot SDK 2.1.0 Beta2
+ 
+* Visual Editor
+- Major improvements on the Circuit Editor performance;
+- Blackboard Variables can now be converted to Constants and Config. On existing nodes, the “Key” slot connection is lost and the “Value” slot’s connection is maintained;
+- Constants and Configs can now be converted to Blackboard Variables. On existing nodes, the “Key” is added and the “Value” slot’s connection is maintained;
+- Fixed issue in which the button Duplicate Document was generating a new document with invalid Guids on its nodes;
+- Added success message on the Circuit window when duplicating a document;
+ 
+* Quantum code
+- Added new API for resolving AIParams which only needs the Frame and the EntityRef as parameter;
+ 
+ 
+ 
+Jan 19, 2021
+- Bot SDK 2.0.0 Beta2
+ 
+* Debugger
+- The debugger window now also shows the HFSM/BT asset names alongside with the entity number;
+ 
+* Behaviour Tree
+- Added an Asset Ref to AIConfig on the BTAgent, and a “btAgent.GetConfig(frame)” helper method;
+ 
+* Systems
+- Created BotSDKDebuggerSystem, which is important for the Debugger on Unity;
+ 
+* Circuit
+- Fixed “Debugger Inspector” button on Dark Mode;
+ 
+ 
+Jan 08, 2021
+- Bot SDK 2.0.0 Beta1
+ 
+* Debugger
+- Created a custom inspector window for the Debugger. It is now possible to see all HFSMAgents and BTAgents to be debugged there, even if it doesn’t have a View game object;
+ 
+* Behaviour Tree
+- Added a debugger for the Behaviour Tree;
+- Fixed issue in which Sequences and Selectors did not have their Status updated when canceled by a child node;
+- Optimized the logic on the initial memory allocation on the BTAgent. Also improved the amount of data allocated;
+- On BotSDKSystem, listening to component added/removed callbacks to initialize and free the BTAgent’s data;
+ 
+* HFSM
+- Added method overload for HFSMManager.TriggerEvent, which doesn’t needs a HFSMData* as parameter;
+- On the debugger: the transition which shows many points is the most recent transition taken. That same transition is also blue, while the others are dark;
+- On BotSDKSystem, listening to component added to initialize a HFSMAgent;
+- Removed possibility of deleting the ActionRoot node (the main action node which lies inside States);
+- Changed the label used upon asset creation from “State Machine” to “HFSM”;
+- Fixed issue which happened when there were “ANYTransitions” but no State node existed;
+- Fixed issue in which Actions couldn't receive more than one input (like from both OnEnter and OnUpdate at the same time);
+ 
+* Blackboard
+- On BotSDKSystem, listening to component removed to free the Blackboard memory;
+ 
+* Systems
+- Created the BotSDKSystem which listens to many callbacks to initialize/free components and data;
+ 
+* DSL
+- Removed many “asset import” from the DSL, which were no more needed;
+ 
+ 
+ 
+Dec 21, 2020
+- Bot SDK 2.0.0 Alpha9
+ 
+* Assets
+- BotSDK.unitypackage will not import "AssetLinkDatabase.asset" and "SettingsDatabase" anymore, to prevent issues on asset serialization on old Unity versions.
+These assets are generated automatically when opening Bot SDK window.
+ 
+ 
+Nov 17, 2020
+- Bot SDK 2.0.0 Alpha8
+ 
+* Bugfix
+- Fixed an issue in which Blackboard/Constant Nodes would be created with the parent Guid
+ 
+ 
+Nov 16, 2020
+- Bot SDK 2.0.0 Alpha7
+ 
+* Compilation
+- Added a Boolean on the SettingsDatabase scripable object named "CreateBlackboardInitializer" which makes it possible to avoid creating the asset, if needed
+- The Events baked into the HFSM assets are now ordered alphabetically
+ 
+ 
+Oct 26, 2020
+- Bot SDK 2.0.0 Alpha6
+ 
+* Folders structure
+- It is now possible to safely change Bot SDK's root folder
+ 
+ 
+Oct 20, 2020
+- Bot SDK 2.0.0 Alpha5
+ 
+* Behaviour Tree Editor
+- Release of the alpha version of our Behaviour Tree Editor, composed by:
+- Deterministic Behaviour Tree implementation on Quantum solution
+- Circuit editor on the Unity side
+ 
+* HFSM
+- Changed how “ANY Transitions” are compiled. Their priorities are now organized with the origin states transitions’ priorities
+ 
+* Visual Editor
+- Added “Duplicate Document” on Bot SDK window which creates a copy of the currently opened document
+- Fixed issue regarding the fields serializer getting null during edit time
+- Fixed issue on FP fields which could, in some specific scenarios, get corrupted during edit time
+- Fixed issue that created null values during deserialization of field, which could lead the editor to crash
+- Added MacOS command “CMD + Backspace” and “CMD + Delete” for deleting Nodes
+- Added “Delete Node” button to the Nodes context menu
+- The Save History is now provided with a Max save amount of 0. Possible to change via the asset SettingsDatabase, field SaveHistoryCount
+ 
+ 
+Jun 16, 2020
+- Bot SDK 2.0.0 Alpha4
+ 
+* GOAP Editor
+- Included the Blackboard panel
+- Included the Constants panel
+- Included the Configs panel
+- Using assets cache to reduce the compile time
+- Added complete solution to slots baker, to consider the Blackboards/Constants/Configs;
+- Added a reference to an AIConfig on the GOAPAgent component
+- Added Hotkey: press “F2” to edit Tasks
+ 
+* Visual Editor
+- On the History panel, highlighting the last compiled entry, and the active entry;
+- Added “Compilation succeeded” message when Bot SDK finishes compiling;
+- The left size panel is now resizable
+- The compilation button now turns green when the current state of the circuit was already compiled;
+- Support for the creation of AIParam<T> with an Enum as the type. Connections enabled with Blackboard/Constant/Config nodes
+- Support for implicit cast on numerical nodes/slots. It is possible now to connect Byte/Int32/FP slots and nodes
+- Added button which shows a panel with the most important Hotkeys
+- Included panel for correcting Actions/Decisions types if they had their names changed
+- The middle mouse button now closes tabs
+- Fixed issue regarding duplicating existing Nodes, which was leading to duplicated Guid errors
+- When Action/Decision nodes types are broken, they appear on the Left Panel upon compilation. Circuit window will focus on the broken node if the user click on the error message
+ 
+* Quantum code
+- HFSM and GOAP main methods doesn’t receive an AIContext as parameter anymore
+- Added method GetConfig to the HFSMAgent component
+- Removed the parameter “HFSMData* fsm” from the abstract Decide method
+- Created method overloads for HFSMManager’s Init and Update methods. No need always to pass the HFSMData* anymore
+- Added “asset import” declaractions to all Bot SDK files on its internal .qtn files. Needed for correct DB serialization on newer Quantum 2.0 versions
+ 
+* Folders and files
+- Changed the folder structure. It was previously on “Assets/Plugins/Circuit” and it was moved to “Assets/Photon/BotSDK”
+- On Unity, changed the debugger script name from HFSMDebugComponent to HFSMDebugger
+- Added panel to select the output folder for the result of Bot SDK’s compilation process. The Panel can be found at the bottom of the asset SettingsDatabase, the field name is BotSDKOutputFolder
+- Config files are now generated on the subfolder AIConfig_Assets
+ 
+Apr 28, 2020
+- Bot SDK 2.0.0 Alpha3
+ 
+* GOAP Editor
+- Fixed issue regarding duplicated paths for Actions with the same type
+- Fixed issue regarding duplicated paths for Tasks with the same name
+- Fixed issue which prevented users to give custom names to Action nodes
+ 
+* Visual Editor
+- Fixed AssetRef drawer for Actions and Decisions fields
+ 
+ 
+Apr 24, 2020
+- Bot SDK 2.0.0 Alpha2
+ 
+* Visual Editor
+- Added Filter button on the top bar;
+- Added “Refresh Documents” button to re-import all types on all Bot SDK documents at the project;
+- Added Bot SDK version label to the top bar;
+- Removed the “Promote to Variable” alternative from Action/Decision fields
+ 
+* Issues
+- Adapted Bot SDK dll to work with the new dlls structure present on Quantum SDK 2.0.0 A1 260 and on
+ 
+Apr 16, 2020
+- Bot SDK 2.0.0 Alpha
+ 
+* Portability to Quantum 2.0.0 Alpha
+- This version has no major change in comparison to version Bot SDK 1.0.0 Final. Only minor changes to make it work with Quantum 2.0
+ 
+ 
+March 16, 2020
+- Bot SDK 1.0.0 Final
+ 
+* Visual Editor
+- Support for adding Labels to Actions/Decision Nodes (from the right click menu)
+- Allowed connection between Event Nodes and String/AIParamString slots
+- Fixed the Constant Nodes drawer: its width is now defined by the size of the Node value instead of its name
+- Removed log message when adding Constant nodes to the graph
+- Fixed issue in which uninitialized AIParam fields would generate broken Nodes on the Visual Editor
+- Fixed issue in which the compilation process tried to find for the Events on the Constants panel, which would lead to unnecessary logs showing up
+- Fixed issues regarding the History view
+- Fixed issue that happened when drag-and-dropping assets into AssetLink fields on Actions and Decisions
+- Fixed issue in which the Priority values were initialized as null instead of zero
+- Fixed issue with the “Compile Project” functionality
+- Changed the tooltip from “Compile Project” to “Compile All”
+- On the Unity top toolbar, changed the tool name from “Circuit” to “Bot SDK”
+ 
+* Hotkeys
+- Added Hotkey: press “M” to mute and unmute States/Actions/Transitions Links
+- Added Hotkey: press “F2” to edit States/Actions/Decisions/Transitions Nodes/TransitionSets
+- Added Hotkey: press “Esc” to go upper on the states hierarchy or out of a transiton graph
+ 
+* Configs panel
+- Created new panel on the left side menu named Config
+This panel should be used for agents which use the same HFSM but need different constant values from each other
+ 
+* Blackboard
+- The Blackboard getter method is now generated automatically. Instead of Entity.GetBlackboardComponent(entity), use Entity.GetAIBlackboardComponent(entity)
+- Fixed issue regarding destroying and re-initializing Blackboard components
+ 
+* GOAP
+- Fixed issue on muting Tasks
+ 
+* Unity files
+- Moved the AssetLinkDatabase and SettingsDatabase to a new folder. It is not on the Resources folder anymore
+- Removed duplicated Gizmos Icon images
+ 
+* Debugger
+- Added support to debugging Blackboard Vars
+- Event nodes can now be linked to String fields
+- Fixed transition color when there is only one transition to be debugged
+ 
+ 
+Dec 17, 2019
+- Bot SDK 1.0.0 Release Candidate 3
+ 
+* Visual Editor
+- Changed the line drawers which are used to link states, actions, decisions, etc
+- Keyboard numeric Enter is now also used to confirm some editing actions
+- Clicking on some transition slot doesn't delete that transition anymore. Instead, drag and drop it to re-direct some transition to another state
+- Right click transitions to access the Delete button
+- Variables on the left side menu are now ordered by alphabetical order
+- Actions and Decisions are also now ordered by alphabetical order
+- Actions and Decisions nodes can now have its names changed on the Visual Editor (right click on it to edit). This makes no difference to the actual actions and decisions classes
+- Created a menu to fix events/blackboard variables from former Bot SDK versions
+- Added the transition Priority to the top view on the graph, on the state node
+- No longer generates a Blackboard asset when there is no Blackboard Variable on the visual eitor
+ 
+* ANY Transition
+- Added Excluded List to it, which allows the user to inform states that should not consider that ANY transition
+ 
+* Compilation
+- Removed code which was causing the compilation process to take the double of the time needed
+- Improved a lot the compilation time by re-using the previous data assets structure to prevent re-creating assets unnecessarily
+ 
+* Debugging
+- Added new toolset for debugging HFSM agents. Its main features are:
+Select some Game Object on your Hierarchy tab which represents some HFSM Agent and has the HFSMDebugComponent added to it in order to open its HFSM editor
+See what is the current state in which the HFSM Agent is
+See what are the last three transitions taken by that HFSM Agent (works hierarchically)
+See what are the current states on the left panel, to easily see all of the current states considering the hierarchy
+ 
+* Quantum code
+- Created the AIContext, which is used to reference Constants and Config data assets and can be set differently for bots which has the same HFSM but uses different values
+- Changed the way that Transition Sets were handled on the HFSM core code
+ 
+* Constants
+- Created the Constants menu on the left side part of the editor
+- Constants can be used to define nodes with a default type, and the same constants node can be used as input for many fields
+ 
+* Blackboard
+- On the Visual Eitor, added a new slot on every Blackboard node: the value slot, which can be used to define where some Action/Decision reads some value from
+- Fixed serialization issue for entities which has the Blackboard Component and are Created -> Destroyed-> Created (respawned)
+- Fixed serialization issue regarding using the Blackboard component during matches between different platforms (cross platform)
+- Fixed serialization issue regardinsg usint the Blackboard component on replays
+ 
+* AI Param
+- Created a new type that easily changes the source from where it reads values: the AIParam
+- Public AIParam fields can be defined, on the Visual Editor, from a value set by hand (click to edit), from a Blackboard node or a Constant node
+- AIParams are strongly typed, so they are used as AIParamInt, AIParamFP, AIParamBool, etc
+ 
+* Unity Assets
+- Added new asset: HFSMDebugComponent
+ 
+* Issues
+- Fixed issue on using Events on ANY transitions
+- Reduced the amount of SetDirty called for the data assets created, which was causing a bug during compilation on some Mac OS machines
+- Added custom header on the default Bot SDK actions/decisions to prevent the Reset method to be created. It was also the cause of issues during compilation
+- Fixed precision issues regarding closing/opening circuits with FP values. Every re-open would make the FP value change. FPs are now stored as their internal long value
+- Fixed issue when (de)serializing the XML document. It didn't use InvariantCulture so it would cause errors depending on the machine's localization. Issue happened with some czech localized Windows machines 
+- Fixed issue in which OnExit actions would be called right after entering some state which has children states
+- Fixed compilation and runtime issues when some states were named the same
+- Fixed nodes being in incorrect states if it was created as a result of drawing a new transition. It was generating broken nodes after copying and pasting it
+- Documents are now saved before assembly recompilation to prevent loss of document modifications
+- Fixed the Circuit window when the game is on Play mode
+ 
+ 
+Aug 15, 2019
+- Bot SDK 1.0.0 Release Candidate 2
+ 
+* Visual Editor
+- Mute Transition option, accessible by right clicking on a any transition's line or on
+its in/outbound slot. Muted transitions will be ignored during the compilation process;
+- Mute State option, accessible by right clicking on a State node. Muted states are
+ignored during the compilation process, so no transition will lead to that state. The
+HFSM will not compile if you mute the Default State;
+- Mute Action option, accessible by right clicking on a Action node. It is possible to
+mute any Action, no matter its position on the actions list. If a muted action is linked
+to another action, then the other action will still be executed;
+- Editor screen panning using direcional arrow keys;
+- Actions and Decision nodes will automatically add or remove its fields list based on
+changes performed on the quantum_code (such as adding/removing fields);
+- Actions and Decisions nodes fields are initialized with the values defined on quantum_code;
+- Warning logs if some Action/Decision isn't serialized. Those Actions/Decisions wont show on the pop up menu in this case;
+- Actions/Decision fields always showing its values. There is no need to select the node to see the values anymore;
+- Transitions are now labelled with their Event name if there is no custom label defined;
+- Added menu to create Blackboard information within the editor view from which your
+custom Blackboards are created and from where you can drag and drop the Blackboard keys as nodes.
+ 
+* Blackboard
+- Blackboard Initializer asset, which can be used to define initial values for blackboard instances;
+- Fixed issue on Blackboard's memory allocation;
+- Added optional compilation symbol (USE_BLACKBOARD_FRAME_METHODS) to define if the Blackboard will not use Frame's partial methods.
+ 
+* Unity Assets
+- Compiling a HFSM generates both a Blackboard asset and a BlackboardInitializer asset for that agent;
+- Fixed redundancy between SettingsDatabase and AssetLinksDatabase assets which led to invalid cast errors;
+- Downgraded all assets versions. Assets were previously generated from Unity 2019.1.0f2, now it is generated from Unity 2018.4.0f1 LTS.
+ 
+* GOAP
+- Reduced the amount of GOAP re-planning: it now happens when the agent's Goal changes and when the agent's Current State changes
+ 
+* Changes on quantum_code BotSDK folder's content:
+- Included the Samples folder with some very simple pre-defined Actions and Decisions
+ 
+ 
+Jul 1, 2019
+- Bot SDK 1.0.0 Release Candidate 1

@@ -1,0 +1,23 @@
+From 1.2.4.x to 2.0
+1. Import quantum_migration1.2.4.xTo2.0.unitypackage to Unity 1.2.4.x project
+2. Run Menu->Quantum->Migration 1.2.4.x To 2.0->Export Asset Links To 2.0
+3. Run Menu->Quantum->Migration 1.2.4.x To 2.0->Prepare Folders For 2.0 (Test Run)
+  If errors appear files or folders have been moved from their original position. Update the migration source code if you can find the file/folder in your file structure.
+4. Run Menu->Quantum->Migration 1.2.4.x To 2.0->Prepare Folders For 2.0
+  Files and folders are moved and deleted to fit the new folder structure of Quantum 2.0
+  Most importantly the Quantum Generated script files need to be moved with their meta files!
+5. Run instructions from 2.0 to 2.x
+6. Add QUANTUM_2_0_OR_NEWER to the Scripting Define Symbols in Unity for each the supported platforms
+7. Import Asset Links using Menu->Quantum->Migration 1.2.4.x To 2.0->Import Asset Links From 1.2.4.x
+
+From 2.0 to 2.x
+1. Close Unity and Visual Studio instances
+2. Delete old tools and assemblies folders
+3. Unzip tools_and_assemblies.zip in the project root (unblock the zip files on Windows before extraction by right-click and selecting properties)
+4. Unzip quantum_code.zip inside the quantum_code folder overwrite all files
+    Migration Note:
+        We merged the code and systems project into a single csproj called `quantum.code`.
+        Migrate your project by copying the quantum.code folder from the SDK (not the upgrade folder) and copy all of your custom files (from state and systems) into that project: Add the new code project to your Visual Studio solution and drag drop the files there. Also copy your *.User files and CommandSetup.cs and SystemSetup.cs. Afterwards you can delete the state and systems projects completely.
+        We combined all source code provided with the SDK that is inside quantum code solution into a single file called `Core.cs` to make the upgrade more managable in the future (e.g. adding and removing files).
+5. Build quantum.code
+6. Open Unity and import quantum_unity.unitypackage (local modification are being overwritten)

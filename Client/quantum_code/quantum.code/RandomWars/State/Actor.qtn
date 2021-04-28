@@ -1,0 +1,6 @@
+component Actor {
+    int Team;
+    FP Health;
+    FP MaxHealth;
+    FP Power;
+}

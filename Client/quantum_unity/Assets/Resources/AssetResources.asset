@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd8e95ae0daaec4496511105240e8a3, type: 3}
+  m_Name: AssetResources
+  m_EditorClassIdentifier: 
+  AssetBundlesGroup:
+    _resources: []
+  ResourcesGroup:
+    _resources:
+    - Path: Resources/DB/Configs/DefaultPhysicsMaterial
+      AssetRef:
+        Id:
+          Value: 1
+      ResourcePath: DB/Configs/DefaultPhysicsMaterial
+    - Path: Resources/DB/Configs/DefaultNavMeshAgentConfig
+      AssetRef:
+        Id:
+          Value: 2
+      ResourcePath: DB/Configs/DefaultNavMeshAgentConfig
+    - Path: Resources/DB/Configs/DefaultCharacterController2D
+      AssetRef:
+        Id:
+          Value: 3
+      ResourcePath: DB/Configs/DefaultCharacterController2D
+    - Path: Resources/DB/Configs/DefaultCharacterController3D
+      AssetRef:
+        Id:
+          Value: 4
+      ResourcePath: DB/Configs/DefaultCharacterController3D
+    - Path: Resources/DB/Configs/SimulationConfig
+      AssetRef:
+        Id:
+          Value: 5
+      ResourcePath: DB/Configs/SimulationConfig
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_3
+      AssetRef:
+        Id:
+          Value: 464481439080346440
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
+      AssetRef:
+        Id:
+          Value: 687509308602505173
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|DebugLeaf_0
+      AssetRef:
+        Id:
+          Value: 752189454027856678
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
+      AssetRef:
+        Id:
+          Value: 1145133073435569565
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/Map1_Navmesh
+      AssetRef:
+        Id:
+          Value: 1696161997930526014
+      ResourcePath: DB/Map1_Navmesh
+    - Path: Resources/DB/Map1
+      AssetRef:
+        Id:
+          Value: 1710471675203725834
+      ResourcePath: DB/Map1
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee
+      AssetRef:
+        Id:
+          Value: 2923029850650634590
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
+      AssetRef:
+        Id:
+          Value: 3191137225385853972
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_4
+      AssetRef:
+        Id:
+          Value: 3427086675080851217
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 3448728012277418625
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|DebugLeaf_1
+      AssetRef:
+        Id:
+          Value: 3580962421273367876
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee

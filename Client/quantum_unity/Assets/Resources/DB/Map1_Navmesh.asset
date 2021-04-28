@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb2d134f0fd8e447b08e569da2a1031, type: 3}
+  m_Name: Map1_Navmesh
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/Map1_Navmesh
+      Guid:
+        Value: 1696161997930526014
+    Name: Navmesh
+    DataFilepath: Map1_Navmesh.bytes
+    GridSizeX: 32
+    GridSizeY: 32
+    GridNodeSize: 4
+    WorldOffset:
+      X:
+        RawValue: -4194304
+      Y:
+        RawValue: -4194304
+    MinAgentRadius:
+      RawValue: 32768

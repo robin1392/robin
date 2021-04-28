@@ -1,0 +1,16 @@
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/quantum.console.runner.exe.config
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/quantum.console.runner.exe
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/quantum.console.runner.pdb
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/Newtonsoft.Json.dll
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/PhotonDeterministic.dll
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/quantum.code.dll
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/quantum.core.dll
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/Newtonsoft.Json.xml
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/PhotonDeterministic.pdb
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/quantum.core.pdb
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/bin/Debug/quantum.code.pdb
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/obj/Debug/quantum.console.runner.csprojAssemblyReference.cache
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/obj/Debug/quantum.console.runner.csproj.CoreCompileInputs.cache
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/obj/Debug/quantum.console.runner.csproj.CopyComplete
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/obj/Debug/quantum.console.runner.exe
+/Users/111percent/RiderProjects/RandomWars_Quantum/quantum_code/quantum.console.runner/obj/Debug/quantum.console.runner.pdb

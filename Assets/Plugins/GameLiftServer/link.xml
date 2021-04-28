@@ -1,7 +1,0 @@
-﻿<linker>
-
- <assembly fullname="AWSSDK.Core" preserve="all"/>
- <assembly fullname="AWSSDK.SQS" preserve="all"/>
- <assembly fullname="AWSSDK.SecurityToken" preserve="all"/>
- 
- </linker>
