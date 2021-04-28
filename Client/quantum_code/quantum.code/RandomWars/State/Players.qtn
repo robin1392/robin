@@ -1,0 +1,33 @@
+struct DeckDice {
+    int DiceId;
+    int outGameLevel;
+    int inGameLevel;
+}
+
+struct FieldDice {
+    int DiceScale;
+    int DeckDiceIndex;
+}
+
+component RWPlayer {
+    uint Team;
+    int DiceCreationCount;
+}
+
+component DiceCreation {
+    int Count;
+}
+
+component Sp {
+    int CurrentSp;
+    int CommingSp;
+}
+
+component Deck {
+    int GuardianId;
+    array<DeckDice>[5] Dices;
+}
+
+component Field {
+    array<FieldDice>[15] Dices;
+}
