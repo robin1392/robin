@@ -1,8 +1,0 @@
-component MoveToTarget {
-    player_ref Player;
-    FPVector2 Target;
-}
-
-input {
-    FPVector2 Dest;
-}

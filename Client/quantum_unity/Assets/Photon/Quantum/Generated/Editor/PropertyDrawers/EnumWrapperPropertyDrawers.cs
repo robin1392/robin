@@ -13,6 +13,16 @@ public class GOAPWorldState_PrototypePropertyDrawer : EnumWrapperPropertyDrawerB
 }
 
 
+[CustomPropertyDrawer(typeof(Quantum.Prototypes.ModeType_Prototype))]
+public class ModeType_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.ModeType> {
+}
+
+
+[CustomPropertyDrawer(typeof(Quantum.Prototypes.StateType_Prototype))]
+public class StateType_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.StateType> {
+}
+
+
 [CustomPropertyDrawer(typeof(Quantum.Prototypes.InputButtons_Prototype))]
 public class InputButtons_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.InputButtons> {
 }

@@ -20,7 +20,7 @@ MonoBehaviour:
     UserAsset:
       Id:
         Value: 0
-    Scene: Game
+    Scene: InGame_Battle_Quantum
     WorldSize: 256
     BucketsCount: 16
     BucketsSubdivisions: 8
@@ -33,7 +33,212 @@ MonoBehaviour:
     GridNodeSize: 4
     NavMeshLinks: []
     Regions: []
-    StaticColliders2D: []
+    StaticColliders2D:
+    - Rotation:
+        RawValue: 0
+      Position:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 786432
+      Height:
+        RawValue: 0
+      VerticalOffset:
+        RawValue: 0
+      PhysicsMaterial:
+        Id:
+          Value: 0
+      Layer: 0
+      ShapeType: 4
+      CircleRadius:
+        RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 983040
+        Y:
+          RawValue: 131072
+      EdgeExtent:
+        RawValue: 0
+      PolygonCollider:
+        Identifier:
+          Path: 
+          Guid:
+            Value: 0
+        Vertices: []
+        Normals: []
+      StaticData:
+        Name: Top
+        Tag: Untagged
+        Layer: 0
+        Asset:
+          Id:
+            Value: 0
+        IsTrigger: 0
+        ColliderId: 0
+    - Rotation:
+        RawValue: 0
+      Position:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -786432
+      Height:
+        RawValue: 0
+      VerticalOffset:
+        RawValue: 0
+      PhysicsMaterial:
+        Id:
+          Value: 0
+      Layer: 0
+      ShapeType: 4
+      CircleRadius:
+        RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 983040
+        Y:
+          RawValue: 131072
+      EdgeExtent:
+        RawValue: 0
+      PolygonCollider:
+        Identifier:
+          Path: 
+          Guid:
+            Value: 0
+        Vertices: []
+        Normals: []
+      StaticData:
+        Name: Bottom
+        Tag: Untagged
+        Layer: 0
+        Asset:
+          Id:
+            Value: 0
+        IsTrigger: 0
+        ColliderId: 1
+    - Rotation:
+        RawValue: 0
+      Position:
+        X:
+          RawValue: -655360
+        Y:
+          RawValue: 0
+      Height:
+        RawValue: 0
+      VerticalOffset:
+        RawValue: 0
+      PhysicsMaterial:
+        Id:
+          Value: 0
+      Layer: 0
+      ShapeType: 4
+      CircleRadius:
+        RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 131072
+        Y:
+          RawValue: 983040
+      EdgeExtent:
+        RawValue: 0
+      PolygonCollider:
+        Identifier:
+          Path: 
+          Guid:
+            Value: 0
+        Vertices: []
+        Normals: []
+      StaticData:
+        Name: Left
+        Tag: Untagged
+        Layer: 0
+        Asset:
+          Id:
+            Value: 0
+        IsTrigger: 0
+        ColliderId: 2
+    - Rotation:
+        RawValue: 0
+      Position:
+        X:
+          RawValue: 655360
+        Y:
+          RawValue: 0
+      Height:
+        RawValue: 0
+      VerticalOffset:
+        RawValue: 0
+      PhysicsMaterial:
+        Id:
+          Value: 0
+      Layer: 0
+      ShapeType: 4
+      CircleRadius:
+        RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 131072
+        Y:
+          RawValue: 983040
+      EdgeExtent:
+        RawValue: 0
+      PolygonCollider:
+        Identifier:
+          Path: 
+          Guid:
+            Value: 0
+        Vertices: []
+        Normals: []
+      StaticData:
+        Name: Right
+        Tag: Untagged
+        Layer: 0
+        Asset:
+          Id:
+            Value: 0
+        IsTrigger: 0
+        ColliderId: 3
+    - Rotation:
+        RawValue: 0
+      Position:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      Height:
+        RawValue: 0
+      VerticalOffset:
+        RawValue: 0
+      PhysicsMaterial:
+        Id:
+          Value: 0
+      Layer: 0
+      ShapeType: 4
+      CircleRadius:
+        RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 655360
+        Y:
+          RawValue: 851968
+      EdgeExtent:
+        RawValue: 0
+      PolygonCollider:
+        Identifier:
+          Path: 
+          Guid:
+            Value: 0
+        Vertices: []
+        Normals: []
+      StaticData:
+        Name: Floor
+        Tag: Untagged
+        Layer: 0
+        Asset:
+          Id:
+            Value: 0
+        IsTrigger: 0
+        ColliderId: 4
     StaticColliders3D: []
     MapEntities: []
   Prototypes: []

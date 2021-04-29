@@ -1396,7 +1396,7 @@ namespace  Quantum {
 }
 
 // Core/RuntimeConfig.cs
-﻿
+ 
 namespace Quantum {
   /// <summary>
   /// In contrast to the <see cref="SimulationConfig"/>, which has only static configuration data, the RuntimeConfig holds information that can be different from game to game.
@@ -1482,7 +1482,7 @@ namespace Quantum {
 
 
 // Core/RuntimePlayer.cs
-﻿
+ 
 namespace Quantum {
 
   public interface ISignalOnPlayerDataSet : ISignal {

@@ -7,10 +7,14 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using MirageTest.Aws;
+using ExitGames.Client.Photon;
 using MirageTest.Scripts;
+using Quantum;
 using Service.Core;
 using UnityEngine;
+using DeckInfo = _Scripts.DeckInfo;
+using MatchData = _Scripts.MatchData;
+using MatchPlayer = _Scripts.MatchPlayer;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,6 +23,8 @@ namespace ED
 {
     public class InGameManager : SingletonDestroy<InGameManager>
     {
+        private MatchData MatchData;
+        
         #region game system variable
 
         [Header("SYSTEN INFO")] 
@@ -147,58 +153,86 @@ namespace ED
                 TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             }
             
-            var server = FindObjectOfType<RWNetworkServer>(true);
-            server.gameObject.SetActive(true);
             var userInfo = UserInfoManager.Get().GetUserInfo();
 
             var userDeck = userInfo.GetActiveDeck;
             var diceDeck = userDeck.Take(5).ToArray();
             var guadianId = userDeck[5];
-
+            
             if (TutorialManager.isTutorial)
             {
-                server.serverGameLogic.modeType = PLAY_TYPE.Tutorial;
             }
             else
             {
-                server.serverGameLogic.modeType = playType;    
+                
             }
 
-            server.serverGameLogic.hostMode = true;
-
-            var userDeckInfo = new DeckInfo(guadianId, diceDeck);
-            server.MatchData.AddPlayerInfo(
-                userInfo.userID, 
-                userInfo.userNickName, 0, 0,
-                userDeckInfo);
-            server.MatchData.AddPlayerInfo(
-                "AI", 
-                "AI", 0, 0,
-                GetAIDeck(userDeckInfo, TutorialManager.isTutorial), false);
+            var localMatchPlayer = new MatchPlayer()
+            {
+                NickName = userInfo.userNickName,
+                Trophy = 0,
+                WinStreak = 0,
+                Deck = new DeckInfo(guadianId, diceDeck, userInfo.GetOutGameLevels(diceDeck)),
+                EnableAI = false
+            };
             
-            server.authenticator = null;
-            var client = FindObjectOfType<RWNetworkClient>();
-            client.authenticator = null;
-            client.LocalUserId = userInfo.userID;
-            client.LocalNickName = userInfo.userNickName;
+            var aiMatchPlayer = GetAIMatchPlayer(localMatchPlayer, TutorialManager.isTutorial);
 
-            server.Listening = false;
-            await server.StartHost(client);
+            MatchData = new MatchData(localMatchPlayer, aiMatchPlayer);
+
+            await UniTask.Yield();
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), DelayType.Realtime);
+            
+            UI_InGamePopup.Get().InitUIElement(localMatchPlayer, aiMatchPlayer);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(1.0f), DelayType.Realtime);
+            
+            var quantumRunner = FindObjectOfType<RWQuantumRunner>();
+            
+            quantumRunner.Players = new[]
+            {
+                ToRuntimePlayer(localMatchPlayer),
+                ToRuntimePlayer(aiMatchPlayer)
+            };
+
+            quantumRunner.StartWithFrame();
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(1.0f), DelayType.Realtime);
+
+            UI_InGamePopup.Get().DisableStartPopup();
         }
-
-        public DeckInfo GetAIDeck(DeckInfo userDeckInfo, bool isTutorial)
+        
+        RuntimePlayer ToRuntimePlayer(MatchPlayer matchPlayer)
+        {
+            return new RuntimePlayer()
+            {
+                Nickname = matchPlayer.NickName,
+                DeckDiceIds = matchPlayer.Deck.DiceInfos.Select(i => i.DiceId).ToArray(),
+                DeckDiceOutGameLevels = matchPlayer.Deck.DiceInfos.Select(i => i.OutGameLevel).ToArray(),
+                GuardianId = matchPlayer.Deck.GuardianId,
+            };
+        }
+        
+        public MatchPlayer GetAIMatchPlayer(MatchPlayer userMatchPlayer, bool isTutorial)
         {
             if (isTutorial)
             {
-                return new DeckInfo(userDeckInfo.GuardianId, new int[] {31001, 31003, 31002, 32002, 32009});
+                return new MatchPlayer()
+                {
+                    NickName = "AI",
+                    Deck = new DeckInfo(
+                        userMatchPlayer.Deck.GuardianId, 
+                        new int[] {31001, 31003, 31002, 32002, 32009}, 
+                        new int[]{0,0,0,0,0}),
+                };
             }
-            
-            // var diceInfos = TableManager.Get().DiceInfo.Values;
-            // var arr = diceInfos.Where(info => info.enableDice).ToArray();
-            // var shuffled = arr.OrderBy(x => Guid.NewGuid()).ToList();
-            // return shuffled.Take(5).Select(info => info.id).ToArray();
 
-            return userDeckInfo;
+            return new MatchPlayer()
+            {
+                NickName = "AI",
+                Deck = userMatchPlayer.Deck,
+            };
         }
         #endregion
         

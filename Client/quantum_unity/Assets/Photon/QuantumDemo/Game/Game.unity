@@ -209,7 +209,11 @@ MonoBehaviour:
     SimulationConfig:
       Id:
         Value: 5
-  Players: []
+  Players:
+  - Nickname: a
+    DeckDiceIds: 0100000002000000030000000400000005000000
+    DeckDiceOutGameLevels: 0000000000000000000000000000000000000000
+    GuardianId: 0
 --- !u!4 &394500854
 Transform:
   m_ObjectHideFlags: 0

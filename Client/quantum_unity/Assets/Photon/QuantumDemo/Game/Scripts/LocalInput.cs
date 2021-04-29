@@ -16,7 +16,6 @@ public class LocalInput : MonoBehaviour {
     var v = UnityEngine.Input.mousePosition;
     var worldPoint = Camera.main.ScreenToWorldPoint(new Vector3(v.x, v.y, 10));
     var a = new FPVector2(worldPoint.x.ToFP(), worldPoint.z.ToFP());
-    i.Dest = a;
     callback.SetInput(i, DeterministicInputFlags.Repeatable);
   }
 }

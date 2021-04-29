@@ -71,6 +71,16 @@ MonoBehaviour:
         Id:
           Value: 1710471675203725834
       ResourcePath: DB/Map1
+    - Path: Resources/DB/EntityPrototypes/RWPlayer|EntityView
+      AssetRef:
+        Id:
+          Value: 2341071469025545075
+      ResourcePath: DB/EntityPrototypes/RWPlayer
+    - Path: Resources/DB/EntityPrototypes/RWPlayer|EntityPrototype
+      AssetRef:
+        Id:
+          Value: 2448339213474126104
+      ResourcePath: DB/EntityPrototypes/RWPlayer
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee
       AssetRef:
         Id:

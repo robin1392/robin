@@ -342,7 +342,7 @@ public class PlayerProxy : NetworkBehaviour
         UI_InGamePopup.Get().ShowLowHPEffect(false);
         SoundManager.instance.StopBGM();
         UI_InGame.Get().ClearUI();
-        InGameManager.Get().EndGame(client.PlayType, client.LocalMatchPlayer, client.OtherMatchPlayer, endNoti);
+        // InGameManager.Get().EndGame(client.PlayType, client.LocalMatchPlayer, client.OtherMatchPlayer, endNoti);
     }
     
     public void GiveUp()

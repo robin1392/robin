@@ -10,8 +10,8 @@ struct FieldDice {
 }
 
 component RWPlayer {
+    player_ref PlayerRef;
     uint Team;
-    int DiceCreationCount;
 }
 
 component DiceCreation {

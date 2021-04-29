@@ -4,5 +4,5 @@
  **/
 
 [UnityEngine.DisallowMultipleComponent()]
-public sealed partial class EntityComponentTestTest : EntityComponentBase<Quantum.Prototypes.TestTest_Prototype> {
+public sealed partial class EntityComponentGameState : EntityComponentBase<Quantum.Prototypes.GameState_Prototype> {
 }

@@ -65,4 +65,4 @@ MonoBehaviour:
   QuantumSolutionPath: ../quantum_code/quantum_code.sln
   MergeWithVisualStudioSolution: 0
   ImportQuantumLibrariesImmediately: 1
-  AutoRunQtnCodeGen: 1
+  AutoRunQtnCodeGen: 0

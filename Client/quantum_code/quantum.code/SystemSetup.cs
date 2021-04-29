@@ -22,7 +22,8 @@ namespace Quantum {
         new BTUpdateSystem(),
         new BotSDKSystem(),
         new ActorSystem(),
-        new TestTestSystem()
+        new PlayerInitSystem()
+        
       };
     }
   }

@@ -270,6 +270,24 @@ public class UserInfo
         // arrDeck[index] = list.ToArray();
         arrDeck[index] = deck;
     }
+    
+    public int[] GetOutGameLevels(int[] deck)
+    {
+        var levels = new int[deck.Length];
+        for (int i = 0; i < deck.Length; i++)
+        {
+            if (dicGettedDice.TryGetValue(deck[i], out var arr))
+            {
+                levels[i] = arr[0];
+            }
+            else
+            {
+                levels[i] = 0;
+            }
+        }
+
+        return levels;
+    }
 
     // public void ResetDeck()
     // {

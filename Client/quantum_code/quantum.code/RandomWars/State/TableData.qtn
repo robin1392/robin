@@ -1,0 +1,4 @@
+asset DiceInfo;
+asset GuardianInfo;
+asset VsMode;
+asset CoopMode;

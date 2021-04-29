@@ -1,5 +1,5 @@
 input {
-    button GetDice;
+    button CreateFieldDice;
     button SpUpgrade;
     
     button MergeDice;

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ using ED;
 using MirageTest.Scripts;
 using RandomWarsProtocol;
 using Service.Core;
+using MatchPlayer = _Scripts.MatchPlayer;
 
 public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 {
@@ -52,12 +54,12 @@ public class UI_InGamePopup : SingletonDestroy<UI_InGamePopup>
 
     #region init destroy
 
-    public void InitUIElement(MatchPlayer player1, MatchPlayer player2)
+    public void InitUIElement(MatchPlayer local, MatchPlayer remote)
     {
-        winlose_My.Initialize(player1.Deck.GuardianId, player1.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
-            player1.UserNickName, player1.Trophy);
-        winlose_Other.Initialize(player2.Deck.GuardianId, player2.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
-            player2.UserNickName, player2.Trophy);
+        winlose_My.Initialize(local.Deck.GuardianId, local.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+            local.NickName, local.Trophy);
+        winlose_Other.Initialize(remote.Deck.GuardianId, remote.Deck.DiceInfos.Select(d => d.DiceId).ToArray(),
+            remote.NickName, remote.Trophy);
 
         obj_Start.SetActive(true);
     }

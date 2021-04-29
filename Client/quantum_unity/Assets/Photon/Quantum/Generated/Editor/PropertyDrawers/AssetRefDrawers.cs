@@ -122,4 +122,12 @@ public class AssetRefHFSMTransitionSetPropertyDrawer : PropertyDrawer {
   }
 }
 
+
+[CustomPropertyDrawer(typeof(AssetRefTableData))]
+public class AssetRefTableDataPropertyDrawer : PropertyDrawer {
+  public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+    AssetRefDrawer.DrawAssetRefSelector(position, property, label, typeof(TableDataAsset));
+  }
+}
+
 }

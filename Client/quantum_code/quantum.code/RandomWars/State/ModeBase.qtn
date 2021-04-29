@@ -1,3 +1,14 @@
-component Wave {
-    
+#define PLAYERS_MAX 2
+
+enum ModeType { Battle, Coop }
+enum StateType { Battle, Preparation, Ready, Countdown, GameOver }
+
+global
+{
+    int Wave;
+    FP RemainTime;
+    int SpWave;
+    ModeType Mode;
+    StateType State;
+	array<RWPlayer>[PLAYERS_MAX] Players;
 }

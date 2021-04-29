@@ -5,6 +5,5 @@ component Actor {
     FP Power;
 }
 
-component TestTest {
-    int A;
-}
+
+

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts;
 using Cysharp.Threading.Tasks;
 using ED;
 using UnityEngine;
@@ -13,6 +14,7 @@ using RandomWarsResource.Data;
 using Service.Core;
 using Template.User.RandomwarsUser.Common;
 using Button = UnityEngine.UI.Button;
+using MatchPlayer = _Scripts.MatchPlayer;
 
 public class UI_InGamePopup_Result : MonoBehaviour
 {
@@ -79,10 +81,10 @@ public class UI_InGamePopup_Result : MonoBehaviour
         var otherPlayerDeck = otherMatchPlayer.Deck;
         winlose_My.Initialize(isWin, perfectGame, winningStreak,
             localPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), localPlayerDeck.GuardianId,
-            localMatchPlayer.UserNickName, localMatchPlayer.Trophy);
+            localMatchPlayer.NickName, localMatchPlayer.Trophy);
         winlose_Other.Initialize(!isWin, perfectGame, winningStreak,
             otherPlayerDeck.DiceInfos.Select(d => d.DiceId).ToArray(), otherPlayerDeck.GuardianId,
-            otherMatchPlayer.UserNickName, otherMatchPlayer.Trophy);
+            otherMatchPlayer.NickName, otherMatchPlayer.Trophy);
         btn_ShowValues.interactable = false;
 
         // 경쟁전일경우
