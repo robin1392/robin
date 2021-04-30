@@ -42,7 +42,7 @@ namespace Quantum {
   }
   [System.FlagsAttribute()]
   public enum InputButtons : int {
-    GetDice = 1 << 0,
+    CreateFieldDice = 1 << 0,
     SpUpgrade = 1 << 1,
     MergeDice = 1 << 2,
   }
@@ -730,90 +730,6 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
-  [Quantum.AssetRefAttribute(typeof(CoopMode))]
-  [System.SerializableAttribute()]
-  public unsafe partial struct AssetRefCoopMode : IEquatable<AssetRefCoopMode>, IAssetRef<CoopMode> {
-    public const Int32 SIZE = 8;
-    public const Int32 ALIGNMENT = 8;
-    [FieldOffset(0)]
-    public AssetGuid Id;
-    public override String ToString() {
-      return AssetRef.ToString(Id);
-    }
-    public static implicit operator AssetRefCoopMode(CoopMode value) {
-      var r = default(AssetRefCoopMode);
-      if (value != null) {
-        r.Id = value.Guid;
-      }
-      return r;
-    }
-    public override Boolean Equals(Object obj) {
-      return obj is AssetRefCoopMode other && Equals(other);
-    }
-    public Boolean Equals(AssetRefCoopMode other) {
-      return Id.Equals(other.Id);
-    }
-    public static Boolean operator ==(AssetRefCoopMode a, AssetRefCoopMode b) {
-      return a.Id == b.Id;
-    }
-    public static Boolean operator !=(AssetRefCoopMode a, AssetRefCoopMode b) {
-      return a.Id != b.Id;
-    }
-    public override Int32 GetHashCode() {
-      unchecked { 
-        var hash = 103;
-        hash = hash * 31 + Id.GetHashCode();
-        return hash;
-      }
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (AssetRefCoopMode*)ptr;
-        AssetGuid.Serialize(&p->Id, serializer);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
-  [Quantum.AssetRefAttribute(typeof(DiceInfo))]
-  [System.SerializableAttribute()]
-  public unsafe partial struct AssetRefDiceInfo : IEquatable<AssetRefDiceInfo>, IAssetRef<DiceInfo> {
-    public const Int32 SIZE = 8;
-    public const Int32 ALIGNMENT = 8;
-    [FieldOffset(0)]
-    public AssetGuid Id;
-    public override String ToString() {
-      return AssetRef.ToString(Id);
-    }
-    public static implicit operator AssetRefDiceInfo(DiceInfo value) {
-      var r = default(AssetRefDiceInfo);
-      if (value != null) {
-        r.Id = value.Guid;
-      }
-      return r;
-    }
-    public override Boolean Equals(Object obj) {
-      return obj is AssetRefDiceInfo other && Equals(other);
-    }
-    public Boolean Equals(AssetRefDiceInfo other) {
-      return Id.Equals(other.Id);
-    }
-    public static Boolean operator ==(AssetRefDiceInfo a, AssetRefDiceInfo b) {
-      return a.Id == b.Id;
-    }
-    public static Boolean operator !=(AssetRefDiceInfo a, AssetRefDiceInfo b) {
-      return a.Id != b.Id;
-    }
-    public override Int32 GetHashCode() {
-      unchecked { 
-        var hash = 107;
-        hash = hash * 31 + Id.GetHashCode();
-        return hash;
-      }
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (AssetRefDiceInfo*)ptr;
-        AssetGuid.Serialize(&p->Id, serializer);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
   [Quantum.AssetRefAttribute(typeof(GOAPRoot))]
   [System.SerializableAttribute()]
   public unsafe partial struct AssetRefGOAPRoot : IEquatable<AssetRefGOAPRoot>, IAssetRef<GOAPRoot> {
@@ -845,7 +761,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 109;
+        var hash = 103;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -887,55 +803,13 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 113;
+        var hash = 107;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (AssetRefGOAPTask*)ptr;
-        AssetGuid.Serialize(&p->Id, serializer);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
-  [Quantum.AssetRefAttribute(typeof(GuardianInfo))]
-  [System.SerializableAttribute()]
-  public unsafe partial struct AssetRefGuardianInfo : IEquatable<AssetRefGuardianInfo>, IAssetRef<GuardianInfo> {
-    public const Int32 SIZE = 8;
-    public const Int32 ALIGNMENT = 8;
-    [FieldOffset(0)]
-    public AssetGuid Id;
-    public override String ToString() {
-      return AssetRef.ToString(Id);
-    }
-    public static implicit operator AssetRefGuardianInfo(GuardianInfo value) {
-      var r = default(AssetRefGuardianInfo);
-      if (value != null) {
-        r.Id = value.Guid;
-      }
-      return r;
-    }
-    public override Boolean Equals(Object obj) {
-      return obj is AssetRefGuardianInfo other && Equals(other);
-    }
-    public Boolean Equals(AssetRefGuardianInfo other) {
-      return Id.Equals(other.Id);
-    }
-    public static Boolean operator ==(AssetRefGuardianInfo a, AssetRefGuardianInfo b) {
-      return a.Id == b.Id;
-    }
-    public static Boolean operator !=(AssetRefGuardianInfo a, AssetRefGuardianInfo b) {
-      return a.Id != b.Id;
-    }
-    public override Int32 GetHashCode() {
-      unchecked { 
-        var hash = 127;
-        hash = hash * 31 + Id.GetHashCode();
-        return hash;
-      }
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (AssetRefGuardianInfo*)ptr;
         AssetGuid.Serialize(&p->Id, serializer);
     }
   }
@@ -971,7 +845,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 131;
+        var hash = 109;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1013,7 +887,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 137;
+        var hash = 113;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1055,7 +929,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 139;
+        var hash = 127;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1097,55 +971,13 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 149;
+        var hash = 131;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (AssetRefHFSMTransitionSet*)ptr;
-        AssetGuid.Serialize(&p->Id, serializer);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
-  [Quantum.AssetRefAttribute(typeof(VsMode))]
-  [System.SerializableAttribute()]
-  public unsafe partial struct AssetRefVsMode : IEquatable<AssetRefVsMode>, IAssetRef<VsMode> {
-    public const Int32 SIZE = 8;
-    public const Int32 ALIGNMENT = 8;
-    [FieldOffset(0)]
-    public AssetGuid Id;
-    public override String ToString() {
-      return AssetRef.ToString(Id);
-    }
-    public static implicit operator AssetRefVsMode(VsMode value) {
-      var r = default(AssetRefVsMode);
-      if (value != null) {
-        r.Id = value.Guid;
-      }
-      return r;
-    }
-    public override Boolean Equals(Object obj) {
-      return obj is AssetRefVsMode other && Equals(other);
-    }
-    public Boolean Equals(AssetRefVsMode other) {
-      return Id.Equals(other.Id);
-    }
-    public static Boolean operator ==(AssetRefVsMode a, AssetRefVsMode b) {
-      return a.Id == b.Id;
-    }
-    public static Boolean operator !=(AssetRefVsMode a, AssetRefVsMode b) {
-      return a.Id != b.Id;
-    }
-    public override Int32 GetHashCode() {
-      unchecked { 
-        var hash = 151;
-        hash = hash * 31 + Id.GetHashCode();
-        return hash;
-      }
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (AssetRefVsMode*)ptr;
         AssetGuid.Serialize(&p->Id, serializer);
     }
   }
@@ -1157,7 +989,7 @@ namespace Quantum {
     public Int32 Index;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 157;
+        var hash = 137;
         hash = hash * 31 + Index.GetHashCode();
         return hash;
       }
@@ -1186,7 +1018,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 163;
+        var hash = 139;
         hash = hash * 31 + ReactiveDecoratorsPtr.GetHashCode();
         hash = hash * 31 + Value.GetHashCode();
         return hash;
@@ -1210,7 +1042,7 @@ namespace Quantum {
     public Int32 outGameLevel;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 167;
+        var hash = 149;
         hash = hash * 31 + DiceId.GetHashCode();
         hash = hash * 31 + inGameLevel.GetHashCode();
         hash = hash * 31 + outGameLevel.GetHashCode();
@@ -1234,7 +1066,7 @@ namespace Quantum {
     public Int32 DiceScale;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 173;
+        var hash = 151;
         hash = hash * 31 + DeckDiceIndex.GetHashCode();
         hash = hash * 31 + DiceScale.GetHashCode();
         return hash;
@@ -1256,7 +1088,7 @@ namespace Quantum {
     public Int64 Positive;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 179;
+        var hash = 157;
         hash = hash * 31 + Negative.GetHashCode();
         hash = hash * 31 + Positive.GetHashCode();
         return hash;
@@ -1288,7 +1120,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 181;
+        var hash = 163;
         hash = hash * 31 + CurrentState.GetHashCode();
         hash = hash * 31 + Root.GetHashCode();
         hash = hash * 31 + Time.GetHashCode();
@@ -1308,10 +1140,10 @@ namespace Quantum {
   public unsafe partial struct Input {
     public const Int32 SIZE = 44;
     public const Int32 ALIGNMENT = 4;
+    [FieldOffset(8)]
+    public Button CreateFieldDice;
     [FieldOffset(0)]
     public Int32 DestinationFieldDice;
-    [FieldOffset(8)]
-    public Button GetDice;
     [FieldOffset(20)]
     public Button MergeDice;
     [FieldOffset(4)]
@@ -1321,9 +1153,9 @@ namespace Quantum {
     public const int MAX_COUNT = 6;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 191;
+        var hash = 167;
+        hash = hash * 31 + CreateFieldDice.GetHashCode();
         hash = hash * 31 + DestinationFieldDice.GetHashCode();
-        hash = hash * 31 + GetDice.GetHashCode();
         hash = hash * 31 + MergeDice.GetHashCode();
         hash = hash * 31 + SourceFieldDice.GetHashCode();
         hash = hash * 31 + SpUpgrade.GetHashCode();
@@ -1340,7 +1172,7 @@ namespace Quantum {
     }
     public Boolean IsDown(InputButtons button) {
       switch (button) {
-        case InputButtons.GetDice: return GetDice.IsDown;
+        case InputButtons.CreateFieldDice: return CreateFieldDice.IsDown;
         case InputButtons.SpUpgrade: return SpUpgrade.IsDown;
         case InputButtons.MergeDice: return MergeDice.IsDown;
       }
@@ -1348,7 +1180,7 @@ namespace Quantum {
     }
     public Boolean WasPressed(InputButtons button) {
       switch (button) {
-        case InputButtons.GetDice: return GetDice.WasPressed;
+        case InputButtons.CreateFieldDice: return CreateFieldDice.WasPressed;
         case InputButtons.SpUpgrade: return SpUpgrade.WasPressed;
         case InputButtons.MergeDice: return MergeDice.WasPressed;
       }
@@ -1358,7 +1190,7 @@ namespace Quantum {
         var p = (Input*)ptr;
         serializer.Stream.Serialize(&p->DestinationFieldDice);
         serializer.Stream.Serialize(&p->SourceFieldDice);
-        Button.Serialize(&p->GetDice, serializer);
+        Button.Serialize(&p->CreateFieldDice, serializer);
         Button.Serialize(&p->MergeDice, serializer);
         Button.Serialize(&p->SpUpgrade, serializer);
     }
@@ -1409,7 +1241,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 193;
+        var hash = 173;
         hash = hash * 31 + DeltaTime.GetHashCode();
         hash = hash * 31 + FrameMetaData.GetHashCode();
         hash = hash * 31 + Map.GetHashCode();
@@ -1490,7 +1322,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 197;
+        var hash = 179;
         hash = hash * 31 + _FPValue.GetHashCode();
         hash = hash * 31 + _IntValue.GetHashCode();
         hash = hash * 31 + _field_used_.GetHashCode();
@@ -1633,7 +1465,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 199;
+        var hash = 181;
         hash = hash * 31 + _BooleanValue.GetHashCode();
         hash = hash * 31 + _ByteValue.GetHashCode();
         hash = hash * 31 + _EntityRefValue.GetHashCode();
@@ -1690,7 +1522,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 211;
+        var hash = 191;
         hash = hash * 31 + Board.GetHashCode();
         hash = hash * 31 + EntriesPtr.GetHashCode();
         return hash;
@@ -1716,7 +1548,7 @@ namespace Quantum {
     public Int32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 223;
+        var hash = 193;
         hash = hash * 31 + Health.GetHashCode();
         hash = hash * 31 + MaxHealth.GetHashCode();
         hash = hash * 31 + Power.GetHashCode();
@@ -1799,7 +1631,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 227;
+        var hash = 197;
         hash = hash * 31 + ActiveServicesPtr.GetHashCode();
         hash = hash * 31 + BTDataValuesPtr.GetHashCode();
         hash = hash * 31 + Config.GetHashCode();
@@ -1839,7 +1671,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 229;
+        var hash = 199;
         hash = hash * 31 + Dices.GetHashCode();
         hash = hash * 31 + GuardianId.GetHashCode();
         return hash;
@@ -1859,7 +1691,7 @@ namespace Quantum {
     public Int32 Count;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 233;
+        var hash = 211;
         hash = hash * 31 + Count.GetHashCode();
         return hash;
       }
@@ -1883,7 +1715,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 239;
+        var hash = 223;
         hash = hash * 31 + Dices.GetHashCode();
         return hash;
       }
@@ -1917,7 +1749,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 241;
+        var hash = 227;
         hash = hash * 31 + Config.GetHashCode();
         hash = hash * 31 + CurrentState.GetHashCode();
         hash = hash * 31 + CurrentTaskIndex.GetHashCode();
@@ -1947,7 +1779,7 @@ namespace Quantum {
     public HFSMData Data;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 251;
+        var hash = 229;
         hash = hash * 31 + Config.GetHashCode();
         hash = hash * 31 + Data.GetHashCode();
         return hash;
@@ -1969,7 +1801,7 @@ namespace Quantum {
     public UInt32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 257;
+        var hash = 233;
         hash = hash * 31 + PlayerRef.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
         return hash;
@@ -1991,7 +1823,7 @@ namespace Quantum {
     public Int32 CurrentSp;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 263;
+        var hash = 239;
         hash = hash * 31 + CommingSp.GetHashCode();
         hash = hash * 31 + CurrentSp.GetHashCode();
         return hash;
@@ -2083,7 +1915,7 @@ namespace Quantum {
     public void SetPlayerInput(Int32 player, Input input) {
       if ((uint)player >= (uint)_globals->input.Length) { throw new System.ArgumentOutOfRangeException("player"); }
       var i = _globals->input.GetPointer(player);
-      i->GetDice = i->GetDice.Update(this.Number, input.GetDice);
+      i->CreateFieldDice = i->CreateFieldDice.Update(this.Number, input.CreateFieldDice);
       i->SpUpgrade = i->SpUpgrade.Update(this.Number, input.SpUpgrade);
       i->MergeDice = i->MergeDice.Update(this.Number, input.MergeDice);
       i->SourceFieldDice = input.SourceFieldDice;
@@ -2154,18 +1986,6 @@ namespace Quantum {
       public AIBlackboardInitializer AIBlackboardInitializer(AssetRefAIBlackboardInitializer assetRef) {
          return _f.FindAsset<AIBlackboardInitializer>(assetRef.Id);
       }
-      public DiceInfo DiceInfo(AssetRefDiceInfo assetRef) {
-         return _f.FindAsset<DiceInfo>(assetRef.Id);
-      }
-      public GuardianInfo GuardianInfo(AssetRefGuardianInfo assetRef) {
-         return _f.FindAsset<GuardianInfo>(assetRef.Id);
-      }
-      public VsMode VsMode(AssetRefVsMode assetRef) {
-         return _f.FindAsset<VsMode>(assetRef.Id);
-      }
-      public CoopMode CoopMode(AssetRefCoopMode assetRef) {
-         return _f.FindAsset<CoopMode>(assetRef.Id);
-      }
     }
   }
   #region BitStreamExtensions
@@ -2198,19 +2018,10 @@ namespace Quantum {
     public static void Serialize(this IBitStream stream, ref AssetRefBTService value) {
       stream.Serialize(ref value.Id.Value);
     }
-    public static void Serialize(this IBitStream stream, ref AssetRefCoopMode value) {
-      stream.Serialize(ref value.Id.Value);
-    }
-    public static void Serialize(this IBitStream stream, ref AssetRefDiceInfo value) {
-      stream.Serialize(ref value.Id.Value);
-    }
     public static void Serialize(this IBitStream stream, ref AssetRefGOAPRoot value) {
       stream.Serialize(ref value.Id.Value);
     }
     public static void Serialize(this IBitStream stream, ref AssetRefGOAPTask value) {
-      stream.Serialize(ref value.Id.Value);
-    }
-    public static void Serialize(this IBitStream stream, ref AssetRefGuardianInfo value) {
       stream.Serialize(ref value.Id.Value);
     }
     public static void Serialize(this IBitStream stream, ref AssetRefHFSMDecision value) {
@@ -2223,9 +2034,6 @@ namespace Quantum {
       stream.Serialize(ref value.Id.Value);
     }
     public static void Serialize(this IBitStream stream, ref AssetRefHFSMTransitionSet value) {
-      stream.Serialize(ref value.Id.Value);
-    }
-    public static void Serialize(this IBitStream stream, ref AssetRefVsMode value) {
       stream.Serialize(ref value.Id.Value);
     }
   }
@@ -2265,18 +2073,6 @@ namespace Quantum {
   }
   [System.SerializableAttribute()]
   public unsafe partial class AIBlackboardInitializer : AssetObject {
-  }
-  [System.SerializableAttribute()]
-  public unsafe partial class DiceInfo : AssetObject {
-  }
-  [System.SerializableAttribute()]
-  public unsafe partial class GuardianInfo : AssetObject {
-  }
-  [System.SerializableAttribute()]
-  public unsafe partial class VsMode : AssetObject {
-  }
-  [System.SerializableAttribute()]
-  public unsafe partial class CoopMode : AssetObject {
   }
   public unsafe partial class ComponentPrototypeVisitor : Prototypes.ComponentPrototypeVisitorBase {
     public virtual void Visit(Prototypes.AIBlackboardComponent_Prototype prototype) {
@@ -2329,13 +2125,10 @@ namespace Quantum {
       Register(typeof(Quantum.AssetRefBTService), Quantum.AssetRefBTService.SIZE);
       Register(typeof(AssetRefCharacterController2DConfig), AssetRefCharacterController2DConfig.SIZE);
       Register(typeof(AssetRefCharacterController3DConfig), AssetRefCharacterController3DConfig.SIZE);
-      Register(typeof(Quantum.AssetRefCoopMode), Quantum.AssetRefCoopMode.SIZE);
-      Register(typeof(Quantum.AssetRefDiceInfo), Quantum.AssetRefDiceInfo.SIZE);
       Register(typeof(AssetRefEntityPrototype), AssetRefEntityPrototype.SIZE);
       Register(typeof(AssetRefEntityView), AssetRefEntityView.SIZE);
       Register(typeof(Quantum.AssetRefGOAPRoot), Quantum.AssetRefGOAPRoot.SIZE);
       Register(typeof(Quantum.AssetRefGOAPTask), Quantum.AssetRefGOAPTask.SIZE);
-      Register(typeof(Quantum.AssetRefGuardianInfo), Quantum.AssetRefGuardianInfo.SIZE);
       Register(typeof(Quantum.AssetRefHFSMDecision), Quantum.AssetRefHFSMDecision.SIZE);
       Register(typeof(Quantum.AssetRefHFSMRoot), Quantum.AssetRefHFSMRoot.SIZE);
       Register(typeof(Quantum.AssetRefHFSMState), Quantum.AssetRefHFSMState.SIZE);
@@ -2346,7 +2139,6 @@ namespace Quantum {
       Register(typeof(AssetRefPhysicsMaterial), AssetRefPhysicsMaterial.SIZE);
       Register(typeof(AssetRefPolygonCollider), AssetRefPolygonCollider.SIZE);
       Register(typeof(AssetRefTerrainCollider), AssetRefTerrainCollider.SIZE);
-      Register(typeof(Quantum.AssetRefVsMode), Quantum.AssetRefVsMode.SIZE);
       Register(typeof(Quantum.BTAgent), Quantum.BTAgent.SIZE);
       Register(typeof(Quantum.BTDataIndex), Quantum.BTDataIndex.SIZE);
       Register(typeof(Quantum.BTDataValue), Quantum.BTDataValue.SIZE);
@@ -2427,16 +2219,12 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefBTNode>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefBTRoot>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefBTService>();
-      FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefCoopMode>();
-      FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefDiceInfo>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefGOAPRoot>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefGOAPTask>();
-      FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefGuardianInfo>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMDecision>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMRoot>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMTransitionSet>();
-      FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefVsMode>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.GOAPWorldState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.InputButtons>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.ModeType>();
@@ -2948,15 +2736,15 @@ namespace Quantum.Prototypes {
   }
   [System.SerializableAttribute()]
   public unsafe sealed partial class Input_Prototype : IPrototype {
-    public Button GetDice;
+    public Button CreateFieldDice;
     public Button SpUpgrade;
     public Button MergeDice;
     public Int32 SourceFieldDice;
     public Int32 DestinationFieldDice;
     partial void MaterializeUser(Frame frame, ref Input result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Input result, in PrototypeMaterializationContext context) {
+      result.CreateFieldDice = this.CreateFieldDice;
       result.DestinationFieldDice = this.DestinationFieldDice;
-      result.GetDice = this.GetDice;
       result.MergeDice = this.MergeDice;
       result.SourceFieldDice = this.SourceFieldDice;
       result.SpUpgrade = this.SpUpgrade;

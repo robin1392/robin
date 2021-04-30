@@ -10,6 +10,8 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
     {
         if (DoesPlayerExist(f, playerRef)) return;
 
+        Log.Debug($"{f.Context.VsMode.DiceCostUp}");
+            
         var playerPrototype = f.FindAsset<EntityPrototype>(PLAYER_PROTOTYPE);
         var entity = f.Create(playerPrototype);
 

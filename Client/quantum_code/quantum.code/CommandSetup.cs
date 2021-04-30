@@ -1,4 +1,5 @@
 ﻿using Photon.Deterministic;
+using Quantum.Commands;
 
 namespace Quantum {
   public static class CommandSetup {
@@ -6,6 +7,9 @@ namespace Quantum {
       return new DeterministicCommand[] {
 
         // user commands go here
+        new CreateFieldDiceCommand(),
+        new MergeDiceCommand(),
+        new SpUpgradeCommand(),
       };
     }
   }

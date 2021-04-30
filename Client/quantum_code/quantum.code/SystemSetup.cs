@@ -19,11 +19,13 @@ namespace Quantum {
         new Core.EntityPrototypeSystem(),
 
         // user systems go here
+        new CreateFieldDiceCommandSystem(),
+        
+        
         new BTUpdateSystem(),
         new BotSDKSystem(),
         new ActorSystem(),
         new PlayerInitSystem()
-        
       };
     }
   }

@@ -1,4 +1,4 @@
-namespace Quantum.State.Spec
+namespace Quantum
 {
     public class VsMode
     {

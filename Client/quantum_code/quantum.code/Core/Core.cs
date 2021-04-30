@@ -1531,7 +1531,7 @@ namespace Quantum {
 
 
 // Core/SimulationConfig.cs
-﻿
+ 
 namespace Quantum {
   /// <summary>
   /// The SimulationConfig holds parameters used in the ECS layer and inside core systems like physics and navigation.

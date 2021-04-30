@@ -46,14 +46,22 @@ public class RWQuantumRunner: QuantumCallbacks {
       param.FrameData    = frameData;
 
       // start with debug config
-      QuantumRunner.StartGame("LOCALDEBUG", param);
+      var runner = QuantumRunner.StartGame("LOCALDEBUG", param);
+      
     } else {
       throw new Exception("No MapData object found, can't debug start scene");
     }
   }
 
   public override void OnGameStart(QuantumGame game) {
-    if (_isReload == false) {
+    if (_isReload == false)
+    {
+      game.Frames.Verified.Context.VsMode = new VsMode()
+      {
+          GetStartDiceCost = 1,
+          DiceCostUp = 2,
+      };
+      
       for (Int32 i = 0; i < Players.Length; ++i) {
         game.SendPlayerData(i, Players[i]);
       }
