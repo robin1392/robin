@@ -56,12 +56,17 @@ public class RWQuantumRunner: QuantumCallbacks {
   public override void OnGameStart(QuantumGame game) {
     if (_isReload == false)
     {
-      game.Frames.Verified.Context.VsMode = new VsMode()
+      var tableManager = TableManager.Get();
+      var quantumTableDataContainer = new QuantumCodeTableDataContainer()
       {
-          GetStartDiceCost = 1,
-          DiceCostUp = 2,
+          VsMode =  tableManager.Vsmode,
+          DiceInfo = tableManager.DiceInfo,
+          GuardianInfo = tableManager.GuardianInfo,
+          CoopMode = tableManager.CoopMode,
       };
       
+      game.Frames.Verified.Context.SetData(quantumTableDataContainer);
+
       for (Int32 i = 0; i < Players.Length; ++i) {
         game.SendPlayerData(i, Players[i]);
       }

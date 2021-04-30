@@ -4,5 +4,5 @@
  **/
 
 [UnityEngine.DisallowMultipleComponent()]
-public sealed partial class EntityComponentRWPlayer : EntityComponentBase<Quantum.Prototypes.RWPlayer_Prototype> {
+public sealed partial class EntityComponentRWPlayer : EntityComponentBase<Quantum.Prototypes.RWPlayer_Prototype, Quantum.Prototypes.Unity.RWPlayer_Prototype> {
 }

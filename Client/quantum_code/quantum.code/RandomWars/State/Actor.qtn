@@ -1,5 +1,5 @@
 component Actor {
-    int Team;
+    UInt32 Team;
     FP Health;
     FP MaxHealth;
     FP Power;

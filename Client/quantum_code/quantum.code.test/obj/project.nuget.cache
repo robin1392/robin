@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "9pw1AlWr2rHvTDV7TYhXh+ShYra1S8svJ2SZIB2D7Yq1G/uJM0lsDSd6x5zA8Nrc74BM+JD4Vmn2BuMBrZ1t/Q==",
+  "success": true,
+  "projectFilePath": "/Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/quantum.code.test.csproj",
+  "expectedPackageFiles": [
+    "/Users/111percent/.nuget/packages/microsoft.codecoverage/16.5.0/microsoft.codecoverage.16.5.0.nupkg.sha512",
+    "/Users/111percent/.nuget/packages/microsoft.net.test.sdk/16.5.0/microsoft.net.test.sdk.16.5.0.nupkg.sha512",
+    "/Users/111percent/.nuget/packages/nunit/3.12.0/nunit.3.12.0.nupkg.sha512",
+    "/Users/111percent/.nuget/packages/nunit3testadapter/3.16.1/nunit3testadapter.3.16.1.nupkg.sha512"
+  ],
+  "logs": []
+}

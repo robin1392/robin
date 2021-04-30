@@ -377,6 +377,40 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &229472206 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4133275067579190418, guid: d6926460109ef40918b4be068e4152d8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1349006752}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &229472208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229472206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a64574ce3844119fe7c9736f6c9157, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RecordingFlags: 3
+  InstantReplayConfig:
+    SnapshotsPerSecond: 1
+    LenghtSeconds:
+      RawValue: 196608
+  SimulationSpeedMultiplier: 1
+  Config:
+    Seed: 0
+    Map:
+      Id:
+        Value: 0
+    SimulationConfig:
+      Id:
+        Value: 0
+    Mode: 0
+  Players: []
 --- !u!95 &378397553 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2608280263066131763, guid: c281f5911e2a54de8a9e3a667e36a364,
@@ -2440,7 +2474,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuantumSceneScaffolding
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4133275067579190419, guid: d6926460109ef40918b4be068e4152d8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d6926460109ef40918b4be068e4152d8, type: 3}
 --- !u!1 &1413991579
 GameObject:

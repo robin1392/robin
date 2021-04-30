@@ -12,34 +12,26 @@ namespace Quantum
                 var command = f.GetPlayerCommand(playerID) as CreateFieldDiceCommand;
                 if (command != null)
                 {
-                    
+                    var player = f.Global->Players.GetPointer(playerID);
+                    CreateFieldDice(f, command, player);
                 }
             }
         }
         
-        public static void CreateFieldDice(Frame f, CreateFieldDiceCommand command, int playerID)
+        public static void CreateFieldDice(Frame f, CreateFieldDiceCommand command, RWPlayer* player)
+        { 
+            var deck = f.Get<Deck>(player->EntityRef);
+
+            CreateFieldDice(f, command.FieldIndex, command.DeckIndex, player);
+        }
+
+        public static void CreateFieldDice(Frame f, int selectedFieldIndex, int deckIndex, RWPlayer* player)
         {
-            
-            // f.AddAsset()
-            // f.FindAsset<VsMode>()
-            // CellData availableCellData;
-            // bool hasAvailableCell = GridHelper.GetAvailableBenchCell(f, playerID, out availableCellData);
-            // if (!hasAvailableCell)
-            // {
-            //     return;
-            // }
-            //
-            // var player = f.Global->Players.GetPointer(playerID);
-            // var targetSpecRef = player->StoreSlots[command.SlotIndex].Spec;
-            // var unitSpec = f.FindAsset<UnitSpec>(targetSpecRef.Id);
-            //
-            // if (unitSpec != null && player->BuyUnit(unitSpec.BuyPrice))
-            // {
-            //     UnitSpec.CreateUnit(f, player, command.SlotIndex, availableCellData, unitSpec, targetSpecRef);
-            // }
-            // else {
-            //     f.Events.PlayerHasNoMoneyAlert(playerID);
-            // }
+            var field = f.Unsafe.GetPointer<Field>(player->EntityRef);
+            field->Dices.GetPointer(selectedFieldIndex)->DiceScale = 0; //눈금 한개가 0, 두개 1...
+            field->Dices.GetPointer(selectedFieldIndex)->DeckIndex = deckIndex;
+
+            f.Events.FieldDiceCreated(player->PlayerRef, selectedFieldIndex);
         }
     }
 }

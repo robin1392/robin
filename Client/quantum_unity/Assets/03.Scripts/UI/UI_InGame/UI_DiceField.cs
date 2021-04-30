@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using MirageTest.Scripts;
+using Quantum;
+using Quantum.Commands;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +19,27 @@ namespace ED
         private void Awake()
         {
             _ingameManager = FindObjectOfType<InGameManager>();
+
+            QuantumEvent.Subscribe<EventFieldDiceCreated>(listener: this, handler: OnFieldDiceCreated);
+        }
+
+        private void OnFieldDiceCreated(EventFieldDiceCreated callback)
+        {
+            var fieldIndex = callback.FieldIndex;
+            var slot = arrSlot[fieldIndex];
+
+            callback.Game.Frames.Predicted.GetFieldDiceInfo(callback.Player, callback.FieldIndex, out var diceId, out var diceScale);
+            TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo);
+            
+            slot.SetDice(new Dice()
+            {
+                diceFieldNum = fieldIndex,
+                diceData = diceInfo,
+                eyeLevel = diceScale
+            });
+            
+            slot.SetIcon();
+            slot.BBoing();
         }
 
         public void InitClient(RWNetworkClient client)
@@ -46,19 +69,10 @@ namespace ED
 
         public void Click_GetDiceButton()
         {
-            if (_client == null || _client.IsConnected == false)
-            {
-                return;
-            }
-            
-            var localPlayerState = _client.GetLocalPlayerState();
-            var diceCost = localPlayerState.GetDiceCost();
-            if (localPlayerState == null)
-            {
-                return;
-            }
+            var predicedFrame = QuantumRunner.Default.Game.Frames.Predicted;
+            var localPlayer = QuantumRunner.Default.Game.GetLocalPlayers()[0];
 
-            if (localPlayerState.sp >= diceCost && localPlayerState.GetEmptySlotCount() > 0)
+            if (predicedFrame.CanCreateFieldDice(localPlayer))
             {
                 if (TutorialManager.isTutorial)
                 {
@@ -66,52 +80,52 @@ namespace ED
                     switch (TutorialManager.getDiceCount)
                     {
                         case 0:
-                            _client.GetLocalPlayerProxy().GetDice(2, 0);
+                            CreateFieldDice(2, 0);
                             break;
                         case 1:
-                            _client.GetLocalPlayerProxy().GetDice(2, 1);
+                            CreateFieldDice(2, 1);
                             break;
                         case 2:
-                            _client.GetLocalPlayerProxy().GetDice(2, 3);
+                            CreateFieldDice(2, 3);
                             break;
                         case 3:
-                            _client.GetLocalPlayerProxy().GetDice(0, 6);
+                            CreateFieldDice(0, 6);
                             break;
                         case 4:
-                            _client.GetLocalPlayerProxy().GetDice(0, 8);
+                            CreateFieldDice(0, 8);
                             break;
                         case 5:
-                            _client.GetLocalPlayerProxy().GetDice(2, 4);
+                            CreateFieldDice(2, 4);
                             break;
                         case 6:
-                            _client.GetLocalPlayerProxy().GetDice(2, 2);
+                            CreateFieldDice(2, 2);
                             break;
                         case 7:
-                            _client.GetLocalPlayerProxy().GetDice(2, 5);
+                            CreateFieldDice(2, 5);
                             break;
                         case 8:
-                            _client.GetLocalPlayerProxy().GetDice(2, 7);
+                            CreateFieldDice(2, 7);
                             break;
                         case 9:
-                            _client.GetLocalPlayerProxy().GetDice(2, 9);
+                            CreateFieldDice(2, 9);
                             break;
                         case 10:
-                            _client.GetLocalPlayerProxy().GetDice(2, 10);
+                            CreateFieldDice(2, 10);
                             break;
                         case 11:
-                            _client.GetLocalPlayerProxy().GetDice(0, 11);
+                            CreateFieldDice(0, 11);
                             break;
                         case 12:
-                            _client.GetLocalPlayerProxy().GetDice(3, 12);
+                            CreateFieldDice(3, 12);
                             break;
                         case 13:
-                            _client.GetLocalPlayerProxy().GetDice(0, 13);
+                            CreateFieldDice(0, 13);
                             break;
                         case 14:
-                            _client.GetLocalPlayerProxy().GetDice(2, 14);
+                            CreateFieldDice(2, 14);
                             break;
                         default:
-                            _client.GetLocalPlayerProxy().GetRandomDice();
+                            CreateRandomFieldDice();
                             break;
                     }
 
@@ -119,11 +133,23 @@ namespace ED
                 }
                 else
                 {
-                    UI_InGame.Get().ControlGetDiceButton(false);
-                    var playerProxy = _client.GetLocalPlayerProxy();
-                    playerProxy.GetRandomDice();
+                    CreateRandomFieldDice();
                 }
             }
+        }
+
+        void CreateRandomFieldDice()
+        {
+            var command = new CreateRandomFieldDiceCommand();
+            QuantumRunner.Default.Game.SendCommand(command);
+        }
+        
+        void CreateFieldDice(int deckIndex, int fieldIndex)
+        {
+            var command = new CreateFieldDiceCommand();
+            command.DeckIndex = deckIndex;
+            command.FieldIndex = fieldIndex;
+            QuantumRunner.Default.Game.SendCommand(command);
         }
     }
 }

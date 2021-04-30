@@ -1,30 +1,31 @@
 struct DeckDice {
-    int DiceId;
-    int outGameLevel;
-    int inGameLevel;
+    Int32 DiceId;
+    Int32 outGameLevel;
+    Int32 inGameLevel;
 }
 
 struct FieldDice {
-    int DiceScale;
-    int DeckDiceIndex;
+    Int32 DiceScale;
+    Int32 DeckIndex; 
 }
 
 component RWPlayer {
     player_ref PlayerRef;
-    uint Team;
+    UInt32 Team;
+    entity_ref EntityRef;
 }
 
 component DiceCreation {
-    int Count;
+    Int32 Count;
 }
 
 component Sp {
-    int CurrentSp;
-    int CommingSp;
+    Int32 CurrentSp;
+    Int32 CommingSp;
 }
 
 component Deck {
-    int GuardianId;
+    Int32 GuardianId;
     array<DeckDice>[5] Dices;
 }
 

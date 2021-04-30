@@ -10,8 +10,6 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
     {
         if (DoesPlayerExist(f, playerRef)) return;
 
-        Log.Debug($"{f.Context.VsMode.DiceCostUp}");
-            
         var playerPrototype = f.FindAsset<EntityPrototype>(PLAYER_PROTOTYPE);
         var entity = f.Create(playerPrototype);
 
@@ -26,7 +24,15 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
             deck->Dices.GetPointer(i)->outGameLevel = outGameLevel;
         }
         
-        f.Global->Players.GetPointer(playerRef)->PlayerRef = playerRef;
+        var field = f.Unsafe.GetPointer<Field>(entity);
+        for (var i =0; i < field->Dices.Length; ++i)
+        {
+            field->Dices.GetPointer(i)->DeckIndex = -1;
+        }
+
+        var rwPlayer = f.Global->Players.GetPointer(playerRef); 
+        rwPlayer->PlayerRef = playerRef;
+        rwPlayer->EntityRef = entity;
     }
 
     private bool DoesPlayerExist(Frame f, PlayerRef playerRef)

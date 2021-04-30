@@ -1,8 +1,2 @@
 input {
-    button CreateFieldDice;
-    button SpUpgrade;
-    
-    button MergeDice;
-    int SourceFieldDice;
-    int DestinationFieldDice;
 }

@@ -20,7 +20,7 @@ namespace Quantum {
 
         // user systems go here
         new CreateFieldDiceCommandSystem(),
-        
+        new CreateRandomFieldDiceCommandSystem(),
         
         new BTUpdateSystem(),
         new BotSDKSystem(),

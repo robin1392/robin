@@ -7,6 +7,7 @@ namespace Quantum {
       return new DeterministicCommand[] {
 
         // user commands go here
+        new CreateRandomFieldDiceCommand(),
         new CreateFieldDiceCommand(),
         new MergeDiceCommand(),
         new SpUpgradeCommand(),

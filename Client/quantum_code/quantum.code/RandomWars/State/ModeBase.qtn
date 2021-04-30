@@ -5,9 +5,9 @@ enum StateType { Battle, Preparation, Ready, Countdown, GameOver }
 
 global
 {
-    int Wave;
+    Int32 Wave;
     FP RemainTime;
-    int SpWave;
+    Int32 SpWave;
     ModeType Mode;
     StateType State;
 	array<RWPlayer>[PLAYERS_MAX] Players;

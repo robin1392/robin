@@ -1641,7 +1641,7 @@ namespace Quantum {
 
 
 // Core/SimulationUpdateTime.cs
-﻿namespace Quantum {
+ namespace Quantum {
   /// <summary>
   /// The type of measuring time progressions to update the local simulation.
   /// </summary>

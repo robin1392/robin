@@ -1,0 +1,4 @@
+event FieldDiceCreated{
+    local player_ref Player;
+    Int32 FieldIndex;
+} 
