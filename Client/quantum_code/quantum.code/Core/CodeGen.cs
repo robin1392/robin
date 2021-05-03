@@ -29,15 +29,10 @@ namespace Quantum {
     CarryingTarget = 4,
     TargetDelivered = 8,
   }
-  public enum ModeType : int {
-    Battle,
-    Coop,
-  }
   public enum StateType : int {
-    Battle,
-    Preparation,
     Ready,
     Countdown,
+    Play,
     GameOver,
   }
   [System.FlagsAttribute()]
@@ -1170,35 +1165,39 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 408;
+    public const Int32 SIZE = 424;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(48)]
     public FP DeltaTime;
-    [FieldOffset(120)]
+    [FieldOffset(136)]
     public FrameMetaData FrameMetaData;
     [FieldOffset(40)]
     public AssetRefMap Map;
-    [FieldOffset(32)]
-    public ModeType Mode;
-    [FieldOffset(64)]
+    [FieldOffset(80)]
     public NavMeshRegionMask NavMeshRegions;
-    [FieldOffset(176)]
+    [FieldOffset(192)]
     public PhysicsSceneSettings PhysicsSettings;
-    [FieldOffset(88)]
+    [FieldOffset(104)]
     [FramePrinter.FixedArrayAttribute(typeof(RWPlayer), 2)]
     private fixed Byte _Players_[32];
-    [FieldOffset(56)]
-    public FP RemainTime;
-    [FieldOffset(72)]
+    [FieldOffset(88)]
     public RNGSession RngSession;
     [FieldOffset(24)]
     public Int32 SpWave;
+    [FieldOffset(56)]
+    public FP StartCountdown;
+    [FieldOffset(28)]
+    public Int32 StartCountdownInt;
+    [FieldOffset(64)]
+    public FP StartDelay;
     [FieldOffset(36)]
     public StateType State;
-    [FieldOffset(144)]
+    [FieldOffset(160)]
     public BitSet256 Systems;
-    [FieldOffset(28)]
+    [FieldOffset(32)]
     public Int32 Wave;
+    [FieldOffset(72)]
+    public FP WaveRemainTime;
     [FieldOffset(0)]
     [FramePrinter.FixedArrayAttribute(typeof(Input), 6)]
     private fixed Byte _input_[24];
@@ -1218,16 +1217,18 @@ namespace Quantum {
         hash = hash * 31 + DeltaTime.GetHashCode();
         hash = hash * 31 + FrameMetaData.GetHashCode();
         hash = hash * 31 + Map.GetHashCode();
-        hash = hash * 31 + (Int32)Mode;
         hash = hash * 31 + NavMeshRegions.GetHashCode();
         hash = hash * 31 + PhysicsSettings.GetHashCode();
         hash = hash * 31 + Players.GetHashCode();
-        hash = hash * 31 + RemainTime.GetHashCode();
         hash = hash * 31 + RngSession.GetHashCode();
         hash = hash * 31 + SpWave.GetHashCode();
+        hash = hash * 31 + StartCountdown.GetHashCode();
+        hash = hash * 31 + StartCountdownInt.GetHashCode();
+        hash = hash * 31 + StartDelay.GetHashCode();
         hash = hash * 31 + (Int32)State;
         hash = hash * 31 + Systems.GetHashCode();
         hash = hash * 31 + Wave.GetHashCode();
+        hash = hash * 31 + WaveRemainTime.GetHashCode();
         hash = hash * 31 + input.GetHashCode();
         return hash;
       }
@@ -1236,12 +1237,14 @@ namespace Quantum {
         var p = (_globals_*)ptr;
         FixedArray<Input>.Serialize(p->input, serializer, Quantum.Input.Serialize);
         serializer.Stream.Serialize(&p->SpWave);
+        serializer.Stream.Serialize(&p->StartCountdownInt);
         serializer.Stream.Serialize(&p->Wave);
-        serializer.Stream.Serialize((Int32*)&p->Mode);
         serializer.Stream.Serialize((Int32*)&p->State);
         AssetRefMap.Serialize(&p->Map, serializer);
         FP.Serialize(&p->DeltaTime, serializer);
-        FP.Serialize(&p->RemainTime, serializer);
+        FP.Serialize(&p->StartCountdown, serializer);
+        FP.Serialize(&p->StartDelay, serializer);
+        FP.Serialize(&p->WaveRemainTime, serializer);
         NavMeshRegionMask.Serialize(&p->NavMeshRegions, serializer);
         RNGSession.Serialize(&p->RngSession, serializer);
         FixedArray<RWPlayer>.Serialize(p->Players, serializer, Quantum.RWPlayer.Serialize);
@@ -1817,6 +1820,7 @@ namespace Quantum {
     }
   }
   public unsafe partial class Frame {
+    private ISignalSpawnByWave[] _ISignalSpawnByWaveSystems;
     partial void AllocGen() {
       _globals = (_globals_*)Context.Allocator.AllocAndClear(sizeof(_globals_));
     }
@@ -1840,6 +1844,7 @@ namespace Quantum {
         ComponentTypeId.Add<Quantum.Sp>(new ComponentCallbacks(Quantum.Sp.Serialize));
       });
       Initialize(this, this.SimulationConfig.Entities);
+      _ISignalSpawnByWaveSystems = BuildSignalsArray<ISignalSpawnByWave>();
       _ComponentSignalsOnAdded = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       _ComponentSignalsOnRemoved = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       BuildSignalsArrayOnComponentAdded<Quantum.AIBlackboardComponent>();
@@ -1902,11 +1907,31 @@ namespace Quantum {
       return _globals->input.GetPointer(player);
     }
     public unsafe partial struct FrameSignals {
+      public void SpawnByWave(Int32 wave) {
+        var array = _f._ISignalSpawnByWaveSystems;
+        var systems = &(_f._globals->Systems);
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+            s.SpawnByWave(_f, wave);
+          }
+        }
+      }
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 10;
+      public const Int32 EVENT_TYPE_COUNT = 12;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
+          case EventFieldDiceCreated.ID: return EventLocalPlayerOnly.ID;
+          case EventFieldDiceMerged.ID: return EventLocalPlayerOnly.ID;
+          case EventPlayerInitialized.ID: return EventLocalPlayerOnly.ID;
+          case EventPoweredDeckDiceUp.ID: return EventLocalPlayerOnly.ID;
+          case EventSpIncreased.ID: return EventLocalPlayerOnly.ID;
+          case EventSpDecreased.ID: return EventLocalPlayerOnly.ID;
+          case EventCommingSpGradeUpgraded.ID: return EventLocalPlayerOnly.ID;
+          case EventCommingSpChanged.ID: return EventLocalPlayerOnly.ID;
+          case EventCommingSpGradeChanged.ID: return EventLocalPlayerOnly.ID;
+          case EventDiceCreationCountChanged.ID: return EventLocalPlayerOnly.ID;
           default: return -1;
         }
       }
@@ -1914,6 +1939,7 @@ namespace Quantum {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return typeof(EventFieldDiceCreated);
           case EventFieldDiceMerged.ID: return typeof(EventFieldDiceMerged);
+          case EventLocalPlayerOnly.ID: return typeof(EventLocalPlayerOnly);
           case EventPlayerInitialized.ID: return typeof(EventPlayerInitialized);
           case EventPoweredDeckDiceUp.ID: return typeof(EventPoweredDeckDiceUp);
           case EventSpIncreased.ID: return typeof(EventSpIncreased);
@@ -1922,18 +1948,17 @@ namespace Quantum {
           case EventCommingSpChanged.ID: return typeof(EventCommingSpChanged);
           case EventCommingSpGradeChanged.ID: return typeof(EventCommingSpGradeChanged);
           case EventDiceCreationCountChanged.ID: return typeof(EventDiceCreationCountChanged);
+          case EventCountDown.ID: return typeof(EventCountDown);
           default: throw new System.ArgumentOutOfRangeException("eventID");
         }
       }
       public void FieldDiceCreated(PlayerRef Player, Int32 FieldIndex) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventFieldDiceCreated>(EventFieldDiceCreated.ID);
         ev.Player = Player;
         ev.FieldIndex = FieldIndex;
         _f.AddEvent(ev);
       }
       public void FieldDiceMerged(PlayerRef Player, Int32 SourceFieldIndex, Int32 TargetFieldIndex) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventFieldDiceMerged>(EventFieldDiceMerged.ID);
         ev.Player = Player;
         ev.SourceFieldIndex = SourceFieldIndex;
@@ -1941,52 +1966,49 @@ namespace Quantum {
         _f.AddEvent(ev);
       }
       public void PlayerInitialized(PlayerRef Player) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventPlayerInitialized>(EventPlayerInitialized.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
       }
       public void PoweredDeckDiceUp(PlayerRef Player, Int32 DeckIndex) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventPoweredDeckDiceUp>(EventPoweredDeckDiceUp.ID);
         ev.Player = Player;
         ev.DeckIndex = DeckIndex;
         _f.AddEvent(ev);
       }
       public void SpIncreased(PlayerRef Player) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventSpIncreased>(EventSpIncreased.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
       }
       public void SpDecreased(PlayerRef Player) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventSpDecreased>(EventSpDecreased.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
       }
       public void CommingSpGradeUpgraded(PlayerRef Player) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventCommingSpGradeUpgraded>(EventCommingSpGradeUpgraded.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
       }
       public void CommingSpChanged(PlayerRef Player) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventCommingSpChanged>(EventCommingSpChanged.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
       }
       public void CommingSpGradeChanged(PlayerRef Player) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventCommingSpGradeChanged>(EventCommingSpGradeChanged.ID);
         ev.Player = Player;
         _f.AddEvent(ev);
       }
       public void DiceCreationCountChanged(PlayerRef Player) {
-        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
         var ev = _f.Context.AcquireEvent<EventDiceCreationCountChanged>(EventDiceCreationCountChanged.ID);
         ev.Player = Player;
+        _f.AddEvent(ev);
+      }
+      public void CountDown(Int32 Count) {
+        var ev = _f.Context.AcquireEvent<EventCountDown>(EventCountDown.ID);
+        ev.Count = Count;
         _f.AddEvent(ev);
       }
     }
@@ -2038,23 +2060,17 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventFieldDiceCreated : EventBase {
+  public unsafe interface ISignalSpawnByWave : ISignal {
+    void SpawnByWave(Frame f, Int32 wave);
+  }
+  public unsafe partial class EventFieldDiceCreated : EventLocalPlayerOnly {
     public new const Int32 ID = 0;
-    public PlayerRef Player;
     public Int32 FieldIndex;
     protected EventFieldDiceCreated(Int32 id, Boolean synced) : 
         base(id, synced) {
     }
     public EventFieldDiceCreated() : 
         base(0, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
     }
     public override Int32 GetHashCode() {
       unchecked {
@@ -2065,9 +2081,8 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventFieldDiceMerged : EventBase {
+  public unsafe partial class EventFieldDiceMerged : EventLocalPlayerOnly {
     public new const Int32 ID = 1;
-    public PlayerRef Player;
     public Int32 SourceFieldIndex;
     public Int32 TargetFieldIndex;
     protected EventFieldDiceMerged(Int32 id, Boolean synced) : 
@@ -2075,14 +2090,6 @@ namespace Quantum {
     }
     public EventFieldDiceMerged() : 
         base(1, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
     }
     public override Int32 GetHashCode() {
       unchecked {
@@ -2094,14 +2101,11 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventPlayerInitialized : EventBase {
+  public unsafe abstract partial class EventLocalPlayerOnly : EventBase {
     public new const Int32 ID = 2;
     public PlayerRef Player;
-    protected EventPlayerInitialized(Int32 id, Boolean synced) : 
+    protected EventLocalPlayerOnly(Int32 id, Boolean synced) : 
         base(id, synced) {
-    }
-    public EventPlayerInitialized() : 
-        base(2, false) {
     }
     public new QuantumGame Game {
       get {
@@ -2119,74 +2123,47 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventPoweredDeckDiceUp : EventBase {
+  public unsafe partial class EventPlayerInitialized : EventLocalPlayerOnly {
     public new const Int32 ID = 3;
-    public PlayerRef Player;
+    protected EventPlayerInitialized(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventPlayerInitialized() : 
+        base(3, false) {
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 47;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventPoweredDeckDiceUp : EventLocalPlayerOnly {
+    public new const Int32 ID = 4;
     public Int32 DeckIndex;
     protected EventPoweredDeckDiceUp(Int32 id, Boolean synced) : 
         base(id, synced) {
     }
     public EventPoweredDeckDiceUp() : 
-        base(3, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
+        base(4, false) {
     }
     public override Int32 GetHashCode() {
       unchecked {
-        var hash = 47;
+        var hash = 53;
         hash = hash * 31 + Player.GetHashCode();
         hash = hash * 31 + DeckIndex.GetHashCode();
         return hash;
       }
     }
   }
-  public unsafe partial class EventSpIncreased : EventBase {
-    public new const Int32 ID = 4;
-    public PlayerRef Player;
+  public unsafe partial class EventSpIncreased : EventLocalPlayerOnly {
+    public new const Int32 ID = 5;
     protected EventSpIncreased(Int32 id, Boolean synced) : 
         base(id, synced) {
     }
     public EventSpIncreased() : 
-        base(4, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
-    }
-    public override Int32 GetHashCode() {
-      unchecked {
-        var hash = 53;
-        hash = hash * 31 + Player.GetHashCode();
-        return hash;
-      }
-    }
-  }
-  public unsafe partial class EventSpDecreased : EventBase {
-    public new const Int32 ID = 5;
-    public PlayerRef Player;
-    protected EventSpDecreased(Int32 id, Boolean synced) : 
-        base(id, synced) {
-    }
-    public EventSpDecreased() : 
         base(5, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
     }
     public override Int32 GetHashCode() {
       unchecked {
@@ -2196,22 +2173,13 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventCommingSpGradeUpgraded : EventBase {
+  public unsafe partial class EventSpDecreased : EventLocalPlayerOnly {
     public new const Int32 ID = 6;
-    public PlayerRef Player;
-    protected EventCommingSpGradeUpgraded(Int32 id, Boolean synced) : 
+    protected EventSpDecreased(Int32 id, Boolean synced) : 
         base(id, synced) {
     }
-    public EventCommingSpGradeUpgraded() : 
+    public EventSpDecreased() : 
         base(6, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
     }
     public override Int32 GetHashCode() {
       unchecked {
@@ -2221,22 +2189,13 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventCommingSpChanged : EventBase {
+  public unsafe partial class EventCommingSpGradeUpgraded : EventLocalPlayerOnly {
     public new const Int32 ID = 7;
-    public PlayerRef Player;
-    protected EventCommingSpChanged(Int32 id, Boolean synced) : 
+    protected EventCommingSpGradeUpgraded(Int32 id, Boolean synced) : 
         base(id, synced) {
     }
-    public EventCommingSpChanged() : 
+    public EventCommingSpGradeUpgraded() : 
         base(7, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
     }
     public override Int32 GetHashCode() {
       unchecked {
@@ -2246,22 +2205,13 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventCommingSpGradeChanged : EventBase {
+  public unsafe partial class EventCommingSpChanged : EventLocalPlayerOnly {
     public new const Int32 ID = 8;
-    public PlayerRef Player;
-    protected EventCommingSpGradeChanged(Int32 id, Boolean synced) : 
+    protected EventCommingSpChanged(Int32 id, Boolean synced) : 
         base(id, synced) {
     }
-    public EventCommingSpGradeChanged() : 
+    public EventCommingSpChanged() : 
         base(8, false) {
-    }
-    public new QuantumGame Game {
-      get {
-        return (QuantumGame)base.Game;
-      }
-      set {
-        base.Game = value;
-      }
     }
     public override Int32 GetHashCode() {
       unchecked {
@@ -2271,14 +2221,46 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventDiceCreationCountChanged : EventBase {
+  public unsafe partial class EventCommingSpGradeChanged : EventLocalPlayerOnly {
     public new const Int32 ID = 9;
-    public PlayerRef Player;
+    protected EventCommingSpGradeChanged(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventCommingSpGradeChanged() : 
+        base(9, false) {
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 73;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventDiceCreationCountChanged : EventLocalPlayerOnly {
+    public new const Int32 ID = 10;
     protected EventDiceCreationCountChanged(Int32 id, Boolean synced) : 
         base(id, synced) {
     }
     public EventDiceCreationCountChanged() : 
-        base(9, false) {
+        base(10, false) {
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 79;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventCountDown : EventBase {
+    public new const Int32 ID = 11;
+    public Int32 Count;
+    protected EventCountDown(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventCountDown() : 
+        base(11, false) {
     }
     public new QuantumGame Game {
       get {
@@ -2290,8 +2272,8 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked {
-        var hash = 73;
-        hash = hash * 31 + Player.GetHashCode();
+        var hash = 83;
+        hash = hash * 31 + Count.GetHashCode();
         return hash;
       }
     }
@@ -2488,7 +2470,6 @@ namespace Quantum {
       Register(typeof(LayerMask), LayerMask.SIZE);
       Register(typeof(MapEntityId), MapEntityId.SIZE);
       Register(typeof(MapEntityLink), MapEntityLink.SIZE);
-      Register(typeof(Quantum.ModeType), 4);
       Register(typeof(NavMeshAvoidanceAgent), NavMeshAvoidanceAgent.SIZE);
       Register(typeof(NavMeshAvoidanceObstacle), NavMeshAvoidanceObstacle.SIZE);
       Register(typeof(NavMeshPathfinder), NavMeshPathfinder.SIZE);
@@ -2535,7 +2516,6 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMTransitionSet>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.GOAPWorldState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.InputButtons>();
-      FramePrinter.EnsurePrimitiveNotStripped<Quantum.ModeType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.StateType>();
     }
   }
@@ -2559,17 +2539,6 @@ namespace Quantum.Prototypes {
     }
     public static implicit operator GOAPWorldState_Prototype(GOAPWorldState value) {
         return new GOAPWorldState_Prototype() { Value = (Int64)value };
-    }
-  }
-  [System.SerializableAttribute()]
-  [EnumWrapper(typeof(ModeType))]
-  public unsafe partial struct ModeType_Prototype {
-    public Int32 Value;
-    public static implicit operator ModeType(ModeType_Prototype value) {
-        return (ModeType)value.Value;
-    }
-    public static implicit operator ModeType_Prototype(ModeType value) {
-        return new ModeType_Prototype() { Value = (Int32)value };
     }
   }
   [System.SerializableAttribute()]

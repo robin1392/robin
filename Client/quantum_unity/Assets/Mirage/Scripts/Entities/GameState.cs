@@ -113,7 +113,7 @@ namespace MirageTest.Scripts.Entities
             }
             else
             {
-                UI_InGame.Get().waveAnimator.SetTrigger("Change");   
+                UI_InGame.Get().waveAnimator.SetTrigger("Change");
             }
         }
         

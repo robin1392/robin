@@ -1841,7 +1841,7 @@ namespace Quantum {
 
 
 // Game/QuantumGame.Snapshots.cs
-﻿
+ 
 namespace Quantum {
   public partial class QuantumGame {
 

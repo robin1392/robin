@@ -84,13 +84,29 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         
         QuantumEvent.Subscribe<EventPlayerInitialized>(listener: this, handler: OnPlayerInitialized);
         QuantumEvent.Subscribe<EventPoweredDeckDiceUp>(listener: this, handler: OnPoweredDeckDiceUp);
-        
         QuantumEvent.Subscribe<EventSpIncreased>(listener: this, handler: OnSpIncreased);
         QuantumEvent.Subscribe<EventSpDecreased>(listener: this, handler: OnSpDecreased);
         QuantumEvent.Subscribe<EventCommingSpGradeUpgraded>(listener: this, handler: OnCommingSpGradeUpgraded);
         QuantumEvent.Subscribe<EventCommingSpChanged>(listener: this, handler: OnCommingSpChanged);
         QuantumEvent.Subscribe<EventCommingSpGradeChanged>(listener: this, handler: OnCommingSpGradeChanged);
         QuantumEvent.Subscribe<EventDiceCreationCountChanged>(listener: this, handler: OnDiceCreationCountChanged);
+        
+        QuantumEvent.Subscribe<EventCountDown>(listener: this, handler: OnCountDown);
+    }
+
+    private void OnCountDown(EventCountDown callback)
+    {
+        if (callback.Count == 0)
+        {
+            startFight.SetActive(true);
+            startAnimator.SetTrigger("Fight");
+        }
+        else
+        {
+            startAnimator.gameObject.SetActive(true);
+            startNumber.text = callback.Count.ToString();    
+            startAnimator.SetTrigger("Number");   
+        }
     }
 
     private void OnDiceCreationCountChanged(EventDiceCreationCountChanged callback)
