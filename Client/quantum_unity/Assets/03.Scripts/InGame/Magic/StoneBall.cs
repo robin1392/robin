@@ -35,7 +35,7 @@ namespace  ED
             
             ts_Model.gameObject.SetActive(true);
             var position = ActorProxy.transform.position;
-            ActorProxy.transform.position = ActorProxy.team == GameConstants.BottomCamp
+            ActorProxy.transform.position = ActorProxy.team == GameConstants_Mirage.BottomCamp
                 ? new Vector3(position.x, position.y, -12)
                 : new Vector3(position.x, position.y, 12);
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.5f, (eyeLevel - 1) / 5f);

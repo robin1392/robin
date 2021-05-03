@@ -1,4 +1,43 @@
 event FieldDiceCreated{
     local player_ref Player;
     Int32 FieldIndex;
-} 
+}
+
+event FieldDiceMerged{
+    local player_ref Player;
+    Int32 SourceFieldIndex;
+    Int32 TargetFieldIndex;
+}
+
+event PlayerInitialized{
+    local player_ref Player;
+}    
+
+event PoweredDeckDiceUp{
+    local player_ref Player;
+    Int32 DeckIndex;
+}
+
+event SpIncreased{
+    local player_ref Player;
+}
+
+event SpDecreased{
+    local player_ref Player;
+}
+
+event CommingSpGradeUpgraded{
+    local player_ref Player;
+}
+
+event CommingSpChanged{
+    local player_ref Player;
+}
+
+event CommingSpGradeChanged{
+    local player_ref Player;
+}
+
+event DiceCreationCountChanged{
+    local player_ref Player;
+}

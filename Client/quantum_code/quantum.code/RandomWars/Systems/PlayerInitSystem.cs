@@ -1,6 +1,7 @@
 using System;
 using Photon.Deterministic;
 using Quantum;
+using RandomWarsResource.Data;
 
 public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
 {
@@ -33,6 +34,27 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
         var rwPlayer = f.Global->Players.GetPointer(playerRef); 
         rwPlayer->PlayerRef = playerRef;
         rwPlayer->EntityRef = entity;
+        
+        var sp = f.Unsafe.GetPointer<Sp>(entity);
+
+        var tableData = f.Context.TableData;
+        if(f.RuntimeConfig.Mode == 1) //Coop
+        {
+            sp->CurrentSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.GetStartSP].value;    
+        }
+        else
+        {
+            sp->CurrentSp = 999; //tableData.VsMode.KeyValues[(int) EVsmodeKey.GetStartSP].value;    
+        }
+
+        sp->CommingSpGrade = 1;
+        sp->CommingSp = f.CalculateCommingSp(sp->CommingSpGrade);
+        
+        f.Events.PlayerInitialized(playerRef);
+        f.Events.SpIncreased(playerRef);
+        f.Events.CommingSpChanged(playerRef);
+        f.Events.CommingSpGradeChanged(playerRef);
+        f.Events.DiceCreationCountChanged(playerRef);
     }
 
     private bool DoesPlayerExist(Frame f, PlayerRef playerRef)

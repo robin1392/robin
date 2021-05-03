@@ -22,6 +22,7 @@ component DiceCreation {
 component Sp {
     Int32 CurrentSp;
     Int32 CommingSp;
+    Int32 CommingSpGrade;
 }
 
 component Deck {

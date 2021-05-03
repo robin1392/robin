@@ -21,25 +21,58 @@ namespace ED
             _ingameManager = FindObjectOfType<InGameManager>();
 
             QuantumEvent.Subscribe<EventFieldDiceCreated>(listener: this, handler: OnFieldDiceCreated);
+            QuantumEvent.Subscribe<EventFieldDiceMerged>(listener: this, handler: OnFieldDiceMerged);
+        }
+
+        private void OnFieldDiceMerged(EventFieldDiceMerged callback)
+        {
+            if(TutorialManager.isTutorial)
+            {
+                TutorialManager.MergeComplete();
+            }
+            
+            UpdateSlot(callback.SourceFieldIndex, callback.Game.Frames.Predicted, callback.Player);
+            UpdateSlot(callback.TargetFieldIndex, callback.Game.Frames.Predicted, callback.Player);
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);
+        }
+
+        void UpdateSlot(int fieldIndex, Frame frame, PlayerRef playerRef)
+        {
+            var slot = arrSlot[fieldIndex];
+
+            if (frame.TryGetFieldDiceInfo(playerRef, fieldIndex, out var diceId, out var diceScale))
+            {
+                TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo);    
+                slot.SetDice(new Dice()
+                {
+                    diceFieldNum = fieldIndex,
+                    diceData = diceInfo,
+                    eyeLevel = diceScale
+                });
+            
+                slot.SetIcon();
+                slot.BBoing();
+            }
+            else
+            {
+                slot.SetDice(new Dice()
+                {
+                    diceFieldNum = fieldIndex,
+                    diceData = null,
+                    eyeLevel = 0
+                });
+            
+                slot.SetIcon();
+            }
         }
 
         private void OnFieldDiceCreated(EventFieldDiceCreated callback)
         {
             var fieldIndex = callback.FieldIndex;
-            var slot = arrSlot[fieldIndex];
+            UpdateSlot(fieldIndex, callback.Game.Frames.Predicted, callback.Player);
 
-            callback.Game.Frames.Predicted.GetFieldDiceInfo(callback.Player, callback.FieldIndex, out var diceId, out var diceScale);
-            TableManager.Get().DiceInfo.GetData(diceId, out var diceInfo);
-            
-            slot.SetDice(new Dice()
-            {
-                diceFieldNum = fieldIndex,
-                diceData = diceInfo,
-                eyeLevel = diceScale
-            });
-            
-            slot.SetIcon();
-            slot.BBoing();
+            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_GET_DICE);
         }
 
         public void InitClient(RWNetworkClient client)
@@ -71,8 +104,8 @@ namespace ED
         {
             var predicedFrame = QuantumRunner.Default.Game.Frames.Predicted;
             var localPlayer = QuantumRunner.Default.Game.GetLocalPlayers()[0];
-
-            if (predicedFrame.CanCreateFieldDice(localPlayer))
+            
+            if (predicedFrame.IsFieldFull(localPlayer) == false && predicedFrame.HasEnouphSpToCreateFieldDice(localPlayer))
             {
                 if (TutorialManager.isTutorial)
                 {

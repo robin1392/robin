@@ -51,8 +51,8 @@ namespace MirageTest.Scripts.GameMode
             GameState = gameState;
             PlayerStates = playerStates;
 
-            PlayerState1.team = GameConstants.BottomCamp;
-            PlayerState2.team = GameConstants.TopCamp;
+            PlayerState1.team = GameConstants_Mirage.BottomCamp;
+            PlayerState2.team = GameConstants_Mirage.TopCamp;
             
             ServerObjectManager.Spawn(gameState.NetIdentity);
             foreach (var playerState in playerStates)
@@ -184,7 +184,7 @@ namespace MirageTest.Scripts.GameMode
                 return;
             }
             
-            if (actorProxy.team == GameConstants.BottomCamp)
+            if (actorProxy.team == GameConstants_Mirage.BottomCamp)
             {
                 if (bottomGudianSpawned)
                 {
@@ -193,7 +193,7 @@ namespace MirageTest.Scripts.GameMode
 
                 bottomGudianSpawned = true;
             }
-            else if (actorProxy.team == GameConstants.TopCamp)
+            else if (actorProxy.team == GameConstants_Mirage.TopCamp)
             {
                 if (topGudianSpawned)
                 {
@@ -205,7 +205,7 @@ namespace MirageTest.Scripts.GameMode
             
             var playerState = GetPlayerStateByTeam(actorProxy.team);
             var position = actorProxy.transform.position; 
-            if (actorProxy.team == GameConstants.BottomCamp)
+            if (actorProxy.team == GameConstants_Mirage.BottomCamp)
             {
                 position += Vector3.forward * 3;
             }

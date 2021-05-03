@@ -10,6 +10,7 @@ using Cysharp.Threading.Tasks;
 using ExitGames.Client.Photon;
 using MirageTest.Scripts;
 using Quantum;
+using Quantum.Commands;
 using Service.Core;
 using UnityEngine;
 using DeckInfo = _Scripts.DeckInfo;
@@ -346,17 +347,7 @@ namespace ED
         
         public void Click_SP_Upgrade_Button()
         {
-            if (_client == null || _client.IsConnected == false)
-            {
-                return;
-            }
-            
-            var localPlayerProxy = _client.GetLocalPlayerProxy(); 
-            localPlayerProxy.UpgradeSp();
-            
-            UI_InGame.Get().spUpgradeAnimator.SetTrigger("Fx_SP_Upgrade");
-
-            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
+            QuantumRunner.Default.Game.SendCommand(new CommingSpUpgradeCommand());
         }
         
         #endregion

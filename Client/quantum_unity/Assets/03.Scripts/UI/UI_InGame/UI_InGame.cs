@@ -4,11 +4,15 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using CodeStage.AntiCheat.ObscuredTypes;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 using UnityEngine.UI;
 using ED;
 using MirageTest.Scripts;
+using Quantum;
 using RandomWarsResource.Data;
+using Button = UnityEngine.UI.Button;
 
 
 public class UI_InGame : SingletonDestroy<UI_InGame>
@@ -66,6 +70,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     #region unity base
 
+    private TweenerCore<int, int, NoOptions> spIncreaseTween;
+
     public override void Awake()
     {
         base.Awake();
@@ -75,8 +81,108 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         image_BottomTowerHealthBar.transform.parent.gameObject.SetActive(false);
         startAnimator.gameObject.SetActive(false);
         startFight.gameObject.SetActive(false);
+        
+        QuantumEvent.Subscribe<EventPlayerInitialized>(listener: this, handler: OnPlayerInitialized);
+        QuantumEvent.Subscribe<EventPoweredDeckDiceUp>(listener: this, handler: OnPoweredDeckDiceUp);
+        
+        QuantumEvent.Subscribe<EventSpIncreased>(listener: this, handler: OnSpIncreased);
+        QuantumEvent.Subscribe<EventSpDecreased>(listener: this, handler: OnSpDecreased);
+        QuantumEvent.Subscribe<EventCommingSpGradeUpgraded>(listener: this, handler: OnCommingSpGradeUpgraded);
+        QuantumEvent.Subscribe<EventCommingSpChanged>(listener: this, handler: OnCommingSpChanged);
+        QuantumEvent.Subscribe<EventCommingSpGradeChanged>(listener: this, handler: OnCommingSpGradeChanged);
+        QuantumEvent.Subscribe<EventDiceCreationCountChanged>(listener: this, handler: OnDiceCreationCountChanged);
     }
-    
+
+    private void OnDiceCreationCountChanged(EventDiceCreationCountChanged callback)
+    {
+        var frame = callback.Game.Frames.Predicted;
+        SetDiceButtonText(frame.CreateFieldDiceCost(callback.Player));
+    }
+
+    private unsafe void OnCommingSpGradeChanged(EventCommingSpGradeChanged callback)
+    {
+        var frame = callback.Game.Frames.Predicted;
+        var player = frame.Global->Players[callback.Player];
+        var sp = frame.Get<Sp>(player.EntityRef);
+        
+        SetSPUpgrade(sp.CommingSpGrade, frame.SpUpgradeCost(sp.CommingSpGrade));
+    }
+
+    private unsafe void OnCommingSpChanged(EventCommingSpChanged callback)
+    {
+        var frame = callback.Game.Frames.Predicted;
+        var player = frame.Global->Players[callback.Player];
+        var sp = frame.Get<Sp>(player.EntityRef);
+        
+        SetComingSp(sp.CommingSp);
+    }
+
+    private void OnCommingSpGradeUpgraded(EventCommingSpGradeUpgraded callback)
+    {
+        SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
+        spUpgradeAnimator.SetTrigger("Fx_SP_Upgrade");
+    }
+
+    private unsafe void OnSpDecreased(EventSpDecreased callback)
+    {
+        var frame = callback.Game.Frames.Predicted;
+        var player = frame.Global->Players[callback.Player];
+        var sp = frame.Get<Sp>(player.EntityRef);
+        
+        SetSP(sp.CurrentSp);
+        UpdateButtons(sp.CurrentSp, sp.CommingSpGrade, frame, callback.Player);
+    }
+
+    private unsafe void OnSpIncreased(EventSpIncreased callback)
+    {
+        var frame = callback.Game.Frames.Predicted;
+        var player = frame.Global->Players[callback.Player];
+        var sp = frame.Get<Sp>(player.EntityRef);
+        
+        addSpAnimator.SetTrigger("Sp_Get");
+        SetSPGradually(sp.CurrentSp);
+        UpdateButtons(sp.CurrentSp, sp.CommingSpGrade, frame, callback.Player);
+    }
+
+    void UpdateButtons(int currentSp, int spGrade, Frame frame, PlayerRef playerRef)
+    {
+        foreach (var upgradeButton in arrUpgradeButtons)
+        {
+            upgradeButton.EditSpCallback(currentSp);
+        }
+        
+        btn_GetDice.EditSpCallback(currentSp >= frame.CreateFieldDiceCost(playerRef));
+        button_SP_Upgrade.EditSpCallback(currentSp >= frame.SpUpgradeCost(playerRef) && spGrade < GameConstants_Mirage.MaxSpUpgradeLevel);
+    }
+
+    private unsafe void OnPoweredDeckDiceUp(EventPoweredDeckDiceUp callback)
+    {
+        var frame = callback.Game.Frames.Verified;
+        var player = frame.Global->Players[callback.Player];
+        var deck = frame.Get<Deck>(player.EntityRef);
+        
+        var deckDice = deck.Dices[callback.DeckIndex];
+        TableManager.Get().DiceInfo.GetData(deckDice.DiceId, out var diceInfo);
+        arrUpgradeButtons[callback.DeckIndex].Initialize( diceInfo, deckDice.inGameLevel, callback.DeckIndex);
+        
+        arrUpgradeButtons[callback.DeckIndex].OnPowerUp();
+        
+        SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
+    }
+
+    private unsafe void OnPlayerInitialized(EventPlayerInitialized callback)
+    {
+        var frame = callback.Game.Frames.Verified;
+        var player = frame.Global->Players[callback.Player];
+        var deck = frame.Get<Deck>(player.EntityRef);
+        for (var i = 0; i < deck.Dices.Length; ++i)
+        {
+            var deckDice = deck.Dices[i];
+            TableManager.Get().DiceInfo.GetData(deckDice.DiceId, out var diceInfo);
+            arrUpgradeButtons[i].Initialize( diceInfo, deckDice.inGameLevel, i);
+        }
+    }
+
     private RWNetworkClient _client;
     public void InitClient(RWNetworkClient client)
     {
@@ -112,6 +218,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     
     
     #region get set
+    
+    
 
     /// <summary>
     /// 덱 주사위 셋팅
@@ -178,12 +286,22 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     
     public void SetSPGradually(int sp)
     {
-        DOTween.To(() => lastSetSp, x => SetSP(x), sp, 5.0f/ 60.0f);
+        if (spIncreaseTween != null)
+        {
+            spIncreaseTween.Kill();
+        }
+        spIncreaseTween = DOTween.To(() => lastSetSp, x => SetSP(x), sp, 5.0f/ 60.0f);
     }
 
     
     public void SetSP(int sp)
     {
+        if (spIncreaseTween != null)
+        {
+            spIncreaseTween.Kill();
+            spIncreaseTween = null;
+        }
+        
         lastSetSp = sp;
         text_SP.text = sp.ToString();
     }
@@ -237,7 +355,6 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     public void SetSPUpgrade(int currentLv , int cost)
     {
-        //button_SP_Upgrade.interactable = (upgradeLv + 1) * 500 <= sp;
         if (currentLv < GameConstants.MaxSpUpgradeLevel)
         {
             text_SP_Upgrade.text = $"Lv.{currentLv}";
@@ -286,3 +403,4 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         textComingSP.text = $"{addSP}";
     }
 }
+

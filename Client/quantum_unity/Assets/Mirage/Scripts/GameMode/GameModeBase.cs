@@ -86,7 +86,7 @@ namespace MirageTest.Scripts.GameMode
                     diceId = d.DiceId,
                     outGameLevel = d.OutGameLevel,
                     inGameLevel = 0,
-                }).ToArray(), GameConstants.Player1Tag);
+                }).ToArray(), GameConstants_Mirage.Player1Tag);
 
             var playerInfo2 = playerInfos[1];
             playerStates[1] = SpawnPlayerState(
@@ -97,7 +97,7 @@ namespace MirageTest.Scripts.GameMode
                     diceId = d.DiceId,
                     outGameLevel = d.OutGameLevel,
                     inGameLevel = 0,
-                }).ToArray(), GameConstants.Player2Tag);
+                }).ToArray(), GameConstants_Mirage.Player2Tag);
 
             return playerStates;
         }
@@ -254,7 +254,7 @@ namespace MirageTest.Scripts.GameMode
             var newMasterPlayerProxy = Server.PlayerProxies.FirstOrDefault(p => p.ConnectionToClient != arg0);
             if (newMasterPlayerProxy == null)
             {
-                GameState.masterOwnerTag = GameConstants.ServerTag;
+                GameState.masterOwnerTag = GameConstants_Mirage.ServerTag;
                 return;
             }
             
@@ -311,7 +311,7 @@ namespace MirageTest.Scripts.GameMode
                         diceScale);
                 }
 
-                var isBottomCamp = playerState.team == GameConstants.BottomCamp;
+                var isBottomCamp = playerState.team == GameConstants_Mirage.BottomCamp;
                 var spawnTransform = isBottomCamp
                     ? FieldManager.Get().GetBottomListTs(fieldIndex)
                     : FieldManager.Get().GetTopListTs(fieldIndex);

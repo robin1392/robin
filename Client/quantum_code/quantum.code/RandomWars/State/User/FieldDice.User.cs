@@ -9,6 +9,7 @@ namespace Quantum
         public void SetEmpty()
         {
             DeckIndex = EmptyIndex;
+            DiceScale = 0;
         }
 
         public bool IsEmpty => DeckIndex == EmptyIndex;

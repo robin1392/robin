@@ -116,7 +116,7 @@ namespace MirageTest.Scripts.Entities
 
             if (client.LocalUserId == userId)
             {
-                CameraController.Get().UpdateCameraRotation(team == GameConstants.BottomCamp);
+                CameraController.Get().UpdateCameraRotation(team == GameConstants_Mirage.BottomCamp);
             }
 
             Deck.OnChange += OnChangeDeckOnClientOnly;
@@ -185,7 +185,7 @@ namespace MirageTest.Scripts.Entities
                 }
                 
                 UI_InGame.Get().btn_GetDice.EditSpCallback(newValue >= GetDiceCost());
-                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue >= GetUpradeSpCost() && spGrade < GameConstants.MaxSpUpgradeLevel);
+                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(newValue >= GetUpradeSpCost() && spGrade < GameConstants_Mirage.MaxSpUpgradeLevel);
             }
         }
         
@@ -224,7 +224,7 @@ namespace MirageTest.Scripts.Entities
 
             if (IsLocalPlayerState)
             {
-                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(sp >= GetUpradeSpCost() && newValue < GameConstants.MaxSpUpgradeLevel);
+                UI_InGame.Get().button_SP_Upgrade.EditSpCallback(sp >= GetUpradeSpCost() && newValue < GameConstants_Mirage.MaxSpUpgradeLevel);
                 UI_InGame.Get().SetSPUpgrade(newValue, GetUpradeSpCost());
             }
         }
@@ -463,7 +463,7 @@ namespace MirageTest.Scripts.Entities
                 return;
             }
 
-            if (deckDice.inGameLevel >= GameConstants.MaxIngameUpgradeLevel)
+            if (deckDice.inGameLevel >= GameConstants_Mirage.MaxIngameUpgradeLevel)
             {
                 logger.LogError($"덱 주사위 레벨이 최대치입니다.: playerId:{userId}, diceId:{deckDice.diceId}");
                 return;
@@ -499,7 +499,7 @@ namespace MirageTest.Scripts.Entities
         {
             logger.Log($"[UpgradeSp]");
             // sp 등급 체크
-            if (spGrade >= GameConstants.MaxSpUpgradeLevel)
+            if (spGrade >= GameConstants_Mirage.MaxSpUpgradeLevel)
             {
                 logger.LogError($"Sp 등급이 최대치입니다.: playerId:{userId}");
                 return;

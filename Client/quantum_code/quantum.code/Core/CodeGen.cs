@@ -1792,16 +1792,19 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Sp : Quantum.IComponent {
-    public const Int32 SIZE = 8;
+    public const Int32 SIZE = 12;
     public const Int32 ALIGNMENT = 4;
     [FieldOffset(0)]
     public Int32 CommingSp;
     [FieldOffset(4)]
+    public Int32 CommingSpGrade;
+    [FieldOffset(8)]
     public Int32 CurrentSp;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 239;
         hash = hash * 31 + CommingSp.GetHashCode();
+        hash = hash * 31 + CommingSpGrade.GetHashCode();
         hash = hash * 31 + CurrentSp.GetHashCode();
         return hash;
       }
@@ -1809,6 +1812,7 @@ namespace Quantum {
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Sp*)ptr;
         serializer.Stream.Serialize(&p->CommingSp);
+        serializer.Stream.Serialize(&p->CommingSpGrade);
         serializer.Stream.Serialize(&p->CurrentSp);
     }
   }
@@ -1900,7 +1904,7 @@ namespace Quantum {
     public unsafe partial struct FrameSignals {
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 1;
+      public const Int32 EVENT_TYPE_COUNT = 10;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
           default: return -1;
@@ -1909,6 +1913,15 @@ namespace Quantum {
       public static System.Type GetEventType(Int32 eventID) {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return typeof(EventFieldDiceCreated);
+          case EventFieldDiceMerged.ID: return typeof(EventFieldDiceMerged);
+          case EventPlayerInitialized.ID: return typeof(EventPlayerInitialized);
+          case EventPoweredDeckDiceUp.ID: return typeof(EventPoweredDeckDiceUp);
+          case EventSpIncreased.ID: return typeof(EventSpIncreased);
+          case EventSpDecreased.ID: return typeof(EventSpDecreased);
+          case EventCommingSpGradeUpgraded.ID: return typeof(EventCommingSpGradeUpgraded);
+          case EventCommingSpChanged.ID: return typeof(EventCommingSpChanged);
+          case EventCommingSpGradeChanged.ID: return typeof(EventCommingSpGradeChanged);
+          case EventDiceCreationCountChanged.ID: return typeof(EventDiceCreationCountChanged);
           default: throw new System.ArgumentOutOfRangeException("eventID");
         }
       }
@@ -1917,6 +1930,63 @@ namespace Quantum {
         var ev = _f.Context.AcquireEvent<EventFieldDiceCreated>(EventFieldDiceCreated.ID);
         ev.Player = Player;
         ev.FieldIndex = FieldIndex;
+        _f.AddEvent(ev);
+      }
+      public void FieldDiceMerged(PlayerRef Player, Int32 SourceFieldIndex, Int32 TargetFieldIndex) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventFieldDiceMerged>(EventFieldDiceMerged.ID);
+        ev.Player = Player;
+        ev.SourceFieldIndex = SourceFieldIndex;
+        ev.TargetFieldIndex = TargetFieldIndex;
+        _f.AddEvent(ev);
+      }
+      public void PlayerInitialized(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventPlayerInitialized>(EventPlayerInitialized.ID);
+        ev.Player = Player;
+        _f.AddEvent(ev);
+      }
+      public void PoweredDeckDiceUp(PlayerRef Player, Int32 DeckIndex) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventPoweredDeckDiceUp>(EventPoweredDeckDiceUp.ID);
+        ev.Player = Player;
+        ev.DeckIndex = DeckIndex;
+        _f.AddEvent(ev);
+      }
+      public void SpIncreased(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventSpIncreased>(EventSpIncreased.ID);
+        ev.Player = Player;
+        _f.AddEvent(ev);
+      }
+      public void SpDecreased(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventSpDecreased>(EventSpDecreased.ID);
+        ev.Player = Player;
+        _f.AddEvent(ev);
+      }
+      public void CommingSpGradeUpgraded(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventCommingSpGradeUpgraded>(EventCommingSpGradeUpgraded.ID);
+        ev.Player = Player;
+        _f.AddEvent(ev);
+      }
+      public void CommingSpChanged(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventCommingSpChanged>(EventCommingSpChanged.ID);
+        ev.Player = Player;
+        _f.AddEvent(ev);
+      }
+      public void CommingSpGradeChanged(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventCommingSpGradeChanged>(EventCommingSpGradeChanged.ID);
+        ev.Player = Player;
+        _f.AddEvent(ev);
+      }
+      public void DiceCreationCountChanged(PlayerRef Player) {
+        if (_f.Context.IsLocalPlayer(Player) == false) { return; }
+        var ev = _f.Context.AcquireEvent<EventDiceCreationCountChanged>(EventDiceCreationCountChanged.ID);
+        ev.Player = Player;
         _f.AddEvent(ev);
       }
     }
@@ -1991,6 +2061,237 @@ namespace Quantum {
         var hash = 37;
         hash = hash * 31 + Player.GetHashCode();
         hash = hash * 31 + FieldIndex.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventFieldDiceMerged : EventBase {
+    public new const Int32 ID = 1;
+    public PlayerRef Player;
+    public Int32 SourceFieldIndex;
+    public Int32 TargetFieldIndex;
+    protected EventFieldDiceMerged(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventFieldDiceMerged() : 
+        base(1, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 41;
+        hash = hash * 31 + Player.GetHashCode();
+        hash = hash * 31 + SourceFieldIndex.GetHashCode();
+        hash = hash * 31 + TargetFieldIndex.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventPlayerInitialized : EventBase {
+    public new const Int32 ID = 2;
+    public PlayerRef Player;
+    protected EventPlayerInitialized(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventPlayerInitialized() : 
+        base(2, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 43;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventPoweredDeckDiceUp : EventBase {
+    public new const Int32 ID = 3;
+    public PlayerRef Player;
+    public Int32 DeckIndex;
+    protected EventPoweredDeckDiceUp(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventPoweredDeckDiceUp() : 
+        base(3, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 47;
+        hash = hash * 31 + Player.GetHashCode();
+        hash = hash * 31 + DeckIndex.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventSpIncreased : EventBase {
+    public new const Int32 ID = 4;
+    public PlayerRef Player;
+    protected EventSpIncreased(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventSpIncreased() : 
+        base(4, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 53;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventSpDecreased : EventBase {
+    public new const Int32 ID = 5;
+    public PlayerRef Player;
+    protected EventSpDecreased(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventSpDecreased() : 
+        base(5, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 59;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventCommingSpGradeUpgraded : EventBase {
+    public new const Int32 ID = 6;
+    public PlayerRef Player;
+    protected EventCommingSpGradeUpgraded(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventCommingSpGradeUpgraded() : 
+        base(6, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 61;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventCommingSpChanged : EventBase {
+    public new const Int32 ID = 7;
+    public PlayerRef Player;
+    protected EventCommingSpChanged(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventCommingSpChanged() : 
+        base(7, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 67;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventCommingSpGradeChanged : EventBase {
+    public new const Int32 ID = 8;
+    public PlayerRef Player;
+    protected EventCommingSpGradeChanged(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventCommingSpGradeChanged() : 
+        base(8, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 71;
+        hash = hash * 31 + Player.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventDiceCreationCountChanged : EventBase {
+    public new const Int32 ID = 9;
+    public PlayerRef Player;
+    protected EventDiceCreationCountChanged(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventDiceCreationCountChanged() : 
+        base(9, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 73;
+        hash = hash * 31 + Player.GetHashCode();
         return hash;
       }
     }
@@ -2785,6 +3086,7 @@ namespace Quantum.Prototypes {
   public unsafe sealed partial class Sp_Prototype : ComponentPrototype<Sp> {
     public Int32 CurrentSp;
     public Int32 CommingSp;
+    public Int32 CommingSpGrade;
     partial void MaterializeUser(Frame frame, ref Sp result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
       Sp component = default;
@@ -2798,6 +3100,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Sp result, in PrototypeMaterializationContext context) {
       result.CommingSp = this.CommingSp;
+      result.CommingSpGrade = this.CommingSpGrade;
       result.CurrentSp = this.CurrentSp;
       MaterializeUser(frame, ref result, in context);
     }

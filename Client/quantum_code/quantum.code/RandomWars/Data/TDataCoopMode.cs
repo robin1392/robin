@@ -33,6 +33,13 @@ namespace RandomWarsResource.Data
 		bossRewardID03 = 25,
 		bossRewardID04 = 26,
 		bossRewardID05 = 27,
+		GetStartSP = 28,
+		AddSP = 29,
+		GetStartDiceCost = 30,
+		DiceCostUp = 31,
+		DefaultSp = 32,
+		UpgradeSp = 33,
+		WaveSp = 34,
 	}
 
 	public class TDataCoopMode : ITableData<int>

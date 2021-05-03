@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using MirageTest.Scripts;
+using Quantum.Commands;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -149,23 +150,12 @@ namespace ED
         {
             if (dice != null && dragDice != null && dice != dragDice && dice.id == dragDice.id && dice.eyeLevel == dragDice.eyeLevel)
             {
-                dragDice.Reset();
                 ui_DiceField.RefreshField();
-                
-                if(TutorialManager.isTutorial)
-                {
-                    TutorialManager.MergeComplete();
-                }
-                
-                if (_client == null || _client.IsConnected == false)
-                {
-                    return;
-                }
-                
-                var localPlayerProxy = _client.GetLocalPlayerProxy();
-                localPlayerProxy.MergeDice(dragDice.diceFieldNum, dice.diceFieldNum);
-                
-                SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_MERGE);
+
+                var command = new MergeDiceCommand();
+                command.SourceFieldIndex = dragDice.diceFieldNum;
+                command.TargetFieldIndex = dice.diceFieldNum;
+                QuantumRunner.Default.Game.SendCommand(command);
             }
         }
 

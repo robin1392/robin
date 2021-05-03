@@ -172,7 +172,7 @@ public class RWNetworkServer : NetworkServer
             stat = GameModeBase.CalcMagicOrInstallationStat(diceInfo, inGameLevel, outGameLevel, 1);
         }
 
-        var isBottomCamp = team == GameConstants.BottomCamp;
+        var isBottomCamp = team == GameConstants_Mirage.BottomCamp;
         
         
         var actorProxyPrefab = serverGameLogic.diceActorProxyPrefab;
@@ -209,7 +209,7 @@ public class RWNetworkServer : NetworkServer
             return;
         }
             
-        var isBottomCamp = team == GameConstants.BottomCamp;
+        var isBottomCamp = team == GameConstants_Mirage.BottomCamp;
         var actorProxyPrefab = serverGameLogic.guardianActorProxyPrefab;
         var actorProxy = Instantiate(actorProxyPrefab, position, GameModeBase.GetRotation(isBottomCamp));
         actorProxy.dataId = guadianId;

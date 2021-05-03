@@ -6,34 +6,38 @@ using RandomWarsResource.Data;
 
 namespace Quantum {
   unsafe partial class Frame {
-      public void GetFieldDiceInfo(PlayerRef playerRef, int fieldIndex, out int diceId, out int diceScale)
+      public bool TryGetFieldDiceInfo(PlayerRef playerRef, int fieldIndex, out int diceId, out int diceScale)
       {
           var player = Global->Players[playerRef];
           var field = Get<Field>(player.EntityRef);
           var fieldDice = field.Dices[fieldIndex];
+          
+          if(fieldDice.IsEmpty)
+          {
+              diceId = 0;
+              diceScale = 0;
+              return false;
+          }
           
           var deck = Get<Deck>(player.EntityRef);
           var deckDice = deck.Dices[fieldDice.DeckIndex];
 
           diceId = deckDice.DiceId;
           diceScale = fieldDice.DiceScale;
+
+          return true;
       }
       
-      public bool CanCreateFieldDice(PlayerRef playerRef)
+      public bool HasEnouphSpToCreateFieldDice(PlayerRef playerRef)
       {
-          if (IsFieldFull(playerRef))
-          {
-              return false;
-          }
-          
           var player = Global->Players[playerRef];
           var sp = Get<Sp>(player.EntityRef);
           var currentSp = sp.CurrentSp;
 
-          return GetDiceCost(playerRef) > currentSp;
+          return CreateFieldDiceCost(playerRef) <= currentSp;
       }
 
-      public int GetDiceCost(PlayerRef playerRef)
+      public int CreateFieldDiceCost(PlayerRef playerRef)
       {
           var player = Global->Players[playerRef];
           var diceCreation = Get<DiceCreation>(player.EntityRef);
@@ -42,8 +46,8 @@ namespace Quantum {
           
           if(_runtimeConfig.Mode == 1) //Coop
           {
-              var startCost = tableData.CoopMode.KeyValues[(int) EVsmodeKey.GetStartDiceCost].value;
-              int addDiceCost = tableData.CoopMode.KeyValues[(int) EVsmodeKey.DiceCostUp].value;
+              var startCost = tableData.CoopMode.KeyValues[(int) ECoopModeKey.GetStartDiceCost].value;
+              int addDiceCost = tableData.CoopMode.KeyValues[(int) ECoopModeKey.DiceCostUp].value;
               return startCost + (diceCreation.Count * addDiceCost);    
           }
           else
@@ -68,6 +72,46 @@ namespace Quantum {
           }
 
           return true;
+      }
+      
+      public int GetPowerUpCost(int ingameLevel)
+      {
+          return Context.TableData.VsMode
+              .KeyValues[(int) EVsmodeKey.DicePowerUpCost01 + ingameLevel].value;
+      }
+
+      public int SpUpgradeCost(int spUpgrade)
+      {
+          return Context.TableData.VsMode
+              .KeyValues[(int) EVsmodeKey.GetSPPlusLevelupCost01 + spUpgrade - 1].value;
+      }
+
+      public int CalculateCommingSp(int spUpgrade)
+      {
+          if (Global->Wave < 1)
+          {
+              return 0;
+          }
+          else
+          {
+              var tableData = Context.TableData;
+              if (RuntimeConfig.Mode == 1)
+              {
+                  var defaultSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.DefaultSp].value;
+                  var upgradeSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.UpgradeSp].value;
+                  var waveSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.WaveSp].value;
+                  var spByUpgrade = (spUpgrade - 1) * upgradeSp;
+                  return defaultSp + Global->Wave * (waveSp + spByUpgrade);   
+              }
+              else
+              {
+                  var defaultSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.DefaultSp].value;
+                  var upgradeSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.UpgradeSp].value;
+                  var waveSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.WaveSp].value;
+                  var spByUpgrade = (spUpgrade - 1) * upgradeSp;
+                  return defaultSp + Global->Wave * (waveSp + spByUpgrade);   
+              }
+          }
       }
   }
 }

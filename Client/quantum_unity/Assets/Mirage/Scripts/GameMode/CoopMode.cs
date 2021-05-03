@@ -58,8 +58,8 @@ namespace MirageTest.Scripts.GameMode
             GameState = gameState;
             PlayerStates = playerStates;
 
-            PlayerState1.team = GameConstants.BottomCamp;
-            PlayerState2.team = GameConstants.BottomCamp;
+            PlayerState1.team = GameConstants_Mirage.BottomCamp;
+            PlayerState2.team = GameConstants_Mirage.BottomCamp;
 
             await UniTask.Yield();
 
@@ -77,8 +77,8 @@ namespace MirageTest.Scripts.GameMode
             var playerTowerPosition = FieldManager.Get().GetPlayerPos(true);
             var tower = Object.Instantiate(_prefabHolder.TowerActorProxyPrefab, playerTowerPosition,
                 Quaternion.identity);
-            tower.team = GameConstants.BottomCamp;
-            tower.ownerTag = GameConstants.ServerTag;
+            tower.team = GameConstants_Mirage.BottomCamp;
+            tower.ownerTag = GameConstants_Mirage.ServerTag;
 
             var tableManager = TableManager.Get();
             var hp = tableManager.Vsmode.KeyValues[(int) EVsmodeKey.TowerHp].value;
@@ -523,7 +523,7 @@ namespace MirageTest.Scripts.GameMode
                 var diceLvPropertyInfo = minionInfo.GetType().GetProperty($"diceLv{propertyNumber:D2}");
                 var diceLv = (int) diceLvPropertyInfo.GetValue(minionInfo);
 
-                Server.CreateActorWithDiceId(diceId, GameConstants.ServerTag, GameConstants.TopCamp,
+                Server.CreateActorWithDiceId(diceId, GameConstants_Mirage.ServerTag, GameConstants_Mirage.TopCamp,
                     (byte) classLv, (byte) diceLv,
                     new Vector3[] {fieldManager.GetTopListPos(i)}, 0);
             }
@@ -573,7 +573,7 @@ namespace MirageTest.Scripts.GameMode
             }
 
             var position = FieldManager.Get().ts_TopPlayer.transform.position + Vector3.back;
-            var actorProxy = Server.CreateActorWithBossId(bossId.value, GameConstants.ServerTag, GameConstants.TopCamp, position, _bossIndex, wave, false);
+            var actorProxy = Server.CreateActorWithBossId(bossId.value, GameConstants_Mirage.ServerTag, GameConstants_Mirage.TopCamp, position, _bossIndex, wave, false);
             _bossIndex++;
             
             return actorProxy;

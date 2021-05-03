@@ -39,7 +39,7 @@ public class PlayerProxy : NetworkBehaviour
     private void OnStartLocalPlayer()
     {
         var client = Client as RWNetworkClient;
-        if (client.enableUI && client.GetLocalPlayerState().team == GameConstants.TopCamp)
+        if (client.enableUI && client.GetLocalPlayerState().team == GameConstants_Mirage.TopCamp)
         {
             InGameManager.Get().RotateTopCampObject();
         }
@@ -91,7 +91,7 @@ public class PlayerProxy : NetworkBehaviour
         var gameState = server?.serverGameLogic?._gameMode?.GameState;
         if(gameState != null)
         {
-            if (gameState.masterOwnerTag == GameConstants.ServerTag)
+            if (gameState.masterOwnerTag == GameConstants_Mirage.ServerTag)
             {
                 var playerState = server.serverGameLogic.GetPlayerState(userId);
                 if (playerState != null)

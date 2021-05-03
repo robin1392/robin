@@ -9,8 +9,9 @@ namespace Quantum {
         // user commands go here
         new CreateRandomFieldDiceCommand(),
         new CreateFieldDiceCommand(),
+        new PowerDeckDiceUpCommand(),
         new MergeDiceCommand(),
-        new SpUpgradeCommand(),
+        new CommingSpUpgradeCommand(),
       };
     }
   }

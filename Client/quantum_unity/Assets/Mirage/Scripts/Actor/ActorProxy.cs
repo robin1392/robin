@@ -68,11 +68,11 @@ namespace MirageTest.Scripts
         {
             get
             {
-                if (team == GameConstants.BottomCamp)
+                if (team == GameConstants_Mirage.BottomCamp)
                 {
                     return transform.position.z < 0;
                 }
-                else if(team == GameConstants.TopCamp)
+                else if(team == GameConstants_Mirage.TopCamp)
                 {
                     return transform.position.z > 0;
                 }
@@ -385,7 +385,7 @@ namespace MirageTest.Scripts
 
         public bool IsBottomCamp()
         {
-            return team == GameConstants.BottomCamp;
+            return team == GameConstants_Mirage.BottomCamp;
         }
 
         public void SetHp(float oldValue, float newValue)
@@ -492,7 +492,7 @@ namespace MirageTest.Scripts
 
             var tilt =  baseEntity.transform.worldToLocalMatrix * new Vector3(20, 0, 0);
             baseEntity.transform.localPosition = new Vector3(0, 0.3f, 0);
-            if (localPlayerState.team == GameConstants.BottomCamp)
+            if (localPlayerState.team == GameConstants_Mirage.BottomCamp)
             {
                 baseEntity.transform.localEulerAngles = tilt;
             }

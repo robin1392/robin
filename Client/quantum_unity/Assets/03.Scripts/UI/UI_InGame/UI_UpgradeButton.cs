@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using MirageTest.Scripts;
+using Quantum;
+using Quantum.Commands;
 using RandomWarsResource.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
 
 namespace ED
 {
@@ -25,16 +28,16 @@ namespace ED
         {
             this.index = index;
             this.pData = dataDice;
-            
-            if (level != 0 && this.level != level)
-            {
-                ingameUpAnimator.SetTrigger("Dice_Power_Up");
-            }
-            
+
             this.level = level;
             image_Icon.sprite = FileHelper.GetIcon(dataDice.iconName);
             image_Icon.SetNativeSize();
             Refresh();
+        }
+
+        public void OnPowerUp()
+        {
+            ingameUpAnimator.SetTrigger("Dice_Power_Up");
         }
         
         private RWNetworkClient _client;
@@ -68,20 +71,9 @@ namespace ED
 
         public void Click()
         {
-            // sp 작으면 리턴
-            var localPlayerState = _client.GetLocalPlayerState();
-            if (localPlayerState == null)
-            {
-                return;
-            }
-            
-            if (localPlayerState.sp < GetUpgradeCost())
-                return;
-
-            var localPlayerProxy = _client.GetLocalPlayerProxy();
-            localPlayerProxy.UpgradeIngameLevel(index);
-            
-            SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_DICE_LEVEL_UP);
+            var command = new PowerDeckDiceUpCommand();
+            command.DeckIndex = index;
+            QuantumRunner.Default.Game.SendCommand(command);
         }
 
         public int GetDeckDiceId()

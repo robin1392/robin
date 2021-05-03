@@ -93,14 +93,14 @@ namespace MirageTest.Scripts
 
         void ShowSpawnLine(Minion minion)
         {
-            if (ownerTag == GameConstants.ServerTag)
+            if (ownerTag == GameConstants_Mirage.ServerTag)
             {
                 return;
             }
             
             var dicePos = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
-            if((CameraController.Get().IsBottomOrientation && team == GameConstants.TopCamp) ||
-               CameraController.Get().IsBottomOrientation == false && team == GameConstants.BottomCamp)
+            if((CameraController.Get().IsBottomOrientation && team == GameConstants_Mirage.TopCamp) ||
+               CameraController.Get().IsBottomOrientation == false && team == GameConstants_Mirage.BottomCamp)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;
@@ -185,7 +185,7 @@ namespace MirageTest.Scripts
                     spawnPosition.z *= -1f;
                 }    
             }
-            else if(team != GameConstants.BottomCamp)
+            else if(team != GameConstants_Mirage.BottomCamp)
             {
                 spawnPosition.x *= -1f;
                 spawnPosition.z *= -1f;

@@ -35,8 +35,8 @@ namespace MirageTest.Scripts.GameMode
             GameState = gameState;
             PlayerStates = playerStates;
 
-            PlayerState1.team = GameConstants.BottomCamp;
-            PlayerState2.team = GameConstants.TopCamp;
+            PlayerState1.team = GameConstants_Mirage.BottomCamp;
+            PlayerState2.team = GameConstants_Mirage.TopCamp;
             
             Debug.Log($"ServerObjectManager:{ServerObjectManager != null}");
             ServerObjectManager.Spawn(gameState.NetIdentity);

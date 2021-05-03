@@ -1729,7 +1729,7 @@ namespace Quantum {
 }
 
 // Game/CallbackDispatcher.cs
-﻿
+ 
 namespace Quantum {
   public class CallbackDispatcher : DispatcherBase, Quantum.ICallbackDispatcher {
 
@@ -1761,7 +1761,7 @@ namespace Quantum {
 
 
 // Game/EventDispatcher.cs
-﻿
+ 
 namespace Quantum {
   public class EventDispatcher : DispatcherBase, IEventDispatcher {
 
@@ -1814,7 +1814,7 @@ namespace Quantum {
 
 
 // Game/InstantReplaySettings.cs
-﻿
+ 
 namespace Quantum {
   [Serializable]
   public struct InstantReplaySettings {
