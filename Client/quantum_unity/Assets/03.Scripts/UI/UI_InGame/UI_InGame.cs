@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -66,6 +67,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     public Text textComingSP;
     public Animator addSpAnimator;
     public Animator spUpgradeAnimator;
+    public Text textWave;
     #endregion
 
     #region unity base
@@ -92,6 +94,22 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         QuantumEvent.Subscribe<EventDiceCreationCountChanged>(listener: this, handler: OnDiceCreationCountChanged);
         
         QuantumEvent.Subscribe<EventCountDown>(listener: this, handler: OnCountDown);
+        QuantumEvent.Subscribe<EventOnWaveChanged>(listener: this, handler: OnWaveChanged);
+    }
+
+    private unsafe void OnWaveChanged(EventOnWaveChanged callback)
+    {
+        var frame = callback.Game.Frames.Verified;
+        textWave.text = $"{frame.Global->Wave}";
+        
+        if (frame.Global->IsSuddenDeath)
+        {
+            waveAnimator.SetTrigger("SuddenDeath");
+        }
+        else
+        {
+            waveAnimator.SetTrigger("Change");
+        }
     }
 
     private void OnCountDown(EventCountDown callback)
@@ -145,7 +163,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         var player = frame.Global->Players[callback.Player];
         var sp = frame.Get<Sp>(player.EntityRef);
         
-        SetSP(sp.CurrentSp);
+        SetSpImmediately(sp.CurrentSp);
         UpdateButtons(sp.CurrentSp, sp.CommingSpGrade, frame, callback.Player);
     }
 
@@ -156,7 +174,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         var sp = frame.Get<Sp>(player.EntityRef);
         
         addSpAnimator.SetTrigger("Sp_Get");
-        SetSPGradually(sp.CurrentSp);
+        SetSpGradually(sp.CurrentSp);
         UpdateButtons(sp.CurrentSp, sp.CommingSpGrade, frame, callback.Player);
     }
 
@@ -197,6 +215,17 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
             TableManager.Get().DiceInfo.GetData(deckDice.DiceId, out var diceInfo);
             arrUpgradeButtons[i].Initialize( diceInfo, deckDice.inGameLevel, i);
         }
+    }
+
+    private unsafe void Update()
+    {
+        if (QuantumRunner.Default?.Game?.Frames?.Verified == null)
+        {
+            return;
+        }
+        
+        var frame = QuantumRunner.Default.Game.Frames.Verified;
+        SetSpawnTime(1 - (frame.Global->WaveRemainTime / frame.Global->WaveTime).AsFloat);
     }
 
     private RWNetworkClient _client;
@@ -300,24 +329,28 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         viewTargetDiceField.SetActive(view);
     }
     
-    public void SetSPGradually(int sp)
+    public void SetSpGradually(int sp)
     {
         if (spIncreaseTween != null)
         {
             spIncreaseTween.Kill();
         }
-        spIncreaseTween = DOTween.To(() => lastSetSp, x => SetSP(x), sp, 5.0f/ 60.0f);
+        spIncreaseTween = DOTween.To(() => lastSetSp, SetSpInternal, sp, 5.0f/ 60.0f);
     }
 
-    
-    public void SetSP(int sp)
+    public void SetSpImmediately(int sp)
     {
         if (spIncreaseTween != null)
         {
             spIncreaseTween.Kill();
             spIncreaseTween = null;
         }
-        
+
+        SetSpInternal(sp);
+    }
+
+    void SetSpInternal(int sp)
+    {
         lastSetSp = sp;
         text_SP.text = sp.ToString();
     }

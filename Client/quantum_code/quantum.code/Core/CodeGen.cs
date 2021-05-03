@@ -1165,39 +1165,47 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 424;
+    public const Int32 SIZE = 448;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(48)]
+    [FieldOffset(56)]
     public FP DeltaTime;
-    [FieldOffset(136)]
+    [FieldOffset(160)]
     public FrameMetaData FrameMetaData;
     [FieldOffset(40)]
+    public QBoolean IsSuddenDeath;
+    [FieldOffset(48)]
     public AssetRefMap Map;
-    [FieldOffset(80)]
-    public NavMeshRegionMask NavMeshRegions;
-    [FieldOffset(192)]
-    public PhysicsSceneSettings PhysicsSettings;
     [FieldOffset(104)]
+    public NavMeshRegionMask NavMeshRegions;
+    [FieldOffset(216)]
+    public PhysicsSceneSettings PhysicsSettings;
+    [FieldOffset(128)]
     [FramePrinter.FixedArrayAttribute(typeof(RWPlayer), 2)]
     private fixed Byte _Players_[32];
-    [FieldOffset(88)]
+    [FieldOffset(112)]
     public RNGSession RngSession;
     [FieldOffset(24)]
     public Int32 SpWave;
-    [FieldOffset(56)]
+    [FieldOffset(64)]
     public FP StartCountdown;
     [FieldOffset(28)]
     public Int32 StartCountdownInt;
-    [FieldOffset(64)]
+    [FieldOffset(72)]
     public FP StartDelay;
-    [FieldOffset(36)]
+    [FieldOffset(44)]
     public StateType State;
-    [FieldOffset(160)]
+    [FieldOffset(80)]
+    public FP SuddenDeathAttackSpeedFactor;
+    [FieldOffset(88)]
+    public FP SuddenDeathMoveSpeedFactor;
+    [FieldOffset(184)]
     public BitSet256 Systems;
     [FieldOffset(32)]
     public Int32 Wave;
-    [FieldOffset(72)]
+    [FieldOffset(96)]
     public FP WaveRemainTime;
+    [FieldOffset(36)]
+    public Int32 WaveTime;
     [FieldOffset(0)]
     [FramePrinter.FixedArrayAttribute(typeof(Input), 6)]
     private fixed Byte _input_[24];
@@ -1216,6 +1224,7 @@ namespace Quantum {
         var hash = 173;
         hash = hash * 31 + DeltaTime.GetHashCode();
         hash = hash * 31 + FrameMetaData.GetHashCode();
+        hash = hash * 31 + IsSuddenDeath.GetHashCode();
         hash = hash * 31 + Map.GetHashCode();
         hash = hash * 31 + NavMeshRegions.GetHashCode();
         hash = hash * 31 + PhysicsSettings.GetHashCode();
@@ -1226,9 +1235,12 @@ namespace Quantum {
         hash = hash * 31 + StartCountdownInt.GetHashCode();
         hash = hash * 31 + StartDelay.GetHashCode();
         hash = hash * 31 + (Int32)State;
+        hash = hash * 31 + SuddenDeathAttackSpeedFactor.GetHashCode();
+        hash = hash * 31 + SuddenDeathMoveSpeedFactor.GetHashCode();
         hash = hash * 31 + Systems.GetHashCode();
         hash = hash * 31 + Wave.GetHashCode();
         hash = hash * 31 + WaveRemainTime.GetHashCode();
+        hash = hash * 31 + WaveTime.GetHashCode();
         hash = hash * 31 + input.GetHashCode();
         return hash;
       }
@@ -1239,11 +1251,15 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->SpWave);
         serializer.Stream.Serialize(&p->StartCountdownInt);
         serializer.Stream.Serialize(&p->Wave);
+        serializer.Stream.Serialize(&p->WaveTime);
+        QBoolean.Serialize(&p->IsSuddenDeath, serializer);
         serializer.Stream.Serialize((Int32*)&p->State);
         AssetRefMap.Serialize(&p->Map, serializer);
         FP.Serialize(&p->DeltaTime, serializer);
         FP.Serialize(&p->StartCountdown, serializer);
         FP.Serialize(&p->StartDelay, serializer);
+        FP.Serialize(&p->SuddenDeathAttackSpeedFactor, serializer);
+        FP.Serialize(&p->SuddenDeathMoveSpeedFactor, serializer);
         FP.Serialize(&p->WaveRemainTime, serializer);
         NavMeshRegionMask.Serialize(&p->NavMeshRegions, serializer);
         RNGSession.Serialize(&p->RngSession, serializer);
@@ -1820,7 +1836,10 @@ namespace Quantum {
     }
   }
   public unsafe partial class Frame {
+    private ISignalOnSpWave[] _ISignalOnSpWaveSystems;
+    private ISignalOnWave[] _ISignalOnWaveSystems;
     private ISignalSpawnByWave[] _ISignalSpawnByWaveSystems;
+    private ISignalAddSpByWave[] _ISignalAddSpByWaveSystems;
     partial void AllocGen() {
       _globals = (_globals_*)Context.Allocator.AllocAndClear(sizeof(_globals_));
     }
@@ -1844,7 +1863,10 @@ namespace Quantum {
         ComponentTypeId.Add<Quantum.Sp>(new ComponentCallbacks(Quantum.Sp.Serialize));
       });
       Initialize(this, this.SimulationConfig.Entities);
+      _ISignalOnSpWaveSystems = BuildSignalsArray<ISignalOnSpWave>();
+      _ISignalOnWaveSystems = BuildSignalsArray<ISignalOnWave>();
       _ISignalSpawnByWaveSystems = BuildSignalsArray<ISignalSpawnByWave>();
+      _ISignalAddSpByWaveSystems = BuildSignalsArray<ISignalAddSpByWave>();
       _ComponentSignalsOnAdded = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       _ComponentSignalsOnRemoved = new ComponentReactiveCallbackInvoker[ComponentTypeId.Type.Length];
       BuildSignalsArrayOnComponentAdded<Quantum.AIBlackboardComponent>();
@@ -1907,6 +1929,26 @@ namespace Quantum {
       return _globals->input.GetPointer(player);
     }
     public unsafe partial struct FrameSignals {
+      public void OnSpWave(Int32 wave, Int32 spWave) {
+        var array = _f._ISignalOnSpWaveSystems;
+        var systems = &(_f._globals->Systems);
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+            s.OnSpWave(_f, wave, spWave);
+          }
+        }
+      }
+      public void OnWave(Int32 wave) {
+        var array = _f._ISignalOnWaveSystems;
+        var systems = &(_f._globals->Systems);
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+            s.OnWave(_f, wave);
+          }
+        }
+      }
       public void SpawnByWave(Int32 wave) {
         var array = _f._ISignalSpawnByWaveSystems;
         var systems = &(_f._globals->Systems);
@@ -1917,9 +1959,19 @@ namespace Quantum {
           }
         }
       }
+      public void AddSpByWave(Int32 wave) {
+        var array = _f._ISignalAddSpByWaveSystems;
+        var systems = &(_f._globals->Systems);
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+            s.AddSpByWave(_f, wave);
+          }
+        }
+      }
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 12;
+      public const Int32 EVENT_TYPE_COUNT = 13;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return EventLocalPlayerOnly.ID;
@@ -1949,6 +2001,7 @@ namespace Quantum {
           case EventCommingSpGradeChanged.ID: return typeof(EventCommingSpGradeChanged);
           case EventDiceCreationCountChanged.ID: return typeof(EventDiceCreationCountChanged);
           case EventCountDown.ID: return typeof(EventCountDown);
+          case EventOnWaveChanged.ID: return typeof(EventOnWaveChanged);
           default: throw new System.ArgumentOutOfRangeException("eventID");
         }
       }
@@ -2011,6 +2064,10 @@ namespace Quantum {
         ev.Count = Count;
         _f.AddEvent(ev);
       }
+      public void OnWaveChanged() {
+        var ev = _f.Context.AcquireEvent<EventOnWaveChanged>(EventOnWaveChanged.ID);
+        _f.AddEvent(ev);
+      }
     }
     public unsafe partial struct FrameAssets {
       public BTNode BTNode(AssetRefBTNode assetRef) {
@@ -2060,8 +2117,17 @@ namespace Quantum {
       }
     }
   }
+  public unsafe interface ISignalOnSpWave : ISignal {
+    void OnSpWave(Frame f, Int32 wave, Int32 spWave);
+  }
+  public unsafe interface ISignalOnWave : ISignal {
+    void OnWave(Frame f, Int32 wave);
+  }
   public unsafe interface ISignalSpawnByWave : ISignal {
     void SpawnByWave(Frame f, Int32 wave);
+  }
+  public unsafe interface ISignalAddSpByWave : ISignal {
+    void AddSpByWave(Frame f, Int32 wave);
   }
   public unsafe partial class EventFieldDiceCreated : EventLocalPlayerOnly {
     public new const Int32 ID = 0;
@@ -2274,6 +2340,29 @@ namespace Quantum {
       unchecked {
         var hash = 83;
         hash = hash * 31 + Count.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventOnWaveChanged : EventBase {
+    public new const Int32 ID = 12;
+    protected EventOnWaveChanged(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventOnWaveChanged() : 
+        base(12, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 89;
         return hash;
       }
     }

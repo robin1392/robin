@@ -177,11 +177,11 @@ namespace MirageTest.Scripts.Entities
                 if (newValue > oldValue)
                 {
                     UI_InGame.Get().addSpAnimator.SetTrigger("Sp_Get");
-                    UI_InGame.Get().SetSPGradually(sp);
+                    UI_InGame.Get().SetSpGradually(sp);
                 }
                 else
                 {
-                    UI_InGame.Get().SetSP(newValue);    
+                    UI_InGame.Get().SetSpImmediately(newValue);    
                 }
                 
                 UI_InGame.Get().btn_GetDice.EditSpCallback(newValue >= GetDiceCost());

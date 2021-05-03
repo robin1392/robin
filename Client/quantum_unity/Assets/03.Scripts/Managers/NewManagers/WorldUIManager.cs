@@ -19,7 +19,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
     [Header("Stage UI")]
     public Image imageTimerIcon;
     public Text textSpawnTime;
-    public Text textWave;
+    
     
 
     [Header("Canvas")] public Canvas canvas_UnitHPBar;
@@ -70,7 +70,7 @@ public class WorldUIManager : SingletonDestroy<WorldUIManager>
 
     public void SetWave(int wave)
     {
-        textWave.text = $"{wave}";
+        
     }
 
     public void RotateTimerIcon()

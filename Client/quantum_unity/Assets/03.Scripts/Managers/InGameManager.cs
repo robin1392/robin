@@ -194,7 +194,7 @@ namespace ED
             quantumRunner.Players = new[]
             {
                 ToRuntimePlayer(localMatchPlayer),
-                ToRuntimePlayer(aiMatchPlayer)
+                // ToRuntimePlayer(aiMatchPlayer)
             };
 
             quantumRunner.StartWithFrame();

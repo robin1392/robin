@@ -35,6 +35,10 @@ namespace Quantum
                 new ReadySystem(),
                 new CountDownSystem(),
                 new UpdateWaveSystem(),
+                new SuddenDeathSystem(),
+                new SetWaveTimeSystem(),
+                new AddSpBySpWaveSystem(),
+                new UpdateCommingSpByWaveSystem(),
             };
 
             if (gameConfig.Mode == 1)

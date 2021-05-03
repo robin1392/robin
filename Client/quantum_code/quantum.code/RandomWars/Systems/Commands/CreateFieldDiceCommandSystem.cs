@@ -42,7 +42,7 @@ namespace Quantum
             field->Dices.GetPointer(selectedFieldIndex)->DeckIndex = deckIndex;
 
             sp->CurrentSp -= diceCost;
-            
+
             var diceCreation = f.Unsafe.GetPointer<DiceCreation>(player->EntityRef);
             diceCreation->Count += 1;
 

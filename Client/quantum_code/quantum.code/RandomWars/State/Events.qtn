@@ -38,4 +38,10 @@ event CountDown {
     Int32 Count;
 }
 
+event OnWaveChanged {
+}
+
+signal OnSpWave(Int32 wave, Int32 spWave);
+signal OnWave(Int32 wave);
 signal SpawnByWave(Int32 wave);
+signal AddSpByWave(Int32 wave);

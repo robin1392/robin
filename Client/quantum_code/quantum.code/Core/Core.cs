@@ -1954,7 +1954,7 @@ namespace Quantum {
 }
 
 // Game/QuantumGame.cs
-﻿
+ 
 namespace Quantum {
   /// <summary>
   /// QuantumGame acts as an interface to the simulation from the client code's perspective.

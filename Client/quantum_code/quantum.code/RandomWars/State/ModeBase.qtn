@@ -7,9 +7,13 @@ global
     FP StartDelay;
     FP StartCountdown;
     Int32 StartCountdownInt;
+    Int32 WaveTime;
     Int32 Wave;
     FP WaveRemainTime;
     Int32 SpWave;
+    FP SuddenDeathAttackSpeedFactor;
+    FP SuddenDeathMoveSpeedFactor;
+    Boolean IsSuddenDeath;
     StateType State;
 	array<RWPlayer>[PLAYERS_MAX] Players;
 }
