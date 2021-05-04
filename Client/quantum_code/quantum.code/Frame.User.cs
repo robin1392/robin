@@ -88,29 +88,28 @@ namespace Quantum {
 
       public int CalculateCommingSp(int spUpgrade)
       {
-          if (Global->Wave < 1)
+          var waveForCalculation = Global->Wave;
+          if (waveForCalculation < 1)
           {
-              return 0;
+              waveForCalculation = 1;
+          }
+          
+          var tableData = Context.TableData;
+          if (RuntimeConfig.Mode == 1)
+          {
+              var defaultSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.DefaultSp].value;
+              var upgradeSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.UpgradeSp].value;
+              var waveSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.WaveSp].value;
+              var spByUpgrade = (spUpgrade - 1) * upgradeSp;
+              return defaultSp + waveForCalculation * (waveSp + spByUpgrade);   
           }
           else
           {
-              var tableData = Context.TableData;
-              if (RuntimeConfig.Mode == 1)
-              {
-                  var defaultSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.DefaultSp].value;
-                  var upgradeSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.UpgradeSp].value;
-                  var waveSp = tableData.CoopMode.KeyValues[(int) ECoopModeKey.WaveSp].value;
-                  var spByUpgrade = (spUpgrade - 1) * upgradeSp;
-                  return defaultSp + Global->Wave * (waveSp + spByUpgrade);   
-              }
-              else
-              {
-                  var defaultSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.DefaultSp].value;
-                  var upgradeSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.UpgradeSp].value;
-                  var waveSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.WaveSp].value;
-                  var spByUpgrade = (spUpgrade - 1) * upgradeSp;
-                  return defaultSp + Global->Wave * (waveSp + spByUpgrade);   
-              }
+              var defaultSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.DefaultSp].value;
+              var upgradeSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.UpgradeSp].value;
+              var waveSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.WaveSp].value;
+              var spByUpgrade = (spUpgrade - 1) * upgradeSp;
+              return defaultSp + waveForCalculation * (waveSp + spByUpgrade);   
           }
       }
   }

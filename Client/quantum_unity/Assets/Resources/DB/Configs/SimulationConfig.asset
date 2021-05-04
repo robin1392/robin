@@ -31,12 +31,12 @@ MonoBehaviour:
         X:
           RawValue: 0
         Y:
-          RawValue: -655360
+          RawValue: 0
         Z:
           RawValue: 0
       SolverIterations: 4
-      UseAngularVelocity: 1
-      UseVerticalTransform: 1
+      UseAngularVelocity: 0
+      UseVerticalTransform: 0
       PenetrationAllowance:
         RawValue: 655
       PenetrationCorrection:

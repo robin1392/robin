@@ -32,7 +32,6 @@ namespace Quantum
                 f.Global->WaveTime = _battleModeSuddenDeathSecondWaveTime;
                 f.Global->SuddenDeathAttackSpeedFactor = _suddenDeathAttackSpeedFactor;
                 f.Global->SuddenDeathMoveSpeedFactor = _suddenDeathMoveSpeedFactor;
-                f.Global->IsSuddenDeath = true;
                 return;
             }
             
@@ -41,7 +40,12 @@ namespace Quantum
                 f.Global->WaveTime = _battleModeSuddenDeathWaveTime;
                 f.Global->SuddenDeathAttackSpeedFactor = _suddenDeathAttackSpeedFactor;
                 f.Global->SuddenDeathMoveSpeedFactor = _suddenDeathMoveSpeedFactor;
-                f.Global->IsSuddenDeath = true;
+                 
+                if (f.Global->IsSuddenDeath == false)
+                {
+                    f.Global->IsSuddenDeath = true;
+                    f.Events.OnSuddenDeathStarted();
+                }
                 return;
             }
 

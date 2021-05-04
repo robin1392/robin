@@ -95,6 +95,13 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         
         QuantumEvent.Subscribe<EventCountDown>(listener: this, handler: OnCountDown);
         QuantumEvent.Subscribe<EventOnWaveChanged>(listener: this, handler: OnWaveChanged);
+        QuantumEvent.Subscribe<EventOnSuddenDeathStarted>(listener: this, handler: OnSuddenDeathStarted);
+    }
+
+    private void OnSuddenDeathStarted(EventOnSuddenDeathStarted callback)
+    {
+        UI_InGame.Get().EnableSuddenDeath();
+        UI_InGame.Get().waveAnimator.SetTrigger("SuddenDeath");
     }
 
     private unsafe void OnWaveChanged(EventOnWaveChanged callback)
@@ -186,7 +193,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
         }
         
         btn_GetDice.EditSpCallback(currentSp >= frame.CreateFieldDiceCost(playerRef));
-        button_SP_Upgrade.EditSpCallback(currentSp >= frame.SpUpgradeCost(playerRef) && spGrade < GameConstants_Mirage.MaxSpUpgradeLevel);
+        button_SP_Upgrade.EditSpCallback(currentSp >= frame.SpUpgradeCost(spGrade) && spGrade < GameConstants_Mirage.MaxSpUpgradeLevel);
     }
 
     private unsafe void OnPoweredDeckDiceUp(EventPoweredDeckDiceUp callback)
@@ -219,12 +226,18 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private unsafe void Update()
     {
-        if (QuantumRunner.Default?.Game?.Frames?.Verified == null)
+        var frame = QuantumRunner.Default?.Game?.Frames?.Verified; 
+        if (frame == null)
         {
             return;
         }
+
+        if (frame.Global->State != StateType.Play)
+        {
+            SetSpawnTime(0);
+            return;
+        }
         
-        var frame = QuantumRunner.Default.Game.Frames.Verified;
         SetSpawnTime(1 - (frame.Global->WaveRemainTime / frame.Global->WaveTime).AsFloat);
     }
 

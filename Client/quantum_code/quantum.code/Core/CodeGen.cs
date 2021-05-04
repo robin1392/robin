@@ -1971,7 +1971,7 @@ namespace Quantum {
       }
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 13;
+      public const Int32 EVENT_TYPE_COUNT = 14;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return EventLocalPlayerOnly.ID;
@@ -2002,6 +2002,7 @@ namespace Quantum {
           case EventDiceCreationCountChanged.ID: return typeof(EventDiceCreationCountChanged);
           case EventCountDown.ID: return typeof(EventCountDown);
           case EventOnWaveChanged.ID: return typeof(EventOnWaveChanged);
+          case EventOnSuddenDeathStarted.ID: return typeof(EventOnSuddenDeathStarted);
           default: throw new System.ArgumentOutOfRangeException("eventID");
         }
       }
@@ -2066,6 +2067,10 @@ namespace Quantum {
       }
       public void OnWaveChanged() {
         var ev = _f.Context.AcquireEvent<EventOnWaveChanged>(EventOnWaveChanged.ID);
+        _f.AddEvent(ev);
+      }
+      public void OnSuddenDeathStarted() {
+        var ev = _f.Context.AcquireEvent<EventOnSuddenDeathStarted>(EventOnSuddenDeathStarted.ID);
         _f.AddEvent(ev);
       }
     }
@@ -2363,6 +2368,29 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked {
         var hash = 89;
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventOnSuddenDeathStarted : EventBase {
+    public new const Int32 ID = 13;
+    protected EventOnSuddenDeathStarted(Int32 id, Boolean synced) : 
+        base(id, synced) {
+    }
+    public EventOnSuddenDeathStarted() : 
+        base(13, false) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 97;
         return hash;
       }
     }

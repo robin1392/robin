@@ -12,6 +12,7 @@ namespace Quantum
             f.Global->SpWave = 4;
             var tableData = f.Context.TableData; 
             f.Global->WaveTime = tableData.VsMode.KeyValues[(int)EVsmodeKey.WaveTime].value;
+            f.Events.OnWaveChanged();
         }
 
         public override void Update(Frame f)
