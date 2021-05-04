@@ -5,7 +5,7 @@ using RandomWarsResource.Data;
 
 public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
 {
-    private const string PLAYER_PROTOTYPE = "Resources/DB/EntityPrototypes/RWPlayer|EntityPrototype";
+    private static readonly string PLAYER_PROTOTYPE = "Resources/DB/EntityPrototypes/RWPlayer|EntityPrototype";
     
     public void OnPlayerDataSet(Frame f, PlayerRef playerRef)
     {
@@ -44,7 +44,7 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
         }
         else
         {
-            sp->CurrentSp = 999; //tableData.VsMode.KeyValues[(int) EVsmodeKey.GetStartSP].value;    
+            sp->CurrentSp = tableData.VsMode.KeyValues[(int) EVsmodeKey.GetStartSP].value;    
         }
 
         sp->CommingSpGrade = 1;

@@ -1,0 +1,17 @@
+//import ActorType;
+
+component ActorCreation{
+    list<ActorCreationSpec> creationList;
+}
+
+struct ActorCreationSpec{
+    player_ref Owner;
+    Int32 Team;
+    ActorType ActorType;
+    Int32 DataId;
+    Int32 IngameLevel;
+    Int32 OutgameLevel;
+    Int32 DiceScale;
+    FPVector2 Position;
+    Int32 FieldIndex;
+}

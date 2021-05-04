@@ -23,6 +23,9 @@ namespace Quantum
             _battleModeSuddenDeathSecondWaveTime= tableData.VsMode.KeyValues[(int) EVsmodeKey.SuddenDeathWaveTime2].value;
             _suddenDeathAttackSpeedFactor = tableData.VsMode.KeyValues[(int) EVsmodeKey.SuddenDeathAtkSpeed].value / FP._100;
             _suddenDeathMoveSpeedFactor = tableData.VsMode.KeyValues[(int) EVsmodeKey.SuddenDeathMoveSpeed].value / FP._100;
+            
+            f.Global->SuddenDeathAttackSpeedFactor = FP._1;
+            f.Global->SuddenDeathMoveSpeedFactor = FP._1;
         }
 
         public void OnWave(Frame f, int wave)

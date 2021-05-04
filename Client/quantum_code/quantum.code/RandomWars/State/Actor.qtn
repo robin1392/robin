@@ -1,9 +1,37 @@
 component Actor {
-    UInt32 Team;
+    player_ref Owner;
+    Int32 Team;
     FP Health;
     FP MaxHealth;
     FP Power;
+    FP AttackSpeed;
+    FP MoveSpeed;
+    FP Effect;
+    FP EffectDurationTime;
 }
+
+component Dice {
+    Int32 DiceInfoId;
+    Int32 DiceScale;
+    Int32 IngameUpgradeLevel;
+    Int32 OutgameUpgradeLevel;
+    Int32 FieldIndex;
+}
+
+component Boss {
+    Int32 BossInfoId;
+    Int32 BossIndex;
+}
+
+component Guardian {
+    Int32 GuardianInfoId;
+}
+
+component Tower {
+}
+
+enum ActorType { Dice, Boss, Guardian, Tower }
+enum DiceType { Minion, Magic, Installation, Hero }
 
 
 

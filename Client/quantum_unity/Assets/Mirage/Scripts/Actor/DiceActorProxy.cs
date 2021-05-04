@@ -47,12 +47,12 @@ namespace MirageTest.Scripts
                 return;
             }
 
-            baseEntity.effectUpgrade = diceInfo.effectUpgrade;
-            baseEntity.effectInGameUp = diceInfo.effectInGameUp;
-            baseEntity.effectDuration = effectDurationTime;
-            baseEntity.effectCooltime = diceInfo.effectCooltime;
-            baseEntity.range = diceInfo.range;
-            baseEntity.searchRange = diceInfo.searchRange;
+            // baseEntity.effectUpgrade = diceInfo.effectUpgrade;
+            // baseEntity.effectInGameUp = diceInfo.effectInGameUp;
+            // baseEntity.effectDuration = effectDurationTime;
+            // baseEntity.effectCooltime = diceInfo.effectCooltime;
+            // baseEntity.range = diceInfo.range;
+            // baseEntity.searchRange = diceInfo.searchRange;
         }
         
         void SpawnMinionOrHero()

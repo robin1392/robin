@@ -4,6 +4,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Photon.Deterministic;
+using Quantum;
 using UnityEngine;
 
 public class FieldManager : SingletonDestroy<FieldManager>
@@ -93,6 +96,26 @@ public class FieldManager : SingletonDestroy<FieldManager>
         return player?ts_BottomPlayer:ts_TopPlayer;
     }
     #endregion
-    
-    
+
+
+    public FieldPositions ToFieldPositions()
+    {
+        return new FieldPositions(
+            listBottomPosition.Select(t => ToFPVector2_2DecimalPlace(t.position)).ToArray(),
+            listTopPosition.Select(t => ToFPVector2_2DecimalPlace(t.position)).ToArray(),
+            ToFPVector2_2DecimalPlace(ts_BottomPlayer.position),
+            ToFPVector2_2DecimalPlace(ts_TopPlayer.position));
+    }
+
+    FPVector2 ToFPVector2_2DecimalPlace(Vector3 position)
+    {
+        var fpX = ToFP_2DecimalPlace(position.x);
+        var fpZ = ToFP_2DecimalPlace(position.z);
+        return new FPVector2(fpX, fpZ);
+    }
+
+    private FP ToFP_2DecimalPlace(float f)
+    {
+        return ((int) (f * 100)) / FP._100;
+    }
 }

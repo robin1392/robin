@@ -1,4 +1,6 @@
 using System;
+using Photon.Deterministic;
+using Quantum.Util;
 
 namespace RandomWarsResource.Data
 {
@@ -105,27 +107,29 @@ namespace RandomWarsResource.Data
 		public string illustName { get; set; }
 		public string cardName { get; set; }
 		public int[] color { get; set; }
-		public float power { get; set; }
-		public float powerUpgrade { get; set; }
-		public float powerInGameUp { get; set; }
-		public float maxHealth { get; set; }
-		public float maxHpUpgrade { get; set; }
-		public float maxHpInGameUp { get; set; }
-		public float effect { get; set; }
-		public float effectUpgrade { get; set; }
-		public float effectInGameUp { get; set; }
-		public float effectDurationTime { get; set; }
-		public float effectDurationTimeUpgrade { get; set; }
-		public float effectDurationTimeIngameUp { get; set; }
-		public float effectRangeValue { get; set; }
-		public float effectProbability { get; set; }
-		public float effectCooltime { get; set; }
-		public float attackSpeed { get; set; }
-		public float moveSpeed { get; set; }
-		public float range { get; set; }
-		public float searchRange { get; set; }
+		public FP power { get; set; }
+		public FP powerUpgrade { get; set; }
+		public FP powerInGameUp { get; set; }
+		public FP maxHealth { get; set; }
+		public FP maxHpUpgrade { get; set; }
+		public FP maxHpInGameUp { get; set; }
+		public FP effect { get; set; }
+		public FP effectUpgrade { get; set; }
+		public FP effectInGameUp { get; set; }
+		public FP effectDurationTime { get; set; }
+		public FP effectDurationTimeUpgrade { get; set; }
+		public FP effectDurationTimeIngameUp { get; set; }
+		public FP effectRangeValue { get; set; }
+		public FP effectProbability { get; set; }
+		public FP effectCooltime { get; set; }
+		public FP attackSpeed { get; set; }
+		public FP moveSpeed { get; set; }
+		public FP range { get; set; }
+		public FP searchRange { get; set; }
 		public int skillIndex { get; set; }
 		public bool attackType { get; set; }
+
+		public string btAssetName { get; set; }
 
 
 		public int PK()
@@ -151,27 +155,28 @@ namespace RandomWarsResource.Data
 			illustName = cols[12].Replace("{#$}", ",");
 			cardName = cols[13].Replace("{#$}", ",");
 			color = (cols[14] == "-1") ? null : Array.ConvertAll(cols[14].Split('|'), s => int.Parse(s));
-			power = float.Parse(cols[15]);
-			powerUpgrade = float.Parse(cols[16]);
-			powerInGameUp = float.Parse(cols[17]);
-			maxHealth = float.Parse(cols[18]);
-			maxHpUpgrade = float.Parse(cols[19]);
-			maxHpInGameUp = float.Parse(cols[20]);
-			effect = float.Parse(cols[21]);
-			effectUpgrade = float.Parse(cols[22]);
-			effectInGameUp = float.Parse(cols[23]);
-			effectDurationTime = float.Parse(cols[24]);
-			effectDurationTimeUpgrade = float.Parse(cols[25]);
-			effectDurationTimeIngameUp = float.Parse(cols[26]);
-			effectRangeValue = float.Parse(cols[27]);
-			effectProbability = float.Parse(cols[28]);
-			effectCooltime = float.Parse(cols[29]);
-			attackSpeed = float.Parse(cols[30]);
-			moveSpeed = float.Parse(cols[31]);
-			range = float.Parse(cols[32]);
-			searchRange = float.Parse(cols[33]);
+			power = ParseUtil.ToFP(cols[15]);
+			powerUpgrade = ParseUtil.ToFP(cols[16]);
+			powerInGameUp = ParseUtil.ToFP(cols[17]);
+			maxHealth = ParseUtil.ToFP(cols[18]);
+			maxHpUpgrade = ParseUtil.ToFP(cols[19]);
+			maxHpInGameUp = ParseUtil.ToFP(cols[20]);
+			effect = ParseUtil.ToFP(cols[21]);
+			effectUpgrade = ParseUtil.ToFP(cols[22]);
+			effectInGameUp = ParseUtil.ToFP(cols[23]);
+			effectDurationTime = ParseUtil.ToFP(cols[24]);
+			effectDurationTimeUpgrade = ParseUtil.ToFP(cols[25]);
+			effectDurationTimeIngameUp = ParseUtil.ToFP(cols[26]);
+			effectRangeValue = ParseUtil.ToFP(cols[27]);
+			effectProbability = ParseUtil.ToFP(cols[28]);
+			effectCooltime = ParseUtil.ToFP(cols[29]);
+			attackSpeed = ParseUtil.ToFP(cols[30]);
+			moveSpeed = ParseUtil.ToFP(cols[31]);
+			range = ParseUtil.ToFP(cols[32]);
+			searchRange = ParseUtil.ToFP(cols[33]);
 			skillIndex = int.Parse(cols[34]);
 			attackType = bool.Parse(cols[35]);
+			btAssetName = "Melee";
 		}
 	}
 }

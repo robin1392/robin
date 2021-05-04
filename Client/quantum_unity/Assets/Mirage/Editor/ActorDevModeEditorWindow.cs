@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
+using Quantum;
+using Quantum.Commands;
 using RandomWarsResource.Data;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -34,70 +36,69 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
     [TableList]
     public List<DiceElement> BossnInfos;
 
-    private GameModeBase _gameMode;
-    private RWNetworkServer _server;
+    private QuantumGame _game;
     protected override void OnGUI()
     {
-        if (_gameMode != null)
+        if (_game != null)
         {
             base.OnGUI();
             return;   
         }
-    
-        var serverGameLogic = FindObjectOfType<ServerGameLogic>();
-        if (serverGameLogic != null)
+        
+        _game = QuantumRunner.Default?.Game;
+        if (_game != null)
         {
-            if (serverGameLogic._gameMode != null)
-            {
-                _server = serverGameLogic.server;
-                _gameMode = serverGameLogic._gameMode;
-                DiceInfos = TableManager.Get().DiceInfo.Values
-                    .Select(d => new DiceElement(SpawnMine, SpawnEnemys, d.id, d.prefabName)).ToList();
-                GuardianInfos = TableManager.Get().GuardianInfo.Values
-                    .Select(d => new DiceElement(SpawnMyGuardian, SpawnEnemyGuardian, d.id, d.prefabName)).ToList();
-                BossnInfos = TableManager.Get().CoopModeBossInfo.Values
-                    .Select(d => new DiceElement(SpawnMyBoss, SpawnEnemyBoss, d.id, d.prefabName)).ToList();
-            }
+            DiceInfos = TableManager.Get().DiceInfo.Values
+                .Select(d => new DiceElement(SpawnMine, SpawnEnemys, d.id, d.prefabName)).ToList();
+            GuardianInfos = TableManager.Get().GuardianInfo.Values
+                .Select(d => new DiceElement(SpawnMyGuardian, SpawnEnemyGuardian, d.id, d.prefabName)).ToList();
+            BossnInfos = TableManager.Get().CoopModeBossInfo.Values
+                .Select(d => new DiceElement(SpawnMyBoss, SpawnEnemyBoss, d.id, d.prefabName)).ToList();
         }
-    
-        if (_gameMode == null)
+        else
         {
-            EditorGUILayout.HelpBox("Mirage 인게임 씬 실행 중에만 동작합니다.", MessageType.Info);
+            EditorGUILayout.HelpBox("Quantum 인게임 씬 실행 중에만 동작합니다.", MessageType.Info);
         }
     }
 
     void SpawnMine(int diceId)
     {
-        _gameMode.SpawnMyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
+        var command = new CreateActorCommand();
+        command.ActorType = ActorType.Dice;
+        command.DataId = diceId;
+        command.IngameLevel = inGameLevel;
+        command.OutgameLevel = outGameLevel;
+        command.DiceScale = diceScale;
+        _game.SendCommand(QuantumRunner.Default.Game.GetLocalPlayers()[0], command);
     }
     
     void SpawnEnemys(int diceId)
     {
-        _gameMode.SpawnEnemyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
+        // _gameMode.SpawnEnemyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
     }
     
     void SpawnMyGuardian(int diceId)
     {
-        var playerState = _gameMode.PlayerState1;
-        _server.CreateActorWithGuardianId(diceId, playerState.ownerTag, playerState.team, Vector3.zero);
+        // var playerState = _gameMode.PlayerState1;
+        // _server.CreateActorWithGuardianId(diceId, playerState.ownerTag, playerState.team, Vector3.zero);
     }
     
     void SpawnEnemyGuardian(int diceId)
     {
-        var playerState = _gameMode.PlayerState2;
-        _server.CreateActorWithGuardianId(diceId, playerState.ownerTag, playerState.team, Vector3.zero);
+        // var playerState = _gameMode.PlayerState2;
+        // _server.CreateActorWithGuardianId(diceId, playerState.ownerTag, playerState.team, Vector3.zero);
     }
     
     void SpawnMyBoss(int id)
     {
-        var playerState = _gameMode.PlayerState1;
-        _server.CreateActorWithBossId(id, playerState.ownerTag, playerState.team, Vector3.zero, 0, 0, true);
+        // var playerState = _gameMode.PlayerState1;
+        // _server.CreateActorWithBossId(id, playerState.ownerTag, playerState.team, Vector3.zero, 0, 0, true);
     }
     
     void SpawnEnemyBoss(int id)
     {
-        var playerState = _gameMode.PlayerState2;
-        _server.CreateActorWithBossId(id, playerState.ownerTag, playerState.team, Vector3.zero, 0, 0, true);
+        // var playerState = _gameMode.PlayerState2;
+        // _server.CreateActorWithBossId(id, playerState.ownerTag, playerState.team, Vector3.zero, 0, 0, true);
     }
     
     public class DiceElement

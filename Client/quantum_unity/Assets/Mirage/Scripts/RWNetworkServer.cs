@@ -191,8 +191,8 @@ public class RWNetworkServer : NetworkServer
             actorProxy.maxHealth = stat.maxHealth;
             actorProxy.currentHealth = stat.maxHealth;
             actorProxy.effect = stat.effect;
-            actorProxy.attackSpeed = diceInfo.attackSpeed / serverGameLogic._gameMode.GameState.factor;
-            actorProxy.moveSpeed = diceInfo.moveSpeed * serverGameLogic._gameMode.GameState.factor;
+            // actorProxy.attackSpeed = diceInfo.attackSpeed / serverGameLogic._gameMode.GameState.factor;
+            // actorProxy.moveSpeed = diceInfo.moveSpeed * serverGameLogic._gameMode.GameState.factor;
             actorProxy.diceScale = 1;
             actorProxy.ingameUpgradeLevel = inGameLevel;
             actorProxy.outgameUpgradeLevel = outGameLevel;

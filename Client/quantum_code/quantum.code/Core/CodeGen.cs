@@ -23,6 +23,18 @@ namespace Quantum {
   using Quantum.Inspector;
   using Optional = Quantum.Inspector.OptionalAttribute;
   
+  public enum ActorType : int {
+    Dice,
+    Boss,
+    Guardian,
+    Tower,
+  }
+  public enum DiceType : int {
+    Minion,
+    Magic,
+    Installation,
+    Hero,
+  }
   public enum GOAPWorldState : long {
     Root = 1,
     TargetSelected = 2,
@@ -974,6 +986,56 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct ActorCreationSpec {
+    public const Int32 SIZE = 48;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(0)]
+    public ActorType ActorType;
+    [FieldOffset(4)]
+    public Int32 DataId;
+    [FieldOffset(8)]
+    public Int32 DiceScale;
+    [FieldOffset(12)]
+    public Int32 FieldIndex;
+    [FieldOffset(16)]
+    public Int32 IngameLevel;
+    [FieldOffset(20)]
+    public Int32 OutgameLevel;
+    [FieldOffset(28)]
+    public PlayerRef Owner;
+    [FieldOffset(32)]
+    public FPVector2 Position;
+    [FieldOffset(24)]
+    public Int32 Team;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 137;
+        hash = hash * 31 + (Int32)ActorType;
+        hash = hash * 31 + DataId.GetHashCode();
+        hash = hash * 31 + DiceScale.GetHashCode();
+        hash = hash * 31 + FieldIndex.GetHashCode();
+        hash = hash * 31 + IngameLevel.GetHashCode();
+        hash = hash * 31 + OutgameLevel.GetHashCode();
+        hash = hash * 31 + Owner.GetHashCode();
+        hash = hash * 31 + Position.GetHashCode();
+        hash = hash * 31 + Team.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (ActorCreationSpec*)ptr;
+        serializer.Stream.Serialize((Int32*)&p->ActorType);
+        serializer.Stream.Serialize(&p->DataId);
+        serializer.Stream.Serialize(&p->DiceScale);
+        serializer.Stream.Serialize(&p->FieldIndex);
+        serializer.Stream.Serialize(&p->IngameLevel);
+        serializer.Stream.Serialize(&p->OutgameLevel);
+        serializer.Stream.Serialize(&p->Team);
+        PlayerRef.Serialize(&p->Owner, serializer);
+        FPVector2.Serialize(&p->Position, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct BTDataIndex {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
@@ -981,7 +1043,7 @@ namespace Quantum {
     public Int32 Index;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 137;
+        var hash = 139;
         hash = hash * 31 + Index.GetHashCode();
         return hash;
       }
@@ -1010,7 +1072,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 139;
+        var hash = 149;
         hash = hash * 31 + ReactiveDecoratorsPtr.GetHashCode();
         hash = hash * 31 + Value.GetHashCode();
         return hash;
@@ -1034,7 +1096,7 @@ namespace Quantum {
     public Int32 outGameLevel;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 149;
+        var hash = 151;
         hash = hash * 31 + DiceId.GetHashCode();
         hash = hash * 31 + inGameLevel.GetHashCode();
         hash = hash * 31 + outGameLevel.GetHashCode();
@@ -1058,7 +1120,7 @@ namespace Quantum {
     public Int32 DiceScale;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 151;
+        var hash = 157;
         hash = hash * 31 + DeckIndex.GetHashCode();
         hash = hash * 31 + DiceScale.GetHashCode();
         return hash;
@@ -1080,7 +1142,7 @@ namespace Quantum {
     public Int64 Positive;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 157;
+        var hash = 163;
         hash = hash * 31 + Negative.GetHashCode();
         hash = hash * 31 + Positive.GetHashCode();
         return hash;
@@ -1112,7 +1174,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 163;
+        var hash = 167;
         hash = hash * 31 + CurrentState.GetHashCode();
         hash = hash * 31 + Root.GetHashCode();
         hash = hash * 31 + Time.GetHashCode();
@@ -1137,7 +1199,7 @@ namespace Quantum {
     public const int MAX_COUNT = 6;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 167;
+        var hash = 173;
         return hash;
       }
     }
@@ -1221,7 +1283,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 173;
+        var hash = 179;
         hash = hash * 31 + DeltaTime.GetHashCode();
         hash = hash * 31 + FrameMetaData.GetHashCode();
         hash = hash * 31 + IsSuddenDeath.GetHashCode();
@@ -1314,7 +1376,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 179;
+        var hash = 181;
         hash = hash * 31 + _FPValue.GetHashCode();
         hash = hash * 31 + _IntValue.GetHashCode();
         hash = hash * 31 + _field_used_.GetHashCode();
@@ -1457,7 +1519,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 181;
+        var hash = 191;
         hash = hash * 31 + _BooleanValue.GetHashCode();
         hash = hash * 31 + _ByteValue.GetHashCode();
         hash = hash * 31 + _EntityRefValue.GetHashCode();
@@ -1514,7 +1576,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 191;
+        var hash = 193;
         hash = hash * 31 + Board.GetHashCode();
         hash = hash * 31 + EntriesPtr.GetHashCode();
         return hash;
@@ -1528,21 +1590,36 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Actor : Quantum.IComponent {
-    public const Int32 SIZE = 32;
+    public const Int32 SIZE = 64;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(8)]
-    public FP Health;
+    public FP AttackSpeed;
     [FieldOffset(16)]
-    public FP MaxHealth;
+    public FP Effect;
     [FieldOffset(24)]
+    public FP EffectDurationTime;
+    [FieldOffset(32)]
+    public FP Health;
+    [FieldOffset(40)]
+    public FP MaxHealth;
+    [FieldOffset(48)]
+    public FP MoveSpeed;
+    [FieldOffset(4)]
+    public PlayerRef Owner;
+    [FieldOffset(56)]
     public FP Power;
     [FieldOffset(0)]
-    public UInt32 Team;
+    public Int32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 193;
+        var hash = 197;
+        hash = hash * 31 + AttackSpeed.GetHashCode();
+        hash = hash * 31 + Effect.GetHashCode();
+        hash = hash * 31 + EffectDurationTime.GetHashCode();
         hash = hash * 31 + Health.GetHashCode();
         hash = hash * 31 + MaxHealth.GetHashCode();
+        hash = hash * 31 + MoveSpeed.GetHashCode();
+        hash = hash * 31 + Owner.GetHashCode();
         hash = hash * 31 + Power.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
         return hash;
@@ -1551,9 +1628,41 @@ namespace Quantum {
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Actor*)ptr;
         serializer.Stream.Serialize(&p->Team);
+        PlayerRef.Serialize(&p->Owner, serializer);
+        FP.Serialize(&p->AttackSpeed, serializer);
+        FP.Serialize(&p->Effect, serializer);
+        FP.Serialize(&p->EffectDurationTime, serializer);
         FP.Serialize(&p->Health, serializer);
         FP.Serialize(&p->MaxHealth, serializer);
+        FP.Serialize(&p->MoveSpeed, serializer);
         FP.Serialize(&p->Power, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct ActorCreation : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(0)]
+    [FramePrinter.PtrQListAttribute(typeof(ActorCreationSpec))]
+    private Ptr creationListPtr;
+    public QListPtr<ActorCreationSpec> creationList {
+      get {
+        return new QListPtr<ActorCreationSpec>(creationListPtr);
+      }
+      set {
+        creationListPtr = value.Ptr;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 199;
+        hash = hash * 31 + creationListPtr.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (ActorCreation*)ptr;
+        QList<ActorCreationSpec>.Serialize(&p->creationListPtr, serializer, Quantum.ActorCreationSpec.Serialize);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -1623,7 +1732,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 197;
+        var hash = 211;
         hash = hash * 31 + ActiveServicesPtr.GetHashCode();
         hash = hash * 31 + BTDataValuesPtr.GetHashCode();
         hash = hash * 31 + Config.GetHashCode();
@@ -1648,6 +1757,28 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Boss : Quantum.IComponent {
+    public const Int32 SIZE = 8;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    public Int32 BossIndex;
+    [FieldOffset(4)]
+    public Int32 BossInfoId;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 223;
+        hash = hash * 31 + BossIndex.GetHashCode();
+        hash = hash * 31 + BossInfoId.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Boss*)ptr;
+        serializer.Stream.Serialize(&p->BossIndex);
+        serializer.Stream.Serialize(&p->BossInfoId);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Deck : Quantum.IComponent {
     public const Int32 SIZE = 64;
     public const Int32 ALIGNMENT = 4;
@@ -1663,7 +1794,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 199;
+        var hash = 227;
         hash = hash * 31 + Dices.GetHashCode();
         hash = hash * 31 + GuardianId.GetHashCode();
         return hash;
@@ -1676,6 +1807,40 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Dice : Quantum.IComponent {
+    public const Int32 SIZE = 20;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    public Int32 DiceInfoId;
+    [FieldOffset(4)]
+    public Int32 DiceScale;
+    [FieldOffset(8)]
+    public Int32 FieldIndex;
+    [FieldOffset(12)]
+    public Int32 IngameUpgradeLevel;
+    [FieldOffset(16)]
+    public Int32 OutgameUpgradeLevel;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 229;
+        hash = hash * 31 + DiceInfoId.GetHashCode();
+        hash = hash * 31 + DiceScale.GetHashCode();
+        hash = hash * 31 + FieldIndex.GetHashCode();
+        hash = hash * 31 + IngameUpgradeLevel.GetHashCode();
+        hash = hash * 31 + OutgameUpgradeLevel.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Dice*)ptr;
+        serializer.Stream.Serialize(&p->DiceInfoId);
+        serializer.Stream.Serialize(&p->DiceScale);
+        serializer.Stream.Serialize(&p->FieldIndex);
+        serializer.Stream.Serialize(&p->IngameUpgradeLevel);
+        serializer.Stream.Serialize(&p->OutgameUpgradeLevel);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct DiceCreation : Quantum.IComponent {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
@@ -1683,7 +1848,7 @@ namespace Quantum {
     public Int32 Count;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 211;
+        var hash = 233;
         hash = hash * 31 + Count.GetHashCode();
         return hash;
       }
@@ -1707,7 +1872,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 223;
+        var hash = 239;
         hash = hash * 31 + Dices.GetHashCode();
         return hash;
       }
@@ -1741,7 +1906,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 227;
+        var hash = 241;
         hash = hash * 31 + Config.GetHashCode();
         hash = hash * 31 + CurrentState.GetHashCode();
         hash = hash * 31 + CurrentTaskIndex.GetHashCode();
@@ -1762,6 +1927,24 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Guardian : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    public Int32 GuardianInfoId;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 251;
+        hash = hash * 31 + GuardianInfoId.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Guardian*)ptr;
+        serializer.Stream.Serialize(&p->GuardianInfoId);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct HFSMAgent : Quantum.IComponent {
     public const Int32 SIZE = 96;
     public const Int32 ALIGNMENT = 8;
@@ -1771,7 +1954,7 @@ namespace Quantum {
     public HFSMData Data;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 229;
+        var hash = 257;
         hash = hash * 31 + Config.GetHashCode();
         hash = hash * 31 + Data.GetHashCode();
         return hash;
@@ -1789,13 +1972,13 @@ namespace Quantum {
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(8)]
     public EntityRef EntityRef;
-    [FieldOffset(0)]
-    public PlayerRef PlayerRef;
     [FieldOffset(4)]
-    public UInt32 Team;
+    public PlayerRef PlayerRef;
+    [FieldOffset(0)]
+    public Int32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 233;
+        var hash = 263;
         hash = hash * 31 + EntityRef.GetHashCode();
         hash = hash * 31 + PlayerRef.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
@@ -1804,8 +1987,8 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (RWPlayer*)ptr;
-        PlayerRef.Serialize(&p->PlayerRef, serializer);
         serializer.Stream.Serialize(&p->Team);
+        PlayerRef.Serialize(&p->PlayerRef, serializer);
         EntityRef.Serialize(&p->EntityRef, serializer);
     }
   }
@@ -1821,7 +2004,7 @@ namespace Quantum {
     public Int32 CurrentSp;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 239;
+        var hash = 269;
         hash = hash * 31 + CommingSp.GetHashCode();
         hash = hash * 31 + CommingSpGrade.GetHashCode();
         hash = hash * 31 + CurrentSp.GetHashCode();
@@ -1833,6 +2016,22 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->CommingSp);
         serializer.Stream.Serialize(&p->CommingSpGrade);
         serializer.Stream.Serialize(&p->CurrentSp);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Tower : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    private fixed Byte _alignment_padding_[4];
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 271;
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Tower*)ptr;
     }
   }
   public unsafe partial class Frame {
@@ -1853,14 +2052,19 @@ namespace Quantum {
       ComponentTypeId.Setup(() => {
         ComponentTypeId.Add<Quantum.AIBlackboardComponent>(new ComponentCallbacks(Quantum.AIBlackboardComponent.Serialize));
         ComponentTypeId.Add<Quantum.Actor>(new ComponentCallbacks(Quantum.Actor.Serialize));
+        ComponentTypeId.Add<Quantum.ActorCreation>(new ComponentCallbacks(Quantum.ActorCreation.Serialize));
         ComponentTypeId.Add<Quantum.BTAgent>(new ComponentCallbacks(Quantum.BTAgent.Serialize));
+        ComponentTypeId.Add<Quantum.Boss>(new ComponentCallbacks(Quantum.Boss.Serialize));
         ComponentTypeId.Add<Quantum.Deck>(new ComponentCallbacks(Quantum.Deck.Serialize));
+        ComponentTypeId.Add<Quantum.Dice>(new ComponentCallbacks(Quantum.Dice.Serialize));
         ComponentTypeId.Add<Quantum.DiceCreation>(new ComponentCallbacks(Quantum.DiceCreation.Serialize));
         ComponentTypeId.Add<Quantum.Field>(new ComponentCallbacks(Quantum.Field.Serialize));
         ComponentTypeId.Add<Quantum.GOAPAgent>(new ComponentCallbacks(Quantum.GOAPAgent.Serialize));
+        ComponentTypeId.Add<Quantum.Guardian>(new ComponentCallbacks(Quantum.Guardian.Serialize));
         ComponentTypeId.Add<Quantum.HFSMAgent>(new ComponentCallbacks(Quantum.HFSMAgent.Serialize));
         ComponentTypeId.Add<Quantum.RWPlayer>(new ComponentCallbacks(Quantum.RWPlayer.Serialize));
         ComponentTypeId.Add<Quantum.Sp>(new ComponentCallbacks(Quantum.Sp.Serialize));
+        ComponentTypeId.Add<Quantum.Tower>(new ComponentCallbacks(Quantum.Tower.Serialize));
       });
       Initialize(this, this.SimulationConfig.Entities);
       _ISignalOnSpWaveSystems = BuildSignalsArray<ISignalOnSpWave>();
@@ -1873,20 +2077,28 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.AIBlackboardComponent>();
       BuildSignalsArrayOnComponentAdded<Quantum.Actor>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Actor>();
+      BuildSignalsArrayOnComponentAdded<Quantum.ActorCreation>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.ActorCreation>();
       BuildSignalsArrayOnComponentAdded<Quantum.BTAgent>();
       BuildSignalsArrayOnComponentRemoved<Quantum.BTAgent>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Boss>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Boss>();
       BuildSignalsArrayOnComponentAdded<CharacterController2D>();
       BuildSignalsArrayOnComponentRemoved<CharacterController2D>();
       BuildSignalsArrayOnComponentAdded<CharacterController3D>();
       BuildSignalsArrayOnComponentRemoved<CharacterController3D>();
       BuildSignalsArrayOnComponentAdded<Quantum.Deck>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Deck>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Dice>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Dice>();
       BuildSignalsArrayOnComponentAdded<Quantum.DiceCreation>();
       BuildSignalsArrayOnComponentRemoved<Quantum.DiceCreation>();
       BuildSignalsArrayOnComponentAdded<Quantum.Field>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Field>();
       BuildSignalsArrayOnComponentAdded<Quantum.GOAPAgent>();
       BuildSignalsArrayOnComponentRemoved<Quantum.GOAPAgent>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Guardian>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Guardian>();
       BuildSignalsArrayOnComponentAdded<Quantum.HFSMAgent>();
       BuildSignalsArrayOnComponentRemoved<Quantum.HFSMAgent>();
       BuildSignalsArrayOnComponentAdded<MapEntityLink>();
@@ -1911,6 +2123,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.RWPlayer>();
       BuildSignalsArrayOnComponentAdded<Quantum.Sp>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Sp>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Tower>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Tower>();
       BuildSignalsArrayOnComponentAdded<Transform2D>();
       BuildSignalsArrayOnComponentRemoved<Transform2D>();
       BuildSignalsArrayOnComponentAdded<Transform2DVertical>();
@@ -2488,10 +2702,19 @@ namespace Quantum {
     public virtual void Visit(Prototypes.Actor_Prototype prototype) {
       VisitFallback(prototype);
     }
+    public virtual void Visit(Prototypes.ActorCreation_Prototype prototype) {
+      VisitFallback(prototype);
+    }
     public virtual void Visit(Prototypes.BTAgent_Prototype prototype) {
       VisitFallback(prototype);
     }
+    public virtual void Visit(Prototypes.Boss_Prototype prototype) {
+      VisitFallback(prototype);
+    }
     public virtual void Visit(Prototypes.Deck_Prototype prototype) {
+      VisitFallback(prototype);
+    }
+    public virtual void Visit(Prototypes.Dice_Prototype prototype) {
       VisitFallback(prototype);
     }
     public virtual void Visit(Prototypes.DiceCreation_Prototype prototype) {
@@ -2503,6 +2726,9 @@ namespace Quantum {
     public virtual void Visit(Prototypes.GOAPAgent_Prototype prototype) {
       VisitFallback(prototype);
     }
+    public virtual void Visit(Prototypes.Guardian_Prototype prototype) {
+      VisitFallback(prototype);
+    }
     public virtual void Visit(Prototypes.HFSMAgent_Prototype prototype) {
       VisitFallback(prototype);
     }
@@ -2510,6 +2736,9 @@ namespace Quantum {
       VisitFallback(prototype);
     }
     public virtual void Visit(Prototypes.Sp_Prototype prototype) {
+      VisitFallback(prototype);
+    }
+    public virtual void Visit(Prototypes.Tower_Prototype prototype) {
       VisitFallback(prototype);
     }
   }
@@ -2520,6 +2749,9 @@ namespace Quantum {
     partial void AddGenerated() {
       Register(typeof(Quantum.AIBlackboardComponent), Quantum.AIBlackboardComponent.SIZE);
       Register(typeof(Quantum.Actor), Quantum.Actor.SIZE);
+      Register(typeof(Quantum.ActorCreation), Quantum.ActorCreation.SIZE);
+      Register(typeof(Quantum.ActorCreationSpec), Quantum.ActorCreationSpec.SIZE);
+      Register(typeof(Quantum.ActorType), 4);
       Register(typeof(AssetGuid), AssetGuid.SIZE);
       Register(typeof(Quantum.AssetRefAIAction), Quantum.AssetRefAIAction.SIZE);
       Register(typeof(Quantum.AssetRefAIBlackboard), Quantum.AssetRefAIBlackboard.SIZE);
@@ -2557,6 +2789,7 @@ namespace Quantum {
       Register(typeof(Quantum.BitSet512), Quantum.BitSet512.SIZE);
       Register(typeof(Quantum.BlackboardEntry), Quantum.BlackboardEntry.SIZE);
       Register(typeof(Quantum.BlackboardValue), Quantum.BlackboardValue.SIZE);
+      Register(typeof(Quantum.Boss), Quantum.Boss.SIZE);
       Register(typeof(Button), Button.SIZE);
       Register(typeof(CharacterController2D), CharacterController2D.SIZE);
       Register(typeof(CharacterController3D), CharacterController3D.SIZE);
@@ -2564,7 +2797,9 @@ namespace Quantum {
       Register(typeof(ComponentPrototypeRef), ComponentPrototypeRef.SIZE);
       Register(typeof(Quantum.Deck), Quantum.Deck.SIZE);
       Register(typeof(Quantum.DeckDice), Quantum.DeckDice.SIZE);
+      Register(typeof(Quantum.Dice), Quantum.Dice.SIZE);
       Register(typeof(Quantum.DiceCreation), Quantum.DiceCreation.SIZE);
+      Register(typeof(Quantum.DiceType), 4);
       Register(typeof(EntityPrototypeRef), EntityPrototypeRef.SIZE);
       Register(typeof(EntityRef), EntityRef.SIZE);
       Register(typeof(FP), FP.SIZE);
@@ -2580,6 +2815,7 @@ namespace Quantum {
       Register(typeof(Quantum.GOAPAgent), Quantum.GOAPAgent.SIZE);
       Register(typeof(Quantum.GOAPState), Quantum.GOAPState.SIZE);
       Register(typeof(Quantum.GOAPWorldState), 8);
+      Register(typeof(Quantum.Guardian), Quantum.Guardian.SIZE);
       Register(typeof(Quantum.HFSMAgent), Quantum.HFSMAgent.SIZE);
       Register(typeof(Quantum.HFSMData), Quantum.HFSMData.SIZE);
       Register(typeof(Quantum.Input), Quantum.Input.SIZE);
@@ -2607,6 +2843,7 @@ namespace Quantum {
       Register(typeof(Quantum.RWPlayer), Quantum.RWPlayer.SIZE);
       Register(typeof(Quantum.Sp), Quantum.Sp.SIZE);
       Register(typeof(Quantum.StateType), 4);
+      Register(typeof(Quantum.Tower), Quantum.Tower.SIZE);
       Register(typeof(Transform2D), Transform2D.SIZE);
       Register(typeof(Transform2DVertical), Transform2DVertical.SIZE);
       Register(typeof(Transform3D), Transform3D.SIZE);
@@ -2616,6 +2853,7 @@ namespace Quantum {
   }
   public unsafe partial class FramePrinterGen {
     public static void EnsureNotStripped() {
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.ActorType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefAIAction>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefAIBlackboard>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefAIBlackboardInitializer>();
@@ -2631,6 +2869,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMRoot>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMTransitionSet>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.DiceType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.GOAPWorldState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.InputButtons>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.StateType>();
@@ -2647,6 +2886,28 @@ namespace Quantum.Prototypes {
   using Quantum.Inspector;
   using Optional = Quantum.Inspector.OptionalAttribute;
   
+  [System.SerializableAttribute()]
+  [EnumWrapper(typeof(ActorType))]
+  public unsafe partial struct ActorType_Prototype {
+    public Int32 Value;
+    public static implicit operator ActorType(ActorType_Prototype value) {
+        return (ActorType)value.Value;
+    }
+    public static implicit operator ActorType_Prototype(ActorType value) {
+        return new ActorType_Prototype() { Value = (Int32)value };
+    }
+  }
+  [System.SerializableAttribute()]
+  [EnumWrapper(typeof(DiceType))]
+  public unsafe partial struct DiceType_Prototype {
+    public Int32 Value;
+    public static implicit operator DiceType(DiceType_Prototype value) {
+        return (DiceType)value.Value;
+    }
+    public static implicit operator DiceType_Prototype(DiceType value) {
+        return new DiceType_Prototype() { Value = (Int32)value };
+    }
+  }
   [System.SerializableAttribute()]
   [EnumWrapper(typeof(GOAPWorldState))]
   public unsafe partial struct GOAPWorldState_Prototype {
@@ -2726,10 +2987,15 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [ComponentPrototypeAttribute(typeof(Actor))]
   public unsafe sealed partial class Actor_Prototype : ComponentPrototype<Actor> {
-    public UInt32 Team;
+    public PlayerRef Owner;
+    public Int32 Team;
     public FP Health;
     public FP MaxHealth;
     public FP Power;
+    public FP AttackSpeed;
+    public FP MoveSpeed;
+    public FP Effect;
+    public FP EffectDurationTime;
     partial void MaterializeUser(Frame frame, ref Actor result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
       Actor component = default;
@@ -2742,8 +3008,13 @@ namespace Quantum.Prototypes {
       return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Actor result, in PrototypeMaterializationContext context) {
+      result.AttackSpeed = this.AttackSpeed;
+      result.Effect = this.Effect;
+      result.EffectDurationTime = this.EffectDurationTime;
       result.Health = this.Health;
       result.MaxHealth = this.MaxHealth;
+      result.MoveSpeed = this.MoveSpeed;
+      result.Owner = this.Owner;
       result.Power = this.Power;
       result.Team = this.Team;
       MaterializeUser(frame, ref result, in context);
@@ -2752,6 +3023,66 @@ namespace Quantum.Prototypes {
     }
     public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
       ((ComponentPrototypeVisitor)visitor).Visit(this);
+    }
+  }
+  [System.SerializableAttribute()]
+  [ComponentPrototypeAttribute(typeof(ActorCreation))]
+  public unsafe sealed partial class ActorCreation_Prototype : ComponentPrototype<ActorCreation> {
+    public ActorCreationSpec_Prototype[] creationList = {};
+    partial void MaterializeUser(Frame frame, ref ActorCreation result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+      ActorCreation component = default;
+      Materialize((Frame)f, ref component, in context);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public override Boolean SetEntityRefs(FrameBase f, EntityRef entity, MapEntityLookup mapEntities) {
+      ActorCreation component = f.Get<ActorCreation>(entity);
+      SetEntityRefs((Frame)f, ref component, mapEntities);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref ActorCreation result, in PrototypeMaterializationContext context) {
+      if (this.creationList.Length == 0) {
+        result.creationList = default;
+      } else {
+        var list = frame.AllocateList<Quantum.ActorCreationSpec>(this.creationList.Length);
+        for (int i = 0; i < this.creationList.Length; ++i) {
+          Quantum.ActorCreationSpec tmp = default;
+          this.creationList[i].Materialize(frame, ref tmp, in context);
+          list.Add(tmp);
+        }
+        result.creationList = list;
+      }
+      MaterializeUser(frame, ref result, in context);
+    }
+    public void SetEntityRefs(Frame frame, ref ActorCreation result, MapEntityLookup mapEntities) {
+    }
+    public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
+      ((ComponentPrototypeVisitor)visitor).Visit(this);
+    }
+  }
+  [System.SerializableAttribute()]
+  public unsafe sealed partial class ActorCreationSpec_Prototype : IPrototype {
+    public PlayerRef Owner;
+    public Int32 Team;
+    public ActorType_Prototype ActorType;
+    public Int32 DataId;
+    public Int32 IngameLevel;
+    public Int32 OutgameLevel;
+    public Int32 DiceScale;
+    public FPVector2 Position;
+    public Int32 FieldIndex;
+    partial void MaterializeUser(Frame frame, ref ActorCreationSpec result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref ActorCreationSpec result, in PrototypeMaterializationContext context) {
+      result.ActorType = this.ActorType;
+      result.DataId = this.DataId;
+      result.DiceScale = this.DiceScale;
+      result.FieldIndex = this.FieldIndex;
+      result.IngameLevel = this.IngameLevel;
+      result.OutgameLevel = this.OutgameLevel;
+      result.Owner = this.Owner;
+      result.Position = this.Position;
+      result.Team = this.Team;
+      MaterializeUser(frame, ref result, in context);
     }
   }
   [System.SerializableAttribute()]
@@ -2928,6 +3259,33 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [ComponentPrototypeAttribute(typeof(Boss))]
+  public unsafe sealed partial class Boss_Prototype : ComponentPrototype<Boss> {
+    public Int32 BossInfoId;
+    public Int32 BossIndex;
+    partial void MaterializeUser(Frame frame, ref Boss result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+      Boss component = default;
+      Materialize((Frame)f, ref component, in context);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public override Boolean SetEntityRefs(FrameBase f, EntityRef entity, MapEntityLookup mapEntities) {
+      Boss component = f.Get<Boss>(entity);
+      SetEntityRefs((Frame)f, ref component, mapEntities);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Boss result, in PrototypeMaterializationContext context) {
+      result.BossIndex = this.BossIndex;
+      result.BossInfoId = this.BossInfoId;
+      MaterializeUser(frame, ref result, in context);
+    }
+    public void SetEntityRefs(Frame frame, ref Boss result, MapEntityLookup mapEntities) {
+    }
+    public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
+      ((ComponentPrototypeVisitor)visitor).Visit(this);
+    }
+  }
+  [System.SerializableAttribute()]
   [ComponentPrototypeAttribute(typeof(Deck))]
   public unsafe sealed partial class Deck_Prototype : ComponentPrototype<Deck> {
     public Int32 GuardianId;
@@ -2968,6 +3326,39 @@ namespace Quantum.Prototypes {
       result.inGameLevel = this.inGameLevel;
       result.outGameLevel = this.outGameLevel;
       MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [ComponentPrototypeAttribute(typeof(Dice))]
+  public unsafe sealed partial class Dice_Prototype : ComponentPrototype<Dice> {
+    public Int32 DiceInfoId;
+    public Int32 DiceScale;
+    public Int32 IngameUpgradeLevel;
+    public Int32 OutgameUpgradeLevel;
+    public Int32 FieldIndex;
+    partial void MaterializeUser(Frame frame, ref Dice result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+      Dice component = default;
+      Materialize((Frame)f, ref component, in context);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public override Boolean SetEntityRefs(FrameBase f, EntityRef entity, MapEntityLookup mapEntities) {
+      Dice component = f.Get<Dice>(entity);
+      SetEntityRefs((Frame)f, ref component, mapEntities);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Dice result, in PrototypeMaterializationContext context) {
+      result.DiceInfoId = this.DiceInfoId;
+      result.DiceScale = this.DiceScale;
+      result.FieldIndex = this.FieldIndex;
+      result.IngameUpgradeLevel = this.IngameUpgradeLevel;
+      result.OutgameUpgradeLevel = this.OutgameUpgradeLevel;
+      MaterializeUser(frame, ref result, in context);
+    }
+    public void SetEntityRefs(Frame frame, ref Dice result, MapEntityLookup mapEntities) {
+    }
+    public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
+      ((ComponentPrototypeVisitor)visitor).Visit(this);
     }
   }
   [System.SerializableAttribute()]
@@ -3084,6 +3475,31 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [ComponentPrototypeAttribute(typeof(Guardian))]
+  public unsafe sealed partial class Guardian_Prototype : ComponentPrototype<Guardian> {
+    public Int32 GuardianInfoId;
+    partial void MaterializeUser(Frame frame, ref Guardian result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+      Guardian component = default;
+      Materialize((Frame)f, ref component, in context);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public override Boolean SetEntityRefs(FrameBase f, EntityRef entity, MapEntityLookup mapEntities) {
+      Guardian component = f.Get<Guardian>(entity);
+      SetEntityRefs((Frame)f, ref component, mapEntities);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Guardian result, in PrototypeMaterializationContext context) {
+      result.GuardianInfoId = this.GuardianInfoId;
+      MaterializeUser(frame, ref result, in context);
+    }
+    public void SetEntityRefs(Frame frame, ref Guardian result, MapEntityLookup mapEntities) {
+    }
+    public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
+      ((ComponentPrototypeVisitor)visitor).Visit(this);
+    }
+  }
+  [System.SerializableAttribute()]
   [ComponentPrototypeAttribute(typeof(HFSMAgent))]
   public unsafe sealed partial class HFSMAgent_Prototype : ComponentPrototype<HFSMAgent> {
     public HFSMData_Prototype Data;
@@ -3141,7 +3557,7 @@ namespace Quantum.Prototypes {
   [ComponentPrototypeAttribute(typeof(RWPlayer))]
   public unsafe sealed partial class RWPlayer_Prototype : ComponentPrototype<RWPlayer> {
     public PlayerRef PlayerRef;
-    public UInt32 Team;
+    public Int32 Team;
     public MapEntityId EntityRef;
     partial void MaterializeUser(Frame frame, ref RWPlayer result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
@@ -3196,15 +3612,46 @@ namespace Quantum.Prototypes {
       ((ComponentPrototypeVisitor)visitor).Visit(this);
     }
   }
+  [System.SerializableAttribute()]
+  [ComponentPrototypeAttribute(typeof(Tower))]
+  public unsafe sealed partial class Tower_Prototype : ComponentPrototype<Tower> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref Tower result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+      Tower component = default;
+      Materialize((Frame)f, ref component, in context);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public override Boolean SetEntityRefs(FrameBase f, EntityRef entity, MapEntityLookup mapEntities) {
+      Tower component = f.Get<Tower>(entity);
+      SetEntityRefs((Frame)f, ref component, mapEntities);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Tower result, in PrototypeMaterializationContext context) {
+      MaterializeUser(frame, ref result, in context);
+    }
+    public void SetEntityRefs(Frame frame, ref Tower result, MapEntityLookup mapEntities) {
+    }
+    public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
+      ((ComponentPrototypeVisitor)visitor).Visit(this);
+    }
+  }
   public unsafe partial class FlatEntityPrototypeContainer {
     [FixedArray(0, 1)]
     public List<Prototypes.AIBlackboardComponent_Prototype> AIBlackboardComponent;
     [FixedArray(0, 1)]
     public List<Prototypes.Actor_Prototype> Actor;
     [FixedArray(0, 1)]
+    public List<Prototypes.ActorCreation_Prototype> ActorCreation;
+    [FixedArray(0, 1)]
     public List<Prototypes.BTAgent_Prototype> BTAgent;
     [FixedArray(0, 1)]
+    public List<Prototypes.Boss_Prototype> Boss;
+    [FixedArray(0, 1)]
     public List<Prototypes.Deck_Prototype> Deck;
+    [FixedArray(0, 1)]
+    public List<Prototypes.Dice_Prototype> Dice;
     [FixedArray(0, 1)]
     public List<Prototypes.DiceCreation_Prototype> DiceCreation;
     [FixedArray(0, 1)]
@@ -3212,22 +3659,31 @@ namespace Quantum.Prototypes {
     [FixedArray(0, 1)]
     public List<Prototypes.GOAPAgent_Prototype> GOAPAgent;
     [FixedArray(0, 1)]
+    public List<Prototypes.Guardian_Prototype> Guardian;
+    [FixedArray(0, 1)]
     public List<Prototypes.HFSMAgent_Prototype> HFSMAgent;
     [FixedArray(0, 1)]
     public List<Prototypes.RWPlayer_Prototype> RWPlayer;
     [FixedArray(0, 1)]
     public List<Prototypes.Sp_Prototype> Sp;
+    [FixedArray(0, 1)]
+    public List<Prototypes.Tower_Prototype> Tower;
     partial void CollectGen(List<ComponentPrototype> target) {
       Collect(AIBlackboardComponent, target);
       Collect(Actor, target);
+      Collect(ActorCreation, target);
       Collect(BTAgent, target);
+      Collect(Boss, target);
       Collect(Deck, target);
+      Collect(Dice, target);
       Collect(DiceCreation, target);
       Collect(Field, target);
       Collect(GOAPAgent, target);
+      Collect(Guardian, target);
       Collect(HFSMAgent, target);
       Collect(RWPlayer, target);
       Collect(Sp, target);
+      Collect(Tower, target);
     }
     public unsafe partial class StoreVisitor {
       public override void Visit(Prototypes.AIBlackboardComponent_Prototype prototype) {
@@ -3236,11 +3692,20 @@ namespace Quantum.Prototypes {
       public override void Visit(Prototypes.Actor_Prototype prototype) {
         Storage.Store(prototype, ref Storage.Actor);
       }
+      public override void Visit(Prototypes.ActorCreation_Prototype prototype) {
+        Storage.Store(prototype, ref Storage.ActorCreation);
+      }
       public override void Visit(Prototypes.BTAgent_Prototype prototype) {
         Storage.Store(prototype, ref Storage.BTAgent);
       }
+      public override void Visit(Prototypes.Boss_Prototype prototype) {
+        Storage.Store(prototype, ref Storage.Boss);
+      }
       public override void Visit(Prototypes.Deck_Prototype prototype) {
         Storage.Store(prototype, ref Storage.Deck);
+      }
+      public override void Visit(Prototypes.Dice_Prototype prototype) {
+        Storage.Store(prototype, ref Storage.Dice);
       }
       public override void Visit(Prototypes.DiceCreation_Prototype prototype) {
         Storage.Store(prototype, ref Storage.DiceCreation);
@@ -3251,6 +3716,9 @@ namespace Quantum.Prototypes {
       public override void Visit(Prototypes.GOAPAgent_Prototype prototype) {
         Storage.Store(prototype, ref Storage.GOAPAgent);
       }
+      public override void Visit(Prototypes.Guardian_Prototype prototype) {
+        Storage.Store(prototype, ref Storage.Guardian);
+      }
       public override void Visit(Prototypes.HFSMAgent_Prototype prototype) {
         Storage.Store(prototype, ref Storage.HFSMAgent);
       }
@@ -3259,6 +3727,9 @@ namespace Quantum.Prototypes {
       }
       public override void Visit(Prototypes.Sp_Prototype prototype) {
         Storage.Store(prototype, ref Storage.Sp);
+      }
+      public override void Visit(Prototypes.Tower_Prototype prototype) {
+        Storage.Store(prototype, ref Storage.Tower);
       }
     }
   }

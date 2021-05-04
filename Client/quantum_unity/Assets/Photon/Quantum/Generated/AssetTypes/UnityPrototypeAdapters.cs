@@ -56,7 +56,7 @@ namespace Quantum.Prototypes.Unity {
   [System.Serializable]
   public class RWPlayer_Prototype : Quantum.IPrototypeAdapter<Quantum.Prototypes.RWPlayer_Prototype> {
     public Quantum.PlayerRef PlayerRef;
-    public System.UInt32 Team;
+    public System.Int32 Team;
     [Quantum.LocalReference]
     public global::EntityPrototype EntityRef;
 

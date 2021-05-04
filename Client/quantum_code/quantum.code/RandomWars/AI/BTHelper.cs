@@ -2,21 +2,19 @@ namespace Quantum
 {
     public unsafe class BTHelper
     {
-        // Used to either initialize an entity as a bot on the beginning of the match
-        // or to turn a player entity into a bot when the player gets disconnected
-        public static void SetupBT(Frame f, EntityRef entityRef)
+        private readonly static string BTFormat = "Resources/DB/CircuitExport/BT_Assets/{0}";
+        private readonly static string BTBlackBoardFormat = "Resources/DB/CircuitExport/Blackboard_Assets/{0}BlackboardInitializer";
+        
+        public static void SetupBT(Frame f, EntityRef entityRef, string btAssetName)
         {
-            // Create the BT Agent and pick the AIConfig, if there is any
             var btAgent = new BTAgent();
             f.Set(entityRef, btAgent);
 
-            var btRoot = f.FindAsset<BTRoot>("Resources/DB/CircuitExport/BT_Assets/Melee");
+            var btRoot = f.FindAsset<BTRoot>(string.Format(BTFormat, btAssetName));
             BTManager.Init(f, entityRef, btRoot);
-
-            // Setup the blackboard
+            
             var blackboardComponent = new AIBlackboardComponent();
-            var blackboardPath = "Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer";
-            var bbInitializerAsset = f.FindAsset<AIBlackboardInitializer>(blackboardPath);
+            var bbInitializerAsset = f.FindAsset<AIBlackboardInitializer>(string.Format(BTBlackBoardFormat, btAssetName));
             AIBlackboardInitializer.InitializeBlackboard(f, &blackboardComponent, bbInitializerAsset);
             f.Set(entityRef, blackboardComponent);
         }

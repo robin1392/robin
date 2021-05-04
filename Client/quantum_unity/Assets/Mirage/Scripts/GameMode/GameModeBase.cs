@@ -345,9 +345,9 @@ namespace MirageTest.Scripts.GameMode
                     actorProxy.currentHealth = stat.maxHealth;
                     actorProxy.effect = stat.effect;
                     actorProxy.effectDurationTime = stat.effectDurationTime;
-                    actorProxy.attackSpeed = diceInfo.attackSpeed / GameState.factor;
-                    actorProxy.diceScale = diceScale;
-                    actorProxy.moveSpeed = diceInfo.moveSpeed * GameState.factor;
+                    // actorProxy.attackSpeed = diceInfo.attackSpeed / GameState.factor;
+                    // actorProxy.diceScale = diceScale;
+                    // actorProxy.moveSpeed = diceInfo.moveSpeed * GameState.factor;
                     actorProxy.ingameUpgradeLevel = deckDice.inGameLevel;
                     actorProxy.outgameUpgradeLevel = deckDice.outGameLevel;
                     actorProxy.spawnTime = (float) Server.Time.Time;
@@ -357,7 +357,7 @@ namespace MirageTest.Scripts.GameMode
                         actorProxy.BuffList.Add(new ActorProxy.Buff()
                         {
                             id = BuffInfos.NinjaClocking,
-                            endTime = (float) ServerObjectManager.Server.Time.Time + diceInfo.effectDurationTime,
+                            // endTime = (float) ServerObjectManager.Server.Time.Time + diceInfo.effectDurationTime,
                         });
                     }
 
@@ -429,10 +429,10 @@ namespace MirageTest.Scripts.GameMode
 
             return new Stat()
             {
-                power = power,
-                maxHealth = maxHealth,
-                effect = effect,
-                effectDurationTime = effectDurationTime,
+                power = power.AsFloat,
+                maxHealth = maxHealth.AsFloat,
+                effect = effect.AsFloat,
+                effectDurationTime = effectDurationTime.AsFloat,
             };
         }
 

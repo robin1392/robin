@@ -48,6 +48,7 @@ namespace RandomWarsResource.Data
 		public float searchRange { get; set; }
 		public int skillIndex { get; set; }
 		public bool attackType { get; set; }
+		public string btAssetName  { get; set; }
 
 
 		public int PK()

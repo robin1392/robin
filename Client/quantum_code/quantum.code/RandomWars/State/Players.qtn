@@ -11,7 +11,7 @@ struct FieldDice {
 
 component RWPlayer {
     player_ref PlayerRef;
-    UInt32 Team;
+    Int32 Team;
     entity_ref EntityRef;
 }
 

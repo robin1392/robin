@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Quantum.Actors;
 using Quantum.Core;
 
 namespace Quantum
@@ -57,11 +58,23 @@ namespace Quantum
                 new ActorSystem(),
                 new PlayerInitSystem()
             };
+            
+            var actorSystem = new List<SystemBase>
+            {
+                new ActorCreationSystem(),
+            };
+            
+            var devSystem = new List<SystemBase>
+            {
+                new CreateActorCommandSystem(),
+            };
 
             return coreSystems
                 .Concat(commandSystems)
                 .Concat(gameStateSystems)
                 .Concat(logicSystem)
+                .Concat(actorSystem)
+                .Concat(devSystem)
                 .ToArray();
         }
     }

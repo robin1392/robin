@@ -66,6 +66,7 @@ public class RWQuantumRunner: QuantumCallbacks {
       };
       
       game.Frames.Verified.Context.SetData(quantumTableDataContainer);
+      game.Frames.Verified.Context.SetFieldPositions(FieldManager.Get().ToFieldPositions());
 
       for (Int32 i = 0; i < Players.Length; ++i) {
         game.SendPlayerData(i, Players[i]);

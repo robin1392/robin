@@ -5,10 +5,16 @@ namespace Quantum {
   public partial class FrameContextUser
   {
       public QuantumCodeTableDataContainer TableData;
+      public FieldPositions FieldPositions;
       
       public void SetData(QuantumCodeTableDataContainer tableData)
       {
           TableData = tableData;
+      }
+      
+      public void SetFieldPositions(FieldPositions fieldPositions)
+      {
+          FieldPositions = fieldPositions;
       }
   }
 

@@ -8,6 +8,16 @@ using UnityEngine;
 using UnityEditor;
 namespace Quantum.Editor {
 
+[CustomPropertyDrawer(typeof(Quantum.Prototypes.ActorType_Prototype))]
+public class ActorType_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.ActorType> {
+}
+
+
+[CustomPropertyDrawer(typeof(Quantum.Prototypes.DiceType_Prototype))]
+public class DiceType_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.DiceType> {
+}
+
+
 [CustomPropertyDrawer(typeof(Quantum.Prototypes.GOAPWorldState_Prototype))]
 public class GOAPWorldState_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.GOAPWorldState> {
 }
