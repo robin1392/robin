@@ -32,6 +32,7 @@ MonoBehaviour:
     - com.coffee.ui-particle
     - com.cysharp
     - com.cysharp.unitask
+    - com.littlebigfun.addressable-importer
     - com.miragenet
     - com.miragenet.mirage
     - com.openupm
@@ -58,6 +59,7 @@ MonoBehaviour:
       - com.coffee.ui-particle
       - com.cysharp
       - com.cysharp.unitask
+      - com.littlebigfun.addressable-importer
       - com.miragenet
       - com.miragenet.mirage
       - com.openupm
@@ -72,6 +74,7 @@ MonoBehaviour:
     - com.coffee.ui-particle
     - com.cysharp
     - com.cysharp.unitask
+    - com.littlebigfun.addressable-importer
     - com.miragenet
     - com.miragenet.mirage
     - com.openupm
