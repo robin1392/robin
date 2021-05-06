@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -848903485, guid: ac6ccf3f9f959c0478b7968b94ac9704, type: 3}
+  m_Name: PlayerBot
+  m_EditorClassIdentifier: 
+  Xml: "<?xml version=\"1.0\" encoding=\"utf-16\"?>\n<Document>\n  <Id>490fc1ed-ef90-47db-8ae5-eac55e759fff</Id>\n 
+    <Version>1</Version>\n  <Meta>false</Meta>\n  <Graph>490fc1ed-ef90-47db-8ae5-eac55e759fff</Graph>\n 
+    <DebugKey>f96627e5-3330-4bd6-9865-9c7fe2487a69</DebugKey>\n  <Flags>0</Flags>\n 
+    <Parent>$bt</Parent>\n  <Error Count=\"0\" />\n  <Comments Count=\"0\" />\n 
+    <HiddenActionsDecisions Count=\"0\" />\n  <Vars Count=\"1\">\n    <Key>5928e05d-02eb-4b33-b492-56bf01adc18e</Key>\n   
+    <Var>\n      <Id>5928e05d-02eb-4b33-b492-56bf01adc18e</Id>\n      <Name>Temp</Name>\n     
+    <Type>@int32</Type>\n      <Default></Default>\n      <Flags>0</Flags>\n     
+    <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n   
+    </Var>\n  </Vars>\n  <Nodes Count=\"7\">\n    <Key>0dc5ddc5-6704-46d6-ba99-641babf94cae</Key>\n   
+    <Node>\n      <Id>0dc5ddc5-6704-46d6-ba99-641babf94cae</Id>\n      <Name>BlackboardVar</Name>\n     
+    <Comment></Comment>\n      <Graph>490fc1ed-ef90-47db-8ae5-eac55e759fff</Graph>\n     
+    <Parent>$blackboardVarData</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
+    <Flags>8</Flags>\n      <Position>338|68||0</Position>\n      <StaticIn Count=\"0\"
+    />\n      <StaticOut Count=\"0\" />\n      <Groups Count=\"0\" />\n      <Data
+    Count=\"8\">\n        <Data>\n          <Name>$default</Name>\n          <Value
+    Type=\"@int32\">0</Value>\n        </Data>\n        <Data>\n          <Name></Name>\n         
+    <Value />\n        </Data>\n        <Data>\n          <Name>$hasDefault</Name>\n         
+    <Value Type=\"@boolean\">False</Value>\n        </Data>\n        <Data>\n         
+    <Name>True</Name>\n          <Value />\n        </Data>\n        <Data>\n         
+    <Name>$bbType</Name>\n          <Value Type=\"@string\">Integer</Value>\n       
+    </Data>\n        <Data>\n          <Name>Boolean</Name>\n          <Value />\n       
+    </Data>\n        <Data>\n          <Name>$varId</Name>\n          <Value Type=\"@string\">5928e05d-02eb-4b33-b492-56bf01adc18e</Value>\n       
+    </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
+    </Data>\n      </Data>\n    </Node>\n    <Key>13c078de-088b-443c-ae2e-0e96acc2d447</Key>\n   
+    <Node>\n      <Id>13c078de-088b-443c-ae2e-0e96acc2d447</Id>\n      <Name>Constant</Name>\n     
+    <Comment></Comment>\n      <Graph>490fc1ed-ef90-47db-8ae5-eac55e759fff</Graph>\n     
+    <Parent>$constantData</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>8</Flags>\n     
+    <Position>338|68||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
+    Count=\"1\">\n        <Slot>\n          <Id>$value</Id>\n          <Name>value</Name>\n         
+    <Value />\n          <Type>@int32</Type>\n          <Mode>Out</Mode>\n         
+    <Flags>2</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"8\">\n       
+    <Data>\n          <Name>$default</Name>\n          <Value Type=\"@int32\">0</Value>\n       
+    </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
+    </Data>\n        <Data>\n          <Name>$hasDefault</Name>\n          <Value
+    />\n        </Data>\n        <Data>\n          <Name>True</Name>\n          <Value
+    />\n        </Data>\n        <Data>\n          <Name>$constType</Name>\n         
+    <Value Type=\"@string\">Integer</Value>\n        </Data>\n        <Data>\n         
+    <Name>Boolean</Name>\n          <Value />\n        </Data>\n        <Data>\n         
+    <Name>$varId</Name>\n          <Value Type=\"@string\">c54704d8-11a2-4030-95d8-0ffd7e4d6e88</Value>\n       
+    </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
+    </Data>\n      </Data>\n    </Node>\n    <Key>712919c6-7bda-423f-9cac-d6eefa0aa6ae</Key>\n   
+    <Node>\n      <Id>712919c6-7bda-423f-9cac-d6eefa0aa6ae</Id>\n      <Name>Constant</Name>\n     
+    <Comment></Comment>\n      <Graph>490fc1ed-ef90-47db-8ae5-eac55e759fff</Graph>\n     
+    <Parent>$constantData</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>8</Flags>\n     
+    <Position>338|68||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
+    Count=\"0\" />\n      <Groups Count=\"0\" />\n      <Data Count=\"8\">\n       
+    <Data>\n          <Name>$default</Name>\n          <Value />\n        </Data>\n       
+    <Data>\n          <Name></Name>\n          <Value />\n        </Data>\n       
+    <Data>\n          <Name>$hasDefault</Name>\n          <Value />\n        </Data>\n       
+    <Data>\n          <Name>True</Name>\n          <Value />\n        </Data>\n       
+    <Data>\n          <Name>$constType</Name>\n          <Value />\n        </Data>\n       
+    <Data>\n          <Name>Boolean</Name>\n          <Value />\n        </Data>\n       
+    <Data>\n          <Name>$varId</Name>\n          <Value Type=\"@string\">c67e0a29-29ca-4b9d-8e61-fe555c8902a4</Value>\n       
+    </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
+    </Data>\n      </Data>\n    </Node>\n    <Key>ad3ae259-2626-457c-8f74-c2a0d2ac3447</Key>\n   
+    <Node>\n      <Id>ad3ae259-2626-457c-8f74-c2a0d2ac3447</Id>\n      <Name>Root</Name>\n     
+    <Comment></Comment>\n      <Graph>490fc1ed-ef90-47db-8ae5-eac55e759fff</Graph>\n     
+    <Parent>$root</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>1</Flags>\n     
+    <Position>-96|-92||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
+    Count=\"1\">\n        <Slot>\n          <Id>$out</Id>\n          <Name>Out</Name>\n         
+    <Value />\n          <Type>$link</Type>\n          <Mode>Out</Mode>\n         
+    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"1\">\n       
+    <Data>\n          <Name>$default</Name>\n          <Value Type=\"@boolean\">True</Value>\n       
+    </Data>\n      </Data>\n    </Node>\n    <Key>b7cd1f0b-4e36-4d1f-a9ba-2d0da1d979d1</Key>\n   
+    <Node>\n      <Id>b7cd1f0b-4e36-4d1f-a9ba-2d0da1d979d1</Id>\n      <Name>BTSequence</Name>\n     
+    <Comment></Comment>\n      <Graph>490fc1ed-ef90-47db-8ae5-eac55e759fff</Graph>\n     
+    <Parent>$composite/BTSequence</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
+    <Flags>32</Flags>\n      <Position>-185|45||0</Position>\n      <StaticIn Count=\"6\">\n       
+    <Slot>\n          <Id>$in</Id>\n          <Name>In</Name>\n          <Value />\n         
+    <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
+    <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>TopmostDecorator</Id>\n         
+    <Name>TopmostDecorator</Name>\n          <Value Type=\"Quantum.AssetRefBTNode,
+    quantum.code\">Id: [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
+    quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
+    <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>CurrentChildIndex</Id>\n         
+    <Name>CurrentChildIndex</Name>\n          <Value Type=\"Quantum.BTDataIndex,
+    quantum.code\">Quantum.BTDataIndex</Value>\n          <Type>Quantum.BTDataIndex,
+    quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
+    <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>IsDynamic</Id>\n         
+    <Name>IsDynamic</Name>\n          <Value Type=\"@boolean\">False</Value>\n         
+    <Type>@boolean</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
+    <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>Label</Id>\n         
+    <Name>Label</Name>\n          <Value />\n          <Type>@string</Type>\n         
+    <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
+    </Slot>\n        <Slot>\n          <Id>Id</Id>\n          <Name>Id</Name>\n         
+    <Value Type=\"@int32\">0</Value>\n          <Type>@int32</Type>\n          <Mode>In</Mode>\n         
+    <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticIn>\n      <StaticOut Count=\"1\">\n        <Slot>\n          <Id>$out0</Id>\n         
+    <Name>Out0</Name>\n          <Value />\n          <Type>$link</Type>\n         
+    <Mode>Out</Mode>\n          <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n       
+    </Slot>\n      </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\"
+    />\n    </Node>\n    <Key>d0392654-b418-4b7a-8599-7b065aa932cb</Key>\n    <Node>\n     
+    <Id>d0392654-b418-4b7a-8599-7b065aa932cb</Id>\n      <Name>BTSequence</Name>\n     
+    <Comment></Comment>\n      <Graph>b7cd1f0b-4e36-4d1f-a9ba-2d0da1d979d1</Graph>\n     
+    <Parent>$servicesRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
+    <Position>0|-5||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
+    Count=\"1\">\n        <Slot>\n          <Id>$servicesList</Id>\n          <Name>Services</Name>\n         
+    <Value />\n          <Type>$exec</Type>\n          <Mode>Out</Mode>\n         
+    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
+    <Key>f582c449-2e6b-4558-80a3-dfc77a2ca605</Key>\n    <Node>\n      <Id>f582c449-2e6b-4558-80a3-dfc77a2ca605</Id>\n     
+    <Name>BTSequence</Name>\n      <Comment></Comment>\n      <Graph>b7cd1f0b-4e36-4d1f-a9ba-2d0da1d979d1</Graph>\n     
+    <Parent>$decoratorsRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
+    <Position>0|225||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
+    Count=\"1\">\n        <Slot>\n          <Id>$decoratorsList</Id>\n          <Name>Decorators</Name>\n         
+    <Value />\n          <Type>$exec</Type>\n          <Mode>Out</Mode>\n         
+    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n 
+    </Nodes>\n  <Types Count=\"0\" />\n  <Links Count=\"1\">\n    <Link>\n      <Id>44891313-735c-4264-b975-d5783f86a134</Id>\n     
+    <FromNode>ad3ae259-2626-457c-8f74-c2a0d2ac3447</FromNode>\n      <FromSlot>$out</FromSlot>\n     
+    <ToNode>b7cd1f0b-4e36-4d1f-a9ba-2d0da1d979d1</ToNode>\n      <ToSlot>$in</ToSlot>\n     
+    <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n  </Links>\n 
+    <Data Count=\"0\" />\n  <PanelData Count=\"2\">\n    <Key>$statemachine/$blackboard/$variables</Key>\n   
+    <PanelData>\n      <Id>$statemachine/$blackboard/$variables</Id>\n      <Expanded>true</Expanded>\n   
+    </PanelData>\n    <Key>$statemachine/$config</Key>\n    <PanelData>\n      <Id>$statemachine/$config</Id>\n     
+    <Expanded>true</Expanded>\n    </PanelData>\n  </PanelData>\n  <GraphData Count=\"2\">\n   
+    <Key>490fc1ed-ef90-47db-8ae5-eac55e759fff</Key>\n    <GraphData>\n      <Id>490fc1ed-ef90-47db-8ae5-eac55e759fff</Id>\n     
+    <ZoomLevel>0.9092579</ZoomLevel>\n      <ZoomOffset>67|22||0</ZoomOffset>\n     
+    <PanOffset>478|208||0</PanOffset>\n    </GraphData>\n    <Key>b7cd1f0b-4e36-4d1f-a9ba-2d0da1d979d1</Key>\n   
+    <GraphData>\n      <Id>b7cd1f0b-4e36-4d1f-a9ba-2d0da1d979d1</Id>\n      <ZoomLevel>1</ZoomLevel>\n     
+    <ZoomOffset>0|0||0</ZoomOffset>\n      <PanOffset>621|-7||0</PanOffset>\n   
+    </GraphData>\n  </GraphData>\n  <Tracks Count=\"0\" />\n</Document>"
+  DocumentType: $bt
+  DocumentId: 490fc1ed-ef90-47db-8ae5-eac55e759fff
+  DocumentNameOverride: 
+  History: []
+  LastCompiledHistoryID: 
+  IsOutdated: 0

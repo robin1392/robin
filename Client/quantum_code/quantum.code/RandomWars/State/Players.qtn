@@ -33,3 +33,6 @@ component Deck {
 component Field {
     array<FieldDice>[15] Dices;
 }
+
+component PlayerBot {
+}

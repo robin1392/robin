@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1402718890428716666}
   - component: {fileID: 9094153712155304808}
   - component: {fileID: 1943579530012203166}
+  - component: {fileID: 757636810806438274}
   m_Layer: 0
   m_Name: DiceActor
   m_TagString: Untagged
@@ -246,6 +247,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EntityView: {fileID: 1402718890428716666}
+  ActorModel: {fileID: 0}
+--- !u!114 &757636810806438274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1398317403032931231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2bfbcce52d2944379e695b9221524b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    DiceInfoId: 0
+    DiceScale: 0
+    IngameUpgradeLevel: 0
+    OutgameUpgradeLevel: 0
+    FieldIndex: 0
 --- !u!114 &-4062502850953598902
 MonoBehaviour:
   m_ObjectHideFlags: 0

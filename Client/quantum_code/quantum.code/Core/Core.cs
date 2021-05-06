@@ -2540,7 +2540,7 @@ namespace Quantum {
 }
 
 // Game/QuantumGame.ReplayTools.cs
-﻿
+ 
 namespace Quantum {
   public partial class QuantumGame {
 

@@ -194,7 +194,7 @@ namespace ED
             quantumRunner.Players = new[]
             {
                 ToRuntimePlayer(localMatchPlayer),
-                // ToRuntimePlayer(aiMatchPlayer)
+                ToRuntimePlayer(aiMatchPlayer)
             };
 
             quantumRunner.StartWithFrame();
@@ -212,6 +212,7 @@ namespace ED
                 DeckDiceIds = matchPlayer.Deck.DiceInfos.Select(i => i.DiceId).ToArray(),
                 DeckDiceOutGameLevels = matchPlayer.Deck.DiceInfos.Select(i => i.OutGameLevel).ToArray(),
                 GuardianId = matchPlayer.Deck.GuardianId,
+                IsBot = matchPlayer.EnableAI,
             };
         }
         
@@ -226,6 +227,7 @@ namespace ED
                         userMatchPlayer.Deck.GuardianId, 
                         new int[] {31001, 31003, 31002, 32002, 32009}, 
                         new int[]{0,0,0,0,0}),
+                    EnableAI = true,
                 };
             }
 
@@ -233,6 +235,7 @@ namespace ED
             {
                 NickName = "AI",
                 Deck = userMatchPlayer.Deck,
+                EnableAI = true,
             };
         }
         #endregion

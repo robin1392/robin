@@ -61,6 +61,16 @@ MonoBehaviour:
         Id:
           Value: 752189454027856678
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
+      AssetRef:
+        Id:
+          Value: 830347301828973888
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
+      AssetRef:
+        Id:
+          Value: 1132299466330892449
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
       AssetRef:
         Id:
@@ -86,6 +96,11 @@ MonoBehaviour:
         Id:
           Value: 2038384912399625890
       ResourcePath: DB/EntityPrototypes/DiceActor
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
+      AssetRef:
+        Id:
+          Value: 2216287507962166723
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
     - Path: Resources/DB/EntityPrototypes/RWPlayer|EntityView
       AssetRef:
         Id:
@@ -106,6 +121,11 @@ MonoBehaviour:
         Id:
           Value: 3191137225385853972
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
+      AssetRef:
+        Id:
+          Value: 3363498406713723043
+      ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_4
       AssetRef:
         Id:
@@ -126,3 +146,8 @@ MonoBehaviour:
         Id:
           Value: 4050719712139043392
       ResourcePath: DB/EntityPrototypes/DiceActor
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|DebugLeaf_0
+      AssetRef:
+        Id:
+          Value: 4161884017955105223
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot

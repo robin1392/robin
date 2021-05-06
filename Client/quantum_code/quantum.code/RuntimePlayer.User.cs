@@ -10,6 +10,7 @@ namespace Quantum {
     public int[] DeckDiceIds;
     public int[] DeckDiceOutGameLevels;
     public int GuardianId;
+    public bool IsBot;
     
     partial void SerializeUserData(BitStream stream)
     {
@@ -17,6 +18,7 @@ namespace Quantum {
         stream.Serialize(ref DeckDiceIds);
         stream.Serialize(ref DeckDiceOutGameLevels);
         stream.Serialize(ref GuardianId);
+        stream.Serialize(ref IsBot);
     }
   }
 }

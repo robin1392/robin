@@ -67,6 +67,11 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
 
     void SpawnMine(int diceId)
     {
+        Spawn(0, diceId);
+    }
+
+    void Spawn(int playerIndex, int diceId)
+    {
         var command = new CreateActorCommand();
         command.ActorType = ActorType.Dice;
         command.DataId = diceId;
@@ -75,12 +80,12 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
         command.DiceScale = diceScale;
         command.FieldIndex = FieldIndex;
         command.Position = Position;
-        _game.SendCommand(QuantumRunner.Default.Game.GetLocalPlayers()[0], command);
+        _game.SendCommand(QuantumRunner.Default.Game.GetLocalPlayers()[playerIndex], command);
     }
     
     void SpawnEnemys(int diceId)
     {
-        // _gameMode.SpawnEnemyMinion(diceId, (byte)inGameLevel, (byte)outGameLevel, (byte)diceScale);
+        Spawn(1, diceId);
     }
     
     void SpawnMyGuardian(int diceId)

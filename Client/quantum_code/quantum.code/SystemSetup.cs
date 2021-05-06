@@ -53,10 +53,13 @@ namespace Quantum
 
             var logicSystem = new List<SystemBase>
             {
-                new BTUpdateSystem(),
                 new BotSDKSystem(),
+                new BTUpdateSystem(),
+                
+                new PlayerBotSystem(),
+                
                 new ActorSystem(),
-                new PlayerInitSystem()
+                new PlayerInitSystem(),
             };
             
             var actorSystem = new List<SystemBase>

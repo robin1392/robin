@@ -101,8 +101,8 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private void OnSuddenDeathStarted(EventOnSuddenDeathStarted callback)
     {
-        UI_InGame.Get().EnableSuddenDeath();
-        UI_InGame.Get().waveAnimator.SetTrigger("SuddenDeath");
+        EnableSuddenDeath();
+        waveAnimator.SetTrigger("SuddenDeath");
     }
 
     private unsafe void OnWaveChanged(EventOnWaveChanged callback)
@@ -137,6 +137,11 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private void OnDiceCreationCountChanged(EventDiceCreationCountChanged callback)
     {
+        if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+        {
+            return;
+        }
+        
         var frame = callback.Game.Frames.Predicted;
         SetDiceButtonText(frame.CreateFieldDiceCost(callback.Player));
     }
@@ -152,6 +157,11 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private unsafe void OnCommingSpChanged(EventCommingSpChanged callback)
     {
+        if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+        {
+            return;
+        }
+        
         var frame = callback.Game.Frames.Predicted;
         var player = frame.Global->Players[callback.Player];
         var sp = frame.Get<Sp>(player.EntityRef);
@@ -161,12 +171,22 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private void OnCommingSpGradeUpgraded(EventCommingSpGradeUpgraded callback)
     {
+        if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+        {
+            return;
+        }
+        
         SoundManager.instance.Play(Global.E_SOUND.SFX_INGAME_UI_SP_LEVEL_UP);
         spUpgradeAnimator.SetTrigger("Fx_SP_Upgrade");
     }
 
     private unsafe void OnSpDecreased(EventSpDecreased callback)
     {
+        if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+        {
+            return;
+        }
+        
         var frame = callback.Game.Frames.Predicted;
         var player = frame.Global->Players[callback.Player];
         var sp = frame.Get<Sp>(player.EntityRef);
@@ -177,6 +197,11 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private unsafe void OnSpIncreased(EventSpIncreased callback)
     {
+        if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+        {
+            return;
+        }
+        
         var frame = callback.Game.Frames.Predicted;
         var player = frame.Global->Players[callback.Player];
         var sp = frame.Get<Sp>(player.EntityRef);
@@ -199,6 +224,11 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private unsafe void OnPoweredDeckDiceUp(EventPoweredDeckDiceUp callback)
     {
+        if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+        {
+            return;
+        }
+        
         var frame = callback.Game.Frames.Verified;
         var player = frame.Global->Players[callback.Player];
         var deck = frame.Get<Deck>(player.EntityRef);
@@ -214,6 +244,11 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
 
     private unsafe void OnPlayerInitialized(EventPlayerInitialized callback)
     {
+        if (callback.Game.IsPlayableLocalPlayer(callback.Player) == false)
+        {
+            return;
+        }
+        
         var frame = callback.Game.Frames.Verified;
         var player = frame.Global->Players[callback.Player];
         var deck = frame.Get<Deck>(player.EntityRef);

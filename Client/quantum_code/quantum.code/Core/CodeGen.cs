@@ -1967,6 +1967,22 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct PlayerBot : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    private fixed Byte _alignment_padding_[4];
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 263;
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (PlayerBot*)ptr;
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct RWPlayer : Quantum.IComponent {
     public const Int32 SIZE = 16;
     public const Int32 ALIGNMENT = 8;
@@ -1978,7 +1994,7 @@ namespace Quantum {
     public Int32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 263;
+        var hash = 269;
         hash = hash * 31 + EntityRef.GetHashCode();
         hash = hash * 31 + PlayerRef.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
@@ -2004,7 +2020,7 @@ namespace Quantum {
     public Int32 CurrentSp;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 269;
+        var hash = 271;
         hash = hash * 31 + CommingSp.GetHashCode();
         hash = hash * 31 + CommingSpGrade.GetHashCode();
         hash = hash * 31 + CurrentSp.GetHashCode();
@@ -2026,7 +2042,7 @@ namespace Quantum {
     private fixed Byte _alignment_padding_[4];
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 271;
+        var hash = 277;
         return hash;
       }
     }
@@ -2062,6 +2078,7 @@ namespace Quantum {
         ComponentTypeId.Add<Quantum.GOAPAgent>(new ComponentCallbacks(Quantum.GOAPAgent.Serialize));
         ComponentTypeId.Add<Quantum.Guardian>(new ComponentCallbacks(Quantum.Guardian.Serialize));
         ComponentTypeId.Add<Quantum.HFSMAgent>(new ComponentCallbacks(Quantum.HFSMAgent.Serialize));
+        ComponentTypeId.Add<Quantum.PlayerBot>(new ComponentCallbacks(Quantum.PlayerBot.Serialize));
         ComponentTypeId.Add<Quantum.RWPlayer>(new ComponentCallbacks(Quantum.RWPlayer.Serialize));
         ComponentTypeId.Add<Quantum.Sp>(new ComponentCallbacks(Quantum.Sp.Serialize));
         ComponentTypeId.Add<Quantum.Tower>(new ComponentCallbacks(Quantum.Tower.Serialize));
@@ -2119,6 +2136,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<PhysicsCollider2D>();
       BuildSignalsArrayOnComponentAdded<PhysicsCollider3D>();
       BuildSignalsArrayOnComponentRemoved<PhysicsCollider3D>();
+      BuildSignalsArrayOnComponentAdded<Quantum.PlayerBot>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.PlayerBot>();
       BuildSignalsArrayOnComponentAdded<Quantum.RWPlayer>();
       BuildSignalsArrayOnComponentRemoved<Quantum.RWPlayer>();
       BuildSignalsArrayOnComponentAdded<Quantum.Sp>();
@@ -2732,6 +2751,9 @@ namespace Quantum {
     public virtual void Visit(Prototypes.HFSMAgent_Prototype prototype) {
       VisitFallback(prototype);
     }
+    public virtual void Visit(Prototypes.PlayerBot_Prototype prototype) {
+      VisitFallback(prototype);
+    }
     public virtual void Visit(Prototypes.RWPlayer_Prototype prototype) {
       VisitFallback(prototype);
     }
@@ -2836,6 +2858,7 @@ namespace Quantum {
       Register(typeof(PhysicsCollider2D), PhysicsCollider2D.SIZE);
       Register(typeof(PhysicsCollider3D), PhysicsCollider3D.SIZE);
       Register(typeof(PhysicsSceneSettings), PhysicsSceneSettings.SIZE);
+      Register(typeof(Quantum.PlayerBot), Quantum.PlayerBot.SIZE);
       Register(typeof(PlayerRef), PlayerRef.SIZE);
       Register(typeof(Ptr), Ptr.SIZE);
       Register(typeof(QBoolean), QBoolean.SIZE);
@@ -3554,6 +3577,31 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [ComponentPrototypeAttribute(typeof(PlayerBot))]
+  public unsafe sealed partial class PlayerBot_Prototype : ComponentPrototype<PlayerBot> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref PlayerBot result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+      PlayerBot component = default;
+      Materialize((Frame)f, ref component, in context);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public override Boolean SetEntityRefs(FrameBase f, EntityRef entity, MapEntityLookup mapEntities) {
+      PlayerBot component = f.Get<PlayerBot>(entity);
+      SetEntityRefs((Frame)f, ref component, mapEntities);
+      return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref PlayerBot result, in PrototypeMaterializationContext context) {
+      MaterializeUser(frame, ref result, in context);
+    }
+    public void SetEntityRefs(Frame frame, ref PlayerBot result, MapEntityLookup mapEntities) {
+    }
+    public override void Dispatch(ComponentPrototypeVisitorBase visitor) {
+      ((ComponentPrototypeVisitor)visitor).Visit(this);
+    }
+  }
+  [System.SerializableAttribute()]
   [ComponentPrototypeAttribute(typeof(RWPlayer))]
   public unsafe sealed partial class RWPlayer_Prototype : ComponentPrototype<RWPlayer> {
     public PlayerRef PlayerRef;
@@ -3663,6 +3711,8 @@ namespace Quantum.Prototypes {
     [FixedArray(0, 1)]
     public List<Prototypes.HFSMAgent_Prototype> HFSMAgent;
     [FixedArray(0, 1)]
+    public List<Prototypes.PlayerBot_Prototype> PlayerBot;
+    [FixedArray(0, 1)]
     public List<Prototypes.RWPlayer_Prototype> RWPlayer;
     [FixedArray(0, 1)]
     public List<Prototypes.Sp_Prototype> Sp;
@@ -3681,6 +3731,7 @@ namespace Quantum.Prototypes {
       Collect(GOAPAgent, target);
       Collect(Guardian, target);
       Collect(HFSMAgent, target);
+      Collect(PlayerBot, target);
       Collect(RWPlayer, target);
       Collect(Sp, target);
       Collect(Tower, target);
@@ -3721,6 +3772,9 @@ namespace Quantum.Prototypes {
       }
       public override void Visit(Prototypes.HFSMAgent_Prototype prototype) {
         Storage.Store(prototype, ref Storage.HFSMAgent);
+      }
+      public override void Visit(Prototypes.PlayerBot_Prototype prototype) {
+        Storage.Store(prototype, ref Storage.PlayerBot);
       }
       public override void Visit(Prototypes.RWPlayer_Prototype prototype) {
         Storage.Store(prototype, ref Storage.RWPlayer);

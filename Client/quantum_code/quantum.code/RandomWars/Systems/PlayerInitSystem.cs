@@ -15,6 +15,12 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
         var entity = f.Create(playerPrototype);
 
         var playerData =  f.GetPlayerData(playerRef);
+
+        if (playerData.IsBot)
+        {
+            f.Add<PlayerBot>(entity);
+        }
+        
         var deck = f.Unsafe.GetPointer<Deck>(entity);
         deck->GuardianId = playerData.GuardianId;
         for (var i =0; i < playerData.DeckDiceIds.Length; ++i)
@@ -34,7 +40,7 @@ public unsafe class PlayerInitSystem : SystemSignalsOnly, ISignalOnPlayerDataSet
         var rwPlayer = f.Global->Players.GetPointer(playerRef); 
         rwPlayer->PlayerRef = playerRef;
         rwPlayer->EntityRef = entity;
-        
+
         var sp = f.Unsafe.GetPointer<Sp>(entity);
 
         var tableData = f.Context.TableData;
