@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: CommonEffects
+  m_EditorClassIdentifier: 
+  m_GroupName: CommonEffects
+  m_Data:
+    m_SerializedData: []
+  m_GUID: aa50f9195139d4e81b7d9a1c3224e0a2
+  m_SerializeEntries:
+  - m_GUID: ec5f00b0bafe14276830214c199ee3bf
+    m_Address: Effect_SpawnLine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7552c1148354c41128e93eb26adc80b7
+    m_Address: particle_necromancer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f97c1e8e4547c4c92a0e1ff200a506bd, type: 2}
+    - {fileID: 11400000, guid: 0dfd86ca197034562beb5b0404a2c0d5, type: 2}
