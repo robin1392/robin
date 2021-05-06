@@ -30,8 +30,6 @@ namespace Quantum
                 position = frame.Context.FieldPositions.GetPosition(player->Team, command.FieldIndex);
             }
 
-            Log.Debug($"{command.FieldIndex}, {command.Position}");
-
             list.Add(new ActorCreationSpec()
             {
                 Owner = player->PlayerRef,
@@ -42,6 +40,7 @@ namespace Quantum
                 DiceScale = command.DiceScale,
                 Position = position,
                 FieldIndex = command.FieldIndex,
+                Team = player->Team,
             });
         }
     }
