@@ -11,6 +11,7 @@ namespace Quantum.Commands
         public Int32 OutgameLevel;
         public Int32 DiceScale;
         public Int32 FieldIndex;
+        public FPVector2 Position;
         
         public override void Serialize(BitStream stream)
         {
@@ -30,6 +31,8 @@ namespace Quantum.Commands
             stream.Serialize(ref IngameLevel);
             stream.Serialize(ref OutgameLevel);
             stream.Serialize(ref DiceScale);
+            stream.Serialize(ref FieldIndex);
+            stream.Serialize(ref Position);
         }
     }
 }

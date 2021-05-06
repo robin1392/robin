@@ -112,5 +112,10 @@ namespace Quantum {
               return defaultSp + waveForCalculation * (waveSp + spByUpgrade);   
           }
       }
+
+      public bool AreEachOtherEnemy(Actor actor, PlayerRef localPlayer)
+      {
+          return Global->Players[localPlayer].Team != actor.Team;
+      }
   }
 }

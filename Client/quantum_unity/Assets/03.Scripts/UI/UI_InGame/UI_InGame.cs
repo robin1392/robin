@@ -53,6 +53,7 @@ public class UI_InGame : SingletonDestroy<UI_InGame>
     
     public Image image_TopTowerHealthBar;
     public Text text_TopTowerHealthBar;
+    //TODO: 아군 타워로 리네임
     public Image image_BottomTowerHealthBar;
     public Text text_BottomTowerHealthBar;
     

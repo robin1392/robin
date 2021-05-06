@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 7372665011992461858}
   - component: {fileID: 1402718890428716666}
   - component: {fileID: 9094153712155304808}
-  - component: {fileID: 1943579530012203166}
+  - component: {fileID: 823538386675823470}
+  - component: {fileID: 7421754532585714678}
   m_Layer: 0
-  m_Name: DiceActor
+  m_Name: TowerActor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,7 +234,7 @@ MonoBehaviour:
       RawValue: 0
     EffectDurationTime:
       RawValue: 0
---- !u!114 &1943579530012203166
+--- !u!114 &823538386675823470
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -242,7 +243,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1398317403032931231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e65f3d53e67574d068422aec1814ef45, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f26a754feed34f9b8466573e57fad02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    _empty_prototype_dummy_field_: 0
+--- !u!114 &7421754532585714678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1398317403032931231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5107f980a4392464b9cf999f0b68729b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   EntityView: {fileID: 1402718890428716666}
@@ -256,13 +271,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d5baec4de8d2754a864a680181831e8, type: 3}
-  m_Name: DiceActorEntityView
+  m_Name: TowerActorEntityView
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/EntityPrototypes/DiceActor|EntityView
+      Path: Resources/DB/EntityPrototypes/TowerActor|EntityView
       Guid:
-        Value: 4050719712139043392
+        Value: 226039107891284717
   Parent: {fileID: 1402718890428716666}
 --- !u!114 &6180675146522355254
 MonoBehaviour:
@@ -274,11 +289,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0120b722c3ca5454da1240b65656905f, type: 3}
-  m_Name: DiceActorEntityPrototype
+  m_Name: TowerActorEntityPrototype
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/EntityPrototypes/DiceActor|EntityPrototype
+      Path: Resources/DB/EntityPrototypes/TowerActor|EntityPrototype
       Guid:
-        Value: 2038384912399625890
+        Value: 1477095050142706443
   Parent: {fileID: 7372665011992461858}

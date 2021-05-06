@@ -1,4 +1,5 @@
 ﻿using System;
+using _Scripts.Quantum.Views;
 using MirageTest.Scripts;
 using UnityEngine;
 using UnityEngine.UI;

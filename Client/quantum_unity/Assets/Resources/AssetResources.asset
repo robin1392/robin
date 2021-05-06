@@ -41,6 +41,11 @@ MonoBehaviour:
         Id:
           Value: 5
       ResourcePath: DB/Configs/SimulationConfig
+    - Path: Resources/DB/EntityPrototypes/TowerActor|EntityView
+      AssetRef:
+        Id:
+          Value: 226039107891284717
+      ResourcePath: DB/EntityPrototypes/TowerActor
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_3
       AssetRef:
         Id:
@@ -61,6 +66,11 @@ MonoBehaviour:
         Id:
           Value: 1145133073435569565
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/EntityPrototypes/TowerActor|EntityPrototype
+      AssetRef:
+        Id:
+          Value: 1477095050142706443
+      ResourcePath: DB/EntityPrototypes/TowerActor
     - Path: Resources/DB/Map1_Navmesh
       AssetRef:
         Id:

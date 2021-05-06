@@ -38,9 +38,9 @@ MonoBehaviour:
         RawValue: 0
       Position:
         X:
-          RawValue: -13107
+          RawValue: 0
         Y:
-          RawValue: 806092
+          RawValue: 786432
       Height:
         RawValue: 0
       VerticalOffset:
@@ -79,9 +79,9 @@ MonoBehaviour:
         RawValue: 0
       Position:
         X:
-          RawValue: -13107
+          RawValue: 0
         Y:
-          RawValue: -766771
+          RawValue: -786432
       Height:
         RawValue: 0
       VerticalOffset:
@@ -120,9 +120,9 @@ MonoBehaviour:
         RawValue: 0
       Position:
         X:
-          RawValue: -668467
+          RawValue: -655360
         Y:
-          RawValue: 19660
+          RawValue: 0
       Height:
         RawValue: 0
       VerticalOffset:
@@ -161,9 +161,9 @@ MonoBehaviour:
         RawValue: 0
       Position:
         X:
-          RawValue: 642252
+          RawValue: 655360
         Y:
-          RawValue: 19660
+          RawValue: 0
       Height:
         RawValue: 0
       VerticalOffset:
@@ -202,9 +202,9 @@ MonoBehaviour:
         RawValue: 0
       Position:
         X:
-          RawValue: -13107
+          RawValue: 0
         Y:
-          RawValue: 19660
+          RawValue: 0
       Height:
         RawValue: 0
       VerticalOffset:

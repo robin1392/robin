@@ -10,7 +10,7 @@ namespace Quantum.Actors
         ISignalOnComponentAdded<ActorCreation>, ISignalOnComponentRemoved<ActorCreation>
     {
         private static readonly string DICE_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceActor|EntityPrototype"; 
-        // private static readonly string TOWER_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/TowerActor|EntityPrototype";
+        private static readonly string TOWER_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/TowerActor|EntityPrototype";
         
         public override void Update(Frame f, ref ActorCreationFilter filter)
         {
@@ -46,6 +46,11 @@ namespace Quantum.Actors
             {
                 var actorPrototype = f.FindAsset<EntityPrototype>(DICE_ACTOR_PROTOTYPE);
                 ActorFactory.CreateDiceActor(f, actorCreationSpec, actorPrototype);
+            }
+            else if (actorCreationSpec.ActorType == ActorType.Tower)
+            {
+                var actorPrototype = f.FindAsset<EntityPrototype>(TOWER_ACTOR_PROTOTYPE);
+                ActorFactory.CreateTowerActor(f, actorCreationSpec, actorPrototype);
             }
         }
 

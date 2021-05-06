@@ -5,7 +5,7 @@ using RandomWarsResource.Data;
 
 namespace Quantum.Actors
 {
-    public static class ActorFactory
+    public static partial class ActorFactory
     {
         public static unsafe void CreateDiceActor(Frame f, ActorCreationSpec spec, EntityPrototype prototype)
         {
@@ -58,10 +58,9 @@ namespace Quantum.Actors
                     spawnPosition = GetRandomPlayerFieldPosition(f);
                 }
 
-                var rotation = GetRotation(spec.Team);
+                var rotation = GetSpawnRotation(spec.Team);
                 
                 var entity = f.Create(prototype);
-                f.Add<Dice>(entity);
                 
                 var dice = f.Unsafe.GetPointer<Dice>(entity);
                 dice->DiceInfoId = spec.DataId;
@@ -87,7 +86,7 @@ namespace Quantum.Actors
             }
         }
         
-        public static FP GetRotation(Int32 team)
+        public static FP GetSpawnRotation(Int32 team)
         {
             if (team == GameConstants.BottomCamp)
             {

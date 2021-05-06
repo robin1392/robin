@@ -24,7 +24,14 @@ namespace Quantum
             var actorCreation = frame.Unsafe.GetPointer<ActorCreation>(entityRef);
             var list = frame.ResolveList(actorCreation->creationList);
 
-            frame.Context.FieldPositions.GetPosition(player->Team, command.FieldIndex);
+            var position = command.Position;
+            if (command.ActorType == ActorType.Dice)
+            {
+                position = frame.Context.FieldPositions.GetPosition(player->Team, command.FieldIndex);
+            }
+
+            Log.Debug($"{command.FieldIndex}, {command.Position}");
+
             list.Add(new ActorCreationSpec()
             {
                 Owner = player->PlayerRef,
@@ -33,7 +40,7 @@ namespace Quantum
                 IngameLevel =  command.IngameLevel,
                 OutgameLevel = command.OutgameLevel,
                 DiceScale = command.DiceScale,
-                Position = frame.Context.FieldPositions.GetPosition(player->Team, command.FieldIndex),
+                Position = position,
                 FieldIndex = command.FieldIndex,
             });
         }

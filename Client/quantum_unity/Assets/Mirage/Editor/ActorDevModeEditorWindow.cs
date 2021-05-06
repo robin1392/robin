@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MirageTest.Scripts;
 using MirageTest.Scripts.GameMode;
+using Photon.Deterministic;
 using Quantum;
 using Quantum.Commands;
 using RandomWarsResource.Data;
@@ -28,6 +29,9 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
     public int inGameLevel;
     public int outGameLevel;
     public int diceScale = 0;
+    [Range(0, 14)]
+    public int FieldIndex;
+    public FPVector2 Position;
     
     [TableList]
     public List<DiceElement> DiceInfos;
@@ -69,6 +73,8 @@ public class ActorDevModeEditorWindow : OdinEditorWindow
         command.IngameLevel = inGameLevel;
         command.OutgameLevel = outGameLevel;
         command.DiceScale = diceScale;
+        command.FieldIndex = FieldIndex;
+        command.Position = Position;
         _game.SendCommand(QuantumRunner.Default.Game.GetLocalPlayers()[0], command);
     }
     

@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace ED
+namespace _Scripts.Quantum.Views
 {
     public class RendererEffect
     {

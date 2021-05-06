@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4762331725121824480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6033329775410361375}
+  m_Layer: 0
+  m_Name: TopEffectPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6033329775410361375
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762331725121824480}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.832, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5081294253336761971}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5081294253336761964
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,8 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5081294253336761971}
   - component: {fileID: 6486029529450410244}
-  - component: {fileID: 2583571212696764795}
-  - component: {fileID: -8729630669416978224}
+  - component: {fileID: -4642469396453523094}
   m_Layer: 0
   m_Name: Minion_Fire
   m_TagString: Minion_Ground
@@ -34,6 +63,7 @@ Transform:
   - {fileID: 8488758196635011245}
   - {fileID: 7446463657413391935}
   - {fileID: 7076981256658133409}
+  - {fileID: 6033329775410361375}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,7 +80,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.3
   m_Center: {x: 0, y: 0.25, z: 0}
---- !u!114 &2583571212696764795
+--- !u!114 &-4642469396453523094
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,23 +89,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5081294253336761964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8392b961c9f7d4742ad6368d481d198a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b384522beaa949b28cac0740185411d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolName: 
-  lifeTime: 0
---- !u!114 &-8729630669416978224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e65f3d53e67574d068422aec1814ef45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  image_HealthBar: {fileID: 6150823028887648129}
+  ObjectHealthBar: {fileID: 5666151450151296743}
+  ShootingPosition: {fileID: 0}
+  HitPosition: {fileID: 8488758196635011245}
+  TopEffectPosition: {fileID: 6033329775410361375}
 --- !u!1 &7214476587837081310
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,6 +358,30 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5732288840781662986}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5666151450151296743 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 85314325294552557, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 5732288840781662986}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017a0d0fe8ec54b4e9790bbae55a7bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6150823028887648129 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1932381381008686219, guid: 9a5189e5086334d2d81072bfc0aa4f0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 5732288840781662986}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8906844206283643874
 PrefabInstance:
   m_ObjectHideFlags: 0
