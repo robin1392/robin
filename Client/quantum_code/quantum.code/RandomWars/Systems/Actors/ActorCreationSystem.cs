@@ -9,10 +9,16 @@ namespace Quantum.Actors
     public unsafe class ActorCreationSystem : SystemMainThreadFilter<ActorCreationFilter>,
         ISignalOnComponentAdded<ActorCreation>, ISignalOnComponentRemoved<ActorCreation>
     {
-        private static readonly string ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/RWActor|EntityPrototype"; 
+        private static readonly string DICE_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceActor|EntityPrototype"; 
+        // private static readonly string TOWER_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/TowerActor|EntityPrototype";
         
         public override void Update(Frame f, ref ActorCreationFilter filter)
         {
+            if (f.IsVerified == false)
+            {
+                return;
+            }
+            
             var creationCountPerFrame = 1;
             var list = f.ResolveList(filter.ActorCreation->creationList);
             var count = 0;
@@ -30,15 +36,17 @@ namespace Quantum.Actors
 
             if (list.Count < 1)
             {
-                // f.Remove<ActorCreation>(filter.EntityRef);
                 f.Destroy(filter.EntityRef);
             }
         }
 
         private void CreateActor(Frame f, ActorCreationSpec actorCreationSpec)
         {
-            var actorPrototype = f.FindAsset<EntityPrototype>(ACTOR_PROTOTYPE);
-            ActorFactory.CreateDiceActor(f, actorCreationSpec, actorPrototype);
+            if (actorCreationSpec.ActorType == ActorType.Dice)
+            {
+                var actorPrototype = f.FindAsset<EntityPrototype>(DICE_ACTOR_PROTOTYPE);
+                ActorFactory.CreateDiceActor(f, actorCreationSpec, actorPrototype);
+            }
         }
 
         public void OnAdded(Frame f, EntityRef entity, ActorCreation* component)
@@ -50,7 +58,6 @@ namespace Quantum.Actors
         {
             f.FreeList(component->creationList);
             component->creationList = default;
-            Log.Debug($"ActorCreation Removed");
         }
     }
 }

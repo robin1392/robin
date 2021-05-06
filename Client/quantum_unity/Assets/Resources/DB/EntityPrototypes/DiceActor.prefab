@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1402718890428716666}
   - component: {fileID: 9094153712155304808}
   m_Layer: 0
-  m_Name: RWActor
+  m_Name: DiceActor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -228,6 +228,10 @@ MonoBehaviour:
       RawValue: 0
     MoveSpeed:
       RawValue: 0
+    Effect:
+      RawValue: 0
+    EffectDurationTime:
+      RawValue: 0
 --- !u!114 &-4062502850953598902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,11 +242,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d5baec4de8d2754a864a680181831e8, type: 3}
-  m_Name: RWActorEntityView
+  m_Name: DiceActorEntityView
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/EntityPrototypes/RWActor|EntityView
+      Path: Resources/DB/EntityPrototypes/DiceActor|EntityView
       Guid:
         Value: 4050719712139043392
   Parent: {fileID: 1402718890428716666}
@@ -256,11 +260,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0120b722c3ca5454da1240b65656905f, type: 3}
-  m_Name: RWActorEntityPrototype
+  m_Name: DiceActorEntityPrototype
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/EntityPrototypes/RWActor|EntityPrototype
+      Path: Resources/DB/EntityPrototypes/DiceActor|EntityPrototype
       Guid:
         Value: 2038384912399625890
   Parent: {fileID: 7372665011992461858}

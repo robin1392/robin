@@ -71,6 +71,11 @@ MonoBehaviour:
         Id:
           Value: 1710471675203725834
       ResourcePath: DB/Map1
+    - Path: Resources/DB/EntityPrototypes/DiceActor|EntityPrototype
+      AssetRef:
+        Id:
+          Value: 2038384912399625890
+      ResourcePath: DB/EntityPrototypes/DiceActor
     - Path: Resources/DB/EntityPrototypes/RWPlayer|EntityView
       AssetRef:
         Id:
@@ -106,3 +111,8 @@ MonoBehaviour:
         Id:
           Value: 3580962421273367876
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/EntityPrototypes/DiceActor|EntityView
+      AssetRef:
+        Id:
+          Value: 4050719712139043392
+      ResourcePath: DB/EntityPrototypes/DiceActor

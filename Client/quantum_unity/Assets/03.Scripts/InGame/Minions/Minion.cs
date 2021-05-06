@@ -57,26 +57,6 @@ namespace ED
         {
             base.Awake();
             collider = GetComponentInChildren<Collider>();
-            _animationEvent = animator.GetComponent<MinionAnimationEvent>();
-        }
-        
-        protected virtual void Update()
-        {
-            if (ActorProxy == null)
-            {
-                return;
-            }
-            
-            if (ActorProxy.isPlayingAI == false)
-            {
-                return;
-            }
-            
-            _spawnedTime += Time.deltaTime;
-            if (animator != null)
-            {
-                animator.SetFloat(AnimationHash.MoveSpeed, ActorProxy._aiPath.velocity.magnitude);
-            }
         }
 
         public virtual void Initialize()
@@ -85,9 +65,6 @@ namespace ED
             collider.enabled = true;
             isPolymorph = false;
             animator.gameObject.SetActive(true);
-            _spawnedTime = 0;
-            target = null;
-            _attackedTarget = null;
             image_HealthBar.fillAmount = 1f;
             RendererEffect.Reset();
 
