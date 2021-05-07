@@ -2,8 +2,10 @@ using Quantum;
 using System;
 using System.Collections;
 using System.Linq;
+using ED;
 using Photon.Deterministic;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class RWQuantumRunner: QuantumCallbacks {
   public RecordingFlags  RecordingFlags = RecordingFlags.Default;

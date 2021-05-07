@@ -1,22 +1,28 @@
 using Photon.Deterministic;
-using System;
 
 namespace Quantum
 {
-    [Serializable]
-    public unsafe partial class SetNearestEnemyToTarget : BTLeaf
+    [System.Serializable]
+    public unsafe class SeekNearestEnemy : BTService
     {
-        public AIBlackboardValueKey Target;
-        public FP Range;
-
-        protected override BTStatus OnUpdate(BTParams p)
+        public AIBlackboardValueKey EnemyTargetRef;
+        public AIBlackboardValueKey IsEnemyTargetAttacked;
+        protected override void OnUpdate(BTParams p)
         {
-            var transform = p.Frame.Get<Transform2D>(p.Entity);
-            var actor = p.Frame.Get<Actor>(p.Entity);
-            
-            var hits = p.Frame.Physics2D.OverlapShape(
-                transform, Shape2D.CreateCircle(Range));
+            var f = p.Frame;
+            var e = p.Entity;
+            var bb = p.Blackboard;
 
+            if (bb->GetBoolean(f, IsEnemyTargetAttacked.Key))
+            {
+                return;
+            }
+            
+            var transform = f.Get<Transform2D>(e);
+            EntityRef previousTarget = bb->GetEntityRef(f, EnemyTargetRef.Key);
+            
+            var actor = f.Get<Actor>(e);
+            var hits = f.Physics2D.OverlapShape(transform, Shape2D.CreateCircle(actor.SearchRange));
             var nearest = EntityRef.None;
             var nearestDistanceSquared = FP.MaxValue;
             for (int i = 0; i < hits.Count; i++)
@@ -47,17 +53,13 @@ namespace Quantum
                         nearest = hits[i].Entity;
                     }
                 }
-            
-                var bb = p.Frame.Unsafe.GetPointer<AIBlackboardComponent>(p.Entity);
-                bb->Set(p.Frame, Target.Key, nearest);
             }
 
-            if (nearest != EntityRef.None)
+            if (nearest != previousTarget)
             {
-                return BTStatus.Success;    
+                bb->Set(f, EnemyTargetRef.Key, nearest)->TriggerDecorators(p);
+                bb->Set(f, IsEnemyTargetAttacked.Key, false);
             }
-
-            return BTStatus.Failure;
         }
     }
 }

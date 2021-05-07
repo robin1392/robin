@@ -46,7 +46,7 @@ MonoBehaviour:
         Id:
           Value: 226039107891284717
       ResourcePath: DB/EntityPrototypes/TowerActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_3
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_1
       AssetRef:
         Id:
           Value: 464481439080346440
@@ -56,21 +56,6 @@ MonoBehaviour:
         Id:
           Value: 687509308602505173
       ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|DebugLeaf_0
-      AssetRef:
-        Id:
-          Value: 752189454027856678
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
-      AssetRef:
-        Id:
-          Value: 830347301828973888
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
-      AssetRef:
-        Id:
-          Value: 1132299466330892449
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
       AssetRef:
         Id:
@@ -81,16 +66,6 @@ MonoBehaviour:
         Id:
           Value: 1477095050142706443
       ResourcePath: DB/EntityPrototypes/TowerActor
-    - Path: Resources/DB/Map1_Navmesh
-      AssetRef:
-        Id:
-          Value: 1696161997930526014
-      ResourcePath: DB/Map1_Navmesh
-    - Path: Resources/DB/Map1
-      AssetRef:
-        Id:
-          Value: 1710471675203725834
-      ResourcePath: DB/Map1
     - Path: Resources/DB/EntityPrototypes/DiceActor|EntityPrototype
       AssetRef:
         Id:
@@ -106,17 +81,27 @@ MonoBehaviour:
         Id:
           Value: 2341071469025545075
       ResourcePath: DB/EntityPrototypes/RWPlayer
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
+      AssetRef:
+        Id:
+          Value: 2435600629990015812
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/EntityPrototypes/RWPlayer|EntityPrototype
       AssetRef:
         Id:
           Value: 2448339213474126104
       ResourcePath: DB/EntityPrototypes/RWPlayer
+    - Path: Resources/DB/BattleMap_Navmesh
+      AssetRef:
+        Id:
+          Value: 2600365732021726587
+      ResourcePath: DB/BattleMap_Navmesh
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee
       AssetRef:
         Id:
-          Value: 2923029850650634590
+          Value: 2733871122761067057
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_0
       AssetRef:
         Id:
           Value: 3191137225385853972
@@ -126,7 +111,12 @@ MonoBehaviour:
         Id:
           Value: 3363498406713723043
       ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_4
+    - Path: Resources/DB/BattleMap
+      AssetRef:
+        Id:
+          Value: 3377154048910103621
+      ResourcePath: DB/BattleMap
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_2
       AssetRef:
         Id:
           Value: 3427086675080851217
@@ -136,18 +126,13 @@ MonoBehaviour:
         Id:
           Value: 3448728012277418625
       ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|DebugLeaf_1
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
       AssetRef:
         Id:
-          Value: 3580962421273367876
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+          Value: 3812355360231845773
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/EntityPrototypes/DiceActor|EntityView
       AssetRef:
         Id:
           Value: 4050719712139043392
       ResourcePath: DB/EntityPrototypes/DiceActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|DebugLeaf_0
-      AssetRef:
-        Id:
-          Value: 4161884017955105223
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot

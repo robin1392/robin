@@ -1,4 +1,5 @@
 using System;
+using Photon.Deterministic;
 
 namespace Quantum
 {
@@ -9,14 +10,19 @@ namespace Quantum
         public BTAgent* BtAgent;
         public AIBlackboardComponent* BlackboardComponent;
     }
-    public unsafe class ActorSystem : SystemMainThreadFilter<ActorFilter>, ISignalOnComponentAdded<Actor>, ISignalOnComponentRemoved<AIBlackboardComponent>
+    public unsafe class ActorSystem : SystemMainThreadFilter<ActorFilter>, ISignalOnComponentRemoved<AIBlackboardComponent>
     {
         public override void Update(Frame f, ref ActorFilter filter)
         {
             filter.BtAgent->Update(f, filter.BtAgent, filter.BlackboardComponent, filter.EntityRef);
         }
         
-        public void OnAdded(Frame f, EntityRef entity, Actor* component)
+        public void OnRemoved(Frame frame, EntityRef entity, AIBlackboardComponent* component)
+        {
+            component->FreeBlackboardComponent(frame);
+        }
+
+        public void OnActorInit(Frame f, EntityRef entity)
         {
             string btAssetName = String.Empty;
             if (f.Has<Dice>(entity))
@@ -66,11 +72,6 @@ namespace Quantum
             }
             
             BTHelper.SetupBT(f, entity, btAssetName);
-        }
-        
-        public void OnRemoved(Frame frame, EntityRef entity, AIBlackboardComponent* component)
-        {
-            component->FreeBlackboardComponent(frame);
         }
     }
 }

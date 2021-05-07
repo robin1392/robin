@@ -48,3 +48,14 @@ signal OnSpWave(Int32 wave, Int32 spWave);
 signal OnWave(Int32 wave);
 signal SpawnByWave(Int32 wave);
 signal AddSpByWave(Int32 wave);
+
+enum ActionStateType { Idle, Walk, Attack, Freeze }
+event ActionChanged {
+    entity_ref Entity;
+    ActionStateType State;
+}
+
+event ActorHitted {
+    entity_ref Attacker;
+    entity_ref Victim;
+}

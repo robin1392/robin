@@ -30,7 +30,7 @@ public class FieldPositionSetter : MonoBehaviour
                var yIndex = i / columnCount;
                var xPosition = (xIndex - xMidIndex) * Gap;
                var yPosition = (yMidIndex - yIndex) * Gap;
-               child.localPosition = new Vector3(xPosition, yPosition, 0);
+               child.localPosition = new Vector3(xPosition, 0, yPosition);
           }
      }
 }

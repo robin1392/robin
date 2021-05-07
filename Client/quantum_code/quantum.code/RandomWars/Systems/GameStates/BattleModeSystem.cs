@@ -3,10 +3,13 @@ using RandomWarsResource.Data;
 
 namespace Quantum
 {
-    public unsafe class BattleModeSpawnSystem : SystemSignalsOnly, ISignalSpawnByWave, ISignalOnPlayerDataSet
+    public unsafe class BattleModeSystem : SystemSignalsOnly, ISignalSpawnByWave, ISignalOnPlayerDataSet
     {
-        
-        
+        public override void OnInit(Frame f)
+        {
+            f.Context.SetNavmesh(f.FindAsset<NavMesh>("Resources/DB/BattleMap_Navmesh"));
+        }
+
         public void SpawnByWave(Frame f, int wave)
         {
             Log.Debug($"BattleModeSpawnSystem Spawn {wave}");
@@ -31,16 +34,12 @@ namespace Quantum
         {
             var entityRef = f.Create();
             f.Add<ActorCreation>(entityRef);
-            var actorCreation = f.Unsafe.GetPointer<ActorCreation>(entityRef);
-            var list = f.ResolveList(actorCreation->creationList);
-
-            list.Add(new ActorCreationSpec()
-            {
-                Owner = rwPlayer->PlayerRef,
-                ActorType =  ActorType.Tower,
-                Position = position,
-                Team = rwPlayer->Team
-            });
+            f.Add<ActorCreationSpec>(entityRef);
+            var actorCreation = f.Unsafe.GetPointer<ActorCreationSpec>(entityRef);
+            actorCreation->Owner = rwPlayer->PlayerRef;
+            actorCreation->ActorType = ActorType.Tower;
+            actorCreation->Position = position;
+            actorCreation->Team = rwPlayer->Team;
         }
     }
 }

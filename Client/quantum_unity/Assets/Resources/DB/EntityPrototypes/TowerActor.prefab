@@ -67,7 +67,7 @@ MonoBehaviour:
         Id:
           Value: 0
       CircleRadius:
-        RawValue: 32768
+        RawValue: 131072
       EdgeExtent:
         RawValue: 0
       BoxExtents:

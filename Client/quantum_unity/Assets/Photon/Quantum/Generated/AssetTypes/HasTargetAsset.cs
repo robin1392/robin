@@ -10,8 +10,8 @@
 using Quantum;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Quantum/BTNode/BTLeaf/HasTarget", order = Quantum.EditorDefines.AssetMenuPriorityStart + 33)]
-public partial class HasTargetAsset : BTLeafAsset {
+[CreateAssetMenu(menuName = "Quantum/BTNode/BTDecorator/HasTarget", order = Quantum.EditorDefines.AssetMenuPriorityStart + 33)]
+public partial class HasTargetAsset : BTDecoratorAsset {
   public Quantum.HasTarget Settings;
 
   public override Quantum.AssetObject AssetObject => Settings;

@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a366507de6e4aa44aea490bd69adace, type: 3}
-  m_Name: Map1
+  m_Name: BattleMap
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/Map1
+      Path: Resources/DB/BattleMap
       Guid:
-        Value: 1710471675203725834
+        Value: 3377154048910103621
     UserAsset:
       Id:
         Value: 0
@@ -27,13 +27,95 @@ MonoBehaviour:
     BucketingAxis: 0
     SortingAxis: 1
     TriangleMeshCellSize: 4
-    StaticColliders3DTrianglesBinaryFile: Map1_mesh.bytes
-    GridSizeX: 32
-    GridSizeY: 32
-    GridNodeSize: 4
+    StaticColliders3DTrianglesBinaryFile: BattleMap_mesh.bytes
+    GridSizeX: 20
+    GridSizeY: 20
+    GridNodeSize: 2
     NavMeshLinks: []
     Regions: []
     StaticColliders2D:
+    - Rotation:
+        RawValue: 0
+      Position:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 589824
+      Height:
+        RawValue: 0
+      VerticalOffset:
+        RawValue: 0
+      PhysicsMaterial:
+        Id:
+          Value: 0
+      Layer: 0
+      ShapeType: 1
+      CircleRadius:
+        RawValue: 131072
+      BoxExtents:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      EdgeExtent:
+        RawValue: 0
+      PolygonCollider:
+        Identifier:
+          Path: 
+          Guid:
+            Value: 0
+        Vertices: []
+        Normals: []
+      StaticData:
+        Name: TopTower
+        Tag: Untagged
+        Layer: 0
+        Asset:
+          Id:
+            Value: 0
+        IsTrigger: 0
+        ColliderId: 0
+    - Rotation:
+        RawValue: 0
+      Position:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -589824
+      Height:
+        RawValue: 0
+      VerticalOffset:
+        RawValue: 0
+      PhysicsMaterial:
+        Id:
+          Value: 0
+      Layer: 0
+      ShapeType: 1
+      CircleRadius:
+        RawValue: 131072
+      BoxExtents:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      EdgeExtent:
+        RawValue: 0
+      PolygonCollider:
+        Identifier:
+          Path: 
+          Guid:
+            Value: 0
+        Vertices: []
+        Normals: []
+      StaticData:
+        Name: BottomTower
+        Tag: Untagged
+        Layer: 0
+        Asset:
+          Id:
+            Value: 0
+        IsTrigger: 0
+        ColliderId: 1
     - Rotation:
         RawValue: 0
       Position:
@@ -74,7 +156,7 @@ MonoBehaviour:
           Id:
             Value: 0
         IsTrigger: 0
-        ColliderId: 0
+        ColliderId: 2
     - Rotation:
         RawValue: 0
       Position:
@@ -115,7 +197,7 @@ MonoBehaviour:
           Id:
             Value: 0
         IsTrigger: 0
-        ColliderId: 1
+        ColliderId: 3
     - Rotation:
         RawValue: 0
       Position:
@@ -156,7 +238,7 @@ MonoBehaviour:
           Id:
             Value: 0
         IsTrigger: 0
-        ColliderId: 2
+        ColliderId: 4
     - Rotation:
         RawValue: 0
       Position:
@@ -197,7 +279,7 @@ MonoBehaviour:
           Id:
             Value: 0
         IsTrigger: 0
-        ColliderId: 3
+        ColliderId: 5
     - Rotation:
         RawValue: 0
       Position:
@@ -238,7 +320,7 @@ MonoBehaviour:
           Id:
             Value: 0
         IsTrigger: 0
-        ColliderId: 4
+        ColliderId: 6
     StaticColliders3D: []
     MapEntities: []
   Prototypes: []

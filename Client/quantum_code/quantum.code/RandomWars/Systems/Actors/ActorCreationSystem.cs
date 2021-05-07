@@ -6,8 +6,7 @@ namespace Quantum.Actors
         public ActorCreation* ActorCreation;
     }
 
-    public unsafe class ActorCreationSystem : SystemMainThreadFilter<ActorCreationFilter>,
-        ISignalOnComponentAdded<ActorCreation>, ISignalOnComponentRemoved<ActorCreation>
+    public unsafe class ActorCreationSystem : SystemMainThreadFilter<ActorCreationFilter>
     {
         private static readonly string DICE_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceActor|EntityPrototype"; 
         private static readonly string TOWER_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/TowerActor|EntityPrototype";
@@ -18,51 +17,31 @@ namespace Quantum.Actors
             {
                 return;
             }
-            
-            var creationCountPerFrame = 1;
-            var list = f.ResolveList(filter.ActorCreation->creationList);
-            var count = 0;
-            for (var i = list.Count - 1; i >= 0; --i)
-            {
-                count++;
-                if (count > creationCountPerFrame)
-                {
-                    break;
-                }
-                
-                CreateActor(f, list[i]);
-                list.RemoveAt(i);
-            }
 
-            if (list.Count < 1)
+            if (filter.ActorCreation->Delay > 0)
             {
-                f.Destroy(filter.EntityRef);
+                filter.ActorCreation->Delay -= 1;
+                return;
             }
+            
+            var actorCreation = f.Get<ActorCreationSpec>(filter.EntityRef);
+            CreateActor(f, actorCreation);
+
+            f.Destroy(filter.EntityRef);
         }
 
-        private void CreateActor(Frame f, ActorCreationSpec actorCreationSpec)
+        private void CreateActor(Frame f, ActorCreationSpec actorCreation)
         {
-            if (actorCreationSpec.ActorType == ActorType.Dice)
+            if (actorCreation.ActorType == ActorType.Dice)
             {
                 var actorPrototype = f.FindAsset<EntityPrototype>(DICE_ACTOR_PROTOTYPE);
-                ActorFactory.CreateDiceActor(f, actorCreationSpec, actorPrototype);
+                ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);
             }
-            else if (actorCreationSpec.ActorType == ActorType.Tower)
+            else if (actorCreation.ActorType == ActorType.Tower)
             {
                 var actorPrototype = f.FindAsset<EntityPrototype>(TOWER_ACTOR_PROTOTYPE);
-                ActorFactory.CreateTowerActor(f, actorCreationSpec, actorPrototype);
+                ActorFactory.CreateTowerActor(f, actorCreation, actorPrototype);
             }
-        }
-
-        public void OnAdded(Frame f, EntityRef entity, ActorCreation* component)
-        {
-            component->creationList = f.AllocateList<ActorCreationSpec>();
-        }
-
-        public void OnRemoved(Frame f, EntityRef entity, ActorCreation* component)
-        {
-            f.FreeList(component->creationList);
-            component->creationList = default;
         }
     }
 }

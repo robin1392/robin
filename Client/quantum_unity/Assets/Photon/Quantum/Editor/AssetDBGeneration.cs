@@ -122,11 +122,13 @@ namespace Quantum.Editor {
 
             // Check for duplicates
             if (guidMap.Contains(asset.AssetObject.Guid)) {
+              Debug.Log(asset.AssetObject.Path);
               Debug.LogError($"Duplicated guid {asset.AssetObject.Guid} found and skipping asset at path '{asset.AssetObject.Path}'");
               continue;
             }
 
             if (pathMap.Contains(asset.AssetObject.Path)) {
+              Debug.Log(asset.AssetObject.Path);
               Debug.LogError($"Duplicated path '{asset.AssetObject.Guid}' found and skipping asset with guid for at {asset.AssetObject.Guid}");
               continue;
             }

@@ -8,6 +8,11 @@ using UnityEngine;
 using UnityEditor;
 namespace Quantum.Editor {
 
+[CustomPropertyDrawer(typeof(Quantum.Prototypes.ActionStateType_Prototype))]
+public class ActionStateType_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.ActionStateType> {
+}
+
+
 [CustomPropertyDrawer(typeof(Quantum.Prototypes.ActorType_Prototype))]
 public class ActorType_PrototypePropertyDrawer : EnumWrapperPropertyDrawerBase<Quantum.ActorType> {
 }

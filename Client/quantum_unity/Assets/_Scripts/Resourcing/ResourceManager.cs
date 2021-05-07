@@ -56,6 +56,7 @@ public static class Pool
         }
         
         var go = stack.Pop();
+        go.SetActive(true);
         return go;
     }
 }

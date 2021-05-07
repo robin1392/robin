@@ -79,10 +79,17 @@ namespace Quantum.Actors
                 actor->EffectDurationTime = stat.effectDurationTime;
                 actor->AttackSpeed = diceInfo.attackSpeed / f.Global->SuddenDeathAttackSpeedFactor;
                 actor->MoveSpeed = diceInfo.moveSpeed * f.Global->SuddenDeathMoveSpeedFactor;
-                
+
                 var transform = f.Unsafe.GetPointer<Transform2D>(entity);
                 transform->Position = spawnPosition;
                 transform->Rotation = rotation;
+                
+                f.Events.ActionChanged(entity, ActionStateType.Idle);
+
+                BTHelper.SetupBT(f, entity, diceInfo.btAssetName);
+                var agent = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
+                agent->Acceleration = actor->MoveSpeed;
+                agent->MaxSpeed = actor->MoveSpeed;
             }
         }
         

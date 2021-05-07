@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cfb2d134f0fd8e447b08e569da2a1031, type: 3}
-  m_Name: Map1_Navmesh
+  m_Name: BattleMap_Navmesh
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/Map1_Navmesh
+      Path: Resources/DB/BattleMap_Navmesh
       Guid:
-        Value: 1696161997930526014
+        Value: 2600365732021726587
     Name: Navmesh
-    DataFilepath: Map1_Navmesh.bytes
-    GridSizeX: 32
-    GridSizeY: 32
-    GridNodeSize: 4
+    DataFilepath: BattleMap_Navmesh.bytes
+    GridSizeX: 20
+    GridSizeY: 20
+    GridNodeSize: 2
     WorldOffset:
       X:
-        RawValue: -4194304
+        RawValue: -1310720
       Y:
-        RawValue: -4194304
+        RawValue: -1310720
     MinAgentRadius:
-      RawValue: 32768
+      RawValue: 19660

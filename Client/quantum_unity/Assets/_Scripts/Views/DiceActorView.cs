@@ -7,64 +7,43 @@ using Dice = Quantum.Dice;
 
 namespace _Scripts.Views
 {
-    public class DiceActorView : QuantumCallbacks
+    public class DiceActorView : ActorView
     {
-        public EntityView EntityView;
-        public ActorModel ActorModel;
-
-        private bool _initializing = false;
-        private bool _initialized = false;
-
-        async UniTask Init(QuantumGame game)
+        protected override async UniTask OnInit(QuantumGame game)
         {
-            if (_initializing)
-            {
-                return;
-            }
+            var f = game.Frames.Verified;
+            var actor = f.Get<Actor>(EntityView.EntityRef);
+            var localPlayer = game.GetLocalPlayers()[0];
+            var isEnemy = f.AreEachOtherEnemy(actor, localPlayer);
+            var isLocalPlayerActor = actor.Owner == localPlayer;
         
-            _initializing = true;
-        
-            try
-            {
-                var f = game.Frames.Verified;
-                var actor = f.Get<Actor>(EntityView.EntityRef);
-                var localPlayer = game.GetLocalPlayers()[0];
-                var isEnemy = f.AreEachOtherEnemy(actor, localPlayer);
-                var isLocalPlayerActor = actor.Owner == localPlayer;
-        
-                var dice = f.Get<Dice>(EntityView.EntityRef);
-                TableManager.Get().DiceInfo.GetData(dice.DiceInfoId, out var diceInfo);
+            var dice = f.Get<Dice>(EntityView.EntityRef);
+            TableManager.Get().DiceInfo.GetData(dice.DiceInfoId, out var diceInfo);
 
-                if (isLocalPlayerActor)
-                {
-                    var setting = UI_DiceField.Get().arrSlot[dice.FieldIndex].ps.main;
-                    setting.startColor = FileHelper.GetColor(diceInfo.color);
-                    UI_DiceField.Get().arrSlot[dice.FieldIndex].ps.Play();
-                }
-        
-                if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION || diceInfo.castType == (int) DICE_CAST_TYPE.HERO)
-                {
-                    await SpawnMinionOrHero(diceInfo, isLocalPlayerActor, dice.FieldIndex, actor.Team, !isEnemy);
-                }
-                else if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC ||
-                         diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
-                {
-                    // await SpawnMagicAndInstallation();
-                }
-        
-                _initialized = true;
-                _initializing = false;
-            }
-            catch (System.Exception)
+            if (isLocalPlayerActor)
             {
-                return;
+                var setting = UI_DiceField.Get().arrSlot[dice.FieldIndex].ps.main;
+                setting.startColor = FileHelper.GetColor(diceInfo.color);
+                UI_DiceField.Get().arrSlot[dice.FieldIndex].ps.Play();
+            }
+        
+            if (diceInfo.castType == (int) DICE_CAST_TYPE.MINION || diceInfo.castType == (int) DICE_CAST_TYPE.HERO)
+            {
+                await SpawnMinionOrHero(diceInfo, isLocalPlayerActor, dice.FieldIndex, actor.Team, !isEnemy);
+            }
+            else if (diceInfo.castType == (int) DICE_CAST_TYPE.MAGIC ||
+                     diceInfo.castType == (int) DICE_CAST_TYPE.INSTALLATION)
+            {
+                // await SpawnMagicAndInstallation();
             }
         }
 
         private async UniTask SpawnMinionOrHero(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
         {
-            var spawnEffectGo = await ResourceManager.LoadGameObjectAsync("particle_necromancer", transform.position, Quaternion.identity);
+            var assetName = "particle_necromancer";
+            var spawnEffectGo = await ResourceManager.LoadGameObjectAsync(assetName, transform.position, Quaternion.identity);
             var spawnEffectPo = spawnEffectGo.GetComponent<PoolableObject>();
+            spawnEffectPo.AssetName = assetName;
             spawnEffectPo.ReservePushBack();
 
             ActorModel = await ResourceManager.LoadMonobehaviourAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
@@ -88,9 +67,11 @@ namespace _Scripts.Views
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;
             }
-        
-            var lrGo = await ResourceManager.LoadGameObjectAsync("Effect_SpawnLine", Vector3.zero, Quaternion.identity);
+
+            var assetName = "Effect_SpawnLine";
+            var lrGo = await ResourceManager.LoadGameObjectAsync(assetName, Vector3.zero, Quaternion.identity);
             var poolable = lrGo.GetComponent<PoolableObject>();
+            poolable.AssetName = assetName;
             poolable.ReservePushBack();
         
             var lr = lrGo.GetComponent<LineRenderer>();
@@ -175,32 +156,13 @@ namespace _Scripts.Views
         //     return spawnPosition;
         // }
         //
-        public override void OnUpdateView(QuantumGame game)
+
+        protected override void OnUpdateViewAfterInit(QuantumGame game)
         {
             var f = game.Frames.Verified;
-            if (EntityView.EntityRef == EntityRef.None)
-            {
-                return;
-            }
-
-            if (_initialized == false && _initializing == false)
-            {
-                Init(game).Forget();
-                return;
-            }
-
-            if (_initialized == false)
-            {
-                return;
-            }
-
             var e = EntityView.EntityRef;
             var actor = f.Get<Actor>(e);
             ActorModel.image_HealthBar.fillAmount = (actor.Health / actor.MaxHealth).AsFloat;
-
-            var tr = f.Get<Transform2D>(e);
-            transform.position = new Vector3(tr.Position.X.AsFloat, 0, tr.Position.Y.AsFloat);
-            transform.eulerAngles = new Vector3(0, tr.Rotation.AsFloat, 0);
         }
     }
 }

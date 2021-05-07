@@ -41,6 +41,7 @@
     </explicitIncludes>
     <explicitExcludes>
       <Path>.idea</Path>
+      <Path>CircuitCache</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Temp</Path>

@@ -1,10 +1,6 @@
 //import ActorType;
 
-component ActorCreation{
-    list<ActorCreationSpec> creationList;
-}
-
-struct ActorCreationSpec{
+component ActorCreationSpec{
     player_ref Owner;
     Int32 Team;
     ActorType ActorType;
@@ -15,3 +11,9 @@ struct ActorCreationSpec{
     FPVector2 Position;
     Int32 FieldIndex;
 }
+
+component ActorCreation{
+    Int32 Delay;
+}
+
+

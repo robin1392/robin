@@ -6,6 +6,7 @@ namespace Quantum {
   {
       public QuantumCodeTableDataContainer TableData;
       public FieldPositions FieldPositions;
+      public NavMesh NavMesh;
       
       public void SetData(QuantumCodeTableDataContainer tableData)
       {
@@ -15,6 +16,11 @@ namespace Quantum {
       public void SetFieldPositions(FieldPositions fieldPositions)
       {
           FieldPositions = fieldPositions;
+      }
+
+      public void SetNavmesh(NavMesh navMesh)
+      {
+          NavMesh = navMesh;
       }
   }
 

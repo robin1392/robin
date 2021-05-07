@@ -8,6 +8,8 @@ component Actor {
     FP MoveSpeed;
     FP Effect;
     FP EffectDurationTime;
+    FP Range;
+    FP SearchRange;
 }
 
 component Dice {

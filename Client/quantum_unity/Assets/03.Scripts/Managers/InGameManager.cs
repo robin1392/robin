@@ -154,6 +154,8 @@ namespace ED
                 TableManager.Get().Init(Application.persistentDataPath + "/Resources/");
             }
             
+            CameraController.Get().UpdateCameraRotation(true);
+            
             var userInfo = UserInfoManager.Get().GetUserInfo();
 
             var userDeck = userInfo.GetActiveDeck;

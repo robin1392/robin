@@ -48,13 +48,14 @@ namespace Quantum
             }
             else
             {
-                gameStateSystems.Add(new BattleModeSpawnSystem());
+                gameStateSystems.Add(new BattleModeSystem());
             }
 
             var logicSystem = new List<SystemBase>
             {
                 new BotSDKSystem(),
                 new BTUpdateSystem(),
+                new BotSDKDebuggerSystem(),
                 
                 new PlayerBotSystem(),
                 
