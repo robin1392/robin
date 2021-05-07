@@ -10,7 +10,8 @@ public class ActorModel : MonoBehaviour
     public Transform ShootingPosition;
     public Transform HitPosition;
     public Transform TopEffectPosition;
-    
+    public Animator Animator;
+
     private void Awake()
     {
         ObjectHealthBar = GetComponentInChildren<UI_ObjectHealthBar>();

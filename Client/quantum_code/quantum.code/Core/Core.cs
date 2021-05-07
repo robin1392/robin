@@ -2747,7 +2747,7 @@ namespace Quantum {
 }
 
 // Game/TriggeredSetPool.cs
-﻿
+ 
 namespace Quantum {
   public class TriggeredSetPool {
     Stack<Dictionary<Int32, Boolean>[]> _triggeredPool = new Stack<Dictionary<Int32, Boolean>[]>();

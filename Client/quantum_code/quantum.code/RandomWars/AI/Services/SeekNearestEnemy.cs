@@ -12,8 +12,8 @@ namespace Quantum
             var f = p.Frame;
             var e = p.Entity;
             var bb = p.Blackboard;
-
-            if (bb->GetBoolean(f, IsEnemyTargetAttacked.Key))
+            var isEnemyTargetAttacked = bb->GetBoolean(f, IsEnemyTargetAttacked.Key);
+            if (isEnemyTargetAttacked == true)
             {
                 return;
             }
@@ -54,7 +54,7 @@ namespace Quantum
                     }
                 }
             }
-
+            
             if (nearest != previousTarget)
             {
                 bb->Set(f, EnemyTargetRef.Key, nearest)->TriggerDecorators(p);

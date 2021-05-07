@@ -18,18 +18,18 @@ namespace Quantum
         public override void OnEnter(BTParams p)
         {
             base.OnEnter(p);
-            var pathfinder = p.Frame.Unsafe.GetPointer<NavMeshPathfinder>(p.Entity);
-            pathfinder->IsActive = true;
-            
-            p.Frame.Events.ActionChanged(p.Entity, ActionStateType.Walk);
+            var f = p.Frame;
+            f.Events.ActionChanged(p.Entity, ActionStateType.Walk);
         }
 
         protected override BTStatus OnUpdate(BTParams p)
         {
-            var bb = p.Frame.Get<AIBlackboardComponent>(p.Entity);
-            var target = bb.GetEntityRef(p.Frame, Target.Key);
+            var f = p.Frame;
+            var e = p.Entity;
+            var bb = f.Get<AIBlackboardComponent>(e);
+            var target = bb.GetEntityRef(f, Target.Key);
             
-            if (p.Frame.Exists(target) == false)
+            if (f.Exists(target) == false)
             {
                 return BTStatus.Failure;
             }
@@ -39,32 +39,31 @@ namespace Quantum
                 return BTStatus.Failure;
             }
 
-            var targetTransform = p.Frame.Get<Transform2D>(target);
-            var transform = p.Frame.Get<Transform2D>(p.Entity);
+            var targetTransform = f.Get<Transform2D>(target);
+            var transform = f.Get<Transform2D>(e);
             
-            var collider2D = p.Frame.Get<PhysicsCollider2D>(p.Entity);
-            var targetCollider2D = p.Frame.Get<PhysicsCollider2D>(target);
-            var acceptDistance = targetCollider2D.Shape.Circle.Radius + collider2D.Shape.Circle.Radius;
-            
+            var acceptDistance = FP._0_03;
             var distanceSquared = FPVector2.DistanceSquared(targetTransform.Position, transform.Position);
             if (distanceSquared < acceptDistance * acceptDistance)
             {
                 return BTStatus.Success;
             }
-            
-            var pathfinder = p.Frame.Unsafe.GetPointer<NavMeshPathfinder>(p.Entity);
-            pathfinder->SetTarget(p.Frame, targetTransform.Position, _navMesh);
 
+            var actor = f.Get<Actor>(e);
+            var direction = (targetTransform.Position - transform.Position).Normalized * actor.MoveSpeed;
+            var body =f.Unsafe.GetPointer<PhysicsBody2D>(e);
+            body->AddForce(direction * f.DeltaTime);
+            
             return BTStatus.Running;
         }
 
         public override void OnExit(BTParams p)
         {
             base.OnExit(p);
-            var pathfinder = p.Frame.Unsafe.GetPointer<NavMeshPathfinder>(p.Entity);
-            pathfinder->Stop(p.Frame, p.Entity, true);
-            
-            p.Frame.Events.ActionChanged(p.Entity, ActionStateType.Idle);
+            var f = p.Frame;
+            var e = p.Entity;
+            f.Unsafe.GetPointer<PhysicsBody2D>(e)->Velocity = FPVector2.Zero;
+            f.Events.ActionChanged(e, ActionStateType.Idle);
         }
     }
 }

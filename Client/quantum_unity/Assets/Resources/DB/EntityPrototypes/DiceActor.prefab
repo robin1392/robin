@@ -58,7 +58,7 @@ MonoBehaviour:
     IsTrigger: 0
     Material:
       Id:
-        Value: 0
+        Value: 1
     SourceCollider: {fileID: 0}
     IsEnabled: 1
     Shape2D:
@@ -118,14 +118,14 @@ MonoBehaviour:
       Value: 0
   PhysicsBody:
     IsEnabled: 0
-    Version: 0
+    Version: 1
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
     Mass:
       RawValue: 65536
     Drag:
-      RawValue: 32768
+      RawValue: 655360
     AngularDrag:
       RawValue: 32768
     CenterOfMass2D:
@@ -141,7 +141,7 @@ MonoBehaviour:
       Z:
         RawValue: 0
   NavMeshPathfinder:
-    IsEnabled: 1
+    IsEnabled: 0
     NavMeshAgentConfig:
       Id:
         Value: 2
@@ -234,6 +234,10 @@ MonoBehaviour:
       RawValue: 0
     EffectDurationTime:
       RawValue: 0
+    Range:
+      RawValue: 0
+    SearchRange:
+      RawValue: 0
 --- !u!114 &1943579530012203166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,8 +250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65f3d53e67574d068422aec1814ef45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EntityView: {fileID: 1402718890428716666}
   ActorModel: {fileID: 0}
+  EntityView: {fileID: 1402718890428716666}
 --- !u!114 &757636810806438274
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,10 +13,10 @@ namespace Quantum
             {
                 // pre-defined core systems
                 new CullingSystem2D(),
-                new CullingSystem3D(),
+                // new CullingSystem3D(),
 
                 new PhysicsSystem2D(),
-                new PhysicsSystem3D(),
+                // new PhysicsSystem3D(),
 
                 new NavigationSystem(),
                 new EntityPrototypeSystem(),

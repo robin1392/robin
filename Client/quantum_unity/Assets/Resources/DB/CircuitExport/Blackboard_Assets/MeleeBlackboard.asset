@@ -16,8 +16,11 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
       Guid:
-        Value: 687509308602505173
+        Value: 3762840619910204947
     Entries:
     - Type: 6
       Key:
         Key: Target
+    - Type: 0
+      Key:
+        Key: TargetAttacked

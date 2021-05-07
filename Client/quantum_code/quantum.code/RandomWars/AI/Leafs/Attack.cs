@@ -8,7 +8,7 @@ namespace Quantum
     {
         public AIBlackboardValueKey Target;
         public FP Duration = 1;
-        public FP HitFrame = FP._0_75;
+        public FP HitFrame = FP._0_50;
         public BTDataIndex StartTimeIndex;
         public BTDataIndex HitIndex;
         
@@ -26,6 +26,7 @@ namespace Quantum
             base.OnEnter(p);
             var startTime = p.Frame.DeltaTime * p.Frame.Number;
             p.BtAgent->SetFPData(p.Frame, startTime, StartTimeIndex.Index);
+            p.BtAgent->SetIntData(p.Frame, 0, HitIndex.Index);
             
             p.Frame.Events.ActionChanged(p.Entity, ActionStateType.Attack);
         }
@@ -60,7 +61,7 @@ namespace Quantum
                 }    
             }
             
-            if (currentTime > startTime + HitFrame)
+            if (currentTime > startTime + Duration)
             {
                 return BTStatus.Success;
             }

@@ -133,7 +133,7 @@ MonoBehaviour:
   radius: 0.3
   height: 1
   repathRate: 1
-  canSearch: 1
+  canSearch: 0
   canMove: 1
   maxSpeed: 1
   gravity: {x: 0, y: 0, z: 0}
@@ -175,6 +175,7 @@ MonoBehaviour:
   maxHealth: 0
   power: 0
   effect: 0
+  effectDurationTime: 0
   attackSpeed: 0
   moveSpeed: 0
   diceScale: 0

@@ -21,10 +21,8 @@ MonoBehaviour:
     m_Address: Minion_Fire
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 5081294253336761964, guid: 9dbba603b416c4dccb8826638030b08c,
-      type: 3}
-    m_TargetAsset: {fileID: 5081294253336761964, guid: 9dbba603b416c4dccb8826638030b08c,
-      type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
   m_SchemaSet:

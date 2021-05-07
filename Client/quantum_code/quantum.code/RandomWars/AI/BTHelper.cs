@@ -1,3 +1,5 @@
+using Photon.Deterministic;
+
 namespace Quantum
 {
     public unsafe class BTHelper
@@ -17,6 +19,48 @@ namespace Quantum
             var bbInitializerAsset = f.FindAsset<AIBlackboardInitializer>(string.Format(BTBlackBoardFormat, btAssetName));
             AIBlackboardInitializer.InitializeBlackboard(f, &blackboardComponent, bbInitializerAsset);
             f.Set(entityRef, blackboardComponent);
+        }
+        
+        public static EntityRef GetNearestEnemy(BTParams p)
+        {
+            var transform = p.Frame.Get<Transform2D>(p.Entity);
+            var actor = p.Frame.Get<Actor>(p.Entity);
+            var hits = p.Frame.Physics2D.OverlapShape(
+                transform, Shape2D.CreateCircle(actor.SearchRange));
+
+            var nearest = EntityRef.None;
+            var nearestDistanceSquared = FP.MaxValue;
+            for (int i = 0; i < hits.Count; i++)
+            {
+                if (hits[i].Entity == EntityRef.None)
+                {
+                    continue;
+                }
+                
+                if (p.Frame.Unsafe.TryGetPointer(hits[i].Entity, out Actor* target))
+                {
+                    if (actor.Team == target->Team)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (p.Frame.TryGet(hits[i].Entity, out Transform2D targetTransform))
+                {
+                    var distanceSquared = FPVector2.DistanceSquared(targetTransform.Position, transform.Position); 
+                    if (distanceSquared < nearestDistanceSquared)
+                    {
+                        nearestDistanceSquared = distanceSquared;
+                        nearest = hits[i].Entity;
+                    }
+                }
+            }
+
+            return nearest;
         }
     }
 }

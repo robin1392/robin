@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Quantum;
+using UnityEngine;
 
 namespace _Scripts.Views
 {
@@ -32,6 +33,7 @@ namespace _Scripts.Views
             try
             {
                 await OnInit(game);
+                OnAfterInit();
             }
             catch (System.Exception)
             {
@@ -39,6 +41,15 @@ namespace _Scripts.Views
             }
             _initialized = true;
             _initializing = false;
+        }
+
+        private void OnAfterInit()
+        {
+            if (string.IsNullOrWhiteSpace(_animationTriggerPending) == false)
+            {
+                AnimationTrigger(_animationTriggerPending);
+                _animationTriggerPending = null;
+            }
         }
 
         protected virtual async UniTask OnInit(QuantumGame game)
@@ -51,18 +62,38 @@ namespace _Scripts.Views
             {
                 if (ActorModel != null)
                 {
-                    ResourceManager.LoadGameObjectAsync("")
-                        
-                    ActorModel.ShootingPosition.position
+                    ShowEffect(ActorModel.ShootingPosition.position).Forget();
                 }
             }
+        }
+
+        async UniTask ShowEffect(Vector3 position)
+        {
+            var assetName = "Effect_ArrowHit";
+            var go = await ResourceManager.LoadGameObjectAsync(assetName, position, Quaternion.identity);
+            var poolable = go.GetComponent<PoolableObject>();
+            poolable.AssetName = assetName;
+            poolable.ReservePushBack();
         }
 
         private void OnActionChanged(EventActionChanged callback)
         {
             if (EntityView.EntityRef.Equals(callback.Entity))
             {
+                AnimationTrigger(callback.State.ToString());
             }
+        }
+
+        private string _animationTriggerPending;
+        void AnimationTrigger(string trigger)
+        {
+            if (ActorModel == null)
+            {
+                _animationTriggerPending = trigger;
+                return;
+            }
+            
+            ActorModel.Animator.SetTrigger(trigger);
         }
         
         public override void OnUpdateView(QuantumGame game)

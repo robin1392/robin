@@ -6,51 +6,21 @@ namespace Quantum
     [Serializable]
     public unsafe partial class SetNearestEnemyToTarget : BTLeaf
     {
-        public AIBlackboardValueKey Target;
-        public FP Range;
+        public AIBlackboardValueKey EnemyTargetRef;
+        public AIBlackboardValueKey IsEnemyTargetAttacked;
 
         protected override BTStatus OnUpdate(BTParams p)
         {
-            var transform = p.Frame.Get<Transform2D>(p.Entity);
-            var actor = p.Frame.Get<Actor>(p.Entity);
-            
-            var hits = p.Frame.Physics2D.OverlapShape(
-                transform, Shape2D.CreateCircle(Range));
-
-            var nearest = EntityRef.None;
-            var nearestDistanceSquared = FP.MaxValue;
-            for (int i = 0; i < hits.Count; i++)
+            var f = p.Frame;
+            var bb = p.Blackboard;
+            var isEnemyTargetAttacked = bb->GetBoolean(f, IsEnemyTargetAttacked.Key);
+            if (isEnemyTargetAttacked == true)
             {
-                if (hits[i].Entity == EntityRef.None)
-                {
-                    continue;
-                }
-                
-                if (p.Frame.Unsafe.TryGetPointer(hits[i].Entity, out Actor* target))
-                {
-                    if (actor.Team == target->Team)
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    continue;
-                }
-                
-                if (p.Frame.TryGet(hits[i].Entity, out Transform2D targetTransform))
-                {
-                    var distanceSquared = FPVector2.DistanceSquared(targetTransform.Position, transform.Position); 
-                    if (distanceSquared < nearestDistanceSquared)
-                    {
-                        nearestDistanceSquared = distanceSquared;
-                        nearest = hits[i].Entity;
-                    }
-                }
+                return BTStatus.Success;
             }
             
-            var bb = p.Frame.Unsafe.GetPointer<AIBlackboardComponent>(p.Entity);
-            bb->Set(p.Frame, Target.Key, nearest);
+            var nearest = BTHelper.GetNearestEnemy(p);
+            bb->Set(p.Frame, EnemyTargetRef.Key, nearest);
 
             if (nearest != EntityRef.None)
             {

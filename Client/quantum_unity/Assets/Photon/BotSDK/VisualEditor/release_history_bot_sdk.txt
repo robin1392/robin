@@ -1,3 +1,29 @@
+Apr 27, 2021
+- Bot SDK 2.1.10 Beta2
+ 
+* Visual Editor
+- Fixed issue related to a Unity bug introduced in a few recent versions. It resulted in errors when creating the scripable objects;
+- Fixed an issue which resulted in duplicate asset Guid after compiling the AI;
+- Fixed issue in which FPVector3 fields would have its value reset to zero everytime;
+- The Searchbox now disappears when clicking on the Breadcrumb buttons;
+- The values on the slots does not disappear anymore during Runtime;
+- Added a context menu (with the Right Click) on the Blackboard, Constants and Config panels;
+
+
+Apr 15, 2021
+- Bot SDK 2.1.9 Beta2
+ 
+* Visual Editor
+- Fixed issue where hidden nodes could be selected and accidentaly deleted;
+
+
+Apr 13, 2021
+- Bot SDK 2.1.8 Beta2
+ 
+* Serialization
+- Updated Protobuf version to 2.4.6
+
+
 Apr 08, 2021
 - Bot SDK 2.1.7 Beta2
  
