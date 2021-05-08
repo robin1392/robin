@@ -22,7 +22,7 @@ MonoBehaviour:
     CachedWaypointCount: 6
     MaxRepathTimeout:
       RawValue: 327680
-    LineOfSightFunneling: 1
+    LineOfSightFunneling: 0
     DynamicLineOfSight: 1
     DynamicLineOfSightWaypointRange:
       RawValue: 0

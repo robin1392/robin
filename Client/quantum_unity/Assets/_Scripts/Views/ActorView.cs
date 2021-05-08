@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Quantum;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace _Scripts.Views
 {
     public class ActorView : QuantumCallbacks
     {
+        //TODO: 게임 시작 전에 비동기로 모델을 비롯한 리소스를 모두 프리로딩하고 동기로 사용한다.
         public ActorModel ActorModel;
         public EntityView EntityView;
         private EntityViewUpdater _viewUpdater;
@@ -19,6 +21,7 @@ namespace _Scripts.Views
             QuantumEvent.Subscribe<EventActionChanged>(this, OnActionChanged);
             QuantumEvent.Subscribe<EventActorHitted>(this, OnActorHitted);
             QuantumEvent.Subscribe<EventActorDeath>(this, OnActorDeath);
+            QuantumEvent.Subscribe<EventPlayCasterEffect>(this, OnPlayCasterEffect);
         }
 
         async UniTask Init(QuantumGame game)
@@ -56,8 +59,29 @@ namespace _Scripts.Views
         {
         }
 
+        private void OnPlayCasterEffect(EventPlayCasterEffect callback)
+        {
+            if (ActorModel == null)
+            {
+                return;
+            }
+
+            if (EntityView.EntityRef.Equals(callback.Caster))
+            {
+                ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(
+                    callback.AssetName, 
+                    transform.position,
+                    Quaternion.identity).Forget();
+            }
+        }
+
         private void OnActorHitted(EventActorHitted callback)
         {
+            if (ActorModel == null)
+            {
+                return;
+            }
+            
             if (EntityView.EntityRef.Equals(callback.Attacker))
             {
                 if (ActorModel != null)
@@ -68,6 +92,24 @@ namespace _Scripts.Views
                         Quaternion.identity).Forget();
                 }
             }
+
+            if (EntityView.EntityRef.Equals(callback.Victim))
+            {
+                if (callback.HitColor == HitColor.Fire)
+                {
+                    PlayRendererHitEffect();
+                }
+            }
+        }
+        
+        public void PlayRendererHitEffect()
+        {
+            var amount = 0.0f;
+            var targetValue = 0.7f;
+            var duration = 0.2f;
+            Tweener tweener = DOTween.To(() => amount, x => amount = x, targetValue, duration);
+            tweener.OnUpdate(() => { ActorModel.RendererEffect.SetTintColor(Color.red, amount); });
+            tweener.SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutQuad);
         }
 
         private void OnActionChanged(EventActionChanged callback)
@@ -127,7 +169,6 @@ namespace _Scripts.Views
 
         protected virtual void OnActorDeathInternal(EventActorDeath callback)
         {
-            
         }
     }
 }

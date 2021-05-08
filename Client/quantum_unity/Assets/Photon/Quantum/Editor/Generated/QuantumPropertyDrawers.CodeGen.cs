@@ -129,6 +129,10 @@ namespace Quantum.Editor {
   public class PrototypeDrawer_GOAPWorldState_Prototype : PrototypeDrawer {
   }
 
+  [CustomPropertyDrawer(typeof(Quantum.Prototypes.HitColor_Prototype))]
+  public class PrototypeDrawer_HitColor_Prototype : PrototypeDrawer {
+  }
+
   [CustomPropertyDrawer(typeof(Quantum.Prototypes.StateType_Prototype))]
   public class PrototypeDrawer_StateType_Prototype : PrototypeDrawer {
   }

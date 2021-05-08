@@ -77,10 +77,12 @@ namespace Quantum.Actors
                 actor->Health = stat.maxHealth;
                 actor->Effect = stat.effect;
                 actor->EffectDurationTime = stat.effectDurationTime;
+                actor->EffectProbability = 20;//diceInfo.effectProbability;
                 actor->AttackSpeed = diceInfo.attackSpeed / f.Global->SuddenDeathAttackSpeedFactor;
                 actor->MoveSpeed = diceInfo.moveSpeed * f.Global->SuddenDeathMoveSpeedFactor;
                 actor->SearchRange = 999;
                 actor->Range = diceInfo.range;
+                actor->EffectRangeValue = diceInfo.effectRangeValue;
 
                 var transform = f.Unsafe.GetPointer<Transform2D>(entity);
                 transform->Position = spawnPosition;

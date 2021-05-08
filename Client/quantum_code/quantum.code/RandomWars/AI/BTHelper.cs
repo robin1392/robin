@@ -23,6 +23,7 @@ namespace Quantum
         
         public static EntityRef GetNearestEnemy(BTParams p)
         {
+            var f = p.Frame;
             var transform = p.Frame.Get<Transform2D>(p.Entity);
             var actor = p.Frame.Get<Actor>(p.Entity);
             var hits = p.Frame.Physics2D.OverlapShape(
@@ -32,14 +33,15 @@ namespace Quantum
             var nearestDistanceSquared = FP.MaxValue;
             for (int i = 0; i < hits.Count; i++)
             {
-                if (hits[i].Entity == EntityRef.None)
+                var hitEntity = hits[i].Entity;
+                if (hitEntity == EntityRef.None)
                 {
                     continue;
                 }
                 
-                if (p.Frame.Unsafe.TryGetPointer(hits[i].Entity, out Actor* target))
+                if (f.TryGet(hitEntity, out Actor target))
                 {
-                    if (actor.Team == target->Team)
+                    if (actor.Team == target.Team)
                     {
                         continue;
                     }
@@ -49,7 +51,7 @@ namespace Quantum
                     continue;
                 }
 
-                if (p.Frame.TryGet(hits[i].Entity, out Transform2D targetTransform))
+                if (f.TryGet(hitEntity, out Transform2D targetTransform))
                 {
                     var distanceSquared = FPVector2.DistanceSquared(targetTransform.Position, transform.Position); 
                     if (distanceSquared < nearestDistanceSquared)

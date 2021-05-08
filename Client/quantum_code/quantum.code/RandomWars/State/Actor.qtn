@@ -8,6 +8,8 @@ component Actor {
     FP MoveSpeed;
     FP Effect;
     FP EffectDurationTime;
+    FP EffectProbability;
+    FP EffectRangeValue;
     FP Range;
     FP SearchRange;
 }

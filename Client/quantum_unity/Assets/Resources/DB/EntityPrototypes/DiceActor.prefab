@@ -126,9 +126,9 @@ MonoBehaviour:
     Config3D: 58
     RotationFreeze: 0
     Mass:
-      RawValue: 655360
+      RawValue: 6553600
     Drag:
-      RawValue: 655360
+      RawValue: 6553600
     AngularDrag:
       RawValue: 6553600
     CenterOfMass2D:

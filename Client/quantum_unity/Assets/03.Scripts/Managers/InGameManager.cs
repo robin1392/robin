@@ -78,7 +78,7 @@ namespace ED
                 DataPatchManager.Get().JsonDownLoad();
 
             // 위치를 옮김.. 차후 데이터 로딩후 풀링을 해야되서....
-            PoolManager.Get().MakePool();
+            // PoolManager.Get().MakePool();
             
             Debug.Log(InGameManager.Get().playType);
             Debug.Log(NetworkManager.Get().UseLocalServer);

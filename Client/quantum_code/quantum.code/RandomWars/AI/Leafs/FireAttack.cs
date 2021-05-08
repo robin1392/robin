@@ -4,7 +4,7 @@ using System;
 namespace Quantum
 {
     [Serializable]
-    public unsafe partial class Attack : BTLeaf
+    public unsafe partial class FireAttack : BTLeaf
     {
         public AIBlackboardValueKey Target;
         public AIBlackboardValueKey IsEnemyTargetAttacked;
@@ -63,9 +63,31 @@ namespace Quantum
                     transform->Rotation = rotation;
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
 
-                    var targetActor = f.Unsafe.GetPointer<Actor>(target);
-                    targetActor->Health -= actor.Power;
-                    f.Events.ActorHitted(p.Entity, target, HitColor.None);
+                    var hits = f.Physics2D.OverlapShape(*transform, Shape2D.CreateCircle(actor.EffectRangeValue));
+                    for (int i = 0; i < hits.Count; i++)
+                    {
+                        var hitEntity = hits[i].Entity;
+                        if (hitEntity == EntityRef.None)
+                        {
+                            continue;
+                        }
+                        
+                        if (f.Unsafe.TryGetPointer(hitEntity, out Actor* targetActor))
+                        {
+                            if (actor.Team == targetActor->Team)
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                        
+                        targetActor->Health -= actor.Effect;
+                        f.Events.ActorHitted(p.Entity, target, HitColor.Fire);
+                        f.Events.PlayCasterEffect(p.Entity, "Effect_FireBomb");
+                    }
 
                     bb->Set(p.Frame, IsEnemyTargetAttacked.Key, true);
                 }    

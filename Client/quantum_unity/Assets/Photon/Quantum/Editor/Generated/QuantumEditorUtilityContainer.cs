@@ -37,12 +37,14 @@ namespace Quantum.Editor {
       public Quantum.AIBlackboard[] AIBlackboard = {};
       public Quantum.AIBlackboardInitializer[] AIBlackboardInitializer = {};
       public Quantum.SimulationConfig[] SimulationConfig = {};
+      public Quantum.EffectProbability[] EffectProbability = {};
       public Quantum.HasTarget[] HasTarget = {};
       public Quantum.IsTargetInRange[] IsTargetInRange = {};
       public Quantum.IsTargetOutOfRange[] IsTargetOutOfRange = {};
       public Quantum.ApproachToTarget[] ApproachToTarget = {};
       public Quantum.Attack[] Attack = {};
       public Quantum.FindEnemy[] FindEnemy = {};
+      public Quantum.FireAttack[] FireAttack = {};
       public Quantum.SetNearestEnemyToTarget[] SetNearestEnemyToTarget = {};
       public Quantum.SeekNearestEnemy[] SeekNearestEnemy = {};
       public Quantum.BTSelector[] BTSelector = {};

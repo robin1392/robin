@@ -49,6 +49,10 @@ namespace Quantum {
     CarryingTarget = 4,
     TargetDelivered = 8,
   }
+  public enum HitColor : int {
+    None,
+    Fire,
+  }
   public enum StateType : int {
     Ready,
     Countdown,
@@ -731,6 +735,76 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct QString64 : IQString, IEquatable<QString64> {
+    public const Int32 SIZE = 64;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    private UInt16 byteCount;
+    [FieldOffset(2)]
+    [FixedBufferDynamicLength("byteCount")]
+    private fixed Byte bytes[62];
+    public const int MaxByteCount = 62;
+    public QString64(String str) {
+      QString.ConstructFrom(str, MaxByteCount, out this);
+    }
+    public int Length {
+      get {
+        return QString.GetLength(ref this);
+      }
+    }
+    public int ByteCount {
+      get {
+        return byteCount;
+      }
+    }
+    public override System.String ToString() {
+      return QString.GetString(ref this);
+    }
+    public static Boolean CanHold(String str) {
+      return QString.CanHold(str, MaxByteCount);
+    }
+    Int32 IQString.CompareOrdinal(byte* bytes, UInt16 byteCount) {
+      return QString.CompareOrdinal(ref this, bytes, byteCount);
+    }
+    public Int32 CompareOrdinal(String str) {
+      return QString.CompareOrdinal(ref this, str);
+    }
+    public static implicit operator QString64(String str) {
+      return new QString64(str);
+    }
+    public static implicit operator String(QString64 str) {
+      return str.ToString();
+    }
+    public override Boolean Equals(Object obj) {
+      return QString.AreEqual(ref this, obj);
+    }
+    public Boolean Equals(QString64 str) {
+      return QString.CompareOrdinal(ref this, str.bytes, str.byteCount) == 0;
+    }
+    public Boolean Equals<T>(ref T str)
+      where T : unmanaged, IQString {
+      return QString.CompareOrdinal(ref this, ref str) == 0;
+    }
+    public Int32 CompareOrdinal<T>(ref T str)
+      where T : unmanaged, IQString {
+      return QString.CompareOrdinal(ref this, ref str);
+    }
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 67;
+        hash = hash * 31 + byteCount.GetHashCode();
+        fixed (Byte* p = bytes) hash = hash * 31 + HashCodeUtils.GetArrayHashCode(p, this.byteCount);
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (QString64*)ptr;
+        serializer.Stream.Serialize(&p->byteCount);
+        Assert.Always(p->byteCount <= 62);
+        serializer.Stream.SerializeBuffer(&p->bytes[0], p->byteCount);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   [Quantum.AssetRefAttribute(typeof(AIAction))]
   [System.SerializableAttribute()]
   public unsafe partial struct AssetRefAIAction : IEquatable<AssetRefAIAction>, IAssetRef<AIAction> {
@@ -762,7 +836,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 67;
+        var hash = 71;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -804,7 +878,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 71;
+        var hash = 73;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -846,7 +920,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 73;
+        var hash = 79;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -888,7 +962,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 79;
+        var hash = 83;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -930,7 +1004,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 83;
+        var hash = 89;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -972,7 +1046,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 89;
+        var hash = 97;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1014,7 +1088,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 97;
+        var hash = 101;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1056,7 +1130,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 101;
+        var hash = 103;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1098,7 +1172,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 103;
+        var hash = 107;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1140,7 +1214,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 107;
+        var hash = 109;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1182,7 +1256,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 109;
+        var hash = 113;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1224,7 +1298,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 113;
+        var hash = 127;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1266,7 +1340,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 127;
+        var hash = 131;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1308,7 +1382,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 131;
+        var hash = 137;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1350,7 +1424,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 137;
+        var hash = 139;
         hash = hash * 31 + Id.GetHashCode();
         return hash;
       }
@@ -1368,7 +1442,7 @@ namespace Quantum {
     public Int32 Index;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 139;
+        var hash = 149;
         hash = hash * 31 + Index.GetHashCode();
         return hash;
       }
@@ -1397,7 +1471,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 149;
+        var hash = 151;
         hash = hash * 31 + ReactiveDecoratorsPtr.GetHashCode();
         hash = hash * 31 + Value.GetHashCode();
         return hash;
@@ -1424,7 +1498,7 @@ namespace Quantum {
     public Int32 outGameLevel;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 151;
+        var hash = 157;
         hash = hash * 31 + DiceId.GetHashCode();
         hash = hash * 31 + inGameLevel.GetHashCode();
         hash = hash * 31 + outGameLevel.GetHashCode();
@@ -1448,7 +1522,7 @@ namespace Quantum {
     public Int32 DiceScale;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 157;
+        var hash = 163;
         hash = hash * 31 + DeckIndex.GetHashCode();
         hash = hash * 31 + DiceScale.GetHashCode();
         return hash;
@@ -1470,7 +1544,7 @@ namespace Quantum {
     public Int64 Positive;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 163;
+        var hash = 167;
         hash = hash * 31 + Negative.GetHashCode();
         hash = hash * 31 + Positive.GetHashCode();
         return hash;
@@ -1502,7 +1576,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 167;
+        var hash = 173;
         hash = hash * 31 + CurrentState.GetHashCode();
         hash = hash * 31 + Root.GetHashCode();
         hash = hash * 31 + Time.GetHashCode();
@@ -1527,7 +1601,7 @@ namespace Quantum {
     public const int MAX_COUNT = 6;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 173;
+        var hash = 179;
         return hash;
       }
     }
@@ -1613,7 +1687,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 179;
+        var hash = 181;
         hash = hash * 31 + DeltaTime.GetHashCode();
         hash = hash * 31 + FrameMetaData.GetHashCode();
         hash = hash * 31 + IsSuddenDeath.GetHashCode();
@@ -1709,7 +1783,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 181;
+        var hash = 191;
         hash = hash * 31 + _FPValue.GetHashCode();
         hash = hash * 31 + _IntValue.GetHashCode();
         hash = hash * 31 + _field_used_.GetHashCode();
@@ -1853,7 +1927,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 191;
+        var hash = 193;
         hash = hash * 31 + _BooleanValue.GetHashCode();
         hash = hash * 31 + _ByteValue.GetHashCode();
         hash = hash * 31 + _EntityRefValue.GetHashCode();
@@ -1910,7 +1984,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 193;
+        var hash = 197;
         hash = hash * 31 + Board.GetHashCode();
         hash = hash * 31 + EntriesPtr.GetHashCode();
         return hash;
@@ -1931,7 +2005,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Actor : Quantum.IComponent {
-    public const Int32 SIZE = 80;
+    public const Int32 SIZE = 96;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(8)]
     public FP AttackSpeed;
@@ -1940,27 +2014,33 @@ namespace Quantum {
     [FieldOffset(24)]
     public FP EffectDurationTime;
     [FieldOffset(32)]
-    public FP Health;
+    public FP EffectProbability;
     [FieldOffset(40)]
-    public FP MaxHealth;
+    public FP EffectRangeValue;
     [FieldOffset(48)]
+    public FP Health;
+    [FieldOffset(56)]
+    public FP MaxHealth;
+    [FieldOffset(64)]
     public FP MoveSpeed;
     [FieldOffset(4)]
     public PlayerRef Owner;
-    [FieldOffset(56)]
-    public FP Power;
-    [FieldOffset(64)]
-    public FP Range;
     [FieldOffset(72)]
+    public FP Power;
+    [FieldOffset(80)]
+    public FP Range;
+    [FieldOffset(88)]
     public FP SearchRange;
     [FieldOffset(0)]
     public Int32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 197;
+        var hash = 199;
         hash = hash * 31 + AttackSpeed.GetHashCode();
         hash = hash * 31 + Effect.GetHashCode();
         hash = hash * 31 + EffectDurationTime.GetHashCode();
+        hash = hash * 31 + EffectProbability.GetHashCode();
+        hash = hash * 31 + EffectRangeValue.GetHashCode();
         hash = hash * 31 + Health.GetHashCode();
         hash = hash * 31 + MaxHealth.GetHashCode();
         hash = hash * 31 + MoveSpeed.GetHashCode();
@@ -1979,6 +2059,8 @@ namespace Quantum {
         FP.Serialize(&p->AttackSpeed, serializer);
         FP.Serialize(&p->Effect, serializer);
         FP.Serialize(&p->EffectDurationTime, serializer);
+        FP.Serialize(&p->EffectProbability, serializer);
+        FP.Serialize(&p->EffectRangeValue, serializer);
         FP.Serialize(&p->Health, serializer);
         FP.Serialize(&p->MaxHealth, serializer);
         FP.Serialize(&p->MoveSpeed, serializer);
@@ -1995,7 +2077,7 @@ namespace Quantum {
     public Int32 Delay;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 199;
+        var hash = 211;
         hash = hash * 31 + Delay.GetHashCode();
         return hash;
       }
@@ -2029,7 +2111,7 @@ namespace Quantum {
     public Int32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 211;
+        var hash = 223;
         hash = hash * 31 + (Int32)ActorType;
         hash = hash * 31 + DataId.GetHashCode();
         hash = hash * 31 + DiceScale.GetHashCode();
@@ -2122,7 +2204,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 223;
+        var hash = 227;
         hash = hash * 31 + ActiveServicesPtr.GetHashCode();
         hash = hash * 31 + BTDataValuesPtr.GetHashCode();
         hash = hash * 31 + Config.GetHashCode();
@@ -2167,7 +2249,7 @@ namespace Quantum {
     public Int32 BossInfoId;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 227;
+        var hash = 229;
         hash = hash * 31 + BossIndex.GetHashCode();
         hash = hash * 31 + BossInfoId.GetHashCode();
         return hash;
@@ -2195,7 +2277,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 229;
+        var hash = 233;
         hash = hash * 31 + HashCodeUtils.GetArrayHashCode(Dices);
         hash = hash * 31 + GuardianId.GetHashCode();
         return hash;
@@ -2223,7 +2305,7 @@ namespace Quantum {
     public Int32 OutgameUpgradeLevel;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 233;
+        var hash = 239;
         hash = hash * 31 + DiceInfoId.GetHashCode();
         hash = hash * 31 + DiceScale.GetHashCode();
         hash = hash * 31 + FieldIndex.GetHashCode();
@@ -2249,7 +2331,7 @@ namespace Quantum {
     public Int32 Count;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 239;
+        var hash = 241;
         hash = hash * 31 + Count.GetHashCode();
         return hash;
       }
@@ -2273,7 +2355,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 241;
+        var hash = 251;
         hash = hash * 31 + HashCodeUtils.GetArrayHashCode(Dices);
         return hash;
       }
@@ -2307,7 +2389,7 @@ namespace Quantum {
     }
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 251;
+        var hash = 257;
         hash = hash * 31 + Config.GetHashCode();
         hash = hash * 31 + CurrentState.GetHashCode();
         hash = hash * 31 + CurrentTaskIndex.GetHashCode();
@@ -2335,7 +2417,7 @@ namespace Quantum {
     public Int32 GuardianInfoId;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 257;
+        var hash = 263;
         hash = hash * 31 + GuardianInfoId.GetHashCode();
         return hash;
       }
@@ -2355,7 +2437,7 @@ namespace Quantum {
     public HFSMData Data;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 263;
+        var hash = 269;
         hash = hash * 31 + Config.GetHashCode();
         hash = hash * 31 + Data.GetHashCode();
         return hash;
@@ -2375,7 +2457,7 @@ namespace Quantum {
     private fixed Byte _alignment_padding_[4];
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 269;
+        var hash = 271;
         return hash;
       }
     }
@@ -2395,7 +2477,7 @@ namespace Quantum {
     public Int32 Team;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 271;
+        var hash = 277;
         hash = hash * 31 + EntityRef.GetHashCode();
         hash = hash * 31 + PlayerRef.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
@@ -2421,7 +2503,7 @@ namespace Quantum {
     public Int32 CurrentSp;
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 277;
+        var hash = 281;
         hash = hash * 31 + CommingSp.GetHashCode();
         hash = hash * 31 + CommingSpGrade.GetHashCode();
         hash = hash * 31 + CurrentSp.GetHashCode();
@@ -2443,7 +2525,7 @@ namespace Quantum {
     private fixed Byte _alignment_padding_[4];
     public override Int32 GetHashCode() {
       unchecked { 
-        var hash = 281;
+        var hash = 283;
         return hash;
       }
     }
@@ -2610,7 +2692,7 @@ namespace Quantum {
       }
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 17;
+      public const Int32 EVENT_TYPE_COUNT = 18;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return EventLocalPlayerOnly.ID;
@@ -2645,6 +2727,7 @@ namespace Quantum {
           case EventActionChanged.ID: return typeof(EventActionChanged);
           case EventActorHitted.ID: return typeof(EventActorHitted);
           case EventActorDeath.ID: return typeof(EventActorDeath);
+          case EventPlayCasterEffect.ID: return typeof(EventPlayCasterEffect);
           default: throw new System.ArgumentOutOfRangeException("eventID");
         }
       }
@@ -2735,10 +2818,11 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventActorHitted ActorHitted(EntityRef Attacker, EntityRef Victim) {
+      public EventActorHitted ActorHitted(EntityRef Attacker, EntityRef Victim, HitColor HitColor) {
         var ev = _f.Context.AcquireEvent<EventActorHitted>(EventActorHitted.ID);
         ev.Attacker = Attacker;
         ev.Victim = Victim;
+        ev.HitColor = HitColor;
         _f.AddEvent(ev);
         return ev;
       }
@@ -2746,6 +2830,13 @@ namespace Quantum {
         var ev = _f.Context.AcquireEvent<EventActorDeath>(EventActorDeath.ID);
         ev.Victim = Victim;
         ev.VictimTeam = VictimTeam;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventPlayCasterEffect PlayCasterEffect(EntityRef Caster, QString64 AssetName) {
+        var ev = _f.Context.AcquireEvent<EventPlayCasterEffect>(EventPlayCasterEffect.ID);
+        ev.Caster = Caster;
+        ev.AssetName = AssetName;
         _f.AddEvent(ev);
         return ev;
       }
@@ -3102,6 +3193,7 @@ namespace Quantum {
     public new const Int32 ID = 15;
     public EntityRef Attacker;
     public EntityRef Victim;
+    public HitColor HitColor;
     protected EventActorHitted(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
@@ -3121,6 +3213,7 @@ namespace Quantum {
         var hash = 103;
         hash = hash * 31 + Attacker.GetHashCode();
         hash = hash * 31 + Victim.GetHashCode();
+        hash = hash * 31 + HitColor.GetHashCode();
         return hash;
       }
     }
@@ -3148,6 +3241,33 @@ namespace Quantum {
         var hash = 107;
         hash = hash * 31 + Victim.GetHashCode();
         hash = hash * 31 + VictimTeam.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventPlayCasterEffect : EventBase {
+    public new const Int32 ID = 17;
+    public EntityRef Caster;
+    public QString64 AssetName;
+    protected EventPlayCasterEffect(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventPlayCasterEffect() : 
+        base(17, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 109;
+        hash = hash * 31 + Caster.GetHashCode();
+        hash = hash * 31 + AssetName.GetHashCode();
         return hash;
       }
     }
@@ -3369,6 +3489,7 @@ namespace Quantum {
       Register(typeof(Quantum.Guardian), Quantum.Guardian.SIZE);
       Register(typeof(Quantum.HFSMAgent), Quantum.HFSMAgent.SIZE);
       Register(typeof(Quantum.HFSMData), Quantum.HFSMData.SIZE);
+      Register(typeof(Quantum.HitColor), 4);
       Register(typeof(Quantum.Input), Quantum.Input.SIZE);
       Register(typeof(Quantum.InputButtons), 4);
       Register(typeof(LayerMask), LayerMask.SIZE);
@@ -3391,6 +3512,7 @@ namespace Quantum {
       Register(typeof(PlayerRef), PlayerRef.SIZE);
       Register(typeof(Ptr), Ptr.SIZE);
       Register(typeof(QBoolean), QBoolean.SIZE);
+      Register(typeof(Quantum.QString64), Quantum.QString64.SIZE);
       Register(typeof(RNGSession), RNGSession.SIZE);
       Register(typeof(Quantum.RWPlayer), Quantum.RWPlayer.SIZE);
       Register(typeof(Quantum.Sp), Quantum.Sp.SIZE);
@@ -3424,6 +3546,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.AssetRefHFSMTransitionSet>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.DiceType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.GOAPWorldState>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.HitColor>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.InputButtons>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.StateType>();
     }
@@ -3483,6 +3606,17 @@ namespace Quantum.Prototypes {
     }
     public static implicit operator GOAPWorldState_Prototype(GOAPWorldState value) {
         return new GOAPWorldState_Prototype() { Value = (Int64)value };
+    }
+  }
+  [System.SerializableAttribute()]
+  [Prototype(typeof(HitColor))]
+  public unsafe partial struct HitColor_Prototype {
+    public Int32 Value;
+    public static implicit operator HitColor(HitColor_Prototype value) {
+        return (HitColor)value.Value;
+    }
+    public static implicit operator HitColor_Prototype(HitColor value) {
+        return new HitColor_Prototype() { Value = (Int32)value };
     }
   }
   [System.SerializableAttribute()]
@@ -3550,6 +3684,8 @@ namespace Quantum.Prototypes {
     public FP MoveSpeed;
     public FP Effect;
     public FP EffectDurationTime;
+    public FP EffectProbability;
+    public FP EffectRangeValue;
     public FP Range;
     public FP SearchRange;
     partial void MaterializeUser(Frame frame, ref Actor result, in PrototypeMaterializationContext context);
@@ -3562,6 +3698,8 @@ namespace Quantum.Prototypes {
       result.AttackSpeed = this.AttackSpeed;
       result.Effect = this.Effect;
       result.EffectDurationTime = this.EffectDurationTime;
+      result.EffectProbability = this.EffectProbability;
+      result.EffectRangeValue = this.EffectRangeValue;
       result.Health = this.Health;
       result.MaxHealth = this.MaxHealth;
       result.MoveSpeed = this.MoveSpeed;
