@@ -41,7 +41,7 @@ MonoBehaviour:
         Id:
           Value: 5
       ResourcePath: DB/Configs/SimulationConfig
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_0
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_1
       AssetRef:
         Id:
           Value: 186149603261161770
@@ -56,7 +56,7 @@ MonoBehaviour:
         Id:
           Value: 781529057815001821
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_1
       AssetRef:
         Id:
           Value: 830595558268387437
@@ -71,12 +71,7 @@ MonoBehaviour:
         Id:
           Value: 1363228581225400788
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SeekNearestEnemy_3
-      AssetRef:
-        Id:
-          Value: 1417162776300932002
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_0
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_1
       AssetRef:
         Id:
           Value: 1457647519061093016
@@ -86,22 +81,32 @@ MonoBehaviour:
         Id:
           Value: 1477095050142706443
       ResourcePath: DB/EntityPrototypes/TowerActor
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_0
+      AssetRef:
+        Id:
+          Value: 2016389499547417488
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/EntityPrototypes/DiceActor|EntityPrototype
       AssetRef:
         Id:
           Value: 2038384912399625890
       ResourcePath: DB/EntityPrototypes/DiceActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|Attack_1
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|Attack_0
       AssetRef:
         Id:
           Value: 2084590921785036322
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSelector_0
+      AssetRef:
+        Id:
+          Value: 2099057146495619474
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
       AssetRef:
         Id:
           Value: 2216287507962166723
       ResourcePath: DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboardInitializer
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_1
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_2
       AssetRef:
         Id:
           Value: 2327373505096431118
@@ -136,10 +141,10 @@ MonoBehaviour:
         Id:
           Value: 2600365732021726587
       ResourcePath: DB/BattleMap_Navmesh
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSelector_2
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SeekNearestEnemy_3
       AssetRef:
         Id:
-          Value: 3269021771861905002
+          Value: 3027350267248676101
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
       AssetRef:
@@ -156,23 +161,18 @@ MonoBehaviour:
         Id:
           Value: 3762840619910204947
       ResourcePath: DB/CircuitExport/Blackboard_Assets/MeleeBlackboard
-    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
-      AssetRef:
-        Id:
-          Value: 3812355360231845773
-      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot
     - Path: Resources/DB/EntityPrototypes/DiceActor|EntityView
       AssetRef:
         Id:
           Value: 4050719712139043392
       ResourcePath: DB/EntityPrototypes/DiceActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_1
-      AssetRef:
-        Id:
-          Value: 4248790913684553827
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
       AssetRef:
         Id:
           Value: 4328589522679660744
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
+      AssetRef:
+        Id:
+          Value: 4542029824511457962
+      ResourcePath: DB/CircuitExport/BT_Assets/PlayerBot

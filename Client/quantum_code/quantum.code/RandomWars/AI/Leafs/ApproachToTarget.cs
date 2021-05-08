@@ -56,13 +56,35 @@ namespace Quantum
                 return BTStatus.Success;
             }
             
+            var col2d = f.Get<PhysicsCollider2D>(e);
             var targetCol2d = f.Get<PhysicsCollider2D>(target);
-            var targetPosition = targetTransform.Position + (transform.Position - targetTransform.Position).Normalized * targetCol2d.Shape.Circle.Radius;
+            var targetRadius = targetCol2d.Shape.Circle.Radius;
+            var targetVector = (transform.Position - targetTransform.Position).Normalized
+                               * (targetRadius + FP._0_25);
             
-            var agent =f.Unsafe.GetPointer<NavMeshPathfinder>(e);
+            var segmentCount = FPMath.RoundToInt(targetRadius * FP.Pi /  col2d.Shape.Circle.Radius);  
+            var targetPosition = GetTargetPosition(f, targetTransform.Position, targetVector, segmentCount);
+            var agent = f.Unsafe.GetPointer<NavMeshPathfinder>(e);
             agent->SetTarget(f, targetPosition.XOY, _navMesh);
 
             return BTStatus.Running;
+        }
+
+        FPVector2 GetTargetPosition(Frame f, FPVector2 target, FPVector2 targetVector, Int32 segmentCount)
+        {
+            var segment = 360 / segmentCount;
+            var slot = targetVector;
+            for (var i = 1; i <= segmentCount; ++i)
+            {
+                var hit = f.Physics2D.Linecast(target, target + slot);
+                if (hit == null)
+                {
+                    return target + slot;
+                }
+
+                slot = FPVector2.Rotate(slot, FP.Deg2Rad * i * segment * (i % 2 == 0 ? 1 : -1));
+            }
+            return target + targetVector;
         }
 
         public override void OnExit(BTParams p)

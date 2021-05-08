@@ -14,7 +14,7 @@ namespace Quantum
                 // pre-defined core systems
                 new CullingSystem2D(),
                 // new CullingSystem3D(),
-
+                
                 new PhysicsSystem2D(),
                 // new PhysicsSystem3D(),
 
@@ -54,7 +54,6 @@ namespace Quantum
             var logicSystem = new List<SystemBase>
             {
                 new BotSDKSystem(),
-                new BTUpdateSystem(),
                 new BotSDKDebuggerSystem(),
                 
                 new PlayerBotSystem(),

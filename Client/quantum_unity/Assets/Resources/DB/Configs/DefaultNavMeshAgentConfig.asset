@@ -46,7 +46,7 @@ MonoBehaviour:
       RawValue: 1310720
     StoppingDistance:
       RawValue: 655
-    AutoBraking: 1
+    AutoBraking: 0
     AutoBrakingDistance:
       RawValue: 32768
     ClampAgentToNavmesh: 1

@@ -56,7 +56,9 @@ namespace Quantum
                 {
                     var transform = f.Unsafe.GetPointer<Transform2D>(p.Entity);
                     var targetTransform = f.Get<Transform2D>(target);
-                    transform->Rotation = FPVector2.Angle(targetTransform.Position - transform->Position, FPVector2.Up);
+                    var rotation = FPVector2.RadiansSigned(FPVector2.Up, targetTransform.Position - transform->Position);
+                    transform->Rotation = rotation;
+
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
                     var actor = f.Get<Actor>(p.Entity);
                     var targetActor = f.Unsafe.GetPointer<Actor>(target);

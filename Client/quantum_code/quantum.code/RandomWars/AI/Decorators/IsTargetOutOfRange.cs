@@ -13,7 +13,7 @@ namespace Quantum
             var f = p.Frame;
             var e = p.Entity;
             var bb = p.Blackboard;
-
+            
             var enemy = bb->GetEntityRef(f, TargetRef.Key);
             if (f.Exists(enemy) == false)
             {

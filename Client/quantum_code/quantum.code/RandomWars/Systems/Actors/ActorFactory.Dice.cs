@@ -105,7 +105,7 @@ namespace Quantum.Actors
                 return FP._0;
             }
 
-            return FP.Rad_180 * FP.Rad2Deg;
+            return FPVector2.RadiansSigned(FPVector2.Up, FPVector2.Down);
         }
 
         private static unsafe FPVector2 GetRandomPlayerFieldPosition(Frame f)

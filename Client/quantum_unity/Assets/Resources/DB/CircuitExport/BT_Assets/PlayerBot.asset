@@ -1,32 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2884275137647982215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
-      Guid:
-        Value: 3812355360231845773
-    Label: BTSequence
-    Id: 1
-    Children: []
-    Services: []
-    TopmostDecorator:
-      Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 0
-    IsDynamic: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,6 +21,33 @@ MonoBehaviour:
     Id: 0
     Child:
       Id:
-        Value: 3812355360231845773
+        Value: 4542029824511457962
     AbortType: 0
     NodesAmount: 2
+--- !u!114 &7809245000114948134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
+  m_Name: BTSequence_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
+      Guid:
+        Value: 4542029824511457962
+    Label: BTSequence
+    Id: 1
+    Children: []
+    Services: []
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 0
+    IsDynamic: 0

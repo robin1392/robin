@@ -296,9 +296,18 @@ namespace Quantum.Editor {
         var dirtyAssets = false;
         var prefabGuids = AssetDatabase.FindAssets("t:Prefab", QuantumEditorSettings.Instance.AssetSearchPaths);
         foreach (var prefabGuid in prefabGuids) {
-          var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(prefabGuid));
-          Debug.Assert(prefab != null);
-          // TODO: ensure for each component
+          try
+          {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(prefabGuid));
+            Debug.Assert(prefab != null);
+            // TODO: ensure for each component
+          }
+          catch (Exception e)
+          {
+            Debug.Log($"{AssetDatabase.GUIDToAssetPath(prefabGuid)} - {e.Message}");
+            continue;
+          }
+          
         }
 
         if (dirtyAssets) {

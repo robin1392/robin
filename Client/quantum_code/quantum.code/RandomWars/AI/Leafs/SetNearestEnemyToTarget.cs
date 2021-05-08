@@ -9,6 +9,11 @@ namespace Quantum
         public AIBlackboardValueKey EnemyTargetRef;
         public AIBlackboardValueKey IsEnemyTargetAttacked;
 
+        public override void OnEnter(BTParams p)
+        {
+            base.OnEnter(p);
+        }
+
         protected override BTStatus OnUpdate(BTParams p)
         {
             var f = p.Frame;
@@ -40,6 +45,11 @@ namespace Quantum
             }
 
             return BTStatus.Failure;
+        }
+
+        public override void OnExit(BTParams p)
+        {
+            base.OnExit(p);
         }
     }
 }

@@ -86,7 +86,7 @@ MonoBehaviour:
     <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>TopmostDecorator</Id>\n         
     <Name>TopmostDecorator</Name>\n          <Value Type=\"Quantum.AssetRefBTNode,
-    quantum.code\">Id: [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
+    quantum.code\">Id: [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>CurrentChildIndex</Id>\n         
     <Name>CurrentChildIndex</Name>\n          <Value Type=\"Quantum.BTDataIndex,
