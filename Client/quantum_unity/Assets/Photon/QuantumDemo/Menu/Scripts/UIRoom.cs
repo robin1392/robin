@@ -22,6 +22,10 @@ namespace Quantum.Demo {
     public ClientIdProvider.Type  IdProvider = ClientIdProvider.Type.NewGuid;
     public RuntimeConfigContainer RuntimeConfigContainer;
 
+    public Boolean Spectate = false;
+
+    public Boolean IsRejoining { get; set; }
+
     private List<MapInfo>      _mapInfo;
     private List<UIRoomPlayer> _players = new List<UIRoomPlayer>();
 
@@ -130,6 +134,7 @@ namespace Quantum.Demo {
 
     public override void OnHideScreen(bool first) {
       UIMain.Client?.RemoveCallbackTarget(this);
+      IsRejoining = false;
     }
 
     #endregion
@@ -268,18 +273,21 @@ namespace Quantum.Demo {
       config.Map.Id = mapGuid;
 
       var param = new QuantumRunner.StartParameters {
-        RuntimeConfig       = config,
-        DeterministicConfig = DeterministicSessionConfigAsset.Instance.Config,
-        ReplayProvider      = null,
-        GameMode            = Photon.Deterministic.DeterministicGameMode.Multiplayer,
-        InitialFrame        = 0,
-        PlayerCount         = UIMain.Client.CurrentRoom.MaxPlayers,
-        LocalPlayerCount    = 1,
-        RecordingFlags      = RecordingFlags.None,
-        NetworkClient       = UIMain.Client
+        RuntimeConfig             = config,
+        DeterministicConfig       = DeterministicSessionConfigAsset.Instance.Config,
+        ReplayProvider            = null,
+        GameMode                  = Spectate ? Photon.Deterministic.DeterministicGameMode.Spectating : Photon.Deterministic.DeterministicGameMode.Multiplayer,
+        FrameData                 = IsRejoining ? UIGame.Instance?.FrameSnapshot : null,
+        InitialFrame              = IsRejoining ? (UIGame.Instance?.FrameSnapshotNumber).Value : 0,
+        PlayerCount               = UIMain.Client.CurrentRoom.MaxPlayers,
+        LocalPlayerCount          = Spectate ? 0 : 1,
+        RecordingFlags            = RecordingFlags.None,
+        NetworkClient             = UIMain.Client,
+        IsRejoin                  = IsRejoining,
+        StartGameTimeoutInSeconds = 5.0f
       };
 
-      Debug.Log($"Starting QuantumRunner with map guid '{mapGuid}'");
+      Debug.Log($"Starting QuantumRunner with map guid '{mapGuid}' and requesting {param.LocalPlayerCount} player(s).");
 
       // Joining with the same client id will result in the same quantum player slot which is important for reconnecting.
       var clientId = ClientIdProvider.CreateClientId(IdProvider, UIMain.Client);

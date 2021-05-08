@@ -34,8 +34,6 @@ namespace Quantum.Demo {
     static bool _firstShow;
     static bool _firstHide;
 
-    private LoadBalancingClient _client;
-
     public static T Instance { get; private set; }
 
     public static void DestroyScreen() {

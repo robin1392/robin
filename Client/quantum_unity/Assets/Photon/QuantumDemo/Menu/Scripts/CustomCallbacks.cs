@@ -16,6 +16,5 @@ public class CustomCallbacks : QuantumCallbacks {
   {
     Debug.Log("Detected Resync. Verified tick: " + game.Frames.Verified.Number);
   }
-
 }
 

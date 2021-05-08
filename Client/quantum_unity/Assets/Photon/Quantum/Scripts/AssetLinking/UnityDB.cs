@@ -4,12 +4,13 @@ using Quantum;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using Photon.Deterministic;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public static class UnityDB {
+public static partial class UnityDB {
   private static Context _context;
 
   static UnityDB() {
@@ -21,9 +22,30 @@ public static class UnityDB {
 #endif
   }
 
+  // implement this if you load AssetResourceContainer from a different sourca than Resources, e.g. AssetBundles or Addressables
+  static partial void LoadAssetResourceContainerUser(ref AssetResourceContainer container);
+
   public static IEnumerable<AssetResource> AssetResources => GetOrCreateContext().AssetResources;
 
-  public static ResourceManagerDynamic ResourceManager => GetOrCreateContext().ResourceManager;
+  [Obsolete("Use DefaultResourceManager instead")]
+  public static ResourceManagerDynamic ResourceManager => DefaultResourceManager;
+
+  public static ResourceManagerDynamic DefaultResourceManager => GetOrCreateContext().ResourceManager;
+
+
+#if QUANTUM_ADDRESSABLES
+  public static List<QTuple<AssetRef, string>> CollectAddressableAssets() {
+    var result = new List<QTuple<AssetRef, string>>();
+    CollectAddressableAssets(result);
+    return result;
+  }
+
+  public static void CollectAddressableAssets(List<QTuple<AssetRef, string>> entries) {
+    foreach (var info in GetOrCreateContext().ResourceContainer.AddressablesGroup.ResourcesT) {
+      entries.Add(QTuple.Create(info.AssetRef, info.Address));
+    }
+  }
+#endif
 
   public static void Dispose() {
     if (_context == null)
@@ -73,7 +95,7 @@ public static class UnityDB {
     return null;
   }
 
-  public static AssetGuid GetAssetGuid(String path) => ResourceManager.GetAssetGuid(path);
+  public static AssetGuid GetAssetGuid(String path) => DefaultResourceManager.GetAssetGuid(path);
 
   public static void Update() {
     _context?.ResourceLoader.Update();
@@ -87,11 +109,18 @@ public static class UnityDB {
   }
 
   private static AssetResourceContainer LoadContainer() {
-    var container = UnityEngine.Resources.Load<AssetResourceContainer>(QuantumEditorSettings.Instance.AssetResourcesPathInResources);
-    if (container == null) {
-      throw new System.InvalidOperationException("Unable to find AssetResourceContainer.");
+    AssetResourceContainer container = null;
+    LoadAssetResourceContainerUser(ref container);
+    if (container != null) {
+      return container;
     }
-    return container;
+
+    container = UnityEngine.Resources.Load<AssetResourceContainer>(QuantumEditorSettings.Instance.AssetResourcesPathInResources);
+    if (container != null) {
+      return container;
+    }
+
+    throw new System.InvalidOperationException("Unable to find AssetResourceContainer.");
   }
 
   private sealed class Context : IDisposable {

@@ -48,6 +48,8 @@ public class QuantumRunnerLocalReplay : MonoBehaviour {
       PlayerCount = replayFile.DeterministicConfig.PlayerCount,
       LocalPlayerCount = replayFile.DeterministicConfig.PlayerCount,
       InstantReplayConfig = InstantReplayConfig,
+      InitialFrame = replayFile.InitialFrame,
+      FrameData = replayFile.InitialFrameData,
     };
 
     if (DatabaseFile != null) {
@@ -62,14 +64,6 @@ public class QuantumRunnerLocalReplay : MonoBehaviour {
     if (ChecksumFile != null) {
       var checksumFile = serializer.DeserializeChecksum(ChecksumFile.bytes);
       _runner.Game.StartVerifyingChecksums(checksumFile);
-    }
-
-
-    // Overwrite the Quantum database from file
-    if (!string.IsNullOrEmpty(DatabasePath)) {
-      // Add the database relative path to point to specific files to load during asset initialization.
-      // Files must reside inside Resources folder to work outside Editor context.
-      FileLoader.Init(new UnityFileLoader(DatabasePath));
     }
   }
 

@@ -33,7 +33,8 @@ public unsafe class EntityViewUpdater : MonoBehaviour {
   protected HashSet<EntityRef> RemoveEntities => _removeEntities;
   protected Dictionary<EntityRef, EntityView> ActiveViews => _activeViews;
   protected Boolean Teleport => _teleport;
-  protected QuantumGame ObservedGame => _observedGame;
+  
+  public QuantumGame ObservedGame => _observedGame;
 
   [Obsolete("Use GetView instead")]
   public EntityView GetPrefab(EntityRef entityRef) => GetView(entityRef);
@@ -250,6 +251,10 @@ public unsafe class EntityViewUpdater : MonoBehaviour {
     TryGetTransform(f, handle, out Vector3 position, out Quaternion rotation);
     EntityView instance = CreateEntityViewInstance(asset, position, rotation);
     
+    if (ViewParentTransform != null) {
+      instance.transform.SetParent(ViewParentTransform);
+    }
+    
     instance.AssetGuid = view.Guid;
     OnEntityViewInstantiated(game, f, instance, handle);
 
@@ -340,13 +345,9 @@ public unsafe class EntityViewUpdater : MonoBehaviour {
   protected virtual EntityView CreateEntityViewInstance(EntityViewAsset asset, Vector3? position = null, Quaternion? rotation = null) {
     Debug.Assert(asset.View != null);
 
-    var view = position.HasValue && rotation.HasValue ?
-      GameObject.Instantiate(asset.View, position.Value, rotation.Value) :
-      GameObject.Instantiate(asset.View);
-
-    if (ViewParentTransform != null) {
-      view.transform.SetParent(ViewParentTransform);
-    }
+    var view = position.HasValue && rotation.HasValue ? 
+        GameObject.Instantiate(asset.View, position.Value, rotation.Value) :
+        GameObject.Instantiate(asset.View);
 
     return view;
   }

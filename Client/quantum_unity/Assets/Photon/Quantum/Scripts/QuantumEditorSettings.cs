@@ -31,7 +31,10 @@ public class QuantumEditorSettings : ScriptableObject {
     }
   }
 
-  public string DatabasePath => AssetSearchPaths[0];
+
+  [Obsolete("Use DefaultAssetSearchPath instead")]
+  public string DatabasePath => DefaultAssetSearchPath;
+  public string DefaultAssetSearchPath => AssetSearchPaths[0];
 
   [Tooltip("Path to asset resource db file.")]
   public string AssetResourcesPath = "Assets/Resources/AssetResources.asset";
@@ -45,6 +48,9 @@ public class QuantumEditorSettings : ScriptableObject {
   [Header("Map")]
   public Color PhysicsGridColor = new Color(0.0f, 0.7f, 1f);
   public Color NavMeshGridColor = new Color(0.4f, 1.0f, 0.7f);
+
+  [Header("Gizmos")]
+  public FP GizmoIconScale = FP._1;
 
   [Header("Collider Gizmos")]
   public Boolean DrawStaticMeshTriangles = true;
@@ -73,7 +79,6 @@ public class QuantumEditorSettings : ScriptableObject {
   public Boolean DrawNavMeshAgents = false;
   public Color NavMeshAgentColor = Color.green;
   public Color NavMeshAvoidanceColor = Color.green * 0.5f;
-  public FP NavigationGizmoSize = FP._0_20;
 
   [Header("NavMesh Gizmos")]
   public Boolean DrawNavMesh = false;
@@ -81,6 +86,7 @@ public class QuantumEditorSettings : ScriptableObject {
   public Boolean DrawNavMeshTriangleIds = false;
   public Boolean DrawNavMeshRegionIds = false;
   public Boolean DrawNavMeshVertexNormals = false;
+  public Boolean DrawNavMeshLinks = false;
   public Color NavMeshDefaultColor = new Color(0.0f, 0.75f, 1.0f, 0.5f);
   public Color NavMeshRegionColor = new Color(1.0f, 0.0f, 0.5f, 0.5f);
 
@@ -101,7 +107,7 @@ public class QuantumEditorSettings : ScriptableObject {
   public bool UsePhotonAppVersionsPostprocessor = true;
   [Tooltip("If enabled entity components are displayed inside of EntityPrototype inspector")]
   [FormerlySerializedAs("UseInlineEntityComponents")]
-  public QuantumEntityComponentInspectorMode EntityComponentInspectorMode = QuantumEntityComponentInspectorMode.ShowMonoBehaviours;
+  public QuantumEntityComponentInspectorMode EntityComponentInspectorMode = QuantumEntityComponentInspectorMode.InlineInEntityPrototypeAndHideMonoBehaviours;
 
   [Range(2, 7)]
   [Tooltip("How many decimal places to round to when displaying FPs.")]
@@ -135,8 +141,8 @@ public class QuantumEditorSettings : ScriptableObject {
     get {
       if (string.IsNullOrEmpty(databasePathInResources)) {
         // Make path relative to the Resource folder.
-        if (!PathUtils.MakeRelativeToFolder(DatabasePath, "Resources", out databasePathInResources)) {
-          Debug.LogError("Failed to make folder relative to Resources/ " + DatabasePath);
+        if (!PathUtils.MakeRelativeToFolder(DefaultAssetSearchPath, "Resources", out databasePathInResources)) {
+          Debug.LogError("Failed to make folder relative to Resources/ " + DefaultAssetSearchPath);
         }
       }
       return databasePathInResources;
@@ -170,11 +176,19 @@ public class QuantumEditorSettings : ScriptableObject {
 [Flags, Serializable]
 public enum QuantumMapDataBakeFlags {
   None,
-  BakeMapData = 1,
-  BakeNavMesh = 2,
-  ImportUnityNavMesh = 4,
-  BakeUnityNavMesh = 8,
-  GenerateAssetDB = 16
+  [Obsolete("Use BakeMapData instead")]
+  Obsolete_BakeMapData  = 1 << 0,
+  BakeMapData           = BakeMapPrototypes | BakeMapColliders,
+  BakeMapPrototypes     = 1 << 5,
+  BakeMapColliders      = 1 << 6,
+
+  BakeUnityNavMesh      = 1 << 3,
+  ImportUnityNavMesh    = 1 << 2,
+  BakeNavMesh           = 1 << 1,
+  ClearUnityNavMesh     = 1 << 8,
+
+  GenerateAssetDB       = 1 << 4,
+  SaveUnityAssets       = 1 << 7,
 }
 
 public enum QuantumEntityComponentInspectorMode {

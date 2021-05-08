@@ -20,6 +20,15 @@ public static class FPMathUtils
         return FP.FromFloat_UNSAFE(v);
     }
 
+    public static FP FlipRotation(this FP r)
+    {
+#if QUANTUM_XY
+        return r;
+#else
+        return -r;
+#endif
+    }
+
     public static Quaternion ToUnityQuaternionDegrees(this FP r)
     {
 #if QUANTUM_XY
@@ -137,6 +146,20 @@ public static class FPMathUtils
 
     public static Vector3 ToUnityVector3(this FPVector3 v)
     {
+        return new Vector3(v.X.AsFloat, v.Y.AsFloat, v.Z.AsFloat);
+    }
+
+    /// <summary>
+    /// Use this version of ToUnityVector3() when converting a 3D position from the XZ plane in the simulation to the 2D XY plane in Unity.
+    /// </summary>
+    public static Vector3 ToUnityVector3(this FPVector3 v, bool quantumXYSwizzle)
+    {
+#if QUANTUM_XY
+        if (quantumXYSwizzle) { 
+            return new Vector3(v.X.AsFloat, v.Z.AsFloat, v.Y.AsFloat);
+        }
+#endif
+
         return new Vector3(v.X.AsFloat, v.Y.AsFloat, v.Z.AsFloat);
     }
 

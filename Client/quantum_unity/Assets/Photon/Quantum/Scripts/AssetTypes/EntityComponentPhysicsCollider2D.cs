@@ -2,22 +2,24 @@ using Quantum;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+using Quantum.Editor;
 #endif
 
 public partial class EntityComponentPhysicsCollider2D {
+  [MultiTypeReference(typeof(BoxCollider), typeof(SphereCollider), typeof(BoxCollider2D), typeof(CircleCollider2D))]
   public Component SourceCollider;
 
   private void OnValidate() {
-    if (SourceCollider != null) {
-      Prototype.ShapeConfig = EntityPrototypeUtils.ColliderToShape2D(transform, SourceCollider, out Prototype.IsTrigger);
-      Prototype.Layer = SourceCollider.gameObject.layer;
+    if (EntityPrototypeUtils.TrySetShapeConfigFromSourceCollider2D(Prototype.ShapeConfig, transform, SourceCollider)) {
+      Prototype.IsTrigger = ((Collider)SourceCollider).isTrigger;
+      Prototype.Layer     = SourceCollider.gameObject.layer;
     }
   }
 
   public override void Refresh() {
-    if (SourceCollider != null) {
-      Prototype.ShapeConfig = EntityPrototypeUtils.ColliderToShape2D(transform, SourceCollider, out Prototype.IsTrigger);
-      Prototype.Layer = SourceCollider.gameObject.layer;
+    if (EntityPrototypeUtils.TrySetShapeConfigFromSourceCollider2D(Prototype.ShapeConfig, transform, SourceCollider)) {
+      Prototype.IsTrigger = ((Collider)SourceCollider).isTrigger;
+      Prototype.Layer     = SourceCollider.gameObject.layer;
     }
   }
 
@@ -36,19 +38,17 @@ public partial class EntityComponentPhysicsCollider2D {
     UnityEditor.Undo.DestroyObjectImmediate(this);
   }
 
-  public override void OnInspectorGUI(SerializedObject so, IQuantumEditorGUI editor) {
+  public override void OnInspectorGUI(SerializedObject so, IQuantumEditorGUI QuantumEditorGUI) {
     var sourceCollider = so.FindPropertyOrThrow(nameof(EntityComponentPhysicsCollider2D.SourceCollider));
 
-    editor.HandleMultiTypeField(sourceCollider, typeof(Collider), typeof(Collider2D));
+    EditorGUILayout.PropertyField(sourceCollider);
 
     bool enterChildren = true;
     for (var p = so.FindPropertyOrThrow("Prototype"); p.Next(enterChildren) && p.depth >= 1; enterChildren = false) {
-      if (p.name == nameof(Quantum.Prototypes.PhysicsCollider3D_Prototype.PhysicsMaterial)) {
-        editor.DrawProperty(p, skipRoot: false);
-      } else {
-        using (new EditorGUI.DisabledGroupScope(sourceCollider.objectReferenceValue != null)) {
-          editor.DrawProperty(p, skipRoot: false);
-        }
+      using (new EditorGUI.DisabledScope(sourceCollider.objectReferenceValue != null && 
+                                         p.name == nameof(Quantum.Prototypes.PhysicsCollider2D_Prototype.Layer) || 
+                                         p.name == nameof(Quantum.Prototypes.PhysicsCollider2D_Prototype.IsTrigger))) {
+        QuantumEditorGUI.PropertyField(p);
       }
     }
 

@@ -51,7 +51,11 @@ namespace Quantum.Demo {
 
       _mapGuids = maps.Select(m => m.AssetObject.Guid).ToList();
 
-      _selectedMapGuid = RuntimeConfigContainer.Config.Map.Id;
+      if (RuntimeConfigContainer.Config.Map.Id.IsValid == false && _mapGuids.Count == 1) {
+        _selectedMapGuid = _mapGuids[0];
+      } else {
+        _selectedMapGuid = RuntimeConfigContainer.Config.Map.Id;
+      }
 
       Application.logMessageReceived += Log;
 

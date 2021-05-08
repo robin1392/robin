@@ -12,8 +12,6 @@ namespace Quantum {
 
       FPLut.Init(pathToLUT);
 
-      FileLoader.Init(new DotNetFileLoader(Path.GetDirectoryName(pathToDatabaseFile)));
-
       Console.WriteLine($"Loading replay from file: '{Path.GetFileName(pathToReplayFile)}' from folder '{Path.GetDirectoryName(pathToReplayFile)}'");
 
       if (!File.Exists(pathToDatabaseFile)) {
@@ -38,7 +36,7 @@ namespace Quantum {
 
       var numberOfFrames = container.replayFile.Length;
 
-      var checksumVerification = new ChecksumVerification(pathToChecksumFile, callbackDispatcher);
+      var checksumVerification = String.IsNullOrEmpty(pathToChecksumFile) ? null : new ChecksumVerification(pathToChecksumFile, callbackDispatcher);
 
       while (container.session.FramePredicted == null || container.session.FramePredicted.Number < numberOfFrames) {
         Thread.Sleep(1);
@@ -54,7 +52,7 @@ namespace Quantum {
 
       Console.WriteLine($"Ending replay at frame {container.session.FramePredicted.Number}");
 
-      checksumVerification.Dispose();
+      checksumVerification?.Dispose();
       container.Destroy();
 
       return true;

@@ -18,7 +18,10 @@ MonoBehaviour:
       Guid:
         Value: 2600365732021726587
     Name: Navmesh
-    DataFilepath: BattleMap_Navmesh.bytes
+    DataAsset:
+      Id:
+        Value: 1312001000283887444
+    DataFilepath: 
     GridSizeX: 20
     GridSizeY: 20
     GridNodeSize: 2

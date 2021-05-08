@@ -15,7 +15,7 @@ namespace quantum.code.test
         public void RNGTest()
         {
             var rng = new RNGSession();
-
+            
             bool minAppeared = false;
             bool maxAppeared = false;
             var min = 10;

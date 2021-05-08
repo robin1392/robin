@@ -10,6 +10,10 @@ public abstract partial class AssetBase : ScriptableObject {
   }
 
   public virtual void Loaded() {
+    PrepareAsset();
+  }
+
+  public virtual void PrepareAsset() {
   }
 
   public virtual void Disposed() {

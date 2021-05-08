@@ -598,7 +598,7 @@ public abstract class QuantumFrameDifferGUI {
       }
 
       // this is how many lines need to be insert
-      int maxPadding = paddingCount.Max();
+      int maxPadding = otherFrames.Length > 0 ? paddingCount.Max() : 0;
       Debug.Assert(maxPadding >= 0);
 
       for ( int i = 0; i < maxPadding; ++i) {

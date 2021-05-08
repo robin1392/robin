@@ -71,7 +71,7 @@ namespace Quantum
 
         // TRIANGLES
         progressBar.Info = "Importing Triangles";
-        navmesh.Triangles = new NavMeshTriangle[0];
+        var navmeshTriangleList = new List<NavMeshTriangle>();
         for (int i = 0; i < navmeshBakeData.Triangles.Length; ++i) {
           progressBar.Progress = i / (float)navmeshBakeData.Triangles.Length;
 
@@ -93,16 +93,37 @@ namespace Quantum
             regionFlags = 1UL << regionIndex;
           }
 
-          ArrayUtils.Add(ref navmesh.Triangles, new NavMeshTriangle {
+          // compute triangle normal with double precision
+          var normal = default(Vector3Double);
+          var p0 = new Vector3Double(navmesh.Vertices[v0].Point);
+          var p1 = new Vector3Double(navmesh.Vertices[v1].Point);
+          var p2 = new Vector3Double(navmesh.Vertices[v2].Point);
+          try {
+            var edge0 = (p1 - p0);
+            var edge1 = (p2 - p0);
+            edge0.Normalize();
+            edge1.Normalize();
+            normal = Vector3Double.Cross(edge0, edge1);
+            normal.Normalize();
+          }
+          catch (ArgumentException) {
+            Debug.LogWarning($"Failed to find triangle normal for triangle {i}: v0 {p0} v1 {p1} v2 {p2}");
+          }
+
+          navmeshTriangleList.Add(new NavMeshTriangle {
             Vertex0 = v0,
             Vertex1 = v1,
             Vertex2 = v2,
             Center = (navmesh.Vertices[v0].Point + navmesh.Vertices[v1].Point + navmesh.Vertices[v2].Point) / FP._3,
+            Normal = normal.AsFPVector(),
             Borders = new Int32[0],
             Regions = new NavMeshRegionMask(regionFlags),
-            Links = new NavMeshLink[0]
+            Links = new Int32[0],
+            Cost = t.Cost
           });
         }
+
+        navmesh.Triangles = navmeshTriangleList.ToArray();
 
         // TRIANGLE GRID
         progressBar.Info = "Calculating Triangle Grid";
@@ -110,7 +131,7 @@ namespace Quantum
 
         // BORDER EDGES
         progressBar.Info = "Generating Borders";
-        navmesh.Borders = GenerateBorders(navmesh, p => progressBar.Progress = p);
+        navmesh.Borders = GenerateBorders(navmesh, p => progressBar.Progress = p).ToArray();
 
         // BORDER GRID
         progressBar.Info = "Generating Border Grid";
@@ -130,9 +151,10 @@ namespace Quantum
           p => progressBar.Progress = p);
 
         // LINKS
+        navmesh.Links = new NavMeshLink[0];
         if (navmeshBakeData.Links != null) {
           progressBar.Info = "Generating NavMesh Links";
-          GenerateNavMeshLinks(navmesh, navmeshBakeData.Links, data.Asset.Settings.Regions, p => progressBar.Progress = p);
+          GenerateNavMeshLinks(navmesh, navmeshBakeData.Links, data.Asset.Settings.Regions, navmeshBakeData.LinkErrorCorrection, p => progressBar.Progress = p);
         }
 
         return navmesh;
@@ -166,20 +188,20 @@ namespace Quantum
 
             if (
               // if any of the corners of the grid are inside the triangle
-              FPCollision.TriangleContainsPoint(bl, v0, v1, v2) ||
-              FPCollision.TriangleContainsPoint(br, v0, v1, v2) ||
-              FPCollision.TriangleContainsPoint(ur, v0, v1, v2) ||
-              FPCollision.TriangleContainsPoint(ul, v0, v1, v2) ||
+              FPCollision.TriangleContainsPointInclusive(bl, v0, v1, v2) ||
+              FPCollision.TriangleContainsPointInclusive(br, v0, v1, v2) ||
+              FPCollision.TriangleContainsPointInclusive(ur, v0, v1, v2) ||
+              FPCollision.TriangleContainsPointInclusive(ul, v0, v1, v2) ||
 
               // if any of the triangle vertices are inside the grid cell (1st triangle)
-              FPCollision.TriangleContainsPoint(v0, ur, ul, bl) ||
-              FPCollision.TriangleContainsPoint(v1, ur, ul, bl) ||
-              FPCollision.TriangleContainsPoint(v2, ur, ul, bl) ||
+              FPCollision.TriangleContainsPointInclusive(v0, ur, ul, bl) ||
+              FPCollision.TriangleContainsPointInclusive(v1, ur, ul, bl) ||
+              FPCollision.TriangleContainsPointInclusive(v2, ur, ul, bl) ||
 
               // if any of the triangle vertices are inside the grid cell (2st triangle)
-              FPCollision.TriangleContainsPoint(v0, bl, br, ur) ||
-              FPCollision.TriangleContainsPoint(v1, bl, br, ur) ||
-              FPCollision.TriangleContainsPoint(v2, bl, br, ur) ||
+              FPCollision.TriangleContainsPointInclusive(v0, bl, br, ur) ||
+              FPCollision.TriangleContainsPointInclusive(v1, bl, br, ur) ||
+              FPCollision.TriangleContainsPointInclusive(v2, bl, br, ur) ||
 
               // if the line segment of vertex 0 and vertex 1 intersects with any of the grid edges
               FPCollision.LineIntersectsLine(v0.XZ, v1.XZ, bl.XZ, br.XZ) ||
@@ -214,27 +236,27 @@ namespace Quantum
       return result;
     }
 
-    static NavMeshBorder[] GenerateBorders(NavMesh navmesh, Action<float> reporter) {
-      NavMeshBorder[] borders = new NavMeshBorder[0];
+    static List<NavMeshBorder> GenerateBorders(NavMesh navmesh, Action<float> reporter) {
+      List<NavMeshBorder> borders = new List<NavMeshBorder>();
       for (int t = 0; t < navmesh.Triangles.Length; ++t) {
         reporter.Invoke(t / (float)navmesh.Triangles.Length);
 
         NavMeshTriangle tr = navmesh.Triangles[t];
 
-        ProcessBorder(navmesh, t, tr.Vertex0, tr.Vertex1, ref borders);
-        ProcessBorder(navmesh, t, tr.Vertex1, tr.Vertex2, ref borders);
-        ProcessBorder(navmesh, t, tr.Vertex2, tr.Vertex0, ref borders);
+        ProcessBorder(navmesh, t, tr.Vertex0, tr.Vertex1, borders);
+        ProcessBorder(navmesh, t, tr.Vertex1, tr.Vertex2, borders);
+        ProcessBorder(navmesh, t, tr.Vertex2, tr.Vertex0, borders);
       }
 
-      if (borders.Length >= 16384) {
-        Debug.LogError("Border count too high: " + borders.Length);
+      if (borders.Count >= 16384) {
+        Debug.LogError("Border count too high: " + borders.Count);
       }
 
       return borders;
     }
 
 
-    static void ProcessBorder(NavMesh navmesh, int t, int v0, int v1, ref NavMeshBorder[] borders) {
+    static void ProcessBorder(NavMesh navmesh, int t, int v0, int v1, List<NavMeshBorder> borders) {
       var regions = navmesh.Triangles[t].Regions;
       var otherRegions = new NavMeshRegionMask();
       if (IsBorderEdge(navmesh.Triangles, t, v0, v1, out otherRegions, navmesh.Vertices)) {
@@ -265,15 +287,15 @@ namespace Quantum
           Normal = normal,
           Regions = regions,
           RegionsOffmesh = otherRegions };
-        var borderIndex = Array.FindIndex(borders, b =>
+        var borderIndex = borders.FindIndex(b =>
           (b.V0 == border.V0 && b.V1 == border.V1 && b.Normal == border.Normal) ||
           (b.V0 == border.V1 && b.V1 == border.V0 && b.Normal == border.Normal));
         if (borderIndex == -1 || borders[borderIndex].Regions.HasValidRegions) {
           // Create "duplicated" borders for each Regions, we need to have them for their different normals.
-          ArrayUtils.Add(ref borders, border);
-          ArrayUtils.Add(ref navmesh.Vertices[v0].Borders, borders.Length - 1);
-          ArrayUtils.Add(ref navmesh.Vertices[v1].Borders, borders.Length - 1);
-          ArrayUtils.Add(ref navmesh.Triangles[t].Borders, borders.Length - 1);
+          borders.Add(border);
+          ArrayUtils.Add(ref navmesh.Vertices[v0].Borders, borders.Count - 1);
+          ArrayUtils.Add(ref navmesh.Vertices[v1].Borders, borders.Count - 1);
+          ArrayUtils.Add(ref navmesh.Triangles[t].Borders, borders.Count - 1);
         }
       }
     }
@@ -361,12 +383,12 @@ namespace Quantum
 
             if (
               // if any of the border vertices start inside the grid cell (1st triangle)
-              FPCollision.TriangleContainsPoint(p0.XZ, ur, ul, bl) ||
-              FPCollision.TriangleContainsPoint(p1.XZ, ur, ul, bl) ||
+              FPCollision.TriangleContainsPointInclusive(p0.XZ, ur, ul, bl) ||
+              FPCollision.TriangleContainsPointInclusive(p1.XZ, ur, ul, bl) ||
 
               // if any of the border vertices start inside the grid cell (2st triangle)
-              FPCollision.TriangleContainsPoint(p0.XZ, bl, br, ur) ||
-              FPCollision.TriangleContainsPoint(p1.XZ, bl, br, ur) ||
+              FPCollision.TriangleContainsPointInclusive(p0.XZ, bl, br, ur) ||
+              FPCollision.TriangleContainsPointInclusive(p1.XZ, bl, br, ur) ||
 
               // if the border edge intersects the grid cell
               FPCollision.LineIntersectsLine(p0.XZ, p1.XZ, bl, br) ||
@@ -450,14 +472,26 @@ namespace Quantum
         return;
       }
 
-      if (Candidates.FindIndex(c => triangleIndex == c.Triangle) >= 0) {
-        return;
+      // if (Candidates.FindIndex(c => triangleIndex == c.Triangle) >= 0) {
+      for (int i = 0; i < Candidates.Count; i++) {
+        if (triangleIndex == Candidates[i].Triangle) {
+          return;
+        }
       }
 
       var h = CalculateCellTriangleHeuristic(cellCenter, navmesh.GridNodeSize, navmesh, triangleIndex);
 
       var candidate = new TriangleCenterGrid.Pair { Heuristic = h, Triangle = triangleIndex };
-      var index = Candidates.FindIndex(c => h < c.Heuristic);
+
+      //var index = Candidates.FindIndex(c => h < c.Heuristic);
+      var index = -1;
+      for (int i = 0; i < Candidates.Count; i++) {
+        if (h < Candidates[i].Heuristic) {
+          index = i;
+          break;
+        }
+      }
+
       if (index >= 0) {
         Candidates.Insert(index, candidate);
       }
@@ -713,55 +747,105 @@ namespace Quantum
       return true;
     }
 
-    static void GenerateNavMeshLinks(NavMesh navmesh, MapNavMeshLink[] links, string[] regions, Action<float> reporter) {
+    static void GenerateNavMeshLinks(NavMesh navmesh, MapNavMeshLink[] links, string[] regions, bool errorCorrection, Action<float> reporter) {
+      var additionCellsToCheck = errorCorrection ? 1 : 0;
+      var checkedTriangles = new HashSet<int>();
       for (var l = 0; l < links.Length; l++) {
         reporter.Invoke(links.Length / (float)l);
         var link = links[l];
-        // find triangle
         var startTriangle = -1;
+        var startPosition = link.Start.ToFPVector3();
         var endTriangle = -1;
+        var endPosition = link.End.ToFPVector3();
         {
-          // find cell index
+          // find cell index (expand one cell for error correction)
           var p = link.Start.ToFPVector2() - navmesh.WorldOffset;
-          var x = (p.X / navmesh.GridNodeSize).AsInt;
-          var z = (p.Y / navmesh.GridNodeSize).AsInt;
-          var i = (z * navmesh.GridSizeX) + x;
+          var _x = (p.X / navmesh.GridNodeSize).AsInt;
+          var _z = (p.Y / navmesh.GridNodeSize).AsInt;
+          var closestDistance = double.MaxValue;
+          for (int x = Math.Max(0, _x - additionCellsToCheck); x <= Math.Min(navmesh.GridSizeX - additionCellsToCheck, _x + 1); x++) {
+            for (int z = Math.Max(0, _z - additionCellsToCheck); z <= Math.Min(navmesh.GridSizeY - additionCellsToCheck, _z + 1); z++) {
+              var i = (z * navmesh.GridSizeX) + x;
 
-          for (int t = 0; t < navmesh.TrianglesGrid[i].Triangles.Length; t++) {
-            var triangleIndex = navmesh.TrianglesGrid[i].Triangles[t];
-            if (FPCollision.TriangleContainsPointInclusive(link.Start.ToFPVector3(),
-                                                           navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex0].Point,
-                                                           navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex1].Point,
-                                                           navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex2].Point)) {
-              startTriangle = triangleIndex;
-              break;
+              // no triangles in cell
+              if (navmesh.TrianglesGrid[i].Triangles == null) {
+                continue;
+              }
+
+              // already checked triangle
+              if (checkedTriangles.Contains(i)) {
+                continue;
+              }
+              checkedTriangles.Add(i);
+
+              for (int t = 0; t < navmesh.TrianglesGrid[i].Triangles.Length; t++) {
+                var triangleIndex = navmesh.TrianglesGrid[i].Triangles[t];
+                var closestPoint = new Vector3Double();
+                var d = Vector3Double.ClosestDistanceToTriangle(new Vector3Double(link.Start),
+                                                                new Vector3Double(navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex0].Point),
+                                                                new Vector3Double(navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex1].Point),
+                                                                new Vector3Double(navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex2].Point), 
+                                                                ref closestPoint);
+                if (d < closestDistance) {
+                  closestDistance = d;
+                  startTriangle = triangleIndex;
+                  if (errorCorrection) {
+                    startPosition = closestPoint.AsFPVector();
+                  }
+                }
+              }
             }
           }
         }
-        {
-          // find cell index
-          var p = link.End.ToFPVector2() - navmesh.WorldOffset;
-          var x = (p.X / navmesh.GridNodeSize).AsInt;
-          var z = (p.Y / navmesh.GridNodeSize).AsInt;
-          var i = (z * navmesh.GridSizeX) + x;
 
-          for (int t = 0; t < navmesh.TrianglesGrid[i].Triangles.Length; t++) {
-            var triangleIndex = navmesh.TrianglesGrid[i].Triangles[t];
-            if (FPCollision.TriangleContainsPointInclusive(link.End.ToFPVector3(),
-                                                           navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex0].Point,
-                                                           navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex1].Point,
-                                                           navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex2].Point)) {
-              endTriangle = triangleIndex;
-              break;
+        checkedTriangles.Clear();
+
+        {
+          // find cell index (expand one cell for error correction)
+          var p = link.End.ToFPVector2() - navmesh.WorldOffset;
+          var _x = (p.X / navmesh.GridNodeSize).AsInt;
+          var _z = (p.Y / navmesh.GridNodeSize).AsInt;
+          var closestDistance = double.MaxValue;
+          for (int x = Math.Max(0, _x - additionCellsToCheck); x <= Math.Min(navmesh.GridSizeX - additionCellsToCheck, _x + 1); x++) {
+            for (int z = Math.Max(0, _z - additionCellsToCheck); z <= Math.Min(navmesh.GridSizeY - additionCellsToCheck, _z + 1); z++) {
+              var i = (z * navmesh.GridSizeX) + x;
+
+              // no triangles in cell
+              if (navmesh.TrianglesGrid[i].Triangles == null) {
+                continue;
+              }
+
+              // already checked triangle
+              if (checkedTriangles.Contains(i)) {
+                continue;
+              }
+              checkedTriangles.Add(i);
+
+              for (int t = 0; t < navmesh.TrianglesGrid[i].Triangles.Length; t++) {
+                var triangleIndex = navmesh.TrianglesGrid[i].Triangles[t];
+                var closestPoint = new Vector3Double();
+                var d = Vector3Double.ClosestDistanceToTriangle(new Vector3Double(link.End),
+                                                                new Vector3Double(navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex0].Point),
+                                                                new Vector3Double(navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex1].Point),
+                                                                new Vector3Double(navmesh.Vertices[navmesh.Triangles[triangleIndex].Vertex2].Point),
+                                                                ref closestPoint);
+                if (d < closestDistance) {
+                  closestDistance = d;
+                  endTriangle = triangleIndex;
+                  if (errorCorrection) {
+                    endPosition = closestPoint.AsFPVector();
+                  }
+                }
+              }
             }
           }
         }
 
         if (startTriangle == -1) {
-          Debug.LogError($"Could not map start position {link.Start} of navmesh link (index {l}) to triangle");
+          Debug.LogError($"Could not map start position {startPosition} of navmesh link (index {l}) to a triangle");
         }
         else if (endTriangle == -1) {
-          Debug.LogError($"Could not map end position {link.End} of navmesh link (index {l}) to triangle");
+          Debug.LogError($"Could not map end position {endPosition} of navmesh link (index {l}) to a triangle");
         }
         else {
 
@@ -771,21 +855,26 @@ namespace Quantum
             regionFlags = 1UL << regionIndex;
           }
 
-          ArrayUtils.Add(ref navmesh.Triangles[startTriangle].Links, new NavMeshLink {
-            Start = link.Start.ToFPVector3(),
-            End = link.End.ToFPVector3(),
+          ArrayUtils.Add(ref navmesh.Triangles[startTriangle].Links, navmesh.Links.Length);
+          ArrayUtils.Add(ref navmesh.Links, new NavMeshLink {
+            Start = startPosition,
+            End = endPosition,
             Triangle = endTriangle,
             CostOverride = FP.FromFloat_UNSAFE(link.CostOverride),
-            Region = new NavMeshRegionMask(regionFlags)
+            Region = new NavMeshRegionMask(regionFlags),
+            Name = link.Name
           });
+          
 
           if (link.Bidirectional) {
-            ArrayUtils.Add(ref navmesh.Triangles[endTriangle].Links, new NavMeshLink {
-              Start = link.End.ToFPVector3(),
-              End = link.Start.ToFPVector3(),
+            ArrayUtils.Add(ref navmesh.Triangles[endTriangle].Links, navmesh.Links.Length);
+            ArrayUtils.Add(ref navmesh.Links, new NavMeshLink {
+              Start = endPosition,
+              End = startPosition,
               Triangle = startTriangle,
               CostOverride = FP.FromFloat_UNSAFE(link.CostOverride),
-              Region = new NavMeshRegionMask(regionFlags)
+              Region = new NavMeshRegionMask(regionFlags),
+              Name = link.Name
             });
           }
         }
@@ -793,11 +882,214 @@ namespace Quantum
     }
 
     struct TriangleCenterGrid {
-      public class Pair {
+      public struct Pair {
         public int Triangle;
         public FP Heuristic;
       }
       public List<Pair> Regions;
+    }
+
+    public struct Vector3Double {
+      public double X;
+      public double Y;
+      public double Z;
+
+      public Vector3Double(double x, double y, double z) {
+        X = x;
+        Y = y;
+        Z = z;
+      }
+
+      public Vector3Double(FPVector3 v) {
+        X = v.X.AsDouble;
+        Y = v.Y.AsDouble;
+        Z = v.Z.AsDouble;
+      }
+
+      public Vector3Double(Vector3 v) {
+        X = v.x;
+        Y = v.y;
+        Z = v.z;
+      }
+
+      public static Vector3Double operator -(Vector3Double a, Vector3Double b) {
+        return new Vector3Double(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+      }
+
+      public static Vector3Double operator +(Vector3Double a, Vector3Double b) {
+        return new Vector3Double(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+      }
+
+      public static Vector3Double operator *(Vector3Double a, double b) {
+        return new Vector3Double(a.X * b, a.Y * b, a.Z * b);
+      }
+
+      public static Vector3Double operator *(double b, Vector3Double a) {
+        return new Vector3Double(a.X * b, a.Y * b, a.Z * b);
+      }
+
+      public FPVector3 AsFPVector() {
+        return new FPVector3(FP.FromFloat_UNSAFE((float)X), FP.FromFloat_UNSAFE((float)Y), FP.FromFloat_UNSAFE((float)Z));
+      }
+
+      public double SqrMagnitude() {
+        return X * X + Y * Y + Z * Z;
+      }
+
+      public void Normalize() {
+        var d = Math.Sqrt(X * X + Y * Y + Z * Z);
+
+        if (d == 0) {
+          throw new ArgumentException("Vector magnitude is null");
+        }
+
+        X = X / d;
+        Y = Y / d;
+        Z = Z / d;
+      }
+
+      public override string ToString() {
+        return $"{X} {Y} {Z}";
+      }
+
+      public static double Dot(Vector3Double a, Vector3Double b) {
+        return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+      }
+
+      public static Vector3Double Cross(Vector3Double a, Vector3Double b) {
+        return new Vector3Double(
+          a.Y * b.Z - a.Z * b.Y,
+          a.Z * b.X - a.X * b.Z,
+          a.X * b.Y - a.Y * b.X);
+      }
+
+      public static double ClosestDistanceToTriangle(Vector3Double p, Vector3Double v0, Vector3Double v1, Vector3Double v2, ref Vector3Double closestPoint) {
+        var diff = p - v0;
+        var edge0 = v1 - v0;
+        var edge1 = v2 - v0;
+        var a00 = Dot(edge0, edge0);
+        var a01 = Dot(edge0, edge1);
+        var a11 = Dot(edge1, edge1);
+        var b0 = -Dot(diff, edge0);
+        var b1 = -Dot(diff, edge1);
+        var det = a00 * a11 - a01 * a01;
+        var t0 = a01 * b1 - a11 * b0;
+        var t1 = a01 * b0 - a00 * b1;
+
+        if (t0 + t1 <= det) {
+          if (t0 < 0) {
+            if (t1 < 0) {
+              if (b0 < 0) {
+                t1 = 0;
+                if (-b0 >= a00) {
+                  t0 = 1;
+                } else {
+                  t0 = -b0 / a00;
+                }
+              } else {
+                t0 = 0;
+                if (b1 >= 0) {
+                  t1 = 0;
+                } else if (-b1 >= a11) {
+                  t1 = 1;
+                } else {
+                  t1 = -b1 / a11;
+                }
+              }
+            } else {
+              t0 = 0;
+              if (b1 >= 0) {
+                t1 = 0;
+              } else if (-b1 >= a11) {
+                t1 = 1;
+              } else {
+                t1 = -b1 / a11;
+              }
+            }
+          } else if (t1 < 0) {
+            t1 = 0;
+            if (b0 >= 0) {
+              t0 = 0;
+            } else if (-b0 >= a00) {
+              t0 = 1;
+            } else {
+              t0 = -b0 / a00;
+            }
+          } else {
+            t0 /= det;
+            t1 /= det;
+          }
+        } else {
+          double tmp0, tmp1, numer, denom;
+
+          if (t0 < 0) {
+            tmp0 = a01 + b0;
+            tmp1 = a11 + b1;
+            if (tmp1 > tmp0) {
+              numer = tmp1 - tmp0;
+              denom = a00 - 2 * a01 + a11;
+              if (numer >= denom) {
+                t0 = 1;
+                t1 = 0;
+              } else {
+                t0 = numer / denom;
+                t1 = 1 - t0;
+              }
+            } else {
+              t0 = 0;
+              if (tmp1 <= 0) {
+                t1 = 1;
+              } else if (b1 >= 0) {
+                t1 = 0;
+              } else {
+                t1 = -b1 / a11;
+              }
+            }
+          } else if (t1 < 0) {
+            tmp0 = a01 + b1;
+            tmp1 = a00 + b0;
+            if (tmp1 > tmp0) {
+              numer = tmp1 - tmp0;
+              denom = a00 - 2 * a01 + a11;
+              if (numer >= denom) {
+                t1 = 1;
+                t0 = 0;
+              } else {
+                t1 = numer / denom;
+                t0 = 1 - t1;
+              }
+            } else {
+              t1 = 0;
+              if (tmp1 <= 0) {
+                t0 = 1;
+              } else if (b0 >= 0) {
+                t0 = 0;
+              } else {
+                t0 = -b0 / a00;
+              }
+            }
+          } else {
+            numer = a11 + b1 - a01 - b0;
+            if (numer <= 0) {
+              t0 = 0;
+              t1 = 1;
+            } else {
+              denom = a00 - 2 * a01 + a11;
+              if (numer >= denom) {
+                t0 = 1;
+                t1 = 0;
+              } else {
+                t0 = numer / denom;
+                t1 = 1 - t0;
+              }
+            }
+          }
+        }
+
+        closestPoint = v0 + t0 * edge0 + t1 * edge1;
+        diff = p - closestPoint;
+        return diff.SqrMagnitude();
+      }
     }
   }
 }

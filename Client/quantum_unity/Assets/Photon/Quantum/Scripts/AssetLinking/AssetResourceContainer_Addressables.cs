@@ -5,11 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.AddressableAssets;
-#endif
-
 using AsyncOpHandle = UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<AssetBase>;
 
 namespace Quantum {
@@ -23,32 +18,12 @@ namespace Quantum {
     }
 
     [Serializable]
-    public class AssetResourceInfoGroup_Addressables : AssetResourceGroupInfo<AssetResourceInfo_Addressables> {
+    public class AssetResourceInfoGroup_Addressables : AssetResourceInfoGroup<AssetResourceInfo_Addressables> {
       public override int SortOrder => 1000;
 
       public override UnityResourceLoader.ILoader CreateLoader() {
         return new Loader_Addressables();
       }
-
-#if UNITY_EDITOR
-      public override AssetResourceInfo EditorTryCreateResourceInfo(AssetBase asset) {
-        var assetPath = AssetDatabase.GetAssetPath(asset);
-        var guid = AssetDatabase.AssetPathToGUID(assetPath);
-        if (!string.IsNullOrEmpty(guid)) {
-          var addressableEntry = AddressableAssetSettingsDefaultObject.Settings?.FindAssetEntry(guid);
-          if (addressableEntry != null) {
-            string address = addressableEntry.address;
-            if (AssetDatabase.LoadMainAssetAtPath(assetPath) != asset) {
-              address += $"[{asset.name}]";
-            }
-            return new AssetResourceInfo_Addressables() {
-              Address = address
-            };
-          }
-        }
-        return null;
-      }
-#endif
     }
 
     class Loader_Addressables : UnityResourceLoader.LoaderBase<AssetResourceInfo_Addressables, AsyncOpHandle> {

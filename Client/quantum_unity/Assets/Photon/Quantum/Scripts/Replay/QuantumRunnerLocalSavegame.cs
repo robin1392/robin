@@ -44,13 +44,6 @@ public class QuantumRunnerLocalSavegame : MonoBehaviour {
     }
 
     QuantumRunner.StartGame("LOCALSAVEGAME", param);
-
-    // Overwrite the Quantum database from file
-    if (!string.IsNullOrEmpty(DatabasePath)) {
-      // Add the database relative path to point to specific files to load during asset initialization.
-      // Files must reside inside Resources folder to work outside Editor context.
-      FileLoader.Init(new UnityFileLoader(DatabasePath));
-    }
   }
 
   private void OnDestroy() {

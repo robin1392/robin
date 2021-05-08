@@ -73,7 +73,7 @@ MonoBehaviour:
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>Child</Id>\n         
     <Name>Child</Name>\n          <Value Type=\"Quantum.AssetRefBTNode, quantum.code\">Id:
-    [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode, quantum.code</Type>\n         
+    [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode, quantum.code</Type>\n         
     <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
     </Slot>\n        <Slot>\n          <Id>AbortType</Id>\n          <Name>AbortType</Name>\n         
     <Value Type=\"Quantum.BTAbort, quantum.code\">Self</Value>\n          <Type>Quantum.BTAbort,
@@ -146,7 +146,7 @@ MonoBehaviour:
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>Child</Id>\n         
     <Name>Child</Name>\n          <Value Type=\"Quantum.AssetRefBTNode, quantum.code\">Id:
-    [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode, quantum.code</Type>\n         
+    [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode, quantum.code</Type>\n         
     <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
     </Slot>\n        <Slot>\n          <Id>AbortType</Id>\n          <Name>AbortType</Name>\n         
     <Value Type=\"Quantum.BTAbort, quantum.code\">Self</Value>\n          <Type>Quantum.BTAbort,
@@ -167,14 +167,13 @@ MonoBehaviour:
     <Flags>8</Flags>\n      <Position>-83|146||0</Position>\n      <StaticIn Count=\"0\"
     />\n      <StaticOut Count=\"0\" />\n      <Groups Count=\"0\" />\n      <Data
     Count=\"8\">\n        <Data>\n          <Name>$default</Name>\n          <Value
-    Type=\"Quantum.EntityRef, quantum.core\">[EntityRef Index: 0, Version: 0]</Value>\n       
-    </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
-    </Data>\n        <Data>\n          <Name>$hasDefault</Name>\n          <Value
-    Type=\"@boolean\">False</Value>\n        </Data>\n        <Data>\n          <Name>True</Name>\n         
-    <Value />\n        </Data>\n        <Data>\n          <Name>$bbType</Name>\n         
-    <Value Type=\"@string\">EntityRef</Value>\n        </Data>\n        <Data>\n         
-    <Name>Boolean</Name>\n          <Value />\n        </Data>\n        <Data>\n         
-    <Name>$varId</Name>\n          <Value Type=\"@string\">2d4f08e7-5286-4442-9136-89f96a019c4a</Value>\n       
+    Type=\"Quantum.EntityRef, quantum.core\">E.00000.000-</Value>\n        </Data>\n       
+    <Data>\n          <Name></Name>\n          <Value />\n        </Data>\n       
+    <Data>\n          <Name>$hasDefault</Name>\n          <Value Type=\"@boolean\">False</Value>\n       
+    </Data>\n        <Data>\n          <Name>True</Name>\n          <Value />\n       
+    </Data>\n        <Data>\n          <Name>$bbType</Name>\n          <Value Type=\"@string\">EntityRef</Value>\n       
+    </Data>\n        <Data>\n          <Name>Boolean</Name>\n          <Value />\n       
+    </Data>\n        <Data>\n          <Name>$varId</Name>\n          <Value Type=\"@string\">2d4f08e7-5286-4442-9136-89f96a019c4a</Value>\n       
     </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
     </Data>\n      </Data>\n    </Node>\n    <Key>48cf2ead-9515-431e-a18e-5d32df1738d1</Key>\n   
     <Node>\n      <Id>48cf2ead-9515-431e-a18e-5d32df1738d1</Id>\n      <Name>BTSelector</Name>\n     
@@ -185,7 +184,7 @@ MonoBehaviour:
     <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>TopmostDecorator</Id>\n         
     <Name>TopmostDecorator</Name>\n          <Value Type=\"Quantum.AssetRefBTNode,
-    quantum.code\">Id: [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
+    quantum.code\">Id: [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>CurrentChildIndex</Id>\n         
     <Name>CurrentChildIndex</Name>\n          <Value Type=\"Quantum.BTDataIndex,
@@ -349,7 +348,7 @@ MonoBehaviour:
     <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>TopmostDecorator</Id>\n         
     <Name>TopmostDecorator</Name>\n          <Value Type=\"Quantum.AssetRefBTNode,
-    quantum.code\">Id: [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
+    quantum.code\">Id: [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>CurrentChildIndex</Id>\n         
     <Name>CurrentChildIndex</Name>\n          <Value Type=\"Quantum.BTDataIndex,
@@ -500,7 +499,7 @@ MonoBehaviour:
     <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>TopmostDecorator</Id>\n         
     <Name>TopmostDecorator</Name>\n          <Value Type=\"Quantum.AssetRefBTNode,
-    quantum.code\">Id: [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
+    quantum.code\">Id: [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode,
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>CurrentChildIndex</Id>\n         
     <Name>CurrentChildIndex</Name>\n          <Value Type=\"Quantum.BTDataIndex,
@@ -537,7 +536,7 @@ MonoBehaviour:
     quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>Child</Id>\n         
     <Name>Child</Name>\n          <Value Type=\"Quantum.AssetRefBTNode, quantum.code\">Id:
-    [00000000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode, quantum.code</Type>\n         
+    [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode, quantum.code</Type>\n         
     <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
     </Slot>\n        <Slot>\n          <Id>AbortType</Id>\n          <Name>AbortType</Name>\n         
     <Value Type=\"Quantum.BTAbort, quantum.code\">None</Value>\n          <Type>Quantum.BTAbort,

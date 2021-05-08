@@ -61,6 +61,11 @@ MonoBehaviour:
         Id:
           Value: 781529057815001821
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/BattleMap_Navmesh_data
+      AssetRef:
+        Id:
+          Value: 1312001000283887444
+      ResourcePath: DB/BattleMap_Navmesh_data
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee
       AssetRef:
         Id:
@@ -111,6 +116,11 @@ MonoBehaviour:
         Id:
           Value: 2341071469025545075
       ResourcePath: DB/EntityPrototypes/RWPlayer
+    - Path: Resources/DB/BattleMap_mesh
+      AssetRef:
+        Id:
+          Value: 2388057882258112240
+      ResourcePath: DB/BattleMap_mesh
     - Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
       AssetRef:
         Id:

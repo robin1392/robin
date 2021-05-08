@@ -1,12 +1,12 @@
 ﻿using Photon.Deterministic;
 using Quantum;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class QuantumStaticBoxCollider3D : MonoBehaviour {
   public FPVector3 Size;
+  public FPVector3 PositionOffset;
+  public FPVector3 RotationOffset;
   public QuantumStaticColliderSettings Settings;
 
   void OnDrawGizmos() {
@@ -19,7 +19,10 @@ public class QuantumStaticBoxCollider3D : MonoBehaviour {
 
   void DrawGizmo(Boolean selected) {
     var t = transform;
-    var matrix = Matrix4x4.TRS(t.position, t.rotation, t.localScale);
+    var matrix = Matrix4x4.TRS(
+      t.position + PositionOffset.ToUnityVector3(),
+      Quaternion.Euler(t.rotation.eulerAngles + RotationOffset.ToUnityVector3()),
+      t.localScale);
     GizmoUtils.DrawGizmosBox(matrix, Size.ToUnityVector3(), selected, QuantumEditorSettings.Instance.StaticColliderColor);
   }
 }

@@ -55,16 +55,20 @@ public class QuantumStaticMeshCollider3D : MonoBehaviour {
 
     Triangles = new TriangleCCW[Mesh.triangles.Length / 3];
 
-    for (int i = 0; i < Mesh.triangles.Length; i += 3) {
+    // Save the arrays to reduce overhead of the property calls during the loop.
+    var cachedUnityTriangles = Mesh.triangles;
+    var cachedUnityVertices = Mesh.vertices;
+
+    for (int i = 0; i < cachedUnityTriangles.Length; i += 3) {
       TriangleCCW tri = new TriangleCCW();
 
-      var vertexA = Mesh.triangles[i];
-      var vertexB = Mesh.triangles[i + 1];
-      var vertexC = Mesh.triangles[i + 2];
+      var vertexA = cachedUnityTriangles[i];
+      var vertexB = cachedUnityTriangles[i + 1];
+      var vertexC = cachedUnityTriangles[i + 2];
 
-      tri.C = localToWorld.MultiplyPoint(Mesh.vertices[vertexA]).ToFPVector3();
-      tri.B = localToWorld.MultiplyPoint(Mesh.vertices[vertexB]).ToFPVector3();
-      tri.A = localToWorld.MultiplyPoint(Mesh.vertices[vertexC]).ToFPVector3();
+      tri.C = localToWorld.MultiplyPoint(cachedUnityVertices[vertexA]).ToFPVector3();
+      tri.B = localToWorld.MultiplyPoint(cachedUnityVertices[vertexB]).ToFPVector3();
+      tri.A = localToWorld.MultiplyPoint(cachedUnityVertices[vertexC]).ToFPVector3();
 
       tri.ComputeNormal();
 
@@ -81,6 +85,9 @@ public class QuantumStaticMeshCollider3D : MonoBehaviour {
       Array.Resize(ref Triangles, triIndex);
     }
 
+#if UNITY_EDITOR
+    UnityEditor.EditorUtility.SetDirty(this);
+#endif
     return Triangles.Length > 0;
   }
 

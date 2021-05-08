@@ -11,27 +11,31 @@ namespace Quantum {
     UnitySceneUnloadDone,
   }
 
-  public class CallbackUnitySceneLoadBegin : QuantumGame.CallbackBase {
+  public interface ICallbackUnityScene {
+    string SceneName { get; set; }
+  }
+
+  public class CallbackUnitySceneLoadBegin : QuantumGame.CallbackBase, ICallbackUnityScene {
     public new const Int32 ID = (int)UnityCallbackId.UnitySceneLoadBegin;
-    internal CallbackUnitySceneLoadBegin(QuantumGame game) : base(ID, game) { }
+    public CallbackUnitySceneLoadBegin(QuantumGame game) : base(ID, game) { }
     public string SceneName { get; set; }
   }
 
-  public class CallbackUnitySceneLoadDone : QuantumGame.CallbackBase {
+  public class CallbackUnitySceneLoadDone : QuantumGame.CallbackBase, ICallbackUnityScene {
     public new const Int32 ID = (int)UnityCallbackId.UnitySceneLoadDone;
-    internal CallbackUnitySceneLoadDone(QuantumGame game) : base(ID, game) { }
+    public CallbackUnitySceneLoadDone(QuantumGame game) : base(ID, game) { }
     public string SceneName { get; set; }
   }
 
-  public class CallbackUnitySceneUnloadBegin : QuantumGame.CallbackBase {
+  public class CallbackUnitySceneUnloadBegin : QuantumGame.CallbackBase, ICallbackUnityScene {
     public new const Int32 ID = (int)UnityCallbackId.UnitySceneUnloadBegin;
-    internal CallbackUnitySceneUnloadBegin(QuantumGame game) : base(ID, game) { }
+    public CallbackUnitySceneUnloadBegin(QuantumGame game) : base(ID, game) { }
     public string SceneName { get; set; }
   }
 
-  public class CallbackUnitySceneUnloadDone : QuantumGame.CallbackBase {
+  public class CallbackUnitySceneUnloadDone : QuantumGame.CallbackBase, ICallbackUnityScene {
     public new const Int32 ID = (int)UnityCallbackId.UnitySceneUnloadDone;
-    internal CallbackUnitySceneUnloadDone(QuantumGame game) : base(ID, game) { }
+    public CallbackUnitySceneUnloadDone(QuantumGame game) : base(ID, game) { }
     public string SceneName { get; set; }
   }
 }
@@ -80,13 +84,6 @@ public partial class QuantumCallback : QuantumUnityStaticDispatcherAdapter<Quant
       IsDefaultHandlerEnabled(typeof(QuantumCallbackHandler_UnityCallbacks), ref enabled);
       if (enabled) {
         QuantumCallbackHandler_UnityCallbacks.Initialize();
-      }
-    }
-    {
-      bool enabled = true;
-      IsDefaultHandlerEnabled(typeof(QuantumCallbackHandler_InitLayers), ref enabled);
-      if (enabled) {
-        QuantumCallbackHandler_InitLayers.Initialize();
       }
     }
   }

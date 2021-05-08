@@ -6,7 +6,7 @@ namespace Quantum {
     static void Main(string[] args) {
 
       Log.InitForConsole();
-      
+
       var pathToLUT = Path.GetFullPath(args[0]);
       var pathToDatabaseFile = Path.GetFullPath(args[1]);
       var pathToReplayFile = Path.GetFullPath(args[2]);

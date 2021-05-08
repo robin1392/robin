@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class QuantumStaticBoxCollider2D : MonoBehaviour {
   public FPVector2 Size;
+  public FPVector2 PositionOffset;
+  public FP RotationOffset;
   public FP Height;
   public QuantumStaticColliderSettings Settings;
 
@@ -30,7 +32,10 @@ public class QuantumStaticBoxCollider2D : MonoBehaviour {
 #endif
 
     var t = transform;
-    var matrix = Matrix4x4.TRS(t.position, t.rotation, t.localScale) * Matrix4x4.Translate(offset);
+    var matrix = Matrix4x4.TRS(
+      t.position + PositionOffset.ToUnityVector3(),
+      t.rotation * RotationOffset.FlipRotation().ToUnityQuaternionDegrees(),
+      t.localScale) * Matrix4x4.Translate(offset);
     GizmoUtils.DrawGizmosBox(matrix, size, selected, QuantumEditorSettings.Instance.StaticColliderColor);
   }
 }

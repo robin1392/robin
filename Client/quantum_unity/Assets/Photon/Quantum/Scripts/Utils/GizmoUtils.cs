@@ -7,6 +7,8 @@ namespace Quantum {
   public static class GizmoUtils {
     public static readonly Color Blue = new Color(0.0f, 0.7f, 1f);
     public static Color Alpha(this Color color, Single a) { color.a = a; return color; }
+    public const float DefaultArrowHeadLength = 0.25f;
+    public const float DefaultArrowHeadAngle = 25.0f;
 
     private static float GetAlphaFace(this bool selected) { return selected ? 0.5f : 0.4f; }
     private static float GetAlphaWire(this bool selected) { return selected ? 0.7f : 0.5f; }
@@ -261,7 +263,7 @@ namespace Quantum {
 
       FPMathUtils.LoadLookupTables();
 
-      color = FPVector2.IsPolygonConvex(vertices) ? color : Color.red;
+      color = FPVector2.IsPolygonConvex(vertices) && FPVector2.PolygonNormalsAreValid(vertices) ? color : Color.red;
 
       var transformedVertices = vertices.Select(x => matrix.MultiplyPoint(x.ToUnityVector3())).ToArray();
       DrawGizmoPolygon2DInternal(transformedVertices, height, drawNormals, selected, color);
@@ -332,7 +334,18 @@ namespace Quantum {
 #endif
     }
 
-    public static void DrawGizmoVector(Vector3 start, Vector3 end, float arrowHeadLength = 0.25f, float arrowHeadAngle = 25.0f) {
+    public static void DrawGizmoVector3D(Vector3 start, Vector3 end, float arrowHeadLength = 0.25f, float arrowHeadAngle = 25.0f) {
+#if UNITY_EDITOR
+      Gizmos.DrawLine(start, end);
+      var d = (end - start).normalized;
+      Vector3 right = Quaternion.LookRotation(d) * Quaternion.Euler(0f, 180f + arrowHeadAngle, 0f) * new Vector3(0f, 0f, 1f);
+      Vector3 left = Quaternion.LookRotation(d) * Quaternion.Euler(0f, 180f - arrowHeadAngle, 0f) * new Vector3(0f, 0f, 1f);
+      Gizmos.DrawLine(end, end + right * arrowHeadLength);
+      Gizmos.DrawLine(end, end + left * arrowHeadLength);
+#endif
+    }
+
+    public static void DrawGizmoVector(Vector3 start, Vector3 end, float arrowHeadLength = DefaultArrowHeadLength, float arrowHeadAngle = DefaultArrowHeadAngle) {
 #if UNITY_EDITOR
       Gizmos.DrawLine(start, end);
 

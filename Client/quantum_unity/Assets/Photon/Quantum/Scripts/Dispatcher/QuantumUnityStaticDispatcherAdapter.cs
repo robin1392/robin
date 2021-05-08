@@ -11,14 +11,14 @@ public abstract class QuantumUnityStaticDispatcherAdapter {
       if (Dispatcher == null) {
         // this may happen when scripts get reloaded in editor
         Destroy(gameObject);
-      } else { 
+      } else {
         Dispatcher.RemoveDeadListners();
       }
     }
   }
 }
 
-public abstract class QuantumUnityStaticDispatcherAdapter<TDispatcher, TDispatchableBase>  : QuantumUnityStaticDispatcherAdapter
+public abstract class QuantumUnityStaticDispatcherAdapter<TDispatcher, TDispatchableBase> : QuantumUnityStaticDispatcherAdapter
   where TDispatcher : DispatcherBase, IQuantumUnityDispatcher, new()
   where TDispatchableBase : IDispatchable {
 
@@ -38,47 +38,71 @@ public abstract class QuantumUnityStaticDispatcherAdapter<TDispatcher, TDispatch
     Dispatcher.RemoveDeadListners();
   }
 
-  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, bool once = false, bool onlyIfActiveAndEnabled = false, string runnerId = null, QuantumRunner runner = null, DeterministicGameMode? gameMode = null, DeterministicGameMode? excludeGameMode = null)
+  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, DispatchableFilter filter = null,
+    bool once = false, bool onlyIfActiveAndEnabled = false, bool onlyIfEntityViewBound = false)
     where TDispatchable : TDispatchableBase {
-    DispatchableFilter filter = null;
-    if (!string.IsNullOrEmpty(runnerId)) {
-      Debug.Assert(runner == null && gameMode == null && excludeGameMode == null);
-      filter = (game) => QuantumRunner.FindRunner(game)?.Id == runnerId;
-    } else if (runner != null) {
-      Debug.Assert(gameMode == null && excludeGameMode == null);
-      // do not capture ref
-      var runnerInstanceId = runner.GetInstanceID();
-      filter = (game) => QuantumRunner.FindRunner(game)?.GetInstanceID() == runnerInstanceId;
-    } else if (gameMode != null) {
-      Debug.Assert(excludeGameMode == null);
-      filter = (game) => game.Session.GameMode == gameMode.Value;
-    } else if (excludeGameMode != null) {
-      filter = (game) => game.Session.GameMode != excludeGameMode.Value;
+
+    if (onlyIfEntityViewBound) {
+      EntityView view;
+      if (listener is Component comp) {
+        view = comp.GetComponentInParent<EntityView>();
+      } else if (listener is GameObject go) {
+        view = go.GetComponentInParent<EntityView>();
+      } else {
+        throw new ArgumentException($"To use {nameof(onlyIfEntityViewBound)} parameter, {nameof(listener)} needs to be a Component or a GameObject", nameof(listener));
+      }
+
+      if (view == null) {
+        throw new ArgumentException($"Unable to find {nameof(EntityView)} component in {listener} or any of its parents", nameof(listener));
+      }
+
+      filter = ComposeFilters((_) => view.EntityRef.IsValid, filter);
     }
 
-    return Subscribe(listener, handler, filter, once, onlyIfActiveAndEnabled);
-  }
-
-  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, QuantumGame game, bool once = false, bool onlyIfActiveAndEnabled = false)
-  where TDispatchable : TDispatchableBase {
-    EnsureWorkerExistsAndIsActive();
-    return Dispatcher.Subscribe(listener, handler, once, onlyIfActiveAndEnabled, filter: g => g == game);
-  }
-
-  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, DispatchableFilter filter, bool once = false, bool onlyIfActiveAndEnabled = false)
-    where TDispatchable : TDispatchableBase {
     EnsureWorkerExistsAndIsActive();
     return Dispatcher.Subscribe(listener, handler, once, onlyIfActiveAndEnabled, filter: filter);
   }
 
-  public static IDisposable SubscribeManual<TDispatchable>(object listener, Quantum.DispatchableHandler<TDispatchable> handler)
-  where TDispatchable : TDispatchableBase {
-    return Dispatcher.SubscribeManual(listener, handler);
+  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, DeterministicGameMode gameMode, bool exclude = false,
+    bool once = false, bool onlyIfActiveAndEnabled = false, bool onlyIfEntityViewBound = false)
+    where TDispatchable : TDispatchableBase {
+    return Subscribe(listener, handler, (game) => (game.Session.GameMode == gameMode) ^ exclude, once, onlyIfActiveAndEnabled, onlyIfEntityViewBound);
   }
 
-  public static IDisposable SubscribeManual<TDispatchable>(Quantum.DispatchableHandler<TDispatchable> handler)
+  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, DeterministicGameMode[] gameModes, bool exclude = false,
+    bool once = false, bool onlyIfActiveAndEnabled = false, bool onlyIfEntityViewBound = false)
     where TDispatchable : TDispatchableBase {
-    return Dispatcher.SubscribeManual(handler);
+    return Subscribe(listener, handler, (game) => (Array.IndexOf(gameModes, game.Session.GameMode) >= 0) ^ exclude, once, onlyIfActiveAndEnabled, onlyIfEntityViewBound);
+  }
+
+
+  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, string runnerId,
+    bool once = false, bool onlyIfActiveAndEnabled = false, bool onlyIfEntityViewBound = false)
+    where TDispatchable : TDispatchableBase {
+    return Subscribe(listener, handler, (game) => QuantumRunner.FindRunner(game)?.Id == runnerId, once, onlyIfActiveAndEnabled, onlyIfEntityViewBound);
+  }
+
+  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, QuantumRunner runner,
+    bool once = false, bool onlyIfActiveAndEnabled = false, bool onlyIfEntityViewBound = false)
+    where TDispatchable : TDispatchableBase {
+    var runnerInstanceId = runner.GetInstanceID();
+    return Subscribe(listener, handler, (game) => QuantumRunner.FindRunner(game)?.GetInstanceID() == runnerInstanceId, once, onlyIfActiveAndEnabled, onlyIfEntityViewBound);
+  }
+
+  public static Quantum.DispatcherSubscription Subscribe<TDispatchable>(UnityEngine.Object listener, Quantum.DispatchableHandler<TDispatchable> handler, QuantumGame game,
+    bool once = false, bool onlyIfActiveAndEnabled = false, bool onlyIfEntityViewBound = false)
+    where TDispatchable : TDispatchableBase {
+    return Subscribe(listener, handler, g => g == game, once, onlyIfActiveAndEnabled, onlyIfEntityViewBound);
+  }
+
+  public static IDisposable SubscribeManual<TDispatchable>(object listener, Quantum.DispatchableHandler<TDispatchable> handler, DispatchableFilter filter = null, bool once = false)
+    where TDispatchable : TDispatchableBase {
+    return Dispatcher.SubscribeManual(listener, handler, once, filter);
+  }
+
+  public static IDisposable SubscribeManual<TDispatchable>(Quantum.DispatchableHandler<TDispatchable> handler, DispatchableFilter filter = null, bool once = false)
+    where TDispatchable : TDispatchableBase {
+    return Dispatcher.SubscribeManual(handler, once, filter);
   }
 
   public static bool Unsubscribe(DispatcherSubscription subscription) {
@@ -109,5 +133,17 @@ public abstract class QuantumUnityStaticDispatcherAdapter<TDispatcher, TDispatch
       throw new InvalidOperationException($"Unable to create {typeof(Worker)}");
 
     _worker.Dispatcher = Dispatcher;
+  }
+
+  private static DispatchableFilter ComposeFilters(DispatchableFilter first, DispatchableFilter second) {
+    if (first == null && second == null) {
+      throw new ArgumentException($"{nameof(first)} and {nameof(second)} can't both be null");
+    } else if (first == null) {
+      return second;
+    } else if (second == null) {
+      return first;
+    } else {
+      return x => first(x) && second(x);
+    }
   }
 }

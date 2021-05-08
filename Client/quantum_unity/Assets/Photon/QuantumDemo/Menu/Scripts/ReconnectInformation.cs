@@ -3,14 +3,15 @@ using Photon.Realtime;
 using UnityEngine;
 
 namespace Quantum.Demo {
+  /// <summary>
+  /// Demonstrates a mechanism to save current ronnection data to the disk in order to use it for a OpRejoinRoom() after a disconnect and app restart.
+  /// </summary>
   [Serializable]
   public class ReconnectInformation {
     public string Room;
     public string Region;
     public string AppVersion;
     public string UserId;
-    public string MasterServerAddress;
-    public string AuthToken;
     public long TimeoutInTicks;
 
     public DateTime Timeout {
@@ -38,14 +39,12 @@ namespace Quantum.Demo {
         Region              = client.CloudRegion,
         Timeout             = DateTime.Now + timeout,
         UserId              = client.UserId,
-        AuthToken           = client.AuthValues.Token,
-        AppVersion          = client.AppVersion,
-        MasterServerAddress = client.MasterServerAddress
+        AppVersion          = client.AppVersion
       };
     }
 
     public override string ToString() {
-      return $"Room '{Room}' Region '{Region}' Timeout {Timeout}' AppVersion '{AppVersion}' UserId '{UserId}' MasterServerAddress '{MasterServerAddress}' AuthToken '{AuthToken}'";
+      return $"Room '{Room}' Region '{Region}' Timeout {Timeout}' AppVersion '{AppVersion}' UserId '{UserId}'";
     }
   }
 }

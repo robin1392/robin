@@ -1,5 +1,6 @@
 using UnityEngine;
 using Quantum;
+using Quantum.Editor;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -44,7 +45,7 @@ public partial class EntityComponentTransform2DVertical {
     UnityEditor.Undo.DestroyObjectImmediate(this);
   }
 
-  public override void OnInspectorGUI(SerializedObject so, IQuantumEditorGUI editor) {
+  public override void OnInspectorGUI(SerializedObject so, IQuantumEditorGUI QuantumEditorGUI) {
     var autoSetPosition = so.FindPropertyOrThrow(nameof(EntityComponentTransform2DVertical.AutoSetPosition));
     var autoSetHeight = so.FindPropertyOrThrow(nameof(EntityComponentTransform2DVertical.AutoSetHeight));
 
@@ -52,10 +53,10 @@ public partial class EntityComponentTransform2DVertical {
     EditorGUILayout.PropertyField(autoSetHeight);
 
     using (new EditorGUI.DisabledScope(autoSetPosition.boolValue)) {
-      EditorGUILayout.PropertyField(so.FindPropertyOrThrow("Prototype.Position"));
+      QuantumEditorGUI.PropertyField(so.FindPropertyOrThrow("Prototype.Position"));
     }
     using (new EditorGUI.DisabledScope(autoSetHeight.boolValue)) {
-      EditorGUILayout.PropertyField(so.FindPropertyOrThrow("Prototype.Height"));
+      QuantumEditorGUI.PropertyField(so.FindPropertyOrThrow("Prototype.Height"));
     }
   }
 #endif

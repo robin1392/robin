@@ -4,6 +4,8 @@ using System.Collections;
 using System.Linq;
 using Photon.Deterministic;
 using UnityEngine;
+using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class QuantumRunnerLocalDebug : QuantumCallbacks {
   public RecordingFlags  RecordingFlags = RecordingFlags.Default;
@@ -14,11 +16,34 @@ public class QuantumRunnerLocalDebug : QuantumCallbacks {
   public RuntimeConfig   Config;
   public RuntimePlayer[] Players;
 
+  public bool PreloadAddressables = false;
+  public DynamicAssetDBSettings DynamicAssetDB;
+
   bool _isReload;
 
-  public void Start() {
+#if QUANTUM_ADDRESSABLES
+  public async System.Threading.Tasks.Task Start()
+#else
+  public void Start()
+#endif
+  { 
     if (QuantumRunner.Default != null)
       return;
+
+#if QUANTUM_ADDRESSABLES
+    if (PreloadAddressables) {
+      // there's also an overload that accepts a target list paramter
+      var addressableAssets = UnityDB.CollectAddressableAssets();
+      // preload all the addressable assets
+      foreach (var (assetRef, address) in addressableAssets) {
+        // there are a few ways to load an asset with Addressables (by label, by IResourceLocation, by address etc.)
+        // but it seems that they're not fully interchangable, i.e. loading by label will not make loading by address
+        // be reported as done immediatelly; hence the only way to preload an asset for Quantum is to replicate
+        // what it does internally, i.e. load with the very same paramters
+        await UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<AssetBase>(address).Task;
+      }
+    }
+#endif
 
     StartWithFrame(0, null);
   }
@@ -35,18 +60,22 @@ public class QuantumRunnerLocalDebug : QuantumCallbacks {
 
       var playerCount = Math.Max(1, Players.Length);
 
+      var dynamicDB = new DynamicAssetDB();
+      DynamicAssetDB.OnInitialDynamicAssetsRequested?.Invoke(dynamicDB);
+
       // create start game parameter
       var param = new QuantumRunner.StartParameters {
-        RuntimeConfig       = Config,
-        DeterministicConfig = DeterministicSessionConfigAsset.Instance.Config,
-        ReplayProvider      = null,
-        GameMode            = Photon.Deterministic.DeterministicGameMode.Local,
-        InitialFrame        = 0,
-        RunnerId            = "LOCALDEBUG",
-        PlayerCount         = playerCount,
-        LocalPlayerCount    = playerCount,
-        RecordingFlags      = RecordingFlags,
-        InstantReplayConfig = InstantReplayConfig,
+        RuntimeConfig        = Config,
+        DeterministicConfig  = DeterministicSessionConfigAsset.Instance.Config,
+        ReplayProvider       = null,
+        GameMode             = Photon.Deterministic.DeterministicGameMode.Local,
+        InitialFrame         = 0,
+        RunnerId             = "LOCALDEBUG",
+        PlayerCount          = playerCount,
+        LocalPlayerCount     = playerCount,
+        RecordingFlags       = RecordingFlags,
+        InstantReplayConfig  = InstantReplayConfig,
+        InitialDynamicAssets = dynamicDB,
       };
 
       param.InitialFrame = frameNumber;
@@ -105,5 +134,15 @@ public class QuantumRunnerLocalDebug : QuantumCallbacks {
     }
 
     StartWithFrame(frameNumber, frameData);
+  }
+
+
+
+  [Serializable]
+  public struct DynamicAssetDBSettings {
+    [Serializable]
+    public class InitialDynamicAssetsRequestedUnityEvent : UnityEvent<DynamicAssetDB> { }
+
+    public InitialDynamicAssetsRequestedUnityEvent OnInitialDynamicAssetsRequested;
   }
 }

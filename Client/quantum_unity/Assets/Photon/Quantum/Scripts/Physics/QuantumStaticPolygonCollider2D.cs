@@ -10,6 +10,10 @@ public class QuantumStaticPolygonCollider2D : MonoBehaviour {
     new FPVector2(-1, 0),
     new FPVector2(+1, 0)
   };
+  [Tooltip("Additional translation applied to transform position when baking")]
+  public FPVector2 PositionOffset;
+  [Tooltip("Additional rotation (in degrees) applied to transform rotation when baking")]
+  public FP RotationOffset;
   public FP Height;
   public QuantumStaticColliderSettings Settings;
 
@@ -23,13 +27,16 @@ public class QuantumStaticPolygonCollider2D : MonoBehaviour {
   }
 
   void DrawGizmo(Boolean selected) {
-    float height = Height.AsFloat * transform.localScale.z;
+    var height = Height.AsFloat * transform.localScale.z;
 #if QUANTUM_XY
     height *= -1.0f;
 #endif
 
     var t = transform;
-    var matrix = Matrix4x4.TRS(t.position, t.rotation, t.localScale);
+    var matrix = Matrix4x4.TRS(
+      t.position + PositionOffset.ToUnityVector3(),
+      t.rotation * RotationOffset.FlipRotation().ToUnityQuaternionDegrees(),
+      t.localScale);
     GizmoUtils.DrawGizmoPolygon2D(matrix, Vertices, height, selected, selected, QuantumEditorSettings.Instance.StaticColliderColor);
   }
 }

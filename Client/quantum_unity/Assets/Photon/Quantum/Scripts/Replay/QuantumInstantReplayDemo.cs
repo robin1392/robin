@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using Quantum;
+using System;
 
 public class QuantumInstantReplayDemo : MonoBehaviour {
 
   public float PlaybackSpeed = 0.5f;
-  [EditorDisabled]
+  [QuantumInspector, Quantum.Inspector.ReadOnly]
   public bool IsReplayRunning;
   [InspectorButton("Editor_StartInstantReplay", "Start", true)]
   public bool Button_StartInstantReplay;
@@ -39,53 +40,50 @@ public class QuantumInstantReplayDemo : MonoBehaviour {
 
       if (c.Game == _instantReplay.LiveGame) {
         // main game was shut down, shut down replay
-        _instantReplay.Shutdown();
-        _instantReplay = null;
-      } else if (c.Game == _instantReplay.ReplayGame && _instantReplay.IsRunning) {
+        CleanUpReplay();
+      } else if (c.Game == _instantReplay.ReplayGame) {
         // this will be called if the replay runner is shut down outside this class.
         // we can call shutdown() on the runner multiple times during the same frame.
-        _instantReplay.StopInstantReplay();
+        CleanUpReplay();
       }
     });
   }
 
   public void Update() {
 
-    // Lazy init the replay recorder.
-    if (_instantReplay == null && QuantumRunner.Default != null) {
-      // Create the instant replay object that takes care of creating new sessions.
-      _instantReplay = new QuantumInstantReplay(QuantumRunner.Default.Game);
-      _instantReplay.OnReplayStarted += OnReplayStarted;
-      _instantReplay.OnReplayStopped += OnReplayStopped;
-
+    if ( QuantumRunner.Default != null ) {
       // Tell the game to start capturing snapshots. This can be called at any point in the game.
       QuantumRunner.Default.Game.StartRecordingInstantReplaySnapshots();
     }
 
     if (_instantReplay != null) {
-      _instantReplay.PlaybackSpeed = PlaybackSpeed;
-      _instantReplay.ReplayLength = ReplayLengthSec;
-      _instantReplay.Update();
-      if (_instantReplay.IsRunning) {
-
-        if (_instantReplay.CanSeek) {
-          if (previousNormalizedTime != NormalizedTime) {
-            _instantReplay.SeekNormalizedTime(NormalizedTime);
-          }
+      if (_instantReplay.CanSeek) {
+        if (previousNormalizedTime != NormalizedTime) {
+          _instantReplay.SeekNormalizedTime(NormalizedTime);
         }
+      }
 
+      if (_instantReplay.Update(Time.unscaledDeltaTime * PlaybackSpeed)) {
         previousNormalizedTime = NormalizedTime = _instantReplay.NormalizedTime;
+      } else {
+        CleanUpReplay();
       }
     }
 
-    Button_StartInstantReplay = _instantReplay != null && !_instantReplay.IsRunning;
-    Button_StopInstantReplay = _instantReplay != null && _instantReplay.IsRunning;
-    IsReplayRunning = _instantReplay != null && _instantReplay.IsRunning;
+    Button_StartInstantReplay = _instantReplay == null && QuantumRunner.Default != null;
+    Button_StopInstantReplay = _instantReplay != null;
+    IsReplayRunning = _instantReplay != null;
+  }
+
+  private void CleanUpReplay() {
+    _instantReplay.Dispose();
+    _instantReplay = null;
+    OnReplayStopped();
   }
 
   public void OnDisable() {
     if (_instantReplay != null && QuantumRunner.Default != null) {
-      _instantReplay.Shutdown();
+      _instantReplay.Dispose();
       _instantReplay = null;
     }
   }
@@ -97,7 +95,7 @@ public class QuantumInstantReplayDemo : MonoBehaviour {
   }
 
   void OnGUI() {
-    if (ShowReplayLabel && _instantReplay != null && _instantReplay.IsRunning) {
+    if (ShowReplayLabel && _instantReplay != null) {
       GUI.contentColor = Color.red;
       GUI.Label(new Rect(10, 10, 200, 100), "INSTANT REPLAY");
 
@@ -147,7 +145,7 @@ public class QuantumInstantReplayDemo : MonoBehaviour {
     StartFading();
   }
 
-  void OnReplayStopped(QuantumGame game) {
+  void OnReplayStopped() {
     Debug.LogFormat("### Stopping quantum instant replay and resuming the live game ###");
 
     var entityViewUpdater = GameObject.FindObjectOfType<EntityViewUpdater>();
@@ -172,13 +170,17 @@ public class QuantumInstantReplayDemo : MonoBehaviour {
   #region Editor Button
 
   public void Editor_StartInstantReplay() {
-    if (_instantReplay != null && !_instantReplay.IsRunning)
-      _instantReplay.StartInstantReplay(RewindMode, EnableLoop);
+
+    if (_instantReplay == null && QuantumRunner.Default) {
+      _instantReplay = new QuantumInstantReplay(QuantumRunner.Default.Game, ReplayLengthSec, RewindMode, EnableLoop);
+      OnReplayStarted(_instantReplay.ReplayGame);
+    }
   }
 
   public void Editor_StopInstantReplay() {
-    if (_instantReplay != null && _instantReplay.IsRunning)
-      _instantReplay.StopInstantReplay();
+    if (_instantReplay != null) {
+      CleanUpReplay();
+    }
   }
 
   #endregion

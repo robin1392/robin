@@ -7,7 +7,6 @@ using System.Linq;
 using Photon.Realtime;
 using UnityEngine;
 
-
 public sealed class QuantumRunner : MonoBehaviour, IDisposable {
   public static QuantumRunner Default => _activeRunners.Count == 0 ? null : _activeRunners[0];
   public static IEnumerable<QuantumRunner> ActiveRunners => _activeRunners;
@@ -20,22 +19,85 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
   [HideInInspector]
   public bool OverrideUpdateSession = false;
 
+  /// <summary>
+  /// Quantum start game parameters.
+  /// </summary>
   public struct StartParameters {
-    public RuntimeConfig                            RuntimeConfig;
-    public DeterministicSessionConfig               DeterministicConfig;
-    public IDeterministicReplayProvider             ReplayProvider;
-    public DeterministicGameMode                    GameMode;
-    public Int32                                    InitialFrame;
-    public Byte[]                                   FrameData;
-    public string                                   RunnerId;
+    /// <summary>
+    /// The runtime config the Quantum game should use. Every client needs to set it, the server selects the first one send to it.
+    /// </summary>
+    public RuntimeConfig RuntimeConfig;
+    /// <summary>
+    /// The deterministic config the Quantum game should use. Every client needs to set it, the server selects the first one send to it.
+    /// </summary>
+    public DeterministicSessionConfig DeterministicConfig;
+    /// <summary>
+    /// The replay provider injects recorded inputs and rpcs into the game which is required to run the game as a replay. <see cref="InputProvider"/> is an implementation of the replay provider. See useages of <see cref="QuantumGame.RecordedInputs"/> and <see cref="QuantumRunnerLocalReplay.InputProvider"/>.
+    /// </summary>
+    public IDeterministicReplayProvider ReplayProvider;
+    /// <summary>
+    /// The game mode (default is Multiplayer). 
+    /// Local mode is for testing only, the simulation is not connected online. It does not go into prediction nor does it perform rollbacks.
+    /// Replay mode will also run offline and requires the ReplayProvider to be set to process the input.
+    /// Spectating mode will run the simulation without a player and without the ability to input.
+    /// </summary>
+    public DeterministicGameMode GameMode;
+    /// <summary>
+    /// The initial tick to start the simulation from as set in FrameData (only set this when FrameData is set as well). The initial frame is also encoded in the data, but required deserilization first.
+    /// </summary>
+    public Int32 InitialFrame;
+    /// <summary>
+    /// Serialized frame to start the simulation from. Requires InitialFrame to be set as well. This can be a reconnect or an instant replay where we already have a frame snapshot locally (<see cref="QuantumInstantReplay"/>).
+    /// </summary>
+    public Byte[] FrameData;
+    /// <summary>
+    /// Optionally name the runner to access it from <see cref="QuantumRunner.FindRunner(string)"/>. This is useful when multiple runners are active on the client (for example an instant replay).
+    /// </summary>
+    public string RunnerId;
+    /// <summary>
+    /// Optionally set the quit behaviour in <see cref="QuantumNetworkCommunicator"/> to choose what is done automatically when the game is destroyed.
+    /// </summary>
     public QuantumNetworkCommunicator.QuitBehaviour QuitBehaviour;
-    public Int32                                    PlayerCount;
-    public Int32                                    LocalPlayerCount;
-    public RecordingFlags                           RecordingFlags;
-    public LoadBalancingClient                      NetworkClient;
-    public IResourceManager                         ResourceManagerOverride;
-    public InstantReplaySettings                    InstantReplayConfig;
-    public Int32                                    HeapExtraCount;
+    /// <summary>
+    /// The player count for the game. Requires to be set and the value will be written into the determinstic config that is send to the server.
+    /// </summary>
+    public Int32 PlayerCount;
+    /// <summary>
+    /// The local player count. Normally you set this to 1. Requires to be 0 when game mode Spectating is used.
+    /// </summary>
+    public Int32 LocalPlayerCount;
+    /// <summary>
+    /// The recording flags will enable the recording of input and checksums (requires memory and allocations). When enabled <see cref="QuantumGame.GetRecordedReplay"/> can be used access the replay data.
+    /// </summary>
+    public RecordingFlags RecordingFlags;
+    /// <summary>
+    /// The LoadBalancingClient object needs to be connected to game sever (joined a room) when handed to Quantum. Is not required for Replay or Local game modes.
+    /// </summary>
+    public LoadBalancingClient NetworkClient;
+    /// <summary>
+    /// Optionally override the resource manager for example from deserialized Quantum assets (as showcased in <see cref="QuantumRunnerLocalReplay"/>).
+    /// </summary>
+    public IResourceManager ResourceManagerOverride;
+    /// <summary>
+    /// The instant replay feature requires this setup data for snapshot recording.
+    /// </summary>
+    public InstantReplaySettings InstantReplayConfig;
+    /// <summary>
+    ///  Extra heaps to allocate for a session in case you need to create 'auxiliary' frames than actually required for the simulation itself.
+    /// </summary>
+    public Int32 HeapExtraCount;
+    /// <summary>
+    /// Optionally provide assest to be added to the dynamic asset db. This can be used to introduce procedurally generated assets into the simulation from the start.
+    /// </summary>
+    public DynamicAssetDB InitialDynamicAssets;
+    /// <summary>
+    /// Set this to true when rejoining a game to make sure that a snapshot is requested.
+    /// </summary>
+    public bool IsRejoin;
+    /// <summary>
+    /// Optionally set a timeout that will enable <see cref="QuantumRunner.HasGameStartTimedOut"/> to check for a timeout during reconnecting into a running game and waiting for a snapshot that never arrives. The checking and handling needs to be done by you.
+    /// </summary>
+    public float StartGameTimeoutInSeconds;
   }
 
   public QuantumGame          Game            { get; private set; }
@@ -45,7 +107,12 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
   public LoadBalancingClient  NetworkClient   { get; private set; }
   public RecordingFlags       RecordingFlags  { get; private set; }
 
+  public bool HideGizmos = false;
+  public QuantumEditorSettings GizmoSettings;
+
   public bool IsRunning => Game?.Frames.Predicted != null;
+
+  public bool HasGameStartTimedOut => _startGameTimeout > 0.0f && Session != null && Session.IsPaused && Time.time > _startGameTimeout;
 
   public float? DeltaTime {
     get {
@@ -59,6 +126,7 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
   }
 
   private bool _shutdownRequested;
+  private float _startGameTimeout;
 
   void Update() {
     if (Session != null && OverrideUpdateSession == false) {
@@ -82,11 +150,10 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
 
   void OnDrawGizmos() {
 #if UNITY_EDITOR
-    if (Session != null) {
+    if (Session != null && HideGizmos == false) {
       var game = Session.Game as QuantumGame;
       if (game != null) {
-        Navigation.Constants.DebugGizmoSize = QuantumEditorSettings.Instance.NavigationGizmoSize;
-        QuantumGameGizmos.OnDrawGizmos(game);
+        QuantumGameGizmos.OnDrawGizmos(game, GizmoSettings);
       }
     }
 #endif
@@ -112,9 +179,6 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
     // load lookup table
     FPMathUtils.LoadLookupTables(force);
 
-    // Init file loading from inside Quantum
-    FileLoader.Init(new UnityFileLoader(QuantumEditorSettings.Instance.DatabasePath));
-
     // init profiler
     Quantum.Profiling.HostProfiler.Init(x => UnityEngine.Profiling.Profiler.BeginSample(x),
                   () => UnityEngine.Profiling.Profiler.EndSample());
@@ -124,7 +188,7 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
                                           () => UnityEngine.Profiling.Profiler.EndThreadProfiling());
 
     // init debug draw functions
-    Draw.Init(DebugDraw.Ray, DebugDraw.Ray3D, DebugDraw.Line, DebugDraw.Line3D, DebugDraw.Circle, DebugDraw.Sphere, DebugDraw.Rectangle, DebugDraw.Clear);
+    Draw.Init(DebugDraw.Ray, DebugDraw.Line, DebugDraw.Circle, DebugDraw.Sphere, DebugDraw.Rectangle, DebugDraw.Clear);
 
     // init quantum logger
     Log.Init(Debug.Log, Debug.LogWarning, Debug.LogError, Debug.LogException);
@@ -141,6 +205,13 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
       param.RunnerId = "DEFAULT";
     }
 
+    if (param.FrameData?.Length > 0 && (param.InitialDynamicAssets?.IsEmpty == false)) {
+      Log.Warn(
+        $"Both {nameof(StartParameters.FrameData)} and {nameof(StartParameters.InitialDynamicAssets)} are set " +
+        $"and not empty. Serialized frames already contain a copy of DynamicAssetDB and that copy will be used " +
+        $"instead of {nameof(StartParameters.InitialDynamicAssets)}");
+    }
+
     // init debug
     Init();
 
@@ -149,7 +220,7 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
       param.RuntimeConfig.SimulationConfig.Id = SimulationConfig.DEFAULT_ID;
     }
 
-    IResourceManager resourceManager = param.ResourceManagerOverride ?? UnityDB.ResourceManager;
+    IResourceManager resourceManager = param.ResourceManagerOverride ?? UnityDB.DefaultResourceManager;
 
     var simulationConfig = (SimulationConfig)resourceManager.GetAsset(param.RuntimeConfig.SimulationConfig.Id);
 
@@ -172,19 +243,20 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
     deterministicConfig.PlayerCount = param.PlayerCount;
 
     // Create the runner
-    var runner = CreateInstance();
+    var runner = CreateInstance(param.RunnerId);
     runner.Id             = param.RunnerId;
     runner.DeltaTimeType  = simulationConfig.DeltaTimeType;
     runner.NetworkClient  = param.NetworkClient;
     runner.RecordingFlags = param.RecordingFlags;
     // Create the game
     runner.Game = new QuantumGame(new QuantumGame.StartParameters() {
-      ResourceManager = resourceManager, 
-      AssetSerializer = new QuantumUnityJsonSerializer(), 
-      CallbackDispatcher = QuantumCallback.Dispatcher,
-      EventDispatcher = QuantumEvent.Dispatcher,
+      ResourceManager       = resourceManager, 
+      AssetSerializer       = new QuantumUnityJsonSerializer(), 
+      CallbackDispatcher    = QuantumCallback.Dispatcher,
+      EventDispatcher       = QuantumEvent.Dispatcher,
       InstantReplaySettings = param.InstantReplayConfig,
-      HeapExtraCount = param.HeapExtraCount,
+      HeapExtraCount        = param.HeapExtraCount,
+      InitialDynamicAssets  = param.InitialDynamicAssets,
     });
 
     // new "local mode" runs as "replay" (with Game providing input polling), to avoid rollbacks of the local network debugger.
@@ -192,6 +264,53 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
     // if (param.LocalInputProvider == null && param.GameMode == DeterministicGameMode.Local)
     //   param.LocalInputProvider = runner.Game;
 
+    DeterministicPlatformInfo info = CreatePlatformInfo();
+
+    DeterministicSessionArgs args;
+    args.Mode          = param.GameMode;
+    args.RuntimeConfig = RuntimeConfig.ToByteArray(param.RuntimeConfig);
+    args.SessionConfig = deterministicConfig;
+    args.Game          = runner.Game;
+    args.Communicator  = CreateCommunicator(param.GameMode, param.NetworkClient, param.QuitBehaviour);
+    args.Replay        = param.ReplayProvider;
+    args.InitialTick   = param.InitialFrame;
+    args.FrameData     = param.FrameData;
+    args.PlatformInfo  = info;
+
+    // Create the session
+    try {
+      runner.Session = new DeterministicSession(args);
+    } catch (Exception e) {
+      Debug.LogException(e);
+      runner.Dispose();
+      return null;
+    }
+
+    // For convenience, to be able to access the runner by the session.
+    runner.Session.Runner = runner;
+
+    // Join local players
+    runner.Session.Join(clientId, Math.Max(0, param.LocalPlayerCount), param.InitialFrame, param.IsRejoin);
+
+#if QUANTUM_REMOTE_PROFILER
+    if (!Application.isEditor) {
+      var client = new QuantumProfilingClient(clientId, deterministicConfig, info);
+      runner.Game.ProfilerSampleGenerated += (sample) => {
+        client.SendProfilingData(sample);
+        client.Update();
+      };
+    }
+#endif
+
+    runner._startGameTimeout = 0.0f;
+    if (param.StartGameTimeoutInSeconds > 0) {
+      runner._startGameTimeout = Time.time + param.StartGameTimeoutInSeconds;
+    }
+
+    return runner;
+  }
+
+  public static DeterministicPlatformInfo CreatePlatformInfo() {
     DeterministicPlatformInfo info;
     info            = new DeterministicPlatformInfo();
     info.Allocator  = new QuantumUnityNativeAllocator();
@@ -233,45 +352,7 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
     info.Platform = DeterministicPlatformInfo.Platforms.Switch;
 #endif
 #endif
-
-    DeterministicSessionArgs args;
-    args.Mode          = param.GameMode;
-    args.RuntimeConfig = RuntimeConfig.ToByteArray(param.RuntimeConfig);
-    args.SessionConfig = deterministicConfig;
-    args.Game          = runner.Game;
-    args.Communicator  = GetCommunicator(param.GameMode, param.NetworkClient, param.QuitBehaviour);
-    args.Replay        = param.ReplayProvider;
-    args.InitialTick   = param.InitialFrame;
-    args.FrameData     = param.FrameData;
-    args.PlatformInfo  = info;
-
-    // Create the session
-    try {
-      runner.Session = new DeterministicSession(args);
-    }
-    catch (Exception e) {
-      Debug.LogException(e);
-      runner.Dispose();
-      return null;
-    }
-
-    // For convenience, to be able to access the runner by the session.
-    runner.Session.Runner = runner;
-
-    // Join local players
-    runner.Session.Join(clientId, Math.Max(1, param.LocalPlayerCount), param.InitialFrame);
-
-#if QUANTUM_REMOTE_PROFILER
-    if (!Application.isEditor) {
-      var client = new QuantumProfilingClient(clientId, deterministicConfig, info);
-      runner.Game.ProfilerSampleGenerated += (sample) => {
-        client.SendProfilingData(sample);
-        client.Update();
-      };
-    }
-#endif
-
-    return runner;
+    return info;
   }
 
   /// <summary>
@@ -314,17 +395,16 @@ public sealed class QuantumRunner : MonoBehaviour, IDisposable {
   [Obsolete("Use FindRunner")]
   internal static QuantumRunner FindRunnerForGame(IDeterministicGame game) => FindRunner(game);
 
-  private static QuantumNetworkCommunicator GetCommunicator(DeterministicGameMode mode,
-                                                            LoadBalancingClient   networkClient, QuantumNetworkCommunicator.QuitBehaviour quitBehaviour) {
-    if (mode != DeterministicGameMode.Multiplayer) {
+  private static QuantumNetworkCommunicator CreateCommunicator(DeterministicGameMode mode, LoadBalancingClient networkClient, QuantumNetworkCommunicator.QuitBehaviour quitBehaviour) {
+    if (mode != DeterministicGameMode.Multiplayer && mode != DeterministicGameMode.Spectating) {
       return null;
     }
 
     return new QuantumNetworkCommunicator(networkClient, quitBehaviour);
   }
 
-  static QuantumRunner CreateInstance() {
-    GameObject go = new GameObject("QuantumRunner");
+  static QuantumRunner CreateInstance(string name) {
+    GameObject go = new GameObject($"QuantumRunner ({name})");
     var runner = go.AddComponent<QuantumRunner>();
 
     runner._shutdownRequested = false;

@@ -5,14 +5,26 @@ using UnityEngine;
 namespace Quantum {
   public static class DebugDraw {
     static Queue<Draw.DebugRay> _rays = new Queue<Draw.DebugRay>();
-    static Queue<Draw.DebugRay3D> _rays3D = new Queue<Draw.DebugRay3D>();
     static Queue<Draw.DebugLine> _lines = new Queue<Draw.DebugLine>();
-    static Queue<Draw.DebugLine3D> _lines3D = new Queue<Draw.DebugLine3D>();
     static Queue<Draw.DebugCircle> _circles = new Queue<Draw.DebugCircle>();
     static Queue<Draw.DebugSphere> _spheres = new Queue<Draw.DebugSphere>();
     static Queue<Draw.DebugRectangle> _rectangles = new Queue<Draw.DebugRectangle>();
-
     static Dictionary<ColorRGBA, Material> _materials = new Dictionary<ColorRGBA, Material>(ColorRGBA.EqualityComparer.Instance);
+
+    static Draw.DebugRay[] _raysArray = new Draw.DebugRay[64];
+    static Draw.DebugLine[] _linesArray = new Draw.DebugLine[64];
+    static Draw.DebugCircle[] _circlesArray = new Draw.DebugCircle[64];
+    static Draw.DebugSphere[] _spheresArray = new Draw.DebugSphere[64];
+    static Draw.DebugRectangle[] _rectanglesArray = new Draw.DebugRectangle[64];
+
+    static int _raysCount;
+    static int _linesCount;
+    static int _circlesCount;
+    static int _spheresCount;
+    static int _rectanglesCount;
+
+    static Mesh solidSphere;
+    static Material material = UnityEngine.Resources.Load<Material>("PREFABS/Materials/White");
 
     public static void Ray(Draw.DebugRay ray) {
       lock (_rays) {
@@ -20,21 +32,9 @@ namespace Quantum {
       }
     }
 
-    public static void Ray3D(Draw.DebugRay3D ray) {
-      lock (_rays3D) {
-        _rays3D.Enqueue(ray);
-      }
-    }
-
     public static void Line(Draw.DebugLine line) {
       lock (_lines) {
         _lines.Enqueue(line);
-      }
-    }
-
-    public static void Line3D(Draw.DebugLine3D line) {
-      lock (_lines3D) {
-        _lines3D.Enqueue(line);
       }
     }
 
@@ -67,35 +67,15 @@ namespace Quantum {
       return mat;
     }
 
-    static Draw.DebugRay[] _raysArray = new Draw.DebugRay[64];
-    static Draw.DebugRay3D[] _raysArray3D = new Draw.DebugRay3D[64];
-    static Draw.DebugLine[] _linesArray = new Draw.DebugLine[64];
-    static Draw.DebugLine3D[] _linesArray3D = new Draw.DebugLine3D[64];
-    static Draw.DebugCircle[] _circlesArray = new Draw.DebugCircle[64];
-    static Draw.DebugSphere[] _spheresArray = new Draw.DebugSphere[64];
-    static Draw.DebugRectangle[] _rectanglesArray = new Draw.DebugRectangle[64];
-
-    static int _raysCount;
-    static int _rays3DCount;
-    static int _linesCount;
-    static int _lines3DCount;
-    static int _circlesCount;
-    static int _spheresCount;
-    static int _rectanglesCount;
-
     public static void Clear() {
       TakeAllFromQueueAndClearLocked(_rays,       ref _raysArray);
-      TakeAllFromQueueAndClearLocked(_rays3D,     ref _raysArray3D);
       TakeAllFromQueueAndClearLocked(_lines,      ref _linesArray);
-      TakeAllFromQueueAndClearLocked(_lines3D,    ref _linesArray3D);
       TakeAllFromQueueAndClearLocked(_circles,    ref _circlesArray);
       TakeAllFromQueueAndClearLocked(_spheres,    ref _spheresArray);
       TakeAllFromQueueAndClearLocked(_rectangles, ref _rectanglesArray);
 
       _raysCount       = 0;
-      _rays3DCount     = 0;
       _linesCount      = 0;
-      _lines3DCount    = 0;
       _circlesCount    = 0;
       _spheresCount    = 0;
       _rectanglesCount = 0;
@@ -103,9 +83,7 @@ namespace Quantum {
 
     public static void TakeAll() {
       _raysCount       = TakeAllFromQueueAndClearLocked(_rays,       ref _raysArray);
-      _rays3DCount     = TakeAllFromQueueAndClearLocked(_rays3D,     ref _raysArray3D);
       _linesCount      = TakeAllFromQueueAndClearLocked(_lines,      ref _linesArray);
-      _lines3DCount    = TakeAllFromQueueAndClearLocked(_lines3D,    ref _linesArray3D);
       _circlesCount    = TakeAllFromQueueAndClearLocked(_circles,    ref _circlesArray);
       _spheresCount    = TakeAllFromQueueAndClearLocked(_spheres,    ref _spheresArray);
       _rectanglesCount = TakeAllFromQueueAndClearLocked(_rectangles, ref _rectanglesArray);
@@ -116,16 +94,8 @@ namespace Quantum {
         DrawRay(_raysArray[i]);
       }
 
-      for (Int32 i = 0; i < _rays3DCount; ++i) {
-        DrawRay(_raysArray3D[i]);
-      }
-
       for (Int32 i = 0; i < _linesCount; ++i) {
         DrawLine(_linesArray[i]);
-      }
-
-      for (Int32 i = 0; i < _lines3DCount; ++i) {
-        DrawLine(_linesArray3D[i]);
       }
 
       for (Int32 i = 0; i < _circlesCount; ++i) {
@@ -142,23 +112,12 @@ namespace Quantum {
     }
 
     static void DrawRay(Draw.DebugRay ray) {
-      Debug.DrawRay(ray.Origin.ToUnityVector3(), ray.Direction.ToUnityVector3(), ray.Color.ToColor());
-    }
-
-    static void DrawRay(Draw.DebugRay3D ray) {
-      Debug.DrawRay(ray.Origin.ToUnityVector3(), ray.Direction.ToUnityVector3(), ray.Color.ToColor());
+      Debug.DrawRay(ray.Origin.ToUnityVector3(ray.Is2D), ray.Direction.ToUnityVector3(ray.Is2D), ray.Color.ToColor());
     }
 
     static void DrawLine(Draw.DebugLine line) {
-      Debug.DrawLine(line.Start.ToUnityVector3(), line.End.ToUnityVector3(), line.Color.ToColor());
+      Debug.DrawLine(line.Start.ToUnityVector3(line.Is2D), line.End.ToUnityVector3(line.Is2D), line.Color.ToColor());
     }
-
-    static void DrawLine(Draw.DebugLine3D line) {
-      Debug.DrawLine(line.Start.ToUnityVector3(), line.End.ToUnityVector3(), line.Color.ToColor());
-    }
-
-    static Mesh solidSphere;
-    static Material material = UnityEngine.Resources.Load<Material>("PREFABS/Materials/White");
 
     static Mesh GetSphere() {
       if (solidSphere != null)
@@ -191,18 +150,13 @@ namespace Quantum {
 #endif
 
       // matrix for mesh
-      var m = Matrix4x4.TRS(circle.Center.ToUnityVector3(), rot, Vector3.one * (circle.Radius.AsFloat + circle.Radius.AsFloat));
+      var m = Matrix4x4.TRS(circle.Center.ToUnityVector3(circle.Is2D), rot, Vector3.one * (circle.Radius.AsFloat + circle.Radius.AsFloat));
 
       // draw
       Graphics.DrawMesh(DebugMesh.CircleMesh, m, GetMaterial(circle.Color), 0, null);
     }
 
     static void DrawRectangle(Draw.DebugRectangle rectangle) {
-      Vector3 size = Vector3.one;
-      size.x = rectangle.Size.X.AsFloat;
-      size.y = rectangle.Size.Y.AsFloat;
-      size.z = rectangle.Size.Y.AsFloat;
-
       Quaternion rot;
 
 #if QUANTUM_XY
@@ -211,9 +165,17 @@ namespace Quantum {
       rot = Quaternion.Euler(0, -rectangle.Rotation.AsFloat * Mathf.Rad2Deg, 0);
 #endif
 
-      var m = Matrix4x4.TRS(rectangle.Center.ToUnityVector3(), rot, size);
+      var m = Matrix4x4.TRS(rectangle.Center.ToUnityVector3(rectangle.Is2D), rot, rectangle.Size.XYY.ToUnityVector3());
 
-      Graphics.DrawMesh(DebugMesh.QuadMesh, m, GetMaterial(rectangle.Color), 0, null);
+      if (rectangle.Wire) {
+        // GL.QUADS is faster but requires OnPostRender()
+        Debug.DrawLine(m.MultiplyPoint3x4(new Vector3(0.5f, 0, 0.5f)), m.MultiplyPoint3x4(new Vector3(0.5f, 0, -0.5f)), rectangle.Color.ToColor());
+        Debug.DrawLine(m.MultiplyPoint3x4(new Vector3(0.5f, 0, -0.5f)), m.MultiplyPoint3x4(new Vector3(-0.5f, 0, -0.5f)), rectangle.Color.ToColor());
+        Debug.DrawLine(m.MultiplyPoint3x4(new Vector3(-0.5f, 0, -0.5f)), m.MultiplyPoint3x4(new Vector3(-0.5f, 0, 0.5f)), rectangle.Color.ToColor());
+        Debug.DrawLine(m.MultiplyPoint3x4(new Vector3(-0.5f, 0, 0.5f)), m.MultiplyPoint3x4(new Vector3(0.5f, 0, 0.5f)), rectangle.Color.ToColor());
+      } else {
+        Graphics.DrawMesh(DebugMesh.QuadMesh, m, GetMaterial(rectangle.Color), 0, null);
+      }
     }
 
     static Int32 TakeAllFromQueueAndClearLocked<T>(Queue<T> queue, ref T[] result) {

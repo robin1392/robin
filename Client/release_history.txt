@@ -1,3 +1,755 @@
+# 2.1.0
+
+**Breaking Changes**
+
+- Unity: Editor code has been refactored and, to simplify future updates, some files have been merged. That means that any changes made to the editor code will need to be reapplied, if necessary. That said, extending inspector and handling Quantum attributes is *much* simpler now and can be done with PropertyDrawers (check LayerAttributeDrawer or RangeAttributeDrawer).
+- Unity: Quantum scripts are now contained in `PhotonQuantum` and `PhotonQuantumEditor` assemblies using Assembly Definitions. This allows you to use Quantum in custom and test assemblies, but forces a different approach when it comes to extending Quantum itself: all partial classes need to be a part of `PhotonQuantum` assembly, types from global assembly can't be used and `Assembly Definitions References` list needs to be updated to access types defined in other assemblies. If the transition proves problematic, removing `PhotonQuantum.asdef` and `PhotonQuantumEditor.asmdef` will make Quantum global again. Note that the new assemblies have a missing reference to `PhotonQuantumCode` - this is a placeholder in case you go for full code integration (explained later on) and should not cause any issues.
+- Unity: Changed generated Editor scripts location to `quantum_unity/Assets/Photon/Quantum/Editor/Generated`. Old scripts (located in `quantum_unity/Assets/Photon/Quantum/Generated`) need to be removed by hand.
+- Unity: `QuantumInstantReplay` has been reworked and simplified. If your code depends on the old implementation, use `Quantum.Legacy.QuantumInstantReplay` instead.
+- Unity: `Map` and `NavMesh` assets no longer create extra binary files to be loaded with `IFileLoader`. They use `BinaryData` assets instead. Rebake all your maps with `Quantum/All Scenes` or `Quantum/All Enabled Scenes`. Old binary files will be removed in the process.
+- Unity: Removed `QuantumEvent`/`QuantumCallback.Subscribe` parameter `excludeGameMode`. Use `gameMode` and `exclude` parameters instead.
+- `AssignEntityRefs` prototype materialization phase has been removed. `EntityRef` fields are now resolved during the `Materialize` stage. This means that any changes to `EntityRef` fields performed in `ISignalOnComponentAdded` signal or in `MaterializeUser` partial method will no longer be overwritten. Remember that just like before, in case of map prototypes querying other entities' components is only safe after all prototypes have been materialized (`ISignalOnEntityPrototypeMaterialized`).
+- DrawIfAttribute now uses enum value instead of enum index, if it points to an enum property.
+- The navmesh binary data format has changed (pre-calculation of triangle normals for projection): Re-bake all your navmeshes.
+- The navmesh binary data file has been converted into a Quantum asset (`BinaryDataAsset`): Relink the new asset files in your debug `MapNavMeshDebugDrawer` instances (if you have any) and remove any leftover navmesh .bytes files from your project.
+- Removed the pathfinder radius feature: Different agent radii are nice but they were taking a lot of extra effort and in the end caused more trouble than we saw potential gain. It is still possible to achieve a similar effect by creating different navmeshes for different radii. This is also a much cleaner solution as it closes paths for bigger agents entirely, which was not possible with the radius feature before. Caveat: the avoidance radius needs to be set explicitly now because it does not have the Radius parameter to fall back to: Consider noting down the Radius values in this case before the upgrade or retrieve from a source control diff afterwards.
+- Navigation agents that are starting off the navmesh (due to a disabled region for example) are teleported to a valid (closest) position inside the navmesh when they begin their path. Previously they were trying to get out of the non-navmesh zone gracefully, but that was not possible all the time.
+- Some Navigation API changes will result in compilation errors and unfortunately need to be fixed by hand while other API changes are marked in code by the `Obsolete` attribute.
+- The new Realtime version restricts access to the auth token. As a guideline reconnecting after losing the connection object should always pass through the nameserver again.
+
+```csharp
+NavMeshPathfinder {
+    // OLD
+    public FPVector2 Target
+    public FPVector2 InternalTarget
+    public FPVector2 GetWaypoint(FrameBase f, int index) { }
+    public void SetTarget(FrameBase f, FPVector2 target, NavMesh navMesh) { }
+    // NEW
+    public FPVector3 Target
+    public FPVector3 InternalTarget
+    public FPVector3 GetWaypoint(FrameBase f, int index) { }
+    public void SetTarget(FrameBase f, FPVector3 target, NavMesh navMesh) { }
+}
+```
+
+`OnNavMeshWaypointReached` changed the waypoint parameter type from `FPVector2` to `FPVector3` inside the callback signature
+
+**What's New**
+
+- Shape Casts (Regular and Broadphase Queries)
+- Inertia Tensors for 3D Physics Bodies
+- New Collision Solvers: improved performance and parallelism
+- Physics Colliders now have an `Enabled` property, so that disabling a collider does not need to incur in removing the component anymore.
+- We added proper 3D support for NavMeshes: When using a Transform3D component the navmesh agents will be able to fully move inside the 3D navigation mesh under and over bridges for example. The input target position is passed in 3D and will be projected onto the closest navmesh triangle vertically-wise.
+The navigation agent will move on the navmesh by default. But for better visual results there should be static Quantum colliders that the agent can use to vertically position itself on. The heightmap, which is generated alongside the Unity navmesh, can **not** be utilized (access is not exposed).
+- Room spectating support: the simulation can be joined with 0 local players to implement spectating clients that cannot influence the simulation
+- Quantum Asset Database can optionally be baked into quantum.code.dll to simplify custom server deployment. Export the AssetDB from Unity to `quantum_code/quantum.code/db.json`. The custom plugin project will prioritize loading from disk first and upon failing to find the db file will try to load internal one.
+- The multi client test runner similar to the DebugRunner can load multiple online clients into a scene controlled by one Unity Editor (`QuantumMutliClientRunner`)
+- Dynamic assets can now be searched by a path. Variants of `Frame`/`FrameThreadSafe.FindAsset` accepting a path now have an additional parameter: `DatabaseType`. Dynamic asset's path needs to be unique only among other dynamic assets.
+- Unity: Quantum State Inspector has been completely reworked. The look & feel is now much closer to Unity Hierarchy and Inspector windows. In addition to entities and globals you can now inspect session settings and dynamic assets. Entities and components can now be added and removed from within the inspector, provided `quantum.code` has been built in `Debug` mode.
+- Native Strings `QString<N>` and `QStringUtf8<N>` DSL types with `N` being the total size in bytes minus 2 bytes used for bookkeeping, e.g. `QString<64>` will use 64 bytes for a string with a max byte length of 62 bytes (up to 31 UTF-16 characters)
+- DSL: `client` & `server` event keywords added. Events marked with `client` are culled immediately when simulation is running as a server plug-in. Marking with `server` has the opposite effect.
+- DSL: `FreeOnComponentRemoved` attribute: a way to auto-free lists and dictionaries. Decorating a field with it will emit clean up code that gets ivoked when component gets removed, after `ISignalOnComponentRemoved`. If used on a struct's field, then the code will be emit and invoked for all components that use the struct.
+- `Frame`/`FrameThreadBase.TryFindAsset` - a way to look for an optional asset without polluting output logs with missing assets errors
+- `quantum.code` project source files can now be entirely moved to the Unity project. Read `tools/codeintegration_unity/README.md` for details.
+- `BinaryData`: an asset hosting binary data with a support for lazy decompression.
+- Math: `FPMath.SinCos` (much faster than calling `FPMath.Sin` and then `FPMath.Cos`).
+- Math: Logarithms (`FPMath.Log2`, `FPMath.Log10`, `FPMath.Ln`, `FPMath.Log`, `FPMath.Log2FloorToInt` and `FPMath.Log2CeilingToInt`).
+- Prototypes: Inspector support for dictionaries.
+- `AssetGuid.TryParse`
+- `EntityRef.TryParse`
+- `RNGSession.NextInclusive` and `RNGSession.Peek`.
+- `FrameContextUser.ConstructUser` and `FrameContextUser.DisposeUser` partial methods.
+- `Frame.Serialize` overload that takes an external byte array to avoid majority of internal allocs
+- `DeterministicSession.MaxVerifiedTicksPerUpdate` - a way to limit how many verified simulations are allowed to happen in a single `Update`.
+- `JsonAssetSerializerBase`, `QuantumJsonSerializer` and `QuantumUnityJsonSerializer` auto-compression of `BinaryData` (`CompressBinaryDataOnSerializationThreshold` and `DecompressBinaryDataOnDeserialization` properties)
+- Unity: `BinaryDataAsset`: a wrapper for BinaryData assets. Supports compression and can point to a TextAsset as their data source.
+- Unity: `QuantumMapDataBakeFlags`: `BakeMapPrototypes` and `BakeMapColliders` flags can be used to enable/disable baking of prototypes/colliders to speed up the auto-bake process.
+- Unity: `QuantumEvent/Callback`: an optional `DispatchableFilter` argument to `SubscribeManual`
+- Unity: `QuantumEvent/Callback`: an optional `onlyIfEntityViewBound` argument to `Subscribe` (makes sure the handler will only be invoked if `EntityView` on the listener has `EntityRef` assigned. `GetComponentInParent` is used to get the `EntityView` instance)
+- Added `PositionOffset` and `RotationOffset` to most of the Quantum static collider scripts (these offsets are baked into the map)
+- Added support for the `Inspector.Reorderable` attribute inside partial AssetObject implementations to display arrays as reorderable lists in the Unity inspector
+- Added an Asset Database Windows toggle inside Quantum shortcuts
+- New inspector attributes: DisplayName, ReadOnly, Range, ComponentTypeName
+- XML API documentation files alongside core and PhotonDeterministic dlls (assemblies folder). If you don't want them to be copied into the Unity Quantum assemblies folder add this line to each configuration property group (debug, release) in your quantum.code.csproj `<AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>`
+
+**Changes**
+
+- Unity: CustomEditorsHelper has been deprecated, use QuantumEditorGUI instead.
+- Math: `FP.Sqrt`, `FPVector3.Normalize` and `FPVector2.Normalize` speed up and precision increased
+- Physics: First-hit-only Raycasts' performance improvements
+- Synced events are culled immediately when a frame is predicted
+- `quantum.codegen.unity` now checks if a file needs an update instead of overwriting it each time
+- Unity: Addressables can now be enabled for all platforms only (in `QuantumEditorSettings`)
+- Unity: prototypes' lists and dictionares fields that have not been decorated with `FreeOnComponentRemoved` are decorated with a reminder that they need to be freed manually.
+- Removed `IFileLoader` and all its implementations
+- `AssetGuid.ToString()` format changed to 16 digit hexadecimal number in brackets, e.g. `[0012345789ABCDEF]`
+- `EntityRef.ToString()` format changed to `E.IIIII.VVV` format (I - index, V - version), e.g. `E.00123.001`
+- `FPSinCos.bytes` replaced both `FPSin.bytes` and `FPCos.bytes`; since Unity packages can't handle file removal, `FPSin.bytes` and `FPCos.bytes` are now 0-sized and can be safely removed
+- Removed `PROFILER_REPORT` define constant from the `quantum.code` project (`QUANTUM_REMOTE_PROFILER` on Unity's side remains)
+- Unity: Scene loading has been reworked and is now controlled with `SimulationConfig.AutoLoadSceneFromMap` enum. `UnloadPreviousSceneThenLoad` is the new default. The `Legacy` way of loading scenes can still be selected but due to bugs it is discouraged.
+- Unity: We added a new menu item `Export Asset DB` and kept the old way of exporting as `Export Asset DB (Through UnityDB)`. The new export will properly locate all assets files using the same process as the Asset Resource object generation instead of locating the files through the UnityDB.
+- Unity: AssetBase has a new virtual member: `PrepareAsset()` which is called from `Loaded()`. The code from the Loaded method in `EntityPrototypeAsset` and `MapAsset` have been moved to `PrepareAsset()` because the latter is required to be called when exporting the Asset DB. Make sure to move your code into PrepareAsset() when you use the exported Asset DB.
+- Renamed FixedArrayAttribute to ArrayLengthAttribute
+- `ComponentTypeSelector.QualifiedName` and `ComponentTypeSetSelector.QualifiedNames` still work, but have been made obsolete. Use ComponentTypeName/ComponentTypeNames instead.
+- `JsonAssetSerializeBase` uses Assembly Qualified Names only for user assets defined outside of `quantum.code`; for all other assets it uses `Type.FullName`. This change is backwards-compatible.
+
+**Changes In Navigation**
+
+- Improved quality and performance by updating the **pivot point calculation** for path-finding through triangles when Path Quality is set to `Good` or `Best` (toggle on `DrawPathfinderRawPath` in Editor Settings to observe)
+- Under some conditions it is preferable for avoidance agents to be able to **reduce their speed** to convey a more natural avoidance behavior. Of course, this is not advisable for most player controlled units and can be opted in inside NavMeshAgentConfig
+- The navmesh **cost** (weights) set under Unity Navigation Areas is exported and used by Quantum regions for heuristic calculations: check out `Cost` in the `MapNavMeshRegion` script
+- **NavMeshAgentConfig**
+    - Removed `Radius` (not used anymore)
+    - Removed `ClampAgentToNavmeshRadiusThreshold` (not needed anymore)
+    - Renamed `FindValidTargetCellRange` (integer) into `AutomaticTargetCorrectionRadius` (FP) for hopefully more clarity. Convert by finding out how one navmesh cell width translates to absolute distance.
+    - Added `AvoidanceCanReduceSpeed` toggle (default is off)
+    - Added `VerticalPositioning` selection to the steering section
+- **SimulationConfig.Navigation**
+    - Added `HeightThresholdForAvoidance` to filter out agents that are too far from each other (only required for 3D navigation)
+    - Added `HeightThresholdForWaypoints` to support waypoint detection on different vertical layers (only required for 3D navigation)
+
+- **API**
+    Old method signatures have been marked `Obsolete`. Please update them.
+    - **`Navigation/PathFinder.FindPath()`**
+        - Removed `minDistanceToBorder` parameter
+        - Changed Int32 `findValidTargetCellRange` to FP `automaticTargetCorrection`
+        - Now returns a `FindPathResults` object which gives more information about what went wrong (see below) or upon `Success` gives access to the calucalted path:
+        ```csharp
+        public struct FindPathResult {
+            public enum Code {
+                Success,
+                InvalidStartPosition,
+                InvalidEndPosition,
+                NoPathFound
+            }
+
+            public Code      Result;
+            public FPVector3 CorrectedStartPosition;
+            public FPVector3 CorrectedEndPosition;
+
+            public int PathSize { get };
+            public PathVertex[] Path { get };
+        }
+        ```
+    - **`Navigation/NavMesh.LineOfSight()`**
+        - Requires `FPVector3` inputs
+        - We changed the algorithm to use navmesh triangle funnelling instead of raycasting the borders, which conveniently also works for 3D and is faster.
+        - `Raycast2D()` (new method) is the former `LineOfSight()` implementation which is practically a raycast against the navmesh borders. This only works in 2D!
+    - **`NavMesh`**
+        - `MovePositionIntoNavmesh()` removed `agentRadius` and removed `radiusThreshold`
+        - `FindTriangle()` renamed method to `FindTriangle2D()`
+        - `FindClosestTriangle()` has been completely changed to support 3D:
+        ```csharp
+        bool FindClosestTriangle(FPVector3 sourcePosition, FP radius, NavMeshRegionMask regionMask, out Int32 triangle, out FPVector3 correctedPosition, MailboxSet8 mailbox = null)
+        ```
+        - (new) `NavMesh.GetHeightAtTriangleRaw()` use this to project the y-position onto a 3D triangle, the method expects that the 2D projection of the point is inside the 2D projection of the triangle.
+        - (new) `NavMesh.FindRandomPointOnTriangle()` use this for an excellent randomization of a point inside one triangle.
+
+**Removed**
+
+- Removed the obsolete quantum.systems project (since 2.0) from the quantum_code solution
+- Removed the `docs` folder and the quickstart guide while moving the API doc file into the root folder of the SDK, please refer to the online docs for starting guides
+- Removed the unnecessary `PROFILER_REPORT` define constant from the quantum.code project (QUANTUM_REMOTE_PROFILER on Unity's side remains)
+- Removed `DebugGizmoSize` from Navigation.Constants, the scaling is smartly matching the agent sizes
+
+**Bug Fixes**
+
+- Replays now work for late-joiners
+- `FixedArray<T>` contents are used when calculating hash codes of owner structs (instead of just the pointer)
+- Fixed the UI rendering of the Quantum shortcuts to better accommodate a wider layout
+- Fixed the debug rendering of inactive navmesh region borders
+
+**Shape Casts Details**
+
+2D and 3D Shape Casts are now available as Regular and Broad-phase queries for all dynamic shapes supported. Internally, a custom GJK-based algorithm is used and new settings are available in the `Physics.GJKConfig` section in the Simulation Config. The new settings are intended to allow a trade-off between accuracy and performance, with the default values being a balanced compromise for regularly sized shapes:
+
+- **Simplex Min/Max Bit Shift**: Allows better precision for points in the Voronoy Simplex by progressively shifting their raw values, avoiding degenerate cases without compromising the valid range of positions in the Physics space. Consider increasing the values if the scale of the shapes involved and/or the distance between them is very small.
+
+- **Shape Cast Max Iterations**: The max number of iterations performed by the algorithm while searching for a solution below the hard tolerance. Increasing it might result in more accurate results, at the cost of performance in worst-case scenarios, and vice-versa.
+
+- **Shape Cast Hard Tolerance**: An iteration result (closest distance between the shapes) below this threshold is acceptable as a finishing condition. Decreasing it might result in more accurate results, at the cost of more iterations, and vice-versa.
+
+- **Shape Cast Soft Tolerance**: A shape cast resolution that fails to find an acceptable result below the defined Hard Tolerance within the Max Iterations allowed will still return positive if the best result found so far is below this soft threshold. In these cases, increasing this threshold enhances the probability of false-positives, while decreasing it enhances false-negatives.
+
+## A1N
+
+### Build 764 (May 07, 2021)
+
+**Bug Fixes**
+
+- Fixed: An issue in the 2D CCD algorithm that could cause tunneling when the objects were already overlapping at the beginning of the time-step
+- Fixed: DumpFlag_PrintRawValues to enable raw printing, not the other way around
+
+### Build 762 (May 06, 2021)
+
+**What's New**
+
+- DumpFlag_PrintRawValues: pass it to Frame.DumpFrame to avoid FPs being pretty-printed
+
+### Build 759 (May 05, 2021)
+
+**What's New**
+
+- BitSetSIZE.Length property (returns bit capacity)
+
+**Changes**
+
+- BitSetSIZE can now be checked/modified with instance methods (Set, Clear, IsSet, ClearAll), all the static methods have been deprecated
+- Added BitSet instance methods
+
+**Bug Fixes**
+
+- Fixed: An issues with the delta angular velocity applied at 2D Physics' AddLinearImpulseAtPosition and AddLinearImpulse with relative point
+
+### Build 753 (May 04, 2021)
+
+**Changes**
+
+- QuantumEditorGUI.DefaultIncludeChildrenInGetPropertyHeight to true to match UnityEditor.EditorGUI default parameter values better
+
+**Bug Fixes**
+
+- Fixed: 2D and 3D Compound Shapes giving ArgumentOutOfRangeException on the Unity Inspector
+
+### Build 752 (May 03, 2021)
+
+**What's New**
+
+- Navmesh generation can now automatically correct the navmesh link positions to the closest triangle (toggle on LinkErrorCorrection)
+- QuantumRunnerLocalDebug.PreloadAddressables - demonstrates a way to preload to preload addressable assets, if Sync Addressables are not an option
+
+**Changes**
+
+- Reduced allocations during navmesh baking
+- Navmesh bake mode visual order in the dropdown list
+
+### Build 751 (Apr 30, 2021)
+
+**What's New**
+
+- More CCD settings are now exposed on the SimulationConfig
+
+**Bug Fixes**
+
+- Fixed: Frame Differ dumping the local Session/Runtime configs when a checksum error occured, instead of the instances received from the server and actually used on the simulation
+
+### Build 750 (Apr 29, 2021)
+
+**Bug Fixes**
+
+- Fixed: An issue with the normal and penetration computation of 3D Box-Box collisions
+
+### Build 749 (Apr 28, 2021)
+
+**Changes**
+
+- Optimized the Broad-phase AABBs of 2D Static Polygon entries
+
+### Build 747 (Apr 27, 2021)
+
+**Changes**
+
+- Layers static class and its methods are now obsolete. All functionalities should now be accessed through the Frame.Layers property instead
+
+### Build 746 (Apr 26, 2021)
+
+**Bug Fixes**
+
+- Fixed: An issue with the view interpolation on lockstep simulations (e.g. replays), where the previous verified state was not provided
+
+### Build 745 (Apr 23, 2021)
+
+**Changes**
+
+- 2D Static Polygons now have their baked Position on the map as its Centroid position in world space, and its baked vertices are translated to this reference (re-centered)
+
+### Build 733 (Apr 21, 2021)
+
+**Changes**
+
+- Created EntityViews are now parented under EntityViewUpdater.ViewParentTransform (if one is provided) on CreateView() instead of on CreateEntityViewInstance() to improve division of responsabilities
+
+### Build 731 (Apr 17, 2021)
+
+**What's New**
+
+- API documentation for the 2D and 3D Hit structure of physics queries
+
+**Changes**
+
+- Renamed 2D and 3D Hit.CastDistance field to CastDistanceNormalized, that better represents its functionality
+
+**Bug Fixes**
+
+- Fixed: 2D and 3D ShapeConfig.UserTag field being displayed as read-only on Editor when initialized from a Unity collider source
+- Fixed: An issue with 2D Shape Casts involving Circles that could cause hits to be missed
+- Fixed: 2D and 3D Ray and Linecast queries now populate the Hit.CastDistanceNormalized field
+
+### Build 730 (Apr 16, 2021)
+
+**Changes**
+
+- Importing Unity Navmesh progress bar cancel-able
+
+**Bug Fixes**
+
+- Fixed: An issue that cause the navmesh generation to fault with an overflow exception when importing degenerate triangles
+- Fixed: An issue that could make the Unity navmesh importing hang on "Fix Triangles On Edges"
+
+### Build 729 (Apr 15, 2021)
+
+**Bug Fixes**
+
+- Fixed: Unity 2020.3+ issue where when using QuantumCodeIntegration new generated asset/component scripts would not be referenceable until the next re-import
+
+### Build 727 (Apr 14, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issues when Physics Entries or HitCollection internal buffers needed to be expanded and Broad Phase Queries have been added
+- Fixed: An issue in FPCollision.CircleIntersectsAABB that would cause circles with radius 0 (point) inside boxes to not be considered as overlapping
+
+### Build 726 (Apr 13, 2021)
+
+**Bug Fixes**
+
+- Fixed: 2D Physics Bodies having their X velocity being reset when the Y velocity is below the Min Linear Velocity Integration threshold
+
+### Build 725 (Apr 11, 2021)
+
+**What's New**
+
+- 2D Polygons with invalid normals are now shown red on the editor and give warnings when baked
+
+### Build 724 (Apr 07, 2021)
+
+**Changes**
+
+- Codegen header to use <auto-generated> tags
+
+### Build 723 (Apr 06, 2021)
+
+**What's New**
+
+- Transform2D.TransformPoint, TransformDirection and their respective inverse operations
+
+### Build 722 (Apr 06, 2021)
+
+**What's New**
+
+- Support to Continuous Collision Detection on 2D Physics Engine, which can be enabled on the SimulationConfig and the PhysicsBody2D Config flags. Rebake all scenes to upgrade existing Body prototypes' version
+- Derived structs get decorated with DerivedStructAttribute and implement IDerivedStruct<T> attribute
+
+### Build 721 (Mar 31, 2021)
+
+**Changes**
+
+- Custom plugin project will init PhotonDeterminstic logging (in addition to Quantum logging)
+
+### Build 720 (Mar 27, 2021)
+
+**Bug Fixes**
+
+- Fixed: 2D Physics's collision manifolds not being ignored if an involved entity has its collider disabled during a physics callback
+
+### Build 719 (Mar 25, 2021)
+
+**Bug Fixes**
+
+- Fixed: BitSet.ClearAll methods for sets greater than 64 bits not resetting the entire buffer
+- Fixed: Generated code for BitSets with a size that is greater than and not multiple of 64 not having a correctly sized fixed buffer
+- Fixed: Joining a session with Spectate mode resulted in exceptions, now the mode will set the local player count to 0
+- Fixed: Debug log of duplicated asset paths
+
+### Build 718 (Mar 24, 2021)
+
+**What's New**
+
+- Quantum.StartParameters now have explanatory comments
+
+**Bug Fixes**
+
+- Fixed: QuantumEditorGUI for Unity 2021.1
+- Fixed: Missing `MemoryLayoutVerifier.Platform` initialization (MemoryLayoutVerifier.DefaultPlatform()) inside SessionContainer.Start()
+
+### Build 717 (Mar 22, 2021)
+
+**Bug Fixes**
+
+- Fixed: Custom plugin simulation stalling if the session tryied to advance the clock more than it had inputs for
+
+### Build 716 (Mar 19, 2021)
+
+**Bug Fixes**
+
+- Fixed: InvalidOperationException on the Frame Differ when trying to differ the dump of a single frame, which can also happen while other clients' dumps have not been received yet
+- Fixed: ArgumentNullException on console runner if no checksum file is provided
+
+### Build 713 (Mar 17, 2021)
+
+**What's New**
+
+- [EmitFixedArray] attribute - can be applied to array<T>[N] fields to force the FixedArray<T> proxy properties being generated, even for integer types
+
+**Bug Fixes**
+
+- Fixed: Custom Plugin sample, now disposing the session container in OnCloseGame instead of in BeforeCloseGame, so the simulation is still available during EmptyRoomTTL
+
+### Build 711 (Mar 15, 2021)
+
+**What's New**
+
+- XML API documentation files alongside core and PhotonDeterministic dlls (assemblies folder). If you don't want them to be copied into the Unity Quantum assemblies folder add this line to each configuration property group (debug, release) in your quantum.code.csproj `<AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>`
+
+**Changes**
+
+- AssetDB is now exposed in the Frame Context
+
+### Build 710 (Mar 13, 2021)
+
+**Bug Fixes**
+
+- Fixed: NullReferenceExceptions when a client gets disconnected by the server after his local session is created and before it is started
+- Fixed: 2D and 3D physics bodies not being awakened in a collision if no impulse was necessary to solve it
+
+### Build 709 (Mar 12, 2021)
+
+- Updated release history format
+
+**Bug Fixes**
+
+- Fixed: 2D and 3D physics bodies not having their linear and angular velocities reset when put in a sleeping state
+
+### Build 707 (Mar 11, 2021)
+
+**Changes**
+
+- FixedArray indexer now returns a reference, so explicit copies or GetPointer are no longer needed to modify a nested field
+
+### Build 706 (Mar 10, 2021)
+
+- Upgraded Photon Realtime to version 4.1.5.1
+
+**Breaking Changes**
+
+- The new Realtime version restricts access to the auth token. As a guideline reconnecting after losing the connection object should always pass through the name server again
+
+**What's New**
+
+- A system to track the player connection state (add PlayerConnectedSystem to your SystemSetup.cs) to trigger PlayerConnected and -Disconnected signals
+- BitSet static class with IsSet, Set, Clear and ClearAll overloads for each BitSetSIZE
+- Local frame snapshots during reconnecting in the demo menu
+- StartGameTimeout to QuantumRunner params (optional). This can be used to mitigate issues when players late-join or reconnect while there is no other client or server to provide a snapshot
+
+**Changes**
+
+- BitSetSIZE IsSet, Set, Clear and ClearAll are now generated as obsolete
+- The demo menu scene UIConnect class by moving code into helper classes to make the connection flow more clear
+
+**Bug Fixes**
+
+- Fixed: A typo in QuantumToolbarUtilities code preventing the toolbar from working
+
+### Build 705 (Mar 09, 2021)
+
+**What's New**
+
+- `QuantumMapDataBakeFlags.ClearUnityNavMesh` to optionally reset the Unity navmesh after baking. This solves issues with wrongly converting the Unity scene asset to binary using ForceText asset serialization
+
+### Build 703 (Mar 08, 2021)
+
+**Changes**
+
+- Events raising methods now return an event instance (or null, if the event has been culled). This makes setting fields added to events with partial classes easier
+- List, dictionaries and Ptr fields are now nullified on component being removed (after ISignalOnComponentRemoved<T> has been invoked). This includes fields that nested structs and arrays a component might have. To avoid this apply [DontClearOnComponentRemoved] attribute on a field
+- Ptr is now serializable
+
+**Bug Fixes**
+
+- Fixed: Issues with debug drawing Draw.Circle() when using QUANTUM_XY, enabled drawing 2D shapes with 3D positions
+
+### Build 702 (Mar 05, 2021)
+
+**Bug Fixes**
+
+- Fixed: Events not being pooled and allocating with each raise
+- Fixed: Frame.Heap.AllocateAndClearPtr returning non-null Ptr values in case it failed to allocate the requested size on the frame heap
+- Fixed: Redundant prompts to reload solution when using code integration
+
+### Build 700 (Mar 04, 2021)
+
+**Bug Fixes**
+
+- Fixed: 3D Physics colliders that have a shape with center offset sometimes missing collisions with triangles in a mesh
+- Fixed: The centroid computation of 3D compound shapes (also affected dynamic compounds' center of mass)
+- Fixed: False-positive component override message and a subsequent crash when materialising a prototype that forces entity pool to grow
+
+### Build 699 (Mar 02, 2021)
+
+**Bug Fixes**
+
+- Fixed: An issue on 2D and 3D regular first-hit-only raycasts and linecasts that could cause the wrong hit to be returned
+
+### Build 698 (Mar 01, 2021)
+
+### Build 696 (Feb 26, 2021)
+
+**What's New**
+
+- DotNetTaskRunner for simulation processing on the plugin and console runner
+- QuantumMultiClientRunner.InitialPlayerCount - a way to kick-start multi-client runner with a number of players
+
+**Changes**
+
+- Core and PhotonDeterministic dlls paths of the custom plugin solution now point to the Unity folder, this way changing between debug and release dlls on the local plugin project is possible by recompiling the code solution
+- Events are now confirmed/cancelled in the order they have been raised. Non-synced duplicated events (i.e. raised from the same tick, with the same parameters) still have their handler and confirmation/cancellation invoked once - for the first instance
+
+**Bug Fixes**
+
+- Fixed: An issue with Photon Server Settings Editor that did not save changes to PlayerTTL only
+- Fixed: QuantumToolbarUtilities occasional error on startup
+
+### Build 692 (Feb 24, 2021)
+
+**Changes**
+
+- QuantumEditorSettings.EntityComponentInspectorMode default value to InlineInEntityPrototypeAndHideMonoBehaviours
+
+### Build 691 (Feb 23, 2021)
+
+**Changes**
+
+- EntityPrototype and EntityView editors - more consistent with other editors when dealing with prefabs
+
+### Build 688 (Feb 22, 2021)
+
+**What's New**
+
+- DSL keyword enum_count: enum_count<EnumType> can be used as a constant (for an array size etc.)
+- FrameSerializer.PointerResolve(Ptr*, int) that can be used to resolve pointers used in components
+
+**Bug Fixes**
+
+- Fixed: QuantumStaticMeshCollider3D & QuantumStaticTerrainCollider3D are now properly marked dirty after a bake
+
+### Build 687 (Feb 19, 2021)
+
+**Changes**
+
+- Quantum Inspector can now edit multiple objects
+
+**Bug Fixes**
+
+- Fixed: Systems inside SystemMainThreadGroup or SystemGroup not having OnInit/OnEnabled callbacks called
+
+### Build 686 (Feb 18, 2021)
+
+**Bug Fixes**
+
+- Fixed: An issue on the inertia matrix computation of 3D bodies with compound shapes that could cause them to not rotate on collisions
+- Fixed: The missing GenerateAssetDB flag when running Bake All Scenes Map Data from the Quantum Unity menu
+
+### Build 683 (Feb 17, 2021)
+
+**Changes**
+
+- The default name for the asset db to db.json (was assetDB.json) for the replay and savegame shortcuts
+
+**Bug Fixes**
+
+- Fixed: 2D and 3D collision solving of dynamic colliders with compound shapes
+- Fixed: Unresolved pointers error when deserializing a frame with compound shape buffers tracked for disposal
+
+### Build 678 (Feb 15, 2021)
+
+**What's New**
+
+- [FreeOnComponentRemoved] attribute initial work
+
+**Bug Fixes**
+
+- Fixed: ArrayLengthAttribute did not work in some cases
+
+### Build 673 (Feb 12, 2021)
+
+**Changes**
+
+- The implementation of FPCollision.ClosestDistanceToTriangle to support queries for tiny and huge triangles by reducing the precision for them
+
+**Bug Fixes**
+
+- Fixed: An accuracy issue in the 2D Box-Circle narrow check that could result in false positives with slightly negative penetrations, throwing assertion errors in Debug mode
+
+### Build 672 (Feb 11, 2021)
+
+**What's New**
+
+- FrameBase.Set method overloads accepting AssetRefEntityPrototype
+
+**Changes**
+
+- QuantumAutoBaker better error handling
+
+**Bug Fixes**
+
+- Fixed: An issue where adding [Serializable] attribute in DSL resulted in compile error
+- Fixed: An issue with FPCollision.ClosestDistanceToTriangle that could cause a div by zero exception on tiny triangles
+- Fixed: Displaying name of Config flags field of PhysicsBody components on entity prototypes
+- Fixed: QUANTUM_ADDRESSABLES properly stripped from a package
+- Fixed: Removed BOMs from merged scripts
+
+### Build 668 (Feb 10, 2021)
+
+**Changes**
+
+- FrameBase.Set(EntityRef, EntityPrototype) and FrameBase.Set(EntityRef, EntityPrototype, out ComponentSet) now invoke ISignalOnEntityPrototypeMaterialized
+- Unity QuantumCallbacks' constructors have been made public
+
+**Bug Fixes**
+
+- Fixed: An issue QuantumStateInspector would not refresh GUI when stepping frame-by-frame
+- Fixed: Inertia computation of sphere bodies that could cause issues when rotating on the Z or X axis
+
+### Build 667 (Feb 09, 2021)
+
+**Changes**
+
+- Warning when FindAsset encounters an asset type mismatch
+
+**Bug Fixes**
+
+- Fixed: 2D and 3D PhysicsCallbacks and PhysicsJoints components printing the full internal buffers on the State Inspector or on frame dumps instead of only the used count
+- Fixed: ArrayLength attribute gets applied on arrays even if a field is hidden
+- Fixed: Navmesh gizmo triangles and Pathfinder Gizmos from the QuantumEditorSettings for QUANTUM_XY
+
+### Build 665 (Feb 05, 2021)
+
+**Bug Fixes**
+
+- Fixed: Issues with using cached physics static data when starting an online game from a local snapshot that uses a different Map than the one the simulation starts with
+
+### Build 664 (Feb 04, 2021)
+
+**Bug Fixes**
+
+- Fixed: An issue where having singleton components on scenes would raise occasional exceptions. Singletons can be removed/destroyed and then created again without committing frame commands
+- Fixed: Possible DivideByZeroException on raycast-sphere checks when the ray length is too small
+- Fixed: QuantumStateInspector issue where components filters were not applied on script recompilation
+- Fixed: QuantumStateInspector issue where exceptions thrown by the state object inspector would mess up the entire UI
+- Fixed: QuantumStateInspector issue where lists with elements removed were triggering an assertion
+- Fixed: Wrong info on physics callbacks when an entity was involved in multiple OnEnter/OnExit conditions in the same frame
+
+### Build 660 (Feb 03, 2021)
+
+**Changes**
+
+- Upgrade_instructions to clear up the instructions about changes in the Unity project editor folders
+
+### Build 659 (Feb 02, 2021)
+
+- Improved QuantumStaticMeshCollider3D.Bake() by reducing the number of Unity Mesh property calls
+
+**What's New**
+
+- Custom Quantum Plugin API documentation
+
+**Changes**
+
+- There's an implicit limit of max allocation (64kB), regardless of the page size. Improved exception message if that error is reached
+
+**Bug Fixes**
+
+- Fixed: Possible null ref exception on custom plugin
+
+### Build 656 (Feb 01, 2021)
+
+- Removed AssignEntityRefs prototype creation step. From now on entities are mapped during Materialization step
+
+**What's New**
+
+- ComponentTypeNameAttribute to handle component type selection more easily in the editor
+
+**Changes**
+
+- ComponentTypeSetSelector and ComponentTypeSelector use component type name instead of Assembly Qualified Name. The old field has been made obsolete, but still works
+- JsonAssetSerializerBase detects if a type is from quantum.code assembly and uses a short name in that case
+- Dictionary inspector for prototypes. An error icon is shown if there are duplicate keys. Keys are inlined and made read-only for folded elements
+
+**Bug Fixes**
+
+- Fixed: Emit custom attributes for dictionaries
+
+### Build 653 (Jan 29, 2021)
+
+**Bug Fixes**
+
+- Fixed: 2D and 3D Physics Solvers' accumulative impulse when colliding with several entries
+
+### Build 651 (Jan 28, 2021)
+
+- Removed PhysicsSandbox.qtn missing file from the SDK package (DEV only)
+
+**What's New**
+
+- Embedded asset db file loading to the custom plugin (will be documented in upcoming plugin docs revision)
+
+**Changes**
+
+- Generated Asset scripts fully qualify the type of their Settings field to avoid possible conflicts. Cherry pick of 72fdb0af48b6e2080c1663c1b79dfbc84ebd925e
+- RangeDrawer to RangeAttributeDrawer
+- Removed special version information from the custom plugin project references
+
+### Build 650 (Jan 27, 2021)
+
+- Removed quantum.console.runner project from the Quantum code solutions, it's still inside the SDK though
+
+**What's New**
+
+- Overloads to 2D Physics API that accept a persistent HitCollection* instead of allocating a temporary one
+- Overloads to 3D Physics API that accept a persistent HitCollection3D instead of allocating a temporary one
+
+**Bug Fixes**
+
+- Fixed: 3D Shape Queries with position offset when resolving against the 3D Scene Mesh
+- Fixed: CircleCast->Circle and SphereCast->Sphere checks when the casted shape had position offset
+- Fixed: Line endings in Quantum AOT
+
+### Build 649 (Jan 26, 2021)
+
+- Removed Navigation.Contants.VelocityObstacleTruncationFactor and moved it to the navigation part in simulation config
+
+**What's New**
+
+- Print support for dictionaries
+- Prototypes are correctly generated for types containing dictionaries (Unity inspector is a bit lackluster at the moment)
+- Partial method UnityDB.LoadAssetResourceContainerUser - a way to change where AssetResourceContainer is loaded from. If not implemented, it is loaded as a Resource from QuantumEditorSettings.AssetResourcesPathInResources). Renamed: UnityDB.ResourceManager to UnityDB.DefaultResourceManager (the old property is still available, but made obsolete)
+- QuantumEvent/Callback.Subscribe overload that takes an array of game modes
+
+**Changes**
+
+- AutoMenu to start the map right away if there is only one to chose from
+
+**Bug Fixes**
+
+- Fixed: Warning in Quantum Unity scripts emitted from UnityInternal
+- Fixed: Issue on the trigger detection between physics colliders with compound shapes and trigger static meshes
+- Fixed: Unity 2020.2.2 reflection error for LayerMatrixGUI.DoGUI
+
+### Build 644 (Jan 21, 2021)
+
+**Bug Fixes**
+
+- Fixed: An issue where [Reorderable] array would not expand in Unity 2020.2
+
+### Build 637 (Jan 18, 2021)
+
+- Initial release
+
+**Bug Fixes**
+
+- Fixed: Inspector for arrays in Unity 2020.2: reorderable lists are simply not compatible with Quantum Editor GUI and hence have been disabled for Quantum types for now
+
 # 2.0.1
 
 ## F1
@@ -30,7 +782,11 @@ Migrate your project by copying the `quantum.code` folder from the **SDK** and c
 
 We combined all source code provided with the SDK that is inside quantum code solution into a single file called `Core.cs` to make the upgrade more managable in the future (e.g. adding and removing files).
 
-## 
+## F1
+
+### Build 640 (Jan 20, 2021)
+
+- Fixed displaying of 2D and 3D Shape Type as flags on Unity 2020.2+ Inspector
 
 ### Build 634 (Jan 18, 2021)
 
@@ -279,7 +1035,6 @@ We combined all source code provided with the SDK that is inside quantum code so
 ### Build 500 (Sep 18, 2020)
 
 - Exposed a default Layer Mask in the 2D and 3D KCC config assets that can also be overhauled through code
-
 - Fixed an issue in the physics callbacks when starting a game from a locally-saved snapshot
 - Changed Frame Events are now invoked after OnUpdateView
 
@@ -309,8 +1064,6 @@ We combined all source code provided with the SDK that is inside quantum code so
 
 - Fixed 3D box-triangle narrow collision check edge case that could generate a collision without contact points
 - Fixed [ExcludeFromPrototype] when applied on EntityRef field sometimes caused a compile error in CodeGen.cs
-
-## N
 
 ### Build 481 (Sep 09, 2020)
 
@@ -859,8 +1612,6 @@ Merge branch '2.0/feature/inline-component-prototypes-editor' into 2.0/develop
 - Fixed an issue with 3D shapes initialized from a shape config or prototype where the shape rotation offset could be initialized as a zeroed quaternion
 - Fixed the static collider data not displaying the correct layer of the object, although the collider itself would be baked and behave as in the correct layer
 
-## A1 (Alpha)
-
 ### Build 289 (May 06, 2020)
 
 - Added Partial support for qtn attributes in prototypes (components with entity_refs ignore most custom attributes)
@@ -979,7 +1730,7 @@ The speed integration has been changed slightly to work more reliable when angul
 
 **NavMeshAvoidanceAgent** (requires both the NavMeshPathfinder and the NavMeshSteeringAgent components) integrates HRVO agent avoidance. Avoidance priorities work now the same way as in Unity. Additionally type and masks can be defined to filter out who can avoid whom.
 
-```(csharp)
+```csharp
 // new agent component creation
 var entity = f.Create();
 f.Set(c, NavMeshPathfinder.Create(frame, entity, navMeshAgentConfig));
@@ -997,7 +1748,7 @@ f.Set(entity, new NavMeshAvoidanceAgent()); // optional
 - Merged `SimulationConfig.AvoidanceCallbacks` and `SteeringCallbacks` into `NavigationCallbacks`. Reset the value when you are using the callbacks
 - Importantly all navigation callbacks are now called from the main-thread and are secure for developers to use
 
-```(csharp)
+```csharp
 // simplified movement callback
 public void OnNavMeshMoveAgent(Frame f, EntityRef entity, FPVector2 desiredDirection) {
 var agent = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
@@ -1015,7 +1766,7 @@ transform->Rotation = FPVector2.RadiansSignedSkipNormalize(FPVector2.Up, desired
 - Navmesh links utilize the region system to be toggled on and off on the map level as well for agents. Add a `MapNavMeshRegion` script to the `OffMeshLink` Unity script.
 - Removed INavMeshRegionMask interface and replaced it with a NavMeshRegionMask struct that is saved in globals and on the PathfinderAgent
 
-```(csharp)
+```csharp
 // old
 f.Map.SetNavMeshRegionActive(f, "secret", false);
 // new
@@ -1137,7 +1888,44 @@ f.NavMeshRegionMask->ToggleRegion(secret, false);
 - Fixed Quaternion multiplication bug fix
 - Added automatic changelog generation and publishing for nightly builds
 
+# 1.2.4.3
+
+## F1 (Feb 04, 2021)
+
+- Fixed static mesh baking: degenerate triangles with zeroed normals are now removed.
+- Fixed wrong collision normal computations on sphere-box collisions when the sphere center was inside the box.
+- Fixed issues when a 2D or 3D KCC center was inside a box, which could produce zeroed penetration correction.
+- Fixed memory leak when running the simulation on the server with the custom plugin sample.
+- Fixed Raycast-Sphere accuracy issue when the ray length was very large relative to the sphere radius.
+- Fixed EntityRefType.Equals(object other) generated methods not correctly returning true when the objects are equal.
+- Changed FPQuaternion.FromToRotation to normalize the input vectors by default, avoiding precision issues.
+- Added FPQuaternion.FromToRotationSkipNormalize to the API as a more performant option when vectors are known to be normalized or have magnitude close to 1.
+
 # 1.2.4.2
+
+## F1 (Aug 26, 2020)
+
+- Fixed the BeginLayoutGroup error logged in Unity after pressing Bake in Unity 2019.
+- Fixed StaticColliderData not correctly displaying the layer of the object, altough the collider itself would be baked into and behave as in the correct layer.
+- Fixed an issue in the KCC steering that was making the character jump with a slightly lower impulse than the one actually set in the jump config.
+- Fixed an issue in the KCC steering that was clamping the vertical velocity of the character if it was moving and then jumped.
+- Fixed an issue in the KCC raw movement computation that could cause position correction overshooting. More noticeable in the 3D KCC when using a higher count of max contact points.
+- Fixed static collider gizmos (2D and 3D boxes and 2D polygons) not matching the baked values when a parent of the GO had a non-uniform scale.
+- Fixed an issue with sphere-box collisions when the sphere center was inside the box.
+- Fixed an issue with FPVector2 and FPvector3.Angle methods the could cause a wrong angle value if the vectors were opposit to each other.
+- Fixed an issue with the penetration correction of box-triangle collisions that could cause over-correction.
+- Fixed a DivideByZero Exception on FPCollision.LineIntersectsCircle if the line start and end points were the same or just slightly different.
+- Fixed the computation of 2D and 3D dynamic bodies' inertia.
+- Fixed NavMeshAgent waypoing flags not being serialized in the frame serialization.
+- Improved the 2D and 3D Collision Solvers' computation of normal and tangent impulses.
+- Improved ray-triangle intersection point accuracy for 3D raycast queries.
+- Improved box-triangle narrow collision detection for small scale entries.
+- Improved KCC Grounded state stability by using the Config.Extent radius for ground detection. Movement Type definition has not changed, only considering the contacts inside the main KCC radius.
+- Improved Entity Prefab Root: now handling 2D entity views with Transform2D Vertical component (2.5D Physics).
+- Added a PenetrationCorrection field to the 2D and 3D KCC config assets, used as a factor to apply the correction in the steering method, also fixing an issue that could cause jittery behavior if the KCC acceleration was higher than the simulation rate.
+- Added GetInertia, SetInertia, AddForceAtPosition and AddLinearImpulseAtPosition to 2D and 3D Dynamic Bodies API.
+- Added SimulationConfig.MinAngularIntegration that defines a minimum DynamicBody.AngularVelocity value that can be integrated into a Transform.
+- SimulationConfig.Physics.PenetrationCorrection is now clamped between 0-1 when the asset is loaded, preventing from glitchy behaviors that higher values would cause.
 
 ## RC1 (Apr 22, 2020)
 
@@ -1786,7 +2574,7 @@ Unity it will no longer have the correct value.
 - Fixed an issue where casting default(EntityRef) to an type-specific entity ref would throw an exception.
 - Fixed an issue inside of the code generator relating to the type safe collision signals that would lead to a compile error.
 
-# 1.
+# 1.1.7
 
 Important: The network protocol of 1.1.7 is incompatible with previous versions. This means
 you have to update your backend plugin after you've upgraded to 1.1.7.

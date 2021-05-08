@@ -3,18 +3,15 @@ using ExitGames.Client.Photon;
 using Photon.Realtime;
 using UnityEngine;
 
-// From PUN to Realtime:
+// Migration from PUN to Realtime:
 // - AutoJoinLobby must be done by hand: call LoadBalancingClient.OpJoinLobby(null); when OnConnectedToMaster()
 // - Room list is not cached and is send in chunks, see UILobby.UpdateRoomList()
-
 public class QuantumLoadBalancingClient : LoadBalancingClient, IConnectionCallbacks {
-
   public static string BestRegionSummaryKey = "Quantum_BestRegionSummary";
-
   public QuantumLoadBalancingClient(ConnectionProtocol protocol = ConnectionProtocol.Udp) : base(protocol) {
     ConnectionCallbackTargets.Add(this);
   }
-
+ 
   public virtual bool ConnectUsingSettings(AppSettings appSettings, string nickname) {
 
     LocalPlayer.NickName = nickname;

@@ -1,12 +1,11 @@
 ﻿using Photon.Deterministic;
 using Quantum;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class QuantumStaticSphereCollider3D : MonoBehaviour {
   public FP Radius;
+  public FPVector3 PositionOffset;
   public QuantumStaticColliderSettings Settings;
 
   void OnDrawGizmos() {
@@ -21,6 +20,6 @@ public class QuantumStaticSphereCollider3D : MonoBehaviour {
     // the radius with which the sphere with be baked into the map
     var radius = Radius.AsFloat * transform.localScale.x;
     
-    GizmoUtils.DrawGizmosSphere(transform.position, radius, selected, QuantumEditorSettings.Instance.StaticColliderColor);
+    GizmoUtils.DrawGizmosSphere(transform.position + PositionOffset.ToUnityVector3(), radius, selected, QuantumEditorSettings.Instance.StaticColliderColor);
   }
 }

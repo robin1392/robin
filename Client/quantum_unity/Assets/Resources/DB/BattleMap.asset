@@ -27,11 +27,16 @@ MonoBehaviour:
     BucketingAxis: 0
     SortingAxis: 1
     TriangleMeshCellSize: 4
-    StaticColliders3DTrianglesBinaryFile: BattleMap_mesh.bytes
+    StaticColliders3DTrianglesData:
+      Id:
+        Value: 2388057882258112240
+    StaticColliders3DTrianglesBinaryFile: 
     GridSizeX: 20
     GridSizeY: 20
     GridNodeSize: 2
-    NavMeshLinks: []
+    NavMeshLinks:
+    - Id:
+        Value: 2600365732021726587
     Regions: []
     StaticColliders2D:
     - Rotation:

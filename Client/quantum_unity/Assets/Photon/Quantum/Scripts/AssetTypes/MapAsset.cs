@@ -11,22 +11,11 @@ public partial class MapAsset : AssetBase {
 
   public override AssetObject AssetObject => Settings;
 
-  public override void Reset() {
-    if (Settings == null) {
-      Settings = new Quantum.Map();
-    }
-    if (Prototypes == null) {
-      Prototypes = new List<FlatEntityPrototypeContainer>();
-    }
+  public override void PrepareAsset() {
+    base.PrepareAsset();
 
-    base.Reset();
-  }
-
-  public override void Loaded() {
-    base.Loaded();
-    
     Settings.MapEntities = new EntityPrototypeContainer[Prototypes.Count];
-
+    
     var buffer = new List<ComponentPrototype>();
     for (int i = 0; i < Prototypes.Count; ++i) {
       try {
@@ -38,6 +27,17 @@ public partial class MapAsset : AssetBase {
         buffer.Clear();
       }
     }
+  }
+
+  public override void Reset() {
+    if (Settings == null) {
+      Settings = new Quantum.Map();
+    }
+    if (Prototypes == null) {
+      Prototypes = new List<FlatEntityPrototypeContainer>();
+    }
+
+    base.Reset();
   }
 }
 

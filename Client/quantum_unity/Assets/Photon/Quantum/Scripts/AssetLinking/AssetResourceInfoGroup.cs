@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Quantum {
 
-  public abstract class AssetResourceGroupInfo {
+  public abstract class AssetResourceInfoGroup {
     public abstract IReadOnlyList<AssetResourceInfo> Resources { get; }
 
     public abstract int SortOrder { get; }
@@ -22,10 +22,6 @@ namespace Quantum {
         return (AssetResourceInfo)Resources[index];
       }
     }
-
-#if UNITY_EDITOR
-    public abstract AssetResourceInfo EditorTryCreateResourceInfo(AssetBase asset);
-#endif
 
     private static int BinarySearch(IReadOnlyList<AssetResourceInfo> list, AssetGuid guid) {
       int min = 0;
@@ -50,12 +46,14 @@ namespace Quantum {
     }
   }
 
-  public abstract class AssetResourceGroupInfo<T> : AssetResourceGroupInfo where T : AssetResourceInfo, new() {
+  public abstract class AssetResourceInfoGroup<T> : AssetResourceInfoGroup where T : AssetResourceInfo, new() {
 
     [SerializeField]
     private List<T> _resources = new List<T>();
 
     public override IReadOnlyList<AssetResourceInfo> Resources => _resources;
+
+    public IReadOnlyList<T> ResourcesT => _resources;
 
     public override void Clear() {
       _resources.Clear();

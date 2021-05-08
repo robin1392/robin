@@ -31,11 +31,5 @@ public partial class EntityComponentNavMeshPathfinder {
     }
     UnityEditor.Undo.DestroyObjectImmediate(this);
   }
-
-  public override void OnInspectorGUI(SerializedObject so, IQuantumEditorGUI editor) {
-    editor.DrawProperty(so.FindPropertyOrThrow("Prototype"), skipRoot: true);
-    editor.DrawProperty(so.FindPropertyOrThrow(nameof(EntityComponentNavMeshPathfinder.InitialTargetNavMeshReference)), skipRoot: false);
-  }
-
 #endif
 }

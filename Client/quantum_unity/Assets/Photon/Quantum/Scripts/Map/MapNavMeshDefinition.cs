@@ -3,6 +3,7 @@ using System.Linq;
 using Photon.Deterministic;
 using System;
 using System.Collections.Generic;
+using Quantum;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,6 +16,7 @@ public struct MapNavMeshTriangle {
   public Int32[] VertexIds2;
   public Int32 Area;
   public String RegionId;
+  public FP Cost;
 }
 
 [System.Serializable]
@@ -32,6 +34,7 @@ public struct MapNavMeshLink {
   public bool Bidirectional;
   public float CostOverride;
   public String RegionId;
+  public String Name;
 }
 
 [Obsolete("Use MapNavMesh.BakeData")]
@@ -57,18 +60,19 @@ public class MapNavMeshDefinition : MonoBehaviour {
   public List<Int32> RegionAreaIds;
   public MapNavMesh.FindClosestTriangleCalculation ClosestTriangleCalculation;
   public int ClosestTriangleCalculationDepth = 3;
+  public bool LinkErrorCorrection = false;
   public bool EnableQuantum_XY;
 
-  [EditorDisabled]
+  [QuantumInspector, Quantum.Inspector.ReadOnly]
   public MapNavMeshVertex[] Vertices;
 
-  [EditorDisabled]
+  [QuantumInspector, Quantum.Inspector.ReadOnly]
   public MapNavMeshTriangle[] Triangles;
 
-  [EditorDisabled]
+  [QuantumInspector, Quantum.Inspector.ReadOnly]
   public List<string> Regions;
 
-  [EditorDisabled]
+  [QuantumInspector, Quantum.Inspector.ReadOnly]
   public MapNavMeshLink[] Links;
 
   private Mesh _gizmoMesh;
@@ -78,6 +82,7 @@ public class MapNavMeshDefinition : MonoBehaviour {
       AgentRadius = definition.AgentRadius,
       ClosestTriangleCalculation = definition.ClosestTriangleCalculation,
       ClosestTriangleCalculationDepth = definition.ClosestTriangleCalculationDepth,
+      LinkErrorCorrection = definition.LinkErrorCorrection,
       Links = definition.Links,
       Name = definition.name,
       Position = definition.transform.position,
@@ -92,6 +97,7 @@ public class MapNavMeshDefinition : MonoBehaviour {
     return new MapNavMesh.ImportSettings {
       ClosestTriangleCalculation = definition.ClosestTriangleCalculation,
       ClosestTriangleCalculationDepth = definition.ClosestTriangleCalculationDepth,
+      LinkErrorCorrection = definition.LinkErrorCorrection,
       DelaunayTriangulation = definition.DelaunayTriangulation,
       EnableQuantum_XY = definition.EnableQuantum_XY,
       FixTrianglesOnEdges = definition.FixTrianglesOnEdges,

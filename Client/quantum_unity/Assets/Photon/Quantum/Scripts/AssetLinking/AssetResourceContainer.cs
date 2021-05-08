@@ -7,7 +7,7 @@ namespace Quantum {
 
   public partial class AssetResourceContainer : ScriptableObject {
 
-    private List<AssetResourceGroupInfo> _groups;
+    private List<AssetResourceInfoGroup> _groups;
 
     public int AssetCount => Groups.Sum(x => x.Resources.Count);
 
@@ -25,7 +25,7 @@ namespace Quantum {
       return result;
     }
 
-    public IReadOnlyList<AssetResourceGroupInfo> Groups {
+    public IReadOnlyList<AssetResourceInfoGroup> Groups {
       get {
         if (_groups == null) {
           InitGroups();
@@ -48,15 +48,16 @@ namespace Quantum {
     private void InitGroups() {
       _groups = GetType()
         .GetFields()
-        .Where(x => x.FieldType.IsSubclassOf(typeof(AssetResourceGroupInfo)))
+        .Where(x => x.FieldType.IsSubclassOf(typeof(AssetResourceInfoGroup)))
         .Select(x => {
-          var result = (AssetResourceGroupInfo)x.GetValue(this);
+          var result = (AssetResourceInfoGroup)x.GetValue(this);
           if (result == null) {
-            result = (AssetResourceGroupInfo)Activator.CreateInstance(x.FieldType);
+            result = (AssetResourceInfoGroup)Activator.CreateInstance(x.FieldType);
             x.SetValue(this, result);
           }
           return result;
         })
+        .OrderBy(x => x.SortOrder)
         .ToList();
     }
   }

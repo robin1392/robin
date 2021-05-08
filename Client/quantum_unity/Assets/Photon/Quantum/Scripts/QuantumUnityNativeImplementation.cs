@@ -104,4 +104,8 @@ public unsafe class QuantumUnityNativeUtility : Photon.Deterministic.Native.Util
   public override void Move(void* dest, void* src, int count) {
     UnsafeUtility.MemMove(dest, src, (long)count);
   }
+
+  public override unsafe int Compare(void* ptr1, void* ptr2, int count) {
+    return UnsafeUtility.MemCmp(ptr1, ptr2, count);
+  }
 }

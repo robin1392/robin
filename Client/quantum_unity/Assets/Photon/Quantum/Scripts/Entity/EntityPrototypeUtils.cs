@@ -4,7 +4,80 @@ using Quantum;
 using UnityEngine;
 
 public static class EntityPrototypeUtils {
+  public static bool TrySetShapeConfigFromSourceCollider2D(Shape2DConfig config, Transform reference, Component collider) {
+    if (collider == null) {
+      if (config != null) {
+        config.IsSetFromSourceCollider = false;
+      }
+      
+      return false;
+    }
+    
+    switch (collider) {
+      case BoxCollider box:
+        ThrowIfDifferentWorldPosition(reference, box.bounds);
+        ThrowIfDifferentWorldRotation(reference, box);
+        config.ShapeType  = Shape2DType.Box;
+        config.BoxExtents = Vector3.Scale(box.size / 2, box.transform.lossyScale).ToFPVector2();
+        break;
 
+      case SphereCollider sphere:
+        ThrowIfDifferentWorldPosition(reference, sphere.bounds);
+        config.ShapeType    = Shape2DType.Circle;
+        config.CircleRadius = sphere.radius.ToFP();
+        break;
+
+      case BoxCollider2D box:
+        ThrowIfDifferentWorldPosition(reference, box.bounds);
+        ThrowIfDifferentWorldRotation(reference, box);
+        config.ShapeType  = Shape2DType.Box;
+        config.BoxExtents = Vector2.Scale(box.size / 2, box.transform.lossyScale).ToFPVector2();
+        break;
+
+      case CircleCollider2D sphere:
+        ThrowIfDifferentWorldPosition(reference, sphere.bounds);
+        config.ShapeType    = Shape2DType.Circle;
+        config.CircleRadius = sphere.radius.ToFP();
+        break;
+
+      default:
+        throw new NotSupportedException(CreateTypeNotSupportedMessage(collider.GetType(), typeof(BoxCollider), typeof(SphereCollider), typeof(BoxCollider2D), typeof(CircleCollider2D)));
+    }
+    
+    return config.IsSetFromSourceCollider = true;
+  }
+
+  public static bool TrySetShapeConfigFromSourceCollider3D(Shape3DConfig config, Transform reference, Component collider) {
+    if (collider == null) {
+      if (config != null) {
+        config.IsSetFromSourceCollider = false;
+      }
+      
+      return false;
+    }
+
+    switch (collider) {
+      case BoxCollider box:
+        ThrowIfDifferentWorldPosition(reference, box.bounds);
+        ThrowIfDifferentWorldRotation(reference, box);
+        config.ShapeType  = Shape3DType.Box;
+        config.BoxExtents = Vector3.Scale(box.size / 2, box.transform.lossyScale).ToFPVector3();
+        break;
+
+      case SphereCollider sphere:
+        ThrowIfDifferentWorldPosition(reference, sphere.bounds);
+        config.ShapeType    = Shape3DType.Sphere;
+        config.SphereRadius = sphere.radius.ToFP();
+        break;
+
+      default:
+        throw new NotSupportedException(CreateTypeNotSupportedMessage(collider.GetType(), typeof(BoxCollider), typeof(SphereCollider)));
+    }
+
+    return config.IsSetFromSourceCollider = true;
+  }
+
+  [Obsolete("Use " + nameof(TrySetShapeConfigFromSourceCollider2D) + " instead.")]
   public static Shape2DConfig ColliderToShape2D(Transform reference, Component collider, out bool isTrigger) {
     if (collider == null)
       throw new ArgumentNullException(nameof(collider));
@@ -49,6 +122,7 @@ public static class EntityPrototypeUtils {
     }
   }
 
+  [Obsolete("Use " + nameof(TrySetShapeConfigFromSourceCollider3D) + " instead.")]
   public static Shape3DConfig ColliderToShape3D(Transform reference, Component collider, out bool isTrigger) {
     if (collider == null)
       throw new ArgumentNullException(nameof(collider));

@@ -1,14 +1,21 @@
 ﻿using Photon.Deterministic;
 using Quantum;
 using System;
-using Quantum.Core;
 using UnityEngine;
 using Assert = Quantum.Assert;
 
 public static class QuantumGameGizmos {
 
-  public static unsafe void OnDrawGizmos(QuantumGame game) {
+  private static Color Desaturate(Color c, float t) {
+    return Color.Lerp(new Color(c.grayscale, c.grayscale, c.grayscale), c, t);
+  }
+
+  public static unsafe void OnDrawGizmos(QuantumGame game, QuantumEditorSettings editorSettings) {
 #if UNITY_EDITOR
+    if (editorSettings == null) {
+      editorSettings = QuantumEditorSettings.Instance;
+    }
+
     var frame = game.Frames.Predicted;
     
     if (frame != null) {
@@ -27,20 +34,20 @@ public static class QuantumGameGizmos {
         Color color;
         if (hasBody) {
           if (body->IsKinematic) {
-            color = QuantumEditorSettings.Instance.KinematicColliderColor;
+            color = editorSettings.KinematicColliderColor;
           }
           else if (body->IsSleeping) {
-            color = QuantumEditorSettings.Instance.AsleepColliderColor;
+            color = editorSettings.AsleepColliderColor;
           } 
           else if (!body->Enabled) {
-            color = QuantumEditorSettings.Instance.DisabledColliderColor;
+            color = editorSettings.DisabledColliderColor;
           }
           else {
-            color = QuantumEditorSettings.Instance.DynamicColliderColor;
+            color = editorSettings.DynamicColliderColor;
           }
         }
         else {
-          color = QuantumEditorSettings.Instance.KinematicColliderColor;
+          color = editorSettings.KinematicColliderColor;
         }
 
         // Set 3d position of 2d object to simulate the vertical offset.
@@ -86,20 +93,20 @@ public static class QuantumGameGizmos {
         Color color;
         if (body != null) {
           if (body->IsKinematic) {
-            color = QuantumEditorSettings.Instance.KinematicColliderColor;
+            color = editorSettings.KinematicColliderColor;
           }
           else if (body->IsSleeping) {
-            color = QuantumEditorSettings.Instance.AsleepColliderColor;
+            color = editorSettings.AsleepColliderColor;
           } 
           else if (!body->Enabled) {
-            color = QuantumEditorSettings.Instance.DisabledColliderColor;
+            color = editorSettings.DisabledColliderColor;
           }
           else {
-            color = QuantumEditorSettings.Instance.DynamicColliderColor;
+            color = editorSettings.DynamicColliderColor;
           }
         }
         else {
-          color = QuantumEditorSettings.Instance.KinematicColliderColor;
+          color = editorSettings.KinematicColliderColor;
         }
         
         if (collider.Shape.Type == Shape3DType.Compound) {
@@ -115,10 +122,10 @@ public static class QuantumGameGizmos {
       foreach(var (entity, kcc3D) in frame.GetComponentIterator<CharacterController3D>()) {
         var t      = frame.Unsafe.GetPointer<Transform3D>(entity);
         var config = frame.FindAsset(kcc3D.Config);
-        var color  = QuantumEditorSettings.Instance.CharacterControllerColor;
-        var color2 = QuantumEditorSettings.Instance.AsleepColliderColor;
-        GizmoUtils.DrawGizmosSphere(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat,                         false, QuantumEditorSettings.Instance.CharacterControllerColor);
-        GizmoUtils.DrawGizmosSphere(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat + config.Extent.AsFloat, false, QuantumEditorSettings.Instance.AsleepColliderColor);
+        var color  = editorSettings.CharacterControllerColor;
+        var color2 = editorSettings.AsleepColliderColor;
+        GizmoUtils.DrawGizmosSphere(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat,                         false, editorSettings.CharacterControllerColor);
+        GizmoUtils.DrawGizmosSphere(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat + config.Extent.AsFloat, false, editorSettings.AsleepColliderColor);
       }
 
       // ################## Components: CharacterController2D ##################
@@ -126,15 +133,16 @@ public static class QuantumGameGizmos {
       foreach(var (entity, kcc2D) in frame.GetComponentIterator<CharacterController2D>()) {
         var t      = frame.Unsafe.GetPointer<Transform2D>(entity);
         var config = frame.FindAsset(kcc2D.Config);
-        var color  = QuantumEditorSettings.Instance.CharacterControllerColor;
-        var color2 = QuantumEditorSettings.Instance.AsleepColliderColor;
-        GizmoUtils.DrawGizmosCircle(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat,                         false, QuantumEditorSettings.Instance.CharacterControllerColor);
-        GizmoUtils.DrawGizmosCircle(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat + config.Extent.AsFloat, false, QuantumEditorSettings.Instance.AsleepColliderColor);
+        var color  = editorSettings.CharacterControllerColor;
+        var color2 = editorSettings.AsleepColliderColor;
+        GizmoUtils.DrawGizmosCircle(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat,                         false, editorSettings.CharacterControllerColor);
+        GizmoUtils.DrawGizmosCircle(t->Position.ToUnityVector3() + config.Offset.ToUnityVector3(), config.Radius.AsFloat + config.Extent.AsFloat, false, editorSettings.AsleepColliderColor);
       }
 
       // ################## Components: NavMeshSteeringAgent ##################
+      NavMeshAsset currentNavmeshAsset = null;
 
-      if (QuantumEditorSettings.Instance.DrawNavMeshAgents) {
+      if (editorSettings.DrawNavMeshAgents) {
         foreach(var (entity, navmeshPathfinderAgent) in frame.GetComponentIterator<NavMeshPathfinder>()) {
           var position = Vector3.zero;
 
@@ -147,19 +155,32 @@ public static class QuantumGameGizmos {
 
           var config = frame.FindAsset<NavMeshAgentConfig>(navmeshPathfinderAgent.ConfigId);
 
+          var agentRadius = 0.25f;
+          if (currentNavmeshAsset == null || currentNavmeshAsset.Settings.Identifier.Guid != navmeshPathfinderAgent.NavMeshGuid) {
+            // cache the asset, it's likely other agents use the same 
+            currentNavmeshAsset = UnityDB.FindAsset<NavMeshAsset>(navmeshPathfinderAgent.NavMeshGuid);
+          }
+
+          if (currentNavmeshAsset != null) {
+            agentRadius = currentNavmeshAsset.Settings.MinAgentRadius.AsFloat;
+          }
+
           if (frame.Has<NavMeshSteeringAgent>(entity)) {
             var steeringAgent = frame.Get<NavMeshSteeringAgent>(entity);
-            Gizmos.color = QuantumEditorSettings.Instance.NavMeshAgentColor;
-            GizmoUtils.DrawGizmoVector(position, position + steeringAgent.Velocity.XOY.ToUnityVector3());
+            Gizmos.color = editorSettings.NavMeshAgentColor;
+            GizmoUtils.DrawGizmoVector(
+              position, position + steeringAgent.Velocity.XOY.ToUnityVector3().normalized * agentRadius * 3.0f, 
+              GizmoUtils.DefaultArrowHeadLength * editorSettings.GizmoIconScale.AsFloat);
           }
 
-          if (frame.Has<NavMeshAvoidanceAgent>(entity)) {
-            var avoidanceRadius = config.OverrideRadiusForAvoidance ? config.AvoidanceRadius : config.Radius;
-            GizmoUtils.DrawGizmosCircle(position, avoidanceRadius.AsFloat, false, QuantumEditorSettings.Instance.NavMeshAvoidanceColor);
+          if (config.AvoidanceType != Navigation.AvoidanceType.None && frame.Has<NavMeshAvoidanceAgent>(entity)) {
+            GizmoUtils.DrawGizmosCircle(position, config.AvoidanceRadius.AsFloat, false, editorSettings.NavMeshAvoidanceColor);
           }
 
-          UnityEditor.Handles.color = QuantumEditorSettings.Instance.NavMeshAgentColor;
-          GizmoUtils.DrawGizmosCircle(position, config.Radius.AsFloat, false, QuantumEditorSettings.Instance.NavMeshAgentColor);
+          GizmoUtils.DrawGizmosCircle(position, agentRadius, false, 
+            navmeshPathfinderAgent.IsActive ?
+            editorSettings.NavMeshAgentColor : 
+            Desaturate(editorSettings.NavMeshAgentColor, 0.25f));
         }
 
         foreach(var (entity, navmeshObstacles) in frame.GetComponentIterator<NavMeshAvoidanceObstacle>()) {
@@ -172,10 +193,12 @@ public static class QuantumGameGizmos {
             position = frame.Unsafe.GetPointer<Transform3D>(entity)->Position.ToUnityVector3();
           }
 
-          GizmoUtils.DrawGizmosCircle(position, navmeshObstacles.Radius.AsFloat, false, QuantumEditorSettings.Instance.NavMeshAvoidanceColor);
+          GizmoUtils.DrawGizmosCircle(position, navmeshObstacles.Radius.AsFloat, false, editorSettings.NavMeshAvoidanceColor);
 
           if (navmeshObstacles.Velocity != FPVector2.Zero) {
-            GizmoUtils.DrawGizmoVector(position, position + navmeshObstacles.Velocity.XOY.ToUnityVector3());
+            GizmoUtils.DrawGizmoVector(
+              position, position + navmeshObstacles.Velocity.XOY.ToUnityVector3().normalized * navmeshObstacles.Radius.AsFloat * 3.0f,
+              GizmoUtils.DefaultArrowHeadLength * editorSettings.GizmoIconScale.AsFloat);
           }
         }
       }
@@ -186,7 +209,7 @@ public static class QuantumGameGizmos {
 
       // ################## NavMeshes ##################
 
-      if (QuantumEditorSettings.Instance.DrawNavMesh) {
+      if (editorSettings.DrawNavMesh) {
         var navmeshes = frame.Map.NavMeshes.Values;
         foreach (var navmesh in navmeshes) {
           MapNavMesh.CreateAndDrawGizmoMesh(navmesh, *frame.NavMeshRegionMask);
@@ -194,20 +217,7 @@ public static class QuantumGameGizmos {
           for (Int32 i = 0; i < navmesh.Triangles.Length; i++) {
             var t = navmesh.Triangles[i];
 
-            // Links
-            for (Int32 l = 0; l < t.Links.Length; l++) {
-              var color = Color.blue;
-              if (t.Links[l].Region.IsSubset(*frame.NavMeshRegionMask) == false) {
-                color = Color.gray;
-              }
-
-              Gizmos.color = color;
-              GizmoUtils.DrawGizmoVector(t.Links[l].Start.ToUnityVector3(), t.Links[l].End.ToUnityVector3());
-              GizmoUtils.DrawGizmosCircle(t.Links[l].Start.ToUnityVector3(), 0.1f, color);
-              GizmoUtils.DrawGizmosCircle(t.Links[l].End.ToUnityVector3(), 0.1f, color);
-            }
-
-            if (QuantumEditorSettings.Instance.DrawNavMeshRegionIds) {
+            if (editorSettings.DrawNavMeshRegionIds) {
               if (t.Regions.HasValidRegions) {
                 var s = string.Empty;
                 for (int r = 0; r < frame.Map.Regions.Length; r++) {
@@ -216,26 +226,44 @@ public static class QuantumGameGizmos {
                   }
                 }
 
-                var vertex0 = ToUnityVector3_QUANTUM_XY(navmesh.Vertices[t.Vertex0].Point);
-                var vertex1 = ToUnityVector3_QUANTUM_XY(navmesh.Vertices[t.Vertex1].Point);
-                var vertex2 = ToUnityVector3_QUANTUM_XY(navmesh.Vertices[t.Vertex2].Point);
+                var vertex0 = navmesh.Vertices[t.Vertex0].Point.ToUnityVector3(true);
+                var vertex1 = navmesh.Vertices[t.Vertex1].Point.ToUnityVector3(true);
+                var vertex2 = navmesh.Vertices[t.Vertex2].Point.ToUnityVector3(true);
                 UnityEditor.Handles.Label((vertex0 + vertex1 + vertex2) / 3.0f, s);
               }
             }
           }
 
-          if (QuantumEditorSettings.Instance.DrawNavMeshVertexNormals) {
+          if (editorSettings.DrawNavMeshVertexNormals) {
             Gizmos.color = Color.blue;
             for (Int32 v = 0; v < navmesh.Vertices.Length; ++v) {
               if (navmesh.Vertices[v].Borders.Length >= 2) {
                 var normal = NavMeshVertex.CalculateNormal(v, navmesh, *frame.NavMeshRegionMask);
                 if (normal != FPVector3.Zero) {
-                  GizmoUtils.DrawGizmoVector(
-                                             ToUnityVector3_QUANTUM_XY(navmesh.Vertices[v].Point),
-                                             ToUnityVector3_QUANTUM_XY(navmesh.Vertices[v].Point) +
-                                             ToUnityVector3_QUANTUM_XY(normal) / 3.0f);
+                  GizmoUtils.DrawGizmoVector(navmesh.Vertices[v].Point.ToUnityVector3(true),
+                                             navmesh.Vertices[v].Point.ToUnityVector3(true) +
+                                             normal.ToUnityVector3(true) * editorSettings.GizmoIconScale.AsFloat * 0.33f,
+                                             GizmoUtils.DefaultArrowHeadLength * editorSettings.GizmoIconScale.AsFloat * 0.33f);
                 }
               }
+            }
+          }
+
+          if (QuantumEditorSettings.Instance.DrawNavMeshLinks) {
+            for (Int32 i = 0; i < navmesh.Links.Length; i++) {
+              var color = Color.blue;
+              var link = navmesh.Links[i];
+              if (navmesh.Links[i].Region.IsSubset(*frame.NavMeshRegionMask) == false) {
+                color = Color.gray;
+              }
+
+              Gizmos.color = color;
+              GizmoUtils.DrawGizmoVector(
+                navmesh.Links[i].Start.ToUnityVector3(), 
+                navmesh.Links[i].End.ToUnityVector3(), 
+                GizmoUtils.DefaultArrowHeadLength * editorSettings.GizmoIconScale.AsFloat);
+              GizmoUtils.DrawGizmosCircle(navmesh.Links[i].Start.ToUnityVector3(), 0.1f * editorSettings.GizmoIconScale.AsFloat, color);
+              GizmoUtils.DrawGizmosCircle(navmesh.Links[i].End.ToUnityVector3(), 0.1f * editorSettings.GizmoIconScale.AsFloat, color);
             }
           }
         }
@@ -243,45 +271,41 @@ public static class QuantumGameGizmos {
 
       // ################## NavMesh Borders ##################
 
-      if (QuantumEditorSettings.Instance.DrawNavMeshBorders) {
+      if (editorSettings.DrawNavMeshBorders) {
         Gizmos.color = Color.blue;
         var navmeshes = frame.Map.NavMeshes.Values;
         foreach (var navmesh in navmeshes) {
-          for (Int32 i = 0; i < navmesh.BorderGrid.Length; i++) {
-            if (navmesh.BorderGrid[i].Borders != null) {
-              for (int j = 0; j < navmesh.BorderGrid[i].Borders.Length; j++) {
-                var b = navmesh.Borders[navmesh.BorderGrid[i].Borders[j]];
-                if (b.Regions.HasValidRegions && b.Regions.IsSubset(*frame.NavMeshRegionMask)) {
-                  // grayed out?
-                  continue;
-                }
-
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(ToUnityVector3_QUANTUM_XY(b.V0), ToUnityVector3_QUANTUM_XY(b.V1));
-
-                //// How to do a thick line? Multiple GizmoDrawLine also possible.
-                //var color = QuantumEditorSettings.Instance.GetNavMeshColor(b.Regions);
-                //UnityEditor.Handles.color = color;
-                //UnityEditor.Handles.lighting = true;
-                //UnityEditor.Handles.DrawAAConvexPolygon(
-                //  ToUnityVector3_QUANTUM_XY(b.V0), 
-                //  ToUnityVector3_QUANTUM_XY(b.V1), 
-                //  ToUnityVector3_QUANTUM_XY(b.V1) + Vector3.up * 0.05f,
-                //  ToUnityVector3_QUANTUM_XY(b.V0) + Vector3.up * 0.05f);
-              }
+          for (Int32 i = 0; i < navmesh.Borders.Length; i++) {
+            var b = navmesh.Borders[i];
+            if (navmesh.IsBorderActive(i, *frame.NavMeshRegionMask) == false) { 
+              // grayed out?
+              continue;
             }
+
+            Gizmos.color = Color.black;
+            Gizmos.DrawLine(b.V0.ToUnityVector3(true), b.V1.ToUnityVector3(true));
+
+            //// How to do a thick line? Multiple GizmoDrawLine also possible.
+            //var color = QuantumEditorSettings.Instance.GetNavMeshColor(b.Regions);
+            //UnityEditor.Handles.color = color;
+            //UnityEditor.Handles.lighting = true;
+            //UnityEditor.Handles.DrawAAConvexPolygon(
+            //  b.V0.ToUnityVector3(true), 
+            //  b.V1.ToUnityVector3(true), 
+            //  b.V1.ToUnityVector3(true) + Vector3.up * 0.05f,
+            //  b.V0.ToUnityVector3(true) + Vector3.up * 0.05f);
           }
         }
       }
 
       // ################## NavMesh Triangle Ids ##################
 
-      if (QuantumEditorSettings.Instance.DrawNavMeshTriangleIds) {
+      if (editorSettings.DrawNavMeshTriangleIds) {
         UnityEditor.Handles.color = Color.white;
         var navmeshes = frame.Map.NavMeshes.Values;
         foreach (var navmesh in navmeshes) {
           for (Int32 i = 0; i < navmesh.Triangles.Length; i++) {
-            UnityEditor.Handles.Label(ToUnityVector3_QUANTUM_XY(navmesh.Triangles[i].Center), i.ToString());
+            UnityEditor.Handles.Label(navmesh.Triangles[i].Center.ToUnityVector3(true), i.ToString());
           }
         }
       }
@@ -297,38 +321,36 @@ public static class QuantumGameGizmos {
           // Iterate through path finders:
           var pf = frame.Navigation.GetDebugInformation(t).Item0;
           if (pf.RawPathSize >= 2) {
-            if (QuantumEditorSettings.Instance.DrawPathfinderFunnel) {
+            if (editorSettings.DrawPathfinderFunnel) {
               for (Int32 i = 0; i < pf.PathSize; i++) {
-                var point = pf.Path[i].Point.XZ;
-                GizmoUtils.DrawGizmosCircle(point.ToUnityVector3(), 0.05f, pf.Path[i].IsLink ? Color.black : Color.green);
+                GizmoUtils.DrawGizmosCircle(pf.Path[i].Point.ToUnityVector3(true), 0.05f * editorSettings.GizmoIconScale.AsFloat, pf.Path[i].Link >= 0 ? Color.black : Color.green);
                 if (i > 0) {
-                  Gizmos.color = pf.Path[i].IsLink && pf.Path[i - 1].IsLink ? Color.black : Color.green;
-                  Gizmos.DrawLine(point.ToUnityVector3(), pf.Path[i - 1].Point.ToUnityVector3());
+                  Gizmos.color = pf.Path[i].Link >= 0 && pf.Path[i].Link == pf.Path[i - 1].Link ? Color.black : Color.green;
+                  Gizmos.DrawLine(pf.Path[i].Point.ToUnityVector3(true), pf.Path[i - 1].Point.ToUnityVector3(true));
                 }
               }
             }
 
-            if (QuantumEditorSettings.Instance.DrawPathfinderRawPath) {
+            if (editorSettings.DrawPathfinderRawPath) {
               for (Int32 i = 0; i < pf.RawPathSize; i++) {
-                var point = pf.RawPath[i].Point.XZ;
-                GizmoUtils.DrawGizmosCircle(point.ToUnityVector3(), 0.1f, pf.RawPath[i].IsLink ? Color.black : Color.magenta);
+                GizmoUtils.DrawGizmosCircle(pf.RawPath[i].Point.ToUnityVector3(true), 0.1f * editorSettings.GizmoIconScale.AsFloat, pf.RawPath[i].Link >= 0 ? Color.black : Color.magenta);
                 if (i > 0) {
-                  Gizmos.color = pf.RawPath[i].IsLink && pf.RawPath[i - 1].IsLink ? Color.black : Color.magenta;
-                  Gizmos.DrawLine(point.ToUnityVector3(), pf.RawPath[i - 1].Point.ToUnityVector3());
+                  Gizmos.color = pf.RawPath[i].Link >= 0 && pf.RawPath[i].Link == pf.RawPath[i - 1].Link ? Color.black : Color.magenta;
+                  Gizmos.DrawLine(pf.RawPath[i].Point.ToUnityVector3(true), pf.RawPath[i - 1].Point.ToUnityVector3(true));
                 }
               }
             }
 
-            if (QuantumEditorSettings.Instance.DrawPathfinderRawTrianglePath) {
+            if (editorSettings.DrawPathfinderRawTrianglePath) {
               var nmGuid = frame.Navigation.GetDebugInformation(t).Item1;
               if (!string.IsNullOrEmpty(nmGuid)) {
                 var nm = UnityDB.FindAsset<NavMeshAsset>(nmGuid).Settings;
                 for (Int32 i = 0; i < pf.RawPathSize; i++) {
                   var triangleIndex = pf.RawPath[i].Index;
                   if (triangleIndex >= 0) {
-                    var vertex0 = ToUnityVector3_QUANTUM_XY(nm.Vertices[nm.Triangles[triangleIndex].Vertex0].Point);
-                    var vertex1 = ToUnityVector3_QUANTUM_XY(nm.Vertices[nm.Triangles[triangleIndex].Vertex1].Point);
-                    var vertex2 = ToUnityVector3_QUANTUM_XY(nm.Vertices[nm.Triangles[triangleIndex].Vertex2].Point);
+                    var vertex0 = nm.Vertices[nm.Triangles[triangleIndex].Vertex0].Point.ToUnityVector3(true);
+                    var vertex1 = nm.Vertices[nm.Triangles[triangleIndex].Vertex1].Point.ToUnityVector3(true);
+                    var vertex2 = nm.Vertices[nm.Triangles[triangleIndex].Vertex2].Point.ToUnityVector3(true);
                     GizmoUtils.DrawGizmosTriangle(vertex0, vertex1, vertex2, true, Color.magenta);
                     UnityEditor.Handles.color = Color.magenta.Alpha(0.25f);
                     UnityEditor.Handles.lighting = true;
@@ -347,7 +369,7 @@ public static class QuantumGameGizmos {
 
       // ################## Prediction Area ##################
 
-      if (QuantumEditorSettings.Instance.DrawPredictionArea && frame.Context.Culling != null) {
+      if (editorSettings.DrawPredictionArea && frame.Context.Culling != null) {
         var context = frame.Context;
         if (context.PredictionAreaRadius != FP.UseableMax) {
 #if QUANTUM_XY
@@ -356,21 +378,12 @@ public static class QuantumGameGizmos {
 #else
           var predictionAreaCenter = context.PredictionAreaCenter.ToUnityVector3();
 #endif
-          GizmoUtils.DrawGizmosSphere(predictionAreaCenter, context.PredictionAreaRadius.AsFloat, QuantumEditorSettings.Instance.PredictionAreaColor);
+          GizmoUtils.DrawGizmosSphere(predictionAreaCenter, context.PredictionAreaRadius.AsFloat, editorSettings.PredictionAreaColor);
         }
       }
 
       #endregion
     }
-#endif
-  }
-
-  private static Vector3 ToUnityVector3_QUANTUM_XY(Photon.Deterministic.FPVector3 v) {
-#if QUANTUM_XY
-    // Quantum NavMesh, although saving 3D vectors, is always in XZ layout. Adjust the gizmo rendering here for QUANTUM_XY.
-    return new Vector3(v.X.AsFloat, v.Z.AsFloat, v.Y.AsFloat);
-#else
-    return v.ToUnityVector3();
 #endif
   }
 

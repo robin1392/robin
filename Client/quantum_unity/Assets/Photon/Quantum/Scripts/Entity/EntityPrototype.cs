@@ -35,10 +35,8 @@ public class EntityPrototype : MonoBehaviour, IQuantumPrefabNestedAssetHost {
     [HideInInspectorAttribute]
     public bool IsEnabled;
 
-    [DrawIf("SourceCollider", 0)]
     public Shape2DConfig Shape2D;
 
-    [DrawIf("SourceCollider", 0)]
     public Shape3DConfig Shape3D;
 
     [DrawIf("SourceCollider", 0)]
@@ -55,12 +53,17 @@ public class EntityPrototype : MonoBehaviour, IQuantumPrefabNestedAssetHost {
     public bool IsEnabled;
     
     [HideInInspectorAttribute]
-    public int Version;
+    public int Version2D;
+    
+    [HideInInspectorAttribute]
+    public int Version3D;
 
     [EnumFlags]
+    [DisplayName("Config")]
     public PhysicsBody2D.ConfigFlags Config2D;
     
     [EnumFlags]
+    [DisplayName("Config")]
     public PhysicsBody3D.ConfigFlags Config3D;
     
     [EnumFlags]
@@ -69,8 +72,53 @@ public class EntityPrototype : MonoBehaviour, IQuantumPrefabNestedAssetHost {
     public FP Mass;
     public FP Drag;
     public FP AngularDrag;
+    [DisplayName("Center Of Mass")]
     public FPVector2 CenterOfMass2D;
+    [DisplayName("Center Of Mass")]
     public FPVector3 CenterOfMass3D;
+
+    [Obsolete("Use Version2D or Version3D instead.")]
+    public int Version {
+      get => Version2D;
+      set => Version2D = value;
+    }
+
+    public void EnsureVersionUpdated() {
+      if (Version2D > Quantum.Physics2D.BODY_PROTOTYPE_VERSION) {
+        Version2D = Quantum.Physics2D.BODY_PROTOTYPE_VERSION;
+      } else {
+        while (Version2D < Quantum.Physics2D.BODY_PROTOTYPE_VERSION) {
+          switch (Version2D) {
+            case 0:
+              Config2D |= PhysicsBody2D.ConfigFlags.IsAwakenedByForces;
+              break;
+            case 1:
+              Config2D &= ~PhysicsBody2D.ConfigFlags.UseContinuousCollisionDetection;
+              break;
+          }
+
+          ++Version2D;
+        }
+      }
+
+      Debug.Assert(Version2D == Quantum.Physics2D.BODY_PROTOTYPE_VERSION);
+
+      if (Version3D > Quantum.Physics3D.BODY_PROTOTYPE_VERSION) {
+        Version3D = Quantum.Physics3D.BODY_PROTOTYPE_VERSION;
+      } else {
+        while (Version3D < Quantum.Physics3D.BODY_PROTOTYPE_VERSION) {
+          switch (Version3D) {
+            case 0:
+              Config3D |= PhysicsBody3D.ConfigFlags.IsAwakenedByForces;
+              break;
+          }
+
+          ++Version3D;
+        }
+      }
+
+      Debug.Assert(Version3D == Quantum.Physics3D.BODY_PROTOTYPE_VERSION);
+    }
   }
 
   [Serializable]
@@ -88,7 +136,7 @@ public class EntityPrototype : MonoBehaviour, IQuantumPrefabNestedAssetHost {
     public bool IsEnabled;
     public Transform Target;
     [DrawIf("Target", 0)]
-    public FPVector2 Position;
+    public FPVector3 Position;
     public NavMeshSpec NavMesh;
   }
 
@@ -167,49 +215,27 @@ public class EntityPrototype : MonoBehaviour, IQuantumPrefabNestedAssetHost {
   Type IQuantumPrefabNestedAssetHost.NestedAssetType => typeof(EntityPrototypeAsset);
 
   public void PreSerialize() {
-    if (PhysicsCollider.SourceCollider != null) {
-      if (TransformMode == EntityPrototypeTransformMode.Transform2D) {
-        PhysicsCollider.Shape2D = EntityPrototypeUtils.ColliderToShape2D(transform, PhysicsCollider.SourceCollider, out PhysicsCollider.IsTrigger);
-        PhysicsCollider.Layer = PhysicsCollider.SourceCollider.gameObject.layer;
-      } else if (TransformMode == EntityPrototypeTransformMode.Transform3D) {
-        PhysicsCollider.Shape3D = EntityPrototypeUtils.ColliderToShape3D(transform, PhysicsCollider.SourceCollider, out PhysicsCollider.IsTrigger);
-        PhysicsCollider.Layer = PhysicsCollider.SourceCollider.gameObject.layer;
-      }
+    if (TransformMode == EntityPrototypeTransformMode.Transform2D && EntityPrototypeUtils.TrySetShapeConfigFromSourceCollider2D(PhysicsCollider.Shape2D, transform, PhysicsCollider.SourceCollider)) {
+      PhysicsCollider.IsTrigger = ((Collider)PhysicsCollider.SourceCollider).isTrigger;
+      PhysicsCollider.Layer     = PhysicsCollider.SourceCollider.gameObject.layer;
+    } else if (TransformMode == EntityPrototypeTransformMode.Transform3D && EntityPrototypeUtils.TrySetShapeConfigFromSourceCollider3D(PhysicsCollider.Shape3D, transform, PhysicsCollider.SourceCollider)) {
+      PhysicsCollider.IsTrigger = ((Collider)PhysicsCollider.SourceCollider).isTrigger;
+      PhysicsCollider.Layer     = PhysicsCollider.SourceCollider.gameObject.layer;
     }
 
     {
-      if (TransformMode == EntityPrototypeTransformMode.Transform2D && PhysicsBody.IsEnabled) {
-        PhysicsBody.RotationFreeze = (PhysicsBody.Config2D & PhysicsBody2D.ConfigFlags.FreezeRotation) == PhysicsBody2D.ConfigFlags.FreezeRotation ? RotationFreezeFlags.FreezeAll : default;
-        
-        while (PhysicsBody.Version < PhysicsCommon.BODY_PROTOTYPE_VERSION) {
-          switch (PhysicsBody.Version) {
-            case 0:
-              PhysicsBody.Config2D |= PhysicsBody2D.ConfigFlags.IsAwakenedByForces;
-              break;
-          }
+      if (PhysicsBody.IsEnabled) {
+        PhysicsBody.EnsureVersionUpdated();
 
-          ++PhysicsBody.Version;
+        if (TransformMode == EntityPrototypeTransformMode.Transform2D) {
+          PhysicsBody.RotationFreeze = (PhysicsBody.Config2D & PhysicsBody2D.ConfigFlags.FreezeRotation) == PhysicsBody2D.ConfigFlags.FreezeRotation ? RotationFreezeFlags.FreezeAll : default;
         }
-        Debug.Assert(PhysicsBody.Version == PhysicsCommon.BODY_PROTOTYPE_VERSION);
-      }
-      
-      else if (TransformMode == EntityPrototypeTransformMode.Transform3D && PhysicsBody.IsEnabled) {
-        while (PhysicsBody.Version < PhysicsCommon.BODY_PROTOTYPE_VERSION) {
-          switch (PhysicsBody.Version) {
-            case 0:
-              PhysicsBody.Config3D |= PhysicsBody3D.ConfigFlags.IsAwakenedByForces;
-              break;
-          }
-
-          ++PhysicsBody.Version;
-        }
-        Debug.Assert(PhysicsBody.Version == PhysicsCommon.BODY_PROTOTYPE_VERSION);
       }
     }
 
     if (NavMeshPathfinder.IsEnabled) {
       if (NavMeshPathfinder.InitialTarget.Target != null) {
-        NavMeshPathfinder.InitialTarget.Position = NavMeshPathfinder.InitialTarget.Target.position.ToFPVector2();
+        NavMeshPathfinder.InitialTarget.Position = NavMeshPathfinder.InitialTarget.Target.position.ToFPVector3();
       }
 
       if (NavMeshPathfinder.InitialTarget.NavMesh.Reference != null) {
@@ -248,7 +274,7 @@ public class EntityPrototype : MonoBehaviour, IQuantumPrefabNestedAssetHost {
         if (!PhysicsCollider.IsTrigger && PhysicsBody.IsEnabled) {
           visitor.Visit(new PhysicsBody2D_Prototype() {
             Config = PhysicsBody.Config2D,
-            Version = PhysicsBody.Version,
+            Version = PhysicsBody.Version2D,
             AngularDrag = PhysicsBody.AngularDrag,
             Drag = PhysicsBody.Drag,
             Mass = PhysicsBody.Mass,
@@ -277,7 +303,7 @@ public class EntityPrototype : MonoBehaviour, IQuantumPrefabNestedAssetHost {
         if (!PhysicsCollider.IsTrigger && PhysicsBody.IsEnabled) {
           visitor.Visit(new PhysicsBody3D_Prototype() {
             Config = PhysicsBody.Config3D,
-            Version = PhysicsBody.Version,
+            Version = PhysicsBody.Version3D,
             AngularDrag = PhysicsBody.AngularDrag,
             Drag = PhysicsBody.Drag,
             Mass = PhysicsBody.Mass,

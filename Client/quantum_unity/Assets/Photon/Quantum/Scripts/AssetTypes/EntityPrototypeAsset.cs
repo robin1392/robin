@@ -21,7 +21,14 @@ public class EntityPrototypeAsset : AssetBase, IQuantumPrefabNestedAsset<EntityP
 
   Component IQuantumPrefabNestedAsset.Parent => Parent;
 
-  private void RefreshQuantumData() {
+  public override void Loaded() {
+    Debug.Assert(Parent != null);
+    base.Loaded();
+  }
+
+  public override void PrepareAsset() {
+    base.PrepareAsset();
+
     if (Parent == null)
       return;
 
@@ -74,12 +81,6 @@ public class EntityPrototypeAsset : AssetBase, IQuantumPrefabNestedAsset<EntityP
     }
   }
 
-  public override void Loaded() {
-    Debug.Assert(Parent != null);
-    RefreshQuantumData();
-    base.Loaded();
-  }
-
   public override void Reset() {
     if (Settings == null) {
       Settings = new Quantum.EntityPrototype();
@@ -88,7 +89,7 @@ public class EntityPrototypeAsset : AssetBase, IQuantumPrefabNestedAsset<EntityP
     base.Reset();
 
     if (Parent != null) {
-      RefreshQuantumData();
+      PrepareAsset();
     }
   }
 }

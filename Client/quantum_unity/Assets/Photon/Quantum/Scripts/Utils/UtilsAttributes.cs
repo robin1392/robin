@@ -1,5 +1,1 @@
-﻿using UnityEngine;
-
-public class EditorDisabledAttribute : PropertyAttribute {
-
-}
+﻿// UtilsAttributes.cs have been removed

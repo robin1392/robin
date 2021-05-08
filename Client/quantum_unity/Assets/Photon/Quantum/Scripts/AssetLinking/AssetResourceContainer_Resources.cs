@@ -16,26 +16,12 @@ namespace Quantum {
     }
 
     [Serializable]
-    public class AssetResourceInfoGroup_Resources : AssetResourceGroupInfo<AssetResourceInfo_Resources> {
+    public class AssetResourceInfoGroup_Resources : AssetResourceInfoGroup<AssetResourceInfo_Resources> {
       public override int SortOrder => 2000;
 
       public override UnityResourceLoader.ILoader CreateLoader() {
         return new Loader_Resources();
       }
-
-#if UNITY_EDITOR
-      public override AssetResourceInfo EditorTryCreateResourceInfo(AssetBase asset) {
-        var assetPath = AssetDatabase.GetAssetPath(asset);
-        if (PathUtils.MakeRelativeToFolder(assetPath, "Resources", out var resourcePath)) {
-          // drop the extension
-          return new AssetResourceInfo_Resources() {
-            ResourcePath = PathUtils.GetPathWithoutExtension(resourcePath)
-          };
-        }
-        return null;
-      }
-
-#endif
     }
 
     class Loader_Resources : UnityResourceLoader.LoaderBase<AssetResourceInfo_Resources, ResourceRequest> {
@@ -60,6 +46,12 @@ namespace Quantum {
         return info.IsNestedAsset
           ? FindAsset(UnityEngine.Resources.LoadAll<AssetBase>(info.ResourcePath), info.Guid)
           : UnityEngine.Resources.Load<AssetBase>(info.ResourcePath);
+      }
+
+      protected override void Unload(AssetResourceInfo_Resources info, AssetBase asset) {
+        if ( asset is BinaryDataAsset ) {
+          UnityEngine.Resources.UnloadAsset(asset);
+        }
       }
     }
   }

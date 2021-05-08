@@ -52,7 +52,7 @@ namespace Quantum
             }
             
             var agent =f.Unsafe.GetPointer<NavMeshPathfinder>(e);
-            agent->SetTarget(f, targetTransform.Position, _navMesh);
+            agent->SetTarget(f, targetTransform.Position.XOY, _navMesh);
 
             return BTStatus.Running;
         }

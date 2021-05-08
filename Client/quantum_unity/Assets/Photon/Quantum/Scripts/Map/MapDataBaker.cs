@@ -16,7 +16,7 @@ using UnityEditor.SceneManagement;
 public static class MapDataBaker {
   public static int NavMeshSerializationBufferSize = 1024 * 1024 * 60;
 
-  public static void BakeMapData(MapData data, Boolean inEditor) {
+  public static void BakeMapData(MapData data, Boolean inEditor, Boolean bakeColliders = true, Boolean bakePrototypes = true) {
     FPMathUtils.LoadLookupTables();
 
     if (inEditor == false && !data.Asset) {
@@ -24,33 +24,52 @@ public static class MapDataBaker {
       data.Asset.Settings = new Quantum.Map();
     }
 
-    BakeData(data, inEditor);
+#if UNITY_EDITOR
+    if (inEditor) {
+      // set scene name
+      data.Asset.Settings.Scene = data.gameObject.scene.name;
+    }
+#endif
+
+    InvokeCallbacks("OnBeforeBake", data);
+
+    if (bakeColliders) {
+      BakeColliders(data, inEditor);
+    }
+
+    if (bakePrototypes) {
+      BakePrototypes(data);
+    }
+
+    // invoke callbacks
+    InvokeCallbacks("OnBake", data);
   }
 
   public static void BakeMeshes(MapData data, Boolean inEditor) {
     if (inEditor) {
 #if UNITY_EDITOR
-      var assetPath         = Path.GetDirectoryName(AssetDatabase.GetAssetPath(data.Asset));
-      var meshDataFilenname = data.Asset.name + "_mesh.bytes";
-      var dbAssetPath       = default(string);
+      var dirPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(data.Asset));
+      var assetPath = Path.Combine(dirPath, data.Asset.name + "_mesh.asset");
 
-      if (!Quantum.PathUtils.MakeRelativeToFolder(assetPath, QuantumEditorSettings.Instance.DatabasePath, out dbAssetPath)) {
-        Debug.LogErrorFormat("Cannot convert '{0}' into a relative path using the db folder '{1}'.", assetPath, QuantumEditorSettings.Instance.DatabasePath);
-        throw new Exception();
-      }
-
-      if (string.IsNullOrEmpty(dbAssetPath)) {
-        data.Asset.Settings.StaticColliders3DTrianglesBinaryFile = meshDataFilenname;
-      } else {
-        data.Asset.Settings.StaticColliders3DTrianglesBinaryFile = Path.Combine(dbAssetPath, meshDataFilenname).Replace('\\', '/');
+      var binaryDataAsset = AssetDatabase.LoadAssetAtPath<BinaryDataAsset>(assetPath);
+      if (binaryDataAsset == null) {
+        binaryDataAsset = ScriptableObject.CreateInstance<BinaryDataAsset>();
+        AssetDatabase.CreateAsset(binaryDataAsset, assetPath);
+        binaryDataAsset.Settings.Guid = AssetGuid.NewGuid();
       }
 
       // Serialize to binary some of the data (max 20 megabytes for now)
       var bytestream = new ByteStream(new Byte[NavMeshSerializationBufferSize]);
       data.Asset.Settings.SerializeStaticColliderTriangles(bytestream, true);
 
-      // write file to disk
-      File.WriteAllBytes(Path.Combine(assetPath, meshDataFilenname), bytestream.ToArray());
+      binaryDataAsset.SetData(bytestream.ToArray(), binaryDataAsset.Settings.IsCompressed);
+      EditorUtility.SetDirty(binaryDataAsset);
+
+      data.Asset.Settings.StaticColliders3DTrianglesData = binaryDataAsset.Settings;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      RemoveLegacyResourcesBinaryFile(ref data.Asset.Settings.StaticColliders3DTrianglesBinaryFile);
+#pragma warning restore CS0618 // Type or member is obsolete
 #endif
     }
   }
@@ -67,28 +86,34 @@ public static class MapDataBaker {
 
     if (inEditor) {
 #if UNITY_EDITOR
-      var assetPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(data.Asset));
+      var dirPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(data.Asset));
+      ByteStream bytestream = null;
       foreach (var navmesh in navmeshes) {
-        var navmeshBinaryFilename = $"{data.Asset.name}_{navmesh.Name}.bytes";
+        var navmeshBinaryFilename = Path.Combine(dirPath, $"{data.Asset.name}_{navmesh.Name}_data.asset");
         var navmeshAssetFilename  = $"{data.Asset.name}_{navmesh.Name}.asset";
 
-        // Make navmesh data file path relative to the DB folder
-        if (!Quantum.PathUtils.MakeRelativeToFolder(assetPath, QuantumEditorSettings.Instance.DatabasePath, out var dbAssetPath)) {
-          Debug.LogErrorFormat("Cannot convert '{0}' into a relative path using the db folder '{1}'.", assetPath, QuantumEditorSettings.Instance.DatabasePath);
-          throw new Exception();
+        var binaryDataAsset = AssetDatabase.LoadAssetAtPath<BinaryDataAsset>(navmeshBinaryFilename);
+        if (binaryDataAsset == null) {
+          binaryDataAsset = ScriptableObject.CreateInstance<BinaryDataAsset>();
+          AssetDatabase.CreateAsset(binaryDataAsset, navmeshBinaryFilename);
+          binaryDataAsset.Settings.Guid = AssetGuid.NewGuid();
         }
 
-        if (string.IsNullOrEmpty(dbAssetPath))
-          navmesh.DataFilepath = navmeshBinaryFilename;
-        else
-          navmesh.DataFilepath = Path.Combine(dbAssetPath, navmeshBinaryFilename).Replace('\\', '/');
+        navmesh.DataAsset = binaryDataAsset.Settings;
 
-        // Serialize to binary some of the data (max 20 megabytes for now)
-        var bytestream = new ByteStream(new Byte[NavMeshSerializationBufferSize]);
+        // Serialize to binary some of the data (max 60 megabytes for now)
+        if (bytestream == null) {
+          bytestream = new ByteStream(new Byte[NavMeshSerializationBufferSize]);
+        } else {
+          bytestream.Reset();
+        }
         navmesh.Serialize(bytestream, true);
-        File.WriteAllBytes(Path.Combine(assetPath, navmeshBinaryFilename), bytestream.ToArray());
 
-        var navmeshAssetPath = Path.Combine(assetPath, navmeshAssetFilename);
+        binaryDataAsset.SetData(bytestream.ToArray(), binaryDataAsset.Settings.IsCompressed);
+        EditorUtility.SetDirty(binaryDataAsset);
+
+        var navmeshAssetPath = Path.Combine(dirPath, navmeshAssetFilename);
+
         var oldAsset         = AssetDatabase.LoadAssetAtPath<NavMeshAsset>(navmeshAssetPath);
         if (oldAsset != null) {
           navmesh.Guid = oldAsset.Settings.Guid;
@@ -99,9 +124,14 @@ public static class MapDataBaker {
         }
 
         if (oldAsset != null) {
+#pragma warning disable CS0618 // Type or member is obsolete
+          RemoveLegacyResourcesBinaryFile(ref oldAsset.Settings.DataFilepath);
+#pragma warning restore CS0618 // Type or member is obsolete
+
           // Reuse the old one
           navmesh.Path      = oldAsset.Settings.Path;
           oldAsset.Settings = navmesh;
+
           EditorUtility.SetDirty(oldAsset);
         } else {
           // Create scriptable object
@@ -133,6 +163,21 @@ public static class MapDataBaker {
     return navmeshes;
   }
 
+  static void RemoveLegacyResourcesBinaryFile(ref string name) {
+#if UNITY_EDITOR
+    if (!string.IsNullOrEmpty(name)) {
+      string fullPath = Path.Combine(QuantumEditorSettings.Instance.DefaultAssetSearchPath, name);
+      bool removed = AssetDatabase.DeleteAsset(fullPath);
+      if (removed) {
+        Debug.Log($"Removed legacy binary resource: {fullPath}");
+      } else {
+        Debug.LogWarning($"Failed to remove legacy binary resource: {fullPath}.");
+      }
+      name = "";
+    }
+#endif
+  }
+
   static StaticColliderData GetStaticData(GameObject gameObject, QuantumStaticColliderSettings settings, int colliderId) {
     return new StaticColliderData {
       Asset      = settings.Asset,
@@ -144,30 +189,23 @@ public static class MapDataBaker {
     };
   }
 
-  static void BakeData(MapData data, Boolean inEditor) {
-
+  public static void BakeColliders(MapData data, Boolean inEditor) {
     var scene = data.gameObject.scene;
     Debug.Assert(scene.IsValid());
 
-#if UNITY_EDITOR
-    if (inEditor) {
-      // set scene name
-      data.Asset.Settings.Scene = scene.name;
-    }
-#endif
-
-    InvokeCallbacks("OnBeforeBake", data);
-
     // clear existing colliders
-    data.Asset.Settings.StaticColliders2D = new MapStaticCollider2D[0];
     data.StaticCollider2DReferences       = new List<MonoBehaviour>();
     data.StaticCollider3DReferences       = new List<MonoBehaviour>();
+
+    // 2D
+    data.Asset.Settings.StaticColliders2D = new MapStaticCollider2D[0];
+    var staticCollider2DList              = new List<MapStaticCollider2D>();
 
     // circle colliders
     foreach (var collider in FindLocalObjects<QuantumStaticCircleCollider2D>(scene)) {
       var s = collider.transform.localScale;
-      ArrayUtils.Add(ref data.Asset.Settings.StaticColliders2D, new MapStaticCollider2D {
-        Position = collider.transform.position.ToFPVector2(),
+      staticCollider2DList.Add( new MapStaticCollider2D {
+        Position = collider.transform.position.ToFPVector2() + collider.PositionOffset,
         Rotation = collider.transform.rotation.ToFPRotation2D(),
 #if QUANTUM_XY
         VerticalOffset = -collider.transform.position.z.ToFP(),
@@ -177,7 +215,7 @@ public static class MapDataBaker {
         Height         = collider.Height * s.y.ToFP(),
 #endif
         PhysicsMaterial = collider.Settings.PhysicsMaterial,
-        StaticData      = GetStaticData(collider.gameObject, collider.Settings, data.Asset.Settings.StaticColliders2D.Length),
+        StaticData      = GetStaticData(collider.gameObject, collider.Settings, staticCollider2DList.Count),
         Layer           = collider.gameObject.layer,
 
         // circle
@@ -192,8 +230,8 @@ public static class MapDataBaker {
     foreach (var c in FindLocalObjects<QuantumStaticPolygonCollider2D>(scene)) {
       if (c.BakeAsStaticEdges2D) {
         for (var i = 0; i < c.Vertices.Length; i++) {
-          var staticEdge = BakeStaticEdge2D(c.transform, c.Vertices[i], c.Vertices[(i + 1) % c.Vertices.Length], c.Height, c.Settings, data.Asset.Settings.StaticColliders2D.Length);
-          ArrayUtils.Add(ref data.Asset.Settings.StaticColliders2D, staticEdge);
+          var staticEdge = BakeStaticEdge2D(c.transform, c.PositionOffset, c.RotationOffset, c.Vertices[i], c.Vertices[(i + 1) % c.Vertices.Length], c.Height, c.Settings, staticCollider2DList.Count);
+          staticCollider2DList.Add(staticEdge);
           data.StaticCollider2DReferences.Add(c);
         }
 
@@ -212,9 +250,9 @@ public static class MapDataBaker {
 
       var normals = FPVector2.CalculatePolygonNormals(vertices);
 
-      ArrayUtils.Add(ref data.Asset.Settings.StaticColliders2D, new MapStaticCollider2D {
-        Position = c.transform.position.ToFPVector2(),
-        Rotation = c.transform.rotation.ToFPRotation2D(),
+      staticCollider2DList.Add(new MapStaticCollider2D {
+        Position = c.transform.position.ToFPVector2() + c.PositionOffset + FPVector2.CalculatePolygonCentroid(vertices),
+        Rotation = c.transform.rotation.ToFPRotation2D() + c.RotationOffset.FlipRotation() * FP.Deg2Rad,
 #if QUANTUM_XY
         VerticalOffset = -c.transform.position.z.ToFP(),
         Height = c.Height * s.z.ToFP(),
@@ -223,13 +261,13 @@ public static class MapDataBaker {
         Height         = c.Height * s.y.ToFP(),
 #endif
         PhysicsMaterial = c.Settings.PhysicsMaterial,
-        StaticData      = GetStaticData(c.gameObject, c.Settings, data.Asset.Settings.StaticColliders2D.Length),
+        StaticData      = GetStaticData(c.gameObject, c.Settings, staticCollider2DList.Count),
         Layer           = c.gameObject.layer,
 
         // polygon
         ShapeType = Quantum.Shape2DType.Polygon,
         PolygonCollider = new PolygonCollider {
-          Vertices = vertices,
+          Vertices = FPVector2.RecenterPolygon(vertices),
           Normals  = normals
         }
       });
@@ -239,7 +277,7 @@ public static class MapDataBaker {
 
     // edge colliders
     foreach (var c in FindLocalObjects<QuantumStaticEdgeCollider2D>(scene)) {
-      ArrayUtils.Add(ref data.Asset.Settings.StaticColliders2D, BakeStaticEdge2D(c.transform, c.VertexA, c.VertexB, c.Height, c.Settings, data.Asset.Settings.StaticColliders2D.Length));
+      staticCollider2DList.Add(BakeStaticEdge2D(c.transform, c.PositionOffset, c.RotationOffset, c.VertexA, c.VertexB, c.Height, c.Settings, staticCollider2DList.Count));
       data.StaticCollider2DReferences.Add(c);
     }
 
@@ -251,9 +289,9 @@ public static class MapDataBaker {
       e.y *= s.y;
       e.z *= s.z;
 
-      ArrayUtils.Add(ref data.Asset.Settings.StaticColliders2D, new MapStaticCollider2D {
-        Position = collider.transform.position.ToFPVector2(),
-        Rotation = collider.transform.rotation.ToFPRotation2D(),
+      staticCollider2DList.Add(new MapStaticCollider2D {
+        Position = collider.transform.position.ToFPVector2() + collider.PositionOffset,
+        Rotation = collider.transform.rotation.ToFPRotation2D() + collider.RotationOffset.FlipRotation() * FP.Deg2Rad,
 #if QUANTUM_XY
         VerticalOffset = -collider.transform.position.z.ToFP(),
         Height = collider.Height * s.z.ToFP(),
@@ -262,16 +300,18 @@ public static class MapDataBaker {
         Height         = collider.Height * s.y.ToFP(),
 #endif
         PhysicsMaterial = collider.Settings.PhysicsMaterial,
-        StaticData      = GetStaticData(collider.gameObject, collider.Settings, data.Asset.Settings.StaticColliders2D.Length),
-        Layer           = collider.gameObject.layer,
+        StaticData      = GetStaticData(collider.gameObject, collider.Settings, staticCollider2DList.Count),
+        Layer = collider.gameObject.layer,
 
         // polygon
-        ShapeType  = Quantum.Shape2DType.Box,
+        ShapeType = Quantum.Shape2DType.Box,
         BoxExtents = e.ToFPVector2() * FP._0_50
       });
 
       data.StaticCollider2DReferences.Add(collider);
     }
+
+    data.Asset.Settings.StaticColliders2D = staticCollider2DList.ToArray();
 
     // 3D statics
 
@@ -288,7 +328,7 @@ public static class MapDataBaker {
     // sphere colliders
     foreach (var collider in FindLocalObjects<QuantumStaticSphereCollider3D>(scene)) {
       staticCollider3DList.Add(new MapStaticCollider3D {
-        Position        = collider.transform.position.ToFPVector3(),
+        Position        = collider.transform.position.ToFPVector3() + collider.PositionOffset,
         Rotation        = collider.transform.rotation.ToFPQuaternion(),
         PhysicsMaterial = collider.Settings.PhysicsMaterial,
         StaticData      = GetStaticData(collider.gameObject, collider.Settings, staticCollider3DList.Count),
@@ -311,8 +351,8 @@ public static class MapDataBaker {
       e.z *= s.z;
 
       staticCollider3DList.Add(new MapStaticCollider3D {
-        Position        = collider.transform.position.ToFPVector3(),
-        Rotation        = collider.transform.rotation.ToFPQuaternion(),
+        Position        = collider.transform.position.ToFPVector3() + collider.PositionOffset,
+        Rotation        = FPQuaternion.Euler(collider.transform.rotation.eulerAngles.ToFPVector3() + collider.RotationOffset),
         PhysicsMaterial = collider.Settings.PhysicsMaterial,
         StaticData      = GetStaticData(collider.gameObject, collider.Settings, staticCollider3DList.Count),
 
@@ -408,55 +448,55 @@ public static class MapDataBaker {
 
     // this has to hold
     Assert.Check(staticCollider3DList.Count == data.StaticCollider3DReferences.Count);
-    
+
     // assign collider 3d array
     data.Asset.Settings.StaticColliders3D = staticCollider3DList.ToArray();
 
     // clear this so it's not re-used by accident
     staticCollider3DList = null;
-    
-    {
-      data.Asset.Prototypes.Clear();
-      data.MapEntityReferences.Clear();
-
-      var components = new List<EntityComponentBase>();
-      var prototypes = FindLocalObjects<EntityPrototype>(scene).ToArray();
-      SortBySiblingIndex(prototypes);
-
-      var converter = new EntityPrototypeConverter(data, prototypes);
-      var storeVisitor = new Quantum.Prototypes.FlatEntityPrototypeContainer.StoreVisitor();
-
-      foreach (var prototype in prototypes) {
-        prototype.GetComponents(components);
-
-        var container = new Quantum.Prototypes.FlatEntityPrototypeContainer();
-        storeVisitor.Storage = container;
-
-        prototype.PreSerialize();
-        prototype.SerializeImplicitComponents(storeVisitor, out var selfView);
-
-        foreach (var component in components) {
-          component.Refresh();
-          var proto = component.CreatePrototype(converter);
-          proto.Dispatch(storeVisitor);
-        }
-
-
-        data.Asset.Prototypes.Add(container);
-        data.MapEntityReferences.Add(selfView);
-        components.Clear();
-      }
-    }
 
     BakeMeshes(data, inEditor);
 
-    // invoke callbacks
-    InvokeCallbacks("OnBake", data);
-
     if (inEditor) {
-      Debug.LogFormat("Baked {0} 2D static colliders",           data.Asset.Settings.StaticColliders2D.Length);
+      Debug.LogFormat("Baked {0} 2D static colliders", data.Asset.Settings.StaticColliders2D.Length);
       Debug.LogFormat("Baked {0} 3D static primitive colliders", data.Asset.Settings.StaticColliders3D.Length);
-      Debug.LogFormat("Baked {0} 3D static triangles",           data.Asset.Settings.StaticColliders3DTriangles.Select(x => x.Value.Length).Sum());
+      Debug.LogFormat("Baked {0} 3D static triangles", data.Asset.Settings.StaticColliders3DTriangles.Select(x => x.Value.Length).Sum());
+    }
+  }
+
+  public static void BakePrototypes(MapData data) {
+    var scene = data.gameObject.scene;
+    Debug.Assert(scene.IsValid());
+
+    data.Asset.Prototypes.Clear();
+    data.MapEntityReferences.Clear();
+
+    var components = new List<EntityComponentBase>();
+    var prototypes = FindLocalObjects<EntityPrototype>(scene).ToArray();
+    SortBySiblingIndex(prototypes);
+
+    var converter = new EntityPrototypeConverter(data, prototypes);
+    var storeVisitor = new Quantum.Prototypes.FlatEntityPrototypeContainer.StoreVisitor();
+
+    foreach (var prototype in prototypes) {
+      prototype.GetComponents(components);
+
+      var container = new Quantum.Prototypes.FlatEntityPrototypeContainer();
+      storeVisitor.Storage = container;
+
+      prototype.PreSerialize();
+      prototype.SerializeImplicitComponents(storeVisitor, out var selfView);
+
+      foreach (var component in components) {
+        component.Refresh();
+        var proto = component.CreatePrototype(converter);
+        proto.Dispatch(storeVisitor);
+      }
+
+
+      data.Asset.Prototypes.Add(container);
+      data.MapEntityReferences.Add(selfView);
+      components.Clear();
     }
   }
 
@@ -537,6 +577,7 @@ public static class MapDataBaker {
             bakeData.EnableQuantum_XY = unityNavmeshes[i].Settings.EnableQuantum_XY;
             bakeData.ClosestTriangleCalculation      = unityNavmeshes[i].Settings.ClosestTriangleCalculation;
             bakeData.ClosestTriangleCalculationDepth = unityNavmeshes[i].Settings.ClosestTriangleCalculationDepth;
+            bakeData.LinkErrorCorrection             = unityNavmeshes[i].Settings.LinkErrorCorrection;
             navmesh                   = MapNavMeshBaker.BakeNavMesh(data, bakeData);
             Debug.LogFormat("Baking Quantum NavMesh '{0}' complete ({1}/{2})", unityNavmeshes[i].name, i + 1, unityNavmeshes.Count);
           }
@@ -619,12 +660,12 @@ public static class MapDataBaker {
     return 0;
   }
 
-  static MapStaticCollider2D BakeStaticEdge2D(Transform t, FPVector2 vertexA, FPVector2 vertexB, FP height, QuantumStaticColliderSettings settings, int colliderId) {
+  static MapStaticCollider2D BakeStaticEdge2D(Transform t, FPVector2 positionOffset, FP rotationOffset, FPVector2 vertexA, FPVector2 vertexB, FP height, QuantumStaticColliderSettings settings, int colliderId) {
     var scale   = t.localScale;
     var scaledA = Vector3.Scale(scale, vertexA.ToUnityVector3());
     var scaledB = Vector3.Scale(scale, vertexB.ToUnityVector3());
 
-    var rot        = t.rotation;
+    var rot        = t.rotation * rotationOffset.FlipRotation().ToUnityQuaternionDegrees();
     var start      = rot * scaledA;
     var end        = rot * scaledB;
     var startToEnd = end - start;
@@ -634,7 +675,7 @@ public static class MapDataBaker {
     var edgeExtent = startToEnd.magnitude / 2.0f;
 
     return new MapStaticCollider2D {
-      Position = pos.ToFPVector2(),
+      Position = pos.ToFPVector2() + positionOffset,
       Rotation = rot.ToFPRotation2D(),
 #if QUANTUM_XY
       VerticalOffset = -t.position.z.ToFP(),

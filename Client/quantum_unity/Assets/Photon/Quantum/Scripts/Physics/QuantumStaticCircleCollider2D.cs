@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class QuantumStaticCircleCollider2D : MonoBehaviour {
   public FP Radius;
+  public FPVector2 PositionOffset;
   public FP Height;
   public QuantumStaticColliderSettings Settings;
 
@@ -26,6 +27,11 @@ public class QuantumStaticCircleCollider2D : MonoBehaviour {
     height *= transform.localScale.y;
 #endif
 
-    GizmoUtils.DrawGizmosCircle(transform.position, Radius.AsFloat * Mathf.Max(transform.localScale.x, transform.localScale.y), height, selected, QuantumEditorSettings.Instance.StaticColliderColor);
+    GizmoUtils.DrawGizmosCircle(
+      transform.position + PositionOffset.ToUnityVector3(),
+      Radius.AsFloat * Mathf.Max(transform.localScale.x, transform.localScale.y),
+      height,
+      selected,
+      QuantumEditorSettings.Instance.StaticColliderColor);
   }
 }

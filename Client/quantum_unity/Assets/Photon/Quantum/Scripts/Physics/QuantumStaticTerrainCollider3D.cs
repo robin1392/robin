@@ -31,6 +31,11 @@ public class QuantumStaticTerrainCollider3D : MonoBehaviour {
         Asset.Settings.HeightMap[j + i * Asset.Settings.Resolution] = FP.FromFloat_UNSAFE(t.terrainData.GetHeight(i, j));
       }
     }
+
+#if UNITY_EDITOR
+    UnityEditor.EditorUtility.SetDirty(Asset);
+    UnityEditor.EditorUtility.SetDirty(this);
+#endif
   }
 
   void OnDrawGizmos() {

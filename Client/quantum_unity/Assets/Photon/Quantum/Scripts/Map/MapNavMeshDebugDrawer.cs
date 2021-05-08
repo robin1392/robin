@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 
 public class MapNavMeshDebugDrawer : MonoBehaviour {
-  public TextAsset BinaryAsset;
+  public AssetRefBinaryData BinaryAsset;
   public bool DrawBorders = true;
   public bool DrawLinks = true;
   public bool DrawBorderNormals;
@@ -14,6 +14,8 @@ public class MapNavMeshDebugDrawer : MonoBehaviour {
   public bool DrawTriangleNeighbors;
   public bool DrawVertexIds;
   public bool DrawTrianglesIds;
+
+  private NavMesh _navmesh;
 
 #if UNITY_EDITOR
 
@@ -28,37 +30,46 @@ public class MapNavMeshDebugDrawer : MonoBehaviour {
 
     var originalColor = Gizmos.color;
 
-    // TODO: make caching navmesh work (e.g. MapDataBakerCallback but playmode change still breaks)
-    var navmesh = new NavMesh();
-    var stream = new ByteStream(BinaryAsset.bytes);
-    navmesh.Serialize(stream, false);
-    navmesh.Name = BinaryAsset.name;
+    var asset = UnityDB.FindAsset<BinaryDataAsset>(BinaryAsset.Id);
+    if (asset == null) {
+      return;
+    }
 
-    MapNavMesh.CreateAndDrawGizmoMesh(navmesh, NavMeshRegionMask.Default);
+    var stream = new ByteStream(asset.Settings.Data);
+    _navmesh = new NavMesh();
+    _navmesh.Serialize(stream, false);
+    _navmesh.Name = asset.Settings.Identifier.Path;
+
+    MapNavMesh.CreateAndDrawGizmoMesh(_navmesh, NavMeshRegionMask.Default);
+
+    var editorSettings = QuantumEditorSettings.Instance;
+
+    if (DrawLinks) {
+      for (int i = 0; i < _navmesh.Links.Length; i++) {
+        Gizmos.color = Color.blue;
+        GizmoUtils.DrawGizmoVector(
+          _navmesh.Links[i].Start.ToUnityVector3(true), 
+          _navmesh.Links[i].End.ToUnityVector3(true), 
+          GizmoUtils.DefaultArrowHeadLength * editorSettings.GizmoIconScale.AsFloat);
+      }
+    }
 
     if (DrawTrianglesIds || DrawLinks || DrawTriangleNeighbors) {
-      for (int i = 0; i < navmesh.Triangles.Length; i++) {
+      for (int i = 0; i < _navmesh.Triangles.Length; i++) {
         if (DrawTrianglesIds) {
           Handles.color = Color.white;
-          Handles.Label(ToUnityVector3(navmesh.Triangles[i].Center), i.ToString());
-        }
-
-        if (DrawLinks) {
-          for (int j = 0; j < navmesh.Triangles[i].Links.Length; j++) {
-            Gizmos.color = Color.blue;
-            GizmoUtils.DrawGizmoVector(navmesh.Triangles[i].Links[j].Start.ToUnityVector3(), navmesh.Triangles[i].Links[j].End.ToUnityVector3());
-          }
+          Handles.Label(_navmesh.Triangles[i].Center.ToUnityVector3(true), i.ToString());
         }
 
         if (DrawTriangleNeighbors) {
-          var t = navmesh.Triangles[i];
+          var t = _navmesh.Triangles[i];
           if (t.Neighbors == null)
             continue;
 
           foreach (var p in t.Neighbors) {
             Gizmos.color = Color.green;
-            var n = navmesh.Triangles[p.Neighbor];
-            Gizmos.DrawLine(ToUnityVector3(t.Center), ToUnityVector3(n.Center));
+            var n = _navmesh.Triangles[p.Neighbor];
+            Gizmos.DrawLine(t.Center.ToUnityVector3(true), n.Center.ToUnityVector3(true));
           }
         }
       }
@@ -66,32 +77,36 @@ public class MapNavMeshDebugDrawer : MonoBehaviour {
 
 
     if (DrawVertexIds || DrawVertexNormals) {
-      for (int i = 0; i < navmesh.Vertices.Length; i++) {
+      for (int i = 0; i < _navmesh.Vertices.Length; i++) {
         if (DrawVertexIds) {
           Handles.color = Color.green;
-          Handles.Label(ToUnityVector3(navmesh.Vertices[i].Point), i.ToString());
+          Handles.Label(_navmesh.Vertices[i].Point.ToUnityVector3(true), i.ToString());
         }
 
         if (DrawVertexNormals) {
           FPMathUtils.LoadLookupTables();
           Gizmos.color = Color.blue;
-          var p = ToUnityVector3(navmesh.Vertices[i].Point);
-          var normal = ToUnityVector3(NavMeshVertex.CalculateNormal(i, navmesh, new NavMeshRegionMask()));
-          GizmoUtils.DrawGizmoVector(p, p + normal * 0.33f);
+          var p = _navmesh.Vertices[i].Point.ToUnityVector3(true);
+          var normal = NavMeshVertex.CalculateNormal(i, _navmesh, new NavMeshRegionMask()).ToUnityVector3(true);
+          GizmoUtils.DrawGizmoVector(p, 
+            p + normal * editorSettings.GizmoIconScale.AsFloat * 0.33f,
+            editorSettings.GizmoIconScale.AsFloat * 0.33f * GizmoUtils.DefaultArrowHeadLength);
         }
       }
     }
 
     if (DrawBorders || DrawBorderNormals) {
-      Gizmos.color = Color.blue;
-      for (int i = 0; i < navmesh.Borders.Length; i++) {
+      Gizmos.color = Color.black;
+      for (int i = 0; i < _navmesh.Borders.Length; i++) {
         if (DrawBorders) {
-          Gizmos.DrawLine(ToUnityVector3(navmesh.Borders[i].V0), ToUnityVector3(navmesh.Borders[i].V1));
+          Gizmos.DrawLine(_navmesh.Borders[i].V0.ToUnityVector3(true), _navmesh.Borders[i].V1.ToUnityVector3(true));
         }
 
         if (DrawBorderNormals) {
-          var middle = (ToUnityVector3(navmesh.Borders[i].V0) + ToUnityVector3(navmesh.Borders[i].V1)) * 0.5f;
-          GizmoUtils.DrawGizmoVector(middle, middle + ToUnityVector3(navmesh.Borders[i].Normal) * 0.33f);
+          var middle = (_navmesh.Borders[i].V0.ToUnityVector3(true) + _navmesh.Borders[i].V1.ToUnityVector3(true)) * 0.5f;
+          GizmoUtils.DrawGizmoVector(middle, 
+            middle + _navmesh.Borders[i].Normal.ToUnityVector3(true) * editorSettings.GizmoIconScale.AsFloat * 0.33f,
+            editorSettings.GizmoIconScale.AsFloat * 0.33f * GizmoUtils.DefaultArrowHeadLength);
         }
       }
     }
@@ -99,19 +114,11 @@ public class MapNavMeshDebugDrawer : MonoBehaviour {
     Gizmos.color = originalColor;
   }
 
-  static Vector3 ToUnityVector3(Photon.Deterministic.FPVector3 v) {
-#if QUANTUM_XY
-    return new Vector3(v.X.AsFloat, v.Z.AsFloat, v.Y.AsFloat);
-#else
-    return v.ToUnityVector3();
-#endif
-  }
-
   static void DrawTriangle(int i, NavMesh navmesh) {
     var t = navmesh.Triangles[i];
-    var vertex0 = ToUnityVector3(navmesh.Vertices[t.Vertex0].Point);
-    var vertex1 = ToUnityVector3(navmesh.Vertices[t.Vertex1].Point);
-    var vertex2 = ToUnityVector3(navmesh.Vertices[t.Vertex2].Point);
+    var vertex0 = navmesh.Vertices[t.Vertex0].Point.ToUnityVector3(true);
+    var vertex1 = navmesh.Vertices[t.Vertex1].Point.ToUnityVector3(true);
+    var vertex2 = navmesh.Vertices[t.Vertex2].Point.ToUnityVector3(true);
     Gizmos.DrawLine(vertex0, vertex1);
     Gizmos.DrawLine(vertex1, vertex2);
     Gizmos.DrawLine(vertex2, vertex0);
@@ -119,13 +126,36 @@ public class MapNavMeshDebugDrawer : MonoBehaviour {
 
   static void DrawTriangleMesh(int i, NavMesh navmesh, Color color) {
     var t = navmesh.Triangles[i];
-    var vertex0 = ToUnityVector3(navmesh.Vertices[t.Vertex0].Point);
-    var vertex1 = ToUnityVector3(navmesh.Vertices[t.Vertex1].Point);
-    var vertex2 = ToUnityVector3(navmesh.Vertices[t.Vertex2].Point);
+    var vertex0 = navmesh.Vertices[t.Vertex0].Point.ToUnityVector3(true);
+    var vertex1 = navmesh.Vertices[t.Vertex1].Point.ToUnityVector3(true);
+    var vertex2 = navmesh.Vertices[t.Vertex2].Point.ToUnityVector3(true);
     Handles.color = color;
     Handles.lighting = true;
     Handles.DrawAAConvexPolygon(vertex0, vertex1, vertex2);
 
   }
+#endif
+
+#if UNITY_EDITOR
+
+  [CustomEditor(typeof(MapNavMeshDebugDrawer))]
+  private class MapNavMeshDebugDrawerEditor : Editor {
+    public override void OnInspectorGUI() {
+      base.OnInspectorGUI();
+
+      var data = (MapNavMeshDebugDrawer)target;
+
+      if (data._navmesh != null && data._navmesh.Triangles != null) {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Information", EditorStyles.boldLabel);
+        GUI.enabled = false;
+        EditorGUILayout.TextField("NavMesh Name", data._navmesh.Name);
+        EditorGUILayout.IntField("Number Of Triangles", data._navmesh.Triangles.Length);
+        EditorGUILayout.IntField("Number Of Vertices", data._navmesh.Vertices.Length);
+        EditorGUILayout.IntField("Number Of Borders", data._navmesh.Borders.Length);
+      }
+    }
+  }
+
 #endif
 }

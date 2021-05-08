@@ -10972,7 +10972,7 @@ MonoBehaviour:
   HideRoomOnStartToggle: {fileID: 1550619375}
   PlayerGrid: {fileID: 324712300}
   PlayerTemplate: {fileID: 2025719609}
-  IdProvider: 3
+  IdProvider: 1
   RuntimeConfigContainer: {fileID: 833318422}
 --- !u!114 &1939664211
 MonoBehaviour:

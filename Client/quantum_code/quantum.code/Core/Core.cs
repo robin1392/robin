@@ -1,23 +1,26 @@
 using Photon.Deterministic;
 using System;
 using Quantum.Core;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
+using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using Quantum.Inspector;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Quantum;
-using System.IO;
 using Quantum.Profiling;
 using Quantum.Allocator;
+using System.Collections.Specialized;
+using System.Threading;
 using Quantum.Prototypes;
+using System.Reflection;
 using Quantum.Task;
 
 // Core/Collision.cs
- 
+
 namespace Quantum {
   
   /// <summary>
@@ -220,7 +223,7 @@ namespace Quantum {
 }
 
 // Core/Frame.cs
- 
+
 namespace Quantum {
   /// <summary>
   /// The user implementation of <see cref="FrameBase"/> that resides in the project quantum_state and has access to all user relevant classes.
@@ -228,11 +231,13 @@ namespace Quantum {
   /// \ingroup FrameClass
   public unsafe partial class Frame : Core.FrameBase {
 
-    public const int DumpFlag_NoSimulationConfig = 1 << 1;
-    public const int DumpFlag_NoRuntimeConfig = 1 << 3;
+    public const int DumpFlag_NoSimulationConfig           = 1 << 1;
+    public const int DumpFlag_NoRuntimeConfig              = 1 << 3;
     public const int DumpFlag_NoDeterministicSessionConfig = 1 << 4;
-    public const int DumpFlag_NoRuntimePlayers = 1 << 5;
-    public const int DumpFlag_NoDynamicDB = 1 << 6;
+    public const int DumpFlag_NoRuntimePlayers             = 1 << 5;
+    public const int DumpFlag_NoDynamicDB                  = 1 << 6;
+    public const int DumpFlag_ReadableDynamicDB            = 1 << 7;
+    public const int DumpFlag_PrintRawValues               = 1 << 8;
 
     struct RuntimePlayerData {
       public Int32         ActorId;
@@ -283,6 +288,9 @@ namespace Quantum {
 
     ISignalOnMapChanged[]                   _ISignalOnMapChangedSystems;
     ISignalOnEntityPrototypeMaterialized[]  _ISignalOnEntityPrototypeMaterializedSystems;
+
+    ISignalOnPlayerConnected[]    _ISignalOnPlayerConnectedSystems;
+    ISignalOnPlayerDisconnected[] _ISignalOnPlayerDisconnectedSystems;
 
     /// <summary>
     /// Access the global struct with generated values from the DSL.
@@ -404,12 +412,16 @@ namespace Quantum {
       _playerData = new PersistentMap<Int32, RuntimePlayerData>();
 
       AllocGen();
+      InitStatic();
       InitGen();
 
       Assets     = new FrameAssets(this);
       Events     = new FrameEvents(this);
       Signals    = new FrameSignals(this);
       Unsafe     = new FrameBaseUnsafe(this);
+      
+      Physics2D  = new Physics2D.Api(this, context.TaskContext.ThreadCount);
+      Physics3D  = new Physics3D.Api(this, context.TaskContext.ThreadCount);
 
       // player data set signal
       _ISignalOnPlayerDataSet = BuildSignalsArray<ISignalOnPlayerDataSet>();
@@ -447,6 +459,8 @@ namespace Quantum {
         base._SignalOnEntityPrototypeMaterialized = (entity, prototype) => Signals.OnEntityPrototypeMaterialized(entity, prototype);
       }
 
+      _ISignalOnPlayerConnectedSystems = BuildSignalsArray<ISignalOnPlayerConnected>();
+      _ISignalOnPlayerDisconnectedSystems = BuildSignalsArray<ISignalOnPlayerDisconnected>();
 
       // assign map, rng session, etc.
       _globals->Map        = FindAsset<Map>(runtimeConfig.Map.Id);
@@ -456,24 +470,12 @@ namespace Quantum {
       // set default enabled systems
       for (Int32 i = 0; i < _systemsAll.Length; ++i) {
         if (_systemsAll[i].StartEnabled) {
-          BitSet256.Set(&_globals->Systems, _systemsAll[i].RuntimeIndex);
+          _globals->Systems.Set(_systemsAll[i].RuntimeIndex);
         }
       }
 
       // init physics settings
-      _globals->PhysicsSettings.Gravity                      = simulationConfig.Physics.Gravity;
-      _globals->PhysicsSettings.SolverIterations             = simulationConfig.Physics.SolverIterations;
-      _globals->PhysicsSettings.UseAngularVelocity           = simulationConfig.Physics.UseAngularVelocity;
-      _globals->PhysicsSettings.PenetrationAllowance         = simulationConfig.Physics.PenetrationAllowance;
-      _globals->PhysicsSettings.PenetrationCorrection        = simulationConfig.Physics.PenetrationCorrection;
-      _globals->PhysicsSettings.MinLinearIntegration         = simulationConfig.Physics.MinLinearIntegration;
-      _globals->PhysicsSettings.MinAngularIntegration        = simulationConfig.Physics.MinAngularIntegration;
-      _globals->PhysicsSettings.AllowSleeping                = simulationConfig.Physics.AllowSleeping;
-      _globals->PhysicsSettings.SleepTimeSec                 = simulationConfig.Physics.SleepTimeSec;
-      _globals->PhysicsSettings.LinearSleepTolerance         = simulationConfig.Physics.LinearSleepTolerance;
-      _globals->PhysicsSettings.AngularSleepToleranceInRad   = simulationConfig.Physics.AngularSleepToleranceInRad;
-      _globals->PhysicsSettings.UseVerticalTransform         = simulationConfig.Physics.UseVerticalTransform;
-      _globals->PhysicsSettings.InitLayers(simulationConfig.Physics);
+      Quantum.PhysicsSceneSettings.Init(&_globals->PhysicsSettings, simulationConfig.Physics);
 
       // Init navmesh regions to all bit fields to be set
       ClearAllNavMeshRegions();
@@ -524,26 +526,88 @@ namespace Quantum {
       return Context.InPredictionArea(this, position);
     }
 
+
+    /// <summary>
+    /// Serializes the frame using a temporary buffer (20MB).
+    /// </summary>
+    /// <param name="mode"></param>
+    /// <returns></returns>
     public override Byte[] Serialize(DeterministicFrameSerializeMode mode) {
-      FrameSerializer serializer;
-      serializer         = new FrameSerializer(mode, this, new byte[1024 * 1024 * 20]);
-      serializer.Writing = true;
+      return Serialize(mode, new byte[1024 * 1024 * 20], allocOutput: true).Array;
+    }
 
-      SerializeState(serializer);
+    /// <summary>
+    /// Serializes the frame using <paramref name="buffer"/> as a buffer for temporary data. 
+    /// 
+    /// If <paramref name="allocOutput"/> is set to false, then <paramref name="buffer"/> is also used for the final data - use offset and count from the result to access
+    /// the part of <paramref name="buffer"/> where serialized frame is stored.
+    /// 
+    /// If <paramref name="allocOutput"/> is set to true then a new array is allocated for the result.
+    /// 
+    /// Despite accepting a buffer, this method still allocates a few small temporary objects. 
+    /// <see cref="IAssetSerializer.SerializeAssets(System.Collections.Generic.IEnumerable{AssetObject})"/> is also going
+    /// to allocate when serializing DynamicAssetDB, but how much depends on the serializer itself and the number of dynamic assets.
+    /// </summary>
+    /// <param name="mode"></param>
+    /// <param name="buffer"></param>
+    /// <param name="offset"></param>
+    /// <param name="allocOutput"></param>
+    /// <returns>Segment of <paramref name="buffer"/> where the serialized frame is stored</returns>
+    public ArraySegment<byte> Serialize(DeterministicFrameSerializeMode mode, byte[] buffer, int offset = 0, bool allocOutput = false) {
+      offset = ByteUtils.AddValueBlock((int)mode, buffer, offset);
+      offset = ByteUtils.AddValueBlock(Number, buffer, offset);
+      offset = ByteUtils.AddValueBlock(CalculateChecksum(), buffer, offset);
 
-      var packed = ByteUtils.PackByteBlocks(
-          BitConverter.GetBytes((int)mode), 
-          BitConverter.GetBytes(Number),
-          BitConverter.GetBytes(CalculateChecksum()),
-          SerializeRuntimePlayers(), 
-          serializer.ToArray(),
-          SerializeDynamicAssetDB()
-        );
+      BitStream stream;
 
-      // make sure not pointers are dangling
-      serializer.VerifyNoUnresolvedPointers();
+      {
+        offset = ByteUtils.BeginByteBlockHeader(buffer, offset, out var blockOffset);
 
-      return ByteUtils.GZipCompressBytes(packed);
+        stream = new BitStream(buffer, buffer.Length - offset, offset) {
+          Writing = true
+        };
+
+        SerializeRuntimePlayers(stream);
+
+        offset = ByteUtils.EndByteBlockHeader(buffer, blockOffset, stream.BytesRequired);
+      }
+
+      {
+        offset = ByteUtils.BeginByteBlockHeader(buffer, offset, out var blockOffset);
+
+        stream.SetBuffer(buffer, buffer.Length - offset, offset);
+        var serializer = new FrameSerializer(mode, this, stream) {
+          Writing = true
+        };
+
+        SerializeState(serializer);
+
+        offset = ByteUtils.EndByteBlockHeader(buffer, blockOffset, stream.BytesRequired);
+      }
+
+      _dynamicAssetDB.Serialize(Context.AssetSerializer, out var assetDBHeader, out var assetDBData);
+
+      {
+        // write the header for the byte block but don't actually copy into the buffer
+        // - we'll do that later during the compression stage
+        offset = ByteUtils.BeginByteBlockHeader(buffer, offset, out var blockOffset);
+        ByteUtils.EndByteBlockHeader(buffer, blockOffset, assetDBHeader.Length + assetDBData.Length);
+      }
+
+      using (var outputStream = allocOutput ? new MemoryStream() : new MemoryStream(buffer, offset, buffer.Length - offset)) {
+        using (var compressedOutput = ByteUtils.CreateGZipCompressStream(outputStream)) {
+          compressedOutput.Write(buffer, 0, offset);
+          compressedOutput.Write(assetDBHeader, 0, assetDBHeader.Length);
+          compressedOutput.Write(assetDBData, 0, assetDBData.Length);
+        }
+
+        if (allocOutput) {
+          return new ArraySegment<byte>(outputStream.ToArray());
+        } else {
+          return new ArraySegment<byte>(buffer, offset, (int)outputStream.Position);
+        }
+        
+      }
     }
 
     public override void Deserialize(Byte[] data) {
@@ -582,7 +646,11 @@ namespace Quantum {
       BitStream stream;
       stream         = new BitStream(1024 * 10);
       stream.Writing = true;
+      SerializeRuntimePlayers(stream);
+      return stream.ToArray();
+    }
 
+    void SerializeRuntimePlayers(BitStream stream) {
       stream.WriteInt(_playerData.Count);
 
       foreach (var player in _playerData.Iterator()) {
@@ -591,12 +659,6 @@ namespace Quantum {
         stream.WriteByteArrayLengthPrefixed(player.Value.Data);
         player.Value.Player.Serialize(stream);
       }
-
-      return stream.ToArray();
-    }
-
-    Byte[] SerializeDynamicAssetDB() {
-      return _dynamicAssetDb.Serialize(Context.AssetSerializer);
     }
 
     void DeserializeRuntimePlayers(Byte[] bytes) {
@@ -620,7 +682,7 @@ namespace Quantum {
     }
 
     void DeserializeDynamicAssetDB(Byte[] bytes) {
-      _dynamicAssetDb.Deserialize(bytes, Context.AssetSerializer);
+      _dynamicAssetDB.Deserialize(bytes, Context.AssetSerializer);
     }
 
     /// <summary>
@@ -630,6 +692,8 @@ namespace Quantum {
     public sealed override String DumpFrame(int dumpFlags = 0) {
       var printer = new FramePrinter();
       printer.Reset(this);
+
+      printer.IsRawPrintEnabled = ((dumpFlags & DumpFlag_PrintRawValues) == DumpFlag_PrintRawValues);
 
       // frame info
       printer.AddLine($"#### FRAME DUMP FOR {Number} IsVerified={IsVerified} ####");
@@ -675,13 +739,26 @@ namespace Quantum {
         printer.AddLine("# DYNAMICDB");
         {
           printer.ScopeBegin();
-          printer.AddLine("Dump: ");
-          printer.ScopeBegin();
-          var data = SerializeDynamicAssetDB();
-          fixed (byte* p = data) {
-            UnmanagedUtils.PrintBytesHex(p, data.Length, 32, printer);
+
+          var assetSerializer = Context.AssetSerializer;
+          if ((dumpFlags & DumpFlag_ReadableDynamicDB) == DumpFlag_ReadableDynamicDB) {
+            printer.AddLine($"NextGuid: {_dynamicAssetDB.NextGuid}");
+            foreach (var asset in _dynamicAssetDB.Assets) {
+              printer.AddLine($"{asset.GetType().FullName}:");
+              printer.ScopeBegin();
+              printer.AddLine($"{assetSerializer.PrintAsset(asset)}");
+              printer.ScopeEnd();
+            }
+          } else {
+            printer.AddLine("Dump: ");
+            printer.ScopeBegin();
+            var data = _dynamicAssetDB.Serialize(assetSerializer);
+            fixed (byte* p = data) {
+              UnmanagedUtils.PrintBytesHex(p, data.Length, 32, printer);
+            }
+            printer.ScopeEnd();
           }
-          printer.ScopeEnd();
+
           printer.ScopeEnd();
         }
       }
@@ -736,7 +813,7 @@ namespace Quantum {
       FrameBase.Copy(this, f);
 
       // dynamic DB
-      _dynamicAssetDb.CopyFrom(f._dynamicAssetDb);
+      _dynamicAssetDB.CopyFrom(f._dynamicAssetDB);
 
       // perform native copy
       CopyFromGen(f);
@@ -763,7 +840,7 @@ namespace Quantum {
         return false;
       }
 
-      return BitSet256.IsSet(&_globals->Systems, system.Item1);
+      return _globals->Systems.IsSet(system.Item1);
     }
     
     public Boolean SystemIsEnabled(Type t) {
@@ -772,7 +849,7 @@ namespace Quantum {
         return false;
       }
 
-      return BitSet256.IsSet(&_globals->Systems, system.Item1);
+      return _globals->Systems.IsSet(system.Item1);
     }
 
     /// <summary>
@@ -790,9 +867,9 @@ namespace Quantum {
         return;
       }
 
-      if (BitSet256.IsSet(&_globals->Systems, system.Item1) == false) {
+      if (_globals->Systems.IsSet(system.Item1) == false) {
         // set flag
-        BitSet256.Set(&_globals->Systems, system.Item1);
+        _globals->Systems.Set(system.Item1);
 
         try {
           system.Item0.OnEnabled(this);
@@ -822,15 +899,19 @@ namespace Quantum {
       SystemDisable(typeof(T));
     }
 
+    public void SystemDisable<T>(T system) where T : SystemBase {
+      SystemDisable(typeof(T));
+    }
+
     public void SystemDisable(Type t) {
       var system = FindSystem(t);
       if (system.Item0 == null) {
         return;
       }
 
-      if (BitSet256.IsSet(&_globals->Systems, system.Item1)) {
+      if (_globals->Systems.IsSet(system.Item1)) {
         // clear flag
-        BitSet256.Clear(&_globals->Systems, system.Item1);
+        _globals->Systems.Clear(system.Item1);
 
         try {
           system.Item0.OnDisabled(this);
@@ -869,7 +950,7 @@ namespace Quantum {
           var component = (T*)componentData;
           var systems   = &(_globals->Systems);
           for (Int32 i = 0; i < array.Length; ++i) {
-            if (BitSet256.IsSet(systems, array[i].RuntimeIndex)) {
+            if (systems->IsSet(array[i].RuntimeIndex)) {
               array[i].OnAdded(this, entity, component);
             }
           }
@@ -888,7 +969,7 @@ namespace Quantum {
           var component = (T*)componentData;
           var systems   = &(_globals->Systems);
           for (Int32 i = 0; i < array.Length; ++i) {
-            if (BitSet256.IsSet(systems, array[i].RuntimeIndex)) {
+            if (systems->IsSet(array[i].RuntimeIndex)) {
               array[i].OnRemoved(this, entity, component);
             }
           }
@@ -906,7 +987,12 @@ namespace Quantum {
       Context.Events.AddLast(evnt);
     }
 
+    public static void InitStatic() {
+      InitStaticGen();
+    }
+
     // partial declarations populated from code generator
+    static partial void InitStaticGen();
     partial void InitGen();
     partial void FreeGen();
     partial void AllocGen();
@@ -1032,12 +1118,12 @@ namespace Quantum {
         _f = f;
       }
 
-      public EntityView View(string view) {
-        return _f.FindAsset<EntityView>(view);
+      public EntityView View(string view, DatabaseType dbType = DatabaseType.Default) {
+        return _f.FindAsset<EntityView>(view, dbType);
       }
 
-      public EntityPrototype Prototype(string prototype) {
-        return _f.FindAsset<EntityPrototype>(prototype);
+      public EntityPrototype Prototype(string prototype, DatabaseType dbType = DatabaseType.Default) {
+        return _f.FindAsset<EntityPrototype>(prototype, dbType);
       }
       
       public EntityView View(AssetRefEntityView view) {
@@ -1092,13 +1178,21 @@ namespace Quantum {
   public partial class FrameContextUser : Core.FrameContext {
     public FrameContextUser(Args args) 
       : base(args) {
-      
+      ConstructUser(args);
     }
+
+    public override sealed void Dispose() {
+      DisposeUser();
+      base.Dispose();
+    }
+
+    partial void ConstructUser(Args args);
+    partial void DisposeUser();
   }
 }
 
 // Core/FrameEvents.cs
- 
+
 namespace Quantum {
   partial class Frame {
     public partial struct FrameEvents {
@@ -1113,7 +1207,7 @@ namespace Quantum {
 
 
 // Core/FrameSignals.cs
- 
+
 namespace Quantum {
   public unsafe interface ISignalOnComponentAdded<T> : ISignal where T : unmanaged, IComponent {
     void OnAdded(Frame f, EntityRef entity, T* component);
@@ -1131,6 +1225,14 @@ namespace Quantum {
     void OnEntityPrototypeMaterialized(Frame f, EntityRef entity, EntityPrototypeRef prototypeRef);
   }
 
+  public unsafe interface ISignalOnPlayerConnected : ISignal {
+    void OnPlayerConnected(Frame f, PlayerRef player);
+  }
+
+  public unsafe interface ISignalOnPlayerDisconnected : ISignal {
+    void OnPlayerDisconnected(Frame f, PlayerRef player);
+  }
+
   partial class Frame {
     public unsafe partial struct FrameSignals {
       Frame _f;
@@ -1144,7 +1246,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnPlayerDataSet(_f, player);
           }
         }
@@ -1155,7 +1257,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnMapChanged(_f, previousMap);
           }
         }
@@ -1166,18 +1268,40 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnEntityPrototypeMaterialized(_f, entity, prototypeRef);
           }
         }
       }
 
-      public void OnNavMeshWaypointReached(EntityRef entity, FPVector2 waypoint, Navigation.WaypointFlag waypointFlags, ref bool resetAgent) {
+      public void OnPlayerConnected(PlayerRef player) {
+        var array = _f._ISignalOnPlayerConnectedSystems;
+        var systems = &(_f._globals->Systems);
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (systems->IsSet(s.RuntimeIndex)) {
+            s.OnPlayerConnected(_f, player);
+          }
+        }
+      }
+
+      public void OnPlayerDisconnected(PlayerRef player) {
+        var array = _f._ISignalOnPlayerDisconnectedSystems;
+        var systems = &(_f._globals->Systems);
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (systems->IsSet(s.RuntimeIndex)) {
+            s.OnPlayerDisconnected(_f, player);
+          }
+        }
+      }
+
+      public void OnNavMeshWaypointReached(EntityRef entity, FPVector3 waypoint, Navigation.WaypointFlag waypointFlags, ref bool resetAgent) {
         var array   = _f._ISignalOnNavMeshWaypointReachedSystems;
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnNavMeshWaypointReached(_f, entity, waypoint, waypointFlags, ref resetAgent);
           }
         }
@@ -1188,7 +1312,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnNavMeshSearchFailed(_f, entity, ref resetAgent);
           }
         }
@@ -1199,7 +1323,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnNavMeshMoveAgent(_f, entity, desiredDirection);
           }
         }
@@ -1210,7 +1334,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnCollision2D(_f, info);
           }
         }
@@ -1221,7 +1345,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnCollisionEnter2D(_f, info);
           }
         }
@@ -1232,7 +1356,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnCollisionExit2D(_f, info);
           }
         }
@@ -1243,7 +1367,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnTrigger2D(_f, info);
           }
         }
@@ -1254,7 +1378,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnTriggerEnter2D(_f, info);
           }
         }
@@ -1265,7 +1389,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnTriggerExit2D(_f, info);
           }
         }
@@ -1276,7 +1400,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnCollision3D(_f, info);
           }
         }
@@ -1287,7 +1411,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnCollisionEnter3D(_f, info);
           }
         }
@@ -1298,7 +1422,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnCollisionExit3D(_f, info);
           }
         }
@@ -1309,7 +1433,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnTrigger3D(_f, info);
           }
         }
@@ -1320,7 +1444,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnTriggerEnter3D(_f, info);
           }
         }
@@ -1331,7 +1455,7 @@ namespace Quantum {
         var systems = &(_f._globals->Systems);
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
-          if (BitSet256.IsSet(systems, s.RuntimeIndex)) {
+          if (systems->IsSet(s.RuntimeIndex)) {
             s.OnTriggerExit3D(_f, info);
           }
         }
@@ -1342,7 +1466,7 @@ namespace Quantum {
 
 
 // Core/NavMeshSignals.cs
- 
+
 namespace Quantum
 {
   /// <summary>
@@ -1356,7 +1480,7 @@ namespace Quantum
     /// <param name="waypoint">The current waypoint position</param>
     /// <param name="waypointFlags">The current waypoint flags</param>
     /// <param name="resetAgent">Set this to true if the agent should reset its internal state (default is false). Required when a new target was set during the callback.</param>
-    void OnNavMeshWaypointReached(Frame f, EntityRef entity, FPVector2 waypoint, Navigation.WaypointFlag waypointFlags, ref bool resetAgent);
+    void OnNavMeshWaypointReached(Frame f, EntityRef entity, FPVector3 waypoint, Navigation.WaypointFlag waypointFlags, ref bool resetAgent);
   }
 
   /// <summary>
@@ -1383,7 +1507,7 @@ namespace Quantum
 
 
 // Core/RecordingFlags.cs
- 
+
 namespace  Quantum {
   [Flags]
   public enum RecordingFlags {
@@ -1396,7 +1520,7 @@ namespace  Quantum {
 }
 
 // Core/RuntimeConfig.cs
- 
+
 namespace Quantum {
   /// <summary>
   /// In contrast to the <see cref="SimulationConfig"/>, which has only static configuration data, the RuntimeConfig holds information that can be different from game to game.
@@ -1482,7 +1606,7 @@ namespace Quantum {
 
 
 // Core/RuntimePlayer.cs
- 
+
 namespace Quantum {
 
   public interface ISignalOnPlayerDataSet : ISignal {
@@ -1531,7 +1655,7 @@ namespace Quantum {
 
 
 // Core/SimulationConfig.cs
- 
+
 namespace Quantum {
   /// <summary>
   /// The SimulationConfig holds parameters used in the ECS layer and inside core systems like physics and navigation.
@@ -1540,23 +1664,33 @@ namespace Quantum {
   public partial class SimulationConfig : AssetObject {
     public const long DEFAULT_ID = (long)DefaultAssetGuids.SimulationConfig;
     
+    public enum AutoLoadSceneFromMapMode {
+      Disabled,
+      Legacy,
+      UnloadPreviousSceneThenLoad,
+      LoadThenUnloadPreviousScene
+    }
+
     /// <summary>
     /// Global navmesh configurations.
     /// </summary>
+    [Space]
     public Navigation.Config Navigation;
     /// <summary>
     /// Global physics configurations.
     /// </summary>
+    [Space]
     public PhysicsCommon.Config Physics;
     /// <summary>
     /// Global entities configuration
     /// </summary>
+    [Space]
     public FrameBase.EntitiesConfig Entities;
     /// <summary>
     /// This option will trigger a Unity scene load during the Quantum start sequence.\n
     /// This might be convenient to start with but once the starting sequence is customized disable it and implement the scene loading by yourself.
     /// </summary>
-    public Boolean AutoLoadSceneFromMap = true;
+    public AutoLoadSceneFromMapMode AutoLoadSceneFromMap = AutoLoadSceneFromMapMode.UnloadPreviousSceneThenLoad;
     /// <summary>
     /// Configure how the client tracks the time to progress the Quantum simulation.
     /// </summary>
@@ -1641,7 +1775,7 @@ namespace Quantum {
 
 
 // Core/SimulationUpdateTime.cs
- namespace Quantum {
+namespace Quantum {
   /// <summary>
   /// The type of measuring time progressions to update the local simulation.
   /// </summary>
@@ -1719,6 +1853,8 @@ namespace Quantum {
       
       // register internal physics types
       PhysicsCommon.RegisterInternalTypes(Register);
+      Physics2D.RegisterInternalTypes(Register);
+      Physics3D.RegisterInternalTypes(Register);
       
       // register collection memory integrity checks
       Collections.QCollectionsUtils.RegisterTypes(Register);
@@ -1729,7 +1865,7 @@ namespace Quantum {
 }
 
 // Game/CallbackDispatcher.cs
- 
+
 namespace Quantum {
   public class CallbackDispatcher : DispatcherBase, Quantum.ICallbackDispatcher {
 
@@ -1761,7 +1897,7 @@ namespace Quantum {
 
 
 // Game/EventDispatcher.cs
- 
+
 namespace Quantum {
   public class EventDispatcher : DispatcherBase, IEventDispatcher {
 
@@ -1814,7 +1950,7 @@ namespace Quantum {
 
 
 // Game/InstantReplaySettings.cs
- 
+
 namespace Quantum {
   [Serializable]
   public struct InstantReplaySettings {
@@ -1841,7 +1977,7 @@ namespace Quantum {
 
 
 // Game/QuantumGame.Snapshots.cs
- 
+
 namespace Quantum {
   public partial class QuantumGame {
 
@@ -1954,8 +2090,13 @@ namespace Quantum {
 }
 
 // Game/QuantumGame.cs
- 
+
 namespace Quantum {
+  public partial class QuantumGameFlags {
+    public const int Server = 1 << 0;
+    public const int CustomFlagsStart = 1 << 16;
+  }
+
   /// <summary>
   /// QuantumGame acts as an interface to the simulation from the client code's perspective.
   /// </summary>
@@ -1970,6 +2111,8 @@ namespace Quantum {
       public IEventDispatcher       EventDispatcher;
       public InstantReplaySettings  InstantReplaySettings;
       public int                    HeapExtraCount;
+      public DynamicAssetDB         InitialDynamicAssets;
+      public int                    GameFlags;
     }
 
 
@@ -2004,13 +2147,15 @@ namespace Quantum {
     /// <summary> </summary>
     public InstantReplaySettings InstantReplayConfig { get; private set; }
 
+    /// <summary> </summary>
+    public IAssetSerializer AssetSerializer { get; }
+
     /// <summary> Extra heaps to allocate for a session in case you need to create 'auxiliary' frames than actually required for the simulation itself. </summary>
     public int HeapExtraCount { get; }
 
 
     Byte[] _inputStreamReadZeroArray;
     IResourceManager _resourceManager;
-    IAssetSerializer _assetSerializer;
     ICallbackDispatcher _callbackDispatcher;
     IEventDispatcher _eventDispatcher;
 
@@ -2023,17 +2168,26 @@ namespace Quantum {
     FrameContext _context;
     TypeRegistry _typeRegistry;
     bool _polledInputInThisSimulation;
+    DynamicAssetDB _initialDynamicAssets;
+    int _flags;
 
     public QuantumGame(in StartParameters startParams) {
-      _typeRegistry = new TypeRegistry();
-      Frames = new FramesContainer();
+      _typeRegistry  = new TypeRegistry();
+      Frames         = new FramesContainer();
       Configurations = new ConfigurationsContainer();
-      _resourceManager = startParams.ResourceManager;
-      _assetSerializer = startParams.AssetSerializer;
-      _callbackDispatcher = startParams.CallbackDispatcher;
-      _eventDispatcher = startParams.EventDispatcher;
-      InstantReplayConfig = startParams.InstantReplaySettings;
-      HeapExtraCount = startParams.HeapExtraCount;
+
+      _resourceManager      = startParams.ResourceManager;
+      AssetSerializer       = startParams.AssetSerializer;
+      _callbackDispatcher   = startParams.CallbackDispatcher;
+      _eventDispatcher      = startParams.EventDispatcher;
+      InstantReplayConfig   = startParams.InstantReplaySettings;
+      HeapExtraCount        = startParams.HeapExtraCount;
+      _flags                = startParams.GameFlags;
+
+      if (startParams.InitialDynamicAssets != null) {
+        _initialDynamicAssets = new DynamicAssetDB();
+        _initialDynamicAssets.CopyFrom(startParams.InitialDynamicAssets);
+      }
 
       InitCallbacks();
     }
@@ -2078,7 +2232,7 @@ namespace Quantum {
     /// Sends a command to the server.
     /// </summary>
     /// <param name="command">Command to send</param>
-    /// Commands are similar to input, they drive the simulation, but do not have to be send regularly.
+    /// Commands are similar to input, they drive the simulation, but do not have to be sent regularly.
     /// <example><code>
     /// RemoveUnitCommand command = new RemoveUnitCommand();
     /// command.CellIndex = 42;
@@ -2138,7 +2292,7 @@ namespace Quantum {
       if (_checksumSnapshotBuffer != null) {
         var result = _checksumSnapshotBuffer.Find(tick, DeterministicFrameSnapshotBufferFindMode.Equal);
         if (result == null) {
-          Log.Warn($"Unable to find verified frame for tick {tick}, increase ChecksumInterval or increase ChecksumFrameBufferSize.");
+          Log.Warn($"Unable to find verified frame for tick {tick}, increase {nameof(DeterministicSessionConfig.ChecksumInterval)} or increase {nameof(SimulationConfig.ChecksumSnapshotHistoryLengthSeconds)}.");
         }
         return result;
       }
@@ -2168,7 +2322,7 @@ namespace Quantum {
         heapCount += Math.Max(0, Configurations.Simulation.HeapExtraCount);
         heapCount += Math.Max(0, HeapExtraCount);
         heapCount += SnapshotsCreateBuffers(Session.SessionConfig.UpdateFPS,
-          Session.GameMode == DeterministicGameMode.Multiplayer ? Session.SessionConfig.ChecksumInterval : 0, Configurations.Simulation.ChecksumSnapshotHistoryLengthSeconds,
+          Session.IsOnline ? Session.SessionConfig.ChecksumInterval : 0, Configurations.Simulation.ChecksumSnapshotHistoryLengthSeconds,
           InstantReplayConfig.SnapshotsPerSecond == 0 ? 0 : Session.SessionConfig.UpdateFPS / InstantReplayConfig.SnapshotsPerSecond, InstantReplayConfig.LenghtSeconds);
 
         // set system runtime indices
@@ -2180,20 +2334,23 @@ namespace Quantum {
         Session.PlatformInfo.CoreCount = Configurations.Simulation.ThreadCount;
 
         FrameContext.Args args;
-        args.AssetDatabase = assetDB;
-        args.PlatformInfo = Session.PlatformInfo;
-        args.IsLocalPlayer = Session.IsLocalPlayer;
-        args.HeapConfig = new Heap.Config(Configurations.Simulation.HeapPageShift, Configurations.Simulation.HeapPageCount, heapCount);
-        args.PhysicsConfig = Configurations.Simulation.Physics;
-        args.NavigationConfig = Configurations.Simulation.Navigation;
-        args.CommandSerializer = Session.CommandSerializer;
-        args.AssetSerializer = _assetSerializer;
+        args.AssetDatabase         = assetDB;
+        args.PlatformInfo          = Session.PlatformInfo;
+        args.IsServer              = (_flags & QuantumGameFlags.Server) == QuantumGameFlags.Server;
+        args.IsLocalPlayer         = Session.IsLocalPlayer;
+        args.HeapConfig            = new Heap.Config(Configurations.Simulation.HeapPageShift, Configurations.Simulation.HeapPageCount, heapCount);
+        args.PhysicsConfig         = Configurations.Simulation.Physics;
+        args.NavigationConfig      = Configurations.Simulation.Navigation;
+        args.CommandSerializer     = Session.CommandSerializer;
+        args.AssetSerializer       = AssetSerializer;
+        args.InitialDynamicAssets = _initialDynamicAssets;
 
         // toggle various parts of the context code
-        args.UsePhysics2D = _systemsAll.FirstOrDefault(x => x is PhysicsSystem2D) != null;
-        args.UsePhysics3D = _systemsAll.FirstOrDefault(x => x is PhysicsSystem3D) != null;
-        args.UseNavigation = _systemsAll.FirstOrDefault(x => x is NavigationSystem) != null;
+        args.UsePhysics2D   = _systemsAll.FirstOrDefault(x => x is PhysicsSystem2D) != null;
+        args.UsePhysics3D   = _systemsAll.FirstOrDefault(x => x is PhysicsSystem3D) != null;
+        args.UseNavigation  = _systemsAll.FirstOrDefault(x => x is NavigationSystem) != null;
         args.UseCullingArea = _systemsAll.FirstOrDefault(x => x is CullingSystem2D) != null || _systemsAll.FirstOrDefault(x => x is CullingSystem3D) != null;
+
         // create frame context
         _context = new FrameContextUser(args);
       }
@@ -2241,16 +2398,21 @@ namespace Quantum {
 
       // init systems on latest frame
       InitSystems(f);
+
+      Log.Debug("Local Players: " + string.Join(" ", Session.LocalPlayerIndices));
     }
 
     public void OnGameResync() {
       _checksumSnapshotBuffer?.Clear();
-      _instantReplaySnapshotBuffer?.Clear();
+      ReplayToolsOnGameResync();
 
       // reset physics engines statics
       Frames.Verified.Physics2D.Init();
       Frames.Verified.Physics3D.Init();
-      
+
+      // events won't get confirmed
+      CancelPendingEvents();
+
       InvokeOnGameResync();
     }
 
@@ -2317,7 +2479,7 @@ namespace Quantum {
         var systems = &f.Global->Systems;
 
         for (Int32 i = 0; i < _systemsRoot.Length; ++i) {
-          if (BitSet256.IsSet(systems, _systemsRoot[i].RuntimeIndex)) {
+          if (systems->IsSet(_systemsRoot[i].RuntimeIndex)) {
             try {
               handle = _systemsRoot[i].OnSchedule(f, handle);
             } catch (Exception exn) {
@@ -2337,12 +2499,10 @@ namespace Quantum {
           Log.Exception(exn);
         }
 
-#if PROFILER_REPORT
         if (ProfilerSampleGenerated != null) {
           var data = f.Context.ProfilerContext.CreateReport(f.Number, f.IsVerified);
           ProfilerSampleGenerated(data);
         }
-#endif
 
 #if PROFILER_FRAME_AVERAGE
       f.Context.ProfilerContext.StoreFrameTime();
@@ -2440,9 +2600,9 @@ namespace Quantum {
         f.Context.OnFrameSimulationBegin(f);
 
         // call init on ALL systems
-        for (Int32 i = 0; i < _systemsRoot.Length; ++i) {
+        for (Int32 i = 0; i < _systemsAll.Length; ++i) {
           try {
-            _systemsRoot[i].OnInit(f);
+            _systemsAll[i].OnInit(f);
 
             if (f.CommitCommandsMode == CommitCommandsModes.InBetweenSystems) {
               f.Unsafe.CommitAllCommands();
@@ -2456,10 +2616,10 @@ namespace Quantum {
         // if we want to do that for the initial map
 
         // call OnEnabled on all systems which start enabled
-        for (Int32 i = 0; i < _systemsRoot.Length; ++i) {
-          if (_systemsRoot[i].StartEnabled) {
+        for (Int32 i = 0; i < _systemsAll.Length; ++i) {
+          if (_systemsAll[i].StartEnabled) {
             try {
-              _systemsRoot[i].OnEnabled(f);
+              _systemsAll[i].OnEnabled(f);
               
               if (f.CommitCommandsMode == CommitCommandsModes.InBetweenSystems) {
                 f.Unsafe.CommitAllCommands();
@@ -2540,7 +2700,7 @@ namespace Quantum {
 }
 
 // Game/QuantumGame.ReplayTools.cs
- 
+
 namespace Quantum {
   public partial class QuantumGame {
 
@@ -2549,49 +2709,11 @@ namespace Quantum {
 
     ChecksumFile _checksumsToVerify;
 
+    [Obsolete("No longer needed. Just use File.WriteAllBytes(path, serializer.SerializeAssets(assets))")]
     public static void ExportDatabase(IEnumerable<AssetObject> assets, IAssetSerializer serializer, string folderPath, int serializationBufferSize, string dbExtension = ".json") {
-
-      {
-        var filePath = Path.Combine(folderPath, "assetDB" + dbExtension);
-        var bytes = serializer.SerializeAssets(assets);
-        File.WriteAllBytes(filePath, bytes);
-      }
-
-      // Export navmesh files from the memory.
-      // They have to reside in the same folder as the database file.
-      var navMeshes = assets.OfType<NavMesh>();
-      foreach (var n in navMeshes) {
-        // Uses it's own binary serialization code.
-        var bytestream = new ByteStream(new System.Byte[serializationBufferSize]);
-        n.Serialize(bytestream, true);
-
-        var filePath = Path.Combine(folderPath, n.DataFilepath);
-        var directoryName = Path.GetDirectoryName(filePath);
-        if (!Directory.Exists(directoryName)) {
-          Directory.CreateDirectory(directoryName);
-        }
-
-        File.WriteAllBytes(filePath, bytestream.ToArray());
-      }
-
-      // Export mesh triangles from each map
-      var maps = assets.OfType<Map>();
-      foreach (var map in maps) {
-        if (!string.IsNullOrEmpty(map.StaticColliders3DTrianglesBinaryFile)) {
-          var bytestream = new ByteStream(new System.Byte[serializationBufferSize]);
-          map.SerializeStaticColliderTriangles(bytestream, true);
-
-          var filePath = Path.Combine(folderPath, map.StaticColliders3DTrianglesBinaryFile);
-          var directoryName = Path.GetDirectoryName(filePath);
-          if (!Directory.Exists(directoryName)) {
-            Directory.CreateDirectory(directoryName);
-          }
-
-          File.WriteAllBytes(filePath, bytestream.ToArray());
-        }
-      }
+      var filePath = Path.Combine(folderPath, "db" + dbExtension);
+      File.WriteAllBytes(filePath, serializer.SerializeAssets(assets));
     }
-
 
     [Obsolete("Use GetInstantReplaySnapshot(int)")]
     public Frame GetRecordedSnapshot(int frame) {
@@ -2675,7 +2797,9 @@ namespace Quantum {
         DeterministicConfig = Frames.Verified.SessionConfig,
         RuntimeConfig = Frames.Verified.RuntimeConfig,
         InputHistory = RecordedInputs.ExportToList(verifiedFrame),
-        Length = verifiedFrame
+        Length = verifiedFrame,
+        InitialFrame = Session.InitialTick,
+        InitialFrameData = Session.IntitialFrameData,
       };
     }
 
@@ -2684,6 +2808,12 @@ namespace Quantum {
       if (RecordedInputs == null)
         return;
       RecordedInputs.OnInputConfirmed(this, input);
+    }
+
+    private void ReplayToolsOnGameResync() {
+      _instantReplaySnapshotBuffer?.Clear();
+      RecordedInputs?.Clear(Frames.Verified.Number);
+      RecordedChecksums?.Clear();
     }
 
     private void ReplayToolsOnChecksumComputed(Int32 frame, ulong checksum) {
@@ -2746,69 +2876,22 @@ namespace Quantum {
   }
 }
 
-// Game/TriggeredSetPool.cs
- 
-namespace Quantum {
-  public class TriggeredSetPool {
-    Stack<Dictionary<Int32, Boolean>[]> _triggeredPool = new Stack<Dictionary<Int32, Boolean>[]>();
-
-    public void Init(Int32 size) {
-      while (_triggeredPool.Count < size) {
-        _triggeredPool.Push(CreateNew());
-      }
-    }
-
-    public Dictionary<Int32, Boolean>[] Alloc() {
-      Dictionary<Int32, Boolean>[] set;
-
-      if (_triggeredPool.Count > 0) {
-        set = _triggeredPool.Pop();
-      } else {
-        set = CreateNew();
-      }
-
-      return set;
-    }
-
-    public void Free(Dictionary<Int32, Boolean>[] set) {
-      if (set != null) {
-        for (Int32 i = 0; i < Frame.FrameEvents.EVENT_TYPE_COUNT; ++i) {
-          set[i].Clear();
-        }
-
-        // push on pool
-        _triggeredPool.Push(set);
-      }
-    }
-
-    Dictionary<Int32, Boolean>[] CreateNew() {
-      var set = new Dictionary<Int32, Boolean>[Frame.FrameEvents.EVENT_TYPE_COUNT];
-
-      for (Int32 i = 0; i < Frame.FrameEvents.EVENT_TYPE_COUNT; ++i) {
-        set[i] = new Dictionary<Int32, Boolean>();
-      }
-
-      return set;
-    }
-  }
-}
-
 // Game/QuantumGame.EventDispatcher.cs
-﻿
+
 namespace Quantum {
   public partial class QuantumGame {
-    TriggeredSetPool _triggeredSetPool;
-    Dictionary<Int32, Dictionary<Int32, Boolean>[]> _eventsTriggered;
-    List<Int32> _eventFramesVerified;
+
+    Dictionary<EventKey, bool> _eventsTriggered; 
+    Queue<EventKey> _eventsConfirmationQueue;
+
+
+    public int EventWaitingForConfirmationCount => _eventsConfirmationQueue.Count;
 
     void InitEventInvoker(Int32 size) {
-      // allocate dictionary with pre-defined capacity
-      _eventsTriggered = new Dictionary<Int32, Dictionary<Int32, Boolean>[]>(size);
-      _eventFramesVerified = new List<int>(size);
-
-      // init trigger set pool with empty hashsets
-      _triggeredSetPool = new TriggeredSetPool();
-      _triggeredSetPool.Init(size);
+      // how many events per frame without a resize
+      const int EventsPerTickHeuristic = 50;
+      _eventsTriggered = new Dictionary<EventKey, bool>(size * EventsPerTickHeuristic);
+      _eventsConfirmationQueue = new Queue<EventKey>(size * EventsPerTickHeuristic);
     }
 
     void RaiseEvent(EventBase evnt) {
@@ -2821,78 +2904,70 @@ namespace Quantum {
       }
     }
 
-    Dictionary<Int32, Boolean>[] GetTriggered(int frame) {
-      if (_eventsTriggered.TryGetValue(frame, out var triggered) == false) {
-        _eventsTriggered.Add(frame, triggered = _triggeredSetPool.Alloc());
+    void CancelPendingEvents() {
+      while (_eventsConfirmationQueue.Count > 0) {
+        var key = _eventsConfirmationQueue.Dequeue();
+        _eventsTriggered.Remove(key);
+        InvokeOnEvent(key, false);
       }
-
-      return triggered;
+      _eventsTriggered.Clear();
     }
+
 
     void InvokeEvents() {
       while (_context.Events.Count > 0) {
         var head = _context.Events.PopHead();
+        _context.ReleaseEvent(head);
+
         if (head.Synced) {
           if (Session.IsFrameVerified(head.Tick)) {
             RaiseEvent(head);
           }
         } else {
           // calculate hash code
-          var hash = head.GetHashCode();
-          var triggered = GetTriggered(head.Tick);
-
-          // if this was already raised, do nothing
-          if (triggered[head.Id].ContainsKey(hash) == false) {
-            // dont trigger this again
-            triggered[head.Id].Add(hash, false);
-
-            // trigger event
-            RaiseEvent(head);
-          }
+          var key = new EventKey(head.Tick, head.Id, head.GetHashCode());
 
           // if frame is verified, CONFIRM the event in the temp collection of hashes
-          if (Session.IsFrameVerified(head.Tick)) {
+          bool confirmed = Session.IsFrameVerified(head.Tick);
+
+          // if this was already raised, do nothing
+          if (!_eventsTriggered.TryGetValue(key, out var alreadyConfirmed)) {
+            // dont trigger this again
+            _eventsTriggered.Add(key, confirmed);
+            // trigger event
+            RaiseEvent(head);
+            // enqueue confirmation
+            _eventsConfirmationQueue.Enqueue(key);
+          } else if (confirmed && !alreadyConfirmed) {
             // confirm this event is definitive...
-            triggered[head.Id][hash] = true;
+            _eventsTriggered[key] = confirmed;
           }
-        }
-      }
-
-      // temp collection we use to keep track of verified frames
-      _eventFramesVerified.Clear();
-
-      // find any verified triggered sets
-      foreach (var kvp in _eventsTriggered) {
-        if (Session.IsFrameVerified(kvp.Key)) {
-          _eventFramesVerified.Add(kvp.Key);
         }
       }
 
       // invoke confirmed/canceled event callbacks
-      for (int i = 0; i < _eventFramesVerified.Count; ++i) {
-        var frame = _eventFramesVerified[i];
-        var triggered = _eventsTriggered[frame];
+      while (_eventsConfirmationQueue.Count > 0) {
 
-        _eventsTriggered.Remove(frame);
+        var key = _eventsConfirmationQueue.Peek();
 
-        for (int eventTypeID = 0; eventTypeID < triggered.Length; eventTypeID++) {
-          var eventCollection = triggered[eventTypeID];
-          foreach (var kvp in eventCollection) {
-            var hash = kvp.Key;
-            var key = new EventKey(frame, eventTypeID, hash);
-            var confirmed = eventCollection[hash];
-            InvokeOnEvent(key, confirmed);
-          }
+        // need to wait; this will block confirmations from resimulations to maintain order
+        if (!Session.IsFrameVerified(key.Tick)) {
+          Assert.Check(key.Tick <= Session.FrameVerified.Number + Session.RollbackWindow);
+          break;
         }
 
-        _triggeredSetPool.Free(triggered);
+        var confirmed = _eventsTriggered[key];
+        _eventsTriggered.Remove(key);
+        _eventsConfirmationQueue.Dequeue();
+
+        InvokeOnEvent(key, confirmed);
       }
     }
   }
 }
 
 // Game/QuantumGameCallbacks.cs
-﻿
+
 namespace Quantum {
 
   public enum CallbackId {
@@ -3398,27 +3473,71 @@ namespace Quantum {
   }
 }
 
+// Replay/DotNetTaskRunner.cs
+
+namespace Quantum {
+  public class DotNetTaskRunner : IDeterministicPlatformTaskRunner {
+    int _length;
+    bool[] _done = new bool[128];
+    public void Schedule(Action[] delegates) {
+      // store how many we're executing
+      _length = delegates.Length;
+      // clear current state
+      Array.Clear(_done, 0, _done.Length);
+      // barrier this
+      Thread.MemoryBarrier();
+      // queue work
+      for (int i = 0; i < delegates.Length; ++i) {
+        ThreadPool.QueueUserWorkItem(Wrap(i, delegates[i]));
+      }
+    }
+    public void WaitForComplete() {
+      throw new NotImplementedException();
+    }
+    public bool PollForComplete() {
+      for (int i = 0; i < _length; ++i) {
+        if (Volatile.Read(ref _done[i]) == false) {
+          return false;
+        }
+      }
+      return true;
+    }
+    WaitCallback Wrap(int index, Action callback) {
+      return _ => {
+        try {
+          Photon.Deterministic.Assert.Check(Volatile.Read(ref _done[index]) == false);
+          callback();
+        } catch (Exception exn) {
+          Log.Exception(exn);
+        } finally {
+          Volatile.Write(ref _done[index], true);
+        }
+      };
+    }
+  }
+}
+
 // Replay/FlatEntityPrototypeContainer.cs
-﻿
+
 namespace Quantum.Prototypes {
   [Serializable]
   public partial class FlatEntityPrototypeContainer {
-    [FixedArray(0, 1)] public List<CharacterController2D_Prototype> CharacterController2D;
-    [FixedArray(0, 1)] public List<CharacterController3D_Prototype> CharacterController3D;
-    [FixedArray(0, 1)] public List<NavMeshAvoidanceAgent_Prototype> NavMeshAvoidanceAgent;
-    [FixedArray(0, 1)] public List<NavMeshAvoidanceObstacle_Prototype> NavMeshAvoidanceObstacle;
-    [FixedArray(0, 1)] public List<NavMeshPathfinder_Prototype> NavMeshPathfinder;
-    [FixedArray(0, 1)] public List<NavMeshSteeringAgent_Prototype> NavMeshSteeringAgent;
-    [FixedArray(0, 1)] public List<PhysicsBody2D_Prototype> PhysicsBody2D;
-    [FixedArray(0, 1)] public List<PhysicsBody3D_Prototype> PhysicsBody3D;
-    [FixedArray(0, 1)] public List<PhysicsCollider2D_Prototype> PhysicsCollider2D;
-    [FixedArray(0, 1)] public List<PhysicsCollider3D_Prototype> PhysicsCollider3D;
-    [FixedArray(0, 1)] public List<PhysicsCallbacks2D_Prototype> PhysicsCallbacks2D;
-    [FixedArray(0, 1)] public List<PhysicsCallbacks3D_Prototype> PhysicsCallbacks3D;
-    [FixedArray(0, 1)] public List<Transform2D_Prototype> Transform2D;
-    [FixedArray(0, 1)] public List<Transform2DVertical_Prototype> Transform2DVertical;
-    [FixedArray(0, 1)] public List<Transform3D_Prototype> Transform3D;
-    [FixedArray(0, 1)] public List<View_Prototype> View;
+    [ArrayLength(0, 1)] public List<CharacterController2D_Prototype> CharacterController2D;
+    [ArrayLength(0, 1)] public List<CharacterController3D_Prototype> CharacterController3D;
+    [ArrayLength(0, 1)] public List<NavMeshAvoidanceAgent_Prototype> NavMeshAvoidanceAgent;
+    [ArrayLength(0, 1)] public List<NavMeshAvoidanceObstacle_Prototype> NavMeshAvoidanceObstacle;
+    [ArrayLength(0, 1)] public List<NavMeshPathfinder_Prototype> NavMeshPathfinder;
+    [ArrayLength(0, 1)] public List<NavMeshSteeringAgent_Prototype> NavMeshSteeringAgent;
+    [ArrayLength(0, 1)] public List<PhysicsBody2D_Prototype> PhysicsBody2D;
+    [ArrayLength(0, 1)] public List<PhysicsBody3D_Prototype> PhysicsBody3D;
+    [ArrayLength(0, 1)] public List<PhysicsCollider2D_Prototype> PhysicsCollider2D;
+    [ArrayLength(0, 1)] public List<PhysicsCollider3D_Prototype> PhysicsCollider3D;
+    [ArrayLength(0, 1)] public List<PhysicsCallbacks2D_Prototype> PhysicsCallbacks2D;
+    [ArrayLength(0, 1)] public List<PhysicsCallbacks3D_Prototype> PhysicsCallbacks3D;
+    [ArrayLength(0, 1)] public List<Transform2D_Prototype> Transform2D;
+    [ArrayLength(0, 1)] public List<Transform2DVertical_Prototype> Transform2DVertical;
+    [ArrayLength(0, 1)] public List<Transform3D_Prototype> Transform3D;
+    [ArrayLength(0, 1)] public List<View_Prototype> View;
 
     public void Collect(List<ComponentPrototype> target) {
       Collect(CharacterController2D, target);
@@ -3438,6 +3557,16 @@ namespace Quantum.Prototypes {
       Collect(Transform3D, target);
       Collect(View, target);
       CollectGen(target);
+    }
+
+    public void Store(IList<ComponentPrototype> prototypes) {
+      var visitor = new FlatEntityPrototypeContainer.StoreVisitor() {
+        Storage = this
+      };
+
+      foreach (var prototype in prototypes) {
+        prototype.Dispatch(visitor);
+      }
     }
 
     public unsafe partial class StoreVisitor : ComponentPrototypeVisitor {
@@ -3512,30 +3641,43 @@ namespace Quantum.Prototypes {
 
 
 // Replay/JsonAssetSerializerBase.cs
-﻿
+
 namespace Quantum {
   public abstract class JsonAssetSerializerBase : IAssetSerializer {
     private List<ComponentPrototype> _prototypeBuffer = new List<ComponentPrototype>();
 
     public bool IsPrettyPrintEnabled { get; set; } = false;
 
+    /// <summary>
+    /// If set to a positive value, all uncompressed BinaryData assets with size over the value will be compressed
+    /// during serialization.
+    /// </summary>
+    public int CompressBinaryDataOnSerializationThreshold { get; set; } = 1024;
+
+    /// <summary>
+    /// If true, all compressed BinaryData assets will be decompressed during deserialization.
+    /// </summary>
+    public bool DecompressBinaryDataOnDeserialization { get; set; }
+
+    public Encoding Encoding => Encoding.UTF8;
+
     public byte[] SerializeReplay(ReplayFile replay) {
       var json = ToJson(replay);
-      return Encoding.UTF8.GetBytes(json);
+      return Encoding.GetBytes(json);
     }
 
     public ReplayFile DeserializeReplay(byte[] data) {
-      var json = Encoding.UTF8.GetString(data);
+      var json = Encoding.GetString(data);
       return (ReplayFile)FromJson(json, typeof(ReplayFile));
     }
 
     public byte[] SerializeChecksum(ChecksumFile checksums) {
       var json = ToJson(checksums);
-      return Encoding.UTF8.GetBytes(json);
+      return Encoding.GetBytes(json);
     }
 
     public ChecksumFile DeserializeChecksum(byte[] data) {
-      var json = Encoding.UTF8.GetString(data);
+      var json = Encoding.GetString(data);
       return (ChecksumFile)FromJson(json, typeof(ChecksumFile));
     }
 
@@ -3543,14 +3685,20 @@ namespace Quantum {
       FlatDatabaseFile db = new FlatDatabaseFile();
       List<UserAssetSurrogate> userAssets = new List<UserAssetSurrogate>();
 
-      var visitor = new AssetVisitor() { Storage = db };
+      var visitor = new AssetVisitor() { 
+        Storage = db,
+        Serializer = this
+      };
+
+      Assembly executingAssembly = typeof(JsonAssetSerializerBase).Assembly;
 
       foreach (var asset in assets) {
-        if (asset is IBuiltInAssetObject) {
-          ((IBuiltInAssetObject)asset).Dispatch(visitor);
+        if (asset is IBuiltInAssetObject builtInAsset) {
+          builtInAsset.Dispatch(visitor);
         } else {
+          var assetType = asset.GetType();
           var surrogate = new UserAssetSurrogate() {
-            Type = asset.GetType().AssemblyQualifiedName,
+            Type = (assetType.Assembly == executingAssembly) ? assetType.FullName : assetType.AssemblyQualifiedName,
             Json = ToJson(asset),
           };
           userAssets.Add(surrogate);
@@ -3560,10 +3708,11 @@ namespace Quantum {
       db.UserAssets = userAssets;
 
       var json = ToJson(db);
-      return Encoding.UTF8.GetBytes(json);
+      return Encoding.GetBytes(json);
     }
 
-    public string SerializeAssetReadable(AssetObject asset) {
+
+    public string PrintAsset(AssetObject asset) {
 
       object objectToSerialize = asset;
       if ( asset is EntityPrototype ep ) {
@@ -3575,9 +3724,10 @@ namespace Quantum {
       return ToJson(objectToSerialize);
     }
 
+    public IEnumerable<AssetObject> DeserializeAssets(byte[] data) => IAssetSerializerExtensions.DeserializeAssets(this, data);
 
-    public IEnumerable<AssetObject> DeserializeAssets(byte[] bytes) {
-      var json = Encoding.UTF8.GetString(bytes);
+    public IEnumerable<AssetObject> DeserializeAssets(byte[] data, int index, int count) {
+      string json = Encoding.UTF8.GetString(data, index, count);
       var db = (FlatDatabaseFile)FromJson(json, typeof(FlatDatabaseFile));
 
       List<AssetObject> result = new List<AssetObject>();
@@ -3602,9 +3752,15 @@ namespace Quantum {
         }
       }
 
+      if (db.BinaryData != null) {
+        foreach (var surrogate in db.BinaryData) {
+          result.Add(CreateFromSurrogate(surrogate));
+        }
+      }
+
       if (db.UserAssets != null) {
         foreach (var surrogate in db.UserAssets) {
-          var type = Type.GetType(surrogate.Type);
+          var type = Type.GetType(surrogate.Type, true);
           var asset = (AssetObject)FromJson(surrogate.Json, type);
           result.Add(asset);
         }
@@ -3657,6 +3813,8 @@ namespace Quantum {
       };
     }
 
+    
+
     private EntityPrototype CreateFromSurrogate(EntityPrototypeSurrogate surrogate) {
       try {
         Assert.Check(_prototypeBuffer.Count == 0);
@@ -3694,6 +3852,39 @@ namespace Quantum {
       return map;
     }
 
+    private BinaryDataSurrogate CreateSurrogate(BinaryData asset) {
+
+      byte[] data = asset.Data ?? Array.Empty<byte>();
+      bool isCompressed = asset.IsCompressed;
+
+      if (!asset.IsCompressed && CompressBinaryDataOnSerializationThreshold > 0 && data.Length >= CompressBinaryDataOnSerializationThreshold) {
+        data = ByteUtils.GZipCompressBytes(data);
+        isCompressed = true;
+      }
+
+      return new BinaryDataSurrogate() {
+        Identifier = asset.Identifier,
+        Base64Data = ByteUtils.Base64Encode(data),
+        IsCompressed = isCompressed,
+      };
+    }
+
+    private BinaryData CreateFromSurrogate(BinaryDataSurrogate surrogate) {
+
+      var result = new BinaryData() {
+        Identifier = surrogate.Identifier,
+        Data = ByteUtils.Base64Decode(surrogate.Base64Data),
+        IsCompressed = surrogate.IsCompressed,
+      };
+
+      if (surrogate.IsCompressed && DecompressBinaryDataOnDeserialization) {
+        result.IsCompressed = false;
+        result.Data = ByteUtils.GZipDecompressBytes(result.Data);
+      }
+
+      return result;
+    }
+
     [Serializable]
     public class EntityPrototypeSurrogate {
       public FlatEntityPrototypeContainer Container;
@@ -3712,8 +3903,20 @@ namespace Quantum {
       public string Type;
     }
 
+    [Serializable]
+    public class BinaryDataSurrogate {
+      public AssetObjectIdentifier Identifier;
+      public bool IsCompressed;
+      public string Base64Data;
+    }
+
     private class AssetVisitor : IAssetObjectVisitor {
       public FlatDatabaseFile Storage;
+      public JsonAssetSerializerBase Serializer;
+
+      void IAssetObjectVisitor.Visit(BinaryData asset) {
+        Storage.BinaryData.Add(Serializer.CreateSurrogate(asset));
+      }
 
       void IAssetObjectVisitor.Visit(CharacterController2DConfig asset) {
         Storage.CharacterController2DConfig.Add(asset);
@@ -3769,17 +3972,18 @@ namespace Quantum {
       public List<PolygonCollider> PolygonCollider = new List<PolygonCollider>();
       public List<TerrainCollider> TerrainCollider = new List<TerrainCollider>();
       public List<UserAssetSurrogate> UserAssets = new List<UserAssetSurrogate>();
+      public List<BinaryDataSurrogate> BinaryData = new List<BinaryDataSurrogate>();
     }
   }
 }
 
 // Replay/ChecksumFile.cs
-﻿
+
 namespace Quantum {
 
   [Serializable]
   public class ChecksumFile {
-    public static int GrowSize = 60 * 60; // one minute of recording at 60 FPS
+    public const int GrowSize = 60 * 60; // one minute of recording at 60 FPS
 
     [Serializable]
     public struct ChecksumEntry {
@@ -3821,6 +4025,15 @@ namespace Quantum {
         }
       }
     }
+
+    internal void Clear() {
+      writeIndex = 0;
+      if ( Checksums != null ) {
+        for (int i = 0; i < Checksums.Length; ++i) {
+          Checksums[i] = default;
+        }
+      }
+    }
   }
 
   public static class ChecksumFileHelper {
@@ -3836,7 +4049,7 @@ namespace Quantum {
 
 
 // Replay/InputProvider.cs
-﻿
+
 namespace Quantum {
   public class InputProvider : IDeterministicReplayProvider {
     private int                         _playerCount;
@@ -3863,6 +4076,16 @@ namespace Quantum {
 
       if (capacity > 0) {
         Allocate(capacity);
+      }
+    }
+
+    public void Clear(int startFrame) {
+      _startFrame = startFrame;
+      for (int i = 0; i < _inputs.Length; i++) {
+        _inputs[i].Tick = i + _startFrame;
+        for (int j = 0; j < _playerCount; j++) {
+          _inputs[i].Inputs[j].Clear();
+        }
       }
     }
 
@@ -3976,7 +4199,7 @@ namespace Quantum {
       }
 
       for (int i = oldSize; i < _inputs.Length; i++) {
-        _inputs[i].Tick   = i + _startFrame;
+        _inputs[i].Tick = i + _startFrame;
         _inputs[i].Inputs = new DeterministicTickInput[_playerCount];
         for (int j = 0; j < _playerCount; j++) {
           _inputs[i].Inputs[j] = new DeterministicTickInput();
@@ -4004,11 +4227,22 @@ namespace Quantum {
       }
     }
 
+    public static void Clear(this DeterministicTickInput input) {
+      input.Tick        = default;
+      input.PlayerIndex = default;
+      input.DataArray   = default;
+      input.DataLength  = default;
+      input.Flags       = default;
+      input.Rpc         = default;
+    }
+
+
+
     public static void Set(this DeterministicTickInput input, DeterministicFrameInputTemp temp) {
       input.Tick        = temp.Frame;
       input.PlayerIndex = temp.Player;
       input.DataArray   = temp.CloneData();
-      input.DataLength = temp.DataLength;
+      input.DataLength  = temp.DataLength;
       input.Flags       = temp.Flags;
       input.Rpc         = temp.Rpc;
     }
@@ -4037,7 +4271,7 @@ namespace Quantum {
 }
 
 // Replay/ReplayFile.cs
-﻿
+
 namespace Quantum {
 
   [Serializable]
@@ -4047,12 +4281,14 @@ namespace Quantum {
     public DeterministicTickInputSet[] InputHistory;
     public Int32 Length;
     public byte[] Frame;
+    public Int32 InitialFrame;
+    public byte[] InitialFrameData;
   }
 }
 
 
 // Replay/SessionContainer.cs
-﻿
+
 namespace Quantum {
   public class SessionContainer {
     DeterministicSessionConfig _sessionConfig;
@@ -4071,6 +4307,7 @@ namespace Quantum {
     public IAssetSerializer             assetSerializer;
     public IEventDispatcher             eventDispatcher;
     public ICallbackDispatcher          callbackDispatcher;
+    public int                          gameFlags;
 
     public static Boolean          _loadedAllStatics = false;
     public static Object           _lock             = new Object();
@@ -4098,27 +4335,25 @@ namespace Quantum {
       }
     }
 
-    public void Start() {
+    public void Start(bool logInitForConsole = true) {
       
       if (!_loadedAllStatics) {
         lock (_lock) {
           if (!_loadedAllStatics) {
             // console first
-            Log.InitForConsole();
+            if (logInitForConsole) {
+              Log.InitForConsole();
+            }
 
             // try to figure out platform if not set
             if (Native.Utils == null) {
               Native.Utils = CreateNativeUtils();
             }
+
+            if (MemoryLayoutVerifier.Platform == null) {
+              MemoryLayoutVerifier.Platform = new MemoryLayoutVerifier.DefaultPlatform();
+            }
           }
-        }
-      }
-
-      var simulationConfig = (SimulationConfig)resourceManager.GetAsset(runtimeConfig.SimulationConfig.Id);
-
-      lock (_lock) {
-        if (!_loadedAllStatics) {
-          Layers.Init(simulationConfig.Physics.Layers, simulationConfig.Physics.LayerMatrix);
           _loadedAllStatics = true;
         }
       }
@@ -4128,6 +4363,7 @@ namespace Quantum {
         AssetSerializer = assetSerializer, 
         CallbackDispatcher = callbackDispatcher, 
         EventDispatcher = eventDispatcher,
+        GameFlags = gameFlags,
       });
 
       if (provider == null) {
@@ -4140,6 +4376,7 @@ namespace Quantum {
       info.Architecture = DeterministicPlatformInfo.Architectures.x86;
       info.RuntimeHost  = DeterministicPlatformInfo.RuntimeHosts.PhotonServer;
       info.Runtime      = DeterministicPlatformInfo.Runtimes.NetFramework;
+      info.TaskRunner   = new DotNetTaskRunner();
 
       switch (System.Environment.OSVersion.Platform) {
         case PlatformID.Unix:
@@ -4196,7 +4433,7 @@ namespace Quantum {
 
 
 // Systems/Base/SystemBase.cs
-﻿
+
 namespace Quantum {
   public abstract partial class SystemBase {
     Int32? _runtimeIndex;
@@ -4295,7 +4532,7 @@ namespace Quantum {
       if (_children != null) {
         var systems = &f.Global->Systems;
         for (var i = 0; i < _children.Length; ++i) {
-          if (BitSet256.IsSet(systems, _children[i].RuntimeIndex)) {
+          if (systems->IsSet(_children[i].RuntimeIndex)) {
             try {
               taskHandle = _children[i].OnSchedule(f, taskHandle);
             } catch (Exception exn) {
@@ -4430,8 +4667,196 @@ namespace Quantum {
   }
 }
 
+// Systems/Core/DebugSystem.cs
+
+namespace Quantum.Core {
+
+  public static partial class DebugCommandType {
+    public const int Create = 0;
+    public const int Destroy = 1;
+    public const int UserCommandTypeStart = 1000;
+  }
+
+  public static partial class DebugCommand {
+
+    public static event Action<Payload, Exception> CommandExecuted
+#if DEBUG
+      ;
+#else
+    { add { } remove { } }
+#endif
+
+    public static bool IsEnabled =>
+#if DEBUG
+      true;
+#else
+      false;
+#endif
+
+    public static void Send(QuantumGame game, params Payload[] payload) {
+#if DEBUG
+      game.SendCommand(new InternalCommand() {
+        Data = payload
+      });
+#else
+      Log.Warn("DebugCommand works only in DEBUG builds.");
+#endif
+    }
+
+    public partial struct Payload {
+      public long Id;
+      public int Type;
+      public EntityRef Entity;
+      public ComponentSet Components;
+      public byte[] Data;
+    }
+
+    public static Payload CreateDestroyPayload(EntityRef entityRef) {
+      return new Payload() {
+        Type = DebugCommandType.Destroy,
+        Entity = entityRef
+      };
+    }
+
+    public static Payload CreateMaterializePayload(EntityRef entityRef, EntityPrototype prototype, IAssetSerializer serializer) {
+      ComponentSet componentSet = default;
+      foreach (var component in prototype.Container.Components) {
+        componentSet.Add(ComponentTypeId.GetComponentIndex(component.ComponentType));
+      }
+      return new Payload() {
+        Type = DebugCommandType.Create,
+        Entity = entityRef,
+        Data = serializer.SerializeAssets(new[] { prototype }),
+        Components = componentSet
+      };
+    }
+
+    public static Payload CreateRemoveComponentPayload(EntityRef entityRef, Type componentType) {
+      var components = new ComponentSet();
+      components.Add(ComponentTypeId.GetComponentIndex(componentType));
+
+      return new Payload() {
+        Type = DebugCommandType.Destroy,
+        Entity = entityRef,
+        Components = components
+      };
+    }
+
+#if DEBUG
+    internal static DeterministicCommand CreateCommand() => new InternalCommand();
+    internal static SystemBase CreateSystem() => new InternalSystem();
+
+    private static void Execute(Frame f, ref Payload payload) {
+      Exception error = null;
+      try {
+        switch (payload.Type) {
+          case DebugCommandType.Create:
+            payload.Entity = ExecuteCreate(f, payload.Entity, payload.Data);
+            break;
+          case DebugCommandType.Destroy:
+            ExecuteDestroy(f, payload.Entity, payload.Components);
+            break;
+          default:
+            if (payload.Type >= DebugCommandType.UserCommandTypeStart) {
+              ExecuteUser(f, ref payload);
+            } else {
+              throw new InvalidOperationException($"Unknown command type: {payload.Type}");
+            }
+            break;
+        }
+      } catch (Exception ex) {
+        error = ex;
+      }
+      CommandExecuted?.Invoke(payload, error);
+    }
+
+    private static void ExecuteDestroy(Frame f, EntityRef entity, ComponentSet components) {
+      if (!f.Exists(entity)) {
+        Log.Error("Entity does not exist: {0}", entity);
+      } else if (components.IsEmpty) {
+        if (!f.Destroy(entity)) {
+          Log.Error("Failed to destroy entity {0}", entity);
+        }
+      } else {
+        for (int i = 1; i < ComponentTypeId.Type.Length; ++i) {
+          if (!components.IsSet(i)) {
+            continue;
+          }
+          var type = ComponentTypeId.Type[i];
+          if (!f.Remove(entity, type)) {
+            Log.Error("Failed to destroy component {0} of entity {1}", type, entity);
+          }
+        }
+
+      }
+    }
+
+    private static EntityRef ExecuteCreate(Frame f, EntityRef entity, byte[] data) {
+      EntityPrototype prototype = null;
+      if (data?.Length > 0) {
+        prototype = f.Context.AssetSerializer.DeserializeAssets(data).OfType<EntityPrototype>().FirstOrDefault();
+        if (prototype == null) {
+          Log.Error("No prototype found");
+        }
+      }
+
+      if (!entity.IsValid) {
+        if (prototype != null) {
+          entity = f.Create(prototype);
+        } else {
+          entity = f.Create();
+        }
+      } else if (prototype != null) {
+        f.Set(entity, prototype, out _);
+      }
+
+      return entity;
+    }
+
+    static partial void ExecuteUser(Frame f, ref Payload payload);
+    static partial void SerializeUser(BitStream stream, ref Payload payload);
+
+    private class InternalCommand : DeterministicCommand {
+      public Payload[] Data = { };
+
+      public override void Serialize(BitStream stream) {
+        stream.SerializeArrayLength(ref Data);
+
+        for (int i = 0; i < Data.Length; ++i) {
+          stream.Serialize(ref Data[i].Id);
+          stream.Serialize(ref Data[i].Type);
+          stream.Serialize(ref Data[i].Entity);
+          stream.Serialize(ref Data[i].Data);
+          unsafe {
+            var set = Data[i].Components;
+            for (int block = 0; block < ComponentSet.BLOCK_COUNT; ++block) {
+              stream.Serialize((&set)->_set + block);
+            }
+            Data[i].Components = set;
+          }
+          SerializeUser(stream, ref Data[i]);
+        }
+      }
+    }
+
+    private unsafe class InternalSystem : SystemMainThread {
+      public override void Update(Frame f) {
+        for (int p = 0; p < f.PlayerCount; ++p) {
+          if (f.GetPlayerCommand(p) is InternalCommand cmd) {
+            for (int i = 0; i < cmd.Data.Length; ++i) {
+              Execute(f, ref cmd.Data[i]);
+            }
+          }
+        }
+      }
+    }
+#endif
+  }
+}
+
+
 // Systems/Core/NavigationSystem.cs
-﻿
+
 namespace Quantum.Core {
   public unsafe class NavigationSystem : SystemBase, INavigationCallbacks {
     Frame _f;
@@ -4441,7 +4866,7 @@ namespace Quantum.Core {
       return f.Navigation.Update(f, f.DeltaTime, this, taskHandle);
     }
 
-    public void OnWaypointReached(EntityRef entity, FPVector2 waypoint, Navigation.WaypointFlag waypointFlags, ref bool resetAgent) {
+    public void OnWaypointReached(EntityRef entity, FPVector3 waypoint, Navigation.WaypointFlag waypointFlags, ref bool resetAgent) {
       _f.Signals.OnNavMeshWaypointReached(entity, waypoint, waypointFlags, ref resetAgent);
     }
 
@@ -4456,7 +4881,7 @@ namespace Quantum.Core {
 }
 
 // Systems/Core/EntityPrototypeSystem.cs
-﻿namespace Quantum.Core {
+namespace Quantum.Core {
   public unsafe sealed partial class EntityPrototypeSystem : SystemSignalsOnly, ISignalOnMapChanged {
     public override void OnInit(Frame f) {
       OnMapChanged(f, default);
@@ -4492,8 +4917,39 @@ namespace Quantum.Core {
   }
 }
 
+// Systems/Core/PlayerConnectedSystem.cs
+namespace Quantum.Core {
+  unsafe class PlayerConnectedSystem : SystemMainThread {
+    public override void Update(Frame f) {
+      if (f.IsVerified == false) {
+        return;
+      }
+
+      for (int p = 0; p < f.PlayerCount; p++) {
+        var isPlayerConnected = (f.GetPlayerInputFlags(p) & Photon.Deterministic.DeterministicInputFlags.PlayerNotPresent) == 0;
+        if (isPlayerConnected != f.Global->PlayerLastConnectionState.IsSet(p)) {
+          if (isPlayerConnected) {
+            f.Signals.OnPlayerConnected(p);
+          } else {
+            f.Signals.OnPlayerDisconnected(p);
+          }
+
+          if (isPlayerConnected) {
+            f.Global->PlayerLastConnectionState.Set(p);
+          }
+          else {
+            f.Global->PlayerLastConnectionState.Clear(p);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
 // Systems/Core/PhysicsSystem.cs
-﻿
+
 namespace Quantum.Core {
   public unsafe partial class PhysicsSystem2D : SystemBase, ICollisionCallbacks2D {
     public override void OnInit(Frame f) {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Quantum;
+using Quantum.Editor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,18 +33,17 @@ public abstract class EntityComponentBase : MonoBehaviour {
   public static Type UnityComponentTypeToQuantumComponentType(Type type) => ComponentPrototype.PrototypeTypeToComponentType(UnityComponentTypeToQuantumPrototypeType(type));
 
 #if UNITY_EDITOR
-
-  public virtual void OnInspectorGUI(UnityEditor.SerializedObject so, IQuantumEditorGUI editor) {
-    DrawPrototype(so, editor);
-    DrawNonPrototypeFields(so, editor);
+  public virtual void OnInspectorGUI(UnityEditor.SerializedObject so, IQuantumEditorGUI QuantumEditorGUI) {
+    DrawPrototype(so, QuantumEditorGUI);
+    DrawNonPrototypeFields(so, QuantumEditorGUI);
   }
 
-  protected void DrawPrototype(UnityEditor.SerializedObject so, IQuantumEditorGUI editor) {
-    editor.DrawProperty(so.FindPropertyOrThrow("Prototype"), skipRoot: true);
+  protected void DrawPrototype(UnityEditor.SerializedObject so, IQuantumEditorGUI QuantumEditorGUI) {
+    QuantumEditorGUI.Inspector(so, "Prototype");
   }
 
-  protected void DrawNonPrototypeFields(UnityEditor.SerializedObject so, IQuantumEditorGUI editor) {
-    editor.DrawProperty(so.GetIterator(), filter: new[] { "m_Script", "Prototype" });
+  protected void DrawNonPrototypeFields(UnityEditor.SerializedObject so, IQuantumEditorGUI QuantumEditorGUI) {
+    QuantumEditorGUI.Inspector(so, filters: new[] { "Prototype" }, drawScript: false);
   }
 
 #endif
@@ -67,7 +67,7 @@ public abstract class EntityComponentBase<TPrototype> : EntityComponentBase
 
 public abstract class EntityComponentBase<TPrototype, TAdapter> : EntityComponentBase
   where TPrototype : ComponentPrototype, new()
-  where TAdapter : class, IPrototypeAdapter<TPrototype>, new() {
+  where TAdapter : PrototypeAdapter<TPrototype>, new() {
 
   [FormerlySerializedAs("prototype")]
   public TAdapter Prototype = new TAdapter();

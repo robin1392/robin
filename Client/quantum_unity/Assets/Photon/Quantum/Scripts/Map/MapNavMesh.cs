@@ -26,6 +26,7 @@ public static class MapNavMesh {
     public FindClosestTriangleCalculation ClosestTriangleCalculation;
     public int ClosestTriangleCalculationDepth;
     public bool EnableQuantum_XY;
+    public bool LinkErrorCorrection;
   }
 
   #region Importing From Unity
@@ -44,13 +45,15 @@ public static class MapNavMesh {
     public bool FixTrianglesOnEdges = true;
     [Tooltip("Larger scaled navmeshes may require to increase this value (e.g. 0.001) when false-positive borders are detected.")]
     public float FixTrianglesOnEdgesEpsilon = float.Epsilon;
+    [Tooltip("Automatically correct navmesh link position to the closest triangle (default is off).")]
+    public bool LinkErrorCorrection = false;
     [Tooltip("SpiralOut will be considerably faster but fallback triangles can be null.")]
     public FindClosestTriangleCalculation ClosestTriangleCalculation = FindClosestTriangleCalculation.SpiralOut;
     [Tooltip("Number of cells to search triangles in neighbors.")]
     public int ClosestTriangleCalculationDepth = 3;
     [Tooltip("Activate this and the navmesh baking will flip Y and Z to support navmeshes generated in the XY plane.")]
     public bool EnableQuantum_XY;
-    [Tooltip("The minimum agent radius supported by the navmesh. The value is retrieved from Unity settings when baking in Editor.")]
+    [Tooltip("The agent radius that the navmesh is build for. The value is retrieved from Unity settings when baking in Editor.")]
     public FP MinAgentRadius = FP._0_25;
     [Tooltip("Toggle the Quantum region import.")]
     public bool ImportRegions = true;
@@ -146,6 +149,7 @@ public static class MapNavMesh {
       // are within its bounds. Use the smallest possible bounds/region found. Use the RegionIndex from that for all triangles.
       if (island.Count > 0) {
         string regionId = string.Empty;
+        FP regionCost = FP._1;
         float smallestRegionBounds = float.MaxValue;
         var regions = MapDataBaker.FindLocalObjects<MapNavMeshRegion>(scene);
         foreach (var region in regions) {
@@ -177,6 +181,12 @@ public static class MapNavMesh {
               if (size < smallestRegionBounds) {
                 smallestRegionBounds = size;
                 regionId = region.Id;
+                regionCost = region.Cost;
+
+                if (region.OverwriteCost == false) {
+                  // Grab the most recent area cost from Unity (ignore the one in the scene)
+                  regionCost = UnityEngine.AI.NavMesh.GetAreaCost(triangles[t].Area).ToFP();
+                }
               }
             }
           }
@@ -197,6 +207,7 @@ public static class MapNavMesh {
 
           foreach (var triangleIndex in island) {
             triangles[triangleIndex].RegionId = regionId;
+            triangles[triangleIndex].Cost = regionCost;
           }
         }
         else {
@@ -261,26 +272,10 @@ public static class MapNavMesh {
       if (p == v0 || p == v1 || v0 == v1)
         return false;
 
-      // Flatten points, the segment can have an edge
-      p.y  = 0.0f;
-      v0.y = 0.0f;
-      v1.y = 0.0f;
-
-      Vector3 cross = Vector3.Cross(v1 - v0, p - v0);
-
-      // We have to use a custom epsilon (usually float.Epsilon) because the Unity navmesh can be generated insufficient accuracy (along tile lines and large scale navmeshes for example).
-      if (Mathf.Abs(cross.magnitude) > epsilon)
-        return false;
-
-      float dot = Vector3.Dot(v1 - v0, p - v0);
-      if (dot < 0.0f)
-        return false;
-
-      float length = (v1 - v0).sqrMagnitude;
-      if (dot > length)
-        return false;
-
-      return true;
+      var p0 = Vector3.Distance(p, v0);
+      var p1 = Vector3.Distance(p, v1);
+      var v = Vector3.Distance(v0, v1);
+      return Mathf.Abs(p0 + p1 - v) < epsilon;
     }
 
     public static void SplitTriangle(ref MapNavMeshTriangle[] triangles, int t, int v0, int vNew) {
@@ -292,6 +287,7 @@ public static class MapNavMesh {
       MapNavMeshTriangle newTriangle = new MapNavMeshTriangle {
         Area = triangles[t].Area,
         RegionId = triangles[t].RegionId,
+        Cost = triangles[t].Cost,
         VertexIds2 = new int[3]
       };
 
@@ -309,7 +305,7 @@ public static class MapNavMesh {
   public static BakeData ImportFromUnity(Scene scene, ImportSettings settings, string name) {
     var result = new BakeData();
 
-    using (var progressBar = new ProgressBar("Importing Unity NavMesh")) {
+    using (var progressBar = new ProgressBar("Importing Unity NavMesh", true)) {
 
       progressBar.Info = "Calculate Triangulation";
       var unityNavMeshTriangulation = UnityEngine.AI.NavMesh.CalculateTriangulation();
@@ -341,7 +337,8 @@ public static class MapNavMesh {
               unityNavMeshTriangulation.indices[baseIndex + 1],
               unityNavMeshTriangulation.indices[baseIndex + 2] },
           Area = area,
-          RegionId = null
+          RegionId = null,
+          Cost = FP._1
         };
       }
 
@@ -449,7 +446,8 @@ public static class MapNavMesh {
           End = link.endTransform.position,
           Bidirectional = link.biDirectional,
           CostOverride = link.costOverride,
-          RegionId = regionId
+          RegionId = regionId,
+          Name = link.name
         });
       }
 
@@ -531,7 +529,13 @@ public static class MapNavMesh {
 
       var mesh = new Mesh();
       mesh.subMeshCount = 3;
+
+#if QUANTUM_XY
+      mesh.vertices = navmesh.Vertices.Select(x => new Vector3(x.Point.X.AsFloat, x.Point.Z.AsFloat, x.Point.Y.AsFloat)).ToArray();
+#else
       mesh.vertices = navmesh.Vertices.Select(x => x.Point.ToUnityVector3()).ToArray();
+#endif
+
       mesh.SetTriangles(navmesh.Triangles.SelectMany(x => x.Regions.IsMainArea ? new int[] { x.Vertex0, x.Vertex1, x.Vertex2 } : new int[0]).ToArray(), 0);
       mesh.SetTriangles(navmesh.Triangles.SelectMany(x => x.Regions.HasValidRegions && x.Regions.IsSubset(regionMask) ? new int[] { x.Vertex0, x.Vertex1, x.Vertex2 } : new int[0]).ToArray(), 1);
       mesh.SetTriangles(navmesh.Triangles.SelectMany(x => x.Regions.HasValidRegions && !x.Regions.IsSubset(regionMask) ? new int[] { x.Vertex0, x.Vertex1, x.Vertex2 } : new int[0]).ToArray(), 2);

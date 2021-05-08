@@ -9,10 +9,8 @@
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/nunit.framework.dll
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/PhotonDeterministic.dll
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/quantum.code.dll
-/Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/quantum.core.dll
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/quantum.code.pdb
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/PhotonDeterministic.pdb
-/Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/quantum.core.pdb
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.csprojAssemblyReference.cache
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.dll.config
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.AssemblyInfoInputs.cache
@@ -21,3 +19,4 @@
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.csproj.CopyComplete
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.dll
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.pdb
+/Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/PhotonDeterministic.xml

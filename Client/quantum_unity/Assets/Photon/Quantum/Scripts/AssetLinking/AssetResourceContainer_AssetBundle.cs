@@ -19,23 +19,9 @@ namespace Quantum {
     }
 
     [Serializable]
-    public class AssetResourceInfoGroup_AssetBundle : AssetResourceGroupInfo<AssetResourceInfo_AssetBundle> {
+    public class AssetResourceInfoGroup_AssetBundle : AssetResourceInfoGroup<AssetResourceInfo_AssetBundle> {
 
       public override int SortOrder => 3000;
-
-#if UNITY_EDITOR
-      public override AssetResourceInfo EditorTryCreateResourceInfo(AssetBase asset) {
-        string assetPath = AssetDatabase.GetAssetPath(asset);
-        var assetBundleName = AssetDatabase.GetImplicitAssetBundleName(assetPath);
-        if (!string.IsNullOrEmpty(assetBundleName)) {
-          return new AssetResourceInfo_AssetBundle() {
-            AssetBundle = assetBundleName,
-            AssetName = Path.GetFileName(assetPath),
-          };
-        }
-        return null;
-      }
-#endif
 
       public override UnityResourceLoader.ILoader CreateLoader() {
         return new Loader_AssetBundles();

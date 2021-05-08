@@ -34,53 +34,22 @@ namespace Quantum.Demo {
 
       Username.text = LastUsername;
 
-      // Find best initial value for the region select
-      var selectedOption          = 0;
-      var lastSelectedRegionToken = LastSelectedRegion;
-      if (string.IsNullOrEmpty(lastSelectedRegionToken)) {
-        lastSelectedRegionToken = PhotonServerSettings.Instance.AppSettings.FixedRegion;
-      }
+      var appSettings = PhotonServerSettings.Instance.AppSettings;
 
       // Create region options
-      var options = new List<UI.Dropdown.OptionData>();
-      options.Add(new UI.Dropdown.OptionData("Best Region"));
-      if (SelectableRegions) {
-        foreach (var photonRegion in SelectableRegions.Regions) {
-          options.Add(new UI.Dropdown.OptionData(photonRegion.Name));
-          if (photonRegion.Token == lastSelectedRegionToken) {
-            selectedOption = options.Count - 1;
-          }
-        }
-      }
-      else {
-        options.Add(new UI.Dropdown.OptionData(PhotonServerSettings.Instance.AppSettings.FixedRegion));
-        if (lastSelectedRegionToken == PhotonServerSettings.Instance.AppSettings.FixedRegion) {
-          selectedOption = options.Count - 1;
-        }
-      }
-
-      RegionDropdown.AddOptions(options);
+      RegionDropdown.AddOptions(PhotonRegions.CreateDefaultDropdownOptions(out int selectedOption, LastSelectedRegion, appSettings, SelectableRegions));
       RegionDropdown.value = selectedOption;
-      RegionDropdown.transform.parent.gameObject.SetActive(string.IsNullOrEmpty(PhotonServerSettings.Instance.AppSettings.Server));
+      RegionDropdown.transform.parent.gameObject.SetActive(string.IsNullOrEmpty(appSettings.Server));
 
-      // Create version dropdown options
-      options = new List<UI.Dropdown.OptionData>();
-      options.Add(new UI.Dropdown.OptionData("Use Private AppVersion (recommended)"));
-      options.Add(new UI.Dropdown.OptionData($"Use Photon AppVersion: '{PhotonServerSettings.Instance.AppSettings.AppVersion}'"));
-      if (SelectableAppVersion) {
-        foreach (var customVersion in SelectableAppVersion.CustomVersions) {
-          options.Add(new UI.Dropdown.OptionData($"'{customVersion}'"));
-        }
-      }
-
-      AppVersionDropdown.AddOptions(options);
+      // Create version options
+      AppVersionDropdown.AddOptions(PhotonAppVersions.CreateDefaultDropdownOptions(appSettings, SelectableAppVersion));
       AppVersionDropdown.value = LastSelectedAppVersion;
     }
 
     public override void OnShowScreen(bool first) {
       base.OnShowScreen(first);
 
-      ReconnectButton.interactable = UIMain.Client != null || ReconnectInformation.Instance.IsValid;
+      ReconnectButton.interactable = ReconnectInformation.Instance.IsValid;
     }
 
     public void OnAppVersionHelpButtonClicked() {
@@ -102,10 +71,11 @@ namespace Quantum.Demo {
 
       // Overwrite region
       if (string.IsNullOrEmpty(appSettings.Server) == false) {
-        // direct connect will not set a region
+        // Direct connect will not set a region
         appSettings.FixedRegion = string.Empty;
       }
       else {
+        // Connections to nameserver require an app id
         if (string.IsNullOrEmpty(appSettings.AppIdRealtime.Trim())) {
           UIDialog.Show("Error", "AppId not set.\n\nSearch or create PhotonServerSettings and configure an AppId.");
           return;
@@ -115,7 +85,7 @@ namespace Quantum.Demo {
           appSettings.FixedRegion = string.Empty;
           LastSelectedRegion = "best";
         }
-        else if (RegionDropdown.value > 0 && SelectableRegions != null && RegionDropdown.value < SelectableRegions.Regions.Count + 1) {
+        else if (SelectableRegions != null && RegionDropdown.value <= SelectableRegions.Regions.Count) {
           appSettings.FixedRegion = SelectableRegions.Regions[RegionDropdown.value - 1].Token;
           LastSelectedRegion = appSettings.FixedRegion;
         }
@@ -123,34 +93,8 @@ namespace Quantum.Demo {
         Debug.Log($"Using region '{LastSelectedRegion}'");
       }
 
-      // Overwrite app version
-      switch (AppVersionDropdown.value) {
-        case (int)PhotonAppVersions.Type.UsePrivateAppVersion:
-          // Use the guid created only for this build
-          if (SelectableAppVersion) {
-            var privateValue = SelectableAppVersion.Private;
-            if (!string.IsNullOrEmpty(privateValue)) {
-              appSettings.AppVersion += $" {privateValue}";
-            }
-          }
-          break;
-
-        case (int)PhotonAppVersions.Type.UsePhotonAppVersion:
-          // Keep the original version
-          break;
-
-        default:
-          // Set a pre-defined app version to find play groups.
-          var appVersionIndex = AppVersionDropdown.value - (int)PhotonAppVersions.Type.Custom;
-          if (SelectableAppVersion && appVersionIndex < SelectableAppVersion.CustomVersions.Count) {
-            appSettings.AppVersion += SelectableAppVersion.CustomVersions[appVersionIndex];
-          }
-          else {
-            appSettings.AppVersion += $" Custom {appVersionIndex:00}";
-          }
-          break;
-      }
-
+      // Append selected app version
+      appSettings.AppVersion += PhotonAppVersions.AppendAppVersion((PhotonAppVersions.Type)AppVersionDropdown.value, SelectableAppVersion);
       LastSelectedAppVersion = AppVersionDropdown.value;
       Debug.Log($"Using app version '{appSettings.AppVersion}'");
 
@@ -164,28 +108,44 @@ namespace Quantum.Demo {
     }
 
     public void OnReconnectClicked() {
-      if (UIMain.Client != null && PhotonServerSettings.Instance.CanRejoin && UIMain.Client.ReconnectAndRejoin()) {
-        // ReconnectAndRejoin can lead to OnJoinRoomFailed or OnJoinedRoom in
-        Debug.Log($"Reconnecting and rejoining");
-        HideScreen();
-        UIReconnecting.ShowScreen();
-        return;
+      // Client object is still valid, try a reconnecting
+      if (UIMain.Client != null) {
+        if (PhotonServerSettings.Instance.CanRejoin) {
+          // Reconnect to game server and automatically rejoin the room
+          // https://doc.photonengine.com/en-us/realtime/current/troubleshooting/analyzing-disconnects#quick_rejoin__reconnectandrejoin_
+          if (UIMain.Client.ReconnectAndRejoin()) {
+            Debug.Log($"Reconnecting and rejoining");
+            HideScreen();
+            UIReconnecting.ShowScreen();
+            return;
+          }
+        }
+        else {
+          // Reconnect to master server and join back into the room
+          if (UIMain.Client.ReconnectToMaster()) {
+            Debug.Log($"Reconnecting to master server");
+            HideScreen();
+            UIReconnecting.ShowScreen();
+            return;
+          }
+        }
       }
 
-      if (UIMain.Client == null) {
-        // Recreate necessary information to connect to the master server to rejoin manually
-        UIMain.Client = new QuantumLoadBalancingClient(PhotonServerSettings.Instance.AppSettings.Protocol) {
-          AppVersion = ReconnectInformation.Instance.AppVersion,
-          MasterServerAddress = ReconnectInformation.Instance.MasterServerAddress,
-          AuthValues = new AuthenticationValues {UserId = ReconnectInformation.Instance.UserId, Token = ReconnectInformation.Instance.AuthToken}
-        };
-      }
+      // Client object is null (after app start for example), connect to cloud and join/rejoin room later
+      if (UIMain.Client == null && ReconnectInformation.Instance.IsValid) {
+        UIMain.Client = new QuantumLoadBalancingClient(PhotonServerSettings.Instance.AppSettings.Protocol);
+        UIMain.Client.UserId = ReconnectInformation.Instance.UserId;
 
-      if (UIMain.Client.ConnectToMasterServer()) {
-        Debug.Log($"Reconnecting to master sever");
-        HideScreen();
-        UIReconnecting.ShowScreen();
-        return;
+        var appSettings = PhotonServerSettings.CloneAppSettings(PhotonServerSettings.Instance.AppSettings);
+        appSettings.FixedRegion = ReconnectInformation.Instance.Region;
+        appSettings.AppVersion = ReconnectInformation.Instance.AppVersion;
+
+        if (UIMain.Client.ConnectUsingSettings(appSettings, LastUsername)) {
+          Debug.Log($"Reconnecting to nameserver using reconnect info {ReconnectInformation.Instance}");
+          HideScreen();
+          UIReconnecting.ShowScreen();
+          return;
+        }
       }
 
       Debug.LogError($"Cannot reconnect");

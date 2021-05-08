@@ -1,6 +1,7 @@
 using System;
 using Quantum;
 using UnityEngine;
+using Quantum.Editor;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -33,7 +34,7 @@ public partial class EntityComponentTransform3D {
     UnityEditor.Undo.DestroyObjectImmediate(this);
   }
 
-  public override void OnInspectorGUI(SerializedObject so, IQuantumEditorGUI editor) {
+  public override void OnInspectorGUI(SerializedObject so, IQuantumEditorGUI QuantumEditorGUI) {
     var autoSetPosition = so.FindPropertyOrThrow(nameof(EntityComponentTransform2D.AutoSetPosition));
     var autoSetRotation = so.FindPropertyOrThrow(nameof(EntityComponentTransform2D.AutoSetRotation));
 
@@ -41,10 +42,10 @@ public partial class EntityComponentTransform3D {
     EditorGUILayout.PropertyField(autoSetRotation);
 
     using (new EditorGUI.DisabledScope(autoSetPosition.boolValue)) {
-      editor.DrawProperty(so.FindPropertyOrThrow("Prototype.Position"), skipRoot: false);
+      QuantumEditorGUI.PropertyField(so.FindPropertyOrThrow("Prototype.Position"));
     }
     using (new EditorGUI.DisabledScope(autoSetRotation.boolValue)) {
-      editor.DrawProperty(so.FindPropertyOrThrow("Prototype.Rotation"), skipRoot: false);
+      QuantumEditorGUI.PropertyField(so.FindPropertyOrThrow("Prototype.Rotation"));
     }
   }
 
