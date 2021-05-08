@@ -7,6 +7,7 @@ namespace Quantum
     public unsafe partial class Attack : BTLeaf
     {
         public AIBlackboardValueKey Target;
+        public AIBlackboardValueKey IsEnemyTargetAttacked;
         public FP Duration = 1;
         public FP HitFrame = FP._0_50;
         public BTDataIndex StartTimeIndex;
@@ -34,8 +35,8 @@ namespace Quantum
         protected override BTStatus OnUpdate(BTParams p)
         {
             var f = p.Frame;
-            var bb = f.Get<AIBlackboardComponent>(p.Entity);
-            var target = bb.GetEntityRef(f, Target.Key);
+            var bb = p.Blackboard;
+            var target = bb->GetEntityRef(f, Target.Key);
             if (f.Exists(target) == false)
             {
                 return BTStatus.Failure;
@@ -55,13 +56,14 @@ namespace Quantum
                 {
                     var transform = f.Unsafe.GetPointer<Transform2D>(p.Entity);
                     var targetTransform = f.Get<Transform2D>(target);
-                    transform->Rotation = FPVector2.Angle(targetTransform.Position - transform->Position, FPVector2.Up);  
-                    
+                    transform->Rotation = FPVector2.Angle(targetTransform.Position - transform->Position, FPVector2.Up);
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
                     var actor = f.Get<Actor>(p.Entity);
                     var targetActor = f.Unsafe.GetPointer<Actor>(target);
                     targetActor->Health -= actor.Power;
                     f.Events.ActorHitted(p.Entity, target);
+                    
+                    bb->Set(p.Frame, IsEnemyTargetAttacked.Key, true);
                 }    
             }
             

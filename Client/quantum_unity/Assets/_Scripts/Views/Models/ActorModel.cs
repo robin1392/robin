@@ -2,7 +2,7 @@ using _Scripts.Quantum.Views;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActorModel : MonoBehaviour
+public class ActorModel : PoolableObject
 {
     [Header("UI Link")] public Image image_HealthBar;
     public UI_ObjectHealthBar ObjectHealthBar;

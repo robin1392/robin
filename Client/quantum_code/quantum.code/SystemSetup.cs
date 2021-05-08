@@ -61,6 +61,7 @@ namespace Quantum
                 
                 new ActorSystem(),
                 new PlayerInitSystem(),
+                new ActorDeathSystem()
             };
             
             var actorSystem = new List<SystemBase>

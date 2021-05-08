@@ -41,12 +41,9 @@ namespace _Scripts.Views
         private async UniTask SpawnMinionOrHero(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
         {
             var assetName = "particle_necromancer";
-            var spawnEffectGo = await ResourceManager.LoadGameObjectAsync(assetName, transform.position, Quaternion.identity);
-            var spawnEffectPo = spawnEffectGo.GetComponent<PoolableObject>();
-            spawnEffectPo.AssetName = assetName;
-            spawnEffectPo.ReservePushBack();
+            ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(assetName, transform.position, Quaternion.identity).Forget();
 
-            ActorModel = await ResourceManager.LoadMonobehaviourAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
+            ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
             ActorModel.Initialize(isAlly);
             ActorModel.transform.SetParent(transform, false);
 

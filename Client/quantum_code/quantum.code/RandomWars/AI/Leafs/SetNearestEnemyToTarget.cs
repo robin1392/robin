@@ -13,6 +13,18 @@ namespace Quantum
         {
             var f = p.Frame;
             var bb = p.Blackboard;
+            
+            var target = bb->GetEntityRef(f, EnemyTargetRef.Key);
+            if (f.Exists(target) == false)
+            {
+                bb->Set(f, IsEnemyTargetAttacked.Key, false);
+            }
+            
+            if (target == EntityRef.None)
+            {
+                bb->Set(f, IsEnemyTargetAttacked.Key, false);
+            }
+            
             var isEnemyTargetAttacked = bb->GetBoolean(f, IsEnemyTargetAttacked.Key);
             if (isEnemyTargetAttacked == true)
             {

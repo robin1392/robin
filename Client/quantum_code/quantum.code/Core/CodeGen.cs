@@ -2610,7 +2610,7 @@ namespace Quantum {
       }
     }
     public unsafe partial struct FrameEvents {
-      public const Int32 EVENT_TYPE_COUNT = 16;
+      public const Int32 EVENT_TYPE_COUNT = 17;
       public static Int32 GetParentEventID(Int32 eventID) {
         switch (eventID) {
           case EventFieldDiceCreated.ID: return EventLocalPlayerOnly.ID;
@@ -2644,6 +2644,7 @@ namespace Quantum {
           case EventOnSuddenDeathStarted.ID: return typeof(EventOnSuddenDeathStarted);
           case EventActionChanged.ID: return typeof(EventActionChanged);
           case EventActorHitted.ID: return typeof(EventActorHitted);
+          case EventActorDeath.ID: return typeof(EventActorDeath);
           default: throw new System.ArgumentOutOfRangeException("eventID");
         }
       }
@@ -2738,6 +2739,13 @@ namespace Quantum {
         var ev = _f.Context.AcquireEvent<EventActorHitted>(EventActorHitted.ID);
         ev.Attacker = Attacker;
         ev.Victim = Victim;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventActorDeath ActorDeath(EntityRef Victim, Int32 VictimTeam) {
+        var ev = _f.Context.AcquireEvent<EventActorDeath>(EventActorDeath.ID);
+        ev.Victim = Victim;
+        ev.VictimTeam = VictimTeam;
         _f.AddEvent(ev);
         return ev;
       }
@@ -3113,6 +3121,33 @@ namespace Quantum {
         var hash = 103;
         hash = hash * 31 + Attacker.GetHashCode();
         hash = hash * 31 + Victim.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventActorDeath : EventBase {
+    public new const Int32 ID = 16;
+    public EntityRef Victim;
+    public Int32 VictimTeam;
+    protected EventActorDeath(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventActorDeath() : 
+        base(16, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 107;
+        hash = hash * 31 + Victim.GetHashCode();
+        hash = hash * 31 + VictimTeam.GetHashCode();
         return hash;
       }
     }

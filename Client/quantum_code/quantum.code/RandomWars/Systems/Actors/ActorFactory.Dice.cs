@@ -87,6 +87,8 @@ namespace Quantum.Actors
                 transform->Rotation = rotation;
                 
                 var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
+                body->FreezeRotation = false;
+                
                 var steering = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
                 steering->MaxSpeed = actor->MoveSpeed;
 

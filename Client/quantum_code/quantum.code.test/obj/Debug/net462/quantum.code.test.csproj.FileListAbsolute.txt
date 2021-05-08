@@ -20,3 +20,6 @@
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.dll
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/obj/Debug/net462/quantum.code.test.pdb
 /Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/PhotonDeterministic.xml
+/Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/quantum.core.dll
+/Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/quantum.core.pdb
+/Users/111percent/RiderProjects/RandomWars/Client/quantum_code/quantum.code.test/bin/Debug/net462/quantum.core.xml

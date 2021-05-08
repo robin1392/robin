@@ -467,11 +467,11 @@ MonoBehaviour:
     <Type>Quantum.AIBlackboardValueKey, quantum.code</Type>\n          <Mode>In</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
     <Slot>\n          <Id>Duration</Id>\n          <Name>Duration</Name>\n         
-    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">72089</Value>\n         
+    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">78643</Value>\n         
     <Type>Photon.Deterministic.FP, PhotonDeterministic</Type>\n          <Mode>In</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
     <Slot>\n          <Id>HitFrame</Id>\n          <Name>HitFrame</Name>\n         
-    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">58982</Value>\n         
+    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">65536</Value>\n         
     <Type>Photon.Deterministic.FP, PhotonDeterministic</Type>\n          <Mode>In</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
     <Slot>\n          <Id>StartTimeIndex</Id>\n          <Name>StartTimeIndex</Name>\n         

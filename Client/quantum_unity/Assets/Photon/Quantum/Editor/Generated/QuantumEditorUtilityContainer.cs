@@ -28,7 +28,42 @@ namespace Quantum.Editor {
 
     [System.Serializable]
     public partial class KnownObjectsContainer : QuantumEditorUtility.SerializableObjectsContainerBase {
+      public Quantum.AIConfig[] AIConfig = {};
+      public Quantum.GOAPTask[] GOAPTask = {};
+      public Quantum.GOAPRoot[] GOAPRoot = {};
+      public Quantum.HFSMRoot[] HFSMRoot = {};
+      public Quantum.HFSMState[] HFSMState = {};
+      public Quantum.HFSMTransitionSet[] HFSMTransitionSet = {};
+      public Quantum.AIBlackboard[] AIBlackboard = {};
+      public Quantum.AIBlackboardInitializer[] AIBlackboardInitializer = {};
       public Quantum.SimulationConfig[] SimulationConfig = {};
+      public Quantum.HasTarget[] HasTarget = {};
+      public Quantum.IsTargetInRange[] IsTargetInRange = {};
+      public Quantum.IsTargetOutOfRange[] IsTargetOutOfRange = {};
+      public Quantum.ApproachToTarget[] ApproachToTarget = {};
+      public Quantum.Attack[] Attack = {};
+      public Quantum.FindEnemy[] FindEnemy = {};
+      public Quantum.SetNearestEnemyToTarget[] SetNearestEnemyToTarget = {};
+      public Quantum.SeekNearestEnemy[] SeekNearestEnemy = {};
+      public Quantum.BTSelector[] BTSelector = {};
+      public Quantum.BTSequence[] BTSequence = {};
+      public Quantum.BTRoot[] BTRoot = {};
+      public Quantum.BTBlackboardCompare[] BTBlackboardCompare = {};
+      public Quantum.BTCooldown[] BTCooldown = {};
+      public Quantum.BTForceResult[] BTForceResult = {};
+      public Quantum.BTLoop[] BTLoop = {};
+      public Quantum.DebugLeaf[] DebugLeaf = {};
+      public Quantum.WaitLeaf[] WaitLeaf = {};
+      public Quantum.DebugService[] DebugService = {};
+      public Quantum.HFSMOrDecision[] HFSMOrDecision = {};
+      public Quantum.HFSMAndDecision[] HFSMAndDecision = {};
+      public Quantum.HFSMNotDecision[] HFSMNotDecision = {};
+      public Quantum.IdleAction[] IdleAction = {};
+      public Quantum.IncreaseBlackboardInt[] IncreaseBlackboardInt = {};
+      public Quantum.SetBlackboardInt[] SetBlackboardInt = {};
+      public Quantum.CheckBlackboardInt[] CheckBlackboardInt = {};
+      public Quantum.TimerDecision[] TimerDecision = {};
+      public Quantum.TrueDecision[] TrueDecision = {};
       public Quantum.BinaryData[] BinaryData = {};
       public Quantum.CharacterController2DConfig[] CharacterController2DConfig = {};
       public Quantum.CharacterController3DConfig[] CharacterController3DConfig = {};

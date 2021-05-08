@@ -14,6 +14,14 @@ public static class ResourceManager
         return go.GetComponent<TMonobehavour>();
     }
     
+    public static async UniTask<TMonobehavour> LoadPoolableAsync<TMonobehavour>(string assetName, Vector3 position,
+        Quaternion rotation) where TMonobehavour : PoolableObject
+    {
+        var mb = await LoadMonobehaviourAsync<TMonobehavour>(assetName, position, rotation);
+        mb.AssetName = assetName;
+        return mb;
+    }
+    
     public static async UniTask<GameObject> LoadGameObjectAsync(string assetName, Vector3 position, Quaternion rotation)
     {
         var go = Pool.Pop(assetName);
@@ -25,6 +33,14 @@ public static class ResourceManager
         }
 
         return await Addressables.InstantiateAsync(assetName, position, rotation);
+    }
+    
+    public static async UniTask LoadGameObjectAsyncAndReseveDeacivate(string assetName, Vector3 position, Quaternion rotation)
+    {
+         var go = await LoadGameObjectAsync(assetName, position, rotation);
+         var poolableObject = go.GetComponent<PoolableObject>();
+         poolableObject.AssetName = assetName;
+         poolableObject.ReservePushBack();
     }
 }
 
@@ -40,7 +56,14 @@ public static class Pool
             _pools.Add(assetName, stack);
         }
         
+        go.transform.SetParent(null);
+        go.gameObject.SetActive(false);
         stack.Push(go);
+    }
+    
+    public static void Push(PoolableObject poolableObject)
+    {
+        Push(poolableObject.AssetName, poolableObject.gameObject);
     }
 
     public static GameObject Pop(string assetName)

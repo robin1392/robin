@@ -59,3 +59,8 @@ event ActorHitted {
     entity_ref Attacker;
     entity_ref Victim;
 }
+
+event ActorDeath {
+    entity_ref Victim;
+    Int32 VictimTeam;
+}

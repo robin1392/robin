@@ -9,7 +9,7 @@ using Dice = Quantum.Dice;
 
 namespace _Scripts.Views
 {
-    public class TowerActorView : QuantumCallbacks
+    public class TowerActorView : ActorView
     {
         public EntityView EntityView;
 
@@ -19,61 +19,33 @@ namespace _Scripts.Views
         private Image _healthBarImage;
         private Text _healthBarText;
 
-        async UniTask Init(QuantumGame game)
-        {
-            _initializing = true;
-        
-            try
-            {
-                var f = game.Frames.Verified;
-                var actor = f.Get<Actor>(EntityView.EntityRef);
-                var localPlayer = game.GetLocalPlayers()[0];
-                var isEnemy = f.AreEachOtherEnemy(actor, localPlayer);
-
-                if (isEnemy)
-                {
-                    UI_InGame.Get().image_TopTowerHealthBar.transform.parent.gameObject.SetActive(true);
-                    _healthBarImage = UI_InGame.Get().image_TopTowerHealthBar;
-                    _healthBarText = UI_InGame.Get().text_TopTowerHealthBar;
-                }
-                else
-                {
-                    UI_InGame.Get().image_BottomTowerHealthBar.transform.parent.gameObject.SetActive(true);
-                    _healthBarImage = UI_InGame.Get().image_BottomTowerHealthBar;
-                    _healthBarText = UI_InGame.Get().text_BottomTowerHealthBar;
-                }
-                
-                var go = await ResourceManager.LoadGameObjectAsync(isEnemy ? "TowerRed" : "TowerBlue", Vector3.zero, Quaternion.identity);
-                go.transform.SetParent(transform, false);
-
-                _initialized = true;
-                _initializing = false;
-            }
-            catch (System.Exception)
-            {
-                return;
-            }
-        }
-        
-        public override void OnUpdateView(QuantumGame game)
+        protected override async UniTask OnInit(QuantumGame game)
         {
             var f = game.Frames.Verified;
-            if (EntityView.EntityRef == EntityRef.None)
-            {
-                return;
-            }
+            var actor = f.Get<Actor>(EntityView.EntityRef);
+            var localPlayer = game.GetLocalPlayers()[0];
+            var isEnemy = f.AreEachOtherEnemy(actor, localPlayer);
 
-            if (_initialized == false && _initializing == false)
+            if (isEnemy)
             {
-                Init(game).Forget();
-                return;
+                UI_InGame.Get().image_TopTowerHealthBar.transform.parent.gameObject.SetActive(true);
+                _healthBarImage = UI_InGame.Get().image_TopTowerHealthBar;
+                _healthBarText = UI_InGame.Get().text_TopTowerHealthBar;
             }
-
-            if (_initialized == false)
+            else
             {
-                return;
+                UI_InGame.Get().image_BottomTowerHealthBar.transform.parent.gameObject.SetActive(true);
+                _healthBarImage = UI_InGame.Get().image_BottomTowerHealthBar;
+                _healthBarText = UI_InGame.Get().text_BottomTowerHealthBar;
             }
+                
+            ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(isEnemy ? "TowerRed" : "TowerBlue", Vector3.zero, Quaternion.identity);
+            ActorModel.transform.SetParent(transform, false);
+        }
 
+        protected override void OnUpdateViewAfterInit(QuantumGame game)
+        {
+            var f = game.Frames.Verified;
             var e = EntityView.EntityRef;
             var actor = f.Get<Actor>(e);
             var ratio = (actor.Health / actor.MaxHealth).AsFloat;

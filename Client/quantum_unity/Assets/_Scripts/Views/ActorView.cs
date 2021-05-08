@@ -18,7 +18,7 @@ namespace _Scripts.Views
         {
             QuantumEvent.Subscribe<EventActionChanged>(this, OnActionChanged);
             QuantumEvent.Subscribe<EventActorHitted>(this, OnActorHitted);
-            _viewUpdater = FindObjectOfType<EntityViewUpdater>();
+            QuantumEvent.Subscribe<EventActorDeath>(this, OnActorDeath);
         }
 
         async UniTask Init(QuantumGame game)
@@ -62,18 +62,12 @@ namespace _Scripts.Views
             {
                 if (ActorModel != null)
                 {
-                    ShowEffect(ActorModel.ShootingPosition.position).Forget();
+                    ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(
+                        "Effect_ArrowHit", 
+                        ActorModel.ShootingPosition.position,
+                        Quaternion.identity).Forget();
                 }
             }
-        }
-
-        async UniTask ShowEffect(Vector3 position)
-        {
-            var assetName = "Effect_ArrowHit";
-            var go = await ResourceManager.LoadGameObjectAsync(assetName, position, Quaternion.identity);
-            var poolable = go.GetComponent<PoolableObject>();
-            poolable.AssetName = assetName;
-            poolable.ReservePushBack();
         }
 
         private void OnActionChanged(EventActionChanged callback)
@@ -119,6 +113,26 @@ namespace _Scripts.Views
         
         protected virtual void OnUpdateViewAfterInit(QuantumGame game)
         {
+        }
+        
+        private unsafe void OnActorDeath(EventActorDeath callback)
+        {
+            if (EntityView.EntityRef.Equals(callback.Victim) == false)
+            {
+                return;
+            }
+
+            var f = callback.Game.Frames.Verified;
+            var localPlayer = callback.Game.GetLocalPlayers()[0];
+            var isEnemy = f.Global->Players[localPlayer].Team == callback.VictimTeam;
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            
+            ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(isEnemy ? "Effect_Death_blue" : "Effect_Death_red",
+                ActorModel.HitPosition.position, Quaternion.identity).Forget();
+
+            Pool.Push(ActorModel);
+            ActorModel = null;
         }
     }
 }

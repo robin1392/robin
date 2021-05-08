@@ -17,9 +17,7 @@ public class PoolableObject : MonoBehaviour
     public async UniTask PushBackDelayed()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(PushBackDelay));
-        
-        OnPushBack();
-        
+
         if (string.IsNullOrWhiteSpace(AssetName))
         {
             Debug.LogError($"AssetName이 비어있습니다. {gameObject.name}");
@@ -28,10 +26,5 @@ public class PoolableObject : MonoBehaviour
         }
 
         Pool.Push(AssetName, gameObject);
-    }
-
-    public void OnPushBack()
-    {
-        gameObject.SetActive(false);
     }
 }
