@@ -40,7 +40,7 @@ namespace _Scripts.Views
 
         private async UniTask SpawnMinionOrHero(TDataDiceInfo diceInfo, bool isLocalPlayerActor, int fieldIndex, int team, bool isAlly)
         {
-            var assetName = "particle_necromancer";
+            var assetName = "Effect_SpawnMinion";
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(assetName, transform.position, Quaternion.identity).Forget();
 
             ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
@@ -79,7 +79,22 @@ namespace _Scripts.Views
                 lr.endColor = FileHelper.GetColor(diceInfo.color);
             }
         }
-    
+
+        protected override unsafe void OnActorDeathInternal(EventActorDeath callback)
+        {
+            var f = callback.Game.Frames.Verified;
+            var localPlayer = callback.Game.GetLocalPlayers()[0];
+            var isEnemy = f.Global->Players[localPlayer].Team == callback.VictimTeam;
+            
+            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
+            
+            ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(isEnemy ? "Effect_Death_blue" : "Effect_Death_red",
+                ActorModel.HitPosition.position, Quaternion.identity).Forget();
+            
+            Pool.Push(ActorModel);
+            ActorModel = null;
+        }
+
 
         // void SpawnMagicAndInstallation()
         // {

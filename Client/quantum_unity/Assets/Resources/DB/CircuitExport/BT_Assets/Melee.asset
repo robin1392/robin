@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7897334199866236329
+--- !u!114 &-7205120102422356757
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,28 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_0
+  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
+  m_Name: SetNearestEnemyToTarget_2
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
       Guid:
-        Value: 4233476808543420893
-    Label: BTSequence
-    Id: 1
-    Children:
-    - Id:
-        Value: 405991349307951381
-    - Id:
-        Value: 4248086307061808185
+        Value: 4328589522679660744
+    Label: SetNearestEnemyToTarget
+    Id: 9
     Services: []
-    TopmostDecorator:
-      Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 0
-    IsDynamic: 0
+    EnemyTargetRef:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
 --- !u!114 &-3557551555518500273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,6 +46,8 @@ MonoBehaviour:
     Services: []
     Target:
       Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
     Duration:
       RawValue: 78643
     HitFrame:
@@ -61,7 +56,38 @@ MonoBehaviour:
       Index: 3
     HitIndex:
       Index: 4
---- !u!114 &-2877568251542371412
+--- !u!114 &-3238061997217874813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
+  m_Name: BTSequence_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
+      Guid:
+        Value: 830595558268387437
+    Label: BTSequence
+    Id: 1
+    Children:
+    - Id:
+        Value: 4328589522679660744
+    - Id:
+        Value: 4248790913684553827
+    Services: []
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 0
+    IsDynamic: 0
+--- !u!114 &-904466708376738405
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,7 +103,7 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_1
       Guid:
-        Value: 4248086307061808185
+        Value: 4248790913684553827
     Label: HasTarget
     Id: 5
     Child:
@@ -132,33 +158,9 @@ MonoBehaviour:
     Id: 0
     Child:
       Id:
-        Value: 4233476808543420893
+        Value: 830595558268387437
     AbortType: 0
     NodesAmount: 10
---- !u!114 &261321335658889371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
-  m_Name: SetNearestEnemyToTarget_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
-      Guid:
-        Value: 405991349307951381
-    Label: SetNearestEnemyToTarget
-    Id: 9
-    Services: []
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
 --- !u!114 &468337487454624749
 MonoBehaviour:
   m_ObjectHideFlags: 0

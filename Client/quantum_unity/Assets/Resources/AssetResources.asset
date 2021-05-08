@@ -51,15 +51,15 @@ MonoBehaviour:
         Id:
           Value: 226039107891284717
       ResourcePath: DB/EntityPrototypes/TowerActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
-      AssetRef:
-        Id:
-          Value: 405991349307951381
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetInRange_2
       AssetRef:
         Id:
           Value: 781529057815001821
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
+      AssetRef:
+        Id:
+          Value: 830595558268387437
       ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/BattleMap_Navmesh_data
       AssetRef:
@@ -166,13 +166,13 @@ MonoBehaviour:
         Id:
           Value: 4050719712139043392
       ResourcePath: DB/EntityPrototypes/DiceActor
-    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
-      AssetRef:
-        Id:
-          Value: 4233476808543420893
-      ResourcePath: DB/CircuitExport/BT_Assets/Melee
     - Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_1
       AssetRef:
         Id:
-          Value: 4248086307061808185
+          Value: 4248790913684553827
+      ResourcePath: DB/CircuitExport/BT_Assets/Melee
+    - Path: Resources/DB/CircuitExport/BT_Assets/Melee|SetNearestEnemyToTarget_2
+      AssetRef:
+        Id:
+          Value: 4328589522679660744
       ResourcePath: DB/CircuitExport/BT_Assets/Melee

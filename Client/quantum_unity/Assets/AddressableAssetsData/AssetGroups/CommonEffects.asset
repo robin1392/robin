@@ -24,7 +24,7 @@ MonoBehaviour:
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   - m_GUID: 7552c1148354c41128e93eb26adc80b7
-    m_Address: particle_necromancer
+    m_Address: Effect_SpawnMinion
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
@@ -43,6 +43,18 @@ MonoBehaviour:
     m_TargetAsset: {fileID: 0}
   - m_GUID: 910587db189e74b2bb152d955785b461
     m_Address: Effect_Death_red
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 0cbe4091e477e45a4adc3eadf50c0328
+    m_Address: Effect_Bomb
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ecf9b05f57faf4035aae25b240452bff
+    m_Address: Effect_TowerDestroyed
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}

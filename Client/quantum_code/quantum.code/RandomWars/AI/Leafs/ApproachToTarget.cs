@@ -56,8 +56,11 @@ namespace Quantum
                 return BTStatus.Success;
             }
             
+            var targetCol2d = f.Get<PhysicsCollider2D>(target);
+            var targetPosition = targetTransform.Position + (transform.Position - targetTransform.Position).Normalized * targetCol2d.Shape.Circle.Radius;
+            
             var agent =f.Unsafe.GetPointer<NavMeshPathfinder>(e);
-            agent->SetTarget(f, targetTransform.Position.XOY, _navMesh);
+            agent->SetTarget(f, targetPosition.XOY, _navMesh);
 
             return BTStatus.Running;
         }

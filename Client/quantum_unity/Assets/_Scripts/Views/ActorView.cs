@@ -122,17 +122,12 @@ namespace _Scripts.Views
                 return;
             }
 
-            var f = callback.Game.Frames.Verified;
-            var localPlayer = callback.Game.GetLocalPlayers()[0];
-            var isEnemy = f.Global->Players[localPlayer].Team == callback.VictimTeam;
-            
-            SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_DEATH);
-            
-            ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(isEnemy ? "Effect_Death_blue" : "Effect_Death_red",
-                ActorModel.HitPosition.position, Quaternion.identity).Forget();
+            OnActorDeathInternal(callback);
+        }
 
-            Pool.Push(ActorModel);
-            ActorModel = null;
+        protected virtual void OnActorDeathInternal(EventActorDeath callback)
+        {
+            
         }
     }
 }

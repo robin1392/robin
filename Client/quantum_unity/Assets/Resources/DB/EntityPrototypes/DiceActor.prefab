@@ -83,20 +83,21 @@ MonoBehaviour:
       RotationOffset:
         RawValue: 0
       UserTag: 0
-      CompoundShapes: []
       IsPersistent: 1
+      CompoundShapes: []
+      IsSetFromSourceCollider: 0
     Shape3D:
       ShapeType: 0
       SphereRadius:
         RawValue: 0
-      BoxExtents:
+      PositionOffset:
         X:
           RawValue: 0
         Y:
           RawValue: 0
         Z:
           RawValue: 0
-      PositionOffset:
+      BoxExtents:
         X:
           RawValue: 0
         Y:
@@ -111,21 +112,23 @@ MonoBehaviour:
         Z:
           RawValue: 0
       UserTag: 0
-      CompoundShapes: []
       IsPersistent: 1
+      CompoundShapes: []
+      IsSetFromSourceCollider: 0
     Layer: 0
     CallbackFlags:
       Value: 0
   PhysicsBody:
     IsEnabled: 1
-    Version: 1
+    Version2D: 2
+    Version3D: 1
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
     Mass:
-      RawValue: 327680
+      RawValue: 6553600
     Drag:
-      RawValue: 327680
+      RawValue: 6553600
     AngularDrag:
       RawValue: 6553600
     CenterOfMass2D:
@@ -152,6 +155,8 @@ MonoBehaviour:
         X:
           RawValue: 0
         Y:
+          RawValue: 0
+        Z:
           RawValue: 0
       NavMesh:
         Reference: {fileID: 0}

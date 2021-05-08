@@ -129,6 +129,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: c8e7832ab51544d80a149eb2889c5234, type: 3}
   - name: 30017
     clip: {fileID: 8300000, guid: 6cbaca125fdff4e97944e56ba7ce3a2b, type: 3}
+  - name: 30002
+    clip: {fileID: 8300000, guid: eb47b1f09e5a14f60a242ca24f9d586a, type: 3}
   randomClips:
   - name: 103
     clips:
