@@ -736,8 +736,8 @@ MonoBehaviour:
     <Id>f12d78f1-1e23-45c4-abcb-c5cdb5e2577d</Id>\n      <ZoomLevel>1</ZoomLevel>\n     
     <ZoomOffset>0|0||0</ZoomOffset>\n      <PanOffset>917|132||0</PanOffset>\n   
     </GraphData>\n    <Key>f711e486-e817-49f4-be3d-742c97b0f8ce</Key>\n    <GraphData>\n     
-    <Id>f711e486-e817-49f4-be3d-742c97b0f8ce</Id>\n      <ZoomLevel>0.7442861</ZoomLevel>\n     
-    <ZoomOffset>172|206||0</ZoomOffset>\n      <PanOffset>1102|411||0</PanOffset>\n   
+    <Id>f711e486-e817-49f4-be3d-742c97b0f8ce</Id>\n      <ZoomLevel>0.7355996</ZoomLevel>\n     
+    <ZoomOffset>187|212||0</ZoomOffset>\n      <PanOffset>1102|411||0</PanOffset>\n   
     </GraphData>\n  </GraphData>\n  <Tracks Count=\"0\" />\n</Document>"
   DocumentType: $bt
   DocumentId: f711e486-e817-49f4-be3d-742c97b0f8ce

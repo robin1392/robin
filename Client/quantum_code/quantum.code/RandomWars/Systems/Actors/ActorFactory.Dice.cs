@@ -86,6 +86,10 @@ namespace Quantum.Actors
                 transform->Position = spawnPosition;
                 transform->Rotation = rotation;
                 
+                var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
+                var steering = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
+                steering->MaxSpeed = actor->MoveSpeed;
+
                 f.Events.ActionChanged(entity, ActionStateType.Idle);
 
                 BTHelper.SetupBT(f, entity, diceInfo.btAssetName);

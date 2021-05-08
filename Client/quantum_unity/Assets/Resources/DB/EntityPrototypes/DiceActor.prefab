@@ -117,17 +117,17 @@ MonoBehaviour:
     CallbackFlags:
       Value: 0
   PhysicsBody:
-    IsEnabled: 0
+    IsEnabled: 1
     Version: 1
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
     Mass:
-      RawValue: 65536
+      RawValue: 327680
     Drag:
-      RawValue: 655360
+      RawValue: 327680
     AngularDrag:
-      RawValue: 32768
+      RawValue: 6553600
     CenterOfMass2D:
       X:
         RawValue: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
       Z:
         RawValue: 0
   NavMeshPathfinder:
-    IsEnabled: 0
+    IsEnabled: 1
     NavMeshAgentConfig:
       Id:
         Value: 2

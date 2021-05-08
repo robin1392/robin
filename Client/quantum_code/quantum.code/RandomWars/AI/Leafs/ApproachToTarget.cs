@@ -19,6 +19,8 @@ namespace Quantum
         {
             base.OnEnter(p);
             var f = p.Frame;
+            var agent = f.Unsafe.GetPointer<NavMeshPathfinder>(p.Entity);
+            agent->IsActive = true;
             f.Events.ActionChanged(p.Entity, ActionStateType.Walk);
         }
 
@@ -48,12 +50,10 @@ namespace Quantum
             {
                 return BTStatus.Success;
             }
-
-            var actor = f.Get<Actor>(e);
-            var direction = (targetTransform.Position - transform.Position).Normalized * actor.MoveSpeed;
-            var body =f.Unsafe.GetPointer<PhysicsBody2D>(e);
-            body->AddForce(direction * f.DeltaTime);
             
+            var agent =f.Unsafe.GetPointer<NavMeshPathfinder>(e);
+            agent->SetTarget(f, targetTransform.Position, _navMesh);
+
             return BTStatus.Running;
         }
 
@@ -62,7 +62,8 @@ namespace Quantum
             base.OnExit(p);
             var f = p.Frame;
             var e = p.Entity;
-            f.Unsafe.GetPointer<PhysicsBody2D>(e)->Velocity = FPVector2.Zero;
+            var agent = f.Unsafe.GetPointer<NavMeshPathfinder>(e);
+            agent->Stop(f, p.Entity);
             f.Events.ActionChanged(e, ActionStateType.Idle);
         }
     }

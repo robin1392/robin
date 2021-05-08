@@ -7,19 +7,7 @@ namespace Quantum
     public unsafe partial class IsTargetOutOfRange : BTDecorator
     {
         public AIBlackboardValueKey TargetRef;
-        
-        public override void OnEnterRunning(BTParams p)
-        {
-            base.OnEnterRunning(p);
-            p.Blackboard->RegisterReactiveDecorator(p.Frame, TargetRef.Key, this);
-        }
 
-        public override void OnExit(BTParams p)
-        {
-            base.OnExit(p);
-            p.Blackboard->UnregisterReactiveDecorator(p.Frame, TargetRef.Key, this);
-        }
-        
         public override Boolean DryRun(BTParams p)
         {
             var f = p.Frame;

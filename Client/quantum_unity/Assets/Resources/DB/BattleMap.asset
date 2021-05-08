@@ -280,47 +280,6 @@ MonoBehaviour:
             Value: 0
         IsTrigger: 0
         ColliderId: 5
-    - Rotation:
-        RawValue: 0
-      Position:
-        X:
-          RawValue: 0
-        Y:
-          RawValue: 0
-      Height:
-        RawValue: 0
-      VerticalOffset:
-        RawValue: 0
-      PhysicsMaterial:
-        Id:
-          Value: 0
-      Layer: 0
-      ShapeType: 4
-      CircleRadius:
-        RawValue: 0
-      BoxExtents:
-        X:
-          RawValue: 655360
-        Y:
-          RawValue: 851968
-      EdgeExtent:
-        RawValue: 0
-      PolygonCollider:
-        Identifier:
-          Path: 
-          Guid:
-            Value: 0
-        Vertices: []
-        Normals: []
-      StaticData:
-        Name: Floor
-        Tag: Untagged
-        Layer: 0
-        Asset:
-          Id:
-            Value: 0
-        IsTrigger: 0
-        ColliderId: 6
     StaticColliders3D: []
     MapEntities: []
   Prototypes: []
