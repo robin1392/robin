@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8227638590133677274
+--- !u!114 &-6335574584034005487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,30 +9,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d10cad3ab145947a8a1aa40c519b35c0, type: 3}
-  m_Name: Attack_1
+  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
+  m_Name: SetNearestEnemyToTarget_3
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|Attack_1
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|SetNearestEnemyToTarget_3
       Guid:
-        Value: 2084590921785036322
-    Label: Attack
-    Id: 10
+        Value: 4328589522679660744
+    Label: SetNearestEnemyToTarget
+    Id: 12
+    Services: []
+    EnemyTargetRef:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+--- !u!114 &-5668166384943143377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2e670fb5b9046129d4326a423b6d00, type: 3}
+  m_Name: FireAttack_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|FireAttack_0
+      Guid:
+        Value: 50499323534730128
+    Label: FireAttack
+    Id: 8
     Services: []
     Target:
       Key: Target
     IsEnemyTargetAttacked:
       Key: TargetAttacked
-    Duration:
-      RawValue: 78643
-    HitFrame:
-      RawValue: 65536
     StartTimeIndex:
-      Index: 6
+      Index: 4
     HitIndex:
-      Index: 7
---- !u!114 &-4707933371797477601
+      Index: 5
+--- !u!114 &-4460317145101801895
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,23 +61,69 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c93a1c7480cb4c1fad188791e90021f, type: 3}
-  m_Name: IsTargetInRange_0
+  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
+  m_Name: SeekNearestEnemy_4
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetInRange_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|SeekNearestEnemy_4
       Guid:
-        Value: 343914648661603259
-    Label: IsTargetInRange
-    Id: 2
+        Value: 113756611079391139
+    IntervalInSec:
+      RawValue: 32768
+    Id: 0
+    EnemyTargetRef:
+      Key: Target
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+--- !u!114 &-2504921726143906523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
+  m_Name: ApproachToTarget_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|ApproachToTarget_2
+      Guid:
+        Value: 1457647519061093016
+    Label: ApproachToTarget
+    Id: 11
+    Services: []
+    Target:
+      Key: Target
+--- !u!114 &-189983736660124840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
+  m_Name: IsTargetOutOfRange_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetOutOfRange_1
+      Guid:
+        Value: 186149603261161770
+    Label: IsTargetOutOfRange
+    Id: 5
     Child:
       Id:
-        Value: 4451639304293521007
-    AbortType: 3
+        Value: 2327373505096431118
+    AbortType: 1
     TargetRef:
       Key: Target
---- !u!114 &-4168118946772791966
+--- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -66,29 +132,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_1
+  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
+  m_Name: Minion_Fire
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSequence_1
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire
       Guid:
-        Value: 830595558268387437
-    Label: BTSequence
-    Id: 3
-    Children:
-    - Id:
-        Value: 4328589522679660744
-    - Id:
-        Value: 1905314721143351809
-    Services: []
-    TopmostDecorator:
+        Value: 2391214781721076588
+    Label: 
+    Id: 0
+    Child:
       Id:
-        Value: 0
-    CurrentChildIndex:
-      Index: 1
-    IsDynamic: 0
---- !u!114 &-3245944480958733744
+        Value: 830595558268387437
+    AbortType: 0
+    NodesAmount: 13
+--- !u!114 &457761713981076695
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,7 +176,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 2
     IsDynamic: 1
---- !u!114 &-2867607809029049185
+--- !u!114 &673284988557015543
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,23 +185,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
-  m_Name: IsTargetOutOfRange_1
+  m_Script: {fileID: 11500000, guid: d10cad3ab145947a8a1aa40c519b35c0, type: 3}
+  m_Name: Attack_1
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetOutOfRange_1
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|Attack_1
       Guid:
-        Value: 186149603261161770
-    Label: IsTargetOutOfRange
-    Id: 5
-    Child:
-      Id:
-        Value: 2327373505096431118
-    AbortType: 1
-    TargetRef:
+        Value: 2084590921785036322
+    Label: Attack
+    Id: 10
+    Services: []
+    Target:
       Key: Target
---- !u!114 &-691361932355911089
+    IsEnemyTargetAttacked:
+      Key: TargetAttacked
+    StartTimeIndex:
+      Index: 6
+    HitIndex:
+      Index: 7
+--- !u!114 &969475125195735284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -173,7 +235,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 0
     IsDynamic: 0
---- !u!114 &11400000
+--- !u!114 &1597811355443635746
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,172 +244,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
-  m_Name: Minion_Fire
+  m_Script: {fileID: 11500000, guid: 4c93a1c7480cb4c1fad188791e90021f, type: 3}
+  m_Name: IsTargetInRange_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetInRange_0
       Guid:
-        Value: 1701198377948020473
-    Label: 
-    Id: 0
+        Value: 343914648661603259
+    Label: IsTargetInRange
+    Id: 2
     Child:
       Id:
-        Value: 830595558268387437
-    AbortType: 0
-    NodesAmount: 13
---- !u!114 &2658580776069743131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c59219ea444c348568a9c0133cf15653, type: 3}
-  m_Name: HasTarget_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|HasTarget_2
-      Guid:
-        Value: 1905314721143351809
-    Label: HasTarget
-    Id: 7
-    Child:
-      Id:
-        Value: 301900458844393858
-    AbortType: 0
+        Value: 4451639304293521007
+    AbortType: 3
     TargetRef:
       Key: Target
---- !u!114 &2747553967264153222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
-  m_Name: ApproachToTarget_2
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|ApproachToTarget_2
-      Guid:
-        Value: 1457647519061093016
-    Label: ApproachToTarget
-    Id: 11
-    Services: []
-    Target:
-      Key: Target
---- !u!114 &3067448723320519518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2e670fb5b9046129d4326a423b6d00, type: 3}
-  m_Name: FireAttack_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|FireAttack_0
-      Guid:
-        Value: 50499323534730128
-    Label: FireAttack
-    Id: 8
-    Services: []
-    Target:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
-    Duration:
-      RawValue: 78643
-    HitFrame:
-      RawValue: 65536
-    StartTimeIndex:
-      Index: 4
-    HitIndex:
-      Index: 5
---- !u!114 &4007071212273087490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fdc738dd23a7474b9dff4ebd589017b, type: 3}
-  m_Name: SeekNearestEnemy_4
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|SeekNearestEnemy_4
-      Guid:
-        Value: 113756611079391139
-    IntervalInSec:
-      RawValue: 32768
-    Id: 0
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &4977914260359498056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c02418a5b97ea46d7bbb6388c6a03f53, type: 3}
-  m_Name: EffectProbability_3
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|EffectProbability_3
-      Guid:
-        Value: 1306239846853971212
-    Label: EffectProbability
-    Id: 9
-    Child:
-      Id:
-        Value: 50499323534730128
-    AbortType: 0
---- !u!114 &6427191764080765293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11b0644e5a6444138af15aacd02feed, type: 3}
-  m_Name: SetNearestEnemyToTarget_3
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|SetNearestEnemyToTarget_3
-      Guid:
-        Value: 4328589522679660744
-    Label: SetNearestEnemyToTarget
-    Id: 12
-    Services: []
-    EnemyTargetRef:
-      Key: Target
-    IsEnemyTargetAttacked:
-      Key: TargetAttacked
---- !u!114 &7781010865040005910
+--- !u!114 &2773586533738694587
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -380,3 +293,82 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 3
     IsDynamic: 0
+--- !u!114 &6327552027465666077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c59219ea444c348568a9c0133cf15653, type: 3}
+  m_Name: HasTarget_2
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|HasTarget_2
+      Guid:
+        Value: 1905314721143351809
+    Label: HasTarget
+    Id: 7
+    Child:
+      Id:
+        Value: 301900458844393858
+    AbortType: 0
+    TargetRef:
+      Key: Target
+--- !u!114 &7906660238045596133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
+  m_Name: BTSequence_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|BTSequence_1
+      Guid:
+        Value: 830595558268387437
+    Label: BTSequence
+    Id: 3
+    Children:
+    - Id:
+        Value: 4328589522679660744
+    - Id:
+        Value: 1905314721143351809
+    Services: []
+    TopmostDecorator:
+      Id:
+        Value: 0
+    CurrentChildIndex:
+      Index: 1
+    IsDynamic: 0
+--- !u!114 &8646757249911527628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c02418a5b97ea46d7bbb6388c6a03f53, type: 3}
+  m_Name: EffectProbability_3
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|EffectProbability_3
+      Guid:
+        Value: 1306239846853971212
+    Label: EffectProbability
+    Id: 9
+    Child:
+      Id:
+        Value: 50499323534730128
+    AbortType: 0

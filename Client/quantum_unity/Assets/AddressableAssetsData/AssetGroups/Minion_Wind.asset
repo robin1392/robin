@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Minion_Wind
+  m_EditorClassIdentifier: 
+  m_GroupName: Minion_Wind
+  m_Data:
+    m_SerializedData: []
+  m_GUID: cfd0dee24fc21498485fb97551f4ce7e
+  m_SerializeEntries:
+  - m_GUID: eeee8b29ac5dd47548de4193442ed4b3
+    m_Address: Minion_Wind
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 80d65d551d0104fa89871b6ced8f99f4
+    m_Address: Projectile_Wind
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: d142d4a6568c14435b67c6d2c92764f5, type: 2}
+    - {fileID: 11400000, guid: 90b0878134f4041f9838bbecd5fa5699, type: 2}

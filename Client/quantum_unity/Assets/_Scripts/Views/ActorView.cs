@@ -20,6 +20,7 @@ namespace _Scripts.Views
         private void Start()
         {
             QuantumEvent.Subscribe<EventActionChanged>(this, OnActionChanged);
+            QuantumEvent.Subscribe<EventActionChangedWithSpeed>(this, OnActionChangedWithSpeed);
             QuantumEvent.Subscribe<EventActorHitted>(this, OnActorHitted);
             QuantumEvent.Subscribe<EventActorDeath>(this, OnActorDeath);
             QuantumEvent.Subscribe<EventPlayCasterEffect>(this, OnPlayCasterEffect);
@@ -51,7 +52,7 @@ namespace _Scripts.Views
         {
             if (string.IsNullOrWhiteSpace(_animationTriggerPending) == false)
             {
-                AnimationTrigger(_animationTriggerPending);
+                AnimationTrigger(_animationTriggerPending, _animationSpeedPending);
                 _animationTriggerPending = null;
             }
         }
@@ -117,20 +118,31 @@ namespace _Scripts.Views
         {
             if (EntityView.EntityRef.Equals(callback.Entity))
             {
-                AnimationTrigger(callback.State.ToString());
+                AnimationTrigger(callback.State.ToString(), 1);
+            }
+        }
+        
+        private void OnActionChangedWithSpeed(EventActionChangedWithSpeed callback)
+        {
+            if (EntityView.EntityRef.Equals(callback.Entity))
+            {
+                AnimationTrigger(callback.State.ToString(), callback.Speed.AsFloat);
             }
         }
 
         private string _animationTriggerPending;
-        void AnimationTrigger(string trigger)
+        private float _animationSpeedPending;
+        void AnimationTrigger(string trigger, float speed)
         {
             if (ActorModel == null)
             {
                 _animationTriggerPending = trigger;
+                _animationSpeedPending = speed;
                 return;
             }
             
             ActorModel.Animator.SetTrigger(trigger);
+            ActorModel.Animator.speed = speed;
         }
         
         public override void OnUpdateView(QuantumGame game)

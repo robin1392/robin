@@ -77,12 +77,14 @@ namespace Quantum.Actors
                 actor->Health = stat.maxHealth;
                 actor->Effect = stat.effect;
                 actor->EffectDurationTime = stat.effectDurationTime;
-                actor->EffectProbability = 20;//diceInfo.effectProbability;
+                actor->EffectProbability = diceInfo.effectProbability;
                 actor->AttackSpeed = diceInfo.attackSpeed / f.Global->SuddenDeathAttackSpeedFactor;
                 actor->MoveSpeed = diceInfo.moveSpeed * f.Global->SuddenDeathMoveSpeedFactor;
                 actor->SearchRange = 999;
                 actor->Range = diceInfo.range;
                 actor->EffectRangeValue = diceInfo.effectRangeValue;
+                actor->AttackHitEvent = diceInfo.attackHitEvent;
+                actor->AttackAniLength = diceInfo.attackAniLength;
 
                 var transform = f.Unsafe.GetPointer<Transform2D>(entity);
                 transform->Position = spawnPosition;
@@ -96,7 +98,7 @@ namespace Quantum.Actors
 
                 f.Events.ActionChanged(entity, ActionStateType.Idle);
 
-                BTHelper.SetupBT(f, entity, diceInfo.btAssetName);
+                BTHelper.SetupBT(f, entity, diceInfo.botData);
             }
         }
         

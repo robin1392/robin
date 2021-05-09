@@ -247,6 +247,10 @@ MonoBehaviour:
       RawValue: 0
     SearchRange:
       RawValue: 0
+    AttackHitEvent:
+      RawValue: 0
+    AttackAniLength:
+      RawValue: 0
 --- !u!114 &823538386675823470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,7 +295,7 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/EntityPrototypes/TowerActor|EntityView
       Guid:
-        Value: 226039107891284717
+        Value: 113376184449356048
   Parent: {fileID: 1402718890428716666}
 --- !u!114 &6180675146522355254
 MonoBehaviour:
@@ -309,5 +313,5 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/EntityPrototypes/TowerActor|EntityPrototype
       Guid:
-        Value: 1477095050142706443
+        Value: 1238589939366458485
   Parent: {fileID: 7372665011992461858}

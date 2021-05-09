@@ -509,7 +509,7 @@ MonoBehaviour:
     <Node>\n      <Id>c47070ac-a371-48fc-824e-bdd709e0ef67</Id>\n      <Name>Attack</Name>\n     
     <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$leaf/Attack</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>32</Flags>\n     
-    <Position>9|180||0</Position>\n      <StaticIn Count=\"9\">\n        <Slot>\n         
+    <Position>9|180||0</Position>\n      <StaticIn Count=\"7\">\n        <Slot>\n         
     <Id>$in</Id>\n          <Name>In</Name>\n          <Value />\n          <Type>$link</Type>\n         
     <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
     </Slot>\n        <Slot>\n          <Id>Target</Id>\n          <Name>Target</Name>\n         
@@ -519,14 +519,6 @@ MonoBehaviour:
     <Slot>\n          <Id>IsEnemyTargetAttacked</Id>\n          <Name>IsEnemyTargetAttacked</Name>\n         
     <Value Type=\"Quantum.AIBlackboardValueKey, quantum.code\">Quantum.AIBlackboardValueKey</Value>\n         
     <Type>Quantum.AIBlackboardValueKey, quantum.code</Type>\n          <Mode>In</Mode>\n         
-    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
-    <Slot>\n          <Id>Duration</Id>\n          <Name>Duration</Name>\n         
-    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">78643</Value>\n         
-    <Type>Photon.Deterministic.FP, PhotonDeterministic</Type>\n          <Mode>In</Mode>\n         
-    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
-    <Slot>\n          <Id>HitFrame</Id>\n          <Name>HitFrame</Name>\n         
-    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">65536</Value>\n         
-    <Type>Photon.Deterministic.FP, PhotonDeterministic</Type>\n          <Mode>In</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
     <Slot>\n          <Id>StartTimeIndex</Id>\n          <Name>StartTimeIndex</Name>\n         
     <Value Type=\"Quantum.BTDataIndex, quantum.code\">Quantum.BTDataIndex</Value>\n         
@@ -776,7 +768,7 @@ MonoBehaviour:
     <Key>fbef5e66-8780-4944-86bc-1b7a84047444</Key>\n    <Node>\n      <Id>fbef5e66-8780-4944-86bc-1b7a84047444</Id>\n     
     <Name>FireAttack</Name>\n      <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$leaf/FireAttack</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>32</Flags>\n     
-    <Position>-607|257||0</Position>\n      <StaticIn Count=\"9\">\n        <Slot>\n         
+    <Position>-607|257||0</Position>\n      <StaticIn Count=\"7\">\n        <Slot>\n         
     <Id>$in</Id>\n          <Name>In</Name>\n          <Value />\n          <Type>$link</Type>\n         
     <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
     </Slot>\n        <Slot>\n          <Id>Target</Id>\n          <Name>Target</Name>\n         
@@ -786,14 +778,6 @@ MonoBehaviour:
     <Slot>\n          <Id>IsEnemyTargetAttacked</Id>\n          <Name>IsEnemyTargetAttacked</Name>\n         
     <Value Type=\"Quantum.AIBlackboardValueKey, quantum.code\">Quantum.AIBlackboardValueKey</Value>\n         
     <Type>Quantum.AIBlackboardValueKey, quantum.code</Type>\n          <Mode>In</Mode>\n         
-    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
-    <Slot>\n          <Id>Duration</Id>\n          <Name>Duration</Name>\n         
-    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">78643</Value>\n         
-    <Type>Photon.Deterministic.FP, PhotonDeterministic</Type>\n          <Mode>In</Mode>\n         
-    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
-    <Slot>\n          <Id>HitFrame</Id>\n          <Name>HitFrame</Name>\n         
-    <Value Type=\"Photon.Deterministic.FP, PhotonDeterministic\">65536</Value>\n         
-    <Type>Photon.Deterministic.FP, PhotonDeterministic</Type>\n          <Mode>In</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n       
     <Slot>\n          <Id>StartTimeIndex</Id>\n          <Name>StartTimeIndex</Name>\n         
     <Value Type=\"Quantum.BTDataIndex, quantum.code\">Quantum.BTDataIndex</Value>\n         

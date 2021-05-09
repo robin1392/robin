@@ -66,7 +66,7 @@ public class RWQuantumRunner: QuantumCallbacks {
           GuardianInfo = tableManager.GuardianInfo,
           CoopMode = tableManager.CoopMode,
       };
-      
+
       game.Frames.Verified.Context.SetData(quantumTableDataContainer);
       game.Frames.Verified.Context.SetFieldPositions(FieldManager.Get().ToFieldPositions());
 

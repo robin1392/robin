@@ -3,6 +3,7 @@ using ED;
 using Quantum;
 using RandomWarsResource.Data;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Dice = Quantum.Dice;
 
 namespace _Scripts.Views

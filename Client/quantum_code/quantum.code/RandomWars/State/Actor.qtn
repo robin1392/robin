@@ -12,6 +12,8 @@ component Actor {
     FP EffectRangeValue;
     FP Range;
     FP SearchRange;
+    FP AttackHitEvent;
+    FP AttackAniLength;
 }
 
 component Dice {

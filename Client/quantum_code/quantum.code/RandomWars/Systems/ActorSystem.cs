@@ -30,7 +30,7 @@ namespace Quantum
                 var dice = f.Get<Dice>(entity);
                 if (f.Context.TableData.DiceInfo.GetData(dice.DiceInfoId, out var diceInfo))
                 {
-                    btAssetName = diceInfo.btAssetName;
+                    btAssetName = diceInfo.botData;
                 }
                 else
                 {

@@ -6,8 +6,17 @@ namespace Quantum.Util
     {
         public static FP ToFP(string value)
         {
-            var values  = value.Split('.');
+            return ToFP(value, FP._0);
+        }
+
+        public static FP ToFP(string value, FP defatulValue)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return defatulValue;
+            }
             
+            var values  = value.Split('.');
             var digit = int.Parse(values[0]);
             if (values.Length == 1)
             {
@@ -21,7 +30,7 @@ namespace Quantum.Util
             }
             
             Log.Error($"{value} FP로 변환 할 수 없습니다.");
-            return FP._0;
+            return defatulValue;
         }
     }
 }

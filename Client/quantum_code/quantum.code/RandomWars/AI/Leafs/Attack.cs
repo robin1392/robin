@@ -8,8 +8,6 @@ namespace Quantum
     {
         public AIBlackboardValueKey Target;
         public AIBlackboardValueKey IsEnemyTargetAttacked;
-        public FP Duration = 1;
-        public FP HitFrame = FP._0_50;
         public BTDataIndex StartTimeIndex;
         public BTDataIndex HitIndex;
         
@@ -25,11 +23,14 @@ namespace Quantum
         public override void OnEnter(BTParams p)
         {
             base.OnEnter(p);
-            var startTime = p.Frame.DeltaTime * p.Frame.Number;
-            p.BtAgent->SetFPData(p.Frame, startTime, StartTimeIndex.Index);
-            p.BtAgent->SetIntData(p.Frame, 0, HitIndex.Index);
-            
-            p.Frame.Events.ActionChanged(p.Entity, ActionStateType.Attack);
+            var f = p.Frame;
+            var e = p.Entity;
+            var startTime = f.DeltaTime * p.Frame.Number;
+            p.BtAgent->SetFPData(f, startTime, StartTimeIndex.Index);
+            p.BtAgent->SetIntData(f, 0, HitIndex.Index);
+
+            var actor = f.Get<Actor>(e);
+            p.Frame.Events.ActionChangedWithSpeed(p.Entity, ActionStateType.Attack, actor.GetAttackAniSpeed());
         }
         
         protected override BTStatus OnUpdate(BTParams p)
@@ -47,16 +48,16 @@ namespace Quantum
                 return BTStatus.Failure;
             }
             
+            var e = p.Entity;
+            var actor = f.Get<Actor>(e);
+            
             var currentTime = f.DeltaTime * f.Number;
             var startTime = p.BtAgent->GetFPData(f, StartTimeIndex.Index);
-            if (currentTime > startTime + HitFrame)
+            if (currentTime > startTime + actor.GetAttackHitEvent())
             {
                 var hit = p.BtAgent->GetIntData(f, HitIndex.Index);
                 if (hit < 1)
                 {
-                    var e = p.Entity;
-                    var actor = f.Get<Actor>(e);
-
                     var transform = f.Unsafe.GetPointer<Transform2D>(e);
                     var targetTransform = f.Get<Transform2D>(target);
                     var rotation = FPVector2.RadiansSigned(FPVector2.Up, targetTransform.Position - transform->Position);
@@ -71,7 +72,7 @@ namespace Quantum
                 }    
             }
             
-            if (currentTime > startTime + Duration)
+            if (currentTime > startTime + actor.AttackSpeed)
             {
                 return BTStatus.Success;
             }

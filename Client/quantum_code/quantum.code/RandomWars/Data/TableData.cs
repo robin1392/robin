@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Quantum;
 
 namespace RandomWarsResource
 {
@@ -98,7 +99,8 @@ namespace RandomWarsResource
                 K key = col.PK();
                 if (_rows.ContainsKey(key) == true)
                 {
-                    return false;
+                    Log.Error($"중복키가 존재합니다. {key}");
+                    continue;
                 }
 
                 _rows.Add(key, col);

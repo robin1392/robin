@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 3625160290465010350}
   - component: {fileID: 7847272695155220223}
   m_Layer: 0
-  m_Name: Minion_Electric 1
+  m_Name: Minion_Electric
   m_TagString: Minion_Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -506,7 +506,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: unit_electric
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 575454586662746114, guid: b7f12388333e8461ea1e4ac81d797e5f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b7f12388333e8461ea1e4ac81d797e5f, type: 3}
 --- !u!4 &7079445963003791711 stripped
 Transform:

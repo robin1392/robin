@@ -39,7 +39,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5081294253336761971}
-  - component: {fileID: 6486029529450410244}
   - component: {fileID: -4642469396453523094}
   m_Layer: 0
   m_Name: Minion_Fire
@@ -68,19 +67,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &6486029529450410244
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081294253336761964}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &-4642469396453523094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,6 +79,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b384522beaa949b28cac0740185411d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AssetName: 
+  PushBackReserved: 0
+  PushBackDelay: 0
   image_HealthBar: {fileID: 6150823028887648129}
   ObjectHealthBar: {fileID: 5666151450151296743}
   ShootingPosition: {fileID: 8466125030054022069}

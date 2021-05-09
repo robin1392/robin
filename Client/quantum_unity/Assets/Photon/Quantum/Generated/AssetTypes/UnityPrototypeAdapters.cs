@@ -59,6 +59,35 @@ namespace Quantum.Prototypes.Unity {
       return result;
     }
   }
+  [Quantum.Prototypes.PrototypeAttribute(typeof(Quantum.Projectile))]
+  [System.SerializableAttribute()]
+  public class Projectile_Prototype : Quantum.PrototypeAdapter<Quantum.Prototypes.Projectile_Prototype> {
+    public Quantum.PlayerRef Owner;
+    public System.Int32 Team;
+    public Photon.Deterministic.FP Power;
+    public Photon.Deterministic.FP HitTime;
+    [Quantum.LocalReference]
+    public global::EntityPrototype Attacker;
+    [Quantum.LocalReference]
+    public global::EntityPrototype Defender;
+    [Quantum.Inspector.MaxStringByteCountAttribute((Int32)62, "Unicode")]
+    public System.String Model;
+    [Quantum.Inspector.MaxStringByteCountAttribute((Int32)62, "Unicode")]
+    public System.String HitEffect;
+
+    public sealed override Quantum.Prototypes.Projectile_Prototype Convert(EntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.Projectile_Prototype();
+      result.Owner = this.Owner;
+      result.Team = this.Team;
+      result.Power = this.Power;
+      result.HitTime = this.HitTime;
+      converter.Convert(this.Attacker, out result.Attacker);
+      converter.Convert(this.Defender, out result.Defender);
+      result.Model = this.Model;
+      result.HitEffect = this.HitEffect;
+      return result;
+    }
+  }
   [Quantum.Prototypes.PrototypeAttribute(typeof(Quantum.RWPlayer))]
   [System.SerializableAttribute()]
   public class RWPlayer_Prototype : Quantum.PrototypeAdapter<Quantum.Prototypes.RWPlayer_Prototype> {

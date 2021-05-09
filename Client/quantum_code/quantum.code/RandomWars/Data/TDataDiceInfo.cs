@@ -128,8 +128,9 @@ namespace RandomWarsResource.Data
 		public FP searchRange { get; set; }
 		public int skillIndex { get; set; }
 		public bool attackType { get; set; }
-
-		public string btAssetName { get; set; }
+		public string botData { get; set; }
+		public FP attackHitEvent;
+		public FP attackAniLength;
 
 
 		public int PK()
@@ -176,7 +177,12 @@ namespace RandomWarsResource.Data
 			searchRange = ParseUtil.ToFP(cols[33]);
 			skillIndex = int.Parse(cols[34]);
 			attackType = bool.Parse(cols[35]);
-			btAssetName = "Melee";
+			if (cols.Length > 36)
+			{
+				botData = cols[36].Replace("{#$}", ",");
+				attackHitEvent = ParseUtil.ToFP(cols[37], FP._1);
+				attackAniLength = ParseUtil.ToFP(cols[38], FP._1);
+			}
 		}
 	}
 }

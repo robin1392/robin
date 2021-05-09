@@ -206,7 +206,6 @@ namespace ED
             var text = (await UnityWebRequest.Get(address).SendWebRequest()).downloadHandler.text;
             Debug.Log(text);
             Debug.Log($"DiceInfo 개발용 로드: {TableManager.Get().DiceInfo.Init(text)}");
-
             quantumRunner.StartWithFrame();
             
             await UniTask.Delay(TimeSpan.FromSeconds(1.0f), DelayType.Realtime);

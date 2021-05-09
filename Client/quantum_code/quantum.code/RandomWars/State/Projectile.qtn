@@ -1,0 +1,10 @@
+component Projectile {
+    player_ref Owner;
+    Int32 Team;
+    FP Power;
+    FP HitTime;
+    entity_ref Attacker;
+    entity_ref Defender;
+    QString<64> Model;
+    QString<64> HitEffect;
+}
