@@ -58,8 +58,8 @@ namespace _Scripts.Views
         async UniTask ShowSpawnLine(TDataDiceInfo diceInfo, ActorModel actorModel, int fieldIndex, int team)
         {
             var dicePos = UI_DiceField.Get().arrSlot[fieldIndex].transform.position;
-            if ((CameraController.Get().IsBottomOrientation && team == GameConstants.TopCamp) ||
-                CameraController.Get().IsBottomOrientation == false && team == GameConstants.BottomCamp)
+            if ((CameraController.IsBottomOrientation && team == GameConstants.TopCamp) ||
+                CameraController.IsBottomOrientation == false && team == GameConstants.BottomCamp)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;
@@ -175,6 +175,8 @@ namespace _Scripts.Views
             var e = EntityView.EntityRef;
             var actor = f.Get<Actor>(e);
             ActorModel.image_HealthBar.fillAmount = (actor.Health / actor.MaxHealth).AsFloat;
+            
+            TiltActorModel();
         }
     }
 }

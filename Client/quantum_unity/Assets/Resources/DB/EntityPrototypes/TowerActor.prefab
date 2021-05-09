@@ -83,20 +83,21 @@ MonoBehaviour:
       RotationOffset:
         RawValue: 0
       UserTag: 0
-      CompoundShapes: []
       IsPersistent: 1
+      CompoundShapes: []
+      IsSetFromSourceCollider: 0
     Shape3D:
       ShapeType: 0
       SphereRadius:
         RawValue: 0
-      BoxExtents:
+      PositionOffset:
         X:
           RawValue: 0
         Y:
           RawValue: 0
         Z:
           RawValue: 0
-      PositionOffset:
+      BoxExtents:
         X:
           RawValue: 0
         Y:
@@ -111,14 +112,16 @@ MonoBehaviour:
         Z:
           RawValue: 0
       UserTag: 0
-      CompoundShapes: []
       IsPersistent: 1
+      CompoundShapes: []
+      IsSetFromSourceCollider: 0
     Layer: 0
     CallbackFlags:
       Value: 0
   PhysicsBody:
     IsEnabled: 0
-    Version: 0
+    Version2D: 0
+    Version3D: 0
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
@@ -153,6 +156,8 @@ MonoBehaviour:
           RawValue: 0
         Y:
           RawValue: 0
+        Z:
+          RawValue: 0
       NavMesh:
         Reference: {fileID: 0}
         Asset:
@@ -186,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0008c51fe3af00b4da5d44f02d9b3dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BindBehaviour: 0
+  BindBehaviour: 1
   ManualDiposal: 0
   GameObjectNameIsEntityRef: 1
   ErrorCorrectionRateMin: 3.3
@@ -234,6 +239,14 @@ MonoBehaviour:
       RawValue: 0
     EffectDurationTime:
       RawValue: 0
+    EffectProbability:
+      RawValue: 0
+    EffectRangeValue:
+      RawValue: 0
+    Range:
+      RawValue: 0
+    SearchRange:
+      RawValue: 0
 --- !u!114 &823538386675823470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5107f980a4392464b9cf999f0b68729b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActorModel: {fileID: 0}
   EntityView: {fileID: 1402718890428716666}
 --- !u!114 &-4062502850953598902
 MonoBehaviour:

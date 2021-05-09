@@ -13,7 +13,7 @@ public class CameraGyroController : SingletonDestroy<CameraGyroController>
     private Vector3 originPos;
     private Quaternion originAngle;
     private bool isFade;
-    
+
     void Start()
     {
         //Input.gyro.enabled = true;

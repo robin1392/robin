@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using ED;
 using Quantum;
 using UnityEngine;
 
@@ -169,6 +170,22 @@ namespace _Scripts.Views
 
         protected virtual void OnActorDeathInternal(EventActorDeath callback)
         {
+        }
+
+        protected void TiltActorModel()
+        {
+            var modelTransform = ActorModel.transform;
+            var tilt =  modelTransform.worldToLocalMatrix * new Vector3(20, 0, 0);
+            modelTransform.transform.localPosition = new Vector3(0, 0.1f, 0);
+            
+            if (CameraController.IsBottomOrientation)
+            {
+                ActorModel.transform.localEulerAngles = tilt;
+            }
+            else
+            {
+                ActorModel.transform.localEulerAngles = -tilt;
+            }
         }
     }
 }

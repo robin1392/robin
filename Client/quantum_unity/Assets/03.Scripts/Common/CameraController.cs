@@ -20,7 +20,7 @@ namespace ED
         [SerializeField]
         private Vector3[] arrRot;
 
-        public bool IsBottomOrientation;
+        public static bool IsBottomOrientation;
 
         public void Start()
         {

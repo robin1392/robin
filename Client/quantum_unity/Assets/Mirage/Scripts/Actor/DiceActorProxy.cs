@@ -99,8 +99,8 @@ namespace MirageTest.Scripts
             }
             
             var dicePos = UI_DiceField.Get().arrSlot[spawnSlot].transform.position;
-            if((CameraController.Get().IsBottomOrientation && team == GameConstants_Mirage.TopCamp) ||
-               CameraController.Get().IsBottomOrientation == false && team == GameConstants_Mirage.BottomCamp)
+            if((CameraController.IsBottomOrientation && team == GameConstants_Mirage.TopCamp) ||
+               CameraController.IsBottomOrientation == false && team == GameConstants_Mirage.BottomCamp)
             {
                 dicePos.x *= -1f;
                 dicePos.z *= -1f;

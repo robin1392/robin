@@ -56,7 +56,7 @@ MonoBehaviour:
       Layer: 0
       ShapeType: 1
       CircleRadius:
-        RawValue: 131072
+        RawValue: 0
       BoxExtents:
         X:
           RawValue: 0
