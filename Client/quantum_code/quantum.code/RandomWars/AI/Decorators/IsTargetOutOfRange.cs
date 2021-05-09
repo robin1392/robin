@@ -20,7 +20,7 @@ namespace Quantum
                 return false;
             }
 
-            var actor = f.Get<Actor>(e);
+            var actor = f.Get<Attackable>(e);
             var col2d = f.Get<PhysicsCollider2D>(e);
             var targetCol2d = f.Get<PhysicsCollider2D>(enemy);
             

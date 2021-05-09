@@ -7,7 +7,7 @@ namespace Quantum.Actors
     {
         public EntityRef Entity;
         public Frozen* Frozen;
-        public Actor* Actor;
+        public Buff* Actor;
     }
     public unsafe class UpdateFronzenSystem : SystemMainThreadFilter<FrozenFilter>
     {

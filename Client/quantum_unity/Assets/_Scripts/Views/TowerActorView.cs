@@ -42,10 +42,11 @@ namespace _Scripts.Views
         {
             var f = game.Frames.Verified;
             var e = EntityView.EntityRef;
+            var hittable = f.Get<Hittable>(e);
             var actor = f.Get<Actor>(e);
-            var ratio = (actor.Health / actor.MaxHealth).AsFloat;
+            var ratio = (hittable.Health / hittable.MaxHealth).AsFloat;
             _healthBarImage.fillAmount = ratio;
-            _healthBarText.text = $"{FPMath.CeilToInt(actor.Health)}";
+            _healthBarText.text = $"{FPMath.CeilToInt(hittable.Health)}";
 
             var simulatedTr2D = f.Get<Transform2D>(e);
             var tr = transform;

@@ -6,7 +6,7 @@ namespace Quantum.Actors
     public unsafe struct ActorFilter
     {
         public EntityRef Entity;
-        public Actor* Actor;
+        public Buff* Actor;
     }
     public unsafe class UpdateBuffStateSystem : SystemMainThreadFilter<ActorFilter>
     {

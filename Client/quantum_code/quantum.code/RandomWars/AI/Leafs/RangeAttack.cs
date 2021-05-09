@@ -53,9 +53,10 @@ namespace Quantum
             
             var e = p.Entity;
             var actor = f.Get<Actor>(e);
+            var attackable = f.Get<Attackable>(e);
             var currentTime = f.DeltaTime * f.Number;
             var startTime = p.BtAgent->GetFPData(f, StartTimeIndex.Index);
-            if (currentTime > startTime + actor.GetAttackHitEvent())
+            if (currentTime > startTime + attackable.GetAttackHitEvent())
             {
                 var hit = p.BtAgent->GetIntData(f, HitIndex.Index);
                 if (hit < 1)
@@ -73,12 +74,12 @@ namespace Quantum
                     projectile->Owner = actor.Owner;
                     projectile->Attacker = e;
                     projectile->Defender = target;
-                    projectile->Power = actor.Power;
+                    projectile->Power = attackable.Power;
                     projectile->Team = actor.Team;
                     projectile->Model = ProjectileModel;
                     projectile->HitEffect = HitEffect;
                     projectile->Debuff = Debuff;
-                    projectile->DebuffDuration = actor.EffectDurationTime;
+                    projectile->DebuffDuration = attackable.EffectDurationTime;
 
                     var distance = FPVector2.Distance(targetTransform.Position, transform->Position) - targetCollider.Shape.Circle.Radius;
                     var hitTime = distance / ProjectTileSpeed;
@@ -88,7 +89,7 @@ namespace Quantum
                 }    
             }
             
-            if (currentTime > startTime + actor.AttackSpeed)
+            if (currentTime > startTime + attackable.AttackSpeed)
             {
                 return BTStatus.Success;
             }

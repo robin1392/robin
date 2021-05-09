@@ -29,7 +29,7 @@ namespace Quantum
             p.BtAgent->SetFPData(f, startTime, StartTimeIndex.Index);
             p.BtAgent->SetIntData(f, 0, HitIndex.Index);
 
-            var actor = f.Get<Actor>(e);
+            var actor = f.Get<Attackable>(e);
             p.Frame.Events.ActionChangedWithSpeed(p.Entity, ActionStateType.Attack, actor.GetAttackAniSpeed());
         }
         
@@ -50,9 +50,10 @@ namespace Quantum
          
             var e = p.Entity;
             var actor = f.Get<Actor>(e);
+            var attackable = f.Get<Attackable>(e);
             var currentTime = f.DeltaTime * f.Number;
             var startTime = p.BtAgent->GetFPData(f, StartTimeIndex.Index);
-            if (currentTime > startTime + actor.GetAttackHitEvent())
+            if (currentTime > startTime + attackable.GetAttackHitEvent())
             {
                 var hit = p.BtAgent->GetIntData(f, HitIndex.Index);
                 if (hit < 1)
@@ -63,7 +64,7 @@ namespace Quantum
                     transform->Rotation = rotation;
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
 
-                    var hits = f.Physics2D.OverlapShape(*transform, Shape2D.CreateCircle(actor.EffectRangeValue));
+                    var hits = f.Physics2D.OverlapShape(*transform, Shape2D.CreateCircle(attackable.EffectRangeValue));
                     for (int i = 0; i < hits.Count; i++)
                     {
                         var hitEntity = hits[i].Entity;
@@ -72,9 +73,9 @@ namespace Quantum
                             continue;
                         }
                         
-                        if (f.Unsafe.TryGetPointer(hitEntity, out Actor* targetActor))
+                        if (f.TryGet(hitEntity, out Actor targetActor))
                         {
-                            if (actor.Team == targetActor->Team)
+                            if (actor.Team == targetActor.Team)
                             {
                                 continue;
                             }
@@ -83,8 +84,9 @@ namespace Quantum
                         {
                             continue;
                         }
-                        
-                        targetActor->Health -= actor.Effect;
+
+                        f.Unsafe.TryGetPointer(hitEntity, out Hittable* targetHittable);
+                        targetHittable->Health -= attackable.Effect;
                         f.Events.ActorHitted(p.Entity, target, HitColor.Fire);
                         f.Events.PlayCasterEffect(p.Entity, "Effect_FireBomb");
                     }
@@ -93,7 +95,7 @@ namespace Quantum
                 }    
             }
             
-            if (currentTime > startTime + actor.AttackSpeed)
+            if (currentTime > startTime + attackable.AttackSpeed)
             {
                 return BTStatus.Success;
             }

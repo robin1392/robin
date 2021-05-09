@@ -1,11 +1,16 @@
 component Actor {
     player_ref Owner;
     Int32 Team;
-    FP Health;
-    FP MaxHealth;
+}
+
+component Buff {
+    Int32 BuffStateApplied;
+    Int32 BuffState;
+}
+
+component Attackable{
     FP Power;
     FP AttackSpeed;
-    FP MoveSpeed;
     FP Effect;
     FP EffectDurationTime;
     FP EffectProbability;
@@ -14,8 +19,15 @@ component Actor {
     FP SearchRange;
     FP AttackHitEvent;
     FP AttackAniLength;
-    Int32 BuffStateApplied;
-    Int32 BuffState;
+}
+
+component Movable{
+    FP MoveSpeed;
+}
+
+component Hittable {
+    FP Health;
+    FP MaxHealth;
 }
 
 component Dice {

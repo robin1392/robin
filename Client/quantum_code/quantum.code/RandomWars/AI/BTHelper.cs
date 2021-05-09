@@ -25,9 +25,10 @@ namespace Quantum
         {
             var f = p.Frame;
             var transform = p.Frame.Get<Transform2D>(p.Entity);
+            var attackable = p.Frame.Get<Attackable>(p.Entity);
             var actor = p.Frame.Get<Actor>(p.Entity);
             var hits = p.Frame.Physics2D.OverlapShape(
-                transform, Shape2D.CreateCircle(actor.SearchRange));
+                transform, Shape2D.CreateCircle(attackable.SearchRange));
 
             var nearest = EntityRef.None;
             var nearestDistanceSquared = FP.MaxValue;

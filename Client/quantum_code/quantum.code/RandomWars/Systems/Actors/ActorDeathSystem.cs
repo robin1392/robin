@@ -5,6 +5,7 @@ namespace Quantum.Actors
     public unsafe struct ActorDeathFilter
     {
         public EntityRef Entity;
+        public Hittable* Hittable;
         public Actor* Actor;
     }
     public unsafe class ActorDeathSystem : SystemMainThreadFilter<ActorDeathFilter>
@@ -16,7 +17,7 @@ namespace Quantum.Actors
                 return;
             }
             
-            if (filter.Actor->Health <= FP._0)
+            if (filter.Hittable->Health <= FP._0)
             {
                 f.Destroy(filter.Entity);
                 f.Events.ActorDeath(filter.Entity, filter.Actor->Team);

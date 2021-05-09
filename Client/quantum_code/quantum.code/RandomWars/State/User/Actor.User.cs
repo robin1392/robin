@@ -3,7 +3,7 @@ using Photon.Deterministic;
 
 namespace Quantum
 {
-    partial struct Actor
+    partial struct Attackable
     {
         private const Int32 EmptyIndex = -1;
 

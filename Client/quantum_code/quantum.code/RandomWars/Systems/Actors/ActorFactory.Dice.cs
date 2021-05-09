@@ -72,19 +72,30 @@ namespace Quantum.Actors
                 var actor = f.Unsafe.GetPointer<Actor>(entity);
                 actor->Owner = spec.Owner;
                 actor->Team = spec.Team;
-                actor->Power = stat.power;
-                actor->MaxHealth = stat.maxHealth;
-                actor->Health = stat.maxHealth;
-                actor->Effect = stat.effect;
-                actor->EffectDurationTime = stat.effectDurationTime;
-                actor->EffectProbability = diceInfo.effectProbability;
-                actor->AttackSpeed = diceInfo.attackSpeed / f.Global->SuddenDeathAttackSpeedFactor;
-                actor->MoveSpeed = diceInfo.moveSpeed * f.Global->SuddenDeathMoveSpeedFactor;
-                actor->SearchRange = 999;
-                actor->Range = diceInfo.range;
-                actor->EffectRangeValue = diceInfo.effectRangeValue;
-                actor->AttackHitEvent = diceInfo.attackHitEvent;
-                actor->AttackAniLength = diceInfo.attackAniLength;
+
+                f.Add<Hittable>(entity);
+                var hittable = f.Unsafe.GetPointer<Hittable>(entity);
+                hittable->MaxHealth = stat.maxHealth;
+                hittable->Health = stat.maxHealth;
+                
+                f.Add<Attackable>(entity);
+                var attackable = f.Unsafe.GetPointer<Attackable>(entity);
+                attackable->Power = stat.power;
+                attackable->Effect = stat.effect;
+                attackable->EffectDurationTime = stat.effectDurationTime;
+                attackable->EffectProbability = diceInfo.effectProbability;
+                attackable->AttackSpeed = diceInfo.attackSpeed / f.Global->SuddenDeathAttackSpeedFactor;
+                attackable->SearchRange = 999;
+                attackable->Range = diceInfo.range;
+                attackable->EffectRangeValue = diceInfo.effectRangeValue;
+                attackable->AttackHitEvent = diceInfo.attackHitEvent;
+                attackable->AttackAniLength = diceInfo.attackAniLength;
+                
+                f.Add<Movable>(entity);
+                var movable = f.Unsafe.GetPointer<Movable>(entity);
+                movable->MoveSpeed = diceInfo.moveSpeed * f.Global->SuddenDeathMoveSpeedFactor;
+                
+                f.Add<Buff>(entity);
 
                 var transform = f.Unsafe.GetPointer<Transform2D>(entity);
                 transform->Position = spawnPosition;
@@ -94,7 +105,7 @@ namespace Quantum.Actors
                 body->FreezeRotation = false;
                 
                 var steering = f.Unsafe.GetPointer<NavMeshSteeringAgent>(entity);
-                steering->MaxSpeed = actor->MoveSpeed;
+                steering->MaxSpeed = movable->MoveSpeed;
 
                 f.Events.ActionChanged(entity, ActionStateType.Idle);
 

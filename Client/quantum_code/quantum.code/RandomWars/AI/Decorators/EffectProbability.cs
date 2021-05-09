@@ -10,7 +10,7 @@ namespace Quantum
         {
             var f = p.Frame;
             var e = p.Entity;
-            var actor = f.Get<Actor>(e);
+            var actor = f.Get<Attackable>(e);
             var random = f.RNG->Next(0, 100);
             return actor.EffectProbability > random;
         }

@@ -180,9 +180,12 @@ namespace _Scripts.Views
         {
             var f = game.Frames.Verified;
             var e = EntityView.EntityRef;
-            var actor = f.Get<Actor>(e);
-            ActorModel.image_HealthBar.fillAmount = (actor.Health / actor.MaxHealth).AsFloat;
-            
+
+            if (f.TryGet(e, out Hittable hittable))
+            {
+                ActorModel.image_HealthBar.fillAmount = (hittable.Health / hittable.MaxHealth).AsFloat;    
+            }
+
             TiltActorModel();
         }
     }

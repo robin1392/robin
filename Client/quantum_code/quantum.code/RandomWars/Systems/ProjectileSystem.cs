@@ -25,7 +25,7 @@ namespace Quantum
                 if (f.Exists(filter.Projectile->Defender))
                 {
                     var defenderEntity = filter.Projectile->Defender;
-                    var defender = f.Unsafe.GetPointer<Actor>(defenderEntity);
+                    var defender = f.Unsafe.GetPointer<Hittable>(defenderEntity);
                     defender->Health -= filter.Projectile->Power;
                     if (f.Has<NoCC>(defenderEntity) == false &&
                         projectile->Debuff == DebuffType.Freeze)

@@ -29,7 +29,7 @@ namespace Quantum
             p.BtAgent->SetFPData(f, startTime, StartTimeIndex.Index);
             p.BtAgent->SetIntData(f, 0, HitIndex.Index);
 
-            var actor = f.Get<Actor>(e);
+            var actor = f.Get<Attackable>(e);
             p.Frame.Events.ActionChangedWithSpeed(p.Entity, ActionStateType.Attack, actor.GetAttackAniSpeed());
         }
         
@@ -49,7 +49,7 @@ namespace Quantum
             }
             
             var e = p.Entity;
-            var actor = f.Get<Actor>(e);
+            var actor = f.Get<Attackable>(e);
             
             var currentTime = f.DeltaTime * f.Number;
             var startTime = p.BtAgent->GetFPData(f, StartTimeIndex.Index);
@@ -64,7 +64,7 @@ namespace Quantum
                     transform->Rotation = rotation;
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
 
-                    var targetActor = f.Unsafe.GetPointer<Actor>(target);
+                    var targetActor = f.Unsafe.GetPointer<Hittable>(target);
                     targetActor->Health -= actor.Power;
                     f.Events.ActorHitted(p.Entity, target, HitColor.None);
 
