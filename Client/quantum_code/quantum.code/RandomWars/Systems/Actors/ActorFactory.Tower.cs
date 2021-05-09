@@ -26,6 +26,8 @@ namespace Quantum.Actors
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
             transform->Position = spec.Position;
             transform->Rotation = rotation;
+
+            f.Add<NoCC>(entity);
         }
     }
 }

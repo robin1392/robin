@@ -19,12 +19,30 @@ namespace Quantum
             }
             
             var currentTime = f.DeltaTime * f.Number;
-            if (filter.Projectile->HitTime <= currentTime)
+            var projectile = filter.Projectile;
+            if (projectile->HitTime <= currentTime)
             {
                 if (f.Exists(filter.Projectile->Defender))
                 {
-                    var defender = f.Unsafe.GetPointer<Actor>(filter.Projectile->Defender);
+                    var defenderEntity = filter.Projectile->Defender;
+                    var defender = f.Unsafe.GetPointer<Actor>(defenderEntity);
                     defender->Health -= filter.Projectile->Power;
+                    if (f.Has<NoCC>(defenderEntity) == false &&
+                        projectile->Debuff == DebuffType.Freeze)
+                    {
+                        if (f.Has<Frozen>(defenderEntity) == false)
+                        {
+                            f.Add<Frozen>(defenderEntity);
+                        }
+                        
+                        var freeze = f.Unsafe.GetPointer<Frozen>(defenderEntity);
+                        var endTimePrev = freeze->EndTime;
+                        var endTime = currentTime + projectile->DebuffDuration;
+                        if (endTimePrev < endTime)
+                        {
+                            freeze->EndTime = endTime;
+                        }
+                    }
                 }
                 
                 f.Destroy(filter.Entity);

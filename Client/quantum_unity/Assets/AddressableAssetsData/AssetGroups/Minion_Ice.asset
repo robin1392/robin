@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Minion_Ice
+  m_EditorClassIdentifier: 
+  m_GroupName: Minion_Ice
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 6105003372f7a4f2f971106dad41dfea
+  m_SerializeEntries:
+  - m_GUID: ea5d0d9ecd1ae4aeb860d02e444b7869
+    m_Address: Effect_Ice_Freeze
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 09a148e86cdb046edb32055e3387a5e8
+    m_Address: Ice_Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c34688a09212048f397a55c185343235
+    m_Address: Minion_Ice
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 8f290cd0539b14cf38b64d6c7a4bc85e, type: 2}
+    - {fileID: 11400000, guid: abd8abfbe3ef144d486a6f9c790f9fdd, type: 2}

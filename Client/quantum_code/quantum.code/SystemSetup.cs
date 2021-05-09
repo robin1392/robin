@@ -61,6 +61,8 @@ namespace Quantum
                 new ActorSystem(),
                 new PlayerInitSystem(),
                 new ProjectileSystem(),
+                new UpdateFronzenSystem(),
+                new UpdateBuffStateSystem(),
                 new ActorDeathSystem()
             };
             

@@ -15,7 +15,8 @@ namespace Quantum
         public string ProjectileModel;
         public string HitEffect;
         public FP ProjectTileSpeed = FP._6;
-        
+        public DebuffType Debuff;
+
         public override void Init(Frame frame, AIBlackboardComponent* bbComponent, BTAgent* btAgent)
         {
             base.Init(frame, bbComponent, btAgent);
@@ -76,9 +77,11 @@ namespace Quantum
                     projectile->Team = actor.Team;
                     projectile->Model = ProjectileModel;
                     projectile->HitEffect = HitEffect;
+                    projectile->Debuff = Debuff;
+                    projectile->DebuffDuration = actor.EffectDurationTime;
 
                     var distance = FPVector2.Distance(targetTransform.Position, transform->Position) - targetCollider.Shape.Circle.Radius;
-                    var hitTime = distance / ProjectTileSpeed; 
+                    var hitTime = distance / ProjectTileSpeed;
                     projectile->HitTime = currentTime + hitTime;
                     
                     bb->Set(p.Frame, IsEnemyTargetAttacked.Key, true);

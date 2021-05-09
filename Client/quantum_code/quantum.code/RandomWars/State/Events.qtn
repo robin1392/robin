@@ -77,3 +77,9 @@ event PlayCasterEffect {
     entity_ref Caster;
     QString<64> AssetName;
 }
+
+
+event BuffStateChanged {
+    entity_ref Entity;
+    Int32 BuffState;
+}

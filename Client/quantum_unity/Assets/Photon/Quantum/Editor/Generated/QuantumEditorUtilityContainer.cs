@@ -37,6 +37,7 @@ namespace Quantum.Editor {
       public Quantum.AIBlackboard[] AIBlackboard = {};
       public Quantum.AIBlackboardInitializer[] AIBlackboardInitializer = {};
       public Quantum.SimulationConfig[] SimulationConfig = {};
+      public Quantum.CanAct[] CanAct = {};
       public Quantum.EffectProbability[] EffectProbability = {};
       public Quantum.HasTarget[] HasTarget = {};
       public Quantum.IsTargetInRange[] IsTargetInRange = {};

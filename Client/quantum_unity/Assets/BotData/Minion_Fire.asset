@@ -16,17 +16,20 @@ MonoBehaviour:
     <Version>1</Version>\n  <Meta>false</Meta>\n  <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n 
     <DebugKey>21a609dd-b87c-49f0-b2e7-8bbc8d345941</DebugKey>\n  <Flags>0</Flags>\n 
     <Parent>$bt</Parent>\n  <Error Count=\"0\" />\n  <Comments Count=\"0\" />\n 
-    <HiddenActionsDecisions Count=\"0\" />\n  <Vars Count=\"2\">\n    <Key>2d4f08e7-5286-4442-9136-89f96a019c4a</Key>\n   
+    <HiddenActionsDecisions Count=\"0\" />\n  <Vars Count=\"3\">\n    <Key>2d4f08e7-5286-4442-9136-89f96a019c4a</Key>\n   
     <Var>\n      <Id>2d4f08e7-5286-4442-9136-89f96a019c4a</Id>\n      <Name>Target</Name>\n     
     <Type>Quantum.EntityRef, quantum.core</Type>\n      <Default></Default>\n     
     <Flags>0</Flags>\n      <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n     
-    <Scope>Blackboard</Scope>\n    </Var>\n    <Key>8e400c7e-521e-433a-b847-fdc261ac017e</Key>\n   
-    <Var>\n      <Id>8e400c7e-521e-433a-b847-fdc261ac017e</Id>\n      <Name>TargetAttacked</Name>\n     
-    <Type>@boolean</Type>\n      <Default></Default>\n      <Flags>0</Flags>\n     
-    <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n   
-    </Var>\n  </Vars>\n  <Nodes Count=\"52\">\n    <Key>04d12865-8f58-4510-a53f-5ad425e55164</Key>\n   
-    <Node>\n      <Id>04d12865-8f58-4510-a53f-5ad425e55164</Id>\n      <Name>FireAttack</Name>\n     
-    <Comment></Comment>\n      <Graph>fbef5e66-8780-4944-86bc-1b7a84047444</Graph>\n     
+    <Scope>Blackboard</Scope>\n    </Var>\n    <Key>33f4931f-13ff-4f47-b31b-d2580ec58e98</Key>\n   
+    <Var>\n      <Id>33f4931f-13ff-4f47-b31b-d2580ec58e98</Id>\n      <Name>CanAct</Name>\n     
+    <Type>@boolean</Type>\n      <Default />\n      <Flags>0</Flags>\n      <VarMode>MetaField</VarMode>\n     
+    <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n    </Var>\n   
+    <Key>8e400c7e-521e-433a-b847-fdc261ac017e</Key>\n    <Var>\n      <Id>8e400c7e-521e-433a-b847-fdc261ac017e</Id>\n     
+    <Name>TargetAttacked</Name>\n      <Type>@boolean</Type>\n      <Default></Default>\n     
+    <Flags>0</Flags>\n      <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n     
+    <Scope>Blackboard</Scope>\n    </Var>\n  </Vars>\n  <Nodes Count=\"55\">\n   
+    <Key>04d12865-8f58-4510-a53f-5ad425e55164</Key>\n    <Node>\n      <Id>04d12865-8f58-4510-a53f-5ad425e55164</Id>\n     
+    <Name>FireAttack</Name>\n      <Comment></Comment>\n      <Graph>fbef5e66-8780-4944-86bc-1b7a84047444</Graph>\n     
     <Parent>$decoratorsRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
     <Position>0|225||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"1\">\n        <Slot>\n          <Id>$decoratorsList</Id>\n          <Name>Decorators</Name>\n         
@@ -112,6 +115,20 @@ MonoBehaviour:
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"1\">\n       
     <Data>\n          <Name>Guid</Name>\n          <Value Type=\"System.Int64, mscorlib\">186149603261161770</Value>\n       
+    </Data>\n      </Data>\n    </Node>\n    <Key>24cb0f02-cbf3-4e41-8173-6707f9fced2e</Key>\n   
+    <Node>\n      <Id>24cb0f02-cbf3-4e41-8173-6707f9fced2e</Id>\n      <Name>CanAct</Name>\n     
+    <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Parent>$blackboardRef</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>0</Flags>\n     
+    <Position>-193|317||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
+    Count=\"2\">\n        <Slot>\n          <Id>$keyOut</Id>\n          <Name>Key</Name>\n         
+    <Value />\n          <Type>Quantum.AIBlackboardValueKey, quantum.code</Type>\n         
+    <Mode>Out</Mode>\n          <Flags>2</Flags>\n          <TypeMode>Value</TypeMode>\n       
+    </Slot>\n        <Slot>\n          <Id>$valueOut</Id>\n          <Name>Value</Name>\n         
+    <Value />\n          <Type>@boolean</Type>\n          <Mode>Out</Mode>\n         
+    <Flags>2</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"2\">\n       
+    <Data>\n          <Name>$varId</Name>\n          <Value Type=\"@string\">33f4931f-13ff-4f47-b31b-d2580ec58e98</Value>\n       
+    </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
     </Data>\n      </Data>\n    </Node>\n    <Key>2edea4cf-302e-4a5d-bd38-63ad9ef202ef</Key>\n   
     <Node>\n      <Id>2edea4cf-302e-4a5d-bd38-63ad9ef202ef</Id>\n      <Name>Constant</Name>\n     
     <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
@@ -130,7 +147,7 @@ MonoBehaviour:
     <Node>\n      <Id>30879b9f-a5bd-4c22-bdb0-7128c4124376</Id>\n      <Name>SetNearestEnemyToTarget</Name>\n     
     <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$leaf/SetNearestEnemyToTarget</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
-    <Flags>32</Flags>\n      <Position>-778|-364||0</Position>\n      <StaticIn Count=\"5\">\n       
+    <Flags>32</Flags>\n      <Position>-834|-272||0</Position>\n      <StaticIn Count=\"5\">\n       
     <Slot>\n          <Id>$in</Id>\n          <Name>In</Name>\n          <Value />\n         
     <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>EnemyTargetRef</Id>\n         
@@ -274,7 +291,7 @@ MonoBehaviour:
     <Key>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</Key>\n    <Node>\n      <Id>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</Id>\n     
     <Name>BTSelector</Name>\n      <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$composite/BTSelector</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
-    <Flags>32</Flags>\n      <Position>-375|-357||0</Position>\n      <StaticIn Count=\"6\">\n       
+    <Flags>32</Flags>\n      <Position>-379|-325||0</Position>\n      <StaticIn Count=\"6\">\n       
     <Slot>\n          <Id>$in</Id>\n          <Name>In</Name>\n          <Value />\n         
     <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>TopmostDecorator</Id>\n         
@@ -339,7 +356,7 @@ MonoBehaviour:
     <Key>83d8334f-fbb3-4df5-89e7-ac393a62deb3</Key>\n    <Node>\n      <Id>83d8334f-fbb3-4df5-89e7-ac393a62deb3</Id>\n     
     <Name>Root</Name>\n      <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$root</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>1</Flags>\n     
-    <Position>-208|-592||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
+    <Position>-232|-768||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"1\">\n        <Slot>\n          <Id>$out</Id>\n          <Name>Out</Name>\n         
     <Value />\n          <Type>$link</Type>\n          <Mode>Out</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
@@ -354,6 +371,33 @@ MonoBehaviour:
     <Value />\n          <Type>$exec</Type>\n          <Mode>Out</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
+    <Key>88021421-8504-4414-9ed9-ee2d3f77cb20</Key>\n    <Node>\n      <Id>88021421-8504-4414-9ed9-ee2d3f77cb20</Id>\n     
+    <Name>CanAct</Name>\n      <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Parent>$decorator/CanAct</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
+    <Flags>0</Flags>\n      <Position>176|267||0</Position>\n      <StaticIn Count=\"6\">\n       
+    <Slot>\n          <Id>$exec</Id>\n          <Name></Name>\n          <Value />\n         
+    <Type>$exec</Type>\n          <Mode>In</Mode>\n          <Flags>2</Flags>\n         
+    <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>CanActKey</Id>\n         
+    <Name>CanActKey</Name>\n          <Value Type=\"Quantum.AIBlackboardValueKey,
+    quantum.code\">Quantum.AIBlackboardValueKey</Value>\n          <Type>Quantum.AIBlackboardValueKey,
+    quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
+    <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>Child</Id>\n         
+    <Name>Child</Name>\n          <Value Type=\"Quantum.AssetRefBTNode, quantum.code\">Id:
+    [0000000000000000]</Value>\n          <Type>Quantum.AssetRefBTNode, quantum.code</Type>\n         
+    <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
+    </Slot>\n        <Slot>\n          <Id>AbortType</Id>\n          <Name>AbortType</Name>\n         
+    <Value Type=\"Quantum.BTAbort, quantum.code\">None</Value>\n          <Type>Quantum.BTAbort,
+    quantum.code</Type>\n          <Mode>In</Mode>\n          <Flags>0</Flags>\n         
+    <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>Label</Id>\n         
+    <Name>Label</Name>\n          <Value />\n          <Type>@string</Type>\n         
+    <Mode>In</Mode>\n          <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n       
+    </Slot>\n        <Slot>\n          <Id>Id</Id>\n          <Name>Id</Name>\n         
+    <Value Type=\"@int32\">0</Value>\n          <Type>@int32</Type>\n          <Mode>In</Mode>\n         
+    <Flags>512</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticIn>\n      <StaticOut Count=\"1\">\n        <Slot>\n          <Id>$exec</Id>\n         
+    <Name></Name>\n          <Value />\n          <Type>$exec</Type>\n          <Mode>Out</Mode>\n         
+    <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
+    </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
     <Key>890b7327-da52-4861-8348-c1ef8d683e8a</Key>\n    <Node>\n      <Id>890b7327-da52-4861-8348-c1ef8d683e8a</Id>\n     
     <Name>FindTarget</Name>\n      <Comment></Comment>\n      <Graph>eef82218-13d8-41c3-9218-b1a2e496eaab</Graph>\n     
     <Parent>$servicesRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
@@ -362,8 +406,23 @@ MonoBehaviour:
     <Value />\n          <Type>$exec</Type>\n          <Mode>Out</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
-    <Key>9bf193ba-fd1f-41db-af7f-9cac974bd37d</Key>\n    <Node>\n      <Id>9bf193ba-fd1f-41db-af7f-9cac974bd37d</Id>\n     
-    <Name>Target</Name>\n      <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
+    <Key>9a30719b-719c-4686-9e75-e6009f78addb</Key>\n    <Node>\n      <Id>9a30719b-719c-4686-9e75-e6009f78addb</Id>\n     
+    <Name>BlackboardVar</Name>\n      <Comment />\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
+    <Parent>$blackboardVarData</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
+    <Flags>8</Flags>\n      <Position>-299|-158||0</Position>\n      <StaticIn Count=\"0\"
+    />\n      <StaticOut Count=\"0\" />\n      <Groups Count=\"0\" />\n      <Data
+    Count=\"8\">\n        <Data>\n          <Name>$default</Name>\n          <Value
+    Type=\"@boolean\">False</Value>\n        </Data>\n        <Data>\n          <Name></Name>\n         
+    <Value />\n        </Data>\n        <Data>\n          <Name>$hasDefault</Name>\n         
+    <Value Type=\"@boolean\">False</Value>\n        </Data>\n        <Data>\n         
+    <Name>True</Name>\n          <Value />\n        </Data>\n        <Data>\n         
+    <Name>$bbType</Name>\n          <Value Type=\"@string\">Boolean</Value>\n       
+    </Data>\n        <Data>\n          <Name>Boolean</Name>\n          <Value />\n       
+    </Data>\n        <Data>\n          <Name>$varId</Name>\n          <Value Type=\"@string\">33f4931f-13ff-4f47-b31b-d2580ec58e98</Value>\n       
+    </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
+    </Data>\n      </Data>\n    </Node>\n    <Key>9bf193ba-fd1f-41db-af7f-9cac974bd37d</Key>\n   
+    <Node>\n      <Id>9bf193ba-fd1f-41db-af7f-9cac974bd37d</Id>\n      <Name>Target</Name>\n     
+    <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$blackboardRef</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>0</Flags>\n     
     <Position>-926|233||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"2\">\n        <Slot>\n          <Id>$keyOut</Id>\n          <Name>Key</Name>\n         
@@ -540,7 +599,7 @@ MonoBehaviour:
     <Node>\n      <Id>c5de4623-71c5-46f3-b067-cb1ad2b30733</Id>\n      <Name>BTSequence</Name>\n     
     <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$composite/BTSequence</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
-    <Flags>32</Flags>\n      <Position>-617|-496||0</Position>\n      <StaticIn Count=\"6\">\n       
+    <Flags>32</Flags>\n      <Position>-573|-564||0</Position>\n      <StaticIn Count=\"6\">\n       
     <Slot>\n          <Id>$in</Id>\n          <Name>In</Name>\n          <Value />\n         
     <Type>$link</Type>\n          <Mode>In</Mode>\n          <Flags>512</Flags>\n         
     <TypeMode>Value</TypeMode>\n        </Slot>\n        <Slot>\n          <Id>TopmostDecorator</Id>\n         
@@ -818,76 +877,83 @@ MonoBehaviour:
     <Value />\n          <Type>$exec</Type>\n          <Mode>Out</Mode>\n         
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n 
-    </Nodes>\n  <Types Count=\"0\" />\n  <Links Count=\"25\">\n    <Link>\n     
-    <Id>35659dc0-d3e6-4ad1-ba7e-af283cfa2911</Id>\n      <FromNode>f138212e-bc39-4cb1-ba40-b2289b909941</FromNode>\n     
-    <FromSlot>$out1</FromSlot>\n      <ToNode>fbef5e66-8780-4944-86bc-1b7a84047444</ToNode>\n     
+    </Nodes>\n  <Types Count=\"0\" />\n  <Links Count=\"27\">\n    <Link>\n     
+    <Id>d074a534-ec29-45b5-901d-a99cb62b676a</Id>\n      <FromNode>83d8334f-fbb3-4df5-89e7-ac393a62deb3</FromNode>\n     
+    <FromSlot>$out</FromSlot>\n      <ToNode>c5de4623-71c5-46f3-b067-cb1ad2b30733</ToNode>\n     
     <ToSlot>$in</ToSlot>\n      <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>426e2b3b-b36b-451c-8148-264d98915e88</Id>\n     
-    <FromNode>9bf193ba-fd1f-41db-af7f-9cac974bd37d</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
-    <ToNode>fbef5e66-8780-4944-86bc-1b7a84047444</ToNode>\n      <ToSlot>Target</ToSlot>\n     
+    </Link>\n    <Link>\n      <Id>8f0a29ae-b10d-4517-9de5-c2df297d171f</Id>\n     
+    <FromNode>24cb0f02-cbf3-4e41-8173-6707f9fced2e</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
+    <ToNode>88021421-8504-4414-9ed9-ee2d3f77cb20</ToNode>\n      <ToSlot>CanActKey</ToSlot>\n     
     <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>4b8c51d1-8e08-46d3-986a-37c3fe05be58</Id>\n      <FromNode>b5895757-5e90-48c0-9401-f76d37ddbb5b</FromNode>\n     
+    <Id>aa18f96e-a39c-4392-9fc7-f69c737fbf56</Id>\n      <FromNode>5d3d79c9-5f95-4b2c-ae69-8aba48a53c33</FromNode>\n     
+    <FromSlot>$decoratorsList</FromSlot>\n      <ToNode>88021421-8504-4414-9ed9-ee2d3f77cb20</ToNode>\n     
+    <ToSlot>$exec</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
+    </Link>\n    <Link>\n      <Id>35659dc0-d3e6-4ad1-ba7e-af283cfa2911</Id>\n     
+    <FromNode>f138212e-bc39-4cb1-ba40-b2289b909941</FromNode>\n      <FromSlot>$out1</FromSlot>\n     
+    <ToNode>fbef5e66-8780-4944-86bc-1b7a84047444</ToNode>\n      <ToSlot>$in</ToSlot>\n     
+    <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
+    <Id>426e2b3b-b36b-451c-8148-264d98915e88</Id>\n      <FromNode>9bf193ba-fd1f-41db-af7f-9cac974bd37d</FromNode>\n     
     <FromSlot>$keyOut</FromSlot>\n      <ToNode>fbef5e66-8780-4944-86bc-1b7a84047444</ToNode>\n     
-    <ToSlot>IsEnemyTargetAttacked</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>c7cb9d4e-68b4-43b6-b07a-e93e6ffc75fd</Id>\n     
-    <FromNode>04d12865-8f58-4510-a53f-5ad425e55164</FromNode>\n      <FromSlot>$decoratorsList</FromSlot>\n     
-    <ToNode>c81ebfa7-0c99-4ac5-a246-5ffec9ec0ab6</ToNode>\n      <ToSlot>$exec</ToSlot>\n     
+    <ToSlot>Target</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
+    </Link>\n    <Link>\n      <Id>4b8c51d1-8e08-46d3-986a-37c3fe05be58</Id>\n     
+    <FromNode>b5895757-5e90-48c0-9401-f76d37ddbb5b</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
+    <ToNode>fbef5e66-8780-4944-86bc-1b7a84047444</ToNode>\n      <ToSlot>IsEnemyTargetAttacked</ToSlot>\n     
     <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>affcdcb7-6de7-4cbd-98a2-c69670e36c62</Id>\n      <FromNode>f138212e-bc39-4cb1-ba40-b2289b909941</FromNode>\n     
-    <FromSlot>$out0</FromSlot>\n      <ToNode>c47070ac-a371-48fc-824e-bdd709e0ef67</ToNode>\n     
-    <ToSlot>$in</ToSlot>\n      <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>485575e2-fb9a-40b8-bca5-510d49cf3446</Id>\n     
-    <FromNode>f76d8211-979a-473f-a10b-94b49a8bbcbe</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
-    <ToNode>55d9b402-a72a-4ad3-9636-f16ad4ab7ff3</ToNode>\n      <ToSlot>TargetRef</ToSlot>\n     
-    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>64a90a9f-ccb0-40c1-84e6-134126b24a3e</Id>\n      <FromNode>cd0118e8-c19b-4f71-92d1-7c557a4181ae</FromNode>\n     
-    <FromSlot>$decoratorsList</FromSlot>\n      <ToNode>55d9b402-a72a-4ad3-9636-f16ad4ab7ff3</ToNode>\n     
+    <Id>c7cb9d4e-68b4-43b6-b07a-e93e6ffc75fd</Id>\n      <FromNode>04d12865-8f58-4510-a53f-5ad425e55164</FromNode>\n     
+    <FromSlot>$decoratorsList</FromSlot>\n      <ToNode>c81ebfa7-0c99-4ac5-a246-5ffec9ec0ab6</ToNode>\n     
     <ToSlot>$exec</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>ff9e438d-c340-4948-b248-bbc88d2a82ac</Id>\n     
-    <FromNode>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</FromNode>\n      <FromSlot>$out1</FromSlot>\n     
-    <ToNode>f138212e-bc39-4cb1-ba40-b2289b909941</ToNode>\n      <ToSlot>$in</ToSlot>\n     
+    </Link>\n    <Link>\n      <Id>affcdcb7-6de7-4cbd-98a2-c69670e36c62</Id>\n     
+    <FromNode>f138212e-bc39-4cb1-ba40-b2289b909941</FromNode>\n      <FromSlot>$out0</FromSlot>\n     
+    <ToNode>c47070ac-a371-48fc-824e-bdd709e0ef67</ToNode>\n      <ToSlot>$in</ToSlot>\n     
     <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>0bd31c9d-96b9-48fb-a835-56ccd3d11e0d</Id>\n      <FromNode>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</FromNode>\n     
-    <FromSlot>$out</FromSlot>\n      <ToNode>a30e80c3-7043-45cc-890d-055c1bbab309</ToNode>\n     
-    <ToSlot>$in</ToSlot>\n      <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>ea8dfc4c-e407-4a3d-b372-7b06e6bf3544</Id>\n     
-    <FromNode>c5de4623-71c5-46f3-b067-cb1ad2b30733</FromNode>\n      <FromSlot>$out0</FromSlot>\n     
-    <ToNode>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</ToNode>\n      <ToSlot>$in</ToSlot>\n     
-    <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>fce9de23-7779-4c56-8286-83e415bb2a7e</Id>\n      <FromNode>4708671e-4650-40cf-b794-5f6d92643ade</FromNode>\n     
-    <FromSlot>$keyOut</FromSlot>\n      <ToNode>1669f49b-7fe0-4827-a28d-d31d311c6c21</ToNode>\n     
+    <Id>485575e2-fb9a-40b8-bca5-510d49cf3446</Id>\n      <FromNode>f76d8211-979a-473f-a10b-94b49a8bbcbe</FromNode>\n     
+    <FromSlot>$keyOut</FromSlot>\n      <ToNode>55d9b402-a72a-4ad3-9636-f16ad4ab7ff3</ToNode>\n     
     <ToSlot>TargetRef</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>4eb19d47-f0a6-4c10-b7e8-aadd408191d8</Id>\n     
-    <FromNode>d2a59b4f-593b-47ee-93b1-7f3e83f52603</FromNode>\n      <FromSlot>$decoratorsList</FromSlot>\n     
-    <ToNode>1669f49b-7fe0-4827-a28d-d31d311c6c21</ToNode>\n      <ToSlot>$exec</ToSlot>\n     
+    </Link>\n    <Link>\n      <Id>64a90a9f-ccb0-40c1-84e6-134126b24a3e</Id>\n     
+    <FromNode>cd0118e8-c19b-4f71-92d1-7c557a4181ae</FromNode>\n      <FromSlot>$decoratorsList</FromSlot>\n     
+    <ToNode>55d9b402-a72a-4ad3-9636-f16ad4ab7ff3</ToNode>\n      <ToSlot>$exec</ToSlot>\n     
     <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>242997f2-88cf-4d89-a987-df9996647179</Id>\n      <FromNode>e472a514-a339-4d0c-800f-7dae48956d6f</FromNode>\n     
-    <FromSlot>$keyOut</FromSlot>\n      <ToNode>f8359a12-db96-4b8e-a73e-0102547ff48d</ToNode>\n     
-    <ToSlot>IsEnemyTargetAttacked</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>b2822382-38b2-4bc7-9e09-6db4be25453a</Id>\n     
-    <FromNode>768a0641-a4ce-4b5a-85d1-28a99ad12e10</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
-    <ToNode>f8359a12-db96-4b8e-a73e-0102547ff48d</ToNode>\n      <ToSlot>EnemyTargetRef</ToSlot>\n     
-    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>e7dae84d-4615-4e1b-9cfb-11900d174b86</Id>\n      <FromNode>31ea380a-e2b4-4bd6-8c96-ceff39656295</FromNode>\n     
-    <FromSlot>$servicesList</FromSlot>\n      <ToNode>f8359a12-db96-4b8e-a73e-0102547ff48d</ToNode>\n     
-    <ToSlot>$exec</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>f45069e4-89c1-4eb8-94fa-22235b723e83</Id>\n     
-    <FromNode>c605291f-0e8b-4363-a71f-cce306dce310</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
-    <ToNode>c47070ac-a371-48fc-824e-bdd709e0ef67</ToNode>\n      <ToSlot>IsEnemyTargetAttacked</ToSlot>\n     
-    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>14efa3f4-f43c-44ee-90b0-14aef9907d0b</Id>\n      <FromNode>49422bfa-04ba-4fb0-87d2-3405bbccb993</FromNode>\n     
-    <FromSlot>$keyOut</FromSlot>\n      <ToNode>30879b9f-a5bd-4c22-bdb0-7128c4124376</ToNode>\n     
-    <ToSlot>IsEnemyTargetAttacked</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>e11262f2-325c-4498-ade3-426b90985a6a</Id>\n     
-    <FromNode>a9bcbc6d-e8ce-4b0f-b373-28308d6f231f</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
-    <ToNode>30879b9f-a5bd-4c22-bdb0-7128c4124376</ToNode>\n      <ToSlot>EnemyTargetRef</ToSlot>\n     
-    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
-    <Id>dce24793-c336-413c-b9a4-7cf566aabaf7</Id>\n      <FromNode>c5de4623-71c5-46f3-b067-cb1ad2b30733</FromNode>\n     
-    <FromSlot>$out</FromSlot>\n      <ToNode>30879b9f-a5bd-4c22-bdb0-7128c4124376</ToNode>\n     
+    <Id>ff9e438d-c340-4948-b248-bbc88d2a82ac</Id>\n      <FromNode>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</FromNode>\n     
+    <FromSlot>$out1</FromSlot>\n      <ToNode>f138212e-bc39-4cb1-ba40-b2289b909941</ToNode>\n     
     <ToSlot>$in</ToSlot>\n      <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
-    </Link>\n    <Link>\n      <Id>868106f2-880d-4fc2-82a0-e0a57b5d5959</Id>\n     
-    <FromNode>83d8334f-fbb3-4df5-89e7-ac393a62deb3</FromNode>\n      <FromSlot>$out</FromSlot>\n     
-    <ToNode>c5de4623-71c5-46f3-b067-cb1ad2b30733</ToNode>\n      <ToSlot>$in</ToSlot>\n     
+    </Link>\n    <Link>\n      <Id>0bd31c9d-96b9-48fb-a835-56ccd3d11e0d</Id>\n     
+    <FromNode>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</FromNode>\n      <FromSlot>$out</FromSlot>\n     
+    <ToNode>a30e80c3-7043-45cc-890d-055c1bbab309</ToNode>\n      <ToSlot>$in</ToSlot>\n     
+    <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
+    <Id>ea8dfc4c-e407-4a3d-b372-7b06e6bf3544</Id>\n      <FromNode>c5de4623-71c5-46f3-b067-cb1ad2b30733</FromNode>\n     
+    <FromSlot>$out0</FromSlot>\n      <ToNode>70e0b81f-e28f-4273-ab6f-ce67f05a1f24</ToNode>\n     
+    <ToSlot>$in</ToSlot>\n      <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
+    </Link>\n    <Link>\n      <Id>fce9de23-7779-4c56-8286-83e415bb2a7e</Id>\n     
+    <FromNode>4708671e-4650-40cf-b794-5f6d92643ade</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
+    <ToNode>1669f49b-7fe0-4827-a28d-d31d311c6c21</ToNode>\n      <ToSlot>TargetRef</ToSlot>\n     
+    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
+    <Id>4eb19d47-f0a6-4c10-b7e8-aadd408191d8</Id>\n      <FromNode>d2a59b4f-593b-47ee-93b1-7f3e83f52603</FromNode>\n     
+    <FromSlot>$decoratorsList</FromSlot>\n      <ToNode>1669f49b-7fe0-4827-a28d-d31d311c6c21</ToNode>\n     
+    <ToSlot>$exec</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
+    </Link>\n    <Link>\n      <Id>242997f2-88cf-4d89-a987-df9996647179</Id>\n     
+    <FromNode>e472a514-a339-4d0c-800f-7dae48956d6f</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
+    <ToNode>f8359a12-db96-4b8e-a73e-0102547ff48d</ToNode>\n      <ToSlot>IsEnemyTargetAttacked</ToSlot>\n     
+    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
+    <Id>b2822382-38b2-4bc7-9e09-6db4be25453a</Id>\n      <FromNode>768a0641-a4ce-4b5a-85d1-28a99ad12e10</FromNode>\n     
+    <FromSlot>$keyOut</FromSlot>\n      <ToNode>f8359a12-db96-4b8e-a73e-0102547ff48d</ToNode>\n     
+    <ToSlot>EnemyTargetRef</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
+    </Link>\n    <Link>\n      <Id>e7dae84d-4615-4e1b-9cfb-11900d174b86</Id>\n     
+    <FromNode>31ea380a-e2b4-4bd6-8c96-ceff39656295</FromNode>\n      <FromSlot>$servicesList</FromSlot>\n     
+    <ToNode>f8359a12-db96-4b8e-a73e-0102547ff48d</ToNode>\n      <ToSlot>$exec</ToSlot>\n     
+    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
+    <Id>f45069e4-89c1-4eb8-94fa-22235b723e83</Id>\n      <FromNode>c605291f-0e8b-4363-a71f-cce306dce310</FromNode>\n     
+    <FromSlot>$keyOut</FromSlot>\n      <ToNode>c47070ac-a371-48fc-824e-bdd709e0ef67</ToNode>\n     
+    <ToSlot>IsEnemyTargetAttacked</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
+    </Link>\n    <Link>\n      <Id>14efa3f4-f43c-44ee-90b0-14aef9907d0b</Id>\n     
+    <FromNode>49422bfa-04ba-4fb0-87d2-3405bbccb993</FromNode>\n      <FromSlot>$keyOut</FromSlot>\n     
+    <ToNode>30879b9f-a5bd-4c22-bdb0-7128c4124376</ToNode>\n      <ToSlot>IsEnemyTargetAttacked</ToSlot>\n     
+    <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
+    <Id>e11262f2-325c-4498-ade3-426b90985a6a</Id>\n      <FromNode>a9bcbc6d-e8ce-4b0f-b373-28308d6f231f</FromNode>\n     
+    <FromSlot>$keyOut</FromSlot>\n      <ToNode>30879b9f-a5bd-4c22-bdb0-7128c4124376</ToNode>\n     
+    <ToSlot>EnemyTargetRef</ToSlot>\n      <Flags>0</Flags>\n      <DebugIndex>-1</DebugIndex>\n   
+    </Link>\n    <Link>\n      <Id>dce24793-c336-413c-b9a4-7cf566aabaf7</Id>\n     
+    <FromNode>c5de4623-71c5-46f3-b067-cb1ad2b30733</FromNode>\n      <FromSlot>$out</FromSlot>\n     
+    <ToNode>30879b9f-a5bd-4c22-bdb0-7128c4124376</ToNode>\n      <ToSlot>$in</ToSlot>\n     
     <Flags>14</Flags>\n      <DebugIndex>-1</DebugIndex>\n    </Link>\n    <Link>\n     
     <Id>a4171783-9e84-43e6-b683-9d4b6a9c040b</Id>\n      <FromNode>a8ed44c5-be7f-4396-9065-7e38fe195f1c</FromNode>\n     
     <FromSlot>$keyOut</FromSlot>\n      <ToNode>b92537ec-8fc5-4690-a1d5-b52d90f82709</ToNode>\n     
@@ -941,7 +1007,7 @@ MonoBehaviour:
     <ZoomOffset>0|0||0</ZoomOffset>\n      <PanOffset>917|132||0</PanOffset>\n   
     </GraphData>\n    <Key>f711e486-e817-49f4-be3d-742c97b0f8ce</Key>\n    <GraphData>\n     
     <Id>f711e486-e817-49f4-be3d-742c97b0f8ce</Id>\n      <ZoomLevel>0.7211195</ZoomLevel>\n     
-    <ZoomOffset>213|254||0</ZoomOffset>\n      <PanOffset>1198|418||0</PanOffset>\n   
+    <ZoomOffset>213|254||0</ZoomOffset>\n      <PanOffset>1039|649||0</PanOffset>\n   
     </GraphData>\n    <Key>fbef5e66-8780-4944-86bc-1b7a84047444</Key>\n    <GraphData>\n     
     <Id>fbef5e66-8780-4944-86bc-1b7a84047444</Id>\n      <ZoomLevel>1</ZoomLevel>\n     
     <ZoomOffset>0|0||0</ZoomOffset>\n      <PanOffset>917|232||0</PanOffset>\n   
@@ -950,5 +1016,5 @@ MonoBehaviour:
   DocumentId: f711e486-e817-49f4-be3d-742c97b0f8ce
   DocumentNameOverride: 
   History: []
-  LastCompiledHistoryID: 860126b1-c32b-48e5-a53f-7ffa6de64240
-  IsOutdated: 0
+  LastCompiledHistoryID: 
+  IsOutdated: 1

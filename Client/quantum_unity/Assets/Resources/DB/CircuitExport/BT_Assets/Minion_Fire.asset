@@ -18,7 +18,7 @@ MonoBehaviour:
       Guid:
         Value: 4328589522679660744
     Label: SetNearestEnemyToTarget
-    Id: 12
+    Id: 13
     Services: []
     EnemyTargetRef:
       Key: Target
@@ -42,7 +42,7 @@ MonoBehaviour:
       Guid:
         Value: 50499323534730128
     Label: FireAttack
-    Id: 8
+    Id: 9
     Services: []
     Target:
       Key: Target
@@ -94,7 +94,7 @@ MonoBehaviour:
       Guid:
         Value: 1457647519061093016
     Label: ApproachToTarget
-    Id: 11
+    Id: 12
     Services: []
     Target:
       Key: Target
@@ -108,15 +108,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
-  m_Name: IsTargetOutOfRange_1
+  m_Name: IsTargetOutOfRange_2
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetOutOfRange_1
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|IsTargetOutOfRange_2
       Guid:
         Value: 186149603261161770
     Label: IsTargetOutOfRange
-    Id: 5
+    Id: 6
     Child:
       Id:
         Value: 2327373505096431118
@@ -144,9 +144,9 @@ MonoBehaviour:
     Id: 0
     Child:
       Id:
-        Value: 830595558268387437
+        Value: 2158982312344498144
     AbortType: 0
-    NodesAmount: 13
+    NodesAmount: 14
 --- !u!114 &457761713981076695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,7 +165,7 @@ MonoBehaviour:
       Guid:
         Value: 2327373505096431118
     Label: BTSequence
-    Id: 4
+    Id: 5
     Children:
     - Id:
         Value: 1457647519061093016
@@ -194,7 +194,7 @@ MonoBehaviour:
       Guid:
         Value: 2084590921785036322
     Label: Attack
-    Id: 10
+    Id: 11
     Services: []
     Target:
       Key: Target
@@ -278,7 +278,7 @@ MonoBehaviour:
       Guid:
         Value: 301900458844393858
     Label: BTSelector
-    Id: 6
+    Id: 7
     Children:
     - Id:
         Value: 186149603261161770
@@ -303,15 +303,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c59219ea444c348568a9c0133cf15653, type: 3}
-  m_Name: HasTarget_2
+  m_Name: HasTarget_3
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|HasTarget_2
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|HasTarget_3
       Guid:
         Value: 1905314721143351809
     Label: HasTarget
-    Id: 7
+    Id: 8
     Child:
       Id:
         Value: 301900458844393858
@@ -349,6 +349,31 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 1
     IsDynamic: 0
+--- !u!114 &7907079273479880263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82a76468a6c147ae863b501f69e3fc3, type: 3}
+  m_Name: CanAct_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|CanAct_1
+      Guid:
+        Value: 2158982312344498144
+    Label: CanAct
+    Id: 4
+    Child:
+      Id:
+        Value: 830595558268387437
+    AbortType: 0
+    CanActKey:
+      Key: CanAct
 --- !u!114 &8646757249911527628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,15 +384,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c02418a5b97ea46d7bbb6388c6a03f53, type: 3}
-  m_Name: EffectProbability_3
+  m_Name: EffectProbability_4
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|EffectProbability_3
+      Path: Resources/DB/CircuitExport/BT_Assets/Minion_Fire|EffectProbability_4
       Guid:
         Value: 1306239846853971212
     Label: EffectProbability
-    Id: 9
+    Id: 10
     Child:
       Id:
         Value: 50499323534730128

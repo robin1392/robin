@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using _Scripts.Resourcing;
 using Cysharp.Threading.Tasks;
 using ExitGames.Client.Photon;
 using MirageTest.Scripts;
@@ -193,6 +194,14 @@ namespace ED
             UI_InGamePopup.Get().InitUIElement(localMatchPlayer, aiMatchPlayer);
 
             await UniTask.Delay(TimeSpan.FromSeconds(1.0f), DelayType.Realtime);
+            
+            await PreloadedResouceManager.Preload(new[]
+            {
+                AssetNames.EffectStun,
+                AssetNames.EffectTaunted,
+                AssetNames.EffectIceState,
+                AssetNames.EffectHalfDamage
+            });
             
             var quantumRunner = FindObjectOfType<RWQuantumRunner>();
             

@@ -59,6 +59,30 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: ce146ffe4b4cb42b5a76691746158ad2
+    m_Address: Effect_Stun
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 5a23b16f0d45e4b159aebb853f20fff2
+    m_Address: Effect_HalfDamage
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 24e540e85e418444b8a19d1c5a50a64e
+    m_Address: DiceState_IceEffect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f829db0a4ca4742b9956ee765e3def80
+    m_Address: Effect_Taunted
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
   m_SchemaSet:

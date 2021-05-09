@@ -94,6 +94,12 @@ namespace _Scripts.Views
             
             Pool.Push(ActorModel);
             ActorModel = null;
+
+            foreach (var kvp in _dicEffectPool)
+            {
+                Pool.Push(kvp.Value);
+            }
+            _dicEffectPool.Clear();
         }
 
 

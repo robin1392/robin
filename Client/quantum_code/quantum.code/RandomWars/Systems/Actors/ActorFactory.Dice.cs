@@ -99,6 +99,9 @@ namespace Quantum.Actors
                 f.Events.ActionChanged(entity, ActionStateType.Idle);
 
                 BTHelper.SetupBT(f, entity, diceInfo.botData);
+                
+                var bb = f.Unsafe.GetPointer<AIBlackboardComponent>(entity);
+                bb->Set(f, "CanAct", true);
             }
         }
         

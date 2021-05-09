@@ -1,1 +1,10 @@
-enum HitColor{None, Fire}
+enum HitColor { None, Fire }
+enum DebuffType { None, Freeze }
+
+
+component Frozen {
+    FP EndTime;
+}
+
+component NoCC {
+}

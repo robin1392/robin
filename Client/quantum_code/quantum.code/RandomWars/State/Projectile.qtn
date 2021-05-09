@@ -7,4 +7,6 @@ component Projectile {
     entity_ref Defender;
     QString<64> Model;
     QString<64> HitEffect;
+    DebuffType Debuff;
+    FP DebuffDuration;
 }

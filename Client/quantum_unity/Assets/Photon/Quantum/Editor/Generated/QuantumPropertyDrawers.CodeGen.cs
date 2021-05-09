@@ -121,6 +121,10 @@ namespace Quantum.Editor {
   public class PrototypeDrawer_ActorType_Prototype : PrototypeDrawer {
   }
 
+  [CustomPropertyDrawer(typeof(Quantum.Prototypes.DebuffType_Prototype))]
+  public class PrototypeDrawer_DebuffType_Prototype : PrototypeDrawer {
+  }
+
   [CustomPropertyDrawer(typeof(Quantum.Prototypes.DiceType_Prototype))]
   public class PrototypeDrawer_DiceType_Prototype : PrototypeDrawer {
   }

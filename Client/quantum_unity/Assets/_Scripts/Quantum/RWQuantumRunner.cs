@@ -17,7 +17,7 @@ public class RWQuantumRunner: QuantumCallbacks {
   public RuntimePlayer[] Players;
 
   bool _isReload;
-  
+
   public void StartWithFrame(int frameNumber = 0, byte[] frameData = null) {
     _isReload = frameNumber > 0 && frameData != null;
 

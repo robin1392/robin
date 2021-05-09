@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using _Scripts.Resourcing;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ED;
@@ -16,6 +18,36 @@ namespace _Scripts.Views
         private EntityViewUpdater _viewUpdater;
         protected bool _initializing = false;
         protected bool _initialized = false;
+        protected AnimationSpeed _animationSpeed;
+
+        public class AnimationSpeed
+        {
+            private float _freezeSpeed = 1;
+            private float _actionSpeed = 1;
+            private Animator _animator;
+
+            public AnimationSpeed(Animator animator)
+            {
+                _animator = animator;
+                UpdateSpeed();
+            }
+            public void SetFreeze(float val)
+            {
+                _freezeSpeed = val;
+                UpdateSpeed();
+            }
+            
+            public void SetActionSpeed(float val)
+            {
+                _actionSpeed = val;
+                UpdateSpeed();
+            }
+
+            void UpdateSpeed()
+            {
+                _animator.speed = _freezeSpeed * _actionSpeed;
+            }
+        }
 
         private void Start()
         {
@@ -24,6 +56,7 @@ namespace _Scripts.Views
             QuantumEvent.Subscribe<EventActorHitted>(this, OnActorHitted);
             QuantumEvent.Subscribe<EventActorDeath>(this, OnActorDeath);
             QuantumEvent.Subscribe<EventPlayCasterEffect>(this, OnPlayCasterEffect);
+            QuantumEvent.Subscribe<EventBuffStateChanged>(this, OnBuffStateChanged);
         }
 
         async UniTask Init(QuantumGame game)
@@ -50,6 +83,8 @@ namespace _Scripts.Views
 
         private void OnAfterInit()
         {
+            _animationSpeed = new AnimationSpeed(ActorModel.Animator);
+            
             if (string.IsNullOrWhiteSpace(_animationTriggerPending) == false)
             {
                 AnimationTrigger(_animationTriggerPending, _animationSpeedPending);
@@ -113,6 +148,88 @@ namespace _Scripts.Views
             tweener.OnUpdate(() => { ActorModel.RendererEffect.SetTintColor(Color.red, amount); });
             tweener.SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutQuad);
         }
+        
+        private void OnBuffStateChanged(EventBuffStateChanged callback)
+        {
+            if (EntityView.EntityRef.Equals(callback.Entity))
+            {
+                var buffState = (BuffType) callback.BuffState;
+                // EnableBuffEffect((BuffType)callback.BuffState, BuffType.Shield, "Shield", EffectLocation.Bottom);
+                // EnableBuffEffect(buffType, BuffType.Stun, "Effect_Sturn", EffectLocation.Top);
+                EnableFreezeEffect((buffState & BuffType.Freeze) != 0);
+                EnableBuffEffect(buffState, BuffType.Freeze, AssetNames.EffectIceState, EffectLocation.Bottom);
+                // EnableBuffEffect(buffType, BuffType.Taunted, "Effect_Taunted", EffectLocation.Top);
+            }
+        }
+        
+        public Dictionary<BuffType, PoolableObject> _dicEffectPool =
+            new Dictionary<BuffType, PoolableObject>();
+        
+        private void EnableFreezeEffect(bool b)
+        {
+            if (b)
+            {
+                _animationSpeed.SetFreeze(0);
+                ActorModel.RendererEffect.ChangeToIceMaterial();
+            }
+            else
+            {
+                _animationSpeed.SetFreeze(1);
+                ActorModel.RendererEffect.ResetToOriginal();
+            }
+        }
+        
+        void EnableBuffEffect(BuffType buffState, BuffType buffType, string resource, EffectLocation effectLocation)
+        {
+            if ((buffState & buffType) != 0)
+            {
+                EnableBuffEffect(buffType, resource, effectLocation);    
+            }
+            else
+            {
+                DisableBuffEffect(buffType);
+            }
+        }
+
+        public void EnableBuffEffect(BuffType buffType, string resource,  EffectLocation effectLocation)
+        {
+            if (_dicEffectPool.ContainsKey(buffType) == false)
+            {
+                var ad = PreloadedResouceManager.LoadPoolable<PoolableObject>(resource ,GetEffectPosition(effectLocation), Quaternion.identity);
+                ad.transform.SetParent(transform);
+                _dicEffectPool.Add(buffType, ad);
+            }
+        }
+
+        public void DisableBuffEffect(BuffType buffType)
+        {
+            if (_dicEffectPool.TryGetValue(buffType, out var ad))
+            {
+                _dicEffectPool.Remove(buffType);
+                Pool.Push(ad);
+            }
+        }
+        
+        public Vector3 GetEffectPosition(EffectLocation effectLocation)
+        {
+            switch (effectLocation)
+            {
+                case EffectLocation.Top:
+                    if (ActorModel.TopEffectPosition != null)
+                    {
+                        return ActorModel.TopEffectPosition.transform.position;
+                    }
+                    
+                    return ActorModel.HitPosition.transform.position + new Vector3(0, 0.65f, 0);
+                
+                case EffectLocation.Mid:
+                    return ActorModel.HitPosition.transform.position;
+                case EffectLocation.Bottom:
+                    return ActorModel.transform.position;
+            }
+            
+            return ActorModel.transform.position;
+        }
 
         private void OnActionChanged(EventActionChanged callback)
         {
@@ -142,7 +259,7 @@ namespace _Scripts.Views
             }
             
             ActorModel.Animator.SetTrigger(trigger);
-            ActorModel.Animator.speed = speed;
+            _animationSpeed.SetActionSpeed(speed);
         }
         
         public override void OnUpdateView(QuantumGame game)
@@ -199,5 +316,12 @@ namespace _Scripts.Views
                 ActorModel.transform.localEulerAngles = -tilt;
             }
         }
+    }
+    
+    public enum EffectLocation
+    {
+        Top,
+        Mid,
+        Bottom
     }
 }

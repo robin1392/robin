@@ -24,30 +24,6 @@ MonoBehaviour:
         Value: 1639148361529984408
     AbortType: 0
     NodesAmount: 3
---- !u!114 &4064293924492009226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
-  m_Name: WaitLeaf_0
-  m_EditorClassIdentifier: 
-  Settings:
-    Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
-      Guid:
-        Value: 4535219142455395633
-    Label: WaitLeaf
-    Id: 2
-    Services: []
-    Duration:
-      RawValue: 65470464
-    EndTimeIndex:
-      Index: 1
 --- !u!114 &7246371838000369809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,7 +45,7 @@ MonoBehaviour:
     Id: 1
     Children:
     - Id:
-        Value: 4535219142455395633
+        Value: 997244612087701357
     Services: []
     TopmostDecorator:
       Id:
@@ -77,3 +53,27 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 0
     IsDynamic: 0
+--- !u!114 &7838673589567583171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
+  m_Name: WaitLeaf_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
+      Guid:
+        Value: 997244612087701357
+    Label: WaitLeaf
+    Id: 2
+    Services: []
+    Duration:
+      RawValue: 65470464
+    EndTimeIndex:
+      Index: 1

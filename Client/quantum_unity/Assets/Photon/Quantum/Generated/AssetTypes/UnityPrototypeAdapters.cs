@@ -74,6 +74,8 @@ namespace Quantum.Prototypes.Unity {
     public System.String Model;
     [Quantum.Inspector.MaxStringByteCountAttribute((Int32)62, "Unicode")]
     public System.String HitEffect;
+    public Quantum.Prototypes.DebuffType_Prototype Debuff;
+    public Photon.Deterministic.FP DebuffDuration;
 
     public sealed override Quantum.Prototypes.Projectile_Prototype Convert(EntityPrototypeConverter converter) {
       var result = new Quantum.Prototypes.Projectile_Prototype();
@@ -85,6 +87,8 @@ namespace Quantum.Prototypes.Unity {
       converter.Convert(this.Defender, out result.Defender);
       result.Model = this.Model;
       result.HitEffect = this.HitEffect;
+      result.Debuff = this.Debuff;
+      result.DebuffDuration = this.DebuffDuration;
       return result;
     }
   }

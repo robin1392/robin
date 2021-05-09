@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 977498b7544644feb9e20fed5b276172, type: 3}
-  m_Name: BTSequence_0
+  m_Name: BTSequence_1
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSequence_1
       Guid:
         Value: 4000871961613954582
     Label: BTSequence
-    Id: 1
+    Id: 3
     Children:
     - Id:
         Value: 2781149729288231892
@@ -29,7 +29,7 @@ MonoBehaviour:
       Id:
         Value: 0
     CurrentChildIndex:
-      Index: 0
+      Index: 1
     IsDynamic: 0
 --- !u!114 &-5721843384545270769
 MonoBehaviour:
@@ -41,11 +41,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d10cad3ab145947a8a1aa40c519b35c0, type: 3}
-  m_Name: Attack_1
+  m_Name: Attack_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|Attack_1
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|Attack_0
       Guid:
         Value: 1011046490626826327
     Label: Attack
@@ -69,15 +69,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c59219ea444c348568a9c0133cf15653, type: 3}
-  m_Name: HasTarget_2
+  m_Name: HasTarget_3
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_2
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|HasTarget_3
       Guid:
         Value: 1879367417165151363
     Label: HasTarget
-    Id: 7
+    Id: 8
     Child:
       Id:
         Value: 1661211318170618849
@@ -94,15 +94,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 741d95ec991f1411dba30ff72992aa61, type: 3}
-  m_Name: BTSelector_1
+  m_Name: BTSelector_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSelector_1
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|BTSelector_0
       Guid:
         Value: 105676668355601455
     Label: BTSelector
-    Id: 2
+    Id: 1
     Children:
     - Id:
         Value: 1011046490626826327
@@ -111,7 +111,7 @@ MonoBehaviour:
       Id:
         Value: 0
     CurrentChildIndex:
-      Index: 1
+      Index: 0
     IsDynamic: 0
 --- !u!114 &-3449320890897372658
 MonoBehaviour:
@@ -131,7 +131,7 @@ MonoBehaviour:
       Guid:
         Value: 1660086907475674263
     Label: BTSequence
-    Id: 4
+    Id: 5
     Children:
     - Id:
         Value: 2388248204481479766
@@ -160,7 +160,7 @@ MonoBehaviour:
       Guid:
         Value: 1661211318170618849
     Label: BTSelector
-    Id: 6
+    Id: 7
     Children:
     - Id:
         Value: 822002564904267216
@@ -185,15 +185,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3e201921df66489c8349d676005eb88, type: 3}
-  m_Name: ApproachToTarget_0
+  m_Name: ApproachToTarget_1
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_0
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|ApproachToTarget_1
       Guid:
         Value: 2388248204481479766
     Label: ApproachToTarget
-    Id: 8
+    Id: 10
     Services: []
     Target:
       Key: Target
@@ -218,9 +218,9 @@ MonoBehaviour:
     Id: 0
     Child:
       Id:
-        Value: 4000871961613954582
+        Value: 2041779037758564756
     AbortType: 0
-    NodesAmount: 11
+    NodesAmount: 12
 --- !u!114 &1263665594146924735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,7 +239,7 @@ MonoBehaviour:
       Guid:
         Value: 4041013889495071996
     Label: IsTargetInRange
-    Id: 3
+    Id: 2
     Child:
       Id:
         Value: 105676668355601455
@@ -288,7 +288,7 @@ MonoBehaviour:
       Guid:
         Value: 2781149729288231892
     Label: SetNearestEnemyToTarget
-    Id: 10
+    Id: 11
     Services: []
     EnemyTargetRef:
       Key: Target
@@ -304,18 +304,43 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52a84fd661d142deba6b7b23d4a3b47, type: 3}
-  m_Name: IsTargetOutOfRange_1
+  m_Name: IsTargetOutOfRange_2
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_1
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|IsTargetOutOfRange_2
       Guid:
         Value: 822002564904267216
     Label: IsTargetOutOfRange
-    Id: 5
+    Id: 6
     Child:
       Id:
         Value: 1660086907475674263
     AbortType: 1
     TargetRef:
       Key: Target
+--- !u!114 &8170283286329603319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82a76468a6c147ae863b501f69e3fc3, type: 3}
+  m_Name: CanAct_1
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/Melee|CanAct_1
+      Guid:
+        Value: 2041779037758564756
+    Label: CanAct
+    Id: 4
+    Child:
+      Id:
+        Value: 4000871961613954582
+    AbortType: 0
+    CanActKey:
+      Key: CanAct

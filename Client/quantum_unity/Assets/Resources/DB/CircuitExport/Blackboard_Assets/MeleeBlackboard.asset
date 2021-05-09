@@ -18,9 +18,12 @@ MonoBehaviour:
       Guid:
         Value: 277064255046679122
     Entries:
-    - Type: 6
+    - Type: 0
       Key:
-        Key: Target
+        Key: CanAct
     - Type: 0
       Key:
         Key: TargetAttacked
+    - Type: 6
+      Key:
+        Key: Target

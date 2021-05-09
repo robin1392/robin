@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Quantum.Actors;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -43,6 +45,65 @@ public static class ResourceManager
          poolableObject.ReservePushBack();
     }
 }
+
+public static class PreloadedResouceManager
+{
+    private static Dictionary<string, GameObject> _pool = new Dictionary<string, GameObject>();
+
+    public static async UniTask Preload(IEnumerable<string> assetNames)
+    {
+        var root = new GameObject("Preloaded"); 
+        foreach (var assetName in assetNames)
+        {
+            var go = await ResourceManager.LoadGameObjectAsync(assetName, Vector3.zero, quaternion.identity);
+            _pool.Add(assetName, go);
+            go.SetActive(false);
+            go.transform.SetParent(root.transform);
+        }
+    }
+    
+    public static TMonobehavour LoadMonobehaviour<TMonobehavour>(string assetName, Vector3 position,
+        Quaternion rotation) where TMonobehavour : MonoBehaviour
+    {
+        var go = LoadGameObject(assetName, position, rotation);
+        return go.GetComponent<TMonobehavour>();
+    }
+    
+    public static  TMonobehavour LoadPoolable<TMonobehavour>(string assetName, Vector3 position,
+        Quaternion rotation) where TMonobehavour : PoolableObject
+    {
+        var mb = LoadMonobehaviour<TMonobehavour>(assetName, position, rotation);
+        mb.AssetName = assetName;
+        return mb;
+    }
+    
+    public static GameObject LoadGameObject(string assetName, Vector3 position, Quaternion rotation)
+    {
+        var go = Pool.Pop(assetName);
+        if (go != null)
+        {
+            go.transform.position = position;
+            go.transform.rotation = rotation;
+            return go;
+        }
+
+        if (_pool.TryGetValue(assetName, out var goOrigin) == false)
+        {
+            return null;
+        }
+
+        return Object.Instantiate(goOrigin, position, rotation);
+    }
+    
+    public static void LoadGameObjectAndReseveDeacivate(string assetName, Vector3 position, Quaternion rotation)
+    {
+        var go = LoadGameObject(assetName, position, rotation);
+        var poolableObject = go.GetComponent<PoolableObject>();
+        poolableObject.AssetName = assetName;
+        poolableObject.ReservePushBack();
+    }
+}
+
 
 public static class Pool
 {

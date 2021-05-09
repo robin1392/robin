@@ -16,7 +16,7 @@ MonoBehaviour:
   EditorFPS: 60
   ForceDark: 0
   PlaySystemErrorSound: 1
-  DebugEnabled: 0
+  DebugEnabled: 1
   CacheEnabled: 1
   DevelopmentMode: 0
   VariableSingleClickEdit: 0
