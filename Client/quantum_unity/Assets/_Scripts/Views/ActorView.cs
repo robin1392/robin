@@ -7,6 +7,7 @@ using DG.Tweening;
 using ED;
 using Quantum;
 using UnityEngine;
+using Debug = ED.Debug;
 
 namespace _Scripts.Views
 {
@@ -61,11 +62,6 @@ namespace _Scripts.Views
 
         async UniTask Init(QuantumGame game)
         {
-            if (_initializing)
-            {
-                return;
-            }
-        
             _initializing = true;
         
             try
@@ -73,8 +69,9 @@ namespace _Scripts.Views
                 await OnInit(game);
                 OnAfterInit();
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
+                Debug.LogError(e.Message);
                 return;
             }
             _initialized = true;
@@ -83,8 +80,6 @@ namespace _Scripts.Views
 
         private void OnAfterInit()
         {
-            _animationSpeed = new AnimationSpeed(ActorModel.Animator);
-            
             if (string.IsNullOrWhiteSpace(_animationTriggerPending) == false)
             {
                 AnimationTrigger(_animationTriggerPending, _animationSpeedPending);

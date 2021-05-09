@@ -47,10 +47,11 @@ namespace _Scripts.Views
             ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
             ActorModel.Initialize(isAlly);
             ActorModel.transform.SetParent(transform, false);
-
+            _animationSpeed = new AnimationSpeed(ActorModel.Animator);
+            
             if (isLocalPlayerActor)
             {
-                await ShowSpawnLine(diceInfo, ActorModel, fieldIndex, team);
+                ShowSpawnLine(diceInfo, ActorModel, fieldIndex, team).Forget();
             }
 
             SoundManager.instance.Play(Global.E_SOUND.SFX_MINION_GENERATE);

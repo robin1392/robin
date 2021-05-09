@@ -12,6 +12,7 @@ namespace _Scripts.Views
         public EntityView EntityView;
         private EntityViewUpdater _viewUpdater;
         private bool _initialized;
+        private bool _initializing;
         private PoolableObject _model;
         private Transform _target;
         protected float _targetRadius;
@@ -40,12 +41,17 @@ namespace _Scripts.Views
                 return;
             }
 
-            if (_initialized == false)
+            if (_initialized == false && _initializing == false)
             {
                 Init(game).Forget();
                 return;
             }
-            
+
+            if (_initialized == false)
+            {
+                return;
+            }
+
             if (_isEntityDestroyed && _isProjectileDestroyed)
             {
                 Destroy(gameObject);
@@ -82,8 +88,9 @@ namespace _Scripts.Views
         
         async UniTask Init(QuantumGame game)
         {
-            var f = game.Frames.Verified;
+            _initializing = true;
             
+            var f = game.Frames.Verified;
             var projectile = f.Get<Projectile>(EntityView.EntityRef);
             _target = _viewUpdater.GetView(projectile.Defender)?.transform;
             if (_target == null)
@@ -107,11 +114,11 @@ namespace _Scripts.Views
             _targetRadius = f.Get<PhysicsCollider2D>(projectile.Defender).Shape.Circle.Radius.AsFloat;
             _startPosition = attackerView.ActorModel.ShootingPosition.transform.position;
             transform.position = _startPosition;
-            
-            _initialized = true;
-            
+
             _model = await ResourceManager.LoadPoolableAsync<PoolableObject>(projectile.Model, Vector3.zero, Quaternion.identity);
             _model.transform.SetParent(transform, false);
+            
+            _initialized = true;
         }
    }
 }
