@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e535ee69c5df94e098c1b05a3e7df967, type: 3}
-  m_Name: MeleeBlackboardInitializer
+  m_Name: Minion_FireBlackboardInitializer
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/Blackboard_Assets/MeleeBlackboardInitializer
+      Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboardInitializer
       Guid:
-        Value: 2696688443582700230
+        Value: 565149372394295498
     ReportMissingEntries: 1
     AIBlackboard:
       Id:
-        Value: 3022088794864846388
+        Value: 3442919929211097172
     InitialValues: []

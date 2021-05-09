@@ -158,5 +158,4 @@ namespace RandomWarsResource
             return true;
         }
     }
-
 }

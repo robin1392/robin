@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7095327362769672408
+--- !u!114 &-2020068182531719580
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -16,10 +16,12 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|BTSequence_0
       Guid:
-        Value: 2449555958105825734
+        Value: 1639148361529984408
     Label: BTSequence
     Id: 1
-    Children: []
+    Children:
+    - Id:
+        Value: 3881943089175783389
     Services: []
     TopmostDecorator:
       Id:
@@ -43,11 +45,35 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
       Guid:
-        Value: 2847764722641915412
+        Value: 1491482766761874428
     Label: 
     Id: 0
     Child:
       Id:
-        Value: 2449555958105825734
+        Value: 1639148361529984408
     AbortType: 0
-    NodesAmount: 2
+    NodesAmount: 3
+--- !u!114 &7310450262648220619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
+  m_Name: WaitLeaf_0
+  m_EditorClassIdentifier: 
+  Settings:
+    Identifier:
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
+      Guid:
+        Value: 3881943089175783389
+    Label: WaitLeaf
+    Id: 2
+    Services: []
+    Duration:
+      RawValue: 65470464
+    EndTimeIndex:
+      Index: 1

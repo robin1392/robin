@@ -10,14 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c34bce42c4acd4d0888774c565d726f5, type: 3}
-  m_Name: PlayerBotBlackboard
+  m_Name: Minion_FireBlackboard
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/Blackboard_Assets/PlayerBotBlackboard
+      Path: Resources/DB/CircuitExport/Blackboard_Assets/Minion_FireBlackboard
       Guid:
-        Value: 385094860072667568
+        Value: 3442919929211097172
     Entries:
-    - Type: 2
+    - Type: 6
       Key:
-        Key: Temp
+        Key: Target
+    - Type: 0
+      Key:
+        Key: TargetAttacked

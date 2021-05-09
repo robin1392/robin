@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Minion_Electric
+  m_EditorClassIdentifier: 
+  m_GroupName: Minion_Electric
+  m_Data:
+    m_SerializedData: []
+  m_GUID: d63e1f6a1c467438e8888508533fd0f5
+  m_SerializeEntries:
+  - m_GUID: 881db4a2baffe462d9cba6b0b7f758ac
+    m_Address: Minion_Electric
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c6b364cf62dee4fe580c99fa575c564b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 94e0e5b96f8bb4e85a441a0b1485c656, type: 2}
+    - {fileID: 11400000, guid: 1feb05da60ee34b62ab4d17c0cbab575, type: 2}

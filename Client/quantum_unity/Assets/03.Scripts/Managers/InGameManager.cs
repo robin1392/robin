@@ -11,8 +11,11 @@ using ExitGames.Client.Photon;
 using MirageTest.Scripts;
 using Quantum;
 using Quantum.Commands;
+using RandomWarsResource;
+using RandomWarsResource.Data;
 using Service.Core;
 using UnityEngine;
+using UnityEngine.Networking;
 using DeckInfo = _Scripts.DeckInfo;
 using MatchData = _Scripts.MatchData;
 using MatchPlayer = _Scripts.MatchPlayer;
@@ -198,6 +201,11 @@ namespace ED
                 ToRuntimePlayer(localMatchPlayer),
                 ToRuntimePlayer(aiMatchPlayer)
             };
+
+            var address = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1YZA4IzGzT26a2Kk3NmCiUpcTJdb4ZBlH-t92rIT6McMFe5b7NnQBkv0aULsov_8XjNHG56aO_GrY/pub?gid=0&single=true&output=csv";
+            var text = (await UnityWebRequest.Get(address).SendWebRequest()).downloadHandler.text;
+            Debug.Log(text);
+            Debug.Log($"DiceInfo 개발용 로드: {TableManager.Get().DiceInfo.Init(text)}");
 
             quantumRunner.StartWithFrame();
             

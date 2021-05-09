@@ -11,8 +11,6 @@ namespace _Scripts.Views
 {
     public class TowerActorView : ActorView
     {
-        public EntityView EntityView;
-
         private Image _healthBarImage;
         private Text _healthBarText;
 
