@@ -70,5 +70,36 @@ namespace Quantum
 
             return nearest;
         }
+
+        public static void DamageToCircleArea(Frame f, Transform2D transform, FP range, EntityRef attacker, Actor actor, FP damage)
+        {
+            var hits = f.Physics2D.OverlapShape(transform, Shape2D.CreateCircle(range));
+            for (int i = 0; i < hits.Count; i++)
+            {
+                var hitEntity = hits[i].Entity;
+                if (hitEntity == EntityRef.None)
+                {
+                    continue;
+                }
+
+                if (f.TryGet(hitEntity, out Actor targetActor))
+                {
+                    if (actor.Team == targetActor.Team)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (f.Unsafe.TryGetPointer(hitEntity, out Hittable* targetHittable))
+                {
+                    targetHittable->Health -= damage;
+                    f.Events.ActorHitted(attacker, hitEntity, HitColor.None);
+                }
+            }
+        }
     }
 }

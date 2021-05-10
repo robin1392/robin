@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Xml: "<?xml version=\"1.0\" encoding=\"utf-16\"?>\n<Document>\n  <Id>0277b67f-07cc-4a5a-951c-6384abec69b9</Id>\n 
     <Version>1</Version>\n  <Meta>false</Meta>\n  <Graph>0277b67f-07cc-4a5a-951c-6384abec69b9</Graph>\n 
-    <DebugKey>21a609dd-b87c-49f0-b2e7-8bbc8d345941</DebugKey>\n  <Flags>0</Flags>\n 
+    <DebugKey>2c9ff9ab-6761-4cd2-9f70-dfa19d143010</DebugKey>\n  <Flags>0</Flags>\n 
     <Parent>$bt</Parent>\n  <Error Count=\"0\" />\n  <Comments Count=\"0\" />\n 
     <HiddenActionsDecisions Count=\"0\" />\n  <Vars Count=\"3\">\n    <Key>2d4f08e7-5286-4442-9136-89f96a019c4a</Key>\n   
     <Var>\n      <Id>2d4f08e7-5286-4442-9136-89f96a019c4a</Id>\n      <Name>Target</Name>\n     
@@ -26,9 +26,9 @@ MonoBehaviour:
     <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n   
     </Var>\n    <Key>c39c7d88-4453-48ea-8d26-e7ac07a53a99</Key>\n    <Var>\n     
     <Id>c39c7d88-4453-48ea-8d26-e7ac07a53a99</Id>\n      <Name>CanAct</Name>\n     
-    <Type>@boolean</Type>\n      <Default />\n      <Flags>0</Flags>\n      <VarMode>MetaField</VarMode>\n     
-    <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n    </Var>\n  </Vars>\n 
-    <Nodes Count=\"55\">\n    <Key>05dd7244-37cc-49ed-9faa-18ddeb790167</Key>\n   
+    <Type>@boolean</Type>\n      <Default></Default>\n      <Flags>0</Flags>\n     
+    <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n   
+    </Var>\n  </Vars>\n  <Nodes Count=\"55\">\n    <Key>05dd7244-37cc-49ed-9faa-18ddeb790167</Key>\n   
     <Node>\n      <Id>05dd7244-37cc-49ed-9faa-18ddeb790167</Id>\n      <Name>Target</Name>\n     
     <Comment></Comment>\n      <Graph>a30e80c3-7043-45cc-890d-055c1bbab309</Graph>\n     
     <Parent>$blackboardRef</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>0</Flags>\n     
@@ -179,7 +179,7 @@ MonoBehaviour:
     </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
     </Data>\n      </Data>\n    </Node>\n    <Key>43126c3e-0121-4b6c-ac06-b1639eff9c88</Key>\n   
     <Node>\n      <Id>43126c3e-0121-4b6c-ac06-b1639eff9c88</Id>\n      <Name>CanAct</Name>\n     
-    <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Comment></Comment>\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
     <Parent>$blackboardRef</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>0</Flags>\n     
     <Position>-168|318||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"2\">\n        <Slot>\n          <Id>$keyOut</Id>\n          <Name>Key</Name>\n         
@@ -718,7 +718,7 @@ MonoBehaviour:
     </Data>\n        <Data>\n          <Name></Name>\n          <Value />\n       
     </Data>\n      </Data>\n    </Node>\n    <Key>e4fb5af4-83ba-4b9e-b256-dcc3018fad8a</Key>\n   
     <Node>\n      <Id>e4fb5af4-83ba-4b9e-b256-dcc3018fad8a</Id>\n      <Name>CanAct</Name>\n     
-    <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Comment></Comment>\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
     <Parent>$decorator/CanAct</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
     <Flags>0</Flags>\n      <Position>196|284||0</Position>\n      <StaticIn Count=\"6\">\n       
     <Slot>\n          <Id>$exec</Id>\n          <Name></Name>\n          <Value />\n         
@@ -745,7 +745,7 @@ MonoBehaviour:
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
     <Key>e6228cbe-841b-4497-a6f0-247cc8752a59</Key>\n    <Node>\n      <Id>e6228cbe-841b-4497-a6f0-247cc8752a59</Id>\n     
-    <Name>BlackboardVar</Name>\n      <Comment />\n      <Graph>0277b67f-07cc-4a5a-951c-6384abec69b9</Graph>\n     
+    <Name>BlackboardVar</Name>\n      <Comment></Comment>\n      <Graph>0277b67f-07cc-4a5a-951c-6384abec69b9</Graph>\n     
     <Parent>$blackboardVarData</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
     <Flags>8</Flags>\n      <Position>-212|-13||0</Position>\n      <StaticIn Count=\"0\"
     />\n      <StaticOut Count=\"0\" />\n      <Groups Count=\"0\" />\n      <Data

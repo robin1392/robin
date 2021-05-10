@@ -65,7 +65,10 @@ namespace Quantum
                 new UpdateFronzenSystem(),
                 new UpdateBuffStateSystem(),
                 new StoneBallTriggerSystem(),
-                new ActorDeathSystem()
+                new MineSystem(),
+                new DamagePerSecSystem(),
+                new DestroyActorByHpSystem(),
+                new DestroyByComponent()
             };
             
             var actorSystem = new List<SystemBase>

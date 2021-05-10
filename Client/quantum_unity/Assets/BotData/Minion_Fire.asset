@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Xml: "<?xml version=\"1.0\" encoding=\"utf-16\"?>\n<Document>\n  <Id>f711e486-e817-49f4-be3d-742c97b0f8ce</Id>\n 
     <Version>1</Version>\n  <Meta>false</Meta>\n  <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n 
-    <DebugKey>21a609dd-b87c-49f0-b2e7-8bbc8d345941</DebugKey>\n  <Flags>0</Flags>\n 
+    <DebugKey>dc038136-6136-4ce7-a9b1-6738c3c9db8f</DebugKey>\n  <Flags>0</Flags>\n 
     <Parent>$bt</Parent>\n  <Error Count=\"0\" />\n  <Comments Count=\"0\" />\n 
     <HiddenActionsDecisions Count=\"0\" />\n  <Vars Count=\"3\">\n    <Key>2d4f08e7-5286-4442-9136-89f96a019c4a</Key>\n   
     <Var>\n      <Id>2d4f08e7-5286-4442-9136-89f96a019c4a</Id>\n      <Name>Target</Name>\n     
@@ -22,14 +22,15 @@ MonoBehaviour:
     <Flags>0</Flags>\n      <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n     
     <Scope>Blackboard</Scope>\n    </Var>\n    <Key>33f4931f-13ff-4f47-b31b-d2580ec58e98</Key>\n   
     <Var>\n      <Id>33f4931f-13ff-4f47-b31b-d2580ec58e98</Id>\n      <Name>CanAct</Name>\n     
-    <Type>@boolean</Type>\n      <Default />\n      <Flags>0</Flags>\n      <VarMode>MetaField</VarMode>\n     
-    <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n    </Var>\n   
-    <Key>8e400c7e-521e-433a-b847-fdc261ac017e</Key>\n    <Var>\n      <Id>8e400c7e-521e-433a-b847-fdc261ac017e</Id>\n     
-    <Name>TargetAttacked</Name>\n      <Type>@boolean</Type>\n      <Default></Default>\n     
-    <Flags>0</Flags>\n      <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n     
-    <Scope>Blackboard</Scope>\n    </Var>\n  </Vars>\n  <Nodes Count=\"55\">\n   
-    <Key>04d12865-8f58-4510-a53f-5ad425e55164</Key>\n    <Node>\n      <Id>04d12865-8f58-4510-a53f-5ad425e55164</Id>\n     
-    <Name>FireAttack</Name>\n      <Comment></Comment>\n      <Graph>fbef5e66-8780-4944-86bc-1b7a84047444</Graph>\n     
+    <Type>@boolean</Type>\n      <Default></Default>\n      <Flags>0</Flags>\n     
+    <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n   
+    </Var>\n    <Key>8e400c7e-521e-433a-b847-fdc261ac017e</Key>\n    <Var>\n     
+    <Id>8e400c7e-521e-433a-b847-fdc261ac017e</Id>\n      <Name>TargetAttacked</Name>\n     
+    <Type>@boolean</Type>\n      <Default></Default>\n      <Flags>0</Flags>\n     
+    <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n   
+    </Var>\n  </Vars>\n  <Nodes Count=\"55\">\n    <Key>04d12865-8f58-4510-a53f-5ad425e55164</Key>\n   
+    <Node>\n      <Id>04d12865-8f58-4510-a53f-5ad425e55164</Id>\n      <Name>FireAttack</Name>\n     
+    <Comment></Comment>\n      <Graph>fbef5e66-8780-4944-86bc-1b7a84047444</Graph>\n     
     <Parent>$decoratorsRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
     <Position>0|225||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"1\">\n        <Slot>\n          <Id>$decoratorsList</Id>\n          <Name>Decorators</Name>\n         
@@ -117,7 +118,7 @@ MonoBehaviour:
     <Data>\n          <Name>Guid</Name>\n          <Value Type=\"System.Int64, mscorlib\">186149603261161770</Value>\n       
     </Data>\n      </Data>\n    </Node>\n    <Key>24cb0f02-cbf3-4e41-8173-6707f9fced2e</Key>\n   
     <Node>\n      <Id>24cb0f02-cbf3-4e41-8173-6707f9fced2e</Id>\n      <Name>CanAct</Name>\n     
-    <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Comment></Comment>\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
     <Parent>$blackboardRef</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>0</Flags>\n     
     <Position>-193|317||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"2\">\n        <Slot>\n          <Id>$keyOut</Id>\n          <Name>Key</Name>\n         
@@ -372,7 +373,7 @@ MonoBehaviour:
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
     <Key>88021421-8504-4414-9ed9-ee2d3f77cb20</Key>\n    <Node>\n      <Id>88021421-8504-4414-9ed9-ee2d3f77cb20</Id>\n     
-    <Name>CanAct</Name>\n      <Comment />\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
+    <Name>CanAct</Name>\n      <Comment></Comment>\n      <Graph>c5de4623-71c5-46f3-b067-cb1ad2b30733</Graph>\n     
     <Parent>$decorator/CanAct</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
     <Flags>0</Flags>\n      <Position>176|267||0</Position>\n      <StaticIn Count=\"6\">\n       
     <Slot>\n          <Id>$exec</Id>\n          <Name></Name>\n          <Value />\n         
@@ -407,7 +408,7 @@ MonoBehaviour:
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
     <Key>9a30719b-719c-4686-9e75-e6009f78addb</Key>\n    <Node>\n      <Id>9a30719b-719c-4686-9e75-e6009f78addb</Id>\n     
-    <Name>BlackboardVar</Name>\n      <Comment />\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
+    <Name>BlackboardVar</Name>\n      <Comment></Comment>\n      <Graph>f711e486-e817-49f4-be3d-742c97b0f8ce</Graph>\n     
     <Parent>$blackboardVarData</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
     <Flags>8</Flags>\n      <Position>-299|-158||0</Position>\n      <StaticIn Count=\"0\"
     />\n      <StaticOut Count=\"0\" />\n      <Groups Count=\"0\" />\n      <Data

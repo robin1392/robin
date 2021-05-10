@@ -44,11 +44,14 @@ namespace Quantum.Editor {
       public Quantum.IsTargetOutOfRange[] IsTargetOutOfRange = {};
       public Quantum.ApproachToTarget[] ApproachToTarget = {};
       public Quantum.Attack[] Attack = {};
+      public Quantum.MineBomb[] MineBomb = {};
       public Quantum.FindEnemy[] FindEnemy = {};
       public Quantum.FireAttack[] FireAttack = {};
+      public Quantum.MoveMine[] MoveMine = {};
       public Quantum.RangeAttack[] RangeAttack = {};
       public Quantum.SetNearestEnemyToTarget[] SetNearestEnemyToTarget = {};
       public Quantum.MoveStraight[] MoveStraight = {};
+      public Quantum.WaitForTrigger[] WaitForTrigger = {};
       public Quantum.SeekNearestEnemy[] SeekNearestEnemy = {};
       public Quantum.BTSelector[] BTSelector = {};
       public Quantum.BTSequence[] BTSequence = {};

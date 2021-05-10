@@ -5,6 +5,7 @@ using RandomWarsResource.Data;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Dice = Quantum.Dice;
+using Mine = Quantum.Mine;
 using StoneBall = Quantum.StoneBall;
 
 namespace _Scripts.Views
@@ -13,7 +14,7 @@ namespace _Scripts.Views
     {
         private string DeathEffect;
         private Vector3 DeathEffectLocalPosition;
-        private Global.E_SOUND DeathSound = Global.E_SOUND.SFX_MINION_DEATH;
+        private string DeathSound;
             
         protected override async UniTask OnInit(QuantumGame game)
         {
@@ -48,10 +49,16 @@ namespace _Scripts.Views
                 DeathEffect = "Effect_Bomb";
                 DeathEffectLocalPosition = Vector3.zero;
             }
+            else if (f.Has<Mine>(EntityView.EntityRef))
+            {
+                DeathEffect = "Effect_MineBomb";
+                DeathSound = "Sound_Explosion";
+                DeathEffectLocalPosition = Vector3.zero;
+            }
             else
             {
                 DeathEffect = isEnemy ? "Effect_Death_blue" : "Effect_Death_red";
-                DeathSound = Global.E_SOUND.SFX_MINION_DEATH;
+                DeathSound = "Sound_MinionDeath";
                 DeathEffectLocalPosition = ActorModel.HitPosition.localPosition;
             }
         }
@@ -79,6 +86,10 @@ namespace _Scripts.Views
             ActorModel = await ResourceManager.LoadPoolableAsync<ActorModel>(diceInfo.prefabName, Vector3.zero, Quaternion.identity);
             ActorModel.Initialize(isAlly);
             ActorModel.transform.SetParent(transform, false);
+            if (ActorModel.Animator != null)
+            {
+                _animationSpeed = new AnimationSpeed(ActorModel.Animator);
+            }
         }
 
         async UniTask ShowSpawnLine(TDataDiceInfo diceInfo, ActorModel actorModel, int fieldIndex, int team)
@@ -108,8 +119,7 @@ namespace _Scripts.Views
         
         protected override void OnEntityDestroyedInternal(QuantumGame game)
         {
-            SoundManager.instance.Play(DeathSound);
-            
+            PlaySound(DeathSound).Forget();
             ResourceManager.LoadGameObjectAsyncAndReseveDeacivate(DeathEffect,
                 transform.position + DeathEffectLocalPosition, Quaternion.identity).Forget();
             
@@ -123,7 +133,6 @@ namespace _Scripts.Views
             _dicEffectPool.Clear();
             Destroy(gameObject);
         }
-
 
         // void SpawnMagicAndInstallation()
         // {

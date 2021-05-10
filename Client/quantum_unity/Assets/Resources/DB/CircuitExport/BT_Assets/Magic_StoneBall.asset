@@ -16,15 +16,15 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall
       Guid:
-        Value: 4302647276457842047
+        Value: 1712507879439308335
     Label: 
     Id: 0
     Child:
       Id:
-        Value: 4257055594729025786
+        Value: 3276419372608423875
     AbortType: 0
     NodesAmount: 2
---- !u!114 &2806955886463951253
+--- !u!114 &7079945146782080669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
     Identifier:
       Path: Resources/DB/CircuitExport/BT_Assets/Magic_StoneBall|MoveStraight_0
       Guid:
-        Value: 4257055594729025786
+        Value: 3276419372608423875
     Label: MoveStraight
     Id: 1
     Services: []

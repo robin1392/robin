@@ -64,35 +64,8 @@ namespace Quantum
                     transform->Rotation = rotation;
                     p.BtAgent->SetIntData(f, 1, HitIndex.Index);
 
-                    var hits = f.Physics2D.OverlapShape(*transform, Shape2D.CreateCircle(attackable.EffectRangeValue));
-                    for (int i = 0; i < hits.Count; i++)
-                    {
-                        var hitEntity = hits[i].Entity;
-                        if (hitEntity == EntityRef.None)
-                        {
-                            continue;
-                        }
-
-                        if (f.TryGet(hitEntity, out Actor targetActor))
-                        {
-                            if (actor.Team == targetActor.Team)
-                            {
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            continue;
-                        }
-
-                        if (f.Unsafe.TryGetPointer(hitEntity, out Hittable* targetHittable))
-                        {
-                            targetHittable->Health -= attackable.Effect;
-                            f.Events.ActorHitted(p.Entity, target, HitColor.Fire);
-                            f.Events.PlayCasterEffect(p.Entity, "Effect_FireBomb");   
-                        }
-                    }
-
+                    BTHelper.DamageToCircleArea(f, *transform, attackable.EffectRangeValue, e, actor, attackable.Effect);
+                    f.Events.PlayCasterEffect(p.Entity, "Effect_FireBomb");
                     bb->Set(p.Frame, IsEnemyTargetAttacked.Key, true);
                 }    
             }

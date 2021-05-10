@@ -9,6 +9,11 @@ using UnityEngine.AddressableAssets;
 
 public static class ResourceManager
 {
+    public static async UniTask<AudioClip> LoadClip(string assetName)
+    {
+        return await Addressables.LoadAssetAsync<AudioClip>(assetName);
+    }
+    
     public static async UniTask<TMonobehavour> LoadMonobehaviourAsync<TMonobehavour>(string assetName, Vector3 position,
         Quaternion rotation) where TMonobehavour : MonoBehaviour
     {

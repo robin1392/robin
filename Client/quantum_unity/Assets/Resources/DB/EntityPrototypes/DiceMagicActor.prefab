@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransformMode: 0
   Transform2DVertical:
-    IsEnabled: 0
+    IsEnabled: 1
     Height:
       RawValue: 0
     PositionOffset:

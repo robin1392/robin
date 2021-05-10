@@ -77,3 +77,8 @@ event BuffStateChanged {
     entity_ref Entity;
     Int32 BuffState;
 }
+
+event PlaySound {
+    entity_ref Actor;
+    QString<128> AssetName;
+}

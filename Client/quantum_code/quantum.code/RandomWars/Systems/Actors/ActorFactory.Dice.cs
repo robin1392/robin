@@ -53,24 +53,25 @@ namespace Quantum.Actors
                     spawnPosition.Y += f.RNG->Next(-FP._0_20, FP._0_20);
                 }
 
-                //TODO: 데이터 시트에 스폰포지션 컬럼을 추가한다.
-                //지뢰 
-                else if (diceInfo.id == 1005 || diceInfo.id == 1013)
+                if(diceInfo.id == 1014)
                 {
-                    spawnPosition = GetRandomPlayerFieldPosition(f);
-                }
-                else if(diceInfo.id == 1014)
-                {
-                    if (spec.Team == GameConstants.BottomCamp)
-                    {
-                        spawnPosition.Y = f.Context.FieldPositions.GetBottomPlayerPosition().Y;
-                    }
-                    if (spec.Team == GameConstants.TopCamp)
-                    {
-                        spawnPosition.Y = f.Context.FieldPositions.GetTopPlayerPosition().Y;
-                    }
-                    
+                    spawnPosition = GetBehindTowerPosition(f, spec.Team, spawnPosition);
                     f.Add<StoneBall>(entity);
+                }
+                
+                if (diceInfo.id == 1013)
+                {
+                    spawnPosition = GetBehindTowerPosition(f, spec.Team, spawnPosition);
+                    var vertical = f.Unsafe.GetPointer<Transform2DVertical>(entity);
+                    vertical->Position = FP._10;
+                    f.Add<Mine>(entity);
+                    var mine = f.Unsafe.GetPointer<Mine>(entity);
+                    var currentTime = f.Number * f.DeltaTime;
+                    mine->SpawnTime = currentTime;
+                    mine->StartPosition = spawnPosition;
+                    mine->Destination = GetRandomFieldPosition(f);
+                    mine->SpawnVertical = vertical->Position;
+                    mine->ArriveTime = (FPVector2.Distance(mine->StartPosition, mine->Destination) / diceInfo.moveSpeed) + currentTime;
                 }
 
                 var rotation = GetSpawnRotation(spec.Team);
@@ -98,13 +99,12 @@ namespace Quantum.Actors
                 collider2D.Shape.Circle.Radius = scale * diceInfo.colliderRadius;
                 
                 //TODO: 프로토타입을 분리한다.
-                
-                if ((DiceType) diceInfo.castType != DiceType.Magic)
+                if ((DiceType) diceInfo.castType == DiceType.Minion)
                 {
                     f.Add<Hittable>(entity);
                     var hittable = f.Unsafe.GetPointer<Hittable>(entity);
                     hittable->MaxHealth = stat.maxHealth;
-                    hittable->Health = stat.maxHealth;    
+                    hittable->Health = stat.maxHealth;
                     
                     f.Add<Buff>(entity);
                     var body = f.Unsafe.GetPointer<PhysicsBody2D>(entity);
@@ -113,6 +113,18 @@ namespace Quantum.Actors
                     steering->MaxSpeed = movable->MoveSpeed;
                 }
                 
+                if ((DiceType) diceInfo.castType == DiceType.Installation)
+                {
+                    f.Add<Hittable>(entity);
+                    var hittable = f.Unsafe.GetPointer<Hittable>(entity);
+                    hittable->MaxHealth = stat.maxHealth;
+                    hittable->Health = stat.maxHealth;
+                    
+                    f.Add<DamagePerSec>(entity);
+                    var damagePerSec = f.Unsafe.GetPointer<DamagePerSec>(entity);
+                    damagePerSec->Damage = hittable->MaxHealth / (FP._4 * FP._10);
+                }
+
                 f.Add<Attackable>(entity);
                 var attackable = f.Unsafe.GetPointer<Attackable>(entity);
                 attackable->Power = stat.power;
@@ -122,6 +134,11 @@ namespace Quantum.Actors
                 attackable->AttackSpeed = diceInfo.attackSpeed / f.Global->SuddenDeathAttackSpeedFactor;
                 attackable->SearchRange = 999;
                 attackable->Range = diceInfo.range;
+                if ((DiceType) diceInfo.castType == DiceType.Magic)
+                {
+                    attackable->Range = diceInfo.range * MathUtil.Pow(FP._1_50, diceScale - 1);
+                }
+                
                 attackable->EffectRangeValue = diceInfo.effectRangeValue;
                 attackable->AttackHitEvent = diceInfo.attackHitEvent;
                 attackable->AttackAniLength = diceInfo.attackAniLength;
@@ -137,6 +154,13 @@ namespace Quantum.Actors
                 bb->Set(f, "CanAct", true);
             }
         }
+
+        public static unsafe FPVector2 GetRandomFieldPosition(Frame f)
+        {
+            var x = f.RNG->Next(-FP._3, FP._3);
+            var z = f.RNG->Next(-FP._2, FP._2);
+            return new FPVector2(x, z);
+        }
         
         public static FP GetSpawnRotation(Int32 team)
         {
@@ -148,11 +172,18 @@ namespace Quantum.Actors
             return FPVector2.RadiansSigned(FPVector2.Up, FPVector2.Down);
         }
 
-        private static unsafe FPVector2 GetRandomPlayerFieldPosition(Frame f)
+        private static unsafe FPVector2 GetBehindTowerPosition(Frame f, int team, FPVector2 fieldPosition)
         {
-            var x = f.RNG->Next(-FP._3, FP._3);
-            var z = f.RNG->Next(-FP._2, FP._2);
-            return new FPVector2(x, z);
+            if (team == GameConstants.BottomCamp)
+            {
+                fieldPosition.Y -= f.Context.FieldPositions.GetBottomPlayerPosition().Y;
+            }
+            if (team == GameConstants.TopCamp)
+            {
+                fieldPosition.Y += f.Context.FieldPositions.GetTopPlayerPosition().Y;
+            }
+
+            return fieldPosition;
         }
 
         public static Stat CalcMinionStat(TDataDiceInfo diceInfo, Int32 inGameLevel, Int32 outGameLevel)

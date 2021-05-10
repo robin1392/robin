@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Xml: "<?xml version=\"1.0\" encoding=\"utf-16\"?>\n<Document>\n  <Id>79f7cfe0-9d2f-4b7a-9435-a31203383da0</Id>\n 
     <Version>1</Version>\n  <Meta>false</Meta>\n  <Graph>79f7cfe0-9d2f-4b7a-9435-a31203383da0</Graph>\n 
-    <DebugKey>28bf88fd-5af8-4def-8658-91bbb2daa7c7</DebugKey>\n  <Flags>0</Flags>\n 
+    <DebugKey>cd6730f1-6dc9-44cb-a65d-9d1004da03af</DebugKey>\n  <Flags>0</Flags>\n 
     <Parent>$bt</Parent>\n  <Error Count=\"0\" />\n  <Comments Count=\"0\" />\n 
     <HiddenActionsDecisions Count=\"0\" />\n  <Vars Count=\"1\">\n    <Key>291cd2a9-cf3e-463b-bea0-676b91274ea7</Key>\n   
     <Var>\n      <Id>291cd2a9-cf3e-463b-bea0-676b91274ea7</Id>\n      <Name>CanAct</Name>\n     
@@ -22,7 +22,7 @@ MonoBehaviour:
     <VarMode>MetaField</VarMode>\n      <TypeMode>Value</TypeMode>\n      <Scope>Blackboard</Scope>\n   
     </Var>\n  </Vars>\n  <Nodes Count=\"5\">\n    <Key>4ab7b43e-233b-45a6-8266-c5f009c1f864</Key>\n   
     <Node>\n      <Id>4ab7b43e-233b-45a6-8266-c5f009c1f864</Id>\n      <Name>MoveStraight</Name>\n     
-    <Comment />\n      <Graph>d708bf99-6886-4b06-b211-525914be05bd</Graph>\n     
+    <Comment></Comment>\n      <Graph>d708bf99-6886-4b06-b211-525914be05bd</Graph>\n     
     <Parent>$decoratorsRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
     <Position>0|225||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"1\">\n        <Slot>\n          <Id>$decoratorsList</Id>\n          <Name>Decorators</Name>\n         
@@ -55,7 +55,7 @@ MonoBehaviour:
     <Data>\n          <Name>$default</Name>\n          <Value Type=\"@boolean\">True</Value>\n       
     </Data>\n      </Data>\n    </Node>\n    <Key>bcc8608d-b420-4921-964b-8ed9a7093cdc</Key>\n   
     <Node>\n      <Id>bcc8608d-b420-4921-964b-8ed9a7093cdc</Id>\n      <Name>MoveStraight</Name>\n     
-    <Comment />\n      <Graph>d708bf99-6886-4b06-b211-525914be05bd</Graph>\n     
+    <Comment></Comment>\n      <Graph>d708bf99-6886-4b06-b211-525914be05bd</Graph>\n     
     <Parent>$servicesRoot</Parent>\n      <DebugIndex>-1</DebugIndex>\n      <Flags>129</Flags>\n     
     <Position>0|-5||0</Position>\n      <StaticIn Count=\"0\" />\n      <StaticOut
     Count=\"1\">\n        <Slot>\n          <Id>$servicesList</Id>\n          <Name>Services</Name>\n         
@@ -63,7 +63,7 @@ MonoBehaviour:
     <Flags>0</Flags>\n          <TypeMode>Value</TypeMode>\n        </Slot>\n     
     </StaticOut>\n      <Groups Count=\"0\" />\n      <Data Count=\"0\" />\n    </Node>\n   
     <Key>d708bf99-6886-4b06-b211-525914be05bd</Key>\n    <Node>\n      <Id>d708bf99-6886-4b06-b211-525914be05bd</Id>\n     
-    <Name>MoveStraight</Name>\n      <Comment />\n      <Graph>79f7cfe0-9d2f-4b7a-9435-a31203383da0</Graph>\n     
+    <Name>MoveStraight</Name>\n      <Comment></Comment>\n      <Graph>79f7cfe0-9d2f-4b7a-9435-a31203383da0</Graph>\n     
     <Parent>$leaf/MoveStraight</Parent>\n      <DebugIndex>-1</DebugIndex>\n     
     <Flags>32</Flags>\n      <Position>-674|-113||0</Position>\n      <StaticIn Count=\"3\">\n       
     <Slot>\n          <Id>$in</Id>\n          <Name>In</Name>\n          <Value />\n         

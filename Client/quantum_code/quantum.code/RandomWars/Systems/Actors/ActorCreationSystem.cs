@@ -8,9 +8,11 @@ namespace Quantum.Actors
 
     public unsafe class ActorCreationSystem : SystemMainThreadFilter<ActorCreationFilter>
     {
-        private static readonly string DICE_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceActor|EntityPrototype"; 
+        private static readonly string DICE_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceMinionActor|EntityPrototype"; 
         private static readonly string DICE_MAGIC_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceMagicActor|EntityPrototype";
+        private static readonly string DICE_INSTALLATION_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/DiceInstallationActor|EntityPrototype";
         private static readonly string TOWER_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/TowerActor|EntityPrototype";
+        private static readonly string GUARDIAN_ACTOR_PROTOTYPE = "Resources/DB/EntityPrototypes/GuardianActor|EntityPrototype";
         
         public override void Update(Frame f, ref ActorCreationFilter filter)
         {
@@ -41,6 +43,11 @@ namespace Quantum.Actors
                     var actorPrototype = f.FindAsset<EntityPrototype>(DICE_MAGIC_ACTOR_PROTOTYPE);
                     ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);    
                 }
+                else if (data.castType == (int)DiceType.Installation)
+                {
+                    var actorPrototype = f.FindAsset<EntityPrototype>(DICE_INSTALLATION_ACTOR_PROTOTYPE);
+                    ActorFactory.CreateDiceActor(f, actorCreation, actorPrototype);
+                }
                 else
                 {
                     var actorPrototype = f.FindAsset<EntityPrototype>(DICE_ACTOR_PROTOTYPE);
@@ -51,6 +58,11 @@ namespace Quantum.Actors
             else if (actorCreation.ActorType == ActorType.Tower)
             {
                 var actorPrototype = f.FindAsset<EntityPrototype>(TOWER_ACTOR_PROTOTYPE);
+                ActorFactory.CreateTowerActor(f, actorCreation, actorPrototype);
+            }
+            else if (actorCreation.ActorType == ActorType.Guardian)
+            {
+                var actorPrototype = f.FindAsset<EntityPrototype>(GUARDIAN_ACTOR_PROTOTYPE);
                 ActorFactory.CreateTowerActor(f, actorCreation, actorPrototype);
             }
         }

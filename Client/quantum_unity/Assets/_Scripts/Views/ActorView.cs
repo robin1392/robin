@@ -57,6 +57,7 @@ namespace _Scripts.Views
             QuantumEvent.Subscribe<EventActorHitted>(this, OnActorHitted);
             QuantumEvent.Subscribe<EventPlayCasterEffect>(this, OnPlayCasterEffect);
             QuantumEvent.Subscribe<EventBuffStateChanged>(this, OnBuffStateChanged);
+            QuantumEvent.Subscribe<EventPlaySound>(this, OnPlaySound);
         }
 
         async UniTask Init(QuantumGame game)
@@ -164,6 +165,25 @@ namespace _Scripts.Views
                 _animationSpeed.SetFreeze(1);
                 ActorModel.RendererEffect.ResetToOriginal();
             }
+        }
+        
+        private void OnPlaySound(EventPlaySound callback)
+        {
+            if (EntityView.EntityRef.Equals(callback.Actor))
+            {
+                PlaySound(callback.AssetName).Forget();
+            }
+        }
+        
+        protected async UniTask PlaySound(string clipName)
+        {
+            if (string.IsNullOrEmpty(clipName))
+            {
+                return;
+            }
+
+            var clip = await ResourceManager.LoadClip(clipName);
+            SoundManager.instance.Play(clip);
         }
         
         void EnableBuffEffect(BuffType buffState, BuffType buffType, string resource, EffectLocation effectLocation)

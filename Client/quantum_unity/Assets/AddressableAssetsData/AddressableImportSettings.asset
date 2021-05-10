@@ -32,3 +32,12 @@ MonoBehaviour:
     groupTemplateApplicationMode: 1
     simplified: 1
     addressReplacement: ${asset}
+  - path: Assets/_Resources/CommonSounds/(?<asset>.*)\.wav
+    matchType: 1
+    groupName: CommonSounds
+    LabelMode: 1
+    labelRefs: []
+    groupTemplate: {fileID: 0}
+    groupTemplateApplicationMode: 1
+    simplified: 1
+    addressReplacement: 

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
+--- !u!114 &-7991387965555111629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,22 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
-  m_Name: PlayerBot
+  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
+  m_Name: WaitLeaf_0
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
       Guid:
-        Value: 3245066073370733556
-    Label: 
-    Id: 0
-    Child:
-      Id:
-        Value: 1639148361529984408
-    AbortType: 0
-    NodesAmount: 3
---- !u!114 &7246371838000369809
+        Value: 1390320214648339109
+    Label: WaitLeaf
+    Id: 2
+    Services: []
+    Duration:
+      RawValue: 65470464
+    EndTimeIndex:
+      Index: 1
+--- !u!114 &-806884372707266115
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +45,7 @@ MonoBehaviour:
     Id: 1
     Children:
     - Id:
-        Value: 997244612087701357
+        Value: 1390320214648339109
     Services: []
     TopmostDecorator:
       Id:
@@ -53,7 +53,7 @@ MonoBehaviour:
     CurrentChildIndex:
       Index: 0
     IsDynamic: 0
---- !u!114 &7838673589567583171
+--- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,18 +62,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11750d1feaefd49449c61a34a9a8f572, type: 3}
-  m_Name: WaitLeaf_0
+  m_Script: {fileID: 11500000, guid: f453d096980db425e94cabc30321b983, type: 3}
+  m_Name: PlayerBot
   m_EditorClassIdentifier: 
   Settings:
     Identifier:
-      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot|WaitLeaf_0
+      Path: Resources/DB/CircuitExport/BT_Assets/PlayerBot
       Guid:
-        Value: 997244612087701357
-    Label: WaitLeaf
-    Id: 2
-    Services: []
-    Duration:
-      RawValue: 65470464
-    EndTimeIndex:
-      Index: 1
+        Value: 1445850023652717355
+    Label: 
+    Id: 0
+    Child:
+      Id:
+        Value: 1639148361529984408
+    AbortType: 0
+    NodesAmount: 3

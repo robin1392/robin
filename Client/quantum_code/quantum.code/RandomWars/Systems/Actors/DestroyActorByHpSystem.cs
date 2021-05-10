@@ -6,13 +6,18 @@ namespace Quantum.Actors
     {
         public EntityRef Entity;
         public Hittable* Hittable;
-        public Actor* Actor;
     }
-    public unsafe class ActorDeathSystem : SystemMainThreadFilter<ActorDeathFilter>
+    public unsafe class DestroyActorByHpSystem : SystemMainThreadFilter<ActorDeathFilter>
     {
         public override void Update(Frame f, ref ActorDeathFilter filter)
         {
             if (f.IsVerified == false)
+            {
+                return;
+            }
+            
+            //HACK:
+            if(f.Has<Mine>(filter.Entity))
             {
                 return;
             }

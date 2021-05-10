@@ -53,6 +53,24 @@ component Tower {
 component StoneBall {
 }
 
+component Mine {
+    FPVector2 StartPosition;
+    FPVector2 Destination;
+    FP SpawnVertical;
+    FP SpawnTime;
+    FP ArriveTime;
+}
+
+component Trigger {
+}
+
+component Destroy {
+}
+
+component DamagePerSec {
+    FP Damage;
+}
+
 enum ActorType { Dice, Boss, Guardian, Tower }
 enum DiceType { Minion, Magic, Installation, Hero }
 
